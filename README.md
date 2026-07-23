@@ -39,6 +39,7 @@ The model was hardened across four generations, each building on the last:
 | **V2.2** | [ebu_v22.py](ebu_v22.py) | A conservation **ledger** asserted every tick, plus a **safe** discrete movement law: a transfer executes only if it provably lowers `B` this tick (line-searched size, no overshoot). |
 | **V2.3** | [ebu_v23.py](ebu_v23.py) | **Regeneration**: external-flow, logistic, Allee, and finite sources; an `H`-horizon actor that declines an action helping now but harming a regenerative source later. |
 | **V2.4** | [ebu_v24.py](ebu_v24.py) | Six **protective harvest rules** on a closed Allee economy, separating genuine ecological foresight from an artifact of the accept/reject architecture. |
+| **V2.5** | [ebu_v25.py](ebu_v25.py) | An **EBU accounting/incentive layer** over the frozen V2.4 physics: naive vs guarded ledgers. Guarded credit is live-state, telescoping, and debits transport loss and irreversible extraction — it closes enumerated gaming attacks (round-trips, splitting, claiming regeneration, reserve sacrifice) and keeps adversaries at 100% viability, while a naive ledger lets an adversary earn ~730k credit while collapsing every source. |
 
 ## Key finding (V2.4)
 
@@ -78,13 +79,15 @@ energy_balance.py       V2.0 engine (Grid, Actor, burden, one synchronous tick)
 ebu_v22.py              V2.2 safe engine + conservation ledger
 ebu_v23.py              V2.3 regeneration + horizon-aware actor
 ebu_v24.py              V2.4 six harvest rules
+ebu_v25.py              V2.5 EBU accounting layer (naive vs guarded)
 ecosystem.py            self-sustaining producer/consumer ecosystem experiment
 exp_v2*.py              experiment drivers (print tables, write figures)
 audit_v231.py           conservation-ledger audit
 test_*.py               tests per version
 make_paper*.py          render the PDF papers via reportlab
 figures/                generated plots (burden vs time, phase maps, heatmaps, …)
-*.pdf                   the Foundation papers, V2.1 → V2.4
+results/v2.4/           frozen result captures + manifest for the v2.4.0 release
+*.pdf                   the Foundation papers, V2.1 → V2.5
 ecosystem.gif           animation of the ecosystem run
 ```
 
@@ -130,10 +133,11 @@ python3 test_energy_balance.py   # V2.0 core        (8 tests, stdlib only)
 python3 test_v22.py              # V2.2 ledger+safe  (7 tests, stdlib only)
 python3 test_v23.py              # V2.3 regeneration (4 tests, needs requirements.txt)
 python3 test_v24.py              # V2.4 harvest rules(5 tests, needs requirements.txt)
+python3 test_v25.py              # V2.5 EBU ledger   (9 tests, needs requirements.txt)
 ```
 
-Each script prints per-test `PASS` lines and a summary; 24 tests total. The first
-two run on a bare Python install; `test_v23.py`/`test_v24.py` import `matplotlib`
+Each script prints per-test `PASS` lines and a summary; 33 tests total. The first
+two run on a bare Python install; `test_v23.py`/`test_v24.py`/`test_v25.py` import `matplotlib`
 via the experiment modules, so install `requirements.txt` first.
 
 ## Design principles
