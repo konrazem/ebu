@@ -1,0 +1,13 @@
+# The simulation CORE and its physics tests use ONLY the Python standard library:
+#   python3 energy_balance.py
+#   python3 test_energy_balance.py   python3 test_v22.py
+#   python3 test_v23.py              python3 test_v24.py
+#
+# The packages below are needed ONLY for the figure / animation / PDF scripts
+# (analysis.py, exp_v2*.py, audit_v231.py, make_paper_*.py). test_v23.py and
+# test_v24.py import them indirectly (via exp_v23), so install these to run the
+# full suite.
+numpy>=1.26
+matplotlib>=3.8
+pillow>=10.0
+reportlab>=4.0

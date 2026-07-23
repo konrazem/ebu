@@ -43,22 +43,33 @@ The model was hardened across four generations, each building on the last:
 ## Key finding (V2.4)
 
 On a closed economy with Allee-threshold sources, the naïve horizon *gate* looks
-smart but collapses every source (`32/32 dead`, 42.8% viable). The controls that
-either **optimize the harvest quantity** or **penalize dipping into a regenerative
-reserve** keep every source alive *and* serve all demand:
+fine at first but collapses every source: viability falls to **0% by the end**
+(42.8% *averaged over the post-shock half*, which is why the mean hides the
+collapse), with `32/32 dead` and **no sustained recovery**. The controls that
+either **optimize the harvest quantity** (`horizon_opt`) or **penalize dipping
+into a regenerative reserve** (`threshold_penalty`, `hard_reserve`) keep every
+source alive *and* serve all demand. Runtime, 1000 ticks; shock at tick 500;
+"sust.rec" = ticks to regain ≥90% viability *and* stay there ≥100 ticks:
 
 ```
-rule                viable%  served%   dead   stock   unmet
-safe                  100.0    100.0   0/32   587.2       0
-horizon_gate           42.8     73.8  32/32     0.0    3778
-horizon_opt           100.0    100.0   0/32   584.7       0
-threshold_penalty     100.0    100.0   0/32   586.6       0
-hard_reserve          100.0    100.0   0/32   587.2       0
-penalty_horizon       100.0    100.0   0/32   584.8       0
+rule               viable%(end) viable%(2ndH) served%   dead   stock  sust.rec
+safe                     100.0        100.0     100.0   0/32   587.2       1
+horizon_gate               0.0         42.8      73.8  32/32     0.0    none
+horizon_opt              100.0        100.0     100.0   0/32   584.7       5
+threshold_penalty        100.0        100.0     100.0   0/32   586.6       1
+hard_reserve             100.0        100.0     100.0   0/32   587.2       1
+penalty_horizon          100.0        100.0     100.0   0/32   584.8       3
 ```
+
+The key control is `horizon_opt`: choosing the harvest quantity to *maximize* the
+H-tick impact is sustainable, so the `horizon_gate` collapse was an artifact of
+gating an immediately-optimized quantity — **not** evidence that foresight itself
+is harmful.
 
 Across 20 randomized clustered layouts, foresight-based rules beat the safe
-baseline on burden **20/20** (paired mean +22.3).
+baseline on **viable-cell fraction** in all **20/20** paired layouts — a paired
+mean of **+22.3 percentage points of viability** (this figure is viability, not
+burden).
 
 ## Repository layout
 
@@ -112,11 +123,18 @@ Regenerate a paper PDF:
 python make_paper_v24.py     # -> Energy_Balance_Project_Foundation_v2.4.pdf
 ```
 
-Run the tests:
+Run the tests (plain standard-library scripts — no `pytest` required):
 
 ```bash
-python -m pytest test_v24.py      # or test_energy_balance.py, test_v22.py, test_v23.py
+python3 test_energy_balance.py   # V2.0 core        (8 tests, stdlib only)
+python3 test_v22.py              # V2.2 ledger+safe  (7 tests, stdlib only)
+python3 test_v23.py              # V2.3 regeneration (4 tests, needs requirements.txt)
+python3 test_v24.py              # V2.4 harvest rules(5 tests, needs requirements.txt)
 ```
+
+Each script prints per-test `PASS` lines and a summary; 24 tests total. The first
+two run on a bare Python install; `test_v23.py`/`test_v24.py` import `matplotlib`
+via the experiment modules, so install `requirements.txt` first.
 
 ## Design principles
 

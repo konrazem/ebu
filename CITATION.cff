@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "The Energy Balance Project (EBU): a homeostatic field model and local actor-motion law"
+abstract: >-
+  A small, self-contained research model of homeostasis on a graph: can purely local
+  rules keep a resource field viable indefinitely, with no central optimizer? Includes a
+  conservation-audited simulation engine, a safe discrete movement law, regeneration
+  (logistic/Allee/finite sources), and protective harvest rules.
+authors:
+  - family-names: Grzyb
+    given-names: Konrad
+repository-code: "https://github.com/konrazem/ebu"
+license: MIT
+version: "2.4.0"
+date-released: "2026-07-23"
+keywords:
+  - homeostasis
+  - agent-based model
+  - complex systems
+  - regeneration
+  - Allee effect

@@ -1,0 +1,23 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Core + physics tests are stdlib-only; test_v23/test_v24 import matplotlib via exp_v23.
+      - name: Install figure/PDF dependencies
+        run: pip install -r requirements.txt
+      - name: Run test suites (24 tests)
+        run: |
+          python test_energy_balance.py
+          python test_v22.py
+          python test_v23.py
+          python test_v24.py

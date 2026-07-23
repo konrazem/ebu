@@ -100,21 +100,27 @@ P("If this still over-harvests, the single-action counterfactual is fundamentall
 # ---- 3 ----
 h1("3. Regeneration Results")
 P("Closed Allee economy (8x8, only supply is regeneration, A=8 &gt; L=4), 1000 ticks, a 55% source "
-  "shock at tick 500. Success requires preserving sources AND serving demand.")
+  "shock at tick 500. Success requires preserving sources AND serving demand. We report both FINAL "
+  "viability and the mean over the post-shock second half, because the mean alone can hide a late "
+  "collapse. Sustained recovery (&ldquo;rec&rdquo;) counts only if viability returns to &gt;=90% of "
+  "its pre-shock value AND source stock stays above the reserve for 100 consecutive ticks.")
 table([
-    ["Rule", "viable %", "demand served %", "dead sources", "A-crossings", "src stock", "cum. burden"],
-    ["safe (H=1)", "100.0", "100.0", "0 / 32", "1", "587", "94,380"],
-    ["horizon_gate (V2.3)", "42.8", "73.8", "32 / 32", "60", "0", "326,941"],
-    ["horizon_opt (q_H*)", "100.0", "100.0", "0 / 32", "2", "585", "110,853"],
-    ["threshold_penalty", "100.0", "100.0", "0 / 32", "0", "587", "95,118"],
-    ["hard_reserve", "100.0", "100.0", "0 / 32", "1", "587", "94,380"],
-    ["penalty_horizon", "100.0", "100.0", "0 / 32", "0", "585", "111,930"],
-], colw=[3.4 * cm, 1.7 * cm, 2.3 * cm, 1.9 * cm, 1.9 * cm, 1.6 * cm, 1.9 * cm])
-P("Only horizon_gate fails. The horizon-optimised rule is sustainable, proving foresight is not "
-  "inherently destructive. The two burden-based rules (threshold_penalty, penalty_horizon) achieve "
-  "zero threshold crossings &mdash; they never even approach the Allee boundary &mdash; and the "
-  "cheap threshold_penalty matches the ~100x more expensive horizon_opt. All sustainable rules serve "
-  "100% of demand, so none succeeds by simply refusing to harvest.")
+    ["Rule", "viable % (end)", "viable % (2nd half)", "served %", "dead", "A-cross", "stock", "rec"],
+    ["safe (H=1)", "100.0", "100.0", "100.0", "0/32", "1", "587", "1t"],
+    ["horizon_gate (V2.3)", "0.0", "42.8", "73.8", "32/32", "60", "0", "none"],
+    ["horizon_opt (q_H*)", "100.0", "100.0", "100.0", "0/32", "2", "585", "5t"],
+    ["threshold_penalty", "100.0", "100.0", "100.0", "0/32", "0", "587", "1t"],
+    ["hard_reserve", "100.0", "100.0", "100.0", "0/32", "1", "587", "1t"],
+    ["penalty_horizon", "100.0", "100.0", "100.0", "0/32", "0", "585", "3t"],
+], colw=[3.2 * cm, 1.9 * cm, 2.2 * cm, 1.5 * cm, 1.4 * cm, 1.5 * cm, 1.3 * cm, 1.2 * cm])
+P("Only horizon_gate fails, and the end/second-half split makes the failure explicit: its "
+  "post-shock mean (42.8%) looks survivable, but final viability is 0% and it never sustainably "
+  "recovers. The horizon-optimised rule is sustainable, proving foresight is not inherently "
+  "destructive. The two burden-based rules (threshold_penalty, penalty_horizon) achieve zero "
+  "threshold crossings &mdash; they never even approach the Allee boundary &mdash; and the cheap "
+  "threshold_penalty matches the ~100x more expensive horizon_opt (benchmarked at 0.24 s vs 21.7 s "
+  "per 200 ticks, ~91x). All sustainable rules serve 100% of demand, so none succeeds by simply "
+  "refusing to harvest.")
 figure("figures/v24_stock.png",
        "Figure 1. Remaining regenerative stock. After the shock only horizon_gate (orange) collapses; "
        "the horizon-optimised and burden-based rules all recover fully.")

@@ -8,13 +8,13 @@ ran penalty_horizon
 === V2.4: six harvest rules on the closed Allee economy ===
 (success = preserve sources AND serve demand)
 
-rule                viable%  served%   dead  cross   stock   unmet      cumB shock rec
---------------------------------------------------------------------------------------
-safe                  100.0    100.0   0/32      1   587.2       0     94380        1t
-horizon_gate           42.8     73.8  32/32     60     0.0    3778    326941        1t
-horizon_opt           100.0    100.0   0/32      2   584.7       0    110853        1t
-threshold_penalty     100.0    100.0   0/32      0   586.6       0     95118        1t
-hard_reserve          100.0    100.0   0/32      1   587.2       0     94380        1t
-penalty_horizon       100.0    100.0   0/32      0   584.8       0    111930        1t
+rule               viable%end viable%2ndH  served%   dead  cross   stock   unmet      cumB  sust.rec
+----------------------------------------------------------------------------------------------------
+safe                    100.0       100.0    100.0   0/32      1   587.2       0     94380        1t
+horizon_gate              0.0        42.8     73.8  32/32     60     0.0    3778    326941      none
+horizon_opt             100.0       100.0    100.0   0/32      2   584.7       0    110853        5t
+threshold_penalty       100.0       100.0    100.0   0/32      0   586.6       0     95118        1t
+hard_reserve            100.0       100.0    100.0   0/32      1   587.2       0     94380        1t
+penalty_horizon         100.0       100.0    100.0   0/32      0   584.8       0    111930        3t
 
 Figures: figures/v24_stock.png, figures/v24_viable.png

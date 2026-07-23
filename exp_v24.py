@@ -35,7 +35,8 @@ def run_rule(rule, H=10):
     cum_unmet = cum_loss = disc_B = cum_B = 0.0
     disc = 1.0
     series = dict(stock=[], viable=[])
-    pre_v = None; recov = None
+    pre_v = None
+    R_reserve = A + 3.0                                # matches ebu_v24 default delta=3
     for t in range(1, TICKS + 1):
         if t == SHOCK:
             for i in src:
@@ -55,16 +56,27 @@ def run_rule(rule, H=10):
         series["stock"].append(sum(g.x[i] for i in src))
         if t == SHOCK - 1:
             pre_v = viable
-        if recov is None and t > SHOCK and pre_v and viable >= 0.9 * pre_v:
-            recov = t - SHOCK
     dead = sum(1 for i in src if g.x[i] < A and regen_at(g, i, g.x[i]) <= 0)
     served = 100.0 * (1 - cum_unmet / (n_con * DEMAND * TICKS))
+    # Sustained recovery: first post-shock tick from which viability stays >= 90% of the
+    # pre-shock value AND total source stock stays above the regenerative reserve for a
+    # full WINDOW of consecutive ticks. A transient bounce that later collapses does NOT
+    # count as recovery (fixes the misleading "1 tick" for horizon_gate).
+    WINDOW = 100
+    v, stk = series["viable"], series["stock"]
+    stock_floor = len(src) * R_reserve
+    recovery = None
+    for t in range(SHOCK, TICKS - WINDOW + 1):
+        if pre_v and all(v[k] >= 0.9 * pre_v and stk[k] >= stock_floor
+                         for k in range(t, t + WINDOW)):
+            recovery = t - SHOCK + 1
+            break
     return series, dict(
-        viable_final=series["viable"][-1],
-        viable_half=sum(series["viable"][TICKS // 2:]) / (TICKS - TICKS // 2),
+        viable_final=v[-1],
+        viable_half=sum(v[TICKS // 2:]) / (TICKS - TICKS // 2),
         dead=dead, n_src=len(src), crossings=crossings,
-        served=served, unmet=cum_unmet, stock=series["stock"][-1],
-        loss=cum_loss, cum_B=cum_B, disc_B=disc_B, recovery=recov)
+        served=served, unmet=cum_unmet, stock=stk[-1],
+        loss=cum_loss, cum_B=cum_B, disc_B=disc_B, recovery=recovery)
 
 
 def main():
@@ -74,13 +86,14 @@ def main():
 
     print("\n=== V2.4: six harvest rules on the closed Allee economy ===")
     print("(success = preserve sources AND serve demand)\n")
-    hdr = (f"{'rule':18s} {'viable%':>8s} {'served%':>8s} {'dead':>6s} {'cross':>6s} "
-           f"{'stock':>7s} {'unmet':>7s} {'cumB':>9s} {'shock rec':>9s}")
+    hdr = (f"{'rule':18s} {'viable%end':>10s} {'viable%2ndH':>11s} {'served%':>8s} "
+           f"{'dead':>6s} {'cross':>6s} {'stock':>7s} {'unmet':>7s} {'cumB':>9s} "
+           f"{'sust.rec':>9s}")
     print(hdr); print("-" * len(hdr))
     for r in RULES:
         m = res[r][1]
         rec = f"{m['recovery']}t" if m["recovery"] is not None else "none"
-        print(f"{r:18s} {m['viable_half']:8.1f} {m['served']:8.1f} "
+        print(f"{r:18s} {m['viable_final']:10.1f} {m['viable_half']:11.1f} {m['served']:8.1f} "
               f"{m['dead']:>3d}/{m['n_src']:<2d} {m['crossings']:>6d} {m['stock']:7.1f} "
               f"{m['unmet']:7.0f} {m['cum_B']:9.0f} {rec:>9s}")
 
