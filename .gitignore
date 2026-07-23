@@ -10,3 +10,6 @@ env/
 
 # OS
 .DS_Store
+
+# Transient stdout captures at repo root (frozen evidence lives in results/<version>/)
+/*_out.txt
