@@ -5,14 +5,17 @@ abstract: >-
   A small, self-contained research model of homeostasis on a graph: can purely local
   rules keep a resource field viable indefinitely, with no central optimizer? Includes a
   conservation-audited simulation engine, a safe discrete movement law, regeneration
-  (logistic/Allee/finite sources), and protective harvest rules.
+  (logistic/Allee/finite sources), protective harvest rules, and an EBU accounting layer
+  whose guarded ledger (live-state causal credit against a threshold-aware burden, with
+  transport and irreversible-extraction debits) closes gaming attacks that a naive ledger
+  admits, without altering the underlying physics.
 authors:
   - family-names: Grzyb
     given-names: Konrad
 repository-code: "https://github.com/konrazem/ebu"
 license: MIT
-version: "2.4.0"
-date-released: "2026-07-23"
+version: "2.5.0"
+date-released: "2026-07-24"
 keywords:
   - homeostasis
   - agent-based model

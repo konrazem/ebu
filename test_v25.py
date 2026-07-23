@@ -43,11 +43,20 @@ def test_natural_regen_not_credited():
         g = mk(4.0, 12.0, L=8.0, rho=0.6, A=0.0)   # cell 0 deep deficit AND regenerating fast
         actors = [Actor(pos=1, q_max=0.5, M=0.6, theta=0.05, eta=0.95)]  # tiny helper at cell 1
         return g, actors
-    g, a = scen(); lg = EBULedger(mode="guarded"); rg = step_v25(g, a, lg, 1, selection="physics")
-    g, a = scen(); ln = EBULedger(mode="naive");   rn = step_v25(g, a, ln, 1, selection="physics")
-    assert lg.issued_credit >= 0.0
+    gg, a = scen(); lg = EBULedger(mode="guarded"); step_v25(gg, a, lg, 1, selection="physics")
+    gn, a = scen(); ln = EBULedger(mode="naive");   step_v25(gn, a, ln, 1, selection="physics")
     assert ln.issued_credit > lg.issued_credit + 1.0, (ln.issued_credit, lg.issued_credit)
-    print(f"PASS  natural regen not credited: guarded={lg.issued_credit:.2f} << naive={ln.issued_credit:.2f}")
+    # Precise: guarded credit (1.75) is NOT zero because the actor does real work; it must
+    # equal EXACTLY the action's burden reduction on the post-regeneration state (natural
+    # regeneration, captured in x0, is excluded).
+    from ebu_v24 import reserve_R
+    from ebu_v25 import b_R
+    gc, _ = scen(); R = reserve_R(gc, 3.0)
+    x0, _ = natural_update_ledger(gc)                     # post-natural, pre-action
+    action_only = b_R(gc, x0, R, 1.0) - b_R(gg, gg.x, R, 1.0)
+    assert abs(lg.issued_credit - action_only) < 1e-9, (lg.issued_credit, action_only)
+    print(f"PASS  natural regen not credited: guarded {lg.issued_credit:.2f} == action-only "
+          f"post-regen reduction {action_only:.2f}  (naive {ln.issued_credit:.2f} inflates)")
 
 
 def test_telescoping_no_double_credit():
@@ -135,10 +144,10 @@ def test_observational_identity():
         traj = []
         for t in range(1, 51):
             step_v25(g, actors, led, t, selection="physics")
-            traj.append(tuple(round(v, 9) for v in g.x))
+            traj.append(tuple(g.x))                # exact float values, no rounding
         return traj
-    assert run("none") == run("guarded")
-    print("PASS  observational identity: physics trajectory unchanged by the EBU layer")
+    assert run("none") == run("guarded")           # exact equality
+    print("PASS  observational identity: physics trajectory EXACTLY identical (no rounding)")
 
 
 if __name__ == "__main__":

@@ -69,8 +69,9 @@ h1("1. Architecture")
 P("The EBU layer may observe actions and their verified consequences, maintain per-actor accounts, "
   "and influence selection among physically admissible actions. It must NOT change regeneration, "
   "transport, demand, or conservation. The physics is exactly V2.4's threshold_penalty rule and its "
-  "threshold-aware burden B_R. A property test confirms the physical trajectory is byte-identical "
-  "whether the ledger is off or guarded (the layer is observational unless it drives selection).")
+  "threshold-aware burden B_R. A property test confirms the physical trajectory is identical under "
+  "exact floating-point equality (no rounding) whether the ledger is off or guarded &mdash; the "
+  "layer is observational unless it drives selection.")
 
 h1("2. The Guarded Ledger")
 P("Credit is the live-state reduction in the threshold-aware burden B_R around each action, issued "
@@ -85,8 +86,12 @@ eq("credit_a = max(0,  B_R(before_a) - B_R(after_a))            (issued credit, 
    "F_a = increase in (A_i - x_i)_+ at a regenerative source i   (extraction below Allee)")
 P("The symmetric burden-increase debit is a deliberate refinement of the plain "
   "C_a = max(0, .) formula: without it, an actor could do good, undo it, and keep the credit. With "
-  "it, sum of account changes telescopes to B_R(before all actions) - B_R(after all actions) minus "
-  "issued debits, which makes round-trips and damage-then-repair non-positive. The naive ledger, by "
+  "it, the signed burden terms telescope exactly, giving the account identity")
+eq("sum_a dEBU_a  =  B_R(x_before) - B_R(x_after)  -  (explicit cost debits)")
+P("where the explicit cost debits are only the transport-dissipation and "
+  "irreversible-extraction terms (lambda_L L_a + lambda_F F_a). Burden increases are already "
+  "captured inside the telescoping B_R term, so they must NOT be subtracted a second time. This "
+  "identity makes round-trips and damage-then-repair non-positive. The naive ledger, by "
   "contrast, credits apparent improvement in the PLAIN burden against the fixed pre-tick field, with "
   "no debits &mdash; so it credits natural regeneration, double-counts across actors, and is blind "
   "to transport loss and regenerative-reserve sacrifice.")
@@ -97,14 +102,14 @@ P("All nine guarded-ledger properties hold (part of a 33-test suite):")
 table([
     ["Property", "Result"],
     ["No action &rarr; zero credit", "PASS"],
-    ["Natural regeneration &rarr; not credited (guarded 1.75 vs naive 13.42)", "PASS"],
+    ["Natural regeneration not credited: guarded credit = action-only reduction (1.75); naive inflates to 13.42", "PASS"],
     ["Telescoping: issued credit == actual B_R reduction (no double credit)", "PASS"],
     ["Perfect (lossless) round trip returning to start &rarr; net EBU = 0", "PASS"],
     ["Pointless lossy move (in-band) &rarr; strictly negative EBU", "PASS"],
     ["Damage then exact repair &rarr; net EBU <= 0", "PASS"],
     ["Splitting one transfer into many &rarr; no increase in reward", "PASS"],
     ["Sum of account changes == issued credit - issued debit", "PASS"],
-    ["Physics trajectory identical when the ledger is observational", "PASS"],
+    ["Physics trajectory identical (exact float equality) when the ledger is observational", "PASS"],
 ], colw=[13 * cm, 2.5 * cm])
 
 # ---- 4 ----
