@@ -1,0 +1,24 @@
+
+=== A. Variance over 30 seeds (n=10, 1500 ticks) ===
+  world        model      viable% mean     std     min     max
+  random       gradient           71.7     8.2    53.8    87.3
+  random       safe               85.6    10.1    61.0    98.0
+  clustered    gradient           51.6     0.0    51.6    51.6
+  clustered    safe               51.1     0.0    51.1    51.1
+
+=== B. Dissipation: clustered, safe rule, vary eta (5 seeds) ===
+    eta  viable% mean     std    B_mean  unmet(mean)
+   0.90          47.1     0.0    467.94         7346
+   0.95          51.1     0.0    425.52         5461
+   0.98          54.7     0.0    395.79         4442
+   1.00          57.3     0.0    381.57         4261
+
+=== C. Myopia: clustered, horizon rule, vary H (radius=2, 3 seeds, n=8) ===
+    H  viable% mean     std    B_mean  unmet(mean)
+    1          54.0     0.0    124.08         1028
+    3          62.2     0.0    101.21         1501
+   10          80.1     0.0    143.02         2524
+   30          78.2     0.0    161.99         2771
+  H=10, radius=4:  viable% mean 80.1
+
+Figure written: figures/audit.png

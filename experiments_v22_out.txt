@@ -1,0 +1,32 @@
+
+=== Topology x model  (n=10, 2000 ticks, supply_ratio=2.0, kappa=0.02) ===
+  topology     model      viable%    B_mean  transp.loss      unmet        regime
+  checkerboard none          50.0  1040.000          0.0    39598.6             -
+  checkerboard gradient      94.6     0.330       2581.6        0.0   homeostatic
+  checkerboard safe          99.4     0.004       2693.9        0.0   homeostatic
+  random       none          47.0  1073.600          0.0    41974.5             -
+  random       gradient      63.7   199.996      10808.2     1247.7       deficit
+  random       safe          81.5     9.812       4603.7        0.0       deficit
+  clustered    none          49.0  1051.200          0.0    40390.6             -
+  clustered    gradient      51.6   550.346       9200.9    14762.4       deficit
+  clustered    safe          51.0   427.538       7951.9     7331.6       deficit
+
+=== Grid-size scan  (checkerboard, safe, supply_ratio=2.0, kappa=0.02) ===
+    n  cells  viable%    B_mean        regime
+    6     36     99.5     0.001   homeostatic
+   10    100     99.4     0.004   homeostatic
+   14    196     99.5     0.006   homeostatic
+
+=== Supply shock  (inflow=0 for ticks 400..600), recovery of viable%% ===
+  none       min viable during shock =   0.0%   recovery to 90% : did not recover
+  gradient   min viable during shock =   0.0%   recovery to 90% : tick 671
+  safe       min viable during shock =   0.0%   recovery to 90% : tick 632
+
+=== Phase map  (safe model, checkerboard, eta=0.95, M=0.6) ===
+  kappa=0.005 | 1.0:D  1.4:E  1.8:E  2.2:E  2.6:E  3.0:E
+  kappa=0.010 | 1.0:D  1.4:H  1.8:E  2.2:E  2.6:E  3.0:E
+  kappa=0.020 | 1.0:D  1.4:D  1.8:H  2.2:H  2.6:E  3.0:E
+  kappa=0.035 | 1.0:D  1.4:D  1.8:D  2.2:H  2.6:H  3.0:H
+  kappa=0.050 | 1.0:D  1.4:D  1.8:D  2.2:D  2.6:H  3.0:H
+
+Figures written: figures/shock_recovery.png, figures/phase_map.png

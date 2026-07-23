@@ -1,0 +1,16 @@
+ran gradient
+ran safe
+ran horizon H=3
+ran horizon H=10
+ran horizon H=30
+
+=== V2.3 regeneration: does immediate gain destroy future capacity? ===
+model         viable%(end) viable%(2nd half)  src stock  dead src     unmet   transp     disc.B  shock rec
+----------------------------------------------------------------------------------------------------------
+gradient             100.0             100.0      585.8    0/32           0     1041    65880.5   tick 501
+safe                 100.0             100.0      587.1    0/32           0     1051    65352.2   tick 501
+horizon H=3          100.0             100.0      584.7    0/32           0     1048    63539.2   tick 501
+horizon H=10           0.0              19.2        0.0   32/32        6658      711   224105.4   tick 501
+horizon H=30          37.5              48.8      132.8   24/32        4557      886   165333.0   tick 501
+
+Figures: figures/v23_src_stock.png, figures/v23_viable.png
