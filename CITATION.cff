@@ -8,13 +8,16 @@ abstract: >-
   (logistic/Allee/finite sources), protective harvest rules, and an EBU accounting layer
   whose guarded ledger (live-state causal credit against a threshold-aware burden, with
   transport and irreversible-extraction debits) closes gaming attacks that a naive ledger
-  admits, without altering the underlying physics.
+  admits, without altering the underlying physics. Version 2.7 adds a mathematical
+  foundation note (no engine change): the local actor law is derived as gradient flow
+  of a state functional under a dissipation potential, with a continuous-time
+  energy-dissipation (Lyapunov) theorem and numerical regression validation.
 authors:
   - family-names: Grzyb
     given-names: Konrad
 repository-code: "https://github.com/konrazem/ebu"
 license: MIT
-version: "2.5.0"
+version: "2.7.0"
 date-released: "2026-07-24"
 keywords:
   - homeostasis
@@ -22,3 +25,5 @@ keywords:
   - complex systems
   - regeneration
   - Allee effect
+  - Lyapunov function
+  - gradient flow

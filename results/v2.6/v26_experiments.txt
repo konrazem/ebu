@@ -1,0 +1,33 @@
+=== (A) Five policies on the red-team world (identical initial state) ===
+  policy                      viable%     B_R  dead  stock  net EBU
+  1 physics / no EBU             11.1    77.8     0    8.6     0.00
+  2 naive greedy adversary       11.1    88.9     0   12.5    15.13
+  3 guarded greedy adversary     11.1    71.1     0    9.0    21.21
+  4 random adversary             22.2   206.2     1    0.0  -126.69
+  5 automated guarded (beam)     11.1    78.2     0    8.9    13.82
+  (beam explored 22743 states)
+
+=== (B) Red-team search for a PROFITABLE HARMFUL sequence ===
+  params: depth=10 width=40 tail=20 quants=(0.5, 1.0) coalition=[0, 1]
+  naive   : EXPLOIT FOUND  | net EBU=+15.35  persistent_harm=True  mean tail-harm(B_R)=+102.91  explored=3809  0.1s
+  guarded : no exploit found  | net EBU=+0.91  persistent_harm=False  mean tail-harm(B_R)=-5.47  explored=10971  0.2s
+  naive positive control PASSED (naive rediscovers a known exploit)
+
+=== (C) Randomized Allee layouts: guarded greedy adversary vs PAIRED no-action ===
+  12 seeds (5x5), attack horizon 30 ticks, persistence tail 20 ticks
+  layout masks pairwise distinct: True (12/12 unique)
+  net guarded EBU:            mean=156.79 sd=58.82 min=89.17 max=263.54
+  final viability %:          mean=80.33 sd=23.29 min=20.00 max=100.00
+  harm@30 (B_R vs no-act):  mean=-241.09 sd=89.96 min=-302.82 max=40.74   (positive => worse than doing nothing)
+  positive-reward harmful layouts (net>0 AND harm>1.0): 1/12
+  CONFIRMED persistent-harm guarded exploits (full definition): 1/12
+    seed 0: net=+260.13  harm@30=+40.74  dead@30=4/5  mean tail-harm=+309.93  dead@end=5/5  viable@end=0%
+
+Figures: figures/v26_policies.png, figures/v26_random.png
+
+SUMMARY:
+  naive positive control: PASSED
+  hand-built guarded red-team (B): no exploit found
+  randomized guarded study (C): 1 CONFIRMED persistent-harm exploit(s) out of 12 layouts
+  => CONCLUSION: the hand-built search found no failure, but the corrected randomized
+     study found at least one PROFITABLE PERSISTENT-HARM guarded trajectory.
