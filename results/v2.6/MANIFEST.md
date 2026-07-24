@@ -7,7 +7,7 @@
 | Baseline commit (`main`, frozen physics + V2.5 ledger) | `8755d697ce1abe789af3d240eb89833adcb89ad5` |
 | Baseline tag | `v2.5.0` |
 | Branch | `v2.6-adversary` |
-| Branch commit (this study) | `31e32f9d25d494e52a9f397ef3fd8353d89598b9` |
+| Branch commit (this study) | `a6be311fc707f419d33bc13170f70038d2a2a326` |
 | Python | 3.14.2 |
 | Dependencies (figures/PDF only; core is stdlib) | numpy, matplotlib, pillow, reportlab (`requirements.txt`) |
 
