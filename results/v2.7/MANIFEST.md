@@ -95,3 +95,17 @@ harness detail, not a count of theorems; a passing run validates tested points o
   so isolating them would require a force-push, which was not performed).
 - **Not tagged.** Per instruction, no git tag is created at this stage.
 - `CITATION.cff` version field bumped `2.5.0 → 2.7.0` (git tag withheld).
+
+## Post-stage corrections
+
+- **`c4f9f90a250c53bfb29e4672d56603cd6b0ba917` — Corollary 7.2 boundedness.** Replaced
+  the invalid "trajectories are bounded (`x ∈ [0,K]`)" assertion (which contradicted
+  Theorem 7.1's exclusion of clipping/projection) with a coercive sublevel-set argument:
+  assume `u_i = 0` and `V_state` coercive (strict positive per-cell weights given only as
+  a sufficient example) ⇒ the trajectory stays in a compact positively-invariant sublevel
+  set `Ω₀` ⇒ locally-Lipschitz field + compact invariant set gives global forward
+  existence ⇒ LaSalle convergence to the largest invariant subset of `{J_e = 0 ∀e}`.
+  Theorem 7.1 correspondingly softened to *locally* Lipschitz (regeneration terms are
+  polynomial), with global existence deferred to Corollary 7.2. Retained non-results: no
+  `V_state = 0`, no complete homeostasis, no unique equilibrium, no `[0,K]` invariance.
+  PDF regenerated (5 pages). No physics/EBU/test/experiment change.
