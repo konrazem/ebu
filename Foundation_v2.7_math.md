@@ -436,8 +436,12 @@ these are the specifications a corrected engine would close.
 > (Model C, C.1); `c0 = 0`; fixed graph; local lossy continuity with efficiency
 > `η_e ∈ (0,1]`; Onsager flux `J_e = M_e[f_e − θ_e]₊` with `f_e = μ_i − η_e μ_j`.
 > Each penalty is `C¹`, so `V_state ∈ C¹` and `μ = ∇V_state` is continuous; the RHS of
-> (C.1) is Lipschitz, so solutions are unique and `C¹`. Writing the local drive
-> `u_i(x) = s_i + g_i(x_i) − d_i − λ_i − κ_i x_i`, then along any solution
+> (C.1) is **locally Lipschitz** (the regeneration terms `g_i` are polynomial, hence
+> not globally Lipschitz on `ℝⁿ`), so a unique `C¹` solution exists locally in time.
+> Global forward existence is not asserted here in general; for the undriven case it is
+> established in Corollary 7.2 via a compact positively-invariant sublevel set. Writing
+> the local drive `u_i(x) = s_i + g_i(x_i) − d_i − λ_i − κ_i x_i`, then along any solution
+> (on its interval of existence)
 >
 > ```
 > dV_state/dt = Σ_i μ_i u_i − Σ_e [ J_e²/M_e + θ_e J_e ],                (7.1)
@@ -468,20 +472,40 @@ On an active edge `J_e = M_e(f_e − θ_e) > 0`, hence `f_e = J_e/M_e + θ_e` an
 `f_e J_e = J_e²/M_e + θ_e J_e`; on an inactive edge both sides vanish. Summing gives
 (7.1). As `J_e ≥ 0`, `θ_e ≥ 0`, the dissipation term is `≥ 0`, giving (7.2). ∎
 
-> **Corollary 7.2 (undriven case — LaSalle, stated precisely).** If `u_i ≡ 0` (closed
-> system: no supply, demand, regen, leak) and trajectories are bounded (they are:
-> `x ∈ [0,K]`), then `V_state` is non-increasing (`dV_state/dt = −Σ_e[J_e²/M_e +
-> θ_e J_e] ≤ 0`). By LaSalle's invariance principle the flow converges to the **largest
-> invariant subset** of the zero-dissipation set
-> `Z = { x : J_e(x) = 0 ∀e } = { x : f_e(x) ≤ θ_e ∀e }`. With `u ≡ 0`, every point of
-> `Z` is already an equilibrium, so `Z` is invariant and the limit set lies in `Z`.
+> **Corollary 7.2 (undriven case — LaSalle via a coercive sublevel set).** Assume
+> `u_i ≡ 0` (closed system: no supply, demand, regeneration, leak) and that `V_state`
+> is **coercive** on the unconstrained state space, i.e.
+> `‖x‖ → ∞ ⟹ V_state(x) → ∞`.
 >
-> This claims **only** convergence to `Z`. It does **not** assert `V_state = 0`,
-> complete homeostasis, a single equilibrium, or which point of `Z` is reached: `Z` is
-> generally a continuum of force-balanced states (`|f_e| ≤ θ_e`), the reached point
-> depends on initial conditions, and `V_state` need not vanish there. Any such stronger
-> conclusion requires a separate argument (e.g. strict convexity or a transversality
-> condition), not proved here.
+> *Coercivity is an explicit assumption, not a property of the model.* The penalty
+> weights `α_i, β_i` (and `χ_i`) may be zero for some cells, in which case `V_state` is
+> flat in some direction and not coercive. A **sufficient** condition for the present
+> piecewise-quadratic `V_state` is that every cell has strictly positive lower- and
+> upper-deviation weights, `α_i > 0` and `β_i > 0` for all `i` (each coordinate is then
+> penalised quadratically in both directions, forcing `V_state → ∞` with `‖x‖`). This
+> is offered only as an example; we do not silently impose it on the engine and instead
+> assume coercivity directly.
+>
+> Under these assumptions:
+> - By Theorem 7.1, `dV_state/dt = −Σ_e[J_e²/M_e + θ_e J_e] ≤ 0`.
+> - Hence `V_state(x(t)) ≤ V_state(x(0))` for all `t ≥ 0`, so the trajectory stays in
+>   the sublevel set `Ω₀ = { x : V_state(x) ≤ V_state(x(0)) }`.
+> - `V_state` is continuous and coercive, so `Ω₀` is **compact**; and because `V_state`
+>   is non-increasing along the flow, `Ω₀` is **positively invariant**.
+> - The vector field is **locally Lipschitz** and the solution remains in the compact
+>   `Ω₀`, so it cannot escape in finite time: the forward solution extends **globally**
+>   in `t`.
+> - LaSalle's invariance principle then gives convergence toward the **largest invariant
+>   subset** of the zero-dissipation set
+>   `Z = { x : J_e(x) = 0 ∀e } = { x : f_e(x) ≤ θ_e ∀e }`. With `u ≡ 0` every point of
+>   `Z` is an equilibrium, so `Z` is invariant.
+>
+> **Retained limitations.** This does **not** prove `V_state = 0`, **not** complete
+> homeostasis, **not** a unique equilibrium, and **not** that the physical interval
+> `[0,K]` is positively invariant — Theorem 7.1 excludes clipping/projection at `0` and
+> `K`, so invariance of `[0,K]` is not established by the unconstrained flow. The reached
+> point of `Z` may depend on the initial condition. (Boundedness here comes from the
+> coercive sublevel set `Ω₀`, **not** from the physical bounds.)
 
 *Numerical validation (Theorem 7.1).* Fine-`dt` integration (`dt = 10⁻⁴`) of a driven
 3-cell path matched (7.1) to `O(dt)` (max `|numeric − analytic dV/dt| = 6.2×10⁻⁵`).
