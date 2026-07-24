@@ -31,7 +31,8 @@ strict conservation via an audited ledger). Homeostasis is never imposed.
 
 ## Version history
 
-The model was hardened across four generations, each building on the last:
+The model was hardened across five generations, each building on the last
+(V2.1 is a paper-only milestone — first long-horizon evidence, no engine change):
 
 | Version | File | What it adds |
 |---------|------|--------------|
@@ -40,6 +41,70 @@ The model was hardened across four generations, each building on the last:
 | **V2.3** | [ebu_v23.py](ebu_v23.py) | **Regeneration**: external-flow, logistic, Allee, and finite sources; an `H`-horizon actor that declines an action helping now but harming a regenerative source later. |
 | **V2.4** | [ebu_v24.py](ebu_v24.py) | Six **protective harvest rules** on a closed Allee economy, separating genuine ecological foresight from an artifact of the accept/reject architecture. |
 | **V2.5** | [ebu_v25.py](ebu_v25.py) | An **EBU accounting/incentive layer** over the frozen V2.4 physics: naive vs guarded ledgers. Guarded credit is live-state, telescoping, and debits transport loss and irreversible extraction — it closes enumerated gaming attacks (round-trips, splitting, claiming regeneration, reserve sacrifice) and keeps adversaries at 100% viability, while a naive ledger lets an adversary earn ~730k credit while collapsing every source. |
+
+## What each version means
+
+A one-paragraph plain-language summary per generation. In short:
+**V2.0–V2.4 built the experimental world; V2.5 added the first working EBU
+accounting mechanism inside that world.** V2.5 is more than the world, but it is
+not yet an EBU *economy* — actors earn balances; they do not yet spend them.
+
+- **V2.0 — the physics.** One scalar field on a lattice with hard laws (locality,
+  continuity, bounded state, non-negative dissipation, *no enforced homeostasis*).
+  Actors respond to a local burden gradient. Survival is never guaranteed by the
+  engine; it must emerge — or not.
+- **V2.1 — first evidence** *(paper only, engine unchanged)*. With a
+  self-regulating sink (proportional leakage), purely local rules hold ~95% of
+  cells viable out to 50,000 ticks, but only inside a bounded supply window;
+  outside it the field collapses. Aggregate burden can mask a slow death — so
+  per-cell viability and long horizons became mandatory diagnostics.
+- **V2.2 — trust the accounting.** Every tick reconciles
+  `dX = S + G − D − Λ − loss − spill` (asserted, not assumed), and a transfer
+  executes only if it provably lowers burden (line-searched size). Result: the
+  safe rule can never make the field worse within a tick.
+- **V2.3 — regeneration and a surprise.** Sources can regrow (logistic), fail
+  below a critical threshold (Allee), or be finite. The naive H-horizon actor —
+  expected to protect regeneration — instead destroyed it after a shock (32/32
+  sources dead at H=10), because its isolated-action counterfactual over-credits
+  harvest as H grows.
+- **V2.4 — the control that resolved it.** Optimizing the harvest *quantity* over
+  the horizon (`q_H*`) is sustainable, so the V2.3 collapse was an artifact of
+  gating an immediately-optimized quantity, not of foresight itself. The cheap
+  **threshold-aware burden** (a penalty for dipping toward the Allee reserve)
+  matches the ~91–100× more expensive horizon search: preserves every source *and*
+  serves 100% of demand. This became the frozen physical baseline (`v2.4.0`).
+- **V2.5 — the EBU wind tunnel.** On top of the untouched baseline, actors earn
+  EBU for verified, live-state burden reduction and are debited for harm,
+  transport loss, and irreversible extraction. A **naive** ledger is demonstrably
+  exploitable (an adversary earns ~730,000 EBU while killing every source); the
+  **guarded** ledger closes or bounds every hand-written attack, and maximizing it
+  coincides with real homeostatic work. The physics trajectory is exactly
+  identical when the ledger only observes.
+
+### Where this sits on the road to an EBU economy
+
+| Layer | Status |
+|-------|--------|
+| Physical simulated world (field, sources, transport, storage) | Implemented (V2.0–V2.2) |
+| Homeostatic movement rules | Implemented (V2.2–V2.4) |
+| Regenerative / Allee / finite sources | Implemented (V2.3) |
+| Conservation and loss accounting | Implemented (V2.2) |
+| Basic EBU rewards and penalties | Implemented (V2.5) |
+| Adversarial reward-gaming tests | Initial hand-written suite (V2.5) |
+| Automated/learning adversaries, collusion, laundering | Not implemented (planned V2.6) |
+| Exchange between actors (paying, transferring EBU) | Not implemented |
+| Prices, saving, borrowing, investment | Not implemented |
+| Ownership, production, goods | Not implemented |
+| Complete monetary replacement | Far in the future |
+
+```
+physical world → homeostatic control → [ EBU accounting — we are here ] → EBU exchange → experimental economy
+```
+
+We have built the laboratory and the first measuring instrument — not yet the
+monetary system. Before any exchange layer, the wind tunnel should be hardened
+with automated adversaries, collusion, multi-step attacks, and long-term
+manipulation; only if guarded EBU survives that does transferable EBU make sense.
 
 ## Key finding (V2.4)
 
