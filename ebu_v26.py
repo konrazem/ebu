@@ -62,32 +62,39 @@ def forced_tick(g: Grid, actors, st: State, actions, mode, delta=3.0, chi=1.0,
                 lam_L=0.1, lam_F=1.0):
     """Apply ONE physical tick: natural update, then the given actor actions (each
     feasibility-clipped), with the frozen V2.5 accounting. Returns (new State, record).
-    `record` includes the conservation flow so tests can verify dX exactly."""
-    g.x = list(st.x)                              # natural_update_ledger / reserve_R read g.x
-    R = reserve_R(g, delta)
-    pretick_plainB = b_plain(g, g.x)
-    x0, flow = natural_update_ledger(g)           # does not mutate g.x
-    xa = list(x0)
-    cur_plainB = b_plain(g, xa)
-    bal = list(st.bal)
-    ic, idb, tc, td, loss = st.issued_c, st.issued_d, 0.0, 0.0, 0.0
-    for (ai, i, j, q) in actions:
-        a = actors[ai]
-        qf = feasible_q(g, a, i, j, xa, q)
-        if qf <= 1e-12:
-            continue
-        credit, debit, xi1, xj1, l = _action_effect(
-            mode, g, i, j, qf, a.eta, a.c0, xa, R, chi, cur_plainB, pretick_plainB, lam_L, lam_F)
-        cur_plainB += (local_penalty(g, i, xi1) - local_penalty(g, i, xa[i])
-                       + local_penalty(g, j, xj1) - local_penalty(g, j, xa[j]))
-        xa[i], xa[j] = xi1, xj1
-        bal[ai] += credit - debit
-        ic += credit; idb += debit; tc += credit; td += debit; loss += l
-    flow.transport_loss += loss
-    new = State(xa, bal, ic, idb)
-    rec = dict(credit=tc, debit=td, loss=loss, flow=flow,
-               dX=sum(xa) - sum(st.x))
-    return new, rec
+    `record` includes the conservation flow so tests can verify dX exactly.
+
+    SIDE-EFFECT-FREE on the caller's grid: g.x is used transiently (natural_update_ledger
+    and reserve_R read it) and RESTORED before returning, so evaluating a trajectory
+    never mutates the caller's world."""
+    saved = g.x
+    try:
+        g.x = list(st.x)                          # natural_update_ledger / reserve_R read g.x
+        R = reserve_R(g, delta)
+        pretick_plainB = b_plain(g, g.x)
+        x0, flow = natural_update_ledger(g)
+        xa = list(x0)
+        cur_plainB = b_plain(g, xa)
+        bal = list(st.bal)
+        ic, idb, tc, td, loss = st.issued_c, st.issued_d, 0.0, 0.0, 0.0
+        for (ai, i, j, q) in actions:
+            a = actors[ai]
+            qf = feasible_q(g, a, i, j, xa, q)
+            if qf <= 1e-12:
+                continue
+            credit, debit, xi1, xj1, l = _action_effect(
+                mode, g, i, j, qf, a.eta, a.c0, xa, R, chi, cur_plainB, pretick_plainB, lam_L, lam_F)
+            cur_plainB += (local_penalty(g, i, xi1) - local_penalty(g, i, xa[i])
+                           + local_penalty(g, j, xj1) - local_penalty(g, j, xa[j]))
+            xa[i], xa[j] = xi1, xj1
+            bal[ai] += credit - debit
+            ic += credit; idb += debit; tc += credit; td += debit; loss += l
+        flow.transport_loss += loss
+        new = State(xa, bal, ic, idb)
+        rec = dict(credit=tc, debit=td, loss=loss, flow=flow, dX=sum(xa) - sum(st.x))
+        return new, rec
+    finally:
+        g.x = saved                               # restore: no side effect on caller's grid
 
 
 # ---------------------------------------------------------------- per-tick policies

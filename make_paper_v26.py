@@ -60,12 +60,14 @@ gap(4)
 P("<b>Can an automated actor or coalition find action sequences that earn positive cumulative "
   "guarded EBU while causing persistent physical harm?</b>")
 gap(8)
-P("<b>Result.</b> Within the declared search space and budget, <b>no profitable persistent-harm "
-  "exploit against the guarded ledger was found</b>. The search is strong enough to judge this: on "
-  "the same fixture it <b>rediscovers a naive-ledger exploit</b> (positive control). A separate, "
-  "honest caveat: the myopic <i>greedy</i> guarded adversary left the field worse than doing nothing "
-  "on 4 of 12 random layouts &mdash; a candidate-exploit signal (persistence unverified) that the "
-  "next stage should red-team directly.")
+P("<b>Result.</b> The hand-built red-team fixture found no guarded failure and it rediscovers a "
+  "naive-ledger exploit (positive control passed). But a <b>corrected, properly paired randomized "
+  "study found a CONFIRMED profitable persistent-harm exploit against the guarded ledger</b>: on one "
+  "of twelve random layouts (seed 0) the guarded greedy adversary earns positive net EBU (+260) yet "
+  "drives every regenerative source below its Allee threshold; with a 20-tick no-action persistence "
+  "tail all five sources die and viability reaches 0%. Guarded EBU therefore does <b>not</b> "
+  "guarantee incentive-alignment on every topology. The ledger is reported unchanged (not patched); "
+  "a corrected variant is left to the next stage.")
 S.append(PageBreak())
 
 # ---- 1 ----
@@ -83,9 +85,10 @@ P("A tick harness applies an arbitrary list of feasibility-clipped actor actions
   "Every tick also checks the conservation identity dX = S + G - D - Lambda - loss - spill.")
 h2("2.2 Deterministic beam search")
 P("A beam search plans multi-tick, multi-actor sequences. Per tick each coalition actor chooses from "
-  "a menu {rest} + transfers to each admissible neighbour at several quantities (small splits and "
-  "full); the joint action is the product over the coalition; the beam keeps the top states by the "
-  "objective. The action space thus spans neighbouring transfers, small splits, repeated/multi-tick "
+  "a menu {rest} + transfers to each admissible neighbour at exactly <b>two</b> transfer quantities "
+  "(0.5 and 1.0 of q_max); the joint action is the product over the coalition; the search uses "
+  "<b>depth 10, width 40</b>, and the exploit test scans only the <b>final-depth beam states</b>. "
+  "The action space thus spans neighbouring transfers, small splits, repeated/multi-tick "
   "actions, relays, cyclic/back-and-forth moves, coordinated multi-actor moves, and harvesting near "
   "or below regenerative reserves. The search is deterministic and consumes no randomness (tested), "
   "so it cannot peek at future events.")
@@ -109,13 +112,15 @@ P("Reported physical harm variables: final and post-shock viability, sustained r
 
 # ---- 3 ----
 h1("3. Tests")
-P("45 tests pass: the 33 prior tests (verified inline) plus 12 new V2.6 behavior tests &mdash; "
+P("48 tests pass: the 33 prior tests (verified inline) plus 15 new V2.6 behavior tests &mdash; "
   "observational trajectory exactly unchanged; conservation during multi-action sequences; search "
-  "reproducibility; genuinely distinct random layouts; rediscovery of a naive exploit; coalition "
-  "totals = issued credit - debit; a lossless restoring multi-actor cycle earns no positive EBU; "
-  "splitting cannot increase reward on the same trajectory; the exploit classifier requires BOTH "
-  "positive net AND persistent harm; the search uses no future randomness; physics-only identical to "
-  "the frozen baseline.")
+  "reproducibility; genuinely distinct random layouts; all 12 study masks pairwise distinct; the "
+  "baseline/forced-tick harness is side-effect-free on the caller's grid (the fix for the Study C "
+  "pairing bug); a reproducible seed-0 guarded-exploit regression fixture; rediscovery of a naive "
+  "exploit; coalition totals = issued credit - debit; a lossless restoring multi-actor cycle earns no "
+  "positive EBU; splitting cannot increase reward on the same trajectory; the exploit classifier "
+  "requires BOTH positive net AND persistent harm; the search uses no future randomness; physics-only "
+  "identical to the frozen baseline.")
 
 # ---- 4 ----
 h1("4. Results")
@@ -146,59 +151,72 @@ tag("<i>Experimental result:</i> the search rediscovers a naive exploit &mdash; 
     "through the whole tail. Under the guarded ledger the same search finds no profitable persistent "
     "harm: the best net-positive sequence it finds actually leaves the field better than no action "
     "(mean tail-harm -5.47).")
-tag("<i>Interpretation:</i> the positive control confirms the search is strong enough to expose a "
-    "known ledger weakness, so its failure to break the guarded ledger on this fixture is meaningful "
-    "&mdash; but see the limitations before generalising.")
+tag("<i>Interpretation:</i> the naive positive control passed (the search reproduces a known ledger "
+    "weakness). Its failure to break the guarded ledger on this ONE small fixture is therefore "
+    "meaningful but narrow &mdash; and is contradicted by the randomized study below.")
 
-h2("4.3 (C) Randomized-layout topology study")
-P("Guarded <i>greedy</i> adversary vs a paired no-action baseline, on 12 genuinely distinct random "
-  "5x5 Allee layouts (30 ticks each). Harm = final B_R(attack) - B_R(no-action); positive means the "
-  "adversary left the field worse than doing nothing.")
+h2("4.3 (C) Randomized-layout topology study (corrected, properly paired)")
+P("<b>Correction.</b> An earlier version of this study was mis-paired: the no-action baseline "
+  "evaluation mutated the shared grid, so the guarded run began from the evolved state rather than "
+  "the initial layout. The harness is now side-effect-free and baseline vs guarded run on separate "
+  "but identical worlds per seed (both verified by tests). The numbers below are from the corrected "
+  "run. Guarded <i>greedy</i> adversary vs a paired no-action baseline, 12 genuinely distinct random "
+  "5x5 Allee layouts, 30-tick attack + 20-tick persistence tail. Harm@30 = B_R(attack@30) - "
+  "B_R(no-action@30); positive means worse than doing nothing.")
 table([
     ["Metric", "mean", "sd", "min", "max"],
-    ["coalition net guarded EBU", "530.24", "130.47", "387.41", "819.94"],
-    ["final viability %", "58.67", "32.63", "0.00", "100.00"],
-    ["harm: B_R(attack) - B_R(no-action)", "-77.02", "249.36", "-271.13", "+592.15"],
+    ["coalition net guarded EBU", "156.79", "58.82", "89.17", "263.54"],
+    ["final viability %", "80.33", "23.29", "20.00", "100.00"],
+    ["harm@30: B_R(attack) - B_R(no-action)", "-241.09", "89.96", "-302.82", "+40.74"],
 ], colw=[7.0 * cm, 2.3 * cm, 2.3 * cm, 2.0 * cm, 2.0 * cm])
-tag("<i>Experimental result:</i> on average the greedy guarded adversary is net-helpful (mean harm "
-    "-77, i.e. better than no action), BUT on <b>4 of 12</b> layouts it is net-harmful (harm up to "
-    "+592) while net EBU is positive.")
-tag("<i>Interpretation / caveat:</i> this is a candidate-exploit signal for the MYOPIC greedy policy "
-    "&mdash; not a confirmed exploit, because persistence was not checked with the tail window here. "
-    "The red-team in 4.2 tested only the small hand-built fixture, not these layouts.")
+tag("<i>Experimental result:</i> on average the greedy guarded adversary is strongly net-helpful "
+    "(mean harm -241, i.e. much better than no action). But 1 of 12 layouts is positive-reward "
+    "harmful, and applying the FULL persistence definition confirms it is a genuine exploit.")
+tag("<i>Confirmed guarded exploit (seed 0):</i> net EBU +260.13; harm@30 +40.74; 4 of 5 sources "
+    "already dead at tick 30; with the 20-tick no-action persistence tail the sequence satisfies the "
+    "persistent-harm predicate (mean tail-harm +309.93); all 5 sources eventually die and viability "
+    "reaches 0%. This is a profitable trajectory that leaves the world persistently, irreversibly "
+    "worse than doing nothing.")
 figure("figures/v26_random.png",
-       "Figure 1. Guarded greedy adversary across 12 random layouts. Most points sit below zero "
-       "(better than no action), but four sit above it (worse than no action) with positive net EBU.")
+       "Figure 1. Corrected, paired study. Eleven layouts sit below zero (guarded adversary better "
+       "than no action); the single red point (seed 0) is a confirmed profitable persistent-harm "
+       "exploit (positive net EBU, worse than no action, all sources die under the persistence tail).")
 figure("figures/v26_policies.png",
        "Figure 2. Five policies on the red-team fixture: viability (green) and coalition net EBU "
        "(purple). Only the random adversary worsens the field, and it loses EBU.")
 
 # ---- 5 ----
 h1("5. Verdict")
-P("<b>No profitable persistent-harm exploit against the guarded ledger was found within the declared "
-  "search space and computational budget.</b> This is a falsification result, not a security proof: "
-  "we do NOT claim guarded EBU is secure or that gaming is impossible. The claim is bounded by the "
-  "fixture, the action menu, the beam depth/width, and the coalition size actually searched.")
-P("<b>The strongest honest caveat</b> is finding (C): the myopic greedy guarded adversary left the "
-  "field worse than no action on 4 of 12 random layouts while earning positive EBU. The proper "
-  "exploit definition (persistence window) was not applied there, so these are signals, not "
-  "confirmed exploits &mdash; but they show the guarded incentive does not provably align with health "
-  "on every topology, and they define the top priority for the next stage.")
-P("<b>Hypothesis (to test next):</b> the greedy harm arises because guarded credit is per-action and "
-  "local; a myopic actor can take locally-credited actions whose combined multi-tick effect is worse "
-  "than inaction. A lookahead or a persistence-aware debit may close it.")
+P("<b>The guarded ledger FAILED under the corrected randomized study.</b> The hand-built red-team "
+  "fixture (B) found no guarded failure and the naive positive control passed, so the search is able "
+  "to expose a known weakness; but that hand-built negative is narrow. When the properly paired "
+  "randomized study (C) applied the full exploit definition &mdash; positive net EBU AND persistent "
+  "physical harm vs a paired no-action baseline &mdash; it found <b>one confirmed profitable "
+  "persistent-harm guarded trajectory</b> (seed 0): the adversary earns +260 EBU while driving every "
+  "regenerative source to death and viability to 0%. So the corrected result overturns the earlier "
+  "(mis-paired) negative: <b>guarded EBU is exploitable on at least one topology.</b>")
+P("<b>The ledger is reported unchanged.</b> Per the review discipline, the failing trajectory is "
+  "preserved as a regression fixture and reported here; the guarded ledger was NOT modified to make "
+  "the exploit disappear. Any correction belongs in a separate, clearly-labelled guarded variant, "
+  "compared against this same fixture.")
+P("<b>Mechanism / hypothesis:</b> guarded credit is per-action and local, so a myopic greedy actor "
+  "can chain locally-credited transfers whose combined multi-tick effect drives sources below the "
+  "Allee threshold &mdash; each step looks locally profitable and roughly burden-neutral, but the "
+  "cumulative trajectory is irreversibly worse than inaction. A lookahead objective or a "
+  "persistence-aware / stock-below-reserve debit are the candidate corrections to test next.")
 
 # ---- 6 ----
 h1("6. Limitations and Next Steps")
-P("1. The red-team searched one small hand-built fixture and a 2-actor coalition; it did not "
-  "red-team the harmful random layouts from (C).<br/>"
-  "2. Beam search is incomplete; a negative result reflects the searched space, not all sequences.<br/>"
-  "3. Harm in (C) is a single-point comparison without a persistence window.<br/>"
+P("1. Study (C) used a 5x5 world with all-cell actors and a single greedy policy; the confirmed "
+  "exploit was found by that policy, not by a full beam over (C).<br/>"
+  "2. Beam search is incomplete; a negative result (as on fixture B) reflects the searched space, not "
+  "all sequences.<br/>"
+  "3. Only 12 seeds were evaluated; the true exploit rate is estimated coarsely (1/12 here).<br/>"
   "4. Coalition size, action-menu granularity, and depth/width were kept small for runtime.<br/>"
-  "<b>Next:</b> apply the full exploit definition (persistence) to the (C) harmful layouts; grow the "
-  "coalition and action menu; add a learning/local-optimiser adversary; and if a guarded exploit is "
-  "confirmed, implement a corrected guarded variant and compare old vs corrected on the same attacks "
-  "and physical baselines, checking the fix does not reward hoarding or starve demand.")
+  "<b>Next:</b> (a) implement a corrected guarded variant (lookahead or persistence-aware debit) as a "
+  "separate ledger and compare old-vs-corrected on the seed-0 fixture and the physical baselines, "
+  "checking the fix does not reward hoarding or starve demand; (b) run the beam/red-team over the "
+  "randomized layouts, not only the hand-built fixture; (c) add a learning adversary and collusion.")
 gap(6)
 P("<b>Reproducibility.</b> Baseline commit, branch commit, exact commands, Python version, "
   "dependencies, seeds, and all search/experiment parameters are recorded in "

@@ -41,7 +41,7 @@ The model was hardened across five generations, each building on the last
 | **V2.3** | [ebu_v23.py](ebu_v23.py) | **Regeneration**: external-flow, logistic, Allee, and finite sources; an `H`-horizon actor that declines an action helping now but harming a regenerative source later. |
 | **V2.4** | [ebu_v24.py](ebu_v24.py) | Six **protective harvest rules** on a closed Allee economy, separating genuine ecological foresight from an artifact of the accept/reject architecture. |
 | **V2.5** | [ebu_v25.py](ebu_v25.py) | An **EBU accounting/incentive layer** over the frozen V2.4 physics: naive vs guarded ledgers. Guarded credit is live-state, telescoping, and debits transport loss and irreversible extraction — it closes enumerated gaming attacks (round-trips, splitting, claiming regeneration, reserve sacrifice) and keeps adversaries at 100% viability, while a naive ledger lets an adversary earn ~730k credit while collapsing every source. |
-| **V2.6** | [ebu_v26.py](ebu_v26.py) | **Automated adversarial testing** of the guarded ledger (a falsification study, *not* an economy). A deterministic beam / red-team search hunts for sequences that earn positive net guarded EBU *and* cause persistent physical harm. It rediscovers a naive exploit (positive control) but finds **no profitable persistent-harm exploit against the guarded ledger** within the searched space. Honest caveat: the myopic *greedy* guarded adversary was net-harmful on 4/12 random layouts — a candidate-exploit signal for follow-up. |
+| **V2.6** | [ebu_v26.py](ebu_v26.py) | **Automated adversarial testing** of the guarded ledger (a falsification study, *not* an economy). A deterministic beam / red-team search hunts for sequences that earn positive net guarded EBU *and* cause persistent physical harm. It rediscovers a naive exploit (positive control). A corrected, properly paired randomized study then found **1 of 12 layouts to be a confirmed profitable persistent-harm guarded exploit** (seed 0: +260 EBU while all sources die, viability→0%). **Guarded EBU is exploitable on at least one topology**; the ledger is reported unchanged (not patched) and the trajectory kept as a regression fixture. |
 
 ## What each version means
 
@@ -81,13 +81,17 @@ not yet an EBU *economy* — actors earn balances; they do not yet spend them.
   **guarded** ledger closes or bounds every hand-written attack, and maximizing it
   coincides with real homeostatic work. The physics trajectory is exactly
   identical when the ledger only observes.
-- **V2.6 — hardening the wind tunnel.** A deterministic beam / red-team search
-  automatically hunts for sequences that earn positive net guarded EBU *and* cause
-  persistent physical harm. It rediscovers a naive exploit (positive control), and
-  finds **no profitable persistent-harm exploit against the guarded ledger** within
-  the searched space — a falsification result, *not* a security proof. Caveat: the
-  myopic *greedy* guarded adversary was net-harmful on 4/12 random layouts, the next
-  thing to red-team. Still no economy: actors earn balances, they do not spend them.
+- **V2.6 — hardening the wind tunnel (and a confirmed guarded failure).** A
+  deterministic beam / red-team search hunts for sequences that earn positive net
+  guarded EBU *and* cause persistent physical harm. It rediscovers a naive exploit
+  (positive control passed). The hand-built fixture showed no guarded failure, but a
+  corrected, properly paired randomized study found **1 of 12 layouts to be a
+  confirmed profitable persistent-harm guarded exploit** (seed 0: a greedy adversary
+  earns +260 EBU while every regenerative source dies and viability reaches 0%). So
+  **guarded EBU is exploitable on at least one topology** — a falsification result,
+  not a security proof. The ledger is left unchanged and the failing trajectory kept
+  as a regression fixture; a corrected guarded variant is the next stage. Still no
+  economy: actors earn balances, they do not spend them.
 
 ### Where this sits on the road to an EBU economy
 
@@ -212,8 +216,8 @@ python3 test_v25.py              # V2.5 EBU ledger   (9 tests, needs requirement
 python3 test_v26.py              # V2.6 adversary    (12 tests + reruns the 33 prior)
 ```
 
-Each script prints per-test `PASS` lines and a summary; **45 tests total** (33 prior
-+ 12 new; `test_v26.py` also reruns the 33 prior as its first test). The first two run
+Each script prints per-test `PASS` lines and a summary; **48 tests total** (33 prior
++ 15 new; `test_v26.py` also reruns the 33 prior as its first test). The first two run
 on a bare Python install; `test_v23.py`/`test_v24.py`/`test_v25.py`/`test_v26.py` import `matplotlib`
 via the experiment modules, so install `requirements.txt` first.
 

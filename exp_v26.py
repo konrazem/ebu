@@ -139,37 +139,76 @@ def red_team():
         tag = "EXPLOIT FOUND" if v.is_exploit else "no exploit found"
         print(f"  {mode:8s}: {tag}  | net EBU={v.net_ebu:+.2f}  persistent_harm={v.harm_persistent}  "
               f"mean tail-harm(B_R)={v.harm_margin:+.2f}  explored={expl}  {dt:.1f}s")
-    ctl = "PASS (search strong enough)" if out["naive"].is_exploit else "FAIL (search too weak)"
-    print(f"  positive control (naive rediscovers a known exploit): {ctl}")
+    ctl = "naive positive control PASSED" if out["naive"].is_exploit else "naive positive control FAILED"
+    print(f"  {ctl} (naive rediscovers a known exploit)")
     return out
 
 
-# ---- (C) randomized-layout topology study ----------------------------------
+H_RUN = DEPTH * 3                                   # attack horizon for study C (30 ticks)
+
+
+def studyC_layout(seed):
+    """Run one paired layout. Baseline (no-action) and guarded adversary start from
+    SEPARATE but identical worlds (both from random_allee_world(seed)). For any
+    positive-reward harmful layout, apply the full persistence-window exploit test.
+    Returns a per-seed record."""
+    g_base, actors_b, src, mask = random_allee_world(seed)
+    g_att, actors_a, _, mask2 = random_allee_world(seed)
+    assert mask == mask2 and g_base.x == g_att.x        # identical initial states (paired)
+    init = State(list(g_base.x), [0.0] * len(actors_b))
+    R = reserve_R(g_att, DELTA)
+
+    # paired NO-ACTION baseline over the full horizon (attack + tail), side-effect-free
+    base, _ = baseline_BR_schedule(g_base, actors_b, init, H_RUN + TAIL, "guarded",
+                                   DELTA, CHI, LAM_L, LAM_F)
+
+    # guarded greedy adversary on the independent identical world
+    led = EBULedger(mode="guarded", lam_L=LAM_L, lam_F=LAM_F)
+    for t in range(1, H_RUN + 1):
+        step_v25(g_att, actors_a, led, t, selection="adversarial", delta=DELTA, chi=CHI)
+    m = phys_metrics(g_att, g_att.x, R, CHI, src)
+    net = sum(led.balances)
+    harm_final = m["B_R"] - base[H_RUN - 1]             # B_R(attack@30) - B_R(no-action@30)
+
+    rec = dict(seed=seed, mask=tuple(mask), net=net, harm_final=harm_final,
+               viable=m["viable"], dead=m["dead"], n_src=len(src),
+               harmful=(net > 0.0 and harm_final > MARGIN), exploit=False,
+               tail_margin=None)
+    if rec["harmful"]:
+        # FULL persistence test: attackers rest for TAIL ticks; compare to paired baseline tail
+        st_final = State(list(g_att.x), list(led.balances))
+        atail, s_end = persistence_tail(g_att, actors_a, st_final, "guarded", TAIL,
+                                        DELTA, CHI, LAM_L, LAM_F)
+        v = classify_exploit(net, atail, base[H_RUN:H_RUN + TAIL], MARGIN)
+        mend = phys_metrics(g_att, s_end.x, R, CHI, src)
+        rec.update(exploit=v.is_exploit, tail_margin=v.harm_margin,
+                   dead_end=mend["dead"], viable_end=mend["viable"])
+    return rec
+
+
 def randomized_study():
-    print(f"\n=== (C) Randomized Allee layouts: guarded greedy adversary vs no-action ===")
-    print(f"  {len(RAND_SEEDS)} genuinely distinct seeds (5x5), {DEPTH*3} ticks each")
-    harms, nets, viables = [], [], []
-    for seed in RAND_SEEDS:
-        g, actors, src, _ = random_allee_world(seed)
-        R = reserve_R(g, DELTA)
-        init = State(list(g.x), [0.0] * len(actors))
-        base, _ = baseline_BR_schedule(g, actors, init, DEPTH * 3, "guarded",
-                                       DELTA, CHI, LAM_L, LAM_F)
-        led = EBULedger(mode="guarded", lam_L=LAM_L, lam_F=LAM_F)
-        gg = g
-        for t in range(1, DEPTH * 3 + 1):
-            step_v25(gg, actors, led, t, selection="adversarial", delta=DELTA, chi=CHI)
-        m = phys_metrics(gg, gg.x, R, CHI, src)
-        harms.append(m["B_R"] - base[-1])           # attack final B_R minus no-action final
-        nets.append(sum(led.balances)); viables.append(m["viable"])
+    print(f"\n=== (C) Randomized Allee layouts: guarded greedy adversary vs PAIRED no-action ===")
+    print(f"  {len(RAND_SEEDS)} seeds (5x5), attack horizon {H_RUN} ticks, persistence tail {TAIL} ticks")
+    recs = [studyC_layout(s) for s in RAND_SEEDS]
+    masks = [r["mask"] for r in recs]
+    distinct = len(set(masks)) == len(masks)
+    print(f"  layout masks pairwise distinct: {distinct} ({len(set(masks))}/{len(masks)} unique)")
+    nets = [r["net"] for r in recs]; viables = [r["viable"] for r in recs]
+    harms = [r["harm_final"] for r in recs]
     def s(v): return f"mean={st.mean(v):.2f} sd={st.pstdev(v):.2f} min={min(v):.2f} max={max(v):.2f}"
-    print(f"  net guarded EBU:      {s(nets)}")
-    print(f"  final viability %:    {s(viables)}")
-    n_harm = sum(1 for h in harms if h > 1.0)
-    print(f"  harm (B_R vs no-act): {s(harms)}   (positive => worse than doing nothing)")
-    print(f"  layouts where greedy-guarded net EBU>0 AND worse than no-action: {n_harm}/{len(harms)}")
-    print(f"    (candidate-exploit SIGNAL for the greedy policy; persistence not verified here)")
-    return dict(harms=harms, nets=nets, viables=viables, n_harm=n_harm)
+    print(f"  net guarded EBU:            {s(nets)}")
+    print(f"  final viability %:          {s(viables)}")
+    print(f"  harm@{H_RUN} (B_R vs no-act):  {s(harms)}   (positive => worse than doing nothing)")
+    harmful = [r for r in recs if r["harmful"]]
+    exploits = [r for r in recs if r["exploit"]]
+    print(f"  positive-reward harmful layouts (net>0 AND harm>{MARGIN}): {len(harmful)}/{len(recs)}")
+    print(f"  CONFIRMED persistent-harm guarded exploits (full definition): {len(exploits)}/{len(recs)}")
+    for r in exploits:
+        print(f"    seed {r['seed']}: net=+{r['net']:.2f}  harm@{H_RUN}=+{r['harm_final']:.2f}  "
+              f"dead@{H_RUN}={r['dead']}/{r['n_src']}  mean tail-harm=+{r['tail_margin']:.2f}  "
+              f"dead@end={r.get('dead_end')}/{r['n_src']}  viable@end={r.get('viable_end'):.0f}%")
+    return dict(recs=recs, nets=nets, viables=viables, harms=harms,
+                n_harmful=len(harmful), n_exploit=len(exploits), distinct=distinct)
 
 
 def figures(rowsA, studyC):
@@ -187,13 +226,21 @@ def figures(rowsA, studyC):
     ax1.set_title("V2.6 (A): five policies on the red-team world")
     fig.tight_layout(); fig.savefig(f"{FIGDIR}/v26_policies.png", dpi=130); plt.close()
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.scatter(studyC["nets"], studyC["harms"], c="#8e44ad", s=40)
+    fig, ax = plt.subplots(figsize=(7.5, 4.3))
+    recs = studyC["recs"]
+    for r in recs:
+        col = "#c0392b" if r["exploit"] else ("#e67e22" if r["harmful"] else "#8e44ad")
+        ax.scatter(r["net"], r["harm_final"], c=col, s=55,
+                   edgecolors="black" if r["exploit"] else "none", linewidths=1.2)
+        if r["exploit"]:
+            ax.annotate(f"seed {r['seed']}\n(confirmed exploit)", (r["net"], r["harm_final"]),
+                        fontsize=8, color="#c0392b", xytext=(6, -4), textcoords="offset points")
     ax.axhline(0, color="#888", ls="--", lw=1)
-    ax.set_xlabel("coalition net guarded EBU"); ax.set_ylabel("harm: B_R(attack) - B_R(no-action)")
-    ax.set_title("V2.6 (C): guarded greedy adversary across 12 random layouts")
-    ax.text(0.02, 0.95, "above 0 = worse than doing nothing", transform=ax.transAxes,
-            fontsize=8, va="top", color="#c0392b")
+    ax.set_xlabel("coalition net guarded EBU (paired)")
+    ax.set_ylabel("harm@30: B_R(attack) - B_R(no-action)")
+    ax.set_title(f"V2.6 (C): guarded greedy adversary vs paired no-action ({len(recs)} random layouts)")
+    ax.text(0.02, 0.96, "above 0 = worse than doing nothing; red = confirmed persistent exploit",
+            transform=ax.transAxes, fontsize=8, va="top", color="#c0392b")
     ax.grid(alpha=0.3); fig.tight_layout(); fig.savefig(f"{FIGDIR}/v26_random.png", dpi=130); plt.close()
 
 
@@ -204,9 +251,12 @@ if __name__ == "__main__":
     figures(rowsA, studyC)
     print("\nFigures: figures/v26_policies.png, figures/v26_random.png")
     print("\nSUMMARY:")
-    if out["guarded"].is_exploit:
-        print("  A profitable persistent-harm exploit against GUARDED EBU WAS found (see above).")
+    print(f"  naive positive control: {'PASSED' if out['naive'].is_exploit else 'FAILED'}")
+    print(f"  hand-built guarded red-team (B): {'exploit found' if out['guarded'].is_exploit else 'no exploit found'}")
+    print(f"  randomized guarded study (C): {studyC['n_exploit']} CONFIRMED persistent-harm "
+          f"exploit(s) out of {len(studyC['recs'])} layouts")
+    if studyC["n_exploit"] > 0:
+        print("  => CONCLUSION: the hand-built search found no failure, but the corrected randomized")
+        print("     study found at least one PROFITABLE PERSISTENT-HARM guarded trajectory.")
     else:
-        print("  No profitable persistent-harm exploit against guarded EBU was found within the")
-        print("  declared search space and computational budget. (Naive positive control:",
-              "found." if out["naive"].is_exploit else "NOT found - search too weak.", ")")
+        print("  => No profitable persistent-harm guarded exploit found within the declared budget.")

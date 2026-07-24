@@ -18,7 +18,7 @@ Frozen, NOT modified: `energy_balance.py`, `ebu_v22.py`, `ebu_v23.py`, `ebu_v24.
 ```bash
 git checkout v2.6-adversary
 pip install -r requirements.txt
-python3 test_v26.py                       # 12 V2.6 tests + 33 prior (45 total)
+python3 test_v26.py                       # 15 V2.6 tests + 33 prior (48 total)
 python3 exp_v26.py > results/v2.6/v26_experiments.txt
 python3 make_paper_v26.py                 # -> Energy_Balance_Project_Foundation_v2.6.pdf
 ```
@@ -47,10 +47,27 @@ The randomized study (C) draws layouts from `random.Random(seed)` fixed at t=0.
 | `figures/v26_random.png` | `exp_v26.py` (C) |
 | `Energy_Balance_Project_Foundation_v2.6.pdf` | `make_paper_v26.py` (numbers from `v26_experiments.txt`) |
 
-## Headline outcome
+## Headline outcome (corrected, properly paired Study C)
 
 Positive control (naive ledger): the search **rediscovers an exploit** (net EBU +15.35, persistent
-harm). Guarded ledger: **no profitable persistent-harm exploit found** within this space/budget.
-Caveat: the myopic greedy guarded adversary was net-harmful on 4 of 12 random layouts (harm up to
-+592) with positive EBU — a candidate-exploit signal (persistence not verified) and the next
-priority. Not a security proof.
+harm). Hand-built guarded red-team (B): no exploit found. **Corrected randomized Study C: 1 of 12
+layouts is a CONFIRMED profitable persistent-harm guarded exploit** (full persistence definition).
+
+Corrected Study C aggregates (12 seeds, 5x5, 30-tick attack + 20-tick persistence tail):
+net guarded EBU mean 156.79 (sd 58.82); final viability 80.33% (sd 23.29); harm@30 mean -241.09
+(sd 89.96); 1/12 positive-reward harmful; **1/12 confirmed exploit**. Seed 0: net +260.13,
+harm@30 +40.74, 4/5 sources dead at tick 30, mean tail-harm +309.93, all 5 sources die,
+viability 0%.
+
+**Conclusion:** guarded EBU is exploitable on at least one topology. The ledger is reported
+unchanged (not patched); the seed-0 trajectory is preserved as a regression fixture
+(`test_v26.py::test_seed0_guarded_exploit_regression`). Not a security proof.
+
+## Correction note
+
+An earlier Study C was mis-paired: `baseline_BR_schedule` / the forced-tick harness mutated the
+shared grid, so the guarded run started from the no-action-evolved state. `forced_tick` is now
+side-effect-free (restores `g.x`), baseline and guarded use separate-but-identical worlds per seed,
+and both are covered by tests. All V2.6 numbers here are from the corrected run. Test suite: 48
+(33 prior + 15 V2.6). Search uses two transfer quantities (0.5, 1.0), depth 10, width 40, and the
+exploit test scans final-depth beam states.

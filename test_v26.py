@@ -82,6 +82,42 @@ def test_random_layouts_differ():
     print(f"PASS  random layouts differ across seeds (sources: seed0={sum(s0)}, seed1={sum(s1)})")
 
 
+def test_all_layout_masks_pairwise_distinct():
+    """Every one of the study's 12 layout masks is pairwise distinct (no deterministic
+    repeat like the earlier clustered mistake)."""
+    masks = [tuple(exp_v26.random_allee_world(s)[3]) for s in exp_v26.RAND_SEEDS]
+    assert len(set(masks)) == len(masks), "layout masks not pairwise distinct"
+    print(f"PASS  all {len(masks)} study layout masks pairwise distinct")
+
+
+def test_baseline_evaluation_no_side_effect():
+    """The baseline/no-action evaluation must NOT modify the caller's grid (the bug that
+    broke Study C pairing). forced_tick restores g.x, so evaluating a trajectory is safe."""
+    from ebu_v26 import forced_tick
+    g, actors, _ = exp_v26.redteam_world()
+    before = list(g.x)
+    init = State(list(g.x), [0.0] * len(actors))
+    baseline_BR_schedule(g, actors, init, 12, "guarded")
+    assert g.x == before, "baseline_BR_schedule mutated the caller's grid"
+    snap = list(g.x)
+    forced_tick(g, actors, State(list(g.x), [0.0] * len(actors)), [(0, 4, 1, 2.0)], "guarded")
+    assert g.x == snap, "forced_tick left the caller's grid mutated"
+    print("PASS  baseline / forced-tick are side-effect-free on the caller's grid")
+
+
+def test_seed0_guarded_exploit_regression():
+    """REGRESSION FIXTURE for the confirmed guarded failure: on random seed 0 the guarded
+    greedy adversary is a profitable persistent-harm exploit (positive net EBU AND
+    persistent harm; every regenerative source dies; viability reaches 0%)."""
+    r = exp_v26.studyC_layout(0)
+    assert r["net"] > 0.0, r["net"]
+    assert r["harmful"] and r["exploit"], r
+    assert r["dead_end"] == r["n_src"], (r["dead_end"], r["n_src"])   # all sources dead
+    assert r["viable_end"] == 0.0, r["viable_end"]
+    print(f"PASS  seed-0 guarded exploit (regression): net=+{r['net']:.2f}, "
+          f"all {r['n_src']} sources die, viability@end=0%")
+
+
 def test_search_rediscovers_naive_exploit():
     """Positive control: the search must find a known naive-ledger exploit."""
     g, actors, src = exp_v26.redteam_world()
@@ -196,6 +232,9 @@ if __name__ == "__main__":
         test_conservation_multi_action,
         test_search_reproducible,
         test_random_layouts_differ,
+        test_all_layout_masks_pairwise_distinct,
+        test_baseline_evaluation_no_side_effect,
+        test_seed0_guarded_exploit_regression,
         test_search_rediscovers_naive_exploit,
         test_coalition_totals_equal_credit_minus_debit,
         test_lossless_cycle_no_positive_ebu,
