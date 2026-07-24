@@ -9,7 +9,7 @@ change.** No physics or EBU accounting source file is modified.
 | Baseline tag | `v2.5.0` |
 | Prior V2.6 study commit (parent of this stage) | `207bfc0` (`v2.6-adversary`) |
 | Branch | `v2.7-math-foundation` |
-| Branch commit (this stage) | `__BRANCH_COMMIT__` |
+| Branch commit (this stage) | `8d790cf5ffca32ce4cf6dd45b8836476eff870eb` (manifest hash recorded by the immediate follow-up commit) |
 | Python | 3.14.2 (core + `test_math.py` are stdlib-only) |
 | Figure/PDF dependencies | numpy, matplotlib, pillow, reportlab (`requirements.txt`) |
 
