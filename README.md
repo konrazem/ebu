@@ -41,6 +41,7 @@ The model was hardened across five generations, each building on the last
 | **V2.3** | [ebu_v23.py](ebu_v23.py) | **Regeneration**: external-flow, logistic, Allee, and finite sources; an `H`-horizon actor that declines an action helping now but harming a regenerative source later. |
 | **V2.4** | [ebu_v24.py](ebu_v24.py) | Six **protective harvest rules** on a closed Allee economy, separating genuine ecological foresight from an artifact of the accept/reject architecture. |
 | **V2.5** | [ebu_v25.py](ebu_v25.py) | An **EBU accounting/incentive layer** over the frozen V2.4 physics: naive vs guarded ledgers. Guarded credit is live-state, telescoping, and debits transport loss and irreversible extraction — it closes enumerated gaming attacks (round-trips, splitting, claiming regeneration, reserve sacrifice) and keeps adversaries at 100% viability, while a naive ledger lets an adversary earn ~730k credit while collapsing every source. |
+| **V2.6** | [ebu_v26.py](ebu_v26.py) | **Automated adversarial testing** of the guarded ledger (a falsification study, *not* an economy). A deterministic beam / red-team search hunts for sequences that earn positive net guarded EBU *and* cause persistent physical harm. It rediscovers a naive exploit (positive control) but finds **no profitable persistent-harm exploit against the guarded ledger** within the searched space. Honest caveat: the myopic *greedy* guarded adversary was net-harmful on 4/12 random layouts — a candidate-exploit signal for follow-up. |
 
 ## What each version means
 
@@ -80,6 +81,13 @@ not yet an EBU *economy* — actors earn balances; they do not yet spend them.
   **guarded** ledger closes or bounds every hand-written attack, and maximizing it
   coincides with real homeostatic work. The physics trajectory is exactly
   identical when the ledger only observes.
+- **V2.6 — hardening the wind tunnel.** A deterministic beam / red-team search
+  automatically hunts for sequences that earn positive net guarded EBU *and* cause
+  persistent physical harm. It rediscovers a naive exploit (positive control), and
+  finds **no profitable persistent-harm exploit against the guarded ledger** within
+  the searched space — a falsification result, *not* a security proof. Caveat: the
+  myopic *greedy* guarded adversary was net-harmful on 4/12 random layouts, the next
+  thing to red-team. Still no economy: actors earn balances, they do not spend them.
 
 ### Where this sits on the road to an EBU economy
 
@@ -90,8 +98,8 @@ not yet an EBU *economy* — actors earn balances; they do not yet spend them.
 | Regenerative / Allee / finite sources | Implemented (V2.3) |
 | Conservation and loss accounting | Implemented (V2.2) |
 | Basic EBU rewards and penalties | Implemented (V2.5) |
-| Adversarial reward-gaming tests | Initial hand-written suite (V2.5) |
-| Automated/learning adversaries, collusion, laundering | Not implemented (planned V2.6) |
+| Adversarial reward-gaming tests | Hand-written (V2.5) + automated beam/red-team search (V2.6) |
+| Automated/learning adversaries, collusion, laundering | Partially (V2.6 beam + coalition search); learning adversary not yet |
 | Exchange between actors (paying, transferring EBU) | Not implemented |
 | Prices, saving, borrowing, investment | Not implemented |
 | Ownership, production, goods | Not implemented |
@@ -145,6 +153,7 @@ ebu_v22.py              V2.2 safe engine + conservation ledger
 ebu_v23.py              V2.3 regeneration + horizon-aware actor
 ebu_v24.py              V2.4 six harvest rules
 ebu_v25.py              V2.5 EBU accounting layer (naive vs guarded)
+ebu_v26.py              V2.6 automated adversarial search (beam / red-team)
 ecosystem.py            self-sustaining producer/consumer ecosystem experiment
 exp_v2*.py              experiment drivers (print tables, write figures)
 audit_v231.py           conservation-ledger audit
@@ -152,7 +161,8 @@ test_*.py               tests per version
 make_paper*.py          render the PDF papers via reportlab
 figures/                generated plots (burden vs time, phase maps, heatmaps, …)
 results/v2.4/           frozen result captures + manifest for the v2.4.0 release
-*.pdf                   the Foundation papers, V2.1 → V2.5
+results/v2.6/           adversarial-search results + manifest (V2.6 branch study)
+*.pdf                   the Foundation papers, V2.1 → V2.6
 ecosystem.gif           animation of the ecosystem run
 ```
 
@@ -199,10 +209,12 @@ python3 test_v22.py              # V2.2 ledger+safe  (7 tests, stdlib only)
 python3 test_v23.py              # V2.3 regeneration (4 tests, needs requirements.txt)
 python3 test_v24.py              # V2.4 harvest rules(5 tests, needs requirements.txt)
 python3 test_v25.py              # V2.5 EBU ledger   (9 tests, needs requirements.txt)
+python3 test_v26.py              # V2.6 adversary    (12 tests + reruns the 33 prior)
 ```
 
-Each script prints per-test `PASS` lines and a summary; 33 tests total. The first
-two run on a bare Python install; `test_v23.py`/`test_v24.py`/`test_v25.py` import `matplotlib`
+Each script prints per-test `PASS` lines and a summary; **45 tests total** (33 prior
++ 12 new; `test_v26.py` also reruns the 33 prior as its first test). The first two run
+on a bare Python install; `test_v23.py`/`test_v24.py`/`test_v25.py`/`test_v26.py` import `matplotlib`
 via the experiment modules, so install `requirements.txt` first.
 
 ## Design principles

@@ -1,0 +1,28 @@
+=== (A) Five policies on the red-team world (identical initial state) ===
+  policy                      viable%     B_R  dead  stock  net EBU
+  1 physics / no EBU             11.1    77.8     0    8.6     0.00
+  2 naive greedy adversary       11.1    88.9     0   12.5    15.13
+  3 guarded greedy adversary     11.1    71.1     0    9.0    21.21
+  4 random adversary             22.2   206.2     1    0.0  -126.69
+  5 automated guarded (beam)     11.1    78.2     0    8.9    13.82
+  (beam explored 22743 states)
+
+=== (B) Red-team search for a PROFITABLE HARMFUL sequence ===
+  params: depth=10 width=40 tail=20 quants=(0.5, 1.0) coalition=[0, 1]
+  naive   : EXPLOIT FOUND  | net EBU=+15.35  persistent_harm=True  mean tail-harm(B_R)=+102.91  explored=3809  0.1s
+  guarded : no exploit found  | net EBU=+0.91  persistent_harm=False  mean tail-harm(B_R)=-5.47  explored=10971  0.2s
+  positive control (naive rediscovers a known exploit): PASS (search strong enough)
+
+=== (C) Randomized Allee layouts: guarded greedy adversary vs no-action ===
+  12 genuinely distinct seeds (5x5), 30 ticks each
+  net guarded EBU:      mean=530.24 sd=130.47 min=387.41 max=819.94
+  final viability %:    mean=58.67 sd=32.63 min=0.00 max=100.00
+  harm (B_R vs no-act): mean=-77.02 sd=249.36 min=-271.13 max=592.15   (positive => worse than doing nothing)
+  layouts where greedy-guarded net EBU>0 AND worse than no-action: 4/12
+    (candidate-exploit SIGNAL for the greedy policy; persistence not verified here)
+
+Figures: figures/v26_policies.png, figures/v26_random.png
+
+SUMMARY:
+  No profitable persistent-harm exploit against guarded EBU was found within the
+  declared search space and computational budget. (Naive positive control: found. )
