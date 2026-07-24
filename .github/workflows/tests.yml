@@ -15,7 +15,7 @@ jobs:
       # Core + physics tests are stdlib-only; test_v23/test_v24 import matplotlib via exp_v23.
       - name: Install figure/PDF dependencies
         run: pip install -r requirements.txt
-      - name: Run test suites (48 tests)
+      - name: Run prior test suites (48 tests)
         run: |
           python test_energy_balance.py
           python test_v22.py
@@ -23,3 +23,6 @@ jobs:
           python test_v24.py
           python test_v25.py
           python test_v26.py
+      - name: Run V2.7 mathematical regression validation (8 groups, 34 checks)
+        run: |
+          python test_math.py

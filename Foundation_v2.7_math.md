@@ -8,9 +8,10 @@ passing tests are validation, **never proof**.
 
 The note ends (§7) with the verdict separated as required: **A** the derived local
 law; the engine split into **B_raw** (Onsager/explicit-Euler) and **B_safe** (gated
-coordinate descent); **C** the exact conditions under which `A = B_raw` (and why
-`A ≠ B_safe` in general). §7.1 promotes the dissipative Lyapunov statement C-1 to a
-continuous-time theorem.
+coordinate descent); **C** the compatibility conditions under which **B_raw is the
+forward-Euler discretisation of A** (not an identity of trajectories — see §7), and
+why `B_safe` is a different law. §7.1 promotes the dissipative Lyapunov statement C-1
+to a continuous-time theorem.
 
 ---
 
@@ -179,8 +180,9 @@ slot `i` and `+η_e` in slot `j`. The three laws are:
 > different variational problem from (1)/(2) and generally lands at a different `q`.
 
 Consequently the verdict (§7) splits the engine into **B_raw** (law 2) and **B_safe**
-(law 3): only B_raw can equal the derived law A, and only under the restricted
-conditions listed there — B_safe cannot, in general, even at `η = 1`.
+(law 3): only B_raw is a *discretisation* of the derived law A (the forward-Euler
+scheme, under the restricted conditions listed there); B_safe is a different law, not
+a discretisation of A, even at `η = 1`.
 
 *Remark (dissipation is not a state cost).* The loss `(1−η)q` and `θ_e J_e` live in
 `Ψ`, not in `V_state`. The correct global statement is the dissipative inequality
@@ -369,7 +371,7 @@ the present engine does this.
 
 ---
 
-## 7. Verdict — derived law (A), engine laws (B_raw / B_safe), coincidence (C)
+## 7. Verdict — derived law (A), engine laws (B_raw / B_safe), discretisation (C)
 
 **A — the mathematically derived law (§2, law (1)/(2.7)).**
 ```
@@ -385,8 +387,12 @@ default; fixed activation cost `c0` possible; applied **sequentially**.
 and gate; size `q* = argmin V_state(x + S_e q)` (D.2s), which **excludes** `θ_e q` and
 `q²/(2M_e)`; executed only on its acceptance test; applied **sequentially**.
 
-**C — exact conditions under which `A = B_raw`.** (`B_safe` is excluded from C; see
-below.) All of the following must hold:
+**C — compatibility conditions under which `B_raw` is the forward-Euler
+discretisation of `A`.** (`B_safe` is excluded from C; see below.) This is a statement
+about the *scheme*, not the *trajectories*: even when all conditions hold, the
+finite-`Δt` discrete trajectory is **not** identical to the continuous flow of A — a
+forward-Euler step incurs local truncation error `O(Δt²)` (global `O(Δt)`), and the
+engine runs at `Δt = 1`. All of the following must hold:
 
 1. **`η_e = 1`** — else A's force `μ_i − η μ_j − θ` differs from B_raw's
    `μ_i − μ_j − θ` by `(1 − η)μ_j`.
@@ -402,7 +408,10 @@ below.) All of the following must hold:
 5. **Mobility bound `M ≤ 1/[max(α,β)_i + η² max(α,β)_j]`** (5.2) — the step-size
    condition for the explicit-Euler law (2).
 
-Under 1–5, `B_raw` is exactly a forward-Euler step (`Δt = 1`) of A.
+Under 1–5, one `B_raw` update **is** one forward-Euler step (`Δt = 1`) applied to A's
+vector field at the current state — the two share the flux at each point. They do
+**not** share trajectories: the discrete iterate departs from the continuous solution
+of A with per-step error `O(Δt²)`, accumulating to `O(Δt)` over a fixed horizon.
 
 > **`A ≠ B_safe` in general — even at `η = 1`, `χ = 0`, `c0 = 0`, single transfer.**
 > `B_safe` sets `q*` by minimising the *state functional* along the edge (2.9); A/B_raw
@@ -411,13 +420,15 @@ Under 1–5, `B_raw` is exactly a forward-Euler step (`Δt = 1`) of A.
 > identity. `B_safe` is **gated coordinate descent on `V_state`**, a genuinely
 > different dynamics from the Onsager flux; do not claim it equals A.
 
-**Plain statement.** `B_raw` **is** a discrete step of the derived gradient flow — only
-in the lossless, danger-free, cost-free, single-transfer, mobility-bounded regime;
-outside it, it differs by the `(1−η)μ_j` loss term, the `−2χ_i(R_i−x_i)₊` reserve
-term, the `c0` jump, and the sequential coupling. `B_safe` is never the Onsager flux;
-it is a different (coordinate-descent) law that happens to share A's search direction
-and its per-transfer non-increase of `V_state`. **No implementation change is made
-here**; these are the specifications a corrected engine would close.
+**Plain statement.** `B_raw` **is the forward-Euler discretisation of** the derived
+gradient flow A — only in the lossless, danger-free, cost-free, single-transfer,
+mobility-bounded regime, and only as a *scheme* (finite-`Δt` trajectories differ,
+`O(Δt²)` local error). Outside that regime it is not even that scheme: it differs by
+the `(1−η)μ_j` loss term, the `−2χ_i(R_i−x_i)₊` reserve term, the `c0` jump, and the
+sequential coupling. `B_safe` is never the Onsager flux; it is a different
+(coordinate-descent) law that happens to share A's search direction and its
+per-transfer non-increase of `V_state`. **No implementation change is made here**;
+these are the specifications a corrected engine would close.
 
 ### 7.1 C-1 promoted: continuous-time energy–dissipation theorem
 
@@ -433,6 +444,22 @@ here**; these are the specifications a corrected engine would close.
 > dV_state/dt ≤ Σ_i μ_i u_i.                                             (7.2)
 > ```
 
+> **Excluded engine mechanisms (scope of Theorem 7.1).** The theorem governs the
+> *smooth, unconstrained, continuous-time* flow only. It does **not** cover the
+> following engine mechanisms, each of which needs its own nonsmooth / projected /
+> hybrid / discrete treatment and can violate (7.1)–(7.2):
+> - **clipping / projection** at the bounds `0` and `K_i` (a projected dynamical
+>   system, not the free flow);
+> - **spill** at `K_i` (mass discarded at the upper bound);
+> - **unmet-demand saturation** (demand truncated to available stock, `nat_cell`);
+> - **hard-reserve constraints** (`hard_reserve`: an inequality constraint / barrier);
+> - **fixed activation cost `c0`** (a discrete jump per transfer — hybrid dynamics);
+> - **sequential live-state transfers** (§6; breaks the simultaneous-flux assumption);
+> - **finite-step discrete updates** (`Δt = 1`; forward Euler adds an `O(Δt²)`
+>   remainder absent from the identity).
+> Establishing analogues under any of these is open (Conjecture C-1′ addresses the
+> finite-step case).
+
 *Proof.* Continuity (C.1): `ẋ_i = u_i + Σ_{e=(k→i)} η_e J_e − Σ_{e=(i→k)} J_e`. Since
 `V_state ∈ C¹`, the chain rule gives `dV_state/dt = Σ_i μ_i ẋ_i = Σ_i μ_i u_i + T`,
 with `T` the transport part. Reorganise `T` by edge: edge `e = (i→j)` contributes
@@ -441,10 +468,20 @@ On an active edge `J_e = M_e(f_e − θ_e) > 0`, hence `f_e = J_e/M_e + θ_e` an
 `f_e J_e = J_e²/M_e + θ_e J_e`; on an inactive edge both sides vanish. Summing gives
 (7.1). As `J_e ≥ 0`, `θ_e ≥ 0`, the dissipation term is `≥ 0`, giving (7.2). ∎
 
-> **Corollary 7.2 (undriven Lyapunov + convergence).** If `u_i ≡ 0` (closed system:
-> no supply, demand, regen, leak), then `dV_state/dt = −Σ_e[J_e²/M_e + θ_e J_e] ≤ 0`,
-> strict unless every edge is inactive. By LaSalle the flow converges to the rest set
-> `{ f_e ≤ θ_e for all e }`, where `V_state` is a strict Lyapunov function.
+> **Corollary 7.2 (undriven case — LaSalle, stated precisely).** If `u_i ≡ 0` (closed
+> system: no supply, demand, regen, leak) and trajectories are bounded (they are:
+> `x ∈ [0,K]`), then `V_state` is non-increasing (`dV_state/dt = −Σ_e[J_e²/M_e +
+> θ_e J_e] ≤ 0`). By LaSalle's invariance principle the flow converges to the **largest
+> invariant subset** of the zero-dissipation set
+> `Z = { x : J_e(x) = 0 ∀e } = { x : f_e(x) ≤ θ_e ∀e }`. With `u ≡ 0`, every point of
+> `Z` is already an equilibrium, so `Z` is invariant and the limit set lies in `Z`.
+>
+> This claims **only** convergence to `Z`. It does **not** assert `V_state = 0`,
+> complete homeostasis, a single equilibrium, or which point of `Z` is reached: `Z` is
+> generally a continuum of force-balanced states (`|f_e| ≤ θ_e`), the reached point
+> depends on initial conditions, and `V_state` need not vanish there. Any such stronger
+> conclusion requires a separate argument (e.g. strict convexity or a transversality
+> condition), not proved here.
 
 *Numerical validation (Theorem 7.1).* Fine-`dt` integration (`dt = 10⁻⁴`) of a driven
 3-cell path matched (7.1) to `O(dt)` (max `|numeric − analytic dV/dt| = 6.2×10⁻⁵`).
@@ -476,9 +513,13 @@ Remaining open items:
 
 ---
 
-## 8. Proposed regression tests (`test_math.py`) — validation, not proof
+## 8. Regression tests (`test_math.py`) — validation, not proof
 
-Added **after** this note, described as numerical validation only:
+`test_math.py` contains **8 groups holding 34 numerical regression checks** in total.
+The check count is an implementation detail of the harness, **not** a count of
+theorems: several checks probe one theorem at different points, and a passing run
+validates the tested points only — it does not prove any statement in this note. The
+groups:
 
 1. **Fold & basin (3.1–3.3):** engine equilibrium matches `x_+(h)`; `x(0)=x_−(h)±ε`
    lands in the collapse / recovery basin.
@@ -515,5 +556,5 @@ None of these is a proof; each guards against drift between engine and analysis.
 | 1-hop causal speed per tick | holds only under frozen-state simultaneous update; the sequential engine leaks multi-hop (§6) |
 | `V = B_homeostasis` | `B_hom` is blind to Allee danger; state functional is `V_state = B_hom + B_reg` (§2, §7) |
 | one engine law `B` compared to A | split into **B_raw** (Onsager/Euler, law 2) and **B_safe** (gated coordinate descent, law 3); only B_raw can equal A (§2.1, §7) |
-| `A = B` under four conditions | `A = B_raw` needs five conditions incl. **`c0 = 0`**; `A ≠ B_safe` in general, even at `η=1` (§7 C) |
+| `A = B` under four conditions | under five conditions incl. **`c0 = 0`**, `B_raw` is the **forward-Euler discretisation** of A (a scheme; finite-`Δt` trajectories differ, `O(Δt²)` local error) — not a trajectory identity; `B_safe` is a different law even at `η=1` (§7 C) |
 | C-1 a conjecture | promoted to **Theorem 7.1** in continuous time (energy–dissipation identity + inequality); discrete case restated as Conjecture C-1′ (§7.1) |
