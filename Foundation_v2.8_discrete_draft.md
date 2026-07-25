@@ -23,10 +23,10 @@ dV/dt = Σ_i μ_i u_i − Σ_e ( J_e²/M_e + θ_e J_e )   ≤   Σ_i μ_i u_i .
 ```
 
 The Python engine does not run this flow. It advances in ticks of size `Δt = 1`,
-applies **natural drive and transport as two ordered sub-steps**, evaluates the
-transport force **loss-blind** (`μ_i − μ_j − θ`), applies accepted transfers
-**sequentially against live state**, and **clips** to `[0,K]`. Theorem 7.1 explicitly
-excluded all of that.
+applies **natural drive and transport as two ordered sub-steps**, evaluates whatever
+transport force it computes **loss-blind** (`μ_i − μ_j − θ`; the forced harness of
+§3.3 computes none), applies transfers **sequentially against live state**, and
+**clips** to `[0,K]`. Theorem 7.1 explicitly excluded all of that.
 
 This draft takes the first step across that gap: a **synchronous, unconstrained,
 loss-aware, explicit-Euler** discretisation (D0), for which we prove a discrete
@@ -120,32 +120,51 @@ constraints, loss-aware force (Def 2.3). This is the subject of the new theorem.
 **Definition 3.3 (the DE engine family — three distinct update laws).** The Python
 operators actually run are **not one identical map**; they share related state
 accounting but differ. We name three members and attribute a feature only where it is
-confirmed in that function. All three apply the natural update `N` **first** and then a
-transport pass, evaluate `μ` at the **post-drive** state `y = N(x^n)` (not `x^n`), use
-the **loss-blind** force `F = μ_i − μ_j − θ`, apply transfers **sequentially against
-live state**, and fix `Δt = 1`.
+confirmed in that function. What **all three** share is only this: a natural-update
+stage `N` applied **first**, followed by **sequentially applied actions** against live
+state, at fixed `Δt = 1`. Whether — and how — a force is computed differs per member:
+
+- **DE-core** computes proposals from `μ` at the **post-drive** state `y = N(x^n)`
+  using the **loss-blind** force `F = μ_i − μ_j − θ`.
+- **DE24-family** (`step_v24`, six rules) computes proposals from marginals
+  `m` at `y = N(x^n)` with the same **loss-blind destination term**
+  (`F = m_i − m_j − θ`, no `η` weight on `m_j`); its reserve-aware modes
+  (`threshold_penalty`, `penalty_horizon`) add the local reserve marginal
+  `−2χ(R_i − x)₊` to `m` — an on-site augmentation that leaves the edge force
+  loss-blind.
+- **DE26-forced** (`forced_tick`) computes **no force and no proposal**: it executes
+  externally supplied actions (from a search or policy), subject only to feasibility
+  caps.
 
 | Member | Function | Transport sizing | Conflict scaling | Constraints |
 |---|---|---|---|---|
 | **DE-core** | `energy_balance.step` | raw `q = M[F]₊` | **proportional** source scaling | feasibility caps + **clip to `[0,K]`** |
-| **DE24-safe** | `ebu_v24.step_v24` | `_golden_min` line search (approx.) or horizon-opt, then a strict-decrease accept gate | **none** (sequential, sorted by `F`, per-proposal feasibility) | per-proposal `q_hi`, reserve floor |
-| **DE26-adversarial** | `ebu_v26.forced_tick` | externally supplied quantities (search/policy); no force or search computed | none | `feasible_q` caps (`q_max`, source floor, dest headroom) |
+| **DE24-family** | `ebu_v24.step_v24` (rules `safe`, `horizon_gate`, `horizon_opt`, `threshold_penalty`, `hard_reserve`, `penalty_horizon`) | rule-dependent: approximate `_golden_min` line search for the line-sized rules, or horizon-optimised `q` (`horizon_opt`, `penalty_horizon`); gated by immediate strict decrease or by horizon impact | **none** (sequential, sorted by `F`, per-proposal feasibility) | per-proposal `q_hi`; hard reserve floor in `hard_reserve` **only** |
+| **DE26-forced** | `ebu_v26.forced_tick` | externally supplied quantities (search/policy); no force or search computed | none | `feasible_q` caps (`q_max`, source floor, dest headroom) |
 
-(So proportional conflict scaling is a property of **DE-core only**; the safe line
-search is **DE24-safe only**; DE26 executes *given* actions. Do not attribute any of
-these to all members.)
+(So proportional conflict scaling is a property of **DE-core only**. The
+**DE24-family** is itself six rules sharing one proposal mechanism but differing in
+sizing (golden-section vs horizon-optimised), gating (immediate strict decrease vs
+horizon impact), reserve awareness (`threshold_penalty`, `penalty_horizon` only), and
+the hard floor (`hard_reserve` only) — no feature of one rule may be attributed to the
+others. `DE26-forced` executes *given* actions and computes nothing. Do not attribute
+any of these features across members.)
 
 > **Assumption 3.4 (non-transfer of results).** A theorem about **D0** does **not**
 > automatically hold for any member of the DE family. **D0 is the forward-Euler
 > discretisation of Model C; the DE members are not.** They are **distinct update laws
 > built on related state accounting**: the loss-blind raw law (`DE-core`) and the
-> approximate coordinate-search law (`DE24-safe`) are *not faithful discretisations of
-> the loss-aware Onsager law C* — they use the wrong (loss-blind) force (Counterexample
-> D) and, for `DE24-safe`, a different sizing rule entirely. D0 and the DE family differ
-> in at least: operator splitting, the state at which `μ` is frozen (`x^n` vs `N(x^n)`),
-> loss-aware vs loss-blind force, simultaneous vs sequential application, presence of
-> conflict scaling (`DE-core`) or line search (`DE24-safe`), unconstrained vs clipped,
-> and `Δt` free vs `Δt = 1`. §7 and §10 quantify the gaps.
+> approximate coordinate-search rules (`DE24-family`) are *not faithful discretisations
+> of the loss-aware Onsager law C* — their proposal forces are loss-blind
+> (Counterexample D) and, for the `DE24-family`, the sizing rule differs entirely;
+> `DE26-forced` computes no force at all, so it is not a discretisation of C in any
+> sense — it is an execution harness for arbitrary feasible actions. D0 and the DE
+> family differ in at least: operator splitting, the state at which the proposal force
+> is frozen (`x^n` vs `N(x^n)`, where a force is computed at all), loss-aware vs
+> loss-blind proposal force (`DE-core`, `DE24-family`) vs no force (`DE26-forced`),
+> simultaneous vs sequential application, presence of conflict scaling (`DE-core`) or
+> line-search/horizon sizing (`DE24-family`), unconstrained vs clipped, and `Δt` free
+> vs `Δt = 1`. §7 and §10 quantify the gaps.
 
 ---
 
@@ -196,11 +215,21 @@ R_n = (L_V Δt²/2) ( ‖u‖²  +  2 uᵀ S J  +  ‖S J‖² ) .
 *Proof.* Apply Lemma 4.3 with `x = x^n`, `y = x^{n+1}`; substitute Lemma 4.1 for the
 first-order term and Lemma 4.2 for the edge sum; expand `‖u + SJ‖²`. ∎
 
-**Remark 4.5 (norm and constant).** The bound uses the `ℓ²` norm and the global
-smoothness constant `L_V` (Assumption 2.5). `R_n` is a genuine explicit upper bound on
-the **Taylor/descent remainder of the functional `V`**, `R_n ≤ (L_V Δt²/2)‖u+SJ‖² =
-O(Δt²)`. It is *not* the local truncation error of the state trajectory, and must not be
-conflated with it (§7 and §10 keep the three error notions separate).
+**Remark 4.5 (norm, constant, and remainder notation).** The bound uses the `ℓ²` norm
+and the global smoothness constant `L_V` (Assumption 2.5). Two objects must be kept
+apart. The **exact Taylor remainder** of the functional along the step is
+```
+r_n := V(x^{n+1}) − V(x^n) − ∇V(x^n)ᵀ Δx ,
+```
+whereas `R_n` is the **explicit bound** appearing in (★): under Assumption 2.5 the
+two-sided quadratic bound for an `L_V`-Lipschitz gradient gives
+```
+|r_n|  ≤  (L_V/2)‖Δx‖²  =  R_n  =  (L_V Δt²/2)‖u+SJ‖² .
+```
+`R_n` **equals** that expression by definition (it is not itself "bounded by" it), and
+`R_n = O(Δt²)`. Neither `r_n` nor `R_n` is the local truncation error of the state
+trajectory, and neither must be conflated with it (§7 and §10 keep the three error
+notions separate).
 
 ---
 
@@ -289,21 +318,41 @@ guarantees `V(x^{n+1}) ≤ V(x^n)` for the current step. Since `A(x^n) ⊆ E`,
 `‖S_A D_{M,A}^{1/2}‖₂² ≤ ‖S D_M^{1/2}‖₂²`, so Theorem 5.5 is never worse than Theorem
 5.2 and is often strictly larger.
 
+**Lemma 5.6a (the Onsager flux has no nonzero null flow).** At any state, the Onsager
+flux `J` of Def 2.3 satisfies
+```
+μᵀ S J  =  − Σ_e ( J_e²/M_e + θ_e J_e ) .
+```
+Consequently `SJ = 0 ⟹ J = 0`.
+
+*Proof.* By the per-edge computation of Lemma 4.1, `μᵀ S_e = −f_e`, so
+`μᵀ S J = −Σ_e f_e J_e`; by Lemma 4.2 (valid precisely because `J` is the Onsager
+flux), `f_e J_e = J_e²/M_e + θ_e J_e` on every edge. Summing gives the identity. If
+`SJ = 0` the left side is `0`, so `Σ_e(J_e²/M_e + θ_e J_e) = 0`; every summand is
+nonnegative (`J_e ≥ 0`, `θ_e ≥ 0`, `M_e > 0`), hence each vanishes, and
+`J_e²/M_e = 0` with `M_e > 0` forces `J_e = 0` for all `e`, i.e. `J = 0`. ∎
+
+*Scope.* An **arbitrary externally prescribed** flow may of course satisfy `SJ = 0`
+with `J ≠ 0` — e.g. an equal circulation around a lossless (`η = 1`) cycle — but such
+a flow is **not generated by the Onsager law** of Def 2.3 and lies outside Lemma 5.6a
+and Theorem 5.6 (cf. the uniformity remark in Theorem 5.2: only the Onsager-law flux
+dissipates through Lemma 4.2).
+
 **Theorem 5.6 (direct state-specific bound, `u = 0`).** At a fixed state `x^n` with
 Onsager flux `J = J(x^n)`:
-- if `SJ = 0` (transport is stock-and-potential neutral, e.g. a balanced cycle), the
-  remainder vanishes and `V(x^{n+1}) ≤ V(x^n)` for **every** `Δt > 0`;
 - if `J = 0` (no active edge), the transport step is trivial and `V` is unchanged by
   transport;
-- otherwise (`‖SJ‖ > 0`),
+- if `J ≠ 0`, then necessarily `SJ ≠ 0` (Lemma 5.6a), and
   ```
   Δt  ≤  2 Σ_e ( J_e²/M_e + θ_e J_e )  /  ( L_V ‖SJ‖² )
   ```
-  guarantees `V(x^{n+1}) ≤ V(x^n)`.
+  guarantees `V(x^{n+1}) ≤ V(x^n)` (the bound is well defined and strictly positive:
+  `‖SJ‖ > 0`, and the dissipation sum is `> 0` whenever `J ≠ 0`).
 
 *Proof.* Direct from `V(x^{n+1}) − V(x^n) ≤ −Δt Σ_e(J_e²/M_e+θ_e J_e) +
-(L_V Δt²/2)‖SJ‖²` (Theorem 4.4, `u=0`): the `SJ=0` and `J=0` cases make the remainder
-or the whole transport term vanish; otherwise solve the quadratic-in-`Δt` inequality. ∎
+(L_V Δt²/2)‖SJ‖²` (Theorem 4.4, `u=0`): if `J = 0` the whole transport term vanishes;
+if `J ≠ 0`, Lemma 5.6a gives `‖SJ‖ > 0`, and solving the quadratic-in-`Δt` inequality
+for a nonpositive right-hand side yields the stated bound. ∎
 
 **Conjecture 5.7 (tightness).** The active-set bound (Theorem 5.5) and the state-specific
 bound (Theorem 5.6) are *sufficient* current-step conditions. Whether either coincides
@@ -350,8 +399,9 @@ descent.
   because `R_n/Δt = (L_V Δt/2)‖u+SJ‖² → 0`. **Theorem 7.1 is recovered from the exact
   identity plus differentiability**, with the inequality only bounding the finite-`Δt`
   gap.
-- **Three distinct error quantities (do not conflate).** (1) the **Taylor/descent
-  remainder of `V`**, rigorously bounded by `(L_V Δt²/2)‖u+SJ‖² = O(Δt²)` (Theorem 4.4);
+- **Three distinct error quantities (do not conflate).** (1) the **exact Taylor
+  remainder `r_n` of `V`** (Remark 4.5), rigorously bounded by
+  `|r_n| ≤ R_n = (L_V Δt²/2)‖u+SJ‖² = O(Δt²)` (Theorem 4.4);
   (2) the **local truncation error of the state trajectory**, `x(t_n+Δt) −
   x^{n+1} = ½Δt² ẍ(t_n) + O(Δt³) = O(Δt²)` — this expansion needs the vector field to be
   differentiable along the step and is valid only in **smooth regions away from the
@@ -364,17 +414,21 @@ descent.
   the continuous flow by the accumulated `O(Δt)` error above; equality holds only in the
   limit.
 - **The safe search is an *approximate* minimiser, not the Onsager flux.** In the engine
-  family, `DE24-safe` sizes a transfer by `_golden_min`, a **finite 24-iteration
-  golden-section** search — an *approximate bounded one-dimensional minimiser* of
-  `q ↦ v_i(x_i − q) + v_j(x_j + η q)` on `[0, q_hi]`, gated on strict decrease. This is
-  an (approximate) **coordinate-descent-style** step on `V`, **not** the explicit flux
+  family, the line-sized rules of the `DE24-family` size a transfer by `_golden_min`, a
+  **finite 24-iteration golden-section** search — an *approximate bounded
+  one-dimensional minimiser* of `q ↦ v_i(x_i − q) + v_j(x_j + η q)` on `[0, q_hi]`,
+  gated on strict decrease (the horizon-sized rules `horizon_opt` / `penalty_horizon`
+  optimise a different, horizon-impact objective again). This is an (approximate)
+  **coordinate-descent-style** step on `V`, **not** the explicit flux
   `q = M_e[f_e − θ_e]₊`, and it is **not** proximal (no proximal objective or proof is
-  claimed). So D0 (explicit Onsager flux) and `DE24-safe` are different update laws
-  (cf. V2.7 §2.1, §7).
+  claimed). So D0 (explicit Onsager flux) and the `DE24-family` are different update
+  laws (cf. V2.7 §2.1, §7).
 - **Proving D0 does not prove the DE family.** Beyond the flux-vs-search point, the DE
-  family members differ from D0 by operator splitting, `μ` frozen at `N(x^n)`, the
-  loss-blind force `μ_i − μ_j − θ`, sequential live state, (for `DE-core`) proportional
-  conflict scaling, and clipping (§3.3, §10 B and D). Each is out of scope (§11).
+  family members differ from D0 by operator splitting, the proposal state frozen at
+  `N(x^n)` (where a proposal is computed at all), the loss-blind proposal force
+  `μ_i − μ_j − θ` (`DE-core`, `DE24-family`; `DE26-forced` computes no force),
+  sequential live state, (for `DE-core`) proportional conflict scaling, and clipping
+  (§3.3, §10 B and D). Each is out of scope (§11).
 
 ---
 
@@ -424,7 +478,8 @@ update (D0) with Assumption 9.0′, `x^{n+1}_i` depends only on
 compose and induct. ∎
 
 **Counterexample / Observation 9.2 (sequential live state breaks this).** Every member
-of the DE family applies accepted transfers **sequentially against live state**. Then a transfer on
+of the DE family applies its transfers (accepted proposals, or externally supplied
+actions in `DE26-forced`) **sequentially against live state**. Then a transfer on
 `(i,j)` mutates `x_j` *before* a later transfer on `(j,k)` reads it, so `x^{n+1}_k` can
 depend on `x^n_i` — a **2-hop** influence in a single nominal tick, even though each
 individual transfer is local. (V2.7 §6 exhibits this concretely: on a `0→1→2` chain, a
@@ -484,8 +539,13 @@ transfer `i→j`. But the **true** loss-aware force is `f_e = μ_i − η_e μ_j
 `−f_e·(ΔtJ) = +ΔtJ > 0`: the loss-blind transfer **increases** `V` to first order,
 because at `η = 0.5` the efficiency loss wastes more than the deficit relief it buys.
 The correct variational force is `f_e = μ_i − η_e μ_j` (Def 2.3), **not** `μ_i − μ_j`.
-This is exactly why the DE family (whose members all use the loss-blind `μ_i − μ_j − θ`)
-is not guaranteed descending under loss, and why D0 must use the loss-aware force.
+This criticism applies exactly to the members that **compute** a loss-blind proposal
+force — `DE-core` (`μ_i − μ_j − θ`) and the `DE24-family` (`m_i − m_j − θ`) — which are
+therefore not guaranteed descending under loss, and it is why D0 must use the
+loss-aware force. `DE26-forced` computes no force, so this particular criticism does
+not apply to it: it executes whatever feasible actions it is given (which may, of
+course, also increase `V` — but that is a property of the supplied actions, not of a
+force law).
 
 **Counterexample E (the former Lipschitz constant is too small).** This is a
 counterexample **to the former constant `2 max_i max(α_i,β_i,χ_i)`**, not to the
@@ -527,7 +587,7 @@ need:
 | unmet-demand saturation (`min(d, ·)`) | nonsmooth / Filippov / piecewise-smooth analysis |
 | hard-reserve constraints | constrained optimisation (KKT) / barrier methods |
 | fixed activation cost `c₀` | hybrid / impulsive systems (discontinuous jumps) |
-| safe golden-section / coordinate line search (`DE24-safe`) | coordinate-descent theory (approximate 1-D minimisation); *not* proximal unless a proximal objective and proof are supplied |
+| golden-section / coordinate line search (`DE24-family` line-sized rules) | coordinate-descent theory (approximate 1-D minimisation); *not* proximal unless a proximal objective and proof are supplied |
 | sequential live-state transfers | Gauss–Seidel operator splitting (vs Jacobi) |
 | horizon optimisation | optimal control / dynamic programming |
 | global / instantaneous field solves | elliptic PDE / implicit (nonlocal) solves |
@@ -574,9 +634,10 @@ These would live in a *new* file at a future gate; **this gate creates no test.*
    sublevel-set / LaSalle argument, cf. V2.7 Cor 7.2) is **open**.
 3. **Splitting error (D0 → DE family, step 1).** The engine's `A∘N` splitting with `μ`
    at `N(x^n)`: bound the discrepancy from D0 via Lie/Strang splitting error. **Open.**
-4. **Loss-blind engine force.** The DE family uses `μ_i − μ_j − θ`; characterise the set of states
-   on which this is (non-)descending under `η < 1` (Counterexample D is one witness).
-   **Open.**
+4. **Loss-blind engine force.** `DE-core` and the `DE24-family` compute the loss-blind
+   proposal force (`μ_i − μ_j − θ`, resp. `m_i − m_j − θ`); characterise the set of
+   states on which this is (non-)descending under `η < 1` (Counterexample D is one
+   witness). `DE26-forced` computes no force and is outside this item. **Open.**
 5. **Constrained descent.** A projected-dynamics analogue of Theorem 4.4 that admits
    clipping/spill/reserve while retaining a dissipation inequality. **Open.**
 6. **`θ` and the flat viable band.** The bounds drop the `θ_e J_e` term and ignore the
@@ -607,6 +668,8 @@ score need not fall every tick; we can only say when dissipation beats drive plu
 step penalty. Second — and most important — this all concerns the **idealised
 synchronous law (D0)**. The **real engine family (DE)** applies drive and transport in two
 ordered passes, moves resource one transfer at a time against a changing state (which
-can carry information two cells in a single tick), uses the naive loss-blind force, and
-clamps values to a physical range. Proving D0 is a first brick, not the building: the
-engine's own guarantees still have to be earned separately.
+can carry information two cells in a single tick), uses the naive loss-blind force
+wherever it computes a force at all (`DE-core` and the `DE24-family`; the forced
+harness `DE26-forced` just executes given actions), and clamps values to a physical
+range. Proving D0 is a first brick, not the building: the engine's own guarantees
+still have to be earned separately.
