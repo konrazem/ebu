@@ -19,9 +19,13 @@ Design constraints enforced here:
     and one Edge - never the world, the full state vector, global V, or any
     evaluation metric. Global V exists ONLY as a researcher diagnostic computed
     AFTER all decisions.
-  * P1K is a separate diagnostic *bounded wrapper* (Amendment 1 Sec 17.2):
-    project the raw D0 proposal to [0, K_i], recording lower-bound shortfall and
-    spill exactly. P1K is OUTSIDE the V2.8 theorem; clipping is never silent.
+  * P1K is a separate diagnostic *projection wrapper* (Amendment 1 Sec 17.2,
+    Amendment 2 Sec 18.1): project the raw D0 proposal to [0, K_i], recording
+    lower-bound shortfall and spill exactly. P1K is OUTSIDE the V2.8 theorem;
+    clipping is never silent; and its ledger closes BY CONSTRUCTION (the
+    projection corrections enter it), so closure never certifies that delivered
+    stock was physically available - material shortfall invalidates
+    physical-service attribution for the tick.
   * This is a NEW engine: it does not import energy_balance or any ebu_v2x
     module, and it must never import test modules.
 
@@ -68,7 +72,12 @@ class Cell:
 
     K is the declared physical capacity: the P1K projection interval is [0, K]
     and K is also the carrying capacity of logistic/Allee regeneration. Exact
-    D0 (P1) never enforces it."""
+    D0 (P1) never enforces it.
+
+    Supply/demand semantics (Amendment 2 Sec 18.3): s and d are NON-NEGATIVE.
+    An arbitrary signed test drive u is represented by the decomposition
+    u = u+ - u-, with u+ as supply and u- as demand; negative supply is
+    rejected and regeneration remains the only signed local term."""
     alpha: float
     beta: float
     chi: float
@@ -76,8 +85,8 @@ class Cell:
     U: float
     R: float
     K: float
-    s: float = 0.0        # declared external inflow
-    d: float = 0.0        # demand
+    s: float = 0.0        # declared external inflow (non-negative)
+    d: float = 0.0        # demand (non-negative)
     lam: float = 0.0      # constant leak
     kappa: float = 0.0    # proportional leak
     source: str = "none"  # none | finite | logistic | allee
@@ -96,7 +105,7 @@ class Cell:
         K = _req_finite("K", self.K)
         if K <= 0.0:
             raise ValueError(f"K must be > 0 (declared physical capacity), got {K}")
-        _req_finite("s", self.s)
+        _req_nonneg("s", self.s)
         _req_nonneg("d", self.d)
         _req_nonneg("lam", self.lam)
         _req_nonneg("kappa", self.kappa)
@@ -248,13 +257,18 @@ def _regen(c: Cell, x: float) -> float:
     return logistic
 
 
-def natural_drive(c: Cell, x: float, s_extra: float = 0.0) -> float:
-    """u_i = s_i + s_extra + g_i(x_i) - d_i - lam_i - kappa_i x_i.
+def natural_drive(c: Cell, x: float, s_extra: float = 0.0,
+                  d_extra: float = 0.0) -> float:
+    """u_i = s_i + s_extra + g_i(x_i) - d_i - d_extra - lam_i - kappa_i x_i.
+
     Local: reads only this cell's state, its declared parameters, and the
-    declared tick-dependent external input s_extra. Never clipped."""
+    declared tick-dependent additional supply/demand. s_extra and d_extra are
+    NON-NEGATIVE (Amendment 2 Sec 18.3); regeneration is the only signed term.
+    Never clipped."""
     x = _req_finite("x", x)
-    s_extra = _req_finite("s_extra", s_extra)
-    return c.s + s_extra + _regen(c, x) - c.d - c.lam - c.kappa * x
+    s_extra = _req_nonneg("s_extra", s_extra)
+    d_extra = _req_nonneg("d_extra", d_extra)
+    return c.s + s_extra + _regen(c, x) - c.d - d_extra - c.lam - c.kappa * x
 
 
 # ---------------------------------------------------------------------------
@@ -315,6 +329,7 @@ class StepResult:
 
 def d0_step(world: World, x: Sequence[float], dt: float,
             s_extra: Optional[Sequence[float]] = None,
+            d_extra: Optional[Sequence[float]] = None,
             diagnostics: bool = True) -> StepResult:
     """One exact synchronous D0 tick (V2.8 Def 3.2).
 
@@ -322,8 +337,11 @@ def d0_step(world: World, x: Sequence[float], dt: float,
     accumulate all lossy contributions -> ONE synchronous update. Unconstrained:
     no clipping, no conflict scaling, no sequential application, no accept gate.
 
-    Per-cell transport contributions are summed with math.fsum, so the result is
-    invariant to edge enumeration order (fsum is a correctly rounded sum)."""
+    Accumulation contract (Amendment 2 Sec 18.4): per-cell transport
+    contributions are summed with math.fsum, so the update is permutation
+    invariant under edge reordering within a strict floating-point tolerance
+    (tested fixtures are observed bit-identical, but cross-platform bit identity
+    is not promised)."""
     dt = _req_finite("dt", dt)
     if dt <= 0.0:
         raise ValueError(f"dt must be > 0, got {dt}")
@@ -331,15 +349,21 @@ def d0_step(world: World, x: Sequence[float], dt: float,
     xf = tuple(_req_finite(f"x[{k}]", v) for k, v in enumerate(x))   # frozen state
     if len(xf) != n:
         raise ValueError(f"state length {len(xf)} != number of cells {n}")
-    if s_extra is None:
-        s_extra_t = (0.0,) * n
-    else:
-        s_extra_t = tuple(_req_finite(f"s_extra[{k}]", v) for k, v in enumerate(s_extra))
-        if len(s_extra_t) != n:
-            raise ValueError("s_extra length mismatch")
+
+    def _extra(name, seq):
+        if seq is None:
+            return (0.0,) * n
+        t = tuple(_req_nonneg(f"{name}[{k}]", v) for k, v in enumerate(seq))
+        if len(t) != n:
+            raise ValueError(f"{name} length mismatch")
+        return t
+
+    s_extra_t = _extra("s_extra", s_extra)
+    d_extra_t = _extra("d_extra", d_extra)
 
     # --- decision path: frozen state only -------------------------------
-    u = tuple(natural_drive(c, xf[k], s_extra_t[k]) for k, c in enumerate(world.cells))
+    u = tuple(natural_drive(c, xf[k], s_extra_t[k], d_extra_t[k])
+              for k, c in enumerate(world.cells))
     views = tuple(local_view(c, xf[k]) for k, c in enumerate(world.cells))
     f_list, J_list = [], []
     contrib = [[] for _ in range(n)]           # per-cell lossy contributions
@@ -394,29 +418,55 @@ def d0_step(world: World, x: Sequence[float], dt: float,
 # ---------------------------------------------------------------------------
 @dataclass(frozen=True)
 class P1KResult:
-    """Bounded-wrapper diagnostics. The V2.8 descent inequality is NOT claimed
-    for this model; clipping is never silent (shortfall/spill are exact)."""
+    """Bounded-wrapper diagnostics (Amendment 2 Sec 18.1).
+
+    P1K is a DIAGNOSTIC PROJECTION WRAPPER, not a physically realized
+    constrained transport law. Its ledger closes by construction because the
+    projection corrections (shortfall/spill) enter it explicitly - closure does
+    NOT prove that every delivered transfer was physically available at its
+    source. The V2.8 descent inequality is never claimed for this model, and
+    clipping is never silent: exact shortfall/spill are recorded unrounded."""
     model: str                       # "P1K-bounded-wrapper"
     covered_by_v28_theorem: bool     # always False
     raw: StepResult                  # the unchanged exact D0 proposal
     x_after: tuple                   # projected to [0, K_i]
-    shortfall: tuple                 # [-y_i]_+ per cell (lower-bound shortfall)
+    shortfall: tuple                 # [-y_i]_+ per cell (lower-bound shortfall;
+                                     # NOT automatically "unmet demand" - the
+                                     # cause needs attribution: demand, leak,
+                                     # or excessive transport-out)
     spill: tuple                     # [y_i - K_i]_+ per cell
     ledger_residual: float           # P1K ledger identity residual
+    boundary_tolerance: float        # tau_b = 1e-12 max(1, max K_i, max |y_i|)
+    material_shortfall: bool         # max shortfall > tau_b
+    material_spill: bool             # max spill > tau_b
+    raw_within_lower_bound: bool     # no material lower-bound violation
+    raw_within_upper_bound: bool     # no material upper-bound violation
+    eligible_for_physical_service_claim: bool
+    # ^ False whenever material_shortfall is True: a lower-bound projection can
+    #   make a destination appear served by stock the source never physically
+    #   possessed, so service attribution for this tick is invalid. This flag
+    #   makes no statement about global functional success.
 
 
 def p1k_step(world: World, x: Sequence[float], dt: float,
              s_extra: Optional[Sequence[float]] = None,
+             d_extra: Optional[Sequence[float]] = None,
              diagnostics: bool = True) -> P1KResult:
-    """Diagnostic physical wrapper: exact raw D0 proposal first (flux decisions
-    unchanged), then per-cell projection to [0, K_i] with exact accounting:
+    """Diagnostic projection wrapper: exact raw D0 proposal first (flux
+    decisions unchanged), then per-cell projection to [0, K_i] with exact
+    accounting:
 
         x'_i = min(K_i, max(0, y_i)) = y_i + shortfall_i - spill_i
 
-    Ledger (Amendment 1 Sec 17.2):
+    Ledger (Amendment 1 Sec 17.2; closes BY CONSTRUCTION, see P1KResult):
         sum(x' - x) = dt [sum u - sum (1-eta) J] + sum shortfall - sum spill
-    """
-    raw = d0_step(world, x, dt, s_extra=s_extra, diagnostics=diagnostics)
+
+    Interpretation limits (Amendment 2 Sec 18.1): a material shortfall makes
+    the tick ineligible for physical-service attribution; material spill is
+    counted as loss and prevents claiming exact unconstrained D0 behavior for
+    the tick. P1K is OUTSIDE the V2.8 theorem."""
+    raw = d0_step(world, x, dt, s_extra=s_extra, d_extra=d_extra,
+                  diagnostics=diagnostics)
     shortfall, spill, xb = [], [], []
     for k, c in enumerate(world.cells):
         y = raw.x_after[k]
@@ -428,11 +478,22 @@ def p1k_step(world: World, x: Sequence[float], dt: float,
     lhs = math.fsum(xb) - math.fsum(raw.x_before)
     rhs = (dt * math.fsum(raw.u) - raw.transport_loss
            + math.fsum(shortfall) - math.fsum(spill))
+    tau_b = 1e-12 * max(1.0,
+                        max(c.K for c in world.cells),
+                        max(abs(y) for y in raw.x_after))
+    mat_short = max(shortfall) > tau_b
+    mat_spill = max(spill) > tau_b
     return P1KResult(
         model="P1K-bounded-wrapper", covered_by_v28_theorem=False,
         raw=raw, x_after=tuple(xb),
         shortfall=tuple(shortfall), spill=tuple(spill),
-        ledger_residual=lhs - rhs)
+        ledger_residual=lhs - rhs,
+        boundary_tolerance=tau_b,
+        material_shortfall=mat_short,
+        material_spill=mat_spill,
+        raw_within_lower_bound=not mat_short,
+        raw_within_upper_bound=not mat_spill,
+        eligible_for_physical_service_claim=not mat_short)
 
 
 # ---------------------------------------------------------------------------
