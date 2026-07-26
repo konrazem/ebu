@@ -43,6 +43,7 @@ The model was hardened across five generations, each building on the last
 | **V2.5** | [ebu_v25.py](ebu_v25.py) | An **EBU accounting/incentive layer** over the frozen V2.4 physics: naive vs guarded ledgers. Guarded credit is live-state, telescoping, and debits transport loss and irreversible extraction — it closes enumerated gaming attacks (round-trips, splitting, claiming regeneration, reserve sacrifice) and keeps adversaries at 100% viability, while a naive ledger lets an adversary earn ~730k credit while collapsing every source. |
 | **V2.6** | [ebu_v26.py](ebu_v26.py) | **Automated adversarial testing** of the guarded ledger (a falsification study, *not* an economy). A deterministic beam / red-team search hunts for sequences that earn positive net guarded EBU *and* cause persistent physical harm. It rediscovers a naive exploit (positive control). A corrected, properly paired randomized study then found **1 of 12 layouts to be a confirmed profitable persistent-harm guarded exploit** (seed 0: +260 EBU while all sources die, viability→0%). **Guarded EBU is exploitable on at least one topology**; the ledger is reported unchanged (not patched) and the trajectory kept as a regression fixture. |
 | **V2.7** | [Foundation_v2.7_math.md](Foundation_v2.7_math.md) | **Mathematical foundation note (no engine change).** Derives the local actor law from a state functional `V_state = B_homeostasis + B_regeneration` and a dissipation potential `Ψ(J)`, separating three laws: the continuous Onsager flux (A), its forward-Euler discretisation (`B_raw`), and the engine's gated line search (`B_safe`). Proves the continuous-time energy–dissipation identity (Theorem 7.1) and corrects the logistic-sustainability, Allee-reserve, loss-aware descent bound, and finite-causal-speed claims. Validated by [test_math.py](test_math.py) (8 groups, 34 regression checks). |
+| **V2.8** | [Foundation_v2.8_discrete_draft.md](Foundation_v2.8_discrete_draft.md) | **Discrete mathematical foundation (no engine change, not yet peer reviewed).** A synchronous **discrete** energy–dissipation inequality for **Model D0** — the frozen-state, unconstrained, loss-aware explicit-Euler discretisation of the V2.7 flow — with an explicit finite-step remainder (Theorem 4.4), a **corrected curvature constant** `L_V` that sums simultaneously active penalty weights, one-edge/spectral/active-set/state-specific step-size bounds, a flux-nullspace lemma (`SJ = 0 ⇒ J = 0`), stock/loss ledger, one-tick locality, and Counterexamples A–E. **Model D0 is not the production DE engine family**, and no D0 theorem transfers to it. Validated (not proved) by [test_v28.py](test_v28.py) (11 groups, 132 checks, stdlib-only, hardened spectral solver). Typeset as [Foundation_v2.8_discrete.pdf](Foundation_v2.8_discrete.pdf). |
 
 ## What each version means
 
@@ -109,6 +110,25 @@ not yet an EBU *economy* — actors earn balances; they do not yet spend them.
   the tests — [test_math.py](test_math.py) (8 groups, 34 checks) only guards the
   analysis against drift. Two conjectures remain open (a discrete driven bound; the
   reserve-surrogate condition).
+- **V2.8 — the discrete foundation** *(a written note + numerical validation, engine
+  unchanged, not yet peer reviewed)*. V2.7's energy–dissipation theorem lived in
+  continuous time; the engine ticks. V2.8 crosses the first half of that gap: for the
+  idealised **synchronous law D0** (all transfers computed from one frozen state and
+  applied simultaneously, no clipping, loss-aware force `μᵢ − ημⱼ`), each tick provably
+  obeys *drive − dissipation + an explicit step-size penalty* — overshoot a spectral
+  step bound and the "stress score" `V` can rise, exactly like too large a learning
+  rate. Along the way it **corrects the curvature constant** (`L_V` must *sum*
+  simultaneously active homeostatic and reserve weights — the old max-form permits a
+  provably bad step, Counterexample E), proves that Onsager flux can never circulate
+  invisibly (`SJ = 0 ⇒ J = 0`), and shows with counterexamples why the naive
+  loss-blind force can make things worse over lossy edges. **Crucially, D0 is not the
+  shipped engine family (DE)**: the DE members split drive from transport, apply
+  transfers sequentially against live state, use the loss-blind force where they
+  compute one at all, and clip to `[0, K]` — every one of those mechanisms is
+  explicitly excluded and listed as an open problem. [test_v28.py](test_v28.py)
+  (11 groups, 132 checks, four negative controls, a hardened Jacobi spectral solver)
+  validates the note numerically; **passing checks validate implementation examples,
+  they do not prove the theorems**.
 
 ### Where this sits on the road to an EBU economy
 
@@ -183,7 +203,9 @@ make_paper*.py          render the PDF papers via reportlab
 figures/                generated plots (burden vs time, phase maps, heatmaps, …)
 results/v2.4/           frozen result captures + manifest for the v2.4.0 release
 results/v2.6/           adversarial-search results + manifest (V2.6 branch study)
-*.pdf                   the Foundation papers, V2.1 → V2.6
+results/v2.7/           manifest for the V2.7 math foundation stage
+results/v2.8/           V2.8 validation capture + reproducibility manifest
+*.pdf                   the Foundation papers, V2.1 → V2.8
 ecosystem.gif           animation of the ecosystem run
 ```
 
@@ -232,9 +254,17 @@ python3 test_v24.py              # V2.4 harvest rules(5 tests, needs requirement
 python3 test_v25.py              # V2.5 EBU ledger   (9 tests, needs requirements.txt)
 python3 test_v26.py              # V2.6 adversary    (15 tests + reruns the 33 prior)
 python3 test_math.py             # V2.7 math regression (8 groups, 34 checks, stdlib only)
+python3 test_v28.py              # V2.8 numerical validation (11 groups, 132 checks, stdlib only)
 ```
 
-Two separate suites:
+Three separate suites (kept separate on purpose — never combine these counts, and a
+check count is not a theorem count):
+
+```
+Prior engine/ledger: 48 tests
+V2.7 mathematical regression: 34 checks in 8 groups
+V2.8 numerical validation: 132 checks in 11 groups
+```
 
 - **Prior engine/ledger tests — 48 total** (33 prior + 15 V2.6; `test_v26.py` reruns
   the 33 prior as its first test).
@@ -242,9 +272,16 @@ Two separate suites:
   (`test_math.py`). These *validate* the derivations in
   [Foundation_v2.7_math.md](Foundation_v2.7_math.md) at tested points; a passing run is
   not a proof, and the check count is not a count of theorems.
+- **V2.8 numerical validation — 132 checks in 11 groups** (`test_v28.py`, deterministic
+  seed 20260726, four negative controls, hardened Jacobi spectral solver with
+  convergence/residual/PSD guards). These validate the **Model D0** results of
+  [Foundation_v2.8_discrete_draft.md](Foundation_v2.8_discrete_draft.md) (typeset as
+  [Foundation_v2.8_discrete.pdf](Foundation_v2.8_discrete.pdf)) on declared fixtures.
+  **Model D0 is not the production DE engine family**, and passing checks do not prove
+  the theorems — the note awaits independent expert review.
 
 Each script prints per-test `PASS` lines and a summary. `test_energy_balance.py`,
-`test_v22.py`, and `test_math.py` run on a bare Python install;
+`test_v22.py`, `test_math.py`, and `test_v28.py` run on a bare Python install;
 `test_v23.py`/`test_v24.py`/`test_v25.py`/`test_v26.py` import `matplotlib` via the
 experiment modules, so install `requirements.txt` first.
 

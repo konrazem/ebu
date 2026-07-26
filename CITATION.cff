@@ -11,14 +11,20 @@ abstract: >-
   admits, without altering the underlying physics. Version 2.7 adds a mathematical
   foundation note (no engine change): the local actor law is derived as gradient flow
   of a state functional under a dissipation potential, with a continuous-time
-  energy-dissipation (Lyapunov) theorem and numerical regression validation.
+  energy-dissipation (Lyapunov) theorem and numerical regression validation. Version
+  2.8 adds a synchronous discrete mathematical foundation (draft, not peer reviewed;
+  no engine change) for the idealised Model D0 discretisation only - a one-step
+  energy-dissipation inequality with explicit finite-step remainder, corrected
+  curvature constant, and spectral step-size bounds - together with standard-library
+  numerical validation (132 checks); the production engine family is explicitly out
+  of scope and numerical validation is not proof.
 authors:
   - family-names: Grzyb
     given-names: Konrad
 repository-code: "https://github.com/konrazem/ebu"
 license: MIT
-version: "2.7.0"
-date-released: "2026-07-24"
+version: "2.8.0"
+date-released: "2026-07-26"
 keywords:
   - homeostasis
   - agent-based model
@@ -27,3 +33,6 @@ keywords:
   - Allee effect
   - Lyapunov function
   - gradient flow
+  - discrete dynamical systems
+  - explicit Euler
+  - numerical validation
