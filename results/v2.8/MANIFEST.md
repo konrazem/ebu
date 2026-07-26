@@ -14,7 +14,7 @@ theorem**.
 | Starting commit of this release gate | `6a497e58876e4adfa228838c2ae4d89811b2a6b7` |
 | V2.8 math-draft commits | `ca2609d` (draft), `7128f56` (curvature + scope correction), `4cf6fcd` (flux-nullspace + engine-scope gaps) |
 | V2.8 test commits | `a978bdc` (`test_v28.py`), `6a497e5` (hardened spectral-solver guards) |
-| Release-preparation commit | recorded by the follow-up metadata commit (see Notes) |
+| Release-preparation commit | `9416cfb0450edf97dfa9c43fe16a43c27351d9fd` |
 | Python | 3.14.2 (`test_v28.py` and `test_math.py` are stdlib-only) |
 | Figure/PDF dependencies | numpy, matplotlib, pillow, reportlab (`requirements.txt`, unchanged) |
 
@@ -155,5 +155,8 @@ no theorem.**
 
 ## Release-preparation commits (recorded post-hoc)
 
-- `V2.8 release: package discrete mathematical foundation` — see follow-up commit for
-  the hash.
+- `9416cfb0450edf97dfa9c43fe16a43c27351d9fd` — `V2.8 release: package discrete
+  mathematical foundation` (PDF generator + PDF, results capture, manifest, README,
+  CI step, CITATION bump).
+- This manifest-metadata commit (`V2.8 release: record reproducibility metadata`) is
+  the immediate follow-up normal commit recording the hash above; no amend was used.
