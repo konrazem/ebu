@@ -180,7 +180,9 @@ def transport_loss(edges, J) -> float:
 # ===========================================================================
 def jacobi_eigs(A0, tol_factor=1e-13, max_rot=20000):
     """Classic Jacobi rotation eigensolver for a symmetric matrix. Returns
-    (eigenvalues, eigenvectors) with eigenvectors[k] the k-th (unit) eigenvector."""
+    (eigenvalues, eigenvectors) with eigenvectors[k] the k-th (unit) eigenvector.
+    Raises AssertionError if the off-diagonal tolerance is not reached within
+    max_rot rotations (a silent non-converged result must never be used)."""
     n = len(A0)
     A = [row[:] for row in A0]
     Vm = [[1.0 if i == j else 0.0 for j in range(n)] for i in range(n)]
@@ -188,6 +190,7 @@ def jacobi_eigs(A0, tol_factor=1e-13, max_rot=20000):
         return [A[0][0]], [[1.0]]
     scale = max(1.0, max(abs(A[i][j]) for i in range(n) for j in range(n)))
     tol = tol_factor * scale
+    converged = False
     for _ in range(max_rot):
         p, q, mx = 0, 1, 0.0
         for i in range(n):
@@ -195,6 +198,7 @@ def jacobi_eigs(A0, tol_factor=1e-13, max_rot=20000):
                 if abs(A[i][j]) > mx:
                     mx, p, q = abs(A[i][j]), i, j
         if mx <= tol:
+            converged = True
             break
         app, aqq, apq = A[p][p], A[q][q], A[p][q]
         theta = (aqq - app) / (2.0 * apq)
@@ -213,6 +217,11 @@ def jacobi_eigs(A0, tol_factor=1e-13, max_rot=20000):
             vkp, vkq = Vm[k][p], Vm[k][q]
             Vm[k][p] = cph * vkp - sph * vkq
             Vm[k][q] = sph * vkp + cph * vkq
+    if not converged:
+        final_off = max(abs(A[i][j]) for i in range(n) for j in range(i + 1, n))
+        raise AssertionError(
+            f"jacobi_eigs did not converge: n={n}, max_rot={max_rot} exhausted, "
+            f"final max off-diagonal {final_off:.3e} > tol {tol:.3e}")
     eigvals = [A[i][i] for i in range(n)]
     eigvecs = [[Vm[i][k] for i in range(n)] for k in range(n)]
     return eigvals, eigvecs
@@ -243,12 +252,29 @@ def gram_G(edges, n):
 
 
 def spectral_norm_sq(edges, n) -> float:
+    """||S D_M^{1/2}||_2^2 via Jacobi, with hard guards on EVERY matrix: eigenpair
+    residuals within a scale-aware tolerance, Gram PSD within roundoff, finite
+    lambda_max. Any violation raises with the offending matrix and residual."""
     if not edges:
         return 0.0
-    eigvals, eigvecs = jacobi_eigs(gram_G(edges, n))
-    WORST["eig_residual"] = max(WORST["eig_residual"],
-                                eig_residual(gram_G(edges, n), eigvals, eigvecs))
-    return max(eigvals)
+    G = gram_G(edges, n)
+    eigvals, eigvecs = jacobi_eigs(G)
+    scale = max(1.0, max(abs(v) for row in G for v in row))
+    res = eig_residual(G, eigvals, eigvecs)
+    if res > 1e-10 * scale:
+        raise AssertionError(
+            f"eigenpair residual {res:.3e} exceeds tolerance {1e-10 * scale:.3e} "
+            f"for Gram matrix G={G}")
+    neg = min(eigvals)
+    if neg < -1e-10 * scale:
+        raise AssertionError(
+            f"Gram matrix not PSD within roundoff: min eigenvalue {neg:.3e} "
+            f"(tolerance {-1e-10 * scale:.3e}) for G={G}")
+    lam_max = max(eigvals)
+    if not math.isfinite(lam_max):
+        raise AssertionError(f"non-finite lambda_max {lam_max!r} for G={G}")
+    WORST["eig_residual"] = max(WORST["eig_residual"], res)
+    return lam_max
 
 
 def gershgorin_bound(edges, n) -> float:
@@ -867,8 +893,10 @@ if __name__ == "__main__":
     for k, (title, p, f) in enumerate(GROUPS, 1):
         print(f"group {k:>2}: {p:>3} passed, {f} failed - {title}")
     print(f"total checks: {PASS} passed, {FAIL} failed in {len(GROUPS)} groups")
-    print(f"max |r_n| - R_n margin observed: {WORST['remainder_margin']:.3e} (<= 0 ok)")
-    print(f"max descent margin observed:     {WORST['descent_margin']:.3e} (<= 0 ok)")
+    print(f"max |r_n| - R_n margin observed: {WORST['remainder_margin']:.3e} "
+          f"(<= 0 expected; tiny positive values within the declared fp tolerance are acceptable)")
+    print(f"max descent margin observed:     {WORST['descent_margin']:.3e} "
+          f"(<= 0 expected; tiny positive values within the declared fp tolerance are acceptable)")
     print(f"max exact-identity residual:     {WORST['identity_residual']:.3e}")
     print(f"max eigenpair residual:          {WORST['eig_residual']:.3e}")
     if FAIL:
