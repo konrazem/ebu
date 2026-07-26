@@ -26,7 +26,8 @@ V29_SEED = 29001    # validation-only seed range; distinct from behavioral
 PASS = 0
 FAIL = 0
 GROUPS: list[list] = []
-WORST = {"conformance": 0.0, "inequality": -math.inf, "ledger": 0.0}
+WORST = {"conformance": 0.0, "inequality": -math.inf, "ledger": 0.0,
+         "permutation": 0.0}
 
 
 def group(title: str) -> None:
@@ -62,8 +63,11 @@ def to_oracle(world: d0.World):
 
 
 def drive_world(cells_params, edges, u_vec):
-    """World whose natural drive is exactly the constant vector u (s=u, rest 0)."""
-    cells = [d0.Cell(alpha=a, beta=b, chi=ch, L=L, U=U, R=R, K=K, s=uv)
+    """World whose natural drive is exactly the constant vector u, represented
+    by the Amendment-2 decomposition u = u+ - u- (supply carries u+, demand
+    carries u-); negative supply is never used."""
+    cells = [d0.Cell(alpha=a, beta=b, chi=ch, L=L, U=U, R=R, K=K,
+                     s=max(uv, 0.0), d=max(-uv, 0.0))
              for (a, b, ch, L, U, R, K), uv in zip(cells_params, u_vec)]
     return d0.World(cells=tuple(cells), edges=tuple(edges))
 
@@ -254,15 +258,18 @@ def test_group4():
     worst = max(abs(a - b) for a, b in zip(res.sj, sj_direct))
     check("S J accumulation matches explicit incidence-column calculation",
           worst < 1e-12, f"max diff {worst:.2e}")
-    # (c) edge-order invariance (bit-identical thanks to fsum accumulation)
+    # (c) edge-order permutation invariance within strict tolerance (observed
+    # bit-identical here via fsum; cross-platform bit identity is NOT claimed)
     rng = random.Random(V29_SEED + 1)
+    tol = 1e-12 * (1.0 + max(abs(v) for v in res.x_after))
     for trial in range(3):
         perm = list(edges)
         rng.shuffle(perm)
         wp = drive_world(params, perm, u)
         rp = d0.d0_step(wp, x, 0.3)
-        check(f"edge-order shuffle {trial}: x_after bit-identical",
-              rp.x_after == res.x_after)
+        dev = max(abs(a - b) for a, b in zip(rp.x_after, res.x_after))
+        check(f"edge-order shuffle {trial}: permutation-invariant within tolerance",
+              dev <= tol, f"observed residual {dev:.1e}")
     # (d) distance-2 cell untouched after one tick (no sequential leakage)
     cq = d0.Cell(alpha=1.0, beta=1.0, chi=0.0, L=10.0, U=10.0, R=0.0, K=20.0)
     chain = d0.World(cells=(cq, cq, cq),
@@ -647,9 +654,157 @@ def test_group11():
 
 
 # ===========================================================================
+# [12] P1K nonphysical-service trap (Gate 1.1 Group A)
+# ===========================================================================
+def test_group12():
+    group("P1K trap: ledger closure does not certify physical service")
+    import dataclasses
+    c = band_cell()
+    w = d0.World(cells=(c, c), edges=(d0.Edge(0, 1, 2.2, 0.0, 0.6),))
+    x = [19.0, 0.5]
+    r = d0.p1k_step(w, x, 1.0)
+    check("raw D0 overdraws the source (J = 20.68 > 19 available; y_src < 0)",
+          abs(r.raw.J[0] - 20.68) < 1e-12 and r.raw.x_after[0] < 0.0,
+          f"y_src={r.raw.x_after[0]:.6f}")
+    check("destination nevertheless received the full raw lossy inflow",
+          abs(r.raw.x_after[1] - (0.5 + 0.6 * 20.68)) < 1e-12,
+          f"y_dst={r.raw.x_after[1]:.6f}")
+    check("P1K projects the source to exactly zero", r.x_after[0] == 0.0)
+    check("exact lower-bound shortfall recorded (1.68, unrounded)",
+          abs(r.shortfall[0] - 1.68) < 1e-12, f"shortfall={r.shortfall[0]!r}")
+    check("P1K ledger closes ONLY via the explicit +shortfall correction",
+          abs(r.ledger_residual) < 1e-12 and r.shortfall[0] > 1.0,
+          f"residual={r.ledger_residual:.2e} - closure alone is insufficient "
+          f"evidence of physical availability")
+    check("material_shortfall flag is true", r.material_shortfall is True,
+          f"tau_b={r.boundary_tolerance:.2e}")
+    check("physical-service-claim eligibility is false",
+          r.eligible_for_physical_service_claim is False
+          and r.raw_within_lower_bound is False)
+    check("no result field describes the destination as validly served",
+          all("served" not in f.name for f in dataclasses.fields(r)))
+    check("P1K remains outside the theorem", r.covered_by_v28_theorem is False)
+
+
+# ===========================================================================
+# [13] boundary tolerance classification (Gate 1.1 Group B)
+# ===========================================================================
+def test_group13():
+    group("boundary tolerance: noise vs material projection")
+    c = band_cell(d=1.0)
+    w = d0.World(cells=(c,), edges=())
+    tiny = d0.p1k_step(w, [1.0], 1.0, d_extra=[1e-14])       # y = -1e-14
+    check("tiny projection below tau_b is classified as numerical noise",
+          tiny.material_shortfall is False
+          and tiny.eligible_for_physical_service_claim is True,
+          f"shortfall={tiny.shortfall[0]:.2e} < tau_b={tiny.boundary_tolerance:.2e}")
+    check("tiny case: exact shortfall still stored, not erased by classification",
+          0.0 < tiny.shortfall[0] < 1e-13, f"{tiny.shortfall[0]!r}")
+    mat = d0.p1k_step(w, [1.0], 1.0, d_extra=[0.5])          # y = -0.5
+    check("projection above tau_b is material and removes eligibility",
+          mat.material_shortfall is True
+          and mat.eligible_for_physical_service_claim is False
+          and abs(mat.shortfall[0] - 0.5) < 1e-12)
+    hi = d0.p1k_step(d0.World(cells=(band_cell(),), edges=()), [19.0], 1.0,
+                     s_extra=[8.0])                          # y = 27 > K = 20
+    check("material spill flagged; upper-bound flag false; exact spill stored",
+          hi.material_spill is True and hi.raw_within_upper_bound is False
+          and abs(hi.spill[0] - 7.0) < 1e-12)
+    check("spill alone does not remove service-claim eligibility",
+          hi.material_shortfall is False
+          and hi.eligible_for_physical_service_claim is True)
+
+
+# ===========================================================================
+# [14] supply/demand semantics (Gate 1.1 Group C)
+# ===========================================================================
+def test_group14():
+    group("supply/demand semantics: non-negative, signed drives by decomposition")
+    rejections = [
+        ("negative s", lambda: d0.Cell(alpha=1, beta=1, chi=0, L=5, U=15, R=0,
+                                       K=20, s=-0.1)),
+        ("negative d", lambda: d0.Cell(alpha=1, beta=1, chi=0, L=5, U=15, R=0,
+                                       K=20, d=-0.1)),
+        ("negative s_extra", lambda: d0.d0_step(
+            d0.World(cells=(band_cell(),), edges=()), [10.0], 0.5, s_extra=[-0.1])),
+        ("negative d_extra", lambda: d0.d0_step(
+            d0.World(cells=(band_cell(),), edges=()), [10.0], 0.5, d_extra=[-0.1])),
+        ("negative lam", lambda: d0.Cell(alpha=1, beta=1, chi=0, L=5, U=15, R=0,
+                                         K=20, lam=-0.1)),
+    ]
+    for name, fn in rejections:
+        try:
+            fn()
+            ok = False
+        except (ValueError, TypeError):
+            ok = True
+        check(f"rejects {name}", ok)
+    up = d0.natural_drive(band_cell(s=1.3), 10.0)
+    dn = d0.natural_drive(band_cell(d=0.7), 10.0)
+    check("positive drive represented by supply: u == +1.3", up == 1.3)
+    check("negative drive represented by demand: u == -0.7", dn == -0.7)
+    params, edges, x, u = FIXTURES[2]
+    res = d0.d0_step(drive_world(params, edges, u), x, 0.3)
+    check("decomposed representation reproduces the signed test drive exactly",
+          max(abs(a - b) for a, b in zip(res.u, u)) == 0.0,
+          f"u={u}")
+    # equivalence of a legacy all-positive-supply representation
+    pos_u = [abs(v) for v in u]
+    w_dec = drive_world(params, edges, pos_u)
+    w_leg = d0.World(cells=tuple(
+        d0.Cell(alpha=a, beta=b, chi=ch, L=L, U=U, R=R, K=K, s=uv)
+        for (a, b, ch, L, U, R, K), uv in zip(params, pos_u)), edges=tuple(edges))
+    r1 = d0.d0_step(w_dec, x, 0.3)
+    r2 = d0.d0_step(w_leg, x, 0.3)
+    check("pure-supply and decomposed forms agree for non-negative drives",
+          r1.x_after == r2.x_after)
+
+
+# ===========================================================================
+# [15] permutation robustness (Gate 1.1 Group D)
+# ===========================================================================
+def test_group15():
+    group("permutation robustness of the synchronous update")
+    rng = random.Random(V29_SEED + 2)
+    n_perms_total = 0
+    n_active = 0
+    worst = 0.0
+    tested = 0
+    for params, edges, x, u in FIXTURES:
+        if len(edges) < 3:
+            continue
+        tested += 1
+        base_w = drive_world(params, edges, u)
+        base = d0.d0_step(base_w, x, 0.3)
+        if any(j > 0 for j in base.J):
+            n_active += 1
+        tol = 1e-12 * (1.0 + max(abs(v) for v in base.x_after))
+        perms = [list(reversed(edges))] + [
+            rng.sample(list(edges), len(edges)) for _ in range(11)]
+        for perm in perms:
+            n_perms_total += 1
+            rp = d0.d0_step(drive_world(params, perm, u), x, 0.3)
+            dev = max(abs(a - b) for a, b in zip(rp.x_after, base.x_after))
+            dev = max(dev, abs(rp.ledger_residual - base.ledger_residual))
+            worst = max(worst, dev)
+            if dev > tol:
+                check("permutation deviation within strict tolerance", False,
+                      f"dev={dev:.2e} > tol={tol:.2e}",
+                      fixture_repr(params, perm, x, u, 0.3))
+                return
+    WORST["permutation"] = worst
+    check(f"{n_perms_total} permutations over {tested} multi-edge fixtures agree "
+          f"within strict scale-aware tolerance",
+          True, f"max residual {worst:.3e} (observed; cross-platform bit "
+          f"identity is not claimed)")
+    check("permutation fixtures include active edges",
+          n_active >= tested // 2, f"{n_active}/{tested} active")
+
+
+# ===========================================================================
 if __name__ == "__main__":
     print("=" * 74)
-    print("V2.9 Gate 1 - D0 engine conformance validation (NOT proof; no behavior)")
+    print("V2.9 Gate 1/1.1 - D0 engine conformance validation (NOT proof; no behavior)")
     print("=" * 74)
     print(f"Python {sys.version.split()[0]}   validation seed = {V29_SEED} "
           f"(distinct from behavioral seeds 0-9 / 100-139)")
@@ -664,6 +819,10 @@ if __name__ == "__main__":
     test_group9()
     test_group10()
     test_group11()
+    test_group12()
+    test_group13()
+    test_group14()
+    test_group15()
     print("-" * 74)
     for k, (title, p, f) in enumerate(GROUPS, 1):
         print(f"group {k:>2}: {p:>3} passed, {f} failed - {title}")
@@ -672,6 +831,8 @@ if __name__ == "__main__":
     print(f"max inequality residual:        {WORST['inequality']:.3e} "
           f"(<= 0 expected; fp-tolerance positive values acceptable)")
     print(f"max ledger residual:            {WORST['ledger']:.3e}")
+    print(f"max permutation residual:       {WORST['permutation']:.3e} "
+          f"(strict-tolerance contract; bit identity not promised cross-platform)")
     if FAIL:
         print("CONFORMANCE VALIDATION FAILED - see reproduce lines above.")
         raise SystemExit(1)
