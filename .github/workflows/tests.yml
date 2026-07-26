@@ -26,3 +26,6 @@ jobs:
       - name: Run V2.7 mathematical regression validation (8 groups, 34 checks)
         run: |
           python test_math.py
+      - name: Run V2.8 numerical validation of the discrete D0 foundation (11 groups, 132 checks)
+        run: |
+          python test_v28.py
