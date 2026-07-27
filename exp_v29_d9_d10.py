@@ -49,12 +49,15 @@ TRACE_GZ_THRESHOLD = 10 * 1024 * 1024   # gzip (stdlib, documented) above 10 MiB
 
 POLICIES = ("P0", "P1", "soft", "P1C")
 
-# per-tick columnar record fields (section 10)
+# per-tick columnar record fields (section 10). Only completed VALID (finite)
+# ticks are written to the trace; a non-finite successor ends the run and is
+# recorded in the aggregate (terminal_status), never serialized as a numeric row.
 TICK_FIELDS = [
     "tick", "x_before", "x_after", "u", "requested_export", "safe_budget",
     "accepted_export", "delivered_service", "transport_loss", "unmet_demand",
     "source_state", "reserve_crossed", "allee_crossed", "locally_infeasible",
     "p1c_binding", "ledger_residual", "theorem_eligible", "theorem_ok",
+    "lower_violation", "upper_violation",
 ]
 
 
@@ -152,6 +155,10 @@ def build_d10_runs(plan: dict) -> list[dict]:
     burn = _req(world, "burn_in", "D10.world")
     persist = _req(world, "persistence_window", "D10.world")
     K = _req(src_t, "K", "D10.world.source")
+    edge_tmpl = _req(world, "edges_template", "D10.world")[0]
+    edge_M = _req(edge_tmpl, "M", "D10.world.edges_template[0]")
+    edge_i = _req(edge_tmpl, "i", "D10.world.edges_template[0]")
+    edge_j = _req(edge_tmpl, "j", "D10.world.edges_template[0]")
     sd = _req(_req(D10, "source_dynamics", "D10"), "rho_default", "D10.source_dynamics")
     axes = _req(D10, "axes", "D10")
     prim = _req(axes, "primary", "D10.axes")
@@ -184,15 +191,20 @@ def build_d10_runs(plan: dict) -> list[dict]:
         else:
             chi = 0.0
         cell_R = R_eff if chi > 0 else 0.0
+        # group_chi = the LARGEST chi among the four policies paired at this grid
+        # point (= the soft arm's chi). All four policies share a timestep derived
+        # from this most-restrictive certificate (Gate 2.4A Sec 4).
+        group_chi = chi_soft
         return {
             "run_id": rid, "experiment": "D10", "policy": policy,
             "d_over_gmax": dg, "eta": eta, "theta": theta, "delta": delta,
-            "chi": chi, "rho": rho, "r_dt": r_dt,
+            "chi": chi, "group_chi": group_chi, "rho": rho, "r_dt": r_dt,
             "d": d, "g_max": g_max, "R_eff": R_eff, "K": K,
             "source": dict(src_t, chi=chi, R=cell_R, rho=rho, K=K, A=0.0,
                            source="logistic"),
             "sink": dict(snk_t, d=d),
-            "edge": {"i": 0, "j": 1, "M": 1.0, "theta": theta, "eta": eta},
+            "edge": {"i": edge_i, "j": edge_j, "M": edge_M, "theta": theta,
+                     "eta": eta},
             "x0": list(x0), "ticks": ticks, "burn_in": burn,
             "persistence": persist, "R_eff_pres": R_eff,
             "eps_x": 0.0, "eps_u": 0.0, "source_type": "regenerative",
@@ -275,19 +287,21 @@ def _worlds_for_run(spec: dict):
 
 
 def resolve_dt(spec: dict) -> float:
-    """D9 uses the fixed registered dt; D10 derives dt = r_dt * cert, computed on
-    the MOST RESTRICTIVE (largest-chi) world at the grid point so all four
-    policies share one dt (static Gershgorin certificate; no state advance)."""
+    """D9 uses the fixed registered dt; D10 derives dt = r_dt * cert on the MOST
+    RESTRICTIVE certificate among the FOUR policies paired at the grid point.
+
+    The binding certificate uses `group_chi` = the largest chi among the paired
+    policies (= the soft arm's chi), NOT the individual run's chi. This makes the
+    four policies at one grid point share a single dt (Gate 2.4A Sec 4), so the
+    P1 vs soft vs P1C comparison is not confounded by different timesteps. The
+    Gershgorin certificate is a static matrix calculation (no state advance)."""
     if spec["experiment"] == "D9":
         return spec["dt"]
-    # D10: build the soft-arm (chi = chi at this point, largest L_V) world to
-    # get the binding certificate. chi_soft = the run's chi if it is the soft/P1C
-    # chi; use max(chi_ref, run chi) to be safe.
     s = spec["source"]
-    chi_bind = max(s["chi"], spec.get("chi", 0.0))
-    src = d0.Cell(alpha=s["alpha"], beta=s["beta"], chi=chi_bind, L=s["L"],
-                  U=s["U"], R=(spec["R_eff"] if chi_bind > 0 else 0.0), K=s["K"],
-                  source="logistic", rho=s["rho"])
+    group_chi = spec["group_chi"]      # max chi among the paired policies
+    src = d0.Cell(alpha=s["alpha"], beta=s["beta"], chi=group_chi, L=s["L"],
+                  U=s["U"], R=(spec["R_eff"] if group_chi > 0 else 0.0),
+                  K=s["K"], source="logistic", rho=s["rho"])
     k = spec["sink"]
     snk = d0.Cell(alpha=k["alpha"], beta=k["beta"], chi=0.0, L=k["L"], U=k["U"],
                   R=0.0, K=k["K"], d=k["d"])
@@ -349,14 +363,37 @@ def step_once(spec: dict, x: list[float], dt: float, cfg: p1c.SourceConfig,
     state = p1c.classify_state(cfg, x[0], u_src, dt)
     # safe budget the source WOULD have (evaluation)
     safe_budget = p1c.robust_budget(cfg, x[0], u_src, dt)
-    # reserve / Allee crossings on the SOURCE
+    # reserve / Allee crossings on the SOURCE, using the registered reserve_tol
+    # (a below-boundary deviation smaller than reserve_tol is NOT material -
+    #  Gate 2.4A Sec 5; e.g. an ~8.88e-16 fp residual is not a crossing).
     R_eff = cfg.R_eff
     A = src.A
-    reserve_crossed = (x[0] >= R_eff) and (x_after[0] < R_eff)
-    allee_crossed = (A > 0.0) and (x[0] >= A) and (x_after[0] < A)
+    rtol = CLASS_TOL["reserve_tol"]
+    finite_after = all(math.isfinite(v) for v in x_after)
+    below_R_before = x[0] < R_eff - rtol
+    below_R_after = finite_after and (x_after[0] < R_eff - rtol)
+    reserve_crossed = (not below_R_before) and below_R_after
+    below_A_before = (A > 0.0) and (x[0] < A - rtol)
+    below_A_after = (A > 0.0) and finite_after and (x_after[0] < A - rtol)
+    allee_crossed = (A > 0.0) and (not below_A_before) and below_A_after
     locally_infeasible = (state == "I")
-    # ledger residual
-    ledger = (math.fsum(x_after) - math.fsum(x)) - (dt * math.fsum(u) - loss)
+    # physical-domain violation flags (FINITE out-of-range is recorded and the
+    # run CONTINUES, as in frozen Gate-2 behavior; only a NON-finite successor is
+    # fatal, handled in run_trajectory). tau = scale-aware fp tolerance.
+    Ks = [world.cells[k].K for k in range(len(x_after))]
+    tau = 1e-12 * max(1.0, max(Ks), max((abs(v) for v in x_after if math.isfinite(v)),
+                                        default=1.0))
+    lower_violation = finite_after and any(v < -tau for v in x_after)
+    upper_violation = finite_after and any(v > Ks[k] + tau
+                                           for k, v in enumerate(x_after))
+    nonfinite = not finite_after
+    # NOTE: the GLOBAL state functional V is deliberately NOT computed here - it
+    # is an evaluation-only quantity computed by run_trajectory AFTER the tick, so
+    # the per-tick decision path never touches a global functional (information
+    # boundary; enforced by test group 11/15). Local evaluations (classify_state,
+    # robust_budget) are source-local and permitted.
+    ledger = ((math.fsum(x_after) - math.fsum(x)) - (dt * math.fsum(u) - loss)
+              if finite_after else None)
     return {
         "x_before": list(x), "x_after": x_after, "u": u,
         "requested_export": req, "safe_budget": safe_budget,
@@ -366,6 +403,8 @@ def step_once(spec: dict, x: list[float], dt: float, cfg: p1c.SourceConfig,
         "allee_crossed": allee_crossed, "locally_infeasible": locally_infeasible,
         "p1c_binding": binding, "ledger_residual": ledger,
         "theorem_eligible": th_elig, "theorem_ok": th_ok,
+        "lower_violation": lower_violation, "upper_violation": upper_violation,
+        "nonfinite": nonfinite, "finite_after": finite_after,
     }
 
 
@@ -420,6 +459,64 @@ def classify(metrics: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
+# safe regeneration + frozen stability classifier (Amendment 1 Sec 17.4)
+# ---------------------------------------------------------------------------
+def safe_regen(src: d0.Cell, x: float) -> float:
+    """g(x) for the source, finite-safe: if the direct evaluation overflows on an
+    extreme (divergence) stock, return the analytic-limit signed sentinel so the
+    'g <= 0' dead-source test stays well defined without producing non-finite
+    output. Allee: g ~ -rho x^3/(K A) as |x|->inf; logistic: g ~ -rho x^2/K."""
+    if src.source in ("none", "finite") or src.rho <= 0.0:
+        return 0.0
+    try:
+        logistic = src.rho * x * (1.0 - x / src.K)
+        g = logistic * (x / src.A - 1.0) if src.source == "allee" else logistic
+    except OverflowError:
+        g = math.inf
+    if math.isfinite(g):
+        return g
+    if src.source == "allee":
+        return math.copysign(1e18, -(x ** 3)) if x != 0 else 0.0
+    return -1e18   # logistic leading term is non-positive for large |x|
+
+
+def stability_class(v_series, x_series, x0, burn, kmax) -> tuple:
+    """Frozen dimensionless V2.9 stability classifier (Amendment 1 Sec 17.4).
+    v_series/x_series are indexed 0..N (index 0 = initial state), over VALID
+    ticks only. Returns (class, tau, amplitude). Ported from exp_v29 (same rules;
+    no new classifier is invented)."""
+    N = len(v_series) - 1
+    W = v_series[burn:]
+    if len(W) < 4:
+        return "unclassified", None, None
+    q = len(W) // 4
+    quarters = [W[k * q:(k + 1) * q] for k in range(4)]
+    q1, q4 = quarters[0], W[len(W) - q:]
+    s0 = max(v_series[burn], 1e-3 * v_series[0], 1e-9)
+    tau = (math.fsum(q4) / len(q4) - math.fsum(q1) / len(q1)) / s0
+    amp = (max(q4) - min(q4)) / s0
+    XW = x_series[burn:]
+    bounded = max(max(abs(v) for v in xs) for xs in XW) <= 10.0 * kmax
+    tot0 = math.fsum(x0)
+    sigma = [(math.fsum(xs) / tot0 if tot0 != 0 else math.inf) for xs in x_series]
+    sigma_w = sigma[burn:]
+    sigma_q4 = sigma_w[len(sigma_w) - q:]
+    qmeans = [math.fsum(qq) / len(qq) for qq in quarters]
+    increasing = all(qmeans[k + 1] > qmeans[k] for k in range(3))
+    if not bounded or (tau > 0.05 and increasing):
+        cls = "accumulation"
+    elif sigma[-1] < 0.05 and not any(s > 0.10 for s in sigma_q4):
+        cls = "collapse"
+    elif abs(tau) <= 0.01 and amp <= 0.01:
+        cls = "converged"
+    elif abs(tau) <= 0.05 and amp > 0.01:
+        cls = "bounded_oscillation"
+    else:
+        cls = "unclassified"
+    return cls, tau, amp
+
+
+# ---------------------------------------------------------------------------
 # full single run (executes a trajectory - NOT called by Phase-A tests)
 # ---------------------------------------------------------------------------
 def run_trajectory(spec: dict) -> tuple[dict, list[dict]]:
@@ -430,9 +527,10 @@ def run_trajectory(spec: dict) -> tuple[dict, list[dict]]:
     persist = spec["persistence"]
     R_eff = cfg.R_eff
     A = src.A
+    rtol = CLASS_TOL["reserve_tol"]
+    kmax = max(c.K for c in world.cells)
     x = list(spec["x0"])
     rows = []
-    # aggregates
     reserve_crossings = 0
     first_reserve_tick = None
     allee_crossings = 0
@@ -441,7 +539,8 @@ def run_trajectory(spec: dict) -> tuple[dict, list[dict]]:
     time_below_allee = 0
     infeasible_ticks = 0
     binding_ticks = 0
-    cum_loss = 0.0
+    lower_viol_ticks = 0
+    upper_viol_ticks = 0
     cum_req = 0.0
     cum_delivered = 0.0
     cum_unmet = 0.0
@@ -452,9 +551,34 @@ def run_trajectory(spec: dict) -> tuple[dict, list[dict]]:
     th_violations = 0
     viab_series = []
     delivered_series = []
+    v_series = [d0.V_total(world, x)]     # index 0 = initial state (for stability)
+    x_series = [list(x)]
+    # domain-exit provenance
+    terminal_status = "completed"
+    domain_exit_tick = None
+    domain_exit_cells = None
+    domain_exit_direction = None
+    valid_ticks = 0
     for t in range(1, ticks + 1):
         rec = step_once(spec, x, dt, cfg, world, world0)
-        # aggregate
+        # DOMAIN EXIT: a non-finite successor is fatal for THIS run (the actual
+        # crash cause). Record it, retain the last valid finite state, and stop
+        # advancing this run (Gate 2.4A Sec 3). Finite out-of-range is NOT fatal
+        # (recorded below and the run continues, as in frozen Gate-2 behavior).
+        if rec["nonfinite"]:
+            terminal_status = "domain_exit"
+            domain_exit_tick = t
+            xa = rec["x_after"]
+            domain_exit_cells = [k for k, v in enumerate(xa) if not math.isfinite(v)]
+            dirs = []
+            for k in domain_exit_cells:
+                v = xa[k]
+                dirs.append("below" if (v == -math.inf) else
+                            "above" if (v == math.inf) else "nan")
+            domain_exit_direction = "/".join(sorted(set(dirs)))
+            break   # do not append this tick; last finite state is retained in x
+        xa = rec["x_after"]
+        valid_ticks += 1
         if rec["reserve_crossed"]:
             reserve_crossings += 1
             if first_reserve_tick is None:
@@ -463,57 +587,69 @@ def run_trajectory(spec: dict) -> tuple[dict, list[dict]]:
             allee_crossings += 1
             if first_allee_tick is None:
                 first_allee_tick = t
-        xa = rec["x_after"]
-        if xa[0] < R_eff:
+        if xa[0] < R_eff - rtol:                 # material below-reserve
             time_below_reserve += 1
-        if A > 0.0 and xa[0] < A:
+        if A > 0.0 and xa[0] < A - rtol:
             time_below_allee += 1
         if rec["locally_infeasible"]:
             infeasible_ticks += 1
         if rec["p1c_binding"]:
             binding_ticks += 1
-        # transport_loss from d0/p1c is already an AMOUNT (dt*sum(1-eta)J);
-        # cum_loss is summed from rows after the loop.
+        if rec["lower_violation"]:
+            lower_viol_ticks += 1
+        if rec["upper_violation"]:
+            upper_viol_ticks += 1
         cum_req += dt * rec["requested_export"]
         cum_delivered += dt * rec["delivered_service"]
         cum_unmet += dt * rec["unmet_demand"]
-        O_physical += overuse_increment(dt, rec["accepted_export"],
-                                        rec["safe_budget"])
+        O_physical += overuse_increment(dt, rec["accepted_export"], rec["safe_budget"])
         min_source = min(min_source, xa[0])
         max_ledger = max(max_ledger, abs(rec["ledger_residual"]))
         if rec["theorem_eligible"]:
             th_elig_ticks += 1
             if rec["theorem_ok"] is False:
                 th_violations += 1
-        viab = (int(xa[0] >= src.L) + int(xa[1] >= snk.L)) / 2.0
-        viab_series.append(viab)
+        viab_series.append((int(xa[0] >= src.L) + int(xa[1] >= snk.L)) / 2.0)
         delivered_series.append(rec["delivered_service"])
-        rows.append({"tick": t, **rec})
+        # GLOBAL functional V computed HERE (evaluation/aggregation), AFTER the
+        # tick's local decision + physical update - never on the decision path.
+        v_series.append(d0.V_total(world, xa))
+        x_series.append(list(xa))
+        rows.append({"tick": t, **{f: rec[f] for f in TICK_FIELDS if f != "tick"}})
         x = xa
     cum_loss = math.fsum(r["transport_loss"] for r in rows)
-    final_src = x[0]
-    final_regen = (_allee_g(src.rho, src.K, src.A, final_src) if src.source == "allee"
-                   else _logistic_g(src.rho, src.K, final_src) if src.source == "logistic"
-                   else 0.0)
-    post = slice(burn, ticks)
-    postburn_viab = viab_series[burn:]
-    postburn_deliv = delivered_series[burn:]
+    final_src = x[0]                             # last valid finite source stock
+    final_regen = safe_regen(src, final_src)
     demand = snk.d
+    # post-burn-in over VALID ticks; empty (exit during burn-in) -> fall back to
+    # the whole valid run (does not affect classification of exiting runs, which
+    # are decided by reserve/overuse/infeasibility, never by class 4/5).
+    pv = viab_series[burn:] or viab_series or [0.0]
+    pd = delivered_series[burn:] or delivered_series or [0.0]
+    scls, s_tau, s_amp = stability_class(v_series, x_series, spec["x0"], burn, kmax)
+    dead_source = (final_src < CLASS_TOL["dead_stock_threshold"]
+                   and final_regen <= 0.0)
     agg = {
         "run_id": spec["run_id"], "experiment": spec["experiment"],
         "policy": spec["policy"], "dt": dt, "ticks": ticks, "burn_in": burn,
-        "persistence_window": persist, "R_eff": R_eff, "A": A,
-        "demand": demand,
-        "chi": spec.get("chi"), "hard_cap": spec.get("hard_cap", spec["policy"] == "P1C"),
+        "persistence_window": persist, "R_eff": R_eff, "A": A, "demand": demand,
+        "chi": spec.get("chi"), "group_chi": spec.get("group_chi"),
+        "hard_cap": spec.get("hard_cap", spec["policy"] == "P1C"),
         "d_over_gmax": spec.get("d_over_gmax"), "eta": spec.get("eta"),
         "theta": spec.get("theta"), "delta": spec.get("delta"),
         "rho": spec.get("rho"), "r_dt": spec.get("r_dt"),
+        "terminal_status": terminal_status, "domain_exit_tick": domain_exit_tick,
+        "domain_exit_cells": domain_exit_cells,
+        "domain_exit_direction": domain_exit_direction,
+        "valid_ticks": valid_ticks,
         "reserve_crossings": reserve_crossings,
         "first_reserve_crossing_tick": first_reserve_tick,
         "allee_crossings": allee_crossings,
         "first_allee_crossing_tick": first_allee_tick,
         "time_below_reserve": time_below_reserve,
         "time_below_allee": time_below_allee,
+        "lower_violation_ticks": lower_viol_ticks,
+        "upper_violation_ticks": upper_viol_ticks,
         "locally_infeasible_ticks": infeasible_ticks,
         "p1c_binding_ticks": binding_ticks,
         "p1c_binding_fraction": binding_ticks / ticks,
@@ -525,10 +661,12 @@ def run_trajectory(spec: dict) -> tuple[dict, list[dict]]:
         "min_source_stock": min_source,
         "final_source_stock": final_src,
         "final_source_regen": final_regen,
-        "final_viability": viab_series[-1],
-        "postburn_mean_viability": math.fsum(postburn_viab) / len(postburn_viab),
-        "final_delivered": delivered_series[-1],
-        "postburn_mean_delivered": math.fsum(postburn_deliv) / len(postburn_deliv),
+        "dead_source_indicator": dead_source,
+        "final_viability": (viab_series[-1] if viab_series else None),
+        "postburn_mean_viability": math.fsum(pv) / len(pv),
+        "final_delivered": (delivered_series[-1] if delivered_series else 0.0),
+        "postburn_mean_delivered": math.fsum(pd) / len(pd),
+        "stability_class": scls, "stability_tau": s_tau, "stability_amp": s_amp,
         "max_ledger_residual": max_ledger,
         "theorem_eligible_ticks": th_elig_ticks,
         "theorem_violation_count": th_violations,
@@ -605,18 +743,24 @@ def main():
     d9 = [r for r in summary_runs if r["experiment"] == "D9"]
     for r in d9:
         print(f"  {r['run_id']} [{r['policy']} chi={_fmt(r['chi'])} "
-              f"cap={_fmt(r['hard_cap'])}]  class={r['primary_classification']}")
+              f"cap={_fmt(r['hard_cap'])}]  class={r['primary_classification']}  "
+              f"terminal={r['terminal_status']}"
+              + (f" @tick {r['domain_exit_tick']} cells {r['domain_exit_cells']} "
+                 f"({r['domain_exit_direction']})" if r['terminal_status'] != 'completed' else ""))
         print(f"    reserve_crossings={r['reserve_crossings']} "
               f"(first tick {_fmt(r['first_reserve_crossing_tick'])})  "
               f"allee_crossings={r['allee_crossings']} "
-              f"(first {_fmt(r['first_allee_crossing_tick'])})")
+              f"(first {_fmt(r['first_allee_crossing_tick'])})  "
+              f"time_below_R={r['time_below_reserve']} time_below_A={r['time_below_allee']}")
         print(f"    min_source={_fmt(r['min_source_stock'])} "
               f"final_source={_fmt(r['final_source_stock'])}  "
-              f"binding_ticks={r['p1c_binding_ticks']}")
+              f"dead_source={_fmt(r['dead_source_indicator'])}  "
+              f"binding_ticks={r['p1c_binding_ticks']}  valid_ticks={r['valid_ticks']}")
         print(f"    delivered(cum)={_fmt(r['cumulative_delivered'])} "
               f"unmet(cum)={_fmt(r['cumulative_unmet_demand'])} "
               f"O_physical={_fmt(r['O_physical'])}  "
-              f"postburn_viab={_fmt(r['postburn_mean_viability'])}")
+              f"postburn_viab={_fmt(r['postburn_mean_viability'])}  "
+              f"stability={r['stability_class']}")
         print(f"    theorem_eligible={r['theorem_eligible_ticks']} "
               f"violations={r['theorem_violation_count']}  "
               f"max_ledger={_fmt(r['max_ledger_residual'])}")
@@ -646,8 +790,12 @@ def main():
             print(f"      d/gmax={dg}: " + "  ".join(cells))
     print(f"  total O_physical>0 runs: "
           f"{sum(1 for r in d10 if r['O_physical'] > 1e-9)}")
-    print(f"  collapse runs: {sum(1 for r in d10 if r['primary_classification']=='collapse')}  "
-          f"unclassified: {sum(1 for r in d10 if r['primary_classification']=='unclassified')}")
+    print(f"  domain_exit runs: {sum(1 for r in d10 if r['terminal_status']!='completed')}  "
+          f"collapse runs: {sum(1 for r in d10 if r['primary_classification']=='collapse')}  "
+          f"unclassified (F-D10-2): {sum(1 for r in d10 if r['primary_classification']=='unclassified')}")
+    from collections import Counter as _C
+    sc = _C(r["stability_class"] for r in d10)
+    print(f"  stability classes: " + ", ".join(f"{k}={v}" for k, v in sorted(sc.items())))
 
     # ---- persist artifacts ----
     summary = {

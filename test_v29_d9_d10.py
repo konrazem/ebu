@@ -296,9 +296,10 @@ def test_group7():
     rdt_slice = [r for r in D10_RUNS if r["run_id"].startswith("D10-slice=r_dt/")]
     for r in rdt_slice:
         dt = X.resolve_dt(r)
-        # recompute the binding certificate independently
+        # recompute the binding certificate independently using group_chi (the
+        # max chi among the four paired policies), matching resolve_dt
         s = r["source"]
-        chi_b = max(s["chi"], r["chi"])
+        chi_b = r["group_chi"]
         src = d0.Cell(s["alpha"], s["beta"], chi_b, s["L"], s["U"],
                       (r["R_eff"] if chi_b > 0 else 0.0), s["K"],
                       source="logistic", rho=s["rho"])
@@ -416,10 +417,15 @@ def test_group11():
                 if isinstance(n, ast.ImportFrom) and n.module]
     check("harness imports no test module",
           not any(m.startswith("test_") for m in imports), str(imports))
-    # V_total must never be called anywhere in the harness (viability is inline)
-    attr_calls = {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)}
-    check("harness never calls d0.V_total (no global functional on any path)",
-          "V_total" not in attr_calls)
+    # the GLOBAL functional V_total must not be called inside step_once (the
+    # per-tick DECISION + local-diagnostic function). It IS allowed inside
+    # run_trajectory (post-tick evaluation/aggregation for stability_class).
+    step_fn0 = next(n for n in ast.walk(tree)
+                    if isinstance(n, ast.FunctionDef) and n.name == "step_once")
+    step_attrs = {n.attr for n in ast.walk(step_fn0) if isinstance(n, ast.Attribute)}
+    check("step_once (decision path) never calls the global functional V_total",
+          "V_total" not in step_attrs and "lv_exact" not in step_attrs
+          and "lv_safe" not in step_attrs)
     # resolve dt BEFORE poisoning: the timestep certificate is a DESIGN-TIME tool
     # that legitimately uses lv_exact; it is not on the decision path.
     cases = []
@@ -544,15 +550,277 @@ def test_group15():
     # correct precedence gives collapse; if overuse were checked first it'd be debt
     check("NC5: precedence matters (collapse != debt for a dead+overusing record)",
           X.classify(m) == "collapse")
-    # (6) a policy reading a forbidden global metric would raise under poison
-    #     (covered in group 11; assert the harness has no V_total call)
+    # (6) a policy reading a forbidden global metric on the DECISION path would
+    #     raise under poison (covered in group 11); assert step_once (decision)
+    #     has no global-functional call. V_total in run_trajectory (evaluation)
+    #     is legitimate and does not violate the boundary.
     tree = ast.parse(open("exp_v29_d9_d10.py").read())
-    check("NC6: no forbidden global evaluator call in the harness",
-          "V_total" not in {n.attr for n in ast.walk(tree)
-                            if isinstance(n, ast.Attribute)})
+    step_fn = next(n for n in ast.walk(tree)
+                   if isinstance(n, ast.FunctionDef) and n.name == "step_once")
+    check("NC6: step_once decision path calls no global evaluator (V_total/lv_*)",
+          not ({"V_total", "lv_exact", "lv_safe"} &
+               {n.attr for n in ast.walk(step_fn) if isinstance(n, ast.Attribute)}))
     # (7) overwrite protection fires (covered in group 13; assert callable exists)
     check("NC7: overwrite-protection guard exists and is wired into main",
           callable(X._refuse_if_results_exist))
+
+
+def _synth_spec(policy="P1", ticks=14, chi=0.0, M=1.0, d=2.7, eta=0.9,
+                x0=(15.0, 3.0), source="logistic", rho=0.6, A=0.0, R_eff=11.5):
+    return {"run_id": "SYNTH", "experiment": "D10", "policy": policy, "chi": chi,
+            "group_chi": chi, "d_over_gmax": 0.9, "eta": eta, "theta": 0.05,
+            "delta": 1.5, "rho": rho, "r_dt": 0.452, "d": d, "g_max": 3.0,
+            "R_eff": R_eff, "K": 20.0,
+            "source": {"alpha": 1, "beta": 0.5, "chi": chi, "L": 5, "U": 15,
+                       "R": (R_eff if chi > 0 else 0.0), "K": 20.0,
+                       "source": source, "rho": rho, "A": A},
+            "sink": {"alpha": 1, "beta": 0.5, "chi": 0.0, "L": 5, "U": 15,
+                     "R": 0.0, "K": 20.0, "d": d, "source": "none", "rho": 0.0,
+                     "A": 0.0},
+            "edge": {"i": 0, "j": 1, "M": M, "theta": 0.05, "eta": eta},
+            "x0": list(x0), "ticks": ticks, "burn_in": 4, "persistence": 6,
+            "R_eff_pres": R_eff, "eps_x": 0.0, "eps_u": 0.0,
+            "source_type": "regenerative"}
+
+
+# ===========================================================================
+# [16] domain-exit handling (Gate 2.4A Sec 3) - synthetic injection only
+# ===========================================================================
+def test_group16():
+    group("domain-exit handling (non-finite records, continues; finite flagged)")
+    # inject a non-finite successor at tick 7 (source -inf)
+    spec = _synth_spec(ticks=20)
+    orig = X.step_once
+    calls = {"n": 0}
+
+    def patched(sp, x, dt, cfg, world, world0):
+        calls["n"] += 1
+        rec = orig(sp, x, dt, cfg, world, world0)
+        if calls["n"] == 7:
+            rec = dict(rec)
+            rec["x_after"] = [-math.inf, rec["x_after"][1]]
+            rec["nonfinite"] = True
+        return rec
+    X.step_once = patched
+    try:
+        agg, rows = X.run_trajectory(spec)
+    finally:
+        X.step_once = orig
+    check("non-finite successor recorded as terminal_status=domain_exit",
+          agg["terminal_status"] == "domain_exit")
+    check("domain_exit_tick, affected cell, and direction recorded",
+          agg["domain_exit_tick"] == 7 and agg["domain_exit_cells"] == [0]
+          and agg["domain_exit_direction"] == "below")
+    check("last valid FINITE state retained (not -inf)",
+          math.isfinite(agg["final_source_stock"]))
+    check("no clipping / no fabricated later ticks (valid_ticks==6, trace==6)",
+          agg["valid_ticks"] == 6 and len(rows) == 6
+          and max(r["tick"] for r in rows) == 6)
+    blob = json.dumps(agg)
+    tb = json.dumps([[r[f] for f in X.TICK_FIELDS] for r in rows])
+    check("summary + trace serialize safely (no JSON Infinity/NaN)",
+          "Infinity" not in blob and "NaN" not in blob
+          and "Infinity" not in tb and "NaN" not in tb)
+    check("run_trajectory returns normally so the study loop CONTINUES "
+          "(no exception propagated)", isinstance(agg, dict))
+    # finite below-domain excursion: run continues, violation flagged
+    fin = _synth_spec(policy="P1C", ticks=30, d=5.0)   # sink drains below 0
+    agg2, rows2 = X.run_trajectory(fin)
+    check("finite below-0 excursion is flagged but the run COMPLETES",
+          agg2["terminal_status"] == "completed"
+          and agg2["valid_ticks"] == 30
+          and agg2["lower_violation_ticks"] > 0,
+          f"lower_viol_ticks={agg2['lower_violation_ticks']}")
+
+
+# ===========================================================================
+# [17] shared timestep across the four policies at EVERY D10 point
+# ===========================================================================
+def test_group17():
+    group("shared timestep across all four paired policies (Gate 2.4A Sec 4)")
+    from collections import defaultdict
+    core = defaultdict(dict)
+    for r in D10_RUNS:
+        if r["run_id"].startswith("D10-core/"):
+            core[(r["d_over_gmax"], r["eta"])][r["policy"]] = X.resolve_dt(r)
+    worst = 0.0
+    ok = True
+    for key, pol_dt in core.items():
+        vals = list(pol_dt.values())
+        assert len(pol_dt) == 4, key
+        spread = max(vals) - min(vals)
+        tol = 1e-12 * (1.0 + max(abs(v) for v in vals))
+        worst = max(worst, spread)
+        if spread > tol:
+            ok = False
+    check(f"all 4 policies share dt at every core point (20 points)", ok,
+          f"max spread {worst:.2e}")
+    # explicitly compare P1 vs soft (the previously-confounded pair)
+    k = (0.9, 0.9)
+    check("P1 and soft share dt at d/gmax=0.9, eta=0.9 (was confounded before)",
+          abs(core[k]["P1"] - core[k]["soft"]) < 1e-12,
+          f"P1={core[k]['P1']:.10f} soft={core[k]['soft']:.10f}")
+    # secondary slices too
+    slc = defaultdict(dict)
+    for r in D10_RUNS:
+        if r["run_id"].startswith("D10-slice="):
+            tag = r["run_id"].rsplit("/", 1)[0]
+            slc[tag][r["policy"]] = X.resolve_dt(r)
+    ok2 = all(max(v.values()) - min(v.values())
+              <= 1e-12 * (1 + max(abs(x) for x in v.values()))
+              for v in slc.values())
+    check("all 4 policies share dt at every secondary-slice point", ok2)
+
+
+# ===========================================================================
+# [18] reserve-tolerance boundary cases (Gate 2.4A Sec 5)
+# ===========================================================================
+def test_group18():
+    group("reserve-tolerance boundary (reserve_tol = 1e-9)")
+    rtol = X.CLASS_TOL["reserve_tol"]
+    check("registered reserve_tol is 1e-9", rtol == 1e-9)
+    R = 11.5
+    cfg = p1c.SourceConfig(0, "regenerative", R_eff=R)
+    src = d0.Cell(1, 0.5, 0, 5, 15, 0, 20, source="logistic", rho=0.6)
+    snk = d0.Cell(1, 0.5, 0, 5, 15, 0, 20, d=1.0)
+    w = d0.World(cells=(src, snk), edges=(d0.Edge(0, 1, 1.0, 0.05, 0.9),))
+    w0 = d0.World(cells=(src, snk), edges=())
+    spec = _synth_spec()
+    # sub-tolerance below R (8.88e-16) must NOT be a material crossing
+    # emulate by a single tick where x goes from R to R - 8.88e-16
+    # (compute directly via the material test used in step_once)
+    def material_cross(before, after):
+        return (not (before < R - rtol)) and (after < R - rtol)
+    check("sub-tolerance deviation (R - 8.88e-16) is NOT a material crossing",
+          not material_cross(R + 0.5, R - 8.88e-16))
+    check("exactly at tolerance (R - reserve_tol) is NOT material (strict <)",
+          not material_cross(R + 0.5, R - rtol))
+    check("clearly material deviation (R - 0.5) IS a crossing",
+          material_cross(R + 0.5, R - 0.5))
+    check("no crossing when already below before (below->below)",
+          not material_cross(R - 1.0, R - 2.0))
+    # persistence: time_below_reserve uses the material threshold
+    below = [R - 0.5] * 10 + [R + 0.5] * 5
+    tbr = sum(1 for v in below if v < R - rtol)
+    check("time-below-reserve counts only material below-reserve ticks", tbr == 10)
+
+
+# ===========================================================================
+# [19] registered aggregate-schema completeness (Gate 2.4A Sec 6)
+# ===========================================================================
+def test_group19():
+    group("registered aggregate-schema completeness")
+    agg, rows = X.run_trajectory(_synth_spec(ticks=16))
+    # D9 registered final/time-average metrics -> agg field mapping
+    d9map = {
+        "reserve_crossing_count": "reserve_crossings",
+        "first_reserve_crossing_tick": "first_reserve_crossing_tick",
+        "allee_crossing_count": "allee_crossings",
+        "first_allee_crossing_tick": "first_allee_crossing_tick",
+        "time_below_reserve": "time_below_reserve",
+        "time_below_allee": "time_below_allee",
+        "dead_source_indicator": "dead_source_indicator",
+        "cumulative_transport_loss": "cumulative_transport_loss",
+        "cumulative_requested_service": "cumulative_requested_service",
+        "cumulative_delivered_service": "cumulative_delivered",
+        "cumulative_unmet_demand": "cumulative_unmet_demand",
+        "p1c_binding_tick_count": "p1c_binding_ticks",
+        "min_source_stock": "min_source_stock",
+        "final_source_stock": "final_source_stock",
+        "final_viability": "final_viability",
+        "postburn_mean_viability": "postburn_mean_viability",
+        "max_ledger_residual": "max_ledger_residual",
+        "theorem_eligible_ticks": "theorem_eligible_ticks",
+        "theorem_violation_count": "theorem_violation_count",
+    }
+    d9_reg = set(PLAN["D9"]["metrics_final_and_timeaverage"])
+    check("every registered D9 metric maps to a produced aggregate field",
+          d9_reg <= set(d9map) and all(d9map[k] in agg for k in d9_reg),
+          f"missing {[k for k in d9_reg if d9map.get(k) not in agg]}")
+    check("dead_source_indicator is now produced (was omitted)",
+          "dead_source_indicator" in agg)
+    # D10 registered per-run metrics: series -> trace fields; scalars -> agg
+    trace_metrics = {"source_stock_series", "dest_stock_series",
+                     "raw_requested_export", "safe_budget", "accepted_export",
+                     "delivered_service", "unmet_demand", "source_state_PRIF"}
+    d10_scalar = {
+        "O_physical": "O_physical",
+        "reserve_crossing_count": "reserve_crossings",
+        "first_reserve_crossing_tick": "first_reserve_crossing_tick",
+        "allee_crossing_count": "allee_crossings",
+        "infeasible_tick_count": "locally_infeasible_ticks",
+        "p1c_binding_fraction": "p1c_binding_fraction",
+        "cumulative_transport_loss": "cumulative_transport_loss",
+        "min_source_stock": "min_source_stock",
+        "final_source_stock": "final_source_stock",
+        "final_viability": "final_viability",
+        "postburn_mean_viability": "postburn_mean_viability",
+        "final_and_postburn_delivered": "final_delivered",
+        "stability_class": "stability_class",
+        "max_ledger_residual": "max_ledger_residual",
+        "theorem_eligible_ticks": "theorem_eligible_ticks",
+        "theorem_violation_count": "theorem_violation_count",
+        "primary_classification": "primary_classification",
+    }
+    d10_reg = set(PLAN["D10"]["metrics_per_run"])
+    uncovered = [m for m in d10_reg
+                 if m not in trace_metrics and d10_scalar.get(m) not in agg]
+    check("every registered D10 metric is a produced trace field or aggregate field",
+          uncovered == [], f"uncovered {uncovered}")
+    check("stability_class is now produced (was omitted)",
+          "stability_class" in agg and agg["stability_class"] in
+          {"accumulation", "collapse", "converged", "bounded_oscillation",
+           "unclassified"})
+    # trace carries the series metrics
+    check("trace schema carries the registered series metrics",
+          {"x_after", "requested_export", "safe_budget", "accepted_export",
+           "delivered_service", "unmet_demand", "source_state"} <= set(X.TICK_FIELDS))
+
+
+# ===========================================================================
+# [20] five-class exclusivity/exhaustiveness + plan-derived config
+# ===========================================================================
+def test_group20():
+    group("five-class exclusivity/exhaustiveness + plan-derived config")
+    five = {"collapse", "locally_infeasible", "debt_overuse_service",
+            "safe_rationing", "safe_service"}
+    # sweep synthetic records across the decision variables; each gets exactly
+    # one label among the five, or 'unclassified' (treated as a falsifier)
+    seen = set()
+    for dead in (True, False):
+        for infeas in (0, 2):
+            for over in (0.0, 1.0):
+                for crossed in (0, 1):
+                    for served_frac in (0.5, 1.0):
+                        m = synth_metrics(
+                            final_source_stock=(0.5 if dead else 15.0),
+                            final_source_regen=(-0.1 if dead else 1.0),
+                            locally_infeasible_ticks=infeas, O_physical=over,
+                            reserve_crossings=crossed,
+                            postburn_mean_delivered=served_frac * 2.7, demand=2.7)
+                        cls = X.classify(m)
+                        seen.add(cls)
+                        if cls not in five and cls != "unclassified":
+                            check("classify returned an unexpected label", False)
+                            return
+    check("classify only ever returns one of the 5 classes or 'unclassified'",
+          seen <= (five | {"unclassified"}), str(seen))
+    check("unclassified is treated as a falsifier, NOT an accepted 6th class",
+          "unclassified" not in five)
+    # a run with a reserve crossing but no overuse/infeasibility -> unclassified
+    # (registered falsifier F-D10-2), never silently a success
+    m = synth_metrics(reserve_crossings=1, O_physical=0.0,
+                      locally_infeasible_ticks=0, final_source_stock=8.0,
+                      final_source_regen=1.0, time_below_reserve=0)
+    check("F-D10-2: crossing w/o overuse/infeasibility is unclassified (flagged)",
+          X.classify(m) == "unclassified")
+    # plan-derived edge M and reserve (no hidden hardcoding)
+    core = [r for r in D10_RUNS if r["run_id"].startswith("D10-core/")]
+    tmplM = PLAN["D10"]["world"]["edges_template"][0]["M"]
+    check("D10 edge M comes from the plan edges_template (not hardcoded)",
+          all(r["edge"]["M"] == tmplM for r in core))
+    check("D10 R_eff derives from K/2 + delta (plan reserve construction)",
+          all(abs(r["R_eff"] - (20.0 / 2 + r["delta"])) < 1e-12 for r in core))
 
 
 # ===========================================================================
@@ -564,7 +832,8 @@ if __name__ == "__main__":
     print(f"Python {sys.version.split()[0]}   plan hash {PLAN_HASH}")
     for fn in (test_group1, test_group2, test_group3, test_group4, test_group5,
                test_group6, test_group7, test_group8, test_group9, test_group10,
-               test_group11, test_group12, test_group13, test_group14, test_group15):
+               test_group11, test_group12, test_group13, test_group14, test_group15,
+               test_group16, test_group17, test_group18, test_group19, test_group20):
         fn()
     print("-" * 76)
     for k, (title, p, f) in enumerate(GROUPS, 1):
