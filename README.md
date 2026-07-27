@@ -9,6 +9,10 @@ The repo is a research artifact: a pure-Python simulation engine, a suite of
 experiments, and the LaTeX-free machinery that turns those experiments into the
 `Energy_Balance_Project_Foundation_*.pdf` papers.
 
+> **Independence note:** this is an independent research project by Konrad
+> Grzyb. It is **not** affiliated with any university or institution, and in
+> particular **not** affiliated with the EU-funded *eBalance-Plus* project.
+
 ## The idea
 
 A dynamic scalar field `x_i(t) ≥ 0` lives on an `n × n` lattice. Each cell has a
@@ -44,6 +48,7 @@ The model was hardened across five generations, each building on the last
 | **V2.6** | [ebu_v26.py](ebu_v26.py) | **Automated adversarial testing** of the guarded ledger (a falsification study, *not* an economy). A deterministic beam / red-team search hunts for sequences that earn positive net guarded EBU *and* cause persistent physical harm. It rediscovers a naive exploit (positive control). A corrected, properly paired randomized study then found **1 of 12 layouts to be a confirmed profitable persistent-harm guarded exploit** (seed 0: +260 EBU while all sources die, viability→0%). **Guarded EBU is exploitable on at least one topology**; the ledger is reported unchanged (not patched) and the trajectory kept as a regression fixture. |
 | **V2.7** | [Foundation_v2.7_math.md](Foundation_v2.7_math.md) | **Mathematical foundation note (no engine change).** Derives the local actor law from a state functional `V_state = B_homeostasis + B_regeneration` and a dissipation potential `Ψ(J)`, separating three laws: the continuous Onsager flux (A), its forward-Euler discretisation (`B_raw`), and the engine's gated line search (`B_safe`). Proves the continuous-time energy–dissipation identity (Theorem 7.1) and corrects the logistic-sustainability, Allee-reserve, loss-aware descent bound, and finite-causal-speed claims. Validated by [test_math.py](test_math.py) (8 groups, 34 regression checks). |
 | **V2.8** | [Foundation_v2.8_discrete_draft.md](Foundation_v2.8_discrete_draft.md) | **Discrete mathematical foundation (no engine change, not yet peer reviewed).** A synchronous **discrete** energy–dissipation inequality for **Model D0** — the frozen-state, unconstrained, loss-aware explicit-Euler discretisation of the V2.7 flow — with an explicit finite-step remainder (Theorem 4.4), a **corrected curvature constant** `L_V` that sums simultaneously active penalty weights, one-edge/spectral/active-set/state-specific step-size bounds, a flux-nullspace lemma (`SJ = 0 ⇒ J = 0`), stock/loss ledger, one-tick locality, and Counterexamples A–E. **Model D0 is not the production DE engine family**, and no D0 theorem transfers to it. Validated (not proved) by [test_v28.py](test_v28.py) (11 groups, 132 checks, stdlib-only, hardened spectral solver). Typeset as [Foundation_v2.8_discrete.pdf](Foundation_v2.8_discrete.pdf). |
+| **V2.9** | [d0_v29.py](d0_v29.py) + [p1c_v29.py](p1c_v29.py) | **Local preservation controller and behavioral validation.** Implements the exact synchronous local D0 law as a strict-locality engine, then adds **P1C**: a source-local preservation controller (P/R/I/F state classifier, robust aggregate safe-export budget, proportional multi-edge allocation, post-loss service accounting, explicit unmet demand). Carries a **one-step reserve-preservation theorem** (outside the V2.8 theorem; the joint constrained descent theorem is open). Preregistered deterministic studies: D1–D8 wind tunnel (24 runs), **D9** Allee reserve stress (soft penalty delays but does not prevent collapse; the hard cap holds the source at `R_eff` with zero crossings) and **D10** 140-run phase map (P1C: zero collapse, zero physical over-use; unconstrained P1 and soft: 25/35 collapse). Strict fail-closed result serialization. **No EBU, debt ledger, wallet, or actor-health code.** Typeset as [Energy_Balance_Project_Foundation_v2.9.pdf](Energy_Balance_Project_Foundation_v2.9.pdf); see [RELEASE_NOTES_v2.9.0.md](RELEASE_NOTES_v2.9.0.md). |
 
 ## What each version means
 
@@ -129,6 +134,38 @@ not yet an EBU *economy* — actors earn balances; they do not yet spend them.
   (11 groups, 132 checks, four negative controls, a hardened Jacobi spectral solver)
   validates the note numerically; **passing checks validate implementation examples,
   they do not prove the theorems**.
+- **V2.9 — local preservation** *(new engine + controller + preregistered
+  deterministic experiments; not peer reviewed)*. V2.8 said what the idealized
+  unconstrained law D0 guarantees; V2.9 builds it (`d0_v29.py`) and asks the project's
+  core preservation question: *can a source decide, purely locally, how much it may
+  safely export?* **P1C** answers with a hard, source-local budget: freeze the local
+  state, compute the largest aggregate export that keeps the stock at or above its
+  certified reserve `R_eff`,
+
+  ```
+  Q_max = [ x + Δt·u − R_eff ]₊ / Δt      (robust form subtracts margins ε_x, ε_u)
+  ```
+
+  then scale all outgoing requests proportionally to fit it, apply one synchronous
+  update, count service **after** transport loss, and report unmet demand explicitly.
+  A one-step theorem (proved algebraically, machine-checked at fixture points) says a
+  feasible source obeying the budget never crosses its reserve that tick; feasibility
+  itself (state I: natural decline alone crosses the reserve) is reported, never
+  masked. Deterministically, in the committed studies: the **soft reserve penalty
+  delays but does not prevent collapse** (D9: reserve crossed at tick 8 in both
+  unconstrained arms; Allee crossing delayed tick 17 → 24), while **both P1C arms hold
+  the source at exactly `R_eff = 11`** with zero crossings, rationing infeasible
+  demand honestly (delivered 130.8, unmet 69.2 of a 200-tick demand-5 schedule). On
+  the 140-run D10 phase map P1C never collapses and never over-uses (25 safe-service
+  + 10 safe-rationing per 35), where P1/soft collapse in 25/35 points with physical
+  over-use. A serialization overflow incident on diverging runs was repaired
+  post-hoc (15 diagnostics nulled, 3 natively null; no trajectory changed) and future
+  writes are fail-closed (`serialization_v29.py`). **The physical controller is not an
+  EBU economy**: no EBU issuance, ecological-debt ledger, wallet, exchange, or
+  scalarisation exists in V2.9 — those remain design candidates
+  ([V2.9_OBJECTIVE_ALIGNMENT_DRAFT.md](V2.9_OBJECTIVE_ALIGNMENT_DRAFT.md), reviewed in
+  [V2.9_OBJECTIVE_ALIGNMENT_REVIEW.md](V2.9_OBJECTIVE_ALIGNMENT_REVIEW.md): "pass with
+  corrections", scalar EBU **not yet justified**).
 
 ### Where this sits on the road to an EBU economy
 
@@ -138,9 +175,11 @@ not yet an EBU *economy* — actors earn balances; they do not yet spend them.
 | Homeostatic movement rules | Implemented (V2.2–V2.4) |
 | Regenerative / Allee / finite sources | Implemented (V2.3) |
 | Conservation and loss accounting | Implemented (V2.2) |
+| **Local hard preservation + safe-export budget (P1C)** | Implemented, deterministic validation only (V2.9) |
 | Basic EBU rewards and penalties | Implemented (V2.5) |
 | Adversarial reward-gaming tests | Hand-written (V2.5) + automated beam/red-team search (V2.6) |
 | Automated/learning adversaries, collusion, laundering | Partially (V2.6 beam + coalition search); learning adversary not yet |
+| Ecological-debt vector ledger, verified restoration credit | Designed only (V2.9 alignment docs); not implemented |
 | Exchange between actors (paying, transferring EBU) | Not implemented |
 | Prices, saving, borrowing, investment | Not implemented |
 | Ownership, production, goods | Not implemented |
@@ -205,9 +244,21 @@ results/v2.4/           frozen result captures + manifest for the v2.4.0 release
 results/v2.6/           adversarial-search results + manifest (V2.6 branch study)
 results/v2.7/           manifest for the V2.7 math foundation stage
 results/v2.8/           V2.8 validation capture + reproducibility manifest
-*.pdf                   the Foundation papers, V2.1 → V2.8
+results/v2.9/           V2.9 committed studies: deterministic/ (D1-D8, 24 runs) and
+                        d9_d10/ (144 runs, trace, manifests, attempt + repair audits)
+*.pdf                   the Foundation papers, V2.1 → V2.9
 ecosystem.gif           animation of the ecosystem run
 ```
+
+Key V2.9 documents: [Foundation_v2.9_local_preservation.md](Foundation_v2.9_local_preservation.md)
+(typeset as [Energy_Balance_Project_Foundation_v2.9.pdf](Energy_Balance_Project_Foundation_v2.9.pdf)),
+[RELEASE_NOTES_v2.9.0.md](RELEASE_NOTES_v2.9.0.md),
+[V2.9_BEHAVIORAL_PROTOCOL_DRAFT.md](V2.9_BEHAVIORAL_PROTOCOL_DRAFT.md),
+[V2.9_OBJECTIVE_ALIGNMENT_DRAFT.md](V2.9_OBJECTIVE_ALIGNMENT_DRAFT.md),
+[V2.9_OBJECTIVE_ALIGNMENT_REVIEW.md](V2.9_OBJECTIVE_ALIGNMENT_REVIEW.md),
+[results/v2.9/RELEASE_MANIFEST.md](results/v2.9/RELEASE_MANIFEST.md), and the result
+manifests [results/v2.9/d9_d10/MANIFEST.md](results/v2.9/d9_d10/MANIFEST.md) +
+[ATTEMPT_2_SERIALIZATION_REPAIR.md](results/v2.9/d9_d10/ATTEMPT_2_SERIALIZATION_REPAIR.md).
 
 ## Getting started
 
@@ -255,15 +306,25 @@ python3 test_v25.py              # V2.5 EBU ledger   (9 tests, needs requirement
 python3 test_v26.py              # V2.6 adversary    (15 tests + reruns the 33 prior)
 python3 test_math.py             # V2.7 math regression (8 groups, 34 checks, stdlib only)
 python3 test_v28.py              # V2.8 numerical validation (11 groups, 132 checks, stdlib only)
+python3 test_v29.py              # V2.9 D0 conformance (15 groups, 141 checks, stdlib only)
+python3 test_v29_behavior.py     # V2.9 D1-D8 behavior (9 groups, 108 checks, stdlib only)
+python3 test_v29_p1c.py          # V2.9 P1C conformance (12 groups, 83 checks, stdlib only)
+python3 test_v29_d9_d10.py       # V2.9 D9/D10 harness (20 groups, 114 checks, stdlib only)
+python3 test_v29_serialization.py# V2.9 strict serialization (6 groups, 46 checks, stdlib only)
 ```
 
-Three separate suites (kept separate on purpose — never combine these counts, and a
+Separate suites (kept separate on purpose — never combine these counts, and a
 check count is not a theorem count):
 
 ```
 Prior engine/ledger: 48 tests
 V2.7 mathematical regression: 34 checks in 8 groups
 V2.8 numerical validation: 132 checks in 11 groups
+V2.9 D0 conformance: 141 checks in 15 groups
+V2.9 deterministic behavior (D1-D8): 108 checks in 9 groups
+V2.9 P1C conformance: 83 checks in 12 groups
+V2.9 D9/D10 harness validation: 114 checks in 20 groups
+V2.9 serialization audit: 46 checks in 6 groups
 ```
 
 - **Prior engine/ledger tests — 48 total** (33 prior + 15 V2.6; `test_v26.py` reruns
@@ -279,6 +340,12 @@ V2.8 numerical validation: 132 checks in 11 groups
   [Foundation_v2.8_discrete.pdf](Foundation_v2.8_discrete.pdf)) on declared fixtures.
   **Model D0 is not the production DE engine family**, and passing checks do not prove
   the theorems — the note awaits independent expert review.
+- **V2.9 validation — five stdlib-only suites** (`test_v29.py` 141/15,
+  `test_v29_behavior.py` 108/9, `test_v29_p1c.py` 83/12, `test_v29_d9_d10.py` 114/20,
+  `test_v29_serialization.py` 46/6). They validate D0-engine conformance and locality,
+  the committed D1–D8 behavioral results, P1C conformance to its one-step preservation
+  algebra, the preregistered D9/D10 harness, and strict fail-closed serialization of
+  the committed 144-run study. As always: validation at declared points, never proof.
 
 Each script prints per-test `PASS` lines and a summary. `test_energy_balance.py`,
 `test_v22.py`, `test_math.py`, and `test_v28.py` run on a bare Python install;

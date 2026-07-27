@@ -1,0 +1,1002 @@
+{
+  "plan_id": "v29-deterministic-wind-tunnel",
+  "protocol_amendment": 3,
+  "protocol_file": "V2.9_BEHAVIORAL_PROTOCOL_DRAFT.md",
+  "date_registered": "2026-07-26",
+  "gate": "V2.9 Gate 2 - deterministic behavioral wind tunnel",
+  "engine": "d0_v29.py",
+  "harness": "exp_v29.py",
+  "scope": {
+    "deterministic_fixtures_only": true,
+    "stochastic_layouts": false,
+    "random_behavioral_seeds": false,
+    "confirmatory_study": false,
+    "p1c_implemented": false,
+    "finite_actors_implemented": false
+  },
+  "canonicalization": "The canonical form of this plan is json.dumps(plan, sort_keys=True, separators=(',', ':'), ensure_ascii=True) encoded as UTF-8; its SHA-256 hex digest is recorded in Pre-experiment Amendment 3 of the protocol. The experiment harness must recompute this hash and refuse to run on mismatch.",
+  "policies_registered": {
+    "P0": "no transport: J identically 0; natural dynamics only (same cells, no edges).",
+    "P1": "exact D0: d0_v29.d0_step, loss-aware frozen-state synchronous edge flow, unconstrained.",
+    "P1K-diag": "diagnostic projection wrapper d0_v29.p1k_step run ONLY to detect boundary exit and keep long driven runs bounded for diagnosis (Amendment 2 Sec 18.1). Never a successful physical policy; material shortfall invalidates physical-service attribution; cannot repair or replace a P1 result.",
+    "P2": "loss-blind test-local ablation (harness-side): force g_e = mu_i - mu_j (no eta weight on mu_j), flux J = M[g - theta]_+, applied synchronously with the lossy column (-J, +eta J). Lives in the harness, never in d0_v29.py.",
+    "P3": "sequential-live test-local ablation (harness-side): loss-aware per-edge force and flux, but edges are ordered by descending force evaluated once at the frozen tick-start state and then applied ONE AT A TIME against live state (DE-family convention); frozen-state natural drive added synchronously at the end of the tick. Lives in the harness.",
+    "P4": "oversized-step ablation: exact P1 law executed with r_dt > 1. DELIBERATELY UNSAFE NEGATIVE CONTROL; separate from all certified P1 runs."
+  },
+  "policies_excluded": [
+    "P1C",
+    "P5",
+    "P6",
+    "P1K-as-successful-physical-policy"
+  ],
+  "tolerances": {
+    "inequality_residual": "residual <= 1e-9 * (1 + |V_before|) per certified P1 tick",
+    "ledger_residual": "|residual| <= 1e-12 * (1 + |lhs| + |rhs|) per tick",
+    "undriven_descent": "V_{n+1} - V_n <= 1e-9 * (1 + |V_n|) per tick on undriven certified P1 runs",
+    "boundary_tau_b": "tau_b = 1e-12 * max(1, max_i K_i, max_i |y_i|) (Amendment 2 Sec 18.1); a raw lower exit is material iff shortfall > tau_b",
+    "reproducibility": "two runs of the same fixture/policy on the same platform must produce bit-identical traces",
+    "certificate_match": "harness-recomputed Gershgorin certificate must match the registered value within relative 1e-9"
+  },
+  "service_attribution_rules": {
+    "requested_demand_per_tick": "dt * sum_i (d_i + d_extra_i(tick))",
+    "valid_service": "for exact P1 (and P0/P4 analogues), declared demand counts as served only while the complete raw trajectory has had no material lower-bound exit (x_i < -tau_b) at any tick so far; from the first material lower exit the invalid-service flag is set and served-valid is 0 for all subsequent ticks",
+    "p1k_rule": "P1K material shortfall invalidates physical-service attribution for the tick; destination inflow during such a tick is never reported as physically backed service; P1K shortfall is never automatically renamed unmet demand",
+    "upper_exceedance": "raw x_i > K_i + tau_b is flagged (physical-domain upper exceedance) and prevents claiming exact unconstrained physical D0 behavior for that tick, but does not by itself invalidate demand-service attribution (Amendment 2 Sec 18.1)"
+  },
+  "evaluation_separation": "V, viability, served demand, recovery, reserve crossings and every other metric are computed by the harness AFTER all local decisions of the tick; no decision function receives them (protocol Sec 4).",
+  "fixtures": {
+    "D1": {
+      "id": "D1",
+      "title": "lossless two-cell relaxation",
+      "purpose": "test repeated exact D0 descent; demonstrate local movement from excess toward deficit with eta = 1 and no drive",
+      "n_cells": 2,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.5,
+          "theta": 0.0,
+          "eta": 1.0
+        }
+      ],
+      "initial_state": [
+        19.0,
+        2.0
+      ],
+      "drive_law": "none: no supply, demand, regeneration or leakage on any cell",
+      "dt": 0.5,
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 1.0,
+        "r_dt": 0.5
+      },
+      "policies": [
+        "P0",
+        "P1"
+      ],
+      "ticks": 200,
+      "burn_in": 50,
+      "shock": null,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status"
+      ],
+      "hypothesis": "P1 transports from the excess cell toward the deficit cell until the loss-aware force is <= theta, with V(final) < 1e-3 * V(initial) (analytically justified: once only one branch is active the deviation contracts geometrically by factor 1 - dt*M*L_branch per tick at the certified step); P0 leaves the state and V exactly constant.",
+      "invariant": "V_{n+1} <= V_n within declared tolerance on EVERY P1 tick (undriven, r_dt < 1, Theorem 5.1/5.2); stock ledger closes each tick with zero transport loss (eta = 1).",
+      "falsifier": "any P1 tick with V_{n+1} > V_n beyond tolerance, any ledger residual beyond tolerance, or nonzero transport loss.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": true
+      },
+      "preserve_and_serve_claims_permitted": false
+    },
+    "D2": {
+      "id": "D2",
+      "title": "lossy two-cell transport vs loss-blind ablation",
+      "purpose": "test the loss-aware force over repeated ticks at 0 < eta < 1; the trajectory reaches a state where loss changes whether movement is beneficial (loss-aware force <= theta while the loss-blind force is still positive); compare exact P1 against loss-blind P2",
+      "n_cells": 2,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.5,
+          "theta": 0.05,
+          "eta": 0.6
+        }
+      ],
+      "initial_state": [
+        8.5,
+        2.0
+      ],
+      "drive_law": "none",
+      "dt": 0.5,
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 1.4705882352941178,
+        "r_dt": 0.34
+      },
+      "policies": [
+        "P0",
+        "P1",
+        "P2"
+      ],
+      "ticks": 300,
+      "burn_in": 75,
+      "shock": null,
+      "analytic_note": "Both cells sit in the deficit branch (L = 10). Continuous-limit rest state of P1 solves mu_0 - 0.6 mu_1 = theta along x_1 = 2 + 0.6 (8.5 - x_0), i.e. approximately (6.09, 3.44), where the loss-blind force 2(x_0 - x_1) ~ 5.3 is still far above theta: resting is the correct loss-aware local action there. P2 continues transferring toward mu_0 = mu_1. P1 is NOT required to transfer at any specific tick; resting is acceptable whenever f <= theta.",
+      "hypothesis": "P1 transfers initially (f(x0) = 6.6 > theta), then rests at a state where the loss-blind force is still positive; final V of P1 is strictly lower than final V of P2 (loss-blind transfers waste more in transit than the deficit relief they buy, V2.8 Counterexample D mechanism); transport loss is positive for both transporting policies and the stock ledger closes every tick.",
+      "invariant": "V_{n+1} <= V_n within tolerance on every P1 tick (undriven, certified); P1 never transfers on a tick where f <= theta.",
+      "falsifier": "P1 V increase beyond tolerance; or final V(P1) >= final V(P2); or the P1 trajectory never reaches a state with f <= theta while the loss-blind force > theta.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": true
+      },
+      "preserve_and_serve_claims_permitted": false,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "loss_blind_vs_loss_aware_force_at_rest_state",
+        "final_V_P1_vs_P2"
+      ]
+    },
+    "D3": {
+      "id": "D3",
+      "title": "three-cell relay and one-tick causality",
+      "purpose": "test repeated propagation through local interactions; distinguish synchronous D0 (distance-2 effect absent after one tick, Theorem 9.1) from the sequential-live P3 negative control (Observation 9.2) using PAIRED baseline/perturbed runs",
+      "n_cells": 3,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 10.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 10.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 10.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.2,
+          "theta": 0.0,
+          "eta": 0.9
+        },
+        {
+          "i": 1,
+          "j": 0,
+          "M": 0.2,
+          "theta": 0.0,
+          "eta": 0.9
+        },
+        {
+          "i": 1,
+          "j": 2,
+          "M": 0.2,
+          "theta": 0.0,
+          "eta": 0.9
+        },
+        {
+          "i": 2,
+          "j": 1,
+          "M": 0.2,
+          "theta": 0.0,
+          "eta": 0.9
+        }
+      ],
+      "initial_state": [
+        12.0,
+        10.5,
+        10.2
+      ],
+      "initial_state_perturbed": [
+        12.5,
+        10.5,
+        10.2
+      ],
+      "perturbation": {
+        "cell": 0,
+        "delta": 0.5,
+        "graph_distance_to_probe": 2,
+        "probe_cell": 2
+      },
+      "drive_law": "none",
+      "dt": 0.5,
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 0.9074410163339383,
+        "r_dt": 0.551
+      },
+      "policies": [
+        "P1",
+        "P3"
+      ],
+      "ticks": 60,
+      "burn_in": 15,
+      "shock": null,
+      "causality_measurement": "The causality claim is measured ONLY as the difference between paired runs (baseline vs perturbed), never from cell 2 changing for its own local reasons. Registered checks: (a) after exactly one P1 tick the probe cell 2 is bit-identical across the pair; (b) a paired difference at cell 2 appears at some tick >= 2 within the run; (c) the P3 sequential-live control shows a paired difference at cell 2 already after ONE nominal tick.",
+      "hypothesis": "Synchronous D0 preserves the one-hop causal radius per tick; the perturbation reaches the distance-2 cell only from tick 2 onward; the sequential-live control P3 leaks to distance 2 in one nominal tick (V2.8 Observation 9.2).",
+      "invariant": "paired P1 runs bit-identical at cell 2 after one tick.",
+      "falsifier": "any paired P1 difference at cell 2 after one tick; or P3 failing to leak at tick 1 (negative control must fire).",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": true
+      },
+      "preserve_and_serve_claims_permitted": false,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "paired_probe_difference_per_tick",
+        "first_probe_difference_tick"
+      ]
+    },
+    "D4": {
+      "id": "D4",
+      "title": "logistic regeneration with feasible demand",
+      "purpose": "test a driven regenerative source repeatedly serving a demand sink; test bounded preserve-and-serve behavior in a deliberately small, analytically feasible world",
+      "n_cells": 2,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 8.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "logistic",
+          "rho": 0.6,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 1.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.5,
+          "theta": 0.05,
+          "eta": 0.9
+        }
+      ],
+      "initial_state": [
+        10.0,
+        6.0
+      ],
+      "drive_law": "cell 0: logistic regeneration g(x) = rho x (1 - x/K), rho = 0.6, K = 20; cell 1: constant demand d = 1.0; no other drive",
+      "feasibility": {
+        "rho": 0.6,
+        "K": 20.0,
+        "demand": 1.0,
+        "efficiency": 0.9,
+        "g_max_isolated": 3.0,
+        "g_max_formula": "g_max = rho*K/4 = 0.6*20/4 = 3.0 (V2.7 Thm 3.1)",
+        "necessary_global_balance": "steady delivery of d = 1.0 at eta = 0.9 requires source export d/eta = 1.1111... <= g_max = 3.0; necessary, not sufficient (Amendment 1 Sec 17.3)",
+        "initial_source_stock": 10.0,
+        "physical_domain_condition": "raw P1 trajectory must remain in [0, K] on every cell for service attribution to stay valid"
+      },
+      "dt": 0.25,
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 0.5524861878453039,
+        "r_dt": 0.45249999999999996
+      },
+      "policies": [
+        "P0",
+        "P1",
+        "P1K-diag"
+      ],
+      "ticks": 600,
+      "burn_in": 150,
+      "shock": null,
+      "hypothesis": "P1 reaches bounded behavior in which the sink's declared demand is fully served post-burn-in from physically admissible stock (continuous-limit joint balance suggests a bounded state near x ~ (17.9, 15.7)); the source never dies and its stock never falls below the reserve R = 8; P0 (no transport) shows the sink exiting the physical domain (demand unservable without transport) - reported as the correct physical outcome.",
+      "invariant": "V2.8 driven inequality (Theorem 6.1) and stock/loss ledger (Theorem 8.1) hold on every certified P1 tick; a driven run need NOT have decreasing V.",
+      "falsifier": "for P1: any material lower-bound exit of the raw trajectory, unserved demand post-burn-in, unbounded V or state, or source death; any inequality/ledger residual beyond tolerance.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": true
+      },
+      "preserve_and_serve_claims_permitted": true,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "served_demand_postburn",
+        "source_survival"
+      ]
+    },
+    "D5": {
+      "id": "D5",
+      "title": "Allee reserve-pressure comparison",
+      "purpose": "compare the SAME deterministic world with regenerative reserve pressure enabled (chi = 1) and disabled (chi = 0); measure reserve/Allee threshold crossings and source survival; H6 is TESTED here, not presumed",
+      "n_cells": 2,
+      "configurations": [
+        {
+          "config_id": "D5-chi1",
+          "cells": [
+            {
+              "alpha": 1.0,
+              "beta": 0.5,
+              "chi": 1.0,
+              "L": 5.0,
+              "U": 15.0,
+              "R": 8.0,
+              "K": 20.0,
+              "s": 0.0,
+              "d": 0.0,
+              "lam": 0.0,
+              "kappa": 0.0,
+              "source": "allee",
+              "rho": 0.6,
+              "A": 5.0
+            },
+            {
+              "alpha": 1.0,
+              "beta": 0.5,
+              "chi": 0.0,
+              "L": 5.0,
+              "U": 15.0,
+              "R": 0.0,
+              "K": 20.0,
+              "s": 0.0,
+              "d": 1.0,
+              "lam": 0.0,
+              "kappa": 0.0,
+              "source": "none",
+              "rho": 0.0,
+              "A": 0.0
+            }
+          ],
+          "dt_certificate": {
+            "kind": "gershgorin",
+            "value": 0.5524861878453039,
+            "r_dt": 0.45249999999999996
+          }
+        },
+        {
+          "config_id": "D5-chi0",
+          "cells": [
+            {
+              "alpha": 1.0,
+              "beta": 0.5,
+              "chi": 0.0,
+              "L": 5.0,
+              "U": 15.0,
+              "R": 8.0,
+              "K": 20.0,
+              "s": 0.0,
+              "d": 0.0,
+              "lam": 0.0,
+              "kappa": 0.0,
+              "source": "allee",
+              "rho": 0.6,
+              "A": 5.0
+            },
+            {
+              "alpha": 1.0,
+              "beta": 0.5,
+              "chi": 0.0,
+              "L": 5.0,
+              "U": 15.0,
+              "R": 0.0,
+              "K": 20.0,
+              "s": 0.0,
+              "d": 1.0,
+              "lam": 0.0,
+              "kappa": 0.0,
+              "source": "none",
+              "rho": 0.0,
+              "A": 0.0
+            }
+          ],
+          "dt_certificate": {
+            "kind": "gershgorin",
+            "value": 1.1049723756906078,
+            "r_dt": 0.22624999999999998
+          }
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.5,
+          "theta": 0.05,
+          "eta": 0.9
+        }
+      ],
+      "initial_state": [
+        6.5,
+        6.0
+      ],
+      "drive_law": "cell 0: Allee regeneration g(x) = rho x (1 - x/K)(x/A - 1), rho = 0.6, K = 20, A = 5 (negative below threshold, by physics); cell 1: constant demand d = 1.0",
+      "allee_parameters": {
+        "A": 5.0,
+        "reserve_R": 8.0,
+        "delta": 3.0,
+        "initial_source_stock": 6.5,
+        "demand": 1.0,
+        "shock": null
+      },
+      "dt": 0.25,
+      "policies": [
+        "P1",
+        "P1K-diag"
+      ],
+      "ticks": 600,
+      "burn_in": 150,
+      "shock": null,
+      "recorded_outcomes": [
+        "downward crossings of R = 8 and of A = 5 on the source",
+        "whether source stock becomes trapped in the collapse basin (x < A with non-positive regeneration persisting to run end)",
+        "source survival at run end",
+        "sink service validity and any boundary exit"
+      ],
+      "hypothesis": "TESTED (H6-style, not presumed): with chi = 1 the reserve-aware marginal shuts transport off before the source crosses the Allee threshold (analytically, export force reaches zero near x0 ~ 5.3 > A while the sink pull is at its initial strength), so the source survives; with chi = 0 the sink pull continues below A (force zero only near x0 ~ 2.3 < A), the source enters the collapse basin, transport dies, and the sink subsequently exits the physical domain. If chi = 1 fails to protect the source, that contradicts H6 in this fixture and is reported as such.",
+      "invariant": "certified-tick inequality and ledger residuals within tolerance on every P1 tick of both configurations.",
+      "falsifier": "for the H6-hypothesis: chi = 1 source dying or crossing A while chi = 0 survives equally or better; for the run itself: residuals beyond tolerance.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": "expected for D5-chi1; D5-chi0 is EXPECTED to exit the physical domain after source collapse (registered expectation, reported as the correct physical outcome; service attribution invalid from the exit tick)"
+      },
+      "preserve_and_serve_claims_permitted": true,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "reserve_R_crossings",
+        "allee_A_crossings",
+        "source_survival",
+        "collapse_basin_trapped"
+      ]
+    },
+    "D6": {
+      "id": "D6",
+      "title": "supply shock",
+      "purpose": "test bounded response and recovery after a temporary total loss of external supply",
+      "n_cells": 2,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.02,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.8,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.5,
+          "theta": 0.05,
+          "eta": 0.9
+        }
+      ],
+      "initial_state": [
+        12.0,
+        6.0
+      ],
+      "drive_law": "cell 0: baseline external supply 1.2 delivered via the per-tick s_extra schedule (cell parameter s = 0 so the shock can remove supply entirely; Amendment 2 Sec 18.3 non-negativity respected) plus proportional leak kappa = 0.02; cell 1: constant demand d = 0.8",
+      "dt": 0.25,
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 1.1049723756906078,
+        "r_dt": 0.22624999999999998
+      },
+      "policies": [
+        "P0",
+        "P1",
+        "P1K-diag"
+      ],
+      "ticks": 1000,
+      "burn_in": 250,
+      "shock": {
+        "type": "supply",
+        "cell": 0,
+        "baseline_s_extra": 1.2,
+        "value_during_shock": 0.0,
+        "magnitude": "-100% of baseline supply",
+        "start_tick": 400,
+        "end_tick_exclusive": 440,
+        "duration_ticks": 40
+      },
+      "recovery_criterion": {
+        "metric": "sink stock x[1]",
+        "reference": "mean of x[1] over ticks [burn_in, shock start) = [250, 400)",
+        "threshold": "x[1] >= 0.9 * reference",
+        "sustained_window_ticks": 100,
+        "evaluated_from": "first tick at/after shock end (tick 440)",
+        "rule": "recovery is claimed only if the threshold holds for >= 100 CONSECUTIVE ticks; the recovery tick is the first tick of the first such window; first threshold crossing alone is NOT recovery; report 'no recovery' if the criterion is never met before the run ends"
+      },
+      "hypothesis": "P1 serves the sink through the shock from stored source stock (the pull mechanism keeps export alive while the source drains), the disturbance stays bounded, no cell exits the physical domain, and the sink recovers per the registered criterion after supply resumes; P0 shows the sink exiting the physical domain and no recovery.",
+      "invariant": "certified-tick inequality and ledger residuals within tolerance on every P1 tick, including all shock ticks.",
+      "falsifier": "for P1: no recovery per the criterion, or a material boundary exit, or residuals beyond tolerance.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": true
+      },
+      "preserve_and_serve_claims_permitted": true,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "shock_recovery_tick_with_sustained_window",
+        "no_recovery_report"
+      ]
+    },
+    "D7": {
+      "id": "D7",
+      "title": "demand shock on the regenerative world",
+      "purpose": "test whether a temporary demand increase causes bounded disturbance, reserve damage, or collapse in the D4 logistic world",
+      "n_cells": 2,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 8.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "logistic",
+          "rho": 0.6,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0,
+          "L": 5.0,
+          "U": 15.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 1.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 0.5,
+          "theta": 0.05,
+          "eta": 0.9
+        }
+      ],
+      "initial_state": [
+        10.0,
+        6.0
+      ],
+      "drive_law": "identical to D4 (logistic source rho = 0.6, K = 20, chi = 1, R = 8; sink demand d = 1.0), plus the registered temporary d_extra schedule on the sink",
+      "dt": 0.25,
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 0.5524861878453039,
+        "r_dt": 0.45249999999999996
+      },
+      "policies": [
+        "P0",
+        "P1",
+        "P1K-diag"
+      ],
+      "ticks": 1000,
+      "burn_in": 250,
+      "shock": {
+        "type": "demand",
+        "cell": 1,
+        "baseline_demand": 1.0,
+        "d_extra_during_shock": 1.0,
+        "magnitude": "+100% of baseline demand",
+        "start_tick": 400,
+        "end_tick_exclusive": 440,
+        "duration_ticks": 40
+      },
+      "recovery_criterion": {
+        "metric": "sink stock x[1]",
+        "reference": "mean of x[1] over ticks [burn_in, shock start) = [250, 400)",
+        "threshold": "x[1] >= 0.9 * reference",
+        "sustained_window_ticks": 100,
+        "evaluated_from": "first tick at/after shock end (tick 440)",
+        "rule": "same sustained-window rule as D6; first threshold crossing alone is NOT recovery; report 'no recovery' if never met"
+      },
+      "hypothesis": "the demand surge produces a bounded disturbance buffered by source stock; the source may dip (reserve crossings of R = 8 are recorded if they occur) but does not collapse; the sink recovers per the registered criterion; P0 again shows sink domain exit.",
+      "invariant": "certified-tick inequality and ledger residuals within tolerance on every P1 tick, including all shock ticks.",
+      "falsifier": "for P1: no recovery per the criterion, a material boundary exit, source collapse, or residuals beyond tolerance.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": true
+      },
+      "preserve_and_serve_claims_permitted": true,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "shock_recovery_tick_with_sustained_window",
+        "reserve_crossings_during_shock",
+        "no_recovery_report"
+      ]
+    },
+    "D8": {
+      "id": "D8",
+      "title": "oversized-step negative control (DELIBERATELY UNSAFE)",
+      "purpose": "verify that r_dt > 1 reproduces the V2.8 Counterexample-A overshoot mechanism over repeated ticks; kept strictly separate from every certified P1 run and clearly labelled deliberately unsafe",
+      "n_cells": 2,
+      "cells": [
+        {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 10.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        },
+        {
+          "alpha": 1.0,
+          "beta": 1.0,
+          "chi": 0.0,
+          "L": 10.0,
+          "U": 10.0,
+          "R": 0.0,
+          "K": 20.0,
+          "s": 0.0,
+          "d": 0.0,
+          "lam": 0.0,
+          "kappa": 0.0,
+          "source": "none",
+          "rho": 0.0,
+          "A": 0.0
+        }
+      ],
+      "edges": [
+        {
+          "i": 0,
+          "j": 1,
+          "M": 1.0,
+          "theta": 0.0,
+          "eta": 1.0
+        }
+      ],
+      "initial_state": [
+        11.0,
+        9.0
+      ],
+      "drive_law": "none",
+      "analytic_note": "Pure-quadratic Counterexample-A fixture translated to the physical domain: L = U = 10 gives v(x) = (x - 10)^2 on both cells, so the CE-A algebra applies verbatim with w = M = 1, d = 1: exact threshold dt* = 1/(2Mw) = 0.5; at dt = 0.6 tick 1 maps V: 2 -> 3.92 exactly and each tick multiplies the deviation by |1 - 4Mw dt| = 1.4 (V by 1.96).",
+      "dt_certificate": {
+        "kind": "gershgorin",
+        "value": 0.5,
+        "note": "equals the exact CE-A threshold on this fixture (Theorem 5.1 tightness)"
+      },
+      "runs": [
+        {
+          "policy": "P4",
+          "dt": 0.6,
+          "r_dt": 1.2,
+          "label": "DELIBERATELY-UNSAFE-NEGATIVE-CONTROL"
+        },
+        {
+          "policy": "P1",
+          "dt": 0.4,
+          "r_dt": 0.8,
+          "label": "certified contrast run"
+        }
+      ],
+      "policies": [
+        "P4",
+        "P1"
+      ],
+      "ticks": 30,
+      "burn_in": 0,
+      "shock": null,
+      "hypothesis": "the P4 run overshoots: V(1)/V(0) = 1.96 exactly (V: 2 -> 3.92) and V grows monotonically for all 30 ticks; the certified contrast run (r_dt = 0.8) has V non-increasing every tick.",
+      "invariant": "certified contrast run: V_{n+1} <= V_n within tolerance every tick.",
+      "falsifier": "P4 failing to increase V at tick 1 (negative control must fire), or the certified contrast run increasing V.",
+      "physical_domain": {
+        "lower": 0.0,
+        "upper": "K",
+        "raw_P1_trajectory_expected_admissible": "NOT REQUIRED: this control is deliberately unsafe, makes no physical claim, and its divergent trajectory is expected to leave [0, K]; the certified contrast run is expected to stay admissible"
+      },
+      "preserve_and_serve_claims_permitted": false,
+      "metrics": [
+        "V_per_tick",
+        "mu",
+        "f",
+        "J",
+        "SJ",
+        "transport_loss",
+        "ledger_residual",
+        "inequality_residual",
+        "min_max_state",
+        "viable_fraction",
+        "physical_domain_violations",
+        "requested_demand",
+        "physically_valid_served_demand",
+        "invalid_service_flag",
+        "source_stock",
+        "reserve_and_allee_crossings",
+        "shock_status",
+        "V_tick1_ratio",
+        "V_monotone_increase_under_P4",
+        "certified_contrast_descent"
+      ]
+    }
+  }
+}

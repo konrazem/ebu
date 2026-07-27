@@ -1,0 +1,271 @@
+{
+  "plan_id": "v29-d9-d10-preservation",
+  "gate": "V2.9 Gate 2.3 - analytical preregistration of D9 and D10",
+  "protocol_amendment": 5,
+  "protocol_file": "V2.9_BEHAVIORAL_PROTOCOL_DRAFT.md",
+  "date_registered": "2026-07-27",
+  "engine": "d0_v29.py",
+  "controller": "p1c_v29.py",
+  "canonicalization": "Canonical form is json.dumps(plan, sort_keys=True, separators=(',', ':'), ensure_ascii=True) encoded UTF-8; its SHA-256 hex digest is recorded in Amendment 5. The future harness must recompute this hash and refuse to run on mismatch.",
+  "scope": {
+    "deterministic_only": true,
+    "behavioral_seeds": false,
+    "stochastic_layouts": false,
+    "ecological_debt_code": false,
+    "ebu_accounting": false,
+    "wallets": false,
+    "scalarisation": false,
+    "run_in_this_gate": false,
+    "note": "No dynamic fixture is executed in this preregistration gate. Only static algebra, root and certificate calculations were performed to fix parameters."
+  },
+  "shared_conventions": {
+    "allee_regen": "g(x) = rho*x*(1 - x/K)*(x/A - 1)  (d0_v29._regen, source='allee'); verified bit-equal to natural_drive at samples",
+    "logistic_regen": "g(x) = rho*x*(1 - x/K)  (d0_v29._regen, source='logistic')",
+    "marginal": "mu = -2*alpha*[L-x]_+ + 2*beta*[x-U]_+ - 2*chi*[R-x]_+  (d0_v29.marginal); the soft reserve marginal -2*chi*(R-x)_+ VANISHES at x=R",
+    "edge_request": "q_e^req = M*[ (mu_i - eta_e*mu_j) - theta_e ]_+  (d0_v29.edge_flux J), >= 0",
+    "p1c_budget": "Q_max^rob = [ (x-eps_x) + dt*(u-eps_u) - R_eff ]_+ / dt ; feasibility x + dt*u >= R_eff (Amendment 4 A4.3-A4.5)",
+    "p1c_alloc": "sigma = min(1, Q_max^rob / Q_req); q_e^acc = sigma*q_e^req; source loses q_e^acc, destination receives eta_e*q_e^acc",
+    "certificate": "Gershgorin dt_cert = d0_v29.gershgorin_dt_certificate (static matrix calc, no state advance); r_dt = dt / dt_cert",
+    "units": "stocks in stock units; drives, requests, budgets, exports are RATES (stock/time); dt in time units"
+  },
+
+  "D9": {
+    "title": "Allee reserve-stress: hard cap vs soft penalty vs reserve-blind",
+    "research_question": "When an Allee-regenerative source is intentionally driven toward its effective reserve, does the hard P1C aggregate export constraint prevent reserve crossing and collapse while the reserve-blind and soft-penalty laws may fail - and what service cost does preservation impose? D9 must NOT merely show P1C preserving by never serving; it must distinguish hard physical preservation, soft reserve pressure, reserve-blind extraction, service delivered, rationing, and genuine physical infeasibility.",
+    "source_dynamics": {
+      "law": "allee",
+      "rho": 0.6,
+      "K": 20.0,
+      "A": 5.0,
+      "g_max_over_(A,K)": 4.5485,
+      "g_max_location_x": 14.34,
+      "sign": "g<0 on (0,A), g>0 on (A,K), g<0 on (K,inf); undriven equilibria {0, A=5 stable-collapse-side, K=20 stable}, undriven unstable middle root = A = 5 (V2.7 Thm 4.1)",
+      "reference_export_q_ref": 3.0,
+      "driven_middle_root_x_r": 10.0,
+      "driven_root_derivation": "x_r solves g(x) - q_ref = 0 on the RISING (unstable, G'=g'>0) branch for the registered reference export q_ref=3.0; g(10)=0.6*10*(1-0.5)*(2-1)=3.0 exactly, so x_r=10. This is the collapse-basin boundary under the reference export (V2.7 Thm 4.2). The stable operating root under q_ref is x_+~17.8 on the falling branch (not used as the reserve).",
+      "conservative_envelope": "q_ref=3.0 is a registered SUSTAINABLE reference export (< g_max=4.55) representing steady demand-driven withdrawal; the actual coupled request is larger (see boundary comparison) and drives the source DOWN toward x_r. R_eff is set above x_r with margin so it dominates the root for exports at or below the reference.",
+      "discrete_step_note": "logistic/Allee flip needs rho*sqrt(D)>2; here rho=0.6<2 so no regeneration-induced flip. Euler transport stability requires dt below the Gershgorin certificate (below)."
+    },
+    "effective_reserve": {
+      "R_eff": 11.0,
+      "delta": 1.0,
+      "formula": "R_eff = x_r + delta = 10 + 1 = 11",
+      "ordering_required": "A(5) < x_r(10) < R_eff(11) < x0_source(13) < K(20) -- verified",
+      "delta_covers": "discrete Euler overshoot (worst near-reserve net drift ~1.79/time * dt=0.2 = 0.36 stock/step) PLUS driven-root/model uncertainty across the export envelope; delta=1.0 dominates the 0.36 overshoot with margin",
+      "why_not_L": "R_eff is an ECOLOGICAL reserve above the collapse root x_r, NOT the homeostatic service floor L=5. L is a comfort/service target; crossing L is a service failure, crossing R_eff risks collapse. Here R_eff=11 >> L=5.",
+      "why_above_reserve_unlike_D5": "x0_source=13 > R_eff=11, so the source begins genuinely ABOVE reserve and is driven downward by demand. In frozen Gate-2 D5 the source began at 6.5 BELOW its reserve R=8 and grew away, making D5 non-discriminating; D9 inverts this."
+    },
+    "non_discrimination": {
+      "boundary_comparison_at_R_eff": {
+        "Q_req_at_R_eff": 5.35,
+        "Q_req_derivation": "at source x=R_eff=11 (in band [5,15], chi=0 -> mu_src=0), sink in operating deficit x_sink=2 -> mu_sink=-2*1*(5-2)=-6; f=mu_src-eta*mu_sink=0-0.9*(-6)=5.4; q_req=M*(5.4-theta)=1.0*(5.4-0.05)=5.35",
+        "Q_max_at_R_eff": 3.564,
+        "Q_max_derivation": "Q_max^rob(R_eff)=[11+dt*g(11)-11]/dt=g(11)=0.6*11*(1-0.55)*(2.2-1)=3.564 (eps=0)",
+        "binding": true,
+        "conclusion": "Q_req(R_eff)=5.35 > Q_max(R_eff)=3.564: at the reserve the reserve-blind/soft raw request EXCEEDS the safe regenerative allowance, so an uncapped law over-exports and crosses R_eff, while P1C caps at 3.564 and holds. The fixture exercises the reserve mechanism (not D5-like)."
+      },
+      "binding_persists_condition": "the request exceeds the budget at R_eff whenever x_sink < 2.992 (from -0.9*mu_sink-0.05 > g(11)); sink demand d=5.0 with max deliverable eta*g_max=4.09 < 5.0 keeps the sink undersaturated, so x_sink stays below ~3 and the request stays active near the reserve",
+      "soft_marginal_vanishes_at_R_eff": "the soft reserve marginal -2*chi*(R-x)_+ = 0 at x=R (=Cell.R=11), so the soft arm has ZERO extra protection exactly at the boundary; below it the term grows and the soft arm's export force f reaches theta at x~8.325 (mu_src=-2*(11-8.325)=-5.35, f=-5.35+5.4-0.05=0). Analytic expectation: soft DELAYS/reduces but (per the vanishing-at-boundary derivative) does not prevent the initial crossing; whether it then self-arrests above A is a registered hypothesis, not a guarantee.",
+      "positive_service_possible": "yes; deliverable rate at the reserve = eta*g(R_eff)=0.9*3.564=3.21 > 0",
+      "not_trivially_infeasible": "source starts healthy at 13 in the recovery basin; the world is feasible for rationed service, only full service (d=5.0 > eta*g_max=4.09) is not sustainable",
+      "outcome_is_open": "the permitted preregistered outcomes are that the soft penalty delays, matches, or fails to prevent crossing; a null/contradictory result stays reportable"
+    },
+    "topology": {
+      "n_cells": 2,
+      "cells": {
+        "0": {"role": "allee_source", "position": "source"},
+        "1": {"role": "sink", "position": "destination"}
+      },
+      "edges": [{"i": 0, "j": 1, "M": 1.0, "theta": 0.05, "eta": 0.9}],
+      "why_smallest": "a single source->sink edge is the minimal world that exposes source export vs sink demand; no extra cells are added for visual interest"
+    },
+    "cell_parameters": {
+      "source_common": {"alpha": 1.0, "beta": 0.5, "L": 5.0, "U": 15.0, "K": 20.0, "s": 0.0, "d": 0.0, "lam": 0.0, "kappa": 0.0, "source": "allee", "rho": 0.6, "A": 5.0},
+      "source_R_by_arm": {"chi0_arms": 0.0, "chi1_arms": 11.0, "note": "Cell.R only affects the marginal when chi>0; chi0 arms set Cell.R=0 (inert), chi1 arms set Cell.R=R_eff=11 so the soft reserve coincides with the hard reserve"},
+      "sink": {"alpha": 1.0, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0, "s": 0.0, "d": 5.0, "lam": 0.0, "kappa": 0.0, "source": "none", "rho": 0.0, "A": 0.0}
+    },
+    "initial_state": [13.0, 2.0],
+    "dt": 0.2,
+    "certificates": {"chi0_arms": {"dt_cert": 0.5525, "r_dt": 0.362}, "chi1_arms": {"dt_cert": 0.2762, "r_dt": 0.724}, "note": "static Gershgorin (L_V=2 for chi0, L_V=4 for chi1); both r_dt < 1"},
+    "ticks": 200,
+    "burn_in": 50,
+    "persistence_window": 100,
+    "demand_schedule": "constant sink demand d=5.0 every tick (no shock)",
+    "supply_schedule": "none (source drive is Allee regeneration only; sink has no supply)",
+    "shock": null,
+    "robust_margins": {"eps_x": 0.0, "eps_u": 0.0, "note": "exact-model conformance uses zero physical margins; NOT an empirical recommendation (Amendment 4 Sec 20.4 forbids fitting margins). delta=1.0 is the ecological reserve margin, kept separate from eps."},
+    "policies": {
+      "D9-A_reserve_blind": {"law": "unconstrained loss-aware D0 (d0_v29.d0_step semantics)", "chi": 0.0, "hard_cap": false, "Cell_R": 0.0},
+      "D9-B_soft": {"law": "unconstrained loss-aware D0 with reserve penalty", "chi": 1.0, "hard_cap": false, "Cell_R": 11.0},
+      "D9-C_soft_plus_hardcap": {"law": "P1C on the SOFT request (matches D9-B raw request)", "chi": 1.0, "hard_cap": true, "Cell_R": 11.0, "R_eff": 11.0, "source_type": "regenerative", "eps_x": 0.0, "eps_u": 0.0},
+      "D9-D_blind_plus_hardcap": {"law": "P1C on the RESERVE-BLIND request (matches D9-A raw request)", "chi": 0.0, "hard_cap": true, "Cell_R": 0.0, "R_eff": 11.0, "source_type": "regenerative", "eps_x": 0.0, "eps_u": 0.0}
+    },
+    "policy_pairing": "all four arms share identical topology, M/eta/theta, sink demand, initial state, dt, ticks. The ONLY differences are chi (0 or 1) and hard-cap (on/off). Comparisons: A-vs-D isolates the hard cap on the reserve-blind request; B-vs-C isolates the hard cap on the soft request; A-vs-B isolates chi; C-vs-D isolates chi under the cap.",
+    "metrics_per_tick": ["source_stock", "dest_stock", "u_source", "raw_requested_export", "safe_budget", "accepted_export", "delivered_service", "unmet_demand", "source_state_PRIF", "reserve_crossing_flag", "allee_crossing_flag", "p1c_binding_flag", "ledger_residual", "theorem_assumptions_hold", "theorem_conclusion_observed"],
+    "metrics_final_and_timeaverage": ["reserve_crossing_count", "first_reserve_crossing_tick", "allee_crossing_count", "first_allee_crossing_tick", "time_below_reserve", "time_below_allee", "dead_source_indicator", "cumulative_transport_loss", "cumulative_requested_service", "cumulative_delivered_service", "cumulative_unmet_demand", "p1c_binding_tick_count", "min_source_stock", "final_source_stock", "final_viability", "postburn_mean_viability", "max_ledger_residual", "theorem_eligible_ticks", "theorem_violation_count"],
+    "dead_source_threshold": {"stock_below": 1.0, "and_regen_nonpositive": true, "note": "x < 0.05*K=1.0 and g(x)<=0 at run end (consistent with exp_v29)"},
+    "hypotheses": [
+      "H-D9-1: P1C arms (C,D) have zero downward reserve crossings whenever the one-step preservation-theorem assumptions hold each tick",
+      "H-D9-2: P1C may ration (deliver < demand) when the raw request exceeds the safe budget; here full service is infeasible (d=5.0 > eta*g_max=4.09) so P1C is expected to ration",
+      "H-D9-3: reserve-blind extraction (A) is more likely to cross the reserve and, because the request 5.35 > g_max=4.55 everywhere near the reserve, is expected (not guaranteed) to collapse",
+      "H-D9-4: the soft penalty (B) is NOT assumed to guarantee preservation; it may delay, match, or fail to prevent crossing (its marginal vanishes at R_eff)",
+      "H-D9-5: if demand were feasible within the safe budget, P1C should deliver it; that is tested indirectly here where demand is infeasible",
+      "H-D9-6: infeasible demand yields rationing/State-I reporting from P1C, never a reserve violation"
+    ],
+    "falsifiers": [
+      "F-D9-1: a P1C arm crosses R_eff downward while the theorem assumptions hold that tick",
+      "F-D9-2: P1C creates phantom stock (successor from stock never physically present)",
+      "F-D9-3: any arm reports raw requests as delivered service",
+      "F-D9-4: P1C hides unmet demand (delivered != eta*accepted, or unmet not = demand-delivered)",
+      "F-D9-5: P1C 'preserves' only because the raw request never approaches the budget (non-binding) - would show the fixture failed to stress the reserve",
+      "F-D9-6: all four arms behave identically (non-discriminating, like D5)",
+      "F-D9-7: P1C counts uncommitted incoming flow to expand the budget",
+      "F-D9-8: measured parameters contradict this analytic preregistration (e.g. x_r, g(11), or the boundary comparison differ)"
+    ]
+  },
+
+  "D10": {
+    "title": "service-versus-preservation deterministic phase map (logistic)",
+    "research_question": "Across analytically declared demand, transport, regeneration and reserve conditions, where does the local preservation controller produce safe service, safe rationing, physical infeasibility, depletion/debt-incurring service, or ecological collapse? D10 is a DETERMINISTIC phase map, not a stochastic robustness study.",
+    "source_dynamics": {
+      "law": "logistic",
+      "rho_default": 0.6,
+      "K": 20.0,
+      "g_max_formula": "g_max = rho*K/4",
+      "g_max_default": 3.0,
+      "fold_boundary": "logistic fold at harvest h = g_max = rho*K/4; equilibria x_+/-(h)=(K/2)(1 +/- sqrt(1-4h/(rho K))) real iff h<=g_max (V2.7 Thm 3.1)",
+      "unstable_root_sup": "x_-(h) = (K/2)(1-sqrt(D)) <= K/2 for all feasible h, approaching K/2=10 at the fold; so K/2 is the supremum of the driven unstable root over the export envelope"
+    },
+    "effective_reserve": {
+      "R_eff_formula": "R_eff = K/2 + delta = 10 + delta (dominates every driven unstable root x_-(h) <= K/2)",
+      "R_eff_default": 11.5,
+      "delta_default": 1.5,
+      "justification": "K/2=10 is the sup of x_-(h) over feasible harvest; delta>=0 adds discrete-overshoot + model margin above it"
+    },
+    "world": {
+      "n_cells": 2,
+      "edges_template": [{"i": 0, "j": 1, "M": 1.0, "theta": "axis:theta", "eta": "axis:eta"}],
+      "source": {"alpha": 1.0, "beta": 0.5, "chi": "axis/policy:chi", "L": 5.0, "U": 15.0, "R": "R_eff when chi>0 else 0", "K": 20.0, "source": "logistic", "rho": "axis:rho", "A": 0.0},
+      "sink": {"alpha": 1.0, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0, "d": "axis:d", "source": "none"},
+      "initial_state": [15.0, 3.0],
+      "ticks": 400,
+      "burn_in": 100,
+      "persistence_window": 100
+    },
+    "axes": {
+      "primary": {
+        "d_over_gmax": {"levels": [0.25, 0.5, 0.9, 1.0, 1.1], "derived_d_at_gmax_3.0": [0.75, 1.5, 2.7, 3.0, 3.3], "origin": "logistic fold at d/g_max=1.0 (V2.7 Thm 3.1): 0.25/0.5 below fold, 0.9 near-but-below and at the eta boundary, 1.0 exactly at the fold, 1.1 above (infeasible)"},
+        "eta": {"levels": [0.5, 0.7, 0.9, 1.0], "origin": "deliverable-flow boundary: full service needs d <= eta*g_max; at d/g_max=0.9 (d=2.7), eta*g_max = {0.5:1.5, 0.7:2.1, 0.9:2.7, 1.0:3.0}, so eta=0.9 sits exactly on the full-service boundary and eta<0.9 forces rationing"}
+      },
+      "secondary_reference_point": {"d_over_gmax": 0.9, "eta": 0.9, "theta": 0.05, "delta": 1.5, "chi": 1.0, "rho": 0.6, "r_dt": 0.452, "note": "each secondary slice varies ONE axis holding the others at this reference; the reference level of each slice reproduces the core point (d/gmax=0.9, eta=0.9) as a consistency check"},
+      "secondary_slices": {
+        "theta": {"levels": [0.0, 0.05, 0.2], "origin": "activation-gate: 0 no gate, 0.05 repo default, 0.2 strong gate"},
+        "delta_over_K": {"levels": [0.0, 0.075, 0.15], "derived_delta": [0.0, 1.5, 3.0], "origin": "reserve margin above K/2=sup unstable root: 0 no margin (tests overshoot at the bare fold root), 1.5 default, 3.0 generous"},
+        "chi": {"levels": [0.0, 0.5, 1.0], "origin": "penalty-weight convention (protocol Sec 7: chi in {0,0.5,1.0}); applied to the soft and P1C arms"},
+        "rho": {"levels": [0.3, 0.6, 1.2], "origin": "regeneration sweep (protocol Sec 7). Demand is held at the reference d=2.7, so g_max=rho*K/4 changes and d/g_max = {0.3:1.8 (infeasible), 0.6:0.9 (reference), 1.2:0.45 (easy)} -- this slice deliberately crosses feasibility via rho"},
+        "r_dt": {"levels": [0.25, 0.5, 0.9], "origin": "timestep certificate ratio; dt = r_dt * gershgorin_dt_cert(eta=0.9,chi); 0.9 probes near-certificate discrete stability"}
+      }
+    },
+    "analytic_boundaries": {
+      "logistic_fold": "d = g_max = rho*K/4 (d/g_max = 1)",
+      "allee_note": "D10 uses logistic sources; Allee root behaviour is covered by D9",
+      "max_regeneration": "g_max = rho*K/4 (=3.0 at rho=0.6)",
+      "deliverable_flow": "full sustainable service requires d <= eta*g_max, i.e. d/g_max <= eta",
+      "transport_loss_effect": "delivered = eta*accepted; a fraction (1-eta) of every export is lost, so lower eta shifts the deliverable boundary left",
+      "reserve_limited_export": "at R_eff the P1C budget ~ g(R_eff)=rho*R_eff*(1-R_eff/K); deliverable-at-reserve = eta*g(R_eff)",
+      "timestep_certificate": "r_dt = dt/gershgorin_dt_cert; stability expected for r_dt<1",
+      "safe_service_possible_when": "d/g_max < 1 AND d/g_max <= eta (feasible and deliverable)",
+      "only_rationing_when": "d/g_max < 1 AND d/g_max > eta (feasible source but loss/threshold limit delivery below demand)",
+      "zero_export_cannot_preserve_when": "the no-export successor of the source falls below R_eff (State I); for a healthy logistic source starting at x0=15 this is not expected in the core, but can arise under strong rho-driven infeasibility slices"
+    },
+    "expected_regions_nonempty": {
+      "safe_service": "e.g. d/gmax=0.25, eta=0.9/1.0 (feasible and deliverable) -- all preserving arms serve",
+      "safe_rationing": "e.g. d/gmax=0.9, eta=0.5 (d=2.7 > eta*gmax=1.5) -- P1C preserves and rations",
+      "infeasible": "e.g. d/gmax=1.1 (d=3.3 > g_max=3.0) -- demand exceeds max regeneration",
+      "overuse_depletion": "unconstrained P1 at d/gmax>=1 exports above the safe budget while delivering (O_physical>0) -> debt/overuse-service label",
+      "collapse_reserve_failure": "unconstrained arm at d/gmax>=1 crosses R_eff and the source falls toward 0",
+      "note": "these are EXPECTED regions, not guaranteed results; the map reports whatever occurs"
+    },
+    "policies": {
+      "P0_no_transport": {"law": "no transport (J=0), natural dynamics only", "chi": 0.0, "hard_cap": false},
+      "P1_unconstrained": {"law": "unconstrained loss-aware D0 (d0_v29)", "chi": 0.0, "hard_cap": false},
+      "soft": {"law": "unconstrained loss-aware D0 with reserve penalty", "chi": "axis:chi (reference 1.0)", "hard_cap": false, "Cell_R": "R_eff"},
+      "P1C_hardcap": {"law": "P1C hard aggregate cap", "chi": 0.0, "hard_cap": true, "R_eff": "K/2 + delta", "source_type": "logistic->regenerative preservation config", "eps_x": 0.0, "eps_u": 0.0, "note": "chi=0 so the cap alone does the protecting; the chi slice tests whether chi changes P1C (expected: little, cap dominates)"}
+    },
+    "physical_overuse_diagnostic": {
+      "name": "O_physical",
+      "formula": "O_physical = sum_n dt * [ Q_i^n - Q_max^n ]_+  (per source, using the P1C budget formula on the UNCONSTRAINED arm's actual export)",
+      "meaning": "physical over-use diagnostic (export above the safe budget), an EVALUATION classification only - NOT issued EBU debt, no ecological-debt ledger is implemented",
+      "finite_irreversible": "for finite/irreversible source types any positive extraction is separately labelled depletion (not applicable to D10's logistic sources but registered for completeness)"
+    },
+    "classifications_ordered": {
+      "precedence": ["1_collapse", "2_locally_infeasible", "3_debt_overuse_service", "4_safe_rationing", "5_safe_service"],
+      "first_match_wins": true,
+      "1_collapse": "dead-source condition (final source stock < 1.0 AND g(final)<=0) OR reserve/Allee failure that PERSISTS (time_below_reserve >= persistence_window)",
+      "2_locally_infeasible": "State I occurs on the source for >= 1 tick (zero export cannot preserve the next boundary); reported WITHOUT claiming policy failure",
+      "3_debt_overuse_service": "positive delivered service AND O_physical > tol_overuse (export exceeded the safe budget) - i.e. service bought by physical over-use",
+      "4_safe_rationing": "reserve preserved (zero persistent reserve crossing) AND O_physical <= tol_overuse AND post-burn-in mean delivered < service_threshold*demand",
+      "5_safe_service": "reserve preserved AND O_physical <= tol_overuse AND post-burn-in mean delivered >= service_threshold*demand",
+      "tolerances": {"tol_overuse": 1e-9, "service_threshold": 0.9, "reserve_tol": 1e-9, "dead_stock_threshold": 1.0},
+      "persistence": "a single transient reserve-dip tick does NOT trigger collapse; collapse requires time_below_reserve >= persistence_window (100 ticks). Reserve 'preserved' means no downward crossing beyond reserve_tol.",
+      "final_vs_postburn": "service uses the POST-BURN-IN mean delivered; reserve/collapse uses persistence over the whole run and the FINAL source stock. Both final and post-burn-in values are reported for every metric.",
+      "no_did_not_crash_class": "'stable'/'successful' never means merely 'did not error'; every class has an explicit physical criterion"
+    },
+    "grid": {
+      "core_map": {"axes": ["d_over_gmax", "eta"], "points": 20, "policies_per_point": 4, "runs": 80},
+      "secondary": {"slices": 5, "levels_per_slice": 3, "policies_per_level": 4, "runs": 60, "note": "reference level of each slice coincides with core point (d/gmax=0.9, eta=0.9) as a consistency check, executed within the slice"},
+      "total_runs": 140
+    },
+    "metrics_per_run": ["source_stock_series", "dest_stock_series", "raw_requested_export", "safe_budget", "accepted_export", "delivered_service", "unmet_demand", "source_state_PRIF", "O_physical", "reserve_crossing_count", "first_reserve_crossing_tick", "allee_crossing_count", "infeasible_tick_count", "p1c_binding_fraction", "cumulative_transport_loss", "min_source_stock", "final_source_stock", "final_viability", "postburn_mean_viability", "final_and_postburn_delivered", "stability_class", "max_ledger_residual", "theorem_eligible_ticks", "theorem_violation_count", "primary_classification"],
+    "reporting": {
+      "per_run_records": "one complete immutable record per run; NO run dropped",
+      "phase_table_format": "policy x (d/gmax, eta) primary-class table for the core map; one table per secondary slice",
+      "policy_pairing": "the four policies share identical world/schedule at each grid point",
+      "no_dominance_or_scale_claim": "no strict-dominance or scale-invariance claim may be inferred from a single deterministic map"
+    },
+    "hypotheses": [
+      "H-D10-1: P1C occupies safe_service where d/gmax<=eta and d/gmax<1, and safe_rationing where eta<d/gmax<1",
+      "H-D10-2: unconstrained P1 shows O_physical>0 and/or collapse for d/gmax>=1, classified debt_overuse_service or collapse",
+      "H-D10-3: the soft arm's region depends on chi and is not assumed to match P1C",
+      "H-D10-4: P0 delivers no service and preserves trivially (reserve only stressed via transport)"
+    ],
+    "falsifiers": [
+      "F-D10-1: P1C classified collapse or reserve-failure while theorem assumptions hold",
+      "F-D10-2: a run receives more than one primary class or none",
+      "F-D10-3: measured fold/deliverable boundaries contradict the analytic ones",
+      "F-D10-4: the map has an empty expected region that the analysis said must be non-empty (e.g. no rationing anywhere)",
+      "F-D10-5: 'safe service' assigned to a run with O_physical>tol or a reserve crossing"
+    ]
+  },
+
+  "information_boundary": {
+    "policies_may_read": ["own source stock", "own source drive and regeneration params", "own source type", "own R_eff", "own remaining aggregate source budget", "own outgoing requests", "adjacent destination view permitted by the local flow rule"],
+    "policies_may_not_read": ["global V", "global viability", "future states", "phase-map position", "run classification", "whole-world debt", "experiment outcome"],
+    "enforcement": "the future harness must include runtime poison + AST checks OR reuse the validated P1C boundary checks (test_v29_p1c group 11); global metrics computed only AFTER local decisions"
+  },
+
+  "future_files": {
+    "experiment": "exp_v29_d9_d10.py",
+    "tests": "test_v29_d9_d10.py",
+    "results_dir": "results/v2.9/d9_d10/",
+    "note": "NOT created in this gate"
+  },
+  "future_commands": [
+    "1. run all prior regressions (prior engine/ledger, test_math, test_v28, test_v29, test_v29_behavior, test_v29_p1c)",
+    "2. run test_v29_d9_d10.py",
+    "3. execute the experiment ONCE with stdout redirected to results/v2.9/d9_d10/ (registered path)",
+    "4. verify the canonical plan hash matches this file before/at run",
+    "5. generate structured traces and summary",
+    "6. stop before any interpretation change; contradictions reported honestly"
+  ],
+
+  "integrity_rules": [
+    "no dynamic fixture was run before plan registration (only static algebra/root/certificate calculations)",
+    "the plan hash is committed and pushed BEFORE any future implementation exists",
+    "any later correction is an additive numbered amendment; the first commit is never amended",
+    "any change to dynamical parameters after execution begins invalidates confirmatory status",
+    "implementation-only corrections that do not alter registered dynamics must still be documented",
+    "contradictory or null results cannot be tuned away and remain reportable",
+    "D9 and D10 are deterministic and use NO behavioral seeds"
+  ]
+}

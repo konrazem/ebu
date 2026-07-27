@@ -17,14 +17,25 @@ abstract: >-
   energy-dissipation inequality with explicit finite-step remainder, corrected
   curvature constant, and spectral step-size bounds - together with standard-library
   numerical validation (132 checks); the production engine family is explicitly out
-  of scope and numerical validation is not proof.
+  of scope and numerical validation is not proof. Version 2.9 implements the exact
+  synchronous local D0 law as a strict-locality engine and adds P1C, a source-local
+  preservation controller: a robust aggregate safe-export budget, proportional
+  multi-edge allocation, post-loss service accounting, and explicit unmet demand,
+  carrying a one-step reserve-preservation theorem (outside the V2.8 theorem; the
+  joint constrained descent theorem remains open). Preregistered deterministic
+  studies (D1-D8 wind tunnel, D9 Allee reserve stress, D10 140-run phase map) show,
+  in these fixtures only, that the hard local cap preserves the source at its
+  certified reserve with zero crossings and zero physical over-use while rationing
+  infeasible demand honestly, where soft penalties and unconstrained flow collapse.
+  Deterministic validation only, not peer reviewed; no EBU issuance, debt ledger,
+  wallet, or scalarisation is implemented, and numerical validation is not proof.
 authors:
   - family-names: Grzyb
     given-names: Konrad
 repository-code: "https://github.com/konrazem/ebu"
 license: MIT
-version: "2.8.0"
-date-released: "2026-07-26"
+version: "2.9.0"
+date-released: "2026-07-27"
 keywords:
   - homeostasis
   - agent-based model
@@ -36,3 +47,9 @@ keywords:
   - discrete dynamical systems
   - explicit Euler
   - numerical validation
+  - local control
+  - reserve preservation
+  - safe-export budget
+  - controlled invariance
+  - sustainability
+  - preregistered experiments

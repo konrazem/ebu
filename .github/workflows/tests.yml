@@ -29,3 +29,18 @@ jobs:
       - name: Run V2.8 numerical validation of the discrete D0 foundation (11 groups, 132 checks)
         run: |
           python test_v28.py
+      - name: Run V2.9 D0 conformance validation (15 groups, 141 checks)
+        run: |
+          python test_v29.py
+      - name: Run V2.9 deterministic behavior validation, D1-D8 (9 groups, 108 checks)
+        run: |
+          python test_v29_behavior.py
+      - name: Run V2.9 P1C preservation conformance validation (12 groups, 83 checks)
+        run: |
+          python test_v29_p1c.py
+      - name: Run V2.9 D9/D10 harness validation - no trajectory regeneration (20 groups, 114 checks)
+        run: |
+          python test_v29_d9_d10.py
+      - name: Run V2.9 serialization audit - validates committed results (6 groups, 46 checks)
+        run: |
+          python test_v29_serialization.py

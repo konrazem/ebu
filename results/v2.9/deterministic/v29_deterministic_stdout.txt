@@ -1,0 +1,304 @@
+==============================================================================
+V2.9 Gate 2 - deterministic behavioral wind tunnel (preregistered)
+==============================================================================
+Python 3.14.2
+plan: v29-deterministic-wind-tunnel   canonical hash: af8f119b4af433290e6fc2546913868421e2f4adcaa467eb6d4d31e5e4856aa2
+Policies P2-P4 live in this harness; P1K is diagnostic only; no
+stochastic seeds, no P1C, no finite actors. Global metrics are
+computed after local decisions and never enter them.
+------------------------------------------------------------------------------
+D1/-/P0
+  dt=0.5  r_dt=- (cert=-, n/a)  ticks=200 burn_in=50
+  V: initial=17 final=17 postburn_mean=17 class=converged
+  descent violations=0  max ineq residual=0  max ledger residual=0
+  state range=[2, 19]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=0.5 postburn_mean=0.5  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D1/-/P1
+  dt=0.5  r_dt=0.5 (cert=1, gershgorin)  ticks=200 burn_in=50
+  V: initial=17 final=6.31089e-30 postburn_mean=3.32599e-15 class=converged
+  descent violations=0  max ineq residual=1.57772e-30  max ledger residual=3.55271e-15
+  state range=[4.5, 16.5]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D2/-/P0
+  dt=0.5  r_dt=- (cert=-, n/a)  ticks=300 burn_in=75
+  V: initial=66.25 final=66.25 postburn_mean=66.25 class=converged
+  descent violations=0  max ineq residual=0  max ledger residual=0
+  state range=[2, 8.5]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=0 postburn_mean=0  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D2/-/P1
+  dt=0.5  r_dt=0.34 (cert=1.47059, gershgorin)  ticks=300 burn_in=75
+  V: initial=66.25 final=58.2431 postburn_mean=58.2431 class=converged
+  descent violations=0  max ineq residual=1.74649e-14  max ledger residual=1.93595e-15
+  state range=[2.9825, 6.8625]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=0 postburn_mean=0  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0.963235
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D2/-/P2
+  dt=0.5  r_dt=0.34 (cert=1.47059, gershgorin)  ticks=300 burn_in=75
+  V: initial=66.25 final=61.8136 postburn_mean=61.8136 class=converged
+  descent violations=11  max ineq residual=-  max ledger residual=2.23779e-15
+  state range=[3.9425, 5.2625]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=0 postburn_mean=0  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=1.61875
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D3/baseline/P1
+  dt=0.5  r_dt=0.551 (cert=0.907441, gershgorin)  ticks=60 burn_in=15
+  V: initial=4.29 final=1.62275 postburn_mean=1.82938 class=unclassified
+  descent violations=0  max ineq residual=2.91087e-15  max ledger residual=5.79398e-15
+  state range=[10.2576, 11.69]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0.493591
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D3/perturbed/P1
+  dt=0.5  r_dt=0.551 (cert=0.907441, gershgorin)  ticks=60 burn_in=15
+  V: initial=6.54 final=2.25784 postburn_mean=2.54534 class=unclassified
+  descent violations=0  max ineq residual=2.98372e-15  max ledger residual=7.04384e-15
+  state range=[10.2576, 12.09]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0.597402
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D3/baseline/P3
+  dt=0.5  r_dt=0.551 (cert=0.907441, gershgorin)  ticks=60 burn_in=15
+  V: initial=4.29 final=1.52127 postburn_mean=1.75865 class=unclassified
+  descent violations=0  max ineq residual=-  max ledger residual=8.30586e-15
+  state range=[10.3078, 11.69]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0.564006
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D3/perturbed/P3
+  dt=0.5  r_dt=0.551 (cert=0.907441, gershgorin)  ticks=60 burn_in=15
+  V: initial=6.54 final=2.11661 postburn_mean=2.44688 class=unclassified
+  descent violations=0  max ineq residual=-  max ledger residual=9.01709e-15
+  state range=[10.324, 12.09]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0.680486
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D4/-/P0
+  dt=0.25  r_dt=- (cert=-, n/a)  ticks=600 burn_in=150
+  V: initial=0 final=22213.5 postburn_mean=9692.95 class=accumulation
+  descent violations=596  max ineq residual=-0.0625  max ledger residual=5.21805e-15
+  state range=[-144, 20]  admissible throughout=no  lower exit tick=25  upper exceed tick=-
+  demand: requested=150 served_valid=6 (postburn 0/112.5)  invalid from tick=25
+  viability: final=0.5 postburn_mean=0.5  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D4/-/P1
+  dt=0.25  r_dt=0.4525 (cert=0.552486, gershgorin)  ticks=600 burn_in=150
+  V: initial=0 final=4.57796 postburn_mean=4.05745 class=accumulation
+  descent violations=379  max ineq residual=-1.48361e-13  max ledger residual=9.52363e-15
+  state range=[4.14445, 17.9349]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=150 served_valid=150 (postburn 112.5/112.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=17.7485
+  preserve-and-serve claim eligible=yes
+------------------------------------------------------------------------------
+D4/-/P1K-diag
+  dt=0.25  r_dt=0.4525 (cert=0.552486, gershgorin)  ticks=600 burn_in=150
+  V: initial=0 final=4.57796 postburn_mean=4.05745 class=accumulation
+  descent violations=379  max ineq residual=-1.48361e-13  max ledger residual=9.52363e-15
+  state range=[4.14445, 17.9349]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=150 served_valid=150 (postburn 112.5/112.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=17.7485
+  P1K DIAGNOSTIC ONLY: material shortfall ticks=0, material spill ticks=0; ledger closes by construction and never certifies physical availability
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D5/D5-chi1/P1
+  dt=0.25  r_dt=0.4525 (cert=0.552486, gershgorin)  ticks=600 burn_in=150
+  V: initial=2.25 final=11.9992 postburn_mean=11.9976 class=converged
+  descent violations=287  max ineq residual=1.16573e-14  max ledger residual=9.6971e-15
+  state range=[3.78866, 19.3316]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=150 served_valid=150 (postburn 112.5/112.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=17.9209
+  preserve-and-serve claim eligible=yes
+------------------------------------------------------------------------------
+D5/D5-chi1/P1K-diag
+  dt=0.25  r_dt=0.4525 (cert=0.552486, gershgorin)  ticks=600 burn_in=150
+  V: initial=2.25 final=11.9992 postburn_mean=11.9976 class=converged
+  descent violations=287  max ineq residual=1.16573e-14  max ledger residual=9.6971e-15
+  state range=[3.78866, 19.3316]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=150 served_valid=150 (postburn 112.5/112.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=17.9209
+  P1K DIAGNOSTIC ONLY: material shortfall ticks=0, material spill ticks=0; ledger closes by construction and never certifies physical availability
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D5/D5-chi0/P1
+  dt=0.25  r_dt=0.22625 (cert=1.10497, gershgorin)  ticks=600 burn_in=150
+  V: initial=0 final=11.9992 postburn_mean=11.9975 class=converged
+  descent violations=288  max ineq residual=1.15463e-14  max ledger residual=1.04465e-14
+  state range=[3.79109, 19.3316]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=150 served_valid=150 (postburn 112.5/112.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=17.9209
+  preserve-and-serve claim eligible=yes
+------------------------------------------------------------------------------
+D5/D5-chi0/P1K-diag
+  dt=0.25  r_dt=0.22625 (cert=1.10497, gershgorin)  ticks=600 burn_in=150
+  V: initial=0 final=11.9992 postburn_mean=11.9975 class=converged
+  descent violations=288  max ineq residual=1.15463e-14  max ledger residual=1.04465e-14
+  state range=[3.79109, 19.3316]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=150 served_valid=150 (postburn 112.5/112.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=17.9209
+  P1K DIAGNOSTIC ONLY: material shortfall ticks=0, material spill ticks=0; ledger closes by construction and never certifies physical availability
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D6/-/P0
+  dt=0.25  r_dt=- (cert=-, n/a)  ticks=1000 burn_in=250
+  V: initial=0 final=40570 postburn_mean=18023 class=accumulation
+  descent violations=995  max ineq residual=-1.20674e-05  max ledger residual=3.18079e-14
+  state range=[-194, 59.0224]  admissible throughout=no  lower exit tick=31  upper exceed tick=37
+  demand: requested=200 served_valid=6 (postburn 0/150)  invalid from tick=31
+  viability: final=0.5 postburn_mean=0.5  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  shock: reference=-58.9 recovered=no recovery tick=- (sustained 100 ticks required)
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D6/-/P1
+  dt=0.25  r_dt=0.22625 (cert=1.10497, gershgorin)  ticks=1000 burn_in=250
+  V: initial=0 final=1.0311 postburn_mean=0.992196 class=unclassified
+  descent violations=127  max ineq residual=6.42715e-16  max ledger residual=4.5311e-15
+  state range=[3.83847, 15.2914]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=200 served_valid=200 (postburn 150/150)  invalid from tick=-
+  viability: final=0.5 postburn_mean=0.495333  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=21.9983
+  shock: reference=4.10355 recovered=yes recovery tick=440 (sustained 100 ticks required)
+  preserve-and-serve claim eligible=yes
+------------------------------------------------------------------------------
+D6/-/P1K-diag
+  dt=0.25  r_dt=0.22625 (cert=1.10497, gershgorin)  ticks=1000 burn_in=250
+  V: initial=0 final=1.0311 postburn_mean=0.992196 class=unclassified
+  descent violations=127  max ineq residual=6.42715e-16  max ledger residual=4.5311e-15
+  state range=[3.83847, 15.2914]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=200 served_valid=200 (postburn 150/150)  invalid from tick=-
+  viability: final=0.5 postburn_mean=0.495333  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=21.9983
+  shock: reference=4.10355 recovered=yes recovery tick=440 (sustained 100 ticks required)
+  P1K DIAGNOSTIC ONLY: material shortfall ticks=0, material spill ticks=0; ledger closes by construction and never certifies physical availability
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D7/-/P0
+  dt=0.25  r_dt=- (cert=-, n/a)  ticks=1000 burn_in=250
+  V: initial=0 final=67093.5 postburn_mean=29892.8 class=accumulation
+  descent violations=996  max ineq residual=-0.0625  max ledger residual=1.25455e-14
+  state range=[-254, 20]  admissible throughout=no  lower exit tick=25  upper exceed tick=-
+  demand: requested=260 served_valid=6 (postburn 0/197.5)  invalid from tick=25
+  viability: final=0.5 postburn_mean=0.5  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  shock: reference=-75.125 recovered=no recovery tick=- (sustained 100 ticks required)
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D7/-/P1
+  dt=0.25  r_dt=0.4525 (cert=0.552486, gershgorin)  ticks=1000 burn_in=250
+  V: initial=0 final=4.57797 postburn_mean=3.97107 class=unclassified
+  descent violations=524  max ineq residual=1.44108e-15  max ledger residual=9.26689e-15
+  state range=[4.14445, 17.9349]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=260 served_valid=260 (postburn 197.5/197.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=29.9707
+  shock: reference=14.8485 recovered=yes recovery tick=611 (sustained 100 ticks required)
+  preserve-and-serve claim eligible=yes
+------------------------------------------------------------------------------
+D7/-/P1K-diag
+  dt=0.25  r_dt=0.4525 (cert=0.552486, gershgorin)  ticks=1000 burn_in=250
+  V: initial=0 final=4.57797 postburn_mean=3.97107 class=unclassified
+  descent violations=524  max ineq residual=1.44108e-15  max ledger residual=9.26689e-15
+  state range=[4.14445, 17.9349]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=260 served_valid=260 (postburn 197.5/197.5)  invalid from tick=-
+  viability: final=1 postburn_mean=1  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=29.9707
+  shock: reference=14.8485 recovered=yes recovery tick=611 (sustained 100 ticks required)
+  P1K DIAGNOSTIC ONLY: material shortfall ticks=0, material spill ticks=0; ledger closes by construction and never certifies physical availability
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D8/DELIBERATELY-UNSAFE-NEGATIVE-CONTROL/P4  [DELIBERATELY UNSAFE NEGATIVE CONTROL]
+  dt=0.6  r_dt=1.2 (cert=0.5, gershgorin)  ticks=30 burn_in=0
+  V: initial=2 final=3.92 postburn_mean=3.92 class=unclassified
+  descent violations=1  max ineq residual=2.22045e-15  max ledger residual=0
+  state range=[8.6, 11.4]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=0.5 postburn_mean=0.5  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+D8/certified contrast run/P1
+  dt=0.4  r_dt=0.8 (cert=0.5, gershgorin)  ticks=30 burn_in=0
+  V: initial=2 final=0.72 postburn_mean=0.72 class=unclassified
+  descent violations=0  max ineq residual=0  max ledger residual=0
+  state range=[9.4, 10.6]  admissible throughout=yes  lower exit tick=-  upper exceed tick=-
+  demand: requested=0 served_valid=0 (postburn 0/0)  invalid from tick=-
+  viability: final=0.5 postburn_mean=0.5  reserve crossings=0  allee crossings=0  dead sources=0  trapped=no
+  transport loss total=0
+  preserve-and-serve claim eligible=no
+------------------------------------------------------------------------------
+fixture analyses:
+{
+  "D2": {
+    "V_final_P1": 58.243106617647065,
+    "V_final_P2": 61.813613281249964,
+    "loss_changes_decision_at_rest": true,
+    "p1_final_loss_aware_force": 0.04999999999999982,
+    "p1_final_loss_blind_force": 5.294117647058824,
+    "p1_final_state": [
+      6.091911764705882,
+      3.44485294117647
+    ],
+    "p1_last_active_tick": 32,
+    "theta": 0.05
+  },
+  "D3": {
+    "measurement": "difference between paired runs only",
+    "paired_probe_differences": {
+      "P1": {
+        "first_probe_diff_tick": 2,
+        "max_probe_diff": 0.14745108998047662,
+        "tick1_probe_diff": 0.0
+      },
+      "P3": {
+        "first_probe_diff_tick": 1,
+        "max_probe_diff": 0.14763299917620643,
+        "tick1_probe_diff": 0.016199999999999548
+      }
+    },
+    "probe_cell": 2
+  },
+  "D8": {
+    "note": "P4 is the DELIBERATELY UNSAFE negative control (CE-A)",
+    "p4_V0": 2.0,
+    "p4_V1": 3.920000000000002,
+    "p4_monotone_increase": false,
+    "p4_tick1_ratio": 1.960000000000001
+  }
+}
+------------------------------------------------------------------------------
+Interpretation limits: Deterministic fixtures only. Results state what occurred in D1-D8 and whether registered invariants/hypotheses held IN THESE FIXTURES. No claim of general stability, scale invariance, stochastic robustness, superiority across random layouts, actor-level success, or monetary validity of EBU is made or implied (Amendment 3 Sec 19.4).
+summary written: results/v2.9/deterministic/v29_deterministic_summary.json
+trace written: results/v2.9/deterministic/v29_deterministic_trace.json
+trace size (uncompressed JSON): 5599639 bytes
