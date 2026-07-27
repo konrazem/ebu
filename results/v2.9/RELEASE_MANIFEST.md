@@ -20,7 +20,7 @@ monetary claim is made.
 | D9/D10 result commit | `2074786d4c5c8a8ea64b9f3c20008ce011667093` |
 | Serialization audit commits (Gate 2.4B) | `84d87eb` (fail-closed writers + tests), `f0bb668` (repair audit note) |
 | Pre-packaging HEAD | `f0bb668b14e793c07a44f3747f9de93bd619a335` |
-| Packaging commit(s) | recorded in the follow-up commit that finalizes this manifest |
+| Packaging commits | `aac747d` (foundation doc + PDF), `4418d82` (notes/README/citation/CI), `3af0914` (this manifest), plus the follow-up commit recording these SHAs |
 
 ## Plans and hashes (canonical sorted-keys SHA-256, enforced at run time)
 
