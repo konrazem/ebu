@@ -41,6 +41,14 @@ summary. The trace was already JSON-safe (per-tick records are all finite;
 non-finite successors are recorded as `terminal_status = domain_exit` in the
 aggregate, never serialized as numeric rows).
 
+**Clarification (Gate 2.4B):** the committed summary contains **18** records
+with `stability_tau`/`stability_amp = null` — the 15 overflow **repairs**
+described above **plus 3** runs whose diagnostics were natively `None` from
+the harness (domain exit before the 100-tick burn-in completed → empty
+diagnostic window; never touched by the repair). Exact run IDs, reasons, and
+the reconstruction method are recorded in
+`ATTEMPT_2_SERIALIZATION_REPAIR.md`.
+
 ## Note on `max_ledger_residual`
 
 The maximum **absolute** per-tick ledger residual is 128, on a run that reached
