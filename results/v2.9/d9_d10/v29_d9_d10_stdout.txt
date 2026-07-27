@@ -1,0 +1,67 @@
+==============================================================================
+V2.9 Gate 2.4 - locked D9/D10 preservation study (single execution)
+==============================================================================
+Python 3.14.2   plan hash 87ad0ae2eb3cca6d86a56378c4a76508b29d7a63cb39ac74f5a362be1004c34a
+registered runs: 144 (D9=4, D10=140); executing in order
+O_physical is a PHYSICAL OVER-USE DIAGNOSTIC, not issued EBU/debt.
+No global stability / sustainability / dominance is proved by this map.
+------------------------------------------------------------------------------
+D9 - Allee reserve-stress (4 arms)
+  D9-A [P1 chi=0 cap=no]  class=collapse  terminal=completed
+    reserve_crossings=1 (first tick 8)  allee_crossings=1 (first 17)  time_below_R=193 time_below_A=184
+    min_source=-4.17469 final_source=-4.17469  dead_source=no  binding_ticks=0  valid_ticks=200
+    delivered(cum)=189.692 unmet(cum)=10.3083 O_physical=201.845  postburn_viab=0  stability=collapse
+    theorem_eligible=0 violations=0  max_ledger=2.84495e-15
+  D9-B [soft chi=1 cap=no]  class=collapse  terminal=completed
+    reserve_crossings=1 (first tick 8)  allee_crossings=1 (first 24)  time_below_R=193 time_below_A=177
+    min_source=-4.17469 final_source=-4.17469  dead_source=no  binding_ticks=0  valid_ticks=200
+    delivered(cum)=172.831 unmet(cum)=27.1691 O_physical=183.045  postburn_viab=0  stability=accumulation
+    theorem_eligible=0 violations=0  max_ledger=4.73233e-15
+  D9-C [P1C chi=1 cap=yes]  class=safe_rationing  terminal=completed
+    reserve_crossings=0 (first tick -)  allee_crossings=0 (first -)  time_below_R=0 time_below_A=0
+    min_source=11 final_source=11  dead_source=no  binding_ticks=193  valid_ticks=200
+    delivered(cum)=130.825 unmet(cum)=69.1752 O_physical=1.5099e-15  postburn_viab=0.5  stability=accumulation
+    theorem_eligible=200 violations=0  max_ledger=1.94289e-15
+  D9-D [P1C chi=0 cap=yes]  class=safe_rationing  terminal=completed
+    reserve_crossings=0 (first tick -)  allee_crossings=0 (first -)  time_below_R=0 time_below_A=0
+    min_source=11 final_source=11  dead_source=no  binding_ticks=193  valid_ticks=200
+    delivered(cum)=130.825 unmet(cum)=69.1752 O_physical=1.5099e-15  postburn_viab=0.5  stability=accumulation
+    theorem_eligible=200 violations=0  max_ledger=1.94289e-15
+------------------------------------------------------------------------------
+D10 - service-vs-preservation phase map (140 runs)
+  P0   : safe_rationing=35
+  P1   : collapse=25, safe_service=10
+  soft : collapse=25, safe_service=10
+  P1C  : safe_rationing=10, safe_service=25
+  core map (d/gmax x eta) primary class by policy:
+    [P0]
+      d/gmax=0.25: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.5: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.9: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=1.0: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=1.1: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+    [P1]
+      d/gmax=0.25: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.5: eta0.5:colla  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.9: eta0.5:colla  eta0.7:colla  eta0.9:colla  eta1.0:safe_
+      d/gmax=1.0: eta0.5:colla  eta0.7:colla  eta0.9:colla  eta1.0:colla
+      d/gmax=1.1: eta0.5:colla  eta0.7:colla  eta0.9:colla  eta1.0:colla
+    [soft]
+      d/gmax=0.25: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.5: eta0.5:colla  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.9: eta0.5:colla  eta0.7:colla  eta0.9:colla  eta1.0:safe_
+      d/gmax=1.0: eta0.5:colla  eta0.7:colla  eta0.9:colla  eta1.0:colla
+      d/gmax=1.1: eta0.5:colla  eta0.7:colla  eta0.9:colla  eta1.0:colla
+    [P1C]
+      d/gmax=0.25: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.5: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=0.9: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=1.0: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+      d/gmax=1.1: eta0.5:safe_  eta0.7:safe_  eta0.9:safe_  eta1.0:safe_
+  total O_physical>0 runs: 50
+  domain_exit runs: 18  collapse runs: 50  unclassified (F-D10-2): 0
+  stability classes: accumulation=103, converged=31, unclassified=6
+------------------------------------------------------------------------------
+summary written: results/v2.9/d9_d10/v29_d9_d10_summary.json (144 runs)
+trace written:   results/v2.9/d9_d10/v29_d9_d10_trace.jsonl.gz (13818148 bytes uncompressed JSONL)
+done.
