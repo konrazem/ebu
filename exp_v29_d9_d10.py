@@ -39,6 +39,7 @@ import sys
 
 import d0_v29 as d0
 import p1c_v29 as p1c
+import serialization_v29 as ser
 
 PLAN_PATH = "v29_d9_d10_plan.json"
 EXPECTED_PLAN_HASH = "87ad0ae2eb3cca6d86a56378c4a76508b29d7a63cb39ac74f5a362be1004c34a"
@@ -730,6 +731,12 @@ def main():
     all_rows = []
     for spec in specs:
         agg, rows = run_trajectory(spec)
+        # Gate 2.4B: the ONLY sanctioned normalization - non-finite
+        # stability_tau/stability_amp diagnostics become null (reason recorded
+        # on the record); a non-finite float in any OTHER aggregate field is a
+        # hard error. Runs after classification, so it cannot affect any
+        # classifier input.
+        agg = ser.normalize_aggregate_diagnostics(agg)
         agg["plan_hash"] = plan_hash
         agg["python"] = pyver
         agg["impl_commit"] = impl_commit
@@ -808,11 +815,19 @@ def main():
         "universal sustainability, or proof is claimed.",
         "runs": summary_runs,
     }
+    # Gate 2.4B: strict fail-closed serialization (allow_nan=False). Any
+    # non-finite float that survived to this point raises instead of being
+    # written as the non-standard JSON tokens Infinity/NaN.
     with open(SUMMARY_PATH, "w", encoding="utf-8") as fh:
-        json.dump(summary, fh, indent=1)
+        ser.strict_dump(summary, fh, indent=1)
         fh.write("\n")
-    # trace as JSONL (one run per line); gzip if large (documented, no data lost)
-    blob = "\n".join(json.dumps(r, separators=(",", ":")) for r in all_rows) + "\n"
+    # trace as JSONL (one run per line); gzip if large (documented, no data lost).
+    # Trace rows are per-tick STATES/FLOWS/SERVICE/certificate data - nothing in
+    # them is nullable-by-overflow, so they are validated fail-closed too.
+    for r in all_rows:
+        ser.assert_all_finite(r, f"trace[{r['run_id']}]")
+    blob = "\n".join(ser.strict_dumps(r, separators=(",", ":"))
+                     for r in all_rows) + "\n"
     raw = blob.encode("utf-8")
     if len(raw) > TRACE_GZ_THRESHOLD:
         path = TRACE_PATH + ".gz"
