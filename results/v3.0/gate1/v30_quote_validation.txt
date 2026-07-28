@@ -1,0 +1,48 @@
+EBP V3.0 Gate 1B - quote-layer conformance (plan a1916e8ecf36..., seed 30001)
+Q22 adversarial replay: REGISTERED, NOT RUN (Gate 1C).
+
+[1] Q1 zero action: q=0 with C(0)=0 quotes exactly 0.0
+[2] Q2 beneficial action (E1)
+[3] Q3 damaging action (E2); linear settlement must be impossible
+[4] Q4 closed damage-repair cycle (E3)
+[5] Q5 natural regeneration exclusion (+ naive-baseline negative control)
+[6] Q6 exact-versus-linear inequality (16 branch fixtures + 200 random)
+[7] Q7 schedule concavity (convex C) + activation discontinuity
+[8] Q8 committed schedule and partial execution (100 x 5 points)
+[9] Q9 unauthorized overexecution: never positive credit + violation
+[10] Q10 undriven telescoping (50 sequences + closed cycles)
+[11] Q11 driven identity with explicit drive residual
+[12] Q12 duplicate settlement rejected (10 fixtures)
+[13] Q13 split-action over-issuance negative control
+[14] Q14 one action per source per micro-step (production rule)
+[15] Q15 P1C positive-but-forbidden: only q_acc is quoted
+[16] Q16 P1C permitted-but-negative: permission does not imply positive EBU
+[17] Q17 P1C non-binding observational identity (byte-identical)
+[18] Q18 information boundary (AST + runtime poison)
+[19] Q19 cost double-count negative control
+[20] Q20 quote-epoch invalidation and no-reallocation rule
+[21] Q21 determinism and strict serialization
+
+group  1:   5 passed, 0 failed - Q1 zero action: q=0 with C(0)=0 quotes exactly 0.0
+group  2:   3 passed, 0 failed - Q2 beneficial action (E1)
+group  3:   4 passed, 0 failed - Q3 damaging action (E2); linear settlement must be impossible
+group  4:   5 passed, 0 failed - Q4 closed damage-repair cycle (E3)
+group  5:   6 passed, 0 failed - Q5 natural regeneration exclusion (+ naive-baseline negative control)
+group  6:  19 passed, 0 failed - Q6 exact-versus-linear inequality (16 branch fixtures + 200 random)
+group  7:   6 passed, 0 failed - Q7 schedule concavity (convex C) + activation discontinuity
+group  8:   2 passed, 0 failed - Q8 committed schedule and partial execution (100 x 5 points)
+group  9:  21 passed, 0 failed - Q9 unauthorized overexecution: never positive credit + violation
+group 10:   3 passed, 0 failed - Q10 undriven telescoping (50 sequences + closed cycles)
+group 11:   5 passed, 0 failed - Q11 driven identity with explicit drive residual
+group 12:  10 passed, 0 failed - Q12 duplicate settlement rejected (10 fixtures)
+group 13:  27 passed, 0 failed - Q13 split-action over-issuance negative control
+group 14:   3 passed, 0 failed - Q14 one action per source per micro-step (production rule)
+group 15:   9 passed, 0 failed - Q15 P1C positive-but-forbidden: only q_acc is quoted
+group 16:   6 passed, 0 failed - Q16 P1C permitted-but-negative: permission does not imply positive EBU
+group 17:   3 passed, 0 failed - Q17 P1C non-binding observational identity (byte-identical)
+group 18:  14 passed, 0 failed - Q18 information boundary (AST + runtime poison)
+group 19:   9 passed, 0 failed - Q19 cost double-count negative control
+group 20:  16 passed, 0 failed - Q20 quote-epoch invalidation and no-reallocation rule
+group 21:   8 passed, 0 failed - Q21 determinism and strict serialization
+total checks: 184 passed, 0 failed in 21 groups
+Numerical validation at declared fixture points is not proof; no behavioral trajectory was run; Q22 was not executed.

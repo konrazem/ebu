@@ -1,0 +1,31 @@
+V3.0 Gate 1B quote audit (read-only)
+[1] plan hash lock
+  [ok ] raw plan SHA-256
+  [ok ] canonical plan hash
+[2] implementation/test independence and information boundary
+  [ok ] module imports within allowlist (['__future__', 'd0_v29', 'dataclasses', 'hashlib', 'json', 'math', 'typing'])
+  [ok ] module never imports test/exp/audit modules
+  [ok ] no forbidden global-information identifiers (hits: [])
+  [ok ] test suite does not import the V2.6 adversary (Q22 not executed)
+[3] strict serialization (fail closed)
+  [ok ] canonical_json rejects NaN
+  [ok ] canonical_json rejects Infinity
+[4] equation-version consistency
+  [ok ] module EQUATION_VERSION == plan quote_law.version (v3.0-gate0.1)
+[5] committed-schedule reproducibility and event-id determinism
+  [ok ] event/epoch identifier deterministic
+  [ok ] schedule reproducible from committed parameters
+  [ok ] epoch id re-derivable from bound fields
+  [ok ] E1 committed value reproduced (+7.94)
+[6] plan-to-test group coverage
+  [ok ] all conformance groups implemented (missing: [])
+  [ok ] Q22 registered in the locked plan
+  [ok ] test suite states Q22 is not executed
+[7] actor/health/wallet modules absent
+  [ok ] no actor-economy modules exist ([])
+[8] released V2.9 files unchanged relative to v2.9.0
+  [ok ] released V2.9 files unchanged (changed: [])
+  [ok ] v2.9.0 still peels to the baseline
+
+audit totals: 19 passed, 0 failed
+This audit is read-only validation; it proves nothing and runs no behavioral trajectory or adversary.
