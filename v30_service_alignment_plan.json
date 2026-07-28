@@ -1,0 +1,525 @@
+{
+  "actor_economy_pause": {
+    "forbidden_in_gate_1d": [
+      "health",
+      "needs",
+      "wallets",
+      "death",
+      "personal debt",
+      "prices",
+      "transfers"
+    ],
+    "reason": "if exact-quote maximization rewards persistent under-service under a fair, bounded, certificate-compliant comparison, attaching survival and access to that signal could amplify the misalignment",
+    "resume_condition": "Gate 2 may proceed only after Gate 1D's registered study determines whether the Gate-1C surprise was a capability artifact (C1), a quote-coverage artifact (C2), genuine objective misalignment (C3), an unbounded-dynamics artifact (C4), an uncertified-timestep artifact (C5), a predicate artifact (C6), or an interaction (C7)",
+    "status": "Gate 2 remains PAUSED"
+  },
+  "arms": {
+    "A_full_p1c_historical": {
+      "primary_comparator": false,
+      "restriction": "none; may retain all accepted flows",
+      "role": "continuity with Gate 1C ONLY"
+    },
+    "B_restricted_p1c_matched": {
+      "primary_comparator": true,
+      "restriction": "identical one-action-per-source restriction, action menu, candidate quantities, observation radius, source opportunities, action-count limit, timestep and conflict rule as arm D",
+      "role": "PRIMARY comparator",
+      "selection": "P1C/D0 physical rule only, no EBU"
+    },
+    "C_restricted_p1c_plus_observational_quote": {
+      "requirement": "same action sequence as B; physical trajectory byte-identical to B",
+      "role": "observational-identity control"
+    },
+    "D_restricted_quote_greedy": {
+      "forbidden_inputs": [
+        "global service",
+        "burden",
+        "viability",
+        "future information",
+        "rollout",
+        "results",
+        "wallet",
+        "health",
+        "price"
+      ],
+      "role": "the actor under test",
+      "selection": "exact local EBU only"
+    },
+    "E_aggregate_source_group_quote": {
+      "status": "NOT registered for execution; may be added only by a separate derivation and preregistration, never to rescue an outcome"
+    },
+    "forbidden_comparison": "unmatched arm A as the sole alignment comparator",
+    "primary_comparison": "arm D versus arm B"
+  },
+  "baseline": {
+    "branch": "v3.0-local-ebu-foundation",
+    "equation_version": "v3.0-gate0.1",
+    "gate1_plan_canonical_hash": "a1916e8ecf366cee93a5284a0d8fcb68a3e1a429f49ce62b9f5914df87f94061",
+    "gate1_plan_raw_sha256": "5f01a1fd554bfb2f5e684dc318a805f2887d51274e456c98d1a1d5788d1a6f4f",
+    "gate1b_implementation_commit": "3c436a334866498f40416fadf47d69cc8087e55e",
+    "gate1c_results_commit": "40a6a8d66397eee14e8874cb88092fa0db98129b",
+    "gate1c_results_unchanged": true,
+    "p1c_unchanged": true,
+    "quote_equation_unchanged": true,
+    "released_baseline_commit": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
+    "released_baseline_tag": "v2.9.0"
+  },
+  "bounded_service_semantics": {
+    "equations": {
+      "available_i": "stock after natural input, regeneration and accepted (post-loss) transport",
+      "service_i": "min(demand_i, available_i)",
+      "unmet_i": "demand_i - service_i",
+      "x_next_i": "available_i - service_i >= 0"
+    },
+    "requirements": [
+      "requested demand is not automatically delivered service",
+      "unmet demand is never hidden",
+      "no phantom stock",
+      "no negative consumer state",
+      "no silent clipping that erases accounting information",
+      "transport losses remain explicit",
+      "service uses post-loss delivered quantity",
+      "the physical ledger must close"
+    ],
+    "status": "DESIGN ONLY - not implemented in Gate 1D",
+    "theorem_scope": "OUTSIDE the V2.8 D0 theorem unless a separate constrained/saturated theorem is proved; a passing test is numerical validation, never proof",
+    "update_order": [
+      "freeze physical state",
+      "on-site external input and regeneration",
+      "local transport requests",
+      "P1C source preservation budgets",
+      "apply accepted transport simultaneously",
+      "compute physically available destination stock",
+      "serve demand only up to available stock",
+      "record unmet demand explicitly",
+      "leave all stocks non-negative",
+      "global evaluation metrics only after local decisions"
+    ]
+  },
+  "candidate_causes": {
+    "C1_capability_mismatch": "arm A executed many accepted flows per source per tick; the quote actor was restricted to one action per source per micro-step",
+    "C2_quote_coverage": "only 3.25% of accepted arm-B flow was quotable under the first-model restriction",
+    "C3_objective_misalignment": "even at identical capacity, maximizing exact local EBU may prefer locally profitable work over demand-serving work",
+    "C4_unbounded_consumer_dynamics": "standing demand drove consumers below zero; all 36 Gate-1C runs left the physical domain",
+    "C5_uncertified_timestep": "dt=1 vs certificate 0.438, r_dt=2.283>1",
+    "C6_predicate_blindness": "the no-action comparator cannot classify 'positive EBU but worse service than a capability-matched P1C controller'",
+    "C7_interaction": "the gap may result from more than one of C1-C6",
+    "decision_rule": "no cause may be selected without the controlled study registered here"
+  },
+  "created": "2026-07-28",
+  "error_types": {
+    "delta_R": "ecological reserve or model margin",
+    "eps_num": "numerical floating-point tolerance (rounding budget only)",
+    "eps_u": "uncertainty in local drive, demand, leakage or regeneration",
+    "eps_x": "measurement uncertainty in local stock",
+    "explicit_non_claim": "Gate 1D makes NO real-world latency or robustness claim",
+    "forbidden": "using a large tolerance to hide the Gate-1C service difference",
+    "primary_study_freeze": {
+      "delta_R": "reported separately, never merged into a tolerance",
+      "eps_u": 0.0,
+      "eps_x": 0.0,
+      "numerical_tolerance": "existing convention only",
+      "observations": "exact deterministic local",
+      "sensor_noise": false,
+      "tau": 0.0
+    },
+    "single_arbitrary_ebu_error_threshold": "FORBIDDEN",
+    "structural": "a physical variable or delayed effect missing from the field",
+    "tau": "observation-to-execution latency"
+  },
+  "experiment_size": {
+    "arms": 4,
+    "burn_in_ticks": 50,
+    "composition": "7 worlds x {A,B,C,D} x {conservative dt, near-certificate dt} = 56 deterministic paired runs",
+    "determinism": "fully deterministic paired fixtures; NO random seed is used",
+    "no_exploratory_parameter_selection": true,
+    "run_length_ticks": 200,
+    "stochastic_study": "NOT registered here; a later gate must register and execute it separately",
+    "timesteps": 2,
+    "total_runs": 56,
+    "worlds": 7
+  },
+  "falsifier_policy": "all falsifiers are reported and never tuned away; a triggered falsifier is a result",
+  "falsifiers": {
+    "F1": "observational quoting changes the physical trajectory",
+    "F10": "any registered run is dropped",
+    "F11": "global service, burden, viability, future state or result information enters the production actor decision",
+    "F12": "the study cannot distinguish physical scarcity from policy under-service",
+    "F13": "a domain exit is treated as an ordinary valid outcome",
+    "F14": "a large error tolerance is used to erase a systematic service difference",
+    "F15": "a zero-latency result is presented as proof of real-world robustness",
+    "F2": "any stock becomes negative under bounded service",
+    "F3": "unmet demand is hidden or counted as delivered service",
+    "F4": "matched baseline and quote-greedy arms have different action menus or capacities",
+    "F5": "a paired timestep exceeds the registered certificate",
+    "F6": "P1C crosses a reserve while its assumptions hold",
+    "F7": "quote-greedy earns positive EBU while persistently under-serving relative to the matched feasible baseline",
+    "F8": "a result is labelled aligned merely because no source died",
+    "F9": "a predicate or threshold changes after results are observed"
+  },
+  "future_gate_1e_robust_quote": {
+    "epoch_must_bind": [
+      "observation tick or timestamp",
+      "deterministic local-state commitment",
+      "maximum permitted quote age tau_max",
+      "eps_x",
+      "eps_u",
+      "delta_R",
+      "equation version",
+      "parameter version",
+      "expiration conditions"
+    ],
+    "expiry_when": [
+      "tau > tau_max",
+      "committed local state becomes stale",
+      "measured local change exceeds its uncertainty envelope",
+      "source configuration changes",
+      "reserve certification changes",
+      "equation or parameter version changes"
+    ],
+    "interval_quote": {
+      "candidate_responses": [
+        "requote",
+        "wait for better measurement",
+        "reduce accepted quantity",
+        "escrow",
+        "zero/neutral settlement"
+      ],
+      "forbidden": "silently rounding uncertain transactions to zero or shrinking every transaction toward zero without proof",
+      "form": "de in [de_minus, de_plus] by evaluating the exact local transaction equation over the declared local uncertainty set",
+      "gate1e_proof_obligations": [
+        "telescoping",
+        "damage-repair non-profitability",
+        "split invariance",
+        "natural-regeneration exclusion",
+        "asymmetric credit/debit behaviour",
+        "quote epochs",
+        "actor incentives"
+      ],
+      "interpretation": {
+        "0 in interval": "sign uncertain",
+        "de_minus>0": "robustly positive",
+        "de_plus<0": "robustly negative"
+      },
+      "settlement_semantics": "NOT adopted in Gate 1D"
+    },
+    "latency_drift_candidate": "x_safe = x - eps_x - L_x * tau, with L_x a declared local upper bound on adverse state change; L_x is NOT assumed always to exist",
+    "margin_discipline": [
+      "physically or empirically justified",
+      "frozen before confirmatory execution",
+      "reported separately",
+      "sensitivity-tested",
+      "never post-result tuned"
+    ],
+    "robust_allowance": "Q_max_rob = [ (x - eps_x) + dt*(u - eps_u) - R_eff ]_+ / dt",
+    "status": "REGISTERED, NOT IMPLEMENTED",
+    "structural_uncertainty": "cannot be solved by increasing eps; a missing delayed consequence requires an additional local state coordinate in the present field (cf. open problem O1)"
+  },
+  "gate": "V3.0 Gate 1D (bounded service-alignment diagnosis) - PREREGISTRATION ONLY",
+  "gate1c_reproduction": {
+    "audit_tool": "audit_v30_gate1c_reproduction.py (read-only, 47 checks passed)",
+    "confirmed_means": {
+      "A_p1c_baseline": {
+        "actions": 645.2,
+        "burden": 1466.079,
+        "ebu": 0.0,
+        "service": 247.3193,
+        "unmet": 23.08,
+        "viability": 50.0
+      },
+      "B_p1c_plus_observational_quote": {
+        "actions": 21.0,
+        "ebu": 8.5001,
+        "physically_identical_to_A": true,
+        "quote_coverage_pct": 3.25
+      },
+      "C_quote_maximizing_adversary": {
+        "actions": 274.3,
+        "burden": 1561.7322,
+        "ebu": 243.603,
+        "service": 166.0401,
+        "unmet": 38.21,
+        "viability": 42.3333
+      }
+    },
+    "erratum_gate1c_manifest": {
+      "correct_means": {
+        "A": 645.2,
+        "B": 21.0,
+        "C": 274.3
+      },
+      "note": "the Gate-1C MANIFEST action-count column quoted per-seed values as arm means; corrected means are recorded here. The Gate-1C artifacts are NOT modified.",
+      "reported": {
+        "A": 704,
+        "B": 25,
+        "C": 285
+      }
+    },
+    "latency_attribution_forbidden": "Gate 1C modelled NO latency, NO stale observation and NO sensor noise (eps_x = eps_u = 0); the service gap must not be attributed to latency",
+    "quantified_gap": {
+      "action_capacity_ratio_C_over_A": 0.425,
+      "burden_increase_pct": 6.52,
+      "dt_certified_gate1c": 0.43802014892685065,
+      "quote_coverage_B_pct": 3.25,
+      "r_dt_gate1c": 2.283,
+      "service_absolute": -81.28,
+      "service_reduction_pct": 32.86,
+      "unmet_increase_absolute": 15.14,
+      "viability_difference_pp": -7.7
+    }
+  },
+  "hypotheses": {
+    "H1": "observational quote remains physically identical to its paired baseline",
+    "H10": "zero-latency results are a necessary ideal baseline but establish no robustness under real latency",
+    "H2": "a substantial part of Gate-1C's service gap disappears under identical action capacity",
+    "H3": "if the gap remains under matched capacity, the exact local quote has a genuine service-alignment problem in the tested world",
+    "H4": "bounded service removes negative-stock domain exits without hiding unmet demand",
+    "H5": "a certified timestep removes the numerical-stability confounder",
+    "H6": "P1C continues to prevent reserve and Allee crossings",
+    "H7": "positive EBU and good service are correlated only in appropriate feasible worlds, not guaranteed universally",
+    "H8": "the serving-baseline predicate detects harmful under-service missed by the Gate-1C no-action predicate",
+    "H9": "full versus restricted P1C isolates how much of the earlier gap was action throughput"
+  },
+  "interpretation": {
+    "not_claimed": [
+      "not proof that the token is misaligned",
+      "not dismissible as acceptable numerical error"
+    ],
+    "prominent_statement": "Preservation succeeded, but preservation alone did not demonstrate useful service.",
+    "registered_as": "candidate service-alignment failure requiring a fair, bounded, certificate-compliant comparison"
+  },
+  "metrics_per_run": [
+    "cumulative_signed_ebu",
+    "positive_issuance",
+    "negative_debit",
+    "action_opportunities",
+    "proposed_actions",
+    "accepted_actions",
+    "quoted_actions",
+    "quote_coverage",
+    "voluntary_rest_count",
+    "p1c_rejection_count",
+    "delivered_service",
+    "unmet_demand",
+    "service_ratio",
+    "source_stock",
+    "destination_stock",
+    "reserve_crossings",
+    "allee_crossings",
+    "dead_sources",
+    "physical_overuse",
+    "transport_loss",
+    "burden",
+    "viability",
+    "domain_exits",
+    "dt_certificate",
+    "r_dt",
+    "final_values",
+    "post_burn_in_means",
+    "paired_differences",
+    "persistence",
+    "service_alignment_predicate",
+    "reserve_harm_predicate",
+    "outcome_class"
+  ],
+  "metrics_rule": "EBU and physical service are always reported together",
+  "outcome_classes": {
+    "classes": [
+      "preserve_and_serve",
+      "preserve_but_under_serve",
+      "safe_rationing_physical_scarcity",
+      "distributive_or_policy_under_service",
+      "destructive_service",
+      "physical_impossibility",
+      "systemic_collapse",
+      "numerical_or_domain_failure",
+      "unclassified"
+    ],
+    "precedence_first_match_wins": [
+      "numerical_or_domain_failure",
+      "systemic_collapse",
+      "destructive_service",
+      "physical_impossibility",
+      "distributive_or_policy_under_service",
+      "safe_rationing_physical_scarcity",
+      "preserve_but_under_serve",
+      "preserve_and_serve",
+      "unclassified"
+    ],
+    "precedence_invariants": [
+      "physical/domain invalidity cannot be hidden by a good service mean",
+      "source survival alone cannot imply success",
+      "positive EBU alone cannot imply useful work",
+      "'did not crash' cannot imply stability",
+      "full service obtained through reserve destruction cannot be preserve_and_serve"
+    ]
+  },
+  "plan_id": "v30_service_alignment",
+  "plan_version": 1,
+  "planned_future_files_not_created": [
+    "service_v30.py (bounded service wrapper)",
+    "exp_v30_service.py (registered study runner)",
+    "test_v30_service.py (conformance suite)",
+    "results/v3.0/gate1d/"
+  ],
+  "prohibitions": [
+    "no experiment is implemented or executed in Gate 1D",
+    "no new physical trajectory is run in Gate 1D",
+    "the EBU equation, P1C, Gate-1C results and every released artifact remain unmodified",
+    "no threshold, predicate, arm, world or timestep may change after confirmatory execution begins",
+    "confirmatory execution runs exactly once per plan version and must verify this plan's canonical hash"
+  ],
+  "service_alignment_predicate": {
+    "frozen_thresholds": {
+      "baseline": "arm B (restricted capability-matched P1C)",
+      "burden_viability_interpretation": "burden and viability are corroborating diagnostics, never the sole trigger: the predicate fires on delivered service and unmet demand",
+      "burn_in_fraction": 0.25,
+      "ebu_threshold_burden_units": 1.0,
+      "paired_comparison_rule": "same world, same parameters, same timestep, same action menu and capacity; compare arm D against arm B tick-by-tick",
+      "persistence_rule": "the service/unmet condition must hold at EVERY tick of the final 20-tick window (never a single-tick blip)",
+      "persistence_window_ticks": 20,
+      "preservation_justification_rule": "a service reduction is NOT an alignment failure if arm D strictly avoided a reserve crossing that arm B incurred, OR arm D's minimum source stock exceeds arm B's by at least delta_R = 0.5 stock units in a world where arm B crossed R_eff; otherwise the reduction counts",
+      "run_length_ticks": 200,
+      "service_absolute_threshold": 1.0,
+      "service_relative_threshold": 0.05,
+      "tolerance": "1e-9 * (1 + |value|)",
+      "unmet_absolute_threshold": 1.0,
+      "unmet_relative_threshold": 0.05
+    },
+    "prohibitions": [
+      "do not classify service reduction as EBU misalignment if it is caused solely by lower action capacity than the comparator",
+      "do not classify positive EBU as useful service without checking physical service",
+      "no threshold may change after results are observed"
+    ],
+    "report_separately": [
+      "reserve_destruction_exploit",
+      "profitable_service_alignment_failure",
+      "action_throughput_limitation",
+      "safe_rationing",
+      "physical_infeasibility",
+      "numerical_or_domain_failure"
+    ],
+    "requires_all": [
+      "cumulative signed EBU > ebu_threshold",
+      "delivered service persistently lower than the capability-matched baseline (arm B) beyond the service thresholds, and/or unmet demand persistently higher beyond the unmet thresholds",
+      "no sufficient physical preservation improvement explains the reduction"
+    ]
+  },
+  "status": "design/audit/preregistration; NO experiment implemented or executed in Gate 1D",
+  "timestep": {
+    "conservative_justification": "0.5 x the most restrictive binding certificate (declared safety factor 2), shared globally so r_dt <= 1 in every world",
+    "derivation": "analytic, before execution: V2.8 one-edge (Thm 5.1) and degree-weighted Gershgorin (Rmk 5.4) certificates via the released d0_v29 certificate functions; the binding (smaller) value per world is used",
+    "most_restrictive_certificate": 0.36900369003690037,
+    "near_certificate_justification": "0.9 x the most restrictive binding certificate; probes behaviour close to but strictly inside the certificate",
+    "per_world_certificate": {
+      "W1_feasible_2cell": 0.5524861878453039,
+      "W2_infeasible_2cell": 0.5524861878453039,
+      "W3_relay_3cell": 0.36900369003690037,
+      "W4_allee_reserve_stress": 0.5524861878453039,
+      "W5_near_boundary": 0.5,
+      "W6_topology_limited": 0.44247787610619466,
+      "W7_demand_shock": 0.5524861878453039
+    },
+    "post_hoc_change_forbidden": true,
+    "r_dt_conservative": {
+      "W1_feasible_2cell": 0.33394833948339486,
+      "W2_infeasible_2cell": 0.33394833948339486,
+      "W3_relay_3cell": 0.5000000000000001,
+      "W4_allee_reserve_stress": 0.33394833948339486,
+      "W5_near_boundary": 0.3690036900369004,
+      "W6_topology_limited": 0.4169741697416975,
+      "W7_demand_shock": 0.33394833948339486
+    },
+    "r_dt_near": {
+      "W1_feasible_2cell": 0.6011070110701106,
+      "W2_infeasible_2cell": 0.6011070110701106,
+      "W3_relay_3cell": 0.8999999999999998,
+      "W4_allee_reserve_stress": 0.6011070110701106,
+      "W5_near_boundary": 0.6642066420664205,
+      "W6_topology_limited": 0.7505535055350553,
+      "W7_demand_shock": 0.6011070110701106
+    },
+    "registered_conservative_dt": 0.1845018450184502,
+    "registered_near_certificate_dt": 0.3321033210332103,
+    "rule": "r_dt = dt / dt_certificate <= 1 for every world; every paired arm at a world/parameter point shares one timestep; the quote-greedy policy never receives a different timestep from its capability-matched baseline"
+  },
+  "worlds": {
+    "W1_feasible_2cell": {
+      "cells": "logistic source (rho=0.6, K=20, chi=1, R=8) -> consumer (d=1.0)",
+      "edge": "M=0.5, theta=0.05, eta=0.9",
+      "feasibility": "g_max = rho*K/4 = 3.0; eta*g_max = 2.7 > d = 1.0 => safe delivery feasible",
+      "x0": [
+        15.0,
+        10.0
+      ]
+    },
+    "W2_infeasible_2cell": {
+      "cells": "same source -> consumer (d=4.0)",
+      "edge": "M=0.5, theta=0.05, eta=0.9",
+      "feasibility": "d = 4.0 > g_max = 3.0 and > eta*g_max = 2.7 => physically infeasible demand",
+      "x0": [
+        15.0,
+        10.0
+      ]
+    },
+    "W3_relay_3cell": {
+      "cells": "source -> relay -> sink (d=1.0)",
+      "edges": "both M=0.5, theta=0.05, eta=0.9",
+      "feasibility": "two-hop delivery eta^2*g_max = 2.43 > 1.0 => feasible; binding certificate world",
+      "x0": [
+        15.0,
+        10.0,
+        10.0
+      ]
+    },
+    "W4_allee_reserve_stress": {
+      "cells": "Allee source (rho=0.6, K=20, A=5, chi=1, R_eff=11) -> consumer (d=2.5)",
+      "edge": "M=0.5, theta=0.05, eta=0.9",
+      "feasibility": "demand exceeds the sustainable export at R_eff => P1C must ration (D9-like reserve stress)",
+      "x0": [
+        15.0,
+        10.0
+      ]
+    },
+    "W5_near_boundary": {
+      "cells": "logistic source -> consumer (d=2.7)",
+      "edge": "M=0.5, theta=0.05, eta=1.0",
+      "feasibility": "d/g_max = 0.9, eta=1 => just inside the sustainable-service boundary",
+      "x0": [
+        15.0,
+        10.0
+      ]
+    },
+    "W6_topology_limited": {
+      "cells": "two logistic sources -> one sink (d=2.0)",
+      "edges": "s0->sink eta=0.5, s1->sink eta=0.9, both M=0.5, theta=0.05",
+      "feasibility": "aggregate regeneration sufficient but one route is loss-limited => topology/route-limited service",
+      "x0": [
+        15.0,
+        15.0,
+        10.0
+      ]
+    },
+    "W7_demand_shock": {
+      "cells": "W1 topology",
+      "edge": "M=0.5, theta=0.05, eta=0.9",
+      "feasibility": "pre-shock feasible (1.0 < 2.7); post-shock 2.5 < 2.7 still feasible but near the boundary",
+      "shock": "d_extra = +1.5 on the consumer from tick 100 onward (registered analytically, single step)",
+      "x0": [
+        15.0,
+        10.0
+      ]
+    },
+    "conventions": {
+      "cell_defaults": {
+        "K": 20.0,
+        "L": 5.0,
+        "R": 0.0,
+        "U": 15.0,
+        "alpha": 1.0,
+        "beta": 0.5,
+        "chi": 0.0
+      },
+      "note": "V2.9 conventions; every parameter is analytic, none chosen by exploratory trajectory"
+    }
+  }
+}
