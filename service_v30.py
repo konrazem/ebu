@@ -62,6 +62,7 @@ __all__ = [
     "DELTA_R", "ARMS", "WORLDS", "build_world", "world_certificate",
     "bounded_step", "TickOutcome", "RunResult", "run_arm",
     "service_alignment_predicate", "reserve_harm_predicate", "classify_outcome",
+    "materially_below_reserve", "reserve_crossing",
 ]
 
 # ---------------------------------------------------------------------------
@@ -87,6 +88,28 @@ def tol(value: float) -> float:
 
 
 TOL_REL = 1e-9
+
+
+# Gate 1D-A shared reserve diagnostic (diagnostic layer ONLY: never used for
+# physical updates, P1C budgets, accepted quantities, quotes, service, unmet
+# demand, ledgers, Allee/dead-source thresholds, or certificates).
+def materially_below_reserve(x: float, R_eff: float) -> bool:
+    """x is below R_eff by MORE than the registered tolerance tol(R_eff).
+
+    Boundary semantics: x == R_eff, a one-ULP residual, any residual smaller
+    than tol(R_eff), and x == R_eff - tol(R_eff) are all NOT below (strict
+    comparison); only x < R_eff - tol(R_eff) is materially below.
+    """
+    return x < R_eff - tol(R_eff)
+
+
+def reserve_crossing(x_before: float, x_after: float, R_eff: float) -> bool:
+    """Downward reserve crossing: previous state not materially below AND
+    current state materially below. Sub-tolerance residuals never count and
+    never accumulate; persistence below reserve counts one crossing at the
+    material descent, as before."""
+    return (not materially_below_reserve(x_before, R_eff)
+            and materially_below_reserve(x_after, R_eff))
 
 # Inherited from the LOCKED Gate-1 quote plan
 # (a1916e8ecf366cee93a5284a0d8fcb68a3e1a429f49ce62b9f5914df87f94061), because
@@ -553,7 +576,7 @@ def run_arm(world_name: str, arm: str, dt: float, dt_label: str) -> RunResult:
         xb, xa = out.x_before, out.x_after
         rx = sum(1 for i in range(n) if i in configs
                  and configs[i].R_eff is not None
-                 and xa[i] < configs[i].R_eff <= xb[i])
+                 and reserve_crossing(xb[i], xa[i], configs[i].R_eff))
         ax = sum(1 for i in range(n) if world.cells[i].source == "allee"
                  and xa[i] < world.cells[i].A <= xb[i])
         src_ids = [i for i in configs if configs[i].R_eff is not None]

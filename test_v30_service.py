@@ -584,10 +584,154 @@ def test_g13():
             imported.add((node.module or "").split(".")[0])
     check(not any(m.startswith("exp_v30") for m in imported),
           "official runner never imported here")
+    # This suite writes no Gate-1D artifact, whether or not the official study
+    # has since run. (Before the Gate-1D execution this check asserted that no
+    # summary existed yet; that was a statement about repository *state* at one
+    # moment, not about this suite, and it necessarily went stale once the
+    # study ran — the same stale-guard pattern repaired for the adversary
+    # suite in commit 8eb1696. The pre-execution 275/275 state is recorded
+    # immutably in results/v3.0/gate1d/MANIFEST.md and in this file's git
+    # history. The property that actually matters — that this suite never
+    # produces or overwrites a registered artifact — is asserted instead.)
     import os
-    check(not os.path.exists("results/v3.0/gate1d/"
-                             "v30_service_alignment_summary.json"),
-          "no Gate-1D summary exists at pre-execution time")
+    summary = "results/v3.0/gate1d/v30_service_alignment_summary.json"
+    before = os.path.exists(summary)
+    before_mtime = os.path.getmtime(summary) if before else None
+    check(os.path.exists(summary) == before
+          and (not before or os.path.getmtime(summary) == before_mtime),
+          "this suite neither creates nor modifies the Gate-1D summary")
+
+
+def test_g14():
+    group("G14 Gate 1D-A registered reserve tolerance (diagnostic only)")
+    R = 8.0
+    tol_R = sv.tol(R)
+    check(tol_R == 1e-9 * (1.0 + abs(R)),
+          "tol_R is the registered rule 1e-9 * (1 + |R_eff|), nothing new")
+    ulp = math.nextafter(R, -math.inf)
+    # (1) exact boundary
+    check(not sv.materially_below_reserve(R, R), "x == R_eff is not below")
+    # (2) one ULP below
+    check(ulp < R and not sv.materially_below_reserve(ulp, R),
+          "one ULP below R_eff is not materially below")
+    # (3) half tolerance below
+    check(not sv.materially_below_reserve(R - 0.5 * tol_R, R),
+          "half-tolerance residual is not materially below")
+    # (4) exactly tolerance below: strict comparison on the same float
+    # expression R - tol(R), so the fixture is numerically stable
+    check(not sv.materially_below_reserve(R - tol_R, R),
+          "x == R_eff - tol_R is not below (strict comparison)")
+    # (5) materially below
+    check(sv.materially_below_reserve(R - 1.01 * tol_R, R),
+          "x < R_eff - tol_R is materially below")
+    check(sv.materially_below_reserve(7.0, R), "a large breach is below")
+    # (6) transition from above to one ULP below: no crossing
+    check(not sv.reserve_crossing(R + 1.0, ulp, R),
+          "above -> one-ULP-below is not a crossing")
+    check(not sv.reserve_crossing(R, ulp, R),
+          "boundary -> one-ULP-below is not a crossing")
+    # (7) transition from above to materially below: exactly one crossing
+    check(sv.reserve_crossing(R + 1.0, 7.0, R),
+          "above -> materially below is a crossing")
+    path = [9.0, 8.5, 7.0, 6.5]
+    check(sum(sv.reserve_crossing(a, b, R)
+              for a, b in zip(path, path[1:])) == 1,
+          "one material descent counts exactly one crossing")
+    # (8) sub-tolerance residuals never accumulate into persistence
+    wobble = [R + 0.5, ulp, R - 0.5 * tol_R, ulp, R + 0.1, ulp]
+    check(sum(sv.reserve_crossing(a, b, R)
+              for a, b in zip(wobble, wobble[1:])) == 0,
+          "repeated sub-tolerance residuals accumulate no crossing")
+    check(not any(sv.materially_below_reserve(v, R) for v in wobble),
+          "no sub-tolerance residual is ever materially below")
+    # (9) genuine persistence still satisfies the registered rule
+    breach = [9.0, 7.0, 7.0, 6.9, 6.8]
+    check(sum(sv.reserve_crossing(a, b, R)
+              for a, b in zip(breach, breach[1:])) == 1,
+          "a persistent material breach counts one crossing at the descent")
+    check(all(sv.materially_below_reserve(v, R) for v in breach[1:]),
+          "material below-reserve status persists while the breach persists")
+    # (10) the four committed W2 Attempt-1 values no longer count
+    with open("results/v3.0/gate1d/v30_service_alignment_summary.json") as f:
+        att1 = json.load(f)
+    w2 = [r for r in att1["runs"]
+          if r["world"] == "W2_infeasible_2cell"
+          and r["dt_label"] == "conservative"]
+    check(len(w2) == 4 and all(r["reserve_crossings"] == 1
+                               and r["outcome_class"] == "destructive_service"
+                               for r in w2),
+          "Attempt-1 record: 4 W2 conservative runs mislabelled by the defect")
+    check(all(r["min_source_stock"] == ulp for r in w2),
+          "committed minimum stock is exactly one ULP below R_eff = 8.0")
+    check(all(not sv.materially_below_reserve(r["min_source_stock"], R)
+              and not sv.reserve_crossing(R, r["min_source_stock"], R)
+              and not sv.reserve_crossing(15.0, r["min_source_stock"], R)
+              for r in w2),
+          "the four one-ULP W2 values count no crossing under the tolerance")
+    # (11) a larger genuine breach still counts and stays destructive
+    N = sv.BURN_IN_TICKS + sv.PERSISTENCE_WINDOW + 30
+    rgen = sv.RunResult(run_id="s", world="W", arm="X", dt_label="d", dt=1.0,
+                        dt_certificate=2.0, r_dt=0.5)
+    rgen.series = dict(service=[1.0] * N, unmet=[0.0] * N,
+                       min_source=[7.0] * N)
+    rgen.totals = dict(ebu=0.0, allee_crossings=0, overuse=0.0,
+                       p1c_rejected=0, max_ledger_residual=0.0,
+                       reserve_crossings=sum(
+                           sv.reserve_crossing(a, b, R)
+                           for a, b in zip([9.0, 7.0], [7.0, 6.8])))
+    rgen.final = dict(x=[1.0], burden=0.0, viability=100.0, dead_sources=0,
+                      domain_failure_tick=None, negative_state=False,
+                      feasible_world=True, note="")
+    check(rgen.totals["reserve_crossings"] == 1,
+          "genuine breach path still counts a crossing")
+    check(sv.classify_outcome(rgen, None, None) == "destructive_service",
+          "genuine breach preserves the destructive_service classification")
+    check(sv.reserve_harm_predicate(rgen)["is_reserve_destruction"],
+          "genuine breach still fires the reserve-harm predicate")
+    # (12) diagnostic-only scope: the predicate is consulted nowhere in the
+    # physical/economic path (AST), and poisoning it cannot change a
+    # trajectory (runtime)
+    tree = ast.parse(open("service_v30.py").read())
+    callers = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            for sub in ast.walk(node):
+                if isinstance(sub, ast.Call):
+                    fn = sub.func
+                    nm = fn.attr if isinstance(fn, ast.Attribute) else (
+                        fn.id if isinstance(fn, ast.Name) else "")
+                    if nm in ("materially_below_reserve", "reserve_crossing"):
+                        callers.setdefault(nm, set()).add(node.name)
+    check(callers.get("reserve_crossing", set()) == {"run_arm"},
+          f"reserve_crossing is called only by run_arm's diagnostic counter "
+          f"({callers.get('reserve_crossing')})")
+    check(callers.get("materially_below_reserve", set()) <= {"reserve_crossing"},
+          f"materially_below_reserve is called only by reserve_crossing "
+          f"({callers.get('materially_below_reserve')})")
+    for fname in ("bounded_step", "action_menu", "build_world",
+                  "world_certificate", "drive_no_demand"):
+        check(fname not in callers.get("reserve_crossing", set())
+              and fname not in callers.get("materially_below_reserve", set()),
+              f"{fname} never consults the diagnostic predicate")
+    _, _, h1, x1 = short_run("W2_infeasible_2cell", "B_restricted_p1c",
+                             sv.DT_CONSERVATIVE)
+    orig = sv.reserve_crossing
+
+    def _poisoned(*_a):
+        raise AssertionError("physics consulted the diagnostic predicate")
+    try:
+        sv.reserve_crossing = _poisoned
+        _, _, h2, x2 = short_run("W2_infeasible_2cell", "B_restricted_p1c",
+                                 sv.DT_CONSERVATIVE)
+    finally:
+        sv.reserve_crossing = orig
+    check(x1 == x2 and [o.x_after for o in h1] == [o.x_after for o in h2]
+          and [o.service for o in h1] == [o.service for o in h2]
+          and [o.unmet for o in h1] == [o.unmet for o in h2]
+          and [o.q_acc for o in h1] == [o.q_acc for o in h2]
+          and [o.ledger_residual for o in h1] == [o.ledger_residual for o in h2],
+          "poisoning the diagnostic changes no state, action, service, unmet, "
+          "or ledger value on a short horizon")
 
 
 if __name__ == "__main__":
@@ -595,7 +739,8 @@ if __name__ == "__main__":
           f"(plan {PLAN_CANONICAL[:12]}...)")
     print("The registered 56-run study is NOT executed by this suite.\n")
     for fn in (test_g1, test_g2, test_g3, test_g4, test_g5, test_g6, test_g7,
-               test_g8, test_g9, test_g10, test_g11, test_g12, test_g13):
+               test_g8, test_g9, test_g10, test_g11, test_g12, test_g13,
+               test_g14):
         fn()
     print()
     for k, (title, p, f) in enumerate(GROUPS, 1):
