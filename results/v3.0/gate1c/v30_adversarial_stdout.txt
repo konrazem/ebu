@@ -1,0 +1,90 @@
+EBP V3.0 Gate 1C - preregistered Q22 adversarial replay
+  plan canonical hash: a1916e8ecf366cee93a5284a0d8fcb68a3e1a429f49ce62b9f5914df87f94061
+  python: 3.14.2
+  frozen: DEPTH=10 WIDTH=40 TAIL=20 QUANTS=(0.5, 1.0) COALITION=[0, 1] H_RUN=30 MARGIN=1.0 dt=1.0
+  layouts: seeds [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] (seed 0 = standing falsifier)
+
+  A falsification search, never a proof of security.
+
+=== (1) Registered arms: 12 layouts x 3 arms ===
+  run                                       EBU      pos      neg  acts    burden  viab% dead  Rx  Ax   served exploit
+  A_p1c_baseline-seed0                   +0.000    0.000    0.000   383   3268.51   20.0    0   0   0   120.57   False
+  B_p1c_plus_observational_quote-seed0     +0.309    0.309    0.000     1   3268.51   20.0    0   0   0   120.57   False
+  C_quote_maximizing_adversary-seed0   +196.564  196.564    0.000   140   3354.61   20.0    0   0   0   108.28   False
+  A_p1c_baseline-seed1                   +0.000    0.000    0.000   653   1156.38   48.0    0   0   0   233.95   False
+  B_p1c_plus_observational_quote-seed1     +3.345    3.345    0.000    18   1156.38   48.0    0   0   0   233.95   False
+  C_quote_maximizing_adversary-seed1   +265.673  265.673    0.000   279   1217.71   40.0    0   0   0   176.06   False
+  A_p1c_baseline-seed2                   +0.000    0.000    0.000   719   1365.83   52.0    0   0   0   219.19   False
+  B_p1c_plus_observational_quote-seed2     +0.618    0.618    0.000     2   1365.83   52.0    0   0   0   219.19   False
+  C_quote_maximizing_adversary-seed2   +221.616  221.616    0.000   279   1535.16   40.0    0   0   0   161.46   False
+  A_p1c_baseline-seed3                   +0.000    0.000    0.000   667   1395.02   44.0    0   0   0   202.33   False
+  B_p1c_plus_observational_quote-seed3     +1.212    1.212    0.000     3   1395.02   44.0    0   0   0   202.33   False
+  C_quote_maximizing_adversary-seed3   +256.405  256.405    0.000   252   1543.47   36.0    0   0   0   161.77   False
+  A_p1c_baseline-seed4                   +0.000    0.000    0.000   677    971.39   60.0    0   0   0   272.90   False
+  B_p1c_plus_observational_quote-seed4    +28.720   28.720    0.000    52    971.39   60.0    0   0   0   272.90   False
+  C_quote_maximizing_adversary-seed4   +258.406  258.406    0.000   334    978.22   52.0    0   0   0   184.74   False
+  A_p1c_baseline-seed5                   +0.000    0.000    0.000   557   1987.94   40.0    0   0   0   246.49   False
+  B_p1c_plus_observational_quote-seed5     +5.956    5.956    0.000    22   1987.94   40.0    0   0   0   246.49   False
+  C_quote_maximizing_adversary-seed5   +238.238  238.238    0.000   224   2005.49   32.0    0   0   0   152.02   False
+  A_p1c_baseline-seed6                   +0.000    0.000    0.000   525   1937.23   40.0    0   0   0   188.51   False
+  B_p1c_plus_observational_quote-seed6     +6.464    6.464    0.000    14   1937.23   40.0    0   0   0   188.51   False
+  C_quote_maximizing_adversary-seed6   +245.972  245.972    0.000   223   2024.29   32.0    0   0   0   153.28   False
+  A_p1c_baseline-seed7                   +0.000    0.000    0.000   820    430.30   76.0    0   0   0   392.72   False
+  B_p1c_plus_observational_quote-seed7     +8.745    8.745    0.000    28    430.30   76.0    0   0   0   392.72   False
+  C_quote_maximizing_adversary-seed7   +265.122  265.122    0.000   388    521.00   64.0    0   0   0   208.31   False
+  A_p1c_baseline-seed8                   +0.000    0.000    0.000   805    168.97   76.0    0   0   0   395.16   False
+  B_p1c_plus_observational_quote-seed8    +16.077   16.077    0.000    32    168.97   76.0    0   0   0   395.16   False
+  C_quote_maximizing_adversary-seed8   +291.289  291.289    0.000   390    283.45   72.0    0   0   0   218.25   False
+  A_p1c_baseline-seed9                   +0.000    0.000    0.000   704    943.28   60.0    0   0   0   289.94   False
+  B_p1c_plus_observational_quote-seed9    +15.966   15.966    0.000    43    943.28   60.0    0   0   0   289.94   False
+  C_quote_maximizing_adversary-seed9   +256.271  256.271    0.000   308    993.17   48.0    0   0   0   182.18   False
+  A_p1c_baseline-seed10                  +0.000    0.000    0.000   712   1773.07   36.0    0   0   0   184.20   False
+  B_p1c_plus_observational_quote-seed10     +0.000    0.000    0.000     0   1773.07   36.0    0   0   0   184.20   False
+  C_quote_maximizing_adversary-seed10   +218.554  218.554    0.000   224   2065.99   32.0    0   0   0   139.91   False
+  A_p1c_baseline-seed11                  +0.000    0.000    0.000   520   2195.03   48.0    0   0   0   221.88   False
+  B_p1c_plus_observational_quote-seed11    +14.590   14.590    0.000    37   2195.03   48.0    0   0   0   221.88   False
+  C_quote_maximizing_adversary-seed11   +209.126  209.126    0.000   251   2218.24   40.0    0   0   0   146.22   False
+
+=== (2) Observational identity: arm B vs arm A (paired) ===
+  seed  0: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  1: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  2: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  3: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  4: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  5: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  6: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  7: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  8: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed  9: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed 10: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  seed 11: trajectories byte-identical: True  (max |diff| = 0.000e+00)
+  all identical: True
+
+=== (3) Red-team ORACLE (separately labelled; uses global harm as an EXTERNAL objective - never production-actor information) ===
+  seed  0: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=8592
+  seed  1: best oracle beam  EBU=   +0.903  cum_harm=   -12.30  persistent=False  exploit=False  explored=16827
+  seed  2: best oracle beam  EBU=   +0.903  cum_harm=   -12.30  persistent=False  exploit=False  explored=17017
+  seed  3: best oracle beam  EBU=   +0.903  cum_harm=   -12.30  persistent=False  exploit=False  explored=15181
+  seed  4: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=19448
+  seed  5: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=16140
+  seed  6: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=13092
+  seed  7: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=23842
+  seed  8: best oracle beam  EBU=   +0.903  cum_harm=   -12.30  persistent=False  exploit=False  explored=23447
+  seed  9: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=19354
+  seed 10: best oracle beam  EBU=   +0.903  cum_harm=   -12.30  persistent=False  exploit=False  explored=15999
+  seed 11: best oracle beam  EBU=   +0.795  cum_harm=    -9.84  persistent=False  exploit=False  explored=14900
+
+=== (4) Historical V2.6 positive controls (released code) ===
+  V2.6 naive    red-team: exploit=True  net EBU=+15.35  persistent=True  mean tail harm=+102.91
+  V2.6 guarded  red-team: exploit=False  net EBU=+0.91  persistent=False  mean tail harm=-5.47
+  V2.6 seed-0 guarded (standing falsifier): net=+260.13  exploit=True  dead=5/5  viability@end=0%
+
+=== (5) Gate-1C verdict ===
+  production-local arms: 0 profitable persistent-harm exploit(s) in 36 runs
+  red-team ORACLE:       0 profitable persistent-harm exploit(s) in 12 searches
+  => NO EXPLOIT FOUND within the declared fixtures, seeds, action menu, search depth, width, and predicate.
+     This is NOT a proof of security, not 'exploit-free', and not a guarantee.
+  domain exits (recorded, none dropped): 36 ['A_p1c_baseline-seed0', 'B_p1c_plus_observational_quote-seed0', 'C_quote_maximizing_adversary-seed0', 'A_p1c_baseline-seed1', 'B_p1c_plus_observational_quote-seed1', 'C_quote_maximizing_adversary-seed1', 'A_p1c_baseline-seed2', 'B_p1c_plus_observational_quote-seed2', 'C_quote_maximizing_adversary-seed2', 'A_p1c_baseline-seed3', 'B_p1c_plus_observational_quote-seed3', 'C_quote_maximizing_adversary-seed3', 'A_p1c_baseline-seed4', 'B_p1c_plus_observational_quote-seed4', 'C_quote_maximizing_adversary-seed4', 'A_p1c_baseline-seed5', 'B_p1c_plus_observational_quote-seed5', 'C_quote_maximizing_adversary-seed5', 'A_p1c_baseline-seed6', 'B_p1c_plus_observational_quote-seed6', 'C_quote_maximizing_adversary-seed6', 'A_p1c_baseline-seed7', 'B_p1c_plus_observational_quote-seed7', 'C_quote_maximizing_adversary-seed7', 'A_p1c_baseline-seed8', 'B_p1c_plus_observational_quote-seed8', 'C_quote_maximizing_adversary-seed8', 'A_p1c_baseline-seed9', 'B_p1c_plus_observational_quote-seed9', 'C_quote_maximizing_adversary-seed9', 'A_p1c_baseline-seed10', 'B_p1c_plus_observational_quote-seed10', 'C_quote_maximizing_adversary-seed10', 'A_p1c_baseline-seed11', 'B_p1c_plus_observational_quote-seed11', 'C_quote_maximizing_adversary-seed11']
+
+wrote results/v3.0/gate1c/v30_adversarial_summary.json (80504 bytes) and results/v3.0/gate1c/v30_adversarial_trace.jsonl.gz
+Every registered run appears exactly once; no run was dropped.
