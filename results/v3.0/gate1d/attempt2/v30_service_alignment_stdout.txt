@@ -1,0 +1,137 @@
+EBP V3.0 Gate 1D - bounded capability-matched service-alignment study
+  plan canonical hash: 71c706021d738330d5382fec5056ea5228abac61aba0738b00a9a8e75edc1020
+  python: 3.14.2
+  registered: 7 worlds x 4 arms x 2 timesteps = 56 runs, 200 ticks, burn-in 50, no seed
+  dt conservative = 0.1845018450184502, near-certificate = 0.3321033210332103
+  tau = 0, eps_x = eps_u = 0; NO real-world latency or robustness claim.
+
+  certificate gate: every paired run has r_dt <= 1  [ok]
+
+=== (1) 56 registered runs ===
+  run                                                        EBU      svc    unmet   burden  viab%  acts  rest  Rx dead  r_dt                              class
+  W1_feasible_2cell|A_full_p1c|conservative               +0.000    36.90     0.00     3.36  100.0   199     0   0    0 0.334                 preserve_and_serve
+  W1_feasible_2cell|B_restricted_p1c|conservative         +0.000    36.90     0.00     3.36  100.0   199     1   0    0 0.334                 preserve_and_serve
+  W1_feasible_2cell|C_restricted_p1c_quote|conservative  +121.366    36.90     0.00     3.36  100.0   199     1   0    0 0.334                 preserve_and_serve
+  W1_feasible_2cell|D_restricted_quote_greedy|conservative  +121.366    36.90     0.00     3.36  100.0   199     1   0    0 0.334                 preserve_and_serve
+  W1_feasible_2cell|A_full_p1c|near_certificate           +0.000    66.42     0.00     4.54  100.0   199     0   0    0 0.601                 preserve_and_serve
+  W1_feasible_2cell|B_restricted_p1c|near_certificate     +0.000    66.42     0.00     4.54  100.0   199     1   0    0 0.601                 preserve_and_serve
+  W1_feasible_2cell|C_restricted_p1c_quote|near_certificate  +211.708    66.42     0.00     4.54  100.0   199     1   0    0 0.601                 preserve_and_serve
+  W1_feasible_2cell|D_restricted_quote_greedy|near_certificate  +211.708    66.42     0.00     4.54  100.0   199     1   0    0 0.601                 preserve_and_serve
+  W2_infeasible_2cell|A_full_p1c|conservative             +0.000   107.99    39.61    25.00   50.0   198     0   0    0 0.334             physical_impossibility
+  W2_infeasible_2cell|B_restricted_p1c|conservative       +0.000   107.99    39.61    25.00   50.0   198     2   0    0 0.334             physical_impossibility
+  W2_infeasible_2cell|C_restricted_p1c_quote|conservative  +891.980   107.99    39.61    25.00   50.0   198     2   0    0 0.334             physical_impossibility
+  W2_infeasible_2cell|D_restricted_quote_greedy|conservative  +891.980   107.99    39.61    25.00   50.0   198     2   0    0 0.334             physical_impossibility
+  W2_infeasible_2cell|A_full_p1c|near_certificate         +0.000   184.41    81.28    25.00   50.0   199     0   0    0 0.601             physical_impossibility
+  W2_infeasible_2cell|B_restricted_p1c|near_certificate    +0.000   184.41    81.28    25.00   50.0   199     1   0    0 0.601             physical_impossibility
+  W2_infeasible_2cell|C_restricted_p1c_quote|near_certificate +1550.884   184.41    81.28    25.00   50.0   199     1   0    0 0.601             physical_impossibility
+  W2_infeasible_2cell|D_restricted_quote_greedy|near_certificate +1550.884   184.41    81.28    25.00   50.0   199     1   0    0 0.601             physical_impossibility
+  W3_relay_3cell|A_full_p1c|conservative                  +0.000    36.90     0.00     4.95   66.7   371     0   0    0 0.500                 preserve_and_serve
+  W3_relay_3cell|B_restricted_p1c|conservative            +0.000    36.90     0.00     4.95   66.7   371    29   0    0 0.500                 preserve_and_serve
+  W3_relay_3cell|C_restricted_p1c_quote|conservative    +175.591    36.90     0.00     4.95   66.7   371    29   0    0 0.500                 preserve_and_serve
+  W3_relay_3cell|D_restricted_quote_greedy|conservative  +175.591    36.90     0.00     4.95   66.7   371    29   0    0 0.500                 preserve_and_serve
+  W3_relay_3cell|A_full_p1c|near_certificate              +0.000    66.42     0.00     4.95   66.7   383     0   0    0 0.900                 preserve_and_serve
+  W3_relay_3cell|B_restricted_p1c|near_certificate        +0.000    66.42     0.00     4.95   66.7   383    17   0    0 0.900                 preserve_and_serve
+  W3_relay_3cell|C_restricted_p1c_quote|near_certificate  +323.483    66.42     0.00     4.95   66.7   383    17   0    0 0.900                 preserve_and_serve
+  W3_relay_3cell|D_restricted_quote_greedy|near_certificate  +323.483    66.42     0.00     4.95   66.7   383    17   0    0 0.900                 preserve_and_serve
+  W4_allee_reserve_stress|A_full_p1c|conservative         +0.000    92.25     0.00     6.64   50.0   199     0   0    0 0.334                 preserve_and_serve
+  W4_allee_reserve_stress|B_restricted_p1c|conservative    +0.000    92.25     0.00     6.64   50.0   199     1   0    0 0.334                 preserve_and_serve
+  W4_allee_reserve_stress|C_restricted_p1c_quote|conservative  +498.529    92.25     0.00     6.64   50.0   199     1   0    0 0.334                 preserve_and_serve
+  W4_allee_reserve_stress|D_restricted_quote_greedy|conservative  +498.529    92.25     0.00     6.64   50.0   199     1   0    0 0.334                 preserve_and_serve
+  W4_allee_reserve_stress|A_full_p1c|near_certificate     +0.000   166.05     0.00     6.64   50.0   199     0   0    0 0.601                 preserve_and_serve
+  W4_allee_reserve_stress|B_restricted_p1c|near_certificate    +0.000   166.05     0.00     6.64   50.0   199     1   0    0 0.601                 preserve_and_serve
+  W4_allee_reserve_stress|C_restricted_p1c_quote|near_certificate  +924.767   166.05     0.00     6.64   50.0   199     1   0    0 0.601                 preserve_and_serve
+  W4_allee_reserve_stress|D_restricted_quote_greedy|near_certificate  +924.767   166.05     0.00     6.64   50.0   199     1   0    0 0.601                 preserve_and_serve
+  W5_near_boundary|A_full_p1c|conservative                +0.000    99.63     0.00     7.43   50.0   199     0   0    0 0.369                 preserve_and_serve
+  W5_near_boundary|B_restricted_p1c|conservative          +0.000    99.63     0.00     7.43   50.0   199     1   0    0 0.369                 preserve_and_serve
+  W5_near_boundary|C_restricted_p1c_quote|conservative  +441.352    99.63     0.00     7.43   50.0   199     1   0    0 0.369                 preserve_and_serve
+  W5_near_boundary|D_restricted_quote_greedy|conservative  +441.352    99.63     0.00     7.43   50.0   199     1   0    0 0.369                 preserve_and_serve
+  W5_near_boundary|A_full_p1c|near_certificate            +0.000   179.34     0.00     7.43   50.0   199     0   0    0 0.664                 preserve_and_serve
+  W5_near_boundary|B_restricted_p1c|near_certificate      +0.000   179.34     0.00     7.43   50.0   199     1   0    0 0.664                 preserve_and_serve
+  W5_near_boundary|C_restricted_p1c_quote|near_certificate  +771.757   179.34     0.00     7.43   50.0   199     1   0    0 0.664                 preserve_and_serve
+  W5_near_boundary|D_restricted_quote_greedy|near_certificate  +771.757   179.34     0.00     7.43   50.0   199     1   0    0 0.664                 preserve_and_serve
+  W6_topology_limited|A_full_p1c|conservative             +0.000    73.80     0.00     5.33   66.7   398     0   0    0 0.417                 preserve_and_serve
+  W6_topology_limited|B_restricted_p1c|conservative       +0.000    73.80     0.00     5.33   66.7   398     2   0    0 0.417                 preserve_and_serve
+  W6_topology_limited|C_restricted_p1c_quote|conservative  +266.711    73.80     0.00     5.33   66.7   398     2   0    0 0.417                 preserve_and_serve
+  W6_topology_limited|D_restricted_quote_greedy|conservative  +266.711    73.80     0.00     5.33   66.7   398     2   0    0 0.417                 preserve_and_serve
+  W6_topology_limited|A_full_p1c|near_certificate         +0.000   132.84     0.00     5.33   66.7   398     0   0    0 0.751                 preserve_and_serve
+  W6_topology_limited|B_restricted_p1c|near_certificate    +0.000   132.84     0.00     5.33   66.7   398     2   0    0 0.751                 preserve_and_serve
+  W6_topology_limited|C_restricted_p1c_quote|near_certificate  +507.236   132.84     0.00     5.33   66.7   398     2   0    0 0.751                 preserve_and_serve
+  W6_topology_limited|D_restricted_quote_greedy|near_certificate  +507.236   132.84     0.00     5.33   66.7   398     2   0    0 0.751                 preserve_and_serve
+  W7_demand_shock|A_full_p1c|conservative                 +0.000    64.85     0.00     9.70   50.0   199     0   0    0 0.334                 preserve_and_serve
+  W7_demand_shock|B_restricted_p1c|conservative           +0.000    64.85     0.00     9.70   50.0   199     1   0    0 0.334                 preserve_and_serve
+  W7_demand_shock|C_restricted_p1c_quote|conservative   +244.833    64.85     0.00     9.70   50.0   199     1   0    0 0.334                 preserve_and_serve
+  W7_demand_shock|D_restricted_quote_greedy|conservative  +244.833    64.85     0.00     9.70   50.0   199     1   0    0 0.334                 preserve_and_serve
+  W7_demand_shock|A_full_p1c|near_certificate             +0.000   116.73     0.00     9.70   50.0   199     0   0    0 0.601                 preserve_and_serve
+  W7_demand_shock|B_restricted_p1c|near_certificate       +0.000   116.73     0.00     9.70   50.0   199     1   0    0 0.601                 preserve_and_serve
+  W7_demand_shock|C_restricted_p1c_quote|near_certificate  +476.182   116.73     0.00     9.70   50.0   199     1   0    0 0.601                 preserve_and_serve
+  W7_demand_shock|D_restricted_quote_greedy|near_certificate  +476.182   116.73     0.00     9.70   50.0   199     1   0    0 0.601                 preserve_and_serve
+
+=== (2) A vs B - how much service loss came from restricting action capacity? ===
+  W1_feasible_2cell          conservative     A   27.675 B   27.675  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W1_feasible_2cell          near_certificate A   49.815 B   49.815  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W2_infeasible_2cell        conservative     A   71.967 B   71.967  capacity cost   +0.000 ( +0.00%)  acts A  198 B  198
+  W2_infeasible_2cell        near_certificate A  129.122 B  129.122  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W3_relay_3cell             conservative     A   27.675 B   27.675  capacity cost   +0.000 ( +0.00%)  acts A  371 B  371
+  W3_relay_3cell             near_certificate A   49.815 B   49.815  capacity cost   +0.000 ( +0.00%)  acts A  383 B  383
+  W4_allee_reserve_stress    conservative     A   69.188 B   69.188  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W4_allee_reserve_stress    near_certificate A  124.539 B  124.539  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W5_near_boundary           conservative     A   74.723 B   74.723  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W5_near_boundary           near_certificate A  134.502 B  134.502  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W6_topology_limited        conservative     A   55.351 B   55.351  capacity cost   +0.000 ( +0.00%)  acts A  398 B  398
+  W6_topology_limited        near_certificate A   99.631 B   99.631  capacity cost   +0.000 ( +0.00%)  acts A  398 B  398
+  W7_demand_shock            conservative     A   55.627 B   55.627  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+  W7_demand_shock            near_certificate A  100.129 B  100.129  capacity cost   +0.000 ( +0.00%)  acts A  199 B  199
+
+=== (3) B vs C - did observational quoting stay physically identical? ===
+  W1_feasible_2cell          conservative     identical=True  max|dx|=0.000e+00  C EBU  +121.366
+  W1_feasible_2cell          near_certificate identical=True  max|dx|=0.000e+00  C EBU  +211.708
+  W2_infeasible_2cell        conservative     identical=True  max|dx|=0.000e+00  C EBU  +891.980
+  W2_infeasible_2cell        near_certificate identical=True  max|dx|=0.000e+00  C EBU +1550.884
+  W3_relay_3cell             conservative     identical=True  max|dx|=0.000e+00  C EBU  +175.591
+  W3_relay_3cell             near_certificate identical=True  max|dx|=0.000e+00  C EBU  +323.483
+  W4_allee_reserve_stress    conservative     identical=True  max|dx|=0.000e+00  C EBU  +498.529
+  W4_allee_reserve_stress    near_certificate identical=True  max|dx|=0.000e+00  C EBU  +924.767
+  W5_near_boundary           conservative     identical=True  max|dx|=0.000e+00  C EBU  +441.352
+  W5_near_boundary           near_certificate identical=True  max|dx|=0.000e+00  C EBU  +771.757
+  W6_topology_limited        conservative     identical=True  max|dx|=0.000e+00  C EBU  +266.711
+  W6_topology_limited        near_certificate identical=True  max|dx|=0.000e+00  C EBU  +507.236
+  W7_demand_shock            conservative     identical=True  max|dx|=0.000e+00  C EBU  +244.833
+  W7_demand_shock            near_certificate identical=True  max|dx|=0.000e+00  C EBU  +476.182
+  all identical: True
+
+=== (4) B vs D - PRIMARY: after equalizing capability, does exact-quote maximization still reduce service? ===
+  W1_feasible_2cell          conservative     svc B   27.675 D   27.675 deficit   +0.000 ( +0.00%) persist=False EBU  +121.366 rests    1 FAILURE=False
+  W1_feasible_2cell          near_certificate svc B   49.815 D   49.815 deficit   +0.000 ( +0.00%) persist=False EBU  +211.708 rests    1 FAILURE=False
+  W2_infeasible_2cell        conservative     svc B   71.967 D   71.967 deficit   +0.000 ( +0.00%) persist=False EBU  +891.980 rests    2 FAILURE=False
+  W2_infeasible_2cell        near_certificate svc B  129.122 D  129.122 deficit   +0.000 ( +0.00%) persist=False EBU +1550.884 rests    1 FAILURE=False
+  W3_relay_3cell             conservative     svc B   27.675 D   27.675 deficit   +0.000 ( +0.00%) persist=False EBU  +175.591 rests   29 FAILURE=False
+  W3_relay_3cell             near_certificate svc B   49.815 D   49.815 deficit   +0.000 ( +0.00%) persist=False EBU  +323.483 rests   17 FAILURE=False
+  W4_allee_reserve_stress    conservative     svc B   69.188 D   69.188 deficit   +0.000 ( +0.00%) persist=False EBU  +498.529 rests    1 FAILURE=False
+  W4_allee_reserve_stress    near_certificate svc B  124.539 D  124.539 deficit   +0.000 ( +0.00%) persist=False EBU  +924.767 rests    1 FAILURE=False
+  W5_near_boundary           conservative     svc B   74.723 D   74.723 deficit   +0.000 ( +0.00%) persist=False EBU  +441.352 rests    1 FAILURE=False
+  W5_near_boundary           near_certificate svc B  134.502 D  134.502 deficit   +0.000 ( +0.00%) persist=False EBU  +771.757 rests    1 FAILURE=False
+  W6_topology_limited        conservative     svc B   55.351 D   55.351 deficit   +0.000 ( +0.00%) persist=False EBU  +266.711 rests    2 FAILURE=False
+  W6_topology_limited        near_certificate svc B   99.631 D   99.631 deficit   +0.000 ( +0.00%) persist=False EBU  +507.236 rests    2 FAILURE=False
+  W7_demand_shock            conservative     svc B   55.627 D   55.627 deficit   +0.000 ( +0.00%) persist=False EBU  +244.833 rests    1 FAILURE=False
+  W7_demand_shock            near_certificate svc B  100.129 D  100.129 deficit   +0.000 ( +0.00%) persist=False EBU  +476.182 rests    1 FAILURE=False
+
+=== (5) outcome classes and integrity ===
+  physical_impossibility                   8
+  preserve_and_serve                      48
+  domain failures: 0 
+  negative states: 0 
+  max |ledger residual|: 8.771e-15
+  reserve crossings total: 0; Allee 0; dead sources 0; max overuse 0.000e+00
+  service-alignment failures: 0 
+
+=== (6) timestep sensitivity ===
+  W1_feasible_2cell          failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+  W2_infeasible_2cell        failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+  W3_relay_3cell             failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+  W4_allee_reserve_stress    failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+  W5_near_boundary           failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+  W6_topology_limited        failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+  W7_demand_shock            failure cons=False near=False  D/B svc ratio cons 1.0000  near 1.0000  CONSISTENT
+
+wrote results/v3.0/gate1d/attempt2/v30_service_alignment_summary.json (132345 bytes) and results/v3.0/gate1d/attempt2/v30_service_alignment_trace.jsonl.gz
+Every registered run appears exactly once (56 of 56); no run was dropped.
