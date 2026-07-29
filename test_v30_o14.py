@@ -1068,16 +1068,21 @@ def test_t16():
     finally:
         __import__("sys").argv = saved_argv
     check(calls == [], "rejection happened before any run_fn call")
-    # --- R3 preflight fail-closed BEFORE any trajectory
-    def expect_preflight_failure(label, mutate, restore):
+    # --- R3 preflight fail-closed BEFORE any trajectory, each scenario
+    # asserting ITS OWN intended fatal reason (a bare SystemExit acceptance
+    # allowed the Gate 1D-B self-match defect to pass every sentinel test at
+    # the wrong, earlier failure)
+    def expect_preflight_failure(label, mutate, restore, expect):
         calls.clear()
         try:
             mutate()
             try:
                 exp.main(run_fn=counting_run_fn)
                 check(False, f"{label}: must fail closed")
-            except SystemExit:
-                check(True, f"{label}: fails closed")
+            except SystemExit as e:
+                check(expect in str(e),
+                      f"{label}: fails closed for the intended reason "
+                      f"{expect!r} (got {e!r})")
             except AssertionError:
                 check(False, f"{label}: run_fn was reached")
         finally:
@@ -1087,29 +1092,34 @@ def test_t16():
     expect_preflight_failure(
         "raw-hash tamper",
         lambda: setattr(exp, "PLAN_RAW", "0" * 64),
-        lambda: setattr(exp, "PLAN_RAW", orig_raw))
+        lambda: setattr(exp, "PLAN_RAW", orig_raw),
+        "raw O14 plan SHA-256 mismatch")
     orig_canon = exp.PLAN_CANONICAL
     expect_preflight_failure(
         "canonical-hash tamper",
         lambda: setattr(exp, "PLAN_CANONICAL", "0" * 64),
-        lambda: setattr(exp, "PLAN_CANONICAL", orig_canon))
+        lambda: setattr(exp, "PLAN_CANONICAL", orig_canon),
+        "canonical O14 plan hash mismatch")
     node = o14.PLAN["timestep"]["per_world"]["O14_W3_volume_split"]
     orig_cert = node["binding_certificate"]
     expect_preflight_failure(
         "certificate tamper",
         lambda: node.__setitem__("binding_certificate", orig_cert + 1e-9),
-        lambda: node.__setitem__("binding_certificate", orig_cert))
+        lambda: node.__setitem__("binding_certificate", orig_cert),
+        "certificate field")
     orig_specs = o14.build_run_specs
     expect_preflight_failure(
         "run-count mismatch (59)",
         lambda: setattr(o14, "build_run_specs",
                         lambda: orig_specs()[:-1]),
-        lambda: setattr(o14, "build_run_specs", orig_specs))
+        lambda: setattr(o14, "build_run_specs", orig_specs),
+        "not exactly 60 unique specifications")
     expect_preflight_failure(
         "duplicate run id",
         lambda: setattr(o14, "build_run_specs",
                         lambda: orig_specs()[:-1] + [orig_specs()[0]]),
-        lambda: setattr(o14, "build_run_specs", orig_specs))
+        lambda: setattr(o14, "build_run_specs", orig_specs),
+        "not exactly 60 unique specifications")
 
     def _with_e():
         s = orig_specs()
@@ -1120,7 +1130,8 @@ def test_t16():
     expect_preflight_failure(
         "arm-E specification",
         lambda: setattr(o14, "build_run_specs", _with_e),
-        lambda: setattr(o14, "build_run_specs", orig_specs))
+        lambda: setattr(o14, "build_run_specs", orig_specs),
+        "differs from the registered Cartesian product")
     with tempfile.TemporaryDirectory() as td:
         saved_paths = (exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST)
         exp.OUTDIR = td
@@ -1131,17 +1142,20 @@ def test_t16():
             open(exp.SUMMARY, "w").write("{}")
             expect_preflight_failure(
                 "existing summary (completion sentinel)",
-                lambda: None, lambda: None)
+                lambda: None, lambda: None,
+                "exists; the registered study runs exactly once")
             os.remove(exp.SUMMARY)
             open(exp.TRACE, "wb").write(b"x")
             expect_preflight_failure(
                 "orphan trace without summary",
-                lambda: None, lambda: None)
+                lambda: None, lambda: None,
+                "exists without a summary")
             os.remove(exp.TRACE)
             open(exp.MANIFEST, "w").write("x")
             expect_preflight_failure(
                 "orphan manifest without summary",
-                lambda: None, lambda: None)
+                lambda: None, lambda: None,
+                "exists without a summary")
             os.remove(exp.MANIFEST)
             # --- R4 exact orchestration with synthetic runs only
             specs = o14.build_run_specs()
@@ -1342,7 +1356,8 @@ def test_t16():
                   "runner")
             expect_preflight_failure(
                 "completed summary prevents any second execution",
-                lambda: None, lambda: None)
+                lambda: None, lambda: None,
+                "exists; the registered study runs exactly once")
         finally:
             exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST = saved_paths
     check((exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST) ==
@@ -1359,13 +1374,180 @@ def test_t16():
           "R12: no result artifact exists after the runner tests")
 
 
+def test_t17():
+    group("T17 Gate 1D-B runner correction: AST randomness guard and TRUE "
+          "preflight success (regression for the self-match defect)")
+    import contextlib
+    import io
+    import tempfile
+    import exp_v30_o14 as exp
+    # the committed production files pass the corrected guard; the defective
+    # substring check could never pass here because its own string literals
+    # matched the runner's source
+    check(exp._randomness_imports("o14_v30.py") == [],
+          "o14_v30.py: no actual randomness import (AST)")
+    check(exp._randomness_imports("exp_v30_o14.py") == [],
+          "exp_v30_o14.py: no actual randomness import (AST) - the guard "
+          "no longer matches its own source")
+    check(exp._RANDOMNESS_GUARDED_SOURCES == ("o14_v30.py",
+                                              "exp_v30_o14.py"),
+          "the guard covers exactly the two production sources")
+
+    def guard_on(body):
+        with tempfile.TemporaryDirectory() as td:
+            p = os.path.join(td, "probe_v30.py")
+            open(p, "w").write(body)
+            return sorted(exp._randomness_imports(p))
+
+    # real imports ARE detected: plain, from-import, alias, dotted
+    check(guard_on("import random\n") == ["random"],
+          "a real `import random` is detected")
+    check(guard_on("from random import randint\n") == ["random"],
+          "a real `from random import ...` is detected")
+    check(guard_on("import secrets\n") == ["secrets"],
+          "a real `import secrets` is detected")
+    check(guard_on("from secrets import token_bytes as tb\n")
+          == ["secrets"],
+          "a real `from secrets import ... as ...` is detected")
+    check(guard_on("import random as _r\n") == ["random"],
+          "an aliased `import random as _r` is detected")
+    check(guard_on("import random.x\nfrom secrets.y import z\n")
+          == ["random.x", "secrets.y"],
+          "dotted imports are normalized to their root module and detected")
+    # the words inside comments, docstrings and string literals are NOT
+    # imports - exactly the original false positive
+    benign = ('"""docstring: import random, import secrets."""\n'
+              "# comment: import random\n"
+              "x = 'import secrets'\n"
+              'y = "from random import randint"\n'
+              "z = 'if \"import random\" in src'\n")
+    check(guard_on(benign) == [],
+          "comments, docstrings and string literals never match")
+    check(guard_on("import randomness\nfrom myrandom import x\n"
+                   "import secretstore\n") == [],
+          "root-module normalization: similarly named modules do not match")
+    # fail closed on unreadable or unparseable source
+    try:
+        exp._randomness_imports("does_not_exist_v30.py")
+        check(False, "unreadable source must fail closed")
+    except SystemExit as e:
+        check("cannot inspect" in str(e), "unreadable source fails closed")
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "broken_v30.py")
+        open(p, "w").write("def broken(:\n")
+        try:
+            exp._randomness_imports(p)
+            check(False, "unparseable source must fail closed")
+        except SystemExit as e:
+            check("cannot inspect" in str(e),
+                  "unparseable source fails closed")
+    # the guard is wired into preflight and fires BEFORE any run
+    calls = []
+
+    def poison_run_fn(*a, **k):
+        calls.append(a)
+        raise AssertionError("run_fn must not be reached")
+    saved_sources = exp._RANDOMNESS_GUARDED_SOURCES
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "poisoned_v30.py")
+        open(p, "w").write("import random\n")
+        exp._RANDOMNESS_GUARDED_SOURCES = ("o14_v30.py", p)
+        try:
+            exp.main(run_fn=poison_run_fn)
+            check(False, "a real randomness import must fail preflight")
+        except SystemExit as e:
+            check("imports a randomness module" in str(e),
+                  "preflight rejects a REAL randomness import for the "
+                  "intended reason")
+        except AssertionError:
+            check(False, "run_fn was reached past a randomness import")
+        finally:
+            exp._RANDOMNESS_GUARDED_SOURCES = saved_sources
+    check(calls == [],
+          "randomness rejection happened before any run_fn call")
+    check(exp._RANDOMNESS_GUARDED_SOURCES == saved_sources,
+          "guarded-source tuple restored")
+    # the REAL committed preflight COMPLETES when no sentinel exists - the
+    # defective guard made this impossible (preflight could never return),
+    # and no prior test required it
+    saved_paths = (exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST)
+    saved_run_arm = o14.run_arm
+
+    def poisoned_run_arm(*a, **k):
+        raise AssertionError("production run_arm was called")
+    traj_before = TRAJECTORIES_RUN
+    before_files = set(os.listdir("."))
+    with tempfile.TemporaryDirectory() as td:
+        exp.OUTDIR = td
+        exp.SUMMARY = os.path.join(td, "v30_o14_summary.json")
+        exp.TRACE = os.path.join(td, "v30_o14_trace.jsonl.gz")
+        exp.MANIFEST = os.path.join(td, "MANIFEST.md")
+        o14.run_arm = poisoned_run_arm
+        try:
+            specs = exp.preflight()
+        finally:
+            o14.run_arm = saved_run_arm
+            exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST = saved_paths
+    check(len(specs) == 60 and len({s["run_id"] for s in specs}) == 60,
+          "the committed preflight COMPLETES and returns exactly 60 "
+          "registered specifications when no sentinel exists")
+    check(specs == o14.build_run_specs(),
+          "preflight returns the frozen registered inventory verbatim")
+    check(TRAJECTORIES_RUN == traj_before
+          and set(os.listdir(".")) == before_files
+          and not os.path.exists("results/v3.0/gate1db"),
+          "successful preflight ran no trajectory and wrote nothing")
+    # the COMPLETE main() path passes preflight and finishes using ONLY the
+    # documented synthetic run_fn seam and temporary output paths, with the
+    # production run_arm poisoned throughout
+    seen = []
+
+    def fake_run_fn(world, arm, dt_label, ticks=None):
+        seen.append((world, arm, dt_label, ticks))
+        return _make_fake_run(dict(world=world, arm=arm, dt_label=dt_label,
+                                   run_id=f"{world}|{arm}|{dt_label}"),
+                              ticks)
+    with tempfile.TemporaryDirectory() as td:
+        exp.OUTDIR = td
+        exp.SUMMARY = os.path.join(td, "v30_o14_summary.json")
+        exp.TRACE = os.path.join(td, "v30_o14_trace.jsonl.gz")
+        exp.MANIFEST = os.path.join(td, "MANIFEST.md")
+        o14.run_arm = poisoned_run_arm
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf):
+                rc = exp.main(run_fn=fake_run_fn)
+            written = sorted(os.listdir(td))
+        finally:
+            o14.run_arm = saved_run_arm
+            exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST = saved_paths
+    check(rc == 0,
+          "main() returns 0 through the documented synthetic seam "
+          "(preflight passed on the committed runner)")
+    check(len(seen) == 60 and all(s[3] == o14.RUN_TICKS for s in seen),
+          "main() drove exactly the 60 registered synthetic runs at the "
+          "registered horizon (mock only; nothing physical)")
+    check("the 60 registered runs" in buf.getvalue(),
+          "the banner and run listing appear after preflight, never before")
+    check(written == ["v30_o14_summary.json", "v30_o14_trace.jsonl.gz"],
+          "all runner outputs confined to the system temporary directory; "
+          "MANIFEST never written")
+    check(not os.path.exists("results/v3.0/gate1db")
+          and set(os.listdir(".")) == before_files,
+          "no repository result path exists after the full main() "
+          "rehearsal")
+    check(TRAJECTORIES_RUN == traj_before,
+          "no production run_arm call occurred (poisoned throughout; no "
+          "real 200-tick trajectory, no 60-run sweep)")
+
+
 if __name__ == "__main__":
     print("EBP V3.0 Gate 1D-B / O14 - PRE-EXECUTION suite "
           f"(plan {PLAN_CANONICAL[:12]}...)")
     print("The registered 60-run study is NOT executed by this suite.\n")
     for fn in (test_t1, test_t2, test_t3, test_t4, test_t5, test_t6,
                test_t7, test_t8, test_t9, test_t10, test_t11, test_t12,
-               test_t13, test_t14, test_t15, test_t16):
+               test_t13, test_t14, test_t15, test_t16, test_t17):
         fn()
     print()
     for k, (title, p, f) in enumerate(GROUPS, 1):

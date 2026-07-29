@@ -38,6 +38,7 @@ open; Gate 1E and Gate 2 remain paused. Standard library only; never
 imports a test module.
 """
 from __future__ import annotations
+import ast
 import gzip
 import hashlib
 import json
@@ -118,6 +119,36 @@ def strict_dumps(obj, **kw) -> str:
 
 
 # ---------------------------------------------------------------------------
+# randomness-import guard (integrity check; AST-based, fail-closed)
+# ---------------------------------------------------------------------------
+_RANDOMNESS_MODULES = frozenset(("random", "secrets"))
+_RANDOMNESS_GUARDED_SOURCES = ("o14_v30.py", "exp_v30_o14.py")
+
+
+def _randomness_imports(fname: str) -> list:
+    """Return every ACTUAL import of/from a forbidden randomness module in
+    fname, found by AST inspection of ast.Import and ast.ImportFrom nodes
+    (aliases included; names normalized to their root module). Comments,
+    docstrings and string literals can never match - the Gate 1D-B
+    correction replacing the defective substring check that matched its own
+    source. Fails closed if the source cannot be read or parsed."""
+    try:
+        src = open(fname, "rb").read()
+        tree = ast.parse(src, filename=fname)
+    except (OSError, SyntaxError, ValueError) as e:
+        _fatal(f"cannot inspect {fname} for randomness imports: {e}")
+    hits = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            hits += [a.name for a in node.names
+                     if a.name.split(".")[0] in _RANDOMNESS_MODULES]
+        elif isinstance(node, ast.ImportFrom):
+            if (node.module or "").split(".")[0] in _RANDOMNESS_MODULES:
+                hits.append(node.module)
+    return hits
+
+
+# ---------------------------------------------------------------------------
 # preflight - must complete before the first trajectory
 # ---------------------------------------------------------------------------
 def preflight() -> list:
@@ -145,10 +176,10 @@ def preflight() -> list:
         _fatal("run inventory differs from the registered Cartesian product")
     if any("E_aggregate" in s["arm"] for s in specs):
         _fatal("an arm-E specification exists (E is not executable)")
-    for fname in ("o14_v30.py", "exp_v30_o14.py"):
-        src = open(fname).read()
-        if "import random" in src or "import secrets" in src:
-            _fatal(f"{fname} imports a randomness module")
+    for fname in _RANDOMNESS_GUARDED_SOURCES:
+        hits = _randomness_imports(fname)
+        if hits:
+            _fatal(f"{fname} imports a randomness module: {sorted(hits)}")
     for name in o14.WORLD_NAMES:
         o14.world_certificates(name)          # fail-closed vs locked plan
         dts = o14.world_dts(name)
