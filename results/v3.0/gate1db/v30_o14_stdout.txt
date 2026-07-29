@@ -1,0 +1,77 @@
+EBP V3.0 Gate 1D-B / O14 - multi-out-edge capability study
+  plan canonical hash: 2524ba268db004969e04f9c8636cc240b643f0f7685507edf65350ea98a37745
+  python: 3.14.2
+  registered: 6 worlds x 5 arms x 2 timesteps = 60 runs, 200 ticks, burn-in 50, no seed
+
+=== (1) the 60 registered runs ===
+  O14_W1_eta_split|A_full_multi_edge_p1c|conservative                    class-pending  svc    68.906  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W1_eta_split|B_restricted_matched_non_ebu|conservative             class-pending  svc    68.906  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W1_eta_split|C_restricted_observational_quote|conservative         class-pending  svc    68.906  unmet     0.000  EBU   +465.187  Rx  0  r_dt 0.50
+  O14_W1_eta_split|D_restricted_exact_total_quote_greedy|conservative    class-pending  svc    68.906  unmet     0.000  EBU   +465.352  Rx  0  r_dt 0.50
+  O14_W1_eta_split|S_restricted_local_service_priority|conservative      class-pending  svc    63.974  unmet     4.932  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W1_eta_split|A_full_multi_edge_p1c|near_certificate                class-pending  svc   124.031  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W1_eta_split|B_restricted_matched_non_ebu|near_certificate         class-pending  svc   124.031  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W1_eta_split|C_restricted_observational_quote|near_certificate     class-pending  svc   124.031  unmet     0.000  EBU   +822.774  Rx  0  r_dt 0.90
+  O14_W1_eta_split|D_restricted_exact_total_quote_greedy|near_certificate class-pending  svc   124.031  unmet     0.000  EBU   +822.860  Rx  0  r_dt 0.90
+  O14_W1_eta_split|S_restricted_local_service_priority|near_certificate  class-pending  svc   117.975  unmet     6.056  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W2_severity_split|A_full_multi_edge_p1c|conservative               class-pending  svc    18.031  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W2_severity_split|B_restricted_matched_non_ebu|conservative        class-pending  svc    18.031  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W2_severity_split|C_restricted_observational_quote|conservative    class-pending  svc    18.031  unmet     0.000  EBU    +53.827  Rx  0  r_dt 0.50
+  O14_W2_severity_split|D_restricted_exact_total_quote_greedy|conservative class-pending  svc    18.031  unmet     0.000  EBU    +52.145  Rx  0  r_dt 0.50
+  O14_W2_severity_split|S_restricted_local_service_priority|conservative class-pending  svc    18.031  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W2_severity_split|A_full_multi_edge_p1c|near_certificate           class-pending  svc    32.456  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W2_severity_split|B_restricted_matched_non_ebu|near_certificate    class-pending  svc    32.456  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W2_severity_split|C_restricted_observational_quote|near_certificate class-pending  svc    32.456  unmet     0.000  EBU    +87.491  Rx  0  r_dt 0.90
+  O14_W2_severity_split|D_restricted_exact_total_quote_greedy|near_certificate class-pending  svc    32.456  unmet     0.000  EBU    +83.974  Rx  0  r_dt 0.90
+  O14_W2_severity_split|S_restricted_local_service_priority|near_certificate class-pending  svc    32.456  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W3_volume_split|A_full_multi_edge_p1c|conservative                 class-pending  svc    20.018  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W3_volume_split|B_restricted_matched_non_ebu|conservative          class-pending  svc    20.018  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W3_volume_split|C_restricted_observational_quote|conservative      class-pending  svc    20.018  unmet     0.000  EBU    +56.943  Rx  0  r_dt 0.50
+  O14_W3_volume_split|D_restricted_exact_total_quote_greedy|conservative class-pending  svc    20.018  unmet     0.000  EBU    +57.214  Rx  0  r_dt 0.50
+  O14_W3_volume_split|S_restricted_local_service_priority|conservative   class-pending  svc    20.018  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W3_volume_split|A_full_multi_edge_p1c|near_certificate             class-pending  svc    36.032  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W3_volume_split|B_restricted_matched_non_ebu|near_certificate      class-pending  svc    36.032  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W3_volume_split|C_restricted_observational_quote|near_certificate  class-pending  svc    36.032  unmet     0.000  EBU    +87.788  Rx  0  r_dt 0.90
+  O14_W3_volume_split|D_restricted_exact_total_quote_greedy|near_certificate class-pending  svc    36.032  unmet     0.000  EBU    +85.816  Rx  0  r_dt 0.90
+  O14_W3_volume_split|S_restricted_local_service_priority|near_certificate class-pending  svc    36.032  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W4_budget_bind|A_full_multi_edge_p1c|conservative                  class-pending  svc    49.896  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W4_budget_bind|B_restricted_matched_non_ebu|conservative           class-pending  svc    49.896  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W4_budget_bind|C_restricted_observational_quote|conservative       class-pending  svc    49.896  unmet     0.000  EBU   +290.141  Rx  0  r_dt 0.50
+  O14_W4_budget_bind|D_restricted_exact_total_quote_greedy|conservative  class-pending  svc    49.896  unmet     0.000  EBU   +290.141  Rx  0  r_dt 0.50
+  O14_W4_budget_bind|S_restricted_local_service_priority|conservative    class-pending  svc    49.896  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W4_budget_bind|A_full_multi_edge_p1c|near_certificate              class-pending  svc    89.813  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W4_budget_bind|B_restricted_matched_non_ebu|near_certificate       class-pending  svc    89.813  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W4_budget_bind|C_restricted_observational_quote|near_certificate   class-pending  svc    89.813  unmet     0.000  EBU   +503.887  Rx  0  r_dt 0.90
+  O14_W4_budget_bind|D_restricted_exact_total_quote_greedy|near_certificate class-pending  svc    89.813  unmet     0.000  EBU   +503.887  Rx  0  r_dt 0.90
+  O14_W4_budget_bind|S_restricted_local_service_priority|near_certificate class-pending  svc    89.813  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W5_reversal|A_full_multi_edge_p1c|conservative                     class-pending  svc    46.263  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W5_reversal|B_restricted_matched_non_ebu|conservative              class-pending  svc    46.263  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W5_reversal|C_restricted_observational_quote|conservative          class-pending  svc    46.263  unmet     0.000  EBU   +195.286  Rx  0  r_dt 0.50
+  O14_W5_reversal|D_restricted_exact_total_quote_greedy|conservative     class-pending  svc    46.263  unmet     0.000  EBU   +194.944  Rx  0  r_dt 0.50
+  O14_W5_reversal|S_restricted_local_service_priority|conservative       class-pending  svc    46.263  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W5_reversal|A_full_multi_edge_p1c|near_certificate                 class-pending  svc    83.274  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W5_reversal|B_restricted_matched_non_ebu|near_certificate          class-pending  svc    83.274  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W5_reversal|C_restricted_observational_quote|near_certificate      class-pending  svc    83.274  unmet     0.000  EBU   +310.321  Rx  0  r_dt 0.90
+  O14_W5_reversal|D_restricted_exact_total_quote_greedy|near_certificate class-pending  svc    83.274  unmet     0.000  EBU   +309.648  Rx  0  r_dt 0.90
+  O14_W5_reversal|S_restricted_local_service_priority|near_certificate   class-pending  svc    83.274  unmet     0.000  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W6_infeasible|A_full_multi_edge_p1c|conservative                   class-pending  svc    81.699  unmet    75.781  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W6_infeasible|B_restricted_matched_non_ebu|conservative            class-pending  svc    81.011  unmet    76.470  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W6_infeasible|C_restricted_observational_quote|conservative        class-pending  svc    81.011  unmet    76.470  EBU   +692.238  Rx  0  r_dt 0.50
+  O14_W6_infeasible|D_restricted_exact_total_quote_greedy|conservative   class-pending  svc    81.011  unmet    76.470  EBU   +692.238  Rx  0  r_dt 0.50
+  O14_W6_infeasible|S_restricted_local_service_priority|conservative     class-pending  svc    81.011  unmet    76.470  EBU     +0.000  Rx  0  r_dt 0.50
+  O14_W6_infeasible|A_full_multi_edge_p1c|near_certificate               class-pending  svc   136.108  unmet   147.357  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W6_infeasible|B_restricted_matched_non_ebu|near_certificate        class-pending  svc   135.383  unmet   148.082  EBU     +0.000  Rx  0  r_dt 0.90
+  O14_W6_infeasible|C_restricted_observational_quote|near_certificate    class-pending  svc   135.383  unmet   148.082  EBU  +1180.640  Rx  0  r_dt 0.90
+  O14_W6_infeasible|D_restricted_exact_total_quote_greedy|near_certificate class-pending  svc   135.383  unmet   148.082  EBU  +1180.640  Rx  0  r_dt 0.90
+  O14_W6_infeasible|S_restricted_local_service_priority|near_certificate class-pending  svc   134.022  unmet   149.443  EBU     +0.000  Rx  0  r_dt 0.90
+
+=== (2) outcome classes ===
+  distributive_or_policy_under_service       2
+  physical_impossibility                    10
+  preserve_and_serve                        48
+
+=== (3) falsifiers fired ===
+  F13: FIRED {'discriminating_worlds': []}
+
+wrote results/v3.0/gate1db/v30_o14_trace.jsonl.gz and results/v3.0/gate1db/v30_o14_summary.json
+Every registered run appears exactly once (60 of 60); no run was dropped; nothing was settled for arm A (O3 open).
