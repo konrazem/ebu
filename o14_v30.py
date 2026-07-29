@@ -644,7 +644,11 @@ def run_arm(world_name: str, arm: str, dt_label: str,
                ebu=[], actions=[], q_acc=[], loss=[], min_source=[],
                opportunities=[], proposed=[], rests=[], p1c_rejected=[],
                quoted=[], corrections=[], ledger=[],
-               selected_edge=[], service_by_dest=[], unmet_by_dest=[])
+               selected_edge=[], service_by_dest=[], unmet_by_dest=[],
+               # complete o14_tick records, retained OBSERVATIONALLY for
+               # the official trace (Gate 1D-B runner-preparation): one
+               # record per physical tick, no replay, no recomputation
+               tick_records=[])
     tot = dict(service=0.0, unmet=0.0, demand=0.0, ebu=0.0, ebu_pos=0.0,
                ebu_neg=0.0, actions=0, opportunities=0, proposed=0,
                accepted=0, quoted=0, rests=0, p1c_rejected=0, loss=0.0,
@@ -707,6 +711,7 @@ def run_arm(world_name: str, arm: str, dt_label: str,
                                          abs(rec["ledger_residual"]))
         if rec["domain_failure"] and domain_fail_tick is None:
             domain_fail_tick = t
+        ser["tick_records"].append(rec)      # retention only; never re-read
         x = tuple(rec["x_after"])
     n = world.n
     dead = sum(1 for i in range(n) if world.cells[i].source == "allee"

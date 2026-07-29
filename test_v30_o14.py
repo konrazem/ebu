@@ -855,8 +855,12 @@ def test_t15():
     after = set(os.listdir(".")) | set(os.listdir("results/v3.0"))
     check(before == after, "importing o14_v30 creates no file (no side "
                            "effects)")
-    check(not os.path.exists("exp_v30_o14.py"),
-          "no runner exists at this stage")
+    # (the former stage-specific "no runner exists" assertion is obsolete:
+    # the official runner now exists and is validated by group T16; the
+    # properties that matter - import safety, no execution, no artifacts -
+    # are asserted there and below)
+    check(os.path.exists("exp_v30_o14.py"),
+          "the official runner file exists (runner-preparation stage)")
     check(not os.path.exists("results/v3.0/gate1db"),
           "no result directory or artifact was created")
     check(not any(os.path.exists(p) for p in
@@ -897,8 +901,462 @@ def test_t15():
             imported |= {a.name.split(".")[0] for a in node.names}
         elif isinstance(node, ast.ImportFrom):
             imported.add((node.module or "").split(".")[0])
-    check(not any(m.startswith("exp_v30") for m in imported),
-          "no runner is imported by this suite")
+    check("subprocess" not in imported and "runpy" not in imported,
+          "the suite never executes the runner as a subprocess or script")
+    o14_tree = ast.parse(open("o14_v30.py").read())
+    o14_imports = set()
+    for node in ast.walk(o14_tree):
+        if isinstance(node, ast.Import):
+            o14_imports |= {a.name.split(".")[0] for a in node.names}
+        elif isinstance(node, ast.ImportFrom):
+            o14_imports.add((node.module or "").split(".")[0])
+    check(not any(m.startswith("exp_v30") for m in o14_imports),
+          "the runner is never imported on the O14 decision/implementation "
+          "path (o14_v30 does not import exp_v30_o14)")
+    # every exp.main / execute_registered_study call in this suite passes an
+    # explicit mock run_fn - the real execution path is never taken
+    bad_calls = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            fn = node.func
+            nm = fn.attr if isinstance(fn, ast.Attribute) else (
+                fn.id if isinstance(fn, ast.Name) else "")
+            if nm in ("main", "execute_registered_study"):
+                if "run_fn" not in {k.arg for k in node.keywords}:
+                    bad_calls.append(nm)
+    check(not bad_calls,
+          f"every runner orchestration call uses a mock run_fn "
+          f"({bad_calls})")
+
+
+def _fake_tick_record(world_name, arm, dt, t):
+    """Synthetic, plan-shaped, fully finite tick record (NON-STUDY fixture:
+    fabricated values, no physics)."""
+    import exp_v30_o14 as exp
+    cand = dict(edge=0, quant_index=3, frac=1.0, f=2.0, J=1.0,
+                q_req=1.0, q_e_max=1.0, q_acc=1.0)
+    n = len(o14.PLAN["worlds"][world_name]["x0"])
+    quoting = arm in (exp.ARM_C, exp.ARM_D)
+    return dict(
+        tick=t, arm=arm, dt=dt,
+        x_before=[10.0] * n, x_after=[10.0] * n, u=[0.0] * n,
+        active_out_edges=[0, 1],
+        menus={0: dict(state="P", budget=5.0, candidates=[dict(cand)])},
+        candidate_exact_quotes=({0: [0.5]} if quoting else {}),
+        candidate_per_unit_quotes=({0: [0.5]} if quoting else {}),
+        candidate_continuous_vertices={0: [None]},
+        selected=(dict(cand) if arm != exp.ARM_A else None),
+        rested=False,
+        executed_q_acc=[1.0], q_req=[1.0], delivered=[0.9],
+        sigma={0: 1.0}, budget_utilization={0: 0.2},
+        service=[0.0] + [0.1] * (n - 1), unmet=[0.0] * n,
+        demand_amount=[0.0] + [0.1] * (n - 1),
+        transport_loss=0.01, negative_corrections=[0.0] * n,
+        ledger_residual=0.0, domain_failure=False,
+        reserve_crossings=0, allee_crossings=0, physical_overuse=0.0,
+        min_source=10.0, burden=1.0, viability=100.0,
+        ebu=(0.1 if quoting else 0.0),
+        ebu_pos=(0.1 if quoting else 0.0), ebu_neg=0.0,
+        quoted=(1 if quoting else 0),
+        group_diagnostic=(dict(group_quote=0.5,
+                               naive_independent_sum=0.6,
+                               double_count=0.1, n_actions=2)
+                          if arm == exp.ARM_A else None))
+
+
+def _make_fake_run(spec, ticks):
+    """Synthetic RunResult that passes the runner's validation (NON-STUDY
+    fixture; deterministic; physical fields depend only on world/dt/tick so
+    B and C fakes are physically identical by construction)."""
+    import exp_v30_o14 as exp
+    w, arm, label = spec["world"], spec["arm"], spec["dt_label"]
+    locked = o14.PLAN["timestep"]["per_world"][w]
+    dt = locked["registered_conservative_dt" if label == "conservative"
+                else "registered_near_certificate_dt"]
+    n = len(o14.PLAN["worlds"][w]["x0"])
+    recs = [_fake_tick_record(w, arm, dt, t) for t in range(1, ticks + 1)]
+    svc_tick = 0.1 * (n - 1)
+    quoting = arm in (exp.ARM_C, exp.ARM_D)
+    ser = dict(service=[svc_tick] * ticks, unmet=[0.0] * ticks,
+               demand=[svc_tick] * ticks, burden=[1.0] * ticks,
+               viability=[100.0] * ticks,
+               ebu=[recs[0]["ebu"]] * ticks, actions=[1] * ticks,
+               q_acc=[1.0] * ticks, loss=[0.01] * ticks,
+               min_source=[10.0] * ticks, opportunities=[4] * ticks,
+               proposed=[1] * ticks, rests=[0] * ticks,
+               p1c_rejected=[0] * ticks,
+               quoted=[recs[0]["quoted"]] * ticks,
+               corrections=[0.0] * ticks, ledger=[0.0] * ticks,
+               selected_edge=[0] * ticks,
+               service_by_dest=[[0.0] + [0.1] * (n - 1)] * ticks,
+               unmet_by_dest=[[0.0] * n] * ticks,
+               tick_records=recs)
+    tot = dict(service=svc_tick * ticks, unmet=0.0,
+               demand=svc_tick * ticks,
+               ebu=recs[0]["ebu"] * ticks,
+               ebu_pos=recs[0]["ebu"] * ticks, ebu_neg=0.0,
+               actions=ticks, opportunities=4 * ticks, proposed=ticks,
+               accepted=ticks, quoted=recs[0]["quoted"] * ticks,
+               rests=0, p1c_rejected=0, loss=0.01 * ticks, overuse=0.0,
+               reserve_crossings=0, allee_crossings=0, corrections=0.0,
+               max_ledger_residual=0.0,
+               quote_pos=(ticks if quoting else 0), quote_zero=0,
+               quote_neg=0)
+    final = dict(x=[10.0] * n, burden=1.0, viability=100.0,
+                 min_source=10.0, dead_sources=0, domain_failure_tick=None,
+                 negative_state=False, source_stock=10.0,
+                 destination_stock=10.0 * (n - 1),
+                 feasible_world=bool(o14.PLAN["worlds"][w]["feasible"]),
+                 note="synthetic non-study fixture")
+    return sv.RunResult(
+        run_id=spec["run_id"], world=w, arm=arm, dt_label=label, dt=dt,
+        dt_certificate=locked["binding_certificate"],
+        certificate_kind=locked["binding_kind"],
+        r_dt=dt / locked["binding_certificate"], series=ser, totals=tot,
+        final=final, x_trajectory_tail=(10.0,) * n)
+
+
+def test_t16():
+    group("T16 official-runner preparation (R1-R12; runner NEVER executed "
+          "for real)")
+    import contextlib
+    import importlib
+    import io
+    import tempfile
+    # --- R1 import safety
+    before = set(os.listdir("."))
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        import exp_v30_o14 as exp
+        importlib.reload(exp)
+    check(buf.getvalue() == "", "importing the runner prints nothing")
+    check(set(os.listdir(".")) == before
+          and not os.path.exists("results/v3.0/gate1db"),
+          "importing the runner creates no file or directory")
+    check(exp.OUTDIR == "results/v3.0/gate1db"
+          and exp.SUMMARY.endswith("v30_o14_summary.json")
+          and exp.TRACE.endswith("v30_o14_trace.jsonl.gz")
+          and exp.MANIFEST.endswith("MANIFEST.md"),
+          "locked output paths defined exactly")
+    check(exp.PLAN_CANONICAL == PLAN_CANONICAL
+          and exp.PLAN_RAW == PLAN_RAW,
+          "runner stores the locked plan hashes")
+    # --- R2 no options or overrides
+    etree = ast.parse(open("exp_v30_o14.py").read())
+    enames = {n.id for n in ast.walk(etree) if isinstance(n, ast.Name)}
+    check("argparse" not in enames,
+          "no argparse / scientific option parsing in the runner")
+    esrc = open("exp_v30_o14.py").read()
+    check(not any(opt in esrc for opt in
+                  ("--world", "--arm", "--ticks", "--subset", "--resume",
+                   "--overwrite", "--seed")),
+          "no subset/seed/resume/overwrite/exploratory option exists")
+    saved_argv = list(__import__("sys").argv)
+    calls = []
+
+    def counting_run_fn(world, arm, dt_label, ticks=None):
+        calls.append((world, arm, dt_label, ticks))
+        raise AssertionError("run_fn must not be reached in this scenario")
+    try:
+        __import__("sys").argv = ["exp_v30_o14.py", "--fast"]
+        try:
+            exp.main(run_fn=counting_run_fn)
+            check(False, "argv must be rejected")
+        except SystemExit as e:
+            check("command-line" in str(e), "command-line argument "
+                  "rejected before any run")
+    finally:
+        __import__("sys").argv = saved_argv
+    check(calls == [], "rejection happened before any run_fn call")
+    # --- R3 preflight fail-closed BEFORE any trajectory
+    def expect_preflight_failure(label, mutate, restore):
+        calls.clear()
+        try:
+            mutate()
+            try:
+                exp.main(run_fn=counting_run_fn)
+                check(False, f"{label}: must fail closed")
+            except SystemExit:
+                check(True, f"{label}: fails closed")
+            except AssertionError:
+                check(False, f"{label}: run_fn was reached")
+        finally:
+            restore()
+        check(calls == [], f"{label}: no run_fn call happened")
+    orig_raw = exp.PLAN_RAW
+    expect_preflight_failure(
+        "raw-hash tamper",
+        lambda: setattr(exp, "PLAN_RAW", "0" * 64),
+        lambda: setattr(exp, "PLAN_RAW", orig_raw))
+    orig_canon = exp.PLAN_CANONICAL
+    expect_preflight_failure(
+        "canonical-hash tamper",
+        lambda: setattr(exp, "PLAN_CANONICAL", "0" * 64),
+        lambda: setattr(exp, "PLAN_CANONICAL", orig_canon))
+    node = o14.PLAN["timestep"]["per_world"]["O14_W3_volume_split"]
+    orig_cert = node["binding_certificate"]
+    expect_preflight_failure(
+        "certificate tamper",
+        lambda: node.__setitem__("binding_certificate", orig_cert + 1e-9),
+        lambda: node.__setitem__("binding_certificate", orig_cert))
+    orig_specs = o14.build_run_specs
+    expect_preflight_failure(
+        "run-count mismatch (59)",
+        lambda: setattr(o14, "build_run_specs",
+                        lambda: orig_specs()[:-1]),
+        lambda: setattr(o14, "build_run_specs", orig_specs))
+    expect_preflight_failure(
+        "duplicate run id",
+        lambda: setattr(o14, "build_run_specs",
+                        lambda: orig_specs()[:-1] + [orig_specs()[0]]),
+        lambda: setattr(o14, "build_run_specs", orig_specs))
+
+    def _with_e():
+        s = orig_specs()
+        s[0] = dict(s[0], arm="E_aggregate_source_group_quote",
+                    run_id=s[0]["run_id"].replace(
+                        s[0]["arm"], "E_aggregate_source_group_quote"))
+        return s
+    expect_preflight_failure(
+        "arm-E specification",
+        lambda: setattr(o14, "build_run_specs", _with_e),
+        lambda: setattr(o14, "build_run_specs", orig_specs))
+    with tempfile.TemporaryDirectory() as td:
+        saved_paths = (exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST)
+        exp.OUTDIR = td
+        exp.SUMMARY = os.path.join(td, "v30_o14_summary.json")
+        exp.TRACE = os.path.join(td, "v30_o14_trace.jsonl.gz")
+        exp.MANIFEST = os.path.join(td, "MANIFEST.md")
+        try:
+            open(exp.SUMMARY, "w").write("{}")
+            expect_preflight_failure(
+                "existing summary (completion sentinel)",
+                lambda: None, lambda: None)
+            os.remove(exp.SUMMARY)
+            open(exp.TRACE, "wb").write(b"x")
+            expect_preflight_failure(
+                "orphan trace without summary",
+                lambda: None, lambda: None)
+            os.remove(exp.TRACE)
+            open(exp.MANIFEST, "w").write("x")
+            expect_preflight_failure(
+                "orphan manifest without summary",
+                lambda: None, lambda: None)
+            os.remove(exp.MANIFEST)
+            # --- R4 exact orchestration with synthetic runs only
+            specs = o14.build_run_specs()
+            order = []
+
+            def fake_run_fn(world, arm, dt_label, ticks=None):
+                order.append((world, arm, dt_label, ticks))
+                return _make_fake_run(
+                    dict(world=world, arm=arm, dt_label=dt_label,
+                         run_id=f"{world}|{arm}|{dt_label}"), ticks)
+            with contextlib.redirect_stdout(io.StringIO()):
+                runs = exp.execute_registered_study(specs,
+                                                    run_fn=fake_run_fn)
+            check(len(order) == 60, "exactly 60 specifications consumed")
+            check([o[:3] for o in order] ==
+                  [(s["world"], s["arm"], s["dt_label"]) for s in specs],
+                  "registered order preserved, each spec invoked once")
+            check(all(o[3] == o14.RUN_TICKS for o in order),
+                  "ticks fixed to the registered 200 for every call")
+            check(len(runs) == 60, "no run dropped, filtered or retried")
+            # --- R7 summary schema on the synthetic 60
+            plan = o14.load_plan()
+            summary = exp.build_summary(runs, plan)
+            check(len(summary["runs"]) == 60,
+                  "summary carries exactly 60 unique run records")
+            check(all(h in summary["hypotheses"]
+                      for h in (f"H{i}" for i in range(1, 11))),
+                  "H1-H10 individually reported")
+            check(all(f in summary["falsifiers"]
+                      for f in (f"F{i}" for i in range(1, 16))),
+                  "F1-F15 individually reported with fired/evidence")
+            check(all(isinstance(summary["falsifiers"][f]["fired"], bool)
+                      for f in summary["falsifiers"]),
+                  "fired flags are booleans (reportable, never suppressed)")
+            check(all(b in summary["comparisons"] for b in
+                      ("A_vs_B_capability_cost",
+                       "B_vs_C_observational_identity",
+                       "B_vs_D_primary_alignment",
+                       "S_vs_B_and_D_secondary", "timestep_sensitivity")),
+                  "all registered comparison blocks present")
+            check(summary["o3_aggregate_diagnostic"]
+                  ["nothing_settled_or_allocated"] is True,
+                  "O3 diagnostic confirms nothing settled or allocated")
+            # --- R6 trace schema + in-memory completeness on the fake 60
+            rows = list(exp.trace_rows(runs))
+            check(len(rows) == 60 * o14.RUN_TICKS == 12000,
+                  "exactly 60 x 200 = 12000 trace rows")
+            check([r["tick"] for r in rows[:o14.RUN_TICKS]] ==
+                  list(range(1, o14.RUN_TICKS + 1)),
+                  "deterministic per-run tick ordering in the trace")
+            check(all(k in rows[0] for k in
+                      ("plan_canonical_hash", "run_id", "world", "arm",
+                       "dt_label", "dt", "dt_certificate",
+                       "certificate_kind", "r_dt", "tick", "record")),
+                  "trace rows carry the full provenance header")
+            exp.validate_complete_outputs_in_memory(runs, summary, rows)
+            check(True, "complete-output validation passes on the "
+                        "synthetic full-size study")
+            try:
+                exp.validate_complete_outputs_in_memory(runs, summary,
+                                                        rows[:-1])
+                check(False, "missing trace row must be rejected")
+            except SystemExit:
+                check(True, "missing trace row rejected (12000 enforced)")
+            try:
+                exp.validate_complete_outputs_in_memory(runs[:-1], summary,
+                                                        rows)
+                check(False, "missing run must be rejected")
+            except SystemExit:
+                check(True, "missing run rejected")
+            # deterministic gzip with mtime=0
+            p1 = os.path.join(td, "t1.gz")
+            p2 = os.path.join(td, "t2.gz")
+            exp.write_trace(rows[:5], p1)
+            exp.write_trace(rows[:5], p2)
+            b1, b2 = open(p1, "rb").read(), open(p2, "rb").read()
+            check(b1 == b2, "gzip trace writing is byte-deterministic")
+            check(b1[4:8] == b"\x00\x00\x00\x00", "gzip header mtime = 0")
+            os.remove(p1)
+            os.remove(p2)
+            # --- R5 full tick retention on a REAL short non-study run
+            rshort = short_run("O14_W1_eta_split",
+                               "D_restricted_exact_total_quote_greedy",
+                               "conservative")
+            recs = rshort.series["tick_records"]
+            check(len(recs) == SHORT
+                  and [r["tick"] for r in recs] == list(range(1, SHORT + 1)),
+                  "run_arm retains exactly SHORT ordered tick records")
+            check(all(all(f in r for f in exp.REQUIRED_TICK_FIELDS)
+                      for r in recs),
+                  "every retained record carries every required tick field")
+            check(all(abs(rshort.series["service"][i]
+                          - math.fsum(recs[i]["service"])) < 1e-15
+                      for i in range(SHORT))
+                  and abs(rshort.totals["ebu"]
+                          - math.fsum(r["ebu"] for r in recs)) < 1e-15,
+                  "aggregates equal the retained records (retention is "
+                  "observational; nothing recomputed)")
+            have = set()
+            for r in recs:
+                have |= set(r)
+            missing = [m for m, fields in o14.METRIC_FIELDS.items()
+                       if not all(f in have for f in fields)]
+            check(not missing,
+                  f"every frozen metric maps to a retained field "
+                  f"({missing})")
+            row = next(iter(exp.trace_rows([rshort])))
+            check(bool(exp.strict_dumps(row)),
+                  "a real retained tick record serializes strictly "
+                  "(allow_nan=False)")
+            broken = _make_fake_run(specs[0], 3)
+            del broken.series["tick_records"][1]["service"]
+            try:
+                exp.validate_run(broken, specs[0], 3)
+                check(False, "missing tick field must be rejected")
+            except SystemExit:
+                check(True, "missing tick field rejected")
+            poisoned = _make_fake_run(specs[0], 3)
+            poisoned.series["tick_records"][2]["burden"] = float("nan")
+            try:
+                exp.validate_run(poisoned, specs[0], 3)
+                check(False, "NaN in a tick record must be rejected")
+            except SystemExit:
+                check(True, "non-finite tick value fails closed")
+            # --- R8 B/C identity analysis controls
+            spec_b = dict(world="O14_W1_eta_split",
+                          arm="B_restricted_matched_non_ebu",
+                          dt_label="conservative",
+                          run_id="O14_W1_eta_split|B_restricted_matched_"
+                                 "non_ebu|conservative")
+            spec_c = dict(spec_b,
+                          arm="C_restricted_observational_quote",
+                          run_id="O14_W1_eta_split|C_restricted_"
+                                 "observational_quote|conservative")
+            fb, fc = _make_fake_run(spec_b, 4), _make_fake_run(spec_c, 4)
+            check(exp.compare_bc(fb, fc)["identical"] is True,
+                  "equal physical traces pass identity (EBU-only "
+                  "differences do not count)")
+            fc_bad = _make_fake_run(spec_c, 4)
+            fc_bad.series["tick_records"][2]["x_after"] = [9.0, 10.0, 10.0]
+            cmpres = exp.compare_bc(fb, fc_bad)
+            check(cmpres["identical"] is False
+                  and "x_after" in cmpres["first_difference"],
+                  "any physical difference is detected (F1 evidence)")
+            # --- R9 comparison discipline
+            check(exp.PRIMARY_BASELINE_ARM ==
+                  "B_restricted_matched_non_ebu"
+                  and summary["comparisons"]["forbidden_baseline_arm"]
+                  == exp.ARM_A,
+                  "arm B is the primary baseline; arm A is forbidden")
+            check("capability_cost_absolute" in list(
+                summary["comparisons"]["A_vs_B_capability_cost"]
+                .values())[0],
+                  "capability cost reported separately (A vs B)")
+            check(all("note" in v for v in
+                      summary["comparisons"]["S_vs_B_and_D_secondary"]
+                      .values()),
+                  "S comparisons are registered secondary/informational")
+            # --- R10 aggregate diagnostic (no settlement)
+            check("EpochRegistry" not in esrc and ".settle(" not in esrc,
+                  "the runner contains no settlement call")
+            gd = o14.group_quote_diagnostic(
+                d0.World(cells=(d0.Cell(alpha=1.0, beta=0.5, chi=0.0,
+                                        L=5.0, U=100.0, R=0.0, K=200.0),
+                                d0.Cell(alpha=1.0, beta=0.5, chi=0.0,
+                                        L=5.0, U=15.0, R=0.0, K=20.0),
+                                d0.Cell(alpha=1.0, beta=0.5, chi=0.0,
+                                        L=5.0, U=15.0, R=0.0, K=20.0)),
+                         edges=(d0.Edge(i=0, j=1, M=0.5, theta=0.0,
+                                        eta=1.0),
+                                d0.Edge(i=0, j=2, M=0.5, theta=0.0,
+                                        eta=1.0))),
+                (4.0, 10.0, 10.0), (0.0, 0.0, 0.0), 1.0, (2.0, 2.0), 1)
+            check(gd["naive_independent_sum"] == -16.0
+                  and gd["group_quote"] == -24.0
+                  and gd["double_count"] == 8.0,
+                  "counterexample intact: naive 16 vs joint 24, "
+                  "under-charge 8")
+            check(any(r["record"]["group_diagnostic"] is not None
+                      for r in rows if r["arm"] == exp.ARM_A),
+                  "arm-A group diagnostic is serialized into the trace")
+            # --- R11 output protection (temporary directory only)
+            wrote = []
+            orig_wt, orig_ws = exp.write_trace, exp.write_summary
+            exp.write_trace = lambda *a, **k: (wrote.append("trace"),
+                                               orig_wt(*a, **k))[-1]
+            exp.write_summary = lambda *a, **k: (wrote.append("summary"),
+                                                 orig_ws(*a, **k))[-1]
+            try:
+                exp.write_outputs(runs, summary, rows)
+            finally:
+                exp.write_trace, exp.write_summary = orig_wt, orig_ws
+            check(wrote == ["trace", "summary"],
+                  "trace is written first; the summary is written LAST")
+            check(os.path.exists(exp.SUMMARY) and os.path.exists(exp.TRACE)
+                  and not os.path.exists(exp.MANIFEST),
+                  "outputs written; MANIFEST is never written by the "
+                  "runner")
+            expect_preflight_failure(
+                "completed summary prevents any second execution",
+                lambda: None, lambda: None)
+        finally:
+            exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST = saved_paths
+    check((exp.OUTDIR, exp.SUMMARY, exp.TRACE, exp.MANIFEST) ==
+          ("results/v3.0/gate1db",
+           "results/v3.0/gate1db/v30_o14_summary.json",
+           "results/v3.0/gate1db/v30_o14_trace.jsonl.gz",
+           "results/v3.0/gate1db/MANIFEST.md"),
+          "locked repository output paths restored")
+    check(not os.path.exists("results/v3.0/gate1db"),
+          "R12: no test touched results/v3.0/gate1db/")
+    check(not any(os.path.exists(p) for p in
+                  ("v30_o14_summary.json", "v30_o14_trace.jsonl.gz",
+                   "v30_o14_stdout.txt")),
+          "R12: no result artifact exists after the runner tests")
 
 
 if __name__ == "__main__":
@@ -907,15 +1365,19 @@ if __name__ == "__main__":
     print("The registered 60-run study is NOT executed by this suite.\n")
     for fn in (test_t1, test_t2, test_t3, test_t4, test_t5, test_t6,
                test_t7, test_t8, test_t9, test_t10, test_t11, test_t12,
-               test_t13, test_t14, test_t15):
+               test_t13, test_t14, test_t15, test_t16):
         fn()
     print()
     for k, (title, p, f) in enumerate(GROUPS, 1):
         print(f"group {k:>2}: {p:>3} passed, {f} failed - {title}")
     print(f"total checks: {PASS} passed, {FAIL} failed in {len(GROUPS)} "
           "groups")
+    print("No official 200-tick trajectory ran; the registered 60-run "
+          "study did NOT run; no result directory or artifact was created "
+          "(runner orchestration was exercised with synthetic fixtures in "
+          "a temporary directory only).")
     print("Numerical validation is not proof: nothing here proves "
           "alignment, safety, the boundary-optimality lemma in general, "
-          "O3, O12 or O13; no registered study ran.")
+          "O3, O12 or O13.")
     if FAIL:
         raise SystemExit(1)
