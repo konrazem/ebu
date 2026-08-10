@@ -11,6 +11,26 @@ integrity take priority over speed.
 - Chat history and remembered summaries are not authoritative scientific
   records. Reconstruct each task's state from Git and committed documents.
 
+## Gate 1D-C authoritative operational sources
+
+- `V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md` and
+  `v30_gate1dc_execution_finalization_contract.json` are the authoritative
+  prospective operational sources for Gate 1D-C execution durability,
+  publication, recovery, finalization, and result-commit mechanics.
+- Their precedence is deliberately narrow. They supersede only the Gate 1D-C
+  protocol's original execution command and incomplete operational
+  finalization mechanics where the addendum and contract say so explicitly.
+  They do not change or reinterpret any scientific content.
+- `V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md` and
+  `v30_gate1dc_outcome_discrimination_plan.json` retain precedence over every
+  hypothesis, parameter, comparison, metric, threshold, tolerance, predicate,
+  falsifier, positive control, outcome class, interpretation rule, limitation,
+  and non-claim. Any scientific conflict requires fail-closed refusal.
+- The Markdown addendum and JSON contract must agree. The JSON is the
+  mechanical schema and ordering source; the Markdown is its normative human
+  rendering. Any mismatch is an integrity failure, not permission to choose
+  one selectively.
+
 ## Required start-of-task checks
 
 - Read every applicable `AGENTS.md` before acting.
