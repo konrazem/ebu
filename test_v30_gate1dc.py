@@ -18,6 +18,7 @@ import os
 import tempfile
 
 import d0_v29 as d0
+import exp_v30_gate1dc as runner
 import gate1dc_v30 as dc
 import service_v30 as sv
 
@@ -404,10 +405,12 @@ def test_information_boundary() -> None:
                 calls.add(node.func.attr)
     check(not (calls & forbidden_calls),
           "the pre-execution suite contains no step, run, runner, or trajectory call")
-    check(not any(isinstance(node, (ast.Import, ast.ImportFrom))
-                  and any(alias.name.startswith("exp_v30_gate1dc")
-                          for alias in node.names) for node in ast.walk(tree)),
-          "the pre-execution suite does not import a study runner")
+    runner_imports = [node for node in ast.walk(tree)
+                      if isinstance(node, (ast.Import, ast.ImportFrom))
+                      and any(alias.name.startswith("exp_v30_gate1dc")
+                              for alias in node.names)]
+    check(len(runner_imports) == 1,
+          "the official runner is imported once for zero-side-effect validation")
 
 
 def test_analytic_certificates() -> None:
@@ -664,8 +667,10 @@ def test_output_contract() -> None:
           "future manifest contract covers provenance, integrity, science, and limits")
     check(30 * dc.RUN_TICKS == 6000,
           "future trace schema requires exactly 6000 ordered tick rows")
-    check(not any(os.path.exists(path) for path in dc.FUTURE_ARTIFACTS),
-          "no runner, result, stdout, trace, summary, or manifest exists")
+    check(os.path.isfile(dc.FUTURE_ARTIFACTS[0]),
+          "the authorized official runner now exists")
+    check(not any(os.path.exists(path) for path in dc.FUTURE_ARTIFACTS[1:]),
+          "no result directory artifact, stdout, trace, summary, or manifest exists")
     check(json.loads(dc.strict_json_dumps({"x": 1.0})) == {"x": 1.0},
           "strict finite JSON serialization succeeds")
     rejects(lambda: dc.strict_json_dumps({"x": float("nan")}),
@@ -714,6 +719,129 @@ def test_static_execution_guards() -> None:
           "pre-execution harness filename is exact")
 
 
+def test_official_runner_static_guards() -> None:
+    group("official runner preflight, single-execution, and finalization guards")
+    source = open("exp_v30_gate1dc.py", "r", encoding="utf-8").read()
+    tree = ast.parse(source)
+    top_level_calls = []
+    for node in tree.body:
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
+            top_level_calls.append(node.value)
+        elif isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            top_level_calls.append(node.value)
+    names = set()
+    for call in top_level_calls:
+        if isinstance(call.func, ast.Name):
+            names.add(call.func.id)
+        elif isinstance(call.func, ast.Attribute):
+            names.add(call.func.attr)
+    check(not ({"main", "preflight", "execute_registered_study", "run_arm",
+                "gate1dc_tick", "bounded_step", "p1c_step"} & names),
+          "runner import has no execution, preflight, step, print, or write call")
+    check("if __name__ == \"__main__\":" in source,
+          "direct execution is protected by an explicit entry point")
+    main_source = inspect.getsource(runner.main)
+    check(main_source.index("preflight()")
+          < main_source.index("execute_registered_study"),
+          "complete preflight precedes the only study-execution call")
+    execute_source = inspect.getsource(runner.execute_registered_study)
+    check("called.add(run_identifier)" in execute_source
+          and execute_source.index("called.add(run_identifier)")
+          < execute_source.index("run = dc.run_arm"),
+          "run IDs are consumed before invocation so failures cannot retry")
+    check("run_fn" not in execute_source and "run_fn" not in main_source,
+          "production execution exposes no substitution seam")
+    check("for index, spec in enumerate(specs)" in execute_source
+          and "sorted(" not in execute_source,
+          "execution consumes the provided frozen list without reordering")
+    check("os.link(temporary, path)" in inspect.getsource(runner._publish_new),
+          "artifact publication is atomic and cannot overwrite an existing path")
+    write_source = inspect.getsource(runner.write_outputs)
+    check(write_source.index("_publish_new(TRACE")
+          < write_source.index("_publish_new(SUMMARY"),
+          "trace publishes before the summary completion sentinel")
+    check("_publish_new(MANIFEST" not in source
+          and runner.MANIFEST == dc.MANIFEST_PATH,
+          "runner never writes the separately finalized manifest")
+    check(runner.SUMMARY == dc.SUMMARY_PATH
+          and runner.TRACE == dc.TRACE_PATH
+          and runner.STDOUT == dc.STDOUT_PATH,
+          "runner output filenames exactly match the frozen contract")
+    check(tuple(runner.REQUIRED_SOURCE_HASHES) == (
+        "AGENTS.md", "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+        "v30_gate1dc_outcome_discrimination_plan.json", "gate1dc_v30.py",
+        "test_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
+        "ebu_quote_v30.py", "service_v30.py"),
+          "preflight locks every authoritative and scientific source")
+    check("TO_BE_LOCKED" not in runner.REQUIRED_SOURCE_HASHES[
+        "test_v30_gate1dc.py"],
+          "runner-validation source hash is finalized, not a placeholder")
+    check(runner.PLAN_RAW == dc.PLAN_RAW
+          and runner.PLAN_CANONICAL == dc.PLAN_CANONICAL,
+          "runner and implementation share both plan hash locks")
+    check(set(dc.TICK_RECORD_FIELDS) <= set(runner.REQUIRED_TICK_FIELDS),
+          "runner tick schema contains every frozen metric field")
+
+    original = (runner.OUTDIR, runner.STDOUT, runner.SUMMARY,
+                runner.TRACE, runner.MANIFEST)
+    try:
+        with tempfile.TemporaryDirectory() as directory:
+            runner.OUTDIR = directory
+            runner.STDOUT = os.path.join(directory, "stdout.txt")
+            runner.SUMMARY = os.path.join(directory, "summary.json")
+            runner.TRACE = os.path.join(directory, "trace.jsonl.gz")
+            runner.MANIFEST = os.path.join(directory, "MANIFEST.md")
+            with open(runner.STDOUT, "wb") as handle:
+                runner._validate_output_start(stdout_fd=handle.fileno())
+                check(True,
+                      "fresh empty stdout attached to the supplied fd passes")
+            with open(runner.TRACE, "wb") as handle:
+                handle.write(b"orphan")
+            with open(runner.STDOUT, "rb") as handle:
+                rejects(lambda: runner._validate_output_start(
+                    stdout_fd=handle.fileno()),
+                        "an orphan registered artifact causes refusal",
+                        "fresh stdout capture")
+            os.unlink(runner.TRACE)
+            with open(runner.STDOUT, "wb") as handle:
+                handle.write(b"prior output")
+            with open(runner.STDOUT, "rb") as handle:
+                rejects(lambda: runner._validate_output_start(
+                    stdout_fd=handle.fileno()),
+                        "a nonempty stdout artifact causes refusal",
+                        "already contains data")
+    finally:
+        (runner.OUTDIR, runner.STDOUT, runner.SUMMARY,
+         runner.TRACE, runner.MANIFEST) = original
+
+    production_calls = []
+    original_run_arm = runner.dc.run_arm
+    try:
+        runner.dc.run_arm = lambda *args, **kwargs: production_calls.append(
+            (args, kwargs))
+        rejects(runner.preflight,
+                "committed preflight refuses before execution without the "
+                "fresh exclusive stdout capture", "does not exist")
+        check(production_calls == [],
+              "failed preflight cannot reach the production execution function")
+    finally:
+        runner.dc.run_arm = original_run_arm
+
+    specs = dc.build_run_specs()
+    check([spec["run_id"] for spec in specs] == [
+        dc.run_id(world, arm, label)
+        for world in dc.WORLD_NAMES for label in dc.DT_LABELS
+        for arm in dc.EXEC_ARMS],
+          "runner receives all 30 run IDs in exact world/dt/arm order")
+    check(len(specs) * dc.RUN_TICKS == 6000,
+          "runner row contract is 30 x 200 = 6000 without generating rows")
+    check(runner.strict_dumps({"finite": 1.0}) == '{"finite": 1.0}',
+          "runner strict JSON serializes finite synthetic data")
+    rejects(lambda: runner.strict_dumps({"bad": float("nan")}),
+            "runner strict JSON rejects non-finite synthetic data",
+            "Out of range")
+
+
 def main() -> int:
     test_plan_lock_and_schema()
     test_worlds_and_demand()
@@ -726,6 +854,7 @@ def main() -> int:
     test_predicates_and_precedence()
     test_output_contract()
     test_static_execution_guards()
+    test_official_runner_static_guards()
     print(f"\nGate 1D-C pre-execution: {PASSED} passed, {FAILED} failed, "
           f"{GROUPS} groups")
     print("Model-state advancement: NONE; registered runs generated: 0")
