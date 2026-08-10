@@ -34,6 +34,11 @@ import service_v30 as sv
 PLAN_PATH = "v30_gate1dc_outcome_discrimination_plan.json"
 PLAN_RAW = "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe"
 PLAN_CANONICAL = "f9dd4b804a83744268bffe48d2d3861825cbc96d90aa871f348251e4108ef287"
+CONTRACT_PATH = "v30_gate1dc_execution_finalization_contract.json"
+CONTRACT_RAW = "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155"
+CONTRACT_CANONICAL = "ed90eaf901b506cc91e0a7ba3c4a6329ad6f8730278716383c07f525b748e208"
+ADDENDUM_PATH = "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md"
+ADDENDUM_SHA256 = "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1"
 
 EXEC_ARMS = (
     "A_full_multi_edge_p1c",
@@ -69,18 +74,67 @@ SUMMARY_PATH = FUTURE_ARTIFACTS[2]
 TRACE_PATH = FUTURE_ARTIFACTS[3]
 MANIFEST_PATH = FUTURE_ARTIFACTS[1]
 STDOUT_PATH = FUTURE_ARTIFACTS[4]
+RESULT_DIRECTORY = "results/v3.0/gate1dc"
+RECEIPT_PATH = f"{RESULT_DIRECTORY}/v30_gate1dc_execution_receipt.json"
+EXECUTION_STARTED_PATH = f"{RESULT_DIRECTORY}/v30_gate1dc_execution_started.json"
+FINALIZER_PATH = "finalize_v30_gate1dc.py"
+REGISTERED_ARTIFACTS = (
+    RECEIPT_PATH,
+    EXECUTION_STARTED_PATH,
+    TRACE_PATH,
+    STDOUT_PATH,
+    SUMMARY_PATH,
+    MANIFEST_PATH,
+)
+TEMPORARY_BASENAMES = (
+    ".v30_gate1dc_execution_receipt.json.tmp",
+    ".v30_gate1dc_execution_started.json.tmp",
+    ".v30_gate1dc_trace.jsonl.gz.tmp",
+    ".v30_gate1dc_stdout.txt.tmp",
+    ".v30_gate1dc_summary.json.tmp",
+    ".MANIFEST.md.tmp",
+)
+SOURCE_HASH_ORDER = (
+    "AGENTS.md",
+    "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+    PLAN_PATH,
+    ADDENDUM_PATH,
+    CONTRACT_PATH,
+    "gate1dc_v30.py",
+    "test_v30_gate1dc.py",
+    "exp_v30_gate1dc.py",
+    FINALIZER_PATH,
+    "d0_v29.py",
+    "p1c_v29.py",
+    "ebu_quote_v30.py",
+    "service_v30.py",
+)
+STATE_CLASSIFICATION_ORDER = (
+    "FINALIZED", "RUNNER_COMPLETE", "EXECUTING", "ATTEMPT_COMMITTED",
+    "PREFLIGHT", "UNSTARTED", "FAILED_OR_INTERRUPTED",
+)
+OUTCOME_CLASS_ORDER = (
+    "numerical_or_domain_failure", "systemic_collapse",
+    "destructive_service", "physical_impossibility",
+    "distributive_or_policy_under_service",
+    "safe_rationing_physical_scarcity", "preserve_but_under_serve",
+    "preserve_and_serve", "unclassified",
+)
 
 TRACE_PROVENANCE_FIELDS = (
     "plan_canonical_hash", "plan_raw_sha256", "equation_version",
+    "implementation_sha256", "execution_sha",
     "run_id", "world", "arm", "dt_label", "dt", "dt_certificate",
     "certificate_kind", "r_dt", "tick", "record",
 )
 SUMMARY_REQUIRED_BLOCKS = (
     "gate", "plan_id", "plan_version", "plan_canonical_hash",
     "plan_raw_sha256", "equation_version", "implementation_sha256",
-    "registered", "n_runs", "runs", "comparisons", "discriminator_v2",
+    "execution_sha", "branch", "python", "platform", "registered",
+    "n_runs", "runs", "comparisons", "discriminator_v2",
     "positive_controls", "hypotheses", "falsifiers",
-    "o3_aggregate_diagnostic", "outcome_class_counts", "non_claims",
+    "o3_aggregate_diagnostic", "outcome_class_counts",
+    "registered_artifacts", "completion", "non_claims",
 )
 MANIFEST_REQUIRED_SECTIONS = (
     "provenance and execution SHA", "artifact SHA-256 and byte counts",
@@ -188,6 +242,26 @@ def _reject_nonfinite(name):
     raise ValueError(f"non-finite JSON constant {name!r} rejected")
 
 
+def _reject_duplicate_pairs(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key {key!r} rejected")
+        result[key] = value
+    return result
+
+
+def strict_json_loads(payload):
+    if isinstance(payload, bytes):
+        if payload.startswith(b"\xef\xbb\xbf"):
+            raise ValueError("JSON UTF-8 BOM rejected")
+        payload = payload.decode("utf-8", errors="strict")
+    if not isinstance(payload, str):
+        raise TypeError("strict JSON input must be str or bytes")
+    return json.loads(payload, object_pairs_hook=_reject_duplicate_pairs,
+                      parse_constant=_reject_nonfinite)
+
+
 def plan_canonical_hash(plan: dict) -> str:
     encoded = json.dumps(plan, sort_keys=True, separators=(",", ":"),
                          ensure_ascii=True, allow_nan=False).encode()
@@ -202,7 +276,7 @@ def load_plan(path: str = PLAN_PATH,
     raw_hash = hashlib.sha256(raw).hexdigest()
     if expected_raw is not None and raw_hash != expected_raw:
         raise SystemExit(f"FATAL: raw Gate 1D-C plan SHA-256 mismatch: {raw_hash}")
-    plan = json.loads(raw.decode("utf-8"), parse_constant=_reject_nonfinite)
+    plan = strict_json_loads(raw)
     canonical = plan_canonical_hash(plan)
     if canonical != expected_canonical:
         raise SystemExit(
@@ -1093,6 +1167,16 @@ def validate_output_contract() -> None:
     if FUTURE_ARTIFACTS[1:] != (
             MANIFEST_PATH, SUMMARY_PATH, TRACE_PATH, STDOUT_PATH):
         raise ValueError("output filenames mismatch")
+    if REGISTERED_ARTIFACTS != (
+            RECEIPT_PATH, EXECUTION_STARTED_PATH, TRACE_PATH, STDOUT_PATH,
+            SUMMARY_PATH, MANIFEST_PATH):
+        raise ValueError("registered artifact publication order mismatch")
+    if len(TEMPORARY_BASENAMES) != 6 or len(set(TEMPORARY_BASENAMES)) != 6:
+        raise ValueError("temporary artifact names mismatch")
+    if len(SOURCE_HASH_ORDER) != 13 or len(set(SOURCE_HASH_ORDER)) != 13:
+        raise ValueError("execution source hash inventory mismatch")
+    if len(SUMMARY_REQUIRED_BLOCKS) != 24:
+        raise ValueError("runner summary top-level schema mismatch")
 
 
 def strict_json_dumps(obj, **kwargs) -> str:

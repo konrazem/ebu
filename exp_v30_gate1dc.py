@@ -1,81 +1,124 @@
-"""Official fail-closed runner for the frozen V3.0 Gate 1D-C study.
+"""Official durable single-attempt runner for V3.0 Gate 1D-C.
 
-Importing this module is side-effect free: it does not inspect Git, create a
-directory, write a file, print, advance model state, or execute a run.  The
-single future execution must use the frozen shell command from the protocol::
-
-    mkdir -p results/v3.0/gate1dc; set -o noclobber; \
-      python3 exp_v30_gate1dc.py \
-      > results/v3.0/gate1dc/v30_gate1dc_stdout.txt
-
-The shell-created stdout file is the single-execution lock.  Preflight proves
-that it is the empty regular file attached to fd 1 and that it is the only
-entry in the result directory.  All integrity checks complete before
-``execute_registered_study`` can call ``gate1dc_v30.run_arm``.  There is no
-retry, replacement, subsetting, outcome-based rerun, or scientific option.
-
-The runner publishes the deterministic trace first and the summary last (the
-completion sentinel), both without overwrite.  It never writes MANIFEST.md:
-the frozen protocol assigns manifest creation to the separately authorized
-post-execution validation/finalization stage, after hashes and byte counts of
-all three runner-produced artifacts can be verified.
+Import is side-effect free and standard-library-only.  Complete operational
+preflight runs before the result directory exists.  The immutable execution
+receipt and execution-start control are durably published, and the start file
+is exclusively locked, before scientific modules are imported or a scientific
+call becomes reachable.  The runner owns the registered stdout artifact and
+publishes receipt, start, trace, closed stdout, and summary in that order.
+``MANIFEST.md`` is produced only by the separate frozen mechanical finalizer.
 """
 from __future__ import annotations
 
 import ast
+import fcntl
 import gzip
 import hashlib
+import importlib
 import io
 import json
 import math
 import os
 import platform
+import re
+import signal
 import stat
 import subprocess
 import sys
-import tempfile
-
-import ebu_quote_v30 as eq
-import gate1dc_v30 as dc
-import service_v30 as sv
+import zlib
 
 
 BRANCH = "v3.0-local-ebu-foundation"
+REMOTE = "origin"
+REMOTE_REF = "refs/heads/v3.0-local-ebu-foundation"
+REPOSITORY_ROOT = "/Users/konrad.grzyb/code/ebu"
 PLAN_CANONICAL = "f9dd4b804a83744268bffe48d2d3861825cbc96d90aa871f348251e4108ef287"
 PLAN_RAW = "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe"
 PROTOCOL_SHA256 = "3122aa673f47290bbee866feb56d16afc4540f552ed7c7b458f097ef4e44d04f"
+ADDENDUM_SHA256 = "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1"
+CONTRACT_RAW = "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155"
+CONTRACT_CANONICAL = "ed90eaf901b506cc91e0a7ba3c4a6329ad6f8730278716383c07f525b748e208"
+PLAN = "v30_gate1dc_outcome_discrimination_plan.json"
+PROTOCOL = "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md"
+ADDENDUM = "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md"
+CONTRACT = "v30_gate1dc_execution_finalization_contract.json"
 
 OUTDIR = "results/v3.0/gate1dc"
-MANIFEST = f"{OUTDIR}/MANIFEST.md"       # post-execution stage only
+RECEIPT = f"{OUTDIR}/v30_gate1dc_execution_receipt.json"
+EXECUTION_STARTED = f"{OUTDIR}/v30_gate1dc_execution_started.json"
+MANIFEST = f"{OUTDIR}/MANIFEST.md"
 SUMMARY = f"{OUTDIR}/v30_gate1dc_summary.json"
 TRACE = f"{OUTDIR}/v30_gate1dc_trace.jsonl.gz"
 STDOUT = f"{OUTDIR}/v30_gate1dc_stdout.txt"
 
-ARM_A, ARM_B, ARM_C, ARM_D, ARM_S = dc.EXEC_ARMS
-PRIMARY_BASELINE_ARM = ARM_B
-
-# Frozen identities of every authoritative and scientific source used here.
-REQUIRED_SOURCE_HASHES = {
-    "AGENTS.md": "ff0a468251fabfc74a5d6d705310d6d824d57f7f669adacc9785e2ca871cb635",
-    "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md": PROTOCOL_SHA256,
-    "v30_gate1dc_outcome_discrimination_plan.json": PLAN_RAW,
-    "gate1dc_v30.py": "6f5e86b99ae44cd13603bcb44d317cbac976dd5d2528de3732b72614b66e2ec7",
-    "test_v30_gate1dc.py": "47c70e64b5793738c1beaff18cdaac045e4598edccf7b98c9f39f0c464b1e706",
+TEMPORARY_PATHS = {
+    RECEIPT: f"{OUTDIR}/.v30_gate1dc_execution_receipt.json.tmp",
+    EXECUTION_STARTED: f"{OUTDIR}/.v30_gate1dc_execution_started.json.tmp",
+    TRACE: f"{OUTDIR}/.v30_gate1dc_trace.jsonl.gz.tmp",
+    STDOUT: f"{OUTDIR}/.v30_gate1dc_stdout.txt.tmp",
+    SUMMARY: f"{OUTDIR}/.v30_gate1dc_summary.json.tmp",
+    MANIFEST: f"{OUTDIR}/.MANIFEST.md.tmp",
+}
+REGISTERED_ARTIFACTS = (
+    RECEIPT, EXECUTION_STARTED, TRACE, STDOUT, SUMMARY, MANIFEST,
+)
+SOURCE_HASH_ORDER = (
+    "AGENTS.md", PROTOCOL, PLAN, ADDENDUM, CONTRACT,
+    "gate1dc_v30.py", "test_v30_gate1dc.py", "exp_v30_gate1dc.py",
+    "finalize_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
+    "ebu_quote_v30.py", "service_v30.py",
+)
+FROZEN_SOURCE_HASHES = {
+    "AGENTS.md": "877676e26e5d898642fefe8f5a15d65291091625e0d904f36f483395e7c87062",
+    PROTOCOL: PROTOCOL_SHA256,
+    PLAN: PLAN_RAW,
+    ADDENDUM: ADDENDUM_SHA256,
+    CONTRACT: CONTRACT_RAW,
     "d0_v29.py": "f7fdce8d946b44b4e0bfab9338fcd5c378796f9d14cd80323c53732e08a3bfe9",
     "p1c_v29.py": "a30c869000080b4b0235a9ba1daa517a5b0fe734ba55ac423ae3042da5940729",
     "ebu_quote_v30.py": "44a2ea282837f7613198a06a7037fb89f2f9fd99f05cedde65e0b1ba726e1b79",
     "service_v30.py": "a83bcd5e449b8804f44607e56326ec392324cdfed71260e28fdc4c48899d44e0",
 }
+EXPECTED_ENVIRONMENT = {
+    "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+    "LC_ALL": "C",
+    "LANG": "C",
+    "TZ": "UTC",
+    "PYTHONHASHSEED": "0",
+    "PYTHONNOUSERSITE": "1",
+}
+PYTHON_INVOKED_AS = "/opt/homebrew/bin/python3"
+PYTHON_REALPATH = ("/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/"
+                   "Python.framework/Versions/3.14/bin/python3.14")
+PYTHON_VERSION = "3.14.2"
+ZLIB_VERSION = "1.2.12"
+ATTEMPT_ID = "gate1dc-single-authorized-attempt"
+OUTCOME_CLASS_ORDER = (
+    "numerical_or_domain_failure", "systemic_collapse",
+    "destructive_service", "physical_impossibility",
+    "distributive_or_policy_under_service",
+    "safe_rationing_physical_scarcity", "preserve_but_under_serve",
+    "preserve_and_serve", "unclassified",
+)
 
-REQUIRED_TICK_FIELDS = tuple(dict.fromkeys(
-    dc.TICK_RECORD_FIELDS + (
+EXEC_ARMS = (
+    "A_full_multi_edge_p1c", "B_restricted_matched_non_ebu",
+    "C_restricted_observational_quote",
+    "D_restricted_exact_total_quote_greedy",
+    "S_restricted_local_service_priority",
+)
+WORLD_NAMES = ("DC1_flux_lock", "DC2_capacity_split", "DC3_demand_pulse")
+DT_LABELS = ("conservative", "near_certificate")
+ARM_A, ARM_B, ARM_C, ARM_D, ARM_S = EXEC_ARMS
+PRIMARY_BASELINE_ARM = ARM_B
+REQUIRED_TICK_FIELDS_EXTRA = (
         "x_before", "x_after", "menus", "candidate_exact_quotes",
         "request_shaping_identity", "rested", "pulse_tick",
         "transport_loss", "negative_corrections", "domain_failure",
         "reserve_crossings", "allee_crossings", "dead_sources",
         "physical_overuse", "p1c_rejections", "quote_sign_counts",
         "group_diagnostic", "ebu_pos", "ebu_neg", "quoted",
-    )))
+)
 
 # Physical fields compared for H1/F1.  Quote/EBU accounting and the arm label
 # are observational differences, not physical differences.
@@ -93,16 +136,28 @@ PHYS_TICK_FIELDS = (
 
 _RANDOMNESS_MODULES = frozenset(("random", "secrets"))
 _RANDOMNESS_GUARDED_SOURCES = ("gate1dc_v30.py", "exp_v30_gate1dc.py")
+_SCIENTIFIC_MODULES = ("d0_v29", "p1c_v29", "ebu_quote_v30",
+                       "service_v30", "gate1dc_v30")
+_AUTHORIZED_SHA_RE = r"^[0-9a-f]{40}$"
+_SHA256_RE = r"^[0-9a-f]{64}$"
+
+# Bound only after the durable start control is published and locked.
+dc = eq = sv = None
+REQUIRED_TICK_FIELDS = REQUIRED_TICK_FIELDS_EXTRA
 
 
 def _fatal(message: str):
     raise SystemExit(f"FATAL: {message}")
 
 
+def _sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
 def _sha256(path: str) -> str:
     try:
         with open(path, "rb") as handle:
-            return hashlib.sha256(handle.read()).hexdigest()
+            return _sha256_bytes(handle.read())
     except OSError as error:
         _fatal(f"cannot hash required source {path}: {error}")
 
@@ -124,15 +179,56 @@ def strict_dumps(value, **kwargs) -> str:
                       allow_nan=False, **kwargs)
 
 
-def _git(*arguments: str) -> str:
+def _reject_nonfinite(value):
+    raise ValueError(f"non-finite JSON constant {value!r} rejected")
+
+
+def _reject_duplicate_pairs(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key {key!r} rejected")
+        result[key] = value
+    return result
+
+
+def strict_loads(payload):
+    if isinstance(payload, bytes):
+        if payload.startswith(b"\xef\xbb\xbf"):
+            raise ValueError("JSON UTF-8 BOM rejected")
+        payload = payload.decode("utf-8", errors="strict")
+    if not isinstance(payload, str):
+        raise TypeError("strict JSON input must be str or bytes")
+    return json.loads(payload, object_pairs_hook=_reject_duplicate_pairs,
+                      parse_constant=_reject_nonfinite)
+
+
+def canonical_bytes(value) -> bytes:
+    return strict_dumps(value, separators=(",", ":")).encode("utf-8")
+
+
+def ordered_bytes(value) -> bytes:
+    return (json.dumps(value, sort_keys=False, ensure_ascii=True,
+                       allow_nan=False, separators=(",", ":")) + "\n").encode(
+                           "utf-8")
+
+
+def _git_bytes(*arguments: str) -> bytes:
     try:
         completed = subprocess.run(
-            ("git",) + arguments, check=True, text=True,
+            ("git",) + arguments, check=True,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except (OSError, subprocess.CalledProcessError) as error:
-        detail = getattr(error, "stderr", "") or str(error)
-        _fatal(f"Git check failed for {' '.join(arguments)}: {detail.strip()}")
-    return completed.stdout.strip()
+        detail = getattr(error, "stderr", b"")
+        if isinstance(detail, bytes):
+            detail = detail.decode("utf-8", errors="replace")
+        _fatal(f"Git check failed for {' '.join(arguments)}: "
+               f"{(detail or str(error)).strip()}")
+    return completed.stdout
+
+
+def _git(*arguments: str) -> str:
+    return _git_bytes(*arguments).decode("utf-8", errors="strict").strip()
 
 
 def _randomness_imports(path: str) -> list:
@@ -168,7 +264,10 @@ def _validate_information_boundary() -> None:
         _fatal(f"cannot inspect the decision path: {error}")
     definitions = {node.name: node for node in tree.body
                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))}
-    expected = [function.__name__ for function in dc.DECISION_PATH_FUNCS]
+    expected = [
+        "screen_budget", "candidate_menu", "quote_schedule_for",
+        "select_arm_B", "select_arm_D", "select_arm_S",
+    ]
     if set(definitions) < set(expected):
         _fatal("decision-path function is missing from gate1dc_v30.py")
     for name in expected:
@@ -187,112 +286,229 @@ def _validate_information_boundary() -> None:
         _fatal("arm S does not expose exactly the current-demand boundary")
 
 
-def _validate_output_start(stdout_fd: int | None = None) -> None:
-    """Verify the shell's exclusive stdout capture and refuse prior output."""
-    if not os.path.isdir(OUTDIR):
-        _fatal(f"{OUTDIR} does not exist; use the exact frozen command")
-    try:
-        entries = sorted(os.listdir(OUTDIR))
-    except OSError as error:
-        _fatal(f"cannot inspect {OUTDIR}: {error}")
-    if entries != [os.path.basename(STDOUT)]:
-        _fatal(f"existing result directory is not a fresh stdout capture: {entries}")
-    try:
-        path_stat = os.lstat(STDOUT)
-    except OSError as error:
-        _fatal(f"cannot inspect registered stdout artifact: {error}")
-    if not stat.S_ISREG(path_stat.st_mode) or path_stat.st_nlink != 1:
-        _fatal("registered stdout capture must be one regular, non-linked file")
-    if path_stat.st_size != 0:
-        _fatal("registered stdout artifact already contains data; refusing reuse")
-    fd = sys.stdout.fileno() if stdout_fd is None else stdout_fd
-    try:
-        fd_stat = os.fstat(fd)
-    except OSError as error:
-        _fatal(f"cannot inspect stdout file descriptor: {error}")
-    if (fd_stat.st_dev, fd_stat.st_ino) != (path_stat.st_dev, path_stat.st_ino):
-        _fatal("fd 1 is not the registered empty stdout capture")
-    for artifact in (SUMMARY, TRACE, MANIFEST):
-        if os.path.lexists(artifact):
-            _fatal(f"registered output artifact already exists: {artifact}")
+def _validate_runtime() -> str:
+    if len(sys.argv) != 1 or sys.argv[0] != "exp_v30_gate1dc.py":
+        _fatal("this runner takes no arguments and must use its exact filename")
+    authorized_sha = os.environ.get("EBU_GATE1DC_EXECUTION_SHA")
+    expected_environment = {
+        **EXPECTED_ENVIRONMENT, "EBU_GATE1DC_EXECUTION_SHA": authorized_sha,
+    }
+    if set(os.environ) != set(expected_environment) or any(
+            os.environ.get(key) != value
+            for key, value in expected_environment.items()):
+        _fatal("environment does not equal the frozen env -i allowlist")
+    if authorized_sha is None or re.fullmatch(
+            _AUTHORIZED_SHA_RE, authorized_sha) is None:
+        _fatal("EBU_GATE1DC_EXECUTION_SHA must be one lowercase 40-hex SHA")
+    original = tuple(getattr(sys, "orig_argv", ()))
+    expected_argv = (PYTHON_INVOKED_AS, "-B", "-s", "-X", "utf8",
+                     "exp_v30_gate1dc.py")
+    if original != expected_argv:
+        _fatal("Python argv is not the exact frozen invocation")
+    if os.path.realpath(PYTHON_INVOKED_AS) != PYTHON_REALPATH \
+            or os.path.realpath(sys.executable) != PYTHON_REALPATH:
+        _fatal("Python executable realpath mismatch")
+    if platform.python_version() != PYTHON_VERSION:
+        _fatal("Python version mismatch")
+    if zlib.ZLIB_VERSION != ZLIB_VERSION or zlib.ZLIB_RUNTIME_VERSION != ZLIB_VERSION:
+        _fatal("zlib compile/runtime version mismatch")
+    if not (sys.flags.dont_write_bytecode and sys.flags.no_user_site
+            and sys.flags.utf8_mode == 1):
+        _fatal("Python flags must be exactly compatible with -B -s -X utf8")
+    if any(name in sys.modules for name in _SCIENTIFIC_MODULES):
+        _fatal("scientific module became reachable before receipt durability")
+    return authorized_sha
 
 
-def _validate_repository() -> dict:
-    root = os.path.dirname(os.path.realpath(__file__))
-    if os.path.realpath(os.getcwd()) != root:
-        _fatal(f"runner must execute from repository root {root}")
+def _validate_repository(authorized_sha: str) -> dict:
+    root = os.path.realpath(REPOSITORY_ROOT)
+    if os.path.realpath(os.path.dirname(__file__)) != root \
+            or os.path.realpath(os.getcwd()) != root:
+        _fatal(f"runner must execute from exact repository root {root}")
     if _git("rev-parse", "--show-toplevel") != root:
-        _fatal("Git top-level does not equal the runner directory")
+        _fatal("Git top-level does not equal the frozen repository root")
     branch = _git("symbolic-ref", "--quiet", "--short", "HEAD")
     if branch != BRANCH:
         _fatal(f"branch {branch!r} != registered {BRANCH!r}")
     head = _git("rev-parse", "HEAD")
     remote = _git("rev-parse", f"refs/remotes/origin/{BRANCH}")
-    if head != remote:
-        _fatal(f"local HEAD {head} != origin/{BRANCH} {remote}")
-    status_lines = [line for line in _git(
-        "status", "--porcelain=v1", "--untracked-files=all").splitlines()
-                    if line]
-    allowed_stdout = f"?? {STDOUT}"
-    unexpected = [line for line in status_lines if line != allowed_stdout]
-    if unexpected or status_lines.count(allowed_stdout) != 1:
-        _fatal(f"repository is not clean apart from active stdout: {status_lines}")
-    for path, expected in REQUIRED_SOURCE_HASHES.items():
-        tracked = _git("ls-files", "--error-unmatch", "--", path)
-        if tracked != path:
-            _fatal(f"required source is not tracked exactly: {path}")
-        actual = _sha256(path)
-        if actual != expected:
-            _fatal(f"required source SHA-256 mismatch for {path}: {actual}")
-    runner_hash = _sha256("exp_v30_gate1dc.py")
-    tracked_runner = _git("ls-files", "--error-unmatch", "--",
-                          "exp_v30_gate1dc.py")
-    if tracked_runner != "exp_v30_gate1dc.py":
-        _fatal("official runner is not tracked")
+    live_lines = _git("ls-remote", "--heads", REMOTE, REMOTE_REF).splitlines()
+    if len(live_lines) != 1 or live_lines[0].split() != [authorized_sha, REMOTE_REF]:
+        _fatal("live remote ref does not equal authorized execution SHA")
+    if head != authorized_sha or remote != authorized_sha:
+        _fatal("local HEAD or tracking ref does not equal authorized SHA")
+    status = _git_bytes("status", "--porcelain=v2", "--untracked-files=all")
+    if status:
+        _fatal("index/worktree is not exactly clean before result-directory creation")
+    if os.path.lexists(OUTDIR):
+        _fatal("registered result directory already exists; retry forbidden")
+    parent = os.path.dirname(OUTDIR)
+    try:
+        parent_stat = os.lstat(parent)
+    except OSError as error:
+        _fatal(f"cannot inspect registered result parent: {error}")
+    if not stat.S_ISDIR(parent_stat.st_mode) or stat.S_ISLNK(parent_stat.st_mode):
+        _fatal("results/v3.0 must be an existing non-symlink directory")
+
+    source_hashes = {}
+    for path in SOURCE_HASH_ORDER:
+        try:
+            path_stat = os.lstat(path)
+        except OSError as error:
+            _fatal(f"cannot inspect source {path}: {error}")
+        if not stat.S_ISREG(path_stat.st_mode) or stat.S_ISLNK(path_stat.st_mode):
+            _fatal(f"source is not a regular non-symlink file: {path}")
+        tree_line = _git("ls-tree", authorized_sha, "--", path)
+        fields = tree_line.split(None, 3)
+        if len(fields) != 4 or fields[0] != "100644" or fields[1] != "blob" \
+                or fields[3] != path:
+            _fatal(f"source is not an exact tracked regular blob: {path}")
+        worktree = open(path, "rb").read()
+        committed = _git_bytes("show", f"{authorized_sha}:{path}")
+        if worktree != committed:
+            _fatal(f"worktree/Git blob byte mismatch for {path}")
+        digest = _sha256_bytes(worktree)
+        if path in FROZEN_SOURCE_HASHES and digest != FROZEN_SOURCE_HASHES[path]:
+            _fatal(f"frozen source SHA-256 mismatch for {path}: {digest}")
+        source_hashes[path] = digest
     return {
-        "branch": branch, "execution_sha": head,
-        "remote_tracking_sha": remote,
-        "required_source_sha256": dict(REQUIRED_SOURCE_HASHES),
-        "runner_sha256": runner_hash,
+        "branch": branch, "execution_sha": head, "remote_tracking_sha": remote,
+        "source_sha256": source_hashes,
+        "required_source_sha256": source_hashes,
+        "runner_sha256": source_hashes["exp_v30_gate1dc.py"],
+        "python": {
+            "invoked_as": PYTHON_INVOKED_AS,
+            "executable_realpath": PYTHON_REALPATH,
+            "version": PYTHON_VERSION,
+            "zlib_version": ZLIB_VERSION,
+            "zlib_runtime_version": ZLIB_VERSION,
+            "flags": ["-B", "-s", "-X", "utf8"],
+        },
+        "platform": platform.platform(),
     }
 
 
-def preflight() -> tuple[list, dict]:
-    """Complete every integrity check before any execution function is called."""
-    if len(sys.argv) != 1:
-        _fatal("this runner takes no command-line options or overrides")
-    _validate_output_start()
-    raw = open(dc.PLAN_PATH, "rb").read()
-    if hashlib.sha256(raw).hexdigest() != PLAN_RAW:
-        _fatal("raw Gate 1D-C plan SHA-256 mismatch")
-    plan = json.loads(raw.decode("utf-8"), parse_constant=dc._reject_nonfinite)
-    if dc.plan_canonical_hash(plan) != PLAN_CANONICAL:
-        _fatal("canonical Gate 1D-C plan SHA-256 mismatch")
-    if dc.PLAN_RAW != PLAN_RAW or dc.PLAN_CANONICAL != PLAN_CANONICAL:
-        _fatal("implementation and runner plan-lock constants disagree")
-    dc.validate_plan(plan)
-    dc.validate_output_contract()
+def _validate_contract_and_plan() -> tuple[dict, dict, list]:
+    plan_raw = open(PLAN, "rb").read()
+    contract_raw = open(CONTRACT, "rb").read()
+    if _sha256_bytes(plan_raw) != PLAN_RAW or _sha256_bytes(contract_raw) != CONTRACT_RAW:
+        _fatal("raw plan or execution-contract SHA-256 mismatch")
+    plan = strict_loads(plan_raw)
+    contract = strict_loads(contract_raw)
+    if _sha256_bytes(canonical_bytes(plan)) != PLAN_CANONICAL \
+            or _sha256_bytes(canonical_bytes(contract)) != CONTRACT_CANONICAL:
+        _fatal("canonical plan or execution-contract SHA-256 mismatch")
+    if _sha256(PROTOCOL) != PROTOCOL_SHA256 or _sha256(ADDENDUM) != ADDENDUM_SHA256:
+        _fatal("protocol or execution-addendum SHA-256 mismatch")
+    legal = contract.get("legal_and_scientific_status", {})
+    if legal.get("scientific_precedence") != [PROTOCOL, PLAN] \
+            or legal.get("scientific_preregistration_unchanged") is not True \
+            or legal.get("f4_exact_expression") != (
+                "certified_lower_bound - 1e-9 * (1 + abs(certified_lower_bound))"):
+        _fatal("scientific precedence or F4 contract mismatch")
+    paths = contract.get("paths", {})
+    expected_paths = {
+        "repository_root": REPOSITORY_ROOT, "branch": BRANCH,
+        "remote": REMOTE, "remote_ref": REMOTE_REF,
+        "result_directory": OUTDIR, "execution_receipt": RECEIPT,
+        "execution_started": EXECUTION_STARTED, "stdout": STDOUT,
+        "trace": TRACE, "summary": SUMMARY, "manifest": MANIFEST,
+        "runner": "exp_v30_gate1dc.py", "finalizer": "finalize_v30_gate1dc.py",
+    }
+    if any(paths.get(key) != value for key, value in expected_paths.items()):
+        _fatal("contract path inventory mismatch")
+    receipt_contract = contract.get("execution_receipt", {})
+    if tuple(receipt_contract.get("source_hash_order", ())) != SOURCE_HASH_ORDER:
+        _fatal("receipt source-hash order mismatch")
+    expected_temporary_names = {
+        "receipt": os.path.basename(TEMPORARY_PATHS[RECEIPT]),
+        "execution_started": os.path.basename(TEMPORARY_PATHS[EXECUTION_STARTED]),
+        "trace": os.path.basename(TEMPORARY_PATHS[TRACE]),
+        "stdout": os.path.basename(TEMPORARY_PATHS[STDOUT]),
+        "summary": os.path.basename(TEMPORARY_PATHS[SUMMARY]),
+        "manifest": os.path.basename(TEMPORARY_PATHS[MANIFEST]),
+    }
+    if contract.get("temporary_files", {}).get("names") != expected_temporary_names \
+            or [item.get("path_key") for item in contract.get(
+                "artifact_inventory", [])] != [
+                    "execution_receipt", "execution_started", "trace", "stdout",
+                    "summary", "manifest"] \
+            or contract.get("runner_summary_completion_contract", {}).get(
+                "required_top_level_fields") != [
+                    "gate", "plan_id", "plan_version", "plan_canonical_hash",
+                    "plan_raw_sha256", "equation_version",
+                    "implementation_sha256", "execution_sha", "branch",
+                    "python", "platform", "registered", "n_runs", "runs",
+                    "comparisons", "discriminator_v2", "positive_controls",
+                    "hypotheses", "falsifiers", "o3_aggregate_diagnostic",
+                    "outcome_class_counts", "registered_artifacts",
+                    "completion", "non_claims"]:
+        _fatal("artifact, temporary, or summary contract schema mismatch")
+    inventory = contract.get("registered_execution_inventory", {})
+    run_ids = inventory.get("run_ids")
+    expected_run_ids = [
+        f"{world}|{arm}|{label}" for world in WORLD_NAMES
+        for label in DT_LABELS for arm in EXEC_ARMS
+    ]
+    if (inventory.get("world_order") != list(WORLD_NAMES)
+            or inventory.get("timestep_order") != list(DT_LABELS)
+            or inventory.get("arm_order") != list(EXEC_ARMS)
+            or inventory.get("run_length_ticks") != 200
+            or inventory.get("total_runs") != 30
+            or inventory.get("trace_rows") != 6000
+            or run_ids != expected_run_ids):
+        _fatal("registered execution inventory mismatch")
+    if (plan.get("experiment_size", {}).get("total_runs") != 30
+            or plan.get("experiment_size", {}).get("run_length_ticks") != 200
+            or list(plan.get("worlds", {})) != list(WORLD_NAMES)
+            or list(plan.get("hypotheses", {})) != [f"H{i}" for i in range(1, 11)]
+            or list(plan.get("falsifiers", {})) != [f"F{i}" for i in range(1, 17)]
+            or len(plan.get("non_claims", [])) != 8):
+        _fatal("scientific plan schema/inventory mismatch")
+    if len(contract.get("failure_retry_matrix", [])) != 17:
+        _fatal("failure/retry matrix must contain exactly 17 frozen cases")
+    if tuple(contract.get("state_machine", {}).get("classification_order", ())) != (
+            "FINALIZED", "RUNNER_COMPLETE", "EXECUTING", "ATTEMPT_COMMITTED",
+            "PREFLIGHT", "UNSTARTED", "FAILED_OR_INTERRUPTED"):
+        _fatal("seven-state classification order mismatch")
+    specs = []
+    for run_identifier in run_ids:
+        world, arm, label = run_identifier.split("|")
+        specs.append({"world": world, "arm": arm, "dt_label": label,
+                      "run_id": run_identifier})
+    return plan, contract, specs
+
+
+def preflight() -> tuple[list, dict, dict, dict]:
+    """Finish every check before creating the result directory or receipt."""
+    authorized_sha = _validate_runtime()
+    plan, contract, specs = _validate_contract_and_plan()
     for source in _RANDOMNESS_GUARDED_SOURCES:
         hits = _randomness_imports(source)
         if hits:
             _fatal(f"{source} imports randomness: {sorted(hits)}")
     _validate_information_boundary()
-    specs = dc.build_run_specs()
-    expected = [
-        dc.run_id(world, arm, label)
-        for world in dc.WORLD_NAMES for label in dc.DT_LABELS
-        for arm in dc.EXEC_ARMS
-    ]
-    if [spec["run_id"] for spec in specs] != expected:
-        _fatal("30-run inventory or frozen ordering mismatch")
-    if len(specs) != 30 or len(set(expected)) != 30:
-        _fatal("run inventory is not exactly 30 unique runs")
-    if dc.RUN_TICKS != 200 or len(specs) * dc.RUN_TICKS != 6000:
-        _fatal("200-tick / 6000-row contract mismatch")
-    if (dc.BURN_IN_TICKS, dc.MEASUREMENT_TICKS,
-            dc.PERSISTENCE_WINDOW) != (50, 150, 20):
-        _fatal("burn-in, measurement, or persistence window mismatch")
-    for world in dc.WORLD_NAMES:
+    repository = _validate_repository(authorized_sha)
+    return specs, repository, plan, contract
+
+
+def _load_scientific_modules(plan: dict) -> None:
+    """Make scientific code reachable only after receipt/start durability."""
+    global dc, eq, sv, REQUIRED_TICK_FIELDS
+    dc = importlib.import_module("gate1dc_v30")
+    eq = importlib.import_module("ebu_quote_v30")
+    sv = importlib.import_module("service_v30")
+    if (dc.PLAN_RAW != PLAN_RAW or dc.PLAN_CANONICAL != PLAN_CANONICAL
+            or tuple(dc.EXEC_ARMS) != EXEC_ARMS
+            or tuple(dc.WORLD_NAMES) != WORLD_NAMES
+            or tuple(dc.DT_LABELS) != DT_LABELS):
+        _fatal("scientific implementation locks disagree with frozen contract")
+    dc.validate_plan(plan)
+    dc.validate_output_contract()
+    if (dc.RUN_TICKS, dc.BURN_IN_TICKS, dc.MEASUREMENT_TICKS,
+            dc.PERSISTENCE_WINDOW) != (200, 50, 150, 20):
+        _fatal("scientific horizon/window locks disagree")
+    for world in WORLD_NAMES:
         certificate = dc.world_certificates(world)
         dts = dc.world_dts(world)
         for label, expected_r in (("conservative", 0.5),
@@ -300,8 +516,8 @@ def preflight() -> tuple[list, dict]:
             r_dt = dts[label] / certificate["binding_certificate"]
             if abs(r_dt - expected_r) > 1e-12 or r_dt > 1.0:
                 _fatal(f"{world}/{label}: registered r_dt mismatch")
-    repository = _validate_repository()
-    return specs, repository
+    REQUIRED_TICK_FIELDS = tuple(dict.fromkeys(
+        tuple(dc.TICK_RECORD_FIELDS) + REQUIRED_TICK_FIELDS_EXTRA))
 
 
 def _validate_tick_record(record: dict, spec: dict, tick: int) -> None:
@@ -364,10 +580,6 @@ def execute_registered_study(specs: list) -> list:
                          ticks=dc.RUN_TICKS)
         validate_run(run, spec)
         runs.append(run)
-        print(f"  {index + 1:02d}/30 {run.run_id:76s} "
-              f"service {run.totals['service']:10.4f} "
-              f"unmet {run.totals['unmet']:10.4f} "
-              f"EBU {run.totals['ebu']:+11.4f} r_dt {run.r_dt:.1f}")
     if [run.run_id for run in runs] != [spec["run_id"] for spec in specs]:
         _fatal("executed runs differ from the frozen inventory/order")
     return runs
@@ -764,12 +976,10 @@ def build_summary(runs: list, repository: dict) -> dict:
         "plan_id": dc.PLAN["plan_id"], "plan_version": dc.PLAN["plan_version"],
         "plan_canonical_hash": PLAN_CANONICAL, "plan_raw_sha256": PLAN_RAW,
         "equation_version": eq.EQUATION_VERSION,
-        "implementation_sha256": {
-            **repository["required_source_sha256"],
-            "exp_v30_gate1dc.py": repository["runner_sha256"]},
+        "implementation_sha256": dict(repository["source_sha256"]),
         "execution_sha": repository["execution_sha"],
-        "branch": repository["branch"], "python": platform.python_version(),
-        "platform": platform.platform(),
+        "branch": repository["branch"], "python": dict(repository["python"]),
+        "platform": repository["platform"],
         "registered": {
             "worlds": list(dc.WORLD_NAMES), "arms": list(dc.EXEC_ARMS),
             "dt_labels": list(dc.DT_LABELS), "total_runs": 30,
@@ -782,13 +992,6 @@ def build_summary(runs: list, repository: dict) -> dict:
         "discriminator_v2": discriminator, "positive_controls": controls,
         "hypotheses": hypotheses, "falsifiers": falsifiers,
         "o3_aggregate_diagnostic": o3, "outcome_class_counts": counts,
-        "manifest_finalization": {
-            "written_by_runner": False, "path": MANIFEST,
-            "required_sections": list(dc.MANIFEST_REQUIRED_SECTIONS),
-            "instruction": "Create only in the separately authorized "
-                           "post-execution validation stage after recomputing "
-                           "SHA-256 and byte counts for summary, trace, and stdout; "
-                           "do not invoke this runner again."},
         "non_claims": list(dc.PLAN["non_claims"]),
     }
 
@@ -812,7 +1015,8 @@ def trace_rows(runs: list, repository: dict):
 
 def render_trace(rows: list) -> bytes:
     buffer = io.BytesIO()
-    with gzip.GzipFile(filename="", mode="wb", fileobj=buffer, mtime=0) as gz:
+    with gzip.GzipFile(filename="", mode="wb", fileobj=buffer, mtime=0,
+                       compresslevel=9) as gz:
         for row in rows:
             gz.write((strict_dumps(row, separators=(",", ":")) + "\n").encode())
     return buffer.getvalue()
@@ -822,8 +1026,68 @@ def render_summary(summary: dict) -> bytes:
     return (strict_dumps(summary, indent=2) + "\n").encode()
 
 
+def _json_number(value) -> str:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) \
+            or not math.isfinite(value):
+        _fatal(f"stdout numeric value is not a finite JSON number: {value!r}")
+    return json.dumps(value, ensure_ascii=True, allow_nan=False)
+
+
+def render_stdout(summary: dict) -> bytes:
+    lines = [
+        "EBP V3.0 Gate 1D-C - outcome-discrimination study",
+        f"execution SHA: {summary['execution_sha']}",
+        f"plan canonical hash: {PLAN_CANONICAL}",
+        "registered: 3 worlds x 2 timesteps x 5 arms = 30 runs; 200 ticks "
+        "each; burn-in 50; measurement 150; no seed",
+    ]
+    frozen_order = summary["registered"]["frozen_order"]
+    for index, run_identifier in enumerate(frozen_order, 1):
+        record = summary["runs"][run_identifier]
+        lines.append(
+            f"run {index:02d}/30 | {run_identifier} | "
+            f"service={_json_number(record['total_service'])} | "
+            f"unmet={_json_number(record['total_unmet'])} | "
+            f"ebu={_json_number(record['ebu_total'])} | "
+            f"r_dt={_json_number(record['r_dt'])}")
+    for outcome in OUTCOME_CLASS_ORDER:
+        if outcome in summary["outcome_class_counts"]:
+            count = summary["outcome_class_counts"][outcome]
+            if isinstance(count, bool) or not isinstance(count, int):
+                _fatal("outcome-class count is not an integer")
+            lines.append(f"outcome | {outcome} | {count}")
+    fired = [f"F{index}" for index in range(1, 17)
+             if summary["falsifiers"][f"F{index}"]["fired"]]
+    lines.extend([
+        "falsifiers fired: " + (", ".join(fired) if fired else "none"),
+        "runner outputs validated in memory",
+        "trace published durably",
+        "stdout complete; summary publication follows",
+    ])
+    log = io.StringIO(newline="\n")
+    for line in lines:
+        log.write(line)
+        log.write("\n")
+    payload = log.getvalue().encode("utf-8")
+    log.close()
+    _validate_text_bytes(payload, "stdout")
+    return payload
+
+
+def _validate_text_bytes(payload: bytes, label: str) -> None:
+    if payload.startswith(b"\xef\xbb\xbf") or b"\x00" in payload \
+            or b"\r" in payload or not payload.endswith(b"\n") \
+            or payload.endswith(b"\n\n"):
+        _fatal(f"{label} violates UTF-8/LF/exact-final-LF contract")
+    try:
+        payload.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as error:
+        _fatal(f"{label} is invalid UTF-8: {error}")
+
+
 def validate_complete_outputs_in_memory(runs: list, summary: dict,
                                         rows: list, trace_bytes: bytes,
+                                        stdout_bytes: bytes,
                                         summary_bytes: bytes) -> None:
     expected_ids = [spec["run_id"] for spec in dc.build_run_specs()]
     if [run.run_id for run in runs] != expected_ids:
@@ -838,20 +1102,41 @@ def validate_complete_outputs_in_memory(runs: list, summary: dict,
                 _fatal(f"trace ordering mismatch at row {position}")
             missing = [field for field in dc.TRACE_PROVENANCE_FIELDS
                        if field not in row]
-            if missing:
+            if missing or set(row) != set(dc.TRACE_PROVENANCE_FIELDS):
                 _fatal(f"trace row {position} missing provenance {missing}")
             position += 1
     if list(summary["runs"]) != expected_ids or summary["n_runs"] != 30:
         _fatal("summary run inventory/order mismatch")
-    for block in dc.SUMMARY_REQUIRED_BLOCKS:
-        if block not in summary:
-            _fatal(f"summary missing required block {block}")
+    if set(summary) != set(dc.SUMMARY_REQUIRED_BLOCKS):
+        _fatal("summary top-level fields differ from exact contract")
     if list(summary["hypotheses"]) != [f"H{i}" for i in range(1, 11)]:
         _fatal("summary H1-H10 ordering mismatch")
     if list(summary["falsifiers"]) != [f"F{i}" for i in range(1, 17)]:
         _fatal("summary F1-F16 ordering mismatch")
     if list(summary["positive_controls"]) != list(dc._PC_BOUNDS):
         _fatal("summary PC1-PC4 ordering mismatch")
+    expected_artifact_fields = {
+        "execution_receipt": {"path", "bytes", "sha256"},
+        "execution_started": {"path", "bytes", "sha256"},
+        "trace": {"path", "bytes", "sha256"},
+        "stdout": {"path", "bytes", "sha256"},
+        "summary": {"path", "runner_completion_sentinel",
+                    "self_hash_deferred_to_manifest"},
+        "manifest": {"path", "written_by_runner",
+                     "full_study_completion_sentinel"},
+    }
+    if set(summary["registered_artifacts"]) != set(expected_artifact_fields) \
+            or any(set(summary["registered_artifacts"][key]) != fields
+                   for key, fields in expected_artifact_fields.items()):
+        _fatal("summary registered-artifact schema mismatch")
+    expected_completion = {
+        "runner_complete": True, "runner_completion_sentinel": SUMMARY,
+        "study_finalized": False, "full_study_completion_sentinel": MANIFEST,
+        "scientific_attempts_committed": 1,
+        "scientific_retry_permitted": False,
+    }
+    if summary["completion"] != expected_completion:
+        _fatal("summary completion contract mismatch")
     per_run = {}
     for row in rows:
         aggregate = per_run.setdefault(row["run_id"],
@@ -873,81 +1158,365 @@ def validate_complete_outputs_in_memory(runs: list, summary: dict,
         _assert_finite(row, f"trace[{index}]")
     if not trace_bytes.startswith(b"\x1f\x8b"):
         _fatal("rendered trace is not gzip")
-    json.loads(summary_bytes.decode("utf-8"), parse_constant=dc._reject_nonfinite)
+    parsed_summary = strict_loads(summary_bytes)
+    if render_summary(parsed_summary) != summary_bytes:
+        _fatal("summary bytes are not deterministic strict summary JSON")
+    try:
+        decompressed = gzip.decompress(trace_bytes)
+    except (OSError, EOFError) as error:
+        _fatal(f"trace gzip cannot be decompressed: {error}")
+    lines = decompressed.splitlines(keepends=True)
+    if len(lines) != 6000 or any(not line.endswith(b"\n") for line in lines):
+        _fatal("trace does not contain exactly 6000 LF-terminated JSON lines")
+    reparsed = []
+    for index, line in enumerate(lines):
+        value = strict_loads(line[:-1])
+        if canonical_bytes(value) + b"\n" != line:
+            _fatal(f"trace row {index} is not canonical strict JSON")
+        reparsed.append(value)
+    if render_trace(reparsed) != trace_bytes:
+        _fatal("trace gzip bytes are not deterministic")
+    if render_stdout(summary) != stdout_bytes:
+        _fatal("stdout bytes differ from the frozen grammar")
+
+
+def _fsync_directory(path: str) -> None:
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    descriptor = os.open(path, flags)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def _write_all(descriptor: int, payload: bytes) -> None:
+    view = memoryview(payload)
+    while view:
+        written = os.write(descriptor, view)
+        if written <= 0:
+            raise OSError("short artifact write")
+        view = view[written:]
 
 
 def _publish_new(path: str, payload: bytes) -> None:
-    """Atomically publish a new file; hard-link creation refuses overwrite."""
+    """Publish via the sole fixed-name, same-filesystem, no-overwrite primitive."""
+    if path not in REGISTERED_ARTIFACTS[:-1] or path not in TEMPORARY_PATHS:
+        raise ValueError(f"unregistered publication path {path!r}")
+    temporary = TEMPORARY_PATHS[path]
     directory = os.path.dirname(path)
-    fd, temporary = tempfile.mkstemp(dir=directory, prefix=".gate1dc_tmp_")
+    allowed_entries = {os.path.basename(item) for item in REGISTERED_ARTIFACTS}
+    allowed_entries |= {os.path.basename(item)
+                        for item in TEMPORARY_PATHS.values()}
+    unexpected = set(os.listdir(directory)) - allowed_entries
+    if unexpected:
+        raise ValueError(f"unexpected result-directory entries: {sorted(unexpected)}")
+    if os.path.lexists(temporary) or os.path.lexists(path):
+        raise FileExistsError(f"publication path or fixed temporary exists: {path}")
+    position = REGISTERED_ARTIFACTS.index(path)
+    expected_prefix = {os.path.basename(item)
+                       for item in REGISTERED_ARTIFACTS[:position]}
+    if set(os.listdir(directory)) != expected_prefix:
+        raise ValueError("registered publication prefix is not exact")
+    directory_stat = os.stat(directory, follow_symlinks=False)
+    if not stat.S_ISDIR(directory_stat.st_mode) \
+            or stat.S_ISLNK(directory_stat.st_mode):
+        raise OSError("publication destination is not a regular directory")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(temporary, flags, 0o600)
+    closed = False
     try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(payload)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.link(temporary, path)  # atomic and fails if path already exists
+        opened = os.fstat(descriptor)
+        if not stat.S_ISREG(opened.st_mode) or opened.st_dev != directory_stat.st_dev:
+            raise OSError("temporary file is not regular or is on another filesystem")
+        os.fchmod(descriptor, 0o600)
+        if stat.S_IMODE(os.fstat(descriptor).st_mode) != 0o600:
+            raise OSError("temporary file mode is not 0600")
+        _write_all(descriptor, payload)
+        os.fsync(descriptor)
+        os.fchmod(descriptor, 0o444)
+        os.fsync(descriptor)
+        os.close(descriptor)
+        closed = True
+        if os.path.lexists(path):
+            raise FileExistsError(path)
+        os.link(temporary, path, follow_symlinks=False)
+        _fsync_directory(directory)
         os.unlink(temporary)
-    except BaseException:
-        if os.path.exists(temporary):
-            os.unlink(temporary)
-        raise
+        _fsync_directory(directory)
+    finally:
+        if not closed:
+            os.close(descriptor)
 
 
-def write_outputs(runs: list, summary: dict, rows: list) -> dict:
-    """Validate fully in memory, then trace first and summary sentinel last."""
-    trace_bytes = render_trace(rows)
-    summary["registered_artifacts"] = {
-        "trace": {"path": TRACE, "bytes": len(trace_bytes),
-                  "sha256": hashlib.sha256(trace_bytes).hexdigest()},
-        "summary": {"path": SUMMARY,
-                    "self_hash_deferred_to_manifest": True},
-        "stdout": {"path": STDOUT,
-                   "hash_and_bytes_deferred_to_manifest": True},
-        "manifest": {"path": MANIFEST, "written_by_runner": False},
+def _verify_published(path: str, expected: bytes) -> bytes:
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(path, flags)
+    try:
+        info = os.fstat(descriptor)
+        chunks = []
+        remaining = len(expected) + 1
+        while remaining:
+            chunk = os.read(descriptor, remaining)
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        payload = b"".join(chunks)
+    finally:
+        os.close(descriptor)
+    if (not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o444
+            or info.st_nlink != 1 or payload != expected):
+        _fatal(f"published artifact failed immutable byte check: {path}")
+    return payload
+
+
+def _create_result_directory() -> None:
+    if os.path.lexists(OUTDIR):
+        _fatal("result directory exists; scientific retry is forbidden")
+    parent = os.path.dirname(OUTDIR)
+    os.mkdir(OUTDIR, 0o700)
+    info = os.lstat(OUTDIR)
+    if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode) \
+            or stat.S_IMODE(info.st_mode) != 0o700:
+        _fatal("result directory was not created as exact mode-0700 directory")
+    _fsync_directory(parent)
+
+
+def _pre_receipt_cleanup() -> None:
+    """The only cleanup path; valid solely before any receipt final exists."""
+    finals = (RECEIPT, EXECUTION_STARTED, TRACE, STDOUT, SUMMARY, MANIFEST)
+    if any(os.path.lexists(path) for path in finals):
+        raise RuntimeError("pre-receipt cleanup forbidden after any final artifact")
+    if not os.path.lexists(OUTDIR):
+        return
+    info = os.lstat(OUTDIR)
+    if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode):
+        raise RuntimeError("pre-receipt residue is not a directory")
+    receipt_temporary = TEMPORARY_PATHS[RECEIPT]
+    entries = os.listdir(OUTDIR)
+    allowed = {os.path.basename(receipt_temporary)}
+    if not set(entries) <= allowed:
+        raise RuntimeError("pre-receipt residue contains an unexpected entry")
+    if os.path.lexists(receipt_temporary):
+        temporary_info = os.lstat(receipt_temporary)
+        if not stat.S_ISREG(temporary_info.st_mode) \
+                or stat.S_ISLNK(temporary_info.st_mode):
+            raise RuntimeError("receipt temporary residue is not regular")
+        os.unlink(receipt_temporary)
+        _fsync_directory(OUTDIR)
+    if os.listdir(OUTDIR):
+        raise RuntimeError("pre-receipt result directory is not empty")
+    os.rmdir(OUTDIR)
+    _fsync_directory(os.path.dirname(OUTDIR))
+
+
+def _official_invocation(authorized_sha: str) -> str:
+    del authorized_sha
+    return ("env -i PATH=/opt/homebrew/bin:/usr/bin:/bin LC_ALL=C LANG=C "
+            "TZ=UTC PYTHONHASHSEED=0 PYTHONNOUSERSITE=1 "
+            "EBU_GATE1DC_EXECUTION_SHA=<authorized_execution_sha> "
+            "/opt/homebrew/bin/python3 -B -s -X utf8 exp_v30_gate1dc.py")
+
+
+def _build_receipt(repository: dict) -> dict:
+    source_hashes = {path: repository["source_sha256"][path]
+                     for path in SOURCE_HASH_ORDER}
+    return {
+        "schema_version": "1.0.0",
+        "artifact_type": "gate1dc_execution_receipt",
+        "gate": "V3.0 Gate 1D-C",
+        "attempt_id": ATTEMPT_ID,
+        "branch": BRANCH,
+        "remote_ref": REMOTE_REF,
+        "authorized_execution_sha": repository["execution_sha"],
+        "authorized_execution_sha_source": "EBU_GATE1DC_EXECUTION_SHA",
+        "plan_raw_sha256": PLAN_RAW,
+        "plan_canonical_sha256": PLAN_CANONICAL,
+        "contract_raw_sha256": CONTRACT_RAW,
+        "contract_canonical_sha256": CONTRACT_CANONICAL,
+        "source_sha256": source_hashes,
+        "python": dict(repository["python"]),
+        "official_invocation": _official_invocation(repository["execution_sha"]),
+        "authorization_consumed_when": (
+            "the execution_receipt final path exists and the result-directory "
+            "fsync after its exclusive atomic link has returned success"),
     }
+
+
+def _validate_receipt_bytes(receipt: dict, payload: bytes, contract: dict) -> None:
+    expected_order = contract["execution_receipt"]["field_order"]
+    if list(receipt) != expected_order or list(receipt["source_sha256"]) != list(
+            SOURCE_HASH_ORDER):
+        _fatal("receipt or source hashes have wrong field order")
+    if ordered_bytes(receipt) != payload or strict_loads(payload) != receipt:
+        _fatal("receipt bytes are not exact ordered strict JSON")
+    expected_python = {
+        "invoked_as": PYTHON_INVOKED_AS,
+        "executable_realpath": PYTHON_REALPATH,
+        "version": PYTHON_VERSION,
+        "zlib_version": ZLIB_VERSION,
+        "zlib_runtime_version": ZLIB_VERSION,
+        "flags": ["-B", "-s", "-X", "utf8"],
+    }
+    if (receipt["schema_version"] != "1.0.0"
+            or receipt["artifact_type"] != "gate1dc_execution_receipt"
+            or receipt["gate"] != "V3.0 Gate 1D-C"
+            or receipt["attempt_id"] != ATTEMPT_ID
+            or receipt["branch"] != BRANCH
+            or receipt["remote_ref"] != REMOTE_REF
+            or receipt["authorized_execution_sha_source"]
+            != "EBU_GATE1DC_EXECUTION_SHA"
+            or re.fullmatch(_AUTHORIZED_SHA_RE,
+                            receipt["authorized_execution_sha"]) is None
+            or receipt["plan_raw_sha256"] != PLAN_RAW
+            or receipt["plan_canonical_sha256"] != PLAN_CANONICAL
+            or receipt["contract_raw_sha256"] != CONTRACT_RAW
+            or receipt["contract_canonical_sha256"] != CONTRACT_CANONICAL
+            or any(re.fullmatch(_SHA256_RE, value) is None
+                   for value in receipt["source_sha256"].values())
+            or list(receipt["python"]) != list(expected_python)
+            or receipt["python"] != expected_python
+            or receipt["official_invocation"] != _official_invocation(
+                receipt["authorized_execution_sha"])
+            or receipt["authorization_consumed_when"] != (
+                "the execution_receipt final path exists and the result-directory "
+                "fsync after its exclusive atomic link has returned success")):
+        _fatal("receipt fixed schema mismatch")
+
+
+def _build_execution_start(receipt: dict, receipt_bytes: bytes) -> dict:
+    return {
+        "schema_version": "1.0.0",
+        "artifact_type": "gate1dc_execution_started",
+        "gate": "V3.0 Gate 1D-C",
+        "attempt_id": ATTEMPT_ID,
+        "authorized_execution_sha": receipt["authorized_execution_sha"],
+        "execution_receipt_sha256": _sha256_bytes(receipt_bytes),
+        "phase": "scientific_execution_reachable",
+    }
+
+
+def _lock_execution_start() -> int:
+    descriptor = os.open(EXECUTION_STARTED,
+                         os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BaseException:
+        os.close(descriptor)
+        raise
+    return descriptor
+
+
+def _complete_summary(summary: dict, receipt_bytes: bytes, start_bytes: bytes,
+                      trace_bytes: bytes, stdout_bytes: bytes) -> None:
+    summary["registered_artifacts"] = {
+        "execution_receipt": {
+            "path": RECEIPT, "bytes": len(receipt_bytes),
+            "sha256": _sha256_bytes(receipt_bytes)},
+        "execution_started": {
+            "path": EXECUTION_STARTED, "bytes": len(start_bytes),
+            "sha256": _sha256_bytes(start_bytes)},
+        "trace": {"path": TRACE, "bytes": len(trace_bytes),
+                  "sha256": _sha256_bytes(trace_bytes)},
+        "stdout": {"path": STDOUT, "bytes": len(stdout_bytes),
+                   "sha256": _sha256_bytes(stdout_bytes)},
+        "summary": {"path": SUMMARY, "runner_completion_sentinel": True,
+                    "self_hash_deferred_to_manifest": True},
+        "manifest": {"path": MANIFEST, "written_by_runner": False,
+                     "full_study_completion_sentinel": True},
+    }
+    summary["completion"] = {
+        "runner_complete": True,
+        "runner_completion_sentinel": SUMMARY,
+        "study_finalized": False,
+        "full_study_completion_sentinel": MANIFEST,
+        "scientific_attempts_committed": 1,
+        "scientific_retry_permitted": False,
+    }
+
+
+def write_outputs(runs: list, summary: dict, rows: list,
+                  receipt_bytes: bytes, start_bytes: bytes) -> dict:
+    """Validate all bytes, then publish trace, closed stdout, and summary."""
+    trace_bytes = render_trace(rows)
+    stdout_bytes = render_stdout(summary)
+    _complete_summary(summary, receipt_bytes, start_bytes, trace_bytes,
+                      stdout_bytes)
     summary_bytes = render_summary(summary)
-    validate_complete_outputs_in_memory(runs, summary, rows, trace_bytes,
-                                        summary_bytes)
-    for path in (TRACE, SUMMARY, MANIFEST):
+    validate_complete_outputs_in_memory(
+        runs, summary, rows, trace_bytes, stdout_bytes, summary_bytes)
+    for path in (TRACE, STDOUT, SUMMARY, MANIFEST):
         if os.path.lexists(path):
             _fatal(f"refusing to overwrite registered artifact {path}")
     _publish_new(TRACE, trace_bytes)
+    _verify_published(TRACE, trace_bytes)
+    _publish_new(STDOUT, stdout_bytes)
+    _verify_published(STDOUT, stdout_bytes)
     _publish_new(SUMMARY, summary_bytes)
+    _verify_published(SUMMARY, summary_bytes)
     return {
-        TRACE: {"sha256": hashlib.sha256(trace_bytes).hexdigest(),
+        TRACE: {"sha256": _sha256_bytes(trace_bytes),
                 "bytes": len(trace_bytes)},
-        SUMMARY: {"sha256": hashlib.sha256(summary_bytes).hexdigest(),
+        STDOUT: {"sha256": _sha256_bytes(stdout_bytes),
+                 "bytes": len(stdout_bytes)},
+        SUMMARY: {"sha256": _sha256_bytes(summary_bytes),
                   "bytes": len(summary_bytes)},
     }
 
 
+def _signal_abort(signum, _frame):
+    raise SystemExit(f"FATAL: interrupted by signal {signum}; residues preserved")
+
+
 def main() -> int:
-    specs, repository = preflight()
-    print("EBP V3.0 Gate 1D-C - outcome-discrimination study")
-    print(f"  execution SHA: {repository['execution_sha']}")
-    print(f"  plan canonical hash: {PLAN_CANONICAL}")
-    print("  registered: 3 worlds x 2 timesteps x 5 arms = 30 runs; "
-          "200 ticks each; burn-in 50; measurement 150; no seed")
-    print("\n=== 30 registered runs in frozen order ===")
-    runs = execute_registered_study(specs)
-    summary = build_summary(runs, repository)
-    rows = list(trace_rows(runs, repository))
-    artifacts = write_outputs(runs, summary, rows)
-    print("\n=== outcome classes ===")
-    for name, count in sorted(summary["outcome_class_counts"].items()):
-        print(f"  {name:42s} {count:2d}")
-    print("\n=== reported falsifiers fired ===")
-    fired = [key for key, value in summary["falsifiers"].items()
-             if value["fired"]]
-    print("  " + (", ".join(fired) if fired else "none"))
-    for path, descriptor in artifacts.items():
-        print(f"  wrote {path}: {descriptor['bytes']} bytes, "
-              f"sha256 {descriptor['sha256']}")
-    print("MANIFEST.md was not written; post-execution validation/finalization "
-          "is a separate authorization boundary.")
-    print("Every registered run executed exactly once; no run was retried, "
-          "replaced, skipped, duplicated, filtered, or rerun.")
-    return 0
+    specs, repository, plan, contract = preflight()
+    start_descriptor = None
+    prior_handlers = {}
+    for signum in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+        prior_handlers[signum] = signal.signal(signum, _signal_abort)
+    try:
+        _create_result_directory()
+        receipt = _build_receipt(repository)
+        receipt_bytes = ordered_bytes(receipt)
+        _validate_receipt_bytes(receipt, receipt_bytes, contract)
+        _publish_new(RECEIPT, receipt_bytes)
+        _verify_published(RECEIPT, receipt_bytes)
+
+        execution_start = _build_execution_start(receipt, receipt_bytes)
+        if list(execution_start) != contract["execution_started_control"]["field_order"]:
+            _fatal("execution-start field order mismatch")
+        start_bytes = ordered_bytes(execution_start)
+        if strict_loads(start_bytes) != execution_start:
+            _fatal("execution-start bytes are not strict ordered JSON")
+        _publish_new(EXECUTION_STARTED, start_bytes)
+        _verify_published(EXECUTION_STARTED, start_bytes)
+        start_descriptor = _lock_execution_start()
+
+        # The first project/scientific import and every scientific call are
+        # dynamically and lexically after durable receipt/start plus the lock.
+        _load_scientific_modules(plan)
+        runs = execute_registered_study(specs)
+        summary = build_summary(runs, repository)
+        rows = list(trace_rows(runs, repository))
+        write_outputs(runs, summary, rows, receipt_bytes, start_bytes)
+
+        fcntl.flock(start_descriptor, fcntl.LOCK_UN)
+        os.close(start_descriptor)
+        start_descriptor = None
+        return 0
+    except BaseException:
+        if start_descriptor is not None:
+            try:
+                fcntl.flock(start_descriptor, fcntl.LOCK_UN)
+            finally:
+                os.close(start_descriptor)
+                start_descriptor = None
+        if not os.path.lexists(RECEIPT):
+            _pre_receipt_cleanup()
+        raise
+    finally:
+        for signum, handler in prior_handlers.items():
+            signal.signal(signum, handler)
 
 
 if __name__ == "__main__":
