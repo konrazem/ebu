@@ -11,6 +11,7 @@ publishes receipt, start, trace, closed stdout, and summary in that order.
 from __future__ import annotations
 
 import ast
+import ctypes
 import fcntl
 import gzip
 import hashlib
@@ -38,10 +39,20 @@ PROTOCOL_SHA256 = "3122aa673f47290bbee866feb56d16afc4540f552ed7c7b458f097ef4e44d
 ADDENDUM_SHA256 = "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1"
 CONTRACT_RAW = "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155"
 CONTRACT_CANONICAL = "ed90eaf901b506cc91e0a7ba3c4a6329ad6f8730278716383c07f525b748e208"
+COMPATIBILITY_ADDENDUM_SHA256 = (
+    "2e439afad6ba7532aae83631ef4fb7ea6648980be035674f8e2d13faeecd9b51")
+COMPATIBILITY_CONTRACT_RAW = (
+    "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b")
+COMPATIBILITY_CONTRACT_CANONICAL = (
+    "0fbdaf54734d10a88172ed79451dc2e7a31e4021b66c765d5df164a1d93f3077")
 PLAN = "v30_gate1dc_outcome_discrimination_plan.json"
 PROTOCOL = "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md"
 ADDENDUM = "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md"
 CONTRACT = "v30_gate1dc_execution_finalization_contract.json"
+COMPATIBILITY_ADDENDUM = (
+    "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md")
+COMPATIBILITY_CONTRACT = (
+    "v30_gate1dc_macos_environment_compatibility_contract.json")
 
 OUTDIR = "results/v3.0/gate1dc"
 RECEIPT = f"{OUTDIR}/v30_gate1dc_execution_receipt.json"
@@ -62,18 +73,27 @@ TEMPORARY_PATHS = {
 REGISTERED_ARTIFACTS = (
     RECEIPT, EXECUTION_STARTED, TRACE, STDOUT, SUMMARY, MANIFEST,
 )
-SOURCE_HASH_ORDER = (
+ORIGINAL_SOURCE_HASH_ORDER = (
     "AGENTS.md", PROTOCOL, PLAN, ADDENDUM, CONTRACT,
     "gate1dc_v30.py", "test_v30_gate1dc.py", "exp_v30_gate1dc.py",
     "finalize_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
     "ebu_quote_v30.py", "service_v30.py",
 )
+SOURCE_HASH_ORDER = (
+    "AGENTS.md", PROTOCOL, PLAN, ADDENDUM, CONTRACT,
+    COMPATIBILITY_ADDENDUM, COMPATIBILITY_CONTRACT,
+    "gate1dc_v30.py", "test_v30_gate1dc.py", "exp_v30_gate1dc.py",
+    "finalize_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
+    "ebu_quote_v30.py", "service_v30.py",
+)
 FROZEN_SOURCE_HASHES = {
-    "AGENTS.md": "877676e26e5d898642fefe8f5a15d65291091625e0d904f36f483395e7c87062",
+    "AGENTS.md": "92e934b78017962191dd5fcb021bac079d598e4cf80d4722c33b839fabc1d9cf",
     PROTOCOL: PROTOCOL_SHA256,
     PLAN: PLAN_RAW,
     ADDENDUM: ADDENDUM_SHA256,
     CONTRACT: CONTRACT_RAW,
+    COMPATIBILITY_ADDENDUM: COMPATIBILITY_ADDENDUM_SHA256,
+    COMPATIBILITY_CONTRACT: COMPATIBILITY_CONTRACT_RAW,
     "d0_v29.py": "f7fdce8d946b44b4e0bfab9338fcd5c378796f9d14cd80323c53732e08a3bfe9",
     "p1c_v29.py": "a30c869000080b4b0235a9ba1daa517a5b0fe734ba55ac423ae3042da5940729",
     "ebu_quote_v30.py": "44a2ea282837f7613198a06a7037fb89f2f9fd99f05cedde65e0b1ba726e1b79",
@@ -87,6 +107,17 @@ EXPECTED_ENVIRONMENT = {
     "PYTHONHASHSEED": "0",
     "PYTHONNOUSERSITE": "1",
 }
+COMPATIBILITY_VARIABLE = "__CF_USER_TEXT_ENCODING"
+COMPATIBILITY_VALUE = "0x1F5:0x0:0x0"
+ENTRY_ENVIRONMENT_KEYS = (
+    "PATH", "LC_ALL", "LANG", "TZ", "PYTHONHASHSEED",
+    "PYTHONNOUSERSITE", COMPATIBILITY_VARIABLE,
+    "EBU_GATE1DC_EXECUTION_SHA",
+)
+NORMALIZED_ENVIRONMENT_KEYS = (
+    "PATH", "LC_ALL", "LANG", "TZ", "PYTHONHASHSEED",
+    "PYTHONNOUSERSITE", "EBU_GATE1DC_EXECUTION_SHA",
+)
 PYTHON_INVOKED_AS = "/opt/homebrew/bin/python3"
 PYTHON_REALPATH = ("/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/"
                    "Python.framework/Versions/3.14/bin/python3.14")
@@ -213,6 +244,149 @@ def ordered_bytes(value) -> bytes:
                            "utf-8")
 
 
+def _raw_environment_entries() -> list[tuple[str, str]]:
+    """Read the process-entry vector without collapsing duplicate names."""
+    try:
+        process = ctypes.CDLL(None)
+        if sys.platform == "darwin":
+            get_environ = process._NSGetEnviron
+            get_environ.restype = ctypes.POINTER(
+                ctypes.POINTER(ctypes.c_char_p))
+            environ = get_environ()[0]
+        else:
+            environ = ctypes.POINTER(ctypes.c_char_p).in_dll(
+                process, "environ")
+        entries = []
+        index = 0
+        while environ[index] is not None:
+            text = os.fsdecode(environ[index])
+            key, separator, value = text.partition("=")
+            if separator != "=" or not key:
+                _fatal("malformed process-entry environment declaration")
+            entries.append((key, value))
+            index += 1
+        return entries
+    except (AttributeError, OSError, TypeError, ValueError) as error:
+        _fatal(f"cannot inspect raw process-entry environment: {error}")
+
+
+def _normalize_entry_environment(environment=None, raw_entries=None) -> str:
+    """Validate exact eight-key entry, delete only the compatibility key."""
+    actual_environment = os.environ if environment is None else environment
+    if raw_entries is None:
+        raw_entries = (_raw_environment_entries() if environment is None
+                       else list(actual_environment.items()))
+    raw_entries = list(raw_entries)
+    raw_keys = [key for key, _value in raw_entries]
+    if len(raw_entries) != len(ENTRY_ENVIRONMENT_KEYS) \
+            or len(set(raw_keys)) != len(raw_keys) \
+            or set(raw_keys) != set(ENTRY_ENVIRONMENT_KEYS):
+        _fatal("process entry does not contain exactly eight unique frozen keys")
+    raw_environment = dict(raw_entries)
+    snapshot = dict(actual_environment)
+    if raw_environment != snapshot:
+        _fatal("raw and Python process-entry environments differ")
+    authorized_sha = snapshot.get("EBU_GATE1DC_EXECUTION_SHA")
+    expected_entry = {
+        **EXPECTED_ENVIRONMENT,
+        COMPATIBILITY_VARIABLE: COMPATIBILITY_VALUE,
+        "EBU_GATE1DC_EXECUTION_SHA": authorized_sha,
+    }
+    if set(snapshot) != set(expected_entry) or any(
+            snapshot.get(key) != value for key, value in expected_entry.items()):
+        _fatal("environment does not equal the frozen eight-key entry allowlist")
+    if snapshot.get(COMPATIBILITY_VARIABLE) != COMPATIBILITY_VALUE:
+        _fatal("macOS compatibility value is not the exact frozen value")
+    if authorized_sha is None or re.fullmatch(
+            _AUTHORIZED_SHA_RE, authorized_sha) is None:
+        _fatal("EBU_GATE1DC_EXECUTION_SHA must be one lowercase 40-hex SHA")
+    try:
+        del actual_environment[COMPATIBILITY_VARIABLE]
+    except BaseException as error:
+        _fatal(f"failed to delete only the macOS compatibility key: {error}")
+    expected_normalized = {
+        **EXPECTED_ENVIRONMENT, "EBU_GATE1DC_EXECUTION_SHA": authorized_sha,
+    }
+    if dict(actual_environment) != expected_normalized \
+            or set(actual_environment) != set(NORMALIZED_ENVIRONMENT_KEYS):
+        _fatal("post-normalization environment differs from exact seven-key allowlist")
+    return authorized_sha
+
+
+def _validate_compatibility_contract() -> dict:
+    """Strictly validate the compatibility contract before any Git action."""
+    try:
+        raw = open(COMPATIBILITY_CONTRACT, "rb").read()
+    except OSError as error:
+        _fatal(f"cannot read macOS compatibility contract: {error}")
+    if _sha256_bytes(raw) != COMPATIBILITY_CONTRACT_RAW:
+        _fatal("raw macOS compatibility-contract SHA-256 mismatch")
+    try:
+        compatibility = strict_loads(raw)
+    except (TypeError, UnicodeError, ValueError) as error:
+        _fatal(f"strict macOS compatibility-contract parse failed: {error}")
+    if _sha256_bytes(canonical_bytes(compatibility)) != \
+            COMPATIBILITY_CONTRACT_CANONICAL:
+        _fatal("canonical macOS compatibility-contract SHA-256 mismatch")
+    entry = compatibility.get("entry_environment", {})
+    normalized = compatibility.get("normalization", {}).get(
+        "normalized_environment", {})
+    expected_entry_values = {
+        **EXPECTED_ENVIRONMENT,
+        COMPATIBILITY_VARIABLE: COMPATIBILITY_VALUE,
+        "EBU_GATE1DC_EXECUTION_SHA": "<authorized_execution_sha>",
+    }
+    expected_normalized_values = {
+        **EXPECTED_ENVIRONMENT,
+        "EBU_GATE1DC_EXECUTION_SHA": "<authorized_execution_sha>",
+    }
+    runner_line = (
+        "env -i PATH=/opt/homebrew/bin:/usr/bin:/bin LC_ALL=C LANG=C "
+        "TZ=UTC PYTHONHASHSEED=0 PYTHONNOUSERSITE=1 "
+        "__CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0 "
+        "EBU_GATE1DC_EXECUTION_SHA=\"${AUTHORIZED_EXECUTION_SHA}\" "
+        "/opt/homebrew/bin/python3 -B -s -X utf8 exp_v30_gate1dc.py")
+    invocations = compatibility.get("official_invocations", {})
+    if (compatibility.get("compatibility_sources") != {
+            "markdown": COMPATIBILITY_ADDENDUM,
+            "json": COMPATIBILITY_CONTRACT,
+            "markdown_role": "normative human rendering",
+            "json_role": "mechanical schema and ordering source",
+            "agreement_rule": (
+                "Any disagreement between the compatibility Markdown and JSON "
+                "is an integrity failure and causes fail-closed refusal; "
+                "neither may be applied selectively."),
+            }
+            or entry.get("key_count") != 8
+            or tuple(entry.get("key_order", ())) != ENTRY_ENVIRONMENT_KEYS
+            or entry.get("exact_values") != expected_entry_values
+            or entry.get("additional_or_missing_keys_permitted") is not False
+            or compatibility.get("normalization", {}).get("delete_only")
+            != COMPATIBILITY_VARIABLE
+            or normalized.get("key_count") != 7
+            or tuple(normalized.get("key_order", ()))
+            != NORMALIZED_ENVIRONMENT_KEYS
+            or normalized.get("exact_values") != expected_normalized_values
+            or compatibility.get("normalization", {}).get(
+                "other_normalization_permitted") is not False
+            or invocations.get("runner_shell_lines") != [
+                "AUTHORIZED_EXECUTION_SHA='<AUDITED_40_LOWERCASE_HEX_EXECUTION_SHA>'",
+                runner_line]
+            or tuple(compatibility.get("receipt_integration", {}).get(
+                "source_sha256_order", ())) != SOURCE_HASH_ORDER
+            or compatibility.get("receipt_integration", {}).get(
+                "top_level_field_count") != 16
+            or compatibility.get("receipt_integration", {}).get(
+                "contract_raw_sha256_meaning") != (
+                    "Unchanged: SHA-256 of the exact committed "
+                    "v30_gate1dc_execution_finalization_contract.json bytes "
+                    "at the authorized execution SHA.")
+            or compatibility.get("manifest_integration", {}).get(
+                "provenance_row_count") != 15):
+        _fatal("macOS compatibility contract schema or ordering mismatch")
+    return compatibility
+
+
 def _git_bytes(*arguments: str) -> bytes:
     try:
         completed = subprocess.run(
@@ -286,10 +460,9 @@ def _validate_information_boundary() -> None:
         _fatal("arm S does not expose exactly the current-demand boundary")
 
 
-def _validate_runtime() -> str:
+def _validate_runtime(authorized_sha: str) -> None:
     if len(sys.argv) != 1 or sys.argv[0] != "exp_v30_gate1dc.py":
         _fatal("this runner takes no arguments and must use its exact filename")
-    authorized_sha = os.environ.get("EBU_GATE1DC_EXECUTION_SHA")
     expected_environment = {
         **EXPECTED_ENVIRONMENT, "EBU_GATE1DC_EXECUTION_SHA": authorized_sha,
     }
@@ -297,9 +470,8 @@ def _validate_runtime() -> str:
             os.environ.get(key) != value
             for key, value in expected_environment.items()):
         _fatal("environment does not equal the frozen env -i allowlist")
-    if authorized_sha is None or re.fullmatch(
-            _AUTHORIZED_SHA_RE, authorized_sha) is None:
-        _fatal("EBU_GATE1DC_EXECUTION_SHA must be one lowercase 40-hex SHA")
+    if re.fullmatch(_AUTHORIZED_SHA_RE, authorized_sha) is None:
+        _fatal("normalized execution SHA is not lowercase 40-hex")
     original = tuple(getattr(sys, "orig_argv", ()))
     expected_argv = (PYTHON_INVOKED_AS, "-B", "-s", "-X", "utf8",
                      "exp_v30_gate1dc.py")
@@ -317,7 +489,6 @@ def _validate_runtime() -> str:
         _fatal("Python flags must be exactly compatible with -B -s -X utf8")
     if any(name in sys.modules for name in _SCIENTIFIC_MODULES):
         _fatal("scientific module became reachable before receipt durability")
-    return authorized_sha
 
 
 def _validate_repository(authorized_sha: str) -> dict:
@@ -388,7 +559,8 @@ def _validate_repository(authorized_sha: str) -> dict:
     }
 
 
-def _validate_contract_and_plan() -> tuple[dict, dict, list]:
+def _validate_contract_and_plan(
+        compatibility: dict) -> tuple[dict, dict, list]:
     plan_raw = open(PLAN, "rb").read()
     contract_raw = open(CONTRACT, "rb").read()
     if _sha256_bytes(plan_raw) != PLAN_RAW or _sha256_bytes(contract_raw) != CONTRACT_RAW:
@@ -398,8 +570,11 @@ def _validate_contract_and_plan() -> tuple[dict, dict, list]:
     if _sha256_bytes(canonical_bytes(plan)) != PLAN_CANONICAL \
             or _sha256_bytes(canonical_bytes(contract)) != CONTRACT_CANONICAL:
         _fatal("canonical plan or execution-contract SHA-256 mismatch")
-    if _sha256(PROTOCOL) != PROTOCOL_SHA256 or _sha256(ADDENDUM) != ADDENDUM_SHA256:
-        _fatal("protocol or execution-addendum SHA-256 mismatch")
+    if (_sha256(PROTOCOL) != PROTOCOL_SHA256
+            or _sha256(ADDENDUM) != ADDENDUM_SHA256
+            or _sha256(COMPATIBILITY_ADDENDUM)
+            != COMPATIBILITY_ADDENDUM_SHA256):
+        _fatal("protocol or operational-addendum SHA-256 mismatch")
     legal = contract.get("legal_and_scientific_status", {})
     if legal.get("scientific_precedence") != [PROTOCOL, PLAN] \
             or legal.get("scientific_preregistration_unchanged") is not True \
@@ -418,8 +593,15 @@ def _validate_contract_and_plan() -> tuple[dict, dict, list]:
     if any(paths.get(key) != value for key, value in expected_paths.items()):
         _fatal("contract path inventory mismatch")
     receipt_contract = contract.get("execution_receipt", {})
-    if tuple(receipt_contract.get("source_hash_order", ())) != SOURCE_HASH_ORDER:
-        _fatal("receipt source-hash order mismatch")
+    if tuple(receipt_contract.get("source_hash_order", ())) != \
+            ORIGINAL_SOURCE_HASH_ORDER:
+        _fatal("original receipt source-hash order mismatch")
+    if tuple(compatibility.get("receipt_integration", {}).get(
+            "top_level_field_order", ())) != tuple(
+                receipt_contract.get("field_order", ())) \
+            or tuple(compatibility.get("receipt_integration", {}).get(
+                "source_sha256_order", ())) != SOURCE_HASH_ORDER:
+        _fatal("amended receipt source-hash order mismatch")
     expected_temporary_names = {
         "receipt": os.path.basename(TEMPORARY_PATHS[RECEIPT]),
         "execution_started": os.path.basename(TEMPORARY_PATHS[EXECUTION_STARTED]),
@@ -481,8 +663,10 @@ def _validate_contract_and_plan() -> tuple[dict, dict, list]:
 
 def preflight() -> tuple[list, dict, dict, dict]:
     """Finish every check before creating the result directory or receipt."""
-    authorized_sha = _validate_runtime()
-    plan, contract, specs = _validate_contract_and_plan()
+    authorized_sha = _normalize_entry_environment()
+    compatibility = _validate_compatibility_contract()
+    _validate_runtime(authorized_sha)
+    plan, contract, specs = _validate_contract_and_plan(compatibility)
     for source in _RANDOMNESS_GUARDED_SOURCES:
         hits = _randomness_imports(source)
         if hits:
@@ -499,6 +683,10 @@ def _load_scientific_modules(plan: dict) -> None:
     eq = importlib.import_module("ebu_quote_v30")
     sv = importlib.import_module("service_v30")
     if (dc.PLAN_RAW != PLAN_RAW or dc.PLAN_CANONICAL != PLAN_CANONICAL
+            or dc.COMPATIBILITY_CONTRACT_RAW != COMPATIBILITY_CONTRACT_RAW
+            or dc.COMPATIBILITY_CONTRACT_CANONICAL
+            != COMPATIBILITY_CONTRACT_CANONICAL
+            or tuple(dc.SOURCE_HASH_ORDER) != SOURCE_HASH_ORDER
             or tuple(dc.EXEC_ARMS) != EXEC_ARMS
             or tuple(dc.WORLD_NAMES) != WORLD_NAMES
             or tuple(dc.DT_LABELS) != DT_LABELS):
@@ -1314,6 +1502,7 @@ def _official_invocation(authorized_sha: str) -> str:
     del authorized_sha
     return ("env -i PATH=/opt/homebrew/bin:/usr/bin:/bin LC_ALL=C LANG=C "
             "TZ=UTC PYTHONHASHSEED=0 PYTHONNOUSERSITE=1 "
+            "__CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0 "
             "EBU_GATE1DC_EXECUTION_SHA=<authorized_execution_sha> "
             "/opt/homebrew/bin/python3 -B -s -X utf8 exp_v30_gate1dc.py")
 

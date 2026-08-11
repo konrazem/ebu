@@ -39,6 +39,16 @@ CONTRACT_RAW = "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155
 CONTRACT_CANONICAL = "ed90eaf901b506cc91e0a7ba3c4a6329ad6f8730278716383c07f525b748e208"
 ADDENDUM_PATH = "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md"
 ADDENDUM_SHA256 = "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1"
+COMPATIBILITY_ADDENDUM_PATH = (
+    "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md")
+COMPATIBILITY_ADDENDUM_SHA256 = (
+    "2e439afad6ba7532aae83631ef4fb7ea6648980be035674f8e2d13faeecd9b51")
+COMPATIBILITY_CONTRACT_PATH = (
+    "v30_gate1dc_macos_environment_compatibility_contract.json")
+COMPATIBILITY_CONTRACT_RAW = (
+    "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b")
+COMPATIBILITY_CONTRACT_CANONICAL = (
+    "0fbdaf54734d10a88172ed79451dc2e7a31e4021b66c765d5df164a1d93f3077")
 
 EXEC_ARMS = (
     "A_full_multi_edge_p1c",
@@ -100,6 +110,8 @@ SOURCE_HASH_ORDER = (
     PLAN_PATH,
     ADDENDUM_PATH,
     CONTRACT_PATH,
+    COMPATIBILITY_ADDENDUM_PATH,
+    COMPATIBILITY_CONTRACT_PATH,
     "gate1dc_v30.py",
     "test_v30_gate1dc.py",
     "exp_v30_gate1dc.py",
@@ -1173,7 +1185,7 @@ def validate_output_contract() -> None:
         raise ValueError("registered artifact publication order mismatch")
     if len(TEMPORARY_BASENAMES) != 6 or len(set(TEMPORARY_BASENAMES)) != 6:
         raise ValueError("temporary artifact names mismatch")
-    if len(SOURCE_HASH_ORDER) != 13 or len(set(SOURCE_HASH_ORDER)) != 13:
+    if len(SOURCE_HASH_ORDER) != 15 or len(set(SOURCE_HASH_ORDER)) != 15:
         raise ValueError("execution source hash inventory mismatch")
     if len(SUMMARY_REQUIRED_BLOCKS) != 24:
         raise ValueError("runner summary top-level schema mismatch")

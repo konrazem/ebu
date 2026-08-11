@@ -781,7 +781,7 @@ def test_official_runner_static_guards() -> None:
           and runner.STDOUT == dc.STDOUT_PATH,
           "runner output filenames exactly match the frozen contract")
     check(tuple(runner.SOURCE_HASH_ORDER) == dc.SOURCE_HASH_ORDER,
-          "runner locks all 13 sources in receipt order")
+          "runner locks all 15 sources in amended receipt order")
     check(runner.PLAN_RAW == dc.PLAN_RAW and runner.PLAN_CANONICAL == dc.PLAN_CANONICAL
           and runner.CONTRACT_RAW == dc.CONTRACT_RAW
           and runner.CONTRACT_CANONICAL == dc.CONTRACT_CANONICAL,
@@ -820,14 +820,149 @@ def test_operational_hashes_strict_json_and_schemas() -> None:
             "UTF-8 BOM is rejected", "BOM")
     rejects(lambda: finalizer.strict_json_loads(b'{} trailing'),
             "trailing JSON data is rejected")
+    compatibility_raw = open(runner.COMPATIBILITY_CONTRACT, "rb").read()
+    compatibility = finalizer.strict_json_loads(compatibility_raw)
     check(tuple(contract["execution_receipt"]["source_hash_order"])
+          == runner.ORIGINAL_SOURCE_HASH_ORDER,
+          "original execution contract retains its exact 13-path order")
+    check(tuple(compatibility["receipt_integration"]["source_sha256_order"])
           == runner.SOURCE_HASH_ORDER,
-          "receipt source schema has exact 13-path order")
+          "compatibility contract amends receipt provenance to 15 paths")
     check(contract["runner_summary_completion_contract"]
           ["required_top_level_fields"] == list(dc.SUMMARY_REQUIRED_BLOCKS),
           "summary top-level schema is exact")
     check(len(contract["failure_retry_matrix"]) == 17,
           "failure/retry matrix has exactly 17 cases")
+
+
+def test_macos_environment_compatibility() -> None:
+    group("exact macOS entry normalization and compatibility provenance")
+    raw = open(runner.COMPATIBILITY_CONTRACT, "rb").read()
+    compatibility = finalizer.strict_json_loads(raw)
+    canonical = finalizer.canonical_json_bytes(compatibility)
+    check(hashlib.sha256(raw).hexdigest()
+          == runner.COMPATIBILITY_CONTRACT_RAW
+          == finalizer.COMPATIBILITY_CONTRACT_RAW
+          == dc.COMPATIBILITY_CONTRACT_RAW,
+          "compatibility contract raw SHA-256 lock is exact")
+    check(hashlib.sha256(canonical).hexdigest()
+          == runner.COMPATIBILITY_CONTRACT_CANONICAL
+          == finalizer.COMPATIBILITY_CONTRACT_CANONICAL
+          == dc.COMPATIBILITY_CONTRACT_CANONICAL,
+          "compatibility contract canonical SHA-256 lock is exact")
+    addendum_raw = open(runner.COMPATIBILITY_ADDENDUM, "rb").read()
+    check(hashlib.sha256(addendum_raw).hexdigest()
+          == runner.COMPATIBILITY_ADDENDUM_SHA256
+          == finalizer.COMPATIBILITY_ADDENDUM_SHA256
+          == dc.COMPATIBILITY_ADDENDUM_SHA256,
+          "compatibility addendum raw SHA-256 lock is exact")
+    check(runner._validate_compatibility_contract() == compatibility
+          and finalizer._validate_compatibility_contract() == compatibility,
+          "runner and finalizer strictly enforce the compatibility contract")
+    check(tuple(compatibility["entry_environment"]["key_order"])
+          == runner.ENTRY_ENVIRONMENT_KEYS
+          == finalizer.ENTRY_ENVIRONMENT_KEYS
+          and tuple(compatibility["normalization"]["normalized_environment"]
+                    ["key_order"]) == runner.NORMALIZED_ENVIRONMENT_KEYS
+          == finalizer.NORMALIZED_ENVIRONMENT_KEYS,
+          "eight-key entry and seven-key normalized orders are exact")
+    check(tuple(compatibility["receipt_integration"]["source_sha256_order"])
+          == runner.SOURCE_HASH_ORDER == finalizer.SOURCE_HASH_ORDER
+          == dc.SOURCE_HASH_ORDER and len(dc.SOURCE_HASH_ORDER) == 15,
+          "receipt source provenance has exactly 15 amended entries")
+    check(compatibility["manifest_integration"]["compatibility_rows"] == [
+        {"order": 6, "source": runner.COMPATIBILITY_ADDENDUM},
+        {"order": 7, "source": runner.COMPATIBILITY_CONTRACT}],
+          "manifest compatibility provenance is fixed at rows 6 and 7")
+    expected_receipt_invocation = (
+        "env -i PATH=/opt/homebrew/bin:/usr/bin:/bin LC_ALL=C LANG=C "
+        "TZ=UTC PYTHONHASHSEED=0 PYTHONNOUSERSITE=1 "
+        "__CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0 "
+        "EBU_GATE1DC_EXECUTION_SHA=<authorized_execution_sha> "
+        "/opt/homebrew/bin/python3 -B -s -X utf8 exp_v30_gate1dc.py")
+    check(runner._official_invocation("a" * 40)
+          == expected_receipt_invocation,
+          "receipt invocation inserts compatibility metadata in frozen position")
+
+    def exact_entry(module):
+        return {
+            **module.EXPECTED_ENVIRONMENT,
+            module.COMPATIBILITY_VARIABLE: module.COMPATIBILITY_VALUE,
+            "EBU_GATE1DC_EXECUTION_SHA": "a" * 40,
+        }
+
+    class DeleteFailure(dict):
+        def __delitem__(self, key):
+            if key == runner.COMPATIBILITY_VARIABLE:
+                raise OSError(errno.EPERM, "synthetic deletion failure")
+            super().__delitem__(key)
+
+    class PostNormalizationMutation(dict):
+        def __delitem__(self, key):
+            super().__delitem__(key)
+            self["PATH"] = "/synthetic/injected/path"
+
+    for name, module in (("runner", runner), ("finalizer", finalizer)):
+        environment = exact_entry(module)
+        authorized_sha = module._normalize_entry_environment(
+            environment, list(environment.items()))
+        check(authorized_sha == "a" * 40
+              and environment == {
+                  **module.EXPECTED_ENVIRONMENT,
+                  "EBU_GATE1DC_EXECUTION_SHA": "a" * 40}
+              and module.COMPATIBILITY_VARIABLE not in environment,
+              f"{name}: exact entry deletes only compatibility metadata")
+
+        missing = exact_entry(module)
+        del missing["LANG"]
+        rejects(lambda module=module, value=missing:
+                module._normalize_entry_environment(
+                    value, list(value.items())),
+                f"{name}: missing environment key fails closed")
+
+        incorrect = exact_entry(module)
+        incorrect[module.COMPATIBILITY_VARIABLE] = "injected-value"
+        rejects(lambda module=module, value=incorrect:
+                module._normalize_entry_environment(
+                    value, list(value.items())),
+                f"{name}: incorrect injected compatibility value fails closed")
+
+        duplicate = exact_entry(module)
+        duplicate_entries = list(duplicate.items()) + [
+            (module.COMPATIBILITY_VARIABLE, module.COMPATIBILITY_VALUE)]
+        rejects(lambda module=module, value=duplicate,
+                entries=duplicate_entries:
+                module._normalize_entry_environment(value, entries),
+                f"{name}: duplicate environment declaration fails closed")
+
+        extra = exact_entry(module)
+        extra["SYNTHETIC_EXTRA"] = "forbidden"
+        rejects(lambda module=module, value=extra:
+                module._normalize_entry_environment(
+                    value, list(value.items())),
+                f"{name}: additional environment key fails closed")
+
+        deletion_failure = DeleteFailure(exact_entry(module))
+        rejects(lambda module=module, value=deletion_failure:
+                module._normalize_entry_environment(
+                    value, list(value.items())),
+                f"{name}: failed compatibility-key deletion fails closed",
+                "delet")
+
+        post_mismatch = PostNormalizationMutation(exact_entry(module))
+        rejects(lambda module=module, value=post_mismatch:
+                module._normalize_entry_environment(
+                    value, list(value.items())),
+                f"{name}: post-normalization mismatch fails closed",
+                "post-normalization")
+
+    project_sources = (
+        "gate1dc_v30.py", "d0_v29.py", "p1c_v29.py",
+        "ebu_quote_v30.py", "service_v30.py",
+    )
+    check(all(runner.COMPATIBILITY_VARIABLE not in open(
+        path, "r", encoding="utf-8").read() for path in project_sources),
+          "no scientific/project module reads or depends on compatibility metadata")
 
 
 def test_state_machine_and_all_failure_rows() -> None:
@@ -1321,6 +1456,12 @@ def test_manifest_exact_rendering_and_sentinels() -> None:
           and all(f"| {index} | {outcome} |" in text
                   for index, outcome in enumerate(finalizer.OUTCOME_ORDER, 1)),
           "inventory, PC1-PC4, and all nine outcome rows are complete and ordered")
+    source_rows = [f"| {index} | {path} |"
+                   for index, path in enumerate(finalizer.SOURCE_HASH_ORDER, 1)]
+    check(all(row in text for row in source_rows)
+          and [text.index(row) for row in source_rows]
+          == sorted(text.index(row) for row in source_rows),
+          "all 15 source-provenance rows render in amended order")
     check(all(statement in text for statement in plan["non_claims"])
           and all(f"| H{index} |" in text for index in range(1, 11))
           and all(f"| F{index} |" in text for index in range(1, 17)),
@@ -1399,10 +1540,12 @@ def test_refusal_guards_and_no_stdout_after_summary() -> None:
     finalizer_source = open("finalize_v30_gate1dc.py", "r", encoding="utf-8").read()
     preflight_source = inspect.getsource(runner.preflight)
     repository_source = inspect.getsource(runner._validate_repository)
-    check(preflight_source.index("_validate_runtime()")
-          < preflight_source.index("_validate_contract_and_plan()")
+    check(preflight_source.index("_normalize_entry_environment()")
+          < preflight_source.index("_validate_compatibility_contract()")
+          < preflight_source.index("_validate_runtime(authorized_sha)")
+          < preflight_source.index("_validate_contract_and_plan(compatibility)")
           < preflight_source.index("_validate_repository"),
-          "environment/schema/Git checks are complete pre-receipt")
+          "normalization and compatibility/schema checks precede Git and receipt")
     check("ls-remote" in repository_source and "porcelain=v2" in repository_source
           and "worktree/Git blob byte mismatch" in repository_source,
           "live ref, dirty tree, and source blob mismatches fail closed")
@@ -1420,6 +1563,11 @@ def test_refusal_guards_and_no_stdout_after_summary() -> None:
           < main_source.index("_load_scientific_modules"),
           "receipt durability precedes scientific import reachability")
     finalize_source = inspect.getsource(finalizer.finalize)
+    check(finalize_source.index("_normalize_entry_environment()")
+          < finalize_source.index("_validate_compatibility_contract()")
+          < finalize_source.index("_validate_runtime(authorized_sha)")
+          < finalize_source.index("_validate_git_state(authorized_sha)"),
+          "finalizer normalization and compatibility validation precede Git")
     numbered = [finalize_source.index(f"# {index}.") for index in range(1, 16)]
     check(numbered == sorted(numbered),
           "finalizer implements the exact numbered 1-through-15 sequence")
@@ -1434,7 +1582,7 @@ def test_operational_refusal_stubs_and_sentinel_states() -> None:
     original_argv = runner.sys.argv
     runner.sys.argv = ["exp_v30_gate1dc.py", "--forbidden"]
     try:
-        rejects(runner._validate_runtime,
+        rejects(lambda: runner._validate_runtime("a" * 40),
                 "runner rejects every command-line substitution", "no arguments")
     finally:
         runner.sys.argv = original_argv
@@ -1540,6 +1688,7 @@ def main() -> int:
     test_static_execution_guards()
     test_official_runner_static_guards()
     test_operational_hashes_strict_json_and_schemas()
+    test_macos_environment_compatibility()
     test_state_machine_and_all_failure_rows()
     test_exclusive_publication_fsync_and_same_filesystem()
     test_runner_publication_cut_points_signals_and_sigkill_stub()
