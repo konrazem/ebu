@@ -33,8 +33,22 @@ integrity take priority over speed.
   the explicitly superseded environment entry, normalization, official
   invocations, source-provenance inventory, and dependent manifest-provenance
   rows. They change no scientific content or other operational mechanic.
+- `V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md` and
+  `v30_gate1dc_macos_python_launcher_compatibility_contract.json` are the
+  authoritative prospective sources for the Gate 1D-C macOS process-visible
+  Python launcher identity, exact `sys.orig_argv` validation, and the insertion
+  of those two sources into receipt and manifest provenance. Their precedence
+  is limited to that launcher check and those dependent provenance extensions.
+  They do not change the official shell invocation path, receipt
+  `python.invoked_as`, executable-realpath check, environment contract,
+  scientific content, or any other operational mechanic.
+- The macOS environment compatibility sources retain precedence over process-
+  entry environment, normalization, and the byte-identical official
+  invocations. Their 15-source receipt order and 15-row manifest provenance
+  are superseded only by the launcher sources' exact 17-source and 17-row
+  extensions.
 - The execution/finalization addendum and contract retain precedence over every
-  operational rule outside that narrow compatibility scope, including all
+  operational rule outside those narrow compatibility scopes, including all
   state, receipt durability, retry, publication, failure, finalization, and
   result-commit mechanics. Any conflict outside the narrow scope requires
   fail-closed refusal.
