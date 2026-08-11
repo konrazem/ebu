@@ -47,6 +47,16 @@ COMPATIBILITY_CONTRACT_RAW = (
     "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b")
 COMPATIBILITY_CONTRACT_CANONICAL = (
     "0fbdaf54734d10a88172ed79451dc2e7a31e4021b66c765d5df164a1d93f3077")
+LAUNCHER_COMPATIBILITY_ADDENDUM_PATH = (
+    "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md")
+LAUNCHER_COMPATIBILITY_CONTRACT_PATH = (
+    "v30_gate1dc_macos_python_launcher_compatibility_contract.json")
+LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256 = (
+    "d81afc5d77e1d2c7ccd9ceaae44d96ce33ddbb85ddc35fe0a0a0e1141394e8c3")
+LAUNCHER_COMPATIBILITY_CONTRACT_RAW = (
+    "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82")
+LAUNCHER_COMPATIBILITY_CONTRACT_CANONICAL = (
+    "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82")
 
 RESULT_DIRECTORY = "results/v3.0/gate1dc"
 RECEIPT_PATH = f"{RESULT_DIRECTORY}/v30_gate1dc_execution_receipt.json"
@@ -73,21 +83,34 @@ ORIGINAL_SOURCE_HASH_ORDER = (
     "finalize_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
     "ebu_quote_v30.py", "service_v30.py",
 )
-SOURCE_HASH_ORDER = (
+ENVIRONMENT_SOURCE_HASH_ORDER = (
     "AGENTS.md", PROTOCOL_PATH, PLAN_PATH, ADDENDUM_PATH, CONTRACT_PATH,
     COMPATIBILITY_ADDENDUM_PATH, COMPATIBILITY_CONTRACT_PATH,
     "gate1dc_v30.py", "test_v30_gate1dc.py", "exp_v30_gate1dc.py",
     "finalize_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
     "ebu_quote_v30.py", "service_v30.py",
 )
+SOURCE_HASH_ORDER = (
+    "AGENTS.md", PROTOCOL_PATH, PLAN_PATH, ADDENDUM_PATH, CONTRACT_PATH,
+    COMPATIBILITY_ADDENDUM_PATH, COMPATIBILITY_CONTRACT_PATH,
+    LAUNCHER_COMPATIBILITY_ADDENDUM_PATH,
+    LAUNCHER_COMPATIBILITY_CONTRACT_PATH,
+    "gate1dc_v30.py", "test_v30_gate1dc.py", "exp_v30_gate1dc.py",
+    "finalize_v30_gate1dc.py", "d0_v29.py", "p1c_v29.py",
+    "ebu_quote_v30.py", "service_v30.py",
+)
 FROZEN_SOURCE_HASHES = {
-    "AGENTS.md": "92e934b78017962191dd5fcb021bac079d598e4cf80d4722c33b839fabc1d9cf",
+    "AGENTS.md": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e",
     PROTOCOL_PATH: PROTOCOL_SHA256,
     PLAN_PATH: PLAN_RAW,
     ADDENDUM_PATH: ADDENDUM_SHA256,
     CONTRACT_PATH: CONTRACT_RAW,
     COMPATIBILITY_ADDENDUM_PATH: COMPATIBILITY_ADDENDUM_SHA256,
     COMPATIBILITY_CONTRACT_PATH: COMPATIBILITY_CONTRACT_RAW,
+    LAUNCHER_COMPATIBILITY_ADDENDUM_PATH:
+        LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256,
+    LAUNCHER_COMPATIBILITY_CONTRACT_PATH:
+        LAUNCHER_COMPATIBILITY_CONTRACT_RAW,
     "d0_v29.py": "f7fdce8d946b44b4e0bfab9338fcd5c378796f9d14cd80323c53732e08a3bfe9",
     "p1c_v29.py": "a30c869000080b4b0235a9ba1daa517a5b0fe734ba55ac423ae3042da5940729",
     "ebu_quote_v30.py": "44a2ea282837f7613198a06a7037fb89f2f9fd99f05cedde65e0b1ba726e1b79",
@@ -115,6 +138,9 @@ NORMALIZED_ENVIRONMENT_KEYS = (
 PYTHON_INVOKED_AS = "/opt/homebrew/bin/python3"
 PYTHON_REALPATH = ("/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/"
                    "Python.framework/Versions/3.14/bin/python3.14")
+PYTHON_PROCESS_LAUNCHER = (
+    "/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/Python.framework/"
+    "Versions/3.14/Resources/Python.app/Contents/MacOS/Python")
 PYTHON_VERSION = "3.14.2"
 ZLIB_VERSION = "1.2.12"
 ATTEMPT_ID = "gate1dc-single-authorized-attempt"
@@ -213,6 +239,7 @@ _NETWORK_TRANSIENT_MARKERS = (
     "failed to connect", "couldn't connect", "no route to host",
     "network is unreachable",
 )
+_ORIG_ARGV_ABSENT = object()
 
 
 class TransientFinalizationError(RuntimeError):
@@ -385,7 +412,7 @@ def _validate_compatibility_contract() -> dict:
                 "AUTHORIZED_EXECUTION_SHA='<THE_SAME_AUDITED_40_LOWERCASE_HEX_EXECUTION_SHA>'",
                 finalizer_line]
             or tuple(compatibility.get("receipt_integration", {}).get(
-                "source_sha256_order", ())) != SOURCE_HASH_ORDER
+                "source_sha256_order", ())) != ENVIRONMENT_SOURCE_HASH_ORDER
             or compatibility.get("receipt_integration", {}).get(
                 "top_level_field_count") != 16
             or manifest.get("provenance_row_count") != 15
@@ -395,6 +422,87 @@ def _validate_compatibility_contract() -> dict:
         raise ValueError(
             "macOS compatibility contract schema or ordering mismatch")
     return compatibility
+
+
+def _validate_launcher_compatibility_contract(
+        compatibility: dict) -> dict:
+    """Validate the launcher amendment and contract before any Git action."""
+    addendum_raw = open(LAUNCHER_COMPATIBILITY_ADDENDUM_PATH, "rb").read()
+    raw = open(LAUNCHER_COMPATIBILITY_CONTRACT_PATH, "rb").read()
+    if sha256_bytes(addendum_raw) != LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256:
+        raise ValueError(
+            "macOS Python-launcher compatibility-addendum SHA-256 mismatch")
+    if sha256_bytes(raw) != LAUNCHER_COMPATIBILITY_CONTRACT_RAW:
+        raise ValueError(
+            "raw macOS Python-launcher compatibility-contract SHA-256 mismatch")
+    launcher = strict_json_loads(raw)
+    if sha256_bytes(canonical_json_bytes(launcher)) != \
+            LAUNCHER_COMPATIBILITY_CONTRACT_CANONICAL:
+        raise ValueError(
+            "canonical macOS Python-launcher contract SHA-256 mismatch")
+
+    expected_runner = [PYTHON_PROCESS_LAUNCHER, "-B", "-s", "-X", "utf8",
+                       "exp_v30_gate1dc.py"]
+    expected_finalizer = [PYTHON_PROCESS_LAUNCHER, "-B", "-s", "-X", "utf8",
+                          "finalize_v30_gate1dc.py"]
+    argv_contract = launcher.get("argv_contract", {})
+    original = argv_contract.get("exact_sys_orig_argv", {})
+    program = argv_contract.get("exact_program_argv", {})
+    provenance = launcher.get("provenance_integration", {})
+    identities = launcher.get("frozen_python_identities", {})
+    manifest = launcher.get("manifest_integration", {})
+    official = launcher.get("official_invocations", {})
+    if (launcher.get("compatibility_sources", {}).get("markdown")
+            != LAUNCHER_COMPATIBILITY_ADDENDUM_PATH
+            or launcher.get("compatibility_sources", {}).get("json")
+            != LAUNCHER_COMPATIBILITY_CONTRACT_PATH
+            or original.get("required_container") != (
+                "sys.orig_argv must exist and be a list of exactly six strings "
+                "before exact tuple comparison.")
+            or original.get("runner") != expected_runner
+            or original.get("finalizer") != expected_finalizer
+            or program.get("runner") != ["exp_v30_gate1dc.py"]
+            or program.get("finalizer") != ["finalize_v30_gate1dc.py"]
+            or program.get("program_arguments") != []
+            or program.get("zero_program_arguments_preserved") is not True
+            or identities.get("official_shell_invocation", {}).get("path")
+            != PYTHON_INVOKED_AS
+            or identities.get("official_shell_invocation", {}).get(
+                "receipt_python_invoked_as") != PYTHON_INVOKED_AS
+            or identities.get("executable_realpath", {}).get("path")
+            != PYTHON_REALPATH
+            or identities.get("process_visible_launcher", {}).get("path")
+            != PYTHON_PROCESS_LAUNCHER
+            or provenance.get("original_source_sha256_count") != 13
+            or tuple(provenance.get("original_source_sha256_order", ()))
+            != ORIGINAL_SOURCE_HASH_ORDER
+            or provenance.get("environment_amended_source_sha256_count") != 15
+            or tuple(provenance.get(
+                "environment_amended_source_sha256_order", ()))
+            != ENVIRONMENT_SOURCE_HASH_ORDER
+            or provenance.get("launcher_amended_source_sha256_count") != 17
+            or tuple(provenance.get(
+                "launcher_amended_source_sha256_order", ()))
+            != SOURCE_HASH_ORDER
+            or provenance.get("receipt_top_level_field_count") != 16
+            or manifest.get("provenance_row_count") != 17
+            or manifest.get("environment_compatibility_rows") != [
+                {"order": 6, "source": COMPATIBILITY_ADDENDUM_PATH},
+                {"order": 7, "source": COMPATIBILITY_CONTRACT_PATH}]
+            or manifest.get("launcher_compatibility_rows") != [
+                {"order": 8,
+                 "source": LAUNCHER_COMPATIBILITY_ADDENDUM_PATH},
+                {"order": 9,
+                 "source": LAUNCHER_COMPATIBILITY_CONTRACT_PATH}]
+            or official.get("changed") is not False
+            or official.get("source") != COMPATIBILITY_CONTRACT_PATH
+            or official.get("runner_shell_lines") != compatibility.get(
+                "official_invocations", {}).get("runner_shell_lines")
+            or official.get("finalizer_shell_lines") != compatibility.get(
+                "official_invocations", {}).get("finalizer_shell_lines")):
+        raise ValueError(
+            "macOS Python-launcher contract schema or ordering mismatch")
+    return launcher
 
 
 def deterministic_gzip(rows: list[dict]) -> bytes:
@@ -1087,20 +1195,34 @@ def _git(*arguments: str) -> str:
     return _git_bytes(*arguments).decode("utf-8", errors="strict").strip()
 
 
+def _validate_program_argv(program_argv, original_argv) -> None:
+    if program_argv != ["finalize_v30_gate1dc.py"]:
+        raise ValueError(
+            "finalizer takes no arguments and requires its exact filename")
+    if original_argv is _ORIG_ARGV_ABSENT:
+        raise ValueError("sys.orig_argv is absent")
+    if not isinstance(original_argv, list):
+        raise ValueError("sys.orig_argv must be a list")
+    if len(original_argv) != 6:
+        raise ValueError("sys.orig_argv must contain exactly six strings")
+    if any(not isinstance(value, str) for value in original_argv):
+        raise ValueError("sys.orig_argv must contain exactly six strings")
+    expected = [PYTHON_PROCESS_LAUNCHER, "-B", "-s", "-X", "utf8",
+                "finalize_v30_gate1dc.py"]
+    if original_argv != expected:
+        raise ValueError(
+            "sys.orig_argv is not the exact frozen finalizer invocation")
+
+
 def _validate_runtime(authorized_sha: str) -> None:
-    if len(sys.argv) != 1 or sys.argv[0] != "finalize_v30_gate1dc.py":
-        raise ValueError("finalizer takes no arguments and requires its exact filename")
+    _validate_program_argv(
+        sys.argv, getattr(sys, "orig_argv", _ORIG_ARGV_ABSENT))
     expected = {**EXPECTED_ENVIRONMENT, "EBU_GATE1DC_EXECUTION_SHA": authorized_sha}
     if set(os.environ) != set(expected) or any(
             os.environ.get(key) != value for key, value in expected.items()):
         raise ValueError("environment differs from exact env -i allowlist")
     if re.fullmatch(_SHA40, authorized_sha) is None:
         raise ValueError("normalized execution SHA is not lowercase 40-hex")
-    original = tuple(getattr(sys, "orig_argv", ()))
-    expected_argv = (PYTHON_INVOKED_AS, "-B", "-s", "-X", "utf8",
-                     "finalize_v30_gate1dc.py")
-    if original != expected_argv:
-        raise ValueError("finalizer Python argv is not the exact frozen invocation")
     if os.path.realpath(PYTHON_INVOKED_AS) != PYTHON_REALPATH \
             or os.path.realpath(sys.executable) != PYTHON_REALPATH \
             or platform.python_version() != PYTHON_VERSION \
@@ -1158,7 +1280,8 @@ def _validate_sources(authorized_sha: str) -> dict:
 
 
 def _load_contract_and_plan(
-        receipt_preview: dict, compatibility: dict) -> tuple[dict, dict]:
+        receipt_preview: dict, compatibility: dict,
+        launcher: dict) -> tuple[dict, dict]:
     contract_raw = open(CONTRACT_PATH, "rb").read()
     plan_raw = open(PLAN_PATH, "rb").read()
     contract = strict_json_loads(contract_raw)
@@ -1184,6 +1307,13 @@ def _load_contract_and_plan(
             or receipt_preview.get("source_sha256", {}).get(
                 COMPATIBILITY_CONTRACT_PATH) != COMPATIBILITY_CONTRACT_RAW):
         raise ValueError("scientific precedence/addendum receipt lock mismatch")
+    if (receipt_preview.get("source_sha256", {}).get(
+            LAUNCHER_COMPATIBILITY_ADDENDUM_PATH)
+            != LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256
+            or receipt_preview.get("source_sha256", {}).get(
+                LAUNCHER_COMPATIBILITY_CONTRACT_PATH)
+            != LAUNCHER_COMPATIBILITY_CONTRACT_RAW):
+        raise ValueError("launcher compatibility receipt lock mismatch")
     if len(contract.get("failure_retry_matrix", [])) != 17 \
             or tuple(contract["state_machine"]["classification_order"]) != STATE_ORDER:
         raise ValueError("failure matrix or seven-state order mismatch")
@@ -1214,7 +1344,17 @@ def _load_contract_and_plan(
                 "top_level_field_order"]) != tuple(
                     contract["execution_receipt"]["field_order"])
             or tuple(compatibility["receipt_integration"][
-                "source_sha256_order"]) != SOURCE_HASH_ORDER
+                "source_sha256_order"]) != ENVIRONMENT_SOURCE_HASH_ORDER
+            or tuple(launcher["provenance_integration"][
+                "receipt_top_level_field_order"]) != tuple(
+                    contract["execution_receipt"]["field_order"])
+            or tuple(launcher["provenance_integration"][
+                "original_source_sha256_order"]) != ORIGINAL_SOURCE_HASH_ORDER
+            or tuple(launcher["provenance_integration"][
+                "environment_amended_source_sha256_order"]) \
+            != ENVIRONMENT_SOURCE_HASH_ORDER
+            or tuple(launcher["provenance_integration"][
+                "launcher_amended_source_sha256_order"]) != SOURCE_HASH_ORDER
             or inventory != {
                 "world_order": list(WORLD_ORDER), "timestep_order": list(DT_ORDER),
                 "arm_order": list(ARM_ORDER), "run_length_ticks": 200,
@@ -1432,6 +1572,7 @@ def finalize() -> bytes:
     # any original finalizer action, source check, or Git subprocess.
     authorized_sha = _normalize_entry_environment()
     compatibility = _validate_compatibility_contract()
+    launcher = _validate_launcher_compatibility_contract(compatibility)
 
     # 1. Exact arguments, normalized environment, runtime, root, and cwd.
     _validate_runtime(authorized_sha)
@@ -1442,7 +1583,8 @@ def finalize() -> bytes:
     # 3. Strict contract/plan hashes, addendum hash, scientific precedence.
     receipt_preview_bytes, _receipt_preview_info = _read_no_follow(RECEIPT_PATH)
     receipt_preview = strict_json_loads(receipt_preview_bytes)
-    contract, plan = _load_contract_and_plan(receipt_preview, compatibility)
+    contract, plan = _load_contract_and_plan(
+        receipt_preview, compatibility, launcher)
 
     # 4. Receipt bytes/order/schema/source Git/worktree hashes/immutability.
     receipt_bytes = _read_immutable(RECEIPT_PATH)

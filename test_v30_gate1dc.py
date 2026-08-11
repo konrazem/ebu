@@ -781,7 +781,7 @@ def test_official_runner_static_guards() -> None:
           and runner.STDOUT == dc.STDOUT_PATH,
           "runner output filenames exactly match the frozen contract")
     check(tuple(runner.SOURCE_HASH_ORDER) == dc.SOURCE_HASH_ORDER,
-          "runner locks all 15 sources in amended receipt order")
+          "runner locks all 17 sources in launcher-amended receipt order")
     check(runner.PLAN_RAW == dc.PLAN_RAW and runner.PLAN_CANONICAL == dc.PLAN_CANONICAL
           and runner.CONTRACT_RAW == dc.CONTRACT_RAW
           and runner.CONTRACT_CANONICAL == dc.CONTRACT_CANONICAL,
@@ -822,12 +822,18 @@ def test_operational_hashes_strict_json_and_schemas() -> None:
             "trailing JSON data is rejected")
     compatibility_raw = open(runner.COMPATIBILITY_CONTRACT, "rb").read()
     compatibility = finalizer.strict_json_loads(compatibility_raw)
+    launcher_raw = open(runner.LAUNCHER_COMPATIBILITY_CONTRACT, "rb").read()
+    launcher = finalizer.strict_json_loads(launcher_raw)
     check(tuple(contract["execution_receipt"]["source_hash_order"])
           == runner.ORIGINAL_SOURCE_HASH_ORDER,
           "original execution contract retains its exact 13-path order")
     check(tuple(compatibility["receipt_integration"]["source_sha256_order"])
-          == runner.SOURCE_HASH_ORDER,
+          == runner.ENVIRONMENT_SOURCE_HASH_ORDER,
           "compatibility contract amends receipt provenance to 15 paths")
+    check(tuple(launcher["provenance_integration"]
+                ["launcher_amended_source_sha256_order"])
+          == runner.SOURCE_HASH_ORDER,
+          "launcher contract amends receipt provenance to 17 paths")
     check(contract["runner_summary_completion_contract"]
           ["required_top_level_fields"] == list(dc.SUMMARY_REQUIRED_BLOCKS),
           "summary top-level schema is exact")
@@ -867,8 +873,10 @@ def test_macos_environment_compatibility() -> None:
           == finalizer.NORMALIZED_ENVIRONMENT_KEYS,
           "eight-key entry and seven-key normalized orders are exact")
     check(tuple(compatibility["receipt_integration"]["source_sha256_order"])
-          == runner.SOURCE_HASH_ORDER == finalizer.SOURCE_HASH_ORDER
-          == dc.SOURCE_HASH_ORDER and len(dc.SOURCE_HASH_ORDER) == 15,
+          == runner.ENVIRONMENT_SOURCE_HASH_ORDER
+          == finalizer.ENVIRONMENT_SOURCE_HASH_ORDER
+          == dc.ENVIRONMENT_SOURCE_HASH_ORDER
+          and len(dc.ENVIRONMENT_SOURCE_HASH_ORDER) == 15,
           "receipt source provenance has exactly 15 amended entries")
     check(compatibility["manifest_integration"]["compatibility_rows"] == [
         {"order": 6, "source": runner.COMPATIBILITY_ADDENDUM},
@@ -963,6 +971,171 @@ def test_macos_environment_compatibility() -> None:
     check(all(runner.COMPATIBILITY_VARIABLE not in open(
         path, "r", encoding="utf-8").read() for path in project_sources),
           "no scientific/project module reads or depends on compatibility metadata")
+
+
+def test_macos_python_launcher_compatibility() -> None:
+    group("exact macOS Python launcher argv and 17-source provenance")
+    launcher_raw = open(
+        runner.LAUNCHER_COMPATIBILITY_CONTRACT, "rb").read()
+    launcher = finalizer.strict_json_loads(launcher_raw)
+    launcher_canonical = finalizer.canonical_json_bytes(launcher)
+    addendum_raw = open(
+        runner.LAUNCHER_COMPATIBILITY_ADDENDUM, "rb").read()
+    check(hashlib.sha256(addendum_raw).hexdigest()
+          == runner.LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256
+          == finalizer.LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256
+          == dc.LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256,
+          "launcher addendum raw SHA-256 lock is exact")
+    check(hashlib.sha256(launcher_raw).hexdigest()
+          == runner.LAUNCHER_COMPATIBILITY_CONTRACT_RAW
+          == finalizer.LAUNCHER_COMPATIBILITY_CONTRACT_RAW
+          == dc.LAUNCHER_COMPATIBILITY_CONTRACT_RAW,
+          "launcher contract raw SHA-256 lock is exact")
+    check(hashlib.sha256(launcher_canonical).hexdigest()
+          == runner.LAUNCHER_COMPATIBILITY_CONTRACT_CANONICAL
+          == finalizer.LAUNCHER_COMPATIBILITY_CONTRACT_CANONICAL
+          == dc.LAUNCHER_COMPATIBILITY_CONTRACT_CANONICAL,
+          "launcher contract canonical SHA-256 lock is exact")
+    check(launcher_raw == launcher_canonical,
+          "committed launcher contract is canonical JSON with no final newline")
+
+    compatibility_raw = open(runner.COMPATIBILITY_CONTRACT, "rb").read()
+    compatibility = finalizer.strict_json_loads(compatibility_raw)
+    check(runner._validate_launcher_compatibility_contract(
+              compatibility) == launcher
+          and finalizer._validate_launcher_compatibility_contract(
+              compatibility) == launcher,
+          "runner and finalizer strictly enforce the launcher contract")
+
+    contract, _plan, _contract_raw, _plan_raw = _load_operational_sources()
+    provenance = launcher["provenance_integration"]
+    check(len(runner.ORIGINAL_SOURCE_HASH_ORDER) == 13
+          and tuple(contract["execution_receipt"]["source_hash_order"])
+          == runner.ORIGINAL_SOURCE_HASH_ORDER
+          == finalizer.ORIGINAL_SOURCE_HASH_ORDER
+          == dc.ORIGINAL_SOURCE_HASH_ORDER,
+          "original 13-source provenance validates independently")
+    check(len(runner.ENVIRONMENT_SOURCE_HASH_ORDER) == 15
+          and tuple(compatibility["receipt_integration"]
+                    ["source_sha256_order"])
+          == runner.ENVIRONMENT_SOURCE_HASH_ORDER
+          == finalizer.ENVIRONMENT_SOURCE_HASH_ORDER
+          == dc.ENVIRONMENT_SOURCE_HASH_ORDER,
+          "environment-amended 15-source provenance validates independently")
+    check(len(runner.SOURCE_HASH_ORDER) == 17
+          and tuple(provenance["launcher_amended_source_sha256_order"])
+          == runner.SOURCE_HASH_ORDER == finalizer.SOURCE_HASH_ORDER
+          == dc.SOURCE_HASH_ORDER,
+          "launcher-amended 17-source provenance validates independently")
+    check(provenance["receipt_top_level_field_count"] == 16
+          and provenance["receipt_top_level_field_order"]
+          == contract["execution_receipt"]["field_order"],
+          "receipt retains exactly 16 ordered top-level fields")
+    check(launcher["manifest_integration"]["environment_compatibility_rows"]
+          == [{"order": 6, "source": runner.COMPATIBILITY_ADDENDUM},
+              {"order": 7, "source": runner.COMPATIBILITY_CONTRACT}]
+          and launcher["manifest_integration"]
+          ["launcher_compatibility_rows"]
+          == [{"order": 8,
+               "source": runner.LAUNCHER_COMPATIBILITY_ADDENDUM},
+              {"order": 9,
+               "source": runner.LAUNCHER_COMPATIBILITY_CONTRACT}],
+          "manifest provenance fixes environment rows 6-7 and launcher rows 8-9")
+
+    check(runner.PYTHON_INVOKED_AS == finalizer.PYTHON_INVOKED_AS
+          == "/opt/homebrew/bin/python3"
+          and runner.PYTHON_REALPATH == finalizer.PYTHON_REALPATH
+          == ("/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/"
+              "Python.framework/Versions/3.14/bin/python3.14"),
+          "external invocation and executable-realpath identities are unchanged")
+    check(runner.PYTHON_PROCESS_LAUNCHER
+          == finalizer.PYTHON_PROCESS_LAUNCHER
+          == ("/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/"
+              "Python.framework/Versions/3.14/Resources/Python.app/"
+              "Contents/MacOS/Python"),
+          "process-visible Python.app launcher identity is exact")
+    for name, module in (("runner", runner), ("finalizer", finalizer)):
+        runtime_source = inspect.getsource(module._validate_runtime)
+        check("os.path.realpath(PYTHON_INVOKED_AS)" in runtime_source
+              and "os.path.realpath(sys.executable)" in runtime_source
+              and "PYTHON_REALPATH" in runtime_source
+              and "PYTHON_VERSION" in runtime_source
+              and "ZLIB_VERSION" in runtime_source
+              and "sys.flags.dont_write_bytecode" in runtime_source
+              and "sys.flags.no_user_site" in runtime_source
+              and "sys.flags.utf8_mode" in runtime_source,
+              f"{name}: executable, Python, zlib, and flag checks remain enforced")
+    check(launcher["official_invocations"]["runner_shell_lines"]
+          == compatibility["official_invocations"]["runner_shell_lines"]
+          and launcher["official_invocations"]["finalizer_shell_lines"]
+          == compatibility["official_invocations"]["finalizer_shell_lines"]
+          and launcher["official_invocations"]["changed"] is False,
+          "both official shell invocations remain byte-for-byte unchanged")
+
+    for name, module, program in (
+            ("runner", runner, "exp_v30_gate1dc.py"),
+            ("finalizer", finalizer, "finalize_v30_gate1dc.py")):
+        exact = [module.PYTHON_PROCESS_LAUNCHER,
+                 "-B", "-s", "-X", "utf8", program]
+        module._validate_program_argv([program], list(exact))
+        check(True, f"{name}: exact sys.orig_argv and sys.argv are accepted")
+        rejects(lambda module=module, program=program:
+                module._validate_program_argv(
+                    [program], module._ORIG_ARGV_ABSENT),
+                f"{name}: absent sys.orig_argv is rejected", "absent")
+        rejects(lambda module=module, program=program, exact=exact:
+                module._validate_program_argv([program], tuple(exact)),
+                f"{name}: tuple sys.orig_argv is rejected", "list")
+        rejects(lambda module=module, program=program, exact=exact:
+                module._validate_program_argv([program], exact[:-1]),
+                f"{name}: incorrect sys.orig_argv length is rejected", "six")
+        non_string = list(exact)
+        non_string[2] = 7
+        rejects(lambda module=module, program=program, value=non_string:
+                module._validate_program_argv([program], value),
+                f"{name}: non-string sys.orig_argv member is rejected", "strings")
+        alternate_launcher = list(exact)
+        alternate_launcher[0] = module.PYTHON_INVOKED_AS
+        rejects(lambda module=module, program=program, value=alternate_launcher:
+                module._validate_program_argv([program], value),
+                f"{name}: alternate launcher path is rejected", "exact frozen")
+        reordered = list(exact)
+        reordered[1], reordered[2] = reordered[2], reordered[1]
+        rejects(lambda module=module, program=program, value=reordered:
+                module._validate_program_argv([program], value),
+                f"{name}: reordered flags are rejected", "exact frozen")
+        missing_flag = [exact[0], "-B", "-X", "utf8", program]
+        rejects(lambda module=module, program=program, value=missing_flag:
+                module._validate_program_argv([program], value),
+                f"{name}: missing flag is rejected", "six")
+        extra_flag = exact[:-1] + ["-E", program]
+        rejects(lambda module=module, program=program, value=extra_flag:
+                module._validate_program_argv([program], value),
+                f"{name}: additional flag is rejected", "six")
+        additional_argument = exact + ["synthetic-argument"]
+        rejects(lambda module=module, program=program, value=additional_argument:
+                module._validate_program_argv([program], value),
+                f"{name}: additional original argument is rejected", "six")
+        module_invocation = exact[:-1] + ["-m", program.removesuffix(".py")]
+        rejects(lambda module=module, program=program, value=module_invocation:
+                module._validate_program_argv([program], value),
+                f"{name}: module invocation is rejected", "six")
+        alternate_script = exact[:-1] + ["alternate_gate1dc.py"]
+        rejects(lambda module=module, program=program, value=alternate_script:
+                module._validate_program_argv([program], value),
+                f"{name}: alternate script filename is rejected", "exact frozen")
+        substitution = list(exact)
+        substitution[0] = "${PYTHON_LAUNCHER}"
+        rejects(lambda module=module, program=program, value=substitution:
+                module._validate_program_argv([program], value),
+                f"{name}: runtime substitution is rejected", "exact frozen")
+        rejects(lambda module=module, program=program, exact=exact:
+                module._validate_program_argv(
+                    [program, "synthetic-argument"], exact),
+                f"{name}: sys.argv additional argument is rejected", "arguments")
+        rejects(lambda module=module, exact=exact:
+                module._validate_program_argv(["alternate_gate1dc.py"], exact),
+                f"{name}: sys.argv alternate script is rejected", "filename")
 
 
 def test_state_machine_and_all_failure_rows() -> None:
@@ -1461,7 +1634,7 @@ def test_manifest_exact_rendering_and_sentinels() -> None:
     check(all(row in text for row in source_rows)
           and [text.index(row) for row in source_rows]
           == sorted(text.index(row) for row in source_rows),
-          "all 15 source-provenance rows render in amended order")
+          "all 17 source-provenance rows render in amended order")
     check(all(statement in text for statement in plan["non_claims"])
           and all(f"| H{index} |" in text for index in range(1, 11))
           and all(f"| F{index} |" in text for index in range(1, 17)),
@@ -1542,10 +1715,11 @@ def test_refusal_guards_and_no_stdout_after_summary() -> None:
     repository_source = inspect.getsource(runner._validate_repository)
     check(preflight_source.index("_normalize_entry_environment()")
           < preflight_source.index("_validate_compatibility_contract()")
+          < preflight_source.index("_validate_launcher_compatibility_contract(")
           < preflight_source.index("_validate_runtime(authorized_sha)")
-          < preflight_source.index("_validate_contract_and_plan(compatibility)")
+          < preflight_source.index("_validate_contract_and_plan(")
           < preflight_source.index("_validate_repository"),
-          "normalization and compatibility/schema checks precede Git and receipt")
+          "environment, launcher, runtime, and schema checks precede Git and receipt")
     check("ls-remote" in repository_source and "porcelain=v2" in repository_source
           and "worktree/Git blob byte mismatch" in repository_source,
           "live ref, dirty tree, and source blob mismatches fail closed")
@@ -1565,9 +1739,10 @@ def test_refusal_guards_and_no_stdout_after_summary() -> None:
     finalize_source = inspect.getsource(finalizer.finalize)
     check(finalize_source.index("_normalize_entry_environment()")
           < finalize_source.index("_validate_compatibility_contract()")
+          < finalize_source.index("_validate_launcher_compatibility_contract(")
           < finalize_source.index("_validate_runtime(authorized_sha)")
           < finalize_source.index("_validate_git_state(authorized_sha)"),
-          "finalizer normalization and compatibility validation precede Git")
+          "finalizer environment and launcher validation precede Git")
     numbered = [finalize_source.index(f"# {index}.") for index in range(1, 16)]
     check(numbered == sorted(numbered),
           "finalizer implements the exact numbered 1-through-15 sequence")
@@ -1689,6 +1864,7 @@ def main() -> int:
     test_official_runner_static_guards()
     test_operational_hashes_strict_json_and_schemas()
     test_macos_environment_compatibility()
+    test_macos_python_launcher_compatibility()
     test_state_machine_and_all_failure_rows()
     test_exclusive_publication_fsync_and_same_filesystem()
     test_runner_publication_cut_points_signals_and_sigkill_stub()

@@ -49,6 +49,16 @@ COMPATIBILITY_CONTRACT_RAW = (
     "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b")
 COMPATIBILITY_CONTRACT_CANONICAL = (
     "0fbdaf54734d10a88172ed79451dc2e7a31e4021b66c765d5df164a1d93f3077")
+LAUNCHER_COMPATIBILITY_ADDENDUM_PATH = (
+    "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md")
+LAUNCHER_COMPATIBILITY_ADDENDUM_SHA256 = (
+    "d81afc5d77e1d2c7ccd9ceaae44d96ce33ddbb85ddc35fe0a0a0e1141394e8c3")
+LAUNCHER_COMPATIBILITY_CONTRACT_PATH = (
+    "v30_gate1dc_macos_python_launcher_compatibility_contract.json")
+LAUNCHER_COMPATIBILITY_CONTRACT_RAW = (
+    "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82")
+LAUNCHER_COMPATIBILITY_CONTRACT_CANONICAL = (
+    "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82")
 
 EXEC_ARMS = (
     "A_full_multi_edge_p1c",
@@ -104,6 +114,38 @@ TEMPORARY_BASENAMES = (
     ".v30_gate1dc_summary.json.tmp",
     ".MANIFEST.md.tmp",
 )
+ORIGINAL_SOURCE_HASH_ORDER = (
+    "AGENTS.md",
+    "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+    PLAN_PATH,
+    ADDENDUM_PATH,
+    CONTRACT_PATH,
+    "gate1dc_v30.py",
+    "test_v30_gate1dc.py",
+    "exp_v30_gate1dc.py",
+    FINALIZER_PATH,
+    "d0_v29.py",
+    "p1c_v29.py",
+    "ebu_quote_v30.py",
+    "service_v30.py",
+)
+ENVIRONMENT_SOURCE_HASH_ORDER = (
+    "AGENTS.md",
+    "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+    PLAN_PATH,
+    ADDENDUM_PATH,
+    CONTRACT_PATH,
+    COMPATIBILITY_ADDENDUM_PATH,
+    COMPATIBILITY_CONTRACT_PATH,
+    "gate1dc_v30.py",
+    "test_v30_gate1dc.py",
+    "exp_v30_gate1dc.py",
+    FINALIZER_PATH,
+    "d0_v29.py",
+    "p1c_v29.py",
+    "ebu_quote_v30.py",
+    "service_v30.py",
+)
 SOURCE_HASH_ORDER = (
     "AGENTS.md",
     "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
@@ -112,6 +154,8 @@ SOURCE_HASH_ORDER = (
     CONTRACT_PATH,
     COMPATIBILITY_ADDENDUM_PATH,
     COMPATIBILITY_CONTRACT_PATH,
+    LAUNCHER_COMPATIBILITY_ADDENDUM_PATH,
+    LAUNCHER_COMPATIBILITY_CONTRACT_PATH,
     "gate1dc_v30.py",
     "test_v30_gate1dc.py",
     "exp_v30_gate1dc.py",
@@ -1185,8 +1229,14 @@ def validate_output_contract() -> None:
         raise ValueError("registered artifact publication order mismatch")
     if len(TEMPORARY_BASENAMES) != 6 or len(set(TEMPORARY_BASENAMES)) != 6:
         raise ValueError("temporary artifact names mismatch")
-    if len(SOURCE_HASH_ORDER) != 15 or len(set(SOURCE_HASH_ORDER)) != 15:
-        raise ValueError("execution source hash inventory mismatch")
+    if len(ORIGINAL_SOURCE_HASH_ORDER) != 13 \
+            or len(set(ORIGINAL_SOURCE_HASH_ORDER)) != 13:
+        raise ValueError("original execution source hash inventory mismatch")
+    if len(ENVIRONMENT_SOURCE_HASH_ORDER) != 15 \
+            or len(set(ENVIRONMENT_SOURCE_HASH_ORDER)) != 15:
+        raise ValueError("environment-amended source hash inventory mismatch")
+    if len(SOURCE_HASH_ORDER) != 17 or len(set(SOURCE_HASH_ORDER)) != 17:
+        raise ValueError("launcher-amended source hash inventory mismatch")
     if len(SUMMARY_REQUIRED_BLOCKS) != 24:
         raise ValueError("runner summary top-level schema mismatch")
 
