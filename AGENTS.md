@@ -26,10 +26,22 @@ integrity take priority over speed.
   hypothesis, parameter, comparison, metric, threshold, tolerance, predicate,
   falsifier, positive control, outcome class, interpretation rule, limitation,
   and non-claim. Any scientific conflict requires fail-closed refusal.
-- The Markdown addendum and JSON contract must agree. The JSON is the
-  mechanical schema and ordering source; the Markdown is its normative human
-  rendering. Any mismatch is an integrity failure, not permission to choose
-  one selectively.
+- `V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md` and
+  `v30_gate1dc_macos_environment_compatibility_contract.json` are the
+  authoritative prospective sources for the Gate 1D-C macOS process-entry
+  environment and its immediate normalization. Their precedence is limited to
+  the explicitly superseded environment entry, normalization, official
+  invocations, source-provenance inventory, and dependent manifest-provenance
+  rows. They change no scientific content or other operational mechanic.
+- The execution/finalization addendum and contract retain precedence over every
+  operational rule outside that narrow compatibility scope, including all
+  state, receipt durability, retry, publication, failure, finalization, and
+  result-commit mechanics. Any conflict outside the narrow scope requires
+  fail-closed refusal.
+- Each Markdown addendum and its corresponding JSON contract must agree. The
+  applicable JSON is the mechanical schema and ordering source; its Markdown
+  counterpart is the normative human rendering. Any mismatch is an integrity
+  failure, not permission to choose one selectively.
 
 ## Required start-of-task checks
 

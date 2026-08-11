@@ -1,0 +1,260 @@
+{
+  "contract_id": "v30_gate1dc_macos_environment_compatibility",
+  "contract_version": "1.0.0",
+  "gate": "V3.0 Gate 1D-C",
+  "status": "PROSPECTIVE PRE-EXECUTION OPERATIONAL COMPATIBILITY AMENDMENT",
+  "compatibility_sources": {
+    "markdown": "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+    "json": "v30_gate1dc_macos_environment_compatibility_contract.json",
+    "markdown_role": "normative human rendering",
+    "json_role": "mechanical schema and ordering source",
+    "agreement_rule": "Any disagreement between the compatibility Markdown and JSON is an integrity failure and causes fail-closed refusal; neither may be applied selectively."
+  },
+  "legal_and_scientific_status": {
+    "frozen_before_execution": "These compatibility sources were frozen before any Gate 1D-C runner invocation, receipt creation, execution-start control, model transition, result generation, candidate-outcome inspection, scientific classification, or outcome interpretation.",
+    "failed_check_status": "The failed check was an isolated pre-execution environment probe that imported no repository or scientific module; it was not a runner invocation.",
+    "sole_attempt": "gate1dc-single-authorized-attempt",
+    "sole_attempt_unconsumed": true,
+    "prospective_only": true,
+    "scope": "Resolve only one non-scientific macOS process-entry compatibility fact and freeze the exact normalization required before a later separately authorized execution.",
+    "scientific_content_or_semantics_changed": false,
+    "scientific_precedence": [
+      "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+      "v30_gate1dc_outcome_discrimination_plan.json"
+    ],
+    "scientific_precedence_scope": "The original protocol and plan retain complete precedence over every hypothesis, parameter, comparison, metric, threshold, tolerance, predicate, falsifier, positive control, outcome class, interpretation rule, limitation, and non-claim.",
+    "original_operational_precedence": [
+      "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+      "v30_gate1dc_execution_finalization_contract.json"
+    ],
+    "limited_supersession": [
+      "macOS process-entry environment",
+      "immediate environment normalization",
+      "runner and finalizer official invocations",
+      "source-provenance inventory",
+      "dependent manifest-provenance rows"
+    ],
+    "preserved_operational_precedence": "The original execution/finalization addendum and contract retain precedence over every operational rule outside limited_supersession, including all state, receipt durability, authorization-consumption, active-lock, retry, cleanup, publication, abnormal-termination, recovery, failure, finalization, immutability, and result-commit mechanics.",
+    "conflict_rule": "Any actual or suspected scientific conflict, operational conflict outside limited_supersession, or Markdown/JSON disagreement causes fail-closed refusal."
+  },
+  "pre_execution_platform_record": {
+    "starting_sha": "574b0b097b626fada366d8198ae5175b95020b7a",
+    "platform": "frozen macOS execution platform",
+    "probe_isolated": true,
+    "repository_or_scientific_module_imported": false,
+    "runner_invocations": 0,
+    "finalizer_invocations": 0,
+    "receipt_created": false,
+    "execution_started_control_created": false,
+    "result_directory_created": false,
+    "authorization_consumed": false,
+    "model_state_advanced": false,
+    "results_generated_or_inspected": false,
+    "outcomes_generated_or_inspected": false,
+    "original_seven_key_launch_observation": "The process exposed exactly the original seven entries plus __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0.",
+    "explicit_eight_key_launch_observation": "Explicitly supplying __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0 produced exactly the expected eight-key entry environment.",
+    "normalization_probe_observation": "Deleting only __CF_USER_TEXT_ENCODING restored exactly the original seven-key environment.",
+    "compatibility_variable_classification": "Fixed non-scientific platform metadata; not a scientific input, parameter, option, source of entropy, observation, result, or configurable value."
+  },
+  "entry_environment": {
+    "key_count": 8,
+    "key_order": [
+      "PATH",
+      "LC_ALL",
+      "LANG",
+      "TZ",
+      "PYTHONHASHSEED",
+      "PYTHONNOUSERSITE",
+      "__CF_USER_TEXT_ENCODING",
+      "EBU_GATE1DC_EXECUTION_SHA"
+    ],
+    "exact_values": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LC_ALL": "C",
+      "LANG": "C",
+      "TZ": "UTC",
+      "PYTHONHASHSEED": "0",
+      "PYTHONNOUSERSITE": "1",
+      "__CF_USER_TEXT_ENCODING": "0x1F5:0x0:0x0",
+      "EBU_GATE1DC_EXECUTION_SHA": "<authorized_execution_sha>"
+    },
+    "only_runtime_substitution": "EBU_GATE1DC_EXECUTION_SHA is the single explicitly user-authorized audited lowercase 40-hex execution SHA.",
+    "compatibility_value_configurable": false,
+    "additional_or_missing_keys_permitted": false
+  },
+  "normalization": {
+    "sequence": [
+      "1. At process entry, before any scientific or project import, require the exact eight-key set and the exact fixed values in entry_environment, except for the single authorized execution-SHA substitution.",
+      "2. Independently require __CF_USER_TEXT_ENCODING to equal exactly 0x1F5:0x0:0x0.",
+      "3. Delete only __CF_USER_TEXT_ENCODING from the process environment.",
+      "4. Require the remaining environment to equal exactly normalized_environment with its exact key set and values.",
+      "5. Perform every Git subprocess, source check, receipt construction, scientific import, runner operation, and finalizer operation only after successful normalization.",
+      "6. Prohibit every scientific or project module and function from reading, receiving, copying, hashing as scientific input, or otherwise depending on the compatibility variable.",
+      "7. Fail closed before receipt creation or any finalizer action on an absent key, alternate value, duplicate declaration, injected value, extra key, failed deletion, or post-normalization mismatch."
+    ],
+    "delete_only": "__CF_USER_TEXT_ENCODING",
+    "normalized_environment": {
+      "key_count": 7,
+      "key_order": [
+        "PATH",
+        "LC_ALL",
+        "LANG",
+        "TZ",
+        "PYTHONHASHSEED",
+        "PYTHONNOUSERSITE",
+        "EBU_GATE1DC_EXECUTION_SHA"
+      ],
+      "exact_values": {
+        "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "PYTHONHASHSEED": "0",
+        "PYTHONNOUSERSITE": "1",
+        "EBU_GATE1DC_EXECUTION_SHA": "<authorized_execution_sha>"
+      }
+    },
+    "other_normalization_permitted": false,
+    "failure_point": "Before receipt creation for the runner and before any finalizer action for the finalizer.",
+    "failure_effect": "Fail closed without changing any original state, retry, cleanup, durability, or failure rule."
+  },
+  "official_invocations": {
+    "only_runtime_substitution": "AUTHORIZED_EXECUTION_SHA is the single explicitly user-authorized audited lowercase 40-hex commit SHA.",
+    "runner_shell_lines": [
+      "AUTHORIZED_EXECUTION_SHA='<AUDITED_40_LOWERCASE_HEX_EXECUTION_SHA>'",
+      "env -i PATH=/opt/homebrew/bin:/usr/bin:/bin LC_ALL=C LANG=C TZ=UTC PYTHONHASHSEED=0 PYTHONNOUSERSITE=1 __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0 EBU_GATE1DC_EXECUTION_SHA=\"${AUTHORIZED_EXECUTION_SHA}\" /opt/homebrew/bin/python3 -B -s -X utf8 exp_v30_gate1dc.py"
+    ],
+    "finalizer_shell_lines": [
+      "AUTHORIZED_EXECUTION_SHA='<THE_SAME_AUDITED_40_LOWERCASE_HEX_EXECUTION_SHA>'",
+      "env -i PATH=/opt/homebrew/bin:/usr/bin:/bin LC_ALL=C LANG=C TZ=UTC PYTHONHASHSEED=0 PYTHONNOUSERSITE=1 __CF_USER_TEXT_ENCODING=0x1F5:0x0:0x0 EBU_GATE1DC_EXECUTION_SHA=\"${AUTHORIZED_EXECUTION_SHA}\" /opt/homebrew/bin/python3 -B -s -X utf8 finalize_v30_gate1dc.py"
+    ],
+    "prohibitions": "No other invocation, variable, value, wrapper, redirection, pipe, substitution, executable, argument, or normalization is permitted."
+  },
+  "strict_json_and_hashing": {
+    "parse": "UTF-8 without BOM; reject duplicate object keys, NaN, Infinity, -Infinity, trailing data, comments, invalid UTF-8, and every non-JSON token.",
+    "finite_numbers": "Every JSON number must be finite; Boolean is not accepted where a numeric field is required.",
+    "canonical_json_bytes": "json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True, allow_nan=False).encode(\"utf-8\") with no final newline.",
+    "implementation_hash_locks": {
+      "compatibility_contract_raw_sha256": "A later implementation must freeze and validate the SHA-256 of the exact committed compatibility-contract bytes before any Git subprocess, receipt creation, scientific import, runner operation, or finalizer action.",
+      "compatibility_contract_canonical_sha256": "A later implementation must freeze and validate the SHA-256 of canonical_json_bytes for the strictly parsed committed compatibility contract before any Git subprocess, receipt creation, scientific import, runner operation, or finalizer action."
+    },
+    "receipt_recording": "The compatibility Markdown raw hash and compatibility JSON raw hash are recorded through receipt source_sha256; the JSON raw and canonical hashes are additionally validated against separate implementation constants."
+  },
+  "receipt_integration": {
+    "top_level_field_count": 16,
+    "top_level_field_order": [
+      "schema_version",
+      "artifact_type",
+      "gate",
+      "attempt_id",
+      "branch",
+      "remote_ref",
+      "authorized_execution_sha",
+      "authorized_execution_sha_source",
+      "plan_raw_sha256",
+      "plan_canonical_sha256",
+      "contract_raw_sha256",
+      "contract_canonical_sha256",
+      "source_sha256",
+      "python",
+      "official_invocation",
+      "authorization_consumed_when"
+    ],
+    "top_level_schema_changed": false,
+    "contract_raw_sha256_meaning": "Unchanged: SHA-256 of the exact committed v30_gate1dc_execution_finalization_contract.json bytes at the authorized execution SHA.",
+    "contract_canonical_sha256_meaning": "Unchanged: SHA-256 of canonical strict JSON for v30_gate1dc_execution_finalization_contract.json.",
+    "compatibility_hash_fields_added": false,
+    "source_sha256_count": 15,
+    "source_sha256_value_semantics": "Raw SHA-256 of exact worktree bytes after byte identity with git show <authorized_execution_sha>:<path> is proved; no extra key is permitted.",
+    "source_sha256_order": [
+      "AGENTS.md",
+      "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+      "v30_gate1dc_outcome_discrimination_plan.json",
+      "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+      "v30_gate1dc_execution_finalization_contract.json",
+      "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+      "v30_gate1dc_macos_environment_compatibility_contract.json",
+      "gate1dc_v30.py",
+      "test_v30_gate1dc.py",
+      "exp_v30_gate1dc.py",
+      "finalize_v30_gate1dc.py",
+      "d0_v29.py",
+      "p1c_v29.py",
+      "ebu_quote_v30.py",
+      "service_v30.py"
+    ],
+    "compatibility_source_insertion": "Insert the compatibility Markdown and JSON immediately after the original execution/finalization JSON contract.",
+    "unchanged_rules": "Receipt serialization, top-level ordering, immutability, publication, durability, authorization-consumption, and no-retry semantics remain exactly as frozen in the original execution/finalization sources."
+  },
+  "manifest_integration": {
+    "provenance_row_count": 15,
+    "row_generator": "For receipt source-hash indices 0 through 14, render index plus one, the exact path in receipt_integration.source_sha256_order, and the receipt hash at that key.",
+    "compatibility_rows": [
+      {
+        "order": 6,
+        "source": "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md"
+      },
+      {
+        "order": 7,
+        "source": "v30_gate1dc_macos_environment_compatibility_contract.json"
+      }
+    ],
+    "scientific_manifest_rows_changed": false,
+    "scientific_result_fields_changed": false,
+    "other_manifest_content_changed": false,
+    "prohibition": "No scientific manifest row, runner-summary field, scientific result field, artifact descriptor, hypothesis, falsifier, positive-control row, discriminator row, O3 row, outcome-class row, limitation, nonclaim, fixed wording, section order, or result artifact may be added, removed, renamed, reordered, or reinterpreted."
+  },
+  "preserved_operational_mechanics": {
+    "rule": "Except for legal_and_scientific_status.limited_supersession, the original execution/finalization addendum and contract apply verbatim.",
+    "unchanged": [
+      "six registered final artifacts and six temporary basenames",
+      "16-field receipt schema and point of authorization consumption",
+      "execution-start control, active lock, and scientific reachability boundary",
+      "seven-state classifier and every state transition",
+      "single authorized attempt, no-rerun rule, cleanup rule, and 17-row failure/retry matrix",
+      "serialization of receipt, start, trace, stdout, summary, and manifest",
+      "publication order, no-overwrite linking, modes, file and directory fsync, abnormal-termination residue preservation, and recovery",
+      "runner-output and full-study completion sentinels",
+      "mechanical finalizer restrictions and validation semantics except amended environment/source checks and dependent provenance rows",
+      "post-execution immutability and exact six-file result-commit and push procedure"
+    ]
+  },
+  "future_implementation_acceptance": {
+    "stage_status": "NOT BEGUN AND NOT AUTHORIZED BY THIS COMPATIBILITY-FREEZING STAGE",
+    "only_files_permitted_to_change": [
+      "exp_v30_gate1dc.py",
+      "finalize_v30_gate1dc.py",
+      "gate1dc_v30.py",
+      "test_v30_gate1dc.py"
+    ],
+    "acceptance_criteria": [
+      "Implement exact eight-key entry validation in runner and finalizer.",
+      "Require the fixed compatibility value, delete only __CF_USER_TEXT_ENCODING, and prove the exact seven-key post-normalization environment.",
+      "Make every Git subprocess, source check, receipt construction, scientific import or call, runner operation, and finalizer operation unreachable before normalization.",
+      "Update both official invocation strings exactly.",
+      "Extend receipt/source provenance to the exact 15-source order.",
+      "Separately lock and validate compatibility JSON raw and canonical hashes while preserving the original contract-hash field meanings.",
+      "Extend finalizer source validation and only the manifest provenance table to 15 rows.",
+      "Add static and synthetic tests for missing, incorrect, duplicated, injected, and extra environment values, failed deletion, and post-normalization mismatch.",
+      "Prove no scientific import or call occurs before normalization and no scientific or project code can read the compatibility variable.",
+      "Preserve every scientific function, semantic rule, field, value, and invariant.",
+      "Run no scientific code, step, trajectory, runner, or finalizer."
+    ],
+    "commit_before_execution_authorization": true
+  },
+  "freezing_stage_scope": {
+    "created_files": [
+      "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+      "v30_gate1dc_macos_environment_compatibility_contract.json"
+    ],
+    "modified_files": [
+      "AGENTS.md"
+    ],
+    "runner_or_finalizer_implemented": false,
+    "runner_or_finalizer_invoked": false,
+    "scientific_code_executed": false,
+    "receipt_or_result_artifact_created": false,
+    "sole_attempt_unconsumed": true,
+    "next_possible_stage": "Separately authorized compatibility implementation; not begun and not an execution authorization."
+  }
+}
