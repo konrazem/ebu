@@ -1,1435 +1,734 @@
-# EBU Future Books Structure and Revision Register
+# EBU Future Books Structure and Research Dependency Register
 
-Status: Living planning document  
-Created: 2026-08-10  
-Last updated: 2026-08-12  
-Purpose: Preserve new EBU concepts and place them in the future book structure before they are lost or diluted across conversations.
+**Status:** Detailed working architecture for Parts IV-IX  
+**Created:** 2026-08-10  
+**Regenerated:** 2026-08-12  
+**Language:** English  
+**Purpose:** Preserve the complete future-book architecture, chapter purposes, transitions, overlap controls, scientific dependencies, figure expectations, and research stop conditions in one handoff document.
 
-## 1. How to use this file
+---
 
-This file is a structural and conceptual register, not a finished manuscript and not a replacement for the existing EBU books.
+## 1. Executive decision
 
-It should be updated whenever a new principle, equation, distinction, example, chapter, or unresolved question is developed. Each item should be marked as one of the following:
+Parts I-III already exist. The future series should contain six further books in this final reading order:
 
-- **Established** — already defined in the books or project.
-- **Confirmed addition** — accepted for a future revision but not yet integrated into the manuscript.
-- **Open question** — important, but not yet settled.
-- **Editorial task** — requires reconciliation with existing chapters, terminology, equations, or proofs.
+1. **Part IV - *When Outcomes Must Discriminate***
+2. **Part V - *Homeostasis Through Time***
+3. **Part VI - *Sequential and Parallel EBU Dynamics***
+4. **Part VII - *Across Distance***
+5. **Part VIII - *Dynamic Coordination Fields and Society Geometry***
+6. **Part IX - *The Action-Accounted Economy***
 
-The complete current tables of contents must eventually be copied here from the authoritative Part I–III manuscripts. Until that reconciliation is performed, this file deliberately avoids inventing titles for missing or unseen material.
+The scientific progression is:
 
-### 1.1 Continuity rule
+> **measurement -> time -> multiple actions -> distance -> coordination -> economy**
 
-This file is the persistent project register. A chat may develop ideas, but an accepted structural decision, equation, theorem candidate, research priority, book allocation, or unresolved dependency is not considered safely checkpointed until it is recorded here or in a linked authoritative project file.
+This order replaces the earlier planning order in which *Sequential and Parallel EBU Dynamics* and *Dynamic Coordination Fields and Society Geometry* were numbered VIII and IX while *Across Distance* and *The Action-Accounted Economy* retained their old VI and VII numbers. Those old numbers made the reading sequence discontinuous. The titles and scientific purposes are preserved; only the order of the ungenerated books changes.
 
-Conversation summaries are supporting context, not a substitute for this register or the repository. When the repository is available, every accepted update to this register should be committed together with any linked theory or test specification. When it is not available, the update must be marked as awaiting repository synchronization.
+The key editorial decision is also fixed:
 
-## 2. Current high-level book map
+> Future books must begin at the unresolved boundary left by Parts I-III. They must not repeat existing introductory chapters merely because an earlier outline was written before the Unified Explanatory Editions expanded.
 
-### Existing manuscripts
+Part IV and Part V remain separate. Part IV validates outcome measurement, latency, and uncertainty. Part V develops the conditional long-run homeostasis theorem. They have a direct transition but different evidence standards, different completion dates, and different manuscript-generation gates.
 
-- **Part I** — Existing manuscript. Exact chapter structure to be imported from the authoritative source.
-- **Part II** — Existing manuscript. Exact chapter structure to be imported from the authoritative source.
-- **Part III** — Existing manuscript. Exact chapter structure to be imported from the authoritative source.
+---
 
-Known existing reference:
+## 2. Authority, continuity, and scientific status
 
-- Chapter 1.6, **The Map of Laws We Will Build**, introduces ten laws. Its definitions and numbering must be preserved when the master structure is reconciled.
+### 2.1 Sources used for this regenerated register
 
-### Recovered and extended future architecture
+This architecture was reconciled against the project files available in the current workspace:
 
-- **Part IV — When Outcomes Must Discriminate** — recovered structure; the experimental volume for Gate 1D-C, robust-P1C clarification, and Gate 1E.
-- **Part V — Homeostasis Through Time** — recovered protected high-priority structure; the principal long-run theorem book.
-- **Part VI — Across Distance** — recovered structure; long-range needs, routes, actors, cooperation, and infrastructure adaptation.
-- **Part VII — The Action-Accounted Economy** — recovered structure; final synthesis of the original seven-part architecture. The later binding-quote, residual, reserve, enterprise, motivation, and institutional-learning work belongs inside this full economic synthesis and does not replace its title or purpose.
-- **Part VIII — Sequential and Parallel EBU Dynamics** — confirmed working advanced volume; full theory of how multiple actions combine.
-- **Part IX — Dynamic Coordination Fields and Society Geometry** — confirmed working advanced volume; central research programme on timing, sequence, placement, propagation, topology, scaling, and society-scale coordination.
+- `EBP_Book_Part_I_Unified_Explanatory_Edition.pdf` - 296 pages;
+- `EBP_Book_Part_II_Unified_Explanatory_Edition.pdf` - 160 pages;
+- `EBP_Book_Part_III_Unified_Explanatory_Edition.pdf` - 153 pages;
+- `SEQUENTIAL_PARALLEL_BRIDGE.md` - working theory checkpoint v0.1;
+- the Gate 1D-C outcome-discrimination protocol and frozen JSON plan;
+- the previous `EBU_FUTURE_BOOKS_STRUCTURE.md` planning register.
 
-The recovered Parts IV–VII remain the authoritative baseline. Parts VIII–IX extend the project after later discoveries; they must not delete, compress, or silently repurpose Parts IV–VII.
+The Git repository and its history remain the final authority for committed study status, original Task 2, robust-P1C, Gate 1E, Gate 2, locks, hashes, and official results. This planning document does not authorize an experiment, edit a locked protocol, or convert a proposed result into an observed result.
 
-### 2.1 Recovered original seven-part frontier
+### 2.2 Continuity rule
 
-The completed Parts I–III already absorbed much of the earlier “book of tests” concept. Part IV therefore begins at the post-O14 scientific frontier rather than repeating D1–D10 and O14 as technical history.
+An accepted book allocation, equation, theorem candidate, research dependency, evidence gate, or stop condition should be recorded here and then synchronized with the authoritative repository. Conversation summaries are supporting context, not the scientific source of truth.
 
-| Part | Working title | Central question | Approximate length |
-|---|---|---|---:|
-| IV | *When Outcomes Must Discriminate* | Can local EBU decisions be measured under sensitive outcomes, delay, and uncertainty? | 260–340 pages |
-| V | *Homeostasis Through Time* | Under what assumptions is the system invariant, stable, or attracted toward homeostasis? | 300–420 pages |
-| VI | *Across Distance* | How do routes, actors, cooperation, and infrastructure compose from local actions? | 350–500 pages |
-| VII | *The Action-Accounted Economy* | What would a complete EBU economy require, and how could transition occur? | 400–600 pages |
+When a later result changes the outline, the register should be revised explicitly. A new result must not silently rewrite the historical meaning of an earlier registered study.
 
-Lengths remain flexible. Explanation and scientific completeness take priority over equal book sizes.
+### 2.3 Claim-status vocabulary
 
-### 2.2 Part IV — When Outcomes Must Discriminate
+Every important statement in the future manuscripts must be labelled internally as one of the following:
 
-Status: **Recovered authoritative structure; generation blocked on its supporting registered results.**
+- **Definition** - fixes the meaning of a term or mathematical object.
+- **Algebraic identity** - follows exactly from adopted definitions.
+- **Theorem** - proved under explicit assumptions.
+- **Model-dependent result** - follows inside a declared model but is not universal.
+- **Tested implementation property** - supported by code tests, not by itself a physical result.
+- **Observed registered result** - measured in a preregistered official execution.
+- **Research hypothesis** - a falsifiable proposition awaiting evidence.
+- **Institutional design choice** - a governance or allocation rule, not a law of physics.
+- **Analogy** - explanatory only, with its failure boundary stated.
+- **Open problem** - important and deliberately unresolved.
 
-Central role: Gate 1D-C, robust-P1C clarification, and Gate 1E.
+### 2.4 Figure-status labels
 
-Chapters 63–79:
+Every figure must carry one of these evidence labels:
 
-1. What O14 actually taught us.
-2. How destination buffers hide behavioural differences.
-3. Behavioural discrimination versus outcome discrimination.
-4. How to prove that an experimental instrument is sensitive.
-5. Designing worlds whose outcomes must change.
-6. Gate 1D-C: preregistered questions, arms, controls, and falsifiers.
-7. Positive controls: proving that the instrument is awake.
-8. From static algebra to executable test worlds.
-9. Fail-closed implementation and information boundaries.
-10. The official Gate 1D-C result.
-11. Consequences for O10, O11, and F13.
-12. A physical observation always has an age.
-13. Uncertainty has units.
-14. Robust permission and conservative no-export feasibility.
-15. Exact quote envelopes under uncertainty.
-16. Quote epochs, latency, expiry, and Gate 1E.
-17. The completed local-foundation evidence ledger.
+- **Schematic**
+- **Mathematically derived**
+- **Tested implementation**
+- **Observed in a registered run**
+- **Research hypothesis**
+- **Institutional design choice**
 
-Required figures and evidence:
+This is especially important for gravity, charge, Fermat, diffusion, entropy, waves, cooperation, behavioural change, and economic transition.
 
-- O14 causal chain: different actions → buffered stocks → demand cap → identical service;
-- service-plateau graph with the discriminating boundary visible;
-- positive-control and falsifier trees;
-- observation–quote–execution–settlement timelines;
-- robust uncertainty envelopes;
-- equation → implementation → test → trace provenance;
-- actual result plots generated from committed artifacts.
+### 2.5 Standard descriptive chapter pattern
 
-Generation condition: produce Part IV in one complete pass only after Gate 1D-C and the relevant Gate 1E execution are complete and committed. Gate 1D-C is currently scientifically `UNSTARTED` after its preflight failure; no rerun is authorized by this register.
+Every future chapter should normally contain:
 
-### 2.3 Part V — Homeostasis Through Time
-
-Status: **Recovered authoritative structure; protected high-priority volume.**
-
-Central role: the principal long-run theorem book. It must distinguish one safe action from a system that remains viable indefinitely.
-
-Chapters 80–97:
-
-1. Why one safe tick does not prove a safe future.
-2. The complete constrained state transition.
-3. Safe sets, viable sets, target sets, and recovery basins.
-4. The bounded-service wrapper.
-5. Recursive feasibility: can another safe decision be made tomorrow?
-6. Several actions sharing one nonlinear source.
-7. The long-run theorem dependency structure.
-8. Forward invariance of the viable region.
-9. What mathematical induction means by “forever.”
-10. Lyapunov stability in physical language.
-11. Attraction, recovery, and convergence.
-12. Persistent disturbances and practical stability.
-13. Regeneration, delay, reserve boundaries, and Allee danger.
-14. Demand feasibility and explicit physical impossibility.
-15. Coupled resources and interacting fields.
-16. EBU, entropy, free energy, and signed charge: similarities and limits.
-17. Long-horizon simulations as theorem adversaries.
-18. The strongest homeostasis theorem actually earned.
-
-Target conclusion, explicitly conditional:
-
-> Under stated regeneration, feasibility, connectivity, measurement, timestep, and controller assumptions, the viable region is forward invariant and trajectories approach—or remain within—a bounded homeostatic neighbourhood.
-
-The theorem supplies the “forever” component; simulations attack its assumptions and search for counterexamples. If general shared-source settlement remains unresolved, the first theorem may use a conservative one-action-per-source rule, with the scope stated explicitly. O3 must not block all stability work.
-
-Required figures:
-
-- nested safe, viable, and target regions;
-- invariant-set phase portraits;
-- theorem-dependency map;
-- inductive invariance across time;
-- Lyapunov landscapes;
-- disturbance tubes and recovery trajectories;
-- counterexamples showing why each assumption is needed.
-
-### 2.4 Part VI — Across Distance
-
-Status: **Recovered authoritative structure.**
-
-Central role: long-range genuine needs, actor receipts, Bellman routing, cooperation, and infrastructure adaptation.
-
-Chapters 98–122:
-
-1. Why genuine needs sometimes must travel.
-2. The planet as a typed, time-dependent graph.
-3. Nodes, edges, paths, and live physical epochs.
-4. Why distance alone is not an EBU formula.
-5. Why EBU is not \(q_1q_2/r^2\).
-6. What the gravity analogy helps explain—and where it fails.
-7. Fermat’s principle without a “knowing photon.”
-8. Bellman recursion in plain language.
-9. When changing field states break a static shortest path.
-10. Medicine produced only far away.
-11. A replacement pump needed after a flood.
-12. Food, heat, and repair under regional disruption.
-13. Why a very high negative EBU does not prohibit a necessary action.
-14. Urgency, access, physical permission, and EBU accounting.
-15. Quote, execute, verify, and settle across a complete route.
-16. The action receipt and measured actor contributions.
-17. The Exact Actor–EBU Closure Theorem.
-18. Why signed actor lines are not generally zero-sum.
-19. Nonlinear joint effects and the unresolved O3 allocation problem.
-20. Cooperation without requiring altruism.
-21. Shared transport, tools, storage, and repair capacity.
-22. Fairness, free-riding, access, and resilience experiments.
-23. Repeated costly needs as signals for structural redesign.
-24. Factories, hospitals, storage, rail, road, air, sea, and local production.
-25. Adaptive-network experiments and the final route/cooperation ledger.
-
-Recurring medicine example:
-
-- the medicine is needed regardless of its EBU;
-- EBU records the complete physical consequence and does not morally prohibit the action;
-- access, guarantees, pooling, or borrowing are separate institutional questions;
-- repeated expensive deliveries may make regional storage, local production, a nearer hospital, a shared cold chain, or new transport infrastructure physically preferable;
-- every proposed factory, railway, tunnel, warehouse, or hospital is itself an accounted action;
-- no transport mode is universally best; urgent air delivery may outperform slower rail when delay produces greater total harm.
-
-Collaboration claim to preserve:
-
-> EBU does not require people to become altruistic. It may make cooperation materially advantageous whenever shared action meets the same genuine needs with less verified physical burden. Whether that advantage produces stable, fair and resilient collaboration must be demonstrated rather than assumed.
-
-### 2.5 Part VII — The Action-Accounted Economy
-
-Status: **Recovered authoritative structure; original seven-part synthesis.**
-
-Central role: not EBU as another price, but an economy in which verified actions carry their physical consequences.
-
-Chapters 123–149:
-
-1. From an action equation to an economy.
-2. Money and EBU answer different questions.
-3. An EBU transaction is not a payment from buyer to seller.
-4. Why several participants may all receive positive EBU lines.
-5. Why actor balances need not be equal and opposite.
-6. The complete physical action receipt.
-7. What must be measured to define the field.
-8. Sensors, local state, calibration, uncertainty, and provenance.
-9. Products and complete supply histories.
-10. Verification, audit, residuals, and contestability.
-11. Privacy and the power created by measurement.
-12. Necessary actions with very high physical burden.
-13. Access, guarantees, pooling, and borrowing without rewriting history.
-14. Scarcity, impossibility, priority, and rationing.
-15. Public infrastructure and common services.
-16. The smallest-action incentive.
-17. Competition and cooperation under action accounting.
-18. Behaviour and culture as empirical questions.
-19. Poverty, disability, dependency, and unequal access.
-20. Benefits of a measurable or calculable economy.
-21. Fraud, gaming, rebound effects, and missing burdens.
-22. Institutions and constitutional safeguards.
-23. Why organizations might adopt EBU today.
-24. Observational EBU beside money.
-25. Transition experiments and pilot systems.
-26. A complete functioning EBU-economy simulation.
-27. One needs-based day in an EBU economy, final predictions, conclusions, and future actions.
-
-The long-term destination must be presented positively while scientific results remain separate from institutional choices:
-
-> Present evidence establishes a physical action-accounting foundation. Institutional use can expand as measurement, closure, safety, incentives, and social consequences are validated across progressively wider domains.
-
-### 2.6 Shared descriptive and evidence strategy
-
-Every future chapter should use this human-readable sequence:
-
-1. A genuine physical need.
-2. One plain-language question.
-3. An intuitive diagram.
-4. Definitions and units before notation.
-5. The equation explained first in words.
-6. A complete numerical example.
-7. The corresponding code architecture.
-8. The registered test or theorem.
-9. A failure case or counterexample.
-10. What was established, what was not, and what follows next.
-
-Every figure must carry one evidence-status label:
-
-- **Schematic**;
-- **Mathematically derived**;
-- **Tested implementation**;
-- **Observed in a registered run**;
-- **Research hypothesis**;
-- **Institutional design choice**.
-
-This labeling is especially important for comparisons involving gravity, charge, Fermat, diffusion, entropy, cooperation, and economic transition.
-
-A single recurring region should connect Parts IV–VII: its hospital first exposes O14 buffering, then faces delayed measurements, drought and stability questions, distant medicine and repair needs, infrastructure redesign, and finally a complete action-accounted economy.
-
-### 2.7 Reconciliation with Parts VIII–IX
-
-The recovered structure predates the two later programmes. The correct allocation is:
-
-| Later discovery | Required bridge inside IV–VII | Full treatment |
+1. a genuine physical need;
+2. one plain-language question;
+3. an intuitive diagram;
+4. definitions and units before notation;
+5. the main equation explained first in words;
+6. a complete numerical example;
+7. the corresponding Python architecture or trace path;
+8. the registered test, theorem, or hypothesis;
+9. a failure case, counterexample, or negative control;
+10. a closing ledger: what was established, what was not, and what follows next.
+
+Python-generated figures are explanatory evidence, not decoration. Each important result should normally connect:
+
+> equation -> configuration -> code -> test -> trace -> result figure -> claim
+
+---
+
+## 3. Overlap audit against Parts I-III
+
+The Unified Explanatory Editions already contain many subjects that appeared as full chapters in the recovered future outline. The future books must cite these foundations and move directly to the new scientific boundary.
+
+| Future area | Existing foundation that must not be rewritten as new | Genuine future frontier |
 |---|---|---|
-| Sequential telescoping and shared-source actions | Part V, especially Chapter 6 | Part VIII |
-| Parallel groups, comparator choice, synergy, interference, cancellation, and redundancy | Short prerequisites in Parts V–VII where required | Part VIII |
-| Group receipts, allocation, and receipt batching | Part VI Chapters 16–19 and Part VII Chapters 3–10 | Part VIII, with institutional settlement consequences in Part VII |
-| Long-range and delayed effects | Parts IV–VI | Parts VIII–IX where interaction and coordination require them |
-| Scheduling, timing, placement, topology, and propagation | Part VI Chapters 2–9 and 21–25 | Part IX |
-| Wave diagnostics, phase, spectral modes, scaling laws, recurrences, and fractal hypotheses | Research-status forward references only | Part IX |
-| Binding quotes, residuals, reserves, institutional self-knowledge, enterprise, and adaptive preferences | Part VII Chapters 6–25 | Part VII; not a replacement title and not a separate numbered volume at present |
+| Outcome discrimination | Part III Chapters 58-59 already explain Gate 1D, O14, behavioural differences, buffering, multiplexing, the flat outcome, and F13. Chapter 60 introduces measurement, latency, uncertainty, and privacy. | A new discriminating instrument, Gate 1D-C execution and result, robust-P1C alignment, Gate 1E, and a completed local evidence ledger. |
+| Long-run homeostasis | Part II Chapter 43 and Part III Sections 62.17-62.18 already introduce invariance, stability, attraction, and the boundary of the missing theorem. | The actual constrained theorem programme, proofs, assumptions, adversarial simulations, and counterexamples. |
+| Sequential actions and simultaneity | Part I already introduces several actors on a nonlinear field; Part II Chapter 37 introduces composition, simultaneity, and shared sources; Part III contains exact quote and receipt telescoping examples. | A general sequential-parallel bridge, named comparators, true interaction, many-action systems, group receipts, allocation, batching, and shared-capacity experiments. |
+| Distance, gravity, Fermat, and Bellman | Part I already treats route epochs and warns that distance is not the formula. Part II Sections 30.7 and 32.7 and Chapter 42 already explain why the graph is not gravity, why EBU is not \(q_1q_2/r^2\), Bellman reasoning, Fermat as an analogy, long-range medicine, and route redesign. Part III Section 62.9 repeats the frontier. | Typed time-dependent routes, changing live states, replanning, congestion, multi-resource paths, uncertainty, provisional settlement, route-wide group effects, cooperation experiments, and adaptive infrastructure. |
+| Receipts and actor closure | Part II Chapter 35 and Part III Chapter 51 already define action receipts, actor lines, exact closure, and why actor signs are not zero-sum. | Group and route receipts, causal identifiability, O3, binding quotes, residual allocation, institutional reserves, products, supply histories, and economy-scale settlement. |
+| Money and the economy | Parts I-III already explain that EBU is not money, a price, a wallet, or buyer-to-seller transfer. Part III Chapters 50-51 and Sections 62.12-62.16 introduce necessary high-burden actions, poverty, collaboration, games, and the economy as a research destination. | A complete institutional synthesis: binding quotes, access, priority, common services, privacy safeguards, enterprise, governance, pilots, behavioural studies, and a functioning economy simulation. |
 
-This allocation prevents both omission and duplication. Part VI asks how real needs, routes, actors, cooperation, and infrastructure work across distance. Part VIII formalizes how multiple actions combine. Part IX asks how action providers should be arranged and scheduled to improve the system.
+### 3.1 Consolidation rule for the old *Across Distance* opening
 
-## 3. Confirmed conceptual distinctions to preserve across all books
+The following recovered chapter ideas are already substantially present in Parts I-II and must not remain separate future chapters:
 
-### 3.1 Ledger
+- Why distance alone is not an EBU formula.
+- Why EBU is not \(q_1q_2/r^2\).
+- What the gravity analogy helps explain and where it fails.
+- Fermat's principle without a “knowing photon.”
+- Bellman recursion in plain language.
 
-The ledger is the persistent memory of state transitions, obligations, transfers, errors, and settlements. It is not merely a list of payments. It allows the system to remember what was predicted, what was authorized, what occurred, what remained unresolved, and who ultimately bears each balance.
+They are consolidated into one short bridge chapter in the new Part VII:
 
-### 3.2 Pre-action EBU quote
+> **Known Route Foundations and the Unresolved Boundary**
 
-Before an action, the system observes the current local state and derives an EBU value for the specified action:
+That chapter will cite the existing explanations and then move immediately to time dependence, congestion, changing states, uncertainty, group effects, and adaptive networks.
+
+---
+
+## 4. Final future-series map, sizes, and transitions
+
+Global chapter numbers are not yet frozen. Part-local labels such as IV.1 and V.1 are authoritative for planning. If the present chapter counts survive manuscript development, the provisional global ranges would be 63-77, 78-93, 94-111, 112-129, 130-147, and 148-169.
+
+| Part | Working title | Central question | Chapters | Words | Python/result figures | Estimated pages |
+|---|---|---|---:|---:|---:|---:|
+| IV | *When Outcomes Must Discriminate* | Can local EBU decisions be measured with an outcome instrument that is sensitive under delay and uncertainty? | 15 | 38,000-48,000 | 25-35 | 190-250 |
+| V | *Homeostasis Through Time* | Under what assumptions is the viable region invariant, stable, or attractive over an unbounded future? | 16 | 48,000-62,000 | 35-50 | 240-320 |
+| VI | *Sequential and Parallel EBU Dynamics* | How do multiple actions combine, and when is parallel execution genuinely different from a named sequential comparison? | 18 | 48,000-65,000 | 35-55 | 250-340 |
+| VII | *Across Distance* | How do verified actions compose through changing routes, actors, capacities, regions, and infrastructure? | 18 | 55,000-75,000 | 40-60 | 290-400 |
+| VIII | *Dynamic Coordination Fields and Society Geometry* | How should providers and actions be timed, placed, and connected across a dynamic network? | 18 | 58,000-80,000 | 50-75 | 320-450 |
+| IX | *The Action-Accounted Economy* | How can verified physical action accounting support institutions without pretending that institutional choices are laws of physics? | 22 | 70,000-95,000 | 40-65 | 390-540 |
+
+These estimates include the descriptive tone of Parts I-III, worked examples, proofs, code architecture, exercises, counterexamples, and Python-derived figures. They are not targets to inflate. If a claim can be made clearly in fewer pages, it should be.
+
+### 4.1 Why Parts IV and V remain separate
+
+Part IV is experimental and metrological. Part V is mathematical and dynamical. Part IV can be completed after Gate 1D-C, robust-P1C alignment, and the relevant Gate 1E work. Part V may require a longer theorem programme.
+
+Merging them would probably produce a 410-540-page volume and would delay publication of a completed experimental result until the long-run theorem was also ready. The merge question should be reopened only if the completed, illustrated Part IV falls below approximately 150 pages after overlap removal.
+
+### 4.2 Complete transition chain
+
+| Transition | What the earlier part establishes | Question inherited by the next part |
+|---|---|---|
+| III -> IV | Exact local equations, tested implementation, and O14's genuine behavioural difference with a flat service outcome. | Was the outcome instrument insensitive, and how can a sensitive instrument remain valid under latency and uncertainty? |
+| IV -> V | A validated observation-quote-execution-settlement cycle with stated sensitivity and uncertainty boundaries. | If one transition is measurable and conservatively feasible, does repeating controlled transitions preserve viability through time? |
+| V -> VI | A conditional one-action or conservatively serialized long-run theorem. | What changes when actions overlap, share sources, occur in different orders, or must be measured as a group? |
+| VI -> VII | Exact multiple-action composition, interaction definitions, group receipts, and an explicit O3 boundary. | How do those action groups propagate through routes whose states, capacities, actors, and needs change during execution? |
+| VII -> VIII | Dynamic routing, cooperation, shared capacity, resilience, and infrastructure adaptation. | Can timing, placement, topology, phase, and scheduling systematically improve the whole network? |
+| VIII -> IX | Tested coordination mechanisms and their physical, fairness, resilience, autonomy, and uncertainty limits. | How should measurement, access, guarantees, responsibility, privacy, enterprise, and governance use those results? |
+
+One recurring region should connect all six future books. Its hospital first exposes O14 buffering, then encounters delayed measurements and drought, then several simultaneous needs, then distant medicine and flood repairs, then network redesign, and finally a complete action-accounted institutional day.
+
+---
+
+## 5. Part IV - *When Outcomes Must Discriminate*
+
+**Central question:** Can local EBU decisions be tested with an outcome instrument that is demonstrably sensitive, and can the local decision cycle remain valid when observations are delayed or uncertain?
+
+**What this book must not repeat:** the full histories of Gate 1D, O14, multi-edge capability, buffering, temporal multiplexing, or the basic measurement list already explained in Part III Chapters 58-60.
+
+**Opening transition from Part III:** O14 showed that policies selected different actions, but destination buffering and bounded service produced the same measured service outcome. Part IV asks whether the policy was ineffective or the instrument was unable to reveal its effect.
+
+### Detailed chapter structure
+
+| Ch. | Working title | What the chapter does | Required evidence and figures |
+|---|---|---|---|
+| IV.1 | **The Boundary Inherited from O14** | Gives a concise, cross-referenced reconstruction of the exact unresolved claim: behavioural discrimination was observed, outcome discrimination was not. Separates the registered O14 result from every later interpretation. | One causal chain from policy choice to buffered service; one claim-status table; no retelling of the entire O14 study. |
+| IV.2 | **Behavioural Difference Is Not Outcome Difference** | Defines capability, choice, behaviour, physical transition, service outcome, and outcome discrimination. Explains why different selected actions can coexist with equal endpoint service. | Paired trajectories with different actions but equal outcome; a units table for every metric. |
+| IV.3 | **How Buffers, Caps, and Windows Flatten Results** | Derives the conditions under which destination stock, service caps, demand windows, and temporal multiplexing create a plateau. Converts the O14 explanation into a general instrument-design lesson. | Plateau diagrams, sensitivity boundary plots, and counterexamples where the plateau disappears. |
+| IV.4 | **The Outcome Metric as a Scientific Instrument** | Treats a simulation outcome channel like a measurement instrument. Defines non-vacuity, sensitivity, identifiability, resolution, tolerance, and the difference between “no effect” and “unable to detect an effect.” | Instrument-response curves, detection thresholds, and a falsifier tree. |
+| IV.5 | **Designing Worlds Whose Outcomes Must Change** | Shows how to construct test worlds in which declared policy differences are analytically forced into measurable outcome channels. Prevents parameter tuning after results are seen. | World schematics, analytical lower bounds, and counter-worlds that remain non-discriminating. |
+| IV.6 | **Gate 1D-C: Questions, Worlds, Arms, and Comparators** | Presents the preregistered DC worlds, capability discipline, arms, primary comparisons, and nonclaims in plain language. Explains why the capability-superset arm is not automatically the alignment comparator. | Protocol map, arm table, world diagrams, frozen analytical predictions, and plan-hash provenance. |
+| IV.7 | **Positive Controls, Negative Controls, and Falsifiers** | Explains how positive controls prove that the instrument can fire, negative controls detect unintended physical changes, and falsifiers prevent a convenient reinterpretation of a failed study. | Control matrix, PC response plots, and hypothesis/falsifier ledgers. |
+| IV.8 | **From Frozen Algebra to Fail-Closed Code** | Maps equations and frozen parameters into an implementation that cannot inspect outcomes while constructing the plan. Separates design, implementation, pre-execution tests, and official execution. | Equation-to-function map, information-boundary diagram, test groups, and provenance trace. |
+| IV.9 | **The Preflight Incident and the Integrity of an Unstarted Study** | Records the operational incident without converting it into a scientific result. Explains why a stopped preflight, preserved failure, and separate authorization protect the study. Repository evidence must determine the final incident chronology. | Failure timeline, expected-versus-observed preflight contract, and an explicit `UNSTARTED` scientific status card. |
+| IV.10 | **The Official Gate 1D-C Result** | Reports the single authorized execution exactly as committed. This chapter must not be written as a result chapter until the execution exists. It reports nulls and falsifier activations as results rather than repairing them. | Official summary plots, trace-derived figures, execution manifest, and claim table. |
+| IV.11 | **Consequences for O10, O11, and F13** | Updates only the claims directly affected by Gate 1D-C. Distinguishes instrument sensitivity, quote-greedy under-service, outcome alignment, and execution integrity. | Before-and-after claim ledger with no broad safety claim. |
+| IV.12 | **Every Physical Observation Has an Age** | Introduces observation timestamps, quote epochs, action start, completion, verification, and settlement horizons. Shows how a numerically exact state can still be physically stale. | Observation-quote-execution-settlement timelines and age-of-information plots. |
+| IV.13 | **Uncertainty Has Units** | Represents measurement uncertainty in the same physical units as the observed quantity. Separates stock uncertainty, rate uncertainty, timing uncertainty, model uncertainty, and numerical tolerance. | Interval diagrams, dimensional audits, and examples of invalid mixed-unit margins. |
+| IV.14 | **Robust P1C, Conservative Permission, and Quote Envelopes** | Aligns the robust-P1C diagnostic before making nonzero-uncertainty claims. Derives conservative no-export feasibility and exact or bounded quote envelopes under declared uncertainty sets. | Robust-budget envelopes, feasible/infeasible regions, and worst-case quote bands. |
+| IV.15 | **Gate 1E and the Completed Local-Foundation Ledger** | Executes and reports the repository-defined latency/uncertainty gate without redefining its scope from memory. Closes the local measurement foundation and lists every remaining assumption inherited by Part V. | Gate 1E result figures, final local evidence ledger, and a transition diagram into long-run dynamics. |
+
+### Part IV generation gate
+
+Generate Part IV only after:
+
+1. the Gate 1D-C preflight incident is reconciled in the repository;
+2. execution is separately authorized and completed once under the frozen design;
+3. the robust-P1C diagnostic is aligned before nonzero-uncertainty claims;
+4. the relevant Gate 1E work is completed and committed;
+5. all result figures are rebuilt from committed data.
+
+**Closing transition to Part V:** Part IV can establish that one action cycle is observable, discriminating, and conservatively bounded. It cannot establish that repeated cycles remain safe or approach homeostasis. That becomes the exact question of Part V.
+
+---
+
+## 6. Part V - *Homeostasis Through Time*
+
+**Central question:** Under what explicit assumptions does the constrained system remain viable, stable, or attracted toward a homeostatic region over an unbounded horizon?
+
+**Protected role:** This is the principal long-run theorem book. It must not be compressed into a few simulation chapters or replaced by the sentence “EBU enforces homeostasis.”
+
+**What this book must not repeat:** Part II Chapter 43 and Part III Sections 62.17-62.18 already introduce invariance, Lyapunov stability, attraction, and the missing theorem. Part V must do the theorem work.
+
+### Detailed chapter structure
+
+| Ch. | Working title | What the chapter does | Required evidence and figures |
+|---|---|---|---|
+| V.1 | **From a Reliable Transition to a Long-Run Question** | Imports the validated local transition from Part IV and states the new scope. Defines what would count as preservation, viability, stability, attraction, recovery, and failure across time. | Dependency map from Part IV results to Part V assumptions. |
+| V.2 | **Why One Safe Tick Does Not Prove a Safe Future** | Gives explicit counterexamples in which every isolated action looks feasible while repeated demand, delay, depletion, or controller interaction eventually causes failure. | Short-horizon-safe/long-horizon-failed trajectories. |
+| V.3 | **The Complete Constrained State Transition** | Defines the state, natural drive, regeneration, controlled action, service, reserve, measurement, and update order needed by the theorem. All state variables and units are declared before proof. | State-transition diagram, dimensional table, and reference implementation interface. |
+| V.4 | **Safe Sets, Viable Sets, Target Sets, and Recovery Basins** | Separates four regions that are often called “safe” without distinction. Shows why being inside a reserve boundary is not the same as having a feasible future or converging to a target. | Nested-set diagrams and two-dimensional viable-kernel examples. |
+| V.5 | **Genuine Need, Bounded Service, and Physical Impossibility** | States demand assumptions and distinguishes a genuine need from guaranteed physical feasibility. Defines unmet need, degraded service, rationing, and explicit impossibility without changing the physical history. | Feasibility maps and infeasible-demand counterexamples. |
+| V.6 | **Recursive Feasibility** | Asks whether a feasible decision today leaves at least one feasible decision tomorrow. Develops the controller and reserve conditions needed for recursive feasibility. | Feasible-action-set evolution and recursive-feasibility failures. |
+| V.7 | **The Long-Run Theorem Dependency Structure** | Lists every theorem assumption: regeneration, connectivity, timestep, observation, delay, bounded disturbance, demand, controller action set, and multi-action scope. Prevents hidden assumptions from appearing inside the proof. | Formal dependency graph and assumption-removal table. |
+| V.8 | **Forward Invariance of the Viable Region** | Proves the conditional implication that a state beginning in the declared viable region remains there under the stated controller and disturbance bounds. | Derived boundary maps and proof-to-test correspondence. |
+| V.9 | **What Mathematical Induction Means by “Forever”** | Explains the base case and inductive step in physical language. Clarifies that an unbounded theorem horizon is not a forecast of every real future and depends on assumptions continuing to hold. | Induction timeline and assumption-validity overlay. |
+| V.10 | **Lyapunov Stability in Physical Language** | Defines stability around a set, not only a point. Distinguishes non-increase of a candidate function from actual convergence and explains what a Lyapunov proof does and does not provide. | Lyapunov landscapes and stable-but-not-attractive examples. |
+| V.11 | **Attraction, Recovery, and Convergence** | Develops stronger conditions under which trajectories approach a target region or return after a disturbance. Separates finite recovery, asymptotic convergence, and practical neighbourhoods. | Recovery basins, convergence traces, and non-converging invariant cycles. |
+| V.12 | **Persistent Disturbances and Practical Stability** | Replaces ideal zero-disturbance claims with bounded-disturbance tubes, input-to-state style reasoning, and explicit residual neighbourhoods. | Disturbance tubes, worst-case envelopes, and noise-amplitude sweeps. |
+| V.13 | **Regeneration, Delay, Reserve Boundaries, and Allee Danger** | Tests how logistic regeneration, Allee thresholds, delayed action, and reserve certification interact. Shows why current stock is not identical to future regenerative capacity. | Bifurcation-like regime maps and delayed-collapse counterexamples. |
+| V.14 | **Coupled Resources and Interacting Fields** | Extends the theorem cautiously from one represented resource to coupled water, energy, material, health, or ecological fields. Refuses unjustified scalar aggregation and states when separate accounts are required. | Coupled-state diagrams and failure of a misleading single scalar. |
+| V.15 | **Long-Horizon Simulations as Theorem Adversaries** | Uses Python sweeps, boundary searches, disturbances, and assumption-removal experiments to attack the proof and find counterexamples. Simulation supports scope testing; it does not supply the word “forever.” | Phase portraits, parameter maps, adversarial seeds, and theorem-failure plots. |
+| V.16 | **The Strongest Homeostasis Theorem Actually Earned** | States the final theorem at exactly the scope supported by proof and tests. If shared-source settlement remains unresolved, it may use one action per source or conservative serialization and must say so. Ends by exposing the multiple-action boundary inherited by Part VI. | Final theorem box, assumptions table, evidence ledger, and boundary cases. |
+
+### Target conclusion
+
+The desired conclusion remains conditional:
+
+> Under explicitly stated regeneration, feasibility, connectivity, measurement, timestep, controller, and disturbance assumptions, the viable region may be forward invariant and trajectories may approach or remain within a bounded homeostatic neighbourhood.
+
+The exact wording must follow the theorem actually proved. If attraction is not established, the book must stop at invariance or practical stability.
+
+**Closing transition to Part VI:** A conservative theorem can serialize actions or allow one action per source. Real systems contain overlapping actions, shared capacity, simultaneous repair, group service, and order dependence. Part VI asks how the accounting and dynamics change when the single-action abstraction is removed.
+
+---
+
+## 7. Part VI - *Sequential and Parallel EBU Dynamics*
+
+**Central question:** How do several actions combine, and when does parallel execution produce a genuinely different physical result from a declared sequential comparison?
+
+**Foundation:** `SEQUENTIAL_PARALLEL_BRIDGE.md` v0.1 is the working checkpoint. This book must refine, test, and where necessary correct that note before manuscript generation.
+
+### 7.1 Core theory that must be preserved
+
+Let \(X_t\in\mathcal X\) be the complete represented state and let \(D(X)\) be the declared distortion function. For a transition:
 
 \[
-Q_t = F(S_t,a_t)
-\]
-
-where:
-
-- \(S_t\) is the observable local system state;
-- \(a_t\) is the precisely specified proposed action;
-- \(Q_t\) is the quoted EBU consequence offered to the actor.
-
-The quote is calculated before the action. It is the system's actionable statement about the transition it expects and is prepared to guarantee under stated conditions.
-
-### 3.3 EBU record, receipt, and settlement
-
-The theoretical EBU receipt should not be confused with a technical execution marker used by an experiment runner.
-
-The preferred theoretical model is one evolving EBU record:
-
-1. **QUOTED** — created before the action from the current local state.
-2. **ACCEPTED** — accepted by the actor under explicit conditions.
-3. **IN_PROGRESS** — the specified action has begun.
-4. **SETTLED** — the action and its observed consequences have been evaluated.
-5. **FAILED** — the specified action did not complete.
-6. **PARTIAL** — only part of the specified transition occurred.
-7. **UNRESOLVED** — the system cannot yet determine the actual outcome safely.
-
-The pre-action record contains the quoted value. The post-action receipt settles the same record using the newly observed state. The quote is not erased or silently rewritten after the outcome is known.
-
-### 3.4 Physical accounting versus responsibility
-
-Two questions must always remain separate:
-
-1. What physically happened in the system?
-2. Which actor or institution is responsible for the resulting balance?
-
-A refund or guaranteed payment changes who bears the cost. It does not erase energy, material, time, information, infrastructure use, or dissipation that physically occurred.
-
-### 3.5 Binding quote principle
-
-Once an actor truthfully accepts a valid quote and performs the specified action within its declared conditions, the quoted EBU settlement is binding for that actor.
-
-The actor must not face an unlimited retroactive charge merely because the institution misunderstood its own system. Without this rule, participation becomes a gamble: the actor cannot know the consequence of acting until after the action is irreversible.
-
-### 3.6 Measurement residual
-
-After the action, the system measures the actual local transition:
-
-\[
-A_t = G(S_t,a_t,S_{t+1})
-\]
-
-The measurement or model residual is:
-
-\[
-\varepsilon_t = A_t-Q_t
-\]
-
-The residual is not hidden and does not retroactively replace the accepted actor quote. It is entered visibly in the ledger and assigned according to the responsibility rules defined in Part VII.
-
-### 3.7 Earning EBU, initiative, and ownership
-
-EBU must not be described as a system in which a person cannot earn EBU by creating something useful. If an actor creates and operates a restaurant that contributes positively to the local system, the relevant work may generate EBU.
-
-The unresolved question is not whether initiative may be rewarded. It is how to distinguish and value several different contributions that are combined in today's concept of profit:
-
-- discovering an unmet local need;
-- designing and establishing the restaurant;
-- supplying capital, tools, or a location;
-- accepting a declared and bounded project risk;
-- coordinating people and resources;
-- cooking, serving, cleaning, maintaining, and administering;
-- creating nourishment, pleasure, hospitality, safety, culture, and community;
-- learning and improving the service over time;
-- consuming energy, materials, land, labor capacity, and ecological capacity;
-- receiving an ownership return after active contribution has ended.
-
-EBU may reward verified contribution, initiative, innovation, responsibility, and continuing service without assuming that ownership alone creates an unlimited permanent claim on future value. The correct duration, scale, and distribution of founder rewards remain open theoretical questions.
-
-The restaurant's system contribution is not identical to its revenue or customer demand. A preliminary decomposition is:
-
-\[
-V_{\mathrm{restaurant}}
-=
-B_{\mathrm{nutrition}}
-+B_{\mathrm{hospitality}}
-+B_{\mathrm{community}}
-+B_{\mathrm{learning}}
--C_{\mathrm{resources}}
--C_{\mathrm{labor\ burden}}
--C_{\mathrm{ecology}}
--C_{\mathrm{externalities}}
-\]
-
-This is a conceptual decomposition, not yet an authoritative EBU equation. It must be reconciled with the established formalism before publication.
-
-The total system contribution must also be kept separate from the settlement of each participant. Founder, workers, suppliers, customers, the issuing institution, and the ecological reserve may each have distinct quotes, receipts, and balances.
-
-### 3.8 Preferences are partly produced by the system
-
-The books must not assume that preferences observed under today's monetary, employment, ownership, advertising, scarcity, and status systems will remain fixed under EBU.
-
-People adapt to the incentives, risks, recognition systems, and opportunities around them. If ecological restoration, care, prevention, maintenance, knowledge creation, or community work becomes visible and reliably rewarded, people may learn to value and pursue those activities differently. Work for the planet may become a source of EBU, competence, identity, status, and genuine satisfaction rather than an underfunded sacrifice.
-
-This does not justify assuming that everyone will become altruistic. EBU must remain workable for people with mixed motives, including care, curiosity, autonomy, security, recognition, enjoyment, ambition, and personal benefit. The theory should treat motivation as adaptive and plural rather than reducing it either to profit maximization or to perfect altruism.
-
-### 3.9 Sequential and parallel EBU
-
-Status: **Working theory checkpoint; algebraic core established within the adopted transition formalism; physical interpretation and allocation rules require tests.**
-
-The common transition definition is:
-
-\[
-EBU(X_0\rightarrow X_1)=D(X_0)-D(X_1).
+\boxed{EBU(X_0\rightarrow X_1)=D(X_0)-D(X_1)}
 \]
 
 For a sequential order \(\pi\):
 
 \[
-EBU_{\mathrm{seq},\pi}=D(X_0)-D(X_\pi).
+\boxed{EBU_{\mathrm{seq},\pi}=D(X_0)-D(X_{\pi})}
 \]
 
-For an overlapping parallel group \(G\):
+For a parallel group \(G\):
 
 \[
-EBU_G=D(X_0)-D(X_G).
+\boxed{EBU_G=D(X_0)-D(X_G)}
 \]
 
-The parallel interaction must always name its sequential comparator:
+The parallel interaction must name its sequential comparator:
 
 \[
-I_{G\mid\pi}
-=EBU_G-EBU_{\mathrm{seq},\pi}
-=D(X_\pi)-D(X_G).
+\boxed{I_{G\mid\pi}=EBU_G-EBU_{\mathrm{seq},\pi}=D(X_{\pi})-D(X_G)}
 \]
 
-If the parallel and selected sequential executions have the same final distortion, then \(I_{G\mid\pi}=0\). A nonlinear cross-term alone is not proof of genuine parallel interaction. The identities of child actions, actors, resource costs, and responsibilities must survive group measurement.
+These equations preserve one endpoint-based foundation while making genuinely new parallel behaviour visible.
 
-Authoritative working note: `SEQUENTIAL_PARALLEL_BRIDGE.md`.
+The following findings are already part of the working theory checkpoint:
 
-### 3.10 Dynamic coordination as a central research principle
+1. **Sequential telescoping is an algebraic identity.** Correctly measured consecutive differences cancel their intermediate states.
+2. **Every sequential action must use the live predecessor state.** Evaluating each action independently against the original state double counts or misallocates nonlinear change.
+3. **Parallel group EBU is the change from one common before-state to one common after-state.** Grouping must preserve child identities.
+4. **A parallel interaction is comparator-relative.** There is no honest unnamed interaction when sequential orders reach different endpoints.
+5. **Equal final distortion implies zero EBU interaction.** Identical states are sufficient but not necessary; different states can have equal distortion.
+6. **A nonlinear cross-term is not proof of true parallel interaction.** The same cross-term may already appear in a correct sequential calculation.
+7. **Cancellation does not erase resource use.** If opposing target effects cancel but both consume resources, the complete state must retain that consumption.
+8. **Group EBU does not automatically identify individual causal EBU.** Measurement and allocation must remain separate.
+9. **Individual settlement shares are rules unless causal evidence identifies them.** The rule must not be mislabelled as physics.
+10. **Receipt batching is beneficial only conditionally.** Shared measurement saves resources only when group-coordination cost is smaller than repeated baseline measurement cost.
+11. **Delayed effects require explicit settlement horizons.** Immediate and later EBU are different temporal accounts, not contradictions.
 
-Status: **Confirmed central research direction; theorem candidates and empirical claims remain unvalidated.**
-
-The project will test the proposition that an action's EBU depends not only on what is done, but also on where, when, in which order, and relative to which other actions it is done.
-
-For provider placement \(P\), schedule \(\sigma\), and evaluation horizon \(T\):
+For receipt batching, the working resource-cost model is:
 
 \[
-EBU_G(P,\sigma;T)
-=D(X_0)-D\!\left(X_G(P,\sigma;T)\right).
+K_{\mathrm{separate}}=nK_0+\sum_{i=1}^{n}K_i,
+\]
+
+\[
+K_{\mathrm{group}}=K_0+\sum_{i=1}^{n}K_i+K_G,
+\]
+
+so the modelled saving is:
+
+\[
+\boxed{K_{\mathrm{separate}}-K_{\mathrm{group}}=(n-1)K_0-K_G}
+\]
+
+and grouping is cheaper only if:
+
+\[
+\boxed{K_G<(n-1)K_0.}
+\]
+
+This is a conditional model to test, not a universal EBU law.
+
+### Detailed chapter structure
+
+| Ch. | Working title | What the chapter does | Required evidence and figures |
+|---|---|---|---|
+| VI.1 | **From One Transition to a System of Actions** | Bridges from the conservative scope of Part V and audits what Parts I-II already established. Defines the genuinely unresolved many-action boundary without repeating the basic receipt chapters. | Existing/future boundary map and a two-action physical story. |
+| VI.2 | **Actions, Transformations, Schedules, and Common State** | Defines action transformations, start and finish times, commitments, schedules, and the represented state required for several actions. Extends deterministic notation toward delayed and stochastic variants. | Action-lifecycle timeline and formal object map. |
+| VI.3 | **Sequential Telescoping Beyond Two Actions** | Derives the \(n\)-action telescoping identity and includes natural-drive residuals when drive acts between action epochs. States exactly what telescoping proves and what it cannot identify causally. | Cancellation diagrams, numeric chains, and omitted-state failures. |
+| VI.4 | **Path Dependence, Order, and Serializability** | Distinguishes endpoint dependence from ledger allocation dependence. Compares physical scheduling with serializability and transaction ideas without treating computer-science analogies as physical proofs. | Order-permutation examples and serializable/non-serializable cases. |
+| VI.5 | **What Counts as a Parallel Group** | Defines temporal overlap, shared sources, shared fields, shared constraints, and common accounting boundaries. Tests whether overlap in time alone is enough to require group measurement. | Interval-overlap diagrams and group-boundary counterexamples. |
+| VI.6 | **The Sequential-Parallel Bridge** | Derives \(I_{G\mid\pi}\) and explains why the comparator is part of the scientific statement. Provides positive, zero, and negative interaction examples. | Endpoint triangle diagrams and interaction plots. |
+| VI.7 | **State Equivalence and EBU Equivalence** | Shows that identical endpoints imply identical EBU, while equal distortion can hide different states and future capacities. Explains when endpoint EBU alone is insufficient for later dynamics. | Equal-D/different-state contours and future-divergence examples. |
+| VI.8 | **Commuting and Non-Commuting Actions** | Defines when action order changes the endpoint. Develops comparator sets or ranges for non-commuting actions and shows why “the sequential result” may not exist uniquely. | Commutator examples, order matrices, and comparator-range plots. |
+| VI.9 | **Nonlinear Cross-Terms Are Not Automatically Interaction** | Corrects the tempting but false inference that every \(ab\) term proves parallel synergy. Separates shared nonlinear evaluation from endpoint-changing simultaneity. | Symbolic expansions and matched-endpoint simulations. |
+| VI.10 | **Synergy, Interference, Redundancy, and Capacity Conflict** | Builds an operational taxonomy based on endpoint differences relative to declared comparators. Requires each label to correspond to a measurable physical mechanism. | Paired positive/negative/zero interaction worlds. |
+| VI.11 | **Cancellation Without Annihilation** | Uses a state containing target deviation and resource use to show why opposite effects can cancel while physical costs remain. Extends the example to waste, heat, wear, time, and attention. | Resource-retaining cancellation plots and incomplete-state failures. |
+| VI.12 | **The Deterministic Two-Action Test Matrix** | Registers the minimal controlled matrix: endpoint equivalence, nonlinear no-interaction, positive interaction, negative interaction, cancellation, redundancy, capacity conflict, and both sequential orders. | Full expected-results table, traces, and falsifiers. |
+| VI.13 | **Many-Action Systems and Higher-Order Interaction** | Generalizes the bridge to \(n\) actions and introduces pairwise, triple, and higher-order decompositions as analytical tools. Taylor or inclusion-exclusion-like decompositions must not be mistaken for unique causal allocation. | Interaction-order diagrams and scaling experiments. |
+| VI.14 | **Choosing the Sequential Comparator** | Compares reservation order, start-time order, physically natural order, best and worst feasible schedules, a policy-defined canonical order, and a reported range. No canonical rule is selected without purpose-specific tests. | Comparator decision table and sensitivity analysis. |
+| VI.15 | **Shared Sources, Reservations, and the Committed Field** | Extends the state to include already accepted actions and source budgets. Connects group action physics to O3 and shows why independently valid quotes can conflict at execution. | Shared-source capacity maps and stale-commitment failures. |
+| VI.16 | **Group Measurement and Causal Identifiability** | Separates the objectively measured group endpoint from estimates of individual causal contribution. Defines when separate meters, controlled interventions, or validated causal models make contributions identifiable. | Identifiable/non-identifiable examples and causal-evidence ladder. |
+| VI.17 | **Group Quotes, Child Receipts, and Allocation Closure** | Defines one group record that preserves every child action, actor, provider, promise, and residual. Tests the closure condition for actor shares plus institutional accounts while refusing to disguise allocation as measurement. | Group-receipt schema, closure equations, and allocation counterexamples. |
+| VI.18 | **Receipt Batching, Settlement Horizons, and the Many-Action Ledger** | Tests the batching inequality, delayed effects, provisional records, and later settlement. Closes the evidence ledger and identifies what must be carried into route-wide action chains. | Cost break-even plots, open/settled receipt timelines, and final claim ledger. |
+
+### Open problems that must remain visible
+
+- the exact overlap condition defining a group;
+- the canonical comparator, if one exists;
+- individual causal attribution when actions are inseparable;
+- O3 shared-source settlement and allocation;
+- joining or leaving a group after a quote is issued;
+- large-\(n\) scaling, stochastic actions, and incomplete observation;
+- delayed and cross-boundary effects whose causal chains overlap.
+
+**Closing transition to Part VII:** Part VI can define and test multiple actions inside a declared boundary. A medicine route crosses many boundaries, actors, clocks, capacities, and changing states. Part VII composes the many-action theory across distance.
+
+---
+
+## 8. Part VII - *Across Distance*
+
+**Central question:** How do verified actions compose across typed, time-dependent routes, multiple actors, shared infrastructure, and regional disruption?
+
+**What this book must not repeat:** the elementary claims that distance alone is not EBU, EBU is not \(q_1q_2/r^2\), Fermat is an analogy, or Bellman recursion can plan a path. Those foundations already exist in Parts I-II.
+
+### Detailed chapter structure
+
+| Ch. | Working title | What the chapter does | Required evidence and figures |
+|---|---|---|---|
+| VII.1 | **Known Route Foundations and the Unresolved Boundary** | Consolidates the prior gravity, Fermat, Bellman, and distance material into one concise bridge with exact cross-references. States the new frontier: live time-dependent routes, congestion, uncertainty, group effects, and infrastructure adaptation. | One “already established/new work” table and one route schematic. |
+| VII.2 | **The Planet as a Typed, Time-Dependent Graph** | Defines nodes, edges, carriers, capacities, states, permissions, and epochs. A geographic kilometre is separated from travel time, energy, loss, risk, and service effect. | Layered graph maps and edge-type tables. |
+| VII.3 | **A Route as a Composition of Verified Local Actions** | Builds an end-to-end route from local quote-execute-verify-settle epochs. Uses sequential telescoping while preserving intermediate losses, actors, and state changes. | Route receipt chain and endpoint-versus-segment closure. |
+| VII.4 | **When Live States Break a Static Shortest Path** | Shows why a route chosen at departure can become infeasible or inferior after stocks, weather, capacity, or need change. Defines safe replanning without rewriting completed segments. | Dynamic shortest-path traces and route-switch examples. |
+| VII.5 | **Urgency, Perishability, and an Evolving Need** | Places time, decay, patient condition, service delay, and opportunity cost inside the represented state. Explains why urgent air transport can outperform slower rail without declaring air universally best. | Delay-harm curves and mode comparisons. |
+| VII.6 | **Capacity, Congestion, and Shared Infrastructure** | Models queues, shared cold chains, warehouses, ports, roads, and source budgets. Connects route congestion to the many-action framework of Part VI. | Capacity phase maps and congestion externality plots. |
+| VII.7 | **Multi-Resource Routes Without False Scalar Collapse** | Tracks medicine, cooling energy, packaging, staff time, vehicle wear, and ecological effects as typed accounts. States when aggregation weights are declarations rather than physical identities. | Multi-layer Sankey-like accounts and scalar-collapse counterexamples. |
+| VII.8 | **Uncertainty and Robust Route Feasibility** | Extends Part IV uncertainty envelopes across multiple segments and growing observation age. Tests worst-case feasibility, safety margins, and route failure probabilities without mixing them with prices. | Uncertainty propagation bands and robust-route maps. |
+| VII.9 | **Quote, Reserve, Execute, Verify, and Settle Across a Route** | Defines reservations, expiry, segment confirmation, route-wide guarantees, re-quotation, and settlement boundaries. Prevents double settlement when routes are replanned. | Lifecycle sequence, quote epochs, and duplicate-prevention examples. |
+| VII.10 | **Delayed and Cross-Boundary Effects** | Distinguishes immediate, delivery-time, and later-horizon EBU. Defines provisional receipts and open causal chains for effects that arrive after the apparent route completion. | Settlement-horizon plots and boundary-crossing traces. |
+| VII.11 | **Route Actors and Exact Closure** | Extends actor receipt closure from existing sequential examples to route-wide child records. Separates physical route closure from monetary balance-sheet closure and institutional guarantees. | Actor-route matrix and closure audit. |
+| VII.12 | **Joint Effects and O3 Across a Route** | Examines shared warehouses, consolidated loads, simultaneous handling, and shared-source withdrawals. Uses Part VI interaction and identifiability rules rather than inventing independent actor values. | Group-route examples and unresolved-allocation cases. |
+| VII.13 | **Medicine Produced Only Far Away** | Provides the complete recurring case: the medicine is needed regardless of its EBU; the receipt records physical consequence; access and guarantees are separate; urgency changes the route comparison. | Full numerical route, patient-delay model, and receipt set. |
+| VII.14 | **A Pump After a Flood, and a Region Under Disruption** | Adds replacement pumps, food, heat, and repair under damaged infrastructure. Tests multiple simultaneous genuine needs, scarcity, prioritization pressure, and route failure. | Disruption maps, recovery traces, and competing-needs scenarios. |
+| VII.15 | **Cooperation Without Requiring Altruism** | Tests the claim that shared transport, tools, storage, or repair may meet the same needs with less verified burden. Treats cooperation as a material hypothesis, not a moral assumption. | Cooperative versus separate-action experiments. |
+| VII.16 | **Fairness, Free-Riding, Access, and Resilience** | Tests whether physically efficient cooperation remains stable and fair under unequal access, strategic use, provider failure, and regional dependency. Keeps efficiency separate from institutional acceptability. | Distributional metrics, failure tests, and free-riding scenarios. |
+| VII.17 | **Infrastructure Alternatives Are Accounted Actions** | Compares storage, local production, hospitals, rail, roads, air, sea, tunnels, and shared cold chains while accounting for construction, maintenance, land, and transition burden. | Lifecycle comparison plots and break-even surfaces. |
+| VII.18 | **Adaptive Networks and the Route Evidence Ledger** | Tests whether repeated costly receipts are useful signals for structural redesign. Closes the route, cooperation, and infrastructure claim ledger and passes placement/scheduling questions to Part VIII. | Adaptive-network experiments and final evidence table. |
+
+### Collaboration claim to preserve
+
+> EBU does not require people to become altruistic. It may make cooperation materially advantageous whenever shared action meets the same genuine needs with less verified physical burden. Whether that advantage produces stable, fair, and resilient collaboration must be demonstrated rather than assumed.
+
+**Closing transition to Part VIII:** Part VII can compare and adapt routes. The next question is larger: how should the whole provider network be timed, placed, and connected so that many actions coordinate efficiently without sacrificing resilience, fairness, or autonomy?
+
+---
+
+## 9. Part VIII - *Dynamic Coordination Fields and Society Geometry*
+
+**Central question:** How should providers and their actions be arranged across time, sequence, space, and network structure to improve verified system outcomes?
+
+**Central principle:**
+
+> System performance depends not only on what actors do, but also on their relative timing, sequence, location, and structure.
+
+For provider placement \(P\), schedule \(\sigma\), and horizon \(T\):
+
+\[
+EBU_G(P,\sigma;T)=D(X_0)-D\!\left(X_G(P,\sigma;T)\right).
 \]
 
 Relative to a declared reference schedule \(\rho\), define coordination advantage:
 
 \[
-C_{\sigma\mid\rho}(T)
-=EBU_\sigma(T)-EBU_\rho(T)
-=D(X_\rho(T))-D(X_\sigma(T)).
+\boxed{C_{\sigma\mid\rho}(T)=EBU_\sigma(T)-EBU_\rho(T)=D(X_\rho(T))-D(X_\sigma(T)).}
 \]
 
-The design problem is provisionally:
+The provisional design problem is:
 
 \[
-(P^*,\sigma^*)
-=\arg\max_{P,\sigma} EBU_G(P,\sigma;T),
+\boxed{(P^*,\sigma^*)=\arg\max_{P,\sigma}EBU_G(P,\sigma;T)}
 \]
 
-subject to capacity, resource, fairness, resilience, uncertainty, autonomy, and coordination-cost constraints.
+subject to resource, capacity, fairness, resilience, uncertainty, autonomy, measurement-cost, and coordination-cost constraints.
 
-Wave propagation, Taylor interaction hierarchies, Fibonacci-like recurrences, power laws, spectral modes, self-similarity, and fractal structures are hypotheses or analytical tools to compare objectively. They must not be assumed in advance. This does not reduce their priority: the project must build models, theorem candidates, simulations, and discriminating tests capable of finding or rejecting them.
+### Detailed chapter structure
 
-## 4. Part VII supporting programme — Binding Quotes and Institutional Self-Knowledge
+| Ch. | Working title | What the chapter does | Required evidence and figures |
+|---|---|---|---|
+| VIII.1 | **From Dynamic Routes to a Coordination Field** | Shows why locally good routes can still create system-wide peaks, conflicts, or fragility. Defines the new object: a network of providers whose actions interact through timing and structure. | Local-versus-system outcome example and dependency map. |
+| VIII.2 | **State, Providers, Schedules, and Evaluation Horizons** | Defines the minimal dynamic coordination model: provider nodes, actions, capacities, delays, schedules, commitments, state, and horizon. Separates physical variables from policy variables. | Object diagram, units table, and reference configuration. |
+| VIII.3 | **Actions as Time-Dependent Signals** | Represents action intensity, duration, start time, and recovery as signals acting on a field. Establishes when continuous, discrete, pulse, or event-based descriptions are appropriate. | Signal plots and matched discrete/continuous examples. |
+| VIII.4 | **Coordination Advantage Requires a Reference** | Derives \(C_{\sigma\mid\rho}\) and imports the comparator discipline from Part VI. Shows why an apparently good schedule has no interpretable advantage until the reference is declared. | Reference-schedule comparisons and sign examples. |
+| VIII.5 | **One Objective Is Not Enough** | Defines total EBU, peak distortion, recovery time, unmet need, resource use, resilience, fairness, autonomy, uncertainty, and coordination cost. Uses Pareto frontiers where no single scalar is justified. | Metric dashboard and Pareto plots. |
+| VIII.6 | **Sequence, Timing, and Scheduling** | Tests order, start-time offsets, batching, maintenance windows, and shared capacity. Connects schedule optimization to many-action interaction without assuming that maximum simultaneity is best. | Gantt-like schedules, capacity traces, and optimality counterexamples. |
+| VIII.7 | **Phase Distribution and Peak Reduction** | Studies whether shifting action phases reduces peaks or causes harmful delay. Defines phase only where periodic or quasi-periodic structure exists. | Phase sweeps, peak maps, and phase-response curves. |
+| VIII.8 | **Provider Placement and Geometry** | Compares centralized, distributed, near-need, near-source, and hybrid placement under transport, response-time, capacity, and failure constraints. | Spatial layouts and placement trade-off surfaces. |
+| VIII.9 | **Topology Comparison Under Common Rules** | Compares line, ring, hub, lattice, modular, small-world, hierarchical, recursive, distributed, and learned graphs under identical objectives and constraints. No attractive topology is privileged in advance. | Common-benchmark topology panels and performance tables. |
+| VIII.10 | **Propagation, Delay, and Causal Reach** | Tests how disturbances and actions propagate through edges with distance-dependent or state-dependent delays. Defines causal reach and distinguishes propagation from simultaneous correlation. | Space-time plots and delay-versus-distance tests. |
+| VIII.11 | **When the Word “Wave” Is Earned** | Requires propagation, distance-dependent delay, amplitude and phase, reproducible reinforcement or cancellation, and identifiable modes before calling a pattern a wave. Provides non-wave counterexamples. | Space-time heatmaps, interference experiments, and falsifier checklist. |
+| VIII.12 | **Graph Spectra and Coordination Modes** | Uses eigenvalues and eigenvectors as analytical tools for network modes, synchronization, bottlenecks, and recovery. Clearly separates mathematical modes from observed physical propagation. | Spectral plots and mode reconstruction tests. |
+| VIII.13 | **Interaction Hierarchies Across Space and Time** | Extends pairwise and higher-order interaction diagnostics from Part VI to distributed schedules. Taylor expansions and interaction decompositions remain tools, not automatic causal allocations. | Pair/triple interaction maps and truncation-error plots. |
+| VIII.14 | **Resilience, Failure, and Recovery** | Tests node loss, edge loss, delayed information, correlated failure, reserve exhaustion, and adversarial load. Compares efficiency under normal operation with graceful degradation. | Failure cascades, recovery trajectories, and resilience frontiers. |
+| VIII.15 | **Scaling Laws, Saturation, and Regime Change** | Searches for linear, sublinear, superlinear, saturating, and threshold behaviour as system size grows. Fits alternatives and reports uncertainty rather than choosing a power law because it looks plausible. | Log-log and linear comparisons, residuals, and regime maps. |
+| VIII.16 | **Sequences, Periodicity, and Recurrence Hypotheses** | Tests Fibonacci-like recurrences, other integer sequences, oscillations, and periodic schedules against null and alternative models. A recognizable sequence is a hypothesis, not evidence of a law. | Model-comparison plots and out-of-sample predictions. |
+| VIII.17 | **Modularity, Hierarchy, Self-Similarity, and Fractal Hypotheses** | Compares modular, hierarchical, recursive, and self-similar organization. A fractal claim requires scale range, reproducible scaling, and predictive value beyond simpler alternatives. | Multiscale network plots and competing-model evidence. |
+| VIII.18 | **Society-Scale Coordination Experiments and the Evidence Ledger** | Runs the strongest surviving models at larger scale with fairness, autonomy, privacy, uncertainty, and coordination cost included. States what coordination can inform before institutions choose how to use it. | Society-scale simulations, sensitivity analyses, and final claim ledger. |
 
-Status: **Confirmed supporting programme within the recovered Part VII, *The Action-Accounted Economy*. This section preserves detailed theory and examples; it does not replace the recovered Part VII title or Chapters 123–149.**
+### Non-negotiable research discipline
 
-Working title alternatives:
+- Waves are not assumed.
+- Fibonacci-like sequences are not assumed.
+- Power laws are not assumed.
+- Fractals are not assumed.
+- Centralization is not assumed to be efficient.
+- Decentralization is not assumed to be resilient.
+- The best physical objective is not assumed to be the best institution.
 
-- **The Binding EBU Quote: Risk, Failure, and Institutional Responsibility**
-- **The System Must Know Its Own Body**
-- **From Quote to Settlement: How EBU Handles Error**
+Candidate patterns must compete against simpler models using the same data, objectives, constraints, and validation rules.
 
-Recommended internal division or chapter-cluster title:
+**Closing transition to Part IX:** Part VIII identifies physically promising coordination mechanisms and their limits. Part IX must decide how an institution can quote, measure, guarantee, contest, and learn from those actions without converting a physical model into unaccountable social power.
 
-> **The Binding EBU Quote: Institutional Responsibility and the Knowledge of the System**
+---
 
-### 4.1 Central thesis
+## 10. Part IX - *The Action-Accounted Economy*
 
-EBU should calculate a usable value before an actor commits to an action. If an accepted quote can be replaced afterward by an arbitrarily worse settlement, EBU does not provide coordination; it exposes the actor to institutional uncertainty.
+**Central question:** What would a complete action-accounted economy require, and how could it be introduced while preserving access, contestability, privacy, responsibility, and scientific honesty?
 
-Therefore, when the actor supplied truthful information and performed the specified action under the quoted conditions, the institution that produced the quote must honor it. The institution—not the compliant actor—bears the residual caused by incomplete measurement, model error, environmental uncertainty, or inadequate knowledge of the governed system.
+This is the final synthesis. It is not “EBU as another price.” It is an economy in which verified actions carry their physical consequences while institutional rules determine access, allocation, guarantees, and governance.
 
-The actual physical outcome must still be measured and recorded. The guarantee governs allocation of the resulting balance, not denial of physical reality.
+### 10.1 Binding quote and institutional residual programme
 
-### 4.2 Opening problem: coordination or gambling?
-
-Begin the chapter with the actor's dilemma.
-
-The system offers:
+Before an action, the institution issues a quote from the declared state and action:
 
 \[
-Q_t=+100\ \mathrm{EBU}
+Q_t=F(S_t,a_t).
 \]
 
-The actor accepts and performs the action. Afterward, the system discovers:
+After execution, the actual represented transition is measured:
 
 \[
-A_t=-256\ \mathrm{EBU}
+A_t=G(S_t,a_t,S_{t+1}).
 \]
 
-If the actor can now be charged \(-256\) EBU, the original quote had no dependable meaning. The actor accepted an unknown distribution of outcomes rather than a known coordination signal.
-
-The correct settlement is:
+The residual is:
 
 \[
-\varepsilon_t=A_t-Q_t=-256-100=-356\ \mathrm{EBU}
+\boxed{\varepsilon_t=A_t-Q_t.}
 \]
 
-and the ledger allocation is:
+The physical result and the responsibility allocation must remain separate. If a compliant actor accepts a valid quote of \(+100\) EBU and the actual represented result is \(-256\) EBU, the institution can preserve physical closure as:
 
 \[
 \underbrace{+100}_{\text{binding actor settlement}}
 +
 \underbrace{(-356)}_{\text{institutional residual}}
 =
-\underbrace{-256}_{\text{actual system effect}}
+\underbrace{-256}_{\text{actual represented effect}}.
 \]
 
-This example should appear near the beginning and be revisited throughout the chapter.
+Honouring the quote does not erase energy, material, time, infrastructure wear, or ecological effect. It assigns the model or measurement error to the institution that chose the boundary, sensors, model, and guarantee.
 
-### 4.3 Why the pre-action quote matters
+The action record should support these states:
 
-Explain that a quote is not only a prediction. It is a coordination interface between the local system and the actor.
+- `QUOTED`
+- `ACCEPTED`
+- `IN_PROGRESS`
+- `SETTLED`
+- `FAILED`
+- `PARTIAL`
+- `UNRESOLVED`
 
-The actor needs the quote to decide:
+Fraud, sensor manipulation, material actor deviation, and knowingly experimental actions require declared procedures. They must not be hidden inside ordinary institutional model error.
 
-- whether to act;
-- whether the action is compatible with personal and local homeostasis;
-- whether alternative actions are preferable;
-- whether the expected benefit justifies time, effort, risk, and opportunity cost;
-- whether the institution's requested behavior can be trusted.
+### Detailed chapter structure
 
-A quote that can change without a declared bound after the action fails these functions.
+| Ch. | Working title | What the chapter does | Required evidence and figures |
+|---|---|---|---|
+| IX.1 | **From a Physical Action Equation to an Economy** | Summarizes the validated chain from Parts I-VIII and separates established science from the institutional choices still required. Defines the minimum evidence needed before broader adoption. | Series dependency map and claim-status ledger. |
+| IX.2 | **Money and EBU Answer Different Questions** | Explains money as a system of claims, prices, and exchange while EBU records represented physical transition consequences. Shows why both can coexist during observation and transition phases. | Side-by-side transaction examples and non-equivalence table. |
+| IX.3 | **An EBU Transaction Is Not Buyer-to-Seller Payment** | Reuses, without re-proving, actor closure to explain why several actors may receive positive lines and why actor balances need not be equal and opposite. Prevents EBU from being described as a conserved token. | Actor-line diagrams and monetary-closure comparison. |
+| IX.4 | **The Complete Economic Action Record** | Integrates request, permission, quote, acceptance, commitments, child actions, route segments, measurements, physical settlement, actor lines, and residuals into one auditable record. | Full record schema and end-to-end lifecycle. |
+| IX.5 | **Products and Services as Verified Supply Histories** | Replaces a single product label with a versioned chain of material, energy, transport, labour, maintenance, loss, and uncertainty records. Defines boundaries to prevent both omission and infinite regress. | Product provenance graph and complete/incomplete history examples. |
+| IX.6 | **What Must Be Measured to Define the Field** | Specifies sensors, local state, calibration, uncertainty, timing, provenance, and missing variables. Explains why there is no single planetary EBU sensor. | Measurement architecture and calibration trace. |
+| IX.7 | **The Binding Pre-Action Quote** | Treats the quote as a coordination interface and limited institutional guarantee. Defines truthful disclosure, accepted conditions, expiry, declared bounds, and the committed field. | Quote envelope, actor decision story, and contract-state diagram. |
+| IX.8 | **Actual Settlement and the Visible Residual** | Measures the actual transition without rewriting the accepted quote. Defines the residual as evidence about institutional self-knowledge and preserves physical closure. | Quote-versus-actual distributions and residual ledger. |
+| IX.9 | **Institutional Reserves, Nested Responsibility, and Risk Pooling** | Assigns ordinary model and measurement residuals to providers, higher institutions, or prospectively funded reserves. Tests reserve solvency and prevents unlimited hidden socialization of errors. | Nested account diagrams, reserve simulations, and insolvency cases. |
+| IX.10 | **Failure, Deviation, Fraud, Unresolved Outcomes, and Appeals** | Defines settlement for no action, partial action, system-caused failure, actor deviation, manipulation, and uncertainty. Adds correction and appeal procedures without pretending to have written a complete legal code. | Decision tree, disputed-record examples, and audit trail. |
+| IX.11 | **Privacy, Measurement Power, and Constitutional Safeguards** | Treats observability as a source of institutional power. Develops data minimization, local computation, purpose limitation, access controls, contestability, independent audit, and governance limits. | Information-flow diagrams and privacy-threat models. |
+| IX.12 | **Necessary Actions with Very High Physical Burden** | Repeats the essential moral boundary: negative EBU records burden; it does not morally prohibit medicine, heat, disability support, or emergency rescue. | Necessary-action cases with separate physical and access ledgers. |
+| IX.13 | **Scarcity, Impossibility, Priority, and Rationing** | Separates what is physically impossible from how an institution chooses priority. Compares transparent rationing rules without presenting any one rule as a physical theorem. | Feasibility frontiers and institutional-choice tables. |
+| IX.14 | **Access, Guarantees, Pooling, Borrowing, Poverty, and Dependency** | Develops mechanisms that allow necessary action without rewriting its physical history. Tests unequal starting conditions, disability, care dependence, regional disadvantage, and catastrophic need. | Distributional simulations and access stress tests. |
+| IX.15 | **Public Infrastructure, Common Services, and Stewardship** | Accounts for hospitals, water, transport, storage, knowledge, maintenance, and ecological restoration as continuing service systems. Separates ownership, use, stewardship, and public guarantees. | Infrastructure lifecycle accounts and stewardship examples. |
+| IX.16 | **The Smallest-Action Incentive** | Develops the repeated question: how can the same genuine need be met with a better verified physical result? Tests prevention, maintenance, reuse, redesign, local production, and demand reduction without sacrificing the need. | Alternative-action frontiers and improvement loops. |
+| IX.17 | **Initiative, Enterprise, and the Restaurant Case** | Demonstrates that EBU can recognize useful creation, innovation, coordination, labour, risk, and service. Decomposes founder, worker, supplier, customer, public-infrastructure, knowledge-common, and ecological contributions without assuming unlimited ownership reward. | Complete restaurant action history, participant lines, and counterfactual alternatives. |
+| IX.18 | **Competition, Cooperation, Motivation, and Adaptive Preferences** | Treats motivation as plural: security, autonomy, mastery, recognition, belonging, curiosity, care, ambition, and personal benefit. Tests whether institutions change preferences without assuming universal altruism. | Behavioural study designs and competing institutional scenarios. |
+| IX.19 | **Verification, Gaming, Rebound, Missing Burdens, and Contestability** | Tests Goodhart-like gaming, boundary manipulation, rebound effects, strategic reporting, omitted externalities, and institutional capture. Requires visible residuals and challenge mechanisms. | Red-team scenarios, missing-burden cases, and detection metrics. |
+| IX.20 | **Why Organizations Might Adopt Observational EBU Today** | Defines low-risk adoption beside money: monitoring, procurement, maintenance, infrastructure comparison, and internal learning. Describes benefits of calculability without claiming a completed economy. | Pilot ladder, organizational dashboards, and adoption criteria. |
+| IX.21 | **A Complete Functioning EBU-Economy Simulation** | Integrates needs, actions, quotes, groups, routes, coordination, access, reserves, privacy constraints, fraud, learning, and institutional failure in one reproducible Python model. It is a model test, not evidence that society will behave identically. | Full architecture, scenario results, sensitivity analysis, and failure catalogue. |
+| IX.22 | **One Needs-Based Day, Predictions, Transition, and Future Actions** | Follows one day across household, hospital, enterprise, infrastructure, and ecology. States testable predictions, nonclaims, transition stages, constitutional limits, and the final research programme. | Narrative-system trace, final evidence ledger, and staged transition map. |
 
-### 4.4 Ideal system and real system
+### 10.2 Enterprise and motivation boundary
 
-In an ideal closed, deterministic, and completely observed system:
+EBU must not be described as a system in which a person cannot earn EBU by creating something useful. Initiative, innovation, coordination, labour, stewardship, and continuing service may be real contributions. The open problem is how to distinguish these contributions from an unlimited permanent reward for ownership alone.
+
+The restaurant's total represented contribution is not identical to revenue or popularity. A provisional descriptive decomposition may include:
 
 \[
-S_{t+1}=T(S_t,a_t)
+V_{\mathrm{restaurant}}=
+B_{\mathrm{nutrition}}+B_{\mathrm{hospitality}}+B_{\mathrm{community}}+B_{\mathrm{learning}}
+-C_{\mathrm{resources}}-C_{\mathrm{labour\ burden}}-C_{\mathrm{ecology}}-C_{\mathrm{externalities}}.
 \]
 
-and:
+This is not yet an authoritative EBU equation. It is a checklist of contributions and burdens that must be reconciled with the established formalism.
 
-\[
-Q_t=A_t
-\]
+### 10.3 Long-term destination statement
 
-In a real system:
+> Present evidence establishes a physical action-accounting foundation. Institutional use can expand as measurement, closure, safety, incentives, and social consequences are validated across progressively wider domains.
 
-\[
-S_{t+1}=T(S_t,a_t,E_t)+\eta_t
-\]
+Part IX must present the long-term destination positively while making clear that physics does not select a constitution, a rationing rule, a founder reward, a privacy regime, or a political system.
 
-where \(E_t\) represents environmental interaction and \(\eta_t\) represents unobserved effects, uncertainty, model error, or measurement error.
-
-The chapter must emphasize that the residual is not mystical disappearance. It indicates an incomplete accounting boundary, transport cost, dissipation, external transfer, unobserved state, or incorrect causal model.
-
-### 4.5 Energy is not erased when a promise is honored
-
-The institution honoring the actor's quote does not change the physical past. A failed action may still consume:
-
-- energy;
-- time;
-- material;
-- attention;
-- information-processing capacity;
-- infrastructure lifetime;
-- ecological capacity;
-- opportunity;
-- recovery capacity.
-
-The physical balance may be expressed as:
-
-\[
-C_{\mathrm{actual}}
-=
-C_{\mathrm{actor}}
-+C_{\mathrm{system}}
-+C_{\mathrm{external}}
-+C_{\mathrm{unresolved}}
-\]
-
-Part VII must explain that physical accounting determines what was consumed, while the guarantee and responsibility rules determine which account bears that consumption.
-
-### 4.6 Failure and immediate recalculation
-
-After every attempted action, including failure, the system must observe the new local state and settle the existing EBU record.
-
-Required cases:
-
-- **No action occurred and no resource was consumed** — settle the actor exactly under the quote; release unused reservations; record any administrative cost in the appropriate system account.
-- **Partial action** — measure the actual partial transition, honor the actor-facing quoted rule applicable to the accepted action, and assign the residual.
-- **System-caused failure** — restore or pay the compliant actor according to the quote; charge the residual to the responsible institution or reserve.
-- **Actor deviation** — if the actor materially departed from the quoted action or conditions, the quote is no longer automatically binding for the unquoted behavior.
-- **Fraud or sensor manipulation** — suspend ordinary settlement and apply a separately defined verification procedure; do not classify manipulated input as institutional model error.
-- **Uncertain result** — mark the record `UNRESOLVED`; do not pretend success, failure, or safe repeatability.
-
-### 4.7 Institutional responsibility rule
-
-Recommended rule for the manuscript:
-
-> An accepted EBU quote is binding for an actor who truthfully disclosed the relevant state and performed the specified action within the quoted conditions. The system must recalculate the actual local transition after execution, but any difference caused by the institution's measurement, model, boundary, or governance error is assigned to the institution or its declared reserve. The residual remains visible and must be used to improve future measurement.
-
-The institution is responsible because it:
-
-- selected the measurement boundary;
-- selected and maintained the sensors;
-- defined the state representation;
-- selected the model;
-- issued the quote;
-- authorized or requested the action;
-- possessed greater capacity to pool uncertainty;
-- controls the feedback process needed to improve future estimates.
-
-### 4.8 The organism and its body
-
-This analogy should be developed as a major explanatory section, not a short metaphor.
-
-A country, company, city, hospital, or platform can be understood as a regulatory organism. Its land, infrastructure, resources, members, and institutions form its body. Sensors, statistics, audits, and local reports form its sensory system. Its models and policies form its nervous and regulatory systems.
-
-If an organism cannot sense its own condition, it cannot regulate itself well. It may send an inappropriate signal to a cell, receive the cell's compliant response, and then discover that the action harmed the whole body. The organism cannot honestly claim that its sensory and regulatory error belongs entirely to the cell that followed the signal.
-
-Likewise, an institution that issues a wrong EBU quote reveals that it did not know some relevant part of its own body:
-
-- the state of its land;
-- the condition of infrastructure;
-- the availability of resources;
-- the needs and constraints of people;
-- transport and dissipation losses;
-- externalities crossing its chosen boundary;
-- delayed effects;
-- interactions between local subsystems.
-
-The residual is therefore a physiological symptom of institutional ignorance.
-
-### 4.9 Quote error as a measure of governance quality
-
-Part VII should propose that persistent quote error is a measurable indicator of institutional self-knowledge.
-
-Useful measures to develop:
-
-\[
-\mathrm{MAE}_Q=\frac{1}{N}\sum_{t=1}^{N}|A_t-Q_t|
-\]
-
-\[
-\mathrm{Bias}_Q=\frac{1}{N}\sum_{t=1}^{N}(A_t-Q_t)
-\]
-
-\[
-\mathrm{TailRisk}_Q=P(|A_t-Q_t|>\tau)
-\]
-
-Possible interpretation:
-
-- low average error suggests good local measurement and modeling;
-- persistent signed bias suggests structural misvaluation rather than random noise;
-- large tail risk suggests that the institution hides rare but severe uncertainty behind apparently precise quotes;
-- error concentrated in particular regions or groups suggests unequal sensing or unequal institutional knowledge;
-- slow correction suggests weak institutional learning.
-
-These measures must not become simplistic league tables without normalization for task difficulty, environmental volatility, data availability, and boundary scale. The book should present them as diagnostic signals, not complete measures of moral worth.
-
-### 4.10 Why institutional liability creates an improvement incentive
-
-If every quote error is passed retroactively to the actor, the institution has weak incentives to improve. The actor becomes the absorber of measurement failure.
-
-If the institution bears its own residual, repeated errors create visible pressure to improve:
-
-- sensing;
-- local measurement;
-- causal models;
-- maintenance;
-- infrastructure maps;
-- uncertainty bounds;
-- data quality;
-- feedback speed;
-- institutional memory;
-- cross-boundary accounting.
-
-The reserve is therefore not merely insurance. It is a feedback organ. Its gains and losses reveal where the system lacks knowledge.
-
-### 4.11 The EBU measurement reserve
-
-Create a visible reserve account:
-
-\[
-R_{t+1}=R_t+\varepsilon_t+F_t-P_t
-\]
-
-where:
-
-- \(R_t\) is the reserve balance;
-- \(\varepsilon_t\) is the signed measurement residual assigned to the institution;
-- \(F_t\) is prospective reserve funding;
-- \(P_t\) is any separately defined payout or correction flow not already represented by \(\varepsilon_t\).
-
-Editorial note: the signs and accounting convention must be reconciled with the authoritative EBU equations before publication.
-
-Possible prospective funding mechanisms:
-
-- general taxation;
-- a small transparent measurement-risk contribution;
-- company or institutional capital reserves;
-- insurance or reinsurance between institutions;
-- public budgets for collectively beneficial actions;
-- sector-specific reserve pools;
-- retained surpluses from conservatively accurate quotes.
-
-The funding rule must be declared before outcomes. It need not distribute cost equally. It should distribute risk transparently, predictably, and according to a defensible institutional rule.
-
-### 4.12 Why collective risk pooling can be appropriate
-
-An institution can often absorb prediction error better than a single actor because it can pool many actions across time, geography, and categories. A rare large error can ruin one person while remaining manageable for a broad reserve.
-
-Risk pooling is justified when:
-
-- the system requested or authorized the action;
-- the institution controlled the quote model;
-- the actor complied with the quoted conditions;
-- measurement error is systemic or collectively generated;
-- spreading the risk improves participation and coordination;
-- the reserve remains transparent and cannot silently socialize avoidable private manipulation.
-
-This section should distinguish legitimate collective insurance from hiding institutional incompetence. Repeated residuals must trigger learning, review, and model correction.
-
-### 4.13 Safeguards against exploitation
-
-A binding quote cannot be unconditional. The chapter must specify that it remains binding only when:
-
-1. the actor provided truthful relevant information;
-2. the quoted action was identified precisely enough to verify;
-3. the actor performed that action within the stated conditions and validity period;
-4. the actor did not manipulate sensors, state reports, or settlement evidence;
-5. the institution actually authorized the quote;
-6. the quote was not visibly corrupted or outside a mechanically enforced validity range.
-
-Safeguards should protect the institution without transferring ordinary measurement uncertainty back to the actor.
-
-### 4.14 Actions the system does not understand
-
-When uncertainty is too large, the system should not issue a falsely precise guaranteed quote. It should choose explicitly among:
-
-- decline to quote;
-- delay authorization until adequate measurement is available;
-- issue a guaranteed bounded quote with a declared interval;
-- cap the scale of the authorized action;
-- divide the action into measurable stages;
-- classify it as experimental and obtain separate informed consent;
-- require additional reserve coverage before authorization.
-
-The system must communicate uncertainty before the action, not reveal unlimited uncertainty afterward.
-
-### 4.15 Bounded quotes
-
-Open design question: whether some EBU actions should use a guaranteed point quote or a guaranteed interval.
-
-A bounded quote could take the form:
-
-\[
-Q_t\in[L_t,U_t]
-\]
-
-The actor would know the maximum possible adverse settlement before acting. The final actor settlement could vary within the accepted interval, while any residual outside the interval would remain institutional.
-
-This may preserve coordination when exact point valuation is impossible. However, intervals must not be made so wide that they recreate gambling under another name.
-
-### 4.16 Nested institutional responsibility
-
-A local institution may issue the quote while relying on regional, national, corporate, or international data and infrastructure. Part VII should explain how residuals move through nested responsibility layers.
-
-Possible hierarchy:
-
-1. actor-facing quote remains binding;
-2. local issuer settles with the actor;
-3. local issuer attributes upstream components using frozen rules;
-4. reserve or insurance layers redistribute the institutional residual;
-5. the complete chain remains visible in the ledger;
-6. no upstream dispute delays the compliant actor's settlement.
-
-### 4.17 Positive and negative residuals
-
-The book must address both directions.
-
-- If the actual effect is worse than quoted, the institution bears the negative residual.
-- If the actual effect is better than quoted, the positive residual must follow a declared rule rather than being opportunistically appropriated after observation.
-
-Open question: positive residuals may replenish the reserve, be shared with the actor, or be divided according to a prospective formula. The rule must be symmetrical enough to avoid institutions systematically underquoting benefits while socializing only losses.
-
-### 4.18 Learning loop
-
-Every settled record should feed a controlled learning process:
-
-\[
-(S_t,a_t,Q_t,S_{t+1},A_t,\varepsilon_t)
-\longrightarrow
-\text{model review and future calibration}
-\]
-
-The system should ask:
-
-- Which state variable was missing?
-- Which boundary was incomplete?
-- Was a transport or dissipation path ignored?
-- Was the causal model wrong?
-- Was uncertainty understated?
-- Was the failure local or systemic?
-- Does the same bias affect particular communities or locations?
-- Which sensor, process, or institution must improve?
-
-Model improvement may change future quotes, but it must never rewrite historical quotes or receipts.
-
-### 4.19 Ledger requirements for Part VII
-
-Each EBU action record should preserve at least:
-
-- record identifier;
-- quote issuer;
-- actor or protected participant identity according to the privacy model;
-- timestamp or causal sequence;
-- observable pre-action state reference;
-- exact action specification;
-- quote value or bounded quote;
-- assumptions and validity conditions;
-- acceptance evidence;
-- action status;
-- observable post-action state reference;
-- actual EBU evaluation;
-- residual;
-- residual classification;
-- actor settlement;
-- institutional settlement;
-- reserve account movement;
-- unresolved balance, if any;
-- model version;
-- measurement provenance;
-- audit and appeal status;
-- immutable links between quote and settlement.
-
-### 4.20 Appeals and corrections
-
-The actor should be able to challenge whether:
-
-- the correct quote was applied;
-- the performed action matched the specification;
-- a deviation was attributed correctly;
-- a failure was wrongly classified as actor-caused;
-- the institution altered conditions after acceptance;
-- the settlement record matches the observed evidence.
-
-An appeal may correct measurement or responsibility. It must not erase the original record. Corrections should be appended and linked so institutional learning remains possible.
-
-### 4.21 Why create a restaurant? Initiative, enterprise, and motivation
-
-This should be a substantial chapter section, not a footnote. It begins with a direct question:
-
-> Why would an actor create a restaurant, workshop, laboratory, farm, school, or other enterprise if the actor cannot earn EBU from creating it?
-
-The present working answer is that the premise is probably wrong. A useful enterprise can generate EBU, and its initiator can earn EBU for identifiable contribution. EBU should not eliminate initiative. It should make the basis of its reward clearer.
-
-#### 4.21.1 The restaurant as a bundle of contributions
-
-Creating a restaurant can involve several actions with distinct EBU effects:
-
-- recognizing that a community lacks a useful service;
-- imagining and designing a new response;
-- organizing a location, equipment, supplies, knowledge, and people;
-- accepting responsibility for a difficult coordination process;
-- producing nourishment and safe food;
-- producing hospitality, pleasure, culture, meeting space, and belonging;
-- creating learning, apprenticeships, and local capability;
-- reducing or increasing ecological and health burdens;
-- maintaining the service when novelty has passed;
-- improving the restaurant in response to receipts and local feedback.
-
-The actor may receive EBU for these contributions. Workers and other contributors must also receive their own settlements. The fact that an initiator had the original idea does not make everyone else's contribution disappear, but neither should the existence of collective contribution erase the value of initiative.
-
-#### 4.21.2 Reward without copying today's profit formula
-
-Today's profit combines many different things: payment for work, return for risk, control of scarce assets, bargaining power, temporary innovation reward, inherited ownership, externalized costs, and sometimes monopoly rent. EBU should not treat this bundle as one indivisible natural law.
-
-A future EBU design may separate:
-
-- **creation reward** for discovering and developing a valuable possibility;
-- **coordination reward** for organizing a functioning system;
-- **labor settlement** for continuing work;
-- **stewardship reward** for maintaining assets and capabilities responsibly;
-- **declared risk coverage** for a bounded risk accepted before action;
-- **learning reward** for verified improvements that help the wider system;
-- **ownership or access rights**, whose duration and EBU consequence require separate justification;
-- **external costs**, which must not be hidden by a positive customer-facing balance.
-
-Possible mechanisms include a guaranteed project quote, milestone quotes and receipts, a time-bounded founder reward, continuing EBU tied to continuing contribution, or a prospectively declared share of verified system benefit. These are design candidates, not settled laws.
-
-The key distinction to investigate is:
-
-> Reward for creating and sustaining value is not necessarily the same as an unlimited claim produced by ownership alone.
-
-#### 4.21.3 Motivation is plural
-
-People do not create restaurants only for money. Possible motives include:
-
-- material security and spendable EBU;
-- autonomy;
-- enjoyment of food and hospitality;
-- mastery and creativity;
-- recognition and reputation;
-- social connection;
-- care for a place or community;
-- curiosity and experimentation;
-- ambition and the wish to build something excellent;
-- ecological or public purpose.
-
-EBU should not require altruism, but it also should not assume that profit is the only stable human motive. A robust design should allow personal benefit and system benefit to align while protecting people from coercion and deprivation.
-
-#### 4.21.4 Preferences may change under EBU
-
-Statements such as “people will not do this unless it is profitable in today's sense” extrapolate from preferences formed inside today's institutions. That evidence remains relevant, but it is not automatically valid under a substantially different system.
-
-Preferences are influenced by:
-
-- what work is visible and recognized;
-- which activities provide security;
-- which actions receive status and social meaning;
-- how much time and capacity people have after basic needs are met;
-- what institutions teach people to count as success;
-- which harms are hidden and which contributions are measured;
-- whether cooperation is rewarded or exploited;
-- whether experimentation can occur without catastrophic personal loss.
-
-If EBU makes ecological regeneration, prevention, care, maintenance, and knowledge creation measurable and dependable, people may increasingly want to generate EBU through work for the planet. The system may change not only the chosen action but also the culture in which desires develop.
-
-This possibility must be stated carefully. The manuscript must not claim that EBU will automatically create altruistic people, eliminate status competition, or make all socially valuable work enjoyable. It should claim only that preferences are not external constants and that institutional feedback can cultivate some motives while suppressing others.
-
-#### 4.21.4a Evidence anchor: economic organization and learned social behavior
-
-Use one principal anthropology/cross-cultural study here rather than a broad literature review:
-
-> Henrich, Joseph, et al. (2005). “Economic Man” in Cross-Cultural Perspective: Behavioral Experiments in 15 Small-Scale Societies. *Behavioral and Brain Sciences*, 28(6), 795–855. https://doi.org/10.1017/S0140525X05000142
-
-The researchers used ultimatum, public-goods, and dictator games across 15 small-scale societies with different economic and cultural conditions. The simple self-interested actor model failed in every society studied, while behavior varied substantially between societies. At group level, economic organization and patterns of everyday social interaction explained a substantial portion of that variation. In particular, higher payoffs to cooperation and greater aggregate market integration were associated with more prosocial experimental behavior.
-
-For Part VII, the important lesson is not that markets necessarily create altruism, nor that EBU will produce one predictable personality. It is narrower:
-
-> Human economic behavior is not adequately described as a fixed preference independent of culture and institutions. The forms of cooperation practiced and rewarded in everyday life can be reflected in later choices.
-
-This supports treating the restaurant founder's motives, ecological-work preferences, cooperation, and ideas of success as partly adaptive rather than timeless constants. If EBU changes which contributions are secure, visible, respected, and rewarded, motivation may change over time. That remains a hypothesis to test, not an outcome to assume.
-
-The manuscript must state the study's limitation. It compared societies at one period and found associations; the authors explicitly said their historical data could not establish the direction of causality. It therefore cannot prove that introducing EBU would cause a particular cultural change. It justifies rejecting the opposite unsupported assumption that today's observed preferences must remain unchanged under every institutional arrangement.
-
-This study appears in publicly searchable material attributed to Peter Joseph's *The New Human Rights Movement* and closely matches the theme of the linked 2017 lecture. Before final publication, verify its exact page or endnote against an authoritative copy of the book; cite the original paper as the scientific source rather than citing the lecture as evidence.
-
-#### 4.21.5 Ecological work as productive work
-
-If the planet, ecosystem, or ecological subsystem is inside the relevant EBU boundary, work that improves its homeostasis is productive even when it produces no conventional sale.
-
-Examples may include:
-
-- restoring soil, wetlands, forests, rivers, or biodiversity;
-- reducing pollution and material waste;
-- maintaining long-lived infrastructure;
-- preventing future damage;
-- increasing resilience and recovery capacity;
-- producing shared ecological knowledge;
-- caring for common resources that no single customer owns.
-
-EBU could make such contributions legible and rewardable. This reverses a common present distortion in which extraction produces private revenue while restoration appears merely as a cost.
-
-However, ecological value must not be reduced to whichever variables are easiest to count. Delayed effects, uncertainty, local knowledge, irreversible loss, and cross-boundary consequences require explicit treatment.
-
-#### 4.21.6 The counterfactual problem
-
-The theory needs a method for asking what would happen without the enterprise. A busy restaurant is not automatically a positive contribution if it merely displaces an equally good service, depends on exploited labor, worsens local health, or creates greater ecological loss elsewhere.
-
-Possible questions include:
-
-- Did the enterprise satisfy an unmet need or only capture existing activity?
-- Did it create new local capability?
-- Did it improve or degrade homeostasis across the relevant time horizon?
-- Were costs shifted to workers, distant communities, future actors, or ecosystems?
-- Would another allocation of the same resources have produced greater benefit?
-- How much of the result came from the founder, workers, inherited infrastructure, public knowledge, location, or institutional support?
-
-This makes EBU evaluation harder than counting sales, but it also reveals what sales alone leave invisible.
-
-#### 4.21.7 Avoiding two symmetrical mistakes
-
-Part VII must reject both of these unsupported assumptions:
-
-1. **Present-system determinism** — people will always behave exactly as they do under today's monetary and ownership incentives.
-2. **Altruistic utopianism** — changing the accounting system will automatically remove self-interest, conflict, scarcity, gaming, and status competition.
-
-EBU needs a transition theory and empirical tests. It should observe how motivations change, preserve freedom to initiate projects, reward verified contribution, expose externalities, and revise future quotes without dictating a single approved way of life.
-
-#### 4.21.8 Placement question
-
-This theme may be too large for one section inside the binding-quote chapter. During manuscript integration, decide whether it becomes:
-
-- a major chapter within Part VII;
-- a second division of Part VII;
-- or a separate future part on enterprise, motivation, ownership, and preference formation.
-
-Do not settle that editorial placement until the authoritative Parts I–III and any planned Parts IV–VI are available.
-
-### 4.22 Moral and political consequences
-
-This design changes the relationship between actors and institutions.
-
-The institution can no longer demand precise obedience while externalizing the cost of its own ignorance. Authority to issue actionable valuations is paired with responsibility for valuation error.
-
-Potential consequences to explore:
-
-- greater trust in public and corporate coordination;
-- stronger pressure for transparent measurement;
-- explicit budgeting for uncertainty;
-- reduced fear of catastrophic retroactive charges;
-- institutional reluctance to authorize poorly understood actions;
-- possible overconservatism if reserves are weak;
-- political conflict over who funds residuals;
-- pressure to conceal or reclassify errors;
-- unequal measurement quality across populations;
-- the need for independent audit of quote models and reserves.
-
-### 4.23 Limits and nonclaims
-
-Part VII must not claim that:
-
-- every physical effect can already be measured exactly;
-- every residual can immediately be assigned to one cause;
-- institutional payment makes physical damage disappear;
-- all institutional error should be funded equally by every actor;
-- all risky or experimental actions deserve a guaranteed point quote;
-- a binding quote protects fraud, manipulation, or material deviation;
-- low quote error alone proves good governance;
-- EBU eliminates uncertainty.
-- people will cease to value personal reward;
-- every useful enterprise should receive unlimited EBU;
-- observed demand is identical to total system benefit;
-- preferences formed under the present system are timeless human constants;
-- EBU will automatically make people altruistic or ecologically responsible.
-
-The claim is narrower: EBU should make uncertainty, responsibility, and settlement explicit, and should place ordinary model error on the institution that issued and guaranteed the actionable quote.
-
-### 4.24 Proposed laws or propositions to formalize
-
-These are working propositions and require reconciliation with the existing ten laws and formal EBU notation.
-
-1. **Pre-action valuation principle** — an actionable EBU quote is derived from the observable local state before commitment.
-2. **Quote immutability principle** — an accepted quote cannot be rewritten after observing the outcome.
-3. **Compliant-actor guarantee** — a truthful actor performing the specified action receives the accepted settlement.
-4. **Residual visibility principle** — the difference between quote and observation remains visible in the ledger.
-5. **Issuer responsibility principle** — ordinary measurement and model residual belongs to the guaranteeing institution.
-6. **Physical conservation principle** — settlement allocation cannot erase real physical consumption or transfer.
-7. **Unresolved-state principle** — uncertainty must be recorded explicitly and must not authorize unsafe repetition.
-8. **Prospective-risk principle** — uncertainty limits and funding rules must be declared before the action.
-9. **Institutional-learning principle** — residuals must feed measurement and model improvement.
-10. **Historical-integrity principle** — learning may change future quotes but cannot rewrite historical records.
-11. **Contribution-reward principle** — initiative and verified contribution may earn EBU without making ownership alone an unlimited permanent source of EBU.
-12. **Adaptive-preference principle** — the system must not treat preferences formed under one incentive environment as immutable when evaluating a different institutional environment.
-
-### 4.25 Suggested figures and tables
-
-1. **Quote-to-settlement timeline** — observe state, calculate quote, accept, act, observe, settle, allocate residual, learn.
-2. **The +100 / -256 example** — actor settlement, institutional residual, and actual system balance.
-3. **Organism analogy** — sensors, regulatory model, signal to cell, action, body response, corrective feedback.
-4. **Physical effect versus responsibility table** — what happened compared with who bears it.
-5. **Failure decision table** — no action, partial action, system failure, actor deviation, fraud, unresolved result.
-6. **Nested reserve diagram** — local issuer, sector reserve, national reserve, insurance layer.
-7. **Governance diagnostic dashboard** — mean error, bias, tail error, group disparity, and learning speed.
-8. **Restaurant contribution map** — founder initiative, worker contributions, customer benefit, institutional support, resource costs, and ecological effects.
-9. **Motivation under different systems** — security, EBU reward, autonomy, recognition, purpose, and ecological contribution without claiming a single deterministic response.
-
-### 4.26 Suggested internal development sequence
-
-1. The actor's problem: a quote that can become a gamble.
-2. The EBU quote derived from the current local state.
-3. The ideal transition and the real transition.
-4. From quote to receipt and settlement.
-5. The +100 EBU / -256 EBU example.
-6. Physical loss versus accounting responsibility.
-7. Why the compliant actor receives the quoted settlement.
-8. Failed, partial, manipulated, and unresolved actions.
-9. Why create a restaurant? Initiative and the right to earn EBU.
-10. Contribution, coordination, labor, risk, and ownership.
-11. Why motivations and preferences may change under EBU.
-12. Ecological restoration as productive work.
-13. The institution as an organism that must know its body.
-14. Measurement residual as a governance signal.
-15. Institutional reserves and collective risk pooling.
-16. Safeguards against manipulation and moral hazard.
-17. Bounded quotes and experimental actions.
-18. Nested institutions and upstream responsibility.
-19. Learning from residuals without rewriting history.
-20. Political consequences, limitations, and open questions.
-21. Formal propositions and connection to the existing EBU laws.
-
-## 5. Exact wording to preserve for the future manuscript
-
-The following formulations capture the present conceptual decision and should survive editorial revision unless the theory itself changes:
-
-> The actor bears the quoted consequence. The institution that produced and guaranteed the quote bears its measurement error.
-
-> A refund or guaranteed settlement changes who bears the cost; it does not erase a physical cost that has already occurred.
-
-> The quote predicts and guarantees the actor-facing settlement. The receipt records what physically occurred. The residual connects the two without rewriting either.
-
-> An institution's persistent EBU residual measures, in part, how well it knows the body it governs.
-
-> The system must communicate uncertainty before the action, not impose unlimited uncertainty after the action.
-
-> EBU should reward initiative and verified contribution without assuming that ownership alone creates an unlimited permanent claim on future value.
-
-> We cannot infer motivation under EBU solely from preferences produced by today's institutions.
-
-> A system does not merely respond to preferences; through security, recognition, measurement, and reward, it also helps to form them.
-
-## 6. Open questions for later theoretical work
-
-Status: **Open questions**
-
-1. Is EBU strictly a unit of measurement, a spendable balance, or both in different layers?
-2. Should the default guarantee be a point quote, a bounded interval, or depend on action class?
-3. How are positive residuals divided between the actor, issuer, reserve, and wider system?
-4. What exact conditions count as material actor deviation?
-5. How is causal responsibility assigned when actor error and system error interact?
-6. How long may a record remain `UNRESOLVED`?
-7. Who funds the reserve at municipal, national, company, and international levels?
-8. Which reserve contributions are fair: equal, progressive, sector-weighted, risk-weighted, or benefit-weighted?
-9. What prevents an institution from intentionally issuing conservative quotes to protect its reserve?
-10. What prevents an institution from classifying its own error as actor misconduct?
-11. Which independent body audits measurement quality and reserve solvency?
-12. How should rare catastrophic residuals be handled?
-13. How are ecological effects with long delays settled?
-14. How are privacy and local-state observability balanced?
-15. How do the Part VII propositions map onto the existing ten EBU laws without duplication or contradiction?
-16. By which mechanism does a founder earn EBU for creating a useful enterprise?
-17. Which founder rewards should be one-time, time-bounded, milestone-based, or tied to continuing contribution?
-18. How are EBU settlements divided among initiators, workers, suppliers, customers, public infrastructure, knowledge commons, and ecological accounts?
-19. Does supplying capital create an EBU contribution, a repayment claim, a stewardship duty, or some combination?
-20. Can ownership alone continue producing EBU after active contribution ends, and if so, for how long and why?
-21. How should EBU value novelty, coordination, risk, maintenance, and counterfactual benefit?
-22. How can the system distinguish a genuinely unmet need from displacement, captured demand, or preference manipulation?
-23. Which basic security conditions are required before observed choices can be interpreted as relatively free preferences?
-24. How should preference change be studied without allowing the institution to manipulate citizens toward centrally approved desires?
-25. How should ecological work be quoted when its benefits are delayed, distributed, uncertain, or partly irreversible?
-26. What transition rules allow enterprise and experimentation while moving from current money, ownership, and employment structures toward EBU?
-
-## 7. Editorial integration tasks
-
-Status: **Editorial tasks**
-
-1. Import the exact authoritative tables of contents for Parts I–III.
-2. Locate the intended place and existing meaning of “Part 7” in the manuscripts.
-3. Determine whether this material is one large chapter, several chapters within Part VII, or a complete standalone Part VII volume.
-4. Reconcile `quote`, `receipt`, `ledger`, `settlement`, `reserve`, `residual`, and `EBU balance` with the book's established glossary.
-5. Verify every equation against the authoritative EBU formalism.
-6. Preserve the existing ten-law numbering and avoid introducing duplicate laws.
-7. Connect the institutional organism analogy to the book's homeostasis framework.
-8. Connect transport and dissipation residuals to the physics chapters.
-9. Add worked examples at individual, company, city, national, and ecological scales.
-10. Add failure examples where the actor deviates, the institution errs, both contribute, or the outcome remains unknown.
-11. Define reserve solvency, governance audits, and appeals without prematurely claiming a complete legal system.
-12. Separate theoretical EBU receipts from technical execution markers used in scientific experiments.
-13. Decide whether the +100 / -256 / -356 example remains the canonical introductory example.
-14. After integration, run a duplication review across all books.
-15. Develop the restaurant as a complete worked case from project proposal through quotes, opening, operation, failures, receipts, participant settlements, ecological effects, and institutional learning.
-16. Separate founder initiative, labor, coordination, capital, ownership, stewardship, public infrastructure, inherited knowledge, and externalities in that case.
-17. Add contrasting examples: a community restaurant, a founder-led commercial restaurant, an ecological restoration cooperative, and a project that attracts demand while harming system homeostasis.
-18. Add a motivation chapter that distinguishes material reward, security, autonomy, mastery, recognition, belonging, purpose, and altruism.
-19. Review evidence on endogenous preferences, crowding out of intrinsic motivation, cooperative behavior, entrepreneurship, and institutional transition before making empirical claims.
-20. Decide whether enterprise and adaptive preferences belong inside Part VII or require a separate future part.
-21. Verify the exact Peter Joseph book page or endnote for Henrich et al. (2005), then retain the primary paper—not the lecture—as the scientific citation.
-
-## 8. Future revision log
-
-### 2026-08-12 — Recovery of the complete Parts IV–VII architecture
-
-Recovered and restored:
-
-- Part IV, *When Outcomes Must Discriminate*, Chapters 63–79;
-- Part V, *Homeostasis Through Time*, Chapters 80–97, preserved as the protected principal long-run theorem book;
-- Part VI, *Across Distance*, Chapters 98–122;
-- Part VII, *The Action-Accounted Economy*, Chapters 123–149;
-- the evidence → stability → distance/cooperation → complete-economy progression;
-- the shared descriptive strategy, figure-status labels, recurring-region case, generation conditions, and minimal later audit of Parts I–III.
-
-Reconciliation decision:
-
-- the recovered Parts IV–VII are not overwritten by later discoveries;
-- binding quotes, residuals, reserves, enterprise, motivation, and institutional learning are supporting programmes inside *The Action-Accounted Economy*;
-- the Sequential–Parallel Bridge becomes Part VIII, with prerequisite results cross-referenced where Parts V–VII need them;
-- Dynamic Coordination becomes Part IX, with route and infrastructure prerequisites cross-referenced from Part VI;
-- the project therefore has a working nine-part architecture while preserving the original seven-part spine.
-
-Still awaiting repository synchronization:
-
-- authoritative file paths and source commit for the recovered structure;
-- exact Gate 1E and Gate 2 definitions from the original testing roadmap;
-- verification that chapter numbering and titles match the repository copy byte-for-byte.
-
-### 2026-08-10 — Binding quote and institutional residual
-
-Confirmed direction:
-
-- EBU derives a pre-action quote from the current local system state.
-- A compliant actor should be able to rely on the accepted quote.
-- Post-action observation does not retroactively rewrite the actor's quote.
-- The difference between quoted and actual system effect is recorded as a residual.
-- Ordinary model and measurement error is borne by the issuing institution or its prospectively funded reserve.
-- Physical costs remain recorded even when the actor is refunded or paid.
-- The residual is a measure of institutional self-knowledge and an incentive to improve sensing, modeling, maintenance, and governance.
-- A country or company that repeatedly misquotes actions demonstrates that it does not adequately know the state of the body it governs.
-- Safeguards are required for fraud, manipulation, material deviation, experimental actions, bounded uncertainty, and unresolved outcomes.
-
-No final decision yet:
-
-- exact reserve funding formula;
-- treatment of positive residuals;
-- default use of point versus interval quotes;
-- formal mapping to the existing ten EBU laws;
-- exact placement and numbering inside the authoritative manuscripts.
-
-### 2026-08-10 — Enterprise, motivation, and adaptive preferences
-
-Confirmed direction:
-
-- EBU must not be presented as forbidding a person from earning EBU by creating a useful restaurant or other enterprise.
-- Initiative, innovation, coordination, labor, stewardship, and continuing service may all be real contributions that deserve EBU settlement.
-- These contributions must be distinguished from an assumed unlimited reward for ownership alone.
-- A restaurant's sales or popularity are not identical to its complete EBU contribution; nourishment, hospitality, community, labor burden, resource use, ecology, and externalities must also be considered.
-- Founder, workers, suppliers, customers, institutions, and ecological accounts may require separate quotes and settlements.
-- Human motivation is plural and includes personal benefit, security, autonomy, mastery, recognition, belonging, curiosity, care, ambition, and purpose.
-- Preferences observed under today's system cannot be assumed to remain unchanged under EBU.
-- If ecological and collective work becomes visible, secure, respected, and rewardable, people may increasingly choose to generate EBU through work for the planet.
-- This is a testable possibility, not a claim that EBU automatically makes everyone altruistic.
-- EBU must avoid both present-system determinism and altruistic utopianism.
-
-No final decision yet:
-
-- the exact founder-reward mechanism;
-- the duration and basis of any ownership-linked return;
-- the allocation between founder, workers, capital, public infrastructure, knowledge commons, and ecological accounts;
-- the valuation of novelty, coordination, risk, counterfactual benefit, and displaced alternatives;
-- the institutional design for measuring preference change without manipulating preferences;
-- whether this material belongs within Part VII or a separate future part.
-
-Evidence anchor selected:
-
-- Henrich et al. (2005), a cross-cultural experimental study of 15 small-scale societies, will support only the restrained proposition that economic organization and everyday patterns of cooperation are associated with differences in social behavior.
-- It must not be presented as causal proof that EBU will create altruism or any predetermined culture.
-- The citation's exact location in Peter Joseph's book must be verified against an authoritative copy before publication.
-
-### 2026-08-11 — Sequential–parallel bridge
-
-Confirmed direction:
-
-- Sequential and parallel EBU use the same endpoint distortion definition.
-- Sequential EBU telescopes when every action is evaluated against the state left by the preceding action.
-- A parallel interaction claim is meaningful only relative to a named sequential order or schedule.
-- Endpoint-equivalent sequential and parallel executions have zero EBU interaction even when the underlying paths differ.
-- Nonlinear action cross-terms do not by themselves prove genuine parallel interaction.
-- Parallel group measurement must preserve child actions, actors, physical costs, and responsibility.
-- Many-action, receipt-batching, long-range, delayed-effect, and stochastic extensions remain in the validation programme.
-
-No final decision yet:
-
-- canonical sequential comparator selection;
-- causal allocation of group EBU to individuals;
-- exact group-overlap boundary;
-- receipt-settlement timing for delayed effects;
-- final advanced-volume numbering.
-
-### 2026-08-12 — Dynamic coordination priority
-
-Confirmed direction:
-
-- The effect of an action may depend on what is done, where and when it is done, its order, and its relation to other actions.
-- Provider placement and action scheduling are central EBU variables to model and test.
-- The project will derive theorem candidates, build reproducible simulations, and search for efficient coordination patterns.
-- Efficiency must include total EBU, peak distortion, recovery time, resource cost, resilience, fairness, autonomy, uncertainty, and coordination cost.
-- Wave effects require evidence of propagation, delay, amplitude, phase, reproducible interference, and modes.
-- Taylor expansion is an analytical decomposition tool; Fibonacci recurrences, power laws, periodic sequences, spectral structure, self-similarity, and fractals are possible findings to compare against alternatives.
-- The coordination programme is assigned to a dedicated advanced-volume candidate rather than a short speculative ending.
-
-No final decision yet:
-
-- minimal dynamic state model;
-- admissible provider topologies;
-- coordination reference schedule;
-- theorem assumptions;
-- empirical system used for first real-world validation;
-- whether efficient multiscale structures are fractal, modular, hierarchical, or of another form.
-
-## 9. Part VIII — Sequential and Parallel EBU Dynamics
-
-Status: **Confirmed working advanced volume; final freeze follows bridge and study review.**
-
-Central question:
-
-> How do multiple actions combine, and when does parallel execution produce a genuinely different endpoint from a declared sequential comparison?
-
-Provisional divisions:
-
-1. Sequential telescoping.
-2. Parallel groups and common transition boundaries.
-3. Sequential comparator selection.
-4. Commuting and non-commuting actions.
-5. Nonlinear coupling versus true parallel interaction.
-6. Synergy, interference, cancellation, redundancy, and capacity conflict.
-7. Many-action systems and scaling.
-8. Group quotes, receipts, and individual settlement shares.
-9. Receipt batching and measurement economy.
-10. Scheduling and shared capacity.
-11. Long-range and delayed effects.
-12. Proofs, simulations, counterexamples, and exercises.
-
-Required evidence before final manuscript status:
-
-- independent equation review;
-- explicit two-action test matrix;
-- many-action simulation results;
-- comparator sensitivity analysis;
-- group-receipt and allocation tests;
-- delayed-effect settlement tests.
-
-## 10. Part IX — Dynamic Coordination Fields and Society Geometry
-
-Status: **Confirmed working advanced volume and central research programme; final freeze follows foundation and study review.**
-
-Central question:
-
-> How should providers and their actions be arranged across time, sequence, space, and network structure to improve verified system balance?
-
-Provisional divisions:
-
-1. The central coordination principle.
-2. Actions as time-dependent signals.
-3. Provider networks, weights, capacities, and propagation delays.
-4. Coordination advantage and reference schedules.
-5. Optimal sequences and schedules.
-6. Provider placement and topology.
-7. Phase distribution and peak reduction.
-8. Evidence criteria for genuine wave behaviour.
-9. Graph spectral analysis and propagation modes.
-10. Resilience, failure, and recovery.
-11. Scaling laws and mathematical sequences.
-12. Modular and hierarchical systems.
-13. Self-similarity and fractal hypotheses.
-14. Society-scale efficiency simulations.
-15. Fairness, autonomy, uncertainty, and limits of optimization.
-
-The programme must compare candidate structures rather than privilege an attractive pattern in advance. Line, ring, hub, lattice, modular, small-world, distributed, hierarchical, recursive, and learned topologies should be evaluated under identical declared objectives and constraints.
-
-## 11. Unified theory, study, and book roadmap
-
-### Phase A — Verify and synchronize the authoritative project map
-
-1. Import the exact Parts I–III tables of contents from the authoritative manuscripts.
-2. Verify the recovered Parts IV–VII titles, chapter numbering, chapter titles, generation conditions, and shared descriptive strategy against the repository copy; do not redesign them during verification.
-3. Recover the original Task 2 testing roadmap and the exact scopes of robust-P1C, Gate 1E, and Gate 2.
-4. Register the current repository branch, commit, locked protocols, manuscripts, study code, and generated results.
-5. Map `ebu_resource_metabolism_chapter.tex` to its intended book and chapter location.
-6. Replace remaining recovery placeholders with exact source paths and commit identifiers.
-
-This phase is read-only until the authoritative sources are identified. The conversation-recovered structure closes the conceptual gap but does not substitute for repository path and commit verification.
-
-### Phase B — Stabilize the foundations
-
-1. Review the Sequential–Parallel Bridge and promote it from v0.1 only after equation and example verification.
-2. Create `DYNAMIC_COORDINATION_FOUNDATION.md` with the minimal state, provider-network, schedule, delay, objective, and constraint definitions.
-3. Create a common notation and scientific-status register.
-4. Classify every important statement as a definition, algebraic identity, theorem with assumptions, model-dependent result, hypothesis, or editorial analogy.
-5. Freeze provisional outlines for all recovered and new volumes before deep manuscript drafting.
-
-### Phase C — Build one reproducible Python research framework
-
-The framework should support:
-
-- states and distortion functions;
-- action transformations;
-- sequential, overlapping, and parallel execution;
-- provider graphs, schedules, capacities, and delays;
-- long-range and cross-boundary effects;
-- quotes, receipts, residuals, reserves, and settlement horizons;
-- deterministic, stochastic, and noisy observation modes;
-- reproducible configurations, seeds, manifests, traces, summaries, and tests.
-
-New studies should be configurations or modules of this framework where scientifically appropriate, not disconnected scripts with incompatible state definitions.
-
-### Phase D — Execute studies in dependency order
-
-1. Verify algebraic identities, signs, invariants, examples, and theorem assumptions.
-2. Resolve the Gate 1D-C operational preflight incident under separate authorization; do not alter its locked scientific design.
-3. Execute Gate 1D-C only after explicit reauthorization, then align the robust-P1C diagnostic and execute Gate 1E in their recovered original scopes.
-4. Develop the constrained state transition, viable-set, recursive-feasibility, invariance, Lyapunov, disturbance, and long-horizon counterexample programme required by Part V.
-5. Execute the deterministic two-action sequential–parallel matrix and true-interaction studies: synergy, interference, cancellation, redundancy, order dependence, and shared-capacity conflict.
-6. Execute group quote, receipt, batching, residual, causal-identification, and allocation studies, followed by many-action ordering, scaling, congestion, and scheduling.
-7. Execute path-composition, actor-closure, O3, collaboration, fairness, free-riding, shared-capacity, and adaptive-infrastructure studies required by Part VI.
-8. Execute long-range, delayed, cross-boundary, provisional-settlement, and changing-field studies.
-9. Execute Dynamic Coordination studies across timing, phase, sequence, placement, topology, capacity, and failure.
-10. Apply strict wave diagnostics: propagation, distance-dependent delay, amplitude, phase, reproducible interference, and identifiable modes.
-11. Compare candidate geometries under common objectives and constraints.
-12. Search objectively for recurrence, periodicity, power laws, saturation, modularity, hierarchy, self-similarity, and fractal structure; compare predictive performance rather than selecting Fibonacci or fractals in advance.
-13. Execute quote, residual, reserve, enterprise, behaviour, access, governance, fraud, transition, and complete-economy simulation studies required by Part VII.
-14. Test society-scale robustness, fairness, autonomy, uncertainty, failure, and coordination cost, then seek empirical validation of the strongest surviving predictions.
-
-### Phase E — Generate books at evidence-complete checkpoints
-
-The most efficient manuscript-generation order is dependency-based and need not match the final part numbering:
-
-1. Generate Part IV after Gate 1D-C and the relevant Gate 1E result are complete and committed.
-2. Generate Part V after the constrained-invariance theorem and long-run adversarial simulations reach their declared threshold.
-3. Generate Part VIII after the sequential–parallel, group-receipt, and many-action core is validated; its results supply formal tools needed by later route and economy work.
-4. Generate Part VI after path composition, actor closure, O3, collaboration, and adaptive-network studies are complete.
-5. Generate Part IX after Dynamic Coordination, wave diagnostics, topology comparison, scaling, and pattern-discovery studies are complete.
-6. Generate Part VII last among the future volumes, after the full receipt, quote, residual, access, governance, behavioural, transition, and economy-simulation programme can synthesize the surviving results.
-7. Audit Parts I–III last for only the corrections, bridge passages, series map, and forward references justified by validated results.
-8. Run the final duplication, notation, equation, claim-status, citation, visual-evidence, and cross-volume dependency audit.
-
-The working publication order remains Parts I–IX. The generation order above prevents a synthesis volume from being written before the science it must synthesize.
-
-## 12. Current stop conditions and next deliverables
-
-The present project state must preserve these boundaries:
-
-- Gate 1DC remains scientifically `UNSTARTED` after the preflight failure; its locked scientific design is unchanged.
-- No Gate 1DC rerun is authorized by this planning document.
-- Gate 1E and Gate 2 retain their original meanings until recovered from authoritative sources.
-- The recovered Parts IV–VII must be verified against, not replaced by, the repository source.
-- Parts VIII–IX are working confirmed numbers, but their chapter-level freezes require the Bridge and Dynamic Coordination foundation reviews.
-
-Next deliverables, in order:
-
-1. **Repository Reconciliation Report** — verify the recovered Parts IV–VII against exact source paths and commits, and recover Task 2, robust-P1C, Gate 1E, and Gate 2 without redefining them.
-2. **Sequential–Parallel Bridge v0.2 review** — equations, examples, definitions, and comparator decision table.
-3. **Dynamic Coordination Foundation v0.1** — formal definitions, objectives, constraints, theorem candidates, and discriminating tests.
-4. **Unified Python Framework Specification** — common state, action, field, receipt, schedule, network, experiment, provenance, and artifact architecture before implementation.
-5. **Sequential–Parallel Test Matrix** — first new controlled study specification, separate from Gate 1D-C.
-6. **Gate 1D-C Incident Remedy Report** — the smallest contract-compliant operational remedy and the exact separately authorized next step; no runner invocation is implied.
-
-Repository synchronization status for this revision: **awaiting access to the authoritative EBU Git repository**.
+---
+
+## 11. Cross-volume concept allocation
+
+| Concept | Primary home | Supporting references |
+|---|---|---|
+| Outcome sensitivity and instrument validation | Part IV | Part III Chapters 58-59 |
+| Observation age, uncertainty, robust permission, Gate 1E | Part IV | Part III Chapter 60 |
+| Recursive feasibility, invariance, stability, attraction | Part V | Part II Chapter 43; Part III 62.17-62.18 |
+| Sequential telescoping and parallel interaction | Part VI | Part II Chapter 37; `SEQUENTIAL_PARALLEL_BRIDGE.md` |
+| Group receipts, causal identifiability, O3, batching | Part VI | Part II Chapter 35; Part III Chapter 51 |
+| Dynamic routes, route actors, cooperation, adaptive infrastructure | Part VII | Part II Chapter 42; Part III 62.9-62.11 |
+| Timing, placement, topology, waves, spectra, scaling | Part VIII | Parts VI-VII provide prerequisites |
+| Binding quotes, residuals, reserves, enterprise, governance | Part IX | Parts III-IV and VI-VIII provide prerequisites |
+| Access, poverty, disability, rationing, common services | Part IX | Part III 62.12-62.16 introduces the boundary |
+
+The allocation rule is:
+
+> A later book may summarize an earlier result in one bridge section, but it may not re-present an established explanation as a new theorem or new chapter programme.
+
+---
+
+## 12. Unified Python research framework
+
+The project should use one reproducible Python framework rather than disconnected scripts with incompatible state definitions.
+
+### 12.1 Required scientific objects
+
+- `SystemState` - physical stocks, burdens, commitments, clocks, and uncertainty.
+- `DistortionModel` - declared \(D(X)\), units, parameters, and domain.
+- `Action` - actor, provider, support, transformation, timing, resource use, and declared conditions.
+- `Schedule` - sequence, start times, overlap, reservations, and comparator.
+- `ExecutionEngine` - sequential, parallel, delayed, and stochastic transitions.
+- `ProviderNetwork` - nodes, edges, types, capacities, efficiencies, delays, and failure states.
+- `Quote` - epoch, assumptions, envelope, expiry, and guarantee.
+- `Receipt` - child records, observed endpoint, physical EBU, actor lines, residuals, and status.
+- `Ledger` - persistent quote, commitment, execution, verification, correction, and settlement history.
+- `ExperimentConfig` - frozen worlds, arms, hypotheses, falsifiers, seeds, and analysis plan.
+- `ProvenanceManifest` - code commit, configuration hash, environment, trace paths, summaries, and figures.
+
+### 12.2 Required execution modes
+
+- one action;
+- sequential chains;
+- overlapping and parallel groups;
+- provider graphs and routes;
+- schedules and delays;
+- shared capacities and congestion;
+- deterministic and stochastic dynamics;
+- exact and uncertain observation;
+- provisional and multi-horizon settlement;
+- institutional residuals and reserves;
+- adaptive networks and policy comparisons.
+
+### 12.3 Reproducibility requirements
+
+Every registered run should produce or reference:
+
+- a frozen human-readable configuration;
+- a canonical configuration hash;
+- explicit random seeds;
+- an immutable execution manifest;
+- row-level traces;
+- machine-readable summaries;
+- figure-building scripts that read committed results;
+- tests connecting equations to implementation;
+- an evidence ledger connecting figures to claims.
+
+The framework must not be implemented during a read-only repository reconciliation. Its specification should be approved before code is written.
+
+---
+
+## 13. Research and manuscript-generation sequence
+
+### Phase A - Repository reconciliation and freeze
+
+1. Confirm the repository root, branch, HEAD, status, and applicable `AGENTS.md` instructions.
+2. Verify the Parts I-III manuscripts and their authoritative paths.
+3. Reconcile this register with the repository roadmap and Git history.
+4. Recover original Task 2, robust-P1C, Gate 1E, and Gate 2 scopes without redefining them from memory.
+5. Verify all locked protocols, plans, hashes, and study status.
+6. Map `ebu_resource_metabolism_chapter.tex` to its intended location.
+7. Commit the reconciled planning register only after authorization.
+
+### Phase B - Foundation notes
+
+1. Review `SEQUENTIAL_PARALLEL_BRIDGE.md` v0.1 and prepare v0.2 after independent equation and example review.
+2. Create `DYNAMIC_COORDINATION_FOUNDATION.md` v0.1 with state, network, schedule, objective, constraints, theorem candidates, and falsifiers.
+3. Freeze common notation and claim-status vocabulary.
+4. Approve the unified Python framework specification.
+
+### Phase C - Execute studies in dependency order
+
+1. Reconcile the Gate 1D-C preflight incident.
+2. Obtain separate authorization for any Gate 1D-C implementation, testing, or execution step.
+3. Complete Gate 1D-C once under the frozen design.
+4. Align robust-P1C before making nonzero-uncertainty claims.
+5. Complete Gate 1E in its repository-defined scope.
+6. Develop the Part V constrained transition, viable-set, recursive-feasibility, invariance, Lyapunov, disturbance, and counterexample programme.
+7. Execute the deterministic two-action sequential-parallel test matrix.
+8. Execute many-action, comparator, shared-source, O3, group-receipt, allocation, batching, and delayed-settlement studies.
+9. Execute dynamic route, actor, congestion, uncertainty, cooperation, fairness, and adaptive-infrastructure studies.
+10. Execute timing, phase, placement, topology, propagation, spectral, resilience, scaling, and pattern-discovery studies.
+11. Execute quote, residual, reserve, access, enterprise, behaviour, governance, fraud, transition, and complete-economy simulation studies.
+
+### Phase D - Generate books only at evidence-complete checkpoints
+
+1. Generate Part IV after Gate 1D-C, robust-P1C alignment, and relevant Gate 1E results are committed.
+2. Generate Part V after the strongest constrained homeostasis theorem and adversarial simulations meet their declared threshold.
+3. Generate Part VI after the sequential-parallel bridge, two-action matrix, many-action core, group receipts, and O3 boundary are validated.
+4. Generate Part VII after route composition, actor closure, congestion, cooperation, fairness, and adaptive-network studies are complete.
+5. Generate Part VIII after Dynamic Coordination, wave diagnostics, topology comparison, resilience, scaling, and pattern tests are complete.
+6. Generate Part IX last, after the quote, residual, reserve, access, governance, behavioural, transition, and complete-economy programme can synthesize the surviving results.
+7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable.
+
+### Phase E - Final series audit
+
+- replace “trilogy” with the correct series description;
+- add a two-page map of all nine parts;
+- update the closing bridge in Part III;
+- add precise forward and backward cross-references;
+- create a cumulative symbol, theorem, evidence, and subject index;
+- audit equations, units, signs, notation, citations, and claim status;
+- audit every future chapter for overlap with Parts I-III;
+- rebuild all result figures from committed data;
+- record genuine errata without rewriting historical evidence.
+
+---
+
+## 14. Current stop conditions
+
+1. Gate 1D-C remains scientifically **UNSTARTED** in this planning checkpoint. The available protocol is design-and-preregistration only. Repository reconciliation must establish the exact operational incident history.
+2. This register does not authorize a Gate 1D-C rerun or any other experimental execution.
+3. The Gate 1D-C protocol and JSON plan must initially be hash-verified only.
+4. Gate 1E remains untouched by Gate 1D-C and must retain its repository-defined scope.
+5. Gate 2 remains paused and must not be redefined from memory.
+6. The historical design-time commit `26de9f653c267c59d310f4642deaf710ab493a3e` is not an instruction to reset the repository.
+7. No future result chapter may be written as if a preregistered study has already produced its intended result.
+8. No theorem may claim more than its explicit assumptions support.
+9. No allocation rule may be presented as a physically measured causal contribution unless identifiability evidence exists.
+10. No wave, power law, Fibonacci recurrence, fractal, behavioural transformation, or economy-wide benefit may be assumed in advance.
+
+---
+
+## 15. Immediate next deliverables
+
+1. **Repository Reconciliation Report** - verify this regenerated structure against paths, commits, locks, and existing roadmap files.
+2. **Sequential-Parallel Bridge v0.2** - independent equation audit, comparator decision table, two-action matrix, and updated open problems.
+3. **Dynamic Coordination Foundation v0.1** - minimal state, provider network, schedule, delays, objectives, constraints, and falsifiers.
+4. **Unified Python Framework Specification** - common architecture before implementation.
+5. **Gate 1D-C Incident Remedy Report** - operational reconciliation only; no scientific execution implied.
+
+The exact next action in another chat should be:
+
+> Open the authoritative Git repository as the workspace, read this file completely, compare it with repository history and the Parts I-III manuscripts, and produce a read-only Repository Reconciliation Report. Do not edit locked experiments, run studies, commit, push, or generate books until the report is reviewed and separately authorized.
+
+---
+
+## 16. Revision note for this regeneration
+
+This revision makes five structural corrections:
+
+1. It changes the future reading order to IV measurement, V time, VI multiple actions, VII distance, VIII coordination, IX economy.
+2. It consolidates duplicated distance/gravity/Fermat/Bellman chapters into one route-foundation bridge.
+3. It gives every future chapter a specific purpose, evidence requirement, and transition role.
+4. It integrates the complete sequential-parallel bridge, including comparator-relative interaction, nonlinear cross-term correction, group receipts, allocation limits, batching, and delayed settlement.
+5. It preserves binding quotes, residuals, reserves, enterprise, adaptive preferences, access, privacy, and governance inside the final economic synthesis rather than allowing any one programme to replace the purpose of Part IX.
+
+This is now the preferred handoff architecture, subject to repository reconciliation and later evidence-driven revision.
