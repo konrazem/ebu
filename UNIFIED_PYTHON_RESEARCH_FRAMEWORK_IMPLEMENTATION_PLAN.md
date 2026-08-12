@@ -1,0 +1,2075 @@
+# Unified Python Research Framework Implementation Plan
+
+**Plan version:** 0.2
+**Stage:** I-0 planning only
+**Status:** Draft implementation plan for review; implementation not authorized
+**Date:** 2026-08-12
+**Language:** English
+**Repository branch:** `v3.0-local-ebu-foundation`
+**Starting repository HEAD:** `4897dd69f60860e6c45c979ac37f87b9124e7a3e`
+**Framework specification SHA-256:**
+`4c2b3bc65628d37fefb874ab577f8b9ce173554ae2399c788e2d7d301abead38`
+
+---
+
+## 1. Decision and authority boundary
+
+This document completes the planning work authorized for I-0. It freezes the
+core implementation contracts needed to begin a later, separately authorized
+I-1. It creates no Python package, code, schema, fixture, test, dependency
+lock, accepted configuration, execution binding, authorization credential,
+result, manifest, or publication record. It authorizes no implementation and
+no scientific execution.
+
+The governing architectural and scientific authority is
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1, reconciled with
+its three registered authoritative sources. This plan resolves only the
+implementation questions explicitly assigned to I-0. It does not change an
+imported definition, equation, state component, event phase, hypothesis,
+parameter, comparison, metric, threshold, tolerance, falsifier, causal rule,
+settlement rule, or interpretation rule.
+
+### 1.1 Read-only start verification
+
+The following checks completed before this file was created:
+
+| Check | Required | Observed | Disposition |
+|---|---|---|---|
+| Repository root | `/Users/konrad.grzyb/code/ebu` | Exact match | Pass |
+| Applicable guidance | Root `AGENTS.md` | Read completely; no nested `AGENTS.md` exists | Pass |
+| Worktree | Clean | Clean | Pass |
+| Branch | `v3.0-local-ebu-foundation` | Exact match | Pass |
+| Local HEAD | `4897dd69f60860e6c45c979ac37f87b9124e7a3e` | Exact match | Pass |
+| Tracked remote tip | Same expected SHA | `origin/v3.0-local-ebu-foundation` at exact SHA | Pass |
+| Live remote branch tip | Same expected SHA | `refs/heads/v3.0-local-ebu-foundation` at exact SHA | Pass |
+| Recent history | Consistent with framework-specification checkpoint | HEAD is `Add Unified Python Research Framework Specification v0.1` | Pass |
+| Specification SHA-256 | `4c2b3bc...abead38` | Exact match | Pass |
+| Unexplained artifacts | None | None | Pass |
+
+No material mismatch was found. The authority gate therefore permitted I-0
+planning to proceed.
+
+### 1.2 Authoritative source register
+
+| Source | Version or role | SHA-256 verified at I-0 | Authority retained |
+|---|---|---|---|
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1 framework specification | `4c2b3bc65628d37fefb874ab577f8b9ce173554ae2399c788e2d7d301abead38` | Governing framework object, workflow, hashing, execution, provenance, and stage contracts |
+| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Future-books architecture | `1e4df33b4898a8dd0314ce771f8c06a86eca97782a8d27ffdb9c7165e2663558` | Parts IV–IX order, object requirements, reproducibility, claim status, and stop conditions |
+| `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Part VI definitions, grouping, comparators, physical measurement, causal limits, receipt closure, and batching |
+| `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Dynamic state, seven-layer separation, exact ten-phase order, network evolution, uncertainty, objectives, and falsifiers |
+
+All four files were read completely. Their registered hashes agree with the
+committed bytes. The specification's explanation of the planning register's
+older bridge-v0.1 pointer is retained; the imported bridge authority is v0.2.
+
+### 1.3 Preserved Gate 1D-C incident
+
+The incident is preserved exactly:
+
+> One official runner invocation has occurred; no receipt was created; no
+> model state advanced; the result directory remains absent; the scientific
+> state is `UNSTARTED`.
+
+I-0 did not investigate, correct, retry, invoke, finalize, reinterpret, or
+otherwise interact with Gate 1D-C. Nothing in this plan authorizes a second
+invocation or changes its invocation count, operational evidence, or
+scientific state. All Gate 1D-C source, protocol, plan, contract, runner,
+finalizer, test, and result paths are excluded from every implementation and
+validation stage below.
+
+### 1.4 Scope of the resolutions
+
+| Question | I-0 disposition |
+|---|---|
+| UQ-02 | Resolved only for lossless core representations and the interface that a later domain-owned numerical policy must implement. No domain precision, rounding, tolerance, approximation, backend, or cross-platform guarantee is selected. |
+| UQ-03 | Resolved by EBU Canonical JSON Version 1 (`ECJ-1`), defined exactly in §3. |
+| UQ-04 | Resolved by namespace registration plus deterministic, content-neutral SHA-256 allocation claims, defined in §4. |
+| UQ-31 | Narrowly resolved for the first implementation-validation inventory in §11. Scientific execution remains unreachable. |
+| UQ-35 | Resolved at the mechanism and protocol level in §6. Deployment trust-anchor key material and authority assignments require a prospective governance bootstrap before protected operations can be activated. |
+| UQ-36 | Resolved by the closed-world classification in §7. |
+| UQ-38 | Not resolved. Only the base `FaultSchedule` boundary is frozen in §8; all fault kinds, effect schemas, delivery acknowledgements, and terminal rules remain future work. |
+
+## 2. Non-scientific implementation principles
+
+The future implementation SHALL apply the following rules before any
+module-specific rule:
+
+1. The package is a new `src/ebu_framework` package. It SHALL NOT retrofit,
+   import, or call a historical experiment, runner, finalizer, or Gate 1D-C
+   module.
+2. Public values are immutable value objects. Accepted objects are never
+   modified in place.
+3. Public APIs return typed values or typed failure envelopes. An exception
+   without a failure classification is not sufficient at a protected
+   boundary.
+4. A scientific reference is always the exact triple of ID, semantic version,
+   and object-content hash.
+5. Scientific and operational authority follows the dependency direction in
+   the specification. A Python import cannot confer scientific authority.
+6. Python `float` is forbidden in every canonical scientific preimage. A
+   domain that elects binary floating arithmetic must use the explicit bit
+   representation and a separately accepted numerical policy from §2.2.
+7. No runtime default supplies a missing scientific value. Missing policy,
+   fault, route, stochastic, tolerance, conversion, or terminal semantics
+   fail with an explicit unresolved or unsupported status.
+8. Every public interface has one intrinsic capability class in §10. Pure
+   structure-only handling of already supplied immutable scientific data may
+   be T0; the class is determined by reachable behavior, not merely by the
+   data's scientific type or registration status. A lower-class helper called
+   inside T2 or T3 work inherits the enclosing operation's authorization,
+   classification, and provenance for that invocation.
+9. Validation code is structurally unable to construct a scientific-execution
+   lease or import the scientific runner entry point.
+10. A file listed in §9 may be created or changed only in its owning stage,
+    after separate authorization for that stage.
+
+### 2.1 UQ-02: canonical core numeric substrate
+
+The canonical core numeric union is `CoreNumberV1`. It contains exactly four
+representations:
+
+| Variant | Mathematical value | Canonical fields and normalization |
+|---|---|---|
+| `IntegerV1` | Arbitrary-precision signed integer | `value` is a Python arbitrary-precision integer in memory and an ECJ-1 integer token. Zero has no sign; leading zeroes are impossible. |
+| `RationalV1` | Exact rational | `numerator: IntegerV1`, `denominator: IntegerV1`; denominator is strictly positive; `gcd(abs(numerator), denominator)=1`; zero is exactly `0/1`. |
+| `DecimalV1` | Exact finite base-10 value | `coefficient: IntegerV1`, `exponent10: IntegerV1`, meaning `coefficient * 10**exponent10`; a nonzero coefficient has no trailing decimal zero; zero is exactly coefficient `0`, exponent `0`. |
+| `Binary64BitsV1` | Exact stored IEEE-754 binary64 bit pattern, not a selected arithmetic policy | `bits` is exactly 16 lowercase hexadecimal digits in network bit order; exponent-all-ones encodings are rejected, so NaN and infinities are impossible; both signed-zero bit patterns are preserved and may be equated only by a domain policy. |
+
+The variant tag is part of the canonical representation. Therefore integer
+`1`, rational `1/1`, decimal `1*10^0`, and a binary64 encoding of one have
+different serialized types even where a later numerical policy judges their
+mathematical values equivalent. Conversion among variants is never implicit.
+
+The core may implement lossless normalization, sign handling, integer
+arithmetic, rational arithmetic, and exact conversion of a finite decimal to
+a rational. It SHALL NOT silently choose:
+
+- a decimal precision or context;
+- a rounding mode;
+- an absolute, relative, ULP, interval, or classification tolerance;
+- an approximate comparison rule;
+- a decimal rendering precision for binary values;
+- overflow, underflow, subnormal, fused-operation, or signed-zero semantics;
+- a numerical library or hardware backend; or
+- a cross-platform equivalence promise.
+
+### 2.2 Domain-owned `NumericalPolicyV1` interface
+
+Every operation that is not provably lossless in the core substrate requires
+an accepted, content-hashed `NumericalPolicyV1`. The interface is a typed
+protocol with these mandatory declarations:
+
+```text
+NumericalPolicyV1 = {
+    policy_ref,
+    owning_domain_ref,
+    supported_input_variants,
+    supported_operations,
+    result_variant_by_operation,
+    precision_contract,
+    rounding_contract,
+    comparison_and_tolerance_contract,
+    approximation_contract,
+    error_bound_contract,
+    overflow_underflow_nonfinite_contract,
+    signed_zero_contract,
+    backend_and_dependency_contract,
+    cross_platform_contract,
+    failure_contract,
+    evidence_requirements
+}
+```
+
+Its implementation protocol exposes exactly:
+
+```text
+validate_operands(operation, operands, quantity_context) -> ValidationRecord
+evaluate(operation, operands, quantity_context) -> NumericalResult
+compare(purpose, left, right, quantity_context) -> ComparisonResult
+bound_error(operation, operands, result, quantity_context) -> ErrorBound
+runtime_requirements() -> RuntimeConstraintSet
+```
+
+`NumericalResult` includes the exact returned `CoreNumberV1`, the policy
+reference, operation identifier, rounding evidence, error bound or explicit
+`NOT_APPLICABLE`, and a completeness state. No default implementation of this
+protocol is scientifically usable. A domain must prospectively accept its
+precision, tolerances, approximation method, and backend before a domain
+distortion, transition, classifier, or settlement calculation can use it.
+This is the deliberate UQ-02 boundary.
+
+## 3. UQ-03: EBU Canonical JSON Version 1
+
+The selected standard is **EBU Canonical JSON Version 1**, identifier
+`ebu-canonical-json/1`, abbreviated `ECJ-1`. Its canonical media type is:
+
+```text
+application/json;profile="urn:ebu:canonical-json:1"
+```
+
+ECJ-1 is a closed profile of RFC 8259 JSON, UTF-8, Unicode 15.0.0 NFC, and the
+rules below. The profile is defined here because RFC 8785 JSON Canonicalization
+Scheme is not adopted: RFC 8785 sorts property names by UTF-16 code units,
+whereas the governing specification requires a specified Unicode code-point
+rule. Quietly using RFC 8785 would create divergent ordering for some
+non-BMP/BMP key pairs. ECJ-1 retains the required Unicode-scalar ordering.
+
+### 3.1 ECJ-1 data model and rejection rules
+
+An ECJ-1 value is exactly one of object, array, string, arbitrary-precision
+integer, `true`, `false`, or `null`. Raw JSON fraction or exponent number
+tokens are forbidden. Rational, decimal, and permitted binary values use the
+tagged `CoreNumberV1` objects from §2.1. Schema validation, not the serializer,
+decides whether `null` is allowed; `null` can never substitute for a required
+resolution state.
+
+Before encoding, the serializer SHALL:
+
+1. accept only Unicode scalar values assigned by Unicode 15.0.0;
+2. reject isolated surrogates and unassigned code points;
+3. normalize every string value and property name to NFC;
+4. reject an object if two original names become equal after NFC;
+5. reject duplicate object names at parse time;
+6. reject every float, non-finite value, byte string, implicit date/time,
+   tuple, set, mapping with a non-string key, or application object that was
+   not first projected to the ECJ-1 data model; and
+7. reject cyclic object graphs and every value outside its declared schema.
+
+### 3.2 Version-pinned Unicode enforcement
+
+ECJ-1 SHALL NOT use Python's host `unicodedata` database, ICU, the host locale,
+or any runtime-downloaded Unicode data to decide assignment or normalization.
+I-1 shall vendor these exact Unicode Character Database 15.0.0 source bytes:
+
+| Runtime data asset | Unicode source | Required raw SHA-256 |
+|---|---|---|
+| `src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt` | `https://www.unicode.org/Public/15.0.0/ucd/UnicodeData.txt` | `806e9aed65037197f1ec85e12be6e8cd870fc5608b4de0fffd990f689f376a73` |
+| `src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt` | `https://www.unicode.org/Public/15.0.0/ucd/DerivedNormalizationProps.txt` | `d5687a48c95c7d6e1ec59cb29c0f2e8b052018eb069a4371b7368d0561e12a29` |
+
+`canonical.py` contains those two expected digests as fixed implementation
+constants and verifies the packaged raw bytes before parsing them. Missing,
+extra, malformed, wrong-version, or wrong-digest data causes
+`UNICODE_DATA_INTEGRITY_FAILURE` before any ECJ-1 parse, normalization,
+serialization, or hash. Network fallback is forbidden.
+
+The assignment set is exactly the scalar entries and expanded `First`/`Last`
+ranges in the pinned `UnicodeData.txt`, excluding surrogate code points.
+Consequently a code point absent from Unicode 15.0 is rejected even if the
+running Python or operating system assigns it in a later Unicode version.
+NFC is implemented from the pinned canonical decomposition mappings and
+canonical combining classes, the Unicode 15.0 UAX #15 Hangul
+decomposition/composition algorithm, and `Full_Composition_Exclusion` from
+the pinned `DerivedNormalizationProps.txt`. Compatibility decompositions are
+not used. The implementation compares its output against the complete pinned
+Unicode 15.0 `NormalizationTest.txt` corpus described in §9.5.
+
+Host `unicodedata.unidata_version` may be recorded as run metadata but cannot
+affect an ECJ-1 result. Static reachability checks reject any import of
+`unicodedata` or ICU from `canonical.py` and reject any code path that replaces
+the pinned tables with host or downloaded data.
+
+### 3.3 Exact byte encoding
+
+- Output is UTF-8 without a BOM, leading/trailing whitespace, or terminal
+  newline.
+- Object names are sorted lexicographically by their sequences of Unicode
+  scalar values after NFC. A shorter identical prefix sorts first.
+- Arrays preserve declared order. A mathematical set must first be converted
+  by its owning schema to an array sorted by a schema-declared total key; the
+  generic serializer never guesses set order.
+- Objects use `{`, `:`, `,`, and `}` with no whitespace. Arrays use `[`, `,`,
+  and `]` with no whitespace.
+- Strings use double quotes. Quotation mark and reverse solidus are escaped as
+  `\"` and `\\`. U+0008, U+0009, U+000A, U+000C, and U+000D use `\b`, `\t`,
+  `\n`, `\f`, and `\r`. Other U+0000–U+001F scalars use lowercase
+  `\u00xx`. Solidus is not escaped. Every other scalar is emitted as its
+  direct UTF-8 sequence; `\u` escapes for it are noncanonical.
+- Integers use `0` or `-?[1-9][0-9]*`. A plus sign, negative zero, leading
+  zero, fraction, or exponent is invalid.
+- Literal tokens are exactly `true`, `false`, and `null`.
+- Canonical operational UTC timestamps, where a schema calls for a timestamp,
+  use exactly `YYYY-MM-DDTHH:MM:SS.ffffffZ` with six fractional digits, the
+  proleptic Gregorian calendar, and no leap-second spelling. Scientific model
+  time remains the separately typed clock/epoch representation.
+
+An ECJ-1 parser SHALL parse strictly and re-emit the exact same bytes. A
+noncanonical input may be parsed only by an explicitly named ingestion
+adapter; it is never hashed or accepted until it has been converted to a
+typed value and serialized by ECJ-1. ECJ-1 itself is versioned scientific
+infrastructure. Any change to these bytes requires a new canonicalization
+version and a prospective migration protocol under UQ-05.
+
+## 4. UQ-04: deterministic `ScientificId` allocation
+
+### 4.1 Namespace ownership
+
+`ScientificId` retains the specification grammar:
+
+```text
+ebu:<kind>:<namespace>:<local-id>
+```
+
+The root namespace registry contains immutable namespace entries. Each entry
+binds one lowercase ASCII namespace segment to an owning authority reference
+and an allocation-policy version. The reserved namespaces are `core`,
+`schema`, `authority`, and `validation`; no user or study may claim them.
+Every other namespace must be registered before an ID is allocated. A
+namespace name or owner change creates a new registry entry/version and never
+reassigns existing IDs.
+
+### 4.2 Allocation claim and algorithm
+
+Every non-reserved ID is allocated from this exact content-neutral claim:
+
+```text
+ScientificIdAllocationPreimageV1 = {
+    hash_domain: "ebu.scientific-id-allocation.v1",
+    id_scheme: "sha256-fullhex-v1",
+    kind: <validated lowercase ASCII kind segment>,
+    namespace: <registered lowercase ASCII namespace segment>,
+    namespace_registry_ref: <exact ObjectRef>,
+    allocation_authority_ref: <exact ObjectRef>,
+    stable_key: <NFC string satisfying the stable-key rules>
+}
+
+digest = SHA-256(ECJ1(ScientificIdAllocationPreimageV1))
+local-id = "sha256-" || lowercase_hex(digest)
+ScientificId = "ebu:" || kind || ":" || namespace || ":" || local-id
+```
+
+The full 256-bit digest is retained; it is never truncated. `stable_key` is a
+prospective identity key controlled by the namespace owner. It must describe
+the intended logical object lineage, be chosen before object-content or
+outcome inspection, and remain unchanged across that object's semantic
+versions. It must not contain a mutable path, display label, branch, commit,
+database row, clock time, random value, result, object version, or object
+content hash.
+
+The allocation claim excludes object content, object version, and every
+derived hash, so allocation is non-recursive and later versions retain one
+logical ID. The namespace registry atomically records the claim and ID. The
+same claim is idempotent and returns the same ID. Reuse of a `stable_key` with
+different claim fields, collision with an existing different claim, an
+unregistered namespace, or a concurrent conflicting allocation fails closed.
+There is no auto-increment, “next available” number, random UUID, path-derived
+ID, label-derived ID, or outcome-derived ID.
+
+Reserved bootstrap IDs are literal entries committed in the core registry
+fixture and reviewed as source. They do not use their own not-yet-existing
+namespace registry reference. No other exception is permitted.
+
+## 5. Exact hash domains and non-self-referential preimages
+
+### 5.1 Common rules
+
+Except for the binary artifact and conventional raw-file cases explicitly
+defined below, every framework digest is:
+
+```text
+SHA-256(ECJ1(<exact named preimage>))
+```
+
+Stored digest text is exactly `sha256:` followed by 64 lowercase hexadecimal
+digits. Domain strings are data inside each preimage, not informal labels.
+No preimage contains its own derived digest field, an alias for it, an
+embedded enclosing record, a signature over it, or a reference to an object
+that recursively contains it. ECJ-1 version is pinned by the schema and is
+not selected at call time.
+
+### 5.2 Scientific-object and replay hashes
+
+The following preimages are exact and retain the specification's field
+meanings:
+
+```text
+ObjectContentPreimageV1 = {
+    hash_domain: "ebu.object-content.v1",
+    object_id,
+    object_kind,
+    schema_id,
+    schema_version,
+    object_version,
+    authority_refs,
+    supersedes_ref,
+    object_content_payload
+}
+```
+
+`ObjectContentHash` excludes its own field, lifecycle status, signatures,
+authorization and validation evidence, record times, host/process/storage,
+cache, publication, and presentation metadata. Configuration, binding,
+authorization, ledger-entry, result, manifest, publication, correction,
+trust-registry, and ordinary artifact-record hashes all use this projection.
+
+```text
+StatePayloadPreimageV1 = {
+    hash_domain: "ebu.state-payload.v1",
+    state_schema_ref,
+    epoch,
+    physical_state_x,
+    topology_state_g,
+    queue_and_transit_state_q,
+    commitment_state_c,
+    delayed_effect_state_ell,
+    declared_external_inputs_applied
+}
+```
+
+`StatePayloadHash` excludes object identity/version/content hash, its own
+field, predecessor links, policy memory, ownership/commit/trace references,
+durability, storage, and run provenance.
+
+```text
+PolicyMemoryPayloadPreimageV1 = {
+    hash_domain: "ebu.policy-memory-payload.v1",
+    policy_ref,
+    memory_schema_ref,
+    available_for_decision_epoch,
+    resolution_state,
+    memory_payload
+}
+```
+
+`PolicyMemoryPayloadHash` excludes its own field, memory object
+identity/version/content hash, predecessor and decision links, physical
+state, trace/durability/storage, and run provenance.
+
+```text
+AugmentedClosedLoopReplayStatePreimageV1 = {
+    hash_domain: "ebu.augmented-closed-loop-replay-state.v1",
+    physical_state_payload_hash,
+    policy_memory_payload_hash
+}
+```
+
+`AugmentedClosedLoopReplayStateHash` exists only for one active stateful
+policy under v0.1. `NOT_APPLICABLE` is a typed marker, never a dummy hash.
+Multi-controller composition remains UQ-37.
+
+```text
+RepresentedStateProjectionPreimageV1 = {
+    hash_domain: "ebu.represented-state-projection.v1",
+    source_state_payload_hash,
+    boundary_ref,
+    projection_contract_ref,
+    included_coordinate_ids,
+    excluded_coordinate_ids_and_resolution_states,
+    represented_state_payload
+}
+```
+
+`RepresentedStateProjectionHash` is the specification's projection hash. It
+excludes the `RepresentedState` object identity and every derived hash.
+
+### 5.3 Decision, proposal, and execution-semantics hashes
+
+```text
+InformationViewPreimageV1 = {
+    hash_domain: "ebu.information-view.v1",
+    policy_ref,
+    information_contract_ref,
+    decision_epoch,
+    current_policy_memory_payload_hash_or_not_applicable,
+    ordered_visible_field_records,
+    ordered_visible_object_refs
+}
+```
+
+Each visible field record contains field ID, typed value or resolution state,
+availability epoch, measurement/provenance reference, and access-capability
+ID. `InformationViewHash` covers the complete supplied view. The actual read
+set is separately recorded in the decision record and may not contain a field
+absent from this preimage.
+
+```text
+ProposalSetPreimageV1 = {
+    hash_domain: "ebu.proposal-set.v1",
+    policy_ref_or_open_loop_schedule_ref,
+    decision_coordinate,
+    information_view_hash_or_not_applicable,
+    before_policy_memory_payload_hash_or_not_applicable,
+    after_policy_memory_payload_hash_or_not_applicable,
+    ordered_proposal_payloads
+}
+```
+
+`ProposalSetHash` is the specification's proposal hash. Proposal ordering is
+the policy/schedule's frozen total order and cannot depend on a container or
+outcome.
+
+```text
+ExecutionSemanticsPreimageV1 = {
+    hash_domain: "ebu.execution-semantics.v1",
+    accepted_configuration_ref,
+    implementation_refs,
+    source_refs,
+    implementation_entrypoint_semantics,
+    science_affecting_runtime_constraints,
+    science_affecting_operational_exclusions,
+    policy_memory_transition_contracts_or_not_applicable,
+    fault_injection_delivery_contracts_or_not_applicable,
+    event_order_contract,
+    arithmetic_and_numerical_policy_contracts,
+    information_capability_contract,
+    canonical_scientific_trace_schema_ref,
+    scientific_result_schema_ref,
+    stochastic_generator_and_stream_contract_or_not_applicable
+}
+```
+
+The exact contents of `science_affecting_runtime_constraints` are frozen in
+§7. `ExecutionSemanticsHash` excludes its own field and every run-specific
+property in §7.3.
+
+### 5.4 Canonical trace row, prefix, and complete-payload hashes
+
+Every scientific row first has this independent preimage:
+
+```text
+CanonicalTraceRowPreimageV1 = {
+    hash_domain: "ebu.canonical-trace-row.v1",
+    trace_schema_ref,
+    row_index,
+    epoch,
+    event_key,
+    phase_ordinal,
+    scientific_object_refs,
+    predecessor_state_payload_hash,
+    successor_state_payload_hash,
+    information_view_hash_or_not_applicable,
+    before_policy_memory_payload_hash_or_not_applicable,
+    after_policy_memory_payload_hash_or_not_applicable,
+    augmented_replay_state_hash_or_not_applicable,
+    proposal_set_hash_or_not_applicable,
+    admission_group_and_ownership_facts,
+    typed_quantities,
+    uncertainty_values,
+    lifecycle_transitions,
+    declared_scientific_or_model_faults,
+    scientifically_relevant_failures,
+    resolution_state,
+    predecessor_trace_row_hash_or_genesis
+}
+```
+
+`CanonicalTraceRowHash` excludes its own sibling field. Row zero uses the
+literal typed marker `GENESIS`. Canonical row-stream bytes are the ordered
+concatenation of `UINT64_BE(length(ECJ1(row))) || ECJ1(row)` for each row,
+where `row` contains the row preimage fields and its already computed sibling
+row hash. A confirmed row stream is therefore a literal byte prefix of any
+valid later completion.
+
+```text
+CanonicalTracePrefixPreimageV1 = {
+    hash_domain: "ebu.canonical-trace-prefix.v1",
+    trace_header,
+    ordered_rows,
+    confirmed_row_count,
+    last_confirmed_state_payload_hash,
+    last_confirmed_policy_memory_payload_hash_or_not_applicable,
+    last_confirmed_augmented_replay_state_hash_or_not_applicable,
+    completeness_state
+}
+```
+
+`CanonicalTracePrefixHash` applies only to a finalized, hash-valid prefix and
+never claims full completion. `ordered_rows` is exactly the confirmed row
+sequence, including sibling row hashes.
+
+```text
+CanonicalScientificTracePayloadPreimageV1 = {
+    hash_domain: "ebu.canonical-scientific-trace-payload.v1",
+    trace_schema_ref,
+    accepted_configuration_object_content_hash,
+    execution_semantics_hash,
+    initial_state_payload_hash,
+    initial_policy_memory_payload_hash_or_not_applicable,
+    initial_augmented_replay_state_hash_or_not_applicable,
+    ordered_external_scientific_input_payload_hashes,
+    fault_schedule_object_content_hash_or_not_applicable,
+    stochastic_stream_identities_and_draw_coordinates_or_not_applicable,
+    ordered_rows,
+    terminal_or_last_confirmed_state_payload_hash,
+    terminal_or_last_confirmed_policy_memory_payload_hash_or_not_applicable,
+    terminal_or_last_confirmed_augmented_replay_state_hash_or_not_applicable,
+    confirmed_row_count,
+    trace_completeness_state
+}
+```
+
+`CanonicalScientificTracePayloadHash` excludes its own field. The normal
+determinism target is `ECJ1(CanonicalScientificTracePayloadPreimageV1)` only
+under the completion qualifications in the specification. Run-envelope
+bytes are never part of this target.
+
+### 5.5 Artifact, source, proof, and allocation hashes
+
+Artifact bytes use the specification's binary frame exactly:
+
+```text
+ArtifactBytePreimageV1 =
+    UTF8("ebu.artifact-bytes.v1")
+    || 0x00
+    || UINT64_BE(length(exact_artifact_bytes))
+    || exact_artifact_bytes
+
+ArtifactByteHash = SHA-256(ArtifactBytePreimageV1)
+```
+
+The raw 64-byte Ed25519 signature in an authenticity envelope is an artifact
+for this purpose; its `proof_byte_hash` is an `ArtifactByteHash`. An
+implementation artifact, lock file, figure, trace stream, or other byte
+artifact uses the same framed byte identity plus an object-content-hashed
+artifact record.
+
+External source files additionally record conventional
+`SourceFileRawSha256 = SHA-256(exact_file_bytes)` with the explicit algorithm
+label `sha256-raw`. This raw digest has no domain prefix and must never be
+substituted for an `ArtifactByteHash` or `ObjectContentHash`.
+
+`ScientificIdAllocationDigest` uses the exact preimage in §4.2. It is an ID
+allocation primitive, not object-content identity.
+
+The authorization single-use database key is:
+
+```text
+AuthorizationUseKeyPreimageV1 = {
+    hash_domain: "ebu.authorization-use-key.v1",
+    stage_authorization_ref,
+    requested_operation,
+    target_object_refs,
+    accepted_configuration_ref_or_not_applicable,
+    accepted_execution_binding_ref_or_not_applicable,
+    execution_identity_or_not_applicable
+}
+```
+
+`AuthorizationUseKey` is its SHA-256 digest. It excludes use time, process,
+host, database row ID, result, and use status. Those facts belong to the
+append-only use record. All other hashes required by the specification are
+instances of one of the named projections above or ordinary
+`ObjectContentHash`/`ArtifactByteHash`; no unnamed generic “hash object” API
+is permitted.
+
+## 6. UQ-35: non-recursive authorization model
+
+### 6.1 Trust profile and algorithms
+
+The v0.1 authenticity profile is `EBU-Authorization-Ed25519-V1`:
+
+- signatures are PureEdDSA Ed25519 as defined by RFC 8032;
+- public keys are exactly 32 bytes and signatures exactly 64 bytes;
+- encoded keys/signatures use unpadded base64url;
+- key IDs are `ed25519:` followed by the lowercase raw SHA-256 of the
+  32 public-key bytes;
+- the signed bytes are ECJ-1 bytes of the exact message being authenticated;
+  no caller-selected prehash, algorithm negotiation, or fallback exists; and
+- any unknown algorithm, malformed point/key/signature, noncanonical message,
+  or verification error is invalid, never “unresolved permission.”
+
+The bootstrap `TrustProfileV1` is installed and pinned out of band. It is the
+only non-recursive trust root. It contains exactly three offline issuer-root
+public keys with a two-of-three threshold, three revocation-root public keys
+with a two-of-three threshold, and exactly three online time-attestation
+public keys of which one valid signature is required. It also pins the issuer
+and revocation service identities, ECJ-1 and signature profiles, maximum
+delegation depth, freshness limits, and permitted stage/operation vocabulary.
+
+The framework validates the installed trust profile against an operator-
+configured exact `ObjectRef` and object-content hash. It does not attempt to
+prove that pin by another framework authorization. Replacing the pin is an
+external governance operation, not a self-authorized framework call.
+
+Actual root public keys, service endpoints, issuer identities, and their
+authority assignments do not exist in the governing sources. A prospective
+governance bootstrap document must supply and approve them before I-4 can
+activate any protected operation. I-4 may implement and T1-check the mechanism
+with RFC 8032 and synthetic validation keys, but synthetic keys and the
+reserved `validation` namespace are permanently rejected by production
+trust profiles.
+
+Root signatures over issuer registries, revocation snapshots, and delegation
+credentials use this exact non-recursive message:
+
+```text
+TrustEvidenceSignatureMessageV1 = {
+    hash_domain: "ebu.trust-evidence-signature-message.v1",
+    signature_profile: "EBU-Authorization-Ed25519-V1",
+    evidence_kind,
+    evidence_ref,
+    trust_profile_ref,
+    signer_role,
+    signer_key_id
+}
+```
+
+`evidence_ref` contains the evidence object's already computed
+`ObjectContentHash`; its signature and authenticity-envelope ref are absent
+from that object preimage and signed message. Each root proof is a separate
+immutable envelope created after the signed evidence hash.
+
+### 6.2 Issuer registry
+
+An `IssuerRegistrySnapshotV1` is an immutable object containing:
+
+```text
+registry_id, sequence, predecessor_snapshot_ref_or_genesis,
+valid_from, next_update,
+ordered_issuer_entries
+```
+
+Each issuer entry contains issuer `ScientificId`, legal/governance evidence
+references, active Ed25519 keys with validity intervals, maximum stages,
+maximum operations, allowed target namespaces/kinds, whether delegation is
+allowed, and maximum delegated depth. The snapshot's object-content hash is
+signed by at least two distinct issuer-root keys from the pinned trust
+profile. A lower sequence than the last durably accepted sequence, two
+different snapshots with the same sequence, a broken predecessor chain, an
+expired snapshot, or an insufficient root threshold fails closed.
+
+An issuer registry grants only a ceiling. A `StageAuthorization` remains
+specific to exact target objects and cannot rely on a wildcard registry grant
+as its operation permission.
+
+### 6.3 Delegation
+
+Delegation uses immutable `DelegationCredentialV1` objects plus separate
+Ed25519 authenticity envelopes. A credential contains the delegator issuer
+and key, delegate issuer and key, exact parent credential reference or direct
+issuer-registry entry, permitted stages/operations/target namespaces and
+kinds, `not_before`, `expires_at`, delegation permission, remaining maximum
+depth, revocation-registry reference, and explicit exclusions.
+
+The maximum chain depth is four credentials. Validation walks from the leaf
+to one directly registered issuer and SHALL prove:
+
+- every object-content hash and every signature;
+- exact parent/child key and issuer continuity;
+- no repeated credential, issuer/key pair, or cycle;
+- temporal overlap across the whole chain;
+- the same pinned trust profile and revocation authority throughout;
+- strict attenuation: the child stage, operation, target, time, and
+  delegation scopes are subsets of the parent's effective scope;
+- decrement of remaining depth at every link; and
+- current non-revocation of every issuer, key, and credential.
+
+Scope union across different parents is forbidden. Threshold or joint
+delegation is not supported in v0.1. A need for either requires a prospective
+authorization-profile revision.
+
+### 6.4 Exact operation and target scope
+
+The v0.1 operation vocabulary is:
+
+```text
+ACCEPT_EXPERIMENT_CONFIGURATION
+ACCEPT_EXECUTION_BINDING
+EXECUTE_BOUND_RUN
+FINALIZE_EXECUTION_RESULT_MANIFEST
+RECOVER_EXECUTION_ARTIFACTS
+CREATE_CORRECTION_RECORD
+PUBLISH_ARTIFACTS
+```
+
+One `StageAuthorization` grants exactly one of these operations. Its target
+list contains exact `ObjectRef` values, never path or label patterns.
+Configuration acceptance targets the exact draft configuration content hash.
+Binding acceptance targets both the accepted configuration and exact draft
+binding content hash. `EXECUTE_BOUND_RUN` targets the exact accepted
+configuration, accepted binding, execution identity, and runner entry
+contract. Later run-artifact operations additionally target the exact
+manifest or artifact refs they consume.
+
+For execution, a single successful authorization consumption grants one
+entry into the exact bound run. The resulting nonserializable
+`ScientificExecutionLease` is bound to the authorization-use key, execution
+identity, binding hash, process entry, and one active call stack. Internal
+epoch advances require that lease but do not consume additional invocations.
+The lease cannot be persisted, transferred, reconstructed after process loss,
+or used with another binding. A crash after consumption does not restore the
+authorization; recovery or another invocation requires its own authority.
+
+### 6.5 Trusted time and freshness
+
+Authorization time is UTC at microsecond precision with half-open validity
+`[not_before, expires_at)`. It never uses scientific model time.
+
+Every protected validation obtains a fresh `TrustedTimeAttestationV1` from an
+online time service whose key is pinned by the trust profile. The validator
+creates a 256-bit cryptographically random challenge with
+`secrets.token_bytes(32)`, backed by the operating-system CSPRNG, and the
+exact `AuthorizationUseKey` from §5.5. The service signs ECJ-1 bytes of:
+
+```text
+TrustedTimeAttestationMessageV1 = {
+    hash_domain: "ebu.trusted-time-attestation-message.v1",
+    signature_profile: "EBU-Authorization-Ed25519-V1",
+    trust_profile_ref,
+    time_service_id,
+    signer_key_id,
+    challenge_base64url,
+    authorization_use_key,
+    attested_utc,
+    service_sequence,
+    issued_at,
+    expires_at
+}
+```
+
+The signed response binds the request, the attested UTC time, a service
+sequence, issue time, and expiry no more than 30 seconds after issue. The
+response must arrive during that local request; supplied cached attestations
+are rejected. Local monotonic time may enforce the 30-second processing
+window but is not the authority for authorization validity.
+
+If fresh time cannot be obtained or verified, the protected operation does
+not start. Wall-clock rollback, time-zone configuration, or a caller-supplied
+timestamp cannot extend authority.
+
+### 6.6 Revocation
+
+`RevocationSnapshotV1` is a complete, immutable, monotonically sequenced list
+of revoked issuer IDs, key IDs, delegation refs, authorization refs, and
+trust-profile successor notices, each with effective UTC time and reason.
+Entries are ordered by `(entry_kind, revoked_ref, effective_utc, reason)` in
+ECJ-1 string order, and duplicate `(entry_kind, revoked_ref)` entries are
+invalid. The snapshot contains a predecessor snapshot reference, `as_of`, and
+`next_update`; its lifetime may not exceed five minutes. Its object-content
+hash requires two distinct valid revocation-root signatures.
+
+The validator fetches the current snapshot during the protected request,
+checks it against the fresh time attestation, verifies the threshold and
+predecessor chain, and durably rejects sequence rollback or same-sequence
+equivocation. Failure to fetch, an expired snapshot, an unknown gap, or any
+revoked element fails closed. Revocation never mutates an authorization or
+delegation object.
+
+### 6.7 Single-use enforcement
+
+Every v0.1 `StageAuthorization` has `maximum_invocations=1`. Before entering
+the protected interface, the validator computes `AuthorizationUseKey` from
+§5.5 and performs a linearizable compare-and-consume in a local SQLite use
+store:
+
+1. require a local regular filesystem explicitly approved for SQLite locking;
+   network and distributed filesystems are unsupported;
+2. open SQLite in rollback-journal mode with `journal_mode=DELETE`,
+   `synchronous=FULL`, foreign keys enabled, and a declared SQLite library
+   version captured in operational provenance;
+3. execute `BEGIN IMMEDIATE`;
+4. insert the use key into a table where it is the primary key, together with
+   exact authorization/target refs and status `CONSUMED`;
+5. append a predecessor-linked authorization-use ledger record in the same
+   transaction;
+6. commit durably before the protected interface is entered; and
+7. never delete or reset a consumed key.
+
+A uniqueness conflict means already used. An ambiguous commit, I/O error,
+unsupported filesystem, lock failure, or durability uncertainty returns
+`AUTHORIZATION_USE_UNRESOLVED` and does not enter the operation. It never
+assumes the authorization remains unused. Distributed or multi-site use is
+unsupported in v0.1 and requires a new authorization profile, not a weaker
+local check.
+
+This SQLite choice resolves the local single-use mechanism only. It does not
+resolve UQ-26's broader atomic physical-state, policy-memory, trace, and phase
+durability problem.
+
+### 6.8 External authenticity envelope
+
+The signer signs these exact ECJ-1 bytes:
+
+```text
+AuthorizationSignatureMessageV1 = {
+    hash_domain: "ebu.authorization-signature-message.v1",
+    signature_profile: "EBU-Authorization-Ed25519-V1",
+    stage_authorization_ref,
+    trust_profile_ref,
+    signer_issuer_id,
+    signer_key_id,
+    ordered_delegation_credential_refs
+}
+```
+
+`stage_authorization_ref` includes the already computed authorization object
+content hash. The resulting `AuthorizationAuthenticityEnvelopeV1` contains
+the complete message, unpadded-base64url signature, its `ArtifactByteHash` as
+`proof_byte_hash`, signer credential evidence refs, and its own common object
+envelope. The envelope's `ObjectContentHash` is computed after the signature;
+neither that envelope hash nor the signature enters the authorization
+preimage or the signed message. This is non-recursive.
+
+The validation bundle is external and contains the authorization,
+authenticity envelope, pinned trust-profile ref, issuer-registry snapshot and
+root proofs, ordered delegation objects and proofs, fresh trusted-time
+attestation, current revocation snapshot and proofs, exact predecessor-stage
+evidence, and single-use-store identity. The accepted configuration and
+binding contain none of this permission evidence.
+
+### 6.9 Authorization validation order
+
+Validation is fail-fast but records every check safely completed before the
+failure:
+
+1. strict ECJ-1 parse and all object-content hashes;
+2. pinned trust profile and supported profiles;
+3. issuer-registry threshold, sequence, time, and signer key;
+4. authorization signature message and signature;
+5. delegation chain and effective attenuated issuer ceiling;
+6. fresh trusted time;
+7. current revocation snapshot and non-revocation;
+8. exact stage, operation, target, configuration, binding, execution identity,
+   exclusions, and lifecycle states;
+9. exact predecessor-evidence hashes and accepted statuses;
+10. binding-to-configuration consistency; and
+11. atomic single-use consumption.
+
+No validation branch trusts file existence, Git authorship, username,
+filesystem ownership, process identity, repository access, a self-asserted
+issuer string, or later-stage artifacts as authorization.
+
+## 7. UQ-36: `ExecutionSemanticsHash` classification
+
+### 7.1 Closed-world rule
+
+The execution process receives a normalized, allowlisted environment. Every
+runtime property that code can read and that could select a value, branch,
+order, arithmetic result, scientific failure, trace row, or terminal state
+must be declared in `science_affecting_runtime_constraints` and therefore
+enters `ExecutionSemanticsHash`. An undeclared runtime read, unpinned native
+dependency, or dependence on a property classified as run metadata aborts
+preflight before model-state advance.
+
+The classification is based on semantic influence, not convenience. A
+property is not demoted to run metadata merely because two observed runs
+happened to agree.
+
+### 7.2 Properties included in `ExecutionSemanticsHash`
+
+The following fields are mandatory, using exact values or an explicit
+`NOT_APPLICABLE` marker:
+
+| Included class | Exact content |
+|---|---|
+| Scientific binding | Accepted configuration ref; initial physical and policy-memory contracts; event-order, fault-schedule applicability, stochastic applicability, and domain numerical-policy refs |
+| Framework and domain implementation | Artifact refs and `ArtifactByteHash` values for every imported framework/domain module, generated table, compiled extension, executable resource, and result-producing script reachable by the entry point |
+| Source | Repository identity, exact source commit, and ordered raw SHA-256/source artifact refs for every reachable result-producing source file; dirty source is forbidden rather than hashed as a new implicit implementation |
+| Interpreter | Implementation name (`CPython` for v0.1), full major/minor/patch/release/build identity, executable artifact identity, compile flags, byte order, pointer width, and Python ABI tag |
+| Dependency closure | Exact package version, distribution/wheel or source archive hash, build tag, native library/ABI identity, and transitive dependency closure for every reachable dependency |
+| OS and architecture contract | OS family/release/build, kernel ABI relied upon, machine architecture, byte order, libc/runtime identity, and container/image digest or explicit `NOT_APPLICABLE` |
+| Numerical hardware/backend | CPU instruction features actually enabled for numerical work; FPU rounding mode, denormal/subnormal handling, FMA policy; accelerator/GPU model, driver, runtime, deterministic-mode settings, or `NOT_APPLICABLE`; BLAS/LAPACK/libm/backend identities or `NOT_APPLICABLE` |
+| Arithmetic | Every `NumericalPolicyV1`, precision, rounding, tolerance, approximation/error rule, overflow/underflow/signed-zero rule, unit/conversion policy, and backend configuration |
+| Concurrency | Process/thread/worker count, start method, work partition, deterministic scheduler/reduction/tie-break rules, thread-pool and native-library thread limits; v0.1 rejects any scheduling-dependent scientific order |
+| Environment allowlist | Exact values for `PYTHONHASHSEED`, locale categories, encoding settings, time zone, numerical-backend variables, thread-count variables, and every additional environment variable declared readable by result-producing code; secrets are forbidden as scientific inputs |
+| Entry semantics | Importable entry point, normalized non-secret argument vector, working-data object refs rather than paths, mode, phase/event version, and explicit no-fallback behavior |
+| Information and memory | Capability/view construction, availability/read-set enforcement, stateless/stateful mode, initial-memory validation, and atomic memory-transition contracts |
+| Fault delivery | Base hook version and exact accepted study-specific delivery semantics, or `NOT_APPLICABLE`; the schedule itself remains a scientific configuration input |
+| Trace/result | Canonicalization version, exact Unicode 15.0 runtime-asset hashes and pinned normalization algorithm, all named hash/preimage versions, trace schema, row ordering/framing, completeness rules, result schema, and deterministic equality contract |
+| Operational exclusions that affect science | Exact prohibited fallbacks, modes, APIs, configuration namespaces, runtime substitutions, implicit retries, timeout-driven scientific decisions, and other exclusions whose absence could change scientific behavior |
+| Stochastic contract | Generator, implementation, seed/stream derivation, owner, counter/draw consumption, and platform guarantee, or `NOT_APPLICABLE` until UQ-23/UQ-24 are resolved |
+
+If a platform property cannot affect science because the implementation
+provably normalizes or blocks access to it, the normalization/blocking
+contract above is included instead of the observed property. For example,
+wall time is not a scientific input: the included semantics state that model
+decisions and terminal conditions cannot read it.
+
+### 7.3 Run-specific metadata excluded from `ExecutionSemanticsHash`
+
+The following remain in `RunTraceEnvelopeV1`, operational provenance, an
+authorization validation record, or `ExecutionResultManifest` as applicable:
+
+| Excluded run-specific class | Exact examples and qualification |
+|---|---|
+| Run identity | Execution identity, authorization-use key/record, invocation ledger position, retry/recovery case ID |
+| Human/host identity | Host name, host instance ID, machine serial, cloud instance ID, user/account name, PID, parent PID, worker PIDs |
+| Wall-clock observation | Actual start/end timestamps, durations, scheduling delays, log timestamps, trusted authorization-time nonce/response, clock source diagnostics |
+| Location/storage | Current working directory, source checkout path, artifact/storage URI, mount/volume/inode/database row IDs, cache paths, temporary paths, publication destinations |
+| Resource observations | Available memory/disk, transient CPU load, unrelated core count, process priority, thermal/power state, network latency; code may not branch scientifically on them, and an induced failure is run-specific |
+| Contextual VCS | Branch name, remote URL, tag, pull-request number; exact source commit and source bytes remain included semantics |
+| Non-read environment | Variables outside the normalized allowlist; the process blocks their access from result-producing code and records only names/presence when operationally useful |
+| Blocked host text databases | Host `unicodedata.unidata_version`, ICU version, and locale normalization tables may be diagnostic metadata only because ECJ-1 statically blocks their use; the pinned Unicode 15.0 assets and algorithm remain included semantics |
+| Logs and diagnostics | Stdout/stderr, stack traces, profiler/coverage data, runtime observations, undeclared interruption and durability evidence |
+| Trust and permission evidence | Authenticity envelope, issuer/delegation chain, time/revocation evidence, signer, use-store location; these decide whether execution may start, not what the accepted science means |
+| Publication | Publisher identity, target, publication time, receipt, write-once confirmation, mirror status |
+| Undeclared operational failure | Host loss, signal, OOM, disk-full/torn-write/storage error, power loss, transport failure; these determine run completion/prefix classification and never become retrospective scientific inputs |
+
+An actual CPU feature, dependency, environment value, filesystem ordering, or
+resource limit moves from this table to §7.2 if any result-producing path can
+read it or behave differently because of it. The binding then changes and so
+does `ExecutionSemanticsHash`; the framework never makes that promotion after
+candidate outcome inspection.
+
+## 8. Base `FaultSchedule` boundary; UQ-38 remains open
+
+The core freezes representation and guardrails, not a usable fault taxonomy.
+`FaultScheduleV1` is an immutable common-envelope object whose content payload
+is exactly:
+
+```text
+FaultSchedulePayloadV1 = {
+    schedule_class,
+    owning_study_or_validation_protocol_ref,
+    fault_extension_registry_ref,
+    ordered_fault_directives,
+    ordering_contract_ref,
+    delivery_contract_ref,
+    expected_trace_completeness_rule_ref
+}
+```
+
+`schedule_class` is exactly `SCIENTIFIC_STUDY` or
+`INERT_VALIDATION`. The latter is not a scientific permission and is rejected
+by scientific configurations. Absence of a schedule is the typed marker
+`NOT_APPLICABLE`; an empty object or empty schedule is not an alias for it.
+
+Each `FaultDirectiveV1` contains only the base fields:
+
+```text
+fault_id,
+fault_kind_ref,
+fault_class,
+target_coordinate,
+trigger_predicate_ref,
+effect_payload_ref,
+declared_priority,
+local_sequence,
+delivery_acknowledgement_rule_ref,
+continuation_or_terminal_rule_ref
+```
+
+`fault_class` is either `SCIENTIFIC_MODEL_EVENT` or
+`OPERATIONAL_DURABILITY_INJECTION`. A model target coordinate carries exact
+epoch, phase ordinal, scope/group ID, event kind, primary object ID, and local
+sequence. An operational target carries an exact registered durability-
+boundary ref and occurrence ordinal; it has no epoch unless the future
+extension independently binds one. Trigger predicates may read only frozen
+replay inputs and named event/durability coordinates. They cannot read
+candidate values, outcomes, wall time, host state, storage symptoms, or an
+undeclared exception.
+
+The core validator can prove identity/hash integrity, schedule class,
+reference completeness, coordinate syntax, phase range, total ordering,
+absence of duplicate coordinates, and the prohibition on forbidden trigger
+inputs. It cannot interpret or deliver a directive without a separately
+accepted extension registry.
+
+UQ-38 must prospectively define, before any fault directive is instantiated or
+delivered:
+
+- every admissible scientific and inert fault kind;
+- the target coordinate schema for that kind;
+- effect payload and precondition semantics;
+- delivery acknowledgement and exactly-once proof;
+- continuation, recovery, and terminal rule;
+- expected trace-completeness classification;
+- interaction of coincident faults; and
+- study-specific hypotheses, falsifiers, and nonclaims where scientific.
+
+The base package SHALL contain no built-in “crash,” “drop write,” “fail edge,”
+or generic arbitrary-callback kind and no default terminal rule. Until UQ-38
+is resolved, `delivery_contract_ref` cannot resolve to an accepted production
+implementation and any non-`NOT_APPLICABLE` schedule fails with
+`FAULT_EXTENSION_UNAVAILABLE`. Abstract delivery hooks may be implemented in
+I-5, but they may be checked only for rejection and non-reachability; no fault
+delivery check may invent a sentinel kind. Undeclared operational failures
+remain run-specific under the specification and are never converted to this
+type.
+
+## 9. Exact proposed implementation file manifest
+
+### 9.1 Manifest rules
+
+Paths are repository-relative. “New” and “existing” are relative to starting
+HEAD `4897dd69...`. Only the files below may be created or modified by the
+planned I-1–I-9 implementation programme. Adding, renaming, splitting, or
+merging a file requires an implementation-plan revision before the affected
+stage begins. Authority documents are read-only inputs and are listed
+separately in §9.7.
+
+Dependency abbreviations used below are exact package modules:
+
+```text
+err=errors, can=canonical, num=numeric, id=identity, hash=hashing,
+env=envelopes, reg=registry, prim=primitives, auth=authorization,
+trust=trust, cap=capabilities, exp=experiment, evt=events,
+own=ownership, dur=durability, tr=traces, art=artifacts
+```
+
+No framework source module may import a top-level historical `exp_*`,
+`gate*`, `finalize_*`, `test_*`, result directory, or Gate 1D-C path.
+
+### 9.2 Packaging and cross-stage control files
+
+| Path | Responsibility | Direct dependencies | Owner | State |
+|---|---|---|---|---|
+| `pyproject.toml` | Package metadata, `src` layout, Unicode package-data inclusion, supported CPython line, build backend, static tooling, and test groups; no scientific entry point. I-4 alone may add the exact audited Ed25519 provider metadata selected under UQ-25, in the same reviewed change set as the lock finalization. | I-1 build tooling; I-4 UQ-25 provider decision and `requirements-framework.lock` | I-1; exact crypto dependency metadata extension I-4 | New |
+| `requirements-framework.lock` | Exact hashed framework dependency closure; initially stdlib-only and extended/finalized during I-4 with the audited Ed25519 provider selected under UQ-25 | `pyproject.toml`, UQ-25 audit | I-1; exact crypto dependency extension/finalization I-4 | New |
+| `.github/workflows/tests.yml` | Add push/PR T0 and T1 jobs plus a separately gated `workflow_dispatch` T2 job that first validates exact T2 authority; never add a T3 framework job or Gate 1D-C invocation | Lock file and validation commands | I-9 | Existing, modify |
+
+The existing `requirements.txt` remains the legacy figure/PDF dependency file
+and is not changed or reused as the framework lock.
+
+### 9.3 Core source files
+
+| Path | Responsibility | Direct dependencies | Owner | State |
+|---|---|---|---|---|
+| `src/ebu_framework/__init__.py` | Version constant and reviewed re-exports of only the public interfaces in §10 | Stage-complete modules only | I-1, extended by owning stages | New |
+| `src/ebu_framework/py.typed` | PEP 561 marker for the reviewed typed public surface | Package type annotations | I-1 | New |
+| `src/ebu_framework/data/__init__.py` | Package-data boundary; exports no API and executes no code | None | I-1 | New |
+| `src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt` | Exact raw Unicode 15.0.0 assignment, canonical decomposition, and canonical-combining-class data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
+| `src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt` | Exact raw Unicode 15.0.0 `Full_Composition_Exclusion` and normalization-property data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
+| `src/ebu_framework/errors.py` | Typed failure codes/envelopes; no domain behavior | Stdlib | I-1 | New |
+| `src/ebu_framework/canonical.py` | Strict ECJ-1 projection, parser, encoder, pinned-table NFC/assignment, code-point ordering, asset-digest verification, and host-Unicode rejection rules | `err`, the two pinned Unicode 15.0.0 runtime assets | I-1 | New |
+| `src/ebu_framework/identity.py` | `ScientificId`, semantic versions, allocation claims, `ObjectRef`, typed digest wrappers | `can`, `err` | I-1 | New |
+| `src/ebu_framework/hashing.py` | All exact §5 projections, SHA-256 domains, binary framing, and raw-source labeling | `can`, `id`, `err` | I-1; extended I-3/I-5 | New |
+| `src/ebu_framework/envelopes.py` | Common immutable object envelope, metadata separation, lifecycle/supersession validation | `id`, `hash`, `err` | I-2 | New |
+| `src/ebu_framework/registry.py` | Immutable namespace/object registries, alias resolution, acceptance/supersession, collision checks | `id`, `hash`, `env`, `err` | I-1; acceptance extended I-2 | New |
+| `src/ebu_framework/data/core_registry_v1.json` | Reviewed literal bootstrap namespace/schema IDs and allocation-policy refs; no study or domain entries | ECJ-1, §4 bootstrap exception | I-1 | New |
+| `src/ebu_framework/numeric.py` | `CoreNumberV1`, lossless normalization/exact operations, and `NumericalPolicyV1` protocol | `can`, `id`, `err` | I-2 | New |
+| `src/ebu_framework/primitives.py` | Units, dimensions, quantities, resources, regions, boundaries, clocks, horizons, uncertainty, statuses | `num`, `id`, `env`, `reg`, `err` | I-2 | New |
+| `src/ebu_framework/state.py` | Declarative `SystemState`/`RepresentedState`, state/projection preimages, static and protected projection contracts | `prim`, `id`, `env`, `hash`, `err` | I-3 | New |
+| `src/ebu_framework/distortion.py` | Declarative distortion/evaluation contracts and numerical-policy binding; no domain model | `state`, `prim`, `num`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/actions.py` | Action definitions/instances, supports, intervals, lifecycle, and proposal records | `state`, `prim`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/network.py` | Providers, topology, capacity loci, provisional routes, failures/status records | `state`, `prim`, `id`, `env`, `reg`, `err` | I-3 | New |
+| `src/ebu_framework/commitments.py` | Commitments, reservations, capacity records, queues, admissions, shortfalls | `actions`, `network`, `prim`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/observation.py` | Measurements, calibration, availability time, uncertainty, information-source records | `state`, `prim`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/scheduling.py` | Open-loop schedules, comparator declarations, immutable event declarations | `actions`, `network`, `commitments`, `prim`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/policy.py` | Policy/interface records, immutable memory, decision records, read sets, memory transitions | `observation`, `scheduling`, `prim`, `id`, `env`, `hash`, `err` | I-3 | New |
+| `src/ebu_framework/causal.py` | Causal-model protocol, identification statuses, contribution/remainder records; no model implementation | `prim`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/settlement.py` | Quote, receipt/group/child, allocation, share/residual, and closure records/checks; no institutional default | `prim`, `id`, `env`, `err` | I-3 | New |
+| `src/ebu_framework/ledger.py` | Typed predecessor-linked append-only ledgers and evidence-ledger records | `prim`, `id`, `env`, `hash`, `err` | I-3 | New |
+| `src/ebu_framework/faults.py` | Base §8 types and static rejection/extension boundary only | `prim`, `id`, `env`, `hash`, `err` | I-3; hooks I-5 | New |
+| `src/ebu_framework/experiment.py` | Configuration/binding/stage records, acceptance projection, UQ-36 split | `prim`, `policy`, `faults`, `id`, `env`, `hash`, `err` | I-3 | New |
+| `src/ebu_framework/artifacts.py` | Result/summary/figure/manifest/publication/correction record types and byte refs | `exp`, `ledger`, `prim`, `id`, `env`, `hash`, `err` | I-3; behavior I-8 | New |
+
+### 9.4 Authorization, execution, and scientific adapters
+
+| Path | Responsibility | Direct dependencies | Owner | State |
+|---|---|---|---|---|
+| `src/ebu_framework/trust.py` | Trust profile, issuer/delegation registries, signature envelopes, time/revocation evidence, Ed25519 provider boundary | `id`, `env`, `hash`, `can`, `err`; audited crypto provider | I-4 | New |
+| `src/ebu_framework/authorization.py` | Stage authorization records, exact validation order, evidence bundles, validation records | `trust`, `exp`, `art`, `ledger`, `id`, `hash`, `err` | I-4 | New |
+| `src/ebu_framework/authorization_use.py` | Exact local SQLite compare-and-consume and append-only use records | `auth`, `ledger`, `id`, `hash`, `err`, stdlib `sqlite3` | I-4 | New |
+| `src/ebu_framework/capabilities.py` | Information-view capabilities, availability/read-set checks, T0–T3 capability tokens and escalation | `auth`, `policy`, `observation`, `exp`, `hash`, `err` | I-4 | New |
+| `src/ebu_framework/events.py` | Ten phase ordinals, `EventKey`, deterministic ordering, immutable transition/commit record types | `actions`, `faults`, `prim`, `id`, `hash`, `err` | I-5 | New |
+| `src/ebu_framework/ownership.py` | Epoch-wide physical update-ownership construction and conflict validation | `events`, `state`, `id`, `hash`, `err` | I-5 | New |
+| `src/ebu_framework/durability.py` | Abstract atomic store contracts, typed commit outcomes, prefix preservation, policy-memory transaction boundary | `events`, `ownership`, `policy`, `ledger`, `hash`, `err` | I-5; backend decision deferred UQ-26 | New |
+| `src/ebu_framework/traces.py` | Canonical row, framed stream, prefix, full trace, run-envelope construction and validation | `events`, `policy`, `state`, `exp`, `art`, `hash`, `can`, `err` | I-5; finalization I-8 | New |
+| `src/ebu_framework/execution.py` | T3 entry/lease, exact ten-phase orchestration, proposal/screen/commit contracts, anti-disguise guards | `auth`, `cap`, `exp`, `events`, `own`, `dur`, `tr`, scientific adapter modules; never `validation` | I-5; extended I-6/I-7 | New |
+| `src/ebu_framework/bridge.py` | Exact Bridge v0.2 grouping, comparators, group measurement, `N_G`, interaction, causal/settlement separation | `state`, `distortion`, `actions`, `settlement`, `prim`, `id`, `err` | I-6 | New |
+| `src/ebu_framework/dynamic.py` | Dynamic-foundation capacity/queue/delay/topology/reroute/delayed-effect/natural-drive mechanics and route guard | `network`, `commitments`, `scheduling`, `policy`, `events`, `ownership`, `state`, `prim`, `err` | I-7 | New |
+| `src/ebu_framework/provenance.py` | Source/runtime/environment inventory and §7 projection/run-metadata enforcement | `exp`, `art`, `tr`, `id`, `hash`, `err` | I-8 | New |
+| `src/ebu_framework/recovery.py` | Evidence-classified recovery and immutable prefix/same-bytes rules; no runner entry | `art`, `tr`, `dur`, `auth`, `ledger`, `err` | I-8 | New |
+| `src/ebu_framework/publication.py` | Manifest finalization, inert write-once store protocol, separate publication/correction records | `art`, `provenance`, `recovery`, `auth`, `ledger`, `hash`, `err` | I-8 | New |
+| `src/ebu_framework/validation.py` | Safe T0/T1/T2 harness descriptors and forbidden-reachability checks; cannot import `execution` | `can`, `num`, `id`, `hash`, `prim`, record modules, `err` | I-9 | New |
+
+### 9.5 Validation fixtures
+
+These files contain only static data. No fixture is an accepted world,
+configuration, policy, seed, trajectory, or result.
+
+| Path | Responsibility | Direct dependencies | Owner | State |
+|---|---|---|---|---|
+| `tests/framework/fixtures/ecj1_vectors.json` | Valid/invalid Unicode, key-order, escaping, integer, and timestamp byte vectors, including assigned Unicode 15.0 boundaries and mandatory rejection of later-assigned U+2EBF0 | §3 and pinned Unicode 15.0.0 assets | I-1 | New |
+| `tests/framework/fixtures/unicode/15.0.0/NormalizationTest.txt` | Exact complete Unicode 15.0.0 NFC conformance corpus; required raw SHA-256 `fb9ac8cc154a80cad6caac9897af55a4e75176af6f4e2bb6edc2bf8b1d57f326` | `https://www.unicode.org/Public/15.0.0/ucd/NormalizationTest.txt` | I-1 | New |
+| `tests/framework/fixtures/hash_preimages_v1.json` | Exact §5 preimage/exclusion/domain vectors with synthetic values | ECJ-1 vectors | I-1 | New |
+| `tests/framework/fixtures/scientific_id_vectors_v1.json` | Namespace/allocation/idempotency/collision vectors | §4 | I-1 | New |
+| `tests/framework/fixtures/numeric_vectors_v1.json` | Exact normalization and lossless arithmetic vectors; no domain tolerances | §2 | I-2 | New |
+| `tests/framework/fixtures/authorization_vectors_v1.json` | RFC 8032 plus synthetic trust/delegation/revocation/time/single-use records | §6; synthetic keys only | I-4 | New |
+| `tests/framework/fixtures/bridge_m1_m9_v1.json` | Frozen hand-derived Bridge v0.2 M1–M9 inputs/statuses/expected exact values | Bridge v0.2 §14 | I-6 | New |
+| `tests/framework/fixtures/dynamic_static_v1.json` | Frozen independent-provider, queue, delay, route-failure, timing, and worsening arithmetic from the dynamic foundation | Dynamic foundation §9 | I-7 | New |
+
+### 9.6 Validation code files
+
+| Path | Responsibility | Direct dependencies | Owner | State |
+|---|---|---|---|---|
+| `tests/framework/safety.py` | Synthetic namespace/store factory and process-level forbidden import/call guard | No production T3 module | I-1; extended I-9 | New |
+| `tests/framework/test_ecj1.py` | T0 exact canonical bytes/rejections, complete pinned NFC conformance, asset-integrity failure, later-Unicode rejection, and host-database independence | `canonical`, ECJ-1 vectors, pinned `NormalizationTest.txt` | I-1 | New |
+| `tests/framework/test_hash_preimages.py` | T0 domains, exclusions, self-reference rejection, byte frames | `hashing`, hash vectors | I-1 | New |
+| `tests/framework/test_identity_registry.py` | T0/T1 allocation, resolution, immutability, alias, collision checks | `identity`, `registry`, ID vectors | I-1 | New |
+| `tests/framework/test_numeric.py` | T0 core normalization/lossless arithmetic and missing-policy refusal | `numeric`, numeric vectors | I-2 | New |
+| `tests/framework/test_primitives_envelopes.py` | T0 units/boundaries/time/status/envelope lifecycle checks | `primitives`, `envelopes` | I-2 | New |
+| `tests/framework/test_declarative_records.py` | T0 representability, configuration/binding split, route/fault unresolved guards | I-3 record modules | I-3 | New |
+| `tests/framework/test_policy_memory.py` | T0 hashes, lineage, epoch, and stateless/stateful applicability; no policy callback or durability claim | `policy`, `hashing` | I-3 | New |
+| `tests/framework/test_authorization.py` | T1 synthetic signatures, thresholds, attenuation, freshness, revocation, exact scope | `trust`, `authorization`, auth vectors | I-4 | New |
+| `tests/framework/test_authorization_use.py` | T1 local temp-SQLite consume, duplicate, ambiguous/failure classification | `authorization_use`, auth vectors | I-4 | New |
+| `tests/framework/test_capabilities.py` | T1 fabricated view visibility/read-set denial; no scientific policy | `capabilities`, fabricated fields | I-4 | New |
+| `tests/framework/test_event_ownership.py` | T0 order/key checks and T1 opaque-coordinate ownership conflicts; no transformation | `events`, `ownership` | I-5 | New |
+| `tests/framework/test_inert_durability.py` | T1 dummy bytes/store atomicity classifications and undeclared-prefix preservation; no `FaultSchedule` delivery | `durability`, `traces`, inert store | I-5 | New |
+| `tests/framework/test_bridge_exact_fixtures.py` | Separately authorized T2 isolated M1–M9 exact functions; no state chaining | `bridge`, Bridge fixtures, T2 capability | I-6 | New |
+| `tests/framework/test_dynamic_static_identities.py` | Separately authorized T2 isolated capacity/queue/delay arithmetic; no epoch transition | `dynamic`, dynamic fixtures, T2 capability | I-7 | New |
+| `tests/framework/test_route_guards.py` | T0 refusal of unfrozen Part VII semantics | `network`, `dynamic` | I-7 | New |
+| `tests/framework/test_artifact_recovery_publication.py` | T1 dummy trace/artifact/manifest/prefix/same-bytes/write-once checks | `traces`, `artifacts`, `recovery`, `publication` | I-8 | New |
+| `tests/framework/test_validation_reachability.py` | T0 AST/import/export scan proving validation cannot reach T3 or historical runners/finalizers | Repository source tree as text only | I-9 | New |
+
+### 9.7 Existing read-only authority dependencies
+
+These existing files are dependencies but are not implementation change
+targets: `AGENTS.md`, `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md`,
+this accepted plan once reviewed, `EBU_FUTURE_BOOKS_STRUCTURE.md`,
+`SEQUENTIAL_PARALLEL_BRIDGE.md`, and
+`DYNAMIC_COORDINATION_FOUNDATION.md`. Every implementation stage re-hashes
+them. A mismatch stops the stage; it is not repaired inside implementation.
+
+## 10. Public interface capability classification
+
+### 10.1 Classification rule
+
+Only the interfaces below may be re-exported from `ebu_framework`. A callable
+not listed is private implementation detail. The class describes the highest
+direct capability the public interface accepts:
+
+- **T0**: parsing, projection construction without domain evaluation, typing,
+  hashing, serialization, algebraic/structural validation, or read-only
+  resolution. A T0 interface may accept an already supplied immutable
+  registered or candidate scientific record as opaque typed data, but it
+  cannot evaluate that record's scientific meaning, derive or inspect an
+  outcome, invoke scientific behavior, mutate scientific or operational
+  state, choose a result-sensitive value, or make an acceptance/publication
+  decision.
+- **T1**: synthetic/operational durability or workflow mutation on inert or
+  declarative records; no scientific function, state, policy, outcome, or
+  runner is accepted.
+- **T2**: exactly one isolated pure scientific mapping on a frozen analytical
+  fixture carrying a valid `T2FixtureCapability`; no successor can feed
+  another call.
+- **T3**: can evaluate a registered/candidate scientific object as science,
+  derive or inspect a candidate outcome, call a scientific policy,
+  transformation, or measurement, advance state, make a result-sensitive
+  decision, or participate directly in a scientific run or protected
+  post-execution scientific-artifact operation. It requires a live
+  `ScientificExecutionLease` or the separately authorized post-execution
+  stage evidence named by the interface. Mere structural receipt of an
+  immutable scientific record does not by itself make a pure operation T3.
+
+The table records each interface's intrinsic maximum reachable capability in
+isolation. For an actual invocation, classification is the maximum of the
+interface's intrinsic class and its enclosing work: a T0/T1 helper called
+inside T2 or T3 work is covered by that enclosing T2/T3 authorization,
+classification, evidence, and trace. This contextual escalation does not
+permanently reclassify the helper, and no wrapper, callback, subclass,
+reflection, or test-framework call may lower either class.
+
+### 10.2 Public value and protocol types
+
+Every type constructor in this table is T0-capable: it creates or parses an
+immutable draft/value/protocol declaration and cannot accept a callback,
+access a registry implicitly, mutate a store, inspect an outcome, or advance
+state. A constructed value acquires the class of the operation to which it is
+later supplied. Enum member access is likewise T0. No unlisted type is
+re-exported.
+
+| Owner | Exact public types (all T0-capable constructors unless noted) |
+|---|---|
+| `errors` | `FailureCode`, `FailureEnvelope`, `StateAdvance`, `PolicyMemoryAdvance`, `DurabilityState`, `RetryClass` |
+| `canonical` | `ECJ1Value`, `CanonicalBytes`, `CanonicalizationVersion` |
+| `identity` | `ScientificId`, `ScientificIdAllocationClaimV1`, `SemanticVersion`, `ObjectRef`, `ObjectContentHash`, `StatePayloadHash`, `PolicyMemoryPayloadHash`, `AugmentedClosedLoopReplayStateHash`, `RepresentedStateProjectionHash`, `InformationViewHash`, `ProposalSetHash`, `ExecutionSemanticsHash`, `CanonicalTraceRowHash`, `CanonicalTracePrefixHash`, `CanonicalScientificTracePayloadHash`, `ArtifactByteHash`, `SourceFileRawSha256`, `AuthorizationUseKey` |
+| `numeric` | `CoreNumberV1`, `IntegerV1`, `RationalV1`, `DecimalV1`, `Binary64BitsV1`, `NumericalPolicyV1`, `NumericalOperation`, `NumericalResult`, `ComparisonResult`, `ErrorBound` |
+| `envelopes` | `CommonObjectEnvelope`, `RecordMetadata`, `LifecycleStatus`, `SupersessionRelation` |
+| `registry` | `NamespaceEntry`, `NamespaceRegistrySnapshot`, `RegistryRecord`, `AliasRecord`, `ResolutionRecord` |
+| `primitives` | `Dimension`, `Unit`, `Quantity`, `ConversionRule`, `ResourceType`, `ServiceType`, `SignConvention`, `Region`, `AccountingBoundary`, `ClockSystem`, `Instant`, `Duration`, `Epoch`, `Horizon`, `ResolutionState`, `UncertaintyKind`, `UncertaintyRecord`, `ClaimStatus` |
+| `state` | `SystemState`, `RepresentedState`, `ProjectionContract`, `StatePayloadPreimageV1`, `RepresentedStateProjectionPreimageV1` |
+| `distortion` | `DistortionModel`, `DistortionEvaluation`, `DistortionDomainFailure` |
+| `actions` | `ActionDefinition`, `ActionInstance`, `EffectiveInterval`, `WriteSupport`, `ConstraintSupport`, `TransitionProposal`, `ActionStatus` |
+| `network` | `Provider`, `ProviderNetwork`, `TopologySnapshot`, `TopologyChangeEvent`, `CapacityLocus`, `RoutePlan`, `RouteRef`, `RouteSemanticsStatus`, `AvailabilityStatus` |
+| `commitments` | `Commitment`, `Reservation`, `CapacityRecord`, `AdmissionDecision`, `QueueRecord`, `ReservationShortfall`, `CongestionRecord` |
+| `observation` | `Measurement`, `MeasurementContract`, `CalibrationRecord`, `InformationSourceRecord` |
+| `scheduling` | `Schedule`, `ComparatorSchedule`, `ComparatorKind`, `CoordinationEventDeclaration` |
+| `policy` | `Policy`, `InformationContract`, `InformationView`, `InformationReadSet`, `PolicyMemoryState`, `PolicyDecisionRecord`, `MemoryMode` |
+| `causal` | `CausalModel`, `CausalContributionRecord`, `CausalIdentificationStatus`, `CausalRemainder` |
+| `settlement` | `Quote`, `Receipt`, `GroupReceipt`, `ChildActionRecord`, `SettlementRule`, `SettlementShare`, `GroupResidual`, `SettlementClosureRecord` |
+| `ledger` | `Ledger`, `LedgerEntry`, `EvidenceLedgerEntry`, `LedgerKind` |
+| `faults` | `FaultScheduleV1`, `FaultDirectiveV1`, `FaultClass`, `FaultTargetCoordinate`, `FaultScheduleClass` |
+| `experiment` | `ExperimentConfiguration`, `ExecutionBinding`, `ExecutionMode`, `RuntimeConstraintSet`, `RuntimeMetadata`, `OperationalExclusion`, `ExecutionIdentity` |
+| `trust` | `TrustProfileV1`, `IssuerRegistrySnapshotV1`, `IssuerEntry`, `DelegationCredentialV1`, `RevocationSnapshotV1`, `TrustedTimeAttestationV1`, `AuthorizationAuthenticityEnvelopeV1`, `TrustEvidenceEnvelopeV1` |
+| `authorization` | `StageAuthorization`, `AuthorizedOperation`, `AuthorizationEvidenceBundle`, `AuthorizationValidationRecord` |
+| `authorization_use` | `AuthorizationUseRecord`, `AuthorizationUseStatus` |
+| `capabilities` | `T2FixtureCapability` (private constructor; T2 use only), `ScientificExecutionLease` (private constructor; T3 use only), `AccessCapability`, `CapabilityClass` |
+| `events` | `EventKey`, `PhaseOrdinal`, `PhaseCommitRecord`, `TraceCompleteness`, `EventDeclaration` |
+| `ownership` | `UpdateOwnershipClaim`, `EpochUpdateOwnership`, `OwnershipValidationRecord` |
+| `durability` | `AtomicStore`, `PolicyDecisionStore`, `PhaseCommitStore`, `CommitOutcome`, `DurablePrefixEvidence` |
+| `traces` | `CanonicalTraceRow`, `CanonicalTracePrefix`, `CanonicalScientificTracePayloadV1`, `RunTraceEnvelopeV1`, `TraceHeader`, `TraceFooter` |
+| `artifacts` | `ResultArtifact`, `SummaryArtifact`, `FigureArtifact`, `ExecutionResultManifest`, `PublicationRecord`, `CorrectionRecord`, `ArtifactRecord` |
+| `bridge` | `DependencyEdge`, `JointTransitionGroup`, `AdmissibleComparatorSet`, `GroupMeasurement`, `SameBaselineNonadditivity`, `ComparatorInteraction`, `NonserializableGroup` |
+| `dynamic` | `DelayRecord`, `InTransitRecord`, `DelayedEffect`, `DynamicUpdateRecord`, `NaturalDriveContract` |
+| `provenance` | `SourceProvenance`, `RuntimeProvenance`, `EnvironmentProvenance`, `ExecutionSemanticsProjection` |
+| `recovery` | `RecoveryClassification`, `RecoveryRecord` |
+| `publication` | `WriteOnceStore`, `PublicationReceipt` |
+
+Abstract protocols (`NumericalPolicyV1`, `Policy`, `CausalModel`, atomic-store
+protocols, and `WriteOnceStore`) declare methods but do not make their
+implementations lower-capability. Invoking their scientific methods is
+possible only through the classified callables below.
+
+### 10.3 Exhaustive planned callable catalogue
+
+| Public interface | Owner | Class | Capability boundary |
+|---|---|---:|---|
+| `parse_ecj1` | `canonical` | T0 | Strict parse only; noncanonical bytes rejected |
+| `encode_ecj1` | `canonical` | T0 | Typed ECJ-1 value to exact bytes |
+| `normalize_core_number` | `numeric` | T0 | Lossless §2 normalization only |
+| `apply_exact_core_operation` | `numeric` | T0 | Integer/rational/finite-decimal operation only when result is exact and uniquely represented; otherwise `NUMERICAL_POLICY_REQUIRED` |
+| `validate_numerical_policy` | `numeric` | T0 | Contract completeness; no domain evaluation |
+| `allocate_scientific_id` | `registry` | T1 | Atomically records a content-neutral allocation claim |
+| `parse_scientific_id` | `identity` | T0 | Grammar validation only |
+| `parse_semantic_version` | `identity` | T0 | Grammar validation only |
+| `compute_object_content_hash` | `hashing` | T0 | Exact §5.2 projection |
+| `compute_state_payload_hash` | `hashing` | T0 | Exact §5.2 projection; no state generation |
+| `compute_policy_memory_payload_hash` | `hashing` | T0 | Exact §5.2 projection |
+| `compute_augmented_replay_state_hash` | `hashing` | T0 | Component-hash pairing only |
+| `compute_represented_state_projection_hash` | `hashing` | T0 | Exact projection hash only |
+| `compute_information_view_hash` | `hashing` | T0 | Hashes a supplied view; does not build one |
+| `compute_proposal_set_hash` | `hashing` | T0 | Hashes supplied ordered proposals |
+| `compute_execution_semantics_hash` | `hashing` | T0 | Exact UQ-36 projection only |
+| `compute_canonical_trace_row_hash` | `hashing` | T0 | Exact row preimage only |
+| `compute_canonical_trace_prefix_hash` | `hashing` | T0 | Exact confirmed-prefix preimage only |
+| `compute_canonical_trace_payload_hash` | `hashing` | T0 | Exact complete/fault-qualified payload preimage only |
+| `compute_artifact_byte_hash` | `hashing` | T0 | Exact binary frame only |
+| `compute_source_file_raw_sha256` | `hashing` | T0 | Conventional raw digest with distinct type |
+| `validate_object_envelope` | `envelopes` | T0 | Envelope/preimage/lifecycle consistency |
+| `resolve_ref` | `registry` | T0 | Exact ID/version/hash resolution |
+| `resolve_alias` | `registry` | T0 | Presentation alias to one exact ref; no accepted hash uses alias |
+| `register_draft` | `registry` | T1 | Immutable draft insertion only |
+| `accept_registry_object` | `registry` | T1 | Authorization-gated lifecycle freeze; no science |
+| `supersede_registry_object` | `registry` | T1 | Creates relation/new record; original immutable |
+| `validate_quantity` | `primitives` | T0 | Dimensions, unit/type/region/time/boundary checks |
+| `convert_quantity_exact` | `primitives` | T0 | Only a pinned exact conversion; approximate conversion requires T3 domain policy |
+| `validate_horizon` | `primitives` | T0 | Clock/endpoints/pending treatment only |
+| `validate_uncertainty_record` | `primitives` | T0 | Kind/unit/provenance checks; no inference |
+| `validate_state_record` | `state` | T0 | Shape, refs, payload hash, physical/memory separation |
+| `validate_projection_contract` | `state` | T0 | Static required/excluded coordinate contract |
+| `project_static_fixture` | `state` | T2 | One allowlisted isolated synthetic state only |
+| `project_state` | `state` | T3 | Registered/candidate state projection |
+| `evaluate_distortion_fixture` | `distortion` | T2 | One allowlisted exact-lossless fixture contract; no domain approximation/tolerance |
+| `evaluate_distortion` | `distortion` | T3 | Scientific distortion evaluation |
+| `validate_action_definition` | `actions` | T0 | Declarative contract only |
+| `build_schedule` | `scheduling` | T0 | Constructs/validates a declarative schedule; cannot evaluate it |
+| `validate_policy_memory_state` | `policy` | T0 | Applicability, hash, schema, epoch, lineage |
+| `policy_propose` | `policy` | T3 | Calls a scientific policy on a permitted live view |
+| `commit_policy_decision` | `policy`/`durability` | T3 | Atomically commits live decision/next memory/trace row |
+| `measure_state` | `observation` | T3 | Produces/inspects a scientific measurement |
+| `append_operational_ledger_entry` | `ledger` | T1 | Authorization/use/publication/correction and inert validation ledgers only |
+| `append_scientific_ledger_entry` | `ledger` | T3 | Physical/receipt/causal/settlement evidence in a scientific context |
+| `validate_fault_schedule_boundary` | `faults` | T0 | Base structure and forbidden-input checks only |
+| `deliver_declared_fault` | `faults`/`execution` | T3 | Unavailable until UQ-38 extension and T3 authority |
+| `accept_experiment_configuration` | `experiment` | T1 | Exact external preregistration authority; freezes content; no execution |
+| `accept_execution_binding` | `experiment` | T1 | Exact external pre-execution authority; freezes binding; no execution |
+| `classify_execution_runtime_property` | `experiment`/`provenance` | T0 | Closed §7 enumeration; unknown class rejected |
+| `validate_stage_authorization` | `authorization` | T1 | Full §6 validation without entering target operation |
+| `consume_stage_authorization` | `authorization_use` | T1 | Durable one-use burn; returns target-specific entry evidence, never a scientific lease by itself |
+| `build_synthetic_information_view` | `capabilities` | T1 | Fabricated fields only; rejects scientific refs |
+| `build_information_view` | `capabilities` | T3 | Live permitted scientific view |
+| `validate_information_read_set` | `capabilities` | T3 | Validates a live policy decision read set |
+| `order_event_keys` | `events` | T0 | Total ordering/duplicate detection on declarations |
+| `validate_update_ownership` | `ownership` | T0 | Static claim-disjointness check; no commit |
+| `classify_inert_commit_failure` | `durability` | T1 | Dummy store/bytes only |
+| `classify_undeclared_interruption` | `recovery` | T1 | Evidence classification; cannot resume or execute |
+| `begin_bound_scientific_execution` | `execution` | T3 | Validates/consumes exact authority and creates one live lease; the invocation has begun even before a state step |
+| `propose_phase_updates` | `execution` | T3 | Calls scientific transition proposal for phases 1/2/9/10 |
+| `screen_and_admit` | `execution` | T3 | Applies scientific constraints/capacity/queue rules |
+| `propose_joint_transition` | `execution` | T3 | Calls scientific joint transformation on common pre-state |
+| `commit_phase_updates` | `execution` | T3 | Can advance physical state atomically |
+| `advance_epoch` | `execution` | T3 | Exact ten-phase state advancement |
+| `classify_joint_groups_fixture` | `bridge` | T2 | One frozen M1–M9 grouping fixture |
+| `classify_joint_groups` | `bridge` | T3 | Registered/candidate actions and boundaries |
+| `compute_group_measurement_fixture` | `bridge` | T2 | One frozen M1–M9 exact calculation |
+| `compute_group_measurement` | `bridge` | T3 | Scientific endpoint/group calculation |
+| `compute_same_baseline_nonadditivity_fixture` | `bridge` | T2 | One frozen M1–M9 exact calculation |
+| `compute_same_baseline_nonadditivity` | `bridge` | T3 | Scientific diagnostic; never causal allocation |
+| `compute_comparator_interaction_fixture` | `bridge` | T2 | One frozen named-comparator calculation |
+| `compute_comparator_interaction` | `bridge` | T3 | Scientific comparator-relative calculation |
+| `validate_settlement_closure` | `settlement` | T0 | Exact supplied share-plus-residual algebra only |
+| `infer_causal_contributions` | `causal` | T3 | Separately authorized result interpretation; unsupported without identified model |
+| `allocate_settlement` | `settlement` | T3 | Separately authorized institutional operation on immutable physical evidence |
+| `validate_dynamic_static_identity` | `dynamic` | T2 | One frozen capacity/queue/delay identity; no successor chaining |
+| `propose_reroute` | `dynamic` | T3 | Live unfinished-suffix scientific proposal; Part VII guard enforced |
+| `finalize_inert_trace_payload` | `traces` | T1 | Dummy validation rows only; rejects scientific refs |
+| `finalize_trace_payload` | `traces` | T3 | Finalizes already durable scientific rows under exact finalization authority; cannot create rows or advance state |
+| `finalize_inert_manifest` | `publication` | T1 | Dummy artifact inventory only; rejects scientific refs |
+| `finalize_execution_result_manifest` | `publication` | T3 | Pre-publication scientific inventory under exact authority; no runner |
+| `recover_inert_artifacts` | `recovery` | T1 | Dummy same-bytes/prefix reconstruction only |
+| `recover_artifacts` | `recovery` | T3 | Authorized recovery of scientific artifacts; no model call |
+| `create_inert_correction_record` | `publication` | T1 | Dummy linked immutable record only |
+| `create_correction_record` | `publication` | T3 | Authorized scientific-artifact correction relation; no recomputation or interpretation |
+| `publish_inert_artifacts` | `publication` | T1 | Dummy write-once bytes and separate record |
+| `publish_artifacts` | `publication` | T3 | Authorized real artifact publication; runner import forbidden |
+
+`apply_numerical_policy` is intentionally not a public generic interface. A
+domain operation invokes its exact accepted policy inside its own T2 fixture
+wrapper or T3 scientific interface, preventing a validation caller from using
+the numeric layer as an unclassified scientific evaluator.
+
+## 11. Static and synthetic validation plan
+
+### 11.1 Non-reachability architecture
+
+The validation plan has four simultaneous controls:
+
+1. `ebu_framework.validation` and all T0/T1/T2 tests are statically forbidden
+   from importing `ebu_framework.execution`. Production modules are forbidden
+   from importing `ebu_framework.validation`.
+2. Every T3 interface requires a `ScientificExecutionLease` whose constructor
+   is private to the successful `begin_bound_scientific_execution` path after
+   external-authenticity validation and durable single-use consumption.
+   Deserialization, copying, subclassing, and synthetic namespaces cannot
+   create a valid lease.
+3. T2 wrappers require an allowlisted fixture ID/hash and a
+   `T2FixtureCapability` issued only by the validation harness after matching
+   the frozen fixture inventory. They accept one input and do not return a
+   `SystemState` or value accepted by another T2 wrapper.
+4. A static AST/import/export scan fails if validation code references a T3
+   interface, a historical runner/finalizer/experiment module, any Gate 1D-C
+   path, any `results/` path, or a network/subprocess entry capable of starting
+   science. CI contains no T3 framework job.
+
+Validation stores use a temporary directory created for the job, the reserved
+`validation` namespace, and records whose schema marks them
+`SYNTHETIC_NONSCIENTIFIC`. Production registries reject that namespace. Test
+names do not affect classification.
+
+### 11.2 Frozen validation groups
+
+| Group | Class | Exact permitted checks | Explicitly unreachable |
+|---|---:|---|---|
+| V0 canonical bytes | T0 | Verify both runtime Unicode assets' exact SHA-256 values; run the complete pinned Unicode 15.0 `NormalizationTest.txt`; check assigned-range expansion, assigned Unicode 15.0 boundaries, rejection of later-assigned U+2EBF0 even on a later host, rejection on missing/corrupt data, absence of host `unicodedata`/ICU/network reachability, code-point key order, escapes, integers, re-encoding, and duplicate/rejection vectors | Host Unicode normalization, object acceptance, policies, transitions |
+| V1 hash and identity | T0/T1 | Every §5 domain/preimage/exclusion, metadata invariance, artifact frame, raw-source distinction, ID idempotency/collision in temp registry | Scientific registry/configuration |
+| V2 core numbers/types | T0 | Integer/rational/decimal/binary-bit normalization; exact operations; units/dimensions/boundaries/time/resolution failures; missing policy refusal | Domain precision/tolerance or float evaluation |
+| V3 declarative records | T0 | Every v0.1 record is representable; physical/policy/configuration/binding/authorization/publication separation; route/fault unresolved guards | Scientific callbacks and lifecycle execution |
+| V4 synthetic authorization | T1 | RFC 8032 vectors; synthetic threshold, issuer scope, delegation attenuation/depth/cycle, fresh-time response parser, revocation rollback, exact targets, single-use SQLite conflict | Production keys, real stage authority, model entry |
+| V5 capability leakage | T1 | Fabricated availability epochs, forbidden field traversal, read-set rejection, stateless/stateful applicability | Scientific policy code |
+| V6 event/ownership | T0/T1 | Phase constants, `EventKey` total order, duplicate rejection, opaque synthetic ownership conflicts, phase-8/phase-9 duplicate identifiers | Transition proposal callback or state mutation |
+| V7 inert durability | T1 | Dummy byte/record atomic outcomes, ambiguous commit classification, immutable prefix framing, no-durable-trace classification | FaultSchedule delivery, policy, state, runner |
+| V8 Bridge exact fixtures | T2 | M1–M9 one-at-a-time grouping/status/arithmetic from Bridge v0.2, including undefined values and both M8 comparators | Trajectory, parameter search, causal inference, settlement choice |
+| V9 dynamic exact fixtures | T2 | Six §9 static examples' unit/capacity/queue/delay arithmetic one at a time | `advance_epoch`, route science, schedule comparison |
+| V10 artifact workflow | T1 | Dummy trace finalization, inert partial prefix, manifest completeness, byte-identical recovery, write-once refusal, separate publication record | Result generation, analysis, real publication |
+| V11 reachability/audit | T0 | Import DAG, public export list, forbidden path/call scan, manifest completeness, source hashes, absence of T3 CI command | Dynamic imports or execution |
+
+T2 groups V8 and V9 require separate static-fixture validation authority in
+I-6/I-7 or I-9. Their presence in the plan does not authorize their execution.
+No test advances `Z_k`, reuses a successor as a predecessor, calls a policy,
+samples randomness, inspects candidate outcomes, invokes a runner/finalizer,
+or opens a registered scientific configuration.
+
+### 11.3 Acceptance evidence for every validation run
+
+Every later validation report SHALL record repository/authority hashes,
+changed source hashes, exact test file list, class of every called public
+interface, fixture refs, command, exit status, completed check counts, and an
+explicit statement of whether model state or scientific execution occurred.
+A terminated, skipped, quarantined, or zero-check group is not a pass.
+
+## 12. Implementation stages and dependency order
+
+No stage below begins automatically. Each needs separate explicit authority,
+a clean-tree/hash gate, and review of all predecessor evidence. The dependency
+order is strict:
+
+```text
+I-0 plan
+  -> I-1 canonicalization/identity/registry
+  -> I-2 numbers/primitives/envelopes
+  -> I-3 declarative records
+  -> I-4 authorization/capabilities
+  -> I-5 event/durability/trace kernel
+  -> I-6 exact Bridge adapter
+  -> I-7 dynamic mechanics
+  -> I-8 provenance/recovery/publication
+  -> I-9 implementation audit
+```
+
+### I-1 — Canonicalization, identity, hashing, and base registry
+
+**Inputs:** accepted I-0 plan and unchanged four authority hashes.
+**Work:** only I-1 files in §9; ECJ-1 and exact vendored Unicode 15.0.0 data,
+all immediately constructible §5 hash projections, IDs, refs, semantic
+versions, immutable registry base.
+**Validation:** V0, V1, and import-safety portions of V11.
+**Acceptance:** both Unicode runtime assets and the normalization fixture match
+their §3.2/§9.5 raw SHA-256 values; the complete Unicode 15.0 normalization
+corpus passes; U+2EBF0 is rejected independently of host Unicode support;
+static reachability proves no host `unicodedata`, ICU, locale, or network
+normalization path; exact bytes agree on every vector; all self-reference and
+metadata-contamination cases fail; full-digest allocation is deterministic;
+registry conflicts are atomic; source package imports no historical science.
+**Fail closed:** missing/malformed/wrong-digest Unicode data, host-Unicode or
+network fallback, canonical ambiguity, a Unicode-15.0-unassigned scalar, raw
+float, unregistered namespace, digest/type mismatch, alias in accepted
+content, or authority hash drift.
+**Exclusions:** quantities, scientific records, authorization, event logic,
+and every scientific function.
+
+### I-2 — Numeric substrate, immutable envelope, and typed primitives
+
+**Depends on:** accepted I-1.
+**Work:** §2 `CoreNumberV1` and policy protocol; common envelope; dimensions,
+units, resources, regions, boundaries, clocks/horizons, uncertainty/statuses.
+**Validation:** V2 plus applicable V3 static construction.
+**Acceptance:** all normal forms unique; approximate/non-lossless operation
+without an accepted policy fails; incompatible aggregation and implicit
+absence fail; metadata cannot alter scientific hashes.
+**Fail closed:** Python float at canonical boundary, missing policy field,
+implicit conversion, untyped null/zero, incompatible unit/boundary.
+**Exclusions:** no domain precision/tolerance, distortion, action, or state
+transition.
+
+### I-3 — Declarative scientific and operational records
+
+**Depends on:** accepted I-2.
+**Work:** all I-3 record modules, including separate physical state and policy
+memory, configuration/binding split, base fault types, authorization/artifact
+record shapes, ledgers, and acceptance projections.
+**Validation:** V3 and policy-memory static portions; no callback invocation.
+**Acceptance:** every specification v0.1 record can be represented and
+strictly validated; accepted configuration contains no implementation or
+authority; binding adds no science; route/fault semantics unresolved by
+default; initial memory applicability closes.
+**Fail closed:** hidden scientific field, derived hash in own preimage,
+physical/memory conflation, implementation field in configuration, authority
+embedded in target, unsupported route/fault meaning.
+**Exclusions:** no policy, distortion, grouping, transition, durability,
+publication, or acceptance of a real configuration.
+
+### I-4 — External authorization and information capabilities
+
+**Depends on:** accepted I-3, prospective trust-bootstrap governance approval
+for production activation, and audited exact crypto dependency under UQ-25.
+**Work:** §6 trust/issuer/delegation/time/revocation/envelope/use mechanism,
+stage guard, information capabilities, synthetic validation profile, and—only
+after UQ-25 selects it—the exact Ed25519 provider metadata in `pyproject.toml`
+and matching fully hashed finalization of `requirements-framework.lock` in
+one reviewed change set.
+**Validation:** V4, V5, V11; synthetic keys/records only.
+**Acceptance:** the provider/version/build and dependency closure selected by
+UQ-25 agree exactly between `pyproject.toml`, the finalized lock, installed
+distribution hashes, and provenance; every validation dimension is mandatory
+and ordered; scope attenuates; current revocation and fresh time are required;
+duplicate or ambiguous use cannot enter; future/forbidden field access fails
+before a proposal; production rejects validation keys/namespaces.
+**Fail closed:** absent UQ-25 provider decision, dependency metadata/lock/hash
+drift, missing service, stale/gapped/equivocating evidence,
+signature/key/profile mismatch, scope/time/target/predecessor mismatch,
+unsupported filesystem, or use-store ambiguity.
+**Exclusions:** no production credentials in fixtures; no scientific lease,
+policy call, state advance, or distributed single use.
+
+### I-5 — Deterministic event, ownership, durability, and trace kernel
+
+**Depends on:** accepted I-4 and a prospective UQ-26 operational durability
+contract before any real atomic backend is accepted.
+**Work:** exact ten phase constants/order, event keys, proposals, epoch-wide
+ownership, abstract atomic commits, policy decision/memory transaction,
+canonical rows/prefixes, T3 lease/entry guard, base fault hooks that cannot
+deliver a kind.
+**Validation:** V6, V7, V11 only; opaque coordinates and dummy bytes.
+**Acceptance:** order and ownership conflicts are deterministic; phase 9
+cannot duplicate phase 8; informational memory ownership stays outside
+physical ownership; known prefixes are immutable/literal; T3 entry cannot be
+constructed by validation; non-`NOT_APPLICABLE` faults are rejected pending
+UQ-38.
+**Fail closed:** equal event key, predecessor mismatch, ownership conflict,
+ambiguous durability, missing trace evidence, invalid lease, or any fault
+delivery attempt.
+**Exclusions:** no scientific transformation, policy, state, world, schedule,
+fault directive, runner, or accepted atomic backend absent UQ-26.
+
+### I-6 — Exact Sequential–Parallel Bridge v0.2 adapter
+
+**Depends on:** accepted I-5.
+**Work:** imported grouping graph/transitive closure, comparator records,
+quantity-fixed/rule-replayed distinction, group measurement, `N_G`, named
+interaction, undefined/nonserializable states, causal-status separation, and
+settlement closure validation.
+**Validation:** V8 only after separate T2 authority; static conformance review.
+**Acceptance:** no local definition differs from Bridge v0.2; M1–M9 exact
+values/statuses pass; M9 invents no comparator/causal value; no allocation is
+called measurement.
+**Fail closed:** incompatible boundary, unresolved coupling, missing
+comparator kind, invalid same-baseline endpoint, or undefined value coerced to
+zero.
+**Exclusions:** no deterministic parallel-testing preregistration, trajectory,
+parameter search, causal model, O3 settlement choice, or Gate 1D-C action.
+
+### I-7 — Dynamic Coordination records and deterministic mechanics
+
+**Depends on:** accepted I-6.
+**Work:** exact `Z_k` component ownership; topology/capacity/admission/queue,
+reservation/shortfall, congestion, delay/transit/effects, reroute suffix,
+natural-drive proposal interfaces, policy-memory pairing, provisional Part
+VII guards.
+**Validation:** V9 and route guards after separate T2 authority; isolated
+static arithmetic only.
+**Acceptance:** imported ten-phase responsibilities and no-double-application
+rules map exactly; physical state retains `x,g,q,c,ell`; queues partition
+correctly; pending is nonzero/nonabsence; route-dependent claims fail
+unresolved.
+**Fail closed:** missing typed balance term, capacity excess, rejected-demand
+queue mutation, completed-route rewrite, overlapping delay double count,
+natural drive outside phase 10, or unaccepted domain numerical policy.
+**Exclusions:** no Part VII law, domain natural-drive model, controller,
+trajectory, schedule comparison, stochastic engine, or hypothesis test.
+
+### I-8 — Provenance, artifacts, recovery, and publication
+
+**Depends on:** accepted I-7, a UQ-27 publication protocol before a real store,
+and UQ-26 for recovery against a real execution store.
+**Work:** UQ-36 enforcement, immutable trace/run envelope/result/manifest,
+same-bytes recovery, dummy content-addressed publication, separate
+publication/correction records.
+**Validation:** V10 and V11 on dummy bytes only.
+**Acceptance:** full/prefix/run projections remain distinct; a partial
+manifest cannot be complete; recovery never calls execution; different bytes
+cannot overwrite; publication facts never mutate the manifest.
+**Fail closed:** missing artifact, hash mismatch, ambiguous prefix, different
+destination bytes, publication authorization mismatch, or source/runtime
+property outside §7.
+**Exclusions:** no real result, analysis, figure, publication destination,
+correction decision, or scientific rerun.
+
+### I-9 — Separately authorized implementation audit
+
+**Depends on:** accepted I-8 and explicit validation authority naming the
+exact T0/T1/T2 groups.
+**Work:** complete diff/import/API/hash/authority/threat/invariant audit; add
+only the CI changes in §9.2; produce a separate validation report if later
+authorized.
+**Validation:** V0–V11 as individually authorized; no T3.
+**Acceptance:** every changed path is in §9 and each change was made only by a
+listed owning stage; public exports equal §10 exactly; the `pyproject.toml`
+crypto requirement and finalized lock are identical to the UQ-25 decision;
+the Unicode assets and normalization fixture have the exact frozen hashes and
+no host-Unicode fallback is reachable; every invariant/threat maps to code
+and completed evidence or a named blocker; tests report nonzero completed
+checks; authority/source hashes match; no registered world, policy, runner,
+finalizer, model step, trajectory, Gate 1D-C path, or result path was
+reachable.
+**Fail closed:** skipped/terminated/zero-check group, unexplained path/import,
+dependency/hash drift, T3 reachability, unresolved scientific conflict, or
+evidence gap.
+**Exclusions:** no preregistration, pre-execution binding for a study,
+scientific execution, interpretation, publication, commit, or push unless
+each is separately authorized outside this plan.
+
+## 13. Cross-stage fail-closed rules
+
+These rules apply even if a stage-specific acceptance criterion appears to
+permit progress:
+
+1. A mismatch among the specification, this plan, or any of the three
+   authorities stops work. Implementation may not choose one selectively.
+2. A dirty tree, wrong branch, local/remote SHA mismatch, unregistered path,
+   unexpected artifact, or unexplained dependency change stops the stage.
+3. A hash/preimage, ECJ-1, ID, schema, reference, lifecycle, or authority
+   mismatch fails before the referenced object is used.
+4. Unknown enums, runtime-property classes, operation scopes, numerical
+   policies, fault extensions, route semantics, modes, or completeness states
+   fail unsupported. They never select a default.
+5. `PENDING`, `FAILED`, `PARTIAL`, `UNRESOLVED`, `OUT_OF_BOUNDARY`, and
+   `NOT_APPLICABLE` remain typed and cannot become zero, empty, `null`, or
+   omission.
+6. Physical measurement, causal inference, policy choice, and institutional
+   settlement cannot share a result field or overwrite one another.
+7. Policy memory cannot enter physical `Z_k`, and physical ownership cannot
+   own a memory transition.
+8. A proposal failure advances nothing. A commit ambiguity preserves prior
+   durable evidence and becomes partial/unresolved; it is never retried as a
+   fresh uncounted invocation.
+9. A validation capability token cannot be upgraded or confer T3 authority.
+   Contextual classification may escalate a T0/T1 helper invocation inside
+   already authorized T2/T3 work, but it creates no higher capability. T3
+   still requires new external authority and a one-use execution entry.
+10. Any result-sensitive selection of a parameter, precision, tolerance,
+    comparator, world, schedule, fault, objective, or classification is
+    forbidden unless a separate prospective scientific authority explicitly
+    permits it.
+11. No recovery, finalization, correction, publication, or test interface may
+    import or call the runner.
+12. Unsupported or absent durability guarantees stop acceptance; an
+    in-memory success is not evidence of durable atomicity.
+
+## 14. Explicit exclusions for the whole plan
+
+This plan does not select or authorize:
+
+- any domain state, distortion, action transformation, natural drive,
+  controller, objective, uncertainty set, precision, rounding, tolerance,
+  approximation, or cross-platform numerical guarantee;
+- a Part VII route, distance, loss, propagation, actor, or closure law;
+- a stochastic generator, seed derivation, stream ownership, or draw rule;
+- a multi-controller memory composition;
+- a fault kind, effect, delivery acknowledgement, continuation, recovery, or
+  terminal rule;
+- a causal-identification model or institutional settlement/allocation rule;
+- a durable physical execution store, distributed authorization-use store, or
+  real publication store beyond the stated interfaces;
+- a real trust root, issuer, key, credential, time/revocation endpoint, or
+  governance role assignment;
+- a scientific configuration, preregistration, execution binding, run,
+  interpretation, result, figure, publication, or correction;
+- the deterministic parallel-testing programme;
+- any Gate 1D-C investigation, remedy, retry, finalization, or invocation;
+- alteration of a frozen source, protocol, plan, result, manifest, or incident
+  record; or
+- a commit, push, pull request, branch change, tag, release, package
+  publication, or history rewrite.
+
+## 15. Decision register
+
+All `ACCEPTED_I0` decisions are implementation-plan decisions only. They do
+not establish scientific facts or authorize their implementation.
+
+| ID | Status | Decision | Consequence |
+|---|---|---|---|
+| I0-DR-001 | `ACCEPTED_I0` | Use new `src/ebu_framework` package boundaries and never retrofit historical experiment files | Preserves earlier evidence and blocks accidental Gate/runner coupling |
+| I0-DR-002 | `ACCEPTED_I0` | `CoreNumberV1` is integer, reduced rational, normalized finite decimal, or finite binary64 bits | Lossless interchange is exact while arithmetic meaning remains domain-owned |
+| I0-DR-003 | `ACCEPTED_I0` | Every non-lossless operation requires an accepted `NumericalPolicyV1` with no default implementation | UQ-02 is resolved only at the core/interface boundary |
+| I0-DR-004 | `ACCEPTED_I0` | Adopt ECJ-1 rather than RFC 8785 and pin its assignment/NFC behavior to vendored Unicode 15.0.0 data | Satisfies UTF-8/NFC and Unicode-scalar key ordering without a hidden UTF-16 or host-Unicode-version conflict |
+| I0-DR-005 | `ACCEPTED_I0` | Forbid raw JSON fraction/exponent tokens and all Python floats in canonical scientific preimages | Eliminates cross-runtime numeric spelling ambiguity |
+| I0-DR-006 | `ACCEPTED_I0` | Allocate IDs from full SHA-256 of a namespace-owned, content-neutral stable allocation claim | Deterministic under concurrency, stable across versions, non-recursive, not outcome-derived |
+| I0-DR-007 | `ACCEPTED_I0` | Use all named §5 SHA-256 projections and distinct digest types | Prevents cross-domain substitution and metadata/self-reference contamination |
+| I0-DR-008 | `ACCEPTED_I0` | Canonical trace rows form a predecessor-hash chain and length-framed row stream | Makes the known durable row stream a literal prefix while retaining a distinct complete payload |
+| I0-DR-009 | `ACCEPTED_I0` | Use out-of-band pinned 2-of-3 Ed25519 issuer roots, 2-of-3 revocation roots, and online pinned time attestation | Gives UQ-35 a non-recursive trust root and explicit freshness |
+| I0-DR-010 | `ACCEPTED_I0` | Delegation is single-parent, attenuation-only, acyclic, and at most four credentials | Prevents scope union, escalation, and unbounded validation |
+| I0-DR-011 | `ACCEPTED_I0` | Every authorization grants one operation and one invocation; execution consumes once at run entry and uses a nontransferable live lease internally | Prevents authorization replay without counting each epoch as a new invocation |
+| I0-DR-012 | `ACCEPTED_I0` | Enforce local single use with exact SQLite compare-and-consume; distributed use unsupported | Concrete v0.1 enforcement without pretending UQ-26 is resolved |
+| I0-DR-013 | `ACCEPTED_I0` | Use the closed-world UQ-36 classification and reject undeclared runtime reads | Replay semantics cannot be chosen retrospectively from observed agreement |
+| I0-DR-014 | `ACCEPTED_I0` | Freeze only the base `FaultSchedule` type and make every nonempty schedule unavailable until UQ-38 | Avoids inventing study faults or terminal science in framework code |
+| I0-DR-015 | `ACCEPTED_I0` | Public APIs are exhaustive and classified by reachable behavior: pure structural handling of supplied immutable science may be T0, while enclosing T2/T3 context escalates each invocation and no wrapper can lower it | Removes input-type overclassification without permitting helper/test naming to bypass stage controls |
+| I0-DR-016 | `ACCEPTED_I0` | Validation is split into V0–V11 with structural T3 non-reachability | Static/synthetic checks cannot become a one-tick experiment |
+| I0-DR-017 | `ACCEPTED_I0` | M1–M9 and the six dynamic hand examples are the only first T2 fixtures | Resolves UQ-31 narrowly without beginning a study or trajectory |
+| I0-DR-018 | `ACCEPTED_I0` | The §9 file list is closed and each permitted initial or later modification has an explicit stage owner, including I-4 ownership of `pyproject.toml` crypto metadata | Implementation scope and cross-stage dependency changes are inspectable before code exists |
+| I0-DR-019 | `ACCEPTED_I0` | Production authorization activation waits for an explicit trust-bootstrap governance record | Actual institutional authority is not invented in this technical plan |
+| I0-DR-020 | `ACCEPTED_I0` | Preserve Gate 1D-C exactly and blacklist every related path from framework validation | I-0 cannot alter or consume that study's state |
+| I0-DR-021 | `ACCEPTED_I0` | Vendor and raw-hash-check Unicode 15.0.0 `UnicodeData.txt` and `DerivedNormalizationProps.txt`, and test against the pinned complete normalization corpus | Later Python Unicode databases cannot silently change ECJ-1 assignment or NFC bytes |
+| I0-DR-022 | `ACCEPTED_I0` | Freeze four separately named release milestones and disjoint tag namespaces in §18 | Documentation, alpha software, scientific v3.0, and complete books cannot be conflated |
+
+## 16. Threat register
+
+This register supplements, and does not replace, the specification's TM-001
+through TM-043.
+
+| ID | Threat | Control frozen here | Residual or blocker |
+|---|---|---|---|
+| I0-TM-001 | Canonical bytes differ across languages for non-BMP keys | ECJ-1 Unicode-scalar sorting, raw-hash-pinned Unicode 15.0 assignment/NFC tables, complete normalization corpus, exact vectors | Other implementations require independent conformance evidence |
+| I0-TM-002 | Unicode normalization merges two keys | Normalize then reject duplicate names | Human-confusable but unequal names remain a review concern |
+| I0-TM-003 | JSON parser rounds large numbers or accepts NaN | Arbitrary-precision integer-only raw tokens; strict parser; tagged other numbers | Third-party ingestion adapters remain separately reviewable |
+| I0-TM-004 | Core arithmetic silently becomes domain policy | Only provably lossless operations; mandatory accepted policy otherwise | Domain policy quality remains future science |
+| I0-TM-005 | Content-derived ID changes across versions or becomes recursive | Content-neutral stable allocation claim excluding content/version/hash | Namespace owner may choose a poor stable key; registry review remains needed |
+| I0-TM-006 | Digest from one domain is accepted in another | Distinct types, mandatory domain, no generic public hash API | Type erasure in external systems must fail at ingestion |
+| I0-TM-007 | Trace prefix cannot extend byte-identically | Length-framed canonical row stream and row predecessor hashes | Atomic storage of rows/state/memory remains UQ-26 |
+| I0-TM-008 | Authorization authenticates itself recursively | Out-of-band pin; signature over exact authorization ref; separate envelope hashed afterward | Bootstrap distribution and custody require governance control |
+| I0-TM-009 | One compromised issuer grants broader authority | Root-signed issuer ceiling, attenuation-only delegation, exact authorization targets | Compromise within valid ceiling remains possible until revocation |
+| I0-TM-010 | Stale revocation evidence is replayed | Online fresh time and current short-lived threshold-signed snapshot; rollback/equivocation ledger | Service outage stops protected work; availability is intentionally sacrificed |
+| I0-TM-011 | One authorization is reused after crash or concurrency race | Durable unique use key consumed before entry; ambiguity burns permission | SQLite relies on approved local filesystem and hardware; distributed case unsupported |
+| I0-TM-012 | Actual runtime influence is mislabeled metadata | Closed allowlist/environment; reachable dependency closure; undeclared-read failure | Proving absence of covert native/hardware influence remains implementation audit work |
+| I0-TM-013 | Including every host fact makes replay identity meaningless | §7.3 excludes instance/time/storage facts and instead includes normalization rules | Conservative included OS/backend constraints may narrow equivalence intentionally |
+| I0-TM-014 | Framework invents a generic fault that changes study meaning | No built-in fault kinds/effects/terminal rules; nonempty schedule rejected | UQ-38 amendment is mandatory before any delivery test |
+| I0-TM-015 | T1 storage failure is disguised scientific fault injection | T1 uses dummy bytes/stores and never a `FaultSchedule` or scientific state | Review must distinguish inert failure doubles from accepted durability backend |
+| I0-TM-016 | T2 fixture becomes a trajectory | One-call capability; no `SystemState` return accepted for another call; exact allowlist | Python cannot prevent malicious source edits; closed diff and audit are required |
+| I0-TM-017 | A pure helper is overclassified from its input type, or a wrapper underclassifies reachable scientific behavior | Behavior-based intrinsic classification, contextual maximum/escalation, closed export catalogue, T3 lease parameter, AST reachability scan | Dynamic language reflection remains in reviewed threat model and is forbidden by policy |
+| I0-TM-018 | Validation imports legacy experiment code indirectly | Explicit import/path blacklist and dependency DAG scan | Existing legacy tests remain outside this framework validation claim |
+| I0-TM-019 | A file is added to hide behavior | Closed file manifest and staged filename audit | Legitimate split requires prospective plan revision |
+| I0-TM-020 | Crypto library/version weakens selected profile or differs between package metadata and lock | I-4 owns one reviewed `pyproject.toml`/lock update after exact UQ-25 selection, plus installed-distribution hash audit | Provider vulnerabilities may require prospective security migration |
+| I0-TM-021 | Publication or recovery silently invokes execution | Import-direction rule and T1 interface classification | External scripts outside the framework remain governance risk |
+| I0-TM-022 | Gate 1D-C incident is accidentally consumed as framework fixture | All Gate paths blacklisted; only incident text is preserved in this plan | Manual commands outside authorized scope remain prohibited by repository guidance |
+| I0-TM-023 | A later host runtime recognizes a code point absent from Unicode 15.0 and changes canonical bytes | Pinned runtime tables, mandatory U+2EBF0 rejection, host-library import ban, missing/corrupt-asset failure | A defect in the independent table parser remains possible until I-1 conformance review |
+| I0-TM-024 | A foundation or alpha milestone is presented as scientific or complete-books release evidence | Disjoint prerequisites, acceptance evidence, tag namespaces, branch lanes, and nonclaim rules in §18 | External mirrors or prose can mislabel an artifact and require correction |
+
+## 17. Questions intentionally deferred beyond I-0
+
+### 17.1 Specification questions not resolved here
+
+| IDs | Deferred subject | Required future authority or amendment |
+|---|---|---|
+| UQ-01 | Minimal sufficient domain physical/closed-loop state | Part-specific analytical design |
+| UQ-05 | Meaning-preserving schema migration proof | Separate migration protocol before first migration |
+| UQ-06–UQ-07 | Continuous/hybrid time and physically unresolved simultaneity | New analytical foundation or Dynamic Coordination revision |
+| UQ-08–UQ-11 | Uncertain coupling, separability evidence, comparator existence/coverage | Bridge revision and Part VI preregistration |
+| UQ-12–UQ-13 | Causal identification and acceptable unidentified-contribution settlement | Causal protocol and Part IX institutional design |
+| UQ-14–UQ-22 | Part VII routes; multi-resource conversion; queues; distributed reservations; horizons; delayed causality; natural drive; objectives; institutional values | Named Part/domain foundations and study designs |
+| UQ-23–UQ-24 | PRNG/streams and shared exogenous histories | Stochastic specification and study preregistration |
+| UQ-25 | Exact third-party implementations/dependency versions | Implementation dependency/security audit before each dependency is admitted |
+| UQ-26 | Durable atomic physical phase, policy-memory/decision/trace, and recovery store | Prospective operational durability contract before I-5 backend acceptance |
+| UQ-27–UQ-30 | Real publication store, correction authority, minimum trace/privacy, restricted provenance | Publication, governance, security, and study-specific protocols |
+| UQ-32–UQ-34 | Machine proof tooling, plugin certification, major-version boundary | Separate formal verification/conformance/specification work |
+| UQ-37 | Multi-controller canonical memory and ordering | Part-specific foundation/framework extension |
+| UQ-38 | Fault kinds, targets, acknowledgements, continuation/terminal rules | Separate fault-injection specification and applicable preregistration |
+| UQ-39 | Sensitive policy-memory encryption/access/retention/disclosure | Security/privacy/study-governance protocol |
+
+UQ-02, UQ-03, UQ-04, UQ-31, UQ-35, and UQ-36 have the limited I-0
+resolutions recorded in this plan. Their scientific application is not
+thereby accepted.
+
+### 17.2 Mandatory amendments or decisions before affected implementation
+
+The following are concrete blockers, not optional refinements:
+
+1. **Before I-4 production activation:** a governance bootstrap must register
+   real trust-profile key material, key custody/rotation, issuer roles and
+   ceilings, time/revocation services, endpoints, and operator pin procedure.
+2. **Before the I-4 cryptographic provider is accepted:** UQ-25 review must
+   select exact provider versions/builds/hashes, verify RFC 8032 behavior, and
+   freeze identical direct-dependency metadata in `pyproject.toml` and the
+   complete hashed closure in `requirements-framework.lock` during I-4.
+3. **Before I-5 accepts a real durability backend:** a UQ-26 operational
+   contract must select and prove the atomic physical phase and
+   policy-decision/memory/trace mechanisms. The abstract interface may be
+   implemented earlier; a real runner may not.
+4. **Before any nonempty fault schedule, delivery implementation, or delivery
+   test:** UQ-38 must be resolved prospectively. Base records and rejection
+   hooks alone may proceed.
+5. **Before any domain distortion/action/controller/natural-drive function:**
+   that domain must accept its `NumericalPolicyV1`, state, boundary, and
+   scientific contracts. The core supplies none.
+6. **Before route-derived physical claims:** a Part VII foundation must replace
+   the provisional route boundary.
+7. **Before stochastic code:** UQ-23 and applicable UQ-24 must be resolved.
+8. **Before a real publication backend or correction workflow:** UQ-27 and
+   UQ-28 must be resolved.
+
+## 18. Release roadmap — planning only
+
+This roadmap distinguishes four release milestones. It creates no branch,
+tag, release, package, manuscript, manifest, or publication artifact. Each
+milestone requires a new explicit authorization and a prospective release
+checklist naming the exact commit, evidence paths, hashes, signer, tag command,
+and destination before any release action. Reaching one milestone neither
+authorizes the next nor cures a missing scientific stage.
+
+All future tags named here are immutable annotated and cryptographically
+signed Git tags. A tag is created only after its evidence is accepted at the
+exact commit it names; it is never moved, deleted for reuse, or made to point
+at a dirty/unreviewed tree. Historical `v2.x.y` tags are untouched. A rejected
+candidate receives no tag. Milestone-specific tag namespaces below prevent a
+documentation or software status from being presented as scientific evidence.
+
+### 18.1 Documentation/foundation milestone
+
+**Meaning:** the architecture and I-0 implementation contract are reviewable
+foundations. This is documentation, not an implemented framework, validated
+scientific result, complete book, or permission to execute.
+
+**Prerequisites:**
+
+1. the framework specification, its three authoritative sources, and the I-0
+   plan are accepted with exact hashes and no unresolved integrity conflict;
+2. the I-0 diff is documentation-only and its decision, threat, file,
+   interface, validation, dependency, exclusion, and deferral registers are
+   internally consistent;
+3. every scientific unknown remains open or points to a prospective owner;
+4. repository guidance, branch/HEAD provenance, and the exact Gate 1D-C
+   incident statement remain preserved; and
+5. no implementation, scientific execution, interpretation, or publication
+   is claimed by the milestone.
+
+**Acceptance evidence:** a reviewed authority-hash table; complete changed-file
+and diff audit; static Markdown/reference/identifier checks with nonzero
+counts; explicit no-execution/no-model-state declaration; repository and
+remote-tip state; reviewer disposition; and a release checklist binding all
+of those records to one commit. The plan alone is not that disposition.
+
+**Version/tag policy:** the documentation milestone series is
+`foundation-v0.1.0`; documentation-only corrections increment the patch
+component (`foundation-v0.1.1`, and so on). A scientific, interface, or
+architecture-breaking change requires a new prospective minor/major
+foundation version. No foundation commit receives `v3.0.0`, `framework-*`, or
+`books-*` merely because its documents are complete.
+
+**Branch strategy:** the present foundation work remains on
+`v3.0-local-ebu-foundation`. After a foundation milestone is accepted, later
+corrections use separately authorized short-lived branches named
+`docs/foundation-<issue>` from the exact tagged commit and return through
+reviewed non-history-rewriting merges. The milestone tag points to the exact
+accepted foundation commit on that lineage. Nothing here creates a branch or
+merges it into `main` or `v3.0-ecological-accounting`.
+
+### 18.2 Framework v0.1 alpha
+
+**Meaning:** a pre-stable implementation of the unified framework suitable
+for conformance evaluation. Alpha status explicitly does not assert
+production authorization, a scientific finding, API stability, or book
+completion.
+
+**Prerequisites:**
+
+1. accepted `foundation-v0.1.x` evidence and separately authorized completion
+   and acceptance of I-1 through I-9 in dependency order;
+2. exact UQ-25 Ed25519 provider selection, matching `pyproject.toml` and
+   hashed lock metadata, pinned Unicode assets, complete public-interface and
+   file inventories, and a clean dependency/security audit;
+3. completed nonzero T0/T1 checks and only the separately authorized frozen T2
+   groups, with structural proof that T3 and historical runners were
+   unreachable;
+4. an accepted implementation-validation report mapping every invariant and
+   threat to evidence or an explicit non-release blocker; and
+5. production trust activation, real execution backends, real worlds,
+   scientific credentials, and results remain absent unless separately
+   specified—and none is needed merely to label an alpha.
+
+**Acceptance evidence:** exact source, Unicode-data, dependency, distribution,
+and authority hashes; the I-9 report and completed-check counts; API/export and
+file-manifest comparisons; an install/import conformance record for declared
+platforms; software bill of materials and license/security review; and an
+explicit statement that no T3 scientific execution occurred.
+
+**Version/tag policy:** Python package version `0.1.0a1` corresponds exactly to
+Git tag `framework-v0.1.0-alpha.1`. Later alpha candidates increment only the
+final positive integer and package suffix (`a2` /
+`framework-v0.1.0-alpha.2`). A stable `framework-v0.1.0` tag is outside this
+roadmap and requires a prospective stability decision; it cannot be inferred
+from an alpha passing its checks.
+
+**Branch strategy:** after separate authorization, a future
+`framework-v0.1` integration branch is forked from the exact accepted
+foundation tag. Each I-1–I-9 stage uses a short-lived
+`framework/i-<stage>-<issue>` branch from its accepted predecessor and returns
+only through reviewed, non-history-rewriting merge commits. The alpha tag is
+placed on the accepted I-9 integration commit. Framework commits are imported
+into science only by exact reviewed commit/tag reference; no alpha merge
+automatically enters a scientific branch.
+
+### 18.3 Scientific v3.0 release
+
+**Meaning:** the repository's v3.0 scientific claims and artifacts have passed
+their separately authorized scientific lifecycle. Neither accepted foundation
+documents nor a framework alpha is evidence that this milestone is complete.
+
+**Prerequisites:**
+
+1. every v3.0 hypothesis, world, arm, comparator, parameter, numerical policy,
+   tolerance, metric, falsifier, interpretation rule, and nonclaim is frozen
+   prospectively in its applicable accepted protocol;
+2. every required analytical, implementation, validation, pre-execution,
+   execution, finalization, interpretation, and release-audit stage is
+   separately authorized and accepted in order;
+3. every framework-backed study pins one accepted framework alpha or later
+   framework version and its complete execution-semantics/dependency closure;
+4. canonical traces or qualified durable prefixes, run envelopes, immutable
+   results, manifests, provenance, and correction/publication state are
+   complete for the release scope, with no missing required gate;
+5. all released legacy and v3.0 regression/conformance evidence is accepted;
+   and
+6. the Gate 1D-C incident has a later authoritative disposition sufficient for
+   the release scope. Its present `UNSTARTED` state cannot be treated as a pass,
+   failure, result, or satisfied prerequisite.
+
+**Acceptance evidence:** frozen protocol/configuration/binding hashes;
+authorization and stage-ledger evidence; completed scientific trace/result
+manifests and provenance; accepted interpretation and claim-status ledger;
+reproduction and regression audit; complete changed-file and source/dependency
+hash inventory; release notes; and independent release disposition. An alpha
+validation report cannot substitute for any scientific item.
+
+**Version/tag policy:** the scientific release version and immutable tag are
+exactly `v3.0.0`, continuing the repository's `v<major>.<minor>.<patch>`
+scientific namespace. Post-release corrections preserve the original tag and
+evidence; an authorized scientific correction release increments the patch
+(`v3.0.1`). Foundation, framework, or books tags never satisfy a `v3.0.0`
+reference.
+
+**Branch strategy:** scientific integration occurs on the existing
+`v3.0-ecological-accounting` branch only after separate authorization. Each
+gate or study uses its own prospectively named branch from the exact accepted
+predecessor, with immutable evidence merged through review. Accepted
+foundation/framework commits enter only by exact reviewed merge or pin. The
+release is proposed by a reviewed integration-to-`main` merge, and `v3.0.0`
+would tag that accepted merge commit. The present branches are not changed by
+this plan, and no Gate 1D-C branch, command, or evidence is touched.
+
+### 18.4 Complete-books release
+
+**Meaning:** the complete Parts IV–IX book programme is rendered and released
+with every claim bounded by accepted evidence. It is a publication milestone,
+not a new scientific result and not synonymous with v3.0 alone.
+
+**Prerequisites:**
+
+1. the `v3.0.0` scientific release and every later scientific foundation,
+   proof, study, protocol, result, interpretation, and correction required by
+   Parts IV–IX are accepted and immutable;
+2. all chapters, dependency maps, notation/definition registries, evidence and
+   claim-status ledgers, figures, citations, limitations, nonclaims, and open
+   questions required by `EBU_FUTURE_BOOKS_STRUCTURE.md` are complete;
+3. cross-part dependencies and duplicated definitions are reconciled without
+   changing scientific evidence in editorial review;
+4. every generated figure/table binds to accepted source data and exact
+   generation provenance, and rendering, accessibility, citation, rights,
+   and archival checks pass; and
+5. no unresolved scientific question is silently converted into exposition or
+   a release claim.
+
+**Acceptance evidence:** complete source and rendered-artifact hash inventory;
+chapter-to-authority and claim-to-evidence matrices; figure/table provenance;
+cross-reference, citation, link, accessibility, and visual-render reports;
+open-question/nonclaim ledger; independent editorial/scientific review; and a
+write-once publication/release manifest authorized in its own future stage.
+
+**Version/tag policy:** the first complete-books edition uses edition version
+`1.0.0` and immutable Git tag `books-v1.0.0`. Editorial corrections that do
+not change scientific meaning increment the books patch component. A change to
+a scientific claim first requires its own authorized scientific amendment or
+release and then a new books minor/major version; a books tag never moves or
+rewrites the scientific `v3.0.0` tag.
+
+**Branch strategy:** only after separate authorization, a future
+`books-complete` integration branch is created from a released `main` commit
+that contains `v3.0.0` and every later accepted scientific dependency needed
+by the books. Part-specific work uses reviewed `books/part-iv` through
+`books/part-ix` branches from the recorded integration base. The complete
+edition returns through a reviewed release merge to `main`, and the books tag
+would name that accepted merge commit. Scientific source/result artifacts are
+referenced, never edited on a books branch.
+
+### 18.5 Ordering and present status
+
+The release dependency order is foundation evidence → framework alpha →
+scientific v3.0 → complete books, but documentation may be drafted ahead when
+clearly marked provisional and no milestone may borrow acceptance from a later
+one. Framework alpha is a required implementation baseline only for studies
+that use it; all scientific prerequisites remain independently mandatory.
+
+At this I-0 correction, none of the four milestones is declared achieved. No
+branch, tag, package, release, manuscript, manifest, or publication artifact
+has been created, and no release authorization has been consumed.
+
+## 19. I-0 document acceptance checklist
+
+I-0 is complete only if review confirms all of the following:
+
+- repository and four authority hashes are exactly those in §1;
+- only this new plan file changed;
+- UQ-02 is limited to the substrate/interface boundary;
+- ECJ-1 is byte-exact and resolves the RFC 8785 ordering conflict explicitly;
+- ECJ-1 assignment and NFC are bound to raw-hash-pinned Unicode 15.0.0 assets,
+  reject later-assigned code points independently of the host, and have a
+  complete pinned normalization corpus in the manifest;
+- ID allocation is deterministic, stable, content-neutral, and
+  non-self-referential;
+- every specification-required hash maps to an exact named preimage or to the
+  explicitly distinct artifact/raw-source rules;
+- authorization covers authenticity, bootstrap trust, issuer scope,
+  delegation, trusted time, revocation, exact operation/targets,
+  predecessor evidence, single use, and an external non-recursive envelope;
+- UQ-36 has a closed included/excluded classification;
+- the fault base does not define UQ-38 science;
+- every proposed file and public interface is enumerated;
+- `pyproject.toml` explicitly grants I-4—and no intervening stage—ownership of
+  the exact UQ-25 Ed25519 dependency-metadata update paired with lock
+  finalization;
+- T0 structural operations may receive supplied immutable scientific records
+  without evaluating science, while enclosing T2/T3 context escalates the
+  invocation and cannot be lowered;
+- validation cannot reach scientific execution;
+- the four release milestones have distinct prerequisites, evidence, tag
+  namespaces, branch strategies, and nonclaims;
+- stages, dependencies, acceptance criteria, failures, exclusions, decisions,
+  threats, and deferred questions are explicit;
+- the complete document and diff pass static inspection and
+  `git diff --check`; and
+- no code, schema, fixture, test, package, directory, manifest, result,
+  branch, tag, release, commit, push, model state, or scientific execution was
+  created or run.
+
+The next possible stage after review and explicit authorization is **I-1 —
+Canonicalization, identity, hashing, and base registry**. It has not begun.
+Neither this plan's existence nor its review authorizes I-1 or any later
+stage.
