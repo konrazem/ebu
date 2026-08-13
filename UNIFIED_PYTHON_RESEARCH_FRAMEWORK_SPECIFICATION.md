@@ -1,6 +1,6 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.3
+**Version:** 0.1.4
 **Status:** Prospective Framework I-2 authority amendment only; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-13
@@ -76,17 +76,19 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.3 prospective authority register
+#### 2.1.2 Current v0.1.4 prospective authority register
 
 Revision v0.1.2 prospectively replaced only the active books-structure
-authority pointer. Revision v0.1.3 preserves those imported scientific
-authorities and adds the prospective I-2 contracts in §21. The v0.1.2
+authority pointer. Revision v0.1.3 preserved those imported scientific
+authorities and added the prospective I-2 contracts in §21. Revision v0.1.4
+preserves those authorities and corrects only the validation-case collision
+recorded in §20.5. The v0.1.2
 reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.3 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.4 |
 |---|---|---|---|
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including the K1–K6 planning programme and literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.5 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
@@ -3377,15 +3379,26 @@ exact whole-file SHA-256 is recorded in the prospectively reconciled I-0 plan
 rather than inside this file, which cannot self-record its current raw hash
 without changing it.
 
-### 20.4 Revision v0.1.3 — current prospective I-2 authority amendment
+### 20.4 Revision v0.1.3 — historical prospective I-2 authority amendment
 
-Revision v0.1.3 is the prospective Framework I-2 authority in §21. The
+Revision v0.1.3 introduced the prospective Framework I-2 authority in §21. The
 v0.1.2 whole-file SHA-256
 `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
 is immutable historical evidence. Revision v0.1.3 changes no I-1 bytes,
 imported scientific definition, Gate record, result, package, or accepted
-milestone. Its new raw SHA-256 is recorded in implementation-plan v0.2.3;
-this file does not contain its own current hash.
+milestone. Its exact whole-file SHA-256 is
+`44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`.
+
+### 20.5 Revision v0.1.4 — current prospective I-2 validation correction
+
+Revision v0.1.4 corrects only the Block-5 collision between validation cases
+16 and 34. It makes case 34 an explicit typed-applicability contradiction,
+keeps case 16 as structural omission, and states explicitly that validation
+uses only the resulting declaration rather than patch history. It changes no
+other case, expected outcome, count, API, dependency, scientific definition,
+Gate record, package, I-1 byte, or accepted milestone. Its raw SHA-256 is
+recorded in implementation-plan v0.2.4; this file does not contain its own
+current hash.
 
 ## 21. Normative prospective Framework I-2 amendment
 
@@ -3843,6 +3856,10 @@ distinct where semantics require, runtime constraints are complete, and its
 declared `completeness` is `COMPLETE`. A declaration marked complete that
 fails any predicate is `NUMERICAL_POLICY_INCOMPLETE`; a declaration marked
 incomplete validates only as an incomplete refusal record.
+Structural omission is therefore implicit absence, whereas an explicitly
+present typed `NOT_APPLICABLE` value is evaluated against the field's
+applicability predicate. Validation uses only the resulting declaration and
+never the operations or patch history used to construct it.
 
 The canonical declaration projection is an ECJ-1 object named
 `NumericalPolicyV1ProjectionV1`. It contains `schema_id` equal to
@@ -4403,10 +4420,10 @@ specification_raw_sha256
 vectors
 ```
 
-Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.3 raw
+Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.4 raw
 SHA-256 as 64 lowercase hexadecimal digits,
 `ebu:fixture:validation:i2-numeric-vectors-v1`, `1.0.0`, the eventual
-committed specification v0.1.3 raw SHA-256 in the same form, and the vector
+committed specification v0.1.4 raw SHA-256 in the same form, and the vector
 array. The two hashes occur only in those two authority fields. This is not
 self-reference: the fixture is a later I-2 artifact created after both
 authority files are committed; the plan does not embed its own hash.
@@ -4889,7 +4906,7 @@ into `ops`; the name is never written into the fixture.
 | 31 | replace `/runtime_constraints` with `([],APPLICABLE,COMPLETE)` |
 | 32 | replace it with `([R(10)],NOT_APPLICABLE,COMPLETE)` |
 | 33 | replace it with `([R(10)],APPLICABLE,INCOMPLETE)` |
-| 34 | `remove /precision_contract_ref`, then `replace /completeness "COMPLETE"` |
+| 34 | `replace /precision_contract_ref NA` |
 
 Case 1 expects `VALUE("COMPLETE","Completeness")`; case 2 expects
 `VALUE("INCOMPLETE","Completeness")`. Cases 3–4, 16, 21, 24–26, and 30
@@ -4902,6 +4919,14 @@ nested exact-operation call and asserts the provider's five methods remain
 uncalled. Both expect `NUMERICAL_POLICY_REQUIRED` at the
 `apply_exact_core_operation` I-2 interface. Block-5 `quantity_context` is QC0;
 all earlier contexts are NA.
+
+For `POLICY0`, case 16 structurally omits `precision_contract_ref` and
+therefore represents forbidden implicit absence. Case 34 retains that field
+but gives it the explicit typed value `NOT_APPLICABLE`; because precision is
+required for this policy while `completeness` remains `COMPLETE`, the resulting
+declaration is instead numerically incomplete. A validator determines either
+outcome from the resulting declaration alone. Patch history, including whether
+a value was removed or replaced, is never a validation input.
 
 #### 21.8.3 Exact compatibility block
 
@@ -5233,7 +5258,7 @@ authorization, and artifact records remain I-3 or later and are unreachable.
 
 The I-2 AST/import/export audit reads source as bytes/text and uses AST only;
 it imports no production module. It verifies the exact root export tuple and
-count frozen by plan v0.2.3, module `__all__` subsets, the exact 29-edge DAG
+count frozen by plan v0.2.4, module `__all__` subsets, the exact 29-edge DAG
 in that plan and its acyclicity, no dynamic imports, no module-local failure
 enum/string code, and no imports or calls reaching scientific modules, legacy
 experiment/runner/finalizer modules, `results/`, or any Gate path. It proves
