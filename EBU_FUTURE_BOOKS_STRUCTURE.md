@@ -4,6 +4,7 @@
 **Created:** 2026-08-10  
 **Regenerated:** 2026-08-12  
 **Extended:** 2026-08-13 with the circuit-network analogy programme
+**Literature review extension:** 2026-08-13 with an initial prior-art map and bibliography policy
 **Language:** English  
 **Purpose:** Preserve the complete future-book architecture, chapter purposes, transitions, overlap controls, scientific dependencies, figure expectations, and research stop conditions in one handoff document.
 
@@ -105,11 +106,71 @@ Every future chapter should normally contain:
 7. the corresponding Python architecture or trace path;
 8. the registered test, theorem, or hypothesis;
 9. a failure case, counterexample, or negative control;
-10. a closing ledger: what was established, what was not, and what follows next.
+10. a concise prior-work map using the nearest primary sources;
+11. an explicit EBU delta and nonclaim stating what is and is not new; and
+12. a closing ledger: what was established, what was not, and what follows next.
 
 Python-generated figures are explanatory evidence, not decoration. Each important result should normally connect:
 
 > equation -> configuration -> code -> test -> trace -> result figure -> claim
+
+### 2.6 Citation, prior-art, and originality policy
+
+The future books require bibliographies. Internal project documents establish
+the EBU record, but they cannot substitute for engagement with the relevant
+external literature. Each book must distinguish at least four source roles:
+
+1. **mathematical predecessor** - an earlier identity, theorem, decomposition,
+   or algorithm used by the chapter;
+2. **domain-model predecessor** - an earlier physical, engineering, biological,
+   economic, or institutional model with similar structure;
+3. **methodological safeguard** - metrology, causal inference, statistical,
+   scheduling, reproducibility, or governance work that constrains the claim;
+4. **EBU evidence** - the project's own frozen protocol, proof, implementation,
+   registered result, trace, or manifest.
+
+A citation to a predecessor does not make EBU a restatement of that work, and
+an EBU equation that uses familiar mathematics is not original merely because
+it appears in a new application. The manuscript must identify the nearest
+known antecedent, the exact overlap, the exact difference, and the evidence
+needed for the difference to matter.
+
+The originality labels are therefore:
+
+- **Established antecedent** - the core idea is already documented externally.
+- **EBU-specific formulation** - familiar elements are combined or typed for
+  the EBU research programme, without a claim of global novelty.
+- **Candidate contribution** - the combination appears materially distinct in
+  the reviewed literature but still requires a systematic search and expert
+  challenge before a novelty claim.
+- **Supported contribution** - a candidate contribution that has survived a
+  recorded, claim-by-claim literature review and appropriate scientific tests.
+
+No book may infer originality from a web search, a missing keyword match, or
+the absence of one identical formula. Before a manuscript calls anything new,
+its evidence ledger must include search databases and dates, query families,
+backward and forward citation searches, nearest-antecedent comparisons,
+conflicting or negative literature, and review by someone able to challenge
+the relevant domain. Patent novelty and legal freedom to operate are separate
+questions and are not established by this scholarly review.
+
+### 2.7 Bibliography architecture and page accounting
+
+Each future volume should carry chapter-level citations plus a consolidated
+bibliography divided, where useful, into primary historical sources,
+mathematics and systems theory, domain science and engineering, causal and
+statistical methods, and institutional or economic design. Primary sources
+should be preferred for priority and theorem claims; reviews may orient the
+reader but must not silently replace the original source. DOI, edition, page
+range, correction or retraction status, and stable archival identifier should
+be recorded where available.
+
+The source list in §7.4 is an initial, non-exhaustive map for the newly added
+sequential-parallel and circuit-network programme. It is not the complete
+bibliography for Parts IV-IX. Each part requires its own literature checkpoint
+before manuscript generation. A later, separately authorized bibliography
+stage may create a machine-readable reference database; this planning update
+does not create one.
 
 ---
 
@@ -148,21 +209,23 @@ That chapter will cite the existing explanations and then move immediately to ti
 
 Global chapter numbers are not yet frozen. Part-local labels such as IV.1 and V.1 are authoritative for planning. If the present chapter counts survive manuscript development, the provisional global ranges would be 63-77, 78-93, 94-112, 113-130, 131-148, and 149-170.
 
-| Part | Working title | Central question | Chapters | Words | Python/result figures | Estimated pages |
-|---|---|---|---:|---:|---:|---:|
-| IV | *When Outcomes Must Discriminate* | Can local EBU decisions be measured with an outcome instrument that is sensitive under delay and uncertainty? | 15 | 38,000-48,000 | 25-35 | 190-250 |
-| V | *Homeostasis Through Time* | Under what assumptions is the viable region invariant, stable, or attractive over an unbounded future? | 16 | 48,000-62,000 | 35-50 | 240-320 |
-| VI | *Sequential and Parallel EBU Dynamics* | How do multiple actions combine, when is parallel execution genuinely different from a named sequential comparison, and which network-potential analogies remain valid? | 19 | 52,000-72,000 | 40-65 | 270-380 |
-| VII | *Across Distance* | How do verified actions compose through changing routes, actors, capacities, regions, and infrastructure? | 18 | 55,000-75,000 | 40-60 | 290-400 |
-| VIII | *Dynamic Coordination Fields and Society Geometry* | How should providers and actions be timed, placed, and connected across a dynamic network, including systems with storage, switching, and propagation? | 18 | 60,000-84,000 | 52-80 | 330-470 |
-| IX | *The Action-Accounted Economy* | How can verified physical action accounting support institutions without pretending that institutional choices are laws of physics? | 22 | 70,000-95,000 | 40-65 | 390-540 |
+| Part | Working title | Central question | Chapters | Words | Python/result figures | Narrative pages | References/endnotes reserve |
+|---|---|---|---:|---:|---:|---:|---:|
+| IV | *When Outcomes Must Discriminate* | Can local EBU decisions be measured with an outcome instrument that is sensitive under delay and uncertainty? | 15 | 38,000-48,000 | 25-35 | 190-250 | 6-10 |
+| V | *Homeostasis Through Time* | Under what assumptions is the viable region invariant, stable, or attractive over an unbounded future? | 16 | 48,000-62,000 | 35-50 | 240-320 | 8-12 |
+| VI | *Sequential and Parallel EBU Dynamics* | How do multiple actions combine, when is parallel execution genuinely different from a named sequential comparison, and which network-potential analogies remain valid? | 19 | 52,000-72,000 | 40-65 | 270-380 | 12-18 |
+| VII | *Across Distance* | How do verified actions compose through changing routes, actors, capacities, regions, and infrastructure? | 18 | 55,000-75,000 | 40-60 | 290-400 | 10-16 |
+| VIII | *Dynamic Coordination Fields and Society Geometry* | How should providers and actions be timed, placed, and connected across a dynamic network, including systems with storage, switching, and propagation? | 18 | 60,000-84,000 | 52-80 | 330-470 | 12-20 |
+| IX | *The Action-Accounted Economy* | How can verified physical action accounting support institutions without pretending that institutional choices are laws of physics? | 22 | 70,000-95,000 | 40-65 | 390-540 | 14-22 |
 
 These estimates include the descriptive tone of Parts I-III, worked examples, proofs, code architecture, exercises, counterexamples, and Python-derived figures. They are not targets to inflate. If a claim can be made clearly in fewer pages, it should be.
 
-The combined provisional range for Parts IV-IX is now approximately
-1,710-2,360 pages. The increase is confined mainly to the dedicated Part VI
-circuit-network chapter and the Part VIII storage, switching, and
-lumped-versus-distributed comparisons.
+The combined provisional narrative range for Parts IV-IX remains approximately
+1,710-2,360 pages. The explicit bibliography and endnote reserve adds about
+62-98 pages, giving a publication-planning range of approximately
+1,772-2,458 pages before indexes and front matter. This reserve is not a target
+to fill and should be revised from the actual citation database at manuscript
+freeze.
 
 ### 4.1 Why Parts IV and V remain separate
 
@@ -422,10 +485,74 @@ distributed electromagnetic system cannot be simplified to an ordinary
 lumped static loop merely to resemble EBU.
 
 The circuit chapter receives approximately 4,000-7,000 words, 5-10 figures,
-and 20-40 illustrated pages inside the revised Part VI budget. Its essential
+and 20-40 illustrated narrative pages inside the revised Part VI budget, plus
+its share of the volume's reference reserve. Its essential
 figures are a state-potential path, a common-terminal branch diagram, a
 finite-source capacity/sag model, a nonlinear-superposition counterexample,
 and a switched-storage order comparison.
+
+### 7.3 Initial prior-art and candidate-contribution map
+
+The initial review confirms that the programme has substantial prior art. The
+correct question is not whether all underlying mathematics is new; it is
+whether the EBU programme combines the layers in a scientifically useful and
+properly delimited way.
+
+| EBU topic | Established antecedent or neighbouring field | What is already covered | EBU-specific delta or remaining question |
+|---|---|---|---|
+| Scalar path and closed-loop differences | Kirchhoff's circuit equations and conservative-potential accounting | Path sums of differences telescope; a closed loop has zero net difference when one scalar potential and boundary apply. | \(D(X)\) is a declared state function, not voltage. K1 uses closure as a consistency diagnostic and must test omitted state, changing boundaries, and external drive. |
+| Topological network conservation | Tellegen's theorem, network thermodynamics, bond graphs, port-Hamiltonian systems, and dissipativity theory | Network topology, effort/flow pairing, storage, dissipation, and interconnection have long been generalized beyond ideal linear circuits. | K2-K6 must state typed constitutive laws and failure conditions. The EBU ledger must not rename an established conservation or energy theorem as a new EBU law. |
+| Sequential order and non-commuting actions | Lie commutators, the Baker-Campbell-Hausdorff family, and operator splitting | Composition order can generate correction terms and different endpoints when operators do not commute. | Part VI still needs a physically declared action map, feasible schedule set, and purpose-specific comparator; operator algebra does not select the institutional or scientific comparator. |
+| Higher-order interaction decomposition | Harsanyi dividends, Möbius and interaction transforms, Shapley/Banzhaf interaction indices, factorial/ANOVA methods, and Sobol sensitivity analysis | Pairwise and higher-order non-additivity can be decomposed in several established ways. | \(I_{G\mid\pi}\) is a named endpoint comparison, not automatically a unique decomposition. Competing decompositions must be compared and none may be called causal without identification. |
+| Causal interaction and child contribution | Structural causal models, potential outcomes, and sufficient-cause interaction theory | Statistical or algebraic interaction is not identical to causal or mechanistic interaction; causal claims require interventions and assumptions. | The EBU record explicitly separates the observed joint transition from identified child effects and must preserve `UNIDENTIFIED` when the evidence is insufficient. |
+| Group allocation and settlement | Shapley values, Harsanyi dividends, Aumann-Shapley allocation, and cooperative-game interaction indices | A group total can be allocated under declared axioms or bargaining rules. | Settlement shares are institutional assignments unless a physical causal design identifies them. Closure of assigned shares does not make them measured contributions. |
+| Shared source, overlap, and capacity | Resource-constrained project scheduling, queueing and congestion models, and congestion games | Simultaneous activities can share scarce capacity, create queues, change feasible schedules, and impose externalities. | The proposed parallel-group rule unifies shared source, shared field, overlapping time, shared capacity, and one accounting boundary with joint-transition measurement and receipts. This integration is a candidate contribution, not yet a proved novelty. |
+| Dynamic storage, switching, and propagation | Network thermodynamics, dissipative systems, port-Hamiltonian models, and splitting methods | Memory, storage, loss, switching, and interconnection already have mature mathematical frameworks. | Part VIII must test whether an EBU domain adapter adds explanatory or predictive value beyond those frameworks and must reject an electrical analogy when it does not. |
+| Potential-like incentives and coordination | Potential games and congestion games | A scalar potential can organize strategic incentives in defined classes of games. | EBU distortion is a physical-state account, not automatically a payoff potential. Any bridge to incentives or institutions requires a separate model and evidence. |
+
+The strongest defensible originality statement at this planning stage is:
+
+> The underlying identities, conservation models, interaction transforms,
+> causal safeguards, scheduling problems, and allocation rules are not claimed
+> as new. The candidate EBU contribution is the typed, receipt-backed protocol
+> that keeps four objects separate in one many-action workflow: the measured
+> joint physical transition, comparator-relative parallel interaction,
+> causally identified child contributions, and institutionally assigned
+> settlement shares, including explicit shared-source grouping and provenance.
+
+This is a **candidate contribution**, not a confirmed novelty claim. The review
+did not locate one source containing that whole package, but absence from this
+initial search is not evidence that no such source exists.
+
+### 7.4 Seed bibliography for the Part VI-VIII programme
+
+The following sources are the minimum starting set, not a closed bibliography:
+
+1. G. Kirchhoff, “Ueber die Auflösung der Gleichungen, auf welche man bei der Untersuchung der linearen Vertheilung galvanischer Ströme geführt wird,” *Annalen der Physik* 148(12), 497-508 (1847), [doi:10.1002/andp.18471481202](https://doi.org/10.1002/andp.18471481202).
+2. B. D. H. Tellegen, “A General Network Theorem, with Applications,” *Philips Research Reports* 7, 259-269 (1952).
+3. G. F. Oster and C. A. Desoer, “Tellegen's Theorem and Thermodynamic Inequalities,” *Journal of Theoretical Biology* 32(2), 219-241 (1971), [doi:10.1016/0022-5193(71)90162-7](https://doi.org/10.1016/0022-5193(71)90162-7).
+4. G. Oster, A. Perelson, and A. Katchalsky, “Network Thermodynamics,” *Nature* 234, 393-399 (1971), [doi:10.1038/234393a0](https://doi.org/10.1038/234393a0).
+5. G. F. Oster, A. S. Perelson, and A. Katchalsky, “Network thermodynamics: dynamic modelling of biophysical systems,” *Quarterly Reviews of Biophysics* 6(1), 1-134 (1973), [doi:10.1017/S0033583500000081](https://doi.org/10.1017/S0033583500000081).
+6. J. C. Willems, “Dissipative Dynamical Systems Part I: General Theory,” *Archive for Rational Mechanics and Analysis* 45, 321-351 (1972), [doi:10.1007/BF00276493](https://doi.org/10.1007/BF00276493).
+7. B. M. Maschke and A. J. van der Schaft, “Port-Controlled Hamiltonian Systems: Modelling Origins and Systemtheoretic Properties,” *IFAC Proceedings Volumes* 25(13), 359-365 (1992), [doi:10.1016/S1474-6670(17)52308-3](https://doi.org/10.1016/S1474-6670(17)52308-3).
+8. G. Strang, “On the Construction and Comparison of Difference Schemes,” *SIAM Journal on Numerical Analysis* 5(3), 506-517 (1968), [doi:10.1137/0705041](https://doi.org/10.1137/0705041).
+9. P. Brucker, A. Drexl, R. Möhring, K. Neumann, and E. Pesch, “Resource-constrained project scheduling: Notation, classification, models, and methods,” *European Journal of Operational Research* 112(1), 3-41 (1999), [doi:10.1016/S0377-2217(98)00204-5](https://doi.org/10.1016/S0377-2217(98)00204-5).
+10. R. W. Rosenthal, “A Class of Games Possessing Pure-Strategy Nash Equilibria,” *International Journal of Game Theory* 2, 65-67 (1973), [doi:10.1007/BF01737559](https://doi.org/10.1007/BF01737559).
+11. D. Monderer and L. S. Shapley, “Potential Games,” *Games and Economic Behavior* 14(1), 124-143 (1996), [doi:10.1006/game.1996.0044](https://doi.org/10.1006/game.1996.0044).
+12. L. S. Shapley, “A Value for N-Person Games,” in *Contributions to the Theory of Games II*, Annals of Mathematics Studies 28, 307-317 (1953); 1952 precursor [RAND P-295, doi:10.7249/P0295](https://doi.org/10.7249/P0295).
+13. J. C. Harsanyi, “A Simplified Bargaining Model for the n-Person Cooperative Game,” *International Economic Review* 4(2), 194-220 (1963), [doi:10.2307/2525487](https://doi.org/10.2307/2525487).
+14. R. J. Aumann and L. S. Shapley, *Values of Non-Atomic Games*, Princeton University Press (1974), ISBN 0-691-08103-4.
+15. M. Grabisch and M. Roubens, “An Axiomatic Approach to the Concept of Interaction among Players in Cooperative Games,” *International Journal of Game Theory* 28, 547-565 (1999), [doi:10.1007/s001820050125](https://doi.org/10.1007/s001820050125).
+16. D. Denneberg and M. Grabisch, “Interaction Transform of Set Functions over a Finite Set,” *Information Sciences* 121(1-2), 149-170 (1999), [doi:10.1016/S0020-0255(99)00099-7](https://doi.org/10.1016/S0020-0255(99)00099-7).
+17. I. M. Sobol', “Sensitivity Estimates for Nonlinear Mathematical Models,” *Mathematical Modeling and Computational Experiment* 1(4), 407-414 (1993), translated from “On sensitivity estimation for nonlinear mathematical models,” *Matematicheskoe Modelirovanie* 2(1), 112-118 (1990), [Math-Net.Ru: mm2320](https://www.mathnet.ru/eng/mm2320).
+18. J. Pearl, “The Foundations of Causal Inference,” *Sociological Methodology* 40, 75-149 (2010), [doi:10.1111/j.1467-9531.2010.01228.x](https://doi.org/10.1111/j.1467-9531.2010.01228.x).
+19. T. J. VanderWeele and J. M. Robins, “Empirical and Counterfactual Conditions for Sufficient Cause Interactions,” *Biometrika* 95(1), 49-61 (2008), [doi:10.1093/biomet/asm090](https://doi.org/10.1093/biomet/asm090).
+
+This seed list must be expanded before writing the books. In particular, Parts
+IV, V, VII, and IX still need dedicated reviews of metrology and
+identifiability, viability and control, time-dependent routing and queueing,
+and institutional economics, governance, access, privacy, rebound, and
+transition respectively.
 
 ### Detailed chapter structure
 
@@ -440,7 +567,7 @@ and a switched-storage order comparison.
 | VI.7 | **State Equivalence and EBU Equivalence** | Shows that identical endpoints imply identical EBU, while equal distortion can hide different states and future capacities. Explains when endpoint EBU alone is insufficient for later dynamics. | Equal-D/different-state contours and future-divergence examples. |
 | VI.8 | **Commuting and Non-Commuting Actions** | Defines when action order changes the endpoint. Develops comparator sets or ranges for non-commuting actions and shows why “the sequential result” may not exist uniquely. | Commutator examples, order matrices, and comparator-range plots. |
 | VI.9 | **Nonlinear Cross-Terms Are Not Automatically Interaction** | Corrects the tempting but false inference that every \(ab\) term proves parallel synergy. Separates shared nonlinear evaluation from endpoint-changing simultaneity. | Symbolic expansions and matched-endpoint simulations. |
-| VI.10 | **Network Potentials, Kirchhoff Models, and Their Limits** | Develops K1-K6: potential-path closure, common-terminal branches, finite shared sources, nonlinear response, switched storage, and loss-aware cancellation. Shows why voltage-like differences, conserved flows, causal contributions, and settlement shares are different objects and why equivalent-resistance formulae do not transfer without a validated constitutive law. | Circuit/EBU mapping table, loop-closure diagnostics, shared-source flow/sag figures, nonlinear and dynamic counterexamples, and explicit analogy-failure cards. |
+| VI.10 | **Network Potentials, Kirchhoff Models, and Their Limits** | Places K1-K6 beside Kirchhoff, Tellegen, network thermodynamics, dissipativity, and port-Hamiltonian precedents. Develops potential-path closure, common-terminal branches, finite shared sources, nonlinear response, switched storage, and loss-aware cancellation while keeping voltage-like differences, conserved flows, causal contributions, and settlement shares distinct. Equivalent-resistance formulae do not transfer without a validated constitutive law. | Prior-art/EBU-delta table, circuit/EBU mapping table, loop-closure diagnostics, shared-source flow/sag figures, nonlinear and dynamic counterexamples, and explicit analogy-failure cards. |
 | VI.11 | **Synergy, Interference, Redundancy, and Capacity Conflict** | Builds an operational taxonomy based on endpoint differences relative to declared comparators. Requires each label to correspond to a measurable physical mechanism. | Paired positive/negative/zero interaction worlds. |
 | VI.12 | **Cancellation Without Annihilation** | Uses a state containing target deviation and resource use to show why opposite effects can cancel while physical costs remain. Extends the example to waste, heat, wear, time, and attention. | Resource-retaining cancellation plots and incomplete-state failures. |
 | VI.13 | **The Deterministic Two-Action Test Matrix** | Registers the minimal controlled matrix: endpoint equivalence, nonlinear no-interaction, positive interaction, negative interaction, cancellation, redundancy, capacity conflict, and both sequential orders. | Full expected-results table, traces, and falsifiers. |
@@ -685,7 +812,7 @@ Part IX must present the long-term destination positively while making clear tha
 | Observation age, uncertainty, robust permission, Gate 1E | Part IV | Part III Chapter 60 |
 | Recursive feasibility, invariance, stability, attraction | Part V | Part II Chapter 43; Part III 62.17-62.18 |
 | Sequential telescoping and parallel interaction | Part VI | Part II Chapter 37; `SEQUENTIAL_PARALLEL_BRIDGE.md` |
-| Network-potential closure, shared-source flow models, and circuit-analogy limits | Part VI | Part VIII extends storage, switching, propagation, and topology tests |
+| Network-potential closure, shared-source flow models, and circuit-analogy limits | Part VI | §7.3 prior-art map; Part VIII extends storage, switching, propagation, and topology tests |
 | Group receipts, causal identifiability, O3, batching | Part VI | Part II Chapter 35; Part III Chapter 51 |
 | Dynamic routes, route actors, cooperation, adaptive infrastructure | Part VII | Part II Chapter 42; Part III 62.9-62.11 |
 | Timing, placement, topology, waves, spectra, scaling | Part VIII | Parts VI-VII provide prerequisites |
@@ -805,6 +932,8 @@ must not move.
 3. Preserve the common notation and claim-status vocabulary.
 4. Preserve the accepted unified Python framework specification and I-0 implementation plan.
 5. Review this K1-K6 circuit-network extension as a prospective documentation patch; do not treat it as an observed result or framework implementation authority.
+6. Maintain a claim-by-claim literature map that records established antecedents, EBU-specific formulations, candidate contributions, nonclaims, and unresolved searches.
+7. Complete a dedicated literature checkpoint for each part before its manuscript-generation gate; the §7.4 seed bibliography is not sufficient for Parts IV-IX as a whole.
 
 ### Phase C - Execute studies in dependency order
 
@@ -816,7 +945,7 @@ must not move.
 6. Complete Gate 1E in its repository-defined scope.
 7. Develop the Part V constrained transition, viable-set, recursive-feasibility, invariance, Lyapunov, disturbance, and counterexample programme.
 8. Preregister and execute the deterministic two-action sequential-parallel test matrix.
-9. Prospectively specify, preregister, and test K1-K6, including path closure, common-terminal branches, finite shared sources, nonlinear superposition failure, switched storage, and loss-aware cancellation. These tests must compete against non-circuit explanations and retain every analogy limitation.
+9. Complete the systematic literature comparison for the specific sequential-parallel and K1-K6 claims, then prospectively specify, preregister, and test K1-K6, including path closure, common-terminal branches, finite shared sources, nonlinear superposition failure, switched storage, and loss-aware cancellation. These tests must compete against established non-EBU models and retain every analogy limitation.
 10. Execute many-action, comparator, shared-source, O3, group-receipt, allocation, batching, and delayed-settlement studies.
 11. Execute dynamic route, actor, congestion, uncertainty, cooperation, fairness, and adaptive-infrastructure studies.
 12. Execute timing, phase, placement, topology, propagation, spectral, resilience, scaling, and pattern-discovery studies, including only those dynamic circuit analogies that survive K1-K6.
@@ -832,6 +961,10 @@ must not move.
 6. Generate Part IX last, after the quote, residual, reserve, access, governance, behavioural, transition, and complete-economy programme can synthesize the surviving results.
 7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable.
 
+Each generation gate also requires the corresponding literature checkpoint,
+nearest-antecedent table, and resolved citation ledger. Passing an experiment
+or proof does not by itself pass the originality review.
+
 ### Phase E - Final series audit
 
 - replace “trilogy” with the correct series description;
@@ -840,6 +973,8 @@ must not move.
 - add precise forward and backward cross-references;
 - create a cumulative symbol, theorem, evidence, and subject index;
 - audit equations, units, signs, notation, citations, and claim status;
+- audit priority and originality wording against the nearest primary sources;
+- verify DOI, edition, correction/retraction, license, and archival metadata;
 - audit every future chapter for overlap with Parts I-III;
 - rebuild all result figures from committed data;
 - record genuine errata without rewriting historical evidence.
@@ -861,6 +996,7 @@ must not move.
 11. No Kirchhoff law, circuit topology, superposition principle, or equivalent-resistance formula may be presented as validation or derivation of EBU. Each use must declare whether it is an algebraic correspondence, a domain model, or an explanatory analogy.
 12. I-1 remains blocked until the new authority hash is reconciled in the framework specification and I-0 plan and the packaging contract is amended prospectively. `pyproject.toml` cannot silently rely on an implicit build backend while the framework dependency lock is declared stdlib-only.
 13. No framework integration or I-1 branch should be created merely to work around that planning contradiction.
+14. No future manuscript may claim that the EBU sequential-parallel equations, Kirchhoff analogy, interaction decomposition, shared-capacity problem, causal attribution method, or allocation rule is globally novel until the applicable claim-by-claim literature checkpoint is complete.
 
 ---
 
@@ -873,6 +1009,7 @@ must not move.
 5. **I-1 implementation** - only after the amended plan and applicable foundation tag are accepted, recreate the framework branch setup from that exact accepted foundation commit and implement I-1 under separate authority.
 6. **Deterministic parallel-testing specification** - later incorporate M1-M9 and K1-K6 with exact models, expected outcomes, comparators, tolerances, and falsifiers before any circuit-inspired scientific execution.
 7. **Gate 1D-C incident remedy and reauthorization** - remain separate from framework and circuit-model work; no scientific execution is implied here.
+8. **Systematic literature and novelty register** - in a separately authorized documentation stage, expand the seed bibliography into per-part search logs and nearest-antecedent matrices before any manuscript claims originality. This need not block unrelated I-1 implementation work, but it is a manuscript-generation prerequisite.
 
 ---
 
@@ -906,3 +1043,18 @@ This extension:
 The extension is planning authority only after review and acceptance. It does
 not alter the committed Bridge, framework specification, I-0 plan, Gate 1D-C
 sources, or any scientific result.
+
+### 16.3 Literature, bibliography, and originality extension - 2026-08-13
+
+This extension:
+
+1. requires bibliographies and claim-by-claim prior-art ledgers in every future volume;
+2. distinguishes mathematical predecessors, domain analogues, methodological safeguards, and EBU evidence;
+3. identifies established antecedents for circuit closure, network thermodynamics, dynamic interconnection, non-commuting composition, interaction decomposition, causal interaction, group allocation, shared-capacity scheduling, and potential games;
+4. limits the present originality statement to a candidate EBU contribution: the typed separation of joint physical measurement, comparator-relative interaction, causally identified child contributions, and institutional settlement shares inside one receipt-backed workflow;
+5. reserves 62-98 additional pages across Parts IV-IX for references and endnotes without inflating the narrative targets;
+6. adds a seed bibliography for Parts VI-VIII and explicitly leaves complete per-part literature reviews as future work; and
+7. makes a passed literature checkpoint a manuscript-generation prerequisite without changing any scientific protocol, implementation, result, or Gate 1D-C status.
+
+The review is intentionally non-exhaustive. It narrows claims; it does not
+prove novelty, priority, validity, patentability, or legal freedom to operate.
