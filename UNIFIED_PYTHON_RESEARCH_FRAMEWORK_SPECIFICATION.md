@@ -1,7 +1,7 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.2
-**Status:** Phase B specification checkpoint; prospective authority-hash reconciliation only; no integration, later-stage, scientific-execution, or release authority
+**Version:** 0.1.3
+**Status:** Prospective Framework I-2 authority amendment only; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-13
 **Language:** English
@@ -76,22 +76,26 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.2 prospective authority register
+#### 2.1.2 Current v0.1.3 prospective authority register
 
-Revision v0.1.2 prospectively replaces only the active books-structure
-authority pointer. The reconciliation began from repository `HEAD`
+Revision v0.1.2 prospectively replaced only the active books-structure
+authority pointer. Revision v0.1.3 preserves those imported scientific
+authorities and adds the prospective I-2 contracts in §21. The v0.1.2
+reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.2 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.3 |
 |---|---|---|---|
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including the K1–K6 planning programme and literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.5 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged Part VIII dynamic state, seven-layer separation, deterministic event order, network evolution, objectives, uncertainty, and framework requirements |
 
 The books-structure hash in this table is the only active books-structure
-authority value for this specification revision. Superseded values remain
+authority value for this specification revision. The active I-1 packaging
+authorities and accepted implementation evidence used by I-2 are frozen in
+§21.1. Superseded values remain
 solely in explicitly historical records. This prospective
 pointer update changes no imported bridge or dynamic-coordination semantics,
 framework object, interface, invariant, event phase, test classification, or
@@ -443,7 +447,7 @@ Every versioned framework object SHALL have a common conceptual envelope:
 | `object_version` | `SemanticVersion` | Pins the immutable object-content version |
 | `authority_refs` | ordered `ObjectRef[]` | Pinned normative foundations, protocols, or parent objects; never an operation-granting `StageAuthorization` |
 | `supersedes_ref` | optional `ObjectRef` | Points to an earlier immutable version; never overwrites it |
-| `object_content_payload` | kind-specific immutable value | Complete hash-worthy scientific or operational meaning governed by the named schema |
+| `object_content_payload` | `CanonicalBytes` | Unique immutable canonical ECJ-1 bytes for the complete hash-worthy scientific or operational payload governed by the named schema |
 | `object_content_hash` | `ObjectContentHash` | Hash of the canonical object-content preimage defined in §4.3; never part of its own preimage |
 | `lifecycle_status` | typed status | Draft, accepted, superseded, or other kind-specific registry state; excluded from the object-content preimage |
 | `record_metadata_ref` | optional `RecordMetadataRef` | Storage and other non-content provenance metadata excluded from scientific hashes |
@@ -454,6 +458,15 @@ sufficient inside an accepted configuration, execution binding, or result.
 Common-envelope `authority_refs` identify normative dependencies; they do not
 grant workflow permission. An operation-granting `StageAuthorization` always
 travels as an external input to the interface it authorizes.
+
+`object_content_payload` stores bytes, not a decoded ECJ-1 tree. Its exact
+runtime type is the already-public `CanonicalBytes` and exact immutable
+`bytes`; `bytearray`, `memoryview`, mutable containers, subclasses, and every
+other type are rejected without coercion. A logical payload is encoded once
+before construction. The resulting bytes are the sole payload state retained
+by the envelope. Each validation or hashing operation obtains and discards a
+fresh temporary logical value through `parse_ecj1`; no mutable decoded value
+is stored, cached, or returned as envelope state.
 
 ### 4.3 Non-self-referential hash projections
 
@@ -483,6 +496,19 @@ The object content hash is:
 ```text
 ObjectContentHash = SHA-256(CANONICAL(ObjectContentPreimageV1))
 ```
+
+For an envelope, the `object_content_payload` term in
+`ObjectContentPreimageV1` is the logical ECJ-1 value freshly parsed from the
+stored `CanonicalBytes`. It is not the byte sequence projected as an ECJ-1
+string, hexadecimal value, integer array, or nested JSON text. The parsed
+logical value is passed to the unchanged I-1 `compute_object_content_hash`,
+which performs the single canonical encoding required by this preimage. The
+payload is never double-encoded.
+
+Every later statement that an object's `object_content_payload` "contains"
+fields or values refers to this freshly parsed logical ECJ-1 value. It does not
+change the common-envelope storage type: the envelope retains only the unique
+canonical bytes from which that logical value is reconstructed.
 
 `object_content_hash` itself, lifecycle status, signatures, authorization
 records, record-creation time, ingestion time, wall-clock time, host and
@@ -3333,7 +3359,7 @@ backend, validation fixture, or stage authorization. Its historical exact
 whole-file SHA-256 is
 `a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1`.
 
-### 20.3 Revision v0.1.2 — current prospective reconciliation
+### 20.3 Revision v0.1.2 — historical prospective reconciliation
 
 Revision v0.1.2 adopts the literature-extended books structure through the
 single active authority lock in §2.1.2. The update adds bibliography and
@@ -3350,3 +3376,1992 @@ framework-alpha, scientific-execution, publication, or release authority. Its
 exact whole-file SHA-256 is recorded in the prospectively reconciled I-0 plan
 rather than inside this file, which cannot self-record its current raw hash
 without changing it.
+
+### 20.4 Revision v0.1.3 — current prospective I-2 authority amendment
+
+Revision v0.1.3 is the prospective Framework I-2 authority in §21. The
+v0.1.2 whole-file SHA-256
+`32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
+is immutable historical evidence. Revision v0.1.3 changes no I-1 bytes,
+imported scientific definition, Gate record, result, package, or accepted
+milestone. Its new raw SHA-256 is recorded in implementation-plan v0.2.3;
+this file does not contain its own current hash.
+
+## 21. Normative prospective Framework I-2 amendment
+
+### 21.1 Authority, precedence, and authorization boundary
+
+This section freezes the complete I-2 design needed to implement common
+failures, exact core numbers, typed primitives, immutable envelopes, and pure
+lifecycle validation in a later separately authorized task. Within that
+narrow scope it supersedes incomplete or provisional I-2 details in earlier
+sections. It does not supersede ECJ-1, any I-1 hash preimage, identity or
+registry semantics, the I-1 packaging amendment/contract, imported scientific
+foundations, or later-stage contracts. A conflict outside this scope fails
+closed.
+
+The prospective I-2 input locks are:
+
+| Source or accepted evidence | Exact identity |
+|---|---|
+| Future-books structure | raw SHA-256 `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` |
+| Sequential–Parallel Bridge v0.2 | raw SHA-256 `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` |
+| Dynamic Coordination Foundation v0.1 | raw SHA-256 `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` |
+| Specification v0.1.2 | historical raw SHA-256 `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69` |
+| Implementation plan v0.2.2 | historical raw SHA-256 `3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c` |
+| I-1 packaging amendment v1.1.1 | raw SHA-256 `a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448` |
+| I-1 packaging contract v1.1.1 | raw SHA-256 `edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351` |
+| Accepted combined I-1 raw-hash/path/blob manifest | SHA-256 `f7b1b7abc9a71b090320b8dc468d57e3a7e39f4f2a045b7a5946a4174882fee8` |
+
+The last row is historical audit corroboration, not an I-2 semantic input.
+Commit `ed75790b20c7d6b86cedc4d9dbeb269f32cca9ea` introduced exactly 22 I-1
+implementation paths. The complete feature range from
+`fae76042746e55b9fe5ec5c62de0f47fbc5ccb47` through `ed75790...` contains
+those 22 paths plus the packaging amendment and mechanical contract, hence 24
+paths total. The original serialization recipe that produced the aggregate
+digest is not committed. The historical digest is preserved but is not
+independently reproducible and is neither recreated nor redefined here.
+Current integrity is checked directly from Git path/blob identities, raw
+hashes, and byte sizes.
+
+The signed `foundation-v0.1.2` tag remains immutable: tag object
+`63a3f71401e1cc91e85cdff89dbd4d8d38fcbd57`, peeled target
+`38aae5e8c59d0bced598f2918f76dbee6df7481c`, and signing-key fingerprint
+`SHA256:PmHC6U5rPJ+Jv7sCyjyF2UYLM6wgE8+iG5T6eGwHFCQ`. These are evidence, not
+I-2 implementation authority.
+
+This amendment authorizes no Python edit, test, build, installation,
+acceptance mutation, scientific operation, Gate operation, commit, push,
+release, or publication. I-2 remains unimplemented.
+
+### 21.2 Common failure architecture
+
+#### 21.2.1 Closed failure types
+
+`errors.py` remains the sole owner of machine failure codes and the common
+failure envelope. Module-local failure enums, application-defined subclasses
+with new code domains, and free-form machine failure strings are forbidden.
+Human prose is allowed only in `human_summary` and cannot affect failure
+classification or permission.
+
+The exact public supporting types are immutable `dataclass(frozen=True,
+slots=True)` records unless stated as `StrEnum`:
+
+| Type | Exact fields or values |
+|---|---|
+| `Applicability` | `StrEnum`: `APPLICABLE`, `NOT_APPLICABLE` |
+| `FailureId` | one `value: str`, exactly `ebu:failure:core:sha256-` plus 64 lowercase hexadecimal digits |
+| `FailureStage` | `StrEnum`: `I-1`, `I-2`, `I-3`, `I-4`, `I-5`, `I-6`, `I-7`, `I-8`, `I-9`, `ANALYTICAL_DESIGN`, `PREREGISTRATION`, `IMPLEMENTATION`, `STATIC_AND_SYNTHETIC_VALIDATION`, `PRE_EXECUTION_AUDIT`, `AUTHORIZED_SCIENTIFIC_EXECUTION`, `INTERPRETATION`, `PUBLICATION`, `RECOVERY`, `CORRECTION` |
+| `FailureInterfaceRef` | `module: str`, `qualname: str`, `interface_version: str`; each is nonempty ASCII, contains no control/whitespace, and `interface_version` is `MAJOR.MINOR.PATCH` |
+| `FailureObjectRef` | `object_id: str`, `object_version: str`, `object_content_hash: str`; each string must satisfy the corresponding `ScientificId`, `SemanticVersion`, or `ObjectContentHash` lexical grammar without importing `identity.py` |
+| `FailureEventKey` | `epoch: int`, `phase_ordinal: int`, `declared_priority: int`, `group_or_scope_id: str`, `event_kind: str`, `primary_object_id: str`, `local_sequence: int`; booleans are rejected as integers, phase is `1..10`, and every other integer is nonnegative. `group_or_scope_id` and `primary_object_id` each match the exact `ScientificId` lexical grammar below; `event_kind` matches the exact one-segment grammar below. |
+| `FailureEvidenceRef` | `evidence_kind: str` in `OBJECT`, `ARTIFACT`, `RAW_SOURCE`, `TRACE_PREFIX`, `AUTHORIZATION`, `OPERATIONAL_LOG`; `digest: str` is exactly `sha256-raw:` plus 64 lowercase hex digits for `RAW_SOURCE` and exactly `sha256:` plus 64 lowercase hex digits for every other kind; `locator: str | Applicability`, where `NOT_APPLICABLE` is the only non-string value and locator text is nonempty canonical UTF-8 without controls |
+| `CanonicalTraceState` | fields `applicability: Applicability`, `completeness: str | Applicability`, `confirmed_row_count: int | Applicability`, `durable_prefix_ref: FailureEvidenceRef | Applicability`; the applicable completeness domain is exactly `COMPLETE`, `DECLARED_FAULT_TERMINAL`, `PARTIAL_DURABLE_PREFIX`, `NO_DURABLE_TRACE`, `UNRESOLVED_DURABILITY` |
+| `ScientificStatusEffect` | `StrEnum`: `NONE`, `UNSTARTED_PRESERVED`, `SCIENTIFIC_STATE_UNCHANGED`, `SCIENTIFIC_STATE_ADVANCED`, `SCIENTIFIC_STATUS_FAILED`, `SCIENTIFIC_STATUS_PARTIAL`, `SCIENTIFIC_STATUS_UNRESOLVED` |
+
+The typed pre-trace value is exactly:
+
+```text
+CanonicalTraceState(
+    applicability=NOT_APPLICABLE,
+    completeness=NOT_APPLICABLE,
+    confirmed_row_count=NOT_APPLICABLE,
+    durable_prefix_ref=NOT_APPLICABLE
+)
+```
+
+No other combination with `applicability=NOT_APPLICABLE` is valid. When
+applicable, `confirmed_row_count` is a nonnegative exact `int`; a durable
+prefix reference is required exactly for `PARTIAL_DURABLE_PREFIX`, optional
+only as typed `NOT_APPLICABLE` for the other applicable states, and must have
+kind `TRACE_PREFIX` when present.
+
+For `FailureEventKey`, the exact full-string ASCII grammars are:
+
+```text
+SCIENTIFIC_ID := "ebu:" SEGMENT ":" SEGMENT ":" SEGMENT
+SEGMENT       := [a-z0-9][a-z0-9._-]*
+EVENT_KIND    := [a-z0-9][a-z0-9._-]*
+```
+
+`group_or_scope_id` and `primary_object_id` match `SCIENTIFIC_ID`;
+`event_kind` matches `EVENT_KIND`. Empty strings, uppercase ASCII,
+whitespace, controls, extra or missing colon-delimited fields, and non-ASCII
+characters are rejected. `errors.py` reproduces only these lexical checks so
+it can remain standard-library-only; it does not import `identity.py`.
+Invalid group/scope or primary-object identifiers fail
+`SCIENTIFIC_ID_INVALID`; an invalid event kind fails `STABLE_KEY_INVALID`.
+
+`FailureEnvelope` has exactly these fields, in this declaration and canonical
+projection order:
+
+| Field | Exact Python type | Construction rule |
+|---|---|---|
+| `failure_id` | `FailureId` | Derived by §21.2.2; caller cannot supply a conflicting value |
+| `failure_ordinal` | `int` | Exact nonnegative integer; boolean rejected; default `0` only for one fail-fast boundary invocation |
+| `failure_code` | `FailureCode` | Exact shared enum member |
+| `stage` | `FailureStage` | Resolved explicitly under §21.2.3 |
+| `interface_ref` | `FailureInterfaceRef | Applicability` | Exact ref or typed `NOT_APPLICABLE` |
+| `object_refs` | `tuple[FailureObjectRef, ...]` | Immutable, duplicate-free, lexicographically ordered by the three fields |
+| `event_key` | `FailureEventKey | Applicability` | Exact key or typed `NOT_APPLICABLE` |
+| `state_advance` | `StateAdvance` | Exact enum; default `NONE` |
+| `policy_memory_advance` | `PolicyMemoryAdvance` | Exact enum; default `NONE` |
+| `durability_state` | `DurabilityState` | Exact enum; pre-durability default `NOT_APPLICABLE` |
+| `canonical_trace_state` | `CanonicalTraceState` | Exact typed pre-trace value until trace handling applies |
+| `scientific_status_effect` | `ScientificStatusEffect` | Default `NONE`; never inferred from summary text |
+| `retry_class` | `RetryClass` | Default `NOT_APPLICABLE`; protected operations must override explicitly |
+| `evidence_refs` | `tuple[FailureEvidenceRef, ...]` | Immutable, duplicate-free, ordered by `(evidence_kind,digest,locator)` |
+| `human_summary` | `str` | Nonempty NFC Unicode 15.0 text without controls other than LF; non-authoritative |
+
+`None`, `Any`, an unconstrained machine string, a dictionary, or an omitted
+conditional value is invalid for every field. Empty `object_refs` and
+`evidence_refs` mean an exactly empty collection, not an implicit absent
+value.
+
+The canonical projection is an ECJ-1 object named
+`FailureEnvelopeProjectionV1` containing `schema_id` equal to
+`ebu.failure-envelope/1` followed by the exact fields above. Records project
+to ECJ-1 objects using their field names; enums project to their values;
+tuples project to ordered arrays. The projection excludes exception class,
+Python traceback and frame objects, wall/monotonic time, PID/thread/host,
+memory addresses, storage/cache paths, environment, presentation metadata,
+and any later record that refers to the envelope. Those facts may be separate
+evidence references but cannot silently enter the canonical projection or the
+failure identity.
+
+The exact static `FailureEventKey` basis is assigned directly to
+`tests/framework/test_primitives_envelopes.py`; it does not enter the JSON
+fixture because no unrelated projection category is added. The four cases,
+in order, have no implementation-selected value:
+
+| Case name | Exact constructor arguments after the case name | Expected |
+|---|---|---|
+| `failure-event-key-valid` | `(0,1,0,"ebu:scope:validation:s0","phase.start","ebu:object:validation:o0",0)` | exact successful construction and field equality |
+| `failure-event-key-invalid-group-or-scope-id` | `(0,1,0,"ebu:scope:Validation:s0","phase.start","ebu:object:validation:o0",0)` | `SCIENTIFIC_ID_INVALID` |
+| `failure-event-key-invalid-event-kind` | `(0,1,0,"ebu:scope:validation:s0","Phase.Start","ebu:object:validation:o0",0)` | `STABLE_KEY_INVALID` |
+| `failure-event-key-invalid-primary-object-id` | `(0,1,0,"ebu:scope:validation:s0","phase.start","ebu:object:validation",0)` | `SCIENTIFIC_ID_INVALID` |
+
+The constructor argument order is the `FailureEventKey` field order. Each
+failure is stage I-2 at
+`ebu_framework.errors.FailureEventKey/1.0.0`, with empty object refs,
+not-applicable event coordinate, and ordinal zero. These are exact static
+test values; alternatives are not conforming.
+
+#### 21.2.2 Stable, non-recursive `failure_id`
+
+`failure_id` is the stable identity of a failure occurrence coordinate. It is
+not random, sequential, time-derived, or content-addressed from its enclosing
+envelope. Define `FRAME(x) = UINT64_BE(len(UTF8(x))) || UTF8(x)` and
+`COUNT(n) = UINT64_BE(n)`. `FailureIdPreimageV1` is the exact byte
+concatenation:
+
+```text
+FRAME("ebu.failure-id.v1")
+|| FRAME(failure_code.value)
+|| FRAME(stage.value)
+|| FRAME("APPLICABLE" if interface_ref is present else "NOT_APPLICABLE")
+|| [FRAME(module) || FRAME(qualname) || FRAME(interface_version), if applicable]
+|| COUNT(len(object_refs))
+|| for each ordered object_ref:
+       FRAME(object_id) || FRAME(object_version) || FRAME(object_content_hash)
+|| FRAME("APPLICABLE" if event_key is present else "NOT_APPLICABLE")
+|| [FRAME(decimal(epoch)) || FRAME(decimal(phase_ordinal))
+    || FRAME(decimal(declared_priority)) || FRAME(group_or_scope_id)
+    || FRAME(event_kind) || FRAME(primary_object_id)
+    || FRAME(decimal(local_sequence)), if applicable]
+|| FRAME(decimal(failure_ordinal))
+```
+
+Decimal integers use minimal unsigned ASCII. The digest is raw SHA-256 of
+these bytes and the ID is
+`ebu:failure:core:sha256-<lowercase-full-64-hex>`. `failure_id`, summary,
+advance/durability/trace classifications, evidence, metadata, and exception
+details are excluded from the preimage. Thus later evidence can describe the
+same occurrence without recursive or unstable identity. A boundary that may
+emit more than one failure at the same interface/object/event coordinate must
+assign prospective monotonically increasing ordinals in its deterministic
+validation order; reuse of one coordinate/ordinal for different codes is
+invalid.
+
+#### 21.2.3 Construction, legacy preservation, and import-cycle rule
+
+`FrameworkError` remains an internal `ValueError` carrying `.envelope`, and
+its string remains exactly `"<FAILURE_CODE>: <human_summary>"`. `_fail`
+remains private. New I-2 code must call `_fail` with an explicit
+`stage=FailureStage.I2` and exact `interface_ref`; it may use ordinal zero only
+because every I-2 public boundary is fail-fast and emits at most one failure.
+
+The private constructor boundary is exactly:
+
+```text
+_fail(
+    code: FailureCode,
+    summary: str,
+    *,
+    stage: FailureStage | Applicability = NOT_APPLICABLE,
+    interface_ref: FailureInterfaceRef | Applicability = NOT_APPLICABLE,
+    object_refs: tuple[FailureObjectRef, ...] = (),
+    event_key: FailureEventKey | Applicability = NOT_APPLICABLE,
+    failure_ordinal: int = 0,
+    state_advance: StateAdvance = NONE,
+    policy_memory_advance: PolicyMemoryAdvance = NONE,
+    durability_state: DurabilityState = NOT_APPLICABLE,
+    canonical_trace_state: CanonicalTraceState = PRE_TRACE_NOT_APPLICABLE,
+    scientific_status_effect: ScientificStatusEffect = NONE,
+    retry_class: RetryClass = NOT_APPLICABLE,
+    evidence_refs: tuple[FailureEvidenceRef, ...] = ()
+) -> NoReturn
+```
+
+`FrameworkError` receives the same arguments and constructs exactly one
+envelope. A caller never supplies `failure_id`; it is computed after all
+identity-coordinate fields validate. The `stage=NOT_APPLICABLE` default is an
+internal compatibility sentinel, not a valid stored stage, and is resolved
+only by the four-module legacy rule below. Every other default above is the
+typed value shown; there is no wall time, randomness, process state, implicit
+lookup, or mutable counter.
+
+The complete accepted I-1 audit found 95 `_fail` calls: 23 in `canonical.py`,
+14 in `hashing.py`, 13 in `identity.py`, and 45 in `registry.py`. Every call
+uses exactly two positional arguments and no keyword. The only direct
+`FrameworkError` construction is the one inside `_fail`; no I-1 test directly
+constructs `FailureEnvelope` or `FrameworkError` or depends on the old
+untyped default fields.
+
+Therefore I-2 selects the backward-compatible outcome. `errors.py` contains a
+closed legacy-source map for exactly
+`ebu_framework.canonical`, `ebu_framework.hashing`,
+`ebu_framework.identity`, and `ebu_framework.registry`. An omitted stage is
+accepted only when the immediate caller module is in that map, and resolves
+to `FailureStage.I1`; interface is the typed `NOT_APPLICABLE`, ordinal is
+zero, and every other field receives the typed deterministic pre-trace
+defaults above. Any omitted stage from `numeric`, `envelopes`, `primitives`,
+or a later module fails as an internal contract error and cannot construct a
+mislabelled envelope. This preserves every existing I-1 code, summary,
+exception string, and fail-fast meaning without editing an I-1 caller while
+preventing a universal `"I-1"` default for I-2.
+
+`errors.py` imports only the standard library. It performs its own closed
+lexical checks and binary failure-ID framing; it must not import `canonical`,
+`identity`, `hashing`, `registry`, `numeric`, `envelopes`, or `primitives`.
+The other modules may import `errors`; no reverse edge is allowed.
+
+#### 21.2.4 I-2 failure codes, meanings, and precedence
+
+All 29 existing I-1 members and meanings are retained unchanged. I-2 adds
+exactly these 24 members; no additional code is required:
+
+| Code | Exact meaning |
+|---|---|
+| `CORE_NUMBER_INVALID` | A core-number constructor or operation received the wrong exact Python type, arity, tag, lexical form, denominator, or other structural invariant not covered by the more specific nonfinite code |
+| `NONFINITE_NUMBER_FORBIDDEN` | A syntactically valid binary64 bit pattern has an all-ones exponent, or another canonical numeric input explicitly represents NaN or infinity |
+| `DIVISION_BY_ZERO` | A valid divisor is mathematical zero, including either binary64 signed-zero bit pattern before policy dispatch |
+| `NUMERICAL_OPERATION_UNSUPPORTED` | The requested operation is outside `NumericalOperation` or the exact core matrix marks it unsupported rather than policy-governed |
+| `NUMERICAL_POLICY_REQUIRED` | The matrix permits the operation only under a separately accepted domain policy, but none is supplied; in I-2 this always refuses because no policy can be accepted |
+| `NUMERICAL_POLICY_INCOMPLETE` | A supplied policy declaration lacks or contradicts a condition required by its declared operation/variant applicability |
+| `ERROR_BOUND_INVALID` | An `ErrorBound` violates its kind-specific exact bounds, unit applicability, structural completeness, nonnegativity, or ordering relation after the higher-precedence absence, mixed-variant, and required-policy checks; it also covers use of an incomplete bound as the bound of a complete result |
+| `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN` | Operands have different variants or a result would require an unrequested cross-variant conversion |
+| `DIMENSION_MISMATCH` | Dimension refs or exact basis-exponent vectors differ where equality is required |
+| `UNIT_MISMATCH` | Unit refs differ and no exact, direction-valid conversion rule is explicitly supplied |
+| `QUANTITY_TYPE_MISMATCH` | Resource/service applicability or exact type refs are incompatible |
+| `REGION_MISMATCH` | Region refs differ and no explicit valid common-parent aggregation is supplied |
+| `TIME_BASIS_MISMATCH` | Rate/non-rate applicability, time-basis refs, or duration bases are incompatible |
+| `SIGN_CONVENTION_MISMATCH` | Sign-convention applicability or exact refs differ |
+| `BOUNDARY_MISMATCH` | Mandatory boundary refs differ and no explicit valid common-parent aggregation is supplied |
+| `INVALID_AGGREGATION` | An aggregation is undeclared, uses an invalid parent/membership relation, duplicates a child, or would require weighting/scalarization not supplied by an accepted rule |
+| `CONVERSION_RULE_MISMATCH` | Conversion direction, source/target, dimension, factor/offset representation, or composition chain does not match the quantities |
+| `IMPLICIT_ABSENCE_FORBIDDEN` | A required or conditionally applicable coordinate is omitted, `None`, empty, zero, or otherwise lacks its typed applicability marker |
+| `RESOLUTION_STATE_INVALID` | A resolution/completeness record has an invalid state/payload relation, including completed-and-missing data represented as pending or unresolved |
+| `CLOCK_MISMATCH` | Clock refs differ where one clock is required, or an instant/duration/epoch is applied to the wrong clock |
+| `HORIZON_INVALID` | Start/terminal ordering, endpoint inclusion, completion rule, or post-terminal-effect treatment is absent or contradictory |
+| `UNCERTAINTY_RECORD_INVALID` | An uncertainty record violates its kind-specific required/forbidden fields, units, provenance, or bound order |
+| `LIFECYCLE_TRANSITION_INVALID` | A proposed lifecycle edge is not in the closed graph or violates immutable-source predicates |
+| `SUPERSESSION_INVALID` | A supersession relation changes logical identity/schema, does not increase version, repeats content, branches/cycles ancestry, or otherwise fails §21.5.7 |
+
+Input construction and strict ECJ-1/I-1 validation happen first; an I-1
+failure raised there is never replaced by an I-2 code. For already
+constructed inputs, every I-2 public boundary evaluates applicable checks in
+this exact first-failure order:
+
+```text
+IMPLICIT_ABSENCE_FORBIDDEN
+CORE_NUMBER_INVALID
+NONFINITE_NUMBER_FORBIDDEN
+DIVISION_BY_ZERO
+IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN
+NUMERICAL_POLICY_REQUIRED
+NUMERICAL_POLICY_INCOMPLETE
+ERROR_BOUND_INVALID
+NUMERICAL_OPERATION_UNSUPPORTED
+DIMENSION_MISMATCH
+UNIT_MISMATCH
+QUANTITY_TYPE_MISMATCH
+REGION_MISMATCH
+TIME_BASIS_MISMATCH
+SIGN_CONVENTION_MISMATCH
+BOUNDARY_MISMATCH
+INVALID_AGGREGATION
+CONVERSION_RULE_MISMATCH
+RESOLUTION_STATE_INVALID
+CLOCK_MISMATCH
+HORIZON_INVALID
+UNCERTAINTY_RECORD_INVALID
+LIFECYCLE_TRANSITION_INVALID
+SUPERSESSION_INVALID
+```
+
+Inapplicable checks are skipped, not treated as passes. Constructors apply
+the same relative order to the subset they own. Validation never aggregates
+several failures into a result whose order depends on container iteration.
+
+### 21.3 Exact numeric substrate
+
+#### 21.3.1 Shapes, projections, and constructors
+
+`CoreNumberV1` is the closed runtime union
+`IntegerV1 | RationalV1 | DecimalV1 | Binary64BitsV1`. Each variant is an
+immutable exact-type checked record and projects as follows:
+
+| Type | Exact Python fields | Exact ECJ-1 projection | Constructor behavior |
+|---|---|---|---|
+| `IntegerV1` | `value: int` | `{"variant":"INTEGER_V1","value":value}` | Reject `bool` and non-exact `int`; all Python integers accepted; zero has one representation |
+| `RationalV1` | `numerator: IntegerV1`, `denominator: IntegerV1` | `{"denominator":d,"numerator":n,"variant":"RATIONAL_V1"}` using the nested integer values | Reject wrong types and denominator zero; normalize sign to a positive denominator, divide by `gcd(abs(n),d)`, and force zero to `0/1` |
+| `DecimalV1` | `coefficient: IntegerV1`, `exponent10: IntegerV1` | `{"coefficient":c,"exponent10":e,"variant":"DECIMAL_V1"}` using nested integer values | Reject wrong types; while nonzero coefficient is divisible by 10, divide it by 10 and increment exponent; force zero to coefficient `0`, exponent `0` |
+| `Binary64BitsV1` | `bits: str` | `{"bits":bits,"variant":"BINARY64_BITS_V1"}` | Require exactly 16 lowercase ASCII hex digits; reject uppercase/short/long/nonhex rather than normalize; reject exponent-all-ones as nonfinite; retain `0000000000000000` and `8000000000000000` distinctly |
+
+Record construction performs only the normalization explicitly listed. It
+does not parse decimal text, accept a Python `float`, infer a variant, or
+convert variants. `normalize_core_number(value: CoreNumberV1) ->
+CoreNumberV1` requires an exact union member and reconstructs its unique
+normal form; because public constructors already normalize, it is idempotent.
+Passing raw containers, `bool`, `float`, `Decimal`, `Fraction`, NumPy values,
+or subclasses fails `CORE_NUMBER_INVALID`, except Python `float` at a
+canonical boundary retains I-1 `FLOAT_FORBIDDEN` and an explicit nonfinite
+encoding uses `NONFINITE_NUMBER_FORBIDDEN`.
+
+`decimal_to_rational_exact(value: DecimalV1) -> RationalV1` is the sole I-2
+cross-variant conversion. It computes `c*10^e/1` for `e>=0` and
+`c/10^(-e)` otherwise, then applies rational normalization. It is total,
+explicit, exact, and never called implicitly by an operation.
+
+#### 21.3.2 Closed operation and conversion enums
+
+`NumericalVariant` has exactly `INTEGER`, `RATIONAL`, `DECIMAL`, and
+`BINARY64_BITS`. `NumericalOperation` has exactly `ADD`, `SUBTRACT`,
+`MULTIPLY`, `DIVIDE`, `NEGATE`, and `COMPARE`. `ExactConversion` has exactly
+`NOT_APPLICABLE`, `INTEGER_DIVISION_TO_RATIONAL`, and
+`DECIMAL_TO_RATIONAL`. The last is used only by
+`decimal_to_rational_exact`; it is invalid as an implicit mixed-operation
+flag.
+
+`exact_conversion` must be exact `ExactConversion.NOT_APPLICABLE` for every
+matrix cell except a nondivisible `Integer/Integer` `DIVIDE`, where
+`INTEGER_DIVISION_TO_RATIONAL` is required. Supplying
+`INTEGER_DIVISION_TO_RATIONAL` for a divisible division or any other cell, or
+supplying `DECIMAL_TO_RATIONAL` to this operation interface, fails
+`NUMERICAL_OPERATION_UNSUPPORTED`; no unused conversion request is ignored.
+
+The exact callable is:
+
+```text
+apply_exact_core_operation(
+    operation: NumericalOperation,
+    operands: tuple[CoreNumberV1, ...],
+    *,
+    exact_conversion: ExactConversion = NOT_APPLICABLE
+) -> NumericalResult | ComparisonResult
+```
+
+Unary `NEGATE` takes one operand. `COMPARE` and all other operations take two.
+Wrong arity is `CORE_NUMBER_INVALID`. All operands must be exact union members
+and already reconstruct to their canonical normal forms. `COMPARE` returns
+one of `LESS`, `EQUAL`, or `GREATER`; it has no unordered result because
+nonfinite numbers do not exist.
+
+The complete matrix is:
+
+| Operation | `Integer/Integer` | `Rational/Rational` | `Decimal/Decimal` | `Binary64/Binary64` | Any mixed pair |
+|---|---|---|---|---|---|
+| `ADD` | lossless `IntegerV1` | lossless reduced `RationalV1` | lossless normalized `DecimalV1` after exact exponent alignment | `NUMERICAL_POLICY_REQUIRED` | `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN` |
+| `SUBTRACT` | lossless `IntegerV1` | lossless reduced `RationalV1` | lossless normalized `DecimalV1` | `NUMERICAL_POLICY_REQUIRED` | `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN` |
+| `MULTIPLY` | lossless `IntegerV1` | lossless reduced `RationalV1` | lossless normalized `DecimalV1` | `NUMERICAL_POLICY_REQUIRED` | `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN` |
+| `DIVIDE` | zero divisor fails; divisible result is lossless `IntegerV1`; otherwise succeeds as reduced `RationalV1` only when `INTEGER_DIVISION_TO_RATIONAL` is explicitly supplied, else `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN` | zero divisor fails; otherwise lossless reduced `RationalV1` | zero divisor fails; a finite base-10 quotient succeeds losslessly as normalized `DecimalV1`; a repeating quotient is `NUMERICAL_POLICY_REQUIRED` | either signed-zero divisor is `DIVISION_BY_ZERO`; every other valid pair is `NUMERICAL_POLICY_REQUIRED` | zero-divisor check precedes `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`; otherwise mixed refusal |
+| `COMPARE` | exact | exact by cross-products | exact by integer coefficient/exponent alignment | `NUMERICAL_POLICY_REQUIRED` | `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN` |
+
+| Unary operation | `Integer` | `Rational` | `Decimal` | `Binary64` |
+|---|---|---|---|---|
+| `NEGATE` | lossless; zero unchanged | lossless; zero remains `0/1` | lossless; zero remains `(0,0)` | `NUMERICAL_POLICY_REQUIRED`, including signed-zero handling |
+
+For finite decimal division, reduce the coefficient fraction first. After
+removing sign, the reduced denominator must factor entirely into 2s and 5s;
+otherwise the quotient is repeating. The exact exponent is formed with
+integer powers of 2, 5, and 10 and then normalized. Core arithmetic has no
+overflow, precision, or rounding limit other than available Python integer
+memory; resource exhaustion remains an operational failure, not a numeric
+result.
+
+No I-2 function evaluates binary64 arithmetic, converts binary64 to text or a
+different variant, equates its signed zeros, chooses a rounding mode, or uses
+host floating-point. `Binary64BitsV1` is exact stored-bit data only.
+
+### 21.4 Numerical-policy protocol
+
+#### 21.4.1 Common policy records
+
+`Completeness` is a `StrEnum` with exactly `COMPLETE` and `INCOMPLETE`.
+`NumericalPolicyV1` is a runtime-checkable protocol whose properties are
+read-only; an implementation object may not permit assignment to any declared
+field. Its exact required properties are:
+
+| Property | Exact type and rule |
+|---|---|
+| `policy_ref` | `ObjectRef`; required exact draft/accepted policy identity |
+| `owning_domain_ref` | `ObjectRef`; required; cannot be a core/framework placeholder |
+| `supported_input_variants` | nonempty, duplicate-free tuple of `NumericalVariant` in enum order |
+| `supported_operations` | nonempty, duplicate-free tuple of `NumericalOperation` in enum order |
+| `result_variant_by_operation` | tuple of `(NumericalOperation, NumericalVariant)` with exactly one row per supported non-`COMPARE` operation and no other row |
+| `precision_contract_ref` | `ObjectRef | Applicability`; explicit applicability required |
+| `rounding_contract_ref` | `ObjectRef | Applicability`; required for any potentially inexact result |
+| `comparison_tolerance_contract_ref` | `ObjectRef | Applicability`; required when `COMPARE` is supported unless exact comparison is separately referenced |
+| `approximation_contract_ref` | `ObjectRef | Applicability`; required when approximation is allowed |
+| `error_bound_contract_ref` | `ObjectRef | Applicability`; required whenever a result can be approximate |
+| `overflow_underflow_nonfinite_contract_ref` | `ObjectRef`; always required |
+| `signed_zero_contract_ref` | `ObjectRef | Applicability`; always required if binary64 is supported, otherwise exact typed `NOT_APPLICABLE` |
+| `backend_dependency_contract_ref` | `ObjectRef`; always required before evaluation |
+| `cross_platform_contract_ref` | `ObjectRef`; always required before evaluation |
+| `failure_contract_ref` | `ObjectRef`; always required |
+| `evidence_requirement_refs` | nonempty, duplicate-free, ObjectRef-ordered tuple |
+| `runtime_constraints` | `RuntimeConstraintSet`; required and complete before evaluation |
+| `completeness` | `Completeness`; validation derives, rather than trusts, this value |
+
+Every property exists; typed `NOT_APPLICABLE` is the sole absence form.
+`None`, omission, empty text, an empty required tuple, or a fabricated core
+default is `IMPLICIT_ABSENCE_FORBIDDEN`. A policy is complete exactly when
+all unconditional fields and every conditional field implied by its variant
+and operation sets are applicable, its result mapping closes, its refs are
+distinct where semantics require, runtime constraints are complete, and its
+declared `completeness` is `COMPLETE`. A declaration marked complete that
+fails any predicate is `NUMERICAL_POLICY_INCOMPLETE`; a declaration marked
+incomplete validates only as an incomplete refusal record.
+
+The canonical declaration projection is an ECJ-1 object named
+`NumericalPolicyV1ProjectionV1`. It contains `schema_id` equal to
+`ebu.numerical-policy/1`, followed by every property in the table above in
+that exact table order. Enums project to their exact values, refs to their
+I-1 `ObjectRef` projections, tuples to ordered arrays, mapping rows to
+two-element arrays, and typed `NOT_APPLICABLE` to the string
+`NOT_APPLICABLE`. Protocol implementation class, method objects, Python
+module/qualname, cache, backend instance, validation result, and record
+metadata are excluded. Every policy property is therefore present in the
+projection; absence is never expressed by omission or JSON null.
+
+Each immutable §21.4.1 support/result record has `to_ecj1()` with
+`schema_version` equal to integer `1` followed by its fields in the exact
+declaration order below. Enums project to values, refs to I-1 ref objects,
+core numbers to §21.3 projections, nested records recursively, tuples to
+ordered arrays, booleans to ECJ-1 booleans, and typed `NOT_APPLICABLE` to the
+string `NOT_APPLICABLE`. No field is omitted and JSON null is forbidden.
+Validation failures and record/implementation metadata never enter a
+successful result projection except the explicitly declared `failure` union.
+
+`RuntimeConstraintSet` is assigned to I-2 `numeric.py`, not deferred to I-3.
+It is an immutable record with `constraint_refs: tuple[ObjectRef, ...]`,
+`applicability: Applicability`, and `completeness: Completeness`. Applicable
+sets require a nonempty duplicate-free ObjectRef-ordered tuple; not-applicable
+sets require an empty tuple and `COMPLETE`. It is non-scientific structure:
+it records requirements chosen elsewhere and chooses none.
+
+`QuantityContext` is immutable with exact fields
+`dimension_ref: ObjectRef`, `unit_ref: ObjectRef`,
+`resource_type_ref: ObjectRef | Applicability`,
+`service_type_ref: ObjectRef | Applicability`,
+`region_ref: ObjectRef | Applicability`,
+`time_basis_ref: ObjectRef | Applicability`,
+`sign_convention_ref: ObjectRef | Applicability`, and
+`boundary_ref: ObjectRef`, and
+`uncertainty_applicability: Applicability`. Every conditional ref is
+explicitly applicable or the exact `NOT_APPLICABLE` member; boundary is never
+conditional. `uncertainty_applicability` is an explicit applicability field:
+`NOT_APPLICABLE` requires `Quantity.uncertainty_ref` to be exactly typed
+`NOT_APPLICABLE`, and `APPLICABLE` requires it to be an exact `ObjectRef`.
+`Applicability.APPLICABLE` is valid only in this explicit field and is never
+a substitute reference. Applicability is not inferred from magnitude, unit,
+resolution, resource, service, region, boundary, or caller context. A
+mismatch fails `UNCERTAINTY_RECORD_INVALID`. I-2 neither resolves nor
+evaluates the referenced uncertainty record.
+
+`OperandValidationResult` fields are `operation: NumericalOperation`,
+`operand_variants: tuple[NumericalVariant, ...]`,
+`policy_ref: ObjectRef`, `quantity_context: QuantityContext`,
+`valid: bool`, `completeness: Completeness`, and
+`failure: FailureEnvelope | Applicability`. `valid=True` requires complete and
+typed `NOT_APPLICABLE` failure; `valid=False` requires one exact failure.
+
+`ErrorBound` fields are `bound_kind: str` in `EXACT_ZERO`, `ABSOLUTE`,
+`RELATIVE`, `ULP`, `INTERVAL`; `lower: CoreNumberV1 | Applicability`,
+`upper: CoreNumberV1 | Applicability`, `unit_ref: ObjectRef | Applicability`,
+`policy_ref: ObjectRef | Applicability`, and `completeness: Completeness`.
+Construction performs exact structural validation, separately from any later
+authenticity, acceptance, generation, or execution of the referenced policy:
+
+- `EXACT_ZERO` requires `lower` and `upper` to be exact `IntegerV1(0)` and
+  requires `unit_ref` and `policy_ref` to be exact typed `NOT_APPLICABLE`;
+- `ABSOLUTE`, `RELATIVE`, `ULP`, and `INTERVAL` require an exact applicable
+  `policy_ref`;
+- `ABSOLUTE` and `INTERVAL` require an exact applicable `unit_ref`;
+- `RELATIVE` and `ULP` require `unit_ref` to be exact typed
+  `NOT_APPLICABLE`;
+- `ULP` requires both bounds to be exact `IntegerV1` values;
+- every other nonzero kind requires both bounds to use the same exact variant
+  from `IntegerV1`, `RationalV1`, or `DecimalV1`;
+- a `Binary64BitsV1` bound cannot be structurally ordered in I-2 and fails
+  `NUMERICAL_POLICY_REQUIRED`;
+- mixed variants fail `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`;
+- for every nonzero kind, I-2 uses only the exact core comparison rules to
+  require `0 <= lower <= upper`; it does not invoke or resolve the policy;
+- a missing required policy fails `NUMERICAL_POLICY_REQUIRED`, and a missing
+  required unit fails `IMPLICIT_ABSENCE_FORBIDDEN`;
+- an otherwise malformed kind-specific field, negative lower bound, reversed
+  relation, forbidden applicable unit/policy, or incomplete-bound use in a
+  complete result fails `ERROR_BOUND_INVALID`.
+
+The policy reference records applicability and provenance only. I-2 does not
+establish its authenticity, acceptance, or scientific adequacy and cannot
+call a provider. `Completeness.COMPLETE` means exactly that the structural
+fields and exact inequalities above are complete; it does not mean the
+referenced policy is accepted or scientifically validated. An otherwise
+well-shaped `ErrorBound` may carry `Completeness.INCOMPLETE` only as an
+incomplete refusal/evidence record. It cannot be the `error_bound` of a
+`NumericalResult` whose completeness is `COMPLETE`; that relation fails
+`ERROR_BOUND_INVALID`. Exact core operations return only `EXACT_ZERO` with
+`COMPLETE`.
+
+`NumericalResult` fields are `value: CoreNumberV1`,
+`operation: NumericalOperation`, `operand_variants:
+tuple[NumericalVariant, ...]`, `policy_ref: ObjectRef | Applicability`,
+`rounding_evidence_ref: ObjectRef | Applicability`,
+`error_bound: ErrorBound`, and `completeness: Completeness`. Exact core results
+use typed not-applicable policy/rounding, `EXACT_ZERO`, and `COMPLETE`.
+
+`ComparisonResult` fields are `ordering: str` in `LESS`, `EQUAL`, `GREATER`,
+`purpose: str` in `EXACT_CORE`, `DOMAIN_DECISION`, `TOLERANCE_CLASSIFICATION`,
+`policy_ref: ObjectRef | Applicability`, `error_bound: ErrorBound | Applicability`,
+and `completeness: Completeness`. Core compare uses `EXACT_CORE` and typed
+not-applicable policy/error bound. Domain purposes require both.
+
+#### 21.4.2 Exact protocol methods and I-2 prohibition
+
+Every future concrete `NumericalPolicyV1` provider exposes exactly:
+
+```text
+validate_operands(
+    operation: NumericalOperation,
+    operands: tuple[CoreNumberV1, ...],
+    quantity_context: QuantityContext
+) -> OperandValidationResult
+
+evaluate(
+    operation: NumericalOperation,
+    operands: tuple[CoreNumberV1, ...],
+    quantity_context: QuantityContext
+) -> NumericalResult
+
+compare(
+    purpose: str,
+    left: CoreNumberV1,
+    right: CoreNumberV1,
+    quantity_context: QuantityContext
+) -> ComparisonResult
+
+bound_error(
+    operation: NumericalOperation,
+    operands: tuple[CoreNumberV1, ...],
+    result: NumericalResult,
+    quantity_context: QuantityContext
+) -> ErrorBound
+
+runtime_requirements() -> RuntimeConstraintSet
+```
+
+No additional positional/keyword parameter, variadic argument, default,
+callback, global context, or hidden backend access is permitted. I-2 may
+define the protocol and `validate_numerical_policy(policy) -> Completeness`,
+which inspects shape and cross-field completeness only. I-2 must not
+instantiate a default provider, call any of these five methods, accept a
+policy into a production registry, or choose/execute precision, tolerance,
+approximation, rounding, backend, signed-zero equivalence, overflow,
+underflow, nonfinite, or cross-platform behavior. Consequently every
+policy-required core request fails `NUMERICAL_POLICY_REQUIRED` during I-2.
+
+### 21.5 Typed primitive and envelope schemas
+
+#### 21.5.1 Common rules and projections
+
+Every I-2 record below is immutable, uses exact type identity rather than
+`isinstance` coercion for scalar fields, rejects `bool` where `int` is named,
+and provides `to_ecj1()` containing exactly its listed fields plus a
+`schema_version` literal `1`. Field names are sorted by ECJ-1 at encoding;
+tuples project to their declared order. Derived validation results and
+non-scientific `RecordMetadata` never enter the scientific record projection.
+
+Every conditional reference coordinate is a closed tagged union
+`ObjectRef | Applicability`: an exact ref means applicable, and the only
+permitted `Applicability` value in that union is `NOT_APPLICABLE`.
+`APPLICABLE` is stored only in records that have a separate explicit
+`applicability` field. Omission, `None`, zero, empty string/tuple, or a
+free-form absence reason is forbidden. The schemas do not infer
+applicability from another coordinate.
+
+`CompatibilityResult` is the common immutable return record with
+`compatible: bool`, `checked_predicates: tuple[str, ...]` in the exact
+function-defined order, `conversion_rule_ref: ObjectRef | Applicability`,
+`parent_ref: ObjectRef | Applicability`, and
+`failure: FailureEnvelope | Applicability`. Success requires typed
+not-applicable failure; failure requires exactly one envelope. It describes
+compatibility only and performs no aggregation or scientific operation.
+
+#### 21.5.2 Dimensions, units, conversions, and quantities
+
+| Type | Exact fields and invariants |
+|---|---|
+| `Dimension` | `dimension_ref: ObjectRef`; `dimension_kind: str` in `PHYSICAL`, `DECLARED_INSTITUTIONAL`; `basis_exponents: tuple[tuple[ObjectRef,RationalV1], ...]`, nonempty, unique and ObjectRef-ordered, with nonzero exponents. There is no implicit universal scalar/dimensionless entry. |
+| `Unit` | `unit_ref: ObjectRef`; `dimension_ref: ObjectRef`; `unit_kind: str` in `BASE`, `DERIVED`, `DECLARED_INSTITUTIONAL`; `symbol: str` nonempty NFC; `definition_ref: ObjectRef`; `validity_horizon_ref: ObjectRef | Applicability`. Identity is exact `unit_ref`, not symbol equality. |
+| `ConversionRule` | `conversion_ref`, `source_unit_ref`, `target_unit_ref`, `dimension_ref`: `ObjectRef`; `direction: str` in `FORWARD_ONLY`, `BIDIRECTIONAL`; `factor: RationalV1 | DecimalV1`, nonzero; `offset: RationalV1 | DecimalV1 | Applicability`; `validity_horizon_ref: ObjectRef | Applicability`. Factor and applicable offset use the same variant. Typed not-applicable offset means exact zero offset. |
+| `Quantity` | `magnitude: CoreNumberV1`; `unit_ref`, `dimension_ref`, `boundary_ref`: `ObjectRef`; `resource_type_ref`, `service_type_ref`, `region_ref`, `time_basis_ref`, `sign_convention_ref`, `uncertainty_ref`: `ObjectRef | Applicability`; `resolution: ResolutionDetail`. Only `NOT_APPLICABLE` may occupy a conditional union. `boundary_ref` is mandatory and never inferred. |
+
+Dimensions are compatible only when exact `dimension_ref` values and complete
+basis-exponent vectors match. Units are identical only on exact `unit_ref`;
+they are compatible for conversion only when dimensions match and a supplied
+rule names the exact source/target in an allowed direction. Exact conversion
+computes `target = source * factor + offset`, treating typed not-applicable
+offset as exact zero. All operations must succeed through §21.3 without a
+policy; otherwise conversion is refused. The returned quantity changes only
+magnitude and unit ref; every other coordinate is byte-for-byte identical.
+
+Two forward affine rules `A->B` and `B->C` may compose only when the middle
+unit/dimension/horizon match and all exact operations are supported. The
+composed factor is `f_BC*f_AB`; offset is `f_BC*o_AB+o_BC`. Direction is
+forward unless both inputs are bidirectional and both factors have exact
+nonzero inverses in their existing variants. No implicit inverse, float,
+policy, exchange rate, price, domain weight, or settlement value is a unit
+conversion.
+
+Quantity compatibility checks, in order, resolution, dimension, unit,
+resource/service type, region, time basis, sign convention, boundary, then
+uncertainty applicability. At the final check, exact
+`QuantityContext.uncertainty_applicability=NOT_APPLICABLE` requires exact
+typed `Quantity.uncertainty_ref=NOT_APPLICABLE`, while `APPLICABLE` requires
+an exact `ObjectRef`; a mismatch fails `UNCERTAINTY_RECORD_INVALID`. The
+validator does not resolve or evaluate that reference. Addition, comparison,
+or aggregation is invalid unless every applicable coordinate is compatible.
+I-2 validates this predicate but exposes no public quantity-addition or
+aggregation callable.
+
+#### 21.5.3 Resources, services, sign, regions, and boundaries
+
+| Type | Exact fields and invariants |
+|---|---|
+| `ResourceType` | `resource_type_ref`, `dimension_ref`, `definition_ref`: `ObjectRef`; `service_compatibility_refs: tuple[ObjectRef,...]`, duplicate-free and ordered; `validity_horizon_ref: ObjectRef | Applicability` |
+| `ServiceType` | `service_type_ref`, `definition_ref`: `ObjectRef`; `required_resource_type_refs: tuple[ObjectRef,...]`, nonempty, duplicate-free and ordered; `output_dimension_ref: ObjectRef | Applicability`; `validity_horizon_ref: ObjectRef | Applicability` |
+| `SignConvention` | `sign_convention_ref`, `definition_ref`: `ObjectRef`; `positive_meaning`, `zero_meaning`, `negative_meaning`: nonempty NFC strings; the three meanings must be pairwise distinct |
+| `Region` | `region_ref`, `membership_rule_ref`, `clock_ref`: `ObjectRef`; `parent_region_ref: ObjectRef | Applicability`; `spatial_interpretation: str` in `PHYSICAL`, `NETWORK_NODE_SET`, `INSTITUTIONAL`; `validity_start`, `validity_end`: `Instant`; parent cannot equal self |
+| `AccountingBoundary` | `boundary_ref`, `state_schema_ref`, `distortion_ref`, `clock_ref`, `initial_epoch_ref`, `horizon_ref`, `definition_ref`: `ObjectRef`; `parent_boundary_ref`, `comparator_ref`, `objective_ref`, `institutional_rule_ref`: `ObjectRef | Applicability`; `included_resource_type_refs`, `included_service_type_refs`, `included_provider_refs`, `included_actor_refs`, `included_node_refs`, `included_edge_refs`, `included_region_refs`, `included_lifecycle_stage_refs`, `external_effect_refs`, `commitment_refs`, `reservation_refs`, `queue_refs`, `measurement_refs`, `natural_drive_refs`, `external_input_refs`, `unresolved_cross_boundary_effect_refs`: duplicate-free ObjectRef-ordered tuples |
+
+Resource/service compatibility requires the quantity's resource and service
+applicability markers to agree with the expected type. When both apply, the
+exact resource ref must occur in the service's ordered required-resource
+tuple and the service ref in the resource's compatibility tuple. Either
+one-sided declaration is `QUANTITY_TYPE_MISMATCH`.
+
+Region equality is exact ref equality. Parent aggregation requires a supplied
+parent region, each child naming that exact parent, disjoint child
+membership evidence through an explicit `membership_rule_ref`, the same
+clock and covering validity interval, no duplicate child, and an exact
+aggregation-rule ref. Parent acceptance is an external I-4 concern and is
+neither inferred nor claimed by this T0 validator. Boundary parent
+aggregation analogously requires each
+child's exact `parent_boundary_ref`, compatible state/distortion/clock/horizon
+contracts, declared treatment for every excluded/cross-boundary effect, no
+duplicate child, and an exact aggregation-rule ref. The validators return
+compatibility only; I-2 creates no aggregated quantity. Missing weights,
+domain conversion, scalarization, or overlapping membership is
+`INVALID_AGGREGATION`.
+
+Sign conventions are compatible only when both are typed not-applicable or
+both apply with the exact same ref. No automatic sign flip exists; a sign
+change is a separately declared domain transformation unavailable in I-2.
+
+#### 21.5.4 Time and horizons
+
+| Type | Exact fields and invariants |
+|---|---|
+| `ClockSystem` | `clock_ref`, `epoch_definition_ref`, `duration_unit_ref`: `ObjectRef`; `ordering: str` exactly `DISCRETE_TOTAL`; `origin_ref: ObjectRef | Applicability` |
+| `Instant` | `clock_ref: ObjectRef`; `tick: IntegerV1`; tick is nonnegative |
+| `Duration` | `clock_ref: ObjectRef`; `ticks: IntegerV1`; ticks is strictly positive |
+| `Epoch` | `clock_ref: ObjectRef`; `index: IntegerV1`; index is nonnegative |
+| `Horizon` | `horizon_ref`, `clock_ref`, `completion_rule_ref`, `settlement_rule_ref`: `ObjectRef`; `start`, `terminal`: `Instant`; `endpoint_inclusion: str` in `CLOSED`, `LEFT_CLOSED_RIGHT_OPEN`; `resolution: Duration`; `measurement_epochs: tuple[Epoch,...]`, strictly increasing and inside the included interval; `post_terminal_effect_treatment: str` in `REMAIN_PENDING`, `OUT_OF_BOUNDARY`; `terminal_pending_treatment: str` in `ALLOW_EXPLICIT_PENDING`, `REQUIRE_NONE_PENDING` |
+
+Clock compatibility is exact clock-ref equality. A rate requires an applicable
+time-basis ref; a non-rate requires typed not-applicable. I-2 does not infer a
+rate from a unit symbol or dimension. Horizons require same-clock fields,
+`start <= terminal`, positive resolution, unambiguous endpoint inclusion, and
+an explicit post-terminal rule. At a closed terminal point, effects due there
+are inside; at a right-open terminal they remain pending/out-of-boundary under
+the named rule. Pending effects are never zero. `REQUIRE_NONE_PENDING` fails
+if any pending effect exists; `ALLOW_EXPLICIT_PENDING` requires a complete
+enumeration with due condition.
+
+#### 21.5.5 Resolution and uncertainty
+
+`ResolutionState` has exactly `PRESENT`, `PENDING`, `FAILED`, `PARTIAL`,
+`UNRESOLVED`, `OUT_OF_BOUNDARY`, and `NOT_APPLICABLE`.
+`ResolutionDetail` fields are `state: ResolutionState`,
+`present_value_ref: ObjectRef | Applicability`,
+`completed_part_refs: tuple[ObjectRef,...]`,
+`missing_part_refs: tuple[ObjectRef,...]`,
+`due_condition_ref: ObjectRef | Applicability`,
+`failure: FailureEnvelope | Applicability`,
+`boundary_edge_ref: ObjectRef | Applicability`, and
+`reason_ref: ObjectRef | Applicability`.
+
+The exact state predicates are: `PRESENT` requires a value and no completed,
+missing, due, failure, boundary, or reason fields; `PENDING` requires due and
+no completed/missing/value/failure; `FAILED` requires failure;
+`PARTIAL` requires nonempty disjoint completed and missing tuples;
+`UNRESOLVED` requires reason and no claim that a value is present;
+`OUT_OF_BOUNDARY` requires boundary edge and reason; `NOT_APPLICABLE`
+requires reason and no value/effect tuple. A completed obligation whose value
+is missing is `PARTIAL` with a missing part, not `PENDING`; insufficient
+evidence to determine whether completion occurred is `UNRESOLVED`.
+
+`UncertaintyKind` retains exactly the eight values in §5.5.
+`UncertaintyRecord` fields are `uncertainty_ref: ObjectRef`,
+`kind: UncertaintyKind`, `value_unit_ref: ObjectRef | Applicability`,
+`lower: Quantity | Applicability`, `upper: Quantity | Applicability`,
+`member_refs: tuple[ObjectRef,...]`,
+`probability_model_ref: ObjectRef | Applicability`,
+`calibration_ref: ObjectRef | Applicability`,
+`provenance_refs: tuple[ObjectRef,...]`, and
+`resolution: ResolutionDetail`.
+
+Kind predicates are closed: `EXACT` has no bounds/set/model and must be
+`PRESENT`; `MEASUREMENT_INTERVAL` requires same-coordinate ordered lower and
+upper quantities plus calibration; `ADMISSIBLE_SET` and `ADVERSARIAL_SET`
+require nonempty ordered member refs and forbid probability model;
+`PROBABILITY_MODEL` requires its exact model ref and provenance;
+`MODEL_DISCREPANCY` requires interval or set evidence and provenance;
+`UNKNOWN` requires `UNRESOLVED` and no invented bound/model; `OUT_OF_SET`
+requires the violated contract ref in provenance and a present supplied value
+reference through resolution. A range never implies a distribution.
+
+#### 21.5.6 Common object envelope and metadata
+
+`CommonObjectEnvelope` is immutable with exact fields `object_id:
+ScientificId`, `object_kind_id: ScientificId`, `schema_id: ScientificId`,
+`schema_version: SemanticVersion`, `object_version: SemanticVersion`,
+`authority_refs: tuple[ObjectRef,...]`, `supersedes_ref: ObjectRef |
+Applicability`, `object_content_payload: CanonicalBytes`,
+`object_content_hash: ObjectContentHash`, `lifecycle_status:
+LifecycleStatus`, and `record_metadata_ref: ObjectRef | Applicability`.
+
+Authority refs are duplicate-free and ordered. `object_kind_id` replaces the
+earlier unconstrained “registered enum” placeholder with a registered
+`ScientificId`. The payload accepts exact `bytes` only, typed through the
+existing `CanonicalBytes`. `bytearray`, `memoryview`, `dict`, `list`, all
+subclasses, and every other runtime type fail without conversion. Construction
+passes the exact bytes to the unchanged `parse_ecj1` boundary. Malformed,
+noncanonical, duplicate-key, nonfinite, invalid-Unicode, and otherwise invalid
+bytes therefore fail through the applicable existing I-1 canonical failure
+semantics before an I-2 envelope check.
+
+The canonical bytes are the sole authoritative payload representation stored
+inside the envelope. A caller may encode a mutable source tree before
+construction, but later mutation of that source cannot change the stored
+bytes, projection, or hash. A separately parsed tree is also independent and
+may be mutated and discarded without changing the envelope. No constructor,
+property, validator, closure, slot, or private cache may retain or expose a
+decoded mutable payload tree.
+
+`validate_object_envelope` checks exact field types and ordering, calls
+`parse_ecj1` to obtain one fresh temporary logical ECJ-1 value, passes that
+logical value as `object_content_payload` to the unchanged
+`compute_object_content_hash`, discards the temporary value, and compares the
+result with the stored exact `ObjectContentHash`. The stored bytes are never
+projected as a string, hex, integer array, or nested JSON text. The logical
+payload, stored canonical bytes, complete `ObjectContentPreimageV1`, and
+resulting `ObjectContentHash` are four distinct concepts.
+
+The object-content projection otherwise remains exactly I-1: `object_kind`
+is the string form of `object_kind_id`, and typed not-applicable supersession
+projects as ECJ-1 `null` only inside the preimage adapter.
+`object_content_hash` is excluded from its own preimage. Lifecycle, record
+metadata, validation/failure records, signatures, storage, time,
+host/process, publication, and presentation data remain excluded. A
+recomputation mismatch uses the existing exact `HASH_MISMATCH` code and
+meaning at the I-2 validator coordinate. No edit to `canonical.py` or
+`hashing.py` is required or authorized.
+
+The one new direct dependency `envelopes -> canonical` is authorized only for
+`CanonicalBytes` and `parse_ecj1`. `envelopes.py` must not import
+`encode_ecj1`, canonicalization helpers, Unicode tables/assets, or any other
+canonical name; must not normalize arbitrary input; and must not import
+`registry`. `canonical`, `hashing`, and `identity` must not import
+`envelopes`. Dynamic import is forbidden in production and validation code.
+
+`RecordMetadata` is immutable non-scientific structure with
+`metadata_id: ScientificId`, `storage_locator`, `database_identity`,
+`ingestion_time_ref`, `host_process_ref`, `transport_ref`,
+`presentation_annotation_ref`, and `operational_provenance_ref`, where every
+field after `metadata_id` is `ObjectRef | Applicability`. It has no scientific
+canonical projection and is referenced only outside object-content preimages.
+Changing it cannot change an object hash.
+
+#### 21.5.7 Lifecycle and supersession
+
+`LifecycleStatus` has exactly `DRAFT`, `REVIEWED`, `ACCEPTED`, `SUPERSEDED`,
+and `REVOKED_BEFORE_EXECUTION`. `LifecycleTransition` is immutable with
+`object_ref: ObjectRef`, `from_status: LifecycleStatus`, `to_status:
+LifecycleStatus`, `evidence_refs: tuple[ObjectRef,...]`, and
+`authorization_ref: ObjectRef | Applicability`.
+
+Every `LifecycleTransition.evidence_refs` value must be an exact tuple, must
+be nonempty, must contain no duplicate, and must be lexicographically ordered
+by `(object_id, object_version, object_content_hash)`. The checked predicate
+`evidence_order` means all four requirements exactly. Violation of any one
+fails `LIFECYCLE_TRANSITION_INVALID`.
+
+The closed graph is:
+
+```text
+DRAFT -> REVIEWED
+REVIEWED -> DRAFT
+REVIEWED -> ACCEPTED
+ACCEPTED -> SUPERSEDED
+ACCEPTED -> REVOKED_BEFORE_EXECUTION
+```
+
+No self-edge or other edge is valid. I-2 `validate_lifecycle_transition`
+checks only graph shape. It requires typed not-applicable authorization for
+`DRAFT <-> REVIEWED`; it requires an applicable external authorization ref
+for the other three edges but does not validate that authority, mutate a
+registry, or create the target status.
+
+`LifecycleValidationResult` is immutable with `valid: bool`, `transition:
+LifecycleTransition`, `checked_predicates: tuple[str,...]`, and `failure:
+FailureEnvelope | Applicability`. Checked-predicate strings come only from
+the closed graph-check implementation order. Success requires the exact
+`NOT_APPLICABLE` failure marker; failure requires one envelope.
+
+`SupersessionRelation` is immutable with `predecessor_ref: ObjectRef`,
+`successor_ref: ObjectRef`, `object_kind_id: ScientificId`, `schema_id:
+ScientificId`, `predecessor_status: LifecycleStatus`, `successor_status:
+LifecycleStatus`, `predecessor_supersedes_chain: tuple[ObjectRef,...]`,
+`relation_evidence_refs: tuple[ObjectRef,...]`, and
+`authorization_ref: ObjectRef`.
+
+Validation requires equal logical `object_id`, exact equal kind/schema,
+strictly greater semantic version under numeric major/minor/patch ordering,
+different content hashes, predecessor `ACCEPTED`, successor `REVIEWED`, the
+predecessor absent from its own chain, successor absent from the full chain,
+unique contiguous ancestry ending at the predecessor, nonempty evidence, and
+an applicable authorization ref. The validator returns a
+`SupersessionValidationResult` and mutates nothing. After I-4-authorized
+mutation, the predecessor may be represented by a new immutable registry
+status record `SUPERSEDED`; its accepted content bytes remain unchanged.
+
+`SupersessionValidationResult` is immutable with `valid: bool`, `relation:
+SupersessionRelation`, `checked_predicates: tuple[str,...]`, and `failure:
+FailureEnvelope | Applicability`. Predicate labels come only from the closed
+§21.5.7 validation order. Success requires exact `NOT_APPLICABLE`; failure
+requires one envelope. Both lifecycle result records are validation evidence
+and never enter an object-content preimage.
+
+`ClaimStatus` retains the ten values in §2.4 as exact `StrEnum` members:
+`DEFINITION`, `ALGEBRAIC_IDENTITY`, `THEOREM`, `MODEL_DEPENDENT_RESULT`,
+`TESTED_IMPLEMENTATION_PROPERTY`, `OBSERVED_REGISTERED_RESULT`,
+`RESEARCH_HYPOTHESIS`, `INSTITUTIONAL_DESIGN_CHOICE`, `ANALOGY`, and
+`OPEN_PROBLEM`.
+
+### 21.6 Compatibility predicates and public T0 behavior
+
+The exact I-2 compatibility callables and check order are:
+
+```text
+validate_dimension_compatibility(left: Dimension, right: Dimension) -> CompatibilityResult
+validate_unit_compatibility(source: Unit, target: Unit, conversion_or_not_applicable: ConversionRule | Applicability) -> CompatibilityResult
+validate_conversion_rule(rule: ConversionRule) -> CompatibilityResult
+convert_quantity_exact(quantity: Quantity, target_unit: Unit, rule: ConversionRule) -> Quantity
+validate_quantity(quantity: Quantity, expected_context: QuantityContext) -> CompatibilityResult
+validate_resource_service_compatibility(resource: ResourceType, service: ServiceType) -> CompatibilityResult
+validate_region_compatibility(left: Region, right: Region, parent_or_not_applicable: Region | Applicability, aggregation_rule_or_not_applicable: ObjectRef | Applicability) -> CompatibilityResult
+validate_boundary_compatibility(left: AccountingBoundary, right: AccountingBoundary, parent_or_not_applicable: AccountingBoundary | Applicability, aggregation_rule_or_not_applicable: ObjectRef | Applicability) -> CompatibilityResult
+validate_sign_convention_compatibility(left_or_not_applicable: ObjectRef | Applicability, right_or_not_applicable: ObjectRef | Applicability) -> CompatibilityResult
+validate_time_basis(left_or_not_applicable: ObjectRef | Applicability, right_or_not_applicable: ObjectRef | Applicability, rate_required: bool) -> CompatibilityResult
+validate_clock_compatibility(left: ClockSystem, right: ClockSystem) -> CompatibilityResult
+validate_horizon(horizon: Horizon, pending_effect_refs: tuple[ObjectRef, ...]) -> CompatibilityResult
+validate_uncertainty_record(record: UncertaintyRecord) -> CompatibilityResult
+validate_resolution_detail(record: ResolutionDetail) -> CompatibilityResult
+validate_object_envelope(envelope: CommonObjectEnvelope) -> CompatibilityResult
+validate_lifecycle_transition(transition: LifecycleTransition) -> LifecycleValidationResult
+validate_supersession_relation(relation: SupersessionRelation) -> SupersessionValidationResult
+```
+
+| Callable | Predicate and output |
+|---|---|
+| `validate_dimension_compatibility(left, right)` | Exact ref and basis-vector equality -> `CompatibilityResult` |
+| `validate_unit_compatibility(source, target, conversion_or_not_applicable)` | Dimension first; exact unit identity succeeds without conversion; otherwise exact rule direction/source/target -> result |
+| `validate_conversion_rule(rule)` | Type, nonzero factor, offset variant, direction, dimension, horizon; returns `CompatibilityResult` |
+| `convert_quantity_exact(quantity, target_unit, rule)` | Full quantity validity, exact rule, exact core multiply/add, unchanged coordinates -> new immutable `Quantity` |
+| `validate_quantity(quantity, expected_context)` | Resolution then dimension, unit, type, region, time, sign, boundary, uncertainty -> result |
+| `validate_resource_service_compatibility(resource, service)` | Symmetric exact registry declarations -> result |
+| `validate_region_compatibility(left, right, parent_or_not_applicable, aggregation_rule_or_not_applicable)` | Exact identity or explicit valid common parent only |
+| `validate_boundary_compatibility(left, right, parent_or_not_applicable, aggregation_rule_or_not_applicable)` | Exact identity or explicit valid common parent only |
+| `validate_sign_convention_compatibility(left_or_na, right_or_na)` | Both not applicable or exact same ref |
+| `validate_time_basis(left_or_na, right_or_na, rate_required)` | Applicability predicate then exact ref equality |
+| `validate_clock_compatibility(left, right)` | Exact clock ref equality |
+| `validate_horizon(horizon, pending_effect_refs)` | All §21.5.4 ordering/inclusion/pending predicates -> result |
+| `validate_uncertainty_record(record)` | Closed kind-specific rules -> result |
+| `validate_resolution_detail(record)` | Closed state-specific rules -> result |
+| `validate_object_envelope(envelope)` | Exact fields, ordering, lifecycle, self-reference exclusion, and I-1 content-hash recomputation -> validation result |
+| `validate_lifecycle_transition(transition)` | Pure closed-graph validation; no mutation |
+| `validate_supersession_relation(relation)` | Pure immutable predicates in §21.5.7; no mutation |
+
+These functions are T0. They accept already supplied immutable records, do
+not look up aliases or infer missing refs, do not invoke a domain policy, and
+do not add/compare/aggregate scientific magnitudes except the exact arithmetic
+inside an explicitly supplied unit conversion. No compatibility success is
+permission to perform scientific aggregation.
+
+For deterministic result projection and fixture generation, successful
+`checked_predicates` tuples are frozen below. A failure includes the labels
+through the first failed predicate and no later label. Unit conversion returns
+the supplied rule's `conversion_ref`; region/boundary parent success returns
+the supplied parent ref. Every other `conversion_rule_ref` or `parent_ref` is
+typed `NOT_APPLICABLE`.
+
+| Callable | Exact successful predicate-label tuple |
+|---|---|
+| `validate_dimension_compatibility` | `dimension_ref`, `basis_exponents` |
+| `validate_unit_compatibility` | `dimension`, `unit_identity_or_conversion` |
+| `validate_conversion_rule` | `factor_nonzero`, `offset_variant`, `direction`, `dimension`, `validity_horizon` |
+| `validate_quantity` | `resolution`, `dimension`, `unit`, `resource_service_type`, `region`, `time_basis`, `sign_convention`, `boundary`, `uncertainty_applicability` |
+| `validate_resource_service_compatibility` | `resource_declares_service`, `service_declares_resource` |
+| `validate_region_compatibility` | `identity_or_parent`, `parent_membership`, `clock`, `validity_interval`, `distinct_children`, `aggregation_rule` |
+| `validate_boundary_compatibility` | `identity_or_parent`, `parent_membership`, `state_schema`, `distortion`, `clock`, `horizon`, `cross_boundary_treatment`, `distinct_children`, `aggregation_rule` |
+| `validate_sign_convention_compatibility` | `applicability`, `identity` |
+| `validate_time_basis` | `applicability`, `identity` |
+| `validate_clock_compatibility` | `clock_ref` |
+| `validate_horizon` | `clock_refs`, `endpoint_order`, `endpoint_inclusion`, `resolution`, `measurement_epochs`, `post_terminal_effect_treatment`, `terminal_pending_treatment` |
+| `validate_uncertainty_record` | `resolution`, `kind_fields`, `unit_coordinates`, `bound_order`, `provenance` |
+| `validate_resolution_detail` | `state_payload_relation`, `tuple_order_and_disjointness` |
+| `validate_object_envelope` | `exact_field_types`, `authority_ref_order`, `payload_canonical_bytes`, `lifecycle_status`, `self_reference_exclusion`, `object_content_hash` |
+| `validate_lifecycle_transition` | `closed_edge`, `authorization_applicability`, `evidence_order` |
+| `validate_supersession_relation` | `logical_object_id`, `object_kind_id`, `schema_id`, `version_increase`, `content_change`, `lifecycle_pair`, `predecessor_not_in_own_ancestry`, `successor_not_in_ancestry`, `unique_linear_ancestry`, `ancestry_ends_at_predecessor`, `evidence_nonempty`, `authorization_applicable` |
+
+Within I-2, branch/cycle ancestry is only the locally decidable property of
+one proposed ordered `predecessor_supersedes_chain`: the tuple is linear and
+duplicate-free, excludes the successor, and ends at the predecessor. Detecting
+a competing registry relation requires I-4 lookup/mutation authority and is
+not claimed by I-2.
+
+### 21.7 Registry acceptance dependency resolution
+
+The conservative resolution is normative:
+
+1. I-2 implements only pure T0 lifecycle and immutable supersession
+   validation.
+2. Production mutation from draft/reviewed to accepted is deferred to I-4,
+   after external authorization records, validation, and single-use handling
+   exist.
+3. `accept_registry_object` and `supersede_registry_object` are assigned to
+   I-4 and are absent from the post-I-2 public API.
+4. I-2 cannot synthesize an acceptance result, fabricate or bypass authority,
+   or insert an accepted numerical policy into a production registry.
+5. Existing I-1 `register_draft`, `resolve_ref`, and `resolve_alias` semantics
+   remain unchanged. I-2 may replace `RegistryRecord.lifecycle_status: str`
+   with exact `LifecycleStatus` while retaining `DRAFT` as the only status
+   accepted by `register_draft`.
+
+The only authorized I-2 change to `registry.py` is that type strengthening and
+the minimal imports/checks it requires. Acceptance/supersession mutation is
+not hidden there.
+
+### 21.8 Validation contract
+
+The future `numeric_vectors_v1.json` is the single ECJ-1 document determined
+by §§21.8.1–21.8.5. It contains exactly 335 vectors. The first ID is
+`i2-0001`; the terminal ID is `i2-0335`. Its bytes are exactly
+`encode_ecj1(top_level_object)` with no trailing LF. Canonical top-level key
+order is:
+
+```text
+fixture_class
+implementation_plan_raw_sha256
+schema_id
+schema_version
+specification_raw_sha256
+vectors
+```
+
+Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.3 raw
+SHA-256 as 64 lowercase hexadecimal digits,
+`ebu:fixture:validation:i2-numeric-vectors-v1`, `1.0.0`, the eventual
+committed specification v0.1.3 raw SHA-256 in the same form, and the vector
+array. The two hashes occur only in those two authority fields. This is not
+self-reference: the fixture is a later I-2 artifact created after both
+authority files are committed; the plan does not embed its own hash.
+
+Each vector has canonical key order `case`, `category`, `expected`, `inputs`,
+`operation`, `quantity_context`, `vector_id`. `category` is one of
+`NORMAL_FORM`, `CONSTRUCTOR`, `EXACT_OPERATION`, `EXACT_CONVERSION`,
+`POLICY_REFUSAL`, `COMPATIBILITY`, `ENVELOPE`, `LIFECYCLE`, `PRECEDENCE`.
+`quantity_context` is the fully expanded catalog projection `QC0` only where
+this section says so and otherwise the string `NOT_APPLICABLE`; the alias text
+`QC0` is never written into the fixture.
+
+Expected objects have one of these exact canonical key sets:
+
+```text
+VALUE         canonical_hex,outcome,projection,returned_type
+COMPARISON    canonical_hex,outcome,projection
+COMPATIBILITY canonical_hex,outcome,projection
+FAILURE       failure_code,failure_id,failure_interface_ref,
+              failure_ordinal,failure_stage,outcome
+```
+
+`NA` means the exact ECJ-1 string `NOT_APPLICABLE`. The four constructors are
+exactly:
+
+```text
+VALUE(p,t) = {"canonical_hex":HEX_ECJ(p),"outcome":"VALUE",
+              "projection":p,"returned_type":t}
+COMPARISON(p) = {"canonical_hex":HEX_ECJ(p),"outcome":"COMPARISON",
+                 "projection":p}
+COMPATIBILITY(p) = {"canonical_hex":HEX_ECJ(p),
+                    "outcome":"COMPATIBILITY","projection":p}
+FAILURE(c,s,i) = {"failure_code":c,"failure_id":FAILURE_ID(c,s,i),
+                  "failure_interface_ref":i,"failure_ordinal":0,
+                  "failure_stage":s,"outcome":"FAILURE"}
+IF(op) = {"interface_version":"1.0.0",
+          "module":op with its final dot-component removed,
+          "qualname":op's final dot-component}
+```
+
+`HEX_ECJ` and `FAILURE_ID` are the closed derivations below, not stored
+formula text. `IF` is valid only for a fully qualified operation string in the
+closed §21.8.5 table; both string operations have no `IF`. Failure object refs
+are the empty tuple and event key is typed
+`NOT_APPLICABLE`. Failure interface is either
+`{"interface_version":"1.0.0","module":M,"qualname":Q}` from the closed
+interface table or the string `NOT_APPLICABLE`. `failure_id` is the exact
+§21.2.2 result for those coordinates; the generator writes the derived
+64-digit ID, not a formula or placeholder. Unknown/duplicate keys, an extra,
+missing, duplicated, reordered, or renumbered vector, or a derived-value
+mismatch is nonconforming.
+
+#### 21.8.1 Exact catalog and transport grammar
+
+`ECJ(x)` means the unique ECJ-1 bytes of `x`; `HEX_ECJ(x)` means the lowercase
+even-length hexadecimal encoding of `ECJ(x)`. These definitions are the exact
+canonical-hex entries for every catalog projection below. All catalog text is
+ASCII; no host Unicode or locale operation participates.
+
+For `0 <= n <= 63`, in increasing integer order:
+
+```text
+R(n) = {
+  "object_content_hash":"sha256:" + HEX2(n) repeated 32 times,
+  "object_id":"ebu:fixture:validation:r" + HEX2(n),
+  "object_version":"1.0.0"
+}
+SID(n) = "ebu:fixture:validation:s" + HEX2(n)
+```
+
+`HEX2` is exactly two lowercase hexadecimal digits. The ordered reference
+catalog is `R(0)..R(63)` followed by `SID(0)..SID(63)`; each entry is the
+projection shown and has canonical hex `HEX_ECJ(the projection)`.
+
+The exact numeric projections and ordered numeric catalog are:
+
+```text
+I(x)   = {"value":x,"variant":"INTEGER_V1"}
+Q(n,d) = {"denominator":d,"numerator":n,"variant":"RATIONAL_V1"}
+D(c,e) = {"coefficient":c,"exponent10":e,"variant":"DECIMAL_V1"}
+B(h)   = {"bits":h,"variant":"BINARY64_BITS_V1"}
+
+I0=I(0), I1=I(1), I2=I(2), I3=I(3), I6=I(6), IN1=I(-1)
+Q0=Q(0,1), Q12=Q(1,2), Q13=Q(1,3), Q34=Q(3,4), Q2=Q(2,1)
+D0=D(0,0), D03=D(3,-1), D12=D(12,-1), D125M3=D(125,-3), D2=D(2,0)
+BP0=B("0000000000000000"), BN0=B("8000000000000000")
+B1=B("3ff0000000000000"), B2=B("4000000000000000")
+```
+
+Each catalog item has the displayed projection and
+`canonical_hex=HEX_ECJ(projection)`. The finite binary64 basis, in order, is:
+
+```text
+0000000000000000 8000000000000000 0000000000000001
+000fffffffffffff 0010000000000000 7fefffffffffffff
+8000000000000001 800fffffffffffff 8010000000000000
+ffefffffffffffff
+```
+
+The nonfinite basis, in order, is:
+
+```text
+7ff0000000000000 fff0000000000000 7ff8000000000000
+fff8000000000000 7ff0000000000001 fff0000000000001
+```
+
+The finite basis detects disagreements at both signed zeros and both signs of
+the subnormal, normal, and maximum-finite boundaries. The nonfinite basis
+detects disagreements for both infinities and both signs of quiet/signaling
+NaN. The general all-ones-exponent rule is established by constructor logic;
+the finite vectors are not exhaustive proof over all 64-bit strings.
+
+The primitive catalog uses the exact §21.4–§21.5 `to_ecj1()` field names,
+always adds `schema_version:1`, projects tuples as arrays and `NA` as the
+string `NOT_APPLICABLE`. Constructor expressions below are the projection
+grammar, not Python calls:
+
+```text
+RES_PRESENT=(PRESENT,R(20),[],[],NA,NA,NA,NA)
+RES_PENDING=(PENDING,NA,[],[],R(21),NA,NA,NA)
+RES_FAILED=(FAILED,NA,[],[],NA,FAIL0,NA,NA)
+RES_PARTIAL=(PARTIAL,NA,[R(22)],[R(23)],NA,NA,NA,NA)
+RES_UNRESOLVED=(UNRESOLVED,NA,[],[],NA,NA,NA,R(24))
+RES_OUT=(OUT_OF_BOUNDARY,NA,[],[],NA,NA,R(25),R(24))
+RES_NA=(NOT_APPLICABLE,NA,[],[],NA,NA,NA,R(24))
+DIM0=(R(0),PHYSICAL,[[R(1),Q(1,1)]])
+DIM1=(R(2),PHYSICAL,[[R(1),Q(1,1)]])
+UNIT_A=(R(3),R(0),BASE,"a",R(4),NA)
+UNIT_B=(R(5),R(0),DERIVED,"b",R(6),NA)
+UNIT_C=(R(7),R(0),DERIVED,"c",R(8),NA)
+RULE_AB=(R(9),R(3),R(5),R(0),FORWARD_ONLY,Q2,NA,NA)
+RULE_BC=(R(10),R(5),R(7),R(0),FORWARD_ONLY,Q2,Q(1,1),NA)
+RULE_AFFINE=(R(11),R(3),R(5),R(0),FORWARD_ONLY,D2,D(1,0),NA)
+RULE_BC_DEC=(R(60),R(5),R(7),R(0),FORWARD_ONLY,D2,D(1,0),NA)
+QC0=(R(0),R(3),R(12),R(13),R(14),R(15),R(16),R(17),NOT_APPLICABLE)
+QC_U=QC0 with uncertainty_applicability APPLICABLE
+QTY0=(I2,R(3),R(0),R(17),R(12),R(13),R(14),R(15),R(16),NA,RES_PRESENT)
+QTY1=QTY0 with magnitude I3
+QTY_R=QTY0 with magnitude Q12
+QTY_D=QTY0 with magnitude D12
+QTY_U=QTY0 with uncertainty_ref R(63)
+RESOURCE0=(R(12),R(0),R(18),[R(13)],NA)
+SERVICE0=(R(13),R(19),[R(12)],R(0),NA)
+CLOCK_A=(R(26),R(27),R(28),DISCRETE_TOTAL,NA)
+CLOCK_B=(R(29),R(30),R(28),DISCRETE_TOTAL,NA)
+INSTANT0=(R(26),I0); INSTANT2=(R(26),I2); DURATION1=(R(26),I1)
+EPOCH0=(R(26),I0); EPOCH2=(R(26),I2)
+REGION_P=(R(31),R(32),R(26),NA,PHYSICAL,INSTANT0,INSTANT2)
+REGION_L=(R(33),R(34),R(26),R(31),PHYSICAL,INSTANT0,INSTANT2)
+REGION_R=(R(35),R(36),R(26),R(31),PHYSICAL,INSTANT0,INSTANT2)
+BOUNDARY_P=(R(37),R(38),R(39),R(26),R(40),R(41),R(42),
+            NA,NA,NA,NA,[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[])
+BOUNDARY_L=BOUNDARY_P with boundary_ref R(43), parent_boundary_ref R(37)
+BOUNDARY_R=BOUNDARY_P with boundary_ref R(44), parent_boundary_ref R(37)
+HORIZON0=(R(41),R(26),R(45),R(46),INSTANT0,INSTANT2,CLOSED,
+          DURATION1,[EPOCH0,EPOCH2],REMAIN_PENDING,REQUIRE_NONE_PENDING)
+METADATA0=(SID(3),R(47),R(48),R(49),R(50),R(51),R(52),R(53))
+TRANSITION0=(R(54),DRAFT,REVIEWED,[R(55)],NA)
+```
+
+`QC0` and `QC_U` expand in the exact nine-field `QuantityContext` declaration
+order; their final values are respectively the literal strings
+`NOT_APPLICABLE` and `APPLICABLE`. `QTY_U` expands in the exact `Quantity`
+field order. Alias text is never written into fixture bytes.
+
+Each all-caps enum/status/kind token in this grammar projects as the identical
+ASCII string. Each named record tuple expands by the corresponding exact field
+order in §§21.4–21.5 and then adds `schema_version:1`; a catalog alias is fully
+expanded before insertion. Parenthesized non-record inputs become arrays in
+displayed order. No alias name, constructor notation, or patch instruction is
+written into a successful projection.
+
+`BOUNDARY_P/L/R` have the exact 27 §21.5.3 fields: seven required refs,
+four conditional refs, then the 16 listed collection fields. No omitted field
+or alternate empty collection is permitted.
+
+The baseline payload is `PAYLOAD0=BYTES("7b2261223a317d")`, canonical bytes
+for `{"a":1}`. `PAYLOAD1=BYTES("7b2261223a327d")` is canonical bytes for
+`{"a":2}`, and `PAYLOAD_LIST=BYTES("7b2261223a5b315d7d")` is canonical bytes
+for `{"a":[1]}`. `ENVELOPE(payload,hash,status,metadata)` is the exact fixture
+input object with the eleven §21.5.6 field names and values
+`SID(0),SID(1),SID(2),"1.0.0","1.0.0",[R(0)],NA,payload,hash,status,metadata`
+in that field order. `ENVELOPE0=ENVELOPE(PAYLOAD0,HASH0,DRAFT,NA)`. `HASH0` is
+exactly
+`sha256:c44ef029ee7da9fcb13875d1e11a53a3768512aa58171677cd2e08f3eae0f548`,
+the I-1 content hash of that logical payload and those preimage fields.
+`HASH1` is exactly
+`sha256:16e2f140f4b064c5833cdce029d92d170b5a5c2295e459b4d2d472b8fd90c438`
+for `PAYLOAD1`; `HASH_LIST` is exactly
+`sha256:dbb7229367b16470bcdbfc18e2fd73be2083ace6eca6106d93c13d771cbea8ea`
+for `PAYLOAD_LIST`.
+
+Successful-result helpers are exact projection constructors, fully expanded
+before insertion:
+
+```text
+EZ={"bound_kind":"EXACT_ZERO","completeness":"COMPLETE","lower":I0,
+    "policy_ref":NA,"schema_version":1,"unit_ref":NA,"upper":I0}
+EB(k,l,u,unit,policy,c)={"bound_kind":k,"completeness":c,"lower":l,
+    "policy_ref":policy,"schema_version":1,"unit_ref":unit,"upper":u}
+EB_ABSOLUTE=EB(ABSOLUTE,Q0,Q12,R(3),R(60),COMPLETE)
+EB_RELATIVE=EB(RELATIVE,D0,D03,NA,R(60),COMPLETE)
+EB_ULP=EB(ULP,I0,I3,NA,R(60),COMPLETE)
+EB_INTERVAL=EB(INTERVAL,I1,I3,R(3),R(60),COMPLETE)
+EB_INCOMPLETE=EB(ABSOLUTE,Q0,Q12,R(3),R(60),INCOMPLETE)
+NR(op,variants,value)={"completeness":"COMPLETE","error_bound":EZ,
+  "operand_variants":variants,"operation":op,"policy_ref":NA,
+  "rounding_evidence_ref":NA,"schema_version":1,"value":value}
+CR(order)={"completeness":"COMPLETE","error_bound":NA,"ordering":order,
+  "policy_ref":NA,"purpose":"EXACT_CORE","schema_version":1}
+OK(labels,conversion,parent)={"checked_predicates":labels,"compatible":true,
+  "conversion_rule_ref":conversion,"failure":NA,"parent_ref":parent,
+  "schema_version":1}
+LIFE_OK(transition)={"checked_predicates":["closed_edge",
+  "authorization_applicability","evidence_order"],"failure":NA,
+  "schema_version":1,"transition":transition,"valid":true}
+SUPER_OK(relation)={"checked_predicates":["logical_object_id",
+  "object_kind_id","schema_id","version_increase","content_change",
+  "lifecycle_pair","predecessor_not_in_own_ancestry",
+  "successor_not_in_ancestry","unique_linear_ancestry",
+  "ancestry_ends_at_predecessor","evidence_nonempty",
+  "authorization_applicable"],"failure":NA,"relation":relation,
+  "schema_version":1,"valid":true}
+ASSERT(label)={"assertion":label,"satisfied":true}
+```
+
+For a failed validator result, the fixture's expected value is `FAILURE`, not
+a partially populated result record. `ASSERT` is fixture-only evidence and has
+returned type `STATIC_ASSERTION_V1`; it is not a public framework projection.
+
+`SUPER0` is `(R56v100,R56v101,SID(4),SID(5),ACCEPTED,REVIEWED,
+[R56v090,R56v100],[R(57)],R(58))`. All three versioned refs use object ID
+`ebu:fixture:validation:r38`; versions are `0.9.0`, `1.0.0`, `1.0.1`;
+their digests are respectively `90`, `10`, and `11` repeated 32 times.
+`FAIL0` is the complete default/pre-trace I-2 `FailureEnvelope` with code
+`RESOLUTION_STATE_INVALID`, interface
+`ebu_framework.primitives.ResolutionDetail/1.0.0`, ordinal zero, empty refs,
+not-applicable event, and summary `fixture resolution failure`.
+
+Invalid Python input uses only these exact transport objects:
+
+```text
+PY(type,value)={"python_value":{"type":type,"value":value}}
+BYTES(hex)={"bytes_hex":hex}
+PATCH(base,ops)={"literal":base,"patches":ops}
+replace-or-append=["replace"|"append", JSON-Pointer, ECJ-1 value]
+remove=["remove", JSON-Pointer]
+```
+
+Allowed `PY` types are `BOOL`, `FLOAT`, `INT_SUBCLASS`, `BYTES_SUBCLASS`,
+`BYTEARRAY`, `MEMORYVIEW`, `DICT`, `LIST`, and `POLICY_PROVIDER_RAISES`.
+The last type has the exact `POLICY0` properties and five protocol methods
+that each raise `AssertionError("POLICY_METHOD_CALLED")`. Patch operations are applied in
+array order to a deep copy of the named catalog projection. Array indexes are
+decimal; object paths use RFC 6901 escaping. No patch may name a missing path
+except `append` with final array index `-`. These transport objects are static
+fixture data, not public framework types.
+
+Every vector's `inputs` value is an array. Catalog records and successful
+projections are recursively expanded; `PY`, `BYTES`, and `PATCH` remain the
+displayed transport objects. A displayed input tuple becomes one array in the
+same order. A displayed list is a nested array. An omitted optional argument
+never disappears: the exact typed `NA` marker is written. Object fields use
+the canonical ECJ-1 order at encoding. These rules, plus the block-specific
+shapes below, are the only input translation rules.
+
+#### 21.8.2 Exact sequence and numeric/policy blocks
+
+Set `next_id=1`. Iterate the blocks and cases below in textual order. Emit
+`i2-` plus four-digit decimal `next_id`, then increment. There is no filter or
+conditional inclusion.
+
+| Block | Category | Count | Closed ID range |
+|---:|---|---:|---|
+| 1 | `NORMAL_FORM` | 18 | `i2-0001`–`i2-0018` |
+| 2 | `CONSTRUCTOR` | 35 | `i2-0019`–`i2-0053` |
+| 3 | `EXACT_OPERATION` | 42 | `i2-0054`–`i2-0095` |
+| 4 | `EXACT_CONVERSION` | 4 | `i2-0096`–`i2-0099` |
+| 5 | `POLICY_REFUSAL` | 36 | `i2-0100`–`i2-0135` |
+| 6 | `COMPATIBILITY` | 107 | `i2-0136`–`i2-0242` |
+| 7 | `ENVELOPE` | 20 | `i2-0243`–`i2-0262` |
+| 8 | `LIFECYCLE` | 41 | `i2-0263`–`i2-0303` |
+| 9 | `PRECEDENCE` | 32 | `i2-0304`–`i2-0335` |
+
+Block 1 order is `integer-zero`, `integer-negative`,
+`rational-reduce-positive`, `rational-negative-denominator`, `rational-zero`,
+`decimal-strip-positive`, `decimal-strip-negative`, `decimal-zero`, then
+`binary-` plus the ten finite bit strings from §21.8.1. Raw constructor inputs
+are `0`, `-1`, `(6,8)`, `(3,-4)`, `(0,-5)`, `(1200,-2)`, `(-1200,-2)`,
+`(0,99)`, then each bit string. Expected projections are respectively I0,
+`I(-1)`, `Q(3,4)`, `Q(-3,4)`, Q0, `D(12,0)`, `D(-12,0)`, D0, then the exact
+`B(bits)` values. For `IntegerV1`, a bare integer is its one constructor
+argument. For `RationalV1` and `DecimalV1`, each displayed bare integer expands
+to `I(integer)` before becoming one of the two arguments. Binary input is its
+one string argument. Returned types are `IntegerV1` for cases 1–2,
+`RationalV1` for 3–5, `DecimalV1` for 6–8, and `Binary64BitsV1` for 9–18;
+each expected object is `VALUE(projection,that exact type string)`.
+
+Block 2 order is:
+
+```text
+integer-bool integer-subclass rational-wrong-numerator
+rational-zero-denominator decimal-wrong-exponent binary-uppercase
+binary-short binary-long binary-nonhex binary-positive-infinity
+binary-negative-infinity binary-positive-qnan binary-negative-qnan
+binary-positive-snan binary-negative-snan python-float-canonical-boundary
+normalize-raw-dictionary normalize-number-subclass
+```
+
+Inputs are, in order, `PY(BOOL,"true")`, `PY(INT_SUBCLASS,"1")`,
+`(PY(FLOAT,"1.0"),I2)`, `(I1,I0)`, `(I1,PY(BOOL,"true"))`,
+`3FF0000000000000`, `000000000000000`, `00000000000000000`,
+`000000000000000g`, then the six nonfinite strings in §21.8.1,
+`PY(FLOAT,"1.0")`, `PY(DICT,{"a":1})`, and an integer subclass record.
+The final integer subclass record is exactly `PY(INT_SUBCLASS,"1")`; its
+operation, unlike case 2, is `normalize_core_number`.
+Cases 1–9 and 17–18 fail `CORE_NUMBER_INVALID`; cases 10–15 fail
+`NONFINITE_NUMBER_FORBIDDEN`; case 16 fails unchanged I-1
+`FLOAT_FORBIDDEN`, stage `I-1`, interface `NOT_APPLICABLE`.
+
+Block-2 cases 19–35 are this exact closed `ErrorBound` basis, in the displayed
+order. Each `ErrorBound` input array is in declaration order
+`[bound_kind,lower,upper,unit_ref,policy_ref,completeness]`. Each success is
+`VALUE(the displayed fully expanded bound,"ErrorBound")`; each failure uses
+the displayed code, stage `I-2`, and `IF(operation)`.
+
+| Case | Exact input array | Operation | Expected |
+|---|---|---|---|
+| `error-bound-exact-zero-success` | `[EXACT_ZERO,I0,I0,NA,NA,COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `VALUE(EZ,"ErrorBound")` |
+| `error-bound-absolute-success` | `[ABSOLUTE,Q0,Q12,R(3),R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `VALUE(EB_ABSOLUTE,"ErrorBound")` |
+| `error-bound-relative-success` | `[RELATIVE,D0,D03,NA,R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `VALUE(EB_RELATIVE,"ErrorBound")` |
+| `error-bound-ulp-success` | `[ULP,I0,I3,NA,R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `VALUE(EB_ULP,"ErrorBound")` |
+| `error-bound-interval-success` | `[INTERVAL,I1,I3,R(3),R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `VALUE(EB_INTERVAL,"ErrorBound")` |
+| `error-bound-binary64-refusal` | `[ABSOLUTE,BP0,B1,R(3),R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF(operation))` |
+| `error-bound-reversed-refusal` | `[INTERVAL,I3,I1,R(3),R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-negative-refusal` | `[RELATIVE,IN1,I1,NA,R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-mixed-variant-refusal` | `[ABSOLUTE,I0,Q12,R(3),R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN,"I-2",IF(operation))` |
+| `error-bound-missing-policy-refusal` | `[ABSOLUTE,Q0,Q12,R(3),NA,COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF(operation))` |
+| `error-bound-missing-unit-refusal` | `[ABSOLUTE,Q0,Q12,NA,R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(IMPLICIT_ABSENCE_FORBIDDEN,"I-2",IF(operation))` |
+| `error-bound-relative-unit-refusal` | `[RELATIVE,D0,D03,R(3),R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-ulp-noninteger-refusal` | `[ULP,Q0,Q12,NA,R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-exact-zero-nonzero-refusal` | `[EXACT_ZERO,I0,I1,NA,NA,COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-exact-zero-unit-refusal` | `[EXACT_ZERO,I0,I0,R(3),NA,COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-exact-zero-policy-refusal` | `[EXACT_ZERO,I0,I0,NA,R(60),COMPLETE]` | `ebu_framework.numeric.ErrorBound` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+| `error-bound-incomplete-bound-refusal` | `[I1,ADD,[INTEGER,INTEGER],NA,NA,EB_INCOMPLETE,COMPLETE]` | `ebu_framework.numeric.NumericalResult` | `FAILURE(ERROR_BOUND_INVALID,"I-2",IF(operation))` |
+
+The last row constructs the structurally representable `EB_INCOMPLETE` and
+then refuses it as the bound of a complete result. These 17 cases are the
+complete finite `ErrorBound` basis for I-2; no other case is conditionally
+selected. Every comparison is exact core comparison and no policy method is
+called.
+
+Block 3 first performs the closed nested iteration:
+
+```text
+operations=(ADD,SUBTRACT,MULTIPLY,DIVIDE,COMPARE)
+cells=(INTEGER,RATIONAL,DECIMAL,BINARY64_BITS,MIXED)
+for operation in operations:
+    for cell in cells: emit matrix-<operation>-<cell>
+for variant in (INTEGER,RATIONAL,DECIMAL,BINARY64_BITS):
+    emit matrix-NEGATE-<variant>
+```
+
+Cell inputs are `(I6,I3)`, `(Q12,Q13)`, `(D12,D03)`, `(B1,B2)`, and
+`(I6,Q13)`; negate inputs are I6, Q12, D12, B1. Expected values/failures are
+the following closed table. `inputs` is exactly
+`[operation,[expanded operands],NA]`; the third element is the
+`exact_conversion` argument.
+
+| Operation | Integer | Rational | Decimal | Binary64 bits | Mixed |
+|---|---|---|---|---|---|
+| `ADD` | `VALUE(NR(ADD,[INTEGER,INTEGER],I(9)),"NumericalResult")` | `VALUE(NR(ADD,[RATIONAL,RATIONAL],Q(5,6)),"NumericalResult")` | `VALUE(NR(ADD,[DECIMAL,DECIMAL],D(15,-1)),"NumericalResult")` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` | `FAILURE(IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` |
+| `SUBTRACT` | `VALUE(NR(SUBTRACT,[INTEGER,INTEGER],I3),"NumericalResult")` | `VALUE(NR(SUBTRACT,[RATIONAL,RATIONAL],Q(1,6)),"NumericalResult")` | `VALUE(NR(SUBTRACT,[DECIMAL,DECIMAL],D(9,-1)),"NumericalResult")` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` | `FAILURE(IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` |
+| `MULTIPLY` | `VALUE(NR(MULTIPLY,[INTEGER,INTEGER],I(18)),"NumericalResult")` | `VALUE(NR(MULTIPLY,[RATIONAL,RATIONAL],Q(1,6)),"NumericalResult")` | `VALUE(NR(MULTIPLY,[DECIMAL,DECIMAL],D(36,-2)),"NumericalResult")` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` | `FAILURE(IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` |
+| `DIVIDE` | `VALUE(NR(DIVIDE,[INTEGER,INTEGER],I2),"NumericalResult")` | `VALUE(NR(DIVIDE,[RATIONAL,RATIONAL],Q(3,2)),"NumericalResult")` | `VALUE(NR(DIVIDE,[DECIMAL,DECIMAL],D(4,0)),"NumericalResult")` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` | `FAILURE(IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` |
+| `COMPARE` | `COMPARISON(CR(GREATER))` | `COMPARISON(CR(GREATER))` | `COMPARISON(CR(GREATER))` | `FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` | `FAILURE(IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` |
+
+The unary cases use `inputs=[NEGATE,[operand],NA]` and expected values, in
+variant order, `VALUE(NR(NEGATE,[INTEGER],I(-6)),"NumericalResult")`,
+`VALUE(NR(NEGATE,[RATIONAL],Q(-1,2)),"NumericalResult")`,
+`VALUE(NR(NEGATE,[DECIMAL],D(-12,-1)),"NumericalResult")`, and
+`FAILURE(NUMERICAL_POLICY_REQUIRED,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))`. This produces
+all 25 binary and four unary cells.
+
+The final 13 Block-3 cases and exact `(inputs -> expected)` are:
+
+```text
+integer-nondivisible-no-conversion (I1,I2,NA)->IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN
+integer-nondivisible-explicit-rational (I1,I2,INTEGER_DIVISION_TO_RATIONAL)->Q(1,2)
+integer-divisible-unused-conversion (I6,I3,INTEGER_DIVISION_TO_RATIONAL)->NUMERICAL_OPERATION_UNSUPPORTED
+rational-zero-divisor (Q12,Q0)->DIVISION_BY_ZERO
+decimal-zero-divisor (D12,D0)->DIVISION_BY_ZERO
+decimal-repeating-division (D(1,0),D(3,0))->NUMERICAL_POLICY_REQUIRED
+binary-positive-zero-divisor (B1,BP0)->DIVISION_BY_ZERO
+binary-negative-zero-divisor (B1,BN0)->DIVISION_BY_ZERO
+wrong-unary-arity (NEGATE,[I1,I2])->CORE_NUMBER_INVALID
+wrong-binary-arity (ADD,[I1])->CORE_NUMBER_INVALID
+unknown-operation (POWER,[I1,I2])->NUMERICAL_OPERATION_UNSUPPORTED
+unused-integer-conversion-on-add (ADD,[I1,I2],INTEGER_DIVISION_TO_RATIONAL)->NUMERICAL_OPERATION_UNSUPPORTED
+decimal-conversion-flag-on-divide (DIVIDE,[D12,D03],DECIMAL_TO_RATIONAL)->NUMERICAL_OPERATION_UNSUPPORTED
+```
+
+These displayed triples are the exact input arrays. A two-item display gains
+the final `NA` conversion marker. A successful value expands to the exact `NR`
+wrapper with the operation and operand variants shown; the sole success is
+`VALUE(NR(DIVIDE,[INTEGER,INTEGER],Q12),"NumericalResult")`.
+
+Block 4 order and outcomes are `decimal-positive-exponent: D(12,2)->Q(1200,1)`,
+`decimal-negative-exponent: D125M3->Q(1,8)`, `decimal-zero-to-rational: D0->Q0`, and
+`decimal-wrong-type: I1->CORE_NUMBER_INVALID`. Each `inputs` is the one-item
+array containing the expanded left side. The first three expected objects are
+`VALUE` with returned type `RationalV1`; the fourth is `FAILURE` at the derived
+I-2 interface.
+
+`POLICY0` is the exact §21.4.1 projection: `schema_id` is
+`ebu.numerical-policy/1`, followed in property order by `policy_ref=R(0)`,
+`owning_domain_ref=R(1)`, variants `[INTEGER]`, operations `[ADD,COMPARE]`,
+result map `[[ADD,INTEGER]]`, precision R(2), rounding NA, comparison tolerance
+R(3), approximation NA, error bound NA, overflow/underflow/nonfinite R(4),
+signed zero NA, backend R(5), cross-platform R(6), failure R(7), evidence
+`[R(8),R(9)]`, runtime constraints `([R(10)],APPLICABLE,COMPLETE)`, and
+declared `COMPLETE`. The nested runtime-constraint record expands with its
+three named fields and `schema_version:1`.
+
+Block 5 order is:
+
+```text
+complete-exact-policy declared-incomplete-policy missing-policy-ref
+missing-owning-domain-ref core-placeholder-owner empty-variants
+duplicate-variants unordered-variants empty-operations duplicate-operations
+unordered-operations missing-result-row duplicate-result-row extra-result-row
+compare-result-row missing-precision-contract missing-binary-rounding-contract
+missing-compare-tolerance-contract missing-approximation-contract
+missing-error-bound-contract missing-nonfinite-contract
+missing-binary-signed-zero-contract signed-zero-without-binary
+missing-backend-contract missing-cross-platform-contract
+missing-failure-contract empty-evidence duplicate-evidence unordered-evidence
+missing-runtime-constraints applicable-empty-runtime-constraints
+not-applicable-nonempty-runtime incomplete-runtime-constraints
+false-complete-declaration policy-required-operation-refuses
+policy-provider-never-invoked
+```
+
+Each of cases 1–34 has `inputs=[PATCH(POLICY0,ops)]`, where `ops` is exactly the
+following list; `[]` means no patch. In the table, `replace P V`, `remove P`,
+and `append P V` are exact shorthand for the transport arrays just defined,
+and semicolons separate consecutive patch-array entries:
+
+```text
+BINARY_ADD_PATCHES = [
+  ["replace","/supported_input_variants",["BINARY64_BITS"]],
+  ["replace","/supported_operations",["ADD"]],
+  ["replace","/result_variant_by_operation",[["ADD","BINARY64_BITS"]]]
+]
+```
+
+When the table uses this name, those three arrays are copied in that order
+into `ops`; the name is never written into the fixture.
+
+| Cases | Exact patch operations in array order |
+|---|---|
+| 1 | `[]` |
+| 2 | `replace /completeness "INCOMPLETE"` |
+| 3, 4 | `remove /policy_ref`; `remove /owning_domain_ref` respectively |
+| 5 | `replace /owning_domain_ref R(0)` |
+| 6, 7, 8 | `replace /supported_input_variants []`; `[INTEGER,INTEGER]`; `[RATIONAL,INTEGER]` respectively |
+| 9, 10, 11 | `replace /supported_operations []`; `[ADD,COMPARE,ADD]`; `[COMPARE,ADD]` respectively |
+| 12, 13, 14, 15 | `replace /result_variant_by_operation []`; `[[ADD,INTEGER],[ADD,INTEGER]]`; `[[ADD,INTEGER],[SUBTRACT,INTEGER]]`; `[[ADD,INTEGER],[COMPARE,INTEGER]]` respectively |
+| 16 | `remove /precision_contract_ref` |
+| 17 | `BINARY_ADD_PATCHES`, then `replace /rounding_contract_ref NA` |
+| 18 | `replace /comparison_tolerance_contract_ref NA` |
+| 19 | `BINARY_ADD_PATCHES`, then `replace /approximation_contract_ref NA` |
+| 20 | `BINARY_ADD_PATCHES`, then `replace /error_bound_contract_ref NA` |
+| 21 | `remove /overflow_underflow_nonfinite_contract_ref` |
+| 22 | `BINARY_ADD_PATCHES`, then `replace /signed_zero_contract_ref NA` |
+| 23 | `replace /signed_zero_contract_ref R(11)` |
+| 24, 25, 26 | remove `/backend_dependency_contract_ref`, `/cross_platform_contract_ref`, `/failure_contract_ref` respectively |
+| 27, 28, 29 | replace `/evidence_requirement_refs` with `[]`, `[R(8),R(9),R(8)]`, `[R(9),R(8)]` respectively |
+| 30 | `remove /runtime_constraints` |
+| 31 | replace `/runtime_constraints` with `([],APPLICABLE,COMPLETE)` |
+| 32 | replace it with `([R(10)],NOT_APPLICABLE,COMPLETE)` |
+| 33 | replace it with `([R(10)],APPLICABLE,INCOMPLETE)` |
+| 34 | `remove /precision_contract_ref`, then `replace /completeness "COMPLETE"` |
+
+Case 1 expects `VALUE("COMPLETE","Completeness")`; case 2 expects
+`VALUE("INCOMPLETE","Completeness")`. Cases 3–4, 16, 21, 24–26, and 30
+fail `IMPLICIT_ABSENCE_FORBIDDEN`. Cases 5–15, 17–20, 22–23, 27–29, and 31–34
+fail `NUMERICAL_POLICY_INCOMPLETE`. Case 35 has exact input
+`[ADD,[B1,B2],NA]`. Case 36 has exact input
+`[PY(POLICY_PROVIDER_RAISES,POLICY0),[ADD,[B1,B2],NA]]`; its operation is the
+static orchestration string `STATIC_POLICY_NONINVOCATION`, which performs the
+nested exact-operation call and asserts the provider's five methods remain
+uncalled. Both expect `NUMERICAL_POLICY_REQUIRED` at the
+`apply_exact_core_operation` I-2 interface. Block-5 `quantity_context` is QC0;
+all earlier contexts are NA.
+
+#### 21.8.3 Exact compatibility block
+
+Block 6 concatenates the following rows. For each row, emit the success cases
+in listed order, named `<prefix>-<success-name>`, then one case per predicate
+or rejection label in the exact order printed in that row, named
+`<prefix>-reject-<label>`. For rows that say “labels from §21.6,” use that
+tuple's order. Resolution rejection labels are the seven state names and
+uncertainty rejection labels are the eight kind names printed in their rows,
+not the shorter successful-predicate tuples. A rejection applies the exact
+patch after its label to the baseline fixed below. Counts sum to 107; these
+rules also freeze every Block-6 case name and therefore every ID-to-case
+mapping.
+
+| Prefix | Success cases | Ordered predicate label -> exact patch -> code | Count |
+|---|---|---|---:|
+| `dimension` | `equal` using DIM0,DIM0 | `dimension_ref` -> right `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `basis_exponents` -> right `/basis_exponents/0/1`=Q(-1,1) -> `DIMENSION_MISMATCH` | 3 |
+| `unit` | `identity` UNIT_A,UNIT_A,NA; `conversion` UNIT_A,UNIT_B,RULE_AB | `dimension` -> target `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `unit_identity_or_conversion` -> UNIT_A,UNIT_B,NA -> `UNIT_MISMATCH` | 4 |
+| `conversion-rule` | `valid` RULE_AB | `factor_nonzero` -> `/factor`=Q0; `offset_variant` -> `/offset`=D0; `direction` -> `/direction`=`SIDEWAYS`; `dimension` -> `/dimension_ref`=PY(DICT,{}); `validity_horizon` -> `/validity_horizon_ref`=`APPLICABLE`; all -> `CONVERSION_RULE_MISMATCH` | 6 |
+| `convert` | `exact` `[QTY_R,UNIT_B,RULE_AB]`; `affine` `[QTY_D,UNIT_B,RULE_AFFINE]`; `compose-exact` `[QTY_R,UNIT_B,RULE_AB,UNIT_C,RULE_BC]`; `compose-affine` `[QTY_D,UNIT_B,RULE_AFFINE,UNIT_C,RULE_BC_DEC]` | six rejections in order: `quantity_valid` QTY_R `/resolution`=RES_PENDING -> `RESOLUTION_STATE_INVALID`; `source_unit` QTY_R `/unit_ref`=R(63) -> `UNIT_MISMATCH`; `target_unit` UNIT_B `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `conversion_rule` RULE_AB `/source_unit_ref`=R(63) -> `CONVERSION_RULE_MISMATCH`; `exact_arithmetic` uses QTY0, UNIT_B, unchanged RULE_AB -> `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`; `reverse_not_explicit` uses QTY_R with unit R(5), target UNIT_A and unchanged RULE_AB -> `CONVERSION_RULE_MISMATCH` | 10 |
+| `quantity` | `valid` `[QTY0,QC0]`, then `valid-with-uncertainty` `[QTY_U,QC_U]` | the nine §21.6 labels against `[QTY0,QC0]`; replace respectively `/resolution`=RES_PENDING, `/dimension_ref`, `/unit_ref`, `/resource_type_ref`, `/region_ref`, `/time_basis_ref`, `/sign_convention_ref`, `/boundary_ref`, `/uncertainty_ref` with R(63); codes respectively `RESOLUTION_STATE_INVALID`, `DIMENSION_MISMATCH`, `UNIT_MISMATCH`, `QUANTITY_TYPE_MISMATCH`, `REGION_MISMATCH`, `TIME_BASIS_MISMATCH`, `SIGN_CONVENTION_MISMATCH`, `BOUNDARY_MISMATCH`, `UNCERTAINTY_RECORD_INVALID`; then `uncertainty-unexpected` input `[QTY_U,QC0]` and `uncertainty-required` input `[QTY0,QC_U]`, both -> `UNCERTAINTY_RECORD_INVALID` | 13 |
+| `resource-service` | `symmetric` RESOURCE0,SERVICE0 | `resource_declares_service` -> RESOURCE0 `/service_compatibility_refs`=[]; `service_declares_resource` -> SERVICE0 `/required_resource_type_refs`=[R(63)]; both -> `QUANTITY_TYPE_MISMATCH` | 3 |
+| `region` | `identity` REGION_L,REGION_L,NA,NA; `parent` REGION_L,REGION_R,REGION_P,R(59) | labels from §21.6; patches in label order: supplied parent=R(63); right `/parent_region_ref`=R(63); right `/clock_ref`=R(63); parent `/validity_end/tick`=I1; replace right with REGION_L; aggregation=NA. `identity_or_parent` -> `REGION_MISMATCH`, the other five -> `INVALID_AGGREGATION` | 8 |
+| `boundary` | `identity` BOUNDARY_L,BOUNDARY_L,NA,NA; `parent` BOUNDARY_L,BOUNDARY_R,BOUNDARY_P,R(59) | labels from §21.6; patches in label order: supplied parent=R(63); right `/parent_boundary_ref`=R(63); right `/state_schema_ref`=R(63); right `/distortion_ref`=R(63); right `/clock_ref`=R(63); right `/horizon_ref`=R(63); right `/unresolved_cross_boundary_effect_refs`=[R(60)]; replace right with BOUNDARY_L; aggregation=NA. `identity_or_parent` -> `BOUNDARY_MISMATCH`, the other eight -> `INVALID_AGGREGATION` | 11 |
+| `sign` | `both-na`; `same` R(16),R(16) | `applicability` -> R(16),NA; `identity` -> R(16),R(63); both -> `SIGN_CONVENTION_MISMATCH` | 4 |
+| `time` | `nonrate-na`; `rate-same` R(15),R(15) | `applicability` -> rate true with NA,NA; `identity` -> rate true with R(15),R(63); both -> `TIME_BASIS_MISMATCH` | 4 |
+| `clock` | `same` CLOCK_A,CLOCK_A | `clock_ref` -> CLOCK_A,CLOCK_B -> `CLOCK_MISMATCH` | 2 |
+| `horizon` | `closed` `[HORIZON0,[]]`; `right-open` is the fully expanded `HORIZON0` with `/endpoint_inclusion`=`LEFT_CLOSED_RIGHT_OPEN`, `/post_terminal_effect_treatment`=`OUT_OF_BOUNDARY`, and `/terminal_pending_treatment`=`ALLOW_EXPLICIT_PENDING`, input beside pending refs `[R(60)]` | labels from §21.6 use, in order: `replace /clock_ref R(63)`; `replace /start/tick I3`; `replace /endpoint_inclusion "OPEN"`; `replace /resolution/ticks I0`; `replace /measurement_epochs [EPOCH2,EPOCH0]`; `replace /post_terminal_effect_treatment "DROP"`; `replace /terminal_pending_treatment "UNKNOWN"`; all -> `HORIZON_INVALID` except `clock_refs` -> `CLOCK_MISMATCH` | 9 |
+| `resolution` | one valid case for each state in order `PRESENT,PENDING,FAILED,PARTIAL,UNRESOLVED,OUT_OF_BOUNDARY,NOT_APPLICABLE` | in the same order: `replace /present_value_ref NA`; `replace /completed_part_refs [R(22)]`; `replace /failure NA`; `replace /missing_part_refs [R(22)]`; `replace /present_value_ref R(20)`; `replace /reason_ref NA`; `replace /present_value_ref R(20)`; all -> `RESOLUTION_STATE_INVALID` | 14 |
+| `uncertainty` | one valid case for kinds in §5.5 order `EXACT,MEASUREMENT_INTERVAL,ADMISSIBLE_SET,ADVERSARIAL_SET,PROBABILITY_MODEL,MODEL_DISCREPANCY,UNKNOWN,OUT_OF_SET` | in the same order: `replace /resolution RES_PENDING`; `replace /lower QTY1`, then `replace /upper QTY0`; `replace /member_refs []`; `replace /probability_model_ref R(60)`; `replace /probability_model_ref NA`; `replace /provenance_refs []`; `replace /lower QTY0`; `replace /provenance_refs []`; all -> `UNCERTAINTY_RECORD_INVALID` | 16 |
+
+Rejection baselines are exact: `dimension-equal`; `unit-conversion` for both
+unit rejections; `conversion-rule-valid`; the explicit convert input named in
+each rejection; `[QTY0,QC0]` for the nine quantity predicate rejections and
+the two exact mismatch inputs printed in the quantity row;
+`resource-service-symmetric`;
+`region-parent`; `boundary-parent`; the complete two-argument sign/time input
+printed after the label; `clock-same`; `horizon-closed`; and the valid record
+with the same state or kind for resolution/uncertainty. There is no baseline
+selection by an implementer.
+
+For non-convert prefixes, a success input is the expanded argument array
+printed in the row; each rejection input is that array with the stated
+argument projection patched. Each success expected value is
+`COMPATIBILITY(OK(labels,conversion,parent))`, using the exact full successful
+label tuple in §21.6. Unit conversion success sets `conversion` to the rule ref;
+region/boundary parent success sets `parent` to the parent ref; all other
+coordinates are NA. A failed case uses the displayed code at the derived I-2
+interface and includes predicate labels only in runtime evidence, not in the
+fixture's `FAILURE` expected object.
+
+Exact and affine convert successes use RULE_AB/RULE_AFFINE. Composition
+successes interpret the five-item input as two calls to
+`convert_quantity_exact`, first A->B, then the returned quantity B->C. Exact
+expected quantities are QTY_R with magnitude Q(1,1), unit R(5); QTY_D with
+magnitude D(34,-1), unit R(5); QTY_R with magnitude Q(3,1), unit R(7); and
+QTY_D with magnitude D(78,-1), unit R(7), in success-case order. Each is
+wrapped by `VALUE(expanded-quantity,"Quantity")`. The last two are checked
+against `factor=f_BC*f_AB`, `offset=f_BC*o_AB+o_BC`. This is test orchestration
+through the existing callable, not a new production composition path. Every
+returned quantity preserves all coordinates except magnitude and unit ref.
+
+The exact quantity-row case order is:
+
+```text
+quantity-valid
+quantity-valid-with-uncertainty
+quantity-reject-resolution
+quantity-reject-dimension
+quantity-reject-unit
+quantity-reject-resource_service_type
+quantity-reject-region
+quantity-reject-time_basis
+quantity-reject-sign_convention
+quantity-reject-boundary
+quantity-reject-uncertainty_applicability
+quantity-uncertainty-unexpected
+quantity-uncertainty-required
+```
+
+The first two cases succeed with the complete `validate_quantity` predicate
+tuple. The nine `quantity-reject-*` cases use `[PATCH(QTY0,[the table's one
+exact replace]),QC0]`. Their fixture `quantity_context` is QC0. The
+`valid-with-uncertainty` and `uncertainty-required` contexts are QC_U; the
+`uncertainty-unexpected` context is QC0. Every QC0/QC_U value is fully
+expanded before encoding.
+
+The eight valid uncertainty tuples, in kind order and exact field order after
+`uncertainty_ref`, are:
+
+```text
+EXACT:                (R(3),NA,NA,[],NA,NA,[R(62)],RES_PRESENT)
+MEASUREMENT_INTERVAL: (R(3),QTY0,QTY1,[],NA,R(62),[R(61)],RES_PRESENT)
+ADMISSIBLE_SET:       (NA,NA,NA,[R(60),R(61)],NA,NA,[R(62)],RES_PRESENT)
+ADVERSARIAL_SET:      (NA,NA,NA,[R(60),R(61)],NA,NA,[R(62)],RES_PRESENT)
+PROBABILITY_MODEL:    (R(3),NA,NA,[],R(60),NA,[R(62)],RES_PRESENT)
+MODEL_DISCREPANCY:    (R(3),QTY0,QTY1,[],NA,NA,[R(62)],RES_PRESENT)
+UNKNOWN:              (NA,NA,NA,[],NA,NA,[],RES_UNRESOLVED)
+OUT_OF_SET:           (R(3),NA,NA,[],NA,NA,[R(62)],RES_PRESENT)
+```
+
+Each tuple is preceded by `uncertainty_ref=R(59)` and its displayed kind.
+The resulting expanded records are named `U_EXACT`, `U_MEASUREMENT_INTERVAL`,
+`U_ADMISSIBLE_SET`, `U_ADVERSARIAL_SET`, `U_PROBABILITY_MODEL`,
+`U_MODEL_DISCREPANCY`, `U_UNKNOWN`, and `U_OUT_OF_SET` in that order.
+Block-6 `quantity_context` is QC0 for every `convert-*`; it is selected for
+each `quantity-*` exactly by the preceding paragraph; all other Block-6 cases
+use NA. Block 5 uses fully expanded QC0. Every occurrence therefore contains
+the ninth `uncertainty_applicability` field.
+
+#### 21.8.4 Envelope, lifecycle, and precedence blocks
+
+Block 7 order is:
+
+```text
+envelope-valid-canonical-bytes envelope-source-mutation-invariant
+envelope-parsed-tree-mutation-invariant envelope-dictionary-rejected
+envelope-list-rejected envelope-bytearray-rejected
+envelope-memoryview-rejected envelope-bytes-subclass-rejected
+envelope-noncanonical-rejected envelope-malformed-rejected
+envelope-duplicate-key-rejected envelope-nonfinite-rejected
+envelope-invalid-unicode-rejected envelope-exact-hash
+envelope-metadata-invariant envelope-lifecycle-invariant
+envelope-byte-change-invalid envelope-byte-change-valid-different-hash
+envelope-hash-mismatch envelope-no-decoded-cache
+```
+
+The exact inputs and outcomes are:
+
+| Cases | Exact input array | Exact expected outcome |
+|---|---|---|
+| 1 | `[ENVELOPE0]` | `VALUE(ASSERT("STORES_EXACT_CANONICAL_BYTES"),"STATIC_ASSERTION_V1")` |
+| 2 | `[{"envelope":ENVELOPE(PAYLOAD_LIST,HASH_LIST,DRAFT,NA),"mutation":["append","/a",2],"source":{"a":[1]}}]` | `VALUE(ASSERT("SOURCE_MUTATION_INVARIANT"),"STATIC_ASSERTION_V1")` |
+| 3 | `[{"envelope":ENVELOPE0,"mutation":["replace","/a",2],"parsed_from":PAYLOAD0}]` | `VALUE(ASSERT("PARSED_TREE_MUTATION_INVARIANT"),"STATIC_ASSERTION_V1")` |
+| 4–8 | `[ENVELOPE(v,HASH0,DRAFT,NA)]`, with `v` in order `PY(DICT,{"a":1})`, `PY(LIST,[1])`, `PY(BYTEARRAY,"7b2261223a317d")`, `PY(MEMORYVIEW,"7b2261223a317d")`, `PY(BYTES_SUBCLASS,"7b2261223a317d")` | `FAILURE(INVALID_ECJ1,"I-1",NA)` |
+| 9–13 | `[ENVELOPE(BYTES(h),HASH0,DRAFT,NA)]`, with `h` from the invalid-byte list below | the corresponding I-1 `FAILURE` below |
+| 14 | `[ENVELOPE0]` | `COMPATIBILITY(OK(the validate_object_envelope labels,NA,NA))` |
+| 15 | `[ENVELOPE(PAYLOAD0,HASH0,DRAFT,R(47))]` | the same successful `COMPATIBILITY` |
+| 16 | `[ENVELOPE(PAYLOAD0,HASH0,REVIEWED,NA)]` | the same successful `COMPATIBILITY` |
+| 17 | `[ENVELOPE(BYTES("7b2261223a317c"),HASH0,DRAFT,NA)]` | `FAILURE(INVALID_ECJ1,"I-1",NA)` |
+| 18 | `[ENVELOPE(PAYLOAD1,HASH1,DRAFT,NA)]` | `VALUE(ASSERT("VALID_BYTE_CHANGE_DIFFERENT_HASH"),"STATIC_ASSERTION_V1")` |
+| 19 | `[ENVELOPE(PAYLOAD0,"sha256:0000000000000000000000000000000000000000000000000000000000000000",DRAFT,NA)]` | `FAILURE(HASH_MISMATCH,"I-2",IF("ebu_framework.envelopes.validate_object_envelope"))` |
+| 20 | `[{"module_path":"src/ebu_framework/envelopes.py"}]` | `VALUE(ASSERT("NO_MUTABLE_DECODED_PAYLOAD_STATE"),"STATIC_ASSERTION_V1")` |
+
+Case 2 first encodes the source shown, constructs the envelope, applies the
+mutation to that original source list, and compares stored bytes/HASH_LIST.
+Case 3 parses PAYLOAD0 to a separate tree, applies the mutation, discards that
+tree, and compares stored bytes/HASH0. The test scripts are fixture
+orchestration; neither mutation reaches an envelope field.
+
+Invalid byte hex values are: noncanonical
+`7b2262223a322c2261223a317d`, malformed `7b`, duplicate-key
+`7b2261223a312c2261223a327d`, nonfinite `7b2261223a4e614e7d`, invalid UTF-8
+`7b2261223aff7d`. Expected unchanged I-1 codes are respectively
+`NONCANONICAL_ECJ1`, `INVALID_ECJ1`, `DUPLICATE_OBJECT_NAME`, `INVALID_ECJ1`,
+`INVALID_ECJ1`; stage is I-1 and interface NA.
+
+Metadata and lifecycle cases change only `record_metadata_ref` and
+`lifecycle_status` and retain HASH0. Invalid byte change replaces terminal
+`7d` with `7c`. Valid byte change replaces ASCII `1` with `2` and requires a
+different recomputed hash. Hash mismatch stores `sha256:` plus 64 zeroes and
+fails `HASH_MISMATCH` at
+`ebu_framework.envelopes.validate_object_envelope/1.0.0`, stage I-2. The last
+case is an AST assertion that no field, slot, closure, property, or cache in
+`CommonObjectEnvelope` retains `dict`, `list`, or a decoded payload.
+
+Block 8 first iterates the status tuple `(DRAFT,REVIEWED,ACCEPTED,SUPERSEDED,
+REVOKED_BEFORE_EXECUTION)` row-major over `(from,to)`, producing 25 cases named
+`lifecycle-<from>-to-<to>`. Exactly the five §21.5.7 edges succeed. Every
+other cell fails `LIFECYCLE_TRANSITION_INVALID`. Each input is the one-item
+array containing `(R(54),from,to,[R(55)],authorization)`, expanded as a
+`LifecycleTransition`; `authorization` is NA exactly when `to` is DRAFT or
+REVIEWED and R(58) otherwise. A valid edge expects
+`COMPATIBILITY(LIFE_OK(expanded transition))`; every invalid cell expects the
+derived I-2 `FAILURE`. This exact target rule also fixes invalid-cell bytes and
+ensures no absence defect masks the graph result.
+
+Immediately after those 25 cells, emit these three cases in this exact order:
+
+| Case | Exact input array | Expected |
+|---|---|---|
+| `lifecycle-reject-evidence-empty` | `[PATCH(TRANSITION0,[["replace","/evidence_refs",[]]])]` | `FAILURE(LIFECYCLE_TRANSITION_INVALID,"I-2",IF("ebu_framework.envelopes.validate_lifecycle_transition"))` |
+| `lifecycle-reject-evidence-duplicate` | `[PATCH(TRANSITION0,[["replace","/evidence_refs",[R(55),R(55)]]])]` | same failure coordinate and code |
+| `lifecycle-reject-evidence-unsorted` | `[PATCH(TRANSITION0,[["replace","/evidence_refs",[R(56),R(55)]]])]` | same failure coordinate and code |
+
+The cases respectively isolate nonemptiness, duplicate-freedom, and exact
+lexicographic ordering. Supersession cases follow them.
+
+The final 13 Block-8 cases are `supersession-valid`, followed by one rejection
+for each successful predicate label in §21.6 order:
+
+```text
+logical_object_id object_kind_id schema_id version_increase content_change
+lifecycle_pair predecessor_not_in_own_ancestry successor_not_in_ancestry
+unique_linear_ancestry ancestry_ends_at_predecessor evidence_nonempty
+authorization_applicable
+```
+
+The valid case input is `[SUPER0]` and expects
+`COMPATIBILITY(SUPER_OK(SUPER0))`. Each rejection input is
+`[PATCH(SUPER0,[the exact operation below])]`:
+
+| Predicate/case suffix | Exact patch operation | Expected code |
+|---|---|---|
+| `logical_object_id` | `["replace","/successor_ref/object_id","ebu:fixture:validation:r3f"]` | `SUPERSESSION_INVALID` |
+| `object_kind_id` | `["replace","/object_kind_id",SID(63)]` | `SUPERSESSION_INVALID` |
+| `schema_id` | `["replace","/schema_id",SID(63)]` | `SUPERSESSION_INVALID` |
+| `version_increase` | `["replace","/successor_ref/object_version","1.0.0"]` | `SUPERSESSION_INVALID` |
+| `content_change` | `["replace","/successor_ref/object_content_hash","sha256:" + "10" repeated 32 times]` | `SUPERSESSION_INVALID` |
+| `lifecycle_pair` | `["replace","/predecessor_status","REVIEWED"]` | `LIFECYCLE_TRANSITION_INVALID` |
+| `predecessor_not_in_own_ancestry` | `["replace","/predecessor_supersedes_chain",[R56v090,R56v100,R56v100]]` | `SUPERSESSION_INVALID` |
+| `successor_not_in_ancestry` | `["replace","/predecessor_supersedes_chain",[R56v090,R56v101,R56v100]]` | `SUPERSESSION_INVALID` |
+| `unique_linear_ancestry` | `["replace","/predecessor_supersedes_chain",[R56v090,R56v090,R56v100]]` | `SUPERSESSION_INVALID` |
+| `ancestry_ends_at_predecessor` | `["replace","/predecessor_supersedes_chain/1",R(63)]` | `SUPERSESSION_INVALID` |
+| `evidence_nonempty` | `["replace","/relation_evidence_refs",[]]` | `SUPERSESSION_INVALID` |
+| `authorization_applicable` | `["remove","/authorization_ref"]` | `IMPLICIT_ABSENCE_FORBIDDEN` |
+
+The string concatenation in the `content_change` literal is resolved before
+fixture construction to the exact 71-character digest string. Each failure
+uses the derived I-2 supersession-validator interface. No alternative patch,
+array position, reference, or digest conforms.
+
+Block 9 first iterates the exact 24-code precedence list from §21.2.4 by
+adjacent indexes `(0,1)` through `(22,23)`. Case name is
+`adjacent-<higher>-before-<lower>`, operation `STATIC_PRECEDENCE_ORDER`, input
+the two code strings, expected projection
+`{"higher_precedence":higher,"lower_precedence":lower}`. No failure ID is
+created because this is a static order assertion, not a fabricated public
+boundary.
+
+The last nine cases have these exact inputs and expected first failures. A
+call pair is the two-element array `[operation-string,input-array]`; an ordered
+batch is an array of call pairs evaluated from index zero and stopped at the
+first failure.
+
+| Case | Exact `inputs` array | Expected |
+|---|---|---|
+| `multiple-float-plus-absence` | `[["ebu_framework.canonical.encode_ecj1",[PY(FLOAT,"1.0")]],["ebu_framework.numeric.validate_numerical_policy",[PATCH(POLICY0,[["remove","/policy_ref"]])]]]` | `FAILURE(FLOAT_FORBIDDEN,"I-1",NA)` |
+| `multiple-nonfinite-plus-zero-divisor` | `[["ebu_framework.numeric.Binary64BitsV1",["7ff0000000000000"]],["ebu_framework.numeric.apply_exact_core_operation",[DIVIDE,[B1,BP0],NA]]]` | `FAILURE(NONFINITE_NUMBER_FORBIDDEN,"I-2",IF("ebu_framework.numeric.Binary64BitsV1"))` |
+| `multiple-mixed-plus-zero-divisor` | `[DIVIDE,[I1,Q0],NA]` | `FAILURE(DIVISION_BY_ZERO,"I-2",IF("ebu_framework.numeric.apply_exact_core_operation"))` |
+| `multiple-missing-plus-incomplete-policy` | `[PATCH(POLICY0,[["remove","/policy_ref"],["replace","/supported_input_variants",[BINARY64_BITS]],["replace","/supported_operations",[ADD]],["replace","/result_variant_by_operation",[[ADD,BINARY64_BITS]]],["replace","/rounding_contract_ref",NA]])]` | `FAILURE(IMPLICIT_ABSENCE_FORBIDDEN,"I-2",IF("ebu_framework.numeric.validate_numerical_policy"))` |
+| `multiple-dimension-plus-unit` | `[PATCH(QTY0,[["replace","/dimension_ref",R(63)],["replace","/unit_ref",R(63)]]),QC0]` | `FAILURE(DIMENSION_MISMATCH,"I-2",IF("ebu_framework.primitives.validate_quantity"))` |
+| `multiple-region-plus-boundary` | `[PATCH(QTY0,[["replace","/region_ref",R(63)],["replace","/boundary_ref",R(63)]]),QC0]` | `FAILURE(REGION_MISMATCH,"I-2",IF("ebu_framework.primitives.validate_quantity"))` |
+| `multiple-clock-plus-horizon` | `[PATCH(HORIZON0,[["replace","/start/clock_ref",R(63)],["replace","/endpoint_inclusion","OPEN"]]),[]]` | `FAILURE(CLOCK_MISMATCH,"I-2",IF("ebu_framework.primitives.validate_horizon"))` |
+| `multiple-resolution-plus-uncertainty` | `[PATCH(U_EXACT,[["replace","/resolution",RES_PENDING],["replace","/lower",QTY1]])]` | `FAILURE(RESOLUTION_STATE_INVALID,"I-2",IF("ebu_framework.primitives.validate_uncertainty_record"))` |
+| `multiple-lifecycle-plus-supersession` | `[PATCH(SUPER0,[["replace","/predecessor_status","REVIEWED"],["replace","/successor_ref/object_id","ebu:fixture:validation:r3f"]])]` | `FAILURE(LIFECYCLE_TRANSITION_INVALID,"I-2",IF("ebu_framework.envelopes.validate_supersession_relation"))` |
+
+Every `IF` is fully expanded before encoding. Only the first two rows use an
+ordered two-call batch; every other row is one public boundary with both
+defects. No production composite validator is added.
+
+#### 21.8.5 Exact derivation and closure rules
+
+The `operation` and failure-interface table is closed:
+
+| Cases | Exact operation string |
+|---|---|
+| integer/rational/decimal/binary normal or constructor | `ebu_framework.numeric.IntegerV1`, `RationalV1`, `DecimalV1`, or `Binary64BitsV1` selected by the case prefix |
+| `normalize-*` | `ebu_framework.numeric.normalize_core_number` |
+| `python-float-canonical-boundary` | `ebu_framework.canonical.encode_ecj1` |
+| Block 2 cases 19–34 | `ebu_framework.numeric.ErrorBound` |
+| Block 2 case 35 | `ebu_framework.numeric.NumericalResult` |
+| Block 3 | `ebu_framework.numeric.apply_exact_core_operation` |
+| Block 4 | `ebu_framework.numeric.decimal_to_rational_exact` |
+| Block 5 cases 1–34 | `ebu_framework.numeric.validate_numerical_policy` |
+| Block 5 case 35 | `ebu_framework.numeric.apply_exact_core_operation` |
+| Block 5 case 36 | `STATIC_POLICY_NONINVOCATION` |
+| Block-6 prefix `dimension`, `unit`, `conversion-rule`, `convert`, `quantity`, `resource-service`, `region`, `boundary`, `sign`, `time`, `clock`, `horizon`, `resolution`, `uncertainty` | the correspondingly ordered callable `validate_dimension_compatibility`, `validate_unit_compatibility`, `validate_conversion_rule`, `convert_quantity_exact`, `validate_quantity`, `validate_resource_service_compatibility`, `validate_region_compatibility`, `validate_boundary_compatibility`, `validate_sign_convention_compatibility`, `validate_time_basis`, `validate_clock_compatibility`, `validate_horizon`, `validate_resolution_detail`, `validate_uncertainty_record` in `ebu_framework.primitives` |
+| Block 7 cases 1–13 | `ebu_framework.envelopes.CommonObjectEnvelope` |
+| Block 7 cases 14–20 | `ebu_framework.envelopes.validate_object_envelope` |
+| lifecycle cells | `ebu_framework.envelopes.validate_lifecycle_transition` |
+| supersession cases | `ebu_framework.envelopes.validate_supersession_relation` |
+| adjacent precedence | `STATIC_PRECEDENCE_ORDER` |
+| multiply-invalid | operation string of the higher-precedence source case |
+
+For an ordinary I-2 failure, `IF(operation)` supplies the interface. The
+static noninvocation case and ordered batches instead use the explicitly named
+nested failing operation. Interface version is `1.0.0`. I-1 canonical
+failures use interface NA. Module, qualname, stage, code, empty refs, NA event,
+and ordinal zero are the complete FailureId coordinates.
+
+Successful numeric projections are derived only by the exact §21.3 integer
+algebra. Exact result wrappers use the §21.4.1 `EXACT_ZERO` error bound,
+typed NA policy/rounding, and `COMPLETE`. Comparison uses `EXACT_CORE`, typed
+NA policy/error bound, and `COMPLETE`. Compatibility/lifecycle/supersession
+success projections use the exact fields and predicate labels in §§21.5–21.6.
+Every successful projection is inserted literally into the generated vector
+and its hex is `HEX_ECJ(projection)`.
+
+`returned_type` is the exact public type name of the projected numeric,
+`ErrorBound`, or Quantity result. Policy cases 1–2 use `Completeness`; every `ASSERT` projection
+uses `STATIC_ASSERTION_V1`. Matrix compare uses the `COMPARISON` shape;
+validators returning `CompatibilityResult`, `LifecycleValidationResult`, or
+`SupersessionValidationResult` use `COMPATIBILITY`. No other returned-type
+label is permitted.
+
+Generation uses ordered arrays and the loop orders printed above. It uses no
+dictionary/set traversal, locale, host Unicode behavior, filesystem order,
+time, randomness, network, implementation-selected value, or unspecified
+default. After substituting only the two committed authority hashes, two
+implementations of this recipe must yield byte-identical `ECJ(top_level)`.
+The generator must assert the nine block counts, total 335, first/terminal
+IDs, gap-free order, unique cases, derived failure IDs, and every canonical
+hex before writing.
+
+The exact derived structural totals are block counts
+`18,35,42,4,36,107,20,41,32`, 335 vectors, IDs `i2-0001` through
+`i2-0335`, 335 unique IDs, 335 unique cases, 121 success/static projections,
+and 214 failures. The final prospective byte count, fixture SHA-256, and
+two-route identity are computed and reported externally only after the
+specification hash is installed in the plan and the plan's external raw hash
+is known. They are not embedded here because the fixture binds both document
+hashes and the specification must not recursively bind the fixture digest.
+The document-authority hashes remain the only values inserted into the future
+fixture's two authority fields; the prospective fixture digest is not an
+authority input.
+
+Unbounded integers, the infinite rational/decimal domains, the full binary64
+bit space, and arbitrary ancestry graphs are governed by the mathematical
+constructor/predicate rules. The declared finite bases detect implementation
+disagreement but do not constitute empirical proof over an infinite domain.
+
+The I-2 portion of V3 is limited to static construction and projection of
+`CommonObjectEnvelope` with exact canonical payload bytes and no decoded
+cache, `RecordMetadata`, `LifecycleTransition`, `SupersessionRelation`, and
+the strengthened draft-only `RegistryRecord`.
+Configuration, binding, state, action, policy memory, fault, result,
+authorization, and artifact records remain I-3 or later and are unreachable.
+
+The I-2 AST/import/export audit reads source as bytes/text and uses AST only;
+it imports no production module. It verifies the exact root export tuple and
+count frozen by plan v0.2.3, module `__all__` subsets, the exact 29-edge DAG
+in that plan and its acyclicity, no dynamic imports, no module-local failure
+enum/string code, and no imports or calls reaching scientific modules, legacy
+experiment/runner/finalizer modules, `results/`, or any Gate path. It proves
+that `envelopes.py` imports exactly `CanonicalBytes` and `parse_ecj1` from
+`canonical`, imports neither `encode_ecj1` nor canonical internals nor
+`registry`, and retains no decoded mutable tree. It also proves no package,
+dependency, network, subprocess, T1 mutation, T2 fixture evaluation, or T3
+operation is reachable. `tests/framework/safety.py` remains unchanged; the
+new tests perform this exact I-2 audit directly and may reuse its existing
+guards without extending it.
+
+No framework module import, test runner, package hook, build, installation,
+policy method, model function, trajectory, or scientific operation is part of
+this authority-amendment validation.
+
+#### 21.8.6 Complete public-record closure audit
+
+The prospective I-2 authority has been re-audited across every public record,
+not only the repaired coordinates. Unless a protocol is explicitly named,
+each concrete record below remains an immutable
+`dataclass(frozen=True,slots=True)`, rejects subclasses/coercions where an
+exact scalar or record type is named, validates at construction in the
+§21.2.4 order restricted to its applicable predicates, and projects by the
+exact field order and common ECJ-1 rules already frozen above. Every public
+I-2 callable and constructor is T0; module ownership is the owner column.
+
+| Owner | Closed public records/types | Exact projection and constructor authority | Exact coverage |
+|---|---|---|---|
+| `errors` | `Applicability`, `CanonicalTraceState`, `FailureCode`, `FailureEnvelope`, `FailureEventKey`, `FailureEvidenceRef`, `FailureId`, `FailureInterfaceRef`, `FailureObjectRef`, `FailureStage`, `ScientificStatusEffect`, plus retained `StateAdvance`, `PolicyMemoryAdvance`, `DurabilityState`, `RetryClass` | §21.2.1 fields/domains, §21.2.2 ID preimage, §21.2.3 construction, §21.2.4 codes/precedence; `errors.py` is standard-library-only | 214 derived fixture failures, `FAIL0`, the four exact event-key cases, and `failure-support-nonempty-coordinate` below |
+| `numeric` | `IntegerV1`, `RationalV1`, `DecimalV1`, `Binary64BitsV1`, `RuntimeConstraintSet`, `QuantityContext`, `OperandValidationResult`, `ErrorBound`, `NumericalResult`, `ComparisonResult`; closed unions/enums `CoreNumberV1`, `NumericalVariant`, `NumericalOperation`, `ExactConversion`, `Completeness`; read-only protocol `NumericalPolicyV1` | §§21.3–21.4, including exact normalization, projections, matrix, structural bound relations, result completeness, and five noninvoked protocol methods | Blocks 1–5, the 17-case bound basis, all QC0/QC_U occurrences, the exact policy provider, and `operand-validation-result-valid` below |
+| `primitives` | `Dimension`, `Unit`, `ConversionRule`, `Quantity`, `ResourceType`, `ServiceType`, `SignConvention`, `Region`, `AccountingBoundary`, `ClockSystem`, `Instant`, `Duration`, `Epoch`, `Horizon`, `ResolutionDetail`, `UncertaintyRecord`, `CompatibilityResult`; enums `ClaimStatus`, `ResolutionState`, `UncertaintyKind` | §§21.5.1–21.6 exact fields, projections, kind/state predicates, compatibility order, and failure meanings | Block 6 and its catalog/nested records, plus `sign-convention-valid`, `sign-convention-duplicate-meaning`, and exact enum-domain assertions below |
+| `envelopes` | `CommonObjectEnvelope`, `RecordMetadata`, `LifecycleTransition`, `LifecycleValidationResult`, `SupersessionRelation`, `SupersessionValidationResult`; enum `LifecycleStatus` | §§21.5.6–21.5.7 exact bytes, fields, exclusions, graph/evidence predicates, projections, and failure meanings | Blocks 7–8 plus `record-metadata-valid` below |
+| `registry` | strengthened existing `RegistryRecord` | §21.7 and plan §21: exact `LifecycleStatus`, draft-only registration, no new projection or mutation | `registry-record-draft-valid` and `registry-record-nondraft-refused` below, in the existing primitive/envelope test path |
+
+The exact non-fixture static supplement is assigned to
+`tests/framework/test_primitives_envelopes.py`. Catalog names in this list are
+expanded by §21.8.1 before construction; no alias text enters a public
+projection:
+
+```text
+failure-support-nonempty-coordinate:
+  interface = FailureInterfaceRef("ebu_framework.numeric","ErrorBound","1.0.0")
+  object = FailureObjectRef(R(0).object_id,R(0).object_version,
+                            R(0).object_content_hash)
+  event = FailureEventKey(0,1,0,"ebu:scope:validation:s0","phase.start",
+                          "ebu:object:validation:o0",0)
+  evidence = FailureEvidenceRef("TRACE_PREFIX","sha256:" + "00"*32,NA)
+  trace = CanonicalTraceState(APPLICABLE,"PARTIAL_DURABLE_PREFIX",0,evidence)
+  envelope coordinates = (ERROR_BOUND_INVALID,I-2,interface,[object],event,
+                          ordinal 1,NONE,NONE,PARTIAL,trace,
+                          SCIENTIFIC_STATE_UNCHANGED,NOT_APPLICABLE,
+                          [evidence],"fixture nonempty failure coordinate")
+  derived failure_id =
+    ebu:failure:core:sha256-7a457bf092a50e42b9fcd657e3f6da71eb3ef298fa29cf1741c15150076faa9d
+
+failure-evidence-raw-source-valid:
+  FailureEvidenceRef("RAW_SOURCE","sha256-raw:" + "00"*32,NA)
+failure-evidence-wrong-domain-refused:
+  FailureEvidenceRef("RAW_SOURCE","sha256:" + "00"*32,NA)
+  -> DIGEST_INVALID
+
+operand-validation-result-valid:
+  OperandValidationResult(ADD,[INTEGER,INTEGER],R(0),QC0,true,COMPLETE,NA)
+  -> exact seven-field §21.4.1 projection
+
+sign-convention-valid:
+  SignConvention(R(16),R(18),"credit","zero","debit")
+  -> exact five-field §21.5.3 projection
+sign-convention-duplicate-meaning:
+  SignConvention(R(16),R(18),"same","same","debit")
+  -> SIGN_CONVENTION_MISMATCH
+
+record-metadata-valid:
+  RecordMetadata(SID(3),R(47),R(48),R(49),R(50),R(51),R(52),R(53))
+  -> exact field equality, immutability, and no scientific projection
+
+registry-record-draft-valid:
+  RegistryRecord(R(0),"fixture-kind",BYTES("7b2261223a317d"),DRAFT)
+  -> exact construction and unchanged I-1 value parsing
+registry-record-nondraft-refused:
+  RegistryRecord(R(0),"fixture-kind",BYTES("7b2261223a317d"),REVIEWED)
+  -> REGISTRY_RECORD_CONFLICT
+```
+
+The supplement also asserts the exact declared member tuples, in their
+documented order, for all 16 public enums in `errors`, `numeric`, `envelopes`,
+and `primitives`; it asserts `CoreNumberV1` has exactly the four named union
+members and that `NumericalPolicyV1` has exactly the properties and five
+method signatures in §21.4. Every success projection is checked against
+independently encoded canonical hex where a projection exists. Every failure
+uses the exact code shown and the owning constructor interface at stage I-2.
+
+This closure audit found no missing public field, runtime type, enum member,
+applicability rule, projection coordinate, immutability rule, constructor or
+validation behavior, failure meaning/precedence, capability class, owner, or
+deterministic fixture/static-test route. It changes no public type/callable
+name, signature, owner, capability, dependency edge, root export, or future
+path. The totals remain 84 public types, 42 public callables, `__version__`,
+127 root exports, 29 DAG edges, and nine future implementation paths. The
+failure domain is 29 retained I-1 plus 24 I-2 codes, with 24 I-2 precedence
+entries.
+
+### 21.9 Scientific neutrality, roadmap, and Gate preservation
+
+I-2 contains no domain numerical policy, EBU quote rule, distortion, action,
+transition, trajectory, controller, topology, equilibrium/homeostasis rule,
+routing/settlement rule, parameter search/optimization, stochastic semantic,
+or wave, interference, spectral, Taylor, Fibonacci-like, recursive, fractal,
+or self-similar model. It supplies representation and validation only.
+
+The single planning order remains:
+
+1. Framework I-1 through I-9.
+2. Part IV local measurement and outcome discrimination.
+3. Part V long-run viability and homeostasis.
+4. Part VI sequential and parallel actions.
+5. Part VII routes and infrastructure.
+6. Part VIII topology, timing, waves, spectra, interaction hierarchies,
+   recurrence, hierarchy, and fractal hypotheses.
+7. Part IX institutional application and settlement.
+
+Future structural candidates should be derived where possible from declared
+mathematics, compared with simpler baselines, and tested against a
+homeostasis-preservation gate. This is planning context only and grants no
+scientific work.
+
+Gate 1D-C is preserved exactly: one cumulative official runner invocation;
+no receipt; no result directory; no model-state advance; scientific state
+`UNSTARTED`. This amendment does not inspect, investigate, correct, retry,
+invoke, finalize, or reinterpret it and never describes the cumulative
+invocation count as zero.

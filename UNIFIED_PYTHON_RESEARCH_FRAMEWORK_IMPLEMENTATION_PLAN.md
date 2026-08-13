@@ -1,17 +1,19 @@
 # Unified Python Research Framework Implementation Plan
 
-**Plan version:** 0.2.2
-**Stage:** I-0 planning only
-**Status:** Prospective authority-hash reconciliation only; no integration, later-stage, scientific-execution, or release authority
+**Plan version:** 0.2.3
+**Stage:** Prospective Framework I-2 authority amendment only
+**Status:** I-2 design and future manifest frozen; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-13
 **Language:** English
-**Repository branch:** `v3.0-local-ebu-foundation`
-**Starting repository HEAD:** `4897dd69f60860e6c45c979ac37f87b9124e7a3e`
-**Current authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
-**Framework specification version:** 0.1.2
+**Original I-0 repository branch:** `v3.0-local-ebu-foundation`
+**Original I-0 starting repository HEAD:** `4897dd69f60860e6c45c979ac37f87b9124e7a3e`
+**Historical v0.2.2 authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
+**I-2 authority-amendment branch:** `framework-v0.1`
+**I-2 authority-amendment base HEAD:** `64e7d692dbae2c3beb6752d955c8f6193e481010`
+**Framework specification version:** 0.1.3
 **Framework specification SHA-256:**
-`32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
+`44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`
 **Future-books structure SHA-256:**
 `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`
 
@@ -19,17 +21,17 @@
 
 ## 1. Decision and authority boundary
 
-This document completes the planning work authorized for I-0. It freezes the
-core implementation contracts needed to begin a later, separately authorized
-I-1. It creates no Python package, code, schema, fixture, test, dependency
-lock, accepted configuration, execution binding, authorization credential,
-result, manifest, or publication record. It authorizes no implementation and
-no scientific execution.
+This revision freezes the prospective I-2 implementation authority in §21
+after accepted I-1 integration. It creates no Python package, code, schema,
+fixture, test, dependency lock, accepted configuration, execution binding,
+authorization credential, result, manifest, or publication record. It
+authorizes no implementation and no scientific execution.
 
 The current governing architectural and scientific authority is
-`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.2 at the exact
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.3 at the exact
 whole-file hash above, reconciled with the current source locks in §1.3. This
-plan resolves only the implementation questions explicitly assigned to I-0.
+plan resolves the implementation questions explicitly assigned to I-2
+without beginning that stage.
 It does not change an imported definition, equation, state component, event
 phase, hypothesis, parameter, comparison, metric, threshold, tolerance,
 falsifier, causal rule, settlement rule, or interpretation rule.
@@ -74,16 +76,29 @@ bridge authority is v0.2. The old specification and books hashes in this
 subsection are historical only and are not active implementation authority
 for this or any later revision.
 
-### 1.3 Current v0.2.2 mechanical authority locks and status
+### 1.3 Current v0.2.3 mechanical authority locks and status
 
 The current prospective authority set is:
 
 | Source | Current version or role | Current required raw SHA-256 | Mechanical status |
 |---|---|---|---|
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.2 framework specification | `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69` | Current governing specification lock |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.3 framework specification | `44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193` | Current governing specification and prospective I-2 lock |
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6 planning and the literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Current planning-authority lock, within the scope boundaries below |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged imported Part VI authority |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged imported dynamic-coordination authority |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md` | I-1 packaging amendment v1.1.1 | `a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448` | Unchanged narrow packaging authority |
+| `unified_python_research_framework_packaging_contract.json` | I-1 packaging contract v1.1.1 | `edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351` | Unchanged mechanical packaging authority |
+| Accepted combined I-1 raw-hash/path/blob manifest | Accepted I-1 integration evidence | `f7b1b7abc9a71b090320b8dc468d57e3a7e39f4f2a045b7a5946a4174882fee8` | Immutable accepted I-1 evidence; not recomputed or redefined here |
+
+The aggregate row is historical corroboration, not a semantic I-2 input.
+Commit `ed75790b20c7d6b86cedc4d9dbeb269f32cca9ea` introduced exactly 22 I-1
+implementation paths. The complete feature range from
+`fae76042746e55b9fe5ec5c62de0f47fbc5ccb47` through `ed75790...` contains
+those paths plus the two packaging-authority documents, for 24 paths total.
+The original aggregate serialization recipe is not committed; the digest is
+not independently reproducible and is preserved without recreation or
+redefinition. Current integrity is verified from Git path/blob identities,
+raw hashes, and byte sizes.
 
 Only this table and the matching top-level fields are active mechanical
 authority locks. The old hashes in §§1.1–1.2 are retained solely as historical
@@ -99,7 +114,14 @@ the books-structure raw SHA-256
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`,
 and had plan whole-file SHA-256
 `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
-None of those three values is an active v0.2.2 authority lock.
+None of those three values is an active v0.2.3 authority lock.
+
+Revision v0.2.2 is immutable historical evidence. It used specification
+v0.1.2 at raw SHA-256
+`32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
+and had plan whole-file SHA-256
+`3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`.
+Neither value is an active v0.2.3 lock.
 
 The signed tag `foundation-v0.1.0` remains the unchanged tag object
 `90646d3c7e1ff2201eab4739e894598b80782b79` at commit
@@ -110,6 +132,12 @@ The signed tag `foundation-v0.1.1` likewise remains the unchanged tag object
 `fae76042746e55b9fe5ec5c62de0f47fbc5ccb47`. The v0.1.2/v0.2.2
 reconciliation was not present at or verified during either signed milestone
 and does not move or reinterpret either tag.
+
+The signed tag `foundation-v0.1.2` remains tag object
+`63a3f71401e1cc91e85cdff89dbd4d8d38fcbd57`, peeled target
+`38aae5e8c59d0bced598f2918f76dbee6df7481c`, signed by ED25519 key
+fingerprint `SHA256:PmHC6U5rPJ+Jv7sCyjyF2UYLM6wgE8+iG5T6eGwHFCQ`. It is immutable
+foundation evidence and is not moved or reinterpreted by I-2.
 
 The plan uses the 0.2 revision line, rather than the specification's 0.1
 revision line, because the pre-amendment
@@ -129,10 +157,11 @@ explicit PEP 517 backend requirement, the initially stdlib-only framework
 lock, and the absence of a standard-library PEP 517 backend. That statement
 is retained as historical evidence. The existing packaging amendment and
 matching contract prospectively resolved the contradiction under their
-narrow precedence. This reconciliation does not edit, repeat, or redefine
-that resolution, any packaging rule, or the closed implementation manifest.
-It grants no framework integration, I-2, framework-alpha, scientific-
-execution, Gate, publication, or release authority.
+narrow precedence. Revision v0.2.3 does not edit, repeat, or redefine that
+resolution or any packaging rule. It freezes only prospective I-2 design and
+the exact future §21.2 manifest; it grants no present implementation,
+framework integration, framework-alpha, scientific-execution, Gate,
+publication, or release authority.
 
 ### 1.4 Preserved Gate 1D-C incident
 
@@ -466,6 +495,14 @@ ObjectContentPreimageV1 = {
     object_content_payload
 }
 ```
+
+For `CommonObjectEnvelope`, the field stores exact `CanonicalBytes`, while
+the term shown in this preimage is the logical ECJ-1 value produced by one
+fresh `parse_ecj1` call. That logical value is passed to the unchanged I-1
+`compute_object_content_hash`; the stored bytes are not projected as text,
+hex, an integer array, or nested JSON and are not double-encoded. The logical
+payload, stored canonical bytes, complete preimage, and resulting content
+hash are distinct.
 
 `ObjectContentHash` excludes its own field, lifecycle status, signatures,
 authorization and validation evidence, record times, host/process/storage,
@@ -1152,9 +1189,12 @@ type.
 
 ### 9.1 Manifest rules
 
-Paths are repository-relative. “New” and “existing” are relative to starting
-HEAD `4897dd69...`. Only the files below may be created or modified by the
-planned I-1–I-9 implementation programme. Adding, renaming, splitting, or
+Paths are repository-relative. In this whole-program table, “New” and
+“existing” remain historical classifications relative to original I-0
+starting HEAD `4897dd69...`; §21.2 gives the exact current I-2 modified/new
+states relative to the accepted I-1 base. Only the files below may be created
+or modified by the planned I-1–I-9 implementation programme. Adding,
+renaming, splitting, or
 merging a file requires an implementation-plan revision before the affected
 stage begins. Authority documents are read-only inputs and are listed
 separately in §9.7.
@@ -1179,12 +1219,13 @@ No framework source module may import a top-level historical `exp_*`,
 | `requirements-framework.lock` | Exact hashed framework dependency closure; initially stdlib-only and extended/finalized during I-4 with the audited Ed25519 provider selected under UQ-25 | `pyproject.toml`, UQ-25 audit | I-1; exact crypto dependency extension/finalization I-4 | New |
 | `.github/workflows/tests.yml` | Add push/PR T0 and T1 jobs plus a separately gated `workflow_dispatch` T2 job that first validates exact T2 authority; never add a T3 framework job or Gate 1D-C invocation | Lock file and validation commands | I-9 | Existing, modify |
 
-The table above is the unchanged closed file manifest. Revision v0.2.1
+The cross-stage-control table above is unchanged. Revision v0.2.1
 recorded the explicit-backend/stdlib-only contradiction as a current blocker;
 that status is historical. The existing packaging amendment and matching
 contract prospectively resolve only their stated packaging scope. Revision
-v0.2.2 does not edit, repeat, or redefine that resolution, select a different
-backend or dependency, or add any manifest path.
+v0.2.3 does not edit, repeat, or redefine that resolution, select a different
+backend or dependency, or add any packaging/control manifest path. Its I-2
+ownership amendments are exactly those in §21.2.
 
 The existing `requirements.txt` remains the legacy figure/PDF dependency file
 and is not changed or reused as the framework lock.
@@ -1198,15 +1239,15 @@ and is not changed or reused as the framework lock.
 | `src/ebu_framework/data/__init__.py` | Package-data boundary; exports no API and executes no code | None | I-1 | New |
 | `src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt` | Exact raw Unicode 15.0.0 assignment, canonical decomposition, and canonical-combining-class data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
 | `src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt` | Exact raw Unicode 15.0.0 `Full_Composition_Exclusion` and normalization-property data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
-| `src/ebu_framework/errors.py` | Typed failure codes/envelopes; no domain behavior | Stdlib | I-1 | New |
+| `src/ebu_framework/errors.py` | I-1 failures plus only the v0.1.3/v0.2.3 common fields, stable failure identity, closed I-1 compatibility map, and exact I-2 failure codes; no domain behavior | Stdlib only; must not import any package module | I-1; narrowly extended I-2 | New |
 | `src/ebu_framework/canonical.py` | Strict ECJ-1 projection, parser, encoder, pinned-table NFC/assignment, code-point ordering, asset-digest verification, and host-Unicode rejection rules | `err`, the two pinned Unicode 15.0.0 runtime assets | I-1 | New |
 | `src/ebu_framework/identity.py` | `ScientificId`, semantic versions, allocation claims, `ObjectRef`, typed digest wrappers | `can`, `err` | I-1 | New |
 | `src/ebu_framework/hashing.py` | All exact §5 projections, SHA-256 domains, binary framing, and raw-source labeling | `can`, `id`, `err` | I-1; extended I-3/I-5 | New |
-| `src/ebu_framework/envelopes.py` | Common immutable object envelope, metadata separation, lifecycle/supersession validation | `id`, `hash`, `err` | I-2 | New |
-| `src/ebu_framework/registry.py` | Immutable namespace/object registries, alias resolution, acceptance/supersession, collision checks | `id`, `hash`, `env`, `err` | I-1; acceptance extended I-2 | New |
+| `src/ebu_framework/envelopes.py` | Common immutable envelope storing exact `CanonicalBytes`, fresh `parse_ecj1` validation/hash decoding without a mutable cache, metadata separation, and pure lifecycle/supersession validation; no registry mutation | `can` only for `CanonicalBytes` and `parse_ecj1`; `id`, `hash`, `err` | I-2 | New |
+| `src/ebu_framework/registry.py` | Immutable namespace/object registries, alias resolution, and collision checks; I-2 may only strengthen `RegistryRecord.lifecycle_status` to exact `LifecycleStatus` while preserving draft-only registration | `can`, `id`, `err`; I-2 adds `env` | I-1; narrowly type-strengthened I-2; acceptance mutation I-4 | New |
 | `src/ebu_framework/data/core_registry_v1.json` | Reviewed literal bootstrap namespace/schema IDs and allocation-policy refs; no study or domain entries | ECJ-1, §4 bootstrap exception | I-1 | New |
-| `src/ebu_framework/numeric.py` | `CoreNumberV1`, lossless normalization/exact operations, and `NumericalPolicyV1` protocol | `can`, `id`, `err` | I-2 | New |
-| `src/ebu_framework/primitives.py` | Units, dimensions, quantities, resources, regions, boundaries, clocks, horizons, uncertainty, statuses | `num`, `id`, `env`, `reg`, `err` | I-2 | New |
+| `src/ebu_framework/numeric.py` | Exact core-number records/projections/operation matrix, I-2-owned runtime constraints, and non-executing `NumericalPolicyV1` protocol/completeness validation | `can`, `id`, `err` | I-2 | New |
+| `src/ebu_framework/primitives.py` | Exact dimensions, units/conversions, quantities, resources/services, regions/boundaries, clocks/horizons, resolution, uncertainty, and compatibility predicates | `num`, `id`, `env`, `err`; no registry lookup | I-2 | New |
 | `src/ebu_framework/state.py` | Declarative `SystemState`/`RepresentedState`, state/projection preimages, static and protected projection contracts | `prim`, `id`, `env`, `hash`, `err` | I-3 | New |
 | `src/ebu_framework/distortion.py` | Declarative distortion/evaluation contracts and numerical-policy binding; no domain model | `state`, `prim`, `num`, `id`, `env`, `err` | I-3 | New |
 | `src/ebu_framework/actions.py` | Action definitions/instances, supports, intervals, lifecycle, and proposal records | `state`, `prim`, `id`, `env`, `err` | I-3 | New |
@@ -1253,7 +1294,7 @@ configuration, policy, seed, trajectory, or result.
 | `tests/framework/fixtures/unicode/15.0.0/NormalizationTest.txt` | Exact complete Unicode 15.0.0 NFC conformance corpus; required raw SHA-256 `fb9ac8cc154a80cad6caac9897af55a4e75176af6f4e2bb6edc2bf8b1d57f326` | `https://www.unicode.org/Public/15.0.0/ucd/NormalizationTest.txt` | I-1 | New |
 | `tests/framework/fixtures/hash_preimages_v1.json` | Exact §5 preimage/exclusion/domain vectors with synthetic values | ECJ-1 vectors | I-1 | New |
 | `tests/framework/fixtures/scientific_id_vectors_v1.json` | Namespace/allocation/idempotency/collision vectors | §4 | I-1 | New |
-| `tests/framework/fixtures/numeric_vectors_v1.json` | Exact normalization and lossless arithmetic vectors; no domain tolerances | §2 | I-2 | New |
+| `tests/framework/fixtures/numeric_vectors_v1.json` | Exact 335-vector ordered §21 fixture with block counts `18,35,42,4,36,107,20,41,32`, authority hashes, derived projections/hex/failure IDs, and no domain policy or tolerance | Specification §21.8 and plan §21.5 | I-2 | New |
 | `tests/framework/fixtures/authorization_vectors_v1.json` | RFC 8032 plus synthetic trust/delegation/revocation/time/single-use records | §6; synthetic keys only | I-4 | New |
 | `tests/framework/fixtures/bridge_m1_m9_v1.json` | Frozen hand-derived Bridge v0.2 M1–M9 inputs/statuses/expected exact values | Bridge v0.2 §14 | I-6 | New |
 | `tests/framework/fixtures/dynamic_static_v1.json` | Frozen independent-provider, queue, delay, route-failure, timing, and worsening arithmetic from the dynamic foundation | Dynamic foundation §9 | I-7 | New |
@@ -1266,8 +1307,8 @@ configuration, policy, seed, trajectory, or result.
 | `tests/framework/test_ecj1.py` | T0 exact canonical bytes/rejections, complete pinned NFC conformance, asset-integrity failure, later-Unicode rejection, and host-database independence | `canonical`, ECJ-1 vectors, pinned `NormalizationTest.txt` | I-1 | New |
 | `tests/framework/test_hash_preimages.py` | T0 domains, exclusions, self-reference rejection, byte frames | `hashing`, hash vectors | I-1 | New |
 | `tests/framework/test_identity_registry.py` | T0/T1 allocation, resolution, immutability, alias, collision checks | `identity`, `registry`, ID vectors | I-1 | New |
-| `tests/framework/test_numeric.py` | T0 core normalization/lossless arithmetic and missing-policy refusal | `numeric`, numeric vectors | I-2 | New |
-| `tests/framework/test_primitives_envelopes.py` | T0 units/boundaries/time/status/envelope lifecycle checks | `primitives`, `envelopes` | I-2 | New |
+| `tests/framework/test_numeric.py` | T0 constructor/projection/normalization, complete exact-operation matrix, explicit conversion, policy completeness/refusal, deterministic failures, fixture-schema/hash checks | `numeric`, `errors`, numeric vectors | I-2 | New |
+| `tests/framework/test_primitives_envelopes.py` | T0 primitive compatibility, resolution/uncertainty, nine exact canonical-byte envelope immutability/hash/cache checks, metadata/lifecycle exclusion, lifecycle/supersession, exact export/29-edge-DAG/forbidden-reachability AST audit | source text/AST plus `primitives`, `envelopes`, `registry`, numeric vectors; no production import during AST audit | I-2 | New |
 | `tests/framework/test_declarative_records.py` | T0 representability, configuration/binding split, route/fault unresolved guards | I-3 record modules | I-3 | New |
 | `tests/framework/test_policy_memory.py` | T0 hashes, lineage, epoch, and stateless/stateful applicability; no policy callback or durability claim | `policy`, `hashing` | I-3 | New |
 | `tests/framework/test_authorization.py` | T1 synthetic signatures, thresholds, attenuation, freshness, revocation, exact scope | `trust`, `authorization`, auth vectors | I-4 | New |
@@ -1340,13 +1381,13 @@ re-exported.
 
 | Owner | Exact public types (all T0-capable constructors unless noted) |
 |---|---|
-| `errors` | `FailureCode`, `FailureEnvelope`, `StateAdvance`, `PolicyMemoryAdvance`, `DurabilityState`, `RetryClass` |
+| `errors` | `Applicability`, `CanonicalTraceState`, `DurabilityState`, `FailureCode`, `FailureEnvelope`, `FailureEventKey`, `FailureEvidenceRef`, `FailureId`, `FailureInterfaceRef`, `FailureObjectRef`, `FailureStage`, `PolicyMemoryAdvance`, `RetryClass`, `ScientificStatusEffect`, `StateAdvance` |
 | `canonical` | `ECJ1Value`, `CanonicalBytes`, `CanonicalizationVersion` |
 | `identity` | `ScientificId`, `ScientificIdAllocationClaimV1`, `SemanticVersion`, `ObjectRef`, `ObjectContentHash`, `StatePayloadHash`, `PolicyMemoryPayloadHash`, `AugmentedClosedLoopReplayStateHash`, `RepresentedStateProjectionHash`, `InformationViewHash`, `ProposalSetHash`, `ExecutionSemanticsHash`, `CanonicalTraceRowHash`, `CanonicalTracePrefixHash`, `CanonicalScientificTracePayloadHash`, `ArtifactByteHash`, `SourceFileRawSha256`, `AuthorizationUseKey` |
-| `numeric` | `CoreNumberV1`, `IntegerV1`, `RationalV1`, `DecimalV1`, `Binary64BitsV1`, `NumericalPolicyV1`, `NumericalOperation`, `NumericalResult`, `ComparisonResult`, `ErrorBound` |
-| `envelopes` | `CommonObjectEnvelope`, `RecordMetadata`, `LifecycleStatus`, `SupersessionRelation` |
+| `numeric` | `Binary64BitsV1`, `ComparisonResult`, `Completeness`, `CoreNumberV1`, `DecimalV1`, `ErrorBound`, `ExactConversion`, `IntegerV1`, `NumericalOperation`, `NumericalPolicyV1`, `NumericalResult`, `NumericalVariant`, `OperandValidationResult`, `QuantityContext`, `RationalV1`, `RuntimeConstraintSet` |
+| `envelopes` | `CommonObjectEnvelope`, `LifecycleStatus`, `LifecycleTransition`, `LifecycleValidationResult`, `RecordMetadata`, `SupersessionRelation`, `SupersessionValidationResult` |
 | `registry` | `NamespaceEntry`, `NamespaceRegistrySnapshot`, `RegistryRecord`, `AliasRecord`, `ResolutionRecord` |
-| `primitives` | `Dimension`, `Unit`, `Quantity`, `ConversionRule`, `ResourceType`, `ServiceType`, `SignConvention`, `Region`, `AccountingBoundary`, `ClockSystem`, `Instant`, `Duration`, `Epoch`, `Horizon`, `ResolutionState`, `UncertaintyKind`, `UncertaintyRecord`, `ClaimStatus` |
+| `primitives` | `AccountingBoundary`, `ClaimStatus`, `ClockSystem`, `CompatibilityResult`, `ConversionRule`, `Dimension`, `Duration`, `Epoch`, `Horizon`, `Instant`, `Quantity`, `Region`, `ResolutionDetail`, `ResolutionState`, `ResourceType`, `ServiceType`, `SignConvention`, `UncertaintyKind`, `UncertaintyRecord`, `Unit` |
 | `state` | `SystemState`, `RepresentedState`, `ProjectionContract`, `StatePayloadPreimageV1`, `RepresentedStateProjectionPreimageV1` |
 | `distortion` | `DistortionModel`, `DistortionEvaluation`, `DistortionDomainFailure` |
 | `actions` | `ActionDefinition`, `ActionInstance`, `EffectiveInterval`, `WriteSupport`, `ConstraintSupport`, `TransitionProposal`, `ActionStatus` |
@@ -1359,7 +1400,7 @@ re-exported.
 | `settlement` | `Quote`, `Receipt`, `GroupReceipt`, `ChildActionRecord`, `SettlementRule`, `SettlementShare`, `GroupResidual`, `SettlementClosureRecord` |
 | `ledger` | `Ledger`, `LedgerEntry`, `EvidenceLedgerEntry`, `LedgerKind` |
 | `faults` | `FaultScheduleV1`, `FaultDirectiveV1`, `FaultClass`, `FaultTargetCoordinate`, `FaultScheduleClass` |
-| `experiment` | `ExperimentConfiguration`, `ExecutionBinding`, `ExecutionMode`, `RuntimeConstraintSet`, `RuntimeMetadata`, `OperationalExclusion`, `ExecutionIdentity` |
+| `experiment` | `ExperimentConfiguration`, `ExecutionBinding`, `ExecutionMode`, `RuntimeMetadata`, `OperationalExclusion`, `ExecutionIdentity` |
 | `trust` | `TrustProfileV1`, `IssuerRegistrySnapshotV1`, `IssuerEntry`, `DelegationCredentialV1`, `RevocationSnapshotV1`, `TrustedTimeAttestationV1`, `AuthorizationAuthenticityEnvelopeV1`, `TrustEvidenceEnvelopeV1` |
 | `authorization` | `StageAuthorization`, `AuthorizedOperation`, `AuthorizationEvidenceBundle`, `AuthorizationValidationRecord` |
 | `authorization_use` | `AuthorizationUseRecord`, `AuthorizationUseStatus` |
@@ -1388,6 +1429,7 @@ possible only through the classified callables below.
 | `encode_ecj1` | `canonical` | T0 | Typed ECJ-1 value to exact bytes |
 | `normalize_core_number` | `numeric` | T0 | Lossless §2 normalization only |
 | `apply_exact_core_operation` | `numeric` | T0 | Integer/rational/finite-decimal operation only when result is exact and uniquely represented; otherwise `NUMERICAL_POLICY_REQUIRED` |
+| `decimal_to_rational_exact` | `numeric` | T0 | Sole explicit cross-variant I-2 conversion; exact and total for `DecimalV1` |
 | `validate_numerical_policy` | `numeric` | T0 | Contract completeness; no domain evaluation |
 | `allocate_scientific_id` | `registry` | T1 | Atomically records a content-neutral allocation claim |
 | `parse_scientific_id` | `identity` | T0 | Grammar validation only |
@@ -1406,15 +1448,27 @@ possible only through the classified callables below.
 | `compute_artifact_byte_hash` | `hashing` | T0 | Exact binary frame only |
 | `compute_source_file_raw_sha256` | `hashing` | T0 | Conventional raw digest with distinct type |
 | `validate_object_envelope` | `envelopes` | T0 | Envelope/preimage/lifecycle consistency |
+| `validate_lifecycle_transition` | `envelopes` | T0 | Pure closed-graph and typed-authorization-presence validation; no mutation |
+| `validate_supersession_relation` | `envelopes` | T0 | Pure immutable identity/schema/version/ancestry validation; no mutation |
 | `resolve_ref` | `registry` | T0 | Exact ID/version/hash resolution |
 | `resolve_alias` | `registry` | T0 | Presentation alias to one exact ref; no accepted hash uses alias |
 | `register_draft` | `registry` | T1 | Immutable draft insertion only |
-| `accept_registry_object` | `registry` | T1 | Authorization-gated lifecycle freeze; no science |
-| `supersede_registry_object` | `registry` | T1 | Creates relation/new record; original immutable |
+| `accept_registry_object` | `registry`/`authorization` | T1 | I-4 only: authorization-gated lifecycle freeze; absent from the post-I-2 API |
+| `supersede_registry_object` | `registry`/`authorization` | T1 | I-4 only: authorized new immutable status/relation records; absent from the post-I-2 API |
+| `validate_dimension_compatibility` | `primitives` | T0 | Exact ref and complete basis-exponent equality |
+| `validate_unit_compatibility` | `primitives` | T0 | Exact identity or explicitly supplied direction-valid exact conversion only |
+| `validate_conversion_rule` | `primitives` | T0 | Exact type, direction, dimension, factor/offset, and horizon validation |
 | `validate_quantity` | `primitives` | T0 | Dimensions, unit/type/region/time/boundary checks |
 | `convert_quantity_exact` | `primitives` | T0 | Only a pinned exact conversion; approximate conversion requires T3 domain policy |
+| `validate_resource_service_compatibility` | `primitives` | T0 | Symmetric exact declared compatibility only |
+| `validate_region_compatibility` | `primitives` | T0 | Exact identity or explicit valid common-parent relation; no aggregation |
+| `validate_boundary_compatibility` | `primitives` | T0 | Exact identity or explicit valid common-parent relation; no aggregation |
+| `validate_sign_convention_compatibility` | `primitives` | T0 | Matching typed applicability and exact ref only |
+| `validate_time_basis` | `primitives` | T0 | Rate applicability then exact time-basis ref equality |
+| `validate_clock_compatibility` | `primitives` | T0 | Exact clock-ref equality |
 | `validate_horizon` | `primitives` | T0 | Clock/endpoints/pending treatment only |
 | `validate_uncertainty_record` | `primitives` | T0 | Kind/unit/provenance checks; no inference |
+| `validate_resolution_detail` | `primitives` | T0 | Closed present/pending/failed/partial/unresolved/out-of-boundary predicates |
 | `validate_state_record` | `state` | T0 | Shape, refs, payload hash, physical/memory separation |
 | `validate_projection_contract` | `state` | T0 | Static required/excluded coordinate contract |
 | `project_static_fixture` | `state` | T2 | One allowlisted isolated synthetic state only |
@@ -1512,8 +1566,8 @@ names do not affect classification.
 |---|---:|---|---|
 | V0 canonical bytes | T0 | Verify both runtime Unicode assets' exact SHA-256 values; run the complete pinned Unicode 15.0 `NormalizationTest.txt`; check assigned-range expansion, assigned Unicode 15.0 boundaries, rejection of later-assigned U+2EBF0 even on a later host, rejection on missing/corrupt data, absence of host `unicodedata`/ICU/network reachability, code-point key order, escapes, integers, re-encoding, and duplicate/rejection vectors | Host Unicode normalization, object acceptance, policies, transitions |
 | V1 hash and identity | T0/T1 | Every §5 domain/preimage/exclusion, metadata invariance, artifact frame, raw-source distinction, ID idempotency/collision in temp registry | Scientific registry/configuration |
-| V2 core numbers/types | T0 | Integer/rational/decimal/binary-bit normalization; exact operations; units/dimensions/boundaries/time/resolution failures; missing policy refusal | Domain precision/tolerance or float evaluation |
-| V3 declarative records | T0 | Every v0.1 record is representable; physical/policy/configuration/binding/authorization/publication separation; route/fault unresolved guards | Scientific callbacks and lifecycle execution |
+| V2 core numbers/types | T0 | Strict §21.5 fixture schema/order/hash binding; exact 335-vector sequence; every integer/rational/decimal/binary-bit normal form and rejection; the exact 17-case `ErrorBound` basis; every exact operation cell and explicit conversion; policy shape/completeness and refusal without method call; every frozen I-2 compatibility/lifecycle/supersession predicate, 23 adjacent precedence pairs, and nine named multiply-invalid cases | Domain precision/tolerance/rounding, policy callback, host-float arithmetic, registry acceptance, aggregation, scientific operation |
+| V3 declarative records | T0 | During I-2 only: static construction/projection of `CommonObjectEnvelope` with exact stored `CanonicalBytes`, fresh decode and no decoded cache, `RecordMetadata`, `LifecycleTransition`, `SupersessionRelation`, and strengthened draft-only `RegistryRecord`; the exact four-case `FailureEventKey` lexical basis in specification §21.2.1; later stages add the remaining v0.1 records | Configuration, binding, state, action, policy memory, fault, result, authorization, artifact, scientific callbacks, lifecycle mutation |
 | V4 synthetic authorization | T1 | RFC 8032 vectors; synthetic threshold, issuer scope, delegation attenuation/depth/cycle, fresh-time response parser, revocation rollback, exact targets, single-use SQLite conflict | Production keys, real stage authority, model entry |
 | V5 capability leakage | T1 | Fabricated availability epochs, forbidden field traversal, read-set rejection, stateless/stateful applicability | Scientific policy code |
 | V6 event/ownership | T0/T1 | Phase constants, `EventKey` total order, duplicate rejection, opaque synthetic ownership conflicts, phase-8/phase-9 duplicate identifiers | Transition proposal callback or state mutation |
@@ -1521,7 +1575,7 @@ names do not affect classification.
 | V8 Bridge exact fixtures | T2 | M1–M9 one-at-a-time grouping/status/arithmetic from Bridge v0.2, including undefined values and both M8 comparators | Trajectory, parameter search, causal inference, settlement choice |
 | V9 dynamic exact fixtures | T2 | Six §9 static examples' unit/capacity/queue/delay arithmetic one at a time | `advance_epoch`, route science, schedule comparison |
 | V10 artifact workflow | T1 | Dummy trace finalization, inert partial prefix, manifest completeness, byte-identical recovery, write-once refusal, separate publication record | Result generation, analysis, real publication |
-| V11 reachability/audit | T0 | Import DAG, public export list, forbidden path/call scan, manifest completeness, source hashes, absence of T3 CI command | Dynamic imports or execution |
+| V11 reachability/audit | T0 | For I-2, source-text/AST-only proof of the exact 127-entry root export tuple, module subsets, 29-edge acyclic §21 DAG, exact `envelopes` canonical import subset, nine-path manifest, no decoded payload cache, no dynamic imports/local failure-code domains, and no scientific/runner/finalizer/result/Gate/package/network/subprocess/T1/T2/T3 reachability; later stages extend the audit prospectively | Production import during the AST audit, dynamic imports, execution, policy invocation, state mutation |
 
 T2 groups V8 and V9 require separate static-fixture validation authority in
 I-6/I-7 or I-9. Their presence in the plan does not authorize their execution.
@@ -1565,9 +1619,10 @@ contract prospectively supersede that blocker within their narrow scope.
 Revision v0.2.2 neither repeats that resolution nor determines current branch
 implementation or integration status; those are established from Git and
 retained stage evidence. It grants no authority to run this or a later stage.
-**Inputs:** accepted I-0 plan, unchanged current four authority hashes from
-§1.3, and the separately governed prospective packaging authority without
-silently changing the closed manifest.
+**Historical planned inputs:** the accepted I-0 plan, the four authority
+hashes then active, and the separately governed prospective packaging
+authority without silently changing the closed manifest. Current accepted
+I-1 evidence is recorded separately in §21.1.
 **Work:** only I-1 files in §9; ECJ-1 and exact vendored Unicode 15.0.0 data,
 all immediately constructible §5 hash projections, IDs, refs, semantic
 versions, immutable registry base.
@@ -1589,16 +1644,28 @@ and every scientific function.
 ### I-2 — Numeric substrate, immutable envelope, and typed primitives
 
 **Depends on:** accepted I-1.
-**Work:** §2 `CoreNumberV1` and policy protocol; common envelope; dimensions,
-units, resources, regions, boundaries, clocks/horizons, uncertainty/statuses.
-**Validation:** V2 plus applicable V3 static construction.
-**Acceptance:** all normal forms unique; approximate/non-lossless operation
-without an accepted policy fails; incompatible aggregation and implicit
-absence fail; metadata cannot alter scientific hashes.
-**Fail closed:** Python float at canonical boundary, missing policy field,
-implicit conversion, untyped null/zero, incompatible unit/boundary.
-**Exclusions:** no domain precision/tolerance, distortion, action, or state
-transition.
+**Current status:** §21 freezes prospective implementation authority only;
+I-2 has not begun and needs separate authorization.
+**Work:** exactly the nine-path §21.2 manifest: backward-compatible common
+failure extension; exact core records/operations and non-executing policy
+protocol; immutable envelopes; typed primitives and pure compatibility,
+lifecycle, and supersession validation; draft registry type strengthening.
+**Validation:** the strict ordered §21.5 fixture, V2, only the enumerated I-2
+portion of V3, and the I-2 T0 AST/import/export audit. Existing
+`tests/framework/safety.py` remains unchanged.
+**Acceptance:** exact §21.3 post-I-2 root export tuple has 127 entries; all
+normal forms and projections are unique; every operation-matrix cell and
+multiply-invalid precedence vector agrees; policy-required operations refuse
+without invoking a provider; incompatible aggregation and implicit absence
+fail; metadata cannot alter scientific hashes; no I-1 observable failure
+semantics change.
+**Fail closed:** authority/hash drift, any path beyond the nine-path manifest,
+Python float at a canonical boundary, missing/incomplete policy field,
+implicit conversion, untyped absence, incompatible coordinate, unexpected
+import edge/export, registry acceptance mutation, or policy invocation.
+**Exclusions:** no accepted policy, domain precision/tolerance/rounding,
+distortion, action, state transition, acceptance/supersession mutation, T1,
+T2, T3, scientific operation, or Gate operation.
 
 ### I-3 — Declarative scientific and operational records
 
@@ -1625,7 +1692,9 @@ for production activation, and audited exact crypto dependency under UQ-25.
 stage guard, information capabilities, synthetic validation profile, and—only
 after UQ-25 selects it—the exact Ed25519 provider metadata in `pyproject.toml`
 and matching fully hashed finalization of `requirements-framework.lock` in
-one reviewed change set.
+one reviewed change set. It also owns `accept_registry_object` and
+`supersede_registry_object`; those mutations require the exact external
+authorization validation and cannot be activated from I-2.
 **Validation:** V4, V5, V11; synthetic keys/records only.
 **Acceptance:** the provider/version/build and dependency closure selected by
 UQ-25 agree exactly between `pyproject.toml`, the finalized lock, installed
@@ -1898,9 +1967,11 @@ optional refinements:
    amendment and matching contract prospectively supplied that narrow
    resolution. Revision v0.2.2 does not edit, repeat, or redefine it and does
    not itself authorize implementation or integration.
-2. **Before I-4 production activation:** a governance bootstrap must register
-   real trust-profile key material, key custody/rotation, issuer roles and
-   ceilings, time/revocation services, endpoints, and operator pin procedure.
+2. **Before I-4 production activation or registry acceptance/supersession:**
+   a governance bootstrap must register real trust-profile key material, key
+   custody/rotation, issuer roles and ceilings, time/revocation services,
+   endpoints, and operator pin procedure. I-2 supplies validation only and
+   cannot create an accepted object or numerical policy.
 3. **Before the I-4 cryptographic provider is accepted:** UQ-25 review must
    select exact provider versions/builds/hashes, verify RFC 8032 behavior, and
    freeze identical direct-dependency metadata in `pyproject.toml` and the
@@ -2131,23 +2202,41 @@ Historical v0.2.1 status: the signed documentation tags
 `foundation-v0.1.0` and `foundation-v0.1.1` are immutable evidence at the
 objects and commits recorded in §1.3.
 
-Current v0.2.2 authority boundary: this reconciliation creates no milestone,
+Historical v0.2.2 authority boundary: that reconciliation created no milestone,
 branch, tag, package, release, manuscript, manifest, or publication artifact.
-It does not grant framework integration, I-2, framework-alpha, scientific-
+It did not grant framework integration, I-2, framework-alpha, scientific-
 execution, Gate, publication, or release authority. Milestone and branch
 status must be established independently from Git and their retained
 acceptance evidence rather than inferred from this plan.
 
-## 19. I-0 document acceptance checklist
+Current v0.2.3 authority boundary: this amendment creates no milestone,
+branch, tag, package, release, manuscript, manifest, or publication artifact.
+It freezes prospective I-2 implementation authority only and does not begin
+I-2 or grant integration, framework-alpha, scientific-execution, Gate,
+publication, or release authority.
 
-Revision v0.2.2 is complete only if review confirms all of the following:
+## 19. Current prospective document acceptance checklist
 
-- the current four authority hashes are exactly those in §1.3, while the
+Revision v0.2.3 is complete only if review confirms all of the following:
+
+- the active authority locks are exactly those in §1.3, while the
   original I-0 verification and starting SHA in §§1.1–1.2 remain explicitly
   historical;
 - exactly the specification and this plan changed for this prospective
-  authority-hash reconciliation;
-- UQ-02 is limited to the substrate/interface boundary;
+  I-2 authority amendment;
+- specification §21 and plan §21 agree on the complete common failure,
+  numeric, numerical-policy, primitive, envelope, registry, API, fixture,
+  dependency, capability, and exclusion contracts;
+- all 29 I-1 failure codes and 95 existing `_fail` call semantics remain
+  preserved while the exact 24 I-2 codes and deterministic typed envelope are
+  frozen;
+- the future I-2 manifest is exactly nine paths, existing
+  `tests/framework/safety.py` remains unchanged, and packaging needs no
+  amendment;
+- the post-I-2 public inventory is exactly 84 types, 42 callables, and one
+  version name in a sorted 127-entry root export tuple;
+- UQ-02 is limited to the exact substrate/interface boundary and every
+  policy-required I-2 operation refuses without invoking a provider;
 - ECJ-1 is byte-exact and resolves the RFC 8785 ordering conflict explicitly;
 - ECJ-1 assignment and NFC are bound to raw-hash-pinned Unicode 15.0.0 assets,
   reject later-assigned code points independently of the host, and have a
@@ -2167,7 +2256,7 @@ Revision v0.2.2 is complete only if review confirms all of the following:
   finalization;
 - revision v0.2.1's packaging-blocker statement is historical, the existing
   packaging amendment and contract retain their narrow prospective
-  precedence, and this reconciliation neither edits nor repeats them;
+  precedence, and this amendment neither edits nor repeats them;
 - T0 structural operations may receive supplied immutable scientific records
   without evaluating science, while enclosing T2/T3 context escalates the
   invocation and cannot be lowered;
@@ -2183,7 +2272,7 @@ Revision v0.2.2 is complete only if review confirms all of the following:
   created or run.
 
 This revision establishes documentation locks only. Neither its existence nor
-its review authorizes framework integration, I-2, a framework-alpha
+its review begins I-2 or authorizes framework integration, a framework-alpha
 milestone, scientific execution, a Gate operation, publication, release, or
 any later stage.
 
@@ -2209,21 +2298,530 @@ backend, dependency, fixture, test, or scientific permission. Its exact
 historical whole-file SHA-256 is
 `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
 
-### 20.3 Revision v0.2.2 — current prospective reconciliation
+### 20.3 Revision v0.2.2 — historical prospective reconciliation
 
-Revision v0.2.2 adopts specification v0.1.2 at the exact active raw SHA-256
-in §1.3 and the literature-extended books structure at its exact active raw
-SHA-256 there. This narrow reconciliation records the added bibliography and
+Revision v0.2.2 adopted specification v0.1.2 at historical raw SHA-256
+`32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
+and the literature-extended books structure at raw SHA-256
+`120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`.
+This narrow reconciliation recorded the added bibliography and
 citation policy, prior-art and nearest-antecedent mapping,
 candidate-contribution boundaries, bibliography/endnote page reserves, and
 literature checkpoints before manuscript generation.
 
-It changes no implementation stage, closed manifest, API, invariant,
+It changed no implementation stage, closed manifest, API, invariant,
 decision, threat, validation fixture, dependency selection, packaging rule,
-scientific semantic, Gate rule, or execution permission. It preserves the
+scientific semantic, Gate rule, or execution permission. It preserved the
 distinction among physical measurement, causal inference, policy, and
-settlement. It neither edits nor repeats the existing packaging resolution
-and grants no integration, I-2, framework-alpha, scientific-execution, Gate,
-publication, or release authority. Its exact whole-file SHA-256 is reported
-externally because the current raw hash cannot be embedded in the file it
-hashes.
+settlement. It neither edited nor repeated the existing packaging resolution
+and granted no integration, I-2, framework-alpha, scientific-execution, Gate,
+publication, or release authority. Its exact historical whole-file SHA-256
+is `3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`.
+
+### 20.4 Revision v0.2.3 — current prospective I-2 authority amendment
+
+Revision v0.2.3 adopts specification v0.1.3 at raw SHA-256
+`44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`
+and freezes the prospective I-2 mechanics in §21. The v0.2.2 whole-file
+SHA-256
+`3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`
+is immutable historical evidence. The new v0.2.3 raw hash is reported
+externally and is not embedded in this file.
+
+## 21. Normative prospective Framework I-2 implementation authority
+
+This section supersedes only incomplete or provisional I-2 implementation
+details elsewhere in this plan. Specification v0.1.3 §21 controls every I-2
+semantic, field, projection, invariant, operation-matrix cell, predicate,
+failure meaning, precedence rule, fixture requirement, exclusion, and
+nonclaim. This section is the mechanical path, export, ownership, dependency,
+and validation source. Any mismatch fails closed; neither source may be
+selected piecemeal.
+
+This is authority for a future separately authorized implementation task,
+not implementation authority for the present task. I-2 remains unimplemented.
+
+### 21.1 Accepted predecessor and fixed failure audit
+
+The starting repository evidence for this amendment is branch
+`framework-v0.1` at
+`64e7d692dbae2c3beb6752d955c8f6193e481010`, subject `Synchronize framework
+authority with foundation v0.1.2`, with ordered parents
+`f0f8ed8a7d19991f5084ac203cea0a243de8b46d` and
+`38aae5e8c59d0bced598f2918f76dbee6df7481c`. Local, remote-tracking, and live
+remote tips matched and the tree/index were clean before amendment.
+
+The accepted I-1 source audit is exact: 95 `_fail` calls—23 in
+`canonical.py`, 14 in `hashing.py`, 13 in `identity.py`, and 45 in
+`registry.py`. Every call supplies exactly two positional arguments and no
+keyword. The only direct `FrameworkError` construction is within `_fail` in
+`errors.py`; no I-1 test directly constructs `FailureEnvelope` or
+`FrameworkError` or relies on the former untyped defaults. Therefore the
+backward-compatible specification outcome is mandatory and the manifest need
+not add an I-1 caller or existing test.
+
+The aggregate I-1 evidence has two non-conflicting path scopes. Commit
+`ed75790b20c7d6b86cedc4d9dbeb269f32cca9ea` itself introduced 22
+implementation paths. The closed feature range from
+`fae76042746e55b9fe5ec5c62de0f47fbc5ccb47` through that commit contains the
+same 22 plus the packaging Markdown and JSON authority, for 24 paths. The
+historical aggregate digest
+`f7b1b7abc9a71b090320b8dc468d57e3a7e39f4f2a045b7a5946a4174882fee8`
+is corroboration only: its serialization recipe was not committed, it is not
+independently reproducible, and it is not an I-2 semantic input. Git
+path/blob identities, raw hashes, and byte sizes provide current integrity.
+
+All 29 accepted I-1 failure codes retain their exact names and meanings:
+
+```text
+ALIAS_CONFLICT
+ALIAS_INVALID
+ALLOCATION_CLAIM_CONFLICT
+ALLOCATION_COLLISION
+ARTIFACT_TOO_LARGE
+CANONICALIZATION_FAILURE
+CYCLIC_OBJECT_GRAPH
+DIGEST_INVALID
+DIGEST_TYPE_MISMATCH
+DUPLICATE_OBJECT_NAME
+ECJ1_TYPE_UNSUPPORTED
+FLOAT_FORBIDDEN
+HASH_DOMAIN_MISMATCH
+HASH_MISMATCH
+INVALID_ECJ1
+INVALID_UNICODE_SCALAR
+NAMESPACE_UNREGISTERED
+NONCANONICAL_ECJ1
+REF_NOT_FOUND
+REGISTRY_IMMUTABLE
+REGISTRY_RECORD_CONFLICT
+RESERVED_NAMESPACE
+SCIENTIFIC_ID_INVALID
+SEMANTIC_VERSION_INVALID
+STABLE_KEY_INVALID
+UNASSIGNED_UNICODE_SCALAR
+UNICODE_DATA_INTEGRITY_FAILURE
+UNICODE_DATA_MALFORMED
+VERSION_MISMATCH
+```
+
+I-2 adds exactly the following 24 codes, with the meanings and precedence in
+specification §21.2.4; no further code is authorized:
+
+```text
+BOUNDARY_MISMATCH
+CLOCK_MISMATCH
+CONVERSION_RULE_MISMATCH
+CORE_NUMBER_INVALID
+DIMENSION_MISMATCH
+DIVISION_BY_ZERO
+ERROR_BOUND_INVALID
+HORIZON_INVALID
+IMPLICIT_ABSENCE_FORBIDDEN
+IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN
+INVALID_AGGREGATION
+LIFECYCLE_TRANSITION_INVALID
+NONFINITE_NUMBER_FORBIDDEN
+NUMERICAL_OPERATION_UNSUPPORTED
+NUMERICAL_POLICY_INCOMPLETE
+NUMERICAL_POLICY_REQUIRED
+QUANTITY_TYPE_MISMATCH
+REGION_MISMATCH
+RESOLUTION_STATE_INVALID
+SIGN_CONVENTION_MISMATCH
+SUPERSESSION_INVALID
+TIME_BASIS_MISMATCH
+UNCERTAINTY_RECORD_INVALID
+UNIT_MISMATCH
+```
+
+### 21.2 Exact nine-path I-2 implementation manifest
+
+The future I-2 change set is exactly these paths and states:
+
+| State | Path | Narrow I-2 ownership |
+|---|---|---|
+| Modified | `src/ebu_framework/__init__.py` | Set the exact §21.3 imports and 127-entry root `__all__`; leave `__version__ = "0.1.0a1"` unchanged |
+| Modified | `src/ebu_framework/errors.py` | Add only the specification §21.2 typed common failure fields/types, stable ID allocation, closed four-module I-1 compatibility map, and exact 24 I-2 codes; preserve every I-1 code/string/call-site behavior |
+| Modified | `src/ebu_framework/registry.py` | Strengthen only `RegistryRecord.lifecycle_status` to `LifecycleStatus`; `register_draft` still accepts only `DRAFT`; resolution and alias behavior unchanged; no acceptance/supersession mutation |
+| New | `src/ebu_framework/envelopes.py` | Exact common envelope/metadata and pure lifecycle/supersession records and validators; stores only canonical `CanonicalBytes`, imports only `CanonicalBytes`/`parse_ecj1` from `canonical`, and retains no decoded tree |
+| New | `src/ebu_framework/numeric.py` | Exact core numeric substrate, result/policy records, I-2-owned `RuntimeConstraintSet`, and structural policy validation without provider invocation |
+| New | `src/ebu_framework/primitives.py` | Exact typed primitive records and pure compatibility/conversion validators |
+| New | `tests/framework/fixtures/numeric_vectors_v1.json` | Exact deterministic 335-vector specification §21.8 / plan §21.5 fixture |
+| New | `tests/framework/test_numeric.py` | T0 exact numeric/projection/failure/policy-refusal checks against the fixture |
+| New | `tests/framework/test_primitives_envelopes.py` | T0 primitive/envelope/lifecycle checks, the exact specification §21.8.6 all-record static supplement, nine immutable-byte checks, plus source-text/AST import/export/29-edge reachability audit |
+
+No tenth path is authorized. In particular,
+`tests/framework/safety.py` remains unchanged because the new test can perform
+the required AST/export audit directly and reuse existing guards without
+altering them. The frozen backend's manifest-selection rule already permits
+the three new `src/ebu_framework/*.py` paths once they are present in the
+accepted stage manifest; the tests and fixture remain excluded from wheel and
+sdist exactly as before. No packaging authority amendment is required.
+
+The following remain byte-for-byte unchanged during I-2:
+
+```text
+build_backend/ebu_build_backend.py
+pyproject.toml
+requirements-framework.lock
+src/ebu_framework/canonical.py
+src/ebu_framework/hashing.py
+src/ebu_framework/identity.py
+src/ebu_framework/data/core_registry_v1.json
+tests/framework/safety.py
+UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md
+unified_python_research_framework_packaging_contract.json
+```
+
+All scientific, Gate, result, historical runner/finalizer, and other
+repository paths are also unchanged.
+
+### 21.3 Exact post-I-2 public API
+
+The exact post-I-2 public type inventory contains 84 names. Module ownership
+is closed as follows:
+
+| Owner | Exact public types |
+|---|---|
+| `errors` | `Applicability`, `CanonicalTraceState`, `DurabilityState`, `FailureCode`, `FailureEnvelope`, `FailureEventKey`, `FailureEvidenceRef`, `FailureId`, `FailureInterfaceRef`, `FailureObjectRef`, `FailureStage`, `PolicyMemoryAdvance`, `RetryClass`, `ScientificStatusEffect`, `StateAdvance` |
+| `canonical` | `CanonicalBytes`, `CanonicalizationVersion`, `ECJ1Value` |
+| `identity` | `ArtifactByteHash`, `AugmentedClosedLoopReplayStateHash`, `AuthorizationUseKey`, `CanonicalScientificTracePayloadHash`, `CanonicalTracePrefixHash`, `CanonicalTraceRowHash`, `ExecutionSemanticsHash`, `InformationViewHash`, `ObjectContentHash`, `ObjectRef`, `PolicyMemoryPayloadHash`, `ProposalSetHash`, `RepresentedStateProjectionHash`, `ScientificId`, `ScientificIdAllocationClaimV1`, `SemanticVersion`, `SourceFileRawSha256`, `StatePayloadHash` |
+| `registry` | `AliasRecord`, `NamespaceEntry`, `NamespaceRegistrySnapshot`, `RegistryRecord`, `ResolutionRecord` |
+| `numeric` | `Binary64BitsV1`, `ComparisonResult`, `Completeness`, `CoreNumberV1`, `DecimalV1`, `ErrorBound`, `ExactConversion`, `IntegerV1`, `NumericalOperation`, `NumericalPolicyV1`, `NumericalResult`, `NumericalVariant`, `OperandValidationResult`, `QuantityContext`, `RationalV1`, `RuntimeConstraintSet` |
+| `envelopes` | `CommonObjectEnvelope`, `LifecycleStatus`, `LifecycleTransition`, `LifecycleValidationResult`, `RecordMetadata`, `SupersessionRelation`, `SupersessionValidationResult` |
+| `primitives` | `AccountingBoundary`, `ClaimStatus`, `ClockSystem`, `CompatibilityResult`, `ConversionRule`, `Dimension`, `Duration`, `Epoch`, `Horizon`, `Instant`, `Quantity`, `Region`, `ResolutionDetail`, `ResolutionState`, `ResourceType`, `ServiceType`, `SignConvention`, `UncertaintyKind`, `UncertaintyRecord`, `Unit` |
+
+The exact post-I-2 public callable inventory contains 42 names. The 21
+accepted I-1 callables remain unchanged:
+
+```text
+allocate_scientific_id
+compute_artifact_byte_hash
+compute_augmented_replay_state_hash
+compute_canonical_trace_payload_hash
+compute_canonical_trace_prefix_hash
+compute_canonical_trace_row_hash
+compute_execution_semantics_hash
+compute_information_view_hash
+compute_object_content_hash
+compute_policy_memory_payload_hash
+compute_proposal_set_hash
+compute_represented_state_projection_hash
+compute_source_file_raw_sha256
+compute_state_payload_hash
+encode_ecj1
+parse_ecj1
+parse_scientific_id
+parse_semantic_version
+register_draft
+resolve_alias
+resolve_ref
+```
+
+I-2 adds exactly these 21 T0 callables with the signatures and behavior in
+specification §§21.3–21.6:
+
+```text
+apply_exact_core_operation
+convert_quantity_exact
+decimal_to_rational_exact
+normalize_core_number
+validate_boundary_compatibility
+validate_clock_compatibility
+validate_conversion_rule
+validate_dimension_compatibility
+validate_horizon
+validate_lifecycle_transition
+validate_numerical_policy
+validate_object_envelope
+validate_quantity
+validate_region_compatibility
+validate_resolution_detail
+validate_resource_service_compatibility
+validate_sign_convention_compatibility
+validate_supersession_relation
+validate_time_basis
+validate_uncertainty_record
+validate_unit_compatibility
+```
+
+With `__version__`, the exact root export count is therefore
+`84 + 42 + 1 = 127`. `ebu_framework.__all__` is the following exact
+lexicographically ordered tuple; no extra, missing, duplicate, or differently
+ordered name conforms:
+
+```text
+AccountingBoundary
+AliasRecord
+Applicability
+ArtifactByteHash
+AugmentedClosedLoopReplayStateHash
+AuthorizationUseKey
+Binary64BitsV1
+CanonicalBytes
+CanonicalScientificTracePayloadHash
+CanonicalTracePrefixHash
+CanonicalTraceRowHash
+CanonicalTraceState
+CanonicalizationVersion
+ClaimStatus
+ClockSystem
+CommonObjectEnvelope
+ComparisonResult
+CompatibilityResult
+Completeness
+ConversionRule
+CoreNumberV1
+DecimalV1
+Dimension
+DurabilityState
+Duration
+ECJ1Value
+Epoch
+ErrorBound
+ExactConversion
+ExecutionSemanticsHash
+FailureCode
+FailureEnvelope
+FailureEventKey
+FailureEvidenceRef
+FailureId
+FailureInterfaceRef
+FailureObjectRef
+FailureStage
+Horizon
+InformationViewHash
+Instant
+IntegerV1
+LifecycleStatus
+LifecycleTransition
+LifecycleValidationResult
+NamespaceEntry
+NamespaceRegistrySnapshot
+NumericalOperation
+NumericalPolicyV1
+NumericalResult
+NumericalVariant
+ObjectContentHash
+ObjectRef
+OperandValidationResult
+PolicyMemoryAdvance
+PolicyMemoryPayloadHash
+ProposalSetHash
+Quantity
+QuantityContext
+RationalV1
+RecordMetadata
+Region
+RegistryRecord
+RepresentedStateProjectionHash
+ResolutionDetail
+ResolutionRecord
+ResolutionState
+ResourceType
+RetryClass
+RuntimeConstraintSet
+ScientificId
+ScientificIdAllocationClaimV1
+ScientificStatusEffect
+SemanticVersion
+ServiceType
+SignConvention
+SourceFileRawSha256
+StateAdvance
+StatePayloadHash
+SupersessionRelation
+SupersessionValidationResult
+UncertaintyKind
+UncertaintyRecord
+Unit
+__version__
+allocate_scientific_id
+apply_exact_core_operation
+compute_artifact_byte_hash
+compute_augmented_replay_state_hash
+compute_canonical_trace_payload_hash
+compute_canonical_trace_prefix_hash
+compute_canonical_trace_row_hash
+compute_execution_semantics_hash
+compute_information_view_hash
+compute_object_content_hash
+compute_policy_memory_payload_hash
+compute_proposal_set_hash
+compute_represented_state_projection_hash
+compute_source_file_raw_sha256
+compute_state_payload_hash
+convert_quantity_exact
+decimal_to_rational_exact
+encode_ecj1
+normalize_core_number
+parse_ecj1
+parse_scientific_id
+parse_semantic_version
+register_draft
+resolve_alias
+resolve_ref
+validate_boundary_compatibility
+validate_clock_compatibility
+validate_conversion_rule
+validate_dimension_compatibility
+validate_horizon
+validate_lifecycle_transition
+validate_numerical_policy
+validate_object_envelope
+validate_quantity
+validate_region_compatibility
+validate_resolution_detail
+validate_resource_service_compatibility
+validate_sign_convention_compatibility
+validate_supersession_relation
+validate_time_basis
+validate_uncertainty_record
+validate_unit_compatibility
+```
+
+The exact new/modified module `__all__` subsets are the names assigned to
+each owner above plus its assigned callables: `errors` 15, `numeric` 20,
+`envelopes` 10, and `primitives` 34. `FrameworkError`, `_fail`, helper
+constructors, projection helpers, enum aliases, and imported names remain
+private. `accept_registry_object` and `supersede_registry_object` are absent
+from the post-I-2 API and assigned to I-4.
+
+### 21.4 Capability, dependency, and cycle contract
+
+Every new I-2 callable is T0. It may construct, normalize, project, compare
+exact core numbers, perform an explicitly supplied exact unit conversion, or
+validate immutable structure. No I-2 callable accepts a capability token,
+invokes a `NumericalPolicyV1` method, performs registry mutation, evaluates a
+scientific mapping, inspects an outcome, advances state, or enters T1, T2, or
+T3.
+
+The exact relevant production import DAG after I-2 is:
+
+```text
+errors -> Python standard library only
+canonical -> errors + pinned Unicode package data
+identity -> canonical, errors
+hashing -> canonical, identity, errors
+envelopes -> canonical, hashing, identity, errors
+registry -> canonical, identity, errors, envelopes
+numeric -> canonical, identity, errors
+primitives -> numeric, identity, envelopes, errors
+__init__ -> canonical, errors, hashing, identity, registry, numeric,
+            envelopes, primitives
+```
+
+Counting only directed package-module imports—not the canonical module's
+resource read of pinned Unicode package data—this DAG has exactly 29 edges.
+The prior inventory had 28; `envelopes -> canonical` is the sole added edge.
+The displayed topological order
+`errors, canonical, identity, hashing, envelopes, registry, numeric,
+primitives, __init__` proves acyclicity because every edge points from a later
+node to an earlier node. `numeric` and `registry` are incomparable siblings;
+their displayed relative order is immaterial because neither imports the
+other.
+
+The new edge is narrow: `envelopes.py` may import exactly `CanonicalBytes` and
+`parse_ecj1` from `canonical.py`, may call `parse_ecj1` only to validate or
+freshly decode stored payload bytes, and must immediately discard the decoded
+value after validation/hash construction. It may not import `encode_ecj1`,
+normalization/Unicode internals, or `registry`; retain a decoded cache; or use
+dynamic import. No reverse edge from canonical, hashing, or identity into
+envelopes is permitted. No reverse edge into `errors` and no
+`primitives -> registry` is permitted. Production and test/validation code
+must not use dynamic import. No listed module may import or refer to a
+scientific module, historical `exp_*`, runner, finalizer, result, Gate,
+network, subprocess, packaging hook, or dependency-installation path.
+
+The backward-compatible `_fail` mechanism may inspect only the immediate
+caller module name against the closed four-entry map frozen by specification
+§21.2.3. It cannot walk arbitrary frames, infer a later stage, or expose a
+universal I-1 default. Every I-2 call supplies `FailureStage.I2` and an exact
+`FailureInterfaceRef` explicitly.
+
+### 21.5 Deterministic validation and readiness contract
+
+`tests/framework/fixtures/numeric_vectors_v1.json` is the exact 335-vector
+ECJ-1 sequence in specification §21.8: block counts
+`18,35,42,4,36,107,20,41,32`, first ID `i2-0001`, terminal ID `i2-0335`.
+Its schema/key order, literal catalog, nested-loop order, input patches,
+projections, canonical hex, failure coordinates/IDs, and authority-field
+placement are closed. It binds the accepted specification v0.1.3 raw hash
+above and the future accepted plan v0.2.3 raw hash reported externally after
+this document is complete. It is static validation data, not a policy, world,
+configuration, trajectory, or result.
+
+V2 checks the closed finite basis: all four numeric forms; the 25 binary/four
+unary cells; exact conversions and terminating/repeating division; the ten
+finite and six nonfinite bit patterns; the exact 17-case `ErrorBound` basis;
+policy completeness/refusal; the exact 107 compatibility vectors; all
+resolution/uncertainty states; 20 envelope vectors; 25 lifecycle cells, three
+lifecycle evidence refusals, and 13 supersession vectors; 23 adjacent
+precedence pairs and nine multiply-invalid cases. Infinite numeric/graph
+domains remain constructor/algebra/predicate proof obligations; the fixture
+detects implementation disagreement and is not exhaustive empirical proof.
+
+The I-2 portion of V3 is exactly static construction and projection of
+`CommonObjectEnvelope` with exact canonical bytes, `RecordMetadata`,
+`LifecycleTransition`, `SupersessionRelation`, and the strengthened draft-only
+`RegistryRecord`. `test_primitives_envelopes.py` performs the nine frozen
+immutability checks: source encoded before construction; source mutation
+invariance; independent parsed-tree mutation invariance; direct
+dict/list/bytearray/memoryview rejection; noncanonical-byte rejection; exact
+hash reproduction; metadata/lifecycle invariance; invalid-or-different-hash
+byte mutation; and absence of a decoded mutable cache. Every other V3 record
+is I-3 or later and unreachable.
+
+The complete public-record closure audit is specification §21.8.6. It covers
+every concrete I-2 error, numeric, primitive, envelope, and strengthened
+registry record; all 16 relevant public enum domains; the exact
+`CoreNumberV1` union; and the property/method surface and noninvocation of
+`NumericalPolicyV1`. Its non-fixture supplement has exact names, inputs,
+expected projections/codes, and one independently derived nonempty-coordinate
+failure ID. This adds no public name, callable, dependency edge, or tenth
+path. The closed totals are 84 types, 42 callables, `__version__`, 127 root
+exports, 29 I-1 plus 24 I-2 failure codes, 24 I-2 precedence entries, 29 DAG
+edges, and nine future paths.
+
+The I-2 V11 audit is T0 source-text/AST inspection. It verifies the exact
+127-entry root tuple and module subsets; nine-path manifest; 29 direct module
+edges and acyclicity; the exact `envelopes` import subset
+`CanonicalBytes,parse_ecj1`; absence of `encode_ecj1`, canonical internals,
+registry/dynamic imports, and decoded caches; exact failure-code set; no local
+failure enum/string code; and no scientific/runner/finalizer/result/Gate/
+package/network/subprocess/T1/T2/T3 reachability. The AST audit imports no
+production module. It must report nonzero completed checks; skipped,
+terminated, or zero-check work is not a pass.
+
+### 21.6 Registry dependency, exclusions, and Gate preservation
+
+I-2 implements only pure lifecycle and supersession validation.
+`accept_registry_object` and `supersede_registry_object` belong to I-4, after
+the required external authorization records and validator exist. I-2 cannot
+fabricate authority, create a synthetic production acceptance result, mutate
+a production object to accepted/superseded, or accept a numerical policy.
+Draft registration and exact ref/alias resolution retain their I-1 semantics.
+
+I-2 contains no domain numerical policy, EBU quote rule, distortion, action,
+transition, trajectory, controller, topology, equilibrium/homeostasis rule,
+routing/settlement rule, parameter search/optimization, stochastic semantic,
+or wave, interference, spectral, Taylor, Fibonacci-like, recursive, fractal,
+or self-similar model. It authorizes no framework execution, policy callback,
+scientific test, package/build/install operation, result, publication,
+commit, push, merge, branch, tag, release, or PR.
+
+The one roadmap remains: Framework I-1 through I-9; Part IV local measurement
+and outcome discrimination; Part V long-run viability and homeostasis; Part
+VI sequential and parallel actions; Part VII routes and infrastructure; Part
+VIII topology, timing, waves, spectra, interaction hierarchies, recurrence,
+hierarchy, and fractal hypotheses; then Part IX institutional application and
+settlement. Future candidates are derived where possible from declared
+mathematics, compared with simpler baselines, and tested against a
+homeostasis-preservation gate. This context grants no scientific work.
+
+Gate 1D-C remains exactly: one cumulative official runner invocation; no
+receipt; no result directory; no model-state advance; scientific state
+`UNSTARTED`. I-2 does not inspect, investigate, correct, retry, invoke,
+finalize, reinterpret, or otherwise interact with it and never records its
+cumulative invocation count as zero.
