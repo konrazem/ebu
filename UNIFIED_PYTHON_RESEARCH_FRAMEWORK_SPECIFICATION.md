@@ -1,7 +1,7 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.1
-**Status:** Phase B specification checkpoint; prospective authority-hash reconciliation; implementation not authorized
+**Version:** 0.1.2
+**Status:** Phase B specification checkpoint; prospective authority-hash reconciliation only; no integration, later-stage, scientific-execution, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-13
 **Language:** English
@@ -54,7 +54,7 @@ committed sources at repository `HEAD`
 
 This table is immutable historical evidence of what the original v0.1 task
 verified. In particular, the books-structure hash beginning `1e4df33b` is
-retained only as an original verification hash. It is not a current v0.1.1
+retained only as an original verification hash. It is not a current v0.1.2
 implementation authority.
 
 The planning register at that time contained older references to a working
@@ -76,42 +76,47 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.1 prospective authority register
+#### 2.1.2 Current v0.1.2 prospective authority register
 
-Revision v0.1.1 prospectively replaces only the active books-structure
+Revision v0.1.2 prospectively replaces only the active books-structure
 authority pointer. The reconciliation began from repository `HEAD`
-`dc2620c83718c8fdac67066bd308a4fd6b50b5f9`, where the books-structure
-commit changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
+`c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
+changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.1 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.2 |
 |---|---|---|---|
-| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including the K1–K6 planning programme | `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c` | Parts IV–IX ordering and future research dependencies, subject to the boundary in §2.1.4 |
+| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including the K1–K6 planning programme and literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.5 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged Part VIII dynamic state, seven-layer separation, deterministic event order, network evolution, objectives, uncertainty, and framework requirements |
 
-The `4dcccf8d...` books-structure hash is the only active books-structure
-authority for this specification revision. The superseded `1e4df33b...`
-value remains solely in explicitly historical records. This prospective
+The books-structure hash in this table is the only active books-structure
+authority value for this specification revision. Superseded values remain
+solely in explicitly historical records. This prospective
 pointer update changes no imported bridge or dynamic-coordination semantics,
 framework object, interface, invariant, event phase, test classification, or
 implementation permission.
 
-#### 2.1.3 Immutable `foundation-v0.1.0` evidence
+#### 2.1.3 Immutable signed foundation evidence
 
-The existing signed tag is immutable historical evidence and is not moved or
-reinterpreted by this revision:
+Both existing signed tags are immutable historical evidence and are not moved
+or reinterpreted by this revision:
 
 | Evidence | Exact identity | Historical meaning |
 |---|---|---|
 | Signed tag object | `foundation-v0.1.0` / `90646d3c7e1ff2201eab4739e894598b80782b79` | Original documentation/foundation milestone only |
 | Tag target | `fa08920a56485962b368bfa032fa284f455413eb` | Unchanged commit named by the signed tag |
-| Original specification bytes | `4c2b3bc65628d37fefb874ab577f8b9ce173554ae2399c788e2d7d301abead38` | Original v0.1 whole-file SHA-256; not the current v0.1.1 specification hash |
+| Original specification bytes | `4c2b3bc65628d37fefb874ab577f8b9ce173554ae2399c788e2d7d301abead38` | Original v0.1 whole-file SHA-256; not a later specification hash |
 | Original I-0 plan bytes | `a1cebfa63528e49d9bada3c6564c7d40616369a45afd97640ff937ae07389674` | Original plan whole-file SHA-256 at the milestone; not a hash of a later amendment |
 | Books-structure bytes at the milestone | `1e4df33b4898a8dd0314ce771f8c06a86eca97782a8d27ffdb9c7165e2663558` | Original books-structure verification hash; historical only |
+| Signed tag object | `foundation-v0.1.1` / `29060d72ce2fac10ab85e52330c1a375c1d5cb5b` | Reconciled documentation/foundation milestone only |
+| Tag target | `fae76042746e55b9fe5ec5c62de0f47fbc5ccb47` | Unchanged commit named by the signed tag |
+| Specification bytes at `foundation-v0.1.1` | `a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1` | Historical v0.1.1 whole-file SHA-256 |
+| I-0 plan bytes at `foundation-v0.1.1` | `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e` | Historical v0.2.1 whole-file SHA-256 |
+| Books-structure bytes at `foundation-v0.1.1` | `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c` | Historical v0.1.1/v0.2.1 authority hash |
 
-Revision v0.1.1 is later prospective documentation. It was not present at,
-verified during, or incorporated into `foundation-v0.1.0`.
+Revision v0.1.2 is later prospective documentation. It was not present at,
+verified during, or incorporated into either signed foundation tag.
 
 #### 2.1.4 K1–K6 circuit-network programme boundary
 
@@ -129,6 +134,23 @@ structure is future Part VI/Part VIII planning only. It:
 No K1–K6 object, electrical constitutive law, resistance-like parameter,
 adapter, implementation file, or validation fixture is introduced by this
 authority-hash reconciliation.
+
+#### 2.1.5 Literature and originality extension boundary
+
+The books-structure revision adds bibliography and citation policy, prior-art
+and nearest-antecedent mapping, candidate-contribution boundaries, explicit
+bibliography/endnote page reserves, and literature checkpoints before
+manuscript generation. These are documentation and manuscript-governance
+additions only. They change no imported Bridge definition, Dynamic
+Coordination semantic, framework object, interface, invariant, event phase,
+implementation manifest, packaging rule, scientific definition, Gate rule,
+or execution permission.
+
+In particular, the revision preserves the required distinction among the
+measured joint physical transition, causal inference about contributions,
+policy choice, and institutional settlement. A literature classification or
+candidate-contribution label cannot convert one of those operations into
+another or supply scientific evidence for it.
 
 ### 2.2 Preserved Gate 1D-C incident boundary
 
@@ -3081,11 +3103,14 @@ revision.
 The original v0.1 specification proposed I-0 followed by I-1–I-10. That
 sequence is preserved below as historical design evidence. I-0 planning was
 later completed in `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md`;
-its current v0.2.1 authority/status section governs readiness. I-1 remains
-blocked there by the unresolved PEP 517/stdlib-only packaging contradiction.
-Any implementation still requires separate explicit authorization and would
-not authorize preregistration, pre-execution audit, scientific execution,
-interpretation, publication, or any Gate 1D-C action.
+its current authority/status section governs its documentation locks.
+Revision v0.2.1 recorded the then-unresolved PEP 517/stdlib-only packaging
+contradiction. The existing packaging amendment and matching contract
+prospectively resolved that contradiction within their narrow scope. This
+reconciliation neither repeats nor redefines that solution. This
+specification does not itself authorize integration, I-2, preregistration,
+pre-execution audit, scientific execution, interpretation, release,
+publication, or any Gate 1D-C action.
 
 The proposed implementation sequence is:
 
@@ -3279,10 +3304,12 @@ Only after deterministic implementation acceptance:
   pre-execution audit, scientific execution, interpretation, and publication
   as separate authorizations.
 
-No I-1–I-10 implementation step in this proposal has begun. I-0 is preserved
-through the later plan rather than treated as future work. The next possible
-work is the separately authorized prospective packaging-plan amendment named
-by that plan; implementation itself remains unperformed.
+This original sequence records stage boundaries rather than current branch
+state. I-0 is preserved through the later plan rather than treated as future
+work. Actual implementation and integration status comes from reviewed Git
+history and retained stage evidence, not from this specification. Revision
+v0.1.2 grants no integration, I-2, framework-alpha, scientific-execution,
+Gate, publication, or release authority.
 
 ## 20. Document revision history
 
@@ -3295,13 +3322,31 @@ It used the then-current books-structure hash
 and remains immutable evidence in `foundation-v0.1.0`. Neither value is a
 current implementation authority.
 
-### 20.2 Revision v0.1.1 — current prospective amendment
+### 20.2 Revision v0.1.1 — historical prospective amendment
 
 Revision v0.1.1 adopts the books-structure hash
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`
-as current authority and adds only the K1–K6 scope boundary needed to prevent
+as its then-current authority and adds only the K1–K6 scope boundary needed to prevent
 future planning from silently entering I-1. It changes no scientific
 definition, core semantic, closed implementation manifest, dependency,
-backend, validation fixture, or stage authorization. Its exact whole-file
-SHA-256 is recorded in the prospectively amended I-0 plan rather than inside
-this file, which cannot self-record its current raw hash without changing it.
+backend, validation fixture, or stage authorization. Its historical exact
+whole-file SHA-256 is
+`a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1`.
+
+### 20.3 Revision v0.1.2 — current prospective reconciliation
+
+Revision v0.1.2 adopts the literature-extended books structure through the
+single active authority lock in §2.1.2. The update adds bibliography and
+citation policy, prior-art and nearest-antecedent mapping,
+candidate-contribution boundaries, bibliography/endnote page reserves, and
+literature checkpoints before manuscript generation.
+
+It changes no imported Bridge definition, Dynamic Coordination semantic,
+framework object, interface, invariant, event phase, implementation manifest,
+packaging rule, scientific definition, Gate rule, execution permission, or
+the distinction among physical measurement, causal inference, policy, and
+settlement. It repeats no packaging solution and grants no integration, I-2,
+framework-alpha, scientific-execution, publication, or release authority. Its
+exact whole-file SHA-256 is recorded in the prospectively reconciled I-0 plan
+rather than inside this file, which cannot self-record its current raw hash
+without changing it.
