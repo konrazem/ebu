@@ -1,6 +1,6 @@
 {
   "contract_id": "ebu-framework-i1-packaging/1",
-  "contract_version": "1.1.0",
+  "contract_version": "1.1.1",
   "status": "PROSPECTIVE_FULLY_SPECIFICATION_READY_UNIMPLEMENTED",
   "effective_scope": "I-1 Python packaging only",
   "authority": {
@@ -32,7 +32,8 @@
         "T0 through T3 capability classifications",
         "I-2 through I-10 scientific or operational semantics",
         "Gate 1D-C state, evidence, invocation count, or authority",
-        "the foundation-v0.1.0 tag object, target, or historical hashes"
+        "the foundation-v0.1.0 tag object, target, or historical hashes",
+        "the foundation-v0.1.1 tag object, target, or historical amendment and contract hashes"
       ],
       "conflict_rule": "FAIL_CLOSED"
     },
@@ -42,6 +43,15 @@
       "original_specification_raw_sha256": "4c2b3bc65628d37fefb874ab577f8b9ce173554ae2399c788e2d7d301abead38",
       "original_plan_raw_sha256": "a1cebfa63528e49d9bada3c6564c7d40616369a45afd97640ff937ae07389674",
       "interpretation": "HISTORICAL_ONLY_UNCHANGED"
+    },
+    "foundation_v0_1_1_immutable_evidence": {
+      "tag_object": "29060d72ce2fac10ab85e52330c1a375c1d5cb5b",
+      "tag_target": "fae76042746e55b9fe5ec5c62de0f47fbc5ccb47",
+      "amendment_version": "1.1.0",
+      "amendment_raw_sha256": "694120118a604926cd1c431b29c6d839d24d8d164023d0b5204c7e81e23cc9de",
+      "mechanical_contract_version": "1.1.0",
+      "mechanical_contract_raw_sha256": "89f54bd55802c99d292851619439bf96b9e391ef111fb4223adb37e738aa0e28",
+      "interpretation": "HISTORICAL_ONLY_UNCHANGED; VERSION_1_1_1_IS_A_LATER_PROSPECTIVE_CORRECTION_AND_DOES_NOT_MOVE_OR_REINTERPRET_THE_TAG"
     }
   },
   "standards_snapshot": {
@@ -272,6 +282,27 @@
     ],
     "optional_hook_absence_rule": "Unsupported PEP 660 hooks are not exported as backend attributes.",
     "output_collision_rule": "Refuse if the exact destination file or metadata directory already exists; never overwrite.",
+    "backend_path_identity_rule": {
+      "lexical_source_root": "Compute Path(__file__).absolute().parent.parent before resolving the build_backend directory or backend file; this lexical parent is the source-root identity and is not replaced by a symlink target.",
+      "lexical_build_backend_directory": "lexical_source_root/build_backend with the exact basename build_backend",
+      "lexical_backend_file": "lexical_source_root/build_backend/ebu_build_backend.py with the exact basename ebu_build_backend.py",
+      "ordered_checks": [
+        "Before any build input or output is processed, lstat the lexical build_backend directory and require a real non-symlink directory; otherwise refuse BACKEND_PATH_ESCAPE.",
+        "Before any build input or output is processed, lstat the lexical backend file and require a real non-symlink regular file; otherwise refuse BACKEND_PATH_ESCAPE.",
+        "Resolve the lexical source root, build_backend directory, and backend file strictly; require the resolved build_backend parent to equal the resolved lexical source root and the resolved backend parent to equal the resolved build_backend directory; otherwise refuse BACKEND_PATH_ESCAPE.",
+        "Resolve the loaded module spec origin strictly and require exact equality with the resolved backend file; otherwise refuse BACKEND_ORIGIN_MISMATCH.",
+        "Require pyproject.toml to contain exactly the sole backend-path entry build_backend and the sole backend module ebu_build_backend; unchanged exact pyproject build-system validation refuses an alternate or second backend path."
+      ],
+      "explicit_refusals": [
+        "symlinked lexical build_backend directory",
+        "symlinked lexical backend file",
+        "resolved path escape",
+        "alternate backend filename",
+        "alternate backend location",
+        "module-origin mismatch",
+        "second backend-path entry"
+      ]
+    },
     "source_snapshot_rule": "Read every selected input into one immutable byte snapshot, record pre-read and post-read lstat identity, and refuse a symlink, nonregular file, size/identity change, content change, or selected-set change. Build only from that byte snapshot."
   },
   "metadata_contract": {
@@ -457,6 +488,29 @@
       "line_ending": "LF including final line",
       "digest": "raw SHA-256 of the complete UTF-8 manifest bytes",
       "members": "pyproject.toml, backend source, LICENSE, and all selected package source files; generated metadata and outputs excluded"
+    },
+    "prepared_metadata_tree_manifest": {
+      "domain_line": "ebu-prepared-metadata-tree-manifest-v1",
+      "path_root": "the returned ebu_framework-0.1.0a1.dist-info directory; the root basename is not part of any manifest path",
+      "included_regular_files": [
+        "METADATA",
+        "WHEEL",
+        "licenses/LICENSE"
+      ],
+      "directory_entries": "EXCLUDED, including the returned .dist-info root and its licenses directory",
+      "file_types": "Each included path denotes one real non-symlink regular file; no other file type or path is permitted.",
+      "filesystem_metadata": "EXCLUDED; directory modes, regular-file modes, ownership, timestamps, inode/device identities, and every other filesystem attribute contribute no manifest bytes",
+      "path_spelling": "exact case-sensitive ASCII POSIX relative paths from included_regular_files, with slash separators and no leading ./ or trailing slash",
+      "entry_line": "sha256=<64 lowercase hex> size=<minimal unsigned base-10 byte length> path=<exact path spelling>",
+      "entry_digest": "raw SHA-256 of the exact regular-file bytes",
+      "entry_size": "exact byte length of the regular-file bytes, written as minimal unsigned base-10 digits with zero written as 0",
+      "encoding": "UTF-8",
+      "ordering": "one entry per included regular file, sorted lexicographically by the UTF-8 bytes of the exact path spelling",
+      "line_structure": "the exact domain_line is first, followed immediately by the ordered entry lines, with no blank or additional lines",
+      "line_ending": "LF (0x0a) terminates every line, including the final entry line",
+      "digest": "raw SHA-256 of the complete serialized UTF-8 manifest bytes, from the first domain-line byte through the final LF",
+      "byte_length": "the exact length in bytes of those complete serialized manifest bytes",
+      "persistence": "EVIDENCE_ONLY; the manifest is not written into the wheel, sdist, prepared metadata directory, or source tree"
     },
     "required_output_digests": [
       "raw SHA-256 and byte length of METADATA",
@@ -888,8 +942,8 @@
     {
       "id": "P1_BACKEND_PATH",
       "class": "T0",
-      "accept": "backend realpath is inside the sole resolved build_backend directory and module origin equals the selected file",
-      "refuse": "escape, symlink escape, second backend path, or backend imported elsewhere"
+      "accept": "the independently determined lexical source root contains an exact real non-symlink build_backend directory and exact real non-symlink ebu_build_backend.py regular file; their strict resolutions retain source-root containment; the resolved module origin equals the resolved selected backend file; pyproject declares only that backend path and module",
+      "refuse": "symlinked build_backend directory, symlinked backend file, path escape, alternate backend filename or location, second backend path, or module-origin mismatch"
     },
     {
       "id": "P2_EMPTY_REQUIREMENTS",
