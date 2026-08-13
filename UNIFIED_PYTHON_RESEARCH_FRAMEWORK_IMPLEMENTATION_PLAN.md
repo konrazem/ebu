@@ -1,19 +1,19 @@
 # Unified Python Research Framework Implementation Plan
 
-**Plan version:** 0.2.1
+**Plan version:** 0.2.2
 **Stage:** I-0 planning only
-**Status:** Prospective authority-hash reconciliation; implementation not authorized; I-1 blocked
+**Status:** Prospective authority-hash reconciliation only; no integration, later-stage, scientific-execution, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-13
 **Language:** English
 **Repository branch:** `v3.0-local-ebu-foundation`
 **Starting repository HEAD:** `4897dd69f60860e6c45c979ac37f87b9124e7a3e`
-**Current authority-reconciliation base HEAD:** `dc2620c83718c8fdac67066bd308a4fd6b50b5f9`
-**Framework specification version:** 0.1.1
+**Current authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
+**Framework specification version:** 0.1.2
 **Framework specification SHA-256:**
-`a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1`
+`32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
 **Future-books structure SHA-256:**
-`4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`
+`120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`
 
 ---
 
@@ -27,7 +27,7 @@ result, manifest, or publication record. It authorizes no implementation and
 no scientific execution.
 
 The current governing architectural and scientific authority is
-`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.1 at the exact
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.2 at the exact
 whole-file hash above, reconciled with the current source locks in §1.3. This
 plan resolves only the implementation questions explicitly assigned to I-0.
 It does not change an imported definition, equation, state component, event
@@ -38,7 +38,7 @@ falsifier, causal rule, settlement rule, or interpretation rule.
 
 The following checks completed before the original I-0 plan was created. The
 table is preserved as historical evidence; it does not claim that the later
-v0.1.1 specification or current books-structure hashes were verified during
+specification revisions or current books-structure bytes were verified during
 the original I-0 task:
 
 | Check | Required | Observed | Disposition |
@@ -71,35 +71,48 @@ All four files were read completely during original I-0, and their registered
 hashes then agreed with the committed bytes. The specification's explanation
 of the planning register's older bridge-v0.1 pointer is retained; the imported
 bridge authority is v0.2. The old specification and books hashes in this
-subsection are historical only and are not active v0.2.1 implementation
-authority.
+subsection are historical only and are not active implementation authority
+for this or any later revision.
 
-### 1.3 Current v0.2.1 mechanical authority locks and status
+### 1.3 Current v0.2.2 mechanical authority locks and status
 
 The current prospective authority set is:
 
 | Source | Current version or role | Current required raw SHA-256 | Mechanical status |
 |---|---|---|---|
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.1 framework specification | `a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1` | Current governing specification lock |
-| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6 planning | `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c` | Current planning-authority lock, within the scope boundary below |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.2 framework specification | `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69` | Current governing specification lock |
+| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6 planning and the literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Current planning-authority lock, within the scope boundaries below |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged imported Part VI authority |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged imported dynamic-coordination authority |
 
 Only this table and the matching top-level fields are active mechanical
-authority locks for later implementation-stage preflight. The old hashes in
-§§1.1–1.2 are retained solely as historical evidence. The original plan's
+authority locks. The old hashes in §§1.1–1.2 are retained solely as historical
+evidence. The original plan's
 whole-file SHA-256 is
 `a1cebfa63528e49d9bada3c6564c7d40616369a45afd97640ff937ae07389674`;
-that value is historical and is not the hash of revision v0.2.1.
+that value is historical and is not the hash of a later revision.
+
+Revision v0.2.1 is also immutable historical evidence. It used specification
+v0.1.1 at raw SHA-256
+`a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1`,
+the books-structure raw SHA-256
+`4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`,
+and had plan whole-file SHA-256
+`d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
+None of those three values is an active v0.2.2 authority lock.
 
 The signed tag `foundation-v0.1.0` remains the unchanged tag object
 `90646d3c7e1ff2201eab4739e894598b80782b79` at commit
 `fa08920a56485962b368bfa032fa284f455413eb`. The original specification,
 plan, and books bytes recorded by that milestone remain immutable evidence.
-The v0.1.1/v0.2.1 amendments were not present at or verified during the
-original foundation task and do not move or reinterpret its tag.
+The signed tag `foundation-v0.1.1` likewise remains the unchanged tag object
+`29060d72ce2fac10ab85e52330c1a375c1d5cb5b` at commit
+`fae76042746e55b9fe5ec5c62de0f47fbc5ccb47`. The v0.1.2/v0.2.2
+reconciliation was not present at or verified during either signed milestone
+and does not move or reinterpret either tag.
 
-The plan uses revision 0.2.1, rather than 0.1.1, because the pre-amendment
+The plan uses the 0.2 revision line, rather than the specification's 0.1
+revision line, because the pre-amendment
 plan explicitly identifies itself as version 0.2. This patch increment
 preserves its existing version lineage instead of downgrading it.
 
@@ -111,17 +124,15 @@ do not derive or validate EBU; any later Kirchhoff-style comparison remains a
 conditional analogy or domain model with prospectively frozen assumptions and
 falsifiers.
 
-I-1 remains blocked by a separate unresolved packaging contradiction:
-
-1. `pyproject.toml` requires an explicit PEP 517 build backend;
-2. the initial `requirements-framework.lock` is required to remain
-   stdlib-only; and
-3. Python provides no standard-library PEP 517 backend.
-
-This reconciliation does not choose a build backend, add an in-tree backend
-file, admit a dependency, change the closed manifest, or otherwise resolve
-that contradiction. A separately authorized prospective plan amendment must
-resolve it before I-1 can begin.
+Revision v0.2.1 recorded an unresolved packaging contradiction among the
+explicit PEP 517 backend requirement, the initially stdlib-only framework
+lock, and the absence of a standard-library PEP 517 backend. That statement
+is retained as historical evidence. The existing packaging amendment and
+matching contract prospectively resolved the contradiction under their
+narrow precedence. This reconciliation does not edit, repeat, or redefine
+that resolution, any packaging rule, or the closed implementation manifest.
+It grants no framework integration, I-2, framework-alpha, scientific-
+execution, Gate, publication, or release authority.
 
 ### 1.4 Preserved Gate 1D-C incident
 
@@ -1168,13 +1179,12 @@ No framework source module may import a top-level historical `exp_*`,
 | `requirements-framework.lock` | Exact hashed framework dependency closure; initially stdlib-only and extended/finalized during I-4 with the audited Ed25519 provider selected under UQ-25 | `pyproject.toml`, UQ-25 audit | I-1; exact crypto dependency extension/finalization I-4 | New |
 | `.github/workflows/tests.yml` | Add push/PR T0 and T1 jobs plus a separately gated `workflow_dispatch` T2 job that first validates exact T2 authority; never add a T3 framework job or Gate 1D-C invocation | Lock file and validation commands | I-9 | Existing, modify |
 
-The table above is the unchanged closed file manifest, not a resolution of the
-current packaging blocker. In particular, the `pyproject.toml` row requires a
-build backend while the initial lock row remains stdlib-only. Because Python
-has no standard-library PEP 517 backend, neither file may be created under
-I-1 until a separately authorized prospective plan amendment selects a
-consistent packaging contract. This v0.2.1 reconciliation selects nothing and
-adds no manifest path.
+The table above is the unchanged closed file manifest. Revision v0.2.1
+recorded the explicit-backend/stdlib-only contradiction as a current blocker;
+that status is historical. The existing packaging amendment and matching
+contract prospectively resolve only their stated packaging scope. Revision
+v0.2.2 does not edit, repeat, or redefine that resolution, select a different
+backend or dependency, or add any manifest path.
 
 The existing `requirements.txt` remains the legacy figure/PDF dependency file
 and is not changed or reused as the framework lock.
@@ -1548,11 +1558,16 @@ I-0 plan
 
 ### I-1 — Canonicalization, identity, hashing, and base registry
 
-**Current status:** **BLOCKED** by the unresolved PEP 517/stdlib-only
-packaging contradiction in §1.3. This stage has not begun.
+**Historical v0.2.1 status:** **BLOCKED** by the then-unresolved PEP
+517/stdlib-only packaging contradiction recorded in §1.3.
+**Current authority boundary:** the existing packaging amendment and matching
+contract prospectively supersede that blocker within their narrow scope.
+Revision v0.2.2 neither repeats that resolution nor determines current branch
+implementation or integration status; those are established from Git and
+retained stage evidence. It grants no authority to run this or a later stage.
 **Inputs:** accepted I-0 plan, unchanged current four authority hashes from
-§1.3, and a separately authorized prospective packaging amendment that
-resolves the blocker without silently changing the closed manifest.
+§1.3, and the separately governed prospective packaging authority without
+silently changing the closed manifest.
 **Work:** only I-1 files in §9; ECJ-1 and exact vendored Unicode 15.0.0 data,
 all immediately constructible §5 hash projections, IDs, refs, semantic
 versions, immutable registry base.
@@ -1874,13 +1889,15 @@ thereby accepted.
 
 ### 17.2 Mandatory amendments or decisions before affected implementation
 
-The following are concrete blockers, not optional refinements:
+The following are concrete blockers or retained prerequisite records, not
+optional refinements:
 
-1. **Before I-1 begins:** a separately authorized prospective packaging
-   amendment must resolve the contradiction that `pyproject.toml` requires an
-   explicit PEP 517 build backend, the initial framework lock must remain
-   stdlib-only, and Python provides no standard-library PEP 517 backend. This
-   plan does not select a backend, backend file, or dependency.
+1. **Historical v0.2.1 prerequisite before I-1:** revision v0.2.1 required a
+   separately authorized prospective packaging amendment to resolve the
+   explicit-backend/stdlib-only contradiction. The existing packaging
+   amendment and matching contract prospectively supplied that narrow
+   resolution. Revision v0.2.2 does not edit, repeat, or redefine it and does
+   not itself authorize implementation or integration.
 2. **Before I-4 production activation:** a governance bootstrap must register
    real trust-profile key material, key custody/rotation, issuer roles and
    ceilings, time/revocation services, endpoints, and operator pin procedure.
@@ -2110,15 +2127,20 @@ milestones was declared achieved. No branch, tag, package, release,
 manuscript, manifest, or publication artifact had been created, and no
 release authorization had been consumed.
 
-Current v0.2.1 status: the signed documentation tag `foundation-v0.1.0` was
-subsequently created at the immutable commit recorded in §1.3. This
-authority-hash reconciliation creates no new milestone, branch, tag, package,
-release, manuscript, manifest, or publication artifact and does not change
-the historical status of the other three milestones.
+Historical v0.2.1 status: the signed documentation tags
+`foundation-v0.1.0` and `foundation-v0.1.1` are immutable evidence at the
+objects and commits recorded in §1.3.
+
+Current v0.2.2 authority boundary: this reconciliation creates no milestone,
+branch, tag, package, release, manuscript, manifest, or publication artifact.
+It does not grant framework integration, I-2, framework-alpha, scientific-
+execution, Gate, publication, or release authority. Milestone and branch
+status must be established independently from Git and their retained
+acceptance evidence rather than inferred from this plan.
 
 ## 19. I-0 document acceptance checklist
 
-Revision v0.2.1 is complete only if review confirms all of the following:
+Revision v0.2.2 is complete only if review confirms all of the following:
 
 - the current four authority hashes are exactly those in §1.3, while the
   original I-0 verification and starting SHA in §§1.1–1.2 remain explicitly
@@ -2143,9 +2165,9 @@ Revision v0.2.1 is complete only if review confirms all of the following:
 - `pyproject.toml` explicitly grants I-4—and no intervening stage—ownership of
   the exact UQ-25 Ed25519 dependency-metadata update paired with lock
   finalization;
-- I-1 remains blocked because the closed packaging contract simultaneously
-  requires an explicit PEP 517 backend and an initially stdlib-only lock while
-  Python supplies no standard-library PEP 517 backend;
+- revision v0.2.1's packaging-blocker statement is historical, the existing
+  packaging amendment and contract retain their narrow prospective
+  precedence, and this reconciliation neither edits nor repeats them;
 - T0 structural operations may receive supplied immutable scientific records
   without evaluating science, while enclosing T2/T3 context escalates the
   invocation and cannot be lowered;
@@ -2160,10 +2182,10 @@ Revision v0.2.1 is complete only if review confirms all of the following:
   branch, tag, release, commit, push, model state, or scientific execution was
   created or run.
 
-The next possible work is a separately authorized prospective packaging-plan
-amendment. I-1 — Canonicalization, identity, hashing, and base registry —
-remains blocked and has not begun. Neither this plan's existence nor its
-review authorizes that amendment, I-1, or any later stage.
+This revision establishes documentation locks only. Neither its existence nor
+its review authorizes framework integration, I-2, a framework-alpha
+milestone, scientific execution, a Gate operation, publication, release, or
+any later stage.
 
 ## 20. Document revision history
 
@@ -2176,13 +2198,32 @@ specification hash, and original books-structure hash remain historical
 evidence. They do not claim that the v0.1.1 specification or later
 books-structure bytes were verified during original I-0.
 
-### 20.2 Revision v0.2.1 — current prospective amendment
+### 20.2 Revision v0.2.1 — historical prospective amendment
 
 Revision v0.2.1 adopts specification v0.1.1 at raw SHA-256
 `a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1`
-and the current books-structure raw SHA-256
+and the v0.2.1 books-structure raw SHA-256
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`
-as its active mechanical authority locks. It adds no implementation file,
+as its then-active mechanical authority locks. It adds no implementation file,
 backend, dependency, fixture, test, or scientific permission. Its exact
-whole-file SHA-256 is reported externally because the current raw hash cannot
-be embedded in the file it hashes.
+historical whole-file SHA-256 is
+`d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
+
+### 20.3 Revision v0.2.2 — current prospective reconciliation
+
+Revision v0.2.2 adopts specification v0.1.2 at the exact active raw SHA-256
+in §1.3 and the literature-extended books structure at its exact active raw
+SHA-256 there. This narrow reconciliation records the added bibliography and
+citation policy, prior-art and nearest-antecedent mapping,
+candidate-contribution boundaries, bibliography/endnote page reserves, and
+literature checkpoints before manuscript generation.
+
+It changes no implementation stage, closed manifest, API, invariant,
+decision, threat, validation fixture, dependency selection, packaging rule,
+scientific semantic, Gate rule, or execution permission. It preserves the
+distinction among physical measurement, causal inference, policy, and
+settlement. It neither edits nor repeats the existing packaging resolution
+and grants no integration, I-2, framework-alpha, scientific-execution, Gate,
+publication, or release authority. Its exact whole-file SHA-256 is reported
+externally because the current raw hash cannot be embedded in the file it
+hashes.
