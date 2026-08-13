@@ -1,19 +1,19 @@
 # Unified Python Research Framework Implementation Plan
 
-**Plan version:** 0.2.4
+**Plan version:** 0.2.5
 **Stage:** Prospective Framework I-2 authority correction only
-**Status:** I-2 design and future manifest remain frozen with the validation-case correction; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
+**Status:** I-2 design and future manifest remain frozen with the supersession and constructor-versus-validator corrections; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
-**Authority reconciliation date:** 2026-08-13
+**Authority reconciliation date:** 2026-08-14
 **Language:** English
 **Original I-0 repository branch:** `v3.0-local-ebu-foundation`
 **Original I-0 starting repository HEAD:** `4897dd69f60860e6c45c979ac37f87b9124e7a3e`
 **Historical v0.2.2 authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
 **I-2 authority-amendment branch:** `framework-v0.1`
 **I-2 authority-amendment base HEAD:** `64e7d692dbae2c3beb6752d955c8f6193e481010`
-**Framework specification version:** 0.1.4
+**Framework specification version:** 0.1.5
 **Framework specification SHA-256:**
-`25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380`
+`9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928`
 **Future-books structure SHA-256:**
 `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`
 
@@ -22,14 +22,15 @@
 ## 1. Decision and authority boundary
 
 This revision preserves the prospective I-2 implementation authority in §21
-after accepted I-1 integration and corrects only its Block-5 validation-case
-collision. It creates no Python package, code, schema,
+after accepted I-1 integration and corrects only independently observable
+supersession coordinates and constructor-versus-validator responsibility. It
+creates no Python package, code, schema,
 fixture, test, dependency lock, accepted configuration, execution binding,
 authorization credential, result, manifest, or publication record. It
 authorizes no implementation and no scientific execution.
 
 The current governing architectural and scientific authority is
-`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.4 at the exact
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.5 at the exact
 whole-file hash above, reconciled with the current source locks in §1.3. This
 plan resolves the implementation questions explicitly assigned to I-2
 without beginning that stage.
@@ -77,13 +78,13 @@ bridge authority is v0.2. The old specification and books hashes in this
 subsection are historical only and are not active implementation authority
 for this or any later revision.
 
-### 1.3 Current v0.2.4 mechanical authority locks and status
+### 1.3 Current v0.2.5 mechanical authority locks and status
 
 The current prospective authority set is:
 
 | Source | Current version or role | Current required raw SHA-256 | Mechanical status |
 |---|---|---|---|
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.4 framework specification | `25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380` | Current governing specification and prospective I-2 lock |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.5 framework specification | `9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928` | Current governing specification and prospective I-2 lock |
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6 planning and the literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Current planning-authority lock, within the scope boundaries below |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged imported Part VI authority |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged imported dynamic-coordination authority |
@@ -115,21 +116,28 @@ the books-structure raw SHA-256
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`,
 and had plan whole-file SHA-256
 `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
-None of those three values is an active v0.2.4 authority lock.
+None of those three values is an active v0.2.5 authority lock.
 
 Revision v0.2.2 is immutable historical evidence. It used specification
 v0.1.2 at raw SHA-256
 `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
 and had plan whole-file SHA-256
 `3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`.
-Neither value is an active v0.2.4 lock.
+Neither value is an active v0.2.5 lock.
 
 Revision v0.2.3 is immutable historical evidence. It used specification
 v0.1.3 at raw SHA-256
 `44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`
 and had plan whole-file SHA-256
 `bcc25725575dcd0905a17dc7712da9e534a92c3e6e5335e65248979ad1c22d46`.
-Neither value is an active v0.2.4 lock.
+Neither value is an active v0.2.5 lock.
+
+Revision v0.2.4 is immutable historical evidence. It used specification
+v0.1.4 at raw SHA-256
+`25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380`
+and had plan whole-file SHA-256
+`bd65010e6231f71d68d9e2165f723efab5175d2e8ea3c05d8624a060602ac6ff`.
+Neither value is an active v0.2.5 lock.
 
 The signed tag `foundation-v0.1.0` remains the unchanged tag object
 `90646d3c7e1ff2201eab4739e894598b80782b79` at commit
@@ -165,7 +173,7 @@ explicit PEP 517 backend requirement, the initially stdlib-only framework
 lock, and the absence of a standard-library PEP 517 backend. That statement
 is retained as historical evidence. The existing packaging amendment and
 matching contract prospectively resolved the contradiction under their
-narrow precedence. Revision v0.2.4 does not edit, repeat, or redefine that
+narrow precedence. Revision v0.2.5 does not edit, repeat, or redefine that
 resolution or any packaging rule. It freezes only prospective I-2 design and
 the exact future §21.2 manifest; it grants no present implementation,
 framework integration, framework-alpha, scientific-execution, Gate,
@@ -1231,7 +1239,7 @@ The cross-stage-control table above is unchanged. Revision v0.2.1
 recorded the explicit-backend/stdlib-only contradiction as a current blocker;
 that status is historical. The existing packaging amendment and matching
 contract prospectively resolve only their stated packaging scope. Revision
-v0.2.4 does not edit, repeat, or redefine that resolution, select a different
+v0.2.5 does not edit, repeat, or redefine that resolution, select a different
 backend or dependency, or add any packaging/control manifest path. Its I-2
 ownership amendments are exactly those in §21.2.
 
@@ -1247,7 +1255,7 @@ and is not changed or reused as the framework lock.
 | `src/ebu_framework/data/__init__.py` | Package-data boundary; exports no API and executes no code | None | I-1 | New |
 | `src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt` | Exact raw Unicode 15.0.0 assignment, canonical decomposition, and canonical-combining-class data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
 | `src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt` | Exact raw Unicode 15.0.0 `Full_Composition_Exclusion` and normalization-property data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
-| `src/ebu_framework/errors.py` | I-1 failures plus only the v0.1.4/v0.2.4 common fields, stable failure identity, closed I-1 compatibility map, and exact I-2 failure codes; no domain behavior | Stdlib only; must not import any package module | I-1; narrowly extended I-2 | New |
+| `src/ebu_framework/errors.py` | I-1 failures plus only the v0.1.5/v0.2.5 common fields, stable failure identity, closed I-1 compatibility map, and exact I-2 failure codes; no domain behavior | Stdlib only; must not import any package module | I-1; narrowly extended I-2 | New |
 | `src/ebu_framework/canonical.py` | Strict ECJ-1 projection, parser, encoder, pinned-table NFC/assignment, code-point ordering, asset-digest verification, and host-Unicode rejection rules | `err`, the two pinned Unicode 15.0.0 runtime assets | I-1 | New |
 | `src/ebu_framework/identity.py` | `ScientificId`, semantic versions, allocation claims, `ObjectRef`, typed digest wrappers | `can`, `err` | I-1 | New |
 | `src/ebu_framework/hashing.py` | All exact §5 projections, SHA-256 domains, binary framing, and raw-source labeling | `can`, `id`, `err` | I-1; extended I-3/I-5 | New |
@@ -2217,7 +2225,7 @@ execution, Gate, publication, or release authority. Milestone and branch
 status must be established independently from Git and their retained
 acceptance evidence rather than inferred from this plan.
 
-Current v0.2.4 authority boundary: this correction creates no milestone,
+Current v0.2.5 authority boundary: this correction creates no milestone,
 branch, tag, package, release, manuscript, manifest, or publication artifact.
 It freezes prospective I-2 implementation authority only and does not begin
 I-2 or grant integration, framework-alpha, scientific-execution, Gate,
@@ -2225,7 +2233,7 @@ publication, or release authority.
 
 ## 19. Current prospective document acceptance checklist
 
-Revision v0.2.4 is complete only if review confirms all of the following:
+Revision v0.2.5 is complete only if review confirms all of the following:
 
 - the active authority locks are exactly those in §1.3, while the
   original I-0 verification and starting SHA in §§1.1–1.2 remain explicitly
@@ -2235,6 +2243,15 @@ Revision v0.2.4 is complete only if review confirms all of the following:
 - specification §21 and plan §21 agree on the complete common failure,
   numeric, numerical-policy, primitive, envelope, registry, API, fixture,
   dependency, capability, and exclusion contracts;
+- `SupersessionRelation` has exactly the eleven ordered predecessor/successor
+  coordinates in §21.5, and kind/schema equality is directly observable
+  without lookup or inference;
+- every fixture/supplement record has one exact formation/semantic failure
+  owner, all Block-5 through Block-8 candidates reach their declared public
+  boundary, and no constructor pre-empts or relabels a validator predicate;
+- two independent external standard-library reconstructions agree byte for
+  byte on the prospective fixture, all 335 IDs/names and 214 failure IDs, and
+  report no incompatible effective-input collision;
 - all 29 I-1 failure codes and 95 existing `_fail` call semantics remain
   preserved while the exact 24 I-2 codes and deterministic typed envelope are
   frozen;
@@ -2337,20 +2354,33 @@ is immutable historical evidence. Revision v0.2.3 has exact whole-file
 SHA-256
 `bcc25725575dcd0905a17dc7712da9e534a92c3e6e5335e65248979ad1c22d46`.
 
-### 20.5 Revision v0.2.4 — current prospective I-2 validation correction
+### 20.5 Revision v0.2.4 — historical prospective I-2 validation correction
 
-Revision v0.2.4 adopts specification v0.1.4 at the active raw SHA-256 in
-§1.3. It corrects only the Block-5 collision between structurally absent case
+Revision v0.2.4 adopted specification v0.1.4 at its then-active raw SHA-256
+recorded in §1.3's historical revision register. It corrected only the
+Block-5 collision between structurally absent case
 16 and explicitly `NOT_APPLICABLE` case 34, while preserving their respective
 `IMPLICIT_ABSENCE_FORBIDDEN` and `NUMERICAL_POLICY_INCOMPLETE` outcomes. It
 changes no other case, count, interface, manifest, dependency, scientific
-definition, Gate record, package, I-1 byte, or accepted milestone. Its new raw
-SHA-256 is reported externally and is not embedded in this file.
+definition, Gate record, package, I-1 byte, or accepted milestone. Its raw
+SHA-256 is
+`bd65010e6231f71d68d9e2165f723efab5175d2e8ea3c05d8624a060602ac6ff`.
+
+### 20.6 Revision v0.2.5 — current prospective I-2 authority correction
+
+Revision v0.2.5 adopts specification v0.1.5 at the active raw SHA-256 in
+§1.3. It freezes direct predecessor/successor supersession kind/schema
+coordinates, explicit typed-not-applicable authorization refusal, and the
+complete constructor-versus-validator responsibility and reachability
+contract. It preserves all 335 IDs and names, block/outcome counts, expected
+outcomes and codes, API/export/path/dependency counts, scientific definitions,
+Gate record, package, I-1 bytes, and accepted milestones. Its raw SHA-256 is
+reported externally and is not embedded in this file.
 
 ## 21. Normative prospective Framework I-2 implementation authority
 
 This section supersedes only incomplete or provisional I-2 implementation
-details elsewhere in this plan. Specification v0.1.4 §21 controls every I-2
+details elsewhere in this plan. Specification v0.1.5 §21 controls every I-2
 semantic, field, projection, invariant, operation-matrix cell, predicate,
 failure meaning, precedence rule, fixture requirement, exclusion, and
 nonclaim. This section is the mechanical path, export, ownership, dependency,
@@ -2766,8 +2796,8 @@ ECJ-1 sequence in specification §21.8: block counts
 `18,35,42,4,36,107,20,41,32`, first ID `i2-0001`, terminal ID `i2-0335`.
 Its schema/key order, literal catalog, nested-loop order, input patches,
 projections, canonical hex, failure coordinates/IDs, and authority-field
-placement are closed. It binds the accepted specification v0.1.4 raw hash
-above and the future accepted plan v0.2.4 raw hash reported externally after
+placement are closed. It binds the accepted specification v0.1.5 raw hash
+above and the future accepted plan v0.2.5 raw hash reported externally after
 this document is complete. It is static validation data, not a policy, world,
 configuration, trajectory, or result.
 
@@ -2808,6 +2838,72 @@ failure ID. This adds no public name, callable, dependency edge, or tenth
 path. The closed totals are 84 types, 42 callables, `__version__`, 127 root
 exports, 29 I-1 plus 24 I-2 failure codes, 24 I-2 precedence entries, 29 DAG
 edges, and nine future paths.
+
+Implementation must follow the responsibility table rather than infer
+semantic acceptance from `dataclass` construction. Constructors establish
+only the formation checks assigned there. Each public `validate_*` callable
+owns every named predicate in its frozen order and receives an immutable,
+structurally well-formed candidate that may be semantically invalid. No
+`__new__` bypass, mutation, unchecked/test mode, raw mapping contrary to a
+signature, caught-and-relabelled constructor exception, patch-history check,
+registry lookup, envelope lookup, or dynamic import is permitted. A candidate
+is not valid, lifecycle-accepted, scientifically accepted, or registry-
+accepted until the appropriate validator and later authorized boundary have
+succeeded.
+
+The future `SupersessionRelation` implementation has exactly eleven fields in
+this order:
+
+```text
+predecessor_ref
+successor_ref
+predecessor_object_kind_id
+successor_object_kind_id
+predecessor_schema_id
+successor_schema_id
+predecessor_status
+successor_status
+predecessor_supersedes_chain
+relation_evidence_refs
+authorization_ref
+```
+
+The last field is exactly `ObjectRef | Applicability`; it has no default.
+Predicate `object_kind_id` directly compares the two kind fields and predicate
+`schema_id` directly compares the two schema fields. No registry, envelope,
+inferred metadata, patch history, or external state supplies a missing
+coordinate. `SUPER0` uses equal `SID(4)` kind fields and equal `SID(5)` schema
+fields. Its isolated kind/schema rejections replace only the corresponding
+successor field with `SID(63)`. Its authorization rejection retains the field
+and replaces its value with typed `NOT_APPLICABLE`, which is forbidden absence
+at that unconditionally required validator coordinate and therefore retains
+`IMPLICIT_ABSENCE_FORBIDDEN`.
+
+The Block-6 signature audit also fixes exactly three inputs without changing
+their IDs, names, predicate labels, outcomes, or codes:
+`conversion-rule-reject-dimension` uses `R(63)` instead of a raw dictionary;
+`region-reject-identity_or_parent` and
+`boundary-reject-identity_or_parent` supply typed `NOT_APPLICABLE` instead of
+an `ObjectRef` where a parent record or applicability marker is required.
+Every other validator-bound Block-5 through Block-8 candidate already has all
+required fields and signature-correct runtime members; the deliberately
+malformed Block-7 constructor inputs remain constructor-bound formation tests.
+In particular, semantic closed-domain, cross-field, evidence, resolution,
+uncertainty, graph, ancestry, lifecycle, and authorization defects survive
+formation and fail only at their named validator interface.
+
+The dual envelope boundary is mechanical: Block-7 cases whose operation is
+`CommonObjectEnvelope` retain constructor-owned exact-byte/type/canonical
+formation and unchanged I-1 failures. Structurally formed cases 14–16 and
+18–19 whose operation is `validate_object_envelope` first construct normally
+and then fail, if at all, only at the assigned validator predicate. Case 17's
+malformed bytes instead fail the constructor prerequisite with their unchanged
+I-1 identity; they are not relabelled as a validator failure. Hash mismatch
+remains the last I-2 validator failure; metadata/lifecycle variation remains
+hash-invariant; and source-tree, independently parsed-tree, valid-byte-change,
+and no-decoded-cache assertions remain separate. The fixture adapter
+constructs declared records and a read-only policy provider only; it never
+supplies a raw mapping as a record candidate or relabels an earlier failure.
 
 The I-2 V11 audit is T0 source-text/AST inspection. It verifies the exact
 127-entry root tuple and module subsets; nine-path manifest; 29 direct module
