@@ -1,0 +1,45 @@
+{
+  "synthetic_hashes": {
+    "h0": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "h1": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "h2": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "domains": {
+    "object_content": "ebu.object-content.v1",
+    "state_payload": "ebu.state-payload.v1",
+    "policy_memory_payload": "ebu.policy-memory-payload.v1",
+    "augmented_replay_state": "ebu.augmented-closed-loop-replay-state.v1",
+    "represented_state_projection": "ebu.represented-state-projection.v1",
+    "information_view": "ebu.information-view.v1",
+    "proposal_set": "ebu.proposal-set.v1",
+    "execution_semantics": "ebu.execution-semantics.v1",
+    "canonical_trace_row": "ebu.canonical-trace-row.v1",
+    "canonical_trace_prefix": "ebu.canonical-trace-prefix.v1",
+    "canonical_trace_payload": "ebu.canonical-scientific-trace-payload.v1",
+    "artifact_bytes": "ebu.artifact-bytes.v1",
+    "authorization_use_key": "ebu.authorization-use-key.v1"
+  },
+  "expected": {
+    "object_content": "sha256:76512222ef6f3a09af4afe27771957224e71b088c39513790abb0a6f2fb4672e",
+    "state_payload": "sha256:e6b085639dae9ff6953c01f09a40f14d9eec4037769eaeffdc91fb5316b9888c",
+    "policy_memory_payload": "sha256:162491f2138cf788ecdd25f391607a757d0bf43a85a8f5e28fd086ad3b5f957a",
+    "augmented_replay_state": "sha256:cdde846e4fb3fe6f6bd66764dce49c731dcd7e4646af82fe6b6781fb8b733533",
+    "represented_state_projection": "sha256:7250f16a1698fc3b2525240a45e918328a57ec66c034da675acbc6477c7e0110",
+    "information_view": "sha256:259ac4c9b5f64e181d8d199de5188db6efb426de93a65dd4beeab40b13a4f083",
+    "proposal_set": "sha256:f21687ac2083b1b2a2819004f290fe527721563b738834a3547b547919280d3f",
+    "execution_semantics": "sha256:8977235005a90a67a6cabc49b132885130ec09bdbc6a4a5fcbe0717296e95e7f",
+    "canonical_trace_row": "sha256:e3a79bef9d78a23734e1c59f4c1eabc9266e705d8a07521e4e9b64edf014a22f",
+    "canonical_trace_prefix": "sha256:9098161b7351847d4e19f082ec51d46fd341a785637fd415a555ae43eafc0f61",
+    "canonical_trace_payload": "sha256:1ecc1327f44e11f186c6d48a47782a81f0a7f5c06852bc795b6abf721479b7e6",
+    "authorization_use_key": "sha256:5d0487ba1c07d099aee2726cdeb2497d473062f895b1679d6ac6ebd564aa21dc"
+  },
+  "artifact": {
+    "bytes_hex": "616263",
+    "frame_hex": "6562752e61727469666163742d62797465732e7631000000000000000003616263",
+    "expected": "sha256:cd059d622a40b5ca325c1f28fe79395e4ac9df2a86e4b7a18548a927df1e5d50"
+  },
+  "raw_source": {
+    "bytes_hex": "616263",
+    "expected": "sha256-raw:ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+  }
+}

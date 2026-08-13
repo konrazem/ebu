@@ -1,13 +1,13 @@
 # Unified Python Research Framework I-1 Packaging Amendment
 
-**Amendment version:** 1.1.0
+**Amendment version:** 1.1.1
 **Status:** Prospective packaging authority; fully specification-ready; unimplemented
 **Date:** 2026-08-13
 **Scope:** Resolve only I-1 packaging backend and frontend-identity blockers
 **Mechanical contract:**
 `unified_python_research_framework_packaging_contract.json`
 **Mechanical-contract raw SHA-256:**
-`89f54bd55802c99d292851619439bf96b9e391ef111fb4223adb37e738aa0e28`
+`edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351`
 
 ---
 
@@ -81,6 +81,16 @@ and original plan hash
 `a1cebfa63528e49d9bada3c6564c7d40616369a45afd97640ff937ae07389674`
 remain historical only. This later amendment was not present at that
 milestone and neither moves nor reinterprets it.
+
+The signed `foundation-v0.1.1` tag object
+`29060d72ce2fac10ab85e52330c1a375c1d5cb5b` remains at commit
+`fae76042746e55b9fe5ec5c62de0f47fbc5ccb47`. It records amendment version
+1.1.0 at raw SHA-256
+`694120118a604926cd1c431b29c6d839d24d8d164023d0b5204c7e81e23cc9de`
+and mechanical-contract version 1.1.0 at raw SHA-256
+`89f54bd55802c99d292851619439bf96b9e391ef111fb4223adb37e738aa0e28`.
+Those identities remain historical only. This later prospective 1.1.1
+correction neither moves nor reinterprets that milestone.
 
 ## 3. Current official packaging requirements verified
 
@@ -285,6 +295,35 @@ The backend SHALL:
   `lstat` identity and content checks that refuse links, nonregular files, or
   any selected-set, identity, size, or content change during the snapshot.
 
+Before any build input or output is processed, backend-path identity SHALL be
+checked in this order:
+
+1. compute the lexical source root as
+   `Path(__file__).absolute().parent.parent`, before resolving either the
+   `build_backend` directory or backend file; a resolved symlink target does
+   not replace this lexical parent;
+2. construct the exact lexical directory
+   `lexical_source_root/build_backend` and exact lexical file
+   `lexical_source_root/build_backend/ebu_build_backend.py`;
+3. `lstat` the lexical directory and require a real non-symlink directory,
+   otherwise refuse `BACKEND_PATH_ESCAPE`;
+4. `lstat` the lexical file and require a real non-symlink regular file,
+   otherwise refuse `BACKEND_PATH_ESCAPE`;
+5. strictly resolve the lexical source root, directory, and file, require the
+   resolved directory's parent to equal the resolved lexical source root, and
+   require the resolved file's parent to equal that resolved directory,
+   otherwise refuse `BACKEND_PATH_ESCAPE`; and
+6. strictly resolve the loaded module spec origin and require exact equality
+   with the resolved backend file, otherwise refuse
+   `BACKEND_ORIGIN_MISMATCH`.
+
+The exact lexical basenames are mandatory. A symlinked `build_backend`
+directory, symlinked backend file, resolved escape, alternate backend filename
+or location, or module-origin mismatch refuses as above. `pyproject.toml`
+continues to require exactly the sole backend module `ebu_build_backend` and
+sole `backend-path = ["build_backend"]`; an alternate or second backend path
+is refused by the unchanged exact `pyproject.toml` build-system validation.
+
 The source tree may be read-only. Outputs go only to the frontend-supplied
 directory. Builds use the captured bytes rather than reopening source files
 while writing archives.
@@ -466,6 +505,37 @@ Entries are ordered by path UTF-8 bytes and the final line ends in LF. The
 manifest covers `pyproject.toml`, backend source, `LICENSE`, and all selected
 package source files. Generated metadata and outputs are excluded. Its
 identity is the raw SHA-256 of the complete manifest bytes.
+
+The prepared-metadata-tree manifest is a separate evidence serialization. Its
+complete UTF-8 bytes are constructed as follows:
+
+```text
+ebu-prepared-metadata-tree-manifest-v1
+sha256=<64 lowercase hex> size=<minimal unsigned base-10 byte length> path=<exact relative path>
+```
+
+The path root is the returned
+`ebu_framework-0.1.0a1.dist-info` directory; the root basename is not part of
+any manifest path. Exactly the real non-symlink regular files `METADATA`,
+`WHEEL`, and `licenses/LICENSE` are included. The returned `.dist-info`
+directory entry and its `licenses` directory entry are excluded. Directory
+modes, regular-file modes, ownership, timestamps, inode/device identities,
+and every other filesystem attribute are excluded.
+
+Each path uses exactly the case-sensitive ASCII POSIX spelling above, with
+slash separators and no leading `./` or trailing slash. Each entry's digest is
+the raw SHA-256 of its exact file bytes, written as 64 lowercase hexadecimal
+digits. Its size is the exact file byte length, written as minimal unsigned
+base-10 digits, with zero written as `0`. There is one entry per included
+file, ordered lexicographically by the UTF-8 bytes of the exact path spelling.
+The domain line is first, immediately followed by the entries with no blank or
+additional line. LF (`0x0a`) terminates every line, including the final entry.
+
+The manifest identity is the raw SHA-256 of the complete serialized bytes,
+from the first domain-line byte through the final LF; its reported byte length
+is the length of those same complete bytes. This manifest is evidence-only.
+It SHALL NOT be written into the wheel, sdist, prepared metadata directory, or
+source tree.
 
 I-1 validation evidence SHALL record:
 
@@ -715,7 +785,7 @@ framework/scientific behavior.
 
 | ID | Class | Required acceptance relation |
 |---|---:|---|
-| P1 | T0 | Backend realpath is within the sole `build_backend` path and module origin is the exact backend file |
+| P1 | T0 | The independently determined lexical source root contains the exact real non-symlink `build_backend` directory and real non-symlink `ebu_build_backend.py` regular file; strict resolutions retain containment; resolved module origin equals the resolved selected file; and `pyproject.toml` declares no alternate or second backend path |
 | P2 | T0 | Declared and returned build requirements are empty; isolated offline hooks import no non-stdlib package |
 | P3 | T0 | Prepared, direct-wheel, and sdist-derived metadata are byte-identical and match §7 |
 | P4 | T0 | Installed package contains every and only allowed file; all package data retain source hashes |
@@ -798,3 +868,13 @@ This amendment specifies a future packaging solution. It does not claim that:
   production; or
 - any framework, scientific, Gate 1D-C, model-state, result, or publication
   operation occurred.
+
+## 18. Version 1.1.1 correction scope
+
+Version 1.1.1 prospectively closes only two I-1 packaging-authority gaps: the
+complete prepared-metadata-tree-manifest serialization in §11 and the ordered
+lexical-before-resolved backend-path checks in §6.2 and P1. It preserves the
+historical `foundation-v0.1.1` evidence in §2. It changes no F1/F2 identity or
+command, package member, metadata byte, wheel byte rule, sdist byte rule,
+scientific definition, ECJ-1 rule, identity rule, hash preimage, registry
+content, stage boundary, or release authority.
