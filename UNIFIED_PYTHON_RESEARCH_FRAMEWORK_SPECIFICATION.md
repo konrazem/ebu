@@ -1,6 +1,6 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.5
+**Version:** 0.1.6
 **Status:** Prospective Framework I-2 authority correction only; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-14
@@ -76,21 +76,22 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.5 prospective authority register
+#### 2.1.2 Current v0.1.6 prospective authority register
 
 Revision v0.1.2 prospectively replaced only the active books-structure
 authority pointer. Revision v0.1.3 preserved those imported scientific
 authorities and added the prospective I-2 contracts in §21. Revision v0.1.4
 preserved those authorities and corrected only the validation-case collision
-recorded in §20.5. Revision v0.1.5 preserves those authorities and corrects
+recorded in §20.5. Revision v0.1.5 preserved those authorities and corrected
 only the supersession coordinates and constructor-versus-validator authority
-recorded in §20.6. The v0.1.2
+recorded in §20.6. Revision v0.1.6 preserves those authorities and corrects
+only the I-2 predicate-observability defects recorded in §20.7. The v0.1.2
 reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.5 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.6 |
 |---|---|---|---|
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including the K1–K6 planning programme and literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.5 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
@@ -519,8 +520,10 @@ records, record-creation time, ingestion time, wall-clock time, host and
 process metadata, storage location, database keys, cache metadata,
 publication metadata, and presentation annotations are excluded from this
 preimage. `object_content_payload` SHALL NOT contain the same object's
-`object_content_hash` directly, through an alias, or through an embedded copy
-of the enclosing record.
+exact stored `object_content_hash` string as an object name, object value, or
+array member at any recursive depth. I-2 makes no alias-resolution,
+embedded-record-identity, indirect-cycle, or registry/object-graph-cycle
+claim; those stronger checks require later registry authority.
 
 For `SystemState`, a second independent projection identifies the exact
 scientific state payload:
@@ -2988,6 +2991,7 @@ resolved before the feature they govern can be scientifically used.
 | DR-037 | `ACCEPTED` | Require each stateful policy proposal to return exactly one next memory and atomically durably record decision plus memory before screening | Makes history-dependent policy replay complete without granting the policy physical mutation authority |
 | DR-038 | `ACCEPTED` | Require full canonical trace byte equality for normally completed equal-input deterministic runs and require an identical prospective fault schedule for declared fault studies | Avoids both overclaiming determinism and exempting declared injected faults from replay |
 | DR-039 | `ACCEPTED` | Treat undeclared operational interruption and durability failure as run-specific evidence while preserving every confirmed canonical prefix and completeness class | Separates scientific determinism from operational completion and prevents prefix loss |
+| DR-040 | `ACCEPTED` | Make every I-2 T0 predicate decidable only from exact declared argument values and treat refs as identities rather than implicit lookups | Prevents validator outcomes from depending on registries, hidden state, fixture knowledge, or construction history; stronger semantic claims are deferred |
 
 ## 16. Threat model
 
@@ -3040,6 +3044,7 @@ assume malicious intent is required for a threat to matter.
 | TM-041 | Torn policy decision | Proposal, next memory, and canonical decision row disagree, or memory advances twice | Atomic decision/next-memory/trace-row append and unique decision-coordinate ownership | Storage primitive remains UQ-26 |
 | TM-042 | Fault-schedule laundering | An injected fault differs between replays or an undeclared failure is labelled prospective after observation | Accepted exact `FaultSchedule`, delivery-semantics hash, trace header, and no-retroactive-declaration rule | External faults outside the framework remain governance risk |
 | TM-043 | Operational failure misreported as scientific nondeterminism | A host/storage interruption truncates one run and is compared as a full scientific trace, or its valid prefix is discarded | Completion-qualified equality, run-specific failure envelope, immutable longest valid prefix, and explicit completeness state | Ambiguous storage durability can remain unresolved |
+| TM-044 | Predicate-by-reference overclaim | A T0 validator treats an opaque ref as proof of lifecycle, role, contents, completeness, disjointness, treatment adequacy, or an indirect graph cycle | Exact argument-only predicate contract, explicit role fields/pairs where locally decidable, and named deferred claims | Later registry/domain stages must establish the stronger semantics without weakening I-2 identity checks |
 
 ## 17. Unresolved-question register
 
@@ -3088,6 +3093,7 @@ convenience.
 | UQ-37 | How should several asynchronous or interacting controllers be represented as one canonical composite `PolicyMemoryState`, with a frozen decision order and no hidden cross-controller memory? | Multi-controller closed-loop configuration | Part-specific analytical design plus framework extension review |
 | UQ-38 | Which exact fault kinds, target coordinates, delivery acknowledgements, and terminal rules are admissible for scientific and inert durability fault schedules? | First fault-injection study | Separate fault-injection specification and applicable study preregistration |
 | UQ-39 | How should sensitive policy-memory payloads be encrypted, access-controlled, retained, or disclosed while preserving content-hash verification, authorized replay, and evidence-ledger requirements? | Restricted-memory study | Security, privacy, and study-governance protocol |
+| UQ-40 | Which accepted registry/domain evidence establishes policy and contract roles/lifecycle/content, region membership disjointness, global pending/effect completeness, treatment adequacy, true out-of-set violation, and indirect alias/object-graph cycle freedom? | Any claim stronger than I-2 declaration-shape and identity validation | I-4 registry design plus applicable domain analytical/governance authority |
 
 ## 18. Extension points for Parts IV–IX
 
@@ -3401,7 +3407,7 @@ other case, expected outcome, count, API, dependency, scientific definition,
 Gate record, package, I-1 byte, or accepted milestone. Its raw SHA-256 is
 `25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380`.
 
-### 20.6 Revision v0.1.5 — current prospective I-2 authority correction
+### 20.6 Revision v0.1.5 — historical prospective I-2 authority correction
 
 Revision v0.1.5 replaces the supersession model's singular kind and schema
 coordinates with independently observable predecessor and successor
@@ -3411,8 +3417,19 @@ typed-not-applicable candidate at the validator boundary. It preserves every
 fixture ID, case name, predicate label, expected outcome and code, block and
 outcome count, public API count, dependency, scientific definition, Gate
 record, package, I-1 byte, and accepted milestone. Its raw SHA-256 is recorded
-in implementation-plan v0.2.5; this file does not contain its own current
-hash.
+in historical implementation-plan v0.2.5. Its exact whole-file SHA-256 is
+`9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928`.
+
+### 20.7 Revision v0.1.6 — current prospective I-2 predicate-observability correction
+
+Revision v0.1.6 corrects all eight known I-2 predicate-observability defects:
+numerical-policy identity and ownership, exact-comparison tolerance,
+standalone conversion context, declared region parent links, boundary
+cross-effect treatment, horizon pending due declarations, out-of-set
+violated-contract role, and direct envelope hash occurrence. It preserves
+scientific meaning, public type and callable counts, dependencies, Gate
+state, I-1 bytes, and accepted milestones. Its raw SHA-256 is recorded in
+implementation-plan v0.2.6; this file does not contain its own current hash.
 
 ## 21. Normative prospective Framework I-2 amendment
 
@@ -3842,14 +3859,14 @@ field. Its exact required properties are:
 
 | Property | Exact type and rule |
 |---|---|
-| `policy_ref` | `ObjectRef`; required exact draft/accepted policy identity |
-| `owning_domain_ref` | `ObjectRef`; required; cannot be a core/framework placeholder |
+| `policy_ref` | `ObjectRef`; required declared policy identity only; no lifecycle, kind, role, or acceptance claim is made in I-2 |
+| `owning_domain_ref` | `ObjectRef`; required declared owner identity; must differ exactly from `policy_ref`; no owner lifecycle, kind, or role is resolved in I-2 |
 | `supported_input_variants` | nonempty, duplicate-free tuple of `NumericalVariant` in enum order |
 | `supported_operations` | nonempty, duplicate-free tuple of `NumericalOperation` in enum order |
 | `result_variant_by_operation` | tuple of `(NumericalOperation, NumericalVariant)` with exactly one row per supported non-`COMPARE` operation and no other row |
 | `precision_contract_ref` | `ObjectRef | Applicability`; explicit applicability required |
 | `rounding_contract_ref` | `ObjectRef | Applicability`; required for any potentially inexact result |
-| `comparison_tolerance_contract_ref` | `ObjectRef | Applicability`; required when `COMPARE` is supported unless exact comparison is separately referenced |
+| `comparison_tolerance_contract_ref` | `ObjectRef | Applicability`; exact `ObjectRef` required whenever `COMPARE` is supported; I-2 proves only its declared presence and does not resolve its contents |
 | `approximation_contract_ref` | `ObjectRef | Applicability`; required when approximation is allowed |
 | `error_bound_contract_ref` | `ObjectRef | Applicability`; required whenever a result can be approximate |
 | `overflow_underflow_nonfinite_contract_ref` | `ObjectRef`; always required |
@@ -3870,6 +3887,11 @@ distinct where semantics require, runtime constraints are complete, and its
 declared `completeness` is `COMPLETE`. A declaration marked complete that
 fails any predicate is `NUMERICAL_POLICY_INCOMPLETE`; a declaration marked
 incomplete validates only as an incomplete refusal record.
+There is no core/framework-placeholder classification at this boundary.
+`policy_ref` and `owning_domain_ref` equality alone is the observable owner
+identity violation. Policy and owner lifecycle, kind, role, or registry
+status, and tolerance-contract contents, are deferred to a later authorized
+registry/domain stage.
 Structural omission is therefore implicit absence, whereas an explicitly
 present typed `NOT_APPLICABLE` value is evaluated against the field's
 applicability predicate. Validation uses only the resulting declaration and
@@ -4050,6 +4072,14 @@ The complete formation and validation ownership assignment is §21.8.6. A
 candidate retained for validator testing is never described as valid,
 accepted, or usable as scientific authority before that validator succeeds.
 
+Every T0 validator predicate is decidable solely from the exact declared
+values of that validator's arguments. An `ObjectRef` proves only its declared
+identity at that argument coordinate. No predicate may resolve the ref,
+consult a registry or envelope, infer hidden lifecycle/kind/role/content,
+use fixture-specific knowledge, inspect patch or construction history, or
+read any other hidden or mutable state. When a stronger claim requires such
+information, that claim is explicitly deferred rather than inferred.
+
 Every conditional reference coordinate is a closed tagged union
 `ObjectRef | Applicability`: an exact ref means applicable, and the only
 permitted `Applicability` value in that union is `NOT_APPLICABLE`.
@@ -4078,11 +4108,22 @@ compatibility only and performs no aggregation or scientific operation.
 Dimensions are compatible only when exact `dimension_ref` values and complete
 basis-exponent vectors match. Units are identical only on exact `unit_ref`;
 they are compatible for conversion only when dimensions match and a supplied
-rule names the exact source/target in an allowed direction. Exact conversion
+rule names the exact source/target in an allowed direction. For both unit
+compatibility and standalone rule validation, `FORWARD_ONLY` requires the
+declared `source_unit_ref` to equal the supplied source `unit_ref` and the
+declared `target_unit_ref` to equal the supplied target `unit_ref`;
+`BIDIRECTIONAL` permits exactly that orientation or its exact reversal. The
+rule, source unit, and target unit must declare one identical `dimension_ref`.
+The rule's `validity_horizon_ref` must be an exact `ObjectRef` or exact
+`NOT_APPLICABLE`; `APPLICABLE` is forbidden at this union coordinate, and I-2
+does not resolve or compare horizon contents. Exact conversion
 computes `target = source * factor + offset`, treating typed not-applicable
 offset as exact zero. All operations must succeed through §21.3 without a
 policy; otherwise conversion is refused. The returned quantity changes only
 magnitude and unit ref; every other coordinate is byte-for-byte identical.
+`convert_quantity_exact` takes its source coordinate from the declared
+`quantity.unit_ref` and `quantity.dimension_ref`, never from an inferred or
+looked-up unit. Its target coordinate comes from the supplied `target_unit`.
 
 Two forward affine rules `A->B` and `B->C` may compose only when the middle
 unit/dimension/horizon match and all exact operations are supported. The
@@ -4111,7 +4152,7 @@ aggregation callable.
 | `ServiceType` | `service_type_ref`, `definition_ref`: `ObjectRef`; `required_resource_type_refs: tuple[ObjectRef,...]`, nonempty, duplicate-free and ordered; `output_dimension_ref: ObjectRef | Applicability`; `validity_horizon_ref: ObjectRef | Applicability` |
 | `SignConvention` | `sign_convention_ref`, `definition_ref`: `ObjectRef`; `positive_meaning`, `zero_meaning`, `negative_meaning`: nonempty NFC strings; the three meanings must be pairwise distinct |
 | `Region` | `region_ref`, `membership_rule_ref`, `clock_ref`: `ObjectRef`; `parent_region_ref: ObjectRef | Applicability`; `spatial_interpretation: str` in `PHYSICAL`, `NETWORK_NODE_SET`, `INSTITUTIONAL`; `validity_start`, `validity_end`: `Instant`; parent cannot equal self |
-| `AccountingBoundary` | `boundary_ref`, `state_schema_ref`, `distortion_ref`, `clock_ref`, `initial_epoch_ref`, `horizon_ref`, `definition_ref`: `ObjectRef`; `parent_boundary_ref`, `comparator_ref`, `objective_ref`, `institutional_rule_ref`: `ObjectRef | Applicability`; `included_resource_type_refs`, `included_service_type_refs`, `included_provider_refs`, `included_actor_refs`, `included_node_refs`, `included_edge_refs`, `included_region_refs`, `included_lifecycle_stage_refs`, `external_effect_refs`, `commitment_refs`, `reservation_refs`, `queue_refs`, `measurement_refs`, `natural_drive_refs`, `external_input_refs`, `unresolved_cross_boundary_effect_refs`: duplicate-free ObjectRef-ordered tuples |
+| `AccountingBoundary` | `boundary_ref`, `state_schema_ref`, `distortion_ref`, `clock_ref`, `initial_epoch_ref`, `horizon_ref`, `definition_ref`: `ObjectRef`; `parent_boundary_ref`, `comparator_ref`, `objective_ref`, `institutional_rule_ref`: `ObjectRef | Applicability`; `included_resource_type_refs`, `included_service_type_refs`, `included_provider_refs`, `included_actor_refs`, `included_node_refs`, `included_edge_refs`, `included_region_refs`, `included_lifecycle_stage_refs`, `external_effect_refs`, `commitment_refs`, `reservation_refs`, `queue_refs`, `measurement_refs`, `natural_drive_refs`, `external_input_refs`, `unresolved_cross_boundary_effect_refs`: duplicate-free ObjectRef-ordered tuples; `cross_boundary_effect_treatments: tuple[tuple[ObjectRef, ObjectRef], ...]`, exact `(effect_ref, treatment_ref)` pairs ordered by `effect_ref`, with unique effect keys and no duplicate pair |
 
 Resource/service compatibility requires the quantity's resource and service
 applicability markers to agree with the expected type. When both apply, the
@@ -4120,18 +4161,26 @@ tuple and the service ref in the resource's compatibility tuple. Either
 one-sided declaration is `QUANTITY_TYPE_MISMATCH`.
 
 Region equality is exact ref equality. Parent aggregation requires a supplied
-parent region, each child naming that exact parent, disjoint child
-membership evidence through an explicit `membership_rule_ref`, the same
-clock and covering validity interval, no duplicate child, and an exact
-aggregation-rule ref. Parent acceptance is an external I-4 concern and is
-neither inferred nor claimed by this T0 validator. Boundary parent
-aggregation analogously requires each
-child's exact `parent_boundary_ref`, compatible state/distortion/clock/horizon
-contracts, declared treatment for every excluded/cross-boundary effect, no
-duplicate child, and an exact aggregation-rule ref. The validators return
-compatibility only; I-2 creates no aggregated quantity. Missing weights,
-domain conversion, scalarization, or overlapping membership is
-`INVALID_AGGREGATION`.
+parent region, each child's exact `parent_region_ref` equalling the supplied
+parent's `region_ref`, the same clock and a parent validity interval covering
+both children, distinct child region refs, and an exact aggregation-rule ref.
+“The same clock” means exact equality among the parent and both children's
+declared `clock_ref` values; interval coverage is decided only from their
+declared `validity_start` and `validity_end` values.
+The opaque `membership_rule_ref` is preserved but never resolved, so I-2 does
+not prove child disjointness or real-world membership. Parent acceptance and
+membership/disjointness evidence are external I-4 concerns. Boundary parent
+aggregation analogously requires each child's exact `parent_boundary_ref`
+equal the supplied parent's `boundary_ref`, compatible
+state/distortion/clock/horizon contracts, distinct child refs, and an exact
+aggregation-rule ref. In addition, each child boundary's treatment-map effect
+keys must equal the exact set union of that child's `external_effect_refs`
+and `unresolved_cross_boundary_effect_refs`; no effect may be missing or
+extra. This proves only coverage of the supplied declarations, not real-world
+effect completeness or treatment adequacy. The validators return
+compatibility only; I-2 creates no aggregated quantity. Missing declared
+treatment coverage, domain conversion, scalarization, or a declared parent
+link is `INVALID_AGGREGATION`; membership overlap is not decided in I-2.
 
 Sign conventions are compatible only when both are typed not-applicable or
 both apply with the exact same ref. No automatic sign flip exists; a sign
@@ -4154,8 +4203,15 @@ rate from a unit symbol or dimension. Horizons require same-clock fields,
 an explicit post-terminal rule. At a closed terminal point, effects due there
 are inside; at a right-open terminal they remain pending/out-of-boundary under
 the named rule. Pending effects are never zero. `REQUIRE_NONE_PENDING` fails
-if any pending effect exists; `ALLOW_EXPLICIT_PENDING` requires a complete
-enumeration with due condition.
+unless the supplied pending-effect/due-condition pair tuple is empty;
+`ALLOW_EXPLICIT_PENDING` accepts the exact supplied pair tuple after checking
+that every item is an exact `(effect_ref, due_condition_ref)` pair, pairs are
+ordered by `effect_ref`, and effect keys are unique. This validates only the
+caller-supplied declarations. Global pending-effect completeness and whether
+a due condition is substantively correct are deferred; I-2 does not discover
+or resolve either ref. Pair formation/order/uniqueness and the selected
+treatment relation are all owned by the existing
+`terminal_pending_treatment` predicate and fail `HORIZON_INVALID`.
 
 #### 21.5.5 Resolution and uncertainty
 
@@ -4187,7 +4243,8 @@ evidence to determine whether completion occurred is `UNRESOLVED`.
 `member_refs: tuple[ObjectRef,...]`,
 `probability_model_ref: ObjectRef | Applicability`,
 `calibration_ref: ObjectRef | Applicability`,
-`provenance_refs: tuple[ObjectRef,...]`, and
+`provenance_refs: tuple[ObjectRef,...]`,
+`violated_contract_ref: ObjectRef | Applicability`, and
 `resolution: ResolutionDetail`.
 
 Kind predicates are closed: `EXACT` has no bounds/set/model and must be
@@ -4196,9 +4253,13 @@ upper quantities plus calibration; `ADMISSIBLE_SET` and `ADVERSARIAL_SET`
 require nonempty ordered member refs and forbid probability model;
 `PROBABILITY_MODEL` requires its exact model ref and provenance;
 `MODEL_DISCREPANCY` requires interval or set evidence and provenance;
-`UNKNOWN` requires `UNRESOLVED` and no invented bound/model; `OUT_OF_SET`
-requires the violated contract ref in provenance and a present supplied value
-reference through resolution. A range never implies a distribution.
+`UNKNOWN` requires `UNRESOLVED` and no invented bound/model. `OUT_OF_SET`
+requires an exact `violated_contract_ref`, requires that same exact ref occur
+in `provenance_refs`, and requires a present supplied value reference through
+resolution. Every other kind requires exact typed `NOT_APPLICABLE` at
+`violated_contract_ref`. I-2 proves only these declared roles and identities;
+it does not resolve the contract or establish that the value truly violates
+it. A range never implies a distribution.
 
 #### 21.5.6 Common object envelope and metadata
 
@@ -4228,6 +4289,14 @@ may be mutated and discarded without changing the envelope. No constructor,
 property, validator, closure, slot, or private cache may retain or expose a
 decoded mutable payload tree.
 
+The validator's `direct_content_hash_exclusion` predicate recursively walks
+the freshly parsed ECJ-1 payload and rejects any exact string occurrence of
+the envelope's stored `object_content_hash`, whether it occurs as an object
+name, object value, or array member at any depth. This is only a direct stored-hash
+occurrence check. It does not resolve aliases or refs, traverse a registry or
+object graph, or claim to detect indirect/semantic cycles; those checks are
+deferred to a later registry stage.
+
 `validate_object_envelope` checks exact field types and ordering, calls
 `parse_ecj1` to obtain one fresh temporary logical ECJ-1 value, passes that
 logical value as `object_content_payload` to the unchanged
@@ -4240,7 +4309,8 @@ resulting `ObjectContentHash` are four distinct concepts.
 The object-content projection otherwise remains exactly I-1: `object_kind`
 is the string form of `object_kind_id`, and typed not-applicable supersession
 projects as ECJ-1 `null` only inside the preimage adapter.
-`object_content_hash` is excluded from its own preimage. Lifecycle, record
+`object_content_hash` is excluded from its own preimage, and the direct
+occurrence predicate above is checked before final recomputation. Lifecycle, record
 metadata, validation/failure records, signatures, storage, time,
 host/process, publication, and presentation data remain excluded. A
 recomputation mismatch uses the existing exact `HASH_MISMATCH` code and
@@ -4346,7 +4416,11 @@ The exact I-2 compatibility callables and check order are:
 ```text
 validate_dimension_compatibility(left: Dimension, right: Dimension) -> CompatibilityResult
 validate_unit_compatibility(source: Unit, target: Unit, conversion_or_not_applicable: ConversionRule | Applicability) -> CompatibilityResult
-validate_conversion_rule(rule: ConversionRule) -> CompatibilityResult
+validate_conversion_rule(
+    rule: ConversionRule,
+    source_unit: Unit,
+    target_unit: Unit,
+) -> CompatibilityResult
 convert_quantity_exact(quantity: Quantity, target_unit: Unit, rule: ConversionRule) -> Quantity
 validate_quantity(quantity: Quantity, expected_context: QuantityContext) -> CompatibilityResult
 validate_resource_service_compatibility(resource: ResourceType, service: ServiceType) -> CompatibilityResult
@@ -4355,7 +4429,10 @@ validate_boundary_compatibility(left: AccountingBoundary, right: AccountingBound
 validate_sign_convention_compatibility(left_or_not_applicable: ObjectRef | Applicability, right_or_not_applicable: ObjectRef | Applicability) -> CompatibilityResult
 validate_time_basis(left_or_not_applicable: ObjectRef | Applicability, right_or_not_applicable: ObjectRef | Applicability, rate_required: bool) -> CompatibilityResult
 validate_clock_compatibility(left: ClockSystem, right: ClockSystem) -> CompatibilityResult
-validate_horizon(horizon: Horizon, pending_effect_refs: tuple[ObjectRef, ...]) -> CompatibilityResult
+validate_horizon(
+    horizon: Horizon,
+    pending_effect_due_pairs: tuple[tuple[ObjectRef, ObjectRef], ...],
+) -> CompatibilityResult
 validate_uncertainty_record(record: UncertaintyRecord) -> CompatibilityResult
 validate_resolution_detail(record: ResolutionDetail) -> CompatibilityResult
 validate_object_envelope(envelope: CommonObjectEnvelope) -> CompatibilityResult
@@ -4366,8 +4443,8 @@ validate_supersession_relation(relation: SupersessionRelation) -> SupersessionVa
 | Callable | Predicate and output |
 |---|---|
 | `validate_dimension_compatibility(left, right)` | Exact ref and basis-vector equality -> `CompatibilityResult` |
-| `validate_unit_compatibility(source, target, conversion_or_not_applicable)` | Dimension first; exact unit identity succeeds without conversion; otherwise exact rule direction/source/target -> result |
-| `validate_conversion_rule(rule)` | Type, nonzero factor, offset variant, direction, dimension, horizon; returns `CompatibilityResult` |
+| `validate_unit_compatibility(source, target, conversion_or_not_applicable)` | Dimension first; exact unit identity succeeds without conversion; otherwise applies the same direction, endpoint, three-way dimension, and declared horizon-union rules as standalone conversion validation -> result |
+| `validate_conversion_rule(rule, source_unit, target_unit)` | Nonzero factor, offset variant, declared direction plus exact supplied endpoints, three-way declared dimension equality, and exact horizon-union form; returns `CompatibilityResult` |
 | `convert_quantity_exact(quantity, target_unit, rule)` | Full quantity validity, exact rule, exact core multiply/add, unchanged coordinates -> new immutable `Quantity` |
 | `validate_quantity(quantity, expected_context)` | Resolution then dimension, unit, type, region, time, sign, boundary, uncertainty -> result |
 | `validate_resource_service_compatibility(resource, service)` | Symmetric exact registry declarations -> result |
@@ -4376,15 +4453,18 @@ validate_supersession_relation(relation: SupersessionRelation) -> SupersessionVa
 | `validate_sign_convention_compatibility(left_or_na, right_or_na)` | Both not applicable or exact same ref |
 | `validate_time_basis(left_or_na, right_or_na, rate_required)` | Applicability predicate then exact ref equality |
 | `validate_clock_compatibility(left, right)` | Exact clock ref equality |
-| `validate_horizon(horizon, pending_effect_refs)` | All §21.5.4 ordering/inclusion/pending predicates -> result |
+| `validate_horizon(horizon, pending_effect_due_pairs)` | All §21.5.4 ordering/inclusion predicates plus exact ordered unique supplied effect/due-ref pairs -> result |
 | `validate_uncertainty_record(record)` | Closed kind-specific rules -> result |
 | `validate_resolution_detail(record)` | Closed state-specific rules -> result |
-| `validate_object_envelope(envelope)` | Exact fields, ordering, lifecycle, self-reference exclusion, and I-1 content-hash recomputation -> validation result |
+| `validate_object_envelope(envelope)` | Exact fields, ordering, lifecycle, recursive direct stored-hash occurrence exclusion, and I-1 content-hash recomputation -> validation result |
 | `validate_lifecycle_transition(transition)` | Pure closed-graph validation; no mutation |
 | `validate_supersession_relation(relation)` | Pure immutable predicates in §21.5.7; no mutation |
 
-These functions are T0. They accept already supplied immutable records, do
-not look up aliases or infer missing refs, do not invoke a domain policy, and
+These functions are T0. Every predicate uses only the exact declared values
+of the listed arguments; an `ObjectRef` proves identity only. They accept
+already supplied immutable records, do not look up aliases, registry entries,
+envelopes, kinds, roles, lifecycle, or content, do not infer missing refs or
+inspect fixture/patch history, do not invoke a domain policy, and
 do not add/compare/aggregate scientific magnitudes except the exact arithmetic
 inside an explicitly supplied unit conversion. No compatibility success is
 permission to perform scientific aggregation.
@@ -4403,15 +4483,15 @@ typed `NOT_APPLICABLE`.
 | `validate_conversion_rule` | `factor_nonzero`, `offset_variant`, `direction`, `dimension`, `validity_horizon` |
 | `validate_quantity` | `resolution`, `dimension`, `unit`, `resource_service_type`, `region`, `time_basis`, `sign_convention`, `boundary`, `uncertainty_applicability` |
 | `validate_resource_service_compatibility` | `resource_declares_service`, `service_declares_resource` |
-| `validate_region_compatibility` | `identity_or_parent`, `parent_membership`, `clock`, `validity_interval`, `distinct_children`, `aggregation_rule` |
-| `validate_boundary_compatibility` | `identity_or_parent`, `parent_membership`, `state_schema`, `distortion`, `clock`, `horizon`, `cross_boundary_treatment`, `distinct_children`, `aggregation_rule` |
+| `validate_region_compatibility` | `identity_or_parent`, `declared_parent_links`, `clock`, `validity_interval`, `distinct_children`, `aggregation_rule` |
+| `validate_boundary_compatibility` | `identity_or_parent`, `declared_parent_links`, `state_schema`, `distortion`, `clock`, `horizon`, `cross_boundary_treatment`, `distinct_children`, `aggregation_rule` |
 | `validate_sign_convention_compatibility` | `applicability`, `identity` |
 | `validate_time_basis` | `applicability`, `identity` |
 | `validate_clock_compatibility` | `clock_ref` |
 | `validate_horizon` | `clock_refs`, `endpoint_order`, `endpoint_inclusion`, `resolution`, `measurement_epochs`, `post_terminal_effect_treatment`, `terminal_pending_treatment` |
 | `validate_uncertainty_record` | `resolution`, `kind_fields`, `unit_coordinates`, `bound_order`, `provenance` |
 | `validate_resolution_detail` | `state_payload_relation`, `tuple_order_and_disjointness` |
-| `validate_object_envelope` | `exact_field_types`, `authority_ref_order`, `payload_canonical_bytes`, `lifecycle_status`, `self_reference_exclusion`, `object_content_hash` |
+| `validate_object_envelope` | `exact_field_types`, `authority_ref_order`, `payload_canonical_bytes`, `lifecycle_status`, `direct_content_hash_exclusion`, `object_content_hash` |
 | `validate_lifecycle_transition` | `closed_edge`, `authorization_applicability`, `evidence_order` |
 | `validate_supersession_relation` | `logical_object_id`, `object_kind_id`, `schema_id`, `version_increase`, `content_change`, `lifecycle_pair`, `predecessor_not_in_own_ancestry`, `successor_not_in_ancestry`, `unique_linear_ancestry`, `ancestry_ends_at_predecessor`, `evidence_nonempty`, `authorization_applicable` |
 
@@ -4460,10 +4540,10 @@ specification_raw_sha256
 vectors
 ```
 
-Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.5 raw
+Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.6 raw
 SHA-256 as 64 lowercase hexadecimal digits,
 `ebu:fixture:validation:i2-numeric-vectors-v1`, `1.0.0`, the eventual
-committed specification v0.1.5 raw SHA-256 in the same form, and the vector
+committed specification v0.1.6 raw SHA-256 in the same form, and the vector
 array. The two hashes occur only in those two authority fields. This is not
 self-reference: the fixture is a later I-2 artifact created after both
 authority files are committed; the plan does not embed its own hash.
@@ -4615,7 +4695,7 @@ REGION_P=(R(31),R(32),R(26),NA,PHYSICAL,INSTANT0,INSTANT2)
 REGION_L=(R(33),R(34),R(26),R(31),PHYSICAL,INSTANT0,INSTANT2)
 REGION_R=(R(35),R(36),R(26),R(31),PHYSICAL,INSTANT0,INSTANT2)
 BOUNDARY_P=(R(37),R(38),R(39),R(26),R(40),R(41),R(42),
-            NA,NA,NA,NA,[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[])
+            NA,NA,NA,NA,[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[])
 BOUNDARY_L=BOUNDARY_P with boundary_ref R(43), parent_boundary_ref R(37)
 BOUNDARY_R=BOUNDARY_P with boundary_ref R(44), parent_boundary_ref R(37)
 HORIZON0=(R(41),R(26),R(45),R(46),INSTANT0,INSTANT2,CLOSED,
@@ -4636,9 +4716,11 @@ expanded before insertion. Parenthesized non-record inputs become arrays in
 displayed order. No alias name, constructor notation, or patch instruction is
 written into a successful projection.
 
-`BOUNDARY_P/L/R` have the exact 27 §21.5.3 fields: seven required refs,
-four conditional refs, then the 16 listed collection fields. No omitted field
-or alternate empty collection is permitted.
+`BOUNDARY_P/L/R` have the exact 28 §21.5.3 fields: seven required refs,
+four conditional refs, the 16 listed collection fields, then
+`cross_boundary_effect_treatments=[]`. No omitted field or alternate empty
+collection is permitted. These empty baselines make the treatment-key set
+equal the empty union of each baseline's two effect-ref sets.
 
 The baseline payload is `PAYLOAD0=BYTES("7b2261223a317d")`, canonical bytes
 for `{"a":1}`. `PAYLOAD1=BYTES("7b2261223a327d")` is canonical bytes for
@@ -4892,7 +4974,7 @@ Block 5 order is:
 
 ```text
 complete-exact-policy declared-incomplete-policy missing-policy-ref
-missing-owning-domain-ref core-placeholder-owner empty-variants
+missing-owning-domain-ref owner-identity-equals-policy-identity empty-variants
 duplicate-variants unordered-variants empty-operations duplicate-operations
 unordered-operations missing-result-row duplicate-result-row extra-result-row
 compare-result-row missing-precision-contract missing-binary-rounding-contract
@@ -4960,6 +5042,10 @@ uncalled. Both expect `NUMERICAL_POLICY_REQUIRED` at the
 `apply_exact_core_operation` I-2 interface. Block-5 `quantity_context` is QC0;
 all earlier contexts are NA.
 
+Case 5 is named `owner-identity-equals-policy-identity` and proves only the
+exact declared-identity inequality. There is no placeholder-owner case or
+fixture-only placeholder classification.
+
 For `POLICY0`, case 16 structurally omits `precision_contract_ref` and
 therefore represents forbidden implicit absence. Case 34 retains that field
 but gives it the explicit typed value `NOT_APPLICABLE`; because precision is
@@ -4985,7 +5071,7 @@ mapping.
 |---|---|---|---:|
 | `dimension` | `equal` using DIM0,DIM0 | `dimension_ref` -> right `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `basis_exponents` -> right `/basis_exponents/0/1`=Q(-1,1) -> `DIMENSION_MISMATCH` | 3 |
 | `unit` | `identity` UNIT_A,UNIT_A,NA; `conversion` UNIT_A,UNIT_B,RULE_AB | `dimension` -> target `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `unit_identity_or_conversion` -> UNIT_A,UNIT_B,NA -> `UNIT_MISMATCH` | 4 |
-| `conversion-rule` | `valid` RULE_AB | `factor_nonzero` -> `/factor`=Q0; `offset_variant` -> `/offset`=D0; `direction` -> `/direction`=`SIDEWAYS`; `dimension` -> `/dimension_ref`=R(63); `validity_horizon` -> `/validity_horizon_ref`=`APPLICABLE`; all -> `CONVERSION_RULE_MISMATCH` | 6 |
+| `conversion-rule` | `valid` `[RULE_AB,UNIT_A,UNIT_B]` | each rejection keeps UNIT_A and UNIT_B and patches only RULE_AB: `factor_nonzero` -> `/factor`=Q0; `offset_variant` -> `/offset`=D0; `direction` -> `/direction`=`SIDEWAYS`; `dimension` -> `/dimension_ref`=R(63); `validity_horizon` -> `/validity_horizon_ref`=`APPLICABLE`; all -> `CONVERSION_RULE_MISMATCH` | 6 |
 | `convert` | `exact` `[QTY_R,UNIT_B,RULE_AB]`; `affine` `[QTY_D,UNIT_B,RULE_AFFINE]`; `compose-exact` `[QTY_R,UNIT_B,RULE_AB,UNIT_C,RULE_BC]`; `compose-affine` `[QTY_D,UNIT_B,RULE_AFFINE,UNIT_C,RULE_BC_DEC]` | six rejections in order: `quantity_valid` QTY_R `/resolution`=RES_PENDING -> `RESOLUTION_STATE_INVALID`; `source_unit` QTY_R `/unit_ref`=R(63) -> `UNIT_MISMATCH`; `target_unit` UNIT_B `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `conversion_rule` RULE_AB `/source_unit_ref`=R(63) -> `CONVERSION_RULE_MISMATCH`; `exact_arithmetic` uses QTY0, UNIT_B, unchanged RULE_AB -> `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`; `reverse_not_explicit` uses QTY_R with unit R(5), target UNIT_A and unchanged RULE_AB -> `CONVERSION_RULE_MISMATCH` | 10 |
 | `quantity` | `valid` `[QTY0,QC0]`, then `valid-with-uncertainty` `[QTY_U,QC_U]` | the nine §21.6 labels against `[QTY0,QC0]`; replace respectively `/resolution`=RES_PENDING, `/dimension_ref`, `/unit_ref`, `/resource_type_ref`, `/region_ref`, `/time_basis_ref`, `/sign_convention_ref`, `/boundary_ref`, `/uncertainty_ref` with R(63); codes respectively `RESOLUTION_STATE_INVALID`, `DIMENSION_MISMATCH`, `UNIT_MISMATCH`, `QUANTITY_TYPE_MISMATCH`, `REGION_MISMATCH`, `TIME_BASIS_MISMATCH`, `SIGN_CONVENTION_MISMATCH`, `BOUNDARY_MISMATCH`, `UNCERTAINTY_RECORD_INVALID`; then `uncertainty-unexpected` input `[QTY_U,QC0]` and `uncertainty-required` input `[QTY0,QC_U]`, both -> `UNCERTAINTY_RECORD_INVALID` | 13 |
 | `resource-service` | `symmetric` RESOURCE0,SERVICE0 | `resource_declares_service` -> RESOURCE0 `/service_compatibility_refs`=[]; `service_declares_resource` -> SERVICE0 `/required_resource_type_refs`=[R(63)]; both -> `QUANTITY_TYPE_MISMATCH` | 3 |
@@ -4994,9 +5080,9 @@ mapping.
 | `sign` | `both-na`; `same` R(16),R(16) | `applicability` -> R(16),NA; `identity` -> R(16),R(63); both -> `SIGN_CONVENTION_MISMATCH` | 4 |
 | `time` | `nonrate-na`; `rate-same` R(15),R(15) | `applicability` -> rate true with NA,NA; `identity` -> rate true with R(15),R(63); both -> `TIME_BASIS_MISMATCH` | 4 |
 | `clock` | `same` CLOCK_A,CLOCK_A | `clock_ref` -> CLOCK_A,CLOCK_B -> `CLOCK_MISMATCH` | 2 |
-| `horizon` | `closed` `[HORIZON0,[]]`; `right-open` is the fully expanded `HORIZON0` with `/endpoint_inclusion`=`LEFT_CLOSED_RIGHT_OPEN`, `/post_terminal_effect_treatment`=`OUT_OF_BOUNDARY`, and `/terminal_pending_treatment`=`ALLOW_EXPLICIT_PENDING`, input beside pending refs `[R(60)]` | labels from §21.6 use, in order: `replace /clock_ref R(63)`; `replace /start/tick I3`; `replace /endpoint_inclusion "OPEN"`; `replace /resolution/ticks I0`; `replace /measurement_epochs [EPOCH2,EPOCH0]`; `replace /post_terminal_effect_treatment "DROP"`; `replace /terminal_pending_treatment "UNKNOWN"`; all -> `HORIZON_INVALID` except `clock_refs` -> `CLOCK_MISMATCH` | 9 |
+| `horizon` | `closed` `[HORIZON0,[]]`; `right-open` is the fully expanded `HORIZON0` with `/endpoint_inclusion`=`LEFT_CLOSED_RIGHT_OPEN`, `/post_terminal_effect_treatment`=`OUT_OF_BOUNDARY`, and `/terminal_pending_treatment`=`ALLOW_EXPLICIT_PENDING`, input beside pending effect/due pairs `[[R(60),R(61)]]` | labels from §21.6 use, in order: `replace /clock_ref R(63)`; `replace /start/tick I3`; `replace /endpoint_inclusion "OPEN"`; `replace /resolution/ticks I0`; `replace /measurement_epochs [EPOCH2,EPOCH0]`; `replace /post_terminal_effect_treatment "DROP"`; `replace /terminal_pending_treatment "UNKNOWN"`; all -> `HORIZON_INVALID` except `clock_refs` -> `CLOCK_MISMATCH` | 9 |
 | `resolution` | one valid case for each state in order `PRESENT,PENDING,FAILED,PARTIAL,UNRESOLVED,OUT_OF_BOUNDARY,NOT_APPLICABLE` | in the same order: `replace /present_value_ref NA`; `replace /completed_part_refs [R(22)]`; `replace /failure NA`; `replace /missing_part_refs [R(22)]`; `replace /present_value_ref R(20)`; `replace /reason_ref NA`; `replace /present_value_ref R(20)`; all -> `RESOLUTION_STATE_INVALID` | 14 |
-| `uncertainty` | one valid case for kinds in §5.5 order `EXACT,MEASUREMENT_INTERVAL,ADMISSIBLE_SET,ADVERSARIAL_SET,PROBABILITY_MODEL,MODEL_DISCREPANCY,UNKNOWN,OUT_OF_SET` | in the same order: `replace /resolution RES_PENDING`; `replace /lower QTY1`, then `replace /upper QTY0`; `replace /member_refs []`; `replace /probability_model_ref R(60)`; `replace /probability_model_ref NA`; `replace /provenance_refs []`; `replace /lower QTY0`; `replace /provenance_refs []`; all -> `UNCERTAINTY_RECORD_INVALID` | 16 |
+| `uncertainty` | one valid case for kinds in §5.5 order `EXACT,MEASUREMENT_INTERVAL,ADMISSIBLE_SET,ADVERSARIAL_SET,PROBABILITY_MODEL,MODEL_DISCREPANCY,UNKNOWN,OUT_OF_SET` | in the same order: `replace /resolution RES_PENDING`; `replace /lower QTY1`, then `replace /upper QTY0`; `replace /member_refs []`; `replace /probability_model_ref R(60)`; `replace /probability_model_ref NA`; `replace /provenance_refs []`; `replace /lower QTY0`; `replace /violated_contract_ref NA`; all -> `UNCERTAINTY_RECORD_INVALID` | 16 |
 
 Rejection baselines are exact: `dimension-equal`; `unit-conversion` for both
 unit rejections; `conversion-rule-valid`; the explicit convert input named in
@@ -5058,14 +5144,14 @@ The eight valid uncertainty tuples, in kind order and exact field order after
 `uncertainty_ref`, are:
 
 ```text
-EXACT:                (R(3),NA,NA,[],NA,NA,[R(62)],RES_PRESENT)
-MEASUREMENT_INTERVAL: (R(3),QTY0,QTY1,[],NA,R(62),[R(61)],RES_PRESENT)
-ADMISSIBLE_SET:       (NA,NA,NA,[R(60),R(61)],NA,NA,[R(62)],RES_PRESENT)
-ADVERSARIAL_SET:      (NA,NA,NA,[R(60),R(61)],NA,NA,[R(62)],RES_PRESENT)
-PROBABILITY_MODEL:    (R(3),NA,NA,[],R(60),NA,[R(62)],RES_PRESENT)
-MODEL_DISCREPANCY:    (R(3),QTY0,QTY1,[],NA,NA,[R(62)],RES_PRESENT)
-UNKNOWN:              (NA,NA,NA,[],NA,NA,[],RES_UNRESOLVED)
-OUT_OF_SET:           (R(3),NA,NA,[],NA,NA,[R(62)],RES_PRESENT)
+EXACT:                (R(3),NA,NA,[],NA,NA,[R(62)],NA,RES_PRESENT)
+MEASUREMENT_INTERVAL: (R(3),QTY0,QTY1,[],NA,R(62),[R(61)],NA,RES_PRESENT)
+ADMISSIBLE_SET:       (NA,NA,NA,[R(60),R(61)],NA,NA,[R(62)],NA,RES_PRESENT)
+ADVERSARIAL_SET:      (NA,NA,NA,[R(60),R(61)],NA,NA,[R(62)],NA,RES_PRESENT)
+PROBABILITY_MODEL:    (R(3),NA,NA,[],R(60),NA,[R(62)],NA,RES_PRESENT)
+MODEL_DISCREPANCY:    (R(3),QTY0,QTY1,[],NA,NA,[R(62)],NA,RES_PRESENT)
+UNKNOWN:              (NA,NA,NA,[],NA,NA,[],NA,RES_UNRESOLVED)
+OUT_OF_SET:           (R(3),NA,NA,[],NA,NA,[R(62)],R(62),RES_PRESENT)
 ```
 
 Each tuple is preceded by `uncertainty_ref=R(59)` and its displayed kind.
@@ -5298,7 +5384,7 @@ authorization, and artifact records remain I-3 or later and are unreachable.
 
 The I-2 AST/import/export audit reads source as bytes/text and uses AST only;
 it imports no production module. It verifies the exact root export tuple and
-count frozen by plan v0.2.5, module `__all__` subsets, the exact 29-edge DAG
+count frozen by plan v0.2.6, module `__all__` subsets, the exact 29-edge DAG
 in that plan and its acyclicity, no dynamic imports, no module-local failure
 enum/string code, and no imports or calls reaching scientific modules, legacy
 experiment/runner/finalizer modules, `results/`, or any Gate path. It proves
@@ -5349,25 +5435,25 @@ relation is not a formation check unless the table assigns it to construction.
 | `numeric.ErrorBound` | All six required fields and every exact kind, applicability, variant, policy, unit, completeness, nonnegativity, and order rule in §21.4.1; this constructor is itself the frozen operation, `C(ErrorBound)` | None | An explicitly `INCOMPLETE` refusal/evidence record may exist, but it is not a complete bound; Block-2 cases 19–34 and `EB_INCOMPLETE` |
 | `numeric.NumericalResult` | Seven required exact fields and exact-core/result completeness, policy/rounding, and complete-bound relations; `C(NumericalResult)` | None | No invalid constructed result; Block-2 case 35 and Block-3 success projections |
 | `numeric.ComparisonResult` | Six required exact fields and ordering/purpose/policy/bound/completeness relations; `C(ComparisonResult)` | None | No invalid constructed result; three Block-3 comparison successes |
-| `numeric.NumericalPolicyV1` protocol declaration | No concrete public record constructor exists. The fixture adapter creates an ordinary read-only property provider from the resulting declaration; it is never a raw mapping and never claims protocol conformance before validation. | Property availability/runtime types, tuple order/uniqueness, result-map closure, all unconditional and conditional applicability, nested runtime constraints, and declared completeness; `V(validate_numerical_policy)` | Yes, necessarily; all Block-5 cases 1–34. Missing properties reach the validator as absent provider attributes and explicit `NOT_APPLICABLE` values remain present typed values. Its five methods are never invoked. |
+| `numeric.NumericalPolicyV1` protocol declaration | No concrete public record constructor exists. The fixture adapter creates an ordinary read-only property provider from the resulting declaration; it is never a raw mapping and never claims protocol conformance before validation. | Property availability/runtime types, tuple order/uniqueness, result-map closure, exact inequality of declared policy/owner identities, all unconditional and conditional applicability (including mandatory tolerance-ref presence for `COMPARE`), nested runtime constraints, and declared completeness; `V(validate_numerical_policy)`. It resolves no ref or lifecycle/kind/role/content. | Yes, necessarily; all Block-5 cases 1–34. Missing properties reach the validator as absent provider attributes and explicit `NOT_APPLICABLE` values remain present typed values. Its five methods are never invoked. |
 | `primitives.CompatibilityResult` | Five required exact fields and compatible/failure/ref result consistency; `C(CompatibilityResult)` | None | No invalid constructed result; all Block-6 successes and Block-7 case 14–16 success projections |
 | `primitives.Dimension` | Three required exact fields; closed kind; exact nonempty tuple of exact `(ObjectRef,RationalV1)` pairs, ordered/unique refs, nonzero exponents; `C(Dimension)` | Pairwise ref and complete-basis equality; `V(validate_dimension_compatibility)` | Yes relative to another dimension; all `dimension-*` cases and nested dimension catalog values |
 | `primitives.Unit` | Six required exact fields; closed kind, nonempty NFC symbol, and exact ref/conditional-union types; `C(Unit)` | Dimension then exact identity or supplied conversion relation; `V(validate_unit_compatibility)` | Yes relative to another unit/rule; all `unit-*` and `convert-*` cases |
-| `primitives.ConversionRule` | Eight required fields; exact ref/numeric/string/conditional-union runtime types only; `C(ConversionRule)` | `factor_nonzero`, `offset_variant`, `direction`, `dimension`, and `validity_horizon`; `V(validate_conversion_rule)` and the same ordered checks inside `convert_quantity_exact` | Yes; all six `conversion-rule-*` cases and all `convert-*` cases. The dimension rejection uses the signature-correct `R(63)`, not a raw dictionary. |
+| `primitives.ConversionRule` | Eight required fields; exact ref/numeric/string/conditional-union runtime types only; `C(ConversionRule)` | `factor_nonzero`, `offset_variant`, direction/orientation against the two supplied units, three-way dimension equality, and exact horizon-union form; `V(validate_conversion_rule)` and the same ordered checks inside unit validation and `convert_quantity_exact` | Yes; all six `conversion-rule-*` cases supply `[rule,source_unit,target_unit]`, and all `convert-*` cases. The dimension rejection patches only the rule's declared dimension. |
 | `primitives.Quantity` | Eleven required fields and exact core/ref/conditional-union/`ResolutionDetail` runtime types only; `C(Quantity)` | The nine ordered quantity-context predicates; `V(validate_quantity)`, also first inside `convert_quantity_exact` | Yes; all `quantity-*`, `convert-*`, and nested uncertainty cases |
 | `primitives.ResourceType` | Five required exact fields and exact ordered, duplicate-free tuple/member and conditional-union types; `C(ResourceType)` | Symmetric service declaration; `V(validate_resource_service_compatibility)` | Yes relative to a service; all `resource-service-*` cases |
 | `primitives.ServiceType` | Five required exact fields and exact nonempty ordered, duplicate-free tuple/member and conditional-union types; `C(ServiceType)` | Symmetric resource declaration; `V(validate_resource_service_compatibility)` | Yes relative to a resource; all `resource-service-*` cases |
 | `primitives.SignConvention` | Five required exact fields; nonempty NFC meanings and pairwise distinction; `C(SignConvention)` | Ref applicability/identity only, on refs rather than records; `V(validate_sign_convention_compatibility)` | The record itself is complete after construction, but two refs may be incompatible; `sign-*` fixture cases and both sign supplement cases |
-| `primitives.Region` | Seven required fields; exact runtime types, closed spatial domain, and parent-not-self; `C(Region)` | The six ordered identity/common-parent predicates; `V(validate_region_compatibility)` | Yes relative to other records/arguments; all `region-*` cases. The first rejection supplies typed `NOT_APPLICABLE`, not an `ObjectRef` in the `Region | Applicability` argument. |
-| `primitives.AccountingBoundary` | All required fields, exact ref/conditional-union types, and exact ordered duplicate-free tuple/member types; `C(AccountingBoundary)` | The nine ordered identity/common-parent predicates; `V(validate_boundary_compatibility)` | Yes relative to other records/arguments; all `boundary-*` cases. The first rejection supplies typed `NOT_APPLICABLE`, not an `ObjectRef` in the `AccountingBoundary | Applicability` argument. |
+| `primitives.Region` | Seven required fields; exact runtime types, closed spatial domain, and parent-not-self; `C(Region)` | The six ordered identity/common-parent predicates, including exact declared parent links but excluding membership-rule resolution or disjointness; `V(validate_region_compatibility)` | Yes relative to other records/arguments; all `region-*` cases. The first rejection supplies typed `NOT_APPLICABLE`, not an `ObjectRef` in the `Region | Applicability` argument. |
+| `primitives.AccountingBoundary` | Twenty-eight required fields, exact ref/conditional-union types, exact ordered duplicate-free tuple/member types, and exact ordered unique effect/treatment pairs; `C(AccountingBoundary)` | The nine ordered identity/common-parent predicates, including exact declared parent links and exact supplied effect-key coverage; `V(validate_boundary_compatibility)` | Yes relative to other records/arguments; all `boundary-*` cases. Empty baselines have empty maps; the unresolved-effect rejection leaves that map empty and fails coverage. The first rejection supplies typed `NOT_APPLICABLE`, not an `ObjectRef` in the parent argument. |
 | `primitives.ClockSystem` | Five required exact fields, exact `DISCRETE_TOTAL`, and exact conditional-union type; `C(ClockSystem)` | Pairwise clock-ref equality; `V(validate_clock_compatibility)` | Yes relative to another clock; all `clock-*` and nested horizon cases |
 | `primitives.Instant` | Exact `ObjectRef` and `IntegerV1`, with intrinsic nonnegative tick; `C(Instant)` | Cross-clock and endpoint order are owned by `V(validate_horizon)` | Yes relative to a horizon; all horizon catalog and cases |
 | `primitives.Duration` | Exact `ObjectRef` and `IntegerV1` only; `C(Duration)` | Same-clock and strictly-positive horizon resolution are predicate `clock_refs`/`resolution` at `V(validate_horizon)` | Yes; `horizon-reject-resolution` constructs the exact zero-tick candidate and reaches `V(validate_horizon)` |
 | `primitives.Epoch` | Exact `ObjectRef` and nonnegative `IntegerV1`; `C(Epoch)` | Cross-clock, strict ordering, and included-interval checks are predicate `measurement_epochs` at `V(validate_horizon)` | Yes relative to a horizon; all horizon measurement-epoch cases |
-| `primitives.Horizon` | Eleven required fields and exact record/ref/string/tuple member runtime types only; `C(Horizon)` | All seven ordered horizon predicates in §21.6; `V(validate_horizon)` | Yes; all nine `horizon-*` cases, including invalid closed-domain strings that remain exact strings |
+| `primitives.Horizon` | Eleven required fields and exact record/ref/string/tuple member runtime types only; `C(Horizon)` | All seven ordered horizon predicates plus formation/order/unique-key checks for the supplied exact effect/due-ref pairs; `V(validate_horizon)` | Yes; all nine `horizon-*` cases, including the right-open declared pair and invalid closed-domain strings that remain exact strings; global completeness is not claimed |
 | `primitives.ResolutionDetail` | Eight required fields and exact enum/ref/tuple/failure union runtime types only; `C(ResolutionDetail)` | `state_payload_relation` and `tuple_order_and_disjointness`; `V(validate_resolution_detail)` | Yes; all fourteen `resolution-*` cases and invalid nested resolution candidates consumed first by quantity, conversion, uncertainty, and precedence validators |
-| `primitives.UncertaintyRecord` | Ten required fields and exact enum/ref/quantity/tuple/resolution runtime types only; `C(UncertaintyRecord)` | The five ordered kind/state/unit/bound/provenance predicates; `V(validate_uncertainty_record)` | Yes; all sixteen `uncertainty-*` cases and the two quantity-context uncertainty mismatches |
-| `envelopes.CommonObjectEnvelope` | Eleven required properties and immutable capture; exact built-in payload bytes (no subclass or mutable/container substitute) and a successful unchanged `parse_ecj1` canonical parse are constructor formation owned by the frozen `CommonObjectEnvelope` operation. These raw-input failures retain their I-1 code/stage and not-applicable interface. | `exact_field_types` for the remaining stored fields and captured payload representation, `authority_ref_order`, an independent fresh-parse `payload_canonical_bytes` integrity check, `lifecycle_status`, `self_reference_exclusion`, and `object_content_hash`; `V(validate_object_envelope)`. The fresh parse verifies the stored representation and does not create a second raw-input constructor failure path. | Yes for validator-owned semantics. Block-7 cases 1–13 are constructor-boundary formation cases; structurally formed cases 14–16 and 18–19 reach the validator; case 17 reaches and fails the constructor prerequisite because its bytes are malformed; case 20 is the no-cache AST assertion. Hash mismatch reaches only the final validator predicate; metadata/lifecycle variations remain successful and excluded from the hash. |
+| `primitives.UncertaintyRecord` | Eleven required fields and exact enum/ref/quantity/tuple/resolution runtime types only; `C(UncertaintyRecord)` | The five ordered kind/state/unit/bound/provenance predicates, including exact kind-specific violated-contract role and identity; `V(validate_uncertainty_record)` | Yes; all sixteen `uncertainty-*` cases and the two quantity-context uncertainty mismatches |
+| `envelopes.CommonObjectEnvelope` | Eleven required properties and immutable capture; exact built-in payload bytes (no subclass or mutable/container substitute) and a successful unchanged `parse_ecj1` canonical parse are constructor formation owned by the frozen `CommonObjectEnvelope` operation. These raw-input failures retain their I-1 code/stage and not-applicable interface. | `exact_field_types` for the remaining stored fields and captured payload representation, `authority_ref_order`, an independent fresh-parse `payload_canonical_bytes` integrity check, `lifecycle_status`, `direct_content_hash_exclusion`, and `object_content_hash`; `V(validate_object_envelope)`. Direct exclusion recursively detects the exact stored hash string only; it performs no alias, ref, registry, or graph traversal. | Yes for validator-owned semantics. Block-7 cases 1–13 are constructor-boundary formation cases; structurally formed cases 14–16 and 18–19 reach the validator; case 17 reaches and fails the constructor prerequisite because its bytes are malformed; case 20 is the no-cache AST assertion. Hash mismatch reaches only the final validator predicate; metadata/lifecycle variations remain successful and excluded from the hash. |
 | `envelopes.RecordMetadata` | Eight required exact ID/ref/conditional-union fields; `C(RecordMetadata)` | None; it has no scientific projection or acceptance meaning | No additional semantic validity is claimed; `record-metadata-valid` supplement and Block-7 metadata ref |
 | `envelopes.LifecycleTransition` | Five required fields and exact ref/status/tuple-member/authorization-union runtime types only; `C(LifecycleTransition)` | `closed_edge`, `authorization_applicability`, and all evidence requirements under `evidence_order`; `V(validate_lifecycle_transition)` | Yes; all 25 graph cells and three evidence rejections form candidates and reach that validator |
 | `envelopes.LifecycleValidationResult` | Four required exact fields plus valid/failure/checked-predicate consistency; `C(LifecycleValidationResult)` | None | No invalid constructed result; five Block-8 lifecycle success projections |
@@ -5392,7 +5478,7 @@ The complete fixture reachability audit is closed as follows:
 | 3 | Already formed core operands reach `apply_exact_core_operation` | All 42 reach the exact-operation interface; arity, operation, zero, mixed variant, conversion, and policy predicates retain precedence. |
 | 4 | Already formed numeric candidates reach `decimal_to_rational_exact` | All four reach that interface; the wrong exact union member is rejected there. |
 | 5 | Read-only declaration providers reach `validate_numerical_policy`; exact operands reach the core operation | All 36 reach their declared boundary. Missing properties and present typed-not-applicable properties remain distinguishable from resulting declaration shape alone; no policy method is called. |
-| 6 | Signature-correct immutable record candidates reach the 13 named primitive validators or `convert_quantity_exact` | All 107 reach their declared boundary. The only formerly signature-invalid patches are corrected to `R(63)` for conversion-rule dimension and typed `NOT_APPLICABLE` for the two parent arguments. Every other patch already preserves the declared runtime signature; named semantic predicates, including zero duration and invalid closed-domain strings, are validator-owned. |
+| 6 | Signature-correct immutable record candidates reach the 13 named primitive validators or `convert_quantity_exact` | All 107 reach their declared boundary. Standalone conversion cases supply the rule and both units; both parent validators receive typed parent arguments; horizon cases supply exact effect/due-ref pairs; and uncertainty records include the explicit violated-contract role. Every patch preserves the declared runtime signature; named semantic predicates, including zero duration and invalid closed-domain strings, are validator-owned. |
 | 7 | Cases 1–13 reach the `CommonObjectEnvelope` formation boundary; cases 14–16 and 18–19 first form and then reach `validate_object_envelope`; case 17 reaches the constructor prerequisite and case 20 reaches the static AST assertion | All 20 retain their intended owner. Case 17's malformed bytes fail at construction with unchanged I-1 identity even though the orchestration operation is the validator; constructor byte/type/canonical failures cannot be relabelled; validator hash failure cannot be pre-empted; source/parsed-tree mutation, metadata/lifecycle exclusion, byte-change, and no-cache boundaries remain distinct. |
 | 8 | Exact `LifecycleTransition` and eleven-field `SupersessionRelation` candidates reach their named validators | All 41 reach the assigned interface. Empty/duplicate/unsorted evidence, invalid graph edges, every ancestry relation, direct kind/schema inequalities, lifecycle pair, and typed-not-applicable authorization are validator-owned. |
 | 9 | Static precedence assertions or the explicitly named higher-precedence public boundary | All 32 reach the frozen boundary and retain the same first failure. |
@@ -5453,6 +5539,33 @@ registry-record-draft-valid:
 registry-record-nondraft-refused:
   RegistryRecord(R(0),"fixture-kind",BYTES("7b2261223a317d"),REVIEWED)
   -> REGISTRY_RECORD_CONFLICT
+
+boundary-treatment-pair-formation:
+  child = BOUNDARY_L with external_effect_refs=[R(60)],
+          unresolved_cross_boundary_effect_refs=[R(61)],
+          cross_boundary_effect_treatments=[[R(60),R(62)],[R(61),R(63)]]
+  -> exact pair/member types, effect-ref order, unique effect keys, no duplicate
+boundary-treatment-coverage-refused:
+  BOUNDARY_L with unresolved_cross_boundary_effect_refs=[R(60)] and
+  cross_boundary_effect_treatments=[] in the parent-comparison input
+  -> INVALID_AGGREGATION at cross_boundary_treatment
+
+horizon-pending-pair-formation:
+  validate_horizon(right-open HORIZON0,[[R(60),R(61)]])
+  -> exact pair/member types, effect-ref order, unique effect keys
+horizon-pending-pair-duplicate-refused:
+  validate_horizon(right-open HORIZON0,
+                   [[R(60),R(61)],[R(60),R(62)]])
+  -> HORIZON_INVALID
+
+envelope-direct-content-hash-occurrence-refused:
+  canonical payload contains the envelope's exact stored object_content_hash
+  string as a recursively nested object name, object value, or array member
+  -> HASH_MISMATCH at direct_content_hash_exclusion before recomputation
+envelope-alias-resolution-deferred:
+  static AST/import assertion: validate_object_envelope performs no registry,
+  alias, ObjectRef-target, or object-graph resolution
+  -> STATIC_ASSERTION_V1("ALIAS_AND_GRAPH_CYCLE_DETECTION_DEFERRED")
 ```
 
 The supplement also asserts the exact declared member tuples, in their
@@ -5461,7 +5574,8 @@ and `primitives`; it asserts `CoreNumberV1` has exactly the four named union
 members and that `NumericalPolicyV1` has exactly the properties and five
 method signatures in §21.4. Every success projection is checked against
 independently encoded canonical hex where a projection exists. Every failure
-uses the exact code shown and the owning constructor interface at stage I-2.
+uses the exact code shown and the owning constructor or validator interface at
+stage I-2.
 
 This closure audit found no missing public field, runtime type, enum member,
 applicability rule, projection coordinate, immutability rule, constructor or
