@@ -1,7 +1,7 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.6
-**Status:** Prospective Framework I-2 authority correction only; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
+**Version:** 0.1.7
+**Status:** Prospective Framework I-2 source-unit authority correction only; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-14
 **Language:** English
@@ -76,7 +76,7 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.6 prospective authority register
+#### 2.1.2 Current v0.1.7 prospective authority register
 
 Revision v0.1.2 prospectively replaced only the active books-structure
 authority pointer. Revision v0.1.3 preserved those imported scientific
@@ -85,13 +85,15 @@ preserved those authorities and corrected only the validation-case collision
 recorded in §20.5. Revision v0.1.5 preserved those authorities and corrected
 only the supersession coordinates and constructor-versus-validator authority
 recorded in §20.6. Revision v0.1.6 preserves those authorities and corrects
-only the I-2 predicate-observability defects recorded in §20.7. The v0.1.2
+only the I-2 predicate-observability defects recorded in §20.7. Revision
+v0.1.7 preserves those authorities and corrects only the exact-conversion
+source-unit authority defect recorded in §20.8. The v0.1.2
 reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.6 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.7 |
 |---|---|---|---|
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including the K1–K6 planning programme and literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.5 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
@@ -2992,6 +2994,7 @@ resolved before the feature they govern can be scientifically used.
 | DR-038 | `ACCEPTED` | Require full canonical trace byte equality for normally completed equal-input deterministic runs and require an identical prospective fault schedule for declared fault studies | Avoids both overclaiming determinism and exempting declared injected faults from replay |
 | DR-039 | `ACCEPTED` | Treat undeclared operational interruption and durability failure as run-specific evidence while preserving every confirmed canonical prefix and completeness class | Separates scientific determinism from operational completion and prevents prefix loss |
 | DR-040 | `ACCEPTED` | Make every I-2 T0 predicate decidable only from exact declared argument values and treat refs as identities rather than implicit lookups | Prevents validator outcomes from depending on registries, hidden state, fixture knowledge, or construction history; stronger semantic claims are deferred |
+| DR-041 | `ACCEPTED` | Require `convert_quantity_exact` to receive an explicit source `Unit` as well as quantity, target unit, and rule | Makes quantity/source and rule/source disagreements locally distinguishable while preserving opaque refs, exact arithmetic, and callable count |
 
 ## 16. Threat model
 
@@ -3045,6 +3048,7 @@ assume malicious intent is required for a threat to matter.
 | TM-042 | Fault-schedule laundering | An injected fault differs between replays or an undeclared failure is labelled prospective after observation | Accepted exact `FaultSchedule`, delivery-semantics hash, trace header, and no-retroactive-declaration rule | External faults outside the framework remain governance risk |
 | TM-043 | Operational failure misreported as scientific nondeterminism | A host/storage interruption truncates one run and is compared as a full scientific trace, or its valid prefix is discarded | Completion-qualified equality, run-specific failure envelope, immutable longest valid prefix, and explicit completeness state | Ambiguous storage durability can remain unresolved |
 | TM-044 | Predicate-by-reference overclaim | A T0 validator treats an opaque ref as proof of lifecycle, role, contents, completeness, disjointness, treatment adequacy, or an indirect graph cycle | Exact argument-only predicate contract, explicit role fields/pairs where locally decidable, and named deferred claims | Later registry/domain stages must establish the stronger semantics without weakening I-2 identity checks |
+| TM-045 | Conversion authority inferred from an opaque ref | A quantity/source mismatch and a rule/source mismatch collapse to the same effective arguments, so failure code depends on fixture identity, literal value, or patch history | Explicit source-unit argument, role-position equality checks, unchanged rule validator, and opaque-renaming audit | Referenced unit/rule contents beyond declared identities remain outside I-2 and subject to the unchanged UQ-40 boundary |
 
 ## 17. Unresolved-question register
 
@@ -3094,6 +3098,11 @@ convenience.
 | UQ-38 | Which exact fault kinds, target coordinates, delivery acknowledgements, and terminal rules are admissible for scientific and inert durability fault schedules? | First fault-injection study | Separate fault-injection specification and applicable study preregistration |
 | UQ-39 | How should sensitive policy-memory payloads be encrypted, access-controlled, retained, or disclosed while preserving content-hash verification, authorized replay, and evidence-ledger requirements? | Restricted-memory study | Security, privacy, and study-governance protocol |
 | UQ-40 | Which accepted registry/domain evidence establishes policy and contract roles/lifecycle/content, region membership disjointness, global pending/effect completeness, treatment adequacy, true out-of-set violation, and indirect alias/object-graph cycle freedom? | Any claim stronger than I-2 declaration-shape and identity validation | I-4 registry design plus applicable domain analytical/governance authority |
+
+Revision v0.1.7 does not resolve, narrow, or expand UQ-40. Exact equality at
+the newly explicit source-unit argument is an I-2 identity check, not a claim
+about the contents, lifecycle, role, or scientific adequacy of any referenced
+unit or rule.
 
 ## 18. Extension points for Parts IV–IX
 
@@ -3200,6 +3209,10 @@ deterministic on the supported platforms.
 - no domain distortion or transition functions.
 
 Exit criterion: invalid aggregation and implicit absence fail closed.
+Exact quantity conversion additionally fails closed unless the supplied
+quantity, explicit source unit, explicit target unit, and supplied conversion
+rule provide every locally observable identity and dimension witness required
+by §21.
 
 ### I-3 — Implement declarative scientific records
 
@@ -3420,7 +3433,7 @@ record, package, I-1 byte, and accepted milestone. Its raw SHA-256 is recorded
 in historical implementation-plan v0.2.5. Its exact whole-file SHA-256 is
 `9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928`.
 
-### 20.7 Revision v0.1.6 — current prospective I-2 predicate-observability correction
+### 20.7 Revision v0.1.6 — historical prospective I-2 predicate-observability correction
 
 Revision v0.1.6 corrects all eight known I-2 predicate-observability defects:
 numerical-policy identity and ownership, exact-comparison tolerance,
@@ -3429,7 +3442,22 @@ cross-effect treatment, horizon pending due declarations, out-of-set
 violated-contract role, and direct envelope hash occurrence. It preserves
 scientific meaning, public type and callable counts, dependencies, Gate
 state, I-1 bytes, and accepted milestones. Its raw SHA-256 is recorded in
-implementation-plan v0.2.6; this file does not contain its own current hash.
+historical implementation-plan v0.2.6. Its exact whole-file SHA-256 is
+`884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2`.
+
+### 20.8 Revision v0.1.7 — current prospective I-2 source-unit authority correction
+
+Revision v0.1.7 adds an explicit supplied source `Unit` to
+`convert_quantity_exact` so quantity/source disagreement and
+rule/source disagreement have different locally observable argument
+witnesses. It changes only that callable's argument structure, the ten
+conversion-vector input recipes `i2-0149` through `i2-0158`, their adapter
+instructions, and dependent prospective authority text. It preserves every
+vector ID, name, expected outcome and code, block/outcome count, public type
+and callable count, export, path, dependency, scientific definition, UQ-40
+deferral, Gate record, package, I-1 byte, and accepted milestone. Its raw
+SHA-256 is recorded in implementation-plan v0.2.7; this file does not contain
+its own current hash.
 
 ## 21. Normative prospective Framework I-2 amendment
 
@@ -4121,12 +4149,21 @@ computes `target = source * factor + offset`, treating typed not-applicable
 offset as exact zero. All operations must succeed through §21.3 without a
 policy; otherwise conversion is refused. The returned quantity changes only
 magnitude and unit ref; every other coordinate is byte-for-byte identical.
-`convert_quantity_exact` takes its source coordinate from the declared
-`quantity.unit_ref` and `quantity.dimension_ref`, never from an inferred or
-looked-up unit. Its target coordinate comes from the supplied `target_unit`.
+`convert_quantity_exact` takes its source coordinate from the explicitly
+supplied `source_unit`; it requires exact equality between
+`quantity.unit_ref` and `source_unit.unit_ref` and never infers or looks up a
+unit from either opaque ref. Its target coordinate comes from the explicitly
+supplied `target_unit`. Across the ordered `target_unit` and
+`conversion_rule` checks, the quantity, source-unit, target-unit, and rule
+dimensions are all compared: disagreement among the first three fails
+`DIMENSION_MISMATCH`, while a rule-declared dimension that disagrees with the
+already compatible explicit units fails the `dimension` predicate of
+`validate_conversion_rule` with `CONVERSION_RULE_MISMATCH`. No literal
+fixture reference is privileged.
 
-Two forward affine rules `A->B` and `B->C` may compose only when the middle
-unit/dimension/horizon match and all exact operations are supported. The
+Two forward affine rules `A->B` and `B->C` may compose only when the explicit
+unit chain supplies `A`, `B`, and `C`, the middle unit/dimension/horizon match,
+and all exact operations are supported. The
 composed factor is `f_BC*f_AB`; offset is `f_BC*o_AB+o_BC`. Direction is
 forward unless both inputs are bidirectional and both factors have exact
 nonzero inverses in their existing variants. No implicit inverse, float,
@@ -4421,7 +4458,12 @@ validate_conversion_rule(
     source_unit: Unit,
     target_unit: Unit,
 ) -> CompatibilityResult
-convert_quantity_exact(quantity: Quantity, target_unit: Unit, rule: ConversionRule) -> Quantity
+convert_quantity_exact(
+    quantity: Quantity,
+    source_unit: Unit,
+    target_unit: Unit,
+    rule: ConversionRule,
+) -> Quantity
 validate_quantity(quantity: Quantity, expected_context: QuantityContext) -> CompatibilityResult
 validate_resource_service_compatibility(resource: ResourceType, service: ServiceType) -> CompatibilityResult
 validate_region_compatibility(left: Region, right: Region, parent_or_not_applicable: Region | Applicability, aggregation_rule_or_not_applicable: ObjectRef | Applicability) -> CompatibilityResult
@@ -4445,7 +4487,7 @@ validate_supersession_relation(relation: SupersessionRelation) -> SupersessionVa
 | `validate_dimension_compatibility(left, right)` | Exact ref and basis-vector equality -> `CompatibilityResult` |
 | `validate_unit_compatibility(source, target, conversion_or_not_applicable)` | Dimension first; exact unit identity succeeds without conversion; otherwise applies the same direction, endpoint, three-way dimension, and declared horizon-union rules as standalone conversion validation -> result |
 | `validate_conversion_rule(rule, source_unit, target_unit)` | Nonzero factor, offset variant, declared direction plus exact supplied endpoints, three-way declared dimension equality, and exact horizon-union form; returns `CompatibilityResult` |
-| `convert_quantity_exact(quantity, target_unit, rule)` | Full quantity validity, exact rule, exact core multiply/add, unchanged coordinates -> new immutable `Quantity` |
+| `convert_quantity_exact(quantity, source_unit, target_unit, rule)` | Intrinsic quantity-required state, exact quantity/source identity, quantity/source/target dimension compatibility, exact supplied rule validation, exact core multiply/add, unchanged coordinates -> new immutable `Quantity` |
 | `validate_quantity(quantity, expected_context)` | Resolution then dimension, unit, type, region, time, sign, boundary, uncertainty -> result |
 | `validate_resource_service_compatibility(resource, service)` | Symmetric exact registry declarations -> result |
 | `validate_region_compatibility(left, right, parent_or_not_applicable, aggregation_rule_or_not_applicable)` | Exact identity or explicit valid common parent only |
@@ -4468,6 +4510,24 @@ inspect fixture/patch history, do not invoke a domain policy, and
 do not add/compare/aggregate scientific magnitudes except the exact arithmetic
 inside an explicitly supplied unit conversion. No compatibility success is
 permission to perform scientific aggregation.
+
+`convert_quantity_exact` evaluates the following locally witnessed checks in
+the printed order. The labels are fixture rejection/evidence labels rather
+than a new public result projection:
+
+| Check or rejection label | Exact argument evidence and owner | Failure |
+|---|---|---|
+| `quantity_valid` | `quantity`, including `validate_resolution_detail(quantity.resolution)` followed by the intrinsic exact-conversion requirement that its resolution is `PRESENT` with the required present payload; no synthetic `QuantityContext` is invented | the intrinsic owning code, including `RESOLUTION_STATE_INVALID` |
+| `source_unit` | exact comparison of `quantity.unit_ref` with `source_unit.unit_ref` | `UNIT_MISMATCH` |
+| `target_unit` | exact comparison of `quantity.dimension_ref`, `source_unit.dimension_ref`, and `target_unit.dimension_ref` in that order | `DIMENSION_MISMATCH` |
+| `conversion_rule` | call `validate_conversion_rule(rule, source_unit, target_unit)` or faithfully reuse its ordered `factor_nonzero`, `offset_variant`, `direction`, `dimension`, and `validity_horizon` predicates; the rule dimension is thereby compared with both explicit unit dimensions | `CONVERSION_RULE_MISMATCH` |
+| `exact_arithmetic` | `quantity.magnitude`, `rule.factor`, and `rule.offset`, through only the exact §21.3 operations | the existing exact-arithmetic refusal code |
+| `reverse_not_explicit` | the explicit `source_unit`, explicit `target_unit`, and unchanged rule direction/endpoints; it is a named rejection witness of the `conversion_rule` check, not a hidden inverse path | `CONVERSION_RULE_MISMATCH` |
+
+Constructor-owned formation still precedes these checks. Once formed inputs
+reach the callable, no lookup, hidden state, fixture ID, patch/construction
+history, inferred reference content, or literal-reference privilege may
+affect the result.
 
 For deterministic result projection and fixture generation, successful
 `checked_predicates` tuples are frozen below. A failure includes the labels
@@ -4540,10 +4600,10 @@ specification_raw_sha256
 vectors
 ```
 
-Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.6 raw
+Values are exactly `T0_STATIC_I2`, the eventual committed plan v0.2.7 raw
 SHA-256 as 64 lowercase hexadecimal digits,
 `ebu:fixture:validation:i2-numeric-vectors-v1`, `1.0.0`, the eventual
-committed specification v0.1.6 raw SHA-256 in the same form, and the vector
+committed specification v0.1.7 raw SHA-256 in the same form, and the vector
 array. The two hashes occur only in those two authority fields. This is not
 self-reference: the fixture is a later I-2 artifact created after both
 authority files are committed; the plan does not embed its own hash.
@@ -5072,7 +5132,7 @@ mapping.
 | `dimension` | `equal` using DIM0,DIM0 | `dimension_ref` -> right `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `basis_exponents` -> right `/basis_exponents/0/1`=Q(-1,1) -> `DIMENSION_MISMATCH` | 3 |
 | `unit` | `identity` UNIT_A,UNIT_A,NA; `conversion` UNIT_A,UNIT_B,RULE_AB | `dimension` -> target `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `unit_identity_or_conversion` -> UNIT_A,UNIT_B,NA -> `UNIT_MISMATCH` | 4 |
 | `conversion-rule` | `valid` `[RULE_AB,UNIT_A,UNIT_B]` | each rejection keeps UNIT_A and UNIT_B and patches only RULE_AB: `factor_nonzero` -> `/factor`=Q0; `offset_variant` -> `/offset`=D0; `direction` -> `/direction`=`SIDEWAYS`; `dimension` -> `/dimension_ref`=R(63); `validity_horizon` -> `/validity_horizon_ref`=`APPLICABLE`; all -> `CONVERSION_RULE_MISMATCH` | 6 |
-| `convert` | `exact` `[QTY_R,UNIT_B,RULE_AB]`; `affine` `[QTY_D,UNIT_B,RULE_AFFINE]`; `compose-exact` `[QTY_R,UNIT_B,RULE_AB,UNIT_C,RULE_BC]`; `compose-affine` `[QTY_D,UNIT_B,RULE_AFFINE,UNIT_C,RULE_BC_DEC]` | six rejections in order: `quantity_valid` QTY_R `/resolution`=RES_PENDING -> `RESOLUTION_STATE_INVALID`; `source_unit` QTY_R `/unit_ref`=R(63) -> `UNIT_MISMATCH`; `target_unit` UNIT_B `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `conversion_rule` RULE_AB `/source_unit_ref`=R(63) -> `CONVERSION_RULE_MISMATCH`; `exact_arithmetic` uses QTY0, UNIT_B, unchanged RULE_AB -> `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`; `reverse_not_explicit` uses QTY_R with unit R(5), target UNIT_A and unchanged RULE_AB -> `CONVERSION_RULE_MISMATCH` | 10 |
+| `convert` | `exact` `[QTY_R,UNIT_A,UNIT_B,RULE_AB]`; `affine` `[QTY_D,UNIT_A,UNIT_B,RULE_AFFINE]`; `compose-exact` `[QTY_R,UNIT_A,UNIT_B,RULE_AB,UNIT_C,RULE_BC]`; `compose-affine` `[QTY_D,UNIT_A,UNIT_B,RULE_AFFINE,UNIT_C,RULE_BC_DEC]` | six rejections in order: `quantity_valid` keeps explicit source UNIT_A and patches only QTY_R `/resolution`=RES_PENDING -> `RESOLUTION_STATE_INVALID`; `source_unit` keeps source UNIT_A and patches only QTY_R `/unit_ref`=R(63) -> `UNIT_MISMATCH`; `target_unit` keeps source UNIT_A and patches only UNIT_B `/dimension_ref`=R(63) -> `DIMENSION_MISMATCH`; `conversion_rule` keeps source UNIT_A and patches only RULE_AB `/source_unit_ref`=R(63) -> `CONVERSION_RULE_MISMATCH`; `exact_arithmetic` uses QTY0, UNIT_A, UNIT_B, unchanged RULE_AB -> `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`; `reverse_not_explicit` uses QTY_R with unit R(5), explicit source UNIT_B, target UNIT_A, and unchanged forward-only RULE_AB -> `CONVERSION_RULE_MISMATCH` | 10 |
 | `quantity` | `valid` `[QTY0,QC0]`, then `valid-with-uncertainty` `[QTY_U,QC_U]` | the nine §21.6 labels against `[QTY0,QC0]`; replace respectively `/resolution`=RES_PENDING, `/dimension_ref`, `/unit_ref`, `/resource_type_ref`, `/region_ref`, `/time_basis_ref`, `/sign_convention_ref`, `/boundary_ref`, `/uncertainty_ref` with R(63); codes respectively `RESOLUTION_STATE_INVALID`, `DIMENSION_MISMATCH`, `UNIT_MISMATCH`, `QUANTITY_TYPE_MISMATCH`, `REGION_MISMATCH`, `TIME_BASIS_MISMATCH`, `SIGN_CONVENTION_MISMATCH`, `BOUNDARY_MISMATCH`, `UNCERTAINTY_RECORD_INVALID`; then `uncertainty-unexpected` input `[QTY_U,QC0]` and `uncertainty-required` input `[QTY0,QC_U]`, both -> `UNCERTAINTY_RECORD_INVALID` | 13 |
 | `resource-service` | `symmetric` RESOURCE0,SERVICE0 | `resource_declares_service` -> RESOURCE0 `/service_compatibility_refs`=[]; `service_declares_resource` -> SERVICE0 `/required_resource_type_refs`=[R(63)]; both -> `QUANTITY_TYPE_MISMATCH` | 3 |
 | `region` | `identity` REGION_L,REGION_L,NA,NA; `parent` REGION_L,REGION_R,REGION_P,R(59) | labels from §21.6; patches in label order: supplied parent=NA; right `/parent_region_ref`=R(63); right `/clock_ref`=R(63); parent `/validity_end/tick`=I1; replace right with REGION_L; aggregation=NA. `identity_or_parent` -> `REGION_MISMATCH`, the other five -> `INVALID_AGGREGATION` | 8 |
@@ -5104,9 +5164,12 @@ coordinates are NA. A failed case uses the displayed code at the derived I-2
 interface and includes predicate labels only in runtime evidence, not in the
 fixture's `FAILURE` expected object.
 
-Exact and affine convert successes use RULE_AB/RULE_AFFINE. Composition
-successes interpret the five-item input as two calls to
-`convert_quantity_exact`, first A->B, then the returned quantity B->C. Exact
+Exact and affine convert successes use RULE_AB/RULE_AFFINE with explicitly
+supplied UNIT_A and UNIT_B. Composition successes interpret the six-item
+input as two calls to `convert_quantity_exact`: first
+`(quantity,UNIT_A,UNIT_B,first_rule)`, then
+`(returned_quantity,UNIT_B,UNIT_C,second_rule)`. The fixture adapter must use
+that supplied unit chain and must not invent, infer, or resolve a unit. Exact
 expected quantities are QTY_R with magnitude Q(1,1), unit R(5); QTY_D with
 magnitude D(34,-1), unit R(5); QTY_R with magnitude Q(3,1), unit R(7); and
 QTY_D with magnitude D(78,-1), unit R(7), in success-case order. Each is
@@ -5114,6 +5177,28 @@ wrapped by `VALUE(expanded-quantity,"Quantity")`. The last two are checked
 against `factor=f_BC*f_AB`, `offset=f_BC*o_AB+o_BC`. This is test orchestration
 through the existing callable, not a new production composition path. Every
 returned quantity preserves all coordinates except magnitude and unit ref.
+
+Relative to the historical v0.1.6/v0.2.6 fixture, the only logical vector
+changes are the `inputs` of `i2-0149` through `i2-0158`: each direct case
+inserts UNIT_A or its explicitly named reverse source before the target, and
+each composition case inserts UNIT_A before UNIT_B while reusing UNIT_B as
+the explicit source of the second call. All ten IDs, case names, categories,
+operations, quantity contexts, expected outcomes, failure codes, failure
+coordinates/IDs, and successful projections remain unchanged. The two
+top-level authority-hash fields change mechanically after v0.1.7 and v0.2.7
+are finalized; there are zero added or removed vectors.
+
+The source anchor also closes the historical effective-input ambiguity. In
+`i2-0154`, the role equality graph contains
+`quantity.unit_ref != source_unit.unit_ref` while
+`source_unit.unit_ref == rule.source_unit_ref`; in `i2-0156`, it contains
+`quantity.unit_ref == source_unit.unit_ref` while
+`source_unit.unit_ref != rule.source_unit_ref`. Any bijective renaming of
+opaque ref values preserves those role-position equalities and inequalities,
+so the two cases cannot become equivalent under opaque-reference renaming.
+They therefore witness `UNIT_MISMATCH` and `CONVERSION_RULE_MISMATCH`
+respectively without fixture identity, lookup, inferred contents, or patch
+history.
 
 The exact quantity-row case order is:
 
@@ -5320,7 +5405,7 @@ The `operation` and failure-interface table is closed:
 | Block 5 cases 1–34 | `ebu_framework.numeric.validate_numerical_policy` |
 | Block 5 case 35 | `ebu_framework.numeric.apply_exact_core_operation` |
 | Block 5 case 36 | `STATIC_POLICY_NONINVOCATION` |
-| Block-6 prefix `dimension`, `unit`, `conversion-rule`, `convert`, `quantity`, `resource-service`, `region`, `boundary`, `sign`, `time`, `clock`, `horizon`, `resolution`, `uncertainty` | the correspondingly ordered callable `validate_dimension_compatibility`, `validate_unit_compatibility`, `validate_conversion_rule`, `convert_quantity_exact`, `validate_quantity`, `validate_resource_service_compatibility`, `validate_region_compatibility`, `validate_boundary_compatibility`, `validate_sign_convention_compatibility`, `validate_time_basis`, `validate_clock_compatibility`, `validate_horizon`, `validate_resolution_detail`, `validate_uncertainty_record` in `ebu_framework.primitives` |
+| Block-6 prefix `dimension`, `unit`, `conversion-rule`, `convert`, `quantity`, `resource-service`, `region`, `boundary`, `sign`, `time`, `clock`, `horizon`, `resolution`, `uncertainty` | the correspondingly ordered callable `validate_dimension_compatibility`, `validate_unit_compatibility`, `validate_conversion_rule`, `convert_quantity_exact`, `validate_quantity`, `validate_resource_service_compatibility`, `validate_region_compatibility`, `validate_boundary_compatibility`, `validate_sign_convention_compatibility`, `validate_time_basis`, `validate_clock_compatibility`, `validate_horizon`, `validate_resolution_detail`, `validate_uncertainty_record` in `ebu_framework.primitives`; the convert adapter dispatches four-item inputs directly and six-item composition inputs as two consecutive four-argument calls over the supplied unit chain |
 | Block 7 cases 1–13 | `ebu_framework.envelopes.CommonObjectEnvelope` |
 | Block 7 cases 14–20 | `ebu_framework.envelopes.validate_object_envelope` |
 | lifecycle cells | `ebu_framework.envelopes.validate_lifecycle_transition` |
@@ -5384,7 +5469,7 @@ authorization, and artifact records remain I-3 or later and are unreachable.
 
 The I-2 AST/import/export audit reads source as bytes/text and uses AST only;
 it imports no production module. It verifies the exact root export tuple and
-count frozen by plan v0.2.6, module `__all__` subsets, the exact 29-edge DAG
+count frozen by plan v0.2.7, module `__all__` subsets, the exact 29-edge DAG
 in that plan and its acyclicity, no dynamic imports, no module-local failure
 enum/string code, and no imports or calls reaching scientific modules, legacy
 experiment/runner/finalizer modules, `results/`, or any Gate path. It proves
@@ -5438,9 +5523,9 @@ relation is not a formation check unless the table assigns it to construction.
 | `numeric.NumericalPolicyV1` protocol declaration | No concrete public record constructor exists. The fixture adapter creates an ordinary read-only property provider from the resulting declaration; it is never a raw mapping and never claims protocol conformance before validation. | Property availability/runtime types, tuple order/uniqueness, result-map closure, exact inequality of declared policy/owner identities, all unconditional and conditional applicability (including mandatory tolerance-ref presence for `COMPARE`), nested runtime constraints, and declared completeness; `V(validate_numerical_policy)`. It resolves no ref or lifecycle/kind/role/content. | Yes, necessarily; all Block-5 cases 1–34. Missing properties reach the validator as absent provider attributes and explicit `NOT_APPLICABLE` values remain present typed values. Its five methods are never invoked. |
 | `primitives.CompatibilityResult` | Five required exact fields and compatible/failure/ref result consistency; `C(CompatibilityResult)` | None | No invalid constructed result; all Block-6 successes and Block-7 case 14–16 success projections |
 | `primitives.Dimension` | Three required exact fields; closed kind; exact nonempty tuple of exact `(ObjectRef,RationalV1)` pairs, ordered/unique refs, nonzero exponents; `C(Dimension)` | Pairwise ref and complete-basis equality; `V(validate_dimension_compatibility)` | Yes relative to another dimension; all `dimension-*` cases and nested dimension catalog values |
-| `primitives.Unit` | Six required exact fields; closed kind, nonempty NFC symbol, and exact ref/conditional-union types; `C(Unit)` | Dimension then exact identity or supplied conversion relation; `V(validate_unit_compatibility)` | Yes relative to another unit/rule; all `unit-*` and `convert-*` cases |
-| `primitives.ConversionRule` | Eight required fields; exact ref/numeric/string/conditional-union runtime types only; `C(ConversionRule)` | `factor_nonzero`, `offset_variant`, direction/orientation against the two supplied units, three-way dimension equality, and exact horizon-union form; `V(validate_conversion_rule)` and the same ordered checks inside unit validation and `convert_quantity_exact` | Yes; all six `conversion-rule-*` cases supply `[rule,source_unit,target_unit]`, and all `convert-*` cases. The dimension rejection patches only the rule's declared dimension. |
-| `primitives.Quantity` | Eleven required fields and exact core/ref/conditional-union/`ResolutionDetail` runtime types only; `C(Quantity)` | The nine ordered quantity-context predicates; `V(validate_quantity)`, also first inside `convert_quantity_exact` | Yes; all `quantity-*`, `convert-*`, and nested uncertainty cases |
+| `primitives.Unit` | Six required exact fields; closed kind, nonempty NFC symbol, and exact ref/conditional-union types; `C(Unit)` | Dimension then exact identity or supplied conversion relation; `V(validate_unit_compatibility)`. `convert_quantity_exact` additionally compares the quantity ref with its explicit source unit and compares quantity/source/target dimensions before rule validation. | Yes relative to another unit/rule; all `unit-*` and `convert-*` cases. Every convert case supplies source and target units explicitly. |
+| `primitives.ConversionRule` | Eight required fields; exact ref/numeric/string/conditional-union runtime types only; `C(ConversionRule)` | `factor_nonzero`, `offset_variant`, direction/orientation against the two supplied units, three-way dimension equality, and exact horizon-union form; `V(validate_conversion_rule)` and the same ordered checks inside unit validation and `convert_quantity_exact` | Yes; all six `conversion-rule-*` cases supply `[rule,source_unit,target_unit]`, and all `convert-*` cases supply the rule with explicit source/target units. The standalone dimension rejection patches only the rule's declared dimension; `i2-0156` patches only the rule source ref. |
+| `primitives.Quantity` | Eleven required fields and exact core/ref/conditional-union/`ResolutionDetail` runtime types only; `C(Quantity)` | The nine ordered quantity-context predicates at `V(validate_quantity)`; intrinsic required state, then exact unit identity against the explicit source, are the first checks inside `convert_quantity_exact` | Yes; all `quantity-*`, `convert-*`, and nested uncertainty cases. `i2-0154` changes only the quantity unit ref while the explicit source remains UNIT_A. |
 | `primitives.ResourceType` | Five required exact fields and exact ordered, duplicate-free tuple/member and conditional-union types; `C(ResourceType)` | Symmetric service declaration; `V(validate_resource_service_compatibility)` | Yes relative to a service; all `resource-service-*` cases |
 | `primitives.ServiceType` | Five required exact fields and exact nonempty ordered, duplicate-free tuple/member and conditional-union types; `C(ServiceType)` | Symmetric resource declaration; `V(validate_resource_service_compatibility)` | Yes relative to a resource; all `resource-service-*` cases |
 | `primitives.SignConvention` | Five required exact fields; nonempty NFC meanings and pairwise distinction; `C(SignConvention)` | Ref applicability/identity only, on refs rather than records; `V(validate_sign_convention_compatibility)` | The record itself is complete after construction, but two refs may be incompatible; `sign-*` fixture cases and both sign supplement cases |
@@ -5478,7 +5563,7 @@ The complete fixture reachability audit is closed as follows:
 | 3 | Already formed core operands reach `apply_exact_core_operation` | All 42 reach the exact-operation interface; arity, operation, zero, mixed variant, conversion, and policy predicates retain precedence. |
 | 4 | Already formed numeric candidates reach `decimal_to_rational_exact` | All four reach that interface; the wrong exact union member is rejected there. |
 | 5 | Read-only declaration providers reach `validate_numerical_policy`; exact operands reach the core operation | All 36 reach their declared boundary. Missing properties and present typed-not-applicable properties remain distinguishable from resulting declaration shape alone; no policy method is called. |
-| 6 | Signature-correct immutable record candidates reach the 13 named primitive validators or `convert_quantity_exact` | All 107 reach their declared boundary. Standalone conversion cases supply the rule and both units; both parent validators receive typed parent arguments; horizon cases supply exact effect/due-ref pairs; and uncertainty records include the explicit violated-contract role. Every patch preserves the declared runtime signature; named semantic predicates, including zero duration and invalid closed-domain strings, are validator-owned. |
+| 6 | Signature-correct immutable record candidates reach the 13 named primitive validators or `convert_quantity_exact` | All 107 reach their declared boundary. Standalone conversion-rule cases supply the rule and both units; all ten quantity conversions supply explicit source/target units, and composition uses only the supplied unit chain; both parent validators receive typed parent arguments; horizon cases supply exact effect/due-ref pairs; and uncertainty records include the explicit violated-contract role. Every patch preserves the declared runtime signature; named semantic predicates, including zero duration and invalid closed-domain strings, are validator-owned. |
 | 7 | Cases 1–13 reach the `CommonObjectEnvelope` formation boundary; cases 14–16 and 18–19 first form and then reach `validate_object_envelope`; case 17 reaches the constructor prerequisite and case 20 reaches the static AST assertion | All 20 retain their intended owner. Case 17's malformed bytes fail at construction with unchanged I-1 identity even though the orchestration operation is the validator; constructor byte/type/canonical failures cannot be relabelled; validator hash failure cannot be pre-empted; source/parsed-tree mutation, metadata/lifecycle exclusion, byte-change, and no-cache boundaries remain distinct. |
 | 8 | Exact `LifecycleTransition` and eleven-field `SupersessionRelation` candidates reach their named validators | All 41 reach the assigned interface. Empty/duplicate/unsorted evidence, invalid graph edges, every ancestry relation, direct kind/schema inequalities, lifecycle pair, and typed-not-applicable authorization are validator-owned. |
 | 9 | Static precedence assertions or the explicitly named higher-precedence public boundary | All 32 reach the frozen boundary and retain the same first failure. |
@@ -5490,6 +5575,25 @@ predicate has two failure owners; and no two byte-identical effective input
 and operation pairs have incompatible expected outcomes. The audit requires
 no new public type, callable, tenth path, dependency edge, package change, or
 API-count change.
+
+The complete predicate-observability audit was repeated for revision v0.1.7,
+including every boundary that can distinguish two I-1/I-2 failure codes:
+
+| Boundary group | Complete local witness |
+|---|---|
+| Common failure support and I-1-preserving formation | Exact constructor arguments, immediate closed legacy caller map where applicable, and the explicit failure coordinate; no later validator relabels an I-1 formation failure |
+| Core-number constructors, normalization, and decimal conversion | Exact input runtime type and literal numeric/bit fields; finite/nonfinite, structural, and wrong-union distinctions require no external state |
+| `ErrorBound`, `NumericalResult`, and comparison/result construction | Exact declared kind, variants, bounds, applicability refs, completeness, and result fields supplied to the owning constructor |
+| `apply_exact_core_operation` | Exact operation, ordered operands, variants/zero values, arity, and explicit conversion flag; the 23 adjacent and nine multiply-invalid cases witness the frozen first-failure order |
+| `validate_numerical_policy` | The read-only provider's exact resulting property availability and values, including structural absence versus a present typed `NOT_APPLICABLE`; no method call, placeholder class, registry fact, or patch history |
+| Dimension, unit, rule, quantity, resource/service, sign, time, clock, horizon, resolution, and uncertainty validators | The exact listed record/ref/context/pair arguments and their locally compared fields; all stronger ref-content claims remain deferred |
+| `convert_quantity_exact` | Quantity, explicit source unit, explicit target unit, and rule; the role-equality proof above distinguishes `i2-0154` from `i2-0156` under every opaque-ref renaming |
+| Region and boundary parent validators | Both children, typed parent-or-not-applicable, and aggregation ref, including declared parent links, intervals/contracts, and supplied treatment pairs only |
+| Envelope, lifecycle, and supersession validators | The supplied immutable candidate's exact bytes/fields and independently parsed logical payload where specified; all status, evidence, ancestry, kind/schema, authorization, and direct-hash-occurrence distinctions are argument-local |
+
+No other failure-code distinction lacks an explicit argument witness. The
+audit makes no registry/domain-content claim and leaves every UQ-40 deferral
+unchanged.
 
 The exact non-fixture static supplement is assigned to
 `tests/framework/test_primitives_envelopes.py`. Catalog names in this list are
@@ -5540,6 +5644,14 @@ registry-record-nondraft-refused:
   RegistryRecord(R(0),"fixture-kind",BYTES("7b2261223a317d"),REVIEWED)
   -> REGISTRY_RECORD_CONFLICT
 
+conversion-source-anchor-opaque-renaming:
+  i2-0154 roles = (quantity.unit_ref=R(63),source.unit_ref=R(3),
+                   rule.source_unit_ref=R(3))
+  i2-0156 roles = (quantity.unit_ref=R(3),source.unit_ref=R(3),
+                   rule.source_unit_ref=R(63))
+  -> STATIC_ASSERTION_V1("CONVERSION_SOURCE_ANCHOR_DISTINGUISHES_FAILURES")
+     after any bijective opaque-ref renaming; no lookup or literal-value rule
+
 boundary-treatment-pair-formation:
   child = BOUNDARY_L with external_effect_refs=[R(60)],
           unresolved_cross_boundary_effect_refs=[R(61)],
@@ -5580,9 +5692,11 @@ stage I-2.
 This closure audit found no missing public field, runtime type, enum member,
 applicability rule, projection coordinate, immutability rule, constructor or
 validation behavior, failure meaning/precedence, capability class, owner, or
-deterministic fixture/static-test route. It changes no public type/callable
-name, signature, owner, capability, dependency edge, root export, or future
-path. The totals remain 84 public types, 42 public callables, `__version__`,
+deterministic fixture/static-test route. Revision v0.1.7 changes only the
+argument structure of the existing `convert_quantity_exact` callable; it
+changes no public type/callable name or count, owner, capability, dependency
+edge, root export, or future path. The totals remain 84 public types, 42
+public callables, `__version__`,
 127 root exports, 29 DAG edges, and nine future implementation paths. The
 failure domain is 29 retained I-1 plus 24 I-2 codes, with 24 I-2 precedence
 entries.

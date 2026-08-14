@@ -1,8 +1,8 @@
 # Unified Python Research Framework Implementation Plan
 
-**Plan version:** 0.2.6
+**Plan version:** 0.2.7
 **Stage:** Prospective Framework I-2 authority correction only
-**Status:** I-2 design and future manifest remain frozen with the predicate-observability correction; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
+**Status:** I-2 design and future manifest remain frozen with the explicit source-unit authority correction; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-14
 **Language:** English
@@ -11,9 +11,9 @@
 **Historical v0.2.2 authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
 **I-2 authority-amendment branch:** `framework-v0.1`
 **I-2 authority-amendment base HEAD:** `64e7d692dbae2c3beb6752d955c8f6193e481010`
-**Framework specification version:** 0.1.6
+**Framework specification version:** 0.1.7
 **Framework specification SHA-256:**
-`884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2`
+`01f7392459af3eaccbd6966b1504fa1206997722677415d080b0b6883d8081ca`
 **Future-books structure SHA-256:**
 `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`
 
@@ -22,15 +22,15 @@
 ## 1. Decision and authority boundary
 
 This revision preserves the prospective I-2 implementation authority in §21
-after accepted I-1 integration and corrects only the eight known
-predicate-observability defects under an exact argument-only T0 rule. It
-creates no Python package, code, schema,
+after accepted I-1 integration and corrects only the remaining exact-
+conversion source-unit authority defect under an exact argument-only T0 rule.
+It creates no Python package, code, schema,
 fixture, test, dependency lock, accepted configuration, execution binding,
 authorization credential, result, manifest, or publication record. It
 authorizes no implementation and no scientific execution.
 
 The current governing architectural and scientific authority is
-`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.6 at the exact
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.7 at the exact
 whole-file hash above, reconciled with the current source locks in §1.3. This
 plan resolves the implementation questions explicitly assigned to I-2
 without beginning that stage.
@@ -78,13 +78,13 @@ bridge authority is v0.2. The old specification and books hashes in this
 subsection are historical only and are not active implementation authority
 for this or any later revision.
 
-### 1.3 Current v0.2.6 mechanical authority locks and status
+### 1.3 Current v0.2.7 mechanical authority locks and status
 
 The current prospective authority set is:
 
 | Source | Current version or role | Current required raw SHA-256 | Mechanical status |
 |---|---|---|---|
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.6 framework specification | `884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2` | Current governing specification and prospective I-2 lock |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.7 framework specification | `01f7392459af3eaccbd6966b1504fa1206997722677415d080b0b6883d8081ca` | Current governing specification and prospective I-2 lock |
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6 planning and the literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Current planning-authority lock, within the scope boundaries below |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged imported Part VI authority |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged imported dynamic-coordination authority |
@@ -116,35 +116,42 @@ the books-structure raw SHA-256
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`,
 and had plan whole-file SHA-256
 `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
-None of those three values is an active v0.2.6 authority lock.
+None of those three values is an active v0.2.7 authority lock.
 
 Revision v0.2.2 is immutable historical evidence. It used specification
 v0.1.2 at raw SHA-256
 `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
 and had plan whole-file SHA-256
 `3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`.
-Neither value is an active v0.2.6 lock.
+Neither value is an active v0.2.7 lock.
 
 Revision v0.2.3 is immutable historical evidence. It used specification
 v0.1.3 at raw SHA-256
 `44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`
 and had plan whole-file SHA-256
 `bcc25725575dcd0905a17dc7712da9e534a92c3e6e5335e65248979ad1c22d46`.
-Neither value is an active v0.2.6 lock.
+Neither value is an active v0.2.7 lock.
 
 Revision v0.2.4 is immutable historical evidence. It used specification
 v0.1.4 at raw SHA-256
 `25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380`
 and had plan whole-file SHA-256
 `bd65010e6231f71d68d9e2165f723efab5175d2e8ea3c05d8624a060602ac6ff`.
-Neither value is an active v0.2.6 lock.
+Neither value is an active v0.2.7 lock.
 
 Revision v0.2.5 is immutable historical evidence. It used specification
 v0.1.5 at raw SHA-256
 `9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928`
 and had plan whole-file SHA-256
 `8db6a9bac25aaa7654d614497640e8429888416d01148e1b33fe2026ce4200c6`.
-Neither value is an active v0.2.6 lock.
+Neither value is an active v0.2.7 lock.
+
+Revision v0.2.6 is immutable historical evidence. It used specification
+v0.1.6 at raw SHA-256
+`884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2`
+and had plan whole-file SHA-256
+`34241b44b5d6b8bc5b5d6fea6e517afa47507b4cd905eea464347e9865eedc97`.
+Neither value is an active v0.2.7 lock.
 
 The signed tag `foundation-v0.1.0` remains the unchanged tag object
 `90646d3c7e1ff2201eab4739e894598b80782b79` at commit
@@ -180,7 +187,7 @@ explicit PEP 517 backend requirement, the initially stdlib-only framework
 lock, and the absence of a standard-library PEP 517 backend. That statement
 is retained as historical evidence. The existing packaging amendment and
 matching contract prospectively resolved the contradiction under their
-narrow precedence. Revision v0.2.6 does not edit, repeat, or redefine that
+narrow precedence. Revision v0.2.7 does not edit, repeat, or redefine that
 resolution or any packaging rule. It freezes only prospective I-2 design and
 the exact future §21.2 manifest; it grants no present implementation,
 framework integration, framework-alpha, scientific-execution, Gate,
@@ -1246,7 +1253,7 @@ The cross-stage-control table above is unchanged. Revision v0.2.1
 recorded the explicit-backend/stdlib-only contradiction as a current blocker;
 that status is historical. The existing packaging amendment and matching
 contract prospectively resolve only their stated packaging scope. Revision
-v0.2.6 does not edit, repeat, or redefine that resolution, select a different
+v0.2.7 does not edit, repeat, or redefine that resolution, select a different
 backend or dependency, or add any packaging/control manifest path. Its I-2
 ownership amendments are exactly those in §21.2.
 
@@ -1262,7 +1269,7 @@ and is not changed or reused as the framework lock.
 | `src/ebu_framework/data/__init__.py` | Package-data boundary; exports no API and executes no code | None | I-1 | New |
 | `src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt` | Exact raw Unicode 15.0.0 assignment, canonical decomposition, and canonical-combining-class data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
 | `src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt` | Exact raw Unicode 15.0.0 `Full_Composition_Exclusion` and normalization-property data with the §3.2 digest | Unicode Consortium UCD 15.0.0 source bytes | I-1 | New |
-| `src/ebu_framework/errors.py` | I-1 failures plus only the v0.1.6/v0.2.6 common fields, stable failure identity, closed I-1 compatibility map, and exact I-2 failure codes; no domain behavior | Stdlib only; must not import any package module | I-1; narrowly extended I-2 | New |
+| `src/ebu_framework/errors.py` | I-1 failures plus only the v0.1.7/v0.2.7 common fields, stable failure identity, closed I-1 compatibility map, and exact I-2 failure codes; no domain behavior | Stdlib only; must not import any package module | I-1; narrowly extended I-2 | New |
 | `src/ebu_framework/canonical.py` | Strict ECJ-1 projection, parser, encoder, pinned-table NFC/assignment, code-point ordering, asset-digest verification, and host-Unicode rejection rules | `err`, the two pinned Unicode 15.0.0 runtime assets | I-1 | New |
 | `src/ebu_framework/identity.py` | `ScientificId`, semantic versions, allocation claims, `ObjectRef`, typed digest wrappers | `can`, `err` | I-1 | New |
 | `src/ebu_framework/hashing.py` | All exact §5 projections, SHA-256 domains, binary framing, and raw-source labeling | `can`, `id`, `err` | I-1; extended I-3/I-5 | New |
@@ -1482,7 +1489,7 @@ possible only through the classified callables below.
 | `validate_unit_compatibility` | `primitives` | T0 | Exact identity or supplied rule with observable endpoints, direction, three-way dimension, and declared horizon form only |
 | `validate_conversion_rule` | `primitives` | T0 | Supplied rule plus source/target units: factor/offset, direction/endpoints, three-way dimension, and declared horizon form |
 | `validate_quantity` | `primitives` | T0 | Dimensions, unit/type/region/time/boundary checks |
-| `convert_quantity_exact` | `primitives` | T0 | Only a pinned exact conversion; approximate conversion requires T3 domain policy |
+| `convert_quantity_exact` | `primitives` | T0 | Only a pinned exact conversion from explicit quantity/source/target/rule arguments; approximate conversion requires T3 domain policy |
 | `validate_resource_service_compatibility` | `primitives` | T0 | Symmetric exact declared compatibility only |
 | `validate_region_compatibility` | `primitives` | T0 | Exact identity or explicit declared common-parent links; no membership/disjointness resolution or aggregation |
 | `validate_boundary_compatibility` | `primitives` | T0 | Exact identity or declared common-parent links plus supplied cross-effect treatment-key coverage; no aggregation/adequacy claim |
@@ -1589,7 +1596,7 @@ names do not affect classification.
 |---|---:|---|---|
 | V0 canonical bytes | T0 | Verify both runtime Unicode assets' exact SHA-256 values; run the complete pinned Unicode 15.0 `NormalizationTest.txt`; check assigned-range expansion, assigned Unicode 15.0 boundaries, rejection of later-assigned U+2EBF0 even on a later host, rejection on missing/corrupt data, absence of host `unicodedata`/ICU/network reachability, code-point key order, escapes, integers, re-encoding, and duplicate/rejection vectors | Host Unicode normalization, object acceptance, policies, transitions |
 | V1 hash and identity | T0/T1 | Every §5 domain/preimage/exclusion, metadata invariance, artifact frame, raw-source distinction, ID idempotency/collision in temp registry | Scientific registry/configuration |
-| V2 core numbers/types | T0 | Strict §21.5 fixture schema/order/hash binding; exact 335-vector sequence; every integer/rational/decimal/binary-bit normal form and rejection; the exact 17-case `ErrorBound` basis; every exact operation cell and explicit conversion; policy shape/completeness and refusal without method call; corrected conversion context, declared parent links, boundary treatment coverage, horizon due pairs, uncertainty contract roles, and every frozen I-2 compatibility/lifecycle/supersession predicate; 23 adjacent precedence pairs and nine named multiply-invalid cases | Domain precision/tolerance/rounding, policy callback, host-float arithmetic, registry acceptance, membership/disjointness, global effect completeness, treatment adequacy, aggregation, scientific operation |
+| V2 core numbers/types | T0 | Strict §21.5 fixture schema/order/hash binding; exact 335-vector sequence; every integer/rational/decimal/binary-bit normal form and rejection; the exact 17-case `ErrorBound` basis; every exact operation cell and explicit conversion; policy shape/completeness and refusal without method call; explicit quantity/source/target/rule conversion context and opaque-renaming distinction, declared parent links, boundary treatment coverage, horizon due pairs, uncertainty contract roles, and every frozen I-2 compatibility/lifecycle/supersession predicate; 23 adjacent precedence pairs and nine named multiply-invalid cases | Domain precision/tolerance/rounding, policy callback, host-float arithmetic, unit lookup/inference, registry acceptance, membership/disjointness, global effect completeness, treatment adequacy, aggregation, scientific operation |
 | V3 declarative records | T0 | During I-2 only: static construction/projection of `CommonObjectEnvelope` with exact stored `CanonicalBytes`, fresh decode and no decoded cache, `RecordMetadata`, `LifecycleTransition`, `SupersessionRelation`, and strengthened draft-only `RegistryRecord`; the exact four-case `FailureEventKey` lexical basis in specification §21.2.1; later stages add the remaining v0.1 records | Configuration, binding, state, action, policy memory, fault, result, authorization, artifact, scientific callbacks, lifecycle mutation |
 | V4 synthetic authorization | T1 | RFC 8032 vectors; synthetic threshold, issuer scope, delegation attenuation/depth/cycle, fresh-time response parser, revocation rollback, exact targets, single-use SQLite conflict | Production keys, real stage authority, model entry |
 | V5 capability leakage | T1 | Fabricated availability epochs, forbidden field traversal, read-set rejection, stateless/stateful applicability | Scientific policy code |
@@ -1679,9 +1686,10 @@ portion of V3, and the I-2 T0 AST/import/export audit. Existing
 **Acceptance:** exact §21.3 post-I-2 root export tuple has 127 entries; all
 normal forms and projections are unique; every operation-matrix cell and
 multiply-invalid precedence vector agrees; policy-required operations refuse
-without invoking a provider; incompatible aggregation and implicit absence
-fail; metadata cannot alter scientific hashes; no I-1 observable failure
-semantics change.
+without invoking a provider; quantity/source and rule/source conversion
+failures are distinguished from explicit arguments under opaque-ref renaming;
+incompatible aggregation and implicit absence fail; metadata cannot alter
+scientific hashes; no I-1 observable failure semantics change.
 **Fail closed:** authority/hash drift, any path beyond the nine-path manifest,
 Python float at a canonical boundary, missing/incomplete policy field,
 implicit conversion, untyped absence, incompatible coordinate, unexpected
@@ -1922,6 +1930,7 @@ not establish scientific facts or authorize their implementation.
 | I0-DR-021 | `ACCEPTED_I0` | Vendor and raw-hash-check Unicode 15.0.0 `UnicodeData.txt` and `DerivedNormalizationProps.txt`, and test against the pinned complete normalization corpus | Later Python Unicode databases cannot silently change ECJ-1 assignment or NFC bytes |
 | I0-DR-022 | `ACCEPTED_I0` | Freeze four separately named release milestones and disjoint tag namespaces in §18 | Documentation, alpha software, scientific v3.0, and complete books cannot be conflated |
 | I0-DR-023 | `ACCEPTED_I0` | Implement every I-2 T0 predicate from exact declared argument values only; refs prove identity and trigger no lookup | Makes predicate outcomes reproducible and defers lifecycle/role/content/completeness/disjointness/adequacy/indirect-cycle claims to their owning later authority |
+| I0-DR-024 | `ACCEPTED_I0` | Give `convert_quantity_exact` explicit quantity, source-unit, target-unit, and rule arguments without adding a callable | Separates quantity/source from rule/source authority and preserves exact local observability under opaque-ref renaming |
 
 ## 16. Threat register
 
@@ -1955,6 +1964,7 @@ through TM-044.
 | I0-TM-023 | A later host runtime recognizes a code point absent from Unicode 15.0 and changes canonical bytes | Pinned runtime tables, mandatory U+2EBF0 rejection, host-library import ban, missing/corrupt-asset failure | A defect in the independent table parser remains possible until I-1 conformance review |
 | I0-TM-024 | A foundation or alpha milestone is presented as scientific or complete-books release evidence | Disjoint prerequisites, acceptance evidence, tag namespaces, branch lanes, and nonclaim rules in §18 | External mirrors or prose can mislabel an artifact and require correction |
 | I0-TM-025 | A T0 validator resolves an opaque ref or relies on fixture/patch/hidden state to make a semantic claim | Exact argument-only implementation rule, AST lookup/import exclusions, explicit pair/role fields, and corrected static vectors | I-4 and domain authorities must later validate the stronger referenced semantics |
+| I0-TM-026 | Exact conversion assigns codes from fixture or patch provenance because no source unit is authoritative | Four explicit conversion arguments, exact role-position comparisons, unchanged rule predicates, and a bijective opaque-ref-renaming assertion | Ref contents and scientific adequacy remain deferred under unchanged UQ-40 authority |
 
 ## 17. Questions intentionally deferred beyond I-0
 
@@ -1981,6 +1991,11 @@ through TM-044.
 UQ-02, UQ-03, UQ-04, UQ-31, UQ-35, and UQ-36 have the limited I-0
 resolutions recorded in this plan. Their scientific application is not
 thereby accepted.
+
+Revision v0.2.7 does not resolve, narrow, or expand UQ-40. Comparing the
+quantity's declared unit ref with an explicitly supplied source-unit ref is a
+local I-2 identity predicate only; it establishes no referenced unit or rule
+content, lifecycle, role, or scientific adequacy.
 
 ### 17.2 Mandatory amendments or decisions before affected implementation
 
@@ -2238,7 +2253,7 @@ execution, Gate, publication, or release authority. Milestone and branch
 status must be established independently from Git and their retained
 acceptance evidence rather than inferred from this plan.
 
-Current v0.2.6 authority boundary: this correction creates no milestone,
+Current v0.2.7 authority boundary: this correction creates no milestone,
 branch, tag, package, release, manuscript, manifest, or publication artifact.
 It freezes prospective I-2 implementation authority only and does not begin
 I-2 or grant integration, framework-alpha, scientific-execution, Gate,
@@ -2246,7 +2261,7 @@ publication, or release authority.
 
 ## 19. Current prospective document acceptance checklist
 
-Revision v0.2.6 is complete only if review confirms all of the following:
+Revision v0.2.7 is complete only if review confirms all of the following:
 
 - the active authority locks are exactly those in §1.3, while the
   original I-0 verification and starting SHA in §§1.1–1.2 remain explicitly
@@ -2262,9 +2277,11 @@ Revision v0.2.6 is complete only if review confirms all of the following:
 - numerical-policy validation makes no lifecycle/placeholder claim, requires
   distinct declared policy/owner identities, and requires an exact tolerance
   ref whenever `COMPARE` is supported;
-- standalone conversion receives the rule and both units, shares the exact
-  direction/endpoint/dimension/horizon rules with unit compatibility, and
-  conversion obtains its source coordinate from the quantity declaration;
+- standalone rule validation receives the rule and both units; exact quantity
+  conversion receives quantity, explicit source unit, explicit target unit,
+  and rule, checks intrinsic quantity state, quantity/source identity,
+  quantity/source/target dimensions, and the unchanged ordered rule
+  predicates without lookup or inferred reference contents;
 - region parent validation checks only declared parent links, clocks,
   intervals, distinct IDs, and aggregation-ref presence; it makes no
   membership/disjointness claim;
@@ -2285,11 +2302,19 @@ Revision v0.2.6 is complete only if review confirms all of the following:
 - every fixture/supplement record has one exact formation/semantic failure
   owner, all Block-5 through Block-8 candidates reach their declared public
   boundary, and no constructor pre-empts or relabels a validator predicate;
-- the historical fixture identity is first reproduced exactly and reported
-  externally, with no trailing LF; then two independent external standard-library
+- the historical v0.1.6/v0.2.6 fixture identity is first reproduced exactly
+  as 335 vectors and 809,689 bytes at raw SHA-256
+  `92664cb12ace29dc05d3fd7bbd1b349c6edfd6bb0cc60708acdbff0678d4fcf9`,
+  with no trailing LF; then two independent external standard-library
   reconstructions agree byte for byte on the prospective fixture, all 335
   IDs/names and 214 failure IDs, and report no incompatible effective-input
   collision;
+- the only logical fixture delta is the inputs of `i2-0149` through
+  `i2-0158`, with zero additions/removals and unchanged outcomes, codes,
+  failure IDs, and projections; the two authority fields change mechanically;
+- `i2-0154` proves quantity/source inequality and `i2-0156` proves
+  quantity/source equality plus rule/source inequality, and the distinction
+  survives every bijective renaming of opaque refs;
 - all 29 I-1 failure codes and 95 existing `_fail` call semantics remain
   preserved while the exact 24 I-2 codes and deterministic typed envelope are
   frozen;
@@ -2330,9 +2355,9 @@ Revision v0.2.6 is complete only if review confirms all of the following:
   threats, and deferred questions are explicit;
 - the complete document and diff pass static inspection and
   `git diff --check`; and
-- no code, schema, fixture, test, package, directory, manifest, result,
-  branch, tag, release, commit, push, model state, or scientific execution was
-  created or run.
+- no code, schema, fixture, test, package, repository directory, manifest,
+  result, branch, tag, release, commit, push, model state, or scientific
+  execution was created or run.
 
 This revision establishes documentation locks only. Neither its existence nor
 its review begins I-2 or authorizes framework integration, a framework-alpha
@@ -2415,21 +2440,37 @@ outcomes and codes, API/export/path/dependency counts, scientific definitions,
 Gate record, package, I-1 bytes, and accepted milestones. Its raw SHA-256 is
 `8db6a9bac25aaa7654d614497640e8429888416d01148e1b33fe2026ce4200c6`.
 
-### 20.7 Revision v0.2.6 — current prospective I-2 predicate-observability correction
+### 20.7 Revision v0.2.6 — historical prospective I-2 predicate-observability correction
 
-Revision v0.2.6 adopts specification v0.1.6 at the active raw SHA-256 in
-§1.3 and corrects all eight known I-2 predicate-observability defects under
+Revision v0.2.6 adopted specification v0.1.6 at historical raw SHA-256
+`884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2`
+and corrected all eight then-known I-2 predicate-observability defects under
 the exact argument-only T0 rule. It updates only prospective authority,
 mechanical signatures/fields, fixture derivation, static coverage, and
 explicit later-stage nonclaims. It changes no scientific definition, Gate
 record, implementation byte, package, accepted milestone, public type or
-callable count, dependency edge, or future path count. Its raw SHA-256 is
-reported externally and is not embedded in this file.
+callable count, dependency edge, or future path count. Its exact whole-file
+SHA-256 is
+`34241b44b5d6b8bc5b5d6fea6e517afa47507b4cd905eea464347e9865eedc97`.
+
+### 20.8 Revision v0.2.7 — current prospective I-2 source-unit authority correction
+
+Revision v0.2.7 adopts specification v0.1.7 at the active raw SHA-256 in
+§1.3 and adds the explicit source-unit argument required to distinguish
+quantity/source disagreement from rule/source disagreement locally. It
+changes only prospective authority, the existing callable's argument
+structure, the ten conversion-vector input recipes and adapter instructions,
+and dependent static audit/acceptance text. It preserves every vector ID,
+name, expected outcome/code, failure coordinate/ID, projection, block/outcome
+count, public type/callable/export count, path, dependency, scientific
+definition, UQ-40 deferral, Gate record, package, I-1 byte, and accepted
+milestone. Its raw SHA-256 is reported externally and is not embedded in this
+file.
 
 ## 21. Normative prospective Framework I-2 implementation authority
 
 This section supersedes only incomplete or provisional I-2 implementation
-details elsewhere in this plan. Specification v0.1.6 §21 controls every I-2
+details elsewhere in this plan. Specification v0.1.7 §21 controls every I-2
 semantic, field, projection, invariant, operation-matrix cell, predicate,
 failure meaning, precedence rule, fixture requirement, exclusion, and
 nonclaim. This section is the mechanical path, export, ownership, dependency,
@@ -2644,6 +2685,21 @@ validate_uncertainty_record
 validate_unit_compatibility
 ```
 
+The existing callable count is unchanged. Its corrected conversion signature
+is exactly:
+
+```text
+convert_quantity_exact(
+    quantity: Quantity,
+    source_unit: Unit,
+    target_unit: Unit,
+    rule: ConversionRule,
+) -> Quantity
+```
+
+No overload, default, variadic adapter, resolver callback, or additional
+public conversion callable is authorized.
+
 With `__version__`, the exact root export count is therefore
 `84 + 42 + 1 = 127`. `ebu_framework.__all__` is the following exact
 lexicographically ordered tuple; no extra, missing, duplicate, or differently
@@ -2789,7 +2845,8 @@ from the post-I-2 API and assigned to I-4.
 ### 21.4 Capability, dependency, and cycle contract
 
 Every new I-2 callable is T0. It may construct, normalize, project, compare
-exact core numbers, perform an explicitly supplied exact unit conversion, or
+exact core numbers, perform an exact conversion from explicitly supplied
+quantity/source-unit/target-unit/rule arguments, or
 validate immutable structure. No I-2 callable accepts a capability token,
 invokes a `NumericalPolicyV1` method, performs registry mutation, evaluates a
 scientific mapping, inspects an outcome, advances state, or enters T1, T2, or
@@ -2845,15 +2902,16 @@ ECJ-1 sequence in specification §21.8: block counts
 `18,35,42,4,36,107,20,41,32`, first ID `i2-0001`, terminal ID `i2-0335`.
 Its schema/key order, literal catalog, nested-loop order, input patches,
 projections, canonical hex, failure coordinates/IDs, and authority-field
-placement are closed. It binds the accepted specification v0.1.6 raw hash
-above and the future accepted plan v0.2.6 raw hash reported externally after
+placement are closed. It binds the accepted specification v0.1.7 raw hash
+above and the future accepted plan v0.2.7 raw hash reported externally after
 this document is complete. It is static validation data, not a policy, world,
 configuration, trajectory, or result.
 
 Before deriving prospective bytes, the external stdlib-only authority audit
-must reproduce the exact historical v0.1.5/v0.2.5 fixture identity supplied
-to the audit, with no trailing LF, and report its byte count and digest only
-outside the repository. The prospective fixture is then independently built by
+must reproduce the exact historical v0.1.6/v0.2.6 fixture: 335 vectors,
+809,689 bytes, raw SHA-256
+`92664cb12ace29dc05d3fd7bbd1b349c6edfd6bb0cc60708acdbff0678d4fcf9`,
+and no trailing LF. The prospective fixture is then independently built by
 two stdlib-only routes. The routes must agree byte for byte and report the
 total, nine block counts, outcome counts, bytes, SHA-256, LF status, every
 changed/added/removed vector, all derived failure IDs and canonical
@@ -2868,6 +2926,13 @@ fixture-specific knowledge, and construction/patch history are forbidden.
 The exact corrected public signatures are:
 
 ```text
+convert_quantity_exact(
+    quantity: Quantity,
+    source_unit: Unit,
+    target_unit: Unit,
+    rule: ConversionRule,
+) -> Quantity
+
 validate_conversion_rule(
     rule: ConversionRule,
     source_unit: Unit,
@@ -2886,10 +2951,12 @@ responsibilities:
 - numerical policy refs are declared identities only; policy/owner identities
   differ, `COMPARE` always requires an exact tolerance ref, and lifecycle,
   placeholder, kind, role, and referenced contents are not resolved;
-- conversion validation receives both units and shares exact factor/offset,
-  direction/orientation, endpoint, three-way dimension, and declared horizon
-  rules with unit compatibility; exact conversion takes source unit/dimension
-  from the supplied quantity;
+- conversion-rule validation receives both units and shares exact
+  factor/offset, direction/orientation, endpoint, three-way dimension, and
+  declared horizon rules with unit compatibility; exact quantity conversion
+  receives the quantity plus explicit source and target units, requires exact
+  quantity/source ref equality, compares quantity/source/target dimensions,
+  and then calls or faithfully reuses those ordered rule predicates;
 - region parent success checks only exact declared parent links, parent/child
   clocks and intervals, distinct IDs, and aggregation-ref presence;
   `membership_rule_ref` remains opaque and disjointness is deferred;
@@ -2907,6 +2974,19 @@ responsibilities:
 - envelope `direct_content_hash_exclusion` recursively rejects the exact
   stored hash string as an object name, object value, or array member before
   final recomputation; alias/ref/registry/object-graph cycles are deferred.
+
+The exact conversion implementation order and locally observable evidence
+are: `quantity_valid` from the supplied quantity's intrinsic required state;
+`source_unit` from `quantity.unit_ref` and `source_unit.unit_ref` with
+`UNIT_MISMATCH`; `target_unit` from the quantity/source/target dimensions
+with `DIMENSION_MISMATCH`; `conversion_rule` by calling or faithfully reusing
+`validate_conversion_rule(rule,source_unit,target_unit)` with
+`CONVERSION_RULE_MISMATCH`; and `exact_arithmetic` from the supplied magnitude,
+factor, and offset with unchanged exact-refusal semantics. The
+`reverse_not_explicit` rejection supplies UNIT_B as source and UNIT_A as
+target and is witnessed by the unchanged forward-only rule. Rule-declared
+dimension disagreement is owned by the rule validator; no unit is resolved
+or inferred.
 
 Within Block 5, case 16 has exactly `remove /precision_contract_ref` and
 expects `IMPLICIT_ABSENCE_FORBIDDEN`; case 34 has exactly
@@ -2946,7 +3026,10 @@ registry record; all 16 relevant public enum domains; the exact
 `CoreNumberV1` union; and the property/method surface and noninvocation of
 `NumericalPolicyV1`. Its non-fixture supplement has exact names, inputs,
 expected projections/codes, and one independently derived nonempty-coordinate
-failure ID. This adds no public name, callable, dependency edge, or tenth
+failure ID. Revision v0.2.7 adds the exact
+`conversion-source-anchor-opaque-renaming` static assertion from specification
+§21.8.6; it adds no fixture vector or public boundary. This adds no public
+name, callable, dependency edge, or tenth
 path. The closed totals are 84 types, 42 callables, `__version__`, 127 root
 exports, 29 I-1 plus 24 I-2 failure codes, 24 I-2 precedence entries, 29 DAG
 edges, and nine future paths.
@@ -2964,6 +3047,17 @@ fixture-specific knowledge, or dynamic import is permitted. A candidate
 is not valid, lifecycle-accepted, scientifically accepted, or registry-
 accepted until the appropriate validator and later authorized boundary have
 succeeded.
+
+The complete predicate-observability audit was repeated across common failure
+formation, all core-number/bound/result operations, numerical-policy
+validation, every primitive compatibility validator, exact quantity
+conversion, envelope validation, lifecycle validation, supersession
+validation, all 24 I-2 precedence codes, and the retained I-1 failure
+boundary. Each distinction is witnessed by exact constructor values or exact
+declared public arguments. After the explicit source-unit correction, no
+other failure-code distinction lacks an argument witness and no outcome
+depends on a lookup, hidden state, fixture identity, patch history, inferred
+ref contents, or a privileged literal ref.
 
 The future `SupersessionRelation` implementation has exactly eleven fields in
 this order:
@@ -2993,42 +3087,42 @@ and replaces its value with typed `NOT_APPLICABLE`, which is forbidden absence
 at that unconditionally required validator coordinate and therefore retains
 `IMPLICIT_ABSENCE_FORBIDDEN`.
 
-The fixture retains 335 vectors and every expected outcome/code, but does not
-force historical bytes or names where the corrected declaration changed.
-Block 5 renames only `core-placeholder-owner` to
-`owner-identity-equals-policy-identity`. All six standalone conversion-rule
-inputs become exact `[rule,UNIT_A,UNIT_B]` arguments, with the dimension
-rejection patching only the rule. Region and boundary parent predicate labels
-become `declared_parent_links`, with their generated rejection case names
-changing accordingly. Every boundary projection gains an empty final
-treatment-pair field; the existing unresolved-effect rejection leaves it
-empty and still fails `INVALID_AGGREGATION`. The right-open horizon input uses
-`[[R(60),R(61)]]`. Every uncertainty projection gains
-`violated_contract_ref` (`R(62)` only for OUT_OF_SET, otherwise `NA`), and the
-OUT_OF_SET rejection patches that field to `NA`. Envelope success projections
-rename the predicate to `direct_content_hash_exclusion`. Failure coordinates
-and IDs remain derived from the unchanged operations, stages, interfaces,
-ordinals, and codes rather than asserted from this prose.
+The historical v0.1.6/v0.2.6 fixture already contains the earlier 42-vector
+predicate-observability correction and is immutable baseline evidence. The
+v0.1.7/v0.2.7 fixture retains all 335 vectors and every ID, name, expected
+outcome/code, failure coordinate/ID, successful projection, category,
+operation, and quantity-context coordinate. Its only logical changes are the
+ten conversion `inputs` below; zero vectors are added or removed:
 
-The exact prospective vector delta is 42 changed, zero added, and zero
-removed:
-
-| Vector IDs | Exact changed coordinates |
+| Vector ID | Exact prospective input |
 |---|---|
-| `i2-0104` | case name only |
-| `i2-0143`–`i2-0148` | inputs only: append exact UNIT_A and UNIT_B arguments |
-| `i2-0175`–`i2-0176` | expected projections only: corrected region predicate label |
-| `i2-0178` | generated case name only: corrected region predicate label |
-| `i2-0183`–`i2-0184` | inputs gain boundary field; expected projections gain corrected predicate label |
-| `i2-0185`, `i2-0187`–`i2-0193` | boundary inputs gain the final treatment-pair field |
-| `i2-0186` | boundary input gains the field and generated case name uses corrected label |
-| `i2-0205` | pending-effect argument becomes the exact effect/due-ref pair |
-| `i2-0227`–`i2-0242` | uncertainty inputs gain `violated_contract_ref`; `i2-0242` patches that coordinate to `NA` |
-| `i2-0256`–`i2-0258` | expected projections use `direct_content_hash_exclusion` |
-| `i2-0334` | nested uncertainty input gains `violated_contract_ref` |
+| `i2-0149` | `[QTY_R,UNIT_A,UNIT_B,RULE_AB]` |
+| `i2-0150` | `[QTY_D,UNIT_A,UNIT_B,RULE_AFFINE]` |
+| `i2-0151` | `[QTY_R,UNIT_A,UNIT_B,RULE_AB,UNIT_C,RULE_BC]` |
+| `i2-0152` | `[QTY_D,UNIT_A,UNIT_B,RULE_AFFINE,UNIT_C,RULE_BC_DEC]` |
+| `i2-0153` | `[PATCH(QTY_R,[["replace","/resolution",RES_PENDING]]),UNIT_A,UNIT_B,RULE_AB]` |
+| `i2-0154` | `[PATCH(QTY_R,[["replace","/unit_ref",R(63)]]),UNIT_A,UNIT_B,RULE_AB]` |
+| `i2-0155` | `[QTY_R,UNIT_A,PATCH(UNIT_B,[["replace","/dimension_ref",R(63)]]),RULE_AB]` |
+| `i2-0156` | `[QTY_R,UNIT_A,UNIT_B,PATCH(RULE_AB,[["replace","/source_unit_ref",R(63)]])]` |
+| `i2-0157` | `[QTY0,UNIT_A,UNIT_B,RULE_AB]` |
+| `i2-0158` | `[PATCH(QTY_R,[["replace","/unit_ref",R(5)]]),UNIT_B,UNIT_A,RULE_AB]` |
 
-No expected outcome, failure code, operation, interface, stage, ordinal,
-vector ID, category, or quantity-context coordinate changes.
+The displayed patch arrays use the exact transport grammar from specification
+§21.8. Direct inputs dispatch as one four-argument call.
+Each six-item composition input dispatches as
+`(quantity,UNIT_A,UNIT_B,first_rule)` followed by
+`(returned_quantity,UNIT_B,UNIT_C,second_rule)`. The adapter must use this
+explicit unit chain and must not invent, infer, or resolve a unit.
+
+All vectors change mechanically only through the two top-level v0.1.7/v0.2.7
+authority-hash fields. The fixture's 214 failure IDs and all canonical
+projections are re-derived and remain byte-for-byte unchanged as values.
+`i2-0154` has quantity/source inequality with source/rule-source equality;
+`i2-0156` has quantity/source equality with source/rule-source inequality.
+A bijective opaque-ref renaming preserves these different role-equality
+graphs, so their respective `UNIT_MISMATCH` and
+`CONVERSION_RULE_MISMATCH` outcomes require no lookup, literal-value
+privilege, fixture ID, patch history, or inferred ref contents.
 
 Every validator-bound Block-5 through Block-8 candidate has all required
 fields and signature-correct runtime members; the deliberately malformed
