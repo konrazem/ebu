@@ -1,8 +1,8 @@
 # Unified Python Research Framework Implementation Plan
 
-**Plan version:** 0.2.7
-**Stage:** Prospective Framework I-2 authority correction only
-**Status:** I-2 design and future manifest remain frozen with the explicit source-unit authority correction; I-2 remains unimplemented; no integration, scientific-execution, Gate, publication, or release authority
+**Plan version:** 0.2.8
+**Stage:** Prospective conservation and boundary-accounting planning-authority reconciliation only
+**Status:** Accepted and implemented I-2 remains frozen and unchanged; no framework implementation, I-3, I-5, scientific-execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-14
 **Language:** English
@@ -11,29 +11,30 @@
 **Historical v0.2.2 authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
 **I-2 authority-amendment branch:** `framework-v0.1`
 **I-2 authority-amendment base HEAD:** `64e7d692dbae2c3beb6752d955c8f6193e481010`
-**Framework specification version:** 0.1.7
+**Framework specification version:** 0.1.8
 **Framework specification SHA-256:**
-`01f7392459af3eaccbd6966b1504fa1206997722677415d080b0b6883d8081ca`
+`ff81bbe7bcf1e5a9ae7a7ecb9663a89aceb677f5d3642e4c9e225e56a36e16d3`
 **Future-books structure SHA-256:**
-`120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`
+`0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f`
+**Conservation and boundary-accounting foundation SHA-256:**
+`b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a`
 
 ---
 
 ## 1. Decision and authority boundary
 
-This revision preserves the prospective I-2 implementation authority in §21
-after accepted I-1 integration and corrects only the remaining exact-
-conversion source-unit authority defect under an exact argument-only T0 rule.
+This revision preserves accepted and implemented I-2 exactly and reconciles
+only the current planning authority with the accepted conservation and
+boundary-accounting foundation.
 It creates no Python package, code, schema,
 fixture, test, dependency lock, accepted configuration, execution binding,
 authorization credential, result, manifest, or publication record. It
 authorizes no implementation and no scientific execution.
 
 The current governing architectural and scientific authority is
-`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.7 at the exact
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.8 at the exact
 whole-file hash above, reconciled with the current source locks in §1.3. This
-plan resolves the implementation questions explicitly assigned to I-2
-without beginning that stage.
+plan does not reopen any implementation question or begin I-3 or I-5.
 It does not change an imported definition, equation, state component, event
 phase, hypothesis, parameter, comparison, metric, threshold, tolerance,
 falsifier, causal rule, settlement rule, or interpretation rule.
@@ -78,14 +79,15 @@ bridge authority is v0.2. The old specification and books hashes in this
 subsection are historical only and are not active implementation authority
 for this or any later revision.
 
-### 1.3 Current v0.2.7 mechanical authority locks and status
+### 1.3 Current v0.2.8 mechanical authority locks and status
 
 The current prospective authority set is:
 
 | Source | Current version or role | Current required raw SHA-256 | Mechanical status |
 |---|---|---|---|
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.7 framework specification | `01f7392459af3eaccbd6966b1504fa1206997722677415d080b0b6883d8081ca` | Current governing specification and prospective I-2 lock |
-| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6 planning and the literature/originality extension | `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255` | Current planning-authority lock, within the scope boundaries below |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.8 framework specification | `ff81bbe7bcf1e5a9ae7a7ecb9663a89aceb677f5d3642e4c9e225e56a36e16d3` | Current governing specification and conservation-planning lock |
+| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6, literature/originality, and conservation-accounting planning | `0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f` | Current planning-authority lock, within the scope boundaries below |
+| `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | v0.1 conceptual and algebraic planning foundation | `b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a` | Current conservation/boundary-accounting planning lock; no implementation authority |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged imported Part VI authority |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged imported dynamic-coordination authority |
 | `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md` | I-1 packaging amendment v1.1.1 | `a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448` | Unchanged narrow packaging authority |
@@ -103,8 +105,8 @@ redefinition. Current integrity is verified from Git path/blob identities,
 raw hashes, and byte sizes.
 
 Only this table and the matching top-level fields are active mechanical
-authority locks. The old hashes in §§1.1–1.2 are retained solely as historical
-evidence. The original plan's
+authority locks. The old hashes in §§1.1–1.2, §20, and the frozen §21 I-2
+acceptance record are retained solely as historical evidence. The original plan's
 whole-file SHA-256 is
 `a1cebfa63528e49d9bada3c6564c7d40616369a45afd97640ff937ae07389674`;
 that value is historical and is not the hash of a later revision.
@@ -116,42 +118,51 @@ the books-structure raw SHA-256
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`,
 and had plan whole-file SHA-256
 `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
-None of those three values is an active v0.2.7 authority lock.
+None of those three values is an active v0.2.8 authority lock.
 
 Revision v0.2.2 is immutable historical evidence. It used specification
 v0.1.2 at raw SHA-256
 `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
 and had plan whole-file SHA-256
 `3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`.
-Neither value is an active v0.2.7 lock.
+Neither value is an active v0.2.8 lock.
 
 Revision v0.2.3 is immutable historical evidence. It used specification
 v0.1.3 at raw SHA-256
 `44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`
 and had plan whole-file SHA-256
 `bcc25725575dcd0905a17dc7712da9e534a92c3e6e5335e65248979ad1c22d46`.
-Neither value is an active v0.2.7 lock.
+Neither value is an active v0.2.8 lock.
 
 Revision v0.2.4 is immutable historical evidence. It used specification
 v0.1.4 at raw SHA-256
 `25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380`
 and had plan whole-file SHA-256
 `bd65010e6231f71d68d9e2165f723efab5175d2e8ea3c05d8624a060602ac6ff`.
-Neither value is an active v0.2.7 lock.
+Neither value is an active v0.2.8 lock.
 
 Revision v0.2.5 is immutable historical evidence. It used specification
 v0.1.5 at raw SHA-256
 `9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928`
 and had plan whole-file SHA-256
 `8db6a9bac25aaa7654d614497640e8429888416d01148e1b33fe2026ce4200c6`.
-Neither value is an active v0.2.7 lock.
+Neither value is an active v0.2.8 lock.
 
 Revision v0.2.6 is immutable historical evidence. It used specification
 v0.1.6 at raw SHA-256
 `884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2`
 and had plan whole-file SHA-256
 `34241b44b5d6b8bc5b5d6fea6e517afa47507b4cd905eea464347e9865eedc97`.
-Neither value is an active v0.2.7 lock.
+Neither value is an active v0.2.8 lock.
+
+Revision v0.2.7 is immutable historical evidence. It used specification
+v0.1.7 at raw SHA-256
+`01f7392459af3eaccbd6966b1504fa1206997722677415d080b0b6883d8081ca`,
+the books-structure raw SHA-256
+`120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`,
+and had plan whole-file SHA-256
+`f152d680028c4f35027371d036d7282fd1c5648274018237f98626afbacf170e`.
+None of those three values is an active v0.2.8 lock.
 
 The signed tag `foundation-v0.1.0` remains the unchanged tag object
 `90646d3c7e1ff2201eab4739e894598b80782b79` at commit
@@ -187,11 +198,10 @@ explicit PEP 517 backend requirement, the initially stdlib-only framework
 lock, and the absence of a standard-library PEP 517 backend. That statement
 is retained as historical evidence. The existing packaging amendment and
 matching contract prospectively resolved the contradiction under their
-narrow precedence. Revision v0.2.7 does not edit, repeat, or redefine that
-resolution or any packaging rule. It freezes only prospective I-2 design and
-the exact future §21.2 manifest; it grants no present implementation,
-framework integration, framework-alpha, scientific-execution, Gate,
-publication, or release authority.
+narrow precedence. Revision v0.2.8 does not edit, repeat, or redefine that
+resolution, any packaging rule, the accepted I-2 design, or the implemented
+§21.2 manifest. It grants no framework implementation, I-3, I-5, framework-
+alpha, scientific-execution, Gate, publication, or release authority.
 
 ### 1.4 Preserved Gate 1D-C incident
 
@@ -219,6 +229,38 @@ validation stage below.
 | UQ-35 | Resolved at the mechanism and protocol level in §6. Deployment trust-anchor key material and authority assignments require a prospective governance bootstrap before protected operations can be activated. |
 | UQ-36 | Resolved by the closed-world classification in §7. |
 | UQ-38 | Not resolved. Only the base `FaultSchedule` boundary is frozen in §8; all fault kinds, effect schemas, delivery acknowledgements, and terminal rules remain future work. |
+
+### 1.6 Prospective conservation and boundary-accounting boundary
+
+The conservation foundation accepts three first-class account levels:
+reduced represented-stock, open control-volume, and isolated boundary-
+complete. Reduced and open accounts remain fully supported cases. Existing
+D0, P1C, service, Gate 1D-C, and other historical models remain unchanged
+reduced or open models under their existing boundaries and are not
+retroactively classified as isolated or boundary-complete.
+
+This reconciliation preserves every existing equation, algorithm, constant,
+theorem, test, result, protocol, Gate rule, and interpretation boundary. It
+also preserves accepted and implemented I-2 exactly as introduced at
+`351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated at
+`ede89d8af6b89da491e03c352efcf1868a913f6f`: no I-2 inventory, failure code,
+precedence rule, fixture, import edge, API surface, implementation path, byte,
+or hash is changed or reinterpreted.
+
+Under a later, separately authorized prospective stage, I-3 may introduce
+optional declarative boundary/conservation profiles. Their exact types,
+callables, fields, validators, manifests, fixtures, and implementation
+permissions are not defined here. Under a later, separately authorized stage
+after such profile authority exists, I-5 may validate residuals according to
+the selected declared profile. Neither stage may impose a universal zero-
+residual requirement or a hidden framework-wide numerical tolerance.
+
+Physical conservation, represented-stock closure, EBU accounting, causal
+inference, policy, and institutional settlement remain distinct. Detailed
+Bridge and Dynamic Coordination amendments remain separately authorized and
+unstarted. This revision adds no implementation path, public type, callable,
+export, dependency, fixture, schema, workflow, or executable permission and
+makes no scientific, experimental, empirical, novelty, or result claim.
 
 ## 2. Non-scientific implementation principles
 
@@ -1674,8 +1716,10 @@ and every scientific function.
 ### I-2 — Numeric substrate, immutable envelope, and typed primitives
 
 **Depends on:** accepted I-1.
-**Current status:** §21 freezes prospective implementation authority only;
-I-2 has not begun and needs separate authorization.
+**Current status:** accepted and implemented exactly at feature commit
+`351417c39fa26b9045e7c162a9897a7c38e4e1d1`, then integrated without
+amendment at merge commit `ede89d8af6b89da491e03c352efcf1868a913f6f`.
+Revision v0.2.8 does not reopen I-2 or authorize any implementation change.
 **Work:** exactly the nine-path §21.2 manifest: backward-compatible common
 failure extension; exact core records/operations and non-executing policy
 protocol; immutable envelopes; typed primitives and pure compatibility,
@@ -1992,7 +2036,7 @@ UQ-02, UQ-03, UQ-04, UQ-31, UQ-35, and UQ-36 have the limited I-0
 resolutions recorded in this plan. Their scientific application is not
 thereby accepted.
 
-Revision v0.2.7 does not resolve, narrow, or expand UQ-40. Comparing the
+Revision v0.2.8 does not resolve, narrow, or expand UQ-40. Comparing the
 quantity's declared unit ref with an explicitly supplied source-unit ref is a
 local I-2 identity predicate only; it establishes no referenced unit or rule
 content, lifecycle, role, or scientific adequacy.
@@ -2253,21 +2297,48 @@ execution, Gate, publication, or release authority. Milestone and branch
 status must be established independently from Git and their retained
 acceptance evidence rather than inferred from this plan.
 
-Current v0.2.7 authority boundary: this correction creates no milestone,
+Historical v0.2.7 authority boundary: that correction created no milestone,
 branch, tag, package, release, manuscript, manifest, or publication artifact.
-It freezes prospective I-2 implementation authority only and does not begin
-I-2 or grant integration, framework-alpha, scientific-execution, Gate,
-publication, or release authority.
+It froze the prospective I-2 source-unit authority that was later implemented
+and accepted without reinterpretation.
+
+Current v0.2.8 authority boundary: this reconciliation creates no milestone,
+branch, tag, package, release, manuscript, manifest, or publication artifact.
+It preserves accepted I-2 and does not begin or authorize I-3, I-5, framework-
+alpha, scientific execution, a Gate operation, publication, or release.
 
 ## 19. Current prospective document acceptance checklist
 
-Revision v0.2.7 is complete only if review confirms all of the following:
+Revision v0.2.8 is complete only if review confirms all of the following:
 
 - the active authority locks are exactly those in §1.3, while the
   original I-0 verification and starting SHA in §§1.1–1.2 remain explicitly
   historical;
 - exactly the specification and this plan changed for this prospective
-  I-2 authority correction;
+  conservation and boundary-accounting authority reconciliation;
+- the only active books-structure and conservation-foundation hashes are the
+  exact values in §1.3, while superseded values occur only in explicitly
+  historical records or the frozen accepted-I-2 input record;
+- the three account levels are reduced represented-stock, open control-volume,
+  and isolated boundary-complete, with reduced/open models retained as first-
+  class supported cases;
+- existing D0, P1C, service, Gate 1D-C, and historical models remain unchanged
+  reduced or open models, with no retroactive isolation claim;
+- I-2 remains exactly the accepted nine-path implementation and retains all
+  inventories, failure codes, precedence, fixtures, imports, exports, API
+  counts, bytes, and hashes;
+- optional declarative boundary/conservation profiles remain possible only in
+  a separately authorized prospective I-3 stage, and profile-specific residual
+  validation remains possible only in a later separately authorized I-5 stage;
+- no universal zero-residual requirement, hidden global tolerance, new
+  implementation path, public type, callable, export, dependency, fixture,
+  schema, workflow, or executable permission is introduced;
+- physical conservation, represented-stock closure, EBU accounting, causal
+  inference, policy, and institutional settlement remain distinct;
+- exact I-3 types, callables, fields, validators, manifests, fixtures, and
+  implementation permissions remain unstarted and require separate authority;
+- Bridge and Dynamic Coordination amendments remain separately authorized and
+  unstarted, and no scientific or experimental claim is made;
 - specification §21 and plan §21 agree on the complete common failure,
   numeric, numerical-policy, primitive, envelope, registry, API, fixture,
   dependency, capability, and exclusion contracts;
@@ -2318,7 +2389,7 @@ Revision v0.2.7 is complete only if review confirms all of the following:
 - all 29 I-1 failure codes and 95 existing `_fail` call semantics remain
   preserved while the exact 24 I-2 codes and deterministic typed envelope are
   frozen;
-- the future I-2 manifest is exactly nine paths, existing
+- the accepted I-2 manifest is exactly nine paths, existing
   `tests/framework/safety.py` remains unchanged, and packaging needs no
   amendment;
 - the post-I-2 public inventory is exactly 84 types, 42 callables, and one
@@ -2356,13 +2427,14 @@ Revision v0.2.7 is complete only if review confirms all of the following:
 - the complete document and diff pass static inspection and
   `git diff --check`; and
 - no code, schema, fixture, test, package, repository directory, manifest,
-  result, branch, tag, release, commit, push, model state, or scientific
-  execution was created or run.
+  result, branch, tag, release, model state, or scientific execution was
+  created or run; only the separately authorized documentation commits and
+  guarded push may record this reconciliation after validation.
 
 This revision establishes documentation locks only. Neither its existence nor
-its review begins I-2 or authorizes framework integration, a framework-alpha
-milestone, scientific execution, a Gate operation, publication, release, or
-any later stage.
+its review reopens I-2 or begins I-3 or I-5, and it authorizes no framework-
+alpha milestone, scientific execution, Gate operation, publication, release,
+or other later stage.
 
 ## 20. Document revision history
 
@@ -2453,10 +2525,11 @@ callable count, dependency edge, or future path count. Its exact whole-file
 SHA-256 is
 `34241b44b5d6b8bc5b5d6fea6e517afa47507b4cd905eea464347e9865eedc97`.
 
-### 20.8 Revision v0.2.7 — current prospective I-2 source-unit authority correction
+### 20.8 Revision v0.2.7 — historical prospective I-2 source-unit authority correction
 
-Revision v0.2.7 adopts specification v0.1.7 at the active raw SHA-256 in
-§1.3 and adds the explicit source-unit argument required to distinguish
+Revision v0.2.7 adopted specification v0.1.7 at historical raw SHA-256
+`01f7392459af3eaccbd6966b1504fa1206997722677415d080b0b6883d8081ca`
+and added the explicit source-unit argument required to distinguish
 quantity/source disagreement from rule/source disagreement locally. It
 changes only prospective authority, the existing callable's argument
 structure, the ten conversion-vector input recipes and adapter instructions,
@@ -2464,21 +2537,48 @@ and dependent static audit/acceptance text. It preserves every vector ID,
 name, expected outcome/code, failure coordinate/ID, projection, block/outcome
 count, public type/callable/export count, path, dependency, scientific
 definition, UQ-40 deferral, Gate record, package, I-1 byte, and accepted
-milestone. Its raw SHA-256 is reported externally and is not embedded in this
-file.
+milestone. Its historical raw SHA-256 is
+`f152d680028c4f35027371d036d7282fd1c5648274018237f98626afbacf170e`.
+
+### 20.9 Revision v0.2.8 — current prospective conservation-authority reconciliation
+
+Revision v0.2.8 adopts specification v0.1.8 at the active raw SHA-256 in §1.3,
+the conservation-extended books structure, and the conservation and boundary-
+accounting foundation. It records the three account levels, preserves reduced
+and open accounts as first-class supported cases, and assigns only optional
+future profile declaration to a separately authorized I-3 stage and profile-
+specific residual validation to a later separately authorized I-5 stage.
+
+It preserves all equations, algorithms, constants, theorems, tests, results,
+protocols, Gate rules, interpretation boundaries, and the exact accepted I-2
+implementation. It adds no universal zero-residual rule, hidden tolerance,
+implementation path, public type, callable, export, dependency, fixture,
+schema, workflow, executable permission, Bridge/Dynamic amendment, or
+scientific claim. This file does not contain its own current whole-file hash;
+that value remains external.
 
 ## 21. Normative prospective Framework I-2 implementation authority
 
+This section is retained as the complete mechanical authority implemented and
+accepted at `351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated at
+`ede89d8af6b89da491e03c352efcf1868a913f6f`. Its v0.2.7 future-tense language
+and authority locks are historical acceptance inputs. Revision v0.2.8 changes
+none of its manifests, inventories, fixtures, hashes, paths, dependencies,
+failure semantics, precedence, exports, API, capability, or exclusion rules.
+
 This section supersedes only incomplete or provisional I-2 implementation
-details elsewhere in this plan. Specification v0.1.7 §21 controls every I-2
-semantic, field, projection, invariant, operation-matrix cell, predicate,
+details elsewhere in its historical design record. Specification v0.1.7 §21
+controls every I-2 semantic, field, projection, invariant, operation-matrix
+cell, predicate,
 failure meaning, precedence rule, fixture requirement, exclusion, and
 nonclaim. This section is the mechanical path, export, ownership, dependency,
 and validation source. Any mismatch fails closed; neither source may be
 selected piecemeal.
 
-This is authority for a future separately authorized implementation task,
-not implementation authority for the present task. I-2 remains unimplemented.
+At the v0.2.7 freeze this was authority for a future separately authorized
+implementation task. The accepted feature and integration commits named above
+subsequently satisfied that stage without changing the contract. This
+v0.2.8 reconciliation supplies no permission to alter I-2 or begin I-3 or I-5.
 
 ### 21.1 Accepted predecessor and fixed failure audit
 
