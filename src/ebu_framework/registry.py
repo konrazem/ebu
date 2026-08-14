@@ -10,6 +10,7 @@ from typing import Any
 
 from .canonical import CanonicalBytes, ECJ1Value, _normalize_nfc, encode_ecj1, parse_ecj1
 from .errors import FailureCode, _fail
+from .envelopes import LifecycleStatus
 from .identity import (
     ObjectRef,
     ScientificId,
@@ -109,7 +110,7 @@ class RegistryRecord:
     object_ref: ObjectRef
     object_kind: str
     canonical_value: CanonicalBytes
-    lifecycle_status: str = "DRAFT"
+    lifecycle_status: LifecycleStatus = LifecycleStatus.DRAFT
 
     def __post_init__(self) -> None:
         if type(self.object_ref) is not ObjectRef:
@@ -125,7 +126,10 @@ class RegistryRecord:
                 "canonical_value must be canonical bytes",
             )
         parse_ecj1(bytes(self.canonical_value))
-        if self.lifecycle_status != "DRAFT":
+        if (
+            type(self.lifecycle_status) is not LifecycleStatus
+            or self.lifecycle_status is not LifecycleStatus.DRAFT
+        ):
             _fail(
                 FailureCode.REGISTRY_RECORD_CONFLICT,
                 "I-1 registry records support DRAFT only; acceptance belongs to I-2",
