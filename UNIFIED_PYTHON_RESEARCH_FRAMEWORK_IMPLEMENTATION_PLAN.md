@@ -1,8 +1,8 @@
 # Unified Python Research Framework Implementation Plan
 
-**Plan version:** 0.2.8
-**Stage:** Prospective conservation and boundary-accounting planning-authority reconciliation only
-**Status:** Accepted and implemented I-2 remains frozen and unchanged; no framework implementation, I-3, I-5, scientific-execution, Gate, publication, or release authority
+**Plan version:** 0.2.9
+**Stage:** Prospective complete I-3 mechanical authority only
+**Status:** Accepted and implemented I-2 remains frozen and unchanged; I-3 is specification-ready and unimplemented; no framework implementation, scientific execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-14
 **Language:** English
@@ -11,9 +11,16 @@
 **Historical v0.2.2 authority-reconciliation base HEAD:** `c3965c87554911c526592ac9688d4c35f0c49516`
 **I-2 authority-amendment branch:** `framework-v0.1`
 **I-2 authority-amendment base HEAD:** `64e7d692dbae2c3beb6752d955c8f6193e481010`
-**Framework specification version:** 0.1.8
+**I-3 authority-amendment base HEAD:** `85cc43b4fafe298245ceb5baf48b1731de47df44`
+**Framework specification version:** 0.1.9
 **Framework specification SHA-256:**
-`ff81bbe7bcf1e5a9ae7a7ecb9663a89aceb677f5d3642e4c9e225e56a36e16d3`
+`3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4`
+**I-3 authority amendment SHA-256:**
+`a392874c473219df9a24d044dee7444327f347924438cd8a86627f69f79d3be2`
+**I-3 mechanical contract SHA-256:**
+`505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb`
+**I-3 validation contract SHA-256:**
+`0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0`
 **Future-books structure SHA-256:**
 `0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f`
 **Conservation and boundary-accounting foundation SHA-256:**
@@ -23,18 +30,18 @@
 
 ## 1. Decision and authority boundary
 
-This revision preserves accepted and implemented I-2 exactly and reconciles
-only the current planning authority with the accepted conservation and
-boundary-accounting foundation.
-It creates no Python package, code, schema,
+This revision preserves accepted and implemented I-2 exactly and adopts the
+complete prospective I-3 Markdown, mechanical, and validation authority.
+It creates no Python package, code, implementation schema,
 fixture, test, dependency lock, accepted configuration, execution binding,
 authorization credential, result, manifest, or publication record. It
 authorizes no implementation and no scientific execution.
 
 The current governing architectural and scientific authority is
-`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.8 at the exact
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` v0.1.9 at the exact
 whole-file hash above, reconciled with the current source locks in §1.3. This
-plan does not reopen any implementation question or begin I-3 or I-5.
+plan makes I-3 mechanically specification-ready but does not begin I-3A, any
+implementation, or I-5.
 It does not change an imported definition, equation, state component, event
 phase, hypothesis, parameter, comparison, metric, threshold, tolerance,
 falsifier, causal rule, settlement rule, or interpretation rule.
@@ -79,19 +86,22 @@ bridge authority is v0.2. The old specification and books hashes in this
 subsection are historical only and are not active implementation authority
 for this or any later revision.
 
-### 1.3 Current v0.2.8 mechanical authority locks and status
+### 1.3 Current v0.2.9 mechanical authority locks and status
 
 The current prospective authority set is:
 
 | Source | Current version or role | Current required raw SHA-256 | Mechanical status |
 |---|---|---|---|
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.8 framework specification | `ff81bbe7bcf1e5a9ae7a7ecb9663a89aceb677f5d3642e4c9e225e56a36e16d3` | Current governing specification and conservation-planning lock |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` | v0.1.9 framework specification | `3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4` | Current governing specification and complete prospective I-3 lock |
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6, literature/originality, and conservation-accounting planning | `0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f` | Current planning-authority lock, within the scope boundaries below |
 | `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | v0.1 conceptual and algebraic planning foundation | `b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a` | Current conservation/boundary-accounting planning lock; no implementation authority |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged imported Part VI authority |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged imported dynamic-coordination authority |
 | `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md` | I-1 packaging amendment v1.1.1 | `a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448` | Unchanged narrow packaging authority |
 | `unified_python_research_framework_packaging_contract.json` | I-1 packaging contract v1.1.1 | `edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351` | Unchanged mechanical packaging authority |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` | v1.0.0 normative human I-3 rendering | `a392874c473219df9a24d044dee7444327f347924438cd8a86627f69f79d3be2` | Current narrow prospective I-3 authority; no implementation permission |
+| `unified_python_research_framework_i3_contract.json` | v1.0.0 mechanical I-3 authority | `505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` | Exact I-3 types, fields, validators, failures, projections, exports, imports, paths, and stages |
+| `unified_python_research_framework_i3_validation_contract.json` | v1.0.0 validation authority | `0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` | Exact 544-vector fully materialized prospective validation corpus and collision rules |
 | Accepted combined I-1 raw-hash/path/blob manifest | Accepted I-1 integration evidence | `f7b1b7abc9a71b090320b8dc468d57e3a7e39f4f2a045b7a5946a4174882fee8` | Immutable accepted I-1 evidence; not recomputed or redefined here |
 
 The aggregate row is historical corroboration, not a semantic I-2 input.
@@ -118,42 +128,42 @@ the books-structure raw SHA-256
 `4dcccf8dfbcb12b8db983abd33892c9a98084c40a9e61790027324e5c9691b3c`,
 and had plan whole-file SHA-256
 `d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e`.
-None of those three values is an active v0.2.8 authority lock.
+None of those three values is an active v0.2.9 authority lock.
 
 Revision v0.2.2 is immutable historical evidence. It used specification
 v0.1.2 at raw SHA-256
 `32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69`
 and had plan whole-file SHA-256
 `3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c`.
-Neither value is an active v0.2.8 lock.
+Neither value is an active v0.2.9 lock.
 
 Revision v0.2.3 is immutable historical evidence. It used specification
 v0.1.3 at raw SHA-256
 `44ae0d5587b24bbca32acda822cddfdc7db76795f81337cd8fc7951bf2946193`
 and had plan whole-file SHA-256
 `bcc25725575dcd0905a17dc7712da9e534a92c3e6e5335e65248979ad1c22d46`.
-Neither value is an active v0.2.8 lock.
+Neither value is an active v0.2.9 lock.
 
 Revision v0.2.4 is immutable historical evidence. It used specification
 v0.1.4 at raw SHA-256
 `25250235e5cb2b61ab0ec6c330245766084cf7b2528d323c70018a99dd1c8380`
 and had plan whole-file SHA-256
 `bd65010e6231f71d68d9e2165f723efab5175d2e8ea3c05d8624a060602ac6ff`.
-Neither value is an active v0.2.8 lock.
+Neither value is an active v0.2.9 lock.
 
 Revision v0.2.5 is immutable historical evidence. It used specification
 v0.1.5 at raw SHA-256
 `9486619dd0e5632e0efadfe1353cbf71923b8ba789923cac790797259d756928`
 and had plan whole-file SHA-256
 `8db6a9bac25aaa7654d614497640e8429888416d01148e1b33fe2026ce4200c6`.
-Neither value is an active v0.2.8 lock.
+Neither value is an active v0.2.9 lock.
 
 Revision v0.2.6 is immutable historical evidence. It used specification
 v0.1.6 at raw SHA-256
 `884767698f26ca75b59ab51d3d95a06e7f2996ae7071145b2f5564baed6787d2`
 and had plan whole-file SHA-256
 `34241b44b5d6b8bc5b5d6fea6e517afa47507b4cd905eea464347e9865eedc97`.
-Neither value is an active v0.2.8 lock.
+Neither value is an active v0.2.9 lock.
 
 Revision v0.2.7 is immutable historical evidence. It used specification
 v0.1.7 at raw SHA-256
@@ -162,7 +172,7 @@ the books-structure raw SHA-256
 `120496aa0d304561e16b3556bbbd5300c651a3082a297fd21f6bad6034746255`,
 and had plan whole-file SHA-256
 `f152d680028c4f35027371d036d7282fd1c5648274018237f98626afbacf170e`.
-None of those three values is an active v0.2.8 lock.
+None of those three values is an active v0.2.9 lock.
 
 The signed tag `foundation-v0.1.0` remains the unchanged tag object
 `90646d3c7e1ff2201eab4739e894598b80782b79` at commit
@@ -198,9 +208,10 @@ explicit PEP 517 backend requirement, the initially stdlib-only framework
 lock, and the absence of a standard-library PEP 517 backend. That statement
 is retained as historical evidence. The existing packaging amendment and
 matching contract prospectively resolved the contradiction under their
-narrow precedence. Revision v0.2.8 does not edit, repeat, or redefine that
+narrow precedence. Revision v0.2.9 does not edit, repeat, or redefine that
 resolution, any packaging rule, the accepted I-2 design, or the implemented
-§21.2 manifest. It grants no framework implementation, I-3, I-5, framework-
+§21.2 manifest. It grants only prospective I-3 design authority under §22 and
+no framework implementation, I-5, framework-
 alpha, scientific-execution, Gate, publication, or release authority.
 
 ### 1.4 Preserved Gate 1D-C incident
@@ -247,20 +258,22 @@ also preserves accepted and implemented I-2 exactly as introduced at
 precedence rule, fixture, import edge, API surface, implementation path, byte,
 or hash is changed or reinterpreted.
 
-Under a later, separately authorized prospective stage, I-3 may introduce
-optional declarative boundary/conservation profiles. Their exact types,
-callables, fields, validators, manifests, fixtures, and implementation
-permissions are not defined here. Under a later, separately authorized stage
-after such profile authority exists, I-5 may validate residuals according to
-the selected declared profile. Neither stage may impose a universal zero-
-residual requirement or a hidden framework-wide numerical tolerance.
+Section 22 and its three named authority files now define optional I-3
+declarative boundary/conservation profiles exactly. Reduced/open profiles are
+first-class; isolated profiles require explicit supplied declarations;
+historical configurations require no profile or migration; and I-3 validates
+only local declaration consistency. A later separately authorized I-5 may
+calculate and compare residuals under the selected profile. Neither stage may
+impose a universal zero-residual requirement or a hidden framework-wide
+numerical tolerance.
 
 Physical conservation, represented-stock closure, EBU accounting, causal
 inference, policy, and institutional settlement remain distinct. Detailed
 Bridge and Dynamic Coordination amendments remain separately authorized and
-unstarted. This revision adds no implementation path, public type, callable,
-export, dependency, fixture, schema, workflow, or executable permission and
-makes no scientific, experimental, empirical, novelty, or result claim.
+unstarted as behavior stages. This revision prospectively freezes the exact
+I-3 path/type/callable/export/dependency/fixture authority in §22 but creates
+none of those implementation files and grants no executable permission or
+scientific, experimental, empirical, novelty, or result claim.
 
 ## 2. Non-scientific implementation principles
 
@@ -1283,6 +1296,11 @@ own=ownership, dur=durability, tr=traces, art=artifacts
 No framework source module may import a top-level historical `exp_*`,
 `gate*`, `finalize_*`, `test_*`, result directory, or Gate 1D-C path.
 
+For I-3 only, the older rows and broad future catalogue in §§9.3–9.6 are
+historical/provisional and are superseded by the exact 23-path manifest in
+§22 and the I-3 mechanical contract. Later-stage rows remain future planning
+but do not authorize those stages.
+
 ### 9.2 Packaging and cross-stage control files
 
 | Path | Responsibility | Direct dependencies | Owner | State |
@@ -1444,6 +1462,11 @@ reflection, or test-framework call may lower either class.
 
 ### 10.2 Public value and protocol types
 
+For I-3, the historical all-stage catalogue below is superseded by §22: only
+the exact 69 retained I-3 types are post-I-3 exports. Every type assigned to a
+later stage is excluded even when the older table grouped its semantic shape
+near I-3 records.
+
 Every type constructor in this table is T0-capable: it creates or parses an
 immutable draft/value/protocol declaration and cannot accept a callback,
 access a registry implicitly, mutate a store, inspect an outcome, or advance
@@ -1494,6 +1517,12 @@ implementations lower-capability. Invoking their scientific methods is
 possible only through the classified callables below.
 
 ### 10.3 Exhaustive planned callable catalogue
+
+For post-I-3 API purposes this all-stage planning catalogue is superseded by
+§22. I-3 exports only its 23 `validate_*` callables. Builders, acceptance,
+scientific evaluation, mutation, trace, dynamic, finalization, and publication
+callables remain assigned to their exact later stages and are absent from the
+post-I-3 root API.
 
 | Public interface | Owner | Class | Capability boundary |
 |---|---|---:|---|
@@ -1719,7 +1748,7 @@ and every scientific function.
 **Current status:** accepted and implemented exactly at feature commit
 `351417c39fa26b9045e7c162a9897a7c38e4e1d1`, then integrated without
 amendment at merge commit `ede89d8af6b89da491e03c352efcf1868a913f6f`.
-Revision v0.2.8 does not reopen I-2 or authorize any implementation change.
+Revision v0.2.9 does not reopen I-2 or authorize any implementation change.
 **Work:** exactly the nine-path §21.2 manifest: backward-compatible common
 failure extension; exact core records/operations and non-executing policy
 protocol; immutable envelopes; typed primitives and pure compatibility,
@@ -1745,25 +1774,33 @@ T2, T3, scientific operation, or Gate operation.
 ### I-3 — Declarative scientific and operational records
 
 **Depends on:** accepted I-2.
-**Work:** all I-3 record modules, including separate physical state and policy
-memory, configuration/binding split, base fault types, authorization/artifact
-record shapes, ledgers, and acceptance projections.
-**Validation:** V3 and policy-memory static portions; no callback invocation.
-**Acceptance:** every specification v0.1 record can be represented and
-strictly validated; accepted configuration contains no implementation or
-authority; binding adds no science; route/fault semantics unresolved by
-default; initial memory applicability closes.
-**Fail closed:** hidden scientific field, derived hash in own preimage,
-physical/memory conflation, implementation field in configuration, authority
-embedded in target, unsupported route/fault meaning.
-**Exclusions:** no policy, distortion, grouping, transition, durability,
-publication, or acceptance of a real configuration.
+**Current status:** mechanically specification-ready under §22; unimplemented.
+**Work:** only the exact 23-path manifest, 69 retained immutable types, 23
+locally observable T0 validators, 35-code failure suffix, 92-name root suffix,
+15-node/91-edge import graph, and 544-vector fully materialized prospective corpus in §22 and its
+contracts.
+**Validation:** type formation, exact projections/hashes, every validator
+success and precedence pair, all-invalid cases, exports/imports, effective-
+input collision freedom, and accepted I-1/I-2 byte preservation; no callback,
+registry lookup, or referenced-content inspection.
+**Acceptance:** all five I-3A–I-3E implementation substages complete under one
+separate implementation authority; root exports total 219; every deferred
+later-stage name remains unreachable; no accepted object or scientific use.
+**Fail closed:** any authority/hash/path/name/field/projection/precedence/
+fixture drift, untyped absence, hidden direct configuration field, physical/
+memory/causal/settlement conflation, nonprovisional route claim, fault semantic
+overclaim, or later-stage reachability.
+**Exclusions:** no authorization or accepted-status transition, scientific
+policy/distortion/measurement, state mutation, residual calculation, Bridge,
+Dynamic behavior, trace/durability, finalization, publication, correction, or
+acceptance of a real configuration/binding.
 
 ### I-4 — External authorization and information capabilities
 
 **Depends on:** accepted I-3, prospective trust-bootstrap governance approval
 for production activation, and audited exact crypto dependency under UQ-25.
 **Work:** §6 trust/issuer/delegation/time/revocation/envelope/use mechanism,
+real configuration/binding acceptance transitions,
 stage guard, information capabilities, synthetic validation profile, and—only
 after UQ-25 selects it—the exact Ed25519 provider metadata in `pyproject.toml`
 and matching fully hashed finalization of `requirements-framework.lock` in
@@ -2036,7 +2073,7 @@ UQ-02, UQ-03, UQ-04, UQ-31, UQ-35, and UQ-36 have the limited I-0
 resolutions recorded in this plan. Their scientific application is not
 thereby accepted.
 
-Revision v0.2.8 does not resolve, narrow, or expand UQ-40. Comparing the
+Revision v0.2.9 does not resolve, narrow, or expand UQ-40. Comparing the
 quantity's declared unit ref with an explicitly supplied source-unit ref is a
 local I-2 identity predicate only; it establishes no referenced unit or rule
 content, lifecycle, role, or scientific adequacy.
@@ -2302,20 +2339,22 @@ branch, tag, package, release, manuscript, manifest, or publication artifact.
 It froze the prospective I-2 source-unit authority that was later implemented
 and accepted without reinterpretation.
 
-Current v0.2.8 authority boundary: this reconciliation creates no milestone,
-branch, tag, package, release, manuscript, manifest, or publication artifact.
-It preserves accepted I-2 and does not begin or authorize I-3, I-5, framework-
-alpha, scientific execution, a Gate operation, publication, or release.
+Current v0.2.9 authority boundary: this amendment creates no milestone,
+branch, tag, package, release, manuscript, implementation manifest, validation
+fixture, or publication artifact. It preserves accepted I-2 and closes only
+prospective I-3 mechanical authority. It does not begin I-3A implementation or
+authorize I-4 through I-8 behavior, framework-alpha, scientific execution, a
+Gate operation, publication, or release.
 
 ## 19. Current prospective document acceptance checklist
 
-Revision v0.2.8 is complete only if review confirms all of the following:
+Revision v0.2.9 is complete only if review confirms all of the following:
 
 - the active authority locks are exactly those in §1.3, while the
   original I-0 verification and starting SHA in §§1.1–1.2 remain explicitly
   historical;
-- exactly the specification and this plan changed for this prospective
-  conservation and boundary-accounting authority reconciliation;
+- exactly the specification, this plan, the I-3 authority amendment, and the
+  two strict JSON I-3 contracts changed for this prospective authority closure;
 - the only active books-structure and conservation-foundation hashes are the
   exact values in §1.3, while superseded values occur only in explicitly
   historical records or the frozen accepted-I-2 input record;
@@ -2327,16 +2366,18 @@ Revision v0.2.8 is complete only if review confirms all of the following:
 - I-2 remains exactly the accepted nine-path implementation and retains all
   inventories, failure codes, precedence, fixtures, imports, exports, API
   counts, bytes, and hashes;
-- optional declarative boundary/conservation profiles remain possible only in
-  a separately authorized prospective I-3 stage, and profile-specific residual
-  validation remains possible only in a later separately authorized I-5 stage;
-- no universal zero-residual requirement, hidden global tolerance, new
-  implementation path, public type, callable, export, dependency, fixture,
-  schema, workflow, or executable permission is introduced;
+- optional declarative boundary/conservation profiles are frozen as I-3A
+  authority, while residual calculation and comparison remain I-5 behavior;
+- no universal zero-residual requirement, hidden global tolerance, dependency,
+  implemented fixture, schema, workflow, or executable permission is
+  introduced;
 - physical conservation, represented-stock closure, EBU accounting, causal
   inference, policy, and institutional settlement remain distinct;
-- exact I-3 types, callables, fields, validators, manifests, fixtures, and
-  implementation permissions remain unstarted and require separate authority;
+- the exact 69 I-3 types, 23 validators, 35 appended failures, 92-entry root
+  suffix, 15-module/91-edge direct import graph, 23-path future manifest, and
+  544-vector future fixture are frozen by §22 and its contracts, but remain
+  unimplemented and require separate I-3A through I-3E implementation
+  authorization;
 - Bridge and Dynamic Coordination amendments remain separately authorized and
   unstarted, and no scientific or experimental claim is made;
 - specification §21 and plan §21 agree on the complete common failure,
@@ -2426,15 +2467,15 @@ Revision v0.2.8 is complete only if review confirms all of the following:
   threats, and deferred questions are explicit;
 - the complete document and diff pass static inspection and
   `git diff --check`; and
-- no code, schema, fixture, test, package, repository directory, manifest,
+- no code, implementation fixture, test, package, repository directory,
   result, branch, tag, release, model state, or scientific execution was
-  created or run; only the separately authorized documentation commits and
-  guarded push may record this reconciliation after validation.
+  created or run; only these five unstaged documentation/mechanical-authority
+  files exist after validation.
 
-This revision establishes documentation locks only. Neither its existence nor
-its review reopens I-2 or begins I-3 or I-5, and it authorizes no framework-
-alpha milestone, scientific execution, Gate operation, publication, release,
-or other later stage.
+This revision establishes prospective I-3 documentation locks only. Neither
+its existence nor its review reopens I-2, begins I-3A implementation, or
+authorizes I-4 through I-8 behavior, a framework-alpha milestone, scientific
+execution, Gate operation, publication, release, or other later stage.
 
 ## 20. Document revision history
 
@@ -2540,9 +2581,10 @@ definition, UQ-40 deferral, Gate record, package, I-1 byte, and accepted
 milestone. Its historical raw SHA-256 is
 `f152d680028c4f35027371d036d7282fd1c5648274018237f98626afbacf170e`.
 
-### 20.9 Revision v0.2.8 — current prospective conservation-authority reconciliation
+### 20.9 Revision v0.2.8 — historical prospective conservation-authority reconciliation
 
-Revision v0.2.8 adopts specification v0.1.8 at the active raw SHA-256 in §1.3,
+Revision v0.2.8 adopted specification v0.1.8 at historical raw SHA-256
+`ff81bbe7bcf1e5a9ae7a7ecb9663a89aceb677f5d3642e4c9e225e56a36e16d3`,
 the conservation-extended books structure, and the conservation and boundary-
 accounting foundation. It records the three account levels, preserves reduced
 and open accounts as first-class supported cases, and assigns only optional
@@ -2554,15 +2596,36 @@ protocols, Gate rules, interpretation boundaries, and the exact accepted I-2
 implementation. It adds no universal zero-residual rule, hidden tolerance,
 implementation path, public type, callable, export, dependency, fixture,
 schema, workflow, executable permission, Bridge/Dynamic amendment, or
-scientific claim. This file does not contain its own current whole-file hash;
-that value remains external.
+scientific claim. Its historical whole-file SHA-256 is
+`91180a812a909c644692b11aadf659930567f0853d1e10a19e6f98b699e2a6ce`.
+
+### 20.10 Revision v0.2.9 — current prospective I-3 authority closure
+
+Revision v0.2.9 adopts specification v0.1.9 at raw SHA-256
+`3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4`
+and the complete prospective I-3 authority in §22. The normative human
+amendment has raw SHA-256
+`a392874c473219df9a24d044dee7444327f347924438cd8a86627f69f79d3be2`;
+the mechanical contract has raw/canonical SHA-256
+`505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` /
+`3a56b15447ccedd39eb473f8e7838fbba6cbbb0f4d85a60c9b68d26ca5aa8f22`;
+and the validation contract has raw/canonical SHA-256
+`0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` /
+`88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec`.
+
+It freezes declarative I-3 types, local T0 validators, projections, failures,
+exports, imports, validation vectors, conservation profiles, stage ownership,
+and review-size substages. It adds no implementation byte or fixture and
+authorizes no implementation, registry acceptance, behavior, scientific use,
+execution, Gate operation, finalization, or publication. This file does not
+contain its own current whole-file hash; that value remains external.
 
 ## 21. Normative prospective Framework I-2 implementation authority
 
 This section is retained as the complete mechanical authority implemented and
 accepted at `351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated at
 `ede89d8af6b89da491e03c352efcf1868a913f6f`. Its v0.2.7 future-tense language
-and authority locks are historical acceptance inputs. Revision v0.2.8 changes
+and authority locks are historical acceptance inputs. Revision v0.2.9 changes
 none of its manifests, inventories, fixtures, hashes, paths, dependencies,
 failure semantics, precedence, exports, API, capability, or exclusion rules.
 
@@ -2578,7 +2641,9 @@ selected piecemeal.
 At the v0.2.7 freeze this was authority for a future separately authorized
 implementation task. The accepted feature and integration commits named above
 subsequently satisfied that stage without changing the contract. This
-v0.2.8 reconciliation supplies no permission to alter I-2 or begin I-3 or I-5.
+v0.2.9 amendment supplies no permission to alter I-2. Its separate §22 closes
+prospective I-3 authority but supplies no permission to implement I-3A or
+begin I-4 through I-8 behavior.
 
 ### 21.1 Accepted predecessor and fixed failure audit
 
@@ -3292,3 +3357,119 @@ receipt; no result directory; no model-state advance; scientific state
 `UNSTARTED`. I-2 does not inspect, investigate, correct, retry, invoke,
 finalize, reinterpret, or otherwise interact with it and never records its
 cumulative invocation count as zero.
+
+## 22. Normative prospective Framework I-3 implementation authority
+
+### 22.1 Exact locks, precedence, and authorization boundary
+
+The complete corrected prospective I-3 authority is locked by:
+
+1. specification v0.1.9 raw SHA-256 `3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4`;
+2. amendment v1.0.0 raw SHA-256 `a392874c473219df9a24d044dee7444327f347924438cd8a86627f69f79d3be2`;
+3. mechanical contract v1.0.0 raw/canonical SHA-256 `505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` / `3a56b15447ccedd39eb473f8e7838fbba6cbbb0f4d85a60c9b68d26ca5aa8f22`; and
+4. validation contract v1.0.0 raw/canonical SHA-256 `0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` / `88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec`.
+
+The plan does not contain its own whole-file hash. The amendment is the normative human rendering, the mechanical JSON is the schema/ordering source, and the validation JSON is the fully materialized vector source. Any mismatch fails closed. These sources do not change accepted I-1/I-2 bytes or scientific authority.
+
+This plan remains documentation authority only. No implementation file, fixture, test, package, registry state, scientific state, result, Gate state, commit, push, or publication is authorized. A fresh independent review is required before any I-3A authorization.
+
+### 22.2 Closed inventory and exact future path manifest
+
+| Inventory | Exact value |
+|---|---:|
+| Retained types (historical + conservation) | 69 (55 + 14) |
+| Validators / appended failures | 23 / 35 |
+| Root prefix / suffix / total | 127 / 92 / 219 |
+| Modules / direct acyclic imports | 15 / 91 |
+| Future paths | 23 |
+| Historical / separate deferred types | 25 / 8 |
+| Fully materialized vectors | 544 |
+
+| State | Exact path | Narrow future purpose |
+|---|---|---|
+| `MODIFIED` | `src/ebu_framework/__init__.py` | append exact I-3 root suffix after frozen 127-entry prefix |
+| `MODIFIED` | `src/ebu_framework/errors.py` | append exact 35-code I-3 failure suffix only |
+| `NEW` | `src/ebu_framework/state.py` | I-3A declarations and validators |
+| `NEW` | `src/ebu_framework/conservation.py` | I-3A optional conservation declarations and validators |
+| `NEW` | `src/ebu_framework/distortion.py` | I-3A distortion declaration only |
+| `NEW` | `src/ebu_framework/actions.py` | I-3B action declarations |
+| `NEW` | `src/ebu_framework/network.py` | I-3B static network and provisional-route declarations |
+| `NEW` | `src/ebu_framework/commitments.py` | I-3B commitment, reservation, and capacity declarations |
+| `NEW` | `src/ebu_framework/observation.py` | I-3B measurement declarations |
+| `NEW` | `src/ebu_framework/scheduling.py` | I-3B schedule declarations |
+| `NEW` | `src/ebu_framework/policy.py` | I-3C information and policy-memory declarations |
+| `NEW` | `src/ebu_framework/causal.py` | I-3C causal-status and remainder declarations |
+| `NEW` | `src/ebu_framework/settlement.py` | I-3C quote, receipt, share, residual, and closure declarations |
+| `NEW` | `src/ebu_framework/ledger.py` | I-3C ledger declarations; no append behavior |
+| `NEW` | `src/ebu_framework/faults.py` | I-3D base fault declarations and local boundary validator |
+| `NEW` | `src/ebu_framework/experiment.py` | I-3D configuration and binding declaration shapes |
+| `NEW` | `src/ebu_framework/artifacts.py` | I-3D generic artifact and manifest declaration shapes |
+| `NEW` | `tests/framework/fixtures/i3_validation_v1.json` | exact externally reconstructed validation corpus |
+| `NEW` | `tests/framework/test_i3a_declarations.py` | I-3A T0 validation |
+| `NEW` | `tests/framework/test_i3b_declarations.py` | I-3B T0 validation |
+| `NEW` | `tests/framework/test_i3c_declarations.py` | I-3C T0 validation |
+| `NEW` | `tests/framework/test_i3d_declarations.py` | I-3D T0 validation |
+| `NEW` | `tests/framework/test_i3_integration.py` | I-3E exports, imports, projections, failure precedence, collision freedom, and frozen-I2 audit |
+
+No path in this table is created or modified by v0.2.9. In particular, the future fixture remains absent. The accepted 127-entry prefix remains locked by LF-joined SHA-256 `f5f49518ad67b3cbb0f8fb16c974a61dc64b90038b8149013f4846947675d0a3`; the suffix is the exact 69-type sequence followed by the 23 validators.
+
+### 22.3 Exact implementation interfaces and precedence
+
+| Interface | Exact positional-only signature | Exact first-failure precedence |
+|---|---|---|
+| `validate_state_record` | `(record: SystemState, projection_contract: ProjectionContract, predecessor_epoch: Epoch\|Applicability, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `PHYSICAL_POLICY_MEMORY_CONFLATION` → `STATE_PROJECTION_FAILURE` → `MISSING_COORDINATE` → `EPOCH_MISMATCH` → `HASH_MISMATCH` |
+| `validate_projection_contract` | `(represented: RepresentedState, contract: ProjectionContract, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `STATE_PROJECTION_FAILURE` → `MISSING_COORDINATE` → `HASH_MISMATCH` |
+| `validate_conservation_profile_selection` | `(selection: ConservationProfileSelection, /) -> None` | `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` |
+| `validate_conservation_profile` | `(profile: ConservationProfile, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `CONSERVATION_PROFILE_INVALID` → `CONSERVATION_QUANTITY_DUPLICATE` → `CONSERVATION_COORDINATE_DUPLICATE` → `CONSERVATION_FLOW_CHANNEL_DUPLICATE` → `CONSERVATION_UNIT_MISMATCH` → `CONSERVATION_LEVEL_REQUIREMENT_MISSING` → `CONSERVATION_EVIDENCE_INCOMPLETE` → `CONSERVATION_ISOLATION_INVALID` → `CONSERVATION_TOLERANCE_UNDECLARED` → `HASH_MISMATCH` |
+| `validate_distortion_model` | `(model: DistortionModel, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `DISTORTION_DECLARATION_INVALID` → `HASH_MISMATCH` |
+| `validate_action_definition` | `(definition: ActionDefinition, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `ACTION_DECLARATION_INVALID` → `HASH_MISMATCH` |
+| `validate_action_instance` | `(instance: ActionInstance, route: RoutePlan\|Applicability, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `ACTION_DECLARATION_INVALID` → `PROVISIONAL_ROUTE_REQUIRED` → `HASH_MISMATCH` |
+| `validate_provider_network` | `(provider: Provider, network: ProviderNetwork, topology: TopologySnapshot, locus: CapacityLocus, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `HASH_MISMATCH` |
+| `validate_route_plan` | `(route: RoutePlan, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_DUPLICATE_MEMBER` → `PROVISIONAL_ROUTE_REQUIRED` → `HASH_MISMATCH` |
+| `validate_commitment` | `(record: Commitment, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `ACTION_DECLARATION_INVALID` → `HASH_MISMATCH` |
+| `validate_reservation` | `(record: Reservation, capacity: CapacityRecord, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `ACTION_DECLARATION_INVALID` → `CONSERVATION_UNIT_MISMATCH` → `RESERVATION_CAPACITY_MISMATCH` → `HASH_MISMATCH` |
+| `validate_capacity_record` | `(record: CapacityRecord, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `CONSERVATION_UNIT_MISMATCH` → `ACTION_DECLARATION_INVALID` → `HASH_MISMATCH` |
+| `validate_measurement` | `(measurement: Measurement, contract: MeasurementContract, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `EPOCH_MISMATCH` → `CONSERVATION_UNIT_MISMATCH` → `MEASUREMENT_CONTRACT_MISMATCH` → `HASH_MISMATCH` |
+| `validate_schedule` | `(record: Schedule\|ComparatorSchedule\|CoordinationEventDeclaration, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `INADMISSIBLE_SCHEDULE` → `MISSING_COMPARATOR` → `HASH_MISMATCH` |
+| `validate_information_view` | `(contract: InformationContract, view: InformationView, read_set: InformationReadSet\|Applicability, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `INFORMATION_VIEW_DECLARATION_INVALID` → `HASH_MISMATCH` |
+| `validate_policy_memory_state` | `(record: PolicyMemoryState, mode: MemoryMode, predecessor_epoch: Epoch\|Applicability, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `POLICY_MEMORY_NOT_APPLICABLE` → `EPOCH_MISMATCH` → `HASH_MISMATCH` |
+| `validate_causal_remainder` | `(record: CausalRemainder, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `CONSERVATION_UNIT_MISMATCH` → `CAUSAL_ATTRIBUTION_UNRESOLVED` → `HASH_MISMATCH` |
+| `validate_settlement_closure` | `(closure: SettlementClosureRecord, quote: Quote, receipt: Receipt, group_receipt: GroupReceipt, child_actions: tuple[ChildActionRecord,...], residual: GroupResidual, shares: tuple[SettlementShare,...], causal_status: CausalIdentificationStatus, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `SETTLEMENT_LINK_INVALID` → `CONSERVATION_UNIT_MISMATCH` → `SETTLEMENT_CLOSURE_FAILURE` → `CAUSAL_ATTRIBUTION_UNRESOLVED` → `HASH_MISMATCH` |
+| `validate_ledger` | `(ledger: Ledger, entries: tuple[LedgerEntry,...], /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `LEDGER_LINK_INVALID` → `HASH_MISMATCH` |
+| `validate_fault_schedule_boundary` | `(schedule: FaultScheduleV1, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `FAULT_SCHEDULE_INVALID` → `HASH_MISMATCH` |
+| `validate_experiment_configuration` | `(configuration: ExperimentConfiguration, fault_schedule: FaultScheduleV1\|Applicability, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `CONFIGURATION_INCOMPLETE` → `POLICY_MEMORY_NOT_APPLICABLE` → `FAULT_EXTENSION_UNAVAILABLE` → `HASH_MISMATCH` |
+| `validate_execution_binding` | `(binding: ExecutionBinding, /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `EXECUTION_SEMANTICS_PROJECTION_FAILURE` → `HASH_MISMATCH` |
+| `validate_execution_result_manifest` | `(manifest: ExecutionResultManifest, artifacts: tuple[ArtifactRecord,...], /) -> None` | `I3_OBJECT_CONTENT_MISMATCH` → `IMPLICIT_ABSENCE_FORBIDDEN` → `I3_COLLECTION_ORDER_INVALID` → `I3_DUPLICATE_MEMBER` → `ARTIFACT_COMPLETENESS_INVALID` → `HASH_MISMATCH` |
+
+There are exactly 145 validator/failure sites. The exact appended failure sequence is: `I3_RECORD_FORMATION_INVALID`, `I3_OBJECT_CONTENT_MISMATCH`, `I3_COLLECTION_ORDER_INVALID`, `I3_DUPLICATE_MEMBER`, `STATE_PROJECTION_FAILURE`, `MISSING_COORDINATE`, `POLICY_MEMORY_NOT_APPLICABLE`, `EPOCH_MISMATCH`, `CONSERVATION_PROFILE_INVALID`, `CONSERVATION_LEVEL_REQUIREMENT_MISSING`, `CONSERVATION_QUANTITY_DUPLICATE`, `CONSERVATION_COORDINATE_DUPLICATE`, `CONSERVATION_FLOW_CHANNEL_DUPLICATE`, `CONSERVATION_UNIT_MISMATCH`, `CONSERVATION_EVIDENCE_INCOMPLETE`, `CONSERVATION_ISOLATION_INVALID`, `CONSERVATION_TOLERANCE_UNDECLARED`, `PHYSICAL_POLICY_MEMORY_CONFLATION`, `DISTORTION_DECLARATION_INVALID`, `ACTION_DECLARATION_INVALID`, `RESERVATION_CAPACITY_MISMATCH`, `MEASUREMENT_CONTRACT_MISMATCH`, `INADMISSIBLE_SCHEDULE`, `MISSING_COMPARATOR`, `PROVISIONAL_ROUTE_REQUIRED`, `INFORMATION_VIEW_DECLARATION_INVALID`, `CAUSAL_ATTRIBUTION_UNRESOLVED`, `SETTLEMENT_LINK_INVALID`, `SETTLEMENT_CLOSURE_FAILURE`, `LEDGER_LINK_INVALID`, `FAULT_SCHEDULE_INVALID`, `FAULT_EXTENSION_UNAVAILABLE`, `CONFIGURATION_INCOMPLETE`, `EXECUTION_SEMANTICS_PROJECTION_FAILURE`, `ARTIFACT_COMPLETENESS_INVALID`.
+
+Constructor formation checks exact fields, runtime types, tuple containers/members, enum/Literal arms, and strict `CanonicalBytes`. Cross-field, order, duplicate, applicability, projection, link, and hash defects remain formable for the named validator. Every validator inspects only complete supplied arguments and fresh local payload parses; no reference resolution, registry lookup, fixture-ID branch, or execution is permitted.
+
+For `I3_OBJECT_CONTENT_MISMATCH`, implementation must traverse exact positional-signature order. A direct enveloped I-3 record is inspected at its argument position; members of an explicitly frozen ordered tuple/list-like record collection are inspected in canonical tuple order before the next argument. Enums, scalar witnesses, `Applicability`, primitive records, and non-enveloped values are skipped. Each stored payload is freshly parsed and compared byte-logically with its exact canonical projection excluding `envelope` and `derived_exclusions`; the earliest mismatch emits the code and stops precedence. The failure envelope names the validator, carries exactly that record's stored object ID/version/content hash, names the argument/member position in its summary, and receives a newly derived failure ID. Stored-hash recomputation remains the later `HASH_MISMATCH` predicate. Registry lookup, opaque-reference resolution, inferred content, patch history, and fixture identity are forbidden.
+
+The exact mechanical scan inventory covers all 23 validators, including settlement `child_actions` and `shares`, ledger `entries`, and manifest `artifacts` member-by-member in canonical tuple order. Provider-network order is provider, network, topology, locus; information-view order is contract, view, applicable read set. The primitive conservation-profile selection has no enveloped record to scan. Formation negatives remain distinct `I3_RECORD_FORMATION_INVALID` outcomes with empty object refs because they fail before a valid supplied enveloped-record identity exists.
+
+The corrected paired signatures provide direct local witnesses for state coordinates, predecessor epochs, routes, reservation/capacity, measurement/contract, information contract/view/read set, settlement closure graph, ledger entries, configuration/fault schedule, and manifest/artifacts. `POLICY_MEMORY_PROJECTION_FAILURE` and `POLICY_MEMORY_MISMATCH` are deferred to I-4/I-5.
+
+Uncertainty tolerance is `ObjectRef|Applicability`; `NOT_APPLICABLE` reaches `CONSERVATION_TOLERANCE_UNDECLARED` and malformed `APPLICABLE` reaches `IMPLICIT_ABSENCE_FORBIDDEN`. Direct physical-payload reserved keys alone can reach `PHYSICAL_POLICY_MEMORY_CONFLATION`; opaque referenced targets are explicit nonclaims. Every collection and applicability arm has the exact owner listed in the mechanical contract.
+
+### 22.4 Materialized corpus and external reconstruction
+
+| Coverage | Exact count |
+|---|---:|
+| Formation positive / boundary / negative | 69 / 69 / 69 |
+| Validator positive / boundary | 23 / 23 |
+| Isolated validator sites / all isolated sites | 145 / 214 |
+| Adjacent pairs / multiply-invalid validators | 122 / 23 |
+| Object-content scan-order cases | 1 |
+| **Total** | **544** |
+
+The normative materialized vector array is 24104258 canonical bytes, ends in exactly one LF, and has SHA-256 `fbdaffc00e88b9f20a14b443d7f18f854f625413e4b11475088102f60600c01b`. Two independently written standard-library-only reconstructions agreed byte-for-byte on count, IDs, names, effective inputs, outcomes, bytes, newline, digest, failure-ID derivations, successful projections, object-content scan order/evidence, and collision audit. They found 543 unique effective inputs, one benign same-outcome collision for the one-member enum positive/boundary formation, and zero conflicting outcomes.
+
+Every vector includes complete ordered arguments, exact recursive runtime descriptors, every full record payload, exact successful projection or failure, first failure, interface evidence, stage, and precedence evidence. Baseline/patch notation is non-normative. All 67 validator-level object-content outcomes identify their earliest mismatching record and have rederived failure envelopes and IDs. The six provider-network/information-view vectors identify `CapacityLocus`/`InformationReadSet` after their earlier arguments match. New vector `i3v-08-o01` has matching provider, mismatching network, matching topology, and mismatching locus, and selects the network as earliest. `APPLICABLE` with empty conservation `profile_refs` yields `IMPLICIT_ABSENCE_FORBIDDEN`; the distinct self-parent condition yields `CONSERVATION_PROFILE_INVALID`.
+
+### 22.5 Staged implementation boundary and nonclaims
+
+I-3A is state, conservation, and distortion; I-3B actions, network, commitments, observation, and scheduling; I-3C policy, causal, settlement, and ledger; I-3D faults, experiment, and artifacts; I-3E exports, fixture, projections, imports, and full T0 integration. All corrected authority must be accepted before I-3A starts.
+
+Reduced/open accounts remain first-class, isolated completeness remains only a local declaration claim, and historical models require no migration. There is no universal zero residual or hidden tolerance. Residual computation is I-5, Bridge is I-6, Dynamic Coordination is I-7, and finalization/publication is I-8. None has begun.
