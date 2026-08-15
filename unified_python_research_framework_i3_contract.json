@@ -1,7 +1,7 @@
 {
   "contract_id": "ebu-framework-i3-authority/1",
-  "contract_version": "1.0.1",
-  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_PATH_OWNERSHIP_CORRECTED_UNIMPLEMENTED",
+  "contract_version": "1.0.2",
+  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_SEMANTIC_WITNESS_CORRECTED_UNIMPLEMENTED",
   "revision_history": [
     {
       "version": "1.0.0",
@@ -21,33 +21,53 @@
     },
     {
       "version": "1.0.1",
+      "status": "HISTORICAL_PROSPECTIVE_AUTHORITY",
+      "change": "Adds the complete 23-path to five-substage ownership bijection and changes no other authority.",
+      "source_hashes": {
+        "human_rendering_raw_sha256": "b5e54fad02a232acc89b4d69613f93026dbd0a10d400b0751072475e32173fee",
+        "mechanical_contract_raw_sha256": "817513d43726cbb23a4f61a711700248724aa491dad654ad0c2c6ce703dc8c16",
+        "mechanical_contract_canonical_sha256": "a295ad157ec471776b0c0cf9dca3b1a2d2512ba2bb1cbbcb243e548feec770e4",
+        "validation_contract_raw_sha256": "0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0",
+        "validation_contract_canonical_sha256": "88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec",
+        "specification_version": "0.1.10",
+        "specification_raw_sha256": "ae37f7e20145420f98858c85d2191ba2b42c8432a134537af3dad92177fb07b8",
+        "plan_version": "0.2.10",
+        "plan_raw_sha256": "d4337b7e8fb680db10b9dd714c71705b22acbe5ff128ed4606f4765ce3023e3d"
+      },
+      "note": "Preserved historical path-ownership-corrected authority; superseded only by the v1.0.2 semantic-witness correction."
+    },
+    {
+      "version": "1.0.2",
       "status": "CURRENT_PROSPECTIVE_AUTHORITY",
-      "change": "Adds the complete 23-path to five-substage ownership bijection and changes no other authority."
+      "change": "Freezes identity-agnostic order/duplicate witnesses, exact conservation requirements and scans, applicability/hash predicate ownership, the complete paired-quantity inventory, the exact post-reserved-removal coordinate-only state projection, and exact-triple settlement links; repairs the eight affected inputs and reseals the same 544 vector IDs without implementation authority."
     }
   ],
   "authority": {
     "branch": "framework-v0.1",
     "base_head": "85cc43b4fafe298245ceb5baf48b1731de47df44",
-    "correction_base_head": "d6f211e6faa98b0a4f9b58241d927b812b7a8b3c",
+    "correction_base_head": "e7f34a2bdfdecacebde0860623bc98caf2292c80",
     "prior_specification": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
-      "version": "0.1.8",
-      "raw_sha256": "ff81bbe7bcf1e5a9ae7a7ecb9663a89aceb677f5d3642e4c9e225e56a36e16d3"
+      "version": "0.1.10",
+      "raw_sha256": "ae37f7e20145420f98858c85d2191ba2b42c8432a134537af3dad92177fb07b8"
     },
     "prior_plan": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
-      "version": "0.2.8",
-      "raw_sha256": "91180a812a909c644692b11aadf659930567f0853d1e10a19e6f98b699e2a6ce"
+      "version": "0.2.10",
+      "raw_sha256": "d4337b7e8fb680db10b9dd714c71705b22acbe5ff128ed4606f4765ce3023e3d"
     },
     "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
     "mechanical_contract": "unified_python_research_framework_i3_contract.json",
     "validation_contract": "unified_python_research_framework_i3_validation_contract.json",
     "precedence": {
       "supersedes_only": [
-        "the v1.0.0 omission of a complete mechanical implementation-path/substage ownership bijection",
-        "provisional or contradictory I-3 stage ownership",
-        "provisional I-3 public types, callables, failures, projections, exports, imports, paths, fixtures, and validation mechanics",
-        "the previously absent optional conservation-profile declaration authority"
+        "v1.0.1 order/duplicate validation-vector witness materialization",
+        "v1.0.1 under-specified conservation level/evidence/isolation predicates",
+        "v1.0.1 under-specified paired-quantity compatibility predicates",
+        "v1.0.1 overlapping applicability, measurement, fault-order, and execution-hash predicate ownership needed for isolated satisfiability",
+        "the rejected v1.0.2 draft's contradictory state-projection extra-key statement and four invalid state witnesses",
+        "the rejected v1.0.2 draft's four stale settlement child-receipt content hashes",
+        "dependent v1.0.1 validation corpus bytes and hashes"
       ],
       "does_not_change": [
         "accepted I-1 or I-2 implementation bytes or semantics",
@@ -60,15 +80,11 @@
       "conflict_rule": "FAIL_CLOSED"
     },
     "correction_scope": {
-      "changes_only": "implementation-path/substage ownership",
+      "changes_only": "prospective local predicate semantics, witness materialization, exact finite conservation requirements, paired-quantity compatibility, exact post-reserved-removal state projection, exact-triple settlement links, and dependent validation hashes",
       "does_not_change": [
-        "any public type or callable",
-        "any field, enum, tagged union, signature, projection, or hash domain",
-        "any failure code, ordinal, predicate, precedence, envelope, or failure ID",
-        "any vector, corpus count, corpus bytes, or corpus hash",
-        "the import graph or export inventory",
-        "any scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission",
-        "accepted I-1 or I-2 paths, implementation bytes, or semantics"
+        "the 69 types, 23 validators, 35 failures, 92-name export suffix, 15-module/91-edge graph, 133 collection rows, 43 applicability rows, two sum types, or 23-path ownership bijection",
+        "any public type, field, callable, signature, precedence position, or accepted I-1/I-2 path/hash",
+        "any scientific model, equation, Gate rule, result, interpretation, execution permission, or implementation byte"
       ]
     }
   },
@@ -296,7 +312,10 @@
       },
       "key_order": "ObjectRef object_id, object_version, object_content_hash",
       "duplicates": "FORBIDDEN",
-      "extra_top_level_keys": "allowed except exact reserved contamination keys",
+      "validation_input": "For SystemState.physical_state_payload only, begin with the supplied payload and remove exactly the five keys listed by state_projection_contamination_ownership.reserved_direct_keys for this predicate check only. No removal applies to represented or other state payloads.",
+      "extra_top_level_keys": "FORBIDDEN after the exact reserved-key removal; the remaining object must have coordinates as its sole top-level key",
+      "empty_coordinates": "STRUCTURALLY_VALID; MISSING_COORDINATE activates when a required coordinate is absent",
+      "invalid_coordinate_ownership": "Duplicate, noncanonical, malformed, or otherwise invalid coordinate content retains its existing frozen predicate ownership and precedence.",
       "malformed_failure": "STATE_PROJECTION_FAILURE"
     }
   },
@@ -3227,7 +3246,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -3247,7 +3266,7 @@
         {
           "failure_code": "STATE_PROJECTION_FAILURE",
           "locally_observable": true,
-          "condition": "The supplied state or represented_state payload is not the exact object {'coordinates': [[ObjectRef-ECJ1, ECJ1-value], ...]} with canonical unique coordinate keys."
+          "condition": "For SystemState.physical_state_payload, begins with the supplied payload, removes exactly the five reserved direct contamination keys for this predicate check only, and requires the remaining object to have coordinates as its sole top-level key; any remaining non-reserved extra top-level key activates this failure. Represented and other state payloads are checked against that exact coordinate-only shape without removal. Empty coordinates are structurally valid but may activate MISSING_COORDINATE; all other invalid coordinate content retains its frozen owner and precedence."
         },
         {
           "failure_code": "MISSING_COORDINATE",
@@ -3306,7 +3325,7 @@
         {
           "failure_code": "STATE_PROJECTION_FAILURE",
           "locally_observable": true,
-          "condition": "The supplied state or represented_state payload is not the exact object {'coordinates': [[ObjectRef-ECJ1, ECJ1-value], ...]} with canonical unique coordinate keys."
+          "condition": "For SystemState.physical_state_payload, begins with the supplied payload, removes exactly the five reserved direct contamination keys for this predicate check only, and requires the remaining object to have coordinates as its sole top-level key; any remaining non-reserved extra top-level key activates this failure. Represented and other state payloads are checked against that exact coordinate-only shape without removal. Empty coordinates are structurally valid but may activate MISSING_COORDINATE; all other invalid coordinate content retains its frozen owner and precedence."
         },
         {
           "failure_code": "MISSING_COORDINATE",
@@ -3340,7 +3359,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -3398,7 +3417,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -3413,7 +3432,7 @@
         {
           "failure_code": "CONSERVATION_PROFILE_INVALID",
           "locally_observable": true,
-          "condition": "ConservationProfile.parent_boundary_ref is an ObjectRef equal to boundary_ref; this direct self-parent condition is distinct from selection applicability and from every collection predicate."
+          "condition": "The first failed item in conservation_requirement_table.profile_invalid_scan_order is present: direct self-parent equality, a malformed INTERNAL_TRANSFER endpoint pair under C08, or an exact-zero external declaration in an OPEN_CONTROL_VOLUME under C13."
         },
         {
           "failure_code": "CONSERVATION_QUANTITY_DUPLICATE",
@@ -3433,22 +3452,22 @@
         {
           "failure_code": "CONSERVATION_UNIT_MISMATCH",
           "locally_observable": true,
-          "condition": "Directly supplied paired quantities/declarations that the interface compares have unequal unit_ref or dimension_ref."
+          "condition": "The first unequal direct pair in paired_quantity_compatibility_inventory for this validator has a non-equal required unit_ref or dimension_ref relation; no opaque-reference meaning is inferred."
         },
         {
           "failure_code": "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
           "locally_observable": true,
-          "condition": "An OPEN_CONTROL_VOLUME or ISOLATED_BOUNDARY_COMPLETE profile omits a locally required declaration/evidence collection for that level."
+          "condition": "The first failed row in conservation_requirement_table.level_scan_order is a structurally required declaration collection absent for the declared account level."
         },
         {
           "failure_code": "CONSERVATION_EVIDENCE_INCOMPLETE",
           "locally_observable": true,
-          "condition": "A supplied conservation evidence resolution and its direct evidence/missing collections contradict the account level."
+          "condition": "The first failed row in conservation_requirement_table.evidence_scan_order is a required evidence collection or locally checkable declared-coverage relation absent for the declared account level."
         },
         {
           "failure_code": "CONSERVATION_ISOLATION_INVALID",
           "locally_observable": true,
-          "condition": "An ISOLATED_BOUNDARY_COMPLETE profile directly declares a non-zero external boundary channel or unresolved channel."
+          "condition": "For ISOLATED_BOUNDARY_COMPLETE only, the first conservation_requirement_table.isolation_scan_order contradiction is present: exact nonzero external exchange, explicit loss, quantity/evidence/flow unresolved content, malformed external content, or quantity-level explicit outflow/loss content."
         },
         {
           "failure_code": "CONSERVATION_TOLERANCE_UNDECLARED",
@@ -3590,7 +3609,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -3653,7 +3672,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -3701,7 +3720,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_DUPLICATE_MEMBER",
@@ -3800,7 +3819,7 @@
         {
           "failure_code": "CONSERVATION_UNIT_MISMATCH",
           "locally_observable": true,
-          "condition": "Directly supplied paired quantities/declarations that the interface compares have unequal unit_ref or dimension_ref."
+          "condition": "The first unequal direct pair in paired_quantity_compatibility_inventory for this validator has a non-equal required unit_ref or dimension_ref relation; no opaque-reference meaning is inferred."
         },
         {
           "failure_code": "RESERVATION_CAPACITY_MISMATCH",
@@ -3840,7 +3859,7 @@
         {
           "failure_code": "CONSERVATION_UNIT_MISMATCH",
           "locally_observable": true,
-          "condition": "Directly supplied paired quantities/declarations that the interface compares have unequal unit_ref or dimension_ref."
+          "condition": "The first unequal direct pair in paired_quantity_compatibility_inventory for this validator has a non-equal required unit_ref or dimension_ref relation; no opaque-reference meaning is inferred."
         },
         {
           "failure_code": "ACTION_DECLARATION_INVALID",
@@ -3886,7 +3905,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -3906,12 +3925,12 @@
         {
           "failure_code": "CONSERVATION_UNIT_MISMATCH",
           "locally_observable": true,
-          "condition": "Directly supplied paired quantities/declarations that the interface compares have unequal unit_ref or dimension_ref."
+          "condition": "The first unequal direct pair in paired_quantity_compatibility_inventory for this validator has a non-equal required unit_ref or dimension_ref relation; no opaque-reference meaning is inferred."
         },
         {
           "failure_code": "MEASUREMENT_CONTRACT_MISMATCH",
           "locally_observable": true,
-          "condition": "Measurement.measured_object_ref/coordinate_ref/calibration_ref or Quantity unit_ref differs from the paired MeasurementContract direct field."
+          "condition": "Measurement.measured_object_ref, coordinate_ref, or calibration_ref differs from the paired MeasurementContract direct field; unit compatibility is excluded and owned only by CONSERVATION_UNIT_MISMATCH."
         },
         {
           "failure_code": "HASH_MISMATCH",
@@ -4008,7 +4027,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -4064,7 +4083,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "POLICY_MEMORY_NOT_APPLICABLE",
@@ -4122,7 +4141,7 @@
         {
           "failure_code": "CONSERVATION_UNIT_MISMATCH",
           "locally_observable": true,
-          "condition": "Directly supplied paired quantities/declarations that the interface compares have unequal unit_ref or dimension_ref."
+          "condition": "The first unequal direct pair in paired_quantity_compatibility_inventory for this validator has a non-equal required unit_ref or dimension_ref relation; no opaque-reference meaning is inferred."
         },
         {
           "failure_code": "CAUSAL_ATTRIBUTION_UNRESOLVED",
@@ -4181,7 +4200,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -4196,12 +4215,12 @@
         {
           "failure_code": "SETTLEMENT_LINK_INVALID",
           "locally_observable": true,
-          "condition": "Any directly supplied quote/receipt/group/child/share/residual/closure ObjectRef link differs from the paired record's envelope ObjectRef."
+          "condition": "Any directly supplied quote/receipt/group/child/share/residual/closure ObjectRef link is not exactly equal to the paired record's envelope ObjectRef in all three fields: object_id, object_version, and object_content_hash. No meaning is inferred from an opaque reference."
         },
         {
           "failure_code": "CONSERVATION_UNIT_MISMATCH",
           "locally_observable": true,
-          "condition": "Directly supplied paired quantities/declarations that the interface compares have unequal unit_ref or dimension_ref."
+          "condition": "The first unequal direct pair in paired_quantity_compatibility_inventory for this validator has a non-equal required unit_ref or dimension_ref relation; no opaque-reference meaning is inferred."
         },
         {
           "failure_code": "SETTLEMENT_CLOSURE_FAILURE",
@@ -4251,7 +4270,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -4307,7 +4326,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -4322,7 +4341,7 @@
         {
           "failure_code": "FAULT_SCHEDULE_INVALID",
           "locally_observable": true,
-          "condition": "A supplied directive target applicability contradicts target_kind/fault_class, or directive order is not the frozen target/priority/sequence/fault-id order."
+          "condition": "A supplied directive target applicability contradicts target_kind/fault_class. Directive ordering is excluded and owned only by I3_COLLECTION_ORDER_INVALID under TARGET_PRIORITY_SEQUENCE_ID."
         },
         {
           "failure_code": "HASH_MISMATCH",
@@ -4364,7 +4383,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -4427,7 +4446,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -4447,7 +4466,7 @@
         {
           "failure_code": "HASH_MISMATCH",
           "locally_observable": true,
-          "condition": "A supplied envelope.object_content_hash or declared sibling hash differs from the recomputation over the exact supplied local projection while object-content projection equality has already succeeded."
+          "condition": "ExecutionBinding.envelope.object_content_hash differs from recomputation after object-content equality; execution_semantics_hash is excluded and owned only by EXECUTION_SEMANTICS_PROJECTION_FAILURE."
         }
       ],
       "local_scope": "Only the fully supplied ordered arguments and freshly parsed CanonicalBytes are inspected; no reference resolution, registry lookup, policy/model execution, fixture-ID branch, or external state is permitted."
@@ -4482,7 +4501,7 @@
         {
           "failure_code": "IMPLICIT_ABSENCE_FORBIDDEN",
           "locally_observable": true,
-          "condition": "A supplied I-3 Applicability union contains APPLICABLE as a value arm, or a field-specific applicability/completeness relation listed in applicability_contracts is violated."
+          "condition": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate."
         },
         {
           "failure_code": "I3_COLLECTION_ORDER_INVALID",
@@ -7705,14 +7724,472 @@
   "validation_authority": {
     "path": "unified_python_research_framework_i3_validation_contract.json",
     "vector_count": 544,
-    "canonical_vectors_byte_count": 24104258,
+    "canonical_vectors_byte_count": 24179362,
     "canonical_vectors_final_newline": "EXACTLY_ONE_LF",
-    "canonical_vectors_sha256": "fbdaffc00e88b9f20a14b443d7f18f854f625413e4b11475088102f60600c01b",
+    "canonical_vectors_sha256": "4ac998f53ed5f39a41fcf14d077055c380f522d8a5555535fb735cd0646a6885",
     "formation_failure_interfaces": 69,
     "validator_failure_sites": 145,
     "adjacent_pairs": 122,
     "multiply_invalid_validators": 23,
     "object_content_scan_order_cases": 1,
-    "validator_object_content_outcomes_with_primary_object_ref": 67
-  }
+    "validator_object_content_outcomes_with_primary_object_ref": 67,
+    "adjacent_order_duplicate_witness_count": 19,
+    "corrected_adjacent_order_duplicate_witness_count": 18,
+    "preserved_adjacent_order_duplicate_witness_ids": [
+      "i3v-23-a03"
+    ],
+    "conservation_requirement_rows": 24,
+    "paired_quantity_compatibility_rows": 12,
+    "independent_semantic_audit_routes": 2,
+    "semantic_audit_failure_count_per_route": 0,
+    "state_projection_repaired_vector_count": 4,
+    "settlement_link_repaired_vector_count": 4,
+    "predicate_truth_projection_subject": "the ordered array of [vector_id, precedence_evidence.active_failure_codes] rows in vectors order",
+    "predicate_truth_projection_sha256": "8812d40f5eb8f79722cf6aefe2df0eff7adae0494415ec146b3e9ab950be9f89",
+    "changed_vector_count": 227,
+    "unchanged_vector_count": 317
+  },
+  "collection_witness_rule": {
+    "comparison": "Use only the collection_contracts order_rule comparison key; never fixture identity or member identity.",
+    "order_invalid": "True iff there exist indices i<j whose members are unequal and whose frozen comparison keys satisfy key[i] > key[j]. Equal members never witness order invalid.",
+    "duplicate_invalid": "True iff there exist indices i<j whose complete projected members are equal.",
+    "isolated_order_witness": "[B,A] with B>A under the frozen key and B unequal to A.",
+    "isolated_duplicate_witness": "[A,A].",
+    "combined_order_duplicate_witness": "[B,A,A] with B>A; the first two members witness order and the last two witness duplication independently.",
+    "precedence": "I3_COLLECTION_ORDER_INVALID precedes I3_DUPLICATE_MEMBER wherever both occur."
+  },
+  "conservation_requirement_table": {
+    "schema": [
+      "row_id",
+      "subject",
+      "REDUCED_REPRESENTED_STOCK",
+      "OPEN_CONTROL_VOLUME",
+      "ISOLATED_BOUNDARY_COMPLETE",
+      "failure_owner",
+      "local_rule"
+    ],
+    "status_values": [
+      "ALLOWED_OPTIONAL",
+      "ALLOWED_IF_LOCAL_RULE",
+      "REQUIRED_NONEMPTY",
+      "REQUIRED_PER_PARENT",
+      "REQUIRED_EXACT_COVERAGE",
+      "REQUIRED_PRESENT_COMPLETE",
+      "REQUIRED_AT_LEAST_ONE_NONZERO_EXTERNAL",
+      "REQUIRED_AT_LEAST_ONE_ZERO_EXTERNAL",
+      "FORBIDDEN",
+      "NOT_REQUIRED"
+    ],
+    "rows": [
+      [
+        "C01",
+        "conserved_quantity_declarations",
+        "REQUIRED_NONEMPTY",
+        "REQUIRED_NONEMPTY",
+        "REQUIRED_NONEMPTY",
+        "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
+        "ConservationProfile.conserved_quantities has at least one member"
+      ],
+      [
+        "C02",
+        "coordinate_coefficients",
+        "REQUIRED_PER_PARENT",
+        "REQUIRED_PER_PARENT",
+        "REQUIRED_PER_PARENT",
+        "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
+        "each conserved quantity has at least one coordinate_coefficients member"
+      ],
+      [
+        "C03",
+        "transformation_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "NOT_APPLICABLE",
+        "no minimum cardinality; opaque refs establish no transformation truth"
+      ],
+      [
+        "C04",
+        "boundary_flow_channels",
+        "ALLOWED_OPTIONAL",
+        "REQUIRED_NONEMPTY",
+        "REQUIRED_NONEMPTY",
+        "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
+        "open and isolated levels require at least one locally declared boundary channel"
+      ],
+      [
+        "C05",
+        "at_least_one_exact_nonzero_external_inflow_or_outflow",
+        "NOT_REQUIRED",
+        "REQUIRED_AT_LEAST_ONE_NONZERO_EXTERNAL",
+        "NOT_REQUIRED",
+        "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
+        "exact nonzero external means rollup_role EXTERNAL_BOUNDARY, direction INFLOW or OUTFLOW, and explicit_zero_exchange false; an open profile requires at least one"
+      ],
+      [
+        "C06",
+        "exact_external_inflow_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "exact external inflow means rollup_role EXTERNAL_BOUNDARY, direction INFLOW, and explicit_zero_exchange false"
+      ],
+      [
+        "C07",
+        "exact_external_outflow_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "exact external outflow means rollup_role EXTERNAL_BOUNDARY, direction OUTFLOW, and explicit_zero_exchange false"
+      ],
+      [
+        "C08",
+        "internal_transfer_declarations",
+        "ALLOWED_IF_LOCAL_RULE",
+        "ALLOWED_IF_LOCAL_RULE",
+        "ALLOWED_IF_LOCAL_RULE",
+        "CONSERVATION_PROFILE_INVALID",
+        "each rollup_role INTERNAL_TRANSFER channel has direct ObjectRef source_boundary_ref and target_boundary_ref values that are unequal; its presence declares only profile.boundary_ref as the common accounting boundary and establishes neither endpoint containment nor cancellation"
+      ],
+      [
+        "C09",
+        "explicit_loss_flow_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "any boundary flow whose rollup_role is EXPLICIT_LOSS is a local loss declaration and contradicts isolated completeness"
+      ],
+      [
+        "C10",
+        "explicit_unresolved_flow_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "any boundary flow whose rollup_role is EXPLICIT_UNRESOLVED contradicts isolated completeness"
+      ],
+      [
+        "C11",
+        "quantity_level_unresolved_channels",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "any ConservedQuantityDeclaration.unresolved_channel_refs member contradicts isolated completeness"
+      ],
+      [
+        "C12",
+        "profile_evidence_level_unresolved_channels",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "any ConservationEvidence.unresolved_channel_refs member contradicts isolated completeness"
+      ],
+      [
+        "C13",
+        "exact_zero_external_declarations_in_nonisolated_accounts",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "NOT_REQUIRED",
+        "CONSERVATION_PROFILE_INVALID",
+        "exact zero external means rollup_role EXTERNAL_BOUNDARY, direction ZERO_EXCHANGE, and explicit_zero_exchange true; an open profile may not claim zero external exchange"
+      ],
+      [
+        "C14",
+        "at_least_one_exact_zero_external_declaration",
+        "NOT_REQUIRED",
+        "NOT_REQUIRED",
+        "REQUIRED_AT_LEAST_ONE_ZERO_EXTERNAL",
+        "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
+        "an isolated profile requires at least one exact zero external declaration"
+      ],
+      [
+        "C15",
+        "malformed_external_boundary_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "an EXTERNAL_BOUNDARY channel is malformed here when it is neither an exact nonzero external inflow/outflow nor an exact zero external declaration"
+      ],
+      [
+        "C16",
+        "boundary_completeness_evidence",
+        "NOT_REQUIRED",
+        "REQUIRED_NONEMPTY",
+        "REQUIRED_NONEMPTY",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "ConservationEvidence.boundary_completeness_evidence_refs is nonempty"
+      ],
+      [
+        "C17",
+        "carrier_completeness_evidence",
+        "NOT_REQUIRED",
+        "REQUIRED_NONEMPTY",
+        "REQUIRED_NONEMPTY",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "ConservationEvidence.carrier_completeness_evidence_refs is nonempty"
+      ],
+      [
+        "C18",
+        "zero_exchange_evidence",
+        "NOT_REQUIRED",
+        "NOT_REQUIRED",
+        "REQUIRED_NONEMPTY",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "ConservationEvidence.zero_exchange_evidence_refs is nonempty for isolated completeness"
+      ],
+      [
+        "C19",
+        "observability_resolution",
+        "ALLOWED_OPTIONAL",
+        "REQUIRED_PRESENT_COMPLETE",
+        "REQUIRED_PRESENT_COMPLETE",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "open and isolated levels require observability_resolution.state PRESENT with empty missing_part_refs"
+      ],
+      [
+        "C20",
+        "declared_unresolved_coverage",
+        "NOT_REQUIRED",
+        "REQUIRED_EXACT_COVERAGE",
+        "NOT_REQUIRED",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "for open profiles the canonically sorted multiset union of quantity-level unresolved refs equals evidence.unresolved_channel_refs; reduced profiles make no closure claim and isolated profiles forbid both collections"
+      ],
+      [
+        "C21",
+        "declared_outflow_coverage",
+        "NOT_REQUIRED",
+        "REQUIRED_PER_PARENT",
+        "NOT_REQUIRED",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "for open profiles every explicit_outflow_channel_refs member equals a supplied boundary_flow_channels.channel_ref whose direction is OUTFLOW"
+      ],
+      [
+        "C22",
+        "declared_loss_coverage",
+        "NOT_REQUIRED",
+        "REQUIRED_PER_PARENT",
+        "NOT_REQUIRED",
+        "CONSERVATION_EVIDENCE_INCOMPLETE",
+        "for open profiles every explicit_loss_channel_refs member equals a supplied boundary_flow_channels.channel_ref whose rollup_role is EXPLICIT_LOSS"
+      ],
+      [
+        "C23",
+        "quantity_level_explicit_outflow_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "any ConservedQuantityDeclaration.explicit_outflow_channel_refs member contradicts isolated completeness"
+      ],
+      [
+        "C24",
+        "quantity_level_explicit_loss_declarations",
+        "ALLOWED_OPTIONAL",
+        "ALLOWED_OPTIONAL",
+        "FORBIDDEN",
+        "CONSERVATION_ISOLATION_INVALID",
+        "any ConservedQuantityDeclaration.explicit_loss_channel_refs member contradicts isolated completeness"
+      ]
+    ],
+    "profile_invalid_scan_order": [
+      "direct self-parent relation",
+      "C08",
+      "C13"
+    ],
+    "level_scan_order": [
+      "C01",
+      "C02",
+      "C04",
+      "C05",
+      "C14"
+    ],
+    "evidence_scan_order": [
+      "C16",
+      "C17",
+      "C18",
+      "C19",
+      "C20",
+      "C21",
+      "C22"
+    ],
+    "isolation_scan_order": [
+      "C06",
+      "C07",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C15",
+      "C23",
+      "C24"
+    ],
+    "predicate_precedence": [
+      "CONSERVATION_LEVEL_REQUIREMENT_MISSING",
+      "CONSERVATION_EVIDENCE_INCOMPLETE",
+      "CONSERVATION_ISOLATION_INVALID"
+    ],
+    "reduced_boundary": "Reduced represented-stock is not physical completeness or isolation; unresolved and out-of-scope channels remain explicit and permitted.",
+    "open_boundary": "Open control volume requires locally declared modeled nonzero external exchange and local evidence, permits explicit unresolved content, and forbids an exact-zero external declaration rather than treating it as closure of the open account.",
+    "isolated_boundary": "Isolated boundary complete forbids nonzero external exchange, explicit loss, and unresolved content; every external channel is an exact zero-exchange declaration and boundary, carrier, and zero evidence collections are required.",
+    "internal_transfer_boundary": "No I-3 arithmetic cancellation occurs. An INTERNAL_TRANSFER declaration is eligible for later cancellation only under this profile's explicitly supplied common boundary and never proves endpoint containment.",
+    "nonclaim": "The table checks supplied structure and local equality only; opaque references prove no empirical completeness, physical truth, treatment adequacy, global closure, containment, or cancellation."
+  },
+  "paired_quantity_compatibility_inventory": [
+    {
+      "validator": "validate_conservation_profile",
+      "left_path": "profile.conserved_quantities[i].unit_ref",
+      "right_path": "profile.conserved_quantities[i].coordinate_coefficients[j].unit_ref",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "NOT_COMPARED_RIGHT_HAS_NO_DIMENSION_REF",
+      "clock_or_interval_relation": "NONE",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": "LEXICOGRAPHIC_i_j_FROM_ZERO"
+    },
+    {
+      "validator": "validate_reservation",
+      "left_path": "record.reserved_quantity",
+      "right_path": "capacity.usable",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "NONE; interval validity is ACTION_DECLARATION_INVALID",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 0
+    },
+    {
+      "validator": "validate_capacity_record",
+      "left_path": "record.installed",
+      "right_path": "record.usable",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "SAME_SUPPLIED_RECORD_EPOCH; no reference inference",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 0
+    },
+    {
+      "validator": "validate_capacity_record",
+      "left_path": "record.installed",
+      "right_path": "record.reserved",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "SAME_SUPPLIED_RECORD_EPOCH; no reference inference",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 1
+    },
+    {
+      "validator": "validate_capacity_record",
+      "left_path": "record.installed",
+      "right_path": "record.admitted",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "SAME_SUPPLIED_RECORD_EPOCH; no reference inference",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 2
+    },
+    {
+      "validator": "validate_capacity_record",
+      "left_path": "record.installed",
+      "right_path": "record.completed",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "SAME_SUPPLIED_RECORD_EPOCH; no reference inference",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 3
+    },
+    {
+      "validator": "validate_measurement",
+      "left_path": "measurement.value.unit_ref when value is Quantity",
+      "right_path": "contract.unit_ref",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "NOT_COMPARED_CONTRACT_HAS_NO_DIMENSION_REF",
+      "clock_or_interval_relation": "NONE; measurement/availability epoch order is EPOCH_MISMATCH",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 0
+    },
+    {
+      "validator": "validate_causal_remainder",
+      "left_path": "record.represented_total",
+      "right_path": "record.identified_total when Quantity",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "NONE",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 0
+    },
+    {
+      "validator": "validate_causal_remainder",
+      "left_path": "record.represented_total",
+      "right_path": "record.remainder when Quantity",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "NONE",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 1
+    },
+    {
+      "validator": "validate_settlement_closure",
+      "left_path": "residual.measured_total",
+      "right_path": "residual.share_total",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "NONE",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 0
+    },
+    {
+      "validator": "validate_settlement_closure",
+      "left_path": "residual.measured_total",
+      "right_path": "residual.residual",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "NONE",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": 1
+    },
+    {
+      "validator": "validate_settlement_closure",
+      "left_path": "residual.measured_total",
+      "right_path": "shares[i].amount",
+      "unit_relation": "EXACT_OBJECT_REF_EQUAL",
+      "dimension_relation": "EXACT_OBJECT_REF_EQUAL",
+      "clock_or_interval_relation": "NONE",
+      "failure_code": "CONSERVATION_UNIT_MISMATCH",
+      "scan_position": "2_PLUS_CANONICAL_SHARE_INDEX_i"
+    }
+  ],
+  "applicability_failure_ownership": {
+    "IMPLICIT_ABSENCE_FORBIDDEN": "Owns a supplied APPLICABLE value arm where the exact union does not admit that value; additionally owns ConservationProfileSelection APPLICABLE with empty profile_refs and NOT_APPLICABLE with nonempty profile_refs because that interface has no later pairing predicate.",
+    "later_predicates": "Direct presence/pairing or mode relations with a named later failure are excluded from IMPLICIT_ABSENCE_FORBIDDEN and owned only by that later failure: EPOCH_MISMATCH, PROVISIONAL_ROUTE_REQUIRED, POLICY_MEMORY_NOT_APPLICABLE, FAULT_EXTENSION_UNAVAILABLE, INFORMATION_VIEW_DECLARATION_INVALID, LEDGER_LINK_INVALID, and ARTIFACT_COMPLETENESS_INVALID."
+  },
+  "derived_hash_failure_ownership": {
+    "ExecutionBinding.execution_semantics_hash": "EXECUTION_SEMANTICS_PROJECTION_FAILURE exclusively; generic HASH_MISMATCH at validate_execution_binding checks only envelope.object_content_hash.",
+    "other_derived_sibling_hashes": "HASH_MISMATCH after their earlier structural predicates."
+  },
+  "state_projection_contamination_ownership": {
+    "reserved_direct_keys": [
+      "policy_memory",
+      "policy_memory_payload",
+      "causal_contribution",
+      "settlement_share",
+      "settlement_allocation"
+    ],
+    "PHYSICAL_POLICY_MEMORY_CONFLATION": "Exclusively owns presence of a reserved direct key in SystemState.physical_state_payload.",
+    "state_projection_algorithm": [
+      "Begin with the supplied state payload.",
+      "For SystemState.physical_state_payload only, remove exactly the five frozen reserved contamination keys for the purpose of state-projection validation.",
+      "Validate the remaining payload against the exact frozen coordinate-only shape: a JSON object whose sole top-level key is coordinates.",
+      "A non-reserved extra top-level key activates STATE_PROJECTION_FAILURE.",
+      "A reserved contamination key is owned by PHYSICAL_POLICY_MEMORY_CONFLATION and does not, merely by its presence, activate STATE_PROJECTION_FAILURE.",
+      "An empty coordinates array is structurally valid but activates MISSING_COORDINATE when a required coordinate is absent.",
+      "Duplicate, noncanonical, malformed, or otherwise invalid coordinate content follows its existing frozen predicate ownership and precedence."
+    ],
+    "STATE_PROJECTION_FAILURE": "Checks the exact coordinate-only payload shape after removing exactly the five reserved direct keys from SystemState.physical_state_payload for this predicate check only; it checks represented and other state payloads without removal. Reserved-key removal never changes stored bytes. Any remaining non-reserved extra top-level key activates this failure."
+  },
+  "settlement_link_rule": "Every directly supplied quote/receipt/group/child/share/residual/closure ObjectRef link must exactly equal the paired record's envelope ObjectRef in object_id, object_version, and object_content_hash. No opaque-reference meaning is inferred."
 }
