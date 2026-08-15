@@ -1,7 +1,7 @@
 # Unified Python Research Framework I-3 Authority Amendment
 
-Version: **1.0.0**
-Status: **PROSPECTIVE AUTHORITY — COMPLETE, CORRECTED, UNIMPLEMENTED**
+Version: **1.0.1**
+Status: **PROSPECTIVE AUTHORITY — COMPLETE, PATH-OWNERSHIP CORRECTED, UNIMPLEMENTED**
 
 This amendment is the normative human rendering of the prospective Framework I-3 authority. It is effective only together with the two strict JSON contracts below. Any disagreement among the three sources is an integrity failure and fails closed.
 
@@ -9,12 +9,18 @@ This amendment is the normative human rendering of the prospective Framework I-3
 
 | Source | Raw bytes | Raw SHA-256 | Canonical bytes | Canonical SHA-256 |
 |---|---:|---|---:|---|
-| `unified_python_research_framework_i3_contract.json` | 296905 | `505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` | 235939 | `3a56b15447ccedd39eb473f8e7838fbba6cbbb0f4d85a60c9b68d26ca5aa8f22` |
+| `unified_python_research_framework_i3_contract.json` | 304331 | `817513d43726cbb23a4f61a711700248724aa491dad654ad0c2c6ce703dc8c16` | 241965 | `a295ad157ec471776b0c0cf9dca3b1a2d2512ba2bb1cbbcb243e548feec770e4` |
 | `unified_python_research_framework_i3_validation_contract.json` | 49240767 | `0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` | 24110738 | `88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec` |
 
 Both JSON documents are UTF-8 without BOM, reject duplicate keys, non-finite numbers, comments, and trailing data, and end in exactly one LF. Canonical JSON recursively sorts object keys by Unicode code point, preserves array order, uses compact UTF-8 separators with `ensure_ascii=false` and `allow_nan=false`, and ends in exactly one LF. Neither JSON embeds its own whole-file hash.
 
 The base repository coordinate is branch `framework-v0.1` at `85cc43b4fafe298245ceb5baf48b1731de47df44`. Accepted I-1/I-2 code and scientific authority are unchanged. This amendment supersedes only provisional or contradictory I-3 types, fields, callables, failures, projections, exports, imports, prospective paths, validation mechanics, and stage assignments.
+
+### 1.1 Historical v1.0.0 authority evidence
+
+Version 1.0.0 remains immutable historical prospective evidence. Its amendment raw SHA-256 was `a392874c473219df9a24d044dee7444327f347924438cd8a86627f69f79d3be2`; its mechanical contract raw/canonical SHA-256 values were `505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` / `3a56b15447ccedd39eb473f8e7838fbba6cbbb0f4d85a60c9b68d26ca5aa8f22`; specification v0.1.9 raw SHA-256 was `3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4`; and plan v0.2.9 raw SHA-256 was `cfa86156319fc145091e604ed25e60557535e51ca1fc65a7f02fc40462f9f25d`. The validation contract remains v1.0.0 at the unchanged raw/canonical hashes in the current table. These values are historical evidence, not current amendment or mechanical-contract locks.
+
+Version 1.0.1 begins from branch `framework-v0.1` at `d6f211e6faa98b0a4f9b58241d927b812b7a8b3c`. It corrects only the omission of a complete mechanical implementation-path/substage ownership bijection. It changes no public type or callable; field, enum, tagged union, signature, projection, or hash domain; failure code, ordinal, predicate, precedence, envelope, or failure ID; vector, corpus count, corpus bytes, or corpus hash; import graph or export inventory; accepted I-1/I-2 path, byte, or semantic; or scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission.
 
 ## 2. Authorization and stage ownership
 
@@ -29,7 +35,20 @@ This document authorizes declaration design only. It does not authorize implemen
 | `I-7` | dynamic coordination, topology evolution, admission, queues, delays, in-transit items, rerouting, and delayed effects |
 | `I-8` | artifact finalization, publication, recovery, correction, and post-publication rules |
 
-The implementation review decomposition remains I-3A state/conservation/distortion; I-3B actions/network/commitments/observation/scheduling; I-3C policy/causal/settlement/ledger; I-3D faults/experiment/artifacts; and I-3E exports, complete fixture, projections, imports, and full T0 validation. All authority must be accepted before I-3A begins.
+The implementation review decomposition is now mechanically complete: I-3A owns four modules plus one test path; I-3B owns five modules plus one test path; I-3C owns four modules plus one test path; I-3D owns three modules plus one test path; and I-3E owns one root module, one fixture, and one integration-test path. The exact counts are respectively 5, 6, 5, 4, and 3. All authority must be accepted before I-3A begins. After a substage path is accepted, no later substage may modify it without a separate prospective correction.
+
+`src/ebu_framework/errors.py` is owned exclusively by I-3A under all of the following rules:
+
+- I-3A appends the complete already-frozen 35-code I-3 failure suffix once.
+- Every accepted I-1/I-2 code, ordinal, string, compatibility rule, caller behavior, and byte outside that append-only suffix remains unchanged.
+- All 35 codes are installed together; the suffix is not divided or repeatedly extended by later substages.
+- Codes associated with I-3B–I-3D are inert identifiers until their owning modules and validators are implemented.
+- Installing a code does not implement or authorize its associated behavior.
+- I-3B, I-3C, and I-3D consume the existing suffix and do not modify `errors.py`.
+- I-3E verifies the suffix and preservation evidence but does not modify `errors.py`.
+- `errors.py` remains standard-library-only and retains its frozen import restrictions.
+
+I-3E owns installation and audit of the exact already-frozen 92-name root suffix, the complete already-frozen 544-vector fixture, complete projection integration, import audit, and full T0 validation. I-3E verifies but does not reopen accepted I-3A–I-3D implementations.
 
 ## 3. Closed counts and architecture
 
@@ -530,33 +549,33 @@ The exact root callable suffix is: `validate_state_record`, `validate_projection
 
 The prospective 23-path manifest is:
 
-| State | Path | Narrow purpose |
-|---|---|---|
-| `MODIFIED` | `src/ebu_framework/__init__.py` | append exact I-3 root suffix after frozen 127-entry prefix |
-| `MODIFIED` | `src/ebu_framework/errors.py` | append exact 35-code I-3 failure suffix only |
-| `NEW` | `src/ebu_framework/state.py` | I-3A declarations and validators |
-| `NEW` | `src/ebu_framework/conservation.py` | I-3A optional conservation declarations and validators |
-| `NEW` | `src/ebu_framework/distortion.py` | I-3A distortion declaration only |
-| `NEW` | `src/ebu_framework/actions.py` | I-3B action declarations |
-| `NEW` | `src/ebu_framework/network.py` | I-3B static network and provisional-route declarations |
-| `NEW` | `src/ebu_framework/commitments.py` | I-3B commitment, reservation, and capacity declarations |
-| `NEW` | `src/ebu_framework/observation.py` | I-3B measurement declarations |
-| `NEW` | `src/ebu_framework/scheduling.py` | I-3B schedule declarations |
-| `NEW` | `src/ebu_framework/policy.py` | I-3C information and policy-memory declarations |
-| `NEW` | `src/ebu_framework/causal.py` | I-3C causal-status and remainder declarations |
-| `NEW` | `src/ebu_framework/settlement.py` | I-3C quote, receipt, share, residual, and closure declarations |
-| `NEW` | `src/ebu_framework/ledger.py` | I-3C ledger declarations; no append behavior |
-| `NEW` | `src/ebu_framework/faults.py` | I-3D base fault declarations and local boundary validator |
-| `NEW` | `src/ebu_framework/experiment.py` | I-3D configuration and binding declaration shapes |
-| `NEW` | `src/ebu_framework/artifacts.py` | I-3D generic artifact and manifest declaration shapes |
-| `NEW` | `tests/framework/fixtures/i3_validation_v1.json` | exact externally reconstructed validation corpus |
-| `NEW` | `tests/framework/test_i3a_declarations.py` | I-3A T0 validation |
-| `NEW` | `tests/framework/test_i3b_declarations.py` | I-3B T0 validation |
-| `NEW` | `tests/framework/test_i3c_declarations.py` | I-3C T0 validation |
-| `NEW` | `tests/framework/test_i3d_declarations.py` | I-3D T0 validation |
-| `NEW` | `tests/framework/test_i3_integration.py` | I-3E exports, imports, projections, failure precedence, collision freedom, and frozen-I2 audit |
+| State | Path | Narrow purpose | Exclusive owning substage |
+|---|---|---|---|
+| `MODIFIED` | `src/ebu_framework/__init__.py` | append exact I-3 root suffix after frozen 127-entry prefix | `I-3E` |
+| `MODIFIED` | `src/ebu_framework/errors.py` | append exact 35-code I-3 failure suffix only | `I-3A` |
+| `NEW` | `src/ebu_framework/state.py` | I-3A declarations and validators | `I-3A` |
+| `NEW` | `src/ebu_framework/conservation.py` | I-3A optional conservation declarations and validators | `I-3A` |
+| `NEW` | `src/ebu_framework/distortion.py` | I-3A distortion declaration only | `I-3A` |
+| `NEW` | `src/ebu_framework/actions.py` | I-3B action declarations | `I-3B` |
+| `NEW` | `src/ebu_framework/network.py` | I-3B static network and provisional-route declarations | `I-3B` |
+| `NEW` | `src/ebu_framework/commitments.py` | I-3B commitment, reservation, and capacity declarations | `I-3B` |
+| `NEW` | `src/ebu_framework/observation.py` | I-3B measurement declarations | `I-3B` |
+| `NEW` | `src/ebu_framework/scheduling.py` | I-3B schedule declarations | `I-3B` |
+| `NEW` | `src/ebu_framework/policy.py` | I-3C information and policy-memory declarations | `I-3C` |
+| `NEW` | `src/ebu_framework/causal.py` | I-3C causal-status and remainder declarations | `I-3C` |
+| `NEW` | `src/ebu_framework/settlement.py` | I-3C quote, receipt, share, residual, and closure declarations | `I-3C` |
+| `NEW` | `src/ebu_framework/ledger.py` | I-3C ledger declarations; no append behavior | `I-3C` |
+| `NEW` | `src/ebu_framework/faults.py` | I-3D base fault declarations and local boundary validator | `I-3D` |
+| `NEW` | `src/ebu_framework/experiment.py` | I-3D configuration and binding declaration shapes | `I-3D` |
+| `NEW` | `src/ebu_framework/artifacts.py` | I-3D generic artifact and manifest declaration shapes | `I-3D` |
+| `NEW` | `tests/framework/fixtures/i3_validation_v1.json` | exact externally reconstructed validation corpus | `I-3E` |
+| `NEW` | `tests/framework/test_i3a_declarations.py` | I-3A T0 validation | `I-3A` |
+| `NEW` | `tests/framework/test_i3b_declarations.py` | I-3B T0 validation | `I-3B` |
+| `NEW` | `tests/framework/test_i3c_declarations.py` | I-3C T0 validation | `I-3C` |
+| `NEW` | `tests/framework/test_i3d_declarations.py` | I-3D T0 validation | `I-3D` |
+| `NEW` | `tests/framework/test_i3_integration.py` | I-3E exports, imports, projections, failure precedence, collision freedom, and frozen-I2 audit | `I-3E` |
 
-No listed implementation path is created or modified by this amendment. The fixture path remains absent until separately authorized I-3 implementation.
+These 23 rows are a bijection: every frozen path appears once, exactly five distinct substages appear, no path is missing or duplicated, no outside path is admitted, and each substage's declared module/fixture/test inventory equals its rows. No listed implementation path is created or modified by this amendment. The fixture path remains absent until separately authorized I-3 implementation.
 
 ## 12. Fully materialized validation authority
 
@@ -600,4 +619,4 @@ Reduced represented-stock and open control-volume models remain first-class. Iso
 
 ## 14. Completion boundary
 
-This prospective correction ends with the five authority files unstaged and uncommitted. A fresh independent audit remains required. I-3A has not begun.
+This prospective path-ownership correction ends with exactly the four authorized authority files unstaged and uncommitted; the validation contract remains byte-identical. A fresh independent audit remains required. Independent audit/commit and I-3A implementation have not begun.

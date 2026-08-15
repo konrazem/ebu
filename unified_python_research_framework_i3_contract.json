@@ -1,10 +1,34 @@
 {
   "contract_id": "ebu-framework-i3-authority/1",
-  "contract_version": "1.0.0",
-  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_UNIMPLEMENTED",
+  "contract_version": "1.0.1",
+  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_PATH_OWNERSHIP_CORRECTED_UNIMPLEMENTED",
+  "revision_history": [
+    {
+      "version": "1.0.0",
+      "status": "HISTORICAL_PROSPECTIVE_AUTHORITY",
+      "source_hashes": {
+        "human_rendering_raw_sha256": "a392874c473219df9a24d044dee7444327f347924438cd8a86627f69f79d3be2",
+        "mechanical_contract_raw_sha256": "505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb",
+        "mechanical_contract_canonical_sha256": "3a56b15447ccedd39eb473f8e7838fbba6cbbb0f4d85a60c9b68d26ca5aa8f22",
+        "validation_contract_raw_sha256": "0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0",
+        "validation_contract_canonical_sha256": "88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec",
+        "specification_version": "0.1.9",
+        "specification_raw_sha256": "3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4",
+        "plan_version": "0.2.9",
+        "plan_raw_sha256": "cfa86156319fc145091e604ed25e60557535e51ca1fc65a7f02fc40462f9f25d"
+      },
+      "note": "Preserved historical evidence. Version 1.0.0 is superseded only where it failed to assign every frozen implementation path to exactly one I-3 implementation substage."
+    },
+    {
+      "version": "1.0.1",
+      "status": "CURRENT_PROSPECTIVE_AUTHORITY",
+      "change": "Adds the complete 23-path to five-substage ownership bijection and changes no other authority."
+    }
+  ],
   "authority": {
     "branch": "framework-v0.1",
     "base_head": "85cc43b4fafe298245ceb5baf48b1731de47df44",
+    "correction_base_head": "d6f211e6faa98b0a4f9b58241d927b812b7a8b3c",
     "prior_specification": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
       "version": "0.1.8",
@@ -20,6 +44,7 @@
     "validation_contract": "unified_python_research_framework_i3_validation_contract.json",
     "precedence": {
       "supersedes_only": [
+        "the v1.0.0 omission of a complete mechanical implementation-path/substage ownership bijection",
         "provisional or contradictory I-3 stage ownership",
         "provisional I-3 public types, callables, failures, projections, exports, imports, paths, fixtures, and validation mechanics",
         "the previously absent optional conservation-profile declaration authority"
@@ -33,6 +58,18 @@
         "authorization, execution, publication, or scientific-use permission"
       ],
       "conflict_rule": "FAIL_CLOSED"
+    },
+    "correction_scope": {
+      "changes_only": "implementation-path/substage ownership",
+      "does_not_change": [
+        "any public type or callable",
+        "any field, enum, tagged union, signature, projection, or hash domain",
+        "any failure code, ordinal, predicate, precedence, envelope, or failure ID",
+        "any vector, corpus count, corpus bytes, or corpus hash",
+        "the import graph or export inventory",
+        "any scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission",
+        "accepted I-1 or I-2 paths, implementation bytes, or semantics"
+      ]
     }
   },
   "json_document_profile": {
@@ -75,9 +112,11 @@
     [
       "I-3A",
       [
+        "one-time complete I-3 failure-suffix installation in errors",
         "state",
         "conservation",
-        "distortion"
+        "distortion",
+        "I-3A declaration test"
       ]
     ],
     [
@@ -87,7 +126,8 @@
         "network",
         "commitments",
         "observation",
-        "scheduling"
+        "scheduling",
+        "I-3B declaration test"
       ]
     ],
     [
@@ -96,7 +136,8 @@
         "policy",
         "causal",
         "settlement",
-        "ledger"
+        "ledger",
+        "I-3C declaration test"
       ]
     ],
     [
@@ -104,7 +145,8 @@
       [
         "faults",
         "experiment",
-        "artifacts"
+        "artifacts",
+        "I-3D declaration test"
       ]
     ],
     [
@@ -114,11 +156,109 @@
         "complete validation fixture",
         "projection integration",
         "import audit",
-        "full T0 validation"
+        "full T0 validation in the integration test"
       ]
     ]
   ],
-  "substage_rule": "All I-3 authority must be accepted before I-3A begins. Substages limit implementation and review size and authorize neither partial scientific use nor later-stage behavior.",
+  "substage_rule": "All I-3 authority must be accepted before I-3A begins. Substages limit implementation and review size and authorize neither partial scientific use nor later-stage behavior. After a substage path is accepted, a later substage cannot modify it without a separate prospective correction.",
+  "substage_path_inventories": [
+    {
+      "substage": "I-3A",
+      "module_paths": [
+        "src/ebu_framework/errors.py",
+        "src/ebu_framework/state.py",
+        "src/ebu_framework/conservation.py",
+        "src/ebu_framework/distortion.py"
+      ],
+      "fixture_paths": [],
+      "test_paths": [
+        "tests/framework/test_i3a_declarations.py"
+      ],
+      "path_count": 5
+    },
+    {
+      "substage": "I-3B",
+      "module_paths": [
+        "src/ebu_framework/actions.py",
+        "src/ebu_framework/network.py",
+        "src/ebu_framework/commitments.py",
+        "src/ebu_framework/observation.py",
+        "src/ebu_framework/scheduling.py"
+      ],
+      "fixture_paths": [],
+      "test_paths": [
+        "tests/framework/test_i3b_declarations.py"
+      ],
+      "path_count": 6
+    },
+    {
+      "substage": "I-3C",
+      "module_paths": [
+        "src/ebu_framework/policy.py",
+        "src/ebu_framework/causal.py",
+        "src/ebu_framework/settlement.py",
+        "src/ebu_framework/ledger.py"
+      ],
+      "fixture_paths": [],
+      "test_paths": [
+        "tests/framework/test_i3c_declarations.py"
+      ],
+      "path_count": 5
+    },
+    {
+      "substage": "I-3D",
+      "module_paths": [
+        "src/ebu_framework/faults.py",
+        "src/ebu_framework/experiment.py",
+        "src/ebu_framework/artifacts.py"
+      ],
+      "fixture_paths": [],
+      "test_paths": [
+        "tests/framework/test_i3d_declarations.py"
+      ],
+      "path_count": 4
+    },
+    {
+      "substage": "I-3E",
+      "module_paths": [
+        "src/ebu_framework/__init__.py"
+      ],
+      "fixture_paths": [
+        "tests/framework/fixtures/i3_validation_v1.json"
+      ],
+      "test_paths": [
+        "tests/framework/test_i3_integration.py"
+      ],
+      "path_count": 3
+    }
+  ],
+  "path_specific_ownership": {
+    "src/ebu_framework/errors.py": {
+      "substage": "I-3A",
+      "rules": [
+        "I-3A appends the complete already-frozen 35-code I-3 failure suffix once.",
+        "Every accepted I-1/I-2 code, ordinal, string, compatibility rule, caller behavior, and byte outside that append-only suffix remains unchanged.",
+        "All 35 codes are installed together; the suffix is not divided or repeatedly extended by later substages.",
+        "Codes associated with I-3B–I-3D are inert identifiers until their owning modules and validators are implemented.",
+        "Installing a code does not implement or authorize its associated behavior.",
+        "I-3B, I-3C, and I-3D consume the existing suffix and do not modify `errors.py`.",
+        "I-3E verifies the suffix and preservation evidence but does not modify `errors.py`.",
+        "`errors.py` remains standard-library-only and retains its frozen import restrictions."
+      ]
+    },
+    "src/ebu_framework/__init__.py": {
+      "substage": "I-3E",
+      "rule": "I-3E installs and audits the exact already-frozen 92-name root suffix after the accepted 127-name prefix."
+    },
+    "tests/framework/fixtures/i3_validation_v1.json": {
+      "substage": "I-3E",
+      "rule": "I-3E installs and audits the complete already-frozen 544-vector fixture with unchanged corpus bytes and hash."
+    },
+    "tests/framework/test_i3_integration.py": {
+      "substage": "I-3E",
+      "rule": "I-3E owns complete projection integration, import audit, and full T0 validation; it verifies but does not reopen accepted I-3A–I-3D implementations."
+    }
+  },
   "runtime_conventions": {
     "frozen_dataclass": "@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False); fields are keyword-only; the listed field order is constructor and projection-authority order",
     "strenum": "class NAME(StrEnum); exact listed declaration order and values; no ordering relation",
@@ -4597,121 +4737,172 @@
     ]
   },
   "import_rule": "The listed package-module edges are exact and exhaustive for I-3 modules; stdlib dataclasses, enum, and typing imports are omitted. The graph is acyclic. conservation imports neither state nor experiment; experiment may embed ConservationProfileSelection and conservation refers to physical schemas only by ObjectRef.",
+  "future_implementation_manifest_row_schema": [
+    "state",
+    "path",
+    "narrow_future_purpose",
+    "owning_substage"
+  ],
+  "implementation_path_ownership_rule": {
+    "ownership_table": "future_implementation_manifest",
+    "ownership_row_count": 23,
+    "distinct_substage_count": 5,
+    "substage_order": [
+      "I-3A",
+      "I-3B",
+      "I-3C",
+      "I-3D",
+      "I-3E"
+    ],
+    "substage_path_counts": {
+      "I-3A": 5,
+      "I-3B": 6,
+      "I-3C": 5,
+      "I-3D": 4,
+      "I-3E": 3
+    },
+    "bijection": "Every frozen future implementation path appears in exactly one ownership row and is owned by exactly one listed substage; no path is missing, duplicated, or outside the frozen 23-path manifest.",
+    "inventory_agreement": "For each substage, concatenating module_paths, fixture_paths, and test_paths in substage_path_inventories yields exactly the paths assigned to that substage by future_implementation_manifest.",
+    "accepted_path_rule": "After a substage path is accepted, no later substage may modify that path without a separate prospective correction."
+  },
   "future_implementation_manifest": [
     [
       "MODIFIED",
       "src/ebu_framework/__init__.py",
-      "append exact I-3 root suffix after frozen 127-entry prefix"
+      "append exact I-3 root suffix after frozen 127-entry prefix",
+      "I-3E"
     ],
     [
       "MODIFIED",
       "src/ebu_framework/errors.py",
-      "append exact 35-code I-3 failure suffix only"
+      "append exact 35-code I-3 failure suffix only",
+      "I-3A"
     ],
     [
       "NEW",
       "src/ebu_framework/state.py",
-      "I-3A declarations and validators"
+      "I-3A declarations and validators",
+      "I-3A"
     ],
     [
       "NEW",
       "src/ebu_framework/conservation.py",
-      "I-3A optional conservation declarations and validators"
+      "I-3A optional conservation declarations and validators",
+      "I-3A"
     ],
     [
       "NEW",
       "src/ebu_framework/distortion.py",
-      "I-3A distortion declaration only"
+      "I-3A distortion declaration only",
+      "I-3A"
     ],
     [
       "NEW",
       "src/ebu_framework/actions.py",
-      "I-3B action declarations"
+      "I-3B action declarations",
+      "I-3B"
     ],
     [
       "NEW",
       "src/ebu_framework/network.py",
-      "I-3B static network and provisional-route declarations"
+      "I-3B static network and provisional-route declarations",
+      "I-3B"
     ],
     [
       "NEW",
       "src/ebu_framework/commitments.py",
-      "I-3B commitment, reservation, and capacity declarations"
+      "I-3B commitment, reservation, and capacity declarations",
+      "I-3B"
     ],
     [
       "NEW",
       "src/ebu_framework/observation.py",
-      "I-3B measurement declarations"
+      "I-3B measurement declarations",
+      "I-3B"
     ],
     [
       "NEW",
       "src/ebu_framework/scheduling.py",
-      "I-3B schedule declarations"
+      "I-3B schedule declarations",
+      "I-3B"
     ],
     [
       "NEW",
       "src/ebu_framework/policy.py",
-      "I-3C information and policy-memory declarations"
+      "I-3C information and policy-memory declarations",
+      "I-3C"
     ],
     [
       "NEW",
       "src/ebu_framework/causal.py",
-      "I-3C causal-status and remainder declarations"
+      "I-3C causal-status and remainder declarations",
+      "I-3C"
     ],
     [
       "NEW",
       "src/ebu_framework/settlement.py",
-      "I-3C quote, receipt, share, residual, and closure declarations"
+      "I-3C quote, receipt, share, residual, and closure declarations",
+      "I-3C"
     ],
     [
       "NEW",
       "src/ebu_framework/ledger.py",
-      "I-3C ledger declarations; no append behavior"
+      "I-3C ledger declarations; no append behavior",
+      "I-3C"
     ],
     [
       "NEW",
       "src/ebu_framework/faults.py",
-      "I-3D base fault declarations and local boundary validator"
+      "I-3D base fault declarations and local boundary validator",
+      "I-3D"
     ],
     [
       "NEW",
       "src/ebu_framework/experiment.py",
-      "I-3D configuration and binding declaration shapes"
+      "I-3D configuration and binding declaration shapes",
+      "I-3D"
     ],
     [
       "NEW",
       "src/ebu_framework/artifacts.py",
-      "I-3D generic artifact and manifest declaration shapes"
+      "I-3D generic artifact and manifest declaration shapes",
+      "I-3D"
     ],
     [
       "NEW",
       "tests/framework/fixtures/i3_validation_v1.json",
-      "exact externally reconstructed validation corpus"
+      "exact externally reconstructed validation corpus",
+      "I-3E"
     ],
     [
       "NEW",
       "tests/framework/test_i3a_declarations.py",
-      "I-3A T0 validation"
+      "I-3A T0 validation",
+      "I-3A"
     ],
     [
       "NEW",
       "tests/framework/test_i3b_declarations.py",
-      "I-3B T0 validation"
+      "I-3B T0 validation",
+      "I-3B"
     ],
     [
       "NEW",
       "tests/framework/test_i3c_declarations.py",
-      "I-3C T0 validation"
+      "I-3C T0 validation",
+      "I-3C"
     ],
     [
       "NEW",
       "tests/framework/test_i3d_declarations.py",
-      "I-3D T0 validation"
+      "I-3D T0 validation",
+      "I-3D"
     ],
     [
       "NEW",
       "tests/framework/test_i3_integration.py",
-      "I-3E exports, imports, projections, failure precedence, collision freedom, and frozen-I2 audit"
+      "I-3E exports, imports, projections, failure precedence, collision freedom, and frozen-I2 audit",
+      "I-3E"
     ]
   ],
   "frozen_i1_i2_evidence": {

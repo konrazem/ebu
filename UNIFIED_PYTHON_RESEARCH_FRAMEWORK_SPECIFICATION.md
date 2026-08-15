@@ -1,9 +1,9 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.9
-**Status:** Prospective complete I-3 mechanical authority; accepted and implemented I-2 remains unchanged; I-3 is specification-ready and unimplemented; no framework implementation, scientific execution, Gate, publication, or release authority
+**Version:** 0.1.10
+**Status:** Prospective complete I-3 mechanical authority with corrected implementation-path/substage ownership; accepted and implemented I-2 remains unchanged; I-3 is specification-ready and unimplemented; no framework implementation, scientific execution, Gate, publication, or release authority
 **Date:** 2026-08-12
-**Authority reconciliation date:** 2026-08-14
+**Authority reconciliation date:** 2026-08-15
 **Language:** English
 **Purpose:** Specify one versioned, typed, reproducible Python research
 framework for Parts IV–IX without implementing it or authorizing scientific
@@ -76,7 +76,7 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.9 prospective authority register
+#### 2.1.2 Current v0.1.10 prospective authority register
 
 Revision v0.1.2 prospectively replaced only the active books-structure
 authority pointer. Revision v0.1.3 preserved those imported scientific
@@ -90,22 +90,23 @@ v0.1.7 preserves those authorities and corrects only the exact-conversion
 source-unit authority defect recorded in §20.8. Revision v0.1.8 replaced the
 active books-structure pointer, registers the conservation and boundary-
 accounting foundation as current planning authority, and records accepted I-2
-as unchanged implementation history. Revision v0.1.9 adopts the complete
+as unchanged implementation history. Revision v0.1.9 adopted the complete
 prospective I-3 Markdown/mechanical/validation authority in §22, without
-implementing it or changing I-2. The v0.1.2
+implementing it or changing I-2. Revision v0.1.10 corrects only the complete
+implementation-path/substage ownership bijection. The v0.1.2
 reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.9 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.10 |
 |---|---|---|---|
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6, literature/originality, and conservation-accounting planning | `0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.6 |
 | `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | v0.1 conceptual and algebraic planning foundation | `b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a` | Three account levels, typed boundary-accounting interpretation, historical-model compatibility, and prospective I-3/I-5 planning limits in §2.1.6 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged Part VIII dynamic state, seven-layer separation, deterministic event order, network evolution, objectives, uncertainty, and framework requirements |
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` | v1.0.0 normative human I-3 rendering | Recorded by the active plan after final specification hashing | Narrow prospective I-3 authority and later-stage ownership reconciliation |
-| `unified_python_research_framework_i3_contract.json` | v1.0.0 mechanical I-3 contract | `505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` | Exact I-3 types, fields, validators, failures, projections, exports, imports, paths, stages, and nonclaims |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` | v1.0.1 normative human I-3 rendering | `b5e54fad02a232acc89b4d69613f93026dbd0a10d400b0751072475e32173fee` | Narrow prospective I-3 authority, later-stage ownership reconciliation, and exact implementation-path/substage ownership |
+| `unified_python_research_framework_i3_contract.json` | v1.0.1 mechanical I-3 contract | `817513d43726cbb23a4f61a711700248724aa491dad654ad0c2c6ce703dc8c16` | Exact I-3 types, fields, validators, failures, projections, exports, imports, 23-path ownership bijection, stages, and nonclaims |
 | `unified_python_research_framework_i3_validation_contract.json` | v1.0.0 validation contract | `0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` | Exact prospective validation-corpus generation, ordering, effective inputs, coverage, collision rule, count, bytes, and digest |
 
 The books-structure hash in this table is the only active books-structure
@@ -3420,7 +3421,7 @@ work. Actual implementation and integration status comes from reviewed Git
 history and retained stage evidence, not from this specification. I-2 was
 subsequently accepted exactly on feature commit
 `351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated without amendment
-by merge commit `ede89d8af6b89da491e03c352efcf1868a913f6f`. Revision v0.1.9
+by merge commit `ede89d8af6b89da491e03c352efcf1868a913f6f`. Revision v0.1.10
 does not reopen that accepted implementation. It grants only the prospective
 I-3 authority in §22 and grants no implementation, I-5, framework-alpha,
 scientific-execution, Gate, publication, or release authority.
@@ -3544,7 +3545,7 @@ scientific claim. Its exact whole-file SHA-256 is recorded only in the
 prospectively reconciled implementation plan; this file does not contain its
 own current hash.
 
-### 20.10 Revision v0.1.9 — current prospective I-3 authority closure
+### 20.10 Revision v0.1.9 — historical prospective I-3 authority closure
 
 Revision v0.1.9 adopts
 `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` v1.0.0,
@@ -3553,12 +3554,26 @@ Revision v0.1.9 adopts
 narrow complete prospective authority for I-3. Section 22 records their
 precedence and closed counts.
 
-The revision resolves the old I-3/I-4/I-5/I-7/I-8 ownership contradictions,
+The revision resolved the old I-3/I-4/I-5/I-7/I-8 ownership contradictions,
 adds optional conservation declaration authority, preserves the accepted I-2
 API/helper name and bytes, and authorizes no implementation or scientific
 execution. The exact v0.1.8 whole-file hash remains historical in the active
-plan. This file does not contain its own v0.1.9 whole-file hash; the plan
-records that hash after these bytes are final.
+plan. Its exact whole-file SHA-256 is
+`3eb023e4a729fe5205f4edf476d1347cc2584a99467648ce552c98954bd976e4`.
+
+### 20.11 Revision v0.1.10 — current prospective I-3 path-ownership correction
+
+Revision v0.1.10 adopts amendment v1.0.1 and mechanical contract v1.0.1 to
+assign every frozen I-3 implementation path to exactly one of I-3A–I-3E. It
+preserves validation contract v1.0.0 byte-identically and changes only
+implementation-path/substage ownership. It changes no public type, callable,
+field, enum, tagged union, signature, projection, hash domain, failure code,
+ordinal, predicate, precedence, envelope, failure ID, vector, corpus count,
+corpus byte, corpus hash, import edge, export, accepted I-1/I-2 path or
+semantic, scientific definition, equation, model, result, protocol, Gate
+state, interpretation, or execution permission. This file does not contain
+its own current v0.1.10 whole-file hash; the plan records that hash after
+these bytes are final.
 
 ## 21. Normative prospective Framework I-2 amendment
 
@@ -3567,7 +3582,7 @@ implemented and accepted at
 `351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated at
 `ede89d8af6b89da491e03c352efcf1868a913f6f`. Its v0.1.7 source locks and
 future-tense implementation instructions are historical acceptance inputs,
-not active current-authority pointers. Revision v0.1.9 changes none of
+not active current-authority pointers. Revision v0.1.10 changes none of
 its inventories, predicates, fixtures, precedence, API, dependencies,
 implementation paths, or hashes. Its separate I-3 authority exists only in
 §22 and supplies no authority for I-5.
@@ -3618,7 +3633,7 @@ build, installation, acceptance mutation, scientific operation, Gate
 operation, commit, push, release, or publication, and I-2 remained
 unimplemented. The later accepted implementation and integration commits
 named above satisfy that historical stage without altering this contract.
-Revision v0.1.9 authorizes no change to the accepted I-2 implementation and
+Revision v0.1.10 authorizes no change to the accepted I-2 implementation and
 no implementation stage. Its prospective I-3 design authority is disjoint
 from this implemented I-2 contract.
 
@@ -5853,11 +5868,11 @@ invocation count as zero.
 
 The complete corrected I-3 authority is the agreement of:
 
-1. `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` v1.0.0;
-2. `unified_python_research_framework_i3_contract.json` v1.0.0 at raw SHA-256 `505fcad67139bcf9c45d38a59c759f06d9e347e995d50c5ea8c3637ebe4cbcbb` and canonical SHA-256 `3a56b15447ccedd39eb473f8e7838fbba6cbbb0f4d85a60c9b68d26ca5aa8f22`; and
+1. `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` v1.0.1 at raw SHA-256 `b5e54fad02a232acc89b4d69613f93026dbd0a10d400b0751072475e32173fee`;
+2. `unified_python_research_framework_i3_contract.json` v1.0.1 at raw SHA-256 `817513d43726cbb23a4f61a711700248724aa491dad654ad0c2c6ce703dc8c16` and canonical SHA-256 `a295ad157ec471776b0c0cf9dca3b1a2d2512ba2bb1cbbcb243e548feec770e4`; and
 3. `unified_python_research_framework_i3_validation_contract.json` v1.0.0 at raw SHA-256 `0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` and canonical SHA-256 `88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec`.
 
-The amendment is the normative human rendering; the first JSON is the mechanical schema and ordering source; the second JSON is the fully materialized validation source. Any mismatch fails closed. They narrowly supersede provisional or contradictory I-3 types, fields, callables, failures, projections, exports, imports, prospective paths, validation mechanics, and stage assignments. They do not change accepted I-1/I-2 authority or imported scientific foundations.
+The amendment is the normative human rendering; the first JSON is the mechanical schema and ordering source; the second JSON is the fully materialized validation source. Any mismatch fails closed. Version 1.0.1 narrowly supersedes v1.0.0 only for implementation-path/substage ownership. The historical v1.0.0/v0.1.9 hashes are preserved in §20.10 and the amendment. This correction changes no public type or callable; field, enum, tagged union, signature, projection, or hash domain; failure code, ordinal, predicate, precedence, envelope, or failure ID; vector, corpus count, corpus bytes, or corpus hash; import graph or export inventory; accepted I-1/I-2 path or semantic; or scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission.
 
 I-3 remains specification-ready and unimplemented. This revision authorizes no I-3A implementation, fixture installation, test execution, registry acceptance, scientific use, state advance, or I-4–I-8 behavior.
 
@@ -5872,10 +5887,26 @@ I-3 remains specification-ready and unimplemented. This revision authorizes no I
 | Accepted root prefix / appended suffix / final root count | 127 / 92 / 219 |
 | I-3 modules / direct acyclic imports | 15 / 91 |
 | Future implementation paths | 23 |
+| Ownership rows / distinct implementation substages | 23 / 5 |
+| Substage path counts I-3A / I-3B / I-3C / I-3D / I-3E | 5 / 6 / 5 / 4 / 3 |
 | Historical / separately deferred types | 25 / 8 |
 | Fully materialized validation vectors | 544 |
 
 The exact 92-name suffix remains 69 retained types followed by 23 validators. The exact type fields, enum members, unions, hash exclusions, projections, module exports, direct imports, deferred names, and 23-path prospective manifest are those in the mechanical contract and its complete amendment rendering. `conservation.py` remains dedicated; reduced and open profiles are first-class; historical models require no migration.
+
+| Substage | Exact module paths | Exact fixture paths | Exact test paths | Count |
+|---|---|---|---|---:|
+| `I-3A` | `src/ebu_framework/errors.py`; `src/ebu_framework/state.py`; `src/ebu_framework/conservation.py`; `src/ebu_framework/distortion.py` | — | `tests/framework/test_i3a_declarations.py` | 5 |
+| `I-3B` | `src/ebu_framework/actions.py`; `src/ebu_framework/network.py`; `src/ebu_framework/commitments.py`; `src/ebu_framework/observation.py`; `src/ebu_framework/scheduling.py` | — | `tests/framework/test_i3b_declarations.py` | 6 |
+| `I-3C` | `src/ebu_framework/policy.py`; `src/ebu_framework/causal.py`; `src/ebu_framework/settlement.py`; `src/ebu_framework/ledger.py` | — | `tests/framework/test_i3c_declarations.py` | 5 |
+| `I-3D` | `src/ebu_framework/faults.py`; `src/ebu_framework/experiment.py`; `src/ebu_framework/artifacts.py` | — | `tests/framework/test_i3d_declarations.py` | 4 |
+| `I-3E` | `src/ebu_framework/__init__.py` | `tests/framework/fixtures/i3_validation_v1.json` | `tests/framework/test_i3_integration.py` | 3 |
+
+The flattened table is a bijection with the exact 23-path manifest: every frozen path appears once, there are exactly five distinct substages, no path is missing or duplicated, no outside path is admitted, and every substage inventory agrees with its ownership rows. After a substage path is accepted, no later substage may modify it without a separate prospective correction.
+
+`errors.py` is owned by I-3A. I-3A appends the complete already-frozen 35-code I-3 suffix exactly once and installs all 35 codes together. Every accepted I-1/I-2 code, ordinal, string, compatibility rule, caller behavior, and byte outside that append-only suffix remains unchanged. I-3B–I-3D consume the inert identifiers already installed and do not modify `errors.py`; installation does not implement or authorize associated behavior. I-3E only verifies the suffix and preservation evidence. `errors.py` remains standard-library-only with its frozen import restrictions.
+
+I-3E owns installation and audit of the exact 92-name root suffix, complete 544-vector fixture, complete projection integration, import audit, and full T0 validation. It does not reopen accepted I-3A–I-3D implementations.
 
 ### 22.3 Exact validator signatures and failure precedence
 
@@ -5944,4 +5975,4 @@ All 67 validator-level `I3_OBJECT_CONTENT_MISMATCH` outcomes carry the earliest 
 
 There is no universal zero-residual rule or hidden tolerance. Exact expected residual may be nonzero. I-3 declares but does not compute conservation residuals, measurements, routes, causal contributions, settlement allocations, traces, or results. Physical state, policy memory, causal attribution, and settlement remain distinct. Residual behavior is I-5, Bridge behavior I-6, Dynamic behavior I-7, and finalization/publication behavior I-8.
 
-The review decomposition remains I-3A state/conservation/distortion; I-3B actions/network/commitments/observation/scheduling; I-3C policy/causal/settlement/ledger; I-3D faults/experiment/artifacts; and I-3E exports, materialized fixture, projections, imports, and full T0 validation. Every §22 authority must be independently accepted before I-3A begins. A fresh independent audit remains required.
+The review decomposition and exclusive path inventories are those in §22.2. Every §22 authority must be independently accepted before I-3A begins. A fresh independent audit remains required; independent audit/commit and I-3A implementation have not begun.
