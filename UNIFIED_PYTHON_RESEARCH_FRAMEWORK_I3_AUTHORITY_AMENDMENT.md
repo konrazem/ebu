@@ -1,7 +1,7 @@
 # Unified Python Research Framework I-3 Authority Amendment
 
-Version: **1.0.3**
-Status: **PROSPECTIVE AUTHORITY — COMPLETE, REGRESSION-COMPATIBILITY CORRECTED; I-3A ACCEPTED; TEST REPAIR UNIMPLEMENTED**
+Version: **1.0.4**
+Status: **PROSPECTIVE AUTHORITY — COMPLETE, EXACT THREE-ASSERTION REPAIR SCOPE CORRECTED; I-3A ACCEPTED; TEST REPAIR UNIMPLEMENTED**
 
 This amendment is the normative human rendering of the prospective Framework I-3 authority. It is effective only together with the two strict JSON contracts below. Any disagreement among the three sources is an integrity failure and fails closed.
 
@@ -9,12 +9,12 @@ This amendment is the normative human rendering of the prospective Framework I-3
 
 | Source | Raw bytes | Raw SHA-256 | Canonical bytes | Canonical SHA-256 |
 |---|---:|---|---:|---|
-| `unified_python_research_framework_i3_contract.json` | 338777 | `685f7445bebffe28c1a9ec6c56475087a60c4e185ab858903eb090fb12e52a63` | 271645 | `3ca35af972191a7233df42901f37bb429af1df46b9e94bc303c8cd1f9d70f4e2` |
+| `unified_python_research_framework_i3_contract.json` | 342494 | `b2401cbfc03c671cab66591c1dcbfa9304690d7a0e018afd6ce232b10cecaee9` | 274965 | `8576b0aeec67eda127d33d9b6022fea619d2dd82c9a092c54208925e7d7de706` |
 | `unified_python_research_framework_i3_validation_contract.json` | 49385775 | `769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc` | 24191377 | `1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598` |
 
 Both JSON documents are UTF-8 without BOM, reject duplicate keys, non-finite numbers, comments, and trailing data, and end in exactly one LF. Canonical JSON recursively sorts object keys by Unicode code point, preserves array order, uses compact UTF-8 separators with `ensure_ascii=false` and `allow_nan=false`, and ends in exactly one LF. Neither JSON embeds its own whole-file hash.
 
-The original base repository coordinate remains branch `framework-v0.1` at `85cc43b4fafe298245ceb5baf48b1731de47df44`. This v1.0.3 regression-compatibility correction begins on branch `framework/i-3-regression-compatibility-authority` at `c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`. Accepted I-3A is integrated at that exact commit. This amendment supersedes v1.0.2 only for the historical `FailureCode` prefix rule, the two stale whole-enum assertion scopes, and the dependent preservation exception stated here and in mechanical contract v1.0.3; all other v1.0.2 authority remains in force.
+The original base repository coordinate remains branch `framework-v0.1` at `85cc43b4fafe298245ceb5baf48b1731de47df44`. This v1.0.4 three-assertion repair-scope correction begins on branch `framework/i-3-three-assertion-repair-authority` at `d75540efb8341cd74f4d1f58544a39763da67f6f`. Accepted I-3A is integrated at `c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`. This amendment supersedes v1.0.3 only where its two-site maintenance inventory omitted the adjacent historical prefix-length assertion and did not freeze the exact three expression forms and anti-rebinding constraints stated here and in mechanical contract v1.0.4; all other v1.0.3 authority remains in force.
 
 ### 1.1 Historical v1.0.0 authority evidence
 
@@ -24,11 +24,17 @@ Version 1.0.0 remains immutable historical prospective evidence. Its amendment r
 
 Version 1.0.1 began from branch `framework-v0.1` at `d6f211e6faa98b0a4f9b58241d927b812b7a8b3c` and ended at the v1.0.2 correction base. Its amendment raw SHA-256 was `b5e54fad02a232acc89b4d69613f93026dbd0a10d400b0751072475e32173fee`; mechanical contract raw/canonical SHA-256 values were `817513d43726cbb23a4f61a711700248724aa491dad654ad0c2c6ce703dc8c16` / `a295ad157ec471776b0c0cf9dca3b1a2d2512ba2bb1cbbcb243e548feec770e4`; validation contract raw/canonical SHA-256 values were `0b1d0a2a39e0286ecdf02045838887dd342cd8977062e0e55673ae9437da59b0` / `88283fe2efda6c769688985805d3654d6deb5016195ea119f337b2fd843dd8ec`; specification v0.1.10 raw SHA-256 was `ae37f7e20145420f98858c85d2191ba2b42c8432a134537af3dad92177fb07b8`; and plan v0.2.10 raw SHA-256 was `d4337b7e8fb680db10b9dd714c71705b22acbe5ff128ed4606f4765ce3023e3d`. These are historical evidence only.
 
-### 1.3 Historical v1.0.2 evidence and v1.0.3 correction scope
+### 1.3 Historical v1.0.2 evidence
 
 Version 1.0.2 began at `e7f34a2bdfdecacebde0860623bc98caf2292c80`. Its amendment raw SHA-256 was `997c9e962e6eb1dd3271de42e82fd2753547f76072ef8d1122e72787e4afac23`; mechanical contract raw/canonical SHA-256 values were `bcc7bc0cd1d09d6c7f64119b58722064f64c1590186c65aeaf8b99fc32a90995` / `33ba6d0205e424f49b1e65cbe91aae2e972bd1a96448bb74248d3979dd99ad2f`; validation contract v1.0.1 raw/canonical SHA-256 values were `769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc` / `1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598`; specification v0.1.11 raw SHA-256 was `335e3ebf21196541ebebd9381e9c6c7d1ea7949cc9cbdbc7d61d2225e69b2950`; and plan v0.2.11 raw SHA-256 was `a0d4a63c12585ac8349222906d256e0ae894863c81e0a56c97c311b8b5fd3112`. These values are historical evidence only.
 
 Version 1.0.2 corrected order/duplicate witnesses, two positive baselines, conservation isolation baselines, exact conservation and paired-quantity semantics, predicate ownership needed for isolated satisfiability, the rejected draft's contradictory state-projection extra-key statement and four state inputs, and four stale settlement child-receipt content hashes. Version 1.0.3 preserves all of that authority and changes only the historical whole-enum assumption: the accepted I-1/I-2 inventory is an immutable ordered 53-code prefix, accepted I-3A owns the exact appended 35-code suffix, and two stale I-2 assertions may later be corrected under a separate one-time test-only authorization. It preserves the 69 types, 23 validators, 35 I-3 failures and their order, current 88-code inventory, 92-name export suffix, 15-module/91-edge import graph, 133 collection contracts, 43 applicability rows, two sum types, 23-path ownership bijection, all 544 validation vectors, scientific models and equations, Gate rules, and execution permissions. It authorizes no implementation or execution.
+
+### 1.4 Historical v1.0.3 evidence and v1.0.4 correction scope
+
+Version 1.0.3 began on branch `framework/i-3-regression-compatibility-authority` at `c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a` and was committed at `d75540efb8341cd74f4d1f58544a39763da67f6f`. Its amendment raw SHA-256 was `b6ccc80262463a163601eecca7d8b6aedaf4a9708ea7b070c3c8c0d4ada7194e`; mechanical contract raw/canonical SHA-256 values were `685f7445bebffe28c1a9ec6c56475087a60c4e185ab858903eb090fb12e52a63` / `3ca35af972191a7233df42901f37bb429af1df46b9e94bc303c8cd1f9d70f4e2`; validation contract v1.0.1 raw/canonical SHA-256 values were `769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc` / `1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598`; specification v0.1.12 raw SHA-256 was `beb8608bfa0bc12809b3ac49e8310dc23611715e8b13e913b48a0ae0c54f61f0`; and plan v0.2.12 raw SHA-256 was `690ea1edb510bc8255fa61743c4637ce16254961a3db88c2d4c26702c31b5b93`. These values are immutable historical committed authority, not current locks.
+
+Version 1.0.4 preserves the v1.0.3 prefix/suffix/current-inventory authority and corrects only its maintenance inventory from two assertion sites to exactly three assertion-expression changes. The added third expression is the adjacent historical 53-code prefix-length assertion. This correction freezes the exact three future expressions and forbids assignment expressions, rebinding, mutation, truncation, aliasing, helper insertion, or any hidden change to another assertion's effective input. It changes no implementation or test byte and authorizes no implementation or execution.
 
 ## 2. Authorization and stage ownership
 
@@ -65,18 +71,40 @@ The historical accepted I-1/I-2 `FailureCode` inventory is the following immutab
 1. `CANONICALIZATION_FAILURE`, `INVALID_ECJ1`, `NONCANONICAL_ECJ1`, `ECJ1_TYPE_UNSUPPORTED`, `FLOAT_FORBIDDEN`, `CYCLIC_OBJECT_GRAPH`, `DUPLICATE_OBJECT_NAME`, `INVALID_UNICODE_SCALAR`, `UNASSIGNED_UNICODE_SCALAR`, `UNICODE_DATA_INTEGRITY_FAILURE`, `UNICODE_DATA_MALFORMED`, `SCIENTIFIC_ID_INVALID`, `SEMANTIC_VERSION_INVALID`, `DIGEST_INVALID`, `DIGEST_TYPE_MISMATCH`, `HASH_DOMAIN_MISMATCH`, `ARTIFACT_TOO_LARGE`, `STABLE_KEY_INVALID`, `NAMESPACE_UNREGISTERED`, `RESERVED_NAMESPACE`, `ALLOCATION_COLLISION`, `ALLOCATION_CLAIM_CONFLICT`, `REGISTRY_IMMUTABLE`, `REGISTRY_RECORD_CONFLICT`, `ALIAS_CONFLICT`, `ALIAS_INVALID`, `REF_NOT_FOUND`, `VERSION_MISMATCH`, `HASH_MISMATCH`.
 2. `BOUNDARY_MISMATCH`, `CLOCK_MISMATCH`, `CONVERSION_RULE_MISMATCH`, `CORE_NUMBER_INVALID`, `DIMENSION_MISMATCH`, `DIVISION_BY_ZERO`, `ERROR_BOUND_INVALID`, `HORIZON_INVALID`, `IMPLICIT_ABSENCE_FORBIDDEN`, `IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN`, `INVALID_AGGREGATION`, `LIFECYCLE_TRANSITION_INVALID`, `NONFINITE_NUMBER_FORBIDDEN`, `NUMERICAL_OPERATION_UNSUPPORTED`, `NUMERICAL_POLICY_INCOMPLETE`, `NUMERICAL_POLICY_REQUIRED`, `QUANTITY_TYPE_MISMATCH`, `REGION_MISMATCH`, `RESOLUTION_STATE_INVALID`, `SIGN_CONVENTION_MISMATCH`, `SUPERSESSION_INVALID`, `TIME_BASIS_MISMATCH`, `UNCERTAINTY_RECORD_INVALID`, `UNIT_MISMATCH`.
 
-The numbered lines are continuations of one sequence: line 1 contains ordinals 1–29 and line 2 contains ordinals 30–53. This historical I-1/I-2 sequence is an immutable ordered 53-code prefix. Accepted I-3A owns the exact ordered 35-code `failure_append_order` in §7 and mechanical contract v1.0.3; that suffix is installed immediately after the historical prefix at ordinals 54–88. Their complete ordered 88-code concatenation, `CURRENT_88_CODES`, is itself the immutable current `FailureCode` prefix and remains exact and duplicate-free. Every future code must be appended strictly after ordinal 88; the first possible future code therefore has ordinal 89 under one-based numbering and index 88 under zero-based indexing. No future authority may insert, remove, replace, rename, reorder, or duplicate a code within ordinals 1–53, between ordinals 53 and 54, within ordinals 54–88, or anywhere before the current ordinal-88 endpoint. Equivalently, for every future valid inventory `F`, `F[:88] == CURRENT_88_CODES`.
+The numbered lines are continuations of one sequence: line 1 contains ordinals 1–29 and line 2 contains ordinals 30–53. This historical I-1/I-2 sequence is an immutable ordered 53-code prefix. Accepted I-3A owns the exact ordered 35-code `failure_append_order` in §7 and mechanical contract v1.0.4; that suffix is installed immediately after the historical prefix at ordinals 54–88. Their complete ordered 88-code concatenation, `CURRENT_88_CODES`, is itself the immutable current `FailureCode` prefix and remains exact and duplicate-free. Every future code must be appended strictly after ordinal 88; the first possible future code therefore has ordinal 89 under one-based numbering and index 88 under zero-based indexing. No future authority may insert, remove, replace, rename, reorder, or duplicate a code within ordinals 1–53, between ordinals 53 and 54, within ordinals 54–88, or anywhere before the current ordinal-88 endpoint. Equivalently, for every future valid inventory `F`, `F[:88] == CURRENT_88_CODES`.
 
 Each ordered inventory digest uses exactly `b"".join(name.encode("ascii") + b"\n" for name in inventory)`, where `b"\n"` is one real LF byte `0x0a`, including after the final name. ASCII and UTF-8 bytes are identical for every failure-code name. Declared order is preserved, and the serialization has no BOM, prefix, suffix, spaces, CR, blank lines, or other separator. The historical 53-code inventory is exactly 1,136 bytes with SHA-256 `94b7d2b611f0d15b68ba296dec2156cf0bbdbd7dac97a534a157286386fdb7be`; the accepted I-3 35-code suffix is exactly 989 bytes with SHA-256 `0a65b1995b6ed86ba68266cc9bcaac48f2662fae2e1a60cd7672137d40cbcb2c`; and `CURRENT_88_CODES` is exactly 2,125 bytes with SHA-256 `0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3`.
 
-Exactly two historical test scopes in `tests/framework/test_primitives_envelopes.py` are stale:
+Exactly three historical assertion expressions in `tests/framework/test_primitives_envelopes.py` are stale, confined to exactly two existing test methods. A future separately and explicitly authorized one-time regression-compatibility implementation may replace only those three expressions with the expressions frozen below.
 
-- `FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract` currently applies its historical inventory assertion to the complete current AST member sequence; its corrected subject is exactly the first 53 AST members.
-- `FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement` currently applies its historical runtime-domain assertion to the complete current enum; its corrected subject is exactly the first 53 runtime values.
+In `FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract`, the future expressions are exactly:
 
-A future separately and explicitly authorized one-time regression-compatibility implementation may modify only those two assertion sites in that one test file so each checks exact ordered equality with the complete historical prefix. This amendment does not authorize that implementation and does not edit the test. No other assertion, test, fixture, production path, failure value, precedence rule, validator, declaration, scientific definition, dependency, export, or runtime behavior may change.
+```python
+self.assertEqual(
+    failure_members[:53],
+    I1_FAILURE_CODE_ORDER + I2_FAILURE_CODES,
+)
+self.assertEqual(len(failure_members[:53]), 29 + 24)
+```
 
-Validation is not weakened. The first 53 codes must still equal the entire historical sequence exactly; accepted I-3A validation must continue checking the exact 35-code suffix and exact current 88-code inventory; and duplicates, prefix mutation, reordering, insertion, deletion, suffix reordering or deletion, and unauthorized suffix change must remain detectable.
+These are two independent assertions over the same explicit prefix. `failure_members` must remain the complete current `FailureCode` AST member tuple throughout the method. It may not be assigned through an assignment expression or walrus operator, rebound, mutated, truncated, or aliased to the prefix. Both historical assertions must explicitly slice `failure_members[:53]`: the first compares the exact ordered historical prefix and the adjacent second assertion independently checks that prefix's length.
+
+In `FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement`, the future expression is exactly:
+
+```python
+self.assertEqual(
+    tuple(member.value for member in enum_type)[
+        :53 if enum_type is e.FailureCode else None
+    ],
+    expected_members,
+)
+```
+
+This conditional slice scopes only `FailureCode` to its first 53 runtime values. Every other enum comparison remains whole-domain exact.
+
+The maintenance inventory is exactly three assertion-expression changes in that one existing test file. No assignment expression, walrus operator, rebinding, mutation, truncation, aliasing, helper insertion or extraction, or hidden change to any assertion's effective input is permitted. No individual I-3 failure-code name may be copied into the historical I-2 test. Every other statement, assertion, import, constant, helper, method, class, formatting-only region, production path, and test path must remain byte-identical. This amendment does not authorize that implementation and does not edit the test.
+
+Validation is not weakened. The historical test remains responsible only for the exact ordered 53-code prefix. Accepted I-3A validation remains responsible for the exact 35-code suffix and complete current 88-code inventory. The complete current 88-code sequence remains immutable, future additions begin only at ordinal 89/index 88, every future valid inventory satisfies `F[:88] == CURRENT_88_CODES`, and duplicates, prefix mutation, reordering, insertion, deletion, suffix reordering or deletion, and unauthorized suffix change remain detectable.
 
 This one-path maintenance channel is separate from the 23-path I-3A–I-3E ownership bijection. It is assigned to no I-3 substage, is not I-3B work, and changes no I-3A–I-3E owned-path count. The accepted historical 30-path I-1/I-2 manifest remains immutable evidence at 3461 bytes and SHA-256 `f7ceeb78e2ba149ed3adb0c283d854547b6fbcccfd1b0c00b60aee44fcf221a1`. During this documentation correction all 30 paths remain byte-identical. Under the later one-time authorization, only `tests/framework/test_primitives_envelopes.py` may change; every other accepted I-1/I-2 production and test path remains frozen.
 

@@ -1,7 +1,7 @@
 {
   "contract_id": "ebu-framework-i3-authority/1",
-  "contract_version": "1.0.3",
-  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_REGRESSION_COMPATIBILITY_CORRECTED_TEST_REPAIR_UNIMPLEMENTED",
+  "contract_version": "1.0.4",
+  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_THREE_ASSERTION_REPAIR_SCOPE_CORRECTED_TEST_REPAIR_UNIMPLEMENTED",
   "revision_history": [
     {
       "version": "1.0.0",
@@ -55,32 +55,49 @@
     },
     {
       "version": "1.0.3",
+      "status": "HISTORICAL_PROSPECTIVE_AUTHORITY",
+      "change": "Freezes the exact ordered 53-code historical I-1/I-2 FailureCode prefix, the accepted exact 35-code I-3A suffix and current 88-code concatenation, and a separate one-time test-only maintenance path that identified two stale whole-enum assertion sites.",
+      "source_hashes": {
+        "human_rendering_raw_sha256": "b6ccc80262463a163601eecca7d8b6aedaf4a9708ea7b070c3c8c0d4ada7194e",
+        "mechanical_contract_raw_sha256": "685f7445bebffe28c1a9ec6c56475087a60c4e185ab858903eb090fb12e52a63",
+        "mechanical_contract_canonical_sha256": "3ca35af972191a7233df42901f37bb429af1df46b9e94bc303c8cd1f9d70f4e2",
+        "validation_contract_raw_sha256": "769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc",
+        "validation_contract_canonical_sha256": "1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598",
+        "specification_version": "0.1.12",
+        "specification_raw_sha256": "beb8608bfa0bc12809b3ac49e8310dc23611715e8b13e913b48a0ae0c54f61f0",
+        "plan_version": "0.2.12",
+        "plan_raw_sha256": "690ea1edb510bc8255fa61743c4637ce16254961a3db88c2d4c26702c31b5b93"
+      },
+      "note": "Preserved historical regression-compatibility authority; superseded only by the v1.0.4 exact three-assertion maintenance-scope correction."
+    },
+    {
+      "version": "1.0.4",
       "status": "CURRENT_PROSPECTIVE_AUTHORITY",
-      "change": "Freezes the exact ordered 53-code historical I-1/I-2 FailureCode prefix, the accepted exact 35-code I-3A suffix and current 88-code concatenation, and a separate one-time test-only maintenance path that may correct only two stale whole-enum assertions to exact-prefix assertions under later explicit authorization."
+      "change": "Corrects the one-time maintenance inventory from two assertion sites to exactly three assertion-expression changes by adding the adjacent historical prefix-length assertion and freezes all three future expressions without assignment expressions, rebinding, mutation, aliasing, helpers, or hidden changes to effective assertion inputs."
     }
   ],
   "authority": {
     "branch": "framework-v0.1",
     "base_head": "85cc43b4fafe298245ceb5baf48b1731de47df44",
-    "correction_branch": "framework/i-3-regression-compatibility-authority",
-    "correction_base_head": "c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a",
+    "correction_branch": "framework/i-3-three-assertion-repair-authority",
+    "correction_base_head": "d75540efb8341cd74f4d1f58544a39763da67f6f",
     "prior_specification": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
-      "version": "0.1.11",
-      "raw_sha256": "335e3ebf21196541ebebd9381e9c6c7d1ea7949cc9cbdbc7d61d2225e69b2950"
+      "version": "0.1.12",
+      "raw_sha256": "beb8608bfa0bc12809b3ac49e8310dc23611715e8b13e913b48a0ae0c54f61f0"
     },
     "prior_plan": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
-      "version": "0.2.11",
-      "raw_sha256": "a0d4a63c12585ac8349222906d256e0ae894863c81e0a56c97c311b8b5fd3112"
+      "version": "0.2.12",
+      "raw_sha256": "690ea1edb510bc8255fa61743c4637ce16254961a3db88c2d4c26702c31b5b93"
     },
     "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
     "mechanical_contract": "unified_python_research_framework_i3_contract.json",
     "validation_contract": "unified_python_research_framework_i3_validation_contract.json",
     "precedence": {
       "supersedes_only": [
-        "v1.0.2 treatment of the historical I-1/I-2 FailureCode inventory as a closed whole enum rather than an immutable ordered prefix",
-        "v1.0.2 preservation language only to admit the separately authorized one-time correction of the two stale assertions in tests/framework/test_primitives_envelopes.py"
+        "v1.0.3 maintenance inventory only where it omitted the adjacent historical prefix-length assertion in FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract",
+        "v1.0.3 under-specified assertion-change boundary only to freeze the exact three future expressions and explicitly forbid assignment expressions, rebinding, mutation, aliasing, helper insertion, and hidden changes to effective assertion inputs"
       ],
       "does_not_change": [
         "any implementation or test byte in this documentation-only correction",
@@ -97,7 +114,7 @@
       "conflict_rule": "FAIL_CLOSED"
     },
     "correction_scope": {
-      "changes_only": "prospective FailureCode prefix/suffix compatibility authority and a separately authorized one-time correction boundary for two stale historical assertions in one accepted I-2 test path",
+      "changes_only": "the prospective one-time FailureCode regression-compatibility maintenance inventory, corrected from two assertion sites to exactly three assertion-expression changes in one accepted I-2 test path",
       "does_not_change": [
         "the 69 types, 23 validators, 35 failures, 92-name export suffix, 15-module/91-edge graph, 133 collection rows, 43 applicability rows, two sum types, or 23-path ownership bijection",
         "any public type, field, callable, signature, precedence position, failure value, validation vector, validator, declaration, dependency, or export",
@@ -4678,19 +4695,35 @@
         "insert a code anywhere before the current ordinal-88 endpoint"
       ]
     },
+    "authorized_assertion_expression_count": 3,
+    "authorized_test_method_count": 2,
+    "authorized_test_path_count": 1,
     "historical_assertion_sites": [
       {
         "path": "tests/framework/test_primitives_envelopes.py",
         "test": "FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract",
-        "stale_subject": "the complete current FailureCode AST member inventory",
-        "corrected_subject": "the first 53 AST members",
-        "required_expected": "historical_prefix"
+        "authorized_assertion_expression_count": 2,
+        "stale_subjects": [
+          "the historical ordered-equality assertion currently observes the complete current FailureCode AST member inventory",
+          "the adjacent historical length assertion currently observes the complete current FailureCode AST member inventory"
+        ],
+        "required_future_expressions": [
+          "self.assertEqual(\n    failure_members[:53],\n    I1_FAILURE_CODE_ORDER + I2_FAILURE_CODES,\n)",
+          "self.assertEqual(len(failure_members[:53]), 29 + 24)"
+        ],
+        "required_subject": "Both historical assertions independently observe failure_members[:53], the exact first 53 AST members.",
+        "failure_members_binding_rule": "failure_members remains the complete current FailureCode AST member tuple throughout this method and is never rebound, mutated, truncated, or aliased to a prefix.",
+        "required_expected": "I1_FAILURE_CODE_ORDER + I2_FAILURE_CODES for ordered equality and 29 + 24 for prefix length"
       },
       {
         "path": "tests/framework/test_primitives_envelopes.py",
         "test": "FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement",
+        "authorized_assertion_expression_count": 1,
         "stale_subject": "the complete current FailureCode runtime value inventory",
-        "corrected_subject": "the first 53 runtime values",
+        "required_future_expressions": [
+          "self.assertEqual(\n    tuple(member.value for member in enum_type)[\n        :53 if enum_type is e.FailureCode else None\n    ],\n    expected_members,\n)"
+        ],
+        "corrected_subject": "the first 53 runtime values only when enum_type is e.FailureCode; every other enum remains whole-domain exact",
         "required_expected": "historical_prefix"
       }
     ],
@@ -4700,12 +4733,24 @@
       "paths": [
         "tests/framework/test_primitives_envelopes.py"
       ],
-      "allowed_change": "Modify only the two historical assertion sites above so each validates exact ordered equality of the first 53 FailureCode members or values with historical_prefix.",
-      "forbidden_changes": "No other assertion, test, fixture, production path, failure value, precedence rule, validator, declaration, scientific definition, dependency, export, or implementation behavior may change.",
+      "method_count": 2,
+      "assertion_expression_change_count": 3,
+      "allowed_change": "Replace exactly the three historical assertion expressions above with their required_future_expressions and make no other change.",
+      "forbidden_change_forms": [
+        "assignment expression or walrus operator",
+        "assignment, rebinding, mutation, truncation, or aliasing of failure_members",
+        "helper insertion or extraction",
+        "hidden change to any assertion's effective input",
+        "copying any individual I-3 failure-code name into the historical I-2 test",
+        "formatting-only change outside the exact three assertion expressions"
+      ],
+      "unchanged_scope_rule": "Every other statement, assertion, import, constant, helper, method, class, formatting-only region, production path, and test path remains byte-identical.",
+      "forbidden_changes": "No implementation, fixture, validator, vector, failure code, public API, scientific definition, Gate rule, execution permission, production path, or other test path may change.",
       "single_use": true,
       "authorized_by_this_contract_revision": false
     },
     "validation_preservation": [
+      "The historical source-audit test remains responsible only for the exact ordered 53-code prefix, using both an ordered-equality assertion and an independent prefix-length assertion.",
       "The first 53 members must equal historical_prefix exactly in value and order.",
       "The accepted I-3A tests must continue to validate the exact 35-code failure_append_order suffix and the exact complete 88-code inventory.",
       "Duplicate members or values, prefix mutation, prefix reordering, insertion into the prefix, prefix deletion, suffix reordering, suffix deletion, and unauthorized suffix append or replacement must remain detectable."

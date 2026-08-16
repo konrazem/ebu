@@ -1,7 +1,7 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.12
-**Status:** Prospective complete I-3 regression-compatibility authority; accepted and integrated I-3A remains frozen; one-time historical I-2 assertion repair is specification-ready and unimplemented; no implementation, scientific execution, Gate, publication, or release authority
+**Version:** 0.1.13
+**Status:** Prospective complete I-3 exact three-assertion repair-scope authority; accepted and integrated I-3A remains frozen; one-time historical I-2 assertion repair is specification-ready and unimplemented; no implementation, scientific execution, Gate, publication, or release authority
 **Date:** 2026-08-12
 **Authority reconciliation date:** 2026-08-16
 **Language:** English
@@ -76,7 +76,7 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.12 prospective authority register
+#### 2.1.2 Current v0.1.13 prospective authority register
 
 Revision v0.1.2 prospectively replaced only the active books-structure
 authority pointer. Revision v0.1.3 preserved those imported scientific
@@ -95,22 +95,25 @@ prospective I-3 Markdown/mechanical/validation authority in §22, without
 implementing it or changing I-2. Revision v0.1.10 corrected the complete
 implementation-path/substage ownership bijection. Revision v0.1.11 corrected
 only the local semantic predicates and materialized witnesses recorded in
-§20.12. Revision v0.1.12 corrects only the historical `FailureCode` whole-enum
-assumption and freezes the one-time maintenance boundary recorded in §20.13
-and §22. The v0.1.2
+§20.12. Revision v0.1.12 corrected only the historical `FailureCode` whole-enum
+assumption and froze the one-time maintenance boundary recorded in §20.13
+and §22. Revision v0.1.13 corrects only that boundary's omission of the
+adjacent historical prefix-length assertion, freezes exactly three future
+assertion expressions, and adds the anti-rebinding constraints recorded in
+§20.14 and §22. The v0.1.2
 reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.12 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.13 |
 |---|---|---|---|
 | `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6, literature/originality, and conservation-accounting planning | `0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.6 |
 | `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | v0.1 conceptual and algebraic planning foundation | `b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a` | Three account levels, typed boundary-accounting interpretation, historical-model compatibility, and prospective I-3/I-5 planning limits in §2.1.6 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged Part VIII dynamic state, seven-layer separation, deterministic event order, network evolution, objectives, uncertainty, and framework requirements |
-| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` | v1.0.3 normative human I-3 rendering | `b6ccc80262463a163601eecca7d8b6aedaf4a9708ea7b070c3c8c0d4ada7194e` | Narrow prospective `FailureCode` prefix/suffix compatibility authority, one-time test-only maintenance boundary, preserved semantic-witness authority, and unchanged I-3 path ownership |
-| `unified_python_research_framework_i3_contract.json` | v1.0.3 mechanical I-3 contract | `685f7445bebffe28c1a9ec6c56475087a60c4e185ab858903eb090fb12e52a63` | Exact 53-code prefix, 35-code suffix, current 88-code inventory, two stale assertion sites, one-path maintenance boundary, preserved I-3 inventories, and unchanged path bijection |
+| `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` | v1.0.4 normative human I-3 rendering | `2318334f325aa567e74531e38044ded15859961199700adce55c2fd6241528ce` | Exact three-assertion prospective maintenance inventory, anti-rebinding constraints, preserved `FailureCode` prefix/suffix compatibility authority, preserved semantic-witness authority, and unchanged I-3 path ownership |
+| `unified_python_research_framework_i3_contract.json` | v1.0.4 mechanical I-3 contract | `b2401cbfc03c671cab66591c1dcbfa9304690d7a0e018afd6ce232b10cecaee9` | Exact 53-code prefix, 35-code suffix, current 88-code inventory, three assertion-expression changes in two methods and one test path, anti-rebinding rules, preserved I-3 inventories, and unchanged path bijection |
 | `unified_python_research_framework_i3_validation_contract.json` | v1.0.1 validation contract | `769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc` | Exact corrected 544-vector materialization, complete changed-vector inventory, two-route predicate-truth evidence, collision rule, bytes, and digest |
 
 The books-structure hash in this table is the only active books-structure
@@ -3428,7 +3431,7 @@ subsequently accepted exactly on feature commit
 by merge commit `ede89d8af6b89da491e03c352efcf1868a913f6f`. I-3A was subsequently
 accepted at feature commit `83dc39866799c57af99e8a2001ff2bfa8e60d282`
 and integrated at merge commit
-`c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`. Revision v0.1.12 does not
+`c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`. Revision v0.1.13 does not
 reopen either accepted implementation. It grants only the prospective narrow
 regression-compatibility authority in §22 and grants no implementation, I-3B,
 I-5, framework-alpha, scientific-execution, Gate, publication, or release
@@ -3606,7 +3609,7 @@ I-1/I-2 byte or semantic, scientific model or equation, Gate rule, or
 execution permission. Its now-historical whole-file raw SHA-256 is
 `335e3ebf21196541ebebd9381e9c6c7d1ea7949cc9cbdbc7d61d2225e69b2950`.
 
-### 20.13 Revision v0.1.12 — current prospective I-3 regression-compatibility correction
+### 20.13 Revision v0.1.12 — historical prospective I-3 regression-compatibility correction
 
 Revision v0.1.12 adopts amendment v1.0.3 and mechanical contract v1.0.3 while
 preserving validation contract v1.0.1 byte-identically. It freezes the
@@ -3631,8 +3634,34 @@ one-time authorization every accepted production and test path other than the
 single named test remains frozen. This revision changes no implementation or
 test byte, runtime behavior, failure value or precedence, vector, validator,
 declaration, scientific definition, Gate rule, dependency, export, or
-execution permission. This Markdown document intentionally does not contain
-its own current v0.1.12 whole-file hash.
+execution permission. Its now-historical whole-file raw SHA-256 is
+`beb8608bfa0bc12809b3ac49e8310dc23611715e8b13e913b48a0ae0c54f61f0`.
+
+### 20.14 Revision v0.1.13 — current prospective exact three-assertion repair-scope correction
+
+Revision v0.1.13 adopts amendment v1.0.4 and mechanical contract v1.0.4 while
+preserving validation contract v1.0.1 byte-identically. It preserves the
+exact immutable ordered 53-code historical prefix, accepted ordered 35-code
+I-3A suffix, immutable current 88-code sequence, append-only future boundary,
+and all three inventory identities from v0.1.12.
+
+It corrects the one-time maintenance inventory from two assertion sites to
+exactly three assertion-expression changes in two existing methods and one
+existing test file. The added expression is the adjacent historical
+prefix-length assertion. Both first-method assertions explicitly slice
+`failure_members[:53]`; `failure_members` remains the complete current enum
+tuple throughout that method. The second method prefix-scopes only
+`FailureCode`, leaving every other enum comparison whole-domain exact.
+
+No assignment expression, walrus operator, rebinding, mutation, truncation,
+aliasing, helper insertion, individual I-3 failure-code copy, hidden input
+change, or change outside the exact three expressions is permitted. The
+maintenance path remains outside I-3A–I-3E and leaves the 5/6/5/4/3 ownership
+counts unchanged. This revision changes no implementation or test byte,
+fixture, validator, vector, failure code, public API, scientific definition,
+Gate rule, dependency, export, runtime behavior, or execution permission.
+This Markdown document intentionally does not contain its own current v0.1.13
+whole-file hash.
 
 ## 21. Normative prospective Framework I-2 amendment
 
@@ -3641,7 +3670,7 @@ implemented and accepted at
 `351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated at
 `ede89d8af6b89da491e03c352efcf1868a913f6f`. Its v0.1.7 source locks and
 future-tense implementation instructions are historical acceptance inputs,
-not active current-authority pointers. Revision v0.1.12 changes none of
+not active current-authority pointers. Revision v0.1.13 changes none of
 its inventories, predicates, fixtures, precedence, API, dependencies,
 implementation paths, or hashes. Its separate I-3 authority exists only in
 §22 and supplies no authority for I-5.
@@ -3692,7 +3721,7 @@ build, installation, acceptance mutation, scientific operation, Gate
 operation, commit, push, release, or publication, and I-2 remained
 unimplemented. The later accepted implementation and integration commits
 named above satisfy that historical stage without altering this contract.
-Revision v0.1.12 changes no accepted I-2 implementation byte and authorizes no
+Revision v0.1.13 changes no accepted I-2 implementation byte and authorizes no
 implementation stage. Its exact prospective exception for a later separately
 authorized one-time assertion-only repair is defined in §22; until that later
 authorization, this implemented I-2 contract remains byte-identical.
@@ -5928,11 +5957,11 @@ invocation count as zero.
 
 The complete corrected I-3 authority is the agreement of:
 
-1. `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` v1.0.3 at raw SHA-256 `b6ccc80262463a163601eecca7d8b6aedaf4a9708ea7b070c3c8c0d4ada7194e`;
-2. `unified_python_research_framework_i3_contract.json` v1.0.3 at raw SHA-256 `685f7445bebffe28c1a9ec6c56475087a60c4e185ab858903eb090fb12e52a63` and canonical SHA-256 `3ca35af972191a7233df42901f37bb429af1df46b9e94bc303c8cd1f9d70f4e2`; and
+1. `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md` v1.0.4 at raw SHA-256 `2318334f325aa567e74531e38044ded15859961199700adce55c2fd6241528ce`;
+2. `unified_python_research_framework_i3_contract.json` v1.0.4 at raw SHA-256 `b2401cbfc03c671cab66591c1dcbfa9304690d7a0e018afd6ce232b10cecaee9` and canonical SHA-256 `8576b0aeec67eda127d33d9b6022fea619d2dd82c9a092c54208925e7d7de706`; and
 3. `unified_python_research_framework_i3_validation_contract.json` v1.0.1 at raw SHA-256 `769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc` and canonical SHA-256 `1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598`.
 
-The amendment is the normative human rendering; the first JSON is the mechanical schema and ordering source; the second JSON is the fully materialized validation source. Any mismatch fails closed. Version 1.0.3 narrowly supersedes v1.0.2 only for the historical `FailureCode` prefix rule, the two stale whole-enum assertion scopes, and the exact dependent preservation exception named in §20.13. All other v1.0.2 authority remains in force; older hashes remain historical only. This correction changes no closed public inventory, failure value, precedence position, validation vector, validator, declaration, import graph, export inventory, I-3 implementation-path ownership, scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission.
+The amendment is the normative human rendering; the first JSON is the mechanical schema and ordering source; the second JSON is the fully materialized validation source. Any mismatch fails closed. Version 1.0.4 narrowly supersedes v1.0.3 only where the two-site maintenance inventory omitted the adjacent historical prefix-length assertion and did not freeze the exact three future expressions and anti-rebinding constraints named in §20.14. All other v1.0.3 authority remains in force; older hashes remain historical only. This correction changes no closed public inventory, failure value, precedence position, validation vector, validator, declaration, import graph, export inventory, I-3 implementation-path ownership, scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission.
 
 I-3A is accepted and integrated at `c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`; its bytes and authority remain frozen. The one-time test repair is specification-ready and unimplemented. This revision authorizes no implementation edit, fixture installation, test execution, I-3B resumption, I-3C start, registry acceptance, scientific use, state advance, or I-4–I-8 behavior.
 
@@ -6001,20 +6030,53 @@ the accepted I-3 35-code suffix is exactly 989 bytes with SHA-256
 and `CURRENT_88_CODES` is exactly 2,125 bytes with SHA-256
 `0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3`.
 
-Exactly two scopes in `tests/framework/test_primitives_envelopes.py` retain a
-historical whole-enum assumption:
+Exactly three assertion expressions in
+`tests/framework/test_primitives_envelopes.py` require a future one-time
+maintenance change, confined to exactly two existing methods.
 
-- `FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract`
-  must validate the exact first 53 AST members against the historical prefix.
-- `FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement`
-  must validate the exact first 53 runtime values against the historical
-  prefix.
+In `FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract`,
+the future expressions are exactly:
 
-A future separately authorized one-time implementation may change only those
-two assertion sites in that file. This revision neither performs nor
-authorizes the change. The accepted I-3A test continues to require the exact
-35-code suffix and exact 88-code complete inventory, so duplicate, prefix
-mutation, reorder, insertion, deletion, and unauthorized suffix change remain
+```python
+self.assertEqual(
+    failure_members[:53],
+    I1_FAILURE_CODE_ORDER + I2_FAILURE_CODES,
+)
+self.assertEqual(len(failure_members[:53]), 29 + 24)
+```
+
+`failure_members` remains the complete current enum tuple throughout this
+method. Both independent historical assertions explicitly observe
+`failure_members[:53]`: ordered equality checks the exact historical prefix,
+and the adjacent assertion checks the length of that same prefix.
+
+In `FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement`,
+the future expression is exactly:
+
+```python
+self.assertEqual(
+    tuple(member.value for member in enum_type)[
+        :53 if enum_type is e.FailureCode else None
+    ],
+    expected_members,
+)
+```
+
+Only `FailureCode` is prefix-scoped; every other enum comparison remains
+whole-domain exact. No assignment expression, walrus operator, rebinding,
+mutation, truncation, aliasing, helper insertion or extraction, individual
+I-3 failure-code copy, hidden input change, or change outside these exact
+three expressions is permitted. Every other statement, assertion, import,
+constant, helper, method, class, formatting-only region, production path, and
+test path remains byte-identical. This revision neither performs nor
+authorizes the implementation change.
+
+The historical test remains responsible only for the exact ordered 53-code
+prefix. The accepted I-3A test remains responsible for the exact 35-code
+suffix and complete current 88-code inventory. The current 88-code sequence
+remains immutable; future additions begin only at ordinal 89/index 88 and
+must preserve `F[:88] == CURRENT_88_CODES`, so duplicate, prefix mutation,
+reorder, insertion, deletion, and unauthorized suffix change remain
 detectable.
 
 This maintenance path is assigned to no I-3 substage and is outside the
