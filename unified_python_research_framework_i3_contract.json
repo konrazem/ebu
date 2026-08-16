@@ -1,7 +1,7 @@
 {
   "contract_id": "ebu-framework-i3-authority/1",
-  "contract_version": "1.0.2",
-  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_SEMANTIC_WITNESS_CORRECTED_UNIMPLEMENTED",
+  "contract_version": "1.0.3",
+  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_REGRESSION_COMPATIBILITY_CORRECTED_TEST_REPAIR_UNIMPLEMENTED",
   "revision_history": [
     {
       "version": "1.0.0",
@@ -38,40 +38,57 @@
     },
     {
       "version": "1.0.2",
+      "status": "HISTORICAL_PROSPECTIVE_AUTHORITY",
+      "change": "Freezes identity-agnostic order/duplicate witnesses, exact conservation requirements and scans, applicability/hash predicate ownership, the complete paired-quantity inventory, the exact post-reserved-removal coordinate-only state projection, and exact-triple settlement links; repairs the eight affected inputs and reseals the same 544 vector IDs without implementation authority.",
+      "source_hashes": {
+        "human_rendering_raw_sha256": "997c9e962e6eb1dd3271de42e82fd2753547f76072ef8d1122e72787e4afac23",
+        "mechanical_contract_raw_sha256": "bcc7bc0cd1d09d6c7f64119b58722064f64c1590186c65aeaf8b99fc32a90995",
+        "mechanical_contract_canonical_sha256": "33ba6d0205e424f49b1e65cbe91aae2e972bd1a96448bb74248d3979dd99ad2f",
+        "validation_contract_raw_sha256": "769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc",
+        "validation_contract_canonical_sha256": "1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598",
+        "specification_version": "0.1.11",
+        "specification_raw_sha256": "335e3ebf21196541ebebd9381e9c6c7d1ea7949cc9cbdbc7d61d2225e69b2950",
+        "plan_version": "0.2.11",
+        "plan_raw_sha256": "a0d4a63c12585ac8349222906d256e0ae894863c81e0a56c97c311b8b5fd3112"
+      },
+      "note": "Preserved historical semantic-witness-corrected authority; superseded only by the v1.0.3 regression-compatibility correction."
+    },
+    {
+      "version": "1.0.3",
       "status": "CURRENT_PROSPECTIVE_AUTHORITY",
-      "change": "Freezes identity-agnostic order/duplicate witnesses, exact conservation requirements and scans, applicability/hash predicate ownership, the complete paired-quantity inventory, the exact post-reserved-removal coordinate-only state projection, and exact-triple settlement links; repairs the eight affected inputs and reseals the same 544 vector IDs without implementation authority."
+      "change": "Freezes the exact ordered 53-code historical I-1/I-2 FailureCode prefix, the accepted exact 35-code I-3A suffix and current 88-code concatenation, and a separate one-time test-only maintenance path that may correct only two stale whole-enum assertions to exact-prefix assertions under later explicit authorization."
     }
   ],
   "authority": {
     "branch": "framework-v0.1",
     "base_head": "85cc43b4fafe298245ceb5baf48b1731de47df44",
-    "correction_base_head": "e7f34a2bdfdecacebde0860623bc98caf2292c80",
+    "correction_branch": "framework/i-3-regression-compatibility-authority",
+    "correction_base_head": "c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a",
     "prior_specification": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
-      "version": "0.1.10",
-      "raw_sha256": "ae37f7e20145420f98858c85d2191ba2b42c8432a134537af3dad92177fb07b8"
+      "version": "0.1.11",
+      "raw_sha256": "335e3ebf21196541ebebd9381e9c6c7d1ea7949cc9cbdbc7d61d2225e69b2950"
     },
     "prior_plan": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
-      "version": "0.2.10",
-      "raw_sha256": "d4337b7e8fb680db10b9dd714c71705b22acbe5ff128ed4606f4765ce3023e3d"
+      "version": "0.2.11",
+      "raw_sha256": "a0d4a63c12585ac8349222906d256e0ae894863c81e0a56c97c311b8b5fd3112"
     },
     "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
     "mechanical_contract": "unified_python_research_framework_i3_contract.json",
     "validation_contract": "unified_python_research_framework_i3_validation_contract.json",
     "precedence": {
       "supersedes_only": [
-        "v1.0.1 order/duplicate validation-vector witness materialization",
-        "v1.0.1 under-specified conservation level/evidence/isolation predicates",
-        "v1.0.1 under-specified paired-quantity compatibility predicates",
-        "v1.0.1 overlapping applicability, measurement, fault-order, and execution-hash predicate ownership needed for isolated satisfiability",
-        "the rejected v1.0.2 draft's contradictory state-projection extra-key statement and four invalid state witnesses",
-        "the rejected v1.0.2 draft's four stale settlement child-receipt content hashes",
-        "dependent v1.0.1 validation corpus bytes and hashes"
+        "v1.0.2 treatment of the historical I-1/I-2 FailureCode inventory as a closed whole enum rather than an immutable ordered prefix",
+        "v1.0.2 preservation language only to admit the separately authorized one-time correction of the two stale assertions in tests/framework/test_primitives_envelopes.py"
       ],
       "does_not_change": [
-        "accepted I-1 or I-2 implementation bytes or semantics",
+        "any implementation or test byte in this documentation-only correction",
+        "the accepted I-1/I-2 53-code prefix, semantics, ordinals, strings, compatibility rules, or caller behavior",
+        "the accepted I-3A 35-code suffix or current 88-code inventory",
         "ECJ-1 or accepted I-1/I-2 hash domains and helper names",
+        "the I-3 validation contract or any of its 544 materialized vectors",
+        "the 23-path I-3A-I-3E ownership bijection or any substage path count",
         "any scientific equation, model, result, protocol, Gate state, or interpretation",
         "Bridge behavior owned by I-6",
         "Dynamic Coordination behavior owned by I-7",
@@ -80,11 +97,12 @@
       "conflict_rule": "FAIL_CLOSED"
     },
     "correction_scope": {
-      "changes_only": "prospective local predicate semantics, witness materialization, exact finite conservation requirements, paired-quantity compatibility, exact post-reserved-removal state projection, exact-triple settlement links, and dependent validation hashes",
+      "changes_only": "prospective FailureCode prefix/suffix compatibility authority and a separately authorized one-time correction boundary for two stale historical assertions in one accepted I-2 test path",
       "does_not_change": [
         "the 69 types, 23 validators, 35 failures, 92-name export suffix, 15-module/91-edge graph, 133 collection rows, 43 applicability rows, two sum types, or 23-path ownership bijection",
-        "any public type, field, callable, signature, precedence position, or accepted I-1/I-2 path/hash",
-        "any scientific model, equation, Gate rule, result, interpretation, execution permission, or implementation byte"
+        "any public type, field, callable, signature, precedence position, failure value, validation vector, validator, declaration, dependency, or export",
+        "any scientific model, equation, Gate rule, result, interpretation, execution permission, or implementation byte",
+        "the historical 30-path I-1/I-2 manifest as immutable evidence"
       ]
     }
   },
@@ -176,7 +194,7 @@
       ]
     ]
   ],
-  "substage_rule": "All I-3 authority must be accepted before I-3A begins. Substages limit implementation and review size and authorize neither partial scientific use nor later-stage behavior. After a substage path is accepted, a later substage cannot modify it without a separate prospective correction.",
+  "substage_rule": "All I-3 authority was accepted before I-3A began. I-3A is accepted and integrated at c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a. Substages limit implementation and review size and authorize neither partial scientific use nor later-stage behavior. After a substage path is accepted, a later substage cannot modify it without a separate prospective correction. The separate regression-compatibility maintenance path is not an I-3A-I-3E substage path.",
   "substage_path_inventories": [
     {
       "substage": "I-3A",
@@ -4565,6 +4583,141 @@
     "ARTIFACT_COMPLETENESS_INVALID"
   ],
   "failure_rule": "Append these exact 35 names after the accepted I-2 FailureCode members without changing any accepted member. I3_RECORD_FORMATION_INVALID is constructor-owned; all others occur only at the validator interfaces whose precedence lists contain them.",
+  "failure_code_regression_compatibility": {
+    "historical_prefix_owner": "ACCEPTED_I1_I2",
+    "historical_prefix_count": 53,
+    "historical_prefix": [
+      "CANONICALIZATION_FAILURE",
+      "INVALID_ECJ1",
+      "NONCANONICAL_ECJ1",
+      "ECJ1_TYPE_UNSUPPORTED",
+      "FLOAT_FORBIDDEN",
+      "CYCLIC_OBJECT_GRAPH",
+      "DUPLICATE_OBJECT_NAME",
+      "INVALID_UNICODE_SCALAR",
+      "UNASSIGNED_UNICODE_SCALAR",
+      "UNICODE_DATA_INTEGRITY_FAILURE",
+      "UNICODE_DATA_MALFORMED",
+      "SCIENTIFIC_ID_INVALID",
+      "SEMANTIC_VERSION_INVALID",
+      "DIGEST_INVALID",
+      "DIGEST_TYPE_MISMATCH",
+      "HASH_DOMAIN_MISMATCH",
+      "ARTIFACT_TOO_LARGE",
+      "STABLE_KEY_INVALID",
+      "NAMESPACE_UNREGISTERED",
+      "RESERVED_NAMESPACE",
+      "ALLOCATION_COLLISION",
+      "ALLOCATION_CLAIM_CONFLICT",
+      "REGISTRY_IMMUTABLE",
+      "REGISTRY_RECORD_CONFLICT",
+      "ALIAS_CONFLICT",
+      "ALIAS_INVALID",
+      "REF_NOT_FOUND",
+      "VERSION_MISMATCH",
+      "HASH_MISMATCH",
+      "BOUNDARY_MISMATCH",
+      "CLOCK_MISMATCH",
+      "CONVERSION_RULE_MISMATCH",
+      "CORE_NUMBER_INVALID",
+      "DIMENSION_MISMATCH",
+      "DIVISION_BY_ZERO",
+      "ERROR_BOUND_INVALID",
+      "HORIZON_INVALID",
+      "IMPLICIT_ABSENCE_FORBIDDEN",
+      "IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN",
+      "INVALID_AGGREGATION",
+      "LIFECYCLE_TRANSITION_INVALID",
+      "NONFINITE_NUMBER_FORBIDDEN",
+      "NUMERICAL_OPERATION_UNSUPPORTED",
+      "NUMERICAL_POLICY_INCOMPLETE",
+      "NUMERICAL_POLICY_REQUIRED",
+      "QUANTITY_TYPE_MISMATCH",
+      "REGION_MISMATCH",
+      "RESOLUTION_STATE_INVALID",
+      "SIGN_CONVENTION_MISMATCH",
+      "SUPERSESSION_INVALID",
+      "TIME_BASIS_MISMATCH",
+      "UNCERTAINTY_RECORD_INVALID",
+      "UNIT_MISMATCH"
+    ],
+    "historical_prefix_rule": "The historical I-1/I-2 sequence is an immutable ordered 53-code prefix occupying ordinals 1–53.",
+    "inventory_digest_serialization": {
+      "encoding": "ASCII_WITH_UTF8_BYTE_IDENTITY",
+      "order": "PRESERVE_DECLARED_INVENTORY_ORDER",
+      "construction": "b\"\".join(name.encode(\"ascii\") + b\"\\n\" for name in inventory)",
+      "separator_byte_hex": "0a",
+      "separator_rule": "Append exactly one real LF byte 0x0a after every name, including the final name.",
+      "forbidden_bytes_or_framing": "No BOM, prefix, suffix, spaces, CR, blank lines, literal backslash-plus-n separator, or other separator."
+    },
+    "historical_prefix_lf_byte_count": 1136,
+    "historical_prefix_lf_sha256": "94b7d2b611f0d15b68ba296dec2156cf0bbdbd7dac97a534a157286386fdb7be",
+    "accepted_i3a_suffix_owner": "I-3A",
+    "accepted_i3a_suffix_count": 35,
+    "accepted_i3a_suffix_reference": "failure_append_order",
+    "accepted_i3a_suffix_rule": "failure_append_order is the exact ordered 35-code suffix immediately following historical_prefix at ordinals 54–88.",
+    "accepted_i3a_suffix_lf_byte_count": 989,
+    "accepted_i3a_suffix_lf_sha256": "0a65b1995b6ed86ba68266cc9bcaac48f2662fae2e1a60cd7672137d40cbcb2c",
+    "accepted_i3a_integration_head": "c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a",
+    "current_inventory_count": 88,
+    "current_inventory_symbol": "CURRENT_88_CODES",
+    "current_inventory_definition": "historical_prefix + failure_append_order",
+    "current_inventory_lf_byte_count": 2125,
+    "current_inventory_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+    "current_inventory_rule": "CURRENT_88_CODES is exactly historical_prefix followed by failure_append_order, is duplicate-free, and is itself the immutable current FailureCode prefix.",
+    "future_extension_rule": {
+      "append_strictly_after_ordinal": 88,
+      "first_possible_future_ordinal_one_based": 89,
+      "first_possible_future_index_zero_based": 88,
+      "required_prefix_expression": "F[:88] == CURRENT_88_CODES",
+      "required_for_every_future_valid_inventory": true,
+      "forbidden_mutations": [
+        "insert, remove, replace, rename, reorder, or duplicate a code within ordinals 1–53",
+        "insert a code between ordinals 53 and 54",
+        "insert, remove, replace, rename, reorder, or duplicate a code within ordinals 54–88",
+        "insert a code anywhere before the current ordinal-88 endpoint"
+      ]
+    },
+    "historical_assertion_sites": [
+      {
+        "path": "tests/framework/test_primitives_envelopes.py",
+        "test": "FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract",
+        "stale_subject": "the complete current FailureCode AST member inventory",
+        "corrected_subject": "the first 53 AST members",
+        "required_expected": "historical_prefix"
+      },
+      {
+        "path": "tests/framework/test_primitives_envelopes.py",
+        "test": "FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement",
+        "stale_subject": "the complete current FailureCode runtime value inventory",
+        "corrected_subject": "the first 53 runtime values",
+        "required_expected": "historical_prefix"
+      }
+    ],
+    "one_time_implementation": {
+      "authorization": "SEPARATE_EXPLICIT_AUTHORIZATION_REQUIRED",
+      "path_count": 1,
+      "paths": [
+        "tests/framework/test_primitives_envelopes.py"
+      ],
+      "allowed_change": "Modify only the two historical assertion sites above so each validates exact ordered equality of the first 53 FailureCode members or values with historical_prefix.",
+      "forbidden_changes": "No other assertion, test, fixture, production path, failure value, precedence rule, validator, declaration, scientific definition, dependency, export, or implementation behavior may change.",
+      "single_use": true,
+      "authorized_by_this_contract_revision": false
+    },
+    "validation_preservation": [
+      "The first 53 members must equal historical_prefix exactly in value and order.",
+      "The accepted I-3A tests must continue to validate the exact 35-code failure_append_order suffix and the exact complete 88-code inventory.",
+      "Duplicate members or values, prefix mutation, prefix reordering, insertion into the prefix, prefix deletion, suffix reordering, suffix deletion, and unauthorized suffix append or replacement must remain detectable."
+    ],
+    "maintenance_path_ownership": {
+      "relationship_to_i3_substages": "SEPARATE_FROM_I3A_THROUGH_I3E",
+      "assigned_i3_substage": "NONE",
+      "changes_future_implementation_manifest": false,
+      "changes_future_path_count": false,
+      "changes_substage_path_counts": false
+    }
+  },
   "prose_failure_resolution": [
     [
       "STATE_PROJECTION_FAILURE",
@@ -4931,7 +5084,8 @@
     "manifest_projection": "UTF-8 canonical JSON array in git-ls-files order; each row is [path,raw_byte_count,raw_sha256]; compact separators; ensure_ascii=false; exactly one LF.",
     "manifest_byte_count": 3461,
     "manifest_sha256": "f7ceeb78e2ba149ed3adb0c283d854547b6fbcccfd1b0c00b60aee44fcf221a1",
-    "required_outcome": "Every selected path remains byte-identical throughout this documentation amendment. Future I-3 implementation may alter only the 23 paths prospectively listed above and only under a separate implementation authorization."
+    "historical_evidence_rule": "The 30-path manifest, its 3461-byte projection, and its SHA-256 remain immutable historical evidence and are not recomputed or redefined by this correction.",
+    "required_outcome": "Every selected path remains byte-identical throughout this documentation amendment. A future separately authorized one-time regression-compatibility implementation may alter only tests/framework/test_primitives_envelopes.py under failure_code_regression_compatibility; all other accepted I-1/I-2 production and test paths remain frozen. The separate 23-path I-3A-I-3E implementation ownership bijection is unchanged."
   },
   "retained_type_count": 69,
   "validator_count": 23,
