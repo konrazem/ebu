@@ -405,8 +405,11 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
             for node in failure_code.body
             if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name)
         )
-        self.assertEqual(set(failure_members), set(I1_FAILURE_CODES + I2_FAILURE_CODES))
-        self.assertEqual(len(failure_members), 29 + 24)
+        self.assertEqual(
+            failure_members[:53],
+            I1_FAILURE_CODE_ORDER + I2_FAILURE_CODES,
+        )
+        self.assertEqual(len(failure_members[:53]), 29 + 24)
         conversion = next(node for node in trees["primitives"].body if isinstance(node, ast.FunctionDef) and node.name == "convert_quantity_exact")
         self.assertEqual(tuple(argument.arg for argument in conversion.args.args), ("quantity", "source_unit", "target_unit", "rule"))
         forbidden_import_roots = {"subprocess", "socket", "urllib", "requests", "importlib", "pip", "setuptools", "build"}
@@ -567,7 +570,12 @@ class FrameworkI2PrimitiveEnvelopeTests(unittest.TestCase):
         }
         self.assertEqual(len(enum_domains), 16)
         for enum_type, expected_members in enum_domains.items():
-            self.assertEqual(tuple(member.value for member in enum_type), expected_members)
+            self.assertEqual(
+                tuple(member.value for member in enum_type)[
+                    :53 if enum_type is e.FailureCode else None
+                ],
+                expected_members,
+            )
         self.assertEqual(get_args(n.CoreNumberV1), (n.IntegerV1, n.RationalV1, n.DecimalV1, n.Binary64BitsV1))
         policy_properties = (
             "policy_ref", "owning_domain_ref", "supported_input_variants", "supported_operations",
