@@ -7,6 +7,7 @@
 **Literature review extension:** 2026-08-13 with an initial prior-art map and bibliography policy
 **Conservation-accounting extension:** 2026-08-14 with a three-level boundary-accounting foundation
 **Part I integrated-revision extension:** prospective explanatory, visual, institutional, and typography plan
+**Part I layout-and-distance emphasis:** prospective measured layout, distance/burden, and non-destructive preservation requirements
 **Language:** English  
 **Purpose:** Preserve the complete future-book architecture, chapter purposes, transitions, overlap controls, scientific dependencies, figure expectations, and research stop conditions in one handoff document.
 
@@ -80,6 +81,20 @@ nor changes framework authority, code, a Gate, or I-3C.
 An accepted book allocation, equation, theorem candidate, research dependency, evidence gate, or stop condition should be recorded here and then synchronized with the authoritative repository. Conversation summaries are supporting context, not the scientific source of truth.
 
 When a later result changes the outline, the register should be revised explicitly. A new result must not silently rewrite the historical meaning of an earlier registered study.
+
+The Part I manuscript handoff is explicitly non-destructive:
+
+> The integrated Part I revision modifies the accepted manuscript; it does not
+> regenerate or replace it from scratch.
+
+A separately authorized Part I manuscript task must preserve verified starting
+source and PDF hashes, maintain a complete change ledger, compare before/after
+content inventories, produce textual and visual redlines, retain recoverable
+baseline artifacts, and fail closed on unexplained deletion or substantive
+rewrite. It edits Part I only: Parts II and III remain untouched and
+byte-identical. Any coordinated Parts I-III work requires separate
+authorization and preservation audits. Parts IV-IX extend this foundation
+rather than replacing Parts I-III.
 
 ### 2.3 Claim-status vocabulary
 
@@ -646,6 +661,37 @@ transition respectively.
 
 **What this book must not repeat:** the elementary claims that distance alone is not EBU, EBU is not \(q_1q_2/r^2\), Fermat is an analogy, or Bellman recursion can plan a path. Those foundations already exist in Parts I-II.
 
+### Distance and burden generator rule
+
+Part VII and every affected Part I route explanation must preserve this
+reader-facing takeaway:
+
+\[
+\boxed{\text{EBU penalizes verified burden, not distance itself.}}
+\]
+
+Local provision may often win because it avoids transport loss, delay, energy
+use, storage, wear, and infrastructure burden. But it must win through the
+physical calculation. A distant high-efficiency route may sometimes create
+less total burden than inefficient local production.
+
+Here "penalizes" means that verified physical burden contributes negatively to
+the physical EBU result, not moral blame, legal punishment, personal debt,
+automatic action refusal, or identity-based treatment. The generator must give
+distance no automatic coefficient, universal tax, or inverse-square EBU force.
+Route burden must arise from
+performed physical transformations, including declared source withdrawal,
+segment efficiency, loss, energy, storage, time, capacity, wear, maintenance,
+uncertainty, and delayed observable consequences. Long routes retain exact
+local child records; internal transfers cancel exactly once during roll-up;
+external boundary effects, process costs, and unresolved residuals remain; and
+one effect must not appear both in represented state and process cost. P1C
+permission remains separate from EBU sign. Preference for local provision is
+institutional policy, not part of the physical quote.
+
+This is an explanatory generator requirement, not a new theorem, chapter,
+O-number, framework mechanism, or figure allocation.
+
 ### Detailed chapter structure
 
 | Ch. | Working title | What the chapter does | Required evidence and figures |
@@ -1000,8 +1046,11 @@ the existing tag must not move.
 7. Maintain a claim-by-claim literature map that records established antecedents, EBU-specific formulations, candidate contributions, nonclaims, and unresolved searches.
 8. Complete a dedicated literature checkpoint for each part before its manuscript-generation gate; the §7.4 seed bibliography is not sufficient for Parts IV-IX as a whole.
 9. Maintain `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md` as
-   the prospective authority for one integrated Part I revision; do not mutate
-   the manuscript or PDF without a separate reviewed stage.
+   the prospective authority for one integrated Part I revision, including its
+   exact distance/burden takeaway, measured current-layout control, print and
+   digital geometry trials, heading-size trials, complete change ledger,
+   before/after inventories, redlines, and Parts II-III byte-identity rule; do
+   not mutate the manuscript or PDF without a separate reviewed stage.
 
 ### Phase C - Execute studies in dependency order
 
@@ -1027,7 +1076,9 @@ the existing tag must not move.
 4. Generate Part VII after route composition, actor closure, congestion, cooperation, fairness, and adaptive-network studies are complete.
 5. Generate Part VIII after Dynamic Coordination, storage/switching and lumped-versus-distributed network comparisons, wave diagnostics, topology comparison, resilience, scaling, and pattern tests are complete.
 6. Generate Part IX last, after the quote, residual, reserve, access, governance, behavioural, transition, and complete-economy programme can synthesize the surviving results.
-7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable.
+7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable
+   and under separate authorization with preservation audits; future Parts
+   IV-IX extend rather than replace Parts I-III.
 
 Each generation gate also requires the corresponding literature checkpoint,
 nearest-antecedent table, and resolved citation ledger. Passing an experiment
@@ -1189,3 +1240,25 @@ This extension:
    1,904-2,659 to 1,915-2,677 pages before indexes and front matter; and
 9. remains documentation-only: it does not edit or rebuild Part I, change
    framework authority or code, begin I-3C, run a model, or advance a Gate.
+
+### 16.6 Part I layout, distance, and preservation emphasis
+
+This narrow prospective extension:
+
+1. freezes the reader-facing principle that EBU penalizes verified physical
+   burden rather than distance itself, with no automatic distance coefficient,
+   universal distance tax, inverse-square force, or local-provision preference
+   inside the physical quote;
+2. registers the measured `450 × 666 pt` (`6.25 × 9.25 in`) current layout as a
+   control, together with candidate print and digital margin trials, measured
+   heading-size trials, binding and line-length checks, and representative
+   Chapter 6, equation, table, figure, Q&A, and reference pages;
+3. requires the future Part I task to modify the accepted manuscript
+   non-destructively, with hashes, inventories, ledgers, redlines, recoverable
+   baselines, deletion reporting, and complete final-page inspection;
+4. keeps Parts II and III untouched and byte-identical during Part I work and
+   requires separate authority and preservation audits for any coordinated
+   Parts I-III revision; and
+5. leaves the `27-42`-page Part I and `1,915-2,677`-page publication ranges
+   unchanged and creates no theorem, chapter, O-number, framework mechanism,
+   figure allocation, scientific result, or execution authority.
