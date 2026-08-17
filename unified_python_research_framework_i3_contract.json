@@ -1,7 +1,7 @@
 {
   "contract_id": "ebu-framework-i3-authority/1",
-  "contract_version": "1.0.4",
-  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_THREE_ASSERTION_REPAIR_SCOPE_CORRECTED_TEST_REPAIR_UNIMPLEMENTED",
+  "contract_version": "1.0.5",
+  "status": "PROSPECTIVE_AUTHORITY_COMPLETE_FAULTCLASS_VECTOR_REACHABILITY_CORRECTED_I3D_UNIMPLEMENTED",
   "revision_history": [
     {
       "version": "1.0.0",
@@ -72,54 +72,76 @@
     },
     {
       "version": "1.0.4",
+      "status": "HISTORICAL_PROSPECTIVE_AUTHORITY",
+      "change": "Corrects the one-time maintenance inventory from two assertion sites to exactly three assertion-expression changes by adding the adjacent historical prefix-length assertion and freezes all three future expressions without assignment expressions, rebinding, mutation, aliasing, helpers, or hidden changes to effective assertion inputs.",
+      "source_hashes": {
+        "human_rendering_raw_sha256": "2318334f325aa567e74531e38044ded15859961199700adce55c2fd6241528ce",
+        "mechanical_contract_raw_sha256": "b2401cbfc03c671cab66591c1dcbfa9304690d7a0e018afd6ce232b10cecaee9",
+        "mechanical_contract_canonical_sha256": "8576b0aeec67eda127d33d9b6022fea619d2dd82c9a092c54208925e7d7de706",
+        "validation_contract_raw_sha256": "769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc",
+        "validation_contract_canonical_sha256": "1755d4b25f07324aa8f9cc7fa3bbc90aa7fb2788b99b4ddf14d06369f5846598",
+        "specification_version": "0.1.14",
+        "specification_raw_sha256": "0f6ab9800acda8890ae2a28d4652552af9cf5b335d4b00619eb8f0dbe892041e",
+        "plan_version": "0.2.14",
+        "plan_raw_sha256": "594babad337fcda326408e9d0415a6704eb89655e9e41e5ed28d6537b86ce04e"
+      },
+      "note": "Preserved historical exact-three-assertion maintenance-scope authority; superseded only by the v1.0.5 four-vector FaultClass constructor-reachability correction."
+    },
+    {
+      "version": "1.0.5",
       "status": "CURRENT_PROSPECTIVE_AUTHORITY",
-      "change": "Corrects the one-time maintenance inventory from two assertion sites to exactly three assertion-expression changes by adding the adjacent historical prefix-length assertion and freezes all three future expressions without assignment expressions, rebinding, mutation, aliasing, helpers, or hidden changes to effective assertion inputs."
+      "change": "Corrects only four fully materialized validate_fault_schedule_boundary vectors by replacing the stale out-of-domain OPERATIONAL_DURABILITY_EVENT value with the already-authorized OPERATIONAL_DURABILITY_INJECTION value and resealing dependent projections and hashes; preserves the exact FaultClass domain, vector inventory, categories, active predicate sets, precedence, outcomes, implementation bytes, and scientific nonclaims."
     }
   ],
   "authority": {
     "branch": "framework-v0.1",
     "base_head": "85cc43b4fafe298245ceb5baf48b1731de47df44",
-    "correction_branch": "framework/i-3-three-assertion-repair-authority",
-    "correction_base_head": "d75540efb8341cd74f4d1f58544a39763da67f6f",
+    "correction_branch": "framework/i-3d-faultclass-vector-authority",
+    "correction_base_head": "95f3c1990d32859dd091756a68571959406f2c1b",
     "prior_specification": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
-      "version": "0.1.12",
-      "raw_sha256": "beb8608bfa0bc12809b3ac49e8310dc23611715e8b13e913b48a0ae0c54f61f0"
+      "version": "0.1.14",
+      "raw_sha256": "0f6ab9800acda8890ae2a28d4652552af9cf5b335d4b00619eb8f0dbe892041e"
     },
     "prior_plan": {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
-      "version": "0.2.12",
-      "raw_sha256": "690ea1edb510bc8255fa61743c4637ce16254961a3db88c2d4c26702c31b5b93"
+      "version": "0.2.14",
+      "raw_sha256": "594babad337fcda326408e9d0415a6704eb89655e9e41e5ed28d6537b86ce04e"
     },
     "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
     "mechanical_contract": "unified_python_research_framework_i3_contract.json",
     "validation_contract": "unified_python_research_framework_i3_validation_contract.json",
     "precedence": {
       "supersedes_only": [
-        "v1.0.3 maintenance inventory only where it omitted the adjacent historical prefix-length assertion in FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract",
-        "v1.0.3 under-specified assertion-change boundary only to freeze the exact three future expressions and explicitly forbid assignment expressions, rebinding, mutation, aliasing, helper insertion, and hidden changes to effective assertion inputs"
+        "v1.0.4 validation authority only where i3v-20-s05, i3v-20-a04, i3v-20-a05, and i3v-20-m materialized the out-of-domain OPERATIONAL_DURABILITY_EVENT value",
+        "the directly or transitively dependent canonical payload bytes, projections, object-content hashes, references, evidence coordinates, failure envelopes, failure IDs, and corpus/component identities for those four vectors"
       ],
       "does_not_change": [
-        "any implementation or test byte in this documentation-only correction",
-        "the accepted I-1/I-2 53-code prefix, semantics, ordinals, strings, compatibility rules, or caller behavior",
-        "the accepted I-3A 35-code suffix or current 88-code inventory",
-        "ECJ-1 or accepted I-1/I-2 hash domains and helper names",
-        "the I-3 validation contract or any of its 544 materialized vectors",
-        "the 23-path I-3A-I-3E ownership bijection or any substage path count",
-        "any scientific equation, model, result, protocol, Gate state, or interpretation",
-        "Bridge behavior owned by I-6",
-        "Dynamic Coordination behavior owned by I-7",
-        "authorization, execution, publication, or scientific-use permission"
+        "the exact FaultClass domain SCIENTIFIC_MODEL_EVENT and OPERATIONAL_DURABILITY_INJECTION",
+        "any vector ID, name, category, interface, boundary condition, active failure set, precedence order, expected failure code, stage, retry class, state advance, policy-memory advance, scientific-status effect, or nonclaim",
+        "any other validation vector or any formation, collection, applicability, conservation, paired-quantity, state-projection, settlement-link, artifact, or collision rule",
+        "any implementation, test, fixture, packaging, manuscript, PDF, model, result, runner, finalizer, or Gate byte",
+        "the accepted I-1/I-2 53-code prefix, the accepted I-3A 35-code suffix, or the immutable current 88-code inventory",
+        "the 69 types, 23 validators, 92-name export suffix, 15-module/91-edge graph, 133 collection rows, 43 applicability rows, two sum types, or 23-path ownership bijection",
+        "any scientific equation, model, result, protocol, Gate state, interpretation, authorization, execution, publication, or scientific-use permission"
       ],
       "conflict_rule": "FAIL_CLOSED"
     },
     "correction_scope": {
-      "changes_only": "the prospective one-time FailureCode regression-compatibility maintenance inventory, corrected from two assertion sites to exactly three assertion-expression changes in one accepted I-2 test path",
+      "changes_only": "the four constructor-unreachable fault-class vector inputs and their mechanically dependent seals and authority coordinates",
+      "changed_vector_ids": [
+        "i3v-20-s05",
+        "i3v-20-a04",
+        "i3v-20-a05",
+        "i3v-20-m"
+      ],
+      "stale_invalid_value": "OPERATIONAL_DURABILITY_EVENT",
+      "replacement_authorized_value": "OPERATIONAL_DURABILITY_INJECTION",
       "does_not_change": [
-        "the 69 types, 23 validators, 35 failures, 92-name export suffix, 15-module/91-edge graph, 133 collection rows, 43 applicability rows, two sum types, or 23-path ownership bijection",
-        "any public type, field, callable, signature, precedence position, failure value, validation vector, validator, declaration, dependency, or export",
-        "any scientific model, equation, Gate rule, result, interpretation, execution permission, or implementation byte",
-        "the historical 30-path I-1/I-2 manifest as immutable evidence"
+        "the exact two-member FaultClass domain",
+        "any intended validator predicate or first-failure selection",
+        "any implementation or test byte",
+        "any scientific content or later-stage authorization"
       ]
     }
   },
@@ -7922,31 +7944,62 @@
   ],
   "validation_authority": {
     "path": "unified_python_research_framework_i3_validation_contract.json",
+    "contract_version": "1.0.2",
+    "raw_byte_count": 49384569,
+    "raw_sha256": "9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b",
+    "canonical_byte_count": 24191436,
+    "canonical_sha256": "ba70b9915ebc5957225adc3f4806d89a540bec86560a29d63471613af2659079",
     "vector_count": 544,
-    "canonical_vectors_byte_count": 24179362,
+    "canonical_vectors_byte_count": 24179582,
     "canonical_vectors_final_newline": "EXACTLY_ONE_LF",
-    "canonical_vectors_sha256": "4ac998f53ed5f39a41fcf14d077055c380f522d8a5555535fb735cd0646a6885",
+    "canonical_vectors_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
     "formation_failure_interfaces": 69,
     "validator_failure_sites": 145,
     "adjacent_pairs": 122,
     "multiply_invalid_validators": 23,
     "object_content_scan_order_cases": 1,
     "validator_object_content_outcomes_with_primary_object_ref": 67,
-    "adjacent_order_duplicate_witness_count": 19,
-    "corrected_adjacent_order_duplicate_witness_count": 18,
-    "preserved_adjacent_order_duplicate_witness_ids": [
-      "i3v-23-a03"
-    ],
     "conservation_requirement_rows": 24,
     "paired_quantity_compatibility_rows": 12,
     "independent_semantic_audit_routes": 2,
     "semantic_audit_failure_count_per_route": 0,
-    "state_projection_repaired_vector_count": 4,
-    "settlement_link_repaired_vector_count": 4,
     "predicate_truth_projection_subject": "the ordered array of [vector_id, precedence_evidence.active_failure_codes] rows in vectors order",
-    "predicate_truth_projection_sha256": "8812d40f5eb8f79722cf6aefe2df0eff7adae0494415ec146b3e9ab950be9f89",
-    "changed_vector_count": 227,
-    "unchanged_vector_count": 317
+    "component_sha256": {
+      "ids": "af04f10d692e4ffac66f5af1f3585d3dbaf6ace99417b683f0469c53e0238f85",
+      "names": "31e566fd4f9dc5dd472944a8cdec25c87cf3bc04880822fca9003bdda1b5e5eb",
+      "effective_inputs": "cbcbe59249e866cd4a9d8eec74094fed4c506ac30d46ff2b106d02a1576dc596",
+      "outcomes": "5c6da4ad3fa3498db5a0c633e5ad889f18df621cf6b60d5ece9c9ca1883ed25b",
+      "failure_ids": "af857c4d3c73ca897dbac82c588b8558e8f40746e0059bbdcb582a475733c999",
+      "successful_projections": "a6d463d310f6289721531e2dfef0ef7944ee242eb5f9f245bbc47decbac90a7d",
+      "predicate_truth_sets": "8812d40f5eb8f79722cf6aefe2df0eff7adae0494415ec146b3e9ab950be9f89"
+    },
+    "faultclass_reachability_corrected_vector_count": 4,
+    "faultclass_reachability_corrected_vector_ids": [
+      "i3v-20-s05",
+      "i3v-20-a04",
+      "i3v-20-a05",
+      "i3v-20-m"
+    ],
+    "changed_vector_count": 4,
+    "unchanged_vector_count": 540,
+    "vectors_added": 0,
+    "vectors_removed": 0,
+    "outcomes_changed": 0,
+    "predicate_truth_sets_changed": 0,
+    "unique_effective_input_count": 543,
+    "benign_identical_input_collision_count": 1,
+    "incompatible_collision_count": 0,
+    "historical_v1_0_1_semantic_correction_evidence": {
+      "state_projection_repaired_vector_count": 4,
+      "settlement_link_repaired_vector_count": 4,
+      "changed_vector_count": 227,
+      "unchanged_vector_count": 317,
+      "adjacent_order_duplicate_witness_count": 19,
+      "corrected_adjacent_order_duplicate_witness_count": 18,
+      "preserved_adjacent_order_duplicate_witness_ids": [
+        "i3v-23-a03"
+      ]
+    }
   },
   "collection_witness_rule": {
     "comparison": "Use only the collection_contracts order_rule comparison key; never fixture identity or member identity.",
