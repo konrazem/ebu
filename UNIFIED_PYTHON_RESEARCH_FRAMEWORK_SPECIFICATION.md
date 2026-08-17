@@ -1,9 +1,9 @@
 # Unified Python Research Framework Specification
 
-**Version:** 0.1.13
-**Status:** Prospective complete I-3 exact three-assertion repair-scope authority; accepted and integrated I-3A remains frozen; one-time historical I-2 assertion repair is specification-ready and unimplemented; no implementation, scientific execution, Gate, publication, or release authority
+**Version:** 0.1.14
+**Status:** Prospective Part I revision-planning authority reconciliation only; accepted I-3A, accepted I-3B, and the accepted regression-compatibility repair remain frozen; no manuscript/PDF mutation, implementation, scientific execution, Gate, publication, or release authority
 **Date:** 2026-08-12
-**Authority reconciliation date:** 2026-08-16
+**Authority reconciliation date:** 2026-08-17
 **Language:** English
 **Purpose:** Specify one versioned, typed, reproducible Python research
 framework for Parts IV–IX without implementing it or authorizing scientific
@@ -76,7 +76,7 @@ the bridge controls its imported Part VI objects, the dynamic foundation
 controls its imported state and event order, and neither may be selectively
 rewritten here.
 
-#### 2.1.2 Current v0.1.13 prospective authority register
+#### 2.1.2 Current v0.1.14 prospective authority register
 
 Revision v0.1.2 prospectively replaced only the active books-structure
 authority pointer. Revision v0.1.3 preserved those imported scientific
@@ -97,18 +97,22 @@ implementation-path/substage ownership bijection. Revision v0.1.11 corrected
 only the local semantic predicates and materialized witnesses recorded in
 §20.12. Revision v0.1.12 corrected only the historical `FailureCode` whole-enum
 assumption and froze the one-time maintenance boundary recorded in §20.13
-and §22. Revision v0.1.13 corrects only that boundary's omission of the
+and §22. Revision v0.1.13 corrected only that boundary's omission of the
 adjacent historical prefix-length assertion, freezes exactly three future
 assertion expressions, and adds the anti-rebinding constraints recorded in
-§20.14 and §22. The v0.1.2
+§20.14 and §22. Revision v0.1.14 replaces the active books-structure pointer,
+registers the integrated Part I revision plan as prospective manuscript-
+planning authority, records accepted I-3B and the accepted one-time repair,
+and changes no scientific or implementation authority. The v0.1.2
 reconciliation began from repository `HEAD`
 `c3965c87554911c526592ac9688d4c35f0c49516`, whose first-parent merge diff
 changes only `EBU_FUTURE_BOOKS_STRUCTURE.md`. The current authority
 set is:
 
-| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.13 |
+| Source | Current version or role | Current required raw SHA-256 | Current authority used by v0.1.14 |
 |---|---|---|---|
-| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6, literature/originality, and conservation-accounting planning | `0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f` | Parts IV–IX ordering and future research dependencies, subject to the boundaries in §§2.1.4–2.1.6 |
+| `EBU_FUTURE_BOOKS_STRUCTURE.md` | Current future-books architecture, including K1–K6, literature/originality, conservation accounting, and the integrated Part I revision allocation | `24c32561fb8d8aff4ab19df4b626653be1cf4191b015f8758cee9141ad262440` | Parts I and IV–IX planning dependencies, subject to the boundaries in §§2.1.4–2.1.7 |
+| `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md` | Prospective explanatory, visual, institutional, preservation, and typography plan for one integrated Part I revision | `9f90ffc973e743891d15ae52b186ec5b1facc5ca4a2ae638d8006f91d5e547df` | Current prospective manuscript-planning authority only, within the non-authorization and preservation boundary in §2.1.7 |
 | `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | v0.1 conceptual and algebraic planning foundation | `b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a` | Three account levels, typed boundary-accounting interpretation, historical-model compatibility, and prospective I-3/I-5 planning limits in §2.1.6 |
 | `SEQUENTIAL_PARALLEL_BRIDGE.md` | v0.2 | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` | Unchanged Part VI definitions, grouping, comparators, physical group measurement, causal limits, receipt closure, and batching |
 | `DYNAMIC_COORDINATION_FOUNDATION.md` | v0.1 | `6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95` | Unchanged Part VIII dynamic state, seven-layer separation, deterministic event order, network evolution, objectives, uncertainty, and framework requirements |
@@ -116,17 +120,17 @@ set is:
 | `unified_python_research_framework_i3_contract.json` | v1.0.4 mechanical I-3 contract | `b2401cbfc03c671cab66591c1dcbfa9304690d7a0e018afd6ce232b10cecaee9` | Exact 53-code prefix, 35-code suffix, current 88-code inventory, three assertion-expression changes in two methods and one test path, anti-rebinding rules, preserved I-3 inventories, and unchanged path bijection |
 | `unified_python_research_framework_i3_validation_contract.json` | v1.0.1 validation contract | `769abebab4f52e31e70e1387b202321376b6e03bf8e70a2bddbac84f4a06eafc` | Exact corrected 544-vector materialization, complete changed-vector inventory, two-route predicate-truth evidence, collision rule, bytes, and digest |
 
-The books-structure hash in this table is the only active books-structure
-authority value for this specification revision, and the conservation-
+The books-structure and Part I plan hashes in this table are their only active
+authority values for this specification revision, and the conservation-
 foundation hash in this table is its only active value. The active I-1
 packaging authorities and accepted I-2 implementation evidence remain frozen
 without amendment; the v0.1.7 design-time locks retained in §21 are historical
 inputs to that accepted implementation, not current planning-authority
 pointers. Superseded values remain solely in explicitly historical records.
-This prospective I-3 authority update changes no imported bridge or dynamic-
-coordination semantic, framework object, interface, invariant, event phase,
-accepted I-1/I-2 test classification, implementation byte, or current
-implementation permission.
+This prospective Part I planning-authority reconciliation changes no imported
+Bridge or Dynamic Coordination semantic, framework object, interface,
+invariant, event phase, accepted I-1/I-2/I-3 test classification,
+implementation byte, or current implementation permission.
 
 #### 2.1.3 Immutable signed foundation evidence
 
@@ -226,6 +230,55 @@ workflow, or domain numerical policy.
 Detailed Bridge and Dynamic Coordination amendments remain separately
 authorized and unstarted. This planning reconciliation makes no scientific,
 experimental, empirical, novelty, or result claim.
+
+#### 2.1.7 Integrated Part I revision-planning boundary
+
+`PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md` is prospective
+manuscript-planning authority only. It defines the evidence, preservation,
+explanation, figure, institutional-separation, and layout gates that a later
+independently authorized Part I revision proposal must satisfy. It does not
+authorize mutation of the Part I source or PDF, PDF regeneration, rebuilding
+or regenerating Parts I–III, any change to Parts II or III, framework
+implementation, any repeat of the accepted historical assertion repair, I-3C,
+model-state advance, a Gate operation, publication, or release.
+
+The planning lock preserves without reinterpretation:
+
+- all accepted I-1 and I-2 implementation and packaging identities, the
+  complete I-3 authority amendment, mechanical contract, validation contract
+  and 544-vector corpus identities, the accepted I-3A and I-3B implementations,
+  and the accepted one-time regression-compatibility repair;
+- the Sequential–Parallel Bridge, Dynamic Coordination, and conservation and
+  boundary-accounting authorities and every equation, theorem, result, Gate
+  state, interpretation limit, and nonclaim they protect;
+- retirement of the broad O2 actor/coalition historical-profit-cap objective
+  without a replacement family, together with the fixed-field cycle identity,
+  same-actor quote independence, and the distinction between an equivalent
+  repair and a genuinely larger verified improvement;
+- the rule that EBU penalizes verified physical burden rather than distance
+  itself, with no automatic distance coefficient, universal distance tax, or
+  inverse-square EBU force;
+- the entropy boundary: thermodynamic entropy, Shannon information, and any
+  EBU-specific candidate must remain separately typed, unit- and boundary-
+  declared concepts, and EBU is not asserted to be a thermodynamic law;
+- the separation of physical conservation, represented-stock closure, EBU
+  accounting, causal attribution, institutional settlement, and compensation;
+- the open status of long-run viability, invariance, stability, attraction,
+  recovery, and compositional homeostasis until Part V earns the applicable
+  theorem under explicit assumptions;
+- the exact nine-figure selective visual programme and its evidence, symbol,
+  unit, provenance, accessibility, contrast, caption, and placement gates;
+- the measured typography and pagination trials, representative-page renders,
+  complete-PDF visual acceptance gate, and the rule that no layout winner is
+  selected in advance; and
+- non-destructive Part I revision mechanics: verified source/PDF baselines,
+  a complete change ledger and content inventories, textual and visual
+  redlines, recoverable baseline artifacts, and no unexplained deletion or
+  rewrite, while Parts II and III remain untouched and byte-identical.
+
+These are future manuscript acceptance requirements, not a manuscript edit or
+scientific finding. A separate authority must expressly permit Part I source
+mutation and PDF generation before either can begin.
 
 ### 2.2 Preserved Gate 1D-C incident boundary
 
@@ -3431,11 +3484,16 @@ subsequently accepted exactly on feature commit
 by merge commit `ede89d8af6b89da491e03c352efcf1868a913f6f`. I-3A was subsequently
 accepted at feature commit `83dc39866799c57af99e8a2001ff2bfa8e60d282`
 and integrated at merge commit
-`c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`. Revision v0.1.13 does not
-reopen either accepted implementation. It grants only the prospective narrow
-regression-compatibility authority in §22 and grants no implementation, I-3B,
-I-5, framework-alpha, scientific-execution, Gate, publication, or release
-authority.
+`c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`. The exact one-time regression-
+compatibility repair was subsequently accepted at feature commit
+`8a10bbb8301f9891b1e90d7f40c9878780b37b48` and integrated at merge commit
+`453f14525bbe9ec1fed74d0d37feb4f2e52e4217`. I-3B was accepted at feature
+commit `0312f29d69b3dcf639a49be9a25d43e76036715d` and integrated at merge
+commit `d14928a1f6f9837d9ab895cc2ea64c8562bb4f27`. Revision v0.1.14 reopens
+none of those accepted stages. It reconciles prospective Part I manuscript-
+planning authority only and grants no implementation, I-3C, I-5, framework-
+alpha, manuscript/PDF mutation, scientific execution, Gate, publication, or
+release authority.
 
 ## 20. Document revision history
 
@@ -3637,13 +3695,17 @@ declaration, scientific definition, Gate rule, dependency, export, or
 execution permission. Its now-historical whole-file raw SHA-256 is
 `beb8608bfa0bc12809b3ac49e8310dc23611715e8b13e913b48a0ae0c54f61f0`.
 
-### 20.14 Revision v0.1.13 — current prospective exact three-assertion repair-scope correction
+### 20.14 Revision v0.1.13 — historical prospective exact three-assertion repair-scope correction
 
 Revision v0.1.13 adopts amendment v1.0.4 and mechanical contract v1.0.4 while
 preserving validation contract v1.0.1 byte-identically. It preserves the
 exact immutable ordered 53-code historical prefix, accepted ordered 35-code
 I-3A suffix, immutable current 88-code sequence, append-only future boundary,
 and all three inventory identities from v0.1.12.
+
+Its then-active books-structure raw SHA-256 was
+`0c8eeb402b201e81e20c0167f5b66d93ccb9d6d847d1c4c145891e145c9ec26f`;
+that value is historical and is not an active v0.1.14 authority lock.
 
 It corrects the one-time maintenance inventory from two assertion sites to
 exactly three assertion-expression changes in two existing methods and one
@@ -3660,8 +3722,27 @@ maintenance path remains outside I-3A–I-3E and leaves the 5/6/5/4/3 ownership
 counts unchanged. This revision changes no implementation or test byte,
 fixture, validator, vector, failure code, public API, scientific definition,
 Gate rule, dependency, export, runtime behavior, or execution permission.
-This Markdown document intentionally does not contain its own current v0.1.13
-whole-file hash.
+Its now-historical whole-file raw SHA-256 is
+`f7eb5dfe3d63b422e1a449e64db5b1b8464760afdb4054e485ed4e647b59a8bb`.
+
+### 20.15 Revision v0.1.14 — current prospective Part I planning-authority reconciliation
+
+Revision v0.1.14 adopts the integrated Part I planning sources at the active
+raw hashes in §2.1.2. It registers the new plan as prospective manuscript-
+planning authority, records the accepted regression-compatibility repair and
+accepted I-3B integration, and leaves I-3C and every later implementation or
+scientific stage separate and unbegun.
+
+It preserves all accepted I-1/I-2/I-3 implementation and packaging bytes; the
+Bridge, Dynamic Coordination, conservation, I-3 amendment, mechanical
+contract, validation contract, and corpus identities; every scientific
+definition, equation, theorem status, result, Gate state, and nonclaim; and the
+Part I plan's O2 retirement, fixed-field cycle, same-actor, distance/burden,
+entropy, conservation, homeostasis, institutional-separation, nine-figure,
+typography/render, and Parts II–III preservation boundaries. It authorizes no
+manuscript or PDF mutation, framework implementation, scientific execution,
+model-state advance, Gate operation, publication, or release. This document
+does not contain its own current whole-file hash.
 
 ## 21. Normative prospective Framework I-2 amendment
 
@@ -3670,7 +3751,7 @@ implemented and accepted at
 `351417c39fa26b9045e7c162a9897a7c38e4e1d1` and integrated at
 `ede89d8af6b89da491e03c352efcf1868a913f6f`. Its v0.1.7 source locks and
 future-tense implementation instructions are historical acceptance inputs,
-not active current-authority pointers. Revision v0.1.13 changes none of
+not active current-authority pointers. Revision v0.1.14 changes none of
 its inventories, predicates, fixtures, precedence, API, dependencies,
 implementation paths, or hashes. Its separate I-3 authority exists only in
 §22 and supplies no authority for I-5.
@@ -3721,10 +3802,11 @@ build, installation, acceptance mutation, scientific operation, Gate
 operation, commit, push, release, or publication, and I-2 remained
 unimplemented. The later accepted implementation and integration commits
 named above satisfy that historical stage without altering this contract.
-Revision v0.1.13 changes no accepted I-2 implementation byte and authorizes no
-implementation stage. Its exact prospective exception for a later separately
-authorized one-time assertion-only repair is defined in §22; until that later
-authorization, this implemented I-2 contract remains byte-identical.
+Revision v0.1.14 changes no accepted I-2 implementation byte and authorizes no
+implementation stage. The exact assertion-only exception defined in §22 was
+subsequently implemented and accepted at the feature and integration commits
+recorded in §19; it is now frozen historical implementation evidence and
+creates no permission for another repair.
 
 ### 21.2 Common failure architecture
 
@@ -5963,7 +6045,7 @@ The complete corrected I-3 authority is the agreement of:
 
 The amendment is the normative human rendering; the first JSON is the mechanical schema and ordering source; the second JSON is the fully materialized validation source. Any mismatch fails closed. Version 1.0.4 narrowly supersedes v1.0.3 only where the two-site maintenance inventory omitted the adjacent historical prefix-length assertion and did not freeze the exact three future expressions and anti-rebinding constraints named in §20.14. All other v1.0.3 authority remains in force; older hashes remain historical only. This correction changes no closed public inventory, failure value, precedence position, validation vector, validator, declaration, import graph, export inventory, I-3 implementation-path ownership, scientific definition, equation, model, result, protocol, Gate state, interpretation, or execution permission.
 
-I-3A is accepted and integrated at `c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`; its bytes and authority remain frozen. The one-time test repair is specification-ready and unimplemented. This revision authorizes no implementation edit, fixture installation, test execution, I-3B resumption, I-3C start, registry acceptance, scientific use, state advance, or I-4–I-8 behavior.
+I-3A is accepted and integrated at `c7daa0bbc2ee10bbd1d2fad8f2a68c9ee51d591a`; I-3B is accepted and integrated at `d14928a1f6f9837d9ab895cc2ea64c8562bb4f27`; and their bytes and authority remain frozen. The exact one-time test repair is accepted and integrated at `453f14525bbe9ec1fed74d0d37feb4f2e52e4217`. This revision authorizes no implementation edit, fixture installation, test execution, I-3C start, registry acceptance, scientific use, state advance, or I-4–I-8 behavior.
 
 ### 22.2 Closed mechanical inventory
 
@@ -5991,7 +6073,7 @@ The exact 92-name suffix remains 69 retained types followed by 23 validators. Th
 | `I-3D` | `src/ebu_framework/faults.py`; `src/ebu_framework/experiment.py`; `src/ebu_framework/artifacts.py` | — | `tests/framework/test_i3d_declarations.py` | 4 |
 | `I-3E` | `src/ebu_framework/__init__.py` | `tests/framework/fixtures/i3_validation_v1.json` | `tests/framework/test_i3_integration.py` | 3 |
 
-The flattened table is a bijection with the exact 23-path manifest: every frozen path appears once, there are exactly five distinct substages, no path is missing or duplicated, no outside path is admitted, and every substage inventory agrees with its ownership rows. After a substage path is accepted, no later substage may modify it without a separate prospective correction.
+The flattened table is a bijection with the exact 23-path manifest: every frozen path appears once, there are exactly five distinct substages, no path is missing or duplicated, no outside path is admitted, and every substage inventory agrees with its ownership rows. After a substage path is accepted, no later substage may modify it without a separate prospective correction. The I-3A and I-3B rows are accepted and integrated; I-3C, I-3D, and I-3E retain their separate prospective implementation boundaries.
 
 `errors.py` is owned by I-3A. I-3A appends the complete already-frozen 35-code I-3 suffix exactly once and installs all 35 codes together. Every accepted I-1/I-2 code, ordinal, string, compatibility rule, caller behavior, and byte outside that append-only suffix remains unchanged. I-3B–I-3D consume the inert identifiers already installed and do not modify `errors.py`; installation does not implement or authorize associated behavior. I-3E only verifies the suffix and preservation evidence. `errors.py` remains standard-library-only with its frozen import restrictions.
 
@@ -6030,12 +6112,12 @@ the accepted I-3 35-code suffix is exactly 989 bytes with SHA-256
 and `CURRENT_88_CODES` is exactly 2,125 bytes with SHA-256
 `0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3`.
 
-Exactly three assertion expressions in
-`tests/framework/test_primitives_envelopes.py` require a future one-time
-maintenance change, confined to exactly two existing methods.
+The accepted one-time repair changed exactly three assertion expressions in
+`tests/framework/test_primitives_envelopes.py`, confined to exactly two
+existing methods.
 
 In `FrameworkI2SourceAuditTests.test_ast_import_export_and_reachability_contract`,
-the future expressions are exactly:
+the accepted expressions are exactly:
 
 ```python
 self.assertEqual(
@@ -6051,7 +6133,7 @@ method. Both independent historical assertions explicitly observe
 and the adjacent assertion checks the length of that same prefix.
 
 In `FrameworkI2PrimitiveEnvelopeTests.test_public_record_closure_and_static_supplement`,
-the future expression is exactly:
+the accepted expression is exactly:
 
 ```python
 self.assertEqual(
@@ -6066,10 +6148,12 @@ Only `FailureCode` is prefix-scoped; every other enum comparison remains
 whole-domain exact. No assignment expression, walrus operator, rebinding,
 mutation, truncation, aliasing, helper insertion or extraction, individual
 I-3 failure-code copy, hidden input change, or change outside these exact
-three expressions is permitted. Every other statement, assertion, import,
+three expressions was permitted. Every other statement, assertion, import,
 constant, helper, method, class, formatting-only region, production path, and
-test path remains byte-identical. This revision neither performs nor
-authorizes the implementation change.
+test path remained byte-identical. The repair was accepted at feature commit
+`8a10bbb8301f9891b1e90d7f40c9878780b37b48` and integrated at merge commit
+`453f14525bbe9ec1fed74d0d37feb4f2e52e4217`; this revision performs no further
+change and grants no repeat authorization.
 
 The historical test remains responsible only for the exact ordered 53-code
 prefix. The accepted I-3A test remains responsible for the exact 35-code
@@ -6081,8 +6165,8 @@ detectable.
 
 This maintenance path is assigned to no I-3 substage and is outside the
 unchanged 23-path I-3A–I-3E bijection and 5/6/5/4/3 counts. The historical
-30-path I-1/I-2 manifest remains immutable evidence. Under the later one-time
-authorization only the named test path may change; all other accepted I-1/I-2
+30-path I-1/I-2 manifest remains immutable evidence. The accepted one-time
+authorization changed only the named test path; all other accepted I-1/I-2
 production and test paths remain frozen.
 
 I-3E owns installation and audit of the exact 92-name root suffix, complete 544-vector fixture, complete projection integration, import audit, and full T0 validation. It does not reopen accepted I-3A–I-3D implementations.
@@ -6160,4 +6244,4 @@ Exactly 227 vectors changed and 317 remain unchanged; the complete ordered ID in
 
 There is no universal zero-residual rule or hidden tolerance. Exact expected residual may be nonzero. I-3 declares but does not compute conservation residuals, measurements, routes, causal contributions, settlement allocations, traces, or results. Physical state, policy memory, causal attribution, and settlement remain distinct. Residual behavior is I-5, Bridge behavior I-6, Dynamic behavior I-7, and finalization/publication behavior I-8.
 
-The review decomposition and exclusive path inventories are those in §22.2. The prerequisite authority was independently accepted before I-3A began, and I-3A is now accepted and integrated. The historical two-route reconstruction audit remains complete. This documentation correction, the one-time test repair, I-3B resumption, and I-3C have not begun implementation or execution.
+The review decomposition and exclusive path inventories are those in §22.2. The prerequisite authority was independently accepted before I-3A began; I-3A and I-3B are now accepted and integrated, and the separate one-time regression-compatibility repair is accepted and integrated. Their historical validation evidence remains complete and their bytes remain frozen. This planning reconciliation begins no I-3C implementation, framework execution, scientific execution, model-state advance, or later stage.
