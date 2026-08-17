@@ -53,6 +53,33 @@ manuscript task must work from separately verified manuscript sources, preserve
 the source PDF as an immutable comparison artifact, and render a new candidate
 under separate authority. This plan itself creates no candidate manuscript.
 
+> The integrated Part I revision modifies the accepted manuscript; it does not
+> regenerate or replace it from scratch.
+
+The separately authorized manuscript task must therefore:
+
+- preserve the authoritative starting source and PDF hashes;
+- create a complete change ledger;
+- retain every equation, theorem, definition, implementation result,
+  experiment, Gate status, evidence label, counterexample, nonclaim, citation,
+  and worked calculation unless an individually reviewed correction explicitly
+  changes it;
+- preserve equation numbering and cross-references unless a recorded structural
+  edit requires renumbering;
+- compare before-and-after equation, figure, table, bibliography, heading, and
+  page-reference inventories;
+- report every deletion and substantive rewrite;
+- fail closed on unexplained missing content;
+- generate both a textual and a visual redline;
+- retain recoverable baseline artifacts; and
+- perform a complete final PDF page inspection.
+
+This integrated revision edits Part I only. Parts II and III must remain
+untouched and byte-identical throughout the Part I manuscript task. Any later
+coordinated Parts I-III work requires separate authorization and separate
+preservation audits. Future Parts IV-IX extend the accepted Parts I-III
+foundation; they do not regenerate or replace it.
+
 Framework I-3C may provide declarative support for policy, causal,
 settlement, and ledger separation. That support is representational only: it
 does not supply a scientific policy, infer causal shares, select an
@@ -205,6 +232,40 @@ energy, risk, reliability, deadline feasibility, or another declared effect.
 Moving an institution nearer a recurring need is not credited because
 "nearer" is intrinsically good; later transactions reveal whether the measured
 route and service consequences improved.
+
+The reader-facing takeaway is:
+
+\[
+\boxed{\text{EBU penalizes verified burden, not distance itself.}}
+\]
+
+Local provision may often win because it avoids transport loss, delay, energy
+use, storage, wear, and infrastructure burden. But it must win through the
+physical calculation. A distant high-efficiency route may sometimes create
+less total burden than inefficient local production.
+
+Here "penalizes" means that verified physical burden contributes negatively to
+the physical EBU result. It does not mean moral blame, legal punishment,
+personal debt, automatic action refusal, or identity-based treatment. The
+future revision must preserve all of the following:
+
+- distance has no automatic EBU coefficient;
+- no universal distance tax or inverse-square EBU force exists;
+- route burden emerges from performed physical transformations;
+- relevant effects include source withdrawal, segment efficiency, loss,
+  energy, storage, time, capacity, wear, maintenance, uncertainty, and delayed
+  observable consequences;
+- long routes accumulate exact local child records;
+- internal transfers cancel exactly once during roll-up;
+- external boundary effects, process costs, and unresolved residuals remain;
+- the same effect must not be counted both in represented state and process
+  cost;
+- P1C permission remains separate from EBU sign; and
+- political preference for local provision is institutional policy, not part
+  of the physical quote.
+
+This takeaway creates no new scientific theorem, chapter, O-number, framework
+mechanism, or figure.
 
 ---
 
@@ -537,35 +598,77 @@ body and mathematical face. Multi-line headings such as the Chapter 4 and
 Chapter 26 titles dominate the page, and long section headings sometimes break
 awkwardly across lines.
 
+Read-only measurement of the authoritative PDF records a trim/page size of
+approximately `450 × 666 pt`, or `6.25 × 9.25 in`; current horizontal content
+margins of approximately `39-45 pt`, or `0.54-0.63 in`; body text of
+approximately `10.9 pt`; chapter titles of approximately `24.9 pt`; and section
+headings of approximately `14.9 pt`. The current margins are not exceptionally
+wide in physical print units. In the representative Chapter 6 screenshot, the
+strongest defects are the oversized title hierarchy, large vertical gaps, and
+awkward multi-line heading balance. One screenshot does not freeze a final
+layout.
+
+### 9.1 Controlled text-block trials
+
 A separately authorized future manuscript-layout task must render and compare
-at least these two representative alternatives:
+at least these three geometries:
+
+1. **Current control.** Preserve the current geometry as the visual control.
+2. **Modestly wider print text block.** On the existing `6.25 × 9.25 in` trim,
+   trial a mirrored inner margin of approximately `45-50 pt` (`0.63-0.69 in`),
+   outer margin of `34-39 pt` (`0.47-0.54 in`), top margin of `39-45 pt`
+   (`0.54-0.63 in`), and bottom margin of `47-54 pt` (`0.65-0.75 in`). The
+   inner margin must retain adequate binding and gutter allowance, and recto
+   and verso pages must mirror correctly.
+3. **Digital-PDF alternative.** Trial approximately symmetric horizontal
+   margins of `36-40 pt` when no physical gutter is required.
+
+These ranges are candidates, not frozen final values. The final geometry may
+be selected only after checking readable line length, preferably roughly
+60-75 characters for ordinary prose; equation and table fit; absence of
+clipped symbols; binding safety; paragraph rhythm; footnotes and captions;
+accessibility at 100% display; and a representative duplex print proof where
+practical. Margins must not be reduced merely to minimize page count.
+
+### 9.2 Heading and typeface trials
+
+Within every geometry above, the layout task must render and compare at least
+these two heading alternatives:
 
 1. smaller chapter and section headings using the body's serif family; and
 2. a quieter companion heading face with reduced size, weight, and tracking.
 
-The comparison must initially trial a roughly 10-20% smaller chapter and
-section display hierarchy. That range is a starting hypothesis, not a frozen
-final value. No final font is selected by this plan.
+The already accepted roughly 10-20% reduction requirement remains. Measured
+candidate trials must include chapter titles of approximately `20-22 pt`
+instead of `24.9 pt` and section headings of approximately `12.5-13.5 pt`
+instead of `14.9 pt`. Body text must remain near its current readable
+approximately `10.9 pt` scale unless rendered evidence supports a change.
 
 The layout task must also require:
 
-- avoidance of oversized multi-line chapter titles;
+- substantially less unused vertical space on chapter-opening pages;
+- controlled chapter-title line breaks and no chapter title that dominates the
+  complete opening page;
+- section headings visibly subordinate to chapter titles;
 - controlled heading and page breaks, including no orphaned heading;
+- no oversized heading beside only a few lines of prose;
 - figures and tables beside their explanatory text where practical;
 - no large unexplained blank areas;
 - consistent heading, running-header, footer, caption, table, and equation
   hierarchy;
 - checks for awkward hyphenation, especially in headings and mathematical
   prose;
-- representative page PNGs covering title, chapter opening, dense equations,
-  tables, figures, Q&A, and references;
+- representative before-and-after page PNGs covering the pictured Chapter 6
+  opening, a long chapter title, a dense equation page, the §6.2 symbols table,
+  a page containing a figure, a page containing a long table, Q&A, and
+  references;
 - visual inspection of repeated headers, footers, captions, tables, and
   equations; and
 - a complete final PDF render and page-by-page acceptance pass before
   publication.
 
-This plan does not modify the current PDF and does not claim that a final font,
-size, tracking value, or pagination has been selected.
+This plan does not modify the current PDF and does not claim that a final
+geometry, font, size, tracking value, or pagination has been selected.
 
 ---
 
@@ -732,6 +835,10 @@ The integrated Part I revision is therefore:
 (16\text{-}24)+(11\text{-}18)=27\text{-}42\text{ pages}.
 \]
 
+The distance takeaway, measured layout trials, and preservation controls fit
+within the existing 11-18-page net allowance: they add no dedicated figure or
+new scientific programme. No page-range adjustment is justified.
+
 The earlier total including only the 16-24-page Part I correction was:
 
 \[
@@ -769,13 +876,20 @@ PDF:
   coalition, composition, and institutional exchange retain their earned
   status;
 - all accepted equations, results, Gate states, and nonclaims are unchanged;
+- the complete preservation ledger, inventory comparisons, textual and visual
+  redlines, recoverable baseline artifacts, and deletion/rewrite report contain
+  no unexplained loss;
+- Parts II and III remain untouched and byte-identical;
 - the five-layer infrastructure and versioned-field rules are used in every
   affected example;
+- the distance/burden takeaway and its route-accounting safeguards appear at
+  every affected location without creating an automatic distance coefficient;
 - every required figure passes evidence, symbol, unit, accessibility, and
   placement review;
 - all bibliographic metadata and claim roles are reverified;
-- the two typography alternatives are rendered and compared without claiming
-  a predetermined winner;
+- the current control, print, and digital geometries and both heading-face
+  alternatives are rendered and compared without claiming a predetermined
+  winner;
 - representative page PNGs and the complete candidate PDF are visually
   inspected;
 - the candidate includes no unexplained blank areas, broken headings, detached
