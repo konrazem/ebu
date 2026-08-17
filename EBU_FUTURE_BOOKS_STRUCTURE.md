@@ -6,6 +6,8 @@
 **Extended:** 2026-08-13 with the circuit-network analogy programme
 **Literature review extension:** 2026-08-13 with an initial prior-art map and bibliography policy
 **Conservation-accounting extension:** 2026-08-14 with a three-level boundary-accounting foundation
+**Part I integrated-revision extension:** prospective explanatory, visual, institutional, and typography plan
+**Part I layout-and-distance emphasis:** prospective measured layout, distance/burden, and non-destructive preservation requirements
 **Language:** English  
 **Purpose:** Preserve the complete future-book architecture, chapter purposes, transitions, overlap controls, scientific dependencies, figure expectations, and research stop conditions in one handoff document.
 
@@ -50,6 +52,8 @@ This architecture was reconciled against the project files available in the curr
 - `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md` - committed framework specification v0.1;
 - `UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md` - committed I-0 implementation plan v0.1;
 - `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` - conceptual and algebraic foundation v0.1;
+- `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md` -
+  prospective documentation authority for one integrated Part I revision;
 - the Gate 1D-C outcome-discrimination protocol and frozen JSON plan;
 - the previous `EBU_FUTURE_BOOKS_STRUCTURE.md` planning register.
 
@@ -66,11 +70,31 @@ without changing the Part I D0/P1C equations or results. Historical D0, P1C,
 service, Gate 1D-C, and related models remain reduced or open accounts; none is
 retroactively claimed to be an isolated, boundary-complete physical system.
 
+The Part I integrated-revision plan combines that 16-24-page conservation
+allocation with an additional estimated 11-18 net pages of explanatory,
+selective-visual, institutional, literature, and typography work. It is a
+documentation plan only. It neither authorizes Part I manuscript/PDF mutation
+nor changes framework authority, code, a Gate, or I-3C.
+
 ### 2.2 Continuity rule
 
 An accepted book allocation, equation, theorem candidate, research dependency, evidence gate, or stop condition should be recorded here and then synchronized with the authoritative repository. Conversation summaries are supporting context, not the scientific source of truth.
 
 When a later result changes the outline, the register should be revised explicitly. A new result must not silently rewrite the historical meaning of an earlier registered study.
+
+The Part I manuscript handoff is explicitly non-destructive:
+
+> The integrated Part I revision modifies the accepted manuscript; it does not
+> regenerate or replace it from scratch.
+
+A separately authorized Part I manuscript task must preserve verified starting
+source and PDF hashes, maintain a complete change ledger, compare before/after
+content inventories, produce textual and visual redlines, retain recoverable
+baseline artifacts, and fail closed on unexplained deletion or substantive
+rewrite. It edits Part I only: Parts II and III remain untouched and
+byte-identical. Any coordinated Parts I-III work requires separate
+authorization and preservation audits. Parts IV-IX extend this foundation
+rather than replacing Parts I-III.
 
 ### 2.3 Claim-status vocabulary
 
@@ -234,11 +258,23 @@ The combined provisional narrative range for Parts IV-IX is now approximately
 to fill and should be revised from the actual citation database at manuscript
 freeze.
 
-Part I additionally needs a focused 16-24-page conservation and boundary-
-accounting addendum or an integrated revision of the same extent. It is a
-terminological and interpretive correction: the historical D0/P1C equations
-and results remain valid. Including that addendum, the presently identified
-future publication scope is 1,904-2,659 pages before indexes and front matter.
+Part I needs one integrated 27-42-page revision allocation: the already
+identified 16-24-page conservation and boundary-accounting correction plus an
+estimated 11-18 net pages for explanation, selective visuals, institutional
+separation, literature, and layout effects. The revision remains
+terminological, explanatory, and organizational: historical D0/P1C equations,
+theorems, implementations, experiments, Gate states, results, and nonclaims
+remain valid and unchanged.
+
+The arithmetic is:
+
+\[
+(1{,}888\text{-}2{,}635)+(27\text{-}42)
+=1{,}915\text{-}2{,}677
+\]
+
+pages before indexes and front matter. This supersedes the earlier
+1,904-2,659 total that included only the 16-24-page Part I correction.
 
 ### 4.1 Why Parts IV and V remain separate
 
@@ -308,6 +344,14 @@ Generate Part IV only after:
 **Central question:** Under what explicit assumptions does the constrained system remain viable, stable, or attracted toward a homeostatic region over an unbounded horizon?
 
 **Protected role:** This is the principal long-run theorem book. It must not be compressed into a few simulation chapters or replaced by the sentence “EBU enforces homeostasis.”
+
+**Integrated-revision ownership:** Part V owns every future proof of long-run
+viability, forward invariance, stability, attraction, recovery, and
+compositional homeostasis. Part I may explain these distinctions and their
+local-field motivation, but it must not imply that one-step permission,
+potential descent, conservation, or network composition already proves them.
+Part V does not inherit the withdrawn general actor/coalition history-profit-
+cap objective.
 
 **What this book must not repeat:** Part II Chapter 43 and Part III Sections 62.17-62.18 already introduce invariance, Lyapunov stability, attraction, and the missing theorem. Part V must do the theorem work.
 
@@ -617,6 +661,37 @@ transition respectively.
 
 **What this book must not repeat:** the elementary claims that distance alone is not EBU, EBU is not \(q_1q_2/r^2\), Fermat is an analogy, or Bellman recursion can plan a path. Those foundations already exist in Parts I-II.
 
+### Distance and burden generator rule
+
+Part VII and every affected Part I route explanation must preserve this
+reader-facing takeaway:
+
+\[
+\boxed{\text{EBU penalizes verified burden, not distance itself.}}
+\]
+
+Local provision may often win because it avoids transport loss, delay, energy
+use, storage, wear, and infrastructure burden. But it must win through the
+physical calculation. A distant high-efficiency route may sometimes create
+less total burden than inefficient local production.
+
+Here "penalizes" means that verified physical burden contributes negatively to
+the physical EBU result, not moral blame, legal punishment, personal debt,
+automatic action refusal, or identity-based treatment. The generator must give
+distance no automatic coefficient, universal tax, or inverse-square EBU force.
+Route burden must arise from
+performed physical transformations, including declared source withdrawal,
+segment efficiency, loss, energy, storage, time, capacity, wear, maintenance,
+uncertainty, and delayed observable consequences. Long routes retain exact
+local child records; internal transfers cancel exactly once during roll-up;
+external boundary effects, process costs, and unresolved residuals remain; and
+one effect must not appear both in represented state and process cost. P1C
+permission remains separate from EBU sign. Preference for local provision is
+institutional policy, not part of the physical quote.
+
+This is an explanatory generator requirement, not a new theorem, chapter,
+O-number, framework mechanism, or figure allocation.
+
 ### Detailed chapter structure
 
 | Ch. | Working title | What the chapter does | Required evidence and figures |
@@ -631,14 +706,14 @@ transition respectively.
 | VII.8 | **Uncertainty and Robust Route Feasibility** | Extends Part IV uncertainty envelopes across multiple segments and growing observation age. Tests worst-case feasibility, safety margins, and route failure probabilities without mixing them with prices. | Uncertainty propagation bands and robust-route maps. |
 | VII.9 | **Quote, Reserve, Execute, Verify, and Settle Across a Route** | Defines reservations, expiry, segment confirmation, route-wide guarantees, re-quotation, and settlement boundaries. Prevents double settlement when routes are replanned. | Lifecycle sequence, quote epochs, and duplicate-prevention examples. |
 | VII.10 | **Delayed and Cross-Boundary Effects** | Distinguishes immediate, delivery-time, and later-horizon EBU. Defines physical transaction receipts, typed boundary transfers, provisional receipts, and open causal chains for effects that arrive after the apparent route completion. | Settlement-horizon plots, physical-receipt layers, and boundary-crossing traces. |
-| VII.11 | **Route Actors and Exact Closure** | Extends actor receipt closure from existing sequential examples to route-wide child records. Separates physical conservation, represented-stock closure, EBU accounting, causal attribution, monetary balance-sheet closure, institutional settlement, and guarantees. | Actor-route matrix, layered physical/accounting/settlement receipt, and closure audit. |
+| VII.11 | **Route Actors and Exact Closure** | Extends actor receipt closure from existing sequential examples to route-wide child records. Separates physical conservation, represented-stock closure, EBU accounting, causal attribution, monetary balance-sheet closure, authorization, institutional responsibility/settlement, worker compensation, and guarantees. A negative construction or route receipt is not personal blame or automatic worker liability; the responsible institution and compensation reference are separate declared lines. | Actor-route matrix, five-layer physical/certification/authorization/responsibility/compensation receipt, and closure audit. |
 | VII.12 | **Joint Effects and O3 Across a Route** | Examines shared warehouses, consolidated loads, simultaneous handling, and shared-source withdrawals. Uses Part VI interaction and identifiability rules rather than inventing independent actor values. | Group-route examples and unresolved-allocation cases. |
 | VII.13 | **Medicine Produced Only Far Away** | Provides the complete recurring case: the medicine is needed regardless of its EBU; the receipt records physical consequence; access and guarantees are separate; urgency changes the route comparison. | Full numerical route, patient-delay model, and receipt set. |
 | VII.14 | **A Pump After a Flood, and a Region Under Disruption** | Adds replacement pumps, food, heat, and repair under damaged infrastructure. Tests multiple simultaneous genuine needs, scarcity, prioritization pressure, and route failure. | Disruption maps, recovery traces, and competing-needs scenarios. |
 | VII.15 | **Cooperation Without Requiring Altruism** | Tests the claim that shared transport, tools, storage, or repair may meet the same needs with less verified burden. Treats cooperation as a material hypothesis, not a moral assumption. | Cooperative versus separate-action experiments. |
-| VII.16 | **Fairness, Free-Riding, Access, and Resilience** | Tests whether physically efficient cooperation remains stable and fair under unequal access, strategic use, provider failure, and regional dependency. Keeps efficiency separate from institutional acceptability. | Distributional metrics, failure tests, and free-riding scenarios. |
-| VII.17 | **Infrastructure Alternatives Are Accounted Actions** | Compares storage, local production, hospitals, rail, roads, air, sea, tunnels, and shared cold chains while accounting for construction, maintenance, land, and transition burden. | Lifecycle comparison plots and break-even surfaces. |
-| VII.18 | **Adaptive Networks and the Route Evidence Ledger** | Tests whether repeated costly receipts are useful signals for structural redesign. Closes the route, cooperation, and infrastructure claim ledger and passes placement/scheduling questions to Part VIII. | Adaptive-network experiments and final evidence table. |
+| VII.16 | **Fairness, Free-Riding, Access, and Resilience** | Tests whether physically efficient cooperation remains stable and fair under unequal access, strategic use, provider failure, regional dependency, free-riding, and unequal benefit capture. Separates measured route efficiency from authorization, collective provision, institutional responsibility, and worker compensation; Part IX retains ownership of the institutional choice. | Distributional metrics, failure and free-riding tests, access/benefit-capture cases, and explicit physical-versus-institutional claim cards. |
+| VII.17 | **Infrastructure Alternatives Are Accounted Actions** | Compares storage, local production, hospitals, rail, roads, air, sea, tunnels, and shared cold chains while accounting for construction, maintenance, land, transition, and lifecycle burden. The construction action settles under its current field. Measurement and certification may then open \(\Theta^m\to\Theta^{m+1}\) for genuine changes in efficiency, capacity, regeneration, storage, route properties, or topology; old receipts are never recomputed, predicted benefit creates no immediate speculative credit, and location matters only through measured route, loss, delay, capacity, energy, risk, or service consequences. | Lifecycle comparison plots and break-even surfaces, construction-receipt/certification/field-update sequence, and stock-only versus augmented-state cases. |
+| VII.18 | **Adaptive Networks and the Route Evidence Ledger** | Tests whether repeated costly receipts and certified field changes are useful signals for structural redesign. Future transactions, not retrospective revaluation, reveal improved efficiency or feasibility. Closes the route, cooperation, infrastructure, field-version, and nonclaim ledger; passes placement/scheduling questions to Part VIII and public-provision/responsibility questions to Part IX. | Adaptive-network experiments, versioned-field evidence table, immutable old/new receipt comparison, and final claim ledger. |
 
 ### Collaboration claim to preserve
 
@@ -775,21 +850,21 @@ Fraud, sensor manipulation, material actor deviation, and knowingly experimental
 | IX.1 | **From a Physical Action Equation to an Economy** | Summarizes the validated chain from Parts I-VIII and separates established science from the institutional choices still required. Defines the minimum evidence needed before broader adoption. | Series dependency map and claim-status ledger. |
 | IX.2 | **Money and EBU Answer Different Questions** | Explains money as a system of claims, prices, and exchange while EBU records represented physical transition consequences. Shows why both can coexist during observation and transition phases. | Side-by-side transaction examples and non-equivalence table. |
 | IX.3 | **An EBU Transaction Is Not Buyer-to-Seller Payment** | Reuses, without re-proving, actor closure to explain why several actors may receive positive lines and why actor balances need not be equal and opposite. Prevents EBU from being described as a conserved token. | Actor-line diagrams and monetary-closure comparison. |
-| IX.4 | **The Complete Economic Action Record** | Integrates request, permission, quote, acceptance, commitments, child actions, route segments, measurements, physical boundary transfers, represented-stock and physical residuals, EBU accounting, causal lines, and institutional settlement into one auditable but layered record. | Full layered record schema, non-equivalence table, and end-to-end lifecycle. |
+| IX.4 | **The Complete Economic Action Record** | Integrates request, permission, quote, acceptance, commitments, child actions, route segments, construction burden, measurements, certification, field versions, physical boundary transfers, represented-stock and physical residuals, EBU accounting, causal lines, authorization, institutional responsibility/settlement, and worker-compensation references into one auditable but layered record. It freezes physical burden \(\neq\) personal blame \(\neq\) institutional responsibility \(\neq\) compensation. | Full five-layer record schema, field-epoch lineage, non-equivalence table, and end-to-end lifecycle. |
 | IX.5 | **Products and Services as Verified Supply Histories** | Replaces a single product label with a versioned chain of material, energy, useful stock, service, transport, labour, maintenance, loss, uncertainty, and lifecycle records. Defines product-system boundaries and multi-scale closure rules to prevent omission, duplicate internal transfers, and infinite regress. | Product provenance and lifecycle control-volume graph, roll-up ledger, and complete/incomplete history examples. |
 | IX.6 | **What Must Be Measured to Define the Field** | Specifies sensors, local state, calibration, uncertainty, timing, provenance, and missing variables. Explains why there is no single planetary EBU sensor. | Measurement architecture and calibration trace. |
 | IX.7 | **The Binding Pre-Action Quote** | Treats the quote as a coordination interface and limited institutional guarantee. Defines truthful disclosure, accepted conditions, expiry, declared bounds, and the committed field. | Quote envelope, actor decision story, and contract-state diagram. |
 | IX.8 | **Actual Settlement and the Visible Residual** | Measures the actual transition without rewriting the accepted quote. Defines the residual as evidence about institutional self-knowledge and preserves physical closure. | Quote-versus-actual distributions and residual ledger. |
-| IX.9 | **Institutional Reserves, Nested Responsibility, and Risk Pooling** | Assigns ordinary model and measurement residuals to providers, higher institutions, or prospectively funded reserves. Tests reserve solvency and prevents unlimited hidden socialization of errors. | Nested account diagrams, reserve simulations, and insolvency cases. |
+| IX.9 | **Institutional Reserves, Nested Responsibility, and Risk Pooling** | Assigns ordinary model, measurement, and guarantee residuals to declared providers, infrastructure owners, municipalities, governments, cooperatives, higher institutions, or prospectively funded reserves. It prevents a negative physical receipt from defaulting to personal worker liability, keeps compensation separate, tests reserve solvency, and prevents unlimited hidden socialization of errors. | Nested responsibility/account diagrams, worker-versus-institution counterexamples, reserve simulations, and insolvency cases. |
 | IX.10 | **Failure, Deviation, Fraud, Unresolved Outcomes, and Appeals** | Defines settlement for no action, partial action, system-caused failure, actor deviation, manipulation, and uncertainty. Adds correction and appeal procedures without pretending to have written a complete legal code. | Decision tree, disputed-record examples, and audit trail. |
 | IX.11 | **Privacy, Measurement Power, and Constitutional Safeguards** | Treats observability as a source of institutional power. Develops data minimization, local computation, purpose limitation, access controls, contestability, independent audit, and governance limits. | Information-flow diagrams and privacy-threat models. |
-| IX.12 | **Necessary Actions with Very High Physical Burden** | Repeats the essential moral boundary: negative EBU records burden; it does not morally prohibit medicine, heat, disability support, or emergency rescue. | Necessary-action cases with separate physical and access ledgers. |
+| IX.12 | **Necessary Actions with Very High Physical Burden** | Repeats the essential moral boundary: negative EBU records burden; it does not morally prohibit medicine, heat, disability support, emergency rescue, or necessary infrastructure work. It does not assign personal blame to the patient, technician, or worker. Access guarantees, institutional responsibility, and compensation remain separate declared mechanisms. | Necessary-action and repair cases with separate physical, authorization, access/responsibility, and compensation ledgers. |
 | IX.13 | **Scarcity, Impossibility, Priority, and Rationing** | Separates what is physically impossible from how an institution chooses priority. Compares transparent rationing rules without presenting any one rule as a physical theorem. | Feasibility frontiers and institutional-choice tables. |
 | IX.14 | **Access, Guarantees, Pooling, Borrowing, Poverty, and Dependency** | Develops mechanisms that allow necessary action without rewriting its physical history. Tests unequal starting conditions, disability, care dependence, regional disadvantage, and catastrophic need. | Distributional simulations and access stress tests. |
-| IX.15 | **Public Infrastructure, Common Services, and Stewardship** | Accounts for hospitals, water, transport, storage, knowledge, maintenance, and ecological restoration as continuing service systems. Separates ownership, use, stewardship, and public guarantees. | Infrastructure lifecycle accounts and stewardship examples. |
-| IX.16 | **The Smallest-Action Incentive** | Develops the repeated question: how can the same genuine need be met with a better verified physical result? Tests prevention, maintenance, reuse, redesign, local production, and demand reduction without sacrificing the need. | Alternative-action frontiers and improvement loops. |
+| IX.15 | **Public Infrastructure, Common Services, and Stewardship** | Accounts for hospitals, water, transport, storage, knowledge, maintenance, and ecological restoration as continuing service systems. Separates ownership, use, authorization, stewardship, collective provision, institutional responsibility, access guarantees, worker compensation, and disputes. Uses lifecycle boundaries and versioned certification without crediting predicted future benefit in the current construction quote. | Infrastructure lifecycle accounts, public/common-pool provision comparisons, versioned-field and stewardship examples, free-riding cases, and worker-compensation alternatives. |
+| IX.16 | **The Smallest-Action Incentive** | Develops the repeated question: how can the same genuine need be met with a better verified physical result? Tests prevention, maintenance, reuse, redesign, local production, and demand reduction without sacrificing the need. A certified improvement changes future field calculations; later transactions reveal the consequence, while old receipts and construction burden remain unchanged. | Alternative-action frontiers, prospective field-version improvement loops, and no-retrospective-credit counterexamples. |
 | IX.17 | **Initiative, Enterprise, and the Restaurant Case** | Demonstrates that EBU can recognize useful creation, innovation, coordination, labour, risk, and service. Decomposes founder, worker, supplier, customer, public-infrastructure, knowledge-common, and ecological contributions without assuming unlimited ownership reward. | Complete restaurant action history, participant lines, and counterfactual alternatives. |
-| IX.18 | **Competition, Cooperation, Motivation, and Adaptive Preferences** | Treats motivation as plural: security, autonomy, mastery, recognition, belonging, curiosity, care, ambition, and personal benefit. Tests whether institutions change preferences without assuming universal altruism. | Behavioural study designs and competing institutional scenarios. |
+| IX.18 | **Competition, Cooperation, Motivation, and Adaptive Preferences** | Treats motivation as plural: security, autonomy, mastery, recognition, belonging, curiosity, care, ambition, and personal benefit. Tests whether institutions change preferences without assuming universal altruism, whether free-riding or unequal benefit capture destabilizes provision, and how wages, benefits, access guarantees, professional entitlements, or other compensation mechanisms affect workers and stewards. No one mechanism is selected in advance. | Behavioural study designs, free-riding and benefit-capture tests, worker/steward compensation comparisons, and competing institutional scenarios. |
 | IX.19 | **Verification, Gaming, Rebound, Missing Burdens, and Contestability** | Tests Goodhart-like gaming, boundary manipulation, rebound effects, strategic reporting, omitted externalities, and institutional capture. Requires visible residuals and challenge mechanisms. | Red-team scenarios, missing-burden cases, and detection metrics. |
 | IX.20 | **Why Organizations Might Adopt Observational EBU Today** | Defines low-risk adoption beside money: monitoring, procurement, maintenance, infrastructure comparison, and internal learning. Describes benefits of calculability without claiming a completed economy. | Pilot ladder, organizational dashboards, and adoption criteria. |
 | IX.21 | **A Complete Functioning EBU-Economy Simulation** | Integrates needs, actions, quotes, groups, routes, product and supply networks, multi-scale physical and represented-stock closure, coordination, access, reserves, privacy constraints, fraud, learning, and institutional failure in one reproducible Python model. It is a model test, not evidence that society will behave identically. | Full architecture, cross-scale boundary and residual audits, scenario results, sensitivity analysis, and failure catalogue. |
@@ -823,14 +898,15 @@ Part IX must present the long-term destination positively while making clear tha
 |---|---|---|
 | Outcome sensitivity and instrument validation | Part IV | Part III Chapters 58-59 |
 | Observation age, uncertainty, robust permission, Gate 1E | Part IV | Part III Chapter 60 |
-| Recursive feasibility, invariance, stability, attraction | Part V | Part II Chapter 43; Part III 62.17-62.18 |
-| Reduced stock ledgers, open control volumes, isolated conservation, residual observability, and boundary roll-up | Part I 16-24-page correction and `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | Part IV owns measurement; Part V owns conservation-manifold/homeostasis separation; Part VI owns atomic groups and Kirchhoff/control-volume comparison; Part VII owns physical transaction receipts; Part VIII owns fields, waves, hierarchy, and roll-up; Part IX owns product, lifecycle, supply-network, and settlement separation |
+| Recursive feasibility, invariance, stability, attraction, recovery, and compositional homeostasis proofs | Part V | Part II Chapter 43; Part III 62.17-62.18; Part I explains but does not prove the distinction |
+| Reduced stock ledgers, open control volumes, isolated conservation, residual observability, boundary roll-up, explanatory corrections, selective visuals, and five-layer infrastructure separation | Part I 27-42-page integrated revision, `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md`, and `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | Part IV owns measurement; Part V owns conservation-manifold/homeostasis separation and proofs; Part VI owns atomic groups and Kirchhoff/control-volume comparison; Part VII owns physical infrastructure actions, field versions, and future transaction consequences; Part VIII owns fields, waves, hierarchy, and roll-up; Part IX owns authorization, responsibility, public provision, compensation, product/lifecycle/supply-network closure, and disputes |
+| O1-Q/F/M/I/E and certified field epochs | Part I defines the split; Parts IV, V, VII, and IX own the unresolved work by layer | O1-Q forbids speculative immediate credit; O1-F makes certified changes prospective; O1-M/I/E remain open and O1-E links to O6 |
 | Sequential telescoping and parallel interaction | Part VI | Part II Chapter 37; `SEQUENTIAL_PARALLEL_BRIDGE.md` |
 | Network-potential closure, shared-source flow models, and circuit-analogy limits | Part VI | §7.3 prior-art map; Part VIII extends storage, switching, propagation, and topology tests |
 | Group receipts, causal identifiability, O3, batching | Part VI | Part II Chapter 35; Part III Chapter 51 |
 | Dynamic routes, route actors, cooperation, adaptive infrastructure | Part VII | Part II Chapter 42; Part III 62.9-62.11 |
 | Timing, placement, topology, waves, spectra, scaling | Part VIII | Parts VI-VII provide prerequisites |
-| Binding quotes, residuals, reserves, enterprise, governance | Part IX | Parts III-IV and VI-VIII provide prerequisites |
+| Binding quotes, residuals, reserves, enterprise, intentional misconduct, sanctions, liability, compensation, withholding, and governance | Part IX | Parts III-IV and VI-VIII provide prerequisites |
 | Access, poverty, disability, rationing, common services | Part IX | Part III 62.12-62.16 introduces the boundary |
 
 The allocation rule is:
@@ -894,6 +970,12 @@ Every registered run should produce or reference:
 Framework stages remain separate authorization boundaries. I-2 is accepted
 unchanged. This conservation-accounting extension neither reopens I-2 nor
 authorizes I-3, I-5, or any later implementation or execution stage.
+
+The label I-3C may be used prospectively for the declarative support that keeps
+policy, causal, settlement, and ledger records separate. That support supplies
+no policy, causal inference, institutional default, compensation rule, or
+state advancement. This integrated-revision documentation neither changes nor
+authorizes I-3C.
 
 ### 12.4 Future boundary and conservation profiles
 
@@ -963,6 +1045,12 @@ the existing tag must not move.
 6. Maintain `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` v0.1 and preserve its three account levels, Part I terminology correction, nonclaims, and exact historical compatibility.
 7. Maintain a claim-by-claim literature map that records established antecedents, EBU-specific formulations, candidate contributions, nonclaims, and unresolved searches.
 8. Complete a dedicated literature checkpoint for each part before its manuscript-generation gate; the §7.4 seed bibliography is not sufficient for Parts IV-IX as a whole.
+9. Maintain `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md` as
+   the prospective authority for one integrated Part I revision, including its
+   exact distance/burden takeaway, measured current-layout control, print and
+   digital geometry trials, heading-size trials, complete change ledger,
+   before/after inventories, redlines, and Parts II-III byte-identity rule; do
+   not mutate the manuscript or PDF without a separate reviewed stage.
 
 ### Phase C - Execute studies in dependency order
 
@@ -988,7 +1076,9 @@ the existing tag must not move.
 4. Generate Part VII after route composition, actor closure, congestion, cooperation, fairness, and adaptive-network studies are complete.
 5. Generate Part VIII after Dynamic Coordination, storage/switching and lumped-versus-distributed network comparisons, wave diagnostics, topology comparison, resilience, scaling, and pattern tests are complete.
 6. Generate Part IX last, after the quote, residual, reserve, access, governance, behavioural, transition, and complete-economy programme can synthesize the surviving results.
-7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable.
+7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable
+   and under separate authorization with preservation audits; future Parts
+   IV-IX extend rather than replace Parts I-III.
 
 Each generation gate also requires the corresponding literature checkpoint,
 nearest-antecedent table, and resolved citation ledger. Passing an experiment
@@ -1027,6 +1117,16 @@ or proof does not by itself pass the originality review.
 13. No account may impose a universal zero residual, infer isolation from ledger closure, use a hidden global tolerance, or treat an omitted flow as a structural improvement.
 14. No future manuscript may claim that the EBU sequential-parallel equations, Kirchhoff analogy, interaction decomposition, shared-capacity problem, causal attribution method, or allocation rule is globally novel until the applicable claim-by-claim literature checkpoint is complete.
 15. No historical D0, P1C, service, Gate 1D-C, or other Gate model may be retroactively described as isolated or physically boundary-complete without separate evidence and authority.
+16. No Part I construction or restoration example may equate physical burden
+    with personal blame, institutional responsibility, or worker
+    compensation; no predicted future benefit may create speculative current
+    EBU.
+17. No receipt may be recomputed under a later certified field version. A
+    genuine physical recertification opens a prospective epoch; it does not
+    authorize outcome-driven valuation-parameter changes.
+18. This register acknowledges declarative I-3C support only; it neither
+    changes nor authorizes I-3C, Part I manuscript/PDF mutation, or any model
+    execution.
 
 ---
 
@@ -1034,7 +1134,11 @@ or proof does not by itself pass the originality review.
 
 1. **Conservation-foundation review** - audit the new foundation and this books-structure integration for exact historical compatibility, typed algebra, Part I inventory completeness, chapter allocation, page arithmetic, nonclaims, and literature limits.
 2. **Prospective documentation acceptance** - if authorized after review, commit only the exact accepted documentation paths and reconcile their authority hashes prospectively; do not tag, stage, commit, or push merely because this register exists.
-3. **Part I correction specification** - separately prepare the 16-24-page addendum or integrated revision while preserving every historical D0/P1C equation and result.
+3. **Part I integrated-revision review** - independently review
+   `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md`, its complete
+   296-page occurrence inventory, O1-Q/F/M/I/E split, literature metadata,
+   27-42-page estimate, and exact preservation/nonclaim boundary. Do not begin
+   manuscript mutation or PDF generation.
 4. **I-3 profile specification** - only under separate authority, define optional Level 1, Level 2, and Level 3 boundary/conservation profiles without changing accepted I-2 core types.
 5. **I-5 residual validation** - only under separate authority and after the profile contract is accepted, add profile-specific checks with explicit units, observability, tolerances, and fail-closed behavior.
 6. **Bridge and Dynamic Coordination documentation** - in separate future documentation stages, import atomic group accounting and hierarchical roll-up without changing accepted equations or implying execution authority.
@@ -1106,3 +1210,55 @@ This extension:
 This extension is documentation and planning only. It does not modify a
 framework implementation, Bridge or Dynamic Coordination equations, a frozen
 Gate source, an execution record, or any scientific result.
+
+### 16.5 Part I explanatory, visual, and institutional integrated-revision extension
+
+This extension:
+
+1. registers `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md` as
+   prospective documentation authority for one integrated revision rather than
+   a detached appendix;
+2. preserves every accepted historical equation, theorem, implementation
+   result, experiment, Gate status, and nonclaim;
+3. splits O1 into resolved current-quote and prospective-field rules (O1-Q and
+   O1-F) plus open metrological, institutional, and epoch questions (O1-M,
+   O1-I, and O1-E), linking O1-E to O6;
+4. retires the original broad O2 actor/coalition history-profit-cap objective,
+   preserves its V2.6/P1C origin and the fixed-epoch cycle identity, and creates
+   no replacement O2 family or Part V theorem programme;
+5. freezes the separation among physical construction, certification,
+   authorization, institutional responsibility/settlement, and worker
+   compensation, with no speculative current credit for predicted benefit;
+6. assigns long-run and compositional homeostasis proofs to Part V, physical
+   infrastructure/field-version consequences to Part VII, and authorization,
+   public provision, responsibility, compensation, stewardship, and disputes
+   to Part IX;
+7. acknowledges only declarative I-3C support for policy, causal, settlement,
+   and ledger separation and grants no I-3C authority;
+8. replaces the separate 16-24-page Part I correction total with a 27-42-page
+   integrated allocation, revising the publication-planning total from
+   1,904-2,659 to 1,915-2,677 pages before indexes and front matter; and
+9. remains documentation-only: it does not edit or rebuild Part I, change
+   framework authority or code, begin I-3C, run a model, or advance a Gate.
+
+### 16.6 Part I layout, distance, and preservation emphasis
+
+This narrow prospective extension:
+
+1. freezes the reader-facing principle that EBU penalizes verified physical
+   burden rather than distance itself, with no automatic distance coefficient,
+   universal distance tax, inverse-square force, or local-provision preference
+   inside the physical quote;
+2. registers the measured `450 × 666 pt` (`6.25 × 9.25 in`) current layout as a
+   control, together with candidate print and digital margin trials, measured
+   heading-size trials, binding and line-length checks, and representative
+   Chapter 6, equation, table, figure, Q&A, and reference pages;
+3. requires the future Part I task to modify the accepted manuscript
+   non-destructively, with hashes, inventories, ledgers, redlines, recoverable
+   baselines, deletion reporting, and complete final-page inspection;
+4. keeps Parts II and III untouched and byte-identical during Part I work and
+   requires separate authority and preservation audits for any coordinated
+   Parts I-III revision; and
+5. leaves the `27-42`-page Part I and `1,915-2,677`-page publication ranges
+   unchanged and creates no theorem, chapter, O-number, framework mechanism,
+   figure allocation, scientific result, or execution authority.
