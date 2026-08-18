@@ -1,0 +1,304 @@
+{
+  "contract_id": "ebu-framework-i4-uq25-dependency/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_PROVIDER_SELECTED_NOT_INSTALLED",
+  "authority": {
+    "base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_UQ25_DEPENDENCY_DECISION.md",
+    "mechanical_contract": "unified_python_research_framework_i4_uq25_dependency_contract.json",
+    "scope": "UQ-25 Ed25519 verification provider and complete CPython 3.14 wheel closure only"
+  },
+  "review": {
+    "retrieved_at_utc": "2026-08-18T09:27:43Z",
+    "sources": [
+      "https://pypi.org/pypi/PyNaCl/1.6.2/json",
+      "https://pypi.org/pypi/cffi/2.1.1/json",
+      "https://pypi.org/pypi/cffi/2.1.0/json",
+      "https://github.com/python-cffi/cffi/releases/tag/v2.1.1",
+      "https://github.com/python-cffi/cffi/compare/v2.1.0...v2.1.1",
+      "https://pypi.org/pypi/pycparser/3.0/json",
+      "https://pynacl.readthedocs.io/en/latest/changelog/",
+      "https://pynacl.readthedocs.io/en/latest/signing/",
+      "https://doc.libsodium.org/public-key_cryptography/public-key_signatures",
+      "https://doc.libsodium.org/advanced/point-arithmetic",
+      "https://www.rfc-editor.org/rfc/rfc8032.html",
+      "https://pypi.org/pypi/cryptography/50.0.0/json",
+      "https://cryptography.io/en/latest/changelog/"
+    ],
+    "retrieved_source_identities": [
+      {"source":"PyNaCl 1.6.2 PyPI JSON","bytes":31985,"raw_sha256":"a0f8d5d1795869eaf0dfad7e00896b9902dd691cb0b64b792aaeae14649934c0"},
+      {"source":"cffi 2.1.1 PyPI JSON","bytes":89333,"raw_sha256":"2255e530e3f80593a354e3d84a29966924d0e10309d1e3a6d50f845ab7d8df66"},
+      {"source":"cffi 2.1.0 PyPI JSON comparison input","bytes":89333,"raw_sha256":"4b75df872b40ed83aec2bcc9e761e7bbd3000fb714f294c3346fe39268a13a12"},
+      {"source":"cffi GitHub releases API response","bytes":31675,"raw_sha256":"63cc9a296d3e8b8ae8cd678ac35257473502e690616dce7fce48378bf06fbd82"},
+      {"source":"pycparser 3.0 PyPI JSON","bytes":10557,"raw_sha256":"116983f7de9bda289946d08200ba1bd7b832547f151165c12bd87d6b8e59b015"},
+      {"source":"cryptography 50.0.0 PyPI JSON","bytes":45476,"raw_sha256":"ea5d153d5b7820fbd9e3a6289c12e2c35dcddcba975953b3bb8348c8aed835a2"}
+    ],
+    "method": "Fresh PyPI JSON retrieval, official documentation review, raw wheel download to an external temporary directory, SHA-256 and ZIP member inspection only. No candidate distribution was installed, imported, executed, or dynamically loaded.",
+    "temporary_inspection_artifact_count": 23,
+    "temporary_inspection_total_bytes": 8490512,
+    "temporary_inspection_inventory_projection": "UTF-8 JSON serialization of the exact artifacts array with ensure_ascii=false, sort_keys=true, separators=(',',':'), and no terminal LF.",
+    "temporary_inspection_inventory_bytes": 10421,
+    "temporary_inspection_inventory_sha256": "901cdd158132e7754a913d41f9c4fcbc034eeb769e58e6696724b6d7c4f4623f"
+  },
+  "candidate_comparison": [
+    {
+      "provider": "PyNaCl 1.6.2",
+      "decision": "SELECTED",
+      "reasons": [
+        "Official release explicitly supports free-threaded CPython 3.14.",
+        "Exact detached PureEdDSA verification is exposed by nacl.signing.VerifyKey.verify.",
+        "Binary wheels exist for every admitted standard and free-threaded platform.",
+        "The wheels bundle libsodium 1.0.20-stable and the release fixes CVE-2025-69277.",
+        "Its selected CPython closure uses final, non-yanked cffi 2.1.1 wheels across all twelve frozen combinations.",
+        "The selected PyPI version records no vulnerability entry at retrieval."
+      ]
+    },
+    {
+      "provider": "cryptography 50.0.0",
+      "decision": "REJECTED",
+      "reasons": [
+        "It is final and non-yanked, its PyPI vulnerability list was empty, and its changelog records the CVE-2026-69247 fix; the historical 49.0.0 advisory is not a rejection reason.",
+        "Its wheels cover only eight of twelve frozen interpreter/platform combinations: macOS x86_64 and Windows ARM64 are absent for both standard and free-threaded CPython 3.14.",
+        "The broader API and bundled OpenSSL surface are unnecessary for the single required primitive."
+      ],
+      "frozen_matrix_required": 12,
+      "frozen_matrix_available": 8,
+      "missing": ["CPython 3.14 standard macOS x86_64","CPython 3.14 standard Windows ARM64","CPython 3.14 free-threaded macOS x86_64","CPython 3.14 free-threaded Windows ARM64"]
+    }
+  ],
+  "cffi_release_evaluation": {
+    "selected_version": "2.1.1",
+    "decision": "SELECTED_OVER_2.1.0",
+    "pypi_state": "FINAL_PUBLISHED_NOT_YANKED",
+    "upstream_release_published_at": "2026-08-03T21:17:55Z",
+    "upstream_tag": "v2.1.1",
+    "upstream_tag_git_object": "fd33e7700f0ebafe6f30bd5053f13327221b77a2",
+    "requires_python": ">=3.10",
+    "runtime_requires": ["pycparser; implementation_name != \"PyPy\""],
+    "pypi_release_file_count": 100,
+    "pypi_yanked_file_count": 0,
+    "selected_wheel_count": 12,
+    "selected_yanked_wheel_count": 0,
+    "pypi_vulnerability_entries": [],
+    "upstream_change": "Minimizes internal Python API usage for interpreter and thread-state sampling and avoids a breaking ABI change beginning with Python 3.15.0b4.",
+    "frozen_boundary_effect": "No CPython 3.14 or 3.14t ABI-tag, platform-coverage, dependency-metadata, API-boundary, or license incompatibility was found.",
+    "selection_reason": "2.1.1 is the current final compatible release at review and repairs future interpreter ABI compatibility; no evidence-backed safety or compatibility reason supports retaining 2.1.0."
+  },
+  "selection": {
+    "distribution_name": "PyNaCl",
+    "normalized_distribution_name": "pynacl",
+    "import_name": "nacl",
+    "version": "1.6.2",
+    "requires_python": ">=3.8",
+    "direct_requirement": "PyNaCl==1.6.2",
+    "api_symbols": [
+      "nacl.signing.VerifyKey",
+      "nacl.encoding.RawEncoder",
+      "nacl.exceptions.BadSignatureError"
+    ],
+    "call_shape": "VerifyKey(public_key_bytes,encoder=RawEncoder).verify(message_bytes,signature_bytes,encoder=RawEncoder)",
+    "selected_algorithm": "RFC 8032 PureEdDSA Ed25519",
+    "rejected_algorithms": ["Ed25519ctx","Ed25519ph","prehashed input","streaming/multipart signing","algorithm negotiation","fallback"],
+    "provider_signing_reachability": "FORBIDDEN"
+  },
+  "dependency_closure": [
+    {
+      "distribution": "PyNaCl",
+      "version": "1.6.2",
+      "marker": "direct",
+      "extras": [],
+      "runtime_requires": ["cffi>=2.0.0; platform_python_implementation != 'PyPy' and python_version >= '3.9'"],
+      "excluded_extras": ["tests","docs"]
+    },
+    {
+      "distribution": "cffi",
+      "version": "2.1.1",
+      "marker": "platform_python_implementation == 'CPython'",
+      "extras": [],
+      "runtime_requires": ["pycparser; implementation_name != 'PyPy'"]
+    },
+    {
+      "distribution": "pycparser",
+      "version": "3.0",
+      "marker": "implementation_name == 'cpython'",
+      "extras": [],
+      "runtime_requires": []
+    }
+  ],
+  "closure_rule": "Exactly these three distributions are installed. Markers are evaluated for CPython 3.14/3.14t only. Extras, build requirements, sdists, editable installs, direct URLs, VCS inputs, local paths, and additional transitives are forbidden.",
+  "platform_policy": {
+    "interpreter": "CPython",
+    "versions": ["3.14 standard GIL build","3.14 free-threaded build"],
+    "abis": {
+      "standard": "PyNaCl cp38-abi3 plus cffi cp314-cp314",
+      "free_threaded": "PyNaCl cp314-cp314t plus cffi cp314-cp314t",
+      "pure": "pycparser py3-none-any"
+    },
+    "admitted": [
+      "macOS x86_64 >=10.15",
+      "macOS arm64 >=11.0",
+      "Linux glibc >=2.17 x86_64",
+      "Linux glibc >=2.17 aarch64",
+      "Windows AMD64",
+      "Windows ARM64"
+    ],
+    "cffi_2_1_1_coverage": [
+      {"interpreter":"CPython 3.14 standard","platform":"macOS x86_64 >=10.15","filename":"cffi-2.1.1-cp314-cp314-macosx_10_15_x86_64.whl"},
+      {"interpreter":"CPython 3.14 standard","platform":"macOS arm64 >=11.0","filename":"cffi-2.1.1-cp314-cp314-macosx_11_0_arm64.whl"},
+      {"interpreter":"CPython 3.14 standard","platform":"Linux glibc >=2.17 aarch64","filename":"cffi-2.1.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl"},
+      {"interpreter":"CPython 3.14 standard","platform":"Linux glibc >=2.17 x86_64","filename":"cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"},
+      {"interpreter":"CPython 3.14 standard","platform":"Windows AMD64","filename":"cffi-2.1.1-cp314-cp314-win_amd64.whl"},
+      {"interpreter":"CPython 3.14 standard","platform":"Windows ARM64","filename":"cffi-2.1.1-cp314-cp314-win_arm64.whl"},
+      {"interpreter":"CPython 3.14 free-threaded","platform":"macOS x86_64 >=10.15","filename":"cffi-2.1.1-cp314-cp314t-macosx_10_15_x86_64.whl"},
+      {"interpreter":"CPython 3.14 free-threaded","platform":"macOS arm64 >=11.0","filename":"cffi-2.1.1-cp314-cp314t-macosx_11_0_arm64.whl"},
+      {"interpreter":"CPython 3.14 free-threaded","platform":"Linux glibc >=2.17 aarch64","filename":"cffi-2.1.1-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl"},
+      {"interpreter":"CPython 3.14 free-threaded","platform":"Linux glibc >=2.17 x86_64","filename":"cffi-2.1.1-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"},
+      {"interpreter":"CPython 3.14 free-threaded","platform":"Windows AMD64","filename":"cffi-2.1.1-cp314-cp314t-win_amd64.whl"},
+      {"interpreter":"CPython 3.14 free-threaded","platform":"Windows ARM64","filename":"cffi-2.1.1-cp314-cp314t-win_arm64.whl"}
+    ],
+    "not_admitted": ["32-bit Windows","Linux musl","Linux ppc64le","Linux s390x","Linux armv7l","iOS","PyPy","other Python implementations","CPython other than 3.14","source builds"],
+    "selection_rule": "The installer must select exactly one admitted wheel for each of PyNaCl and cffi and the sole pycparser wheel. More than one compatible candidate, no compatible candidate, or a filename outside artifacts fails closed."
+  },
+  "artifacts": [
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314-macosx_10_15_x86_64.whl","bytes":184964,"sha256":"d28630f5854ab07ab1fd4aba756de52326c82e6be15d414b12793f1975048b54","uploaded":"2026-08-03T21:20:19.708085Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314-darwin.so",192360,"b9c3512d9bb6d0a10732bbde5e08c3b7a689f60b2ddc53fb7307f6809418a12f"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314-macosx_11_0_arm64.whl","bytes":184962,"sha256":"661c298b4821edebead0c91edd2b00374d67ad7c5a1f7a91d4442633b79d6a72","uploaded":"2026-08-03T21:20:20.833553Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314-darwin.so",229488,"7a3ea590a8ba470a09d11267ca583fe7c3a08b15b2699578ef5e048041127684"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.whl","bytes":222328,"sha256":"58acb8ab8e295e6c5ea12f888cbb13cf21511ef2a3303a23f4325c29d17fe5c1","uploaded":"2026-08-03T21:20:22.118064Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314-aarch64-linux-gnu.so",452584,"6e9697ce5e25a80a7e83c5768f56acafab73ac2b9103d638e7daae7a6ae94d8a"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl","bytes":221525,"sha256":"b0431303acaea1089ad4b3e9ce4e6518193def1118d4073ca848635ee4ea2e96","uploaded":"2026-08-03T21:20:25.758239Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314-x86_64-linux-gnu.so",344680,"7d1eff7fbb874ee72228fd426103da2b9eef528979156077bdec736d5b4f61a2"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314-win_amd64.whl","bytes":187949,"sha256":"3222ba5d678f80a030e6afbcc33dc1ae5cb45facabb61cee2c7016b8432fde48","uploaded":"2026-08-03T21:20:45.623108Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cp314-win_amd64.pyd",181248,"9e99b2184c60f21a88cafc374386ded3559e8694ed7cf111f2869e066d303334"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314-win_arm64.whl","bytes":182947,"sha256":"ab36d55f9ed2d067327667c2fea18dda018eb628dd6347aa01dda6cf1f5d3836","uploaded":"2026-08-03T21:20:46.955932Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cp314-win_arm64.pyd",189952,"524e676ee5a620a79209eabc2dd9c783f8225e9c5f295afff778d2517ff89e50"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314t-macosx_10_15_x86_64.whl","bytes":188504,"sha256":"7750c6449dff7864bb9bb27ddfb0267756189201a3afc911d82b3caacd70dfc3","uploaded":"2026-08-03T21:20:29.495454Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314t-darwin.so",201776,"f56035c53ac38c2a93bd74bc0ce3a0150e9035e684f909235658ad3c72dfdefb"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314t-macosx_11_0_arm64.whl","bytes":188259,"sha256":"0beceaabe56af686895136a2de78db54ecd8e4046b236b8fd6d6cb61389e9bf2","uploaded":"2026-08-03T21:20:31.291288Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314t-darwin.so",230632,"1ef19bceea90ed35472e3a313634e2fb96d04feca9ca76b5a0f3372b92a85ac2"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl","bytes":223864,"sha256":"49cbc70e6542d4ccccb936558d1064a8012541e78f821f955cff24e357776c94","uploaded":"2026-08-03T21:20:32.571571Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314t-aarch64-linux-gnu.so",454536,"8dbd37c2d1571495f37f533a4e311410f2e1c0ac0b69e4384ac8cb760f52bb02"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl","bytes":223803,"sha256":"51b31d1c98274844cfd7838ce00bfc27c7423a4dc00fc0772fc3331c2cc90676","uploaded":"2026-08-03T21:20:36.564525Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cpython-314t-x86_64-linux-gnu.so",350360,"d151bd63e949c3e3ad21eb09381c31460facc7885b04bc0bd17d2560820011d6"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314t-win_amd64.whl","bytes":194104,"sha256":"616f097f2fe415bc92a247f02e11f634e1f9e9a83d327e3c915c15089c87869e","uploaded":"2026-08-03T21:20:41.725217Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cp314t-win_amd64.pyd",194560,"38af2d1d3646f73434dc269259ecb22dd8ebd7c7d8479a52122ce619901503d2"]},
+    {"distribution":"cffi","filename":"cffi-2.1.1-cp314-cp314t-win_arm64.whl","bytes":186402,"sha256":"ad2c86c495b899d862ea0f4b42891b8713a3bd45dd4105c7fd51c2a72f39f3a5","uploaded":"2026-08-03T21:20:43.042619Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON and integrity endpoint; no provenance available","native":["_cffi_backend.cp314t-win_arm64.pyd",200704,"1d6588d20b715af582dfe4b27d9b7649ad45988b0e29cb57fbf285f649e28b86"]},
+    {"distribution":"pycparser","filename":"pycparser-3.0-py3-none-any.whl","bytes":48172,"sha256":"b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992","uploaded":"2026-01-21T14:26:50.693739Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI JSON; no provenance object returned","native":null},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp314-cp314t-macosx_10_10_universal2.whl","bytes":390064,"sha256":"622d7b07cc5c02c666795792931b50c91f3ce3c2649762efb1ef0d5684c81594","uploaded":"2026-01-01T17:31:57.264836Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.cpython-314t-darwin.so",1133440,"dc830ceb1053c434b5ad30bcc61ee8bf29c3c6993b2243eb4eab19820394d0b2"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl","bytes":809370,"sha256":"d071c6a9a4c94d79eb665db4ce5cedc537faf74f2355e4d502591d850d3913c0","uploaded":"2026-01-01T17:31:59.198455Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.cpython-314t-aarch64-linux-gnu.so",2810632,"6adc39b6dcc061c8ad32ceb0355dda9ab5155b4dc052cd3b3eb429225713e2c1"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl","bytes":1408304,"sha256":"fe9847ca47d287af41e82be1dd5e23023d3c31a951da134121ab02e42ac218c9","uploaded":"2026-01-01T17:32:01.162360Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.cpython-314t-x86_64-linux-gnu.so",5334512,"d5c7abf8521a9516b6cdfcf6f53c5548ef71bb68dc5bd34cc92b224b655f6be9"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp314-cp314t-win_amd64.whl","bytes":244044,"sha256":"320ef68a41c87547c91a8b58903c9caa641ab01e8512ce291085b5fe2fcb7590","uploaded":"2026-01-01T17:32:13.781557Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.cp314t-win_amd64.pyd",406528,"5864f663a7302990781e18d06af1615b61a4d137ab8a4ec35d3035e4fb8d74ac"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp314-cp314t-win_arm64.whl","bytes":188740,"sha256":"d29bfe37e20e015a7d8b23cfc8bd6aa7909c92a1b8f41ee416bbb3e79ef182b2","uploaded":"2026-01-01T17:32:15.083969Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.cp314t-win_arm64.pyd",284160,"230f42d47ab767e15945b47431571b1343fdc86470262124bcd44aaac6c1d899"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp38-abi3-macosx_10_10_universal2.whl","bytes":388458,"sha256":"c949ea47e4206af7c8f604b8278093b674f7c79ed0d4719cc836902bf4517465","uploaded":"2026-01-01T17:32:16.829569Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.abi3.so",1133120,"49032c357199dde6ae341319e558ce3ed9daa80f5ac83972aa9a63158b0b5371"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp38-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl","bytes":800020,"sha256":"8845c0631c0be43abdd865511c41eab235e0be69c81dc66a50911594198679b0","uploaded":"2026-01-01T17:32:18.340349Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.abi3.so",2787520,"1300499e5cc0917c7a902e400dc3bac2cf1f019de1d4885623e002b7e646b9d4"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl","bytes":1399174,"sha256":"22de65bb9010a725b0dac248f353bb072969c94fa8d6b1f34b87d7953cf7bbe4","uploaded":"2026-01-01T17:32:20.239496Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.abi3.so",5313744,"1ee652a7b8a74a84061c54880a0f66b032b1b630e77dff4cd243b01ffac922fd"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp38-abi3-win_amd64.whl","bytes":239754,"sha256":"62985f233210dee6548c223301b6c25440852e13d59a8b81490203c3227c5ba0","uploaded":"2026-01-01T17:32:34.557565Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.pyd",405504,"57822e7aed944269943bcb855fc14560a5b6ae38869de4e3d00c380a5119ecc7"]},
+    {"distribution":"PyNaCl","filename":"pynacl-1.6.2-cp38-abi3-win_arm64.whl","bytes":184801,"sha256":"834a43af110f743a754448463e8fd61259cd4ab5bbedcf70f9dabad1d28a394c","uploaded":"2026-01-01T17:32:36.309317Z","state":"PUBLISHED_NOT_YANKED","provenance":"PyPI trusted-publishing workflow pypi-publish.yml; JSON provenance object absent","native":["nacl/_sodium.pyd",283136,"426a4293bfa80ed31d2cf71826ca6aeecd7d08e6ee220785ca365769e65c0cd9"]}
+  ],
+  "artifact_count": 23,
+  "sdist_policy": {
+    "admitted_sdist_count": 0,
+    "source_builds": "PROHIBITED",
+    "reason": "No compiler, system library, build flag, build backend, or native-library substitution is authorized."
+  },
+  "bundled_native_library": {
+    "identity": "libsodium 1.0.20-stable, 2025-12-31 build, as declared by PyNaCl 1.6.2 changelog",
+    "packaging": "statically incorporated in each inspected nacl/_sodium extension; no separately loadable libsodium member was present",
+    "per_wheel_binary_identities": "The native triples in artifacts are normative.",
+    "forbidden": "system libsodium, alternate bundled build, LD_PRELOAD/DYLD injection, or a native member hash mismatch"
+  },
+  "static_source_evidence": {
+    "nacl_signing_py": {"applies_to":"six selected non-Windows PyNaCl wheels","bytes":8339,"sha256":"d96e50f4d33cd7bd00aefbf5fbd066a3e6591cec5a15275bb3351f1cd188f61d"},
+    "nacl_signing_py_windows": {"applies_to":"four selected Windows PyNaCl wheels","bytes":8589,"sha256":"81989d7a709a1034f46f7a3c75e60670365ecd78b723fd6ceb8db828cddb07df"},
+    "nacl_exceptions_py": {"applies_to":"six selected non-Windows PyNaCl wheels","bytes":2482,"sha256":"8f954ecc355f348ec3b95965a78028a1e01f99bb77477375d9f9e2b5813b7ea5"},
+    "nacl_exceptions_py_windows": {"applies_to":"four selected Windows PyNaCl wheels","bytes":2570,"sha256":"6d03ec6a82a44226ebc641b0349b38b749b0a05f5ac62c8caf1c5c1950ab28aa"},
+    "nacl_encoding_py": {"applies_to":"six selected non-Windows PyNaCl wheels","bytes":2915,"sha256":"a9300f7363174a4761e1ca83558d2b6ba907c95887302984a3fadeedc806939c"},
+    "nacl_encoding_py_windows": {"applies_to":"four selected Windows PyNaCl wheels","bytes":3020,"sha256":"c4ac2315be45d6311f99acdeb70b5a429b143efcd82e1dd153a5a48aae7a3732"},
+    "nacl_bindings_crypto_sign_py": {"applies_to":"six selected non-Windows PyNaCl wheels","bytes":10347,"sha256":"3f948b91f440ab9963e452db03506e06b283c305b45e30caff1a67f091386aa2"},
+    "nacl_bindings_crypto_sign_py_windows": {"applies_to":"four selected Windows PyNaCl wheels","bytes":10674,"sha256":"0006b5bc544b61114e0230d649ecf9097062e44e4d90db0ea01b819e91051b7b"},
+    "pynacl_source_line_endings": "The four Windows raw members are CRLF encodings of the corresponding non-Windows LF members; replacing CRLF with LF yields byte-identical source.",
+    "cffi_2_1_1_metadata_macos_linux": {"applies_to":"eight selected macOS and Linux cffi wheels","path":"cffi-2.1.1.dist-info/METADATA","bytes":2527,"sha256":"558bafb9093a8e790175d9ecff9688382981d744877dad86fd6770db0f4dc918","requires_python":">=3.10","requires_dist":["pycparser; implementation_name != \"PyPy\""],"license_expression":"MIT-0"},
+    "cffi_2_1_1_metadata_windows": {"applies_to":"four selected Windows cffi wheels","path":"cffi-2.1.1.dist-info/METADATA","bytes":2594,"sha256":"67b6a7595df7ede2195016a05d285faa7d362a8f57c238984edb8bb674b5770d","requires_python":">=3.10","requires_dist":["pycparser; implementation_name != \"PyPy\""],"license_expression":"MIT-0"},
+    "verify_semantics": "VerifyKey enforces 32-byte key; detached verify enforces 64-byte signature; success returns message bytes; failure raises BadSignatureError. Framework prechecks remain mandatory."
+  },
+  "licenses": [
+    {"component":"PyNaCl 1.6.2","applies_to":"six selected non-Windows PyNaCl wheels","expression":"Apache-2.0","notice_path":"pynacl-1.6.2.dist-info/licenses/LICENSE","bytes":9694,"sha256":"d3174ad63e721d4c9dccb8ad4320848992d314369bc46319720b5802c9153fe9"},
+    {"component":"PyNaCl 1.6.2","applies_to":"four selected Windows PyNaCl wheels","expression":"Apache-2.0","notice_path":"pynacl-1.6.2.dist-info/licenses/LICENSE","bytes":9868,"sha256":"77af5bbded959114b6d7a5eea518b2be364e04f4f4a95f9e87d9870c27713d24"},
+    {"component":"bundled libsodium 1.0.20-stable","applies_to":"six selected non-Windows PyNaCl wheels","expression":"ISC","notice_path":"pynacl-1.6.2.dist-info/licenses/licenses/LICENSE.libsodium.txt","bytes":823,"sha256":"508a76d186356c0dd807a670ef510964f8724557024796a2c426c6c0e19ab683"},
+    {"component":"bundled libsodium 1.0.20-stable","applies_to":"four selected Windows PyNaCl wheels","expression":"ISC","notice_path":"pynacl-1.6.2.dist-info/licenses/licenses/LICENSE.libsodium.txt","bytes":841,"sha256":"93e7cac854d71cdafc9d9e4e9f8fd28d87ae541b3dda224d7c8fe23d37875704"},
+    {"component":"cffi 2.1.1","applies_to":"all twelve selected cffi wheels","expression":"MIT-0","notice_path":"cffi-2.1.1.dist-info/licenses/LICENSE","bytes":1123,"sha256":"5ba24ddc57067f9249add644c3afc41a5d6dc37e23433ef759d95df370b0af63"},
+    {"component":"pycparser 3.0","expression":"BSD-3-Clause","notice_path":"pycparser-3.0.dist-info/licenses/LICENSE","bytes":1543,"sha256":"0c846399369ea76ddd7b5c44fe6d16497415fcf015f5cbb508c24bf98b81c5b1"}
+  ],
+  "license_rule": "The four notice files applicable to the selected platform wheels must remain installed and be reproduced in any binary redistribution third-party-notice bundle. The Windows and non-Windows PyNaCl rows freeze their distinct raw packaged identities. Removing or changing an applicable notice fails dependency verification.",
+  "security_snapshot": {
+    "retrieved_at_utc": "2026-08-18T09:27:43Z",
+    "selected_pypi_vulnerability_entries": {"PyNaCl-1.6.2":[],"cffi-2.1.1":[],"pycparser-3.0":[]},
+    "provider_candidate_pypi_vulnerability_entries": {"cryptography-50.0.0":[]},
+    "resolved_relevant_advisory": {"id":"CVE-2025-69277","resolution":"PyNaCl 1.6.2 updates bundled libsodium to 1.0.20-stable 2025-12-31 build to resolve it"},
+    "resolved_provider_candidate_advisory": {"provider":"cryptography 50.0.0","ids":["GHSA-g6cj-pr64-35w5","CVE-2026-69247","PYSEC-2026-3552"],"affected_version":"49.0.0","resolution":"cryptography 50.0.0 changelog records the fix; this historical advisory is not a rejection reason"},
+    "rule": "A later implementation audit must refresh this snapshot. Any new selected-closure advisory, yanked artifact, hash change, or missing artifact blocks implementation and requires a new prospective dependency decision."
+  },
+  "rfc8032_vectors": [
+    {"id":"RFC8032-7.1-TEST-1","public_key_hex":"d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a","message_hex":"","signature_hex":"e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b","expected":"VALID"},
+    {"id":"RFC8032-7.1-TEST-2","public_key_hex":"3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c","message_hex":"72","signature_hex":"92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00","expected":"VALID"},
+    {"id":"RFC8032-7.1-TEST-3","public_key_hex":"fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025","message_hex":"af82","signature_hex":"6291d657deec24024827e69c3abe01a30ce548a284743a445e3680d7db5ac3ac18ff9b538d16f290ae67f760984dc6594a7c15e9716ed28dc027beceea1ec40a","expected":"VALID"}
+  ],
+  "verification_contract": {
+    "prechecks": ["exact profile","canonical ECJ-1 message","canonical unpadded base64url","32-byte public key","64-byte signature","key ID","canonical public-key point","non-small-order public key","canonical R point","non-small-order R","S < L"],
+    "provider_calls": "zero for any failed precheck; otherwise exactly one VerifyKey constructor and exactly one verify call",
+    "success": "returned bytes exactly equal input message",
+    "failure_normalization": "all provider exceptions, false/nonbytes/wrong bytes return, or unexpected behavior becomes SIGNATURE_INVALID",
+    "negative_cases": ["Ed25519ctx","Ed25519ph","prehash","fallback","algorithm negotiation","short/long key","short/long signature","padding/noncanonical base64url","noncanonical y","x=0 sign bit","small-order public key","small-order R","S=L","S>L","malformed point","wrong key","wrong message","wrong signature"]
+  },
+  "pyproject_change": {
+    "path": "pyproject.toml",
+    "existing_exact_line": "dependencies = []",
+    "replacement_exact_line": "dependencies = [\"PyNaCl==1.6.2\"]",
+    "other_bytes": "UNCHANGED"
+  },
+  "requirements_framework_lock": {
+    "path": "requirements-framework.lock",
+    "encoding": "UTF-8",
+    "line_endings": "LF",
+    "final_lf": "EXACTLY_ONE",
+    "byte_count": 2036,
+    "raw_sha256": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+    "lines": [
+      "--only-binary=:all:",
+      "--require-hashes",
+      "",
+      "cffi==2.1.1 \\",
+      "    --hash=sha256:d28630f5854ab07ab1fd4aba756de52326c82e6be15d414b12793f1975048b54 \\",
+      "    --hash=sha256:661c298b4821edebead0c91edd2b00374d67ad7c5a1f7a91d4442633b79d6a72 \\",
+      "    --hash=sha256:58acb8ab8e295e6c5ea12f888cbb13cf21511ef2a3303a23f4325c29d17fe5c1 \\",
+      "    --hash=sha256:b0431303acaea1089ad4b3e9ce4e6518193def1118d4073ca848635ee4ea2e96 \\",
+      "    --hash=sha256:3222ba5d678f80a030e6afbcc33dc1ae5cb45facabb61cee2c7016b8432fde48 \\",
+      "    --hash=sha256:ab36d55f9ed2d067327667c2fea18dda018eb628dd6347aa01dda6cf1f5d3836 \\",
+      "    --hash=sha256:7750c6449dff7864bb9bb27ddfb0267756189201a3afc911d82b3caacd70dfc3 \\",
+      "    --hash=sha256:0beceaabe56af686895136a2de78db54ecd8e4046b236b8fd6d6cb61389e9bf2 \\",
+      "    --hash=sha256:49cbc70e6542d4ccccb936558d1064a8012541e78f821f955cff24e357776c94 \\",
+      "    --hash=sha256:51b31d1c98274844cfd7838ce00bfc27c7423a4dc00fc0772fc3331c2cc90676 \\",
+      "    --hash=sha256:616f097f2fe415bc92a247f02e11f634e1f9e9a83d327e3c915c15089c87869e \\",
+      "    --hash=sha256:ad2c86c495b899d862ea0f4b42891b8713a3bd45dd4105c7fd51c2a72f39f3a5",
+      "",
+      "pycparser==3.0 \\",
+      "    --hash=sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992",
+      "",
+      "PyNaCl==1.6.2 \\",
+      "    --hash=sha256:622d7b07cc5c02c666795792931b50c91f3ce3c2649762efb1ef0d5684c81594 \\",
+      "    --hash=sha256:d071c6a9a4c94d79eb665db4ce5cedc537faf74f2355e4d502591d850d3913c0 \\",
+      "    --hash=sha256:fe9847ca47d287af41e82be1dd5e23023d3c31a951da134121ab02e42ac218c9 \\",
+      "    --hash=sha256:320ef68a41c87547c91a8b58903c9caa641ab01e8512ce291085b5fe2fcb7590 \\",
+      "    --hash=sha256:d29bfe37e20e015a7d8b23cfc8bd6aa7909c92a1b8f41ee416bbb3e79ef182b2 \\",
+      "    --hash=sha256:c949ea47e4206af7c8f604b8278093b674f7c79ed0d4719cc836902bf4517465 \\",
+      "    --hash=sha256:8845c0631c0be43abdd865511c41eab235e0be69c81dc66a50911594198679b0 \\",
+      "    --hash=sha256:22de65bb9010a725b0dac248f353bb072969c94fa8d6b1f34b87d7953cf7bbe4 \\",
+      "    --hash=sha256:62985f233210dee6548c223301b6c25440852e13d59a8b81490203c3227c5ba0 \\",
+      "    --hash=sha256:834a43af110f743a754448463e8fd61259cd4ab5bbedcf70f9dabad1d28a394c"
+    ],
+    "reconstruction": "Join lines with LF and append one LF."
+  },
+  "installed_distribution_verification": [
+    "Read distributions with importlib.metadata without importing nacl, cffi, pycparser, or native extensions.",
+    "Require exactly PyNaCl 1.6.2, cffi 2.1.1, and pycparser 3.0 and no direct_url.json.",
+    "Require an installer receipt naming the exact selected wheel filename, byte length, and SHA-256 from artifacts.",
+    "Verify every installed RECORD entry hash and size, exact METADATA requirements, all notice files, and selected native-member hash.",
+    "Require platform/interpreter/ABI to select exactly the receipt wheels.",
+    "Reject an sdist, editable/local/VCS install, system libsodium, missing receipt, changed file, unrecorded file under the distributions, or extra provider."
+  ],
+  "nonclaims": [
+    "No artifact is installed by this decision.",
+    "No candidate code or native library was executed.",
+    "The provider does not create or authorize a trust root.",
+    "A refreshed security and artifact-availability review remains mandatory at implementation audit."
+  ]
+}
