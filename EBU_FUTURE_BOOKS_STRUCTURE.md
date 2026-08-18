@@ -1,14 +1,15 @@
 # EBU Future Books Structure and Research Dependency Register
 
-**Status:** Detailed working architecture for Parts IV-IX  
-**Created:** 2026-08-10  
-**Regenerated:** 2026-08-12  
+**Status:** Detailed working architecture for Parts IV-IX
+**Created:** 2026-08-10
+**Regenerated:** 2026-08-12
 **Extended:** 2026-08-13 with the circuit-network analogy programme
 **Literature review extension:** 2026-08-13 with an initial prior-art map and bibliography policy
 **Conservation-accounting extension:** 2026-08-14 with a three-level boundary-accounting foundation
 **Part I integrated-revision extension:** prospective explanatory, visual, institutional, and typography plan
 **Part I layout-and-distance emphasis:** prospective measured layout, distance/burden, and non-destructive preservation requirements
-**Language:** English  
+**Series-readability and framework-alpha regeneration extension:** 2026-08-18 prospective documentation authority at `9c4b121acd51ce7cbaab1bad7b3b5bab9eaebd6f`
+**Language:** English
 **Purpose:** Preserve the complete future-book architecture, chapter purposes, transitions, overlap controls, scientific dependencies, figure expectations, and research stop conditions in one handoff document.
 
 ---
@@ -70,11 +71,12 @@ without changing the Part I D0/P1C equations or results. Historical D0, P1C,
 service, Gate 1D-C, and related models remain reduced or open accounts; none is
 retroactively claimed to be an isolated, boundary-complete physical system.
 
-The Part I integrated-revision plan combines that 16-24-page conservation
-allocation with an additional estimated 11-18 net pages of explanatory,
-selective-visual, institutional, literature, and typography work. It is a
-documentation plan only. It neither authorizes Part I manuscript/PDF mutation
-nor changes framework authority, code, a Gate, or I-3C.
+At its historical planning coordinate, the Part I integrated-revision plan
+combined that 16-24-page conservation allocation with an additional estimated
+11-18 net pages of explanatory, selective-visual, institutional, literature,
+and typography work. Those figures are reassessed prospectively in §4.3. The
+plan is documentation only. It neither authorizes Part I manuscript/PDF
+mutation nor changes framework authority, code, a Gate, or I-3C.
 
 ### 2.2 Continuity rule
 
@@ -87,14 +89,16 @@ The Part I manuscript handoff is explicitly non-destructive:
 > The integrated Part I revision modifies the accepted manuscript; it does not
 > regenerate or replace it from scratch.
 
-A separately authorized Part I manuscript task must preserve verified starting
-source and PDF hashes, maintain a complete change ledger, compare before/after
-content inventories, produce textual and visual redlines, retain recoverable
-baseline artifacts, and fail closed on unexplained deletion or substantive
-rewrite. It edits Part I only: Parts II and III remain untouched and
-byte-identical. Any coordinated Parts I-III work requires separate
-authorization and preservation audits. Parts IV-IX extend this foundation
-rather than replacing Parts I-III.
+A separately authorized Part I-only manuscript task must preserve verified
+starting source and PDF hashes, maintain a complete change ledger, compare
+before/after content inventories, produce textual and visual redlines, retain
+recoverable baseline artifacts, and fail closed on unexplained deletion or
+substantive rewrite. During that Part I-only task, Parts II and III remain
+untouched and byte-identical. That task-scoped restriction does not prohibit
+their later, separately authorized framework-alpha regeneration. Any
+coordinated Parts I-III work requires separate authorization and preservation
+audits. Parts IV-IX extend this foundation rather than erasing its historical
+manuscripts or PDFs.
 
 ### 2.3 Claim-status vocabulary
 
@@ -203,6 +207,119 @@ before manuscript generation. A later, separately authorized bibliography
 stage may create a machine-readable reference database; this planning update
 does not create one.
 
+### 2.8 Mandatory Parts I-IX reader-comprehension standard
+
+One editorial standard applies at these checkpoints:
+
+```text
+Parts I-III: future coordinated regeneration and every later revision
+Parts IV-IX: first generation and every later revision
+```
+
+The intended reader is intelligent but new to EBU. Advanced mathematics may
+remain advanced, but the prose must not assume that the reader already
+understands the theory. Every important statement must:
+
+1. state concretely what happens;
+2. identify the object performing or experiencing the change;
+3. explain why the change matters to EBU;
+4. give a small numerical or physical example when practical;
+5. define every technical term when it first appears;
+6. prefer ordinary verbs and complete sentences over compressed abstractions;
+7. preserve qualifications and limitations, but explain them in ordinary
+   language; and
+8. state what the claim does not establish when that boundary matters.
+
+Technically correct terminology does not explain itself. Compressed expressions
+such as “a crossing is material,” “the declared semantics,” “against the
+no-action evolution,” “the affected neighbourhood must change,” “tolerance
+tied to scale and purpose,” “the candidate violates preservation semantics,”
+and “the marginal provides the local conjugate force” must be replaced or
+immediately expanded. The expansion must identify which object changes, its
+earlier and later values or states, the relevant limit, baseline, or
+comparator, why the difference matters, which tolerance is allowed, and why
+that tolerance is appropriate for the measured resource.
+
+A compact model rewrite is:
+
+> Suppose the certified reserve limit is 10 units. If an action leaves the
+> source with 9 units, the source is now 1 unit below its certified reserve and
+> the action must normally be rejected. Floating-point calculations may
+> require a small numerical tolerance, such as 0.001 units, but the model must
+> state and justify that tolerance rather than silently ignoring the reserve
+> violation.
+
+Prefer:
+
+> The action is rejected because it would leave the source below its certified
+> reserve.
+
+Avoid unexplained compression such as:
+
+> The candidate violates preservation semantics.
+
+This is not a requirement to oversimplify mathematics, remove technical
+vocabulary, or delete caveats. It is a requirement to explain them.
+
+### 2.9 Mathematical explanation order
+
+Every important mathematical passage in Parts I-IX must answer, in this order:
+
+1. What are we trying to determine?
+2. Which physical, mathematical, or declared objects are involved?
+3. What does every symbol mean, and what unit does it use?
+4. What calculation is performed?
+5. What does the result mean physically or operationally?
+6. Why is this calculation needed in EBU?
+7. Which assumptions, domains, tolerances, or limitations restrict the result?
+8. What would make the equation inapplicable?
+
+Accepted equations, signs, units, domains, constraints, evidence labels, and
+qualifications remain unchanged. Equations remain central, but the problem and
+objects must be introduced first, symbols must be defined before use, and the
+result must be interpreted immediately afterward. No important equation may
+appear merely as a formal declaration. Where practical, connect:
+
+```text
+physical question
+→ defined objects and units
+→ equation
+→ numerical example
+→ physical interpretation
+→ EBU purpose
+→ limitation or failure case
+```
+
+### 2.10 Human-readability generation gate
+
+After every drafted section in Parts I-IX, a dedicated readability pass must:
+
+- replace unnecessarily abstract words;
+- expand unexplained conclusions;
+- remove declarations that merely sound authoritative;
+- add missing connections to physical or resource examples;
+- break sentences carrying several distinct claims;
+- verify that technical terms are defined at first use;
+- verify that every important equation has a stated purpose;
+- verify that the reader can explain what the result means;
+- preserve caveats and explain them rather than deleting them;
+- check continuity with the preceding and following sections; and
+- identify claims that rely on knowledge not yet introduced.
+
+Automated checks may flag compressed phrases, undefined symbols, absent
+equation explanations, long sentences, or missing examples. Final acceptance
+still requires human reading and cannot be reduced to a word blacklist.
+
+Every Part IV-IX generation gate inherits §§2.8-2.10. Each volume must verify
+that concrete objects and changes are identified; terms and symbols are
+defined at first use; important equations follow the required order; physical
+or operational meaning is stated; numerical examples appear where practical;
+qualifications and nonclaims are explained; advanced concepts are not
+expressed only through compressed academic language; and every section has
+passed human readability review. Advanced subject matter does not permit a
+more compressed style. The future `ebu-book-revise` skill must enforce this
+standard for Parts I-IX; this planning update does not begin skill creation.
+
 ---
 
 ## 3. Overlap audit against Parts I-III
@@ -249,16 +366,21 @@ Global chapter numbers are not yet frozen. Part-local labels such as IV.1 and V.
 | VIII | *Dynamic Coordination Fields and Society Geometry* | How should providers and actions be timed, placed, and connected across a dynamic network, including systems with storage, switching, and propagation? | 18 | 66,000-94,000 | 58-90 | 355-510 | 15-23 |
 | IX | *The Action-Accounted Economy* | How can verified physical action accounting support institutions without pretending that institutional choices are laws of physics? | 22 | 75,000-103,000 | 45-72 | 410-575 | 16-24 |
 
-These estimates include the descriptive tone of Parts I-III, worked examples, proofs, code architecture, exercises, counterexamples, and Python-derived figures. They are not targets to inflate. If a claim can be made clearly in fewer pages, it should be.
+These figures are retained as historical planning baselines. They include the
+then-planned descriptive tone, worked examples, proofs, code architecture,
+exercises, counterexamples, and Python-derived figures. They are not targets
+to inflate and no longer constrain the explanatory space required by
+§§2.8-2.10.
 
-The combined provisional narrative range for Parts IV-IX is now approximately
+At that historical planning coordinate, the combined provisional narrative
+range for Parts IV-IX was approximately
 1,815-2,525 pages. The explicit bibliography and endnote reserve adds about
 73-110 pages, giving a publication-planning range of approximately
-1,888-2,635 pages before indexes and front matter. This reserve is not a target
-to fill and should be revised from the actual citation database at manuscript
-freeze.
+1,888-2,635 pages before indexes and front matter. The reserve is not a target
+to fill.
 
-Part I needs one integrated 27-42-page revision allocation: the already
+The corresponding historical Part I integrated-revision allowance was 27-42
+pages: the already
 identified 16-24-page conservation and boundary-accounting correction plus an
 estimated 11-18 net pages for explanation, selective visuals, institutional
 separation, literature, and layout effects. The revision remains
@@ -273,14 +395,22 @@ The arithmetic is:
 =1{,}915\text{-}2{,}677
 \]
 
-pages before indexes and front matter. This supersedes the earlier
-1,904-2,659 total that included only the 16-24-page Part I correction.
+pages before indexes and front matter. At its planning coordinate, this
+superseded the earlier 1,904-2,659 total that included only the 16-24-page Part
+I correction. Both figures remain traceable historical baselines; neither is a
+current pagination quota or a final forecast.
 
 ### 4.1 Why Parts IV and V remain separate
 
 Part IV is experimental and metrological. Part V is mathematical and dynamical. Part IV can be completed after Gate 1D-C, robust-P1C alignment, and the relevant Gate 1E work. Part V may require a longer theorem programme.
 
-Merging them would probably produce a 410-540-page volume and would delay publication of a completed experimental result until the long-run theorem was also ready. The merge question should be reopened only if the completed, illustrated Part IV falls below approximately 150 pages after overlap removal.
+The historical architecture estimated that merging them would produce a
+410-540-page volume and would delay publication of a completed experimental
+result until the long-run theorem was also ready. Its approximately 150-page
+Part IV reconsideration threshold is retained as a traceable planning
+heuristic, not a quota or current forecast. Any merge decision must use
+calibrated reviewed drafts and must not compress explanation to satisfy either
+figure.
 
 ### 4.2 Complete transition chain
 
@@ -294,6 +424,61 @@ Merging them would probably produce a 410-540-page volume and would delay public
 | VIII -> IX | Tested coordination mechanisms and their physical, fairness, resilience, autonomy, and uncertainty limits. | How should measurement, access, guarantees, responsibility, privacy, enterprise, and governance use those results? |
 
 One recurring region should connect all six future books. Its hospital first exposes O14 buffering, then encounters delayed measurements and drought, then several simultaneous needs, then distant medicine and flood repairs, then network redesign, and finally a complete action-accounted institutional day.
+
+### 4.3 Prospective page-estimate reassessment
+
+The existing PDF counts of 296, 160, and 153 pages for Parts I, II, and III
+are immutable historical artifact identities, not flexible page budgets. They
+do not establish authoritative editable-manuscript baselines. Exact Parts
+II-III manuscript sources, hashes, regeneration changes, and expansion totals
+must be discovered and audited at the framework-alpha checkpoint rather than
+invented here.
+
+The page account must keep separate: immutable historical PDF pages; the
+historical 27-42-page Part I revision allowance; unknown Parts II-III
+regeneration changes; Parts IV-IX narrative estimates; equations; figures and
+tables; references and endnotes; indexes and front matter; and
+layout-dependent pagination. The existing Parts IV-IX plan names 257-392
+Python/result figures, but neither their page occupancy nor a separate table
+occupancy is known. Accepted equations likewise have no separately measured
+page count. Those unknowns must not be hidden inside a false precise total.
+
+For transparent arithmetic, split the Parts IV-IX narrative baseline into
+Parts IV-V, \(200\text{-}265+255\text{-}340=455\text{-}605\) pages, and Parts
+VI-IX, \(290\text{-}410+305\text{-}425+355\text{-}510+410\text{-}575
+=1{,}360\text{-}1{,}920\) pages. The scenarios use different rates for those
+chapter groups, explicit added-page allowances for Part I and new
+figures/tables, and a separate reference adjustment. Every fractional page is
+rounded outward. These are sensitivity assumptions, not quotas.
+
+| Scenario | Part I added allowance beyond 27-42 | Parts IV-V explanatory prose and equation interpretation | Parts VI-IX explanatory prose and equation interpretation | Extra figure, caption, and table pages | Reference/endnote increase | Added pages before indexes/front matter | Historical-baseline-plus-scenario range |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| **Low explanatory expansion** | 6-10 | 5% of 455-605 = 23-31 | 3% of 1,360-1,920 = 41-58 | 12-18 | 5% of 73-110 = 4-6 | \((6+23+41+12+4)\text{-}(10+31+58+18+6)=86\text{-}123\) | \((1{,}915+86)\text{-}(2{,}677+123)=2{,}001\text{-}2{,}800\) |
+| **Central explanatory expansion** | 12-20 | 10% of 455-605 = 46-61 | 7% of 1,360-1,920 = 96-135 | 24-36 | 10% of 73-110 = 8-11 | \((12+46+96+24+8)\text{-}(20+61+135+36+11)=186\text{-}263\) | \((1{,}915+186)\text{-}(2{,}677+263)=2{,}101\text{-}2{,}940\) |
+| **High explanatory expansion** | 24-36 | 18% of 455-605 = 82-109 | 12% of 1,360-1,920 = 164-231 | 40-60 | 18% of 73-110 = 14-20 | \((24+82+164+40+14)\text{-}(36+109+231+60+20)=324\text{-}456\) | \((1{,}915+324)\text{-}(2{,}677+456)=2{,}239\text{-}3{,}133\) |
+
+The low case assumes mostly local definitions and interpretations. The central
+case assumes systematic expansion of mathematics-heavy Parts IV-V and
+substantial clarification in advanced Parts VI-IX. The high case allows
+extensive motivation, worked examples, failure cases, diagrams, captions,
+source notes, and transitions. None includes a Parts II-III regeneration
+increment or indexes/front matter. No revised authoritative final range is
+declared until representative drafts and layouts supply evidence.
+
+Every future pagination forecast must pass this calibration gate:
+
+1. select representative prose-heavy, mathematics-heavy, figure-heavy,
+   table-heavy, and reference-heavy sections;
+2. draft them using the reader-comprehension standard;
+3. render them under candidate print and digital layouts;
+4. measure words, equations, figures, tables, and pages;
+5. derive updated per-volume and series ranges from those measurements;
+6. do not compress explanations merely to fit an old range; and
+7. do not add filler merely to reach a projected range.
+
+Final pagination is an observed property of reviewed manuscript and layout
+candidates, not a quota. This documentation update drafts and renders none of
+those representative sections.
 
 ---
 
@@ -333,7 +518,9 @@ Generate Part IV only after:
 2. execution is separately authorized and completed once under the frozen design;
 3. the robust-P1C diagnostic is aligned before nonzero-uncertainty claims;
 4. the relevant Gate 1E work is completed and committed;
-5. all result figures are rebuilt from committed data.
+5. all result figures are rebuilt from committed data; and
+6. every section passes the Parts I-IX reader-comprehension, mathematical-
+   explanation, and human-readability gate in §§2.8-2.10.
 
 **Closing transition to Part V:** Part IV can establish that one action cycle is observable, discriminating, and conservatively bounded. It cannot establish that repeated cycles remain safe or approach homeostasis. That becomes the exact question of Part V.
 
@@ -342,6 +529,11 @@ Generate Part IV only after:
 ## 6. Part V - *Homeostasis Through Time*
 
 **Central question:** Under what explicit assumptions does the constrained system remain viable, stable, or attracted toward a homeostatic region over an unbounded horizon?
+
+**Reader-comprehension generation gate:** Part V cannot be generated until
+every section passes §§2.8-2.10, including purpose-first mathematical
+explanation, symbol definitions, physical interpretation, examples where
+practical, limitations, and human reading.
 
 **Protected role:** This is the principal long-run theorem book. It must not be compressed into a few simulation chapters or replaced by the sentence “EBU enforces homeostasis.”
 
@@ -391,6 +583,11 @@ The exact wording must follow the theorem actually proved. If attraction is not 
 ## 7. Part VI - *Sequential and Parallel EBU Dynamics*
 
 **Central question:** How do several actions combine, when does parallel execution produce a genuinely different physical result from a declared sequential comparison, and which parts of electrical-network reasoning can supply useful models without being mistaken for EBU laws?
+
+**Reader-comprehension generation gate:** Part VI cannot be generated until
+every section passes §§2.8-2.10. Its advanced interaction, network, causal, and
+settlement distinctions do not permit compressed academic language in place
+of concrete explanation.
 
 **Foundation:** `SEQUENTIAL_PARALLEL_BRIDGE.md` v0.2 is the committed analytical checkpoint. This book must test it, preserve its distinctions, and amend it prospectively if later evidence exposes an error before manuscript generation.
 
@@ -541,9 +738,11 @@ respect the electrical model's own validity conditions; a time-varying or
 distributed electromagnetic system cannot be simplified to an ordinary
 lumped static loop merely to resemble EBU.
 
-The circuit chapter receives approximately 4,000-7,000 words, 5-10 figures,
-and 20-40 illustrated narrative pages inside the revised Part VI budget, plus
-its share of the volume's reference reserve. Its essential
+The circuit chapter's historical allocation is approximately 4,000-7,000
+words, 5-10 figures, and 20-40 illustrated narrative pages inside the revised
+Part VI budget, plus its share of the volume's reference reserve. These are
+planning baselines subject to the §4.3 calibration gate, not limits on the
+explanation. Its essential
 figures are a state-potential path, a common-terminal branch diagram, a
 finite-source capacity/sag model, a nonlinear-superposition counterexample,
 and a switched-storage order comparison.
@@ -659,6 +858,10 @@ transition respectively.
 
 **Central question:** How do verified actions compose across typed, time-dependent routes, multiple actors, shared infrastructure, and regional disruption?
 
+**Reader-comprehension generation gate:** Part VII cannot be generated until
+every section passes §§2.8-2.10, including concrete route objects, before/after
+states, comparators, units, tolerances, examples, nonclaims, and human reading.
+
 **What this book must not repeat:** the elementary claims that distance alone is not EBU, EBU is not \(q_1q_2/r^2\), Fermat is an analogy, or Bellman recursion can plan a path. Those foundations already exist in Parts I-II.
 
 ### Distance and burden generator rule
@@ -726,6 +929,10 @@ O-number, framework mechanism, or figure allocation.
 ## 9. Part VIII - *Dynamic Coordination Fields and Society Geometry*
 
 **Central question:** How should providers and their actions be arranged across time, sequence, space, and network structure to improve verified system outcomes?
+
+**Reader-comprehension generation gate:** Part VIII cannot be generated until
+every section passes §§2.8-2.10. Advanced field, topology, spectral, wave, and
+scaling material must remain mathematically precise and newly readable.
 
 **Central principle:**
 
@@ -796,6 +1003,11 @@ Candidate patterns must compete against simpler models using the same data, obje
 ## 10. Part IX - *The Action-Accounted Economy*
 
 **Central question:** What would a complete action-accounted economy require, and how could it be introduced while preserving access, contestability, privacy, responsibility, and scientific honesty?
+
+**Reader-comprehension generation gate:** Part IX cannot be generated until
+every section passes §§2.8-2.10, including concrete separation of physical
+effects, authorization, responsibility, settlement, compensation, and
+nonclaims.
 
 This is the final synthesis. It is not “EBU as another price.” It is an economy in which verified actions carry their physical consequences while institutional rules determine access, allocation, guarantees, and governance.
 
@@ -899,7 +1111,8 @@ Part IX must present the long-term destination positively while making clear tha
 | Outcome sensitivity and instrument validation | Part IV | Part III Chapters 58-59 |
 | Observation age, uncertainty, robust permission, Gate 1E | Part IV | Part III Chapter 60 |
 | Recursive feasibility, invariance, stability, attraction, recovery, and compositional homeostasis proofs | Part V | Part II Chapter 43; Part III 62.17-62.18; Part I explains but does not prove the distinction |
-| Reduced stock ledgers, open control volumes, isolated conservation, residual observability, boundary roll-up, explanatory corrections, selective visuals, and five-layer infrastructure separation | Part I 27-42-page integrated revision, `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md`, and `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | Part IV owns measurement; Part V owns conservation-manifold/homeostasis separation and proofs; Part VI owns atomic groups and Kirchhoff/control-volume comparison; Part VII owns physical infrastructure actions, field versions, and future transaction consequences; Part VIII owns fields, waves, hierarchy, and roll-up; Part IX owns authorization, responsibility, public provision, compensation, product/lifecycle/supply-network closure, and disputes |
+| Reduced stock ledgers, open control volumes, isolated conservation, residual observability, boundary roll-up, explanatory corrections, selective visuals, and five-layer infrastructure separation | Historical Part I 27-42-page integrated-revision baseline, `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md`, and `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | Part IV owns measurement; Part V owns conservation-manifold/homeostasis separation and proofs; Part VI owns atomic groups and Kirchhoff/control-volume comparison; Part VII owns physical infrastructure actions, field versions, and future transaction consequences; Part VIII owns fields, waves, hierarchy, and roll-up; Part IX owns authorization, responsibility, public provision, compensation, product/lifecycle/supply-network closure, and disputes |
+| Dissipation-potential explanation and bounded Onsager lineage | Future Part I regeneration under separate authority | Derive \(\Psi_e\) as accumulated opposition before differentiating it; preserve nonnegative thresholded flow; add only the short structural-inspiration paragraph; verify the historical citation against primary sources; make no thermodynamic identity or reciprocal-relations claim. |
 | O1-Q/F/M/I/E and certified field epochs | Part I defines the split; Parts IV, V, VII, and IX own the unresolved work by layer | O1-Q forbids speculative immediate credit; O1-F makes certified changes prospective; O1-M/I/E remain open and O1-E links to O6 |
 | Sequential telescoping and parallel interaction | Part VI | Part II Chapter 37; `SEQUENTIAL_PARALLEL_BRIDGE.md` |
 | Network-potential closure, shared-source flow models, and circuit-analogy limits | Part VI | §7.3 prior-art map; Part VIII extends storage, switching, propagation, and topology tests |
@@ -967,32 +1180,31 @@ Every registered run should produce or reference:
 - tests connecting equations to implementation;
 - an evidence ledger connecting figures to claims.
 
-Framework stages remain separate authorization boundaries. I-2 is accepted
-unchanged. This conservation-accounting extension neither reopens I-2 nor
-authorizes I-3, I-5, or any later implementation or execution stage.
-
-The label I-3C may be used prospectively for the declarative support that keeps
-policy, causal, settlement, and ledger records separate. That support supplies
-no policy, causal inference, institutional default, compensation rule, or
-state advancement. This integrated-revision documentation neither changes nor
-authorizes I-3C.
+Framework stages remain separate authorization boundaries. At the prospective
+2026-08-18 planning coordinate, Framework I-4 authority is integrated, but
+Framework I-4 implementation has not begun. Authority integration is not
+implementation completion. This series-readability update changes no framework
+authority or implementation, supplies no policy, causal inference,
+institutional default, compensation rule, or state advancement, and grants no
+permission for I-4 or any later stage.
 
 ### 12.4 Future boundary and conservation profiles
 
-Under a later, separate I-3 authorization, the framework may add an optional
-declared boundary/conservation profile. It must make reduced represented-stock
-and open control-volume accounts first-class, and may support an isolated
-boundary-complete profile only when its stronger assumptions are explicit.
-The profile should declare the quantity, units, boundary, included state
-coordinates, internal transformation invariant, boundary-flow channels,
-observability, sign convention, and numerical policy.
+The earlier conservation extension allocated an optional declared
+boundary/conservation profile to its then-future framework stages. That
+historical allocation is not rewritten here. Its substantive safeguards remain:
+reduced represented-stock and open control-volume accounts must be first-class,
+and an isolated boundary-complete profile is valid only when its stronger
+assumptions are explicit. The profile must declare the quantity, units,
+boundary, included state coordinates, internal transformation invariant,
+boundary-flow channels, observability, sign convention, and numerical policy.
 
-Under a later, separate I-5 authorization, validation may compute typed
-residuals only against the selected profile. There is no universal zero-
-residual rule, no inference of isolation from a small residual, and no hidden
-global tolerance. A missing unit, unknown boundary channel, duplicate roll-up
-transfer, or undeclared tolerance must fail closed. Detailed changes to the
-Bridge and Dynamic Coordination foundation remain future documentation work.
+Any separately authorized later validation may compute typed residuals only
+against the selected profile. There is no universal zero-residual rule, no
+inference of isolation from a small residual, and no hidden global tolerance.
+A missing unit, unknown boundary channel, duplicate roll-up transfer, or
+undeclared tolerance must fail closed. This paragraph records scientific and
+accounting requirements only; it grants no framework implementation authority.
 
 ### 12.5 Future circuit-inspired domain adapters
 
@@ -1020,10 +1232,13 @@ voltage, current, power, energy, or a conserved token.
 The documentation foundation through the framework specification and I-0 plan
 was accepted at `foundation-v0.1.0`. The circuit-network, literature, and
 conservation-accounting extensions are later planning work and are not
-retroactively part of that immutable tag. I-2 is accepted unchanged on its own
-authorized framework history. Any acceptance, authority-hash reconciliation,
-or later documentation milestone for these extensions must be prospective;
-the existing tag must not move.
+retroactively part of that immutable tag. Later framework stages remain on
+their own authorized histories. At checkpoint
+`9c4b121acd51ce7cbaab1bad7b3b5bab9eaebd6f`, Framework I-4 authority is
+integrated and Framework I-4 implementation has not begun. Any acceptance,
+authority-hash reconciliation, implementation, or later documentation
+milestone must be prospective; the existing tag and historical coordinates
+must not move.
 
 ### Phase A - Repository reconciliation and freeze
 
@@ -1049,26 +1264,85 @@ the existing tag must not move.
    the prospective authority for one integrated Part I revision, including its
    exact distance/burden takeaway, measured current-layout control, print and
    digital geometry trials, heading-size trials, complete change ledger,
-   before/after inventories, redlines, and Parts II-III byte-identity rule; do
-   not mutate the manuscript or PDF without a separate reviewed stage.
+   before/after inventories, and redlines. Enforce the Parts II-III byte-
+   identity rule only during the Part I-only task; do not use it to bar later
+   separately authorized framework-alpha regeneration. Do not mutate any
+   manuscript or PDF without a separate reviewed stage.
 
-### Phase C - Execute studies in dependency order
+### Phase C - Complete Framework I-4 through framework alpha
 
-1. Preserve the accepted I-2 core types unchanged. If separately authorized, specify an optional I-3 boundary/conservation profile and later I-5 profile-specific residual checks; no stage inherits permission from this register or from a previous stage.
-2. Reconcile every future framework authority hash and closed file manifest prospectively before the affected stage; do not retrofit this documentation into an accepted implementation commit.
-3. Reconcile the Gate 1D-C incident and obtain separate authority for any correction or second official invocation.
-4. Complete Gate 1D-C once under the applicable frozen design and new authority, without erasing the existing invocation history.
-5. Align robust-P1C before making nonzero-uncertainty claims.
-6. Complete Gate 1E in its repository-defined scope.
-7. Develop the Part V constrained transition, viable-set, recursive-feasibility, invariance, Lyapunov, disturbance, and counterexample programme.
-8. Preregister and execute the deterministic two-action sequential-parallel test matrix.
-9. Complete the systematic literature comparison for the specific sequential-parallel and K1-K6 claims, then prospectively specify, preregister, and test K1-K6, including path closure, common-terminal branches, finite shared sources, nonlinear superposition failure, switched storage, and loss-aware cancellation. These tests must compete against established non-EBU models and retain every analogy limitation.
-10. Execute many-action, comparator, shared-source, O3, group-receipt, allocation, batching, and delayed-settlement studies.
-11. Execute dynamic route, actor, congestion, uncertainty, cooperation, fairness, and adaptive-infrastructure studies.
-12. Execute timing, phase, placement, topology, propagation, spectral, resilience, scaling, and pattern-discovery studies, including only those dynamic circuit analogies that survive K1-K6.
-13. Execute quote, residual, reserve, access, enterprise, behaviour, governance, fraud, transition, and complete-economy simulation studies.
+The accepted prospective order is:
 
-### Phase D - Generate books only at evidence-complete checkpoints
+```text
+Framework I-4 implementation
+→ Framework I-5
+→ Framework I-6
+→ Framework I-7
+→ Framework I-8
+→ Framework I-9 and framework alpha
+→ separately authorized regeneration of Parts I-III
+→ user review of Parts I-III while scientific protocols are prepared
+→ separately authorized scientific simulations
+```
+
+Framework I-4 authority is integrated, but Framework I-4 implementation has
+not begun. Authority integration must never be described as implementation
+completion. Each implementation stage requires its own authority, review, and
+acceptance; no stage inherits permission from this register or from the prior
+stage. All previously accepted framework types, guarantees, and stage results
+remain preserved unless a separately authorized prospective stage explicitly
+changes them. Every authority hash and closed file manifest must be reconciled
+prospectively before the affected stage. This planning extension must not be
+retrofitted into an accepted framework commit.
+
+### Phase D - Framework-alpha trilogy checkpoint
+
+After Framework I-4 through I-9 and framework alpha are independently
+accepted, and only under separate authorities:
+
+1. audit the authoritative Parts I-III manuscript baselines;
+2. reconcile all accepted revision instructions;
+3. revise and render Part I under separate authority;
+4. regenerate Parts II and III under separate authority;
+5. audit the unified trilogy for mathematics, notation, evidence, readability,
+   preservation, citations, and layout;
+6. allow the user to review the books while separately authorized scientific
+   protocols are prepared; and
+7. begin no scientific simulation merely because book regeneration is
+   complete.
+
+Book regeneration is deferred until framework alpha; it is not cancelled.
+The exact Parts II-III manuscript hashes, page baselines, and regeneration
+changes are unknown until item 1 is completed. The Part I-only byte-identity
+rule for Parts II and III does not govern this separately authorized trilogy
+checkpoint.
+
+### Phase E - User review and scientific-protocol preparation
+
+User review of Parts I-III may proceed while scientific protocols are prepared
+under their own authority. Review, protocol drafting, preregistration,
+implementation, pre-execution validation, and execution remain distinct
+boundaries. Neither the completed books nor a prepared protocol authorizes a
+simulation.
+
+### Phase F - Execute separately authorized studies in dependency order
+
+Only after the preceding sequence and applicable preregistration may the
+following work proceed under separate authority:
+
+1. reconcile the Gate 1D-C incident and obtain separate authority for any correction or second official invocation;
+2. complete Gate 1D-C once under the applicable frozen design and new authority, without erasing the existing invocation history;
+3. align robust-P1C before making nonzero-uncertainty claims;
+4. complete Gate 1E in its repository-defined scope;
+5. develop the Part V constrained transition, viable-set, recursive-feasibility, invariance, Lyapunov, disturbance, and counterexample programme;
+6. preregister and execute the deterministic two-action sequential-parallel test matrix;
+7. complete the systematic literature comparison for the specific sequential-parallel and K1-K6 claims, then prospectively specify, preregister, and test K1-K6, including path closure, common-terminal branches, finite shared sources, nonlinear superposition failure, switched storage, and loss-aware cancellation. These tests must compete against established non-EBU models and retain every analogy limitation;
+8. execute many-action, comparator, shared-source, O3, group-receipt, allocation, batching, and delayed-settlement studies;
+9. execute dynamic route, actor, congestion, uncertainty, cooperation, fairness, and adaptive-infrastructure studies;
+10. execute timing, phase, placement, topology, propagation, spectral, resilience, scaling, and pattern-discovery studies, including only those dynamic circuit analogies that survive K1-K6; and
+11. execute quote, residual, reserve, access, enterprise, behaviour, governance, fraud, transition, and complete-economy simulation studies.
+
+### Phase G - Generate Parts IV-IX only at evidence-complete checkpoints
 
 1. Generate Part IV after Gate 1D-C, robust-P1C alignment, and relevant Gate 1E results are committed.
 2. Generate Part V after the strongest constrained homeostasis theorem and adversarial simulations meet their declared threshold.
@@ -1076,17 +1350,23 @@ the existing tag must not move.
 4. Generate Part VII after route composition, actor closure, congestion, cooperation, fairness, and adaptive-network studies are complete.
 5. Generate Part VIII after Dynamic Coordination, storage/switching and lumped-versus-distributed network comparisons, wave diagnostics, topology comparison, resilience, scaling, and pattern tests are complete.
 6. Generate Part IX last, after the quote, residual, reserve, access, governance, behavioural, transition, and complete-economy programme can synthesize the surviving results.
-7. Perform a coordinated audit of Parts I-III only after Parts IV-IX are stable
-   and under separate authorization with preservation audits; future Parts
-   IV-IX extend rather than replace Parts I-III.
 
-Each generation gate also requires the corresponding literature checkpoint,
-nearest-antecedent table, and resolved citation ledger. Passing an experiment
-or proof does not by itself pass the originality review.
+Every Part IV-IX generation gate inherits §§2.8-2.10 and also requires the
+corresponding literature checkpoint, nearest-antecedent table, and resolved
+citation ledger. Passing an experiment or proof does not by itself pass the
+originality or reader-comprehension review.
 
-### Phase E - Final series audit
+### Phase H - Final nine-part series checkpoint
 
-- replace “trilogy” with the correct series description;
+After Parts IV-IX are supported by their required proofs, experiments,
+literature reviews, and evidence:
+
+- perform the final Parts I-IX cross-reference audit;
+- reconcile indexes and terminology;
+- audit overlap and transitions;
+- perform the complete nine-part consistency review;
+- replace “trilogy” with the correct series description where the full series
+  rather than the framework-alpha checkpoint is meant;
 - add a two-page map of all nine parts;
 - update the closing bridge in Part III;
 - add precise forward and backward cross-references;
@@ -1095,8 +1375,12 @@ or proof does not by itself pass the originality review.
 - audit priority and originality wording against the nearest primary sources;
 - verify DOI, edition, correction/retraction, license, and archival metadata;
 - audit every future chapter for overlap with Parts I-III;
-- rebuild all result figures from committed data;
+- rebuild all result figures from committed data; and
 - record genuine errata without rewriting historical evidence.
+
+This final nine-part checkpoint is distinct from the earlier framework-alpha
+trilogy checkpoint. Parts I-III regeneration does not wait for Parts IV-IX to
+be stable, and it does not authorize any later scientific or publication stage.
 
 ---
 
@@ -1113,7 +1397,10 @@ or proof does not by itself pass the originality review.
 9. No allocation rule may be presented as a physically measured causal contribution unless identifiability evidence exists.
 10. No wave, power law, Fibonacci recurrence, fractal, behavioural transformation, or economy-wide benefit may be assumed in advance.
 11. No Kirchhoff law, circuit topology, superposition principle, or equivalent-resistance formula may be presented as validation or derivation of EBU. Each use must declare whether it is an algebraic correspondence, a domain model, or an explanatory analogy.
-12. I-2 is accepted unchanged. This register does not authorize I-3, I-5, or any Bridge or Dynamic Coordination implementation change.
+12. Framework I-4 authority is integrated at the 2026-08-18 prospective
+    checkpoint, but Framework I-4 implementation has not begun. This register
+    authorizes no I-4 implementation, later framework stage, Bridge change, or
+    Dynamic Coordination implementation change.
 13. No account may impose a universal zero residual, infer isolation from ledger closure, use a hidden global tolerance, or treat an omitted flow as a structural improvement.
 14. No future manuscript may claim that the EBU sequential-parallel equations, Kirchhoff analogy, interaction decomposition, shared-capacity problem, causal attribution method, or allocation rule is globally novel until the applicable claim-by-claim literature checkpoint is complete.
 15. No historical D0, P1C, service, Gate 1D-C, or other Gate model may be retroactively described as isolated or physically boundary-complete without separate evidence and authority.
@@ -1124,27 +1411,44 @@ or proof does not by itself pass the originality review.
 17. No receipt may be recomputed under a later certified field version. A
     genuine physical recertification opens a prospective epoch; it does not
     authorize outcome-driven valuation-parameter changes.
-18. This register acknowledges declarative I-3C support only; it neither
-    changes nor authorizes I-3C, Part I manuscript/PDF mutation, or any model
-    execution.
+18. This register neither changes framework authority nor authorizes any
+    framework implementation, Part I-III manuscript/PDF mutation, book
+    regeneration, or model execution.
+19. No manuscript section may be accepted without the Parts I-IX
+    reader-comprehension and human-readability gate, and no explanation may be
+    compressed merely to meet a historical page estimate.
 
 ---
 
 ## 15. Immediate next deliverables
 
-1. **Conservation-foundation review** - audit the new foundation and this books-structure integration for exact historical compatibility, typed algebra, Part I inventory completeness, chapter allocation, page arithmetic, nonclaims, and literature limits.
-2. **Prospective documentation acceptance** - if authorized after review, commit only the exact accepted documentation paths and reconcile their authority hashes prospectively; do not tag, stage, commit, or push merely because this register exists.
-3. **Part I integrated-revision review** - independently review
-   `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md`, its complete
-   296-page occurrence inventory, O1-Q/F/M/I/E split, literature metadata,
-   27-42-page estimate, and exact preservation/nonclaim boundary. Do not begin
-   manuscript mutation or PDF generation.
-4. **I-3 profile specification** - only under separate authority, define optional Level 1, Level 2, and Level 3 boundary/conservation profiles without changing accepted I-2 core types.
-5. **I-5 residual validation** - only under separate authority and after the profile contract is accepted, add profile-specific checks with explicit units, observability, tolerances, and fail-closed behavior.
-6. **Bridge and Dynamic Coordination documentation** - in separate future documentation stages, import atomic group accounting and hierarchical roll-up without changing accepted equations or implying execution authority.
-7. **Deterministic parallel-testing specification** - later incorporate M1-M9 and K1-K6 with exact models, expected outcomes, comparators, declared profile-specific tolerances, and falsifiers before any circuit-inspired scientific execution.
-8. **Gate 1D-C incident remedy and reauthorization** - remain separate from framework, conservation-accounting, and circuit-model work; no scientific execution is implied here.
-9. **Systematic literature and novelty register** - in a separately authorized documentation stage, expand the seed bibliography and conservation antecedent map into per-part search logs and nearest-antecedent matrices before any manuscript claims originality.
+1. **Independent book-brief audit** - independently review exactly this
+   planning update for the Parts I-IX comprehension standard, the pending
+   \(\Psi_e\) and Onsager explanations, framework-alpha sequence, page-scenario
+   arithmetic, historical-baseline preservation, and nonclaims. Do not begin
+   book regeneration, skill creation, framework implementation, or scientific
+   execution.
+2. **Prospective documentation acceptance** - only if separately authorized
+   after review, commit only the exact accepted documentation paths and
+   reconcile their identities prospectively. The existence of this unstaged
+   brief authorizes no staging, commit, push, tag, or publication.
+3. **Framework I-4 implementation** - this is the next framework stage in the
+   accepted sequence, but it requires separate authority and has not begun.
+
+The following accepted work remains later, separately authorized backlog rather
+than an immediate consequence of this update:
+
+- complete Framework I-5 through I-9 and framework alpha in order;
+- perform the framework-alpha Parts I-III regeneration checkpoint under
+  separate manuscript and PDF authorities;
+- allow user review while separately authorized protocols are prepared;
+- undertake any Gate 1D-C incident remedy, robust-P1C, Gate 1E, deterministic
+  parallel-testing, K1-K6, or other scientific work only at its proper later
+  boundary;
+- maintain Bridge, Dynamic Coordination, conservation, boundary-accounting,
+  literature, originality, and nearest-antecedent work under their respective
+  authorities; and
+- generate Parts IV-IX only after their evidence and §§2.8-2.10 gates pass.
 
 ---
 
@@ -1262,3 +1566,33 @@ This narrow prospective extension:
 5. leaves the `27-42`-page Part I and `1,915-2,677`-page publication ranges
    unchanged and creates no theorem, chapter, O-number, framework mechanism,
    figure allocation, scientific result, or execution authority.
+
+### 16.7 Parts I-IX readability and framework-alpha regeneration extension - 2026-08-18
+
+This prospective documentation-only extension:
+
+1. adopts one mandatory reader-comprehension, mathematical-explanation, and
+   human-readability gate for coordinated regeneration and every later
+   revision of Parts I-III, and for the first generation and every later
+   revision of Parts IV-IX;
+2. registers the future Part I derivation of \(\Psi_e\) from accumulated
+   opposition while preserving the nonnegative thresholded flow law, and
+   registers one short primary-source-checked Onsager lineage paragraph with
+   explicit thermodynamic nonclaims;
+3. records that Framework I-4 authority is integrated while Framework I-4
+   implementation has not begun, then fixes the order through I-9 and framework
+   alpha before any separately authorized Parts I-III regeneration;
+4. creates a distinct framework-alpha trilogy checkpoint followed by user
+   review and separately authorized protocol preparation, without allowing book
+   completion to authorize a scientific simulation;
+5. preserves a later, distinct final Parts I-IX cross-reference, index,
+   terminology, overlap, transition, and consistency checkpoint;
+6. retains the 27-42-page Part I allowance, 1,815-2,525-page Parts IV-IX
+   narrative estimate, 73-110-page references/endnotes reserve, and
+   1,915-2,677-page combined figure as historical planning baselines; adds low,
+   central, and high explanatory-expansion scenarios; and leaves the final
+   range unresolved until representative manuscript and layout calibration;
+   and
+7. authorizes no manuscript, generator, LaTeX, template, image, PDF,
+   framework, model, simulation, experiment, Gate, publication, or skill
+   operation.
