@@ -3,6 +3,7 @@
 **Version:** 0.1
 **Status:** Prospective documentation authority; no manuscript or framework mutation
 **Authorized base:** `a89945adde66450f887c0811f2359fe9bfc6ba05`
+**Prospective series-readability extension checkpoint:** `9c4b121acd51ce7cbaab1bad7b3b5bab9eaebd6f` (2026-08-18)
 **Part I source:** `EBP_Book_Part_I_Unified_Explanatory_Edition.pdf`, 296 PDF pages
 **Part I source SHA-256:** `335ed5c6d3541d48a61438e213a8a1148eb196649da83392a4ba0741ce65a4ad`
 **Language:** English
@@ -74,11 +75,12 @@ The separately authorized manuscript task must therefore:
 - retain recoverable baseline artifacts; and
 - perform a complete final PDF page inspection.
 
-This integrated revision edits Part I only. Parts II and III must remain
-untouched and byte-identical throughout the Part I manuscript task. Any later
-coordinated Parts I-III work requires separate authorization and separate
+During the separately authorized Part I-only manuscript task, Parts II and III
+must remain untouched and byte-identical. That task-scoped restriction does
+not prohibit their later, separately authorized framework-alpha regeneration.
+Any coordinated Parts I-III work requires separate authorization and separate
 preservation audits. Future Parts IV-IX extend the accepted Parts I-III
-foundation; they do not regenerate or replace it.
+foundation; they do not erase its historical manuscripts or PDFs.
 
 Framework I-3C may provide declarative support for policy, causal,
 settlement, and ledger separation. That support is representational only: it
@@ -518,6 +520,132 @@ Worked examples must retain Part I's equation-first/calculation style after the
 reason and definitions have been supplied. The correction is explanatory, not
 a replacement of arithmetic with narrative.
 
+### 6.1 Pending explanation: derive \(\Psi_e\) from opposition
+
+A future Part I manuscript task must insert the following explanatory sequence
+near the existing local-flow and dissipation discussion. This changes the
+order and clarity of the explanation, not the accepted mathematics.
+
+Begin with the marginal opposition to nonnegative edge flow:
+
+\[
+r_e(J_e)=\theta_e+\frac{J_e}{M_e}.
+\]
+
+Define each object before using the equation:
+
+- \(J_e\) is the flow through edge \(e\);
+- \(M_e\) is the edge mobility, which determines how readily flow responds to
+  force;
+- \(\theta_e\) is the threshold opposition that must be overcome before
+  positive flow begins; and
+- \(r_e(J_e)\) is the opposition encountered at the current flow.
+
+Then define the dissipation potential as accumulated opposition:
+
+\[
+\Psi_e(J_e)
+=
+\int_0^{J_e}r_e(j)\,dj
+=
+\theta_eJ_e+\frac{J_e^2}{2M_e}.
+\]
+
+Immediately show that
+
+\[
+\frac{d\Psi_e}{dJ_e}
+=
+\theta_e+\frac{J_e}{M_e}.
+\]
+
+The manuscript must say plainly that \(\Psi_e\) is not itself the opposing
+force. Its derivative gives the marginal opposition at a particular flow. The
+factor \(1/2\) appears because integrating the linear term \(J_e/M_e\) gives
+\(J_e^2/(2M_e)\); it has no separate mysterious physical significance here.
+
+Introduce the optimization over admissible nonnegative flow:
+
+\[
+\min_{J_e\ge 0}
+\left[
+\Psi_e(J_e)-f_eJ_e
+\right].
+\]
+
+Explain that \(\Psi_e(J_e)\) represents the accumulated cost or opposition
+associated with producing flow, while \(f_eJ_e\) represents the driving
+contribution. The selected flow balances driving force against marginal
+opposition while respecting \(J_e\ge 0\).
+
+For an active positive-flow edge:
+
+\[
+f_e
+=
+\frac{d\Psi_e}{dJ_e}
+=
+\theta_e+\frac{J_e}{M_e},
+\]
+
+so
+
+\[
+J_e=M_e(f_e-\theta_e).
+\]
+
+After enforcing the threshold and nonnegative flow, recover the complete law:
+
+\[
+J_e=M_e[f_e-\theta_e]_+.
+\]
+
+Subject to verification against the accepted notation, include this small
+numerical example:
+
+\[
+M_e=0.5,\qquad \theta_e=1,\qquad f_e=5,
+\]
+
+and therefore
+
+\[
+J_e=0.5(5-1)=2.
+\]
+
+At \(J_e=2\), the marginal opposition is
+
+\[
+1+\frac{2}{0.5}=5,
+\]
+
+which equals the driving force. The final passage must distinguish explicitly
+among \(\Psi_e\), accumulated opposition or dissipation potential;
+\(d\Psi_e/dJ_e\), marginal opposition; \(f_e\), driving force; \(M_e\),
+mobility; \(\theta_e\), threshold; the active-flow equation; and the complete
+thresholded nonnegative-flow law. It must not alter accepted equations,
+constraints, notation, or scientific status.
+
+### 6.2 Pending explanation: bounded Onsager lineage
+
+Near the first force-flux and dissipation explanation, a future Part I
+manuscript task must add exactly one short reader-facing paragraph:
+
+> The local EBU flow law follows the force–flux and dissipation tradition
+> associated with Lars Onsager: a declared potential produces marginal forces,
+> and a mobility law converts those forces into flows. This is structural
+> inspiration, not a thermodynamic identity—EBU’s \(V\) is a constructed burden
+> field, and \(M_e\) is not automatically a physical Onsager coefficient or
+> evidence of thermodynamic reciprocal relations.
+
+The manuscript task must verify the historical citation against primary
+sources. It must not create a dedication or acknowledgement section, expand
+the paragraph into a historical essay, claim that Onsager proved or validated
+EBU, identify EBU's \(V\) with thermodynamic entropy or free energy, call
+\(M_e\) a physical Onsager coefficient without domain evidence, claim that EBU
+satisfies Onsager reciprocal relations, call those relations “the Fourth Law
+of Thermodynamics,” or otherwise overstate the lineage.
+
 ---
 
 ## 7. Selective visual programme
@@ -561,9 +689,73 @@ be inserted merely to fill a page or create visual variety.
 
 ---
 
-## 8. Human-readable writing standard
+## 8. Mandatory Parts I-IX reader-comprehension standard
 
-The future revision must apply these rules throughout the complete manuscript:
+This standard is mandatory for the following publication scopes:
+
+```text
+Parts I-III: future coordinated regeneration and every later revision
+Parts IV-IX: first generation and every later revision
+```
+
+The intended reader is intelligent but new to EBU. Advanced mathematics may
+remain advanced, but the prose must not assume that the reader already
+understands the theory. Clearer explanation is an acceptance condition, not an
+optional stylistic preference.
+
+### 8.1 Concrete statement standard
+
+For every important statement, the manuscript must:
+
+1. state concretely what happens;
+2. identify the object performing or experiencing the change;
+3. explain why the change matters to EBU;
+4. give a small numerical or physical example when practical;
+5. define every technical term when it first appears;
+6. prefer ordinary verbs and complete sentences over compressed abstractions;
+7. preserve qualifications and limitations, but explain them in ordinary
+   language; and
+8. state what the claim does not establish when that boundary matters.
+
+Technically correct terminology does not explain itself. Expressions such as
+the following must be replaced or immediately expanded:
+
+- “a crossing is material”;
+- “the declared semantics”;
+- “against the no-action evolution”;
+- “the affected neighbourhood must change”;
+- “tolerance tied to scale and purpose”;
+- “the candidate violates preservation semantics”; and
+- “the marginal provides the local conjugate force.”
+
+The expansion must identify which object changes, its earlier and later values
+or states, the relevant limit, baseline, or comparator, why the difference
+matters, which tolerance is allowed, and why that tolerance is appropriate for
+the measured resource.
+
+A compact model rewrite is:
+
+> Suppose the certified reserve limit is 10 units. If an action leaves the
+> source with 9 units, the source is now 1 unit below its certified reserve and
+> the action must normally be rejected. Floating-point calculations may
+> require a small numerical tolerance, such as 0.001 units, but the model must
+> state and justify that tolerance rather than silently ignoring the reserve
+> violation.
+
+Prefer:
+
+> The action is rejected because it would leave the source below its certified
+> reserve.
+
+Avoid unexplained compression such as:
+
+> The candidate violates preservation semantics.
+
+This standard does not require the manuscript to oversimplify the mathematics,
+remove technical vocabulary, or delete caveats. It requires the manuscript to
+explain the mathematics, vocabulary, and caveats.
+
+The future revision must also retain these accepted explanatory rules:
 
 1. Give the reason before the mechanism.
 2. Define the physical object before introducing notation.
@@ -586,6 +778,59 @@ The future revision must apply these rules throughout the complete manuscript:
     choices in the prose as well as in summary tables.
 12. Prefer direct causal wording over moralized or personalized physical
     debits. A worker performs an action; a person is not the physical burden.
+
+### 8.2 Mathematical explanation order
+
+Every important mathematical passage in Parts I-IX must answer, in this order:
+
+1. What are we trying to determine?
+2. Which physical, mathematical, or declared objects are involved?
+3. What does every symbol mean, and what unit does it use?
+4. What calculation is performed?
+5. What does the result mean physically or operationally?
+6. Why is this calculation needed in EBU?
+7. Which assumptions, domains, tolerances, or limitations restrict the result?
+8. What would make the equation inapplicable?
+
+Accepted equations, signs, units, domains, constraints, evidence labels, and
+qualifications must remain unchanged. Equations remain central to the accepted
+equation-first/calculation style, but the problem and objects must be
+introduced first, symbols must be defined before use, and the result must be
+interpreted immediately afterward. No important equation may appear merely as
+a formal declaration. Where practical, the passage should follow:
+
+```text
+physical question
+→ defined objects and units
+→ equation
+→ numerical example
+→ physical interpretation
+→ EBU purpose
+→ limitation or failure case
+```
+
+### 8.3 Dedicated human-readability pass
+
+After every drafted section in Parts I-IX, a dedicated readability pass must:
+
+- replace unnecessarily abstract words;
+- expand unexplained conclusions;
+- remove declarations that merely sound authoritative;
+- add missing connections to physical or resource examples;
+- break sentences carrying several distinct claims;
+- verify that technical terms are defined at first use;
+- verify that every important equation has a stated purpose;
+- verify that the reader can explain what the result means;
+- preserve caveats and explain them rather than deleting them;
+- check continuity with the preceding and following sections; and
+- identify claims that rely on knowledge not yet introduced.
+
+Automated checks may flag compressed phrases, undefined symbols, absent
+equation explanations, long sentences, or missing examples. Final acceptance
+still requires human reading and cannot be reduced to a word blacklist.
+
+The future `ebu-book-revise` skill must enforce this complete standard for
+Parts I-IX. This planning entry does not begin skill creation.
 
 ---
 
@@ -811,7 +1056,11 @@ visible through the future series.
 
 ## 12. Page estimates
 
-The prior Parts IV-IX planning range is:
+### 12.1 Historical planning baselines
+
+The following arithmetic remains traceable as a historical planning baseline.
+It is not an unquestioned current forecast. The prior Parts IV-IX planning
+range was:
 
 \[
 1{,}815\text{-}2{,}525
@@ -823,21 +1072,23 @@ The prior Parts IV-IX planning range is:
 
 pages before indexes and front matter.
 
-The conservation correction already reserves 16-24 pages. No O2-only figure is
+The conservation correction reserved 16-24 pages. No O2-only figure was
 allocated. Retiring the proposed general actor/coalition profit-bound
-programme and trimming repeated O2 explanations reduces the additional
-allowance by about 1-2 pages. The complete PDF inventory therefore supports an
+programme and trimming repeated O2 explanations reduced the additional
+allowance by about 1-2 pages. The complete PDF inventory then supported an
 additional 11-18 net pages for explanation, selective visuals, institutional
-separation, literature, and layout effects.
-The integrated Part I revision is therefore:
+separation, literature, and layout effects. The historical integrated Part I
+revision allowance was therefore:
 
 \[
 (16\text{-}24)+(11\text{-}18)=27\text{-}42\text{ pages}.
 \]
 
-The distance takeaway, measured layout trials, and preservation controls fit
-within the existing 11-18-page net allowance: they add no dedicated figure or
-new scientific programme. No page-range adjustment is justified.
+At that planning coordinate, the distance takeaway, measured layout trials,
+and preservation controls were judged to fit within the 11-18-page net
+allowance. That historical judgment is preserved; the Parts I-IX
+reader-comprehension standard now requires prospective reassessment rather
+than silent compression into it.
 
 The earlier total including only the 16-24-page Part I correction was:
 
@@ -857,8 +1108,73 @@ gives:
 \]
 
 pages before indexes and front matter. This is a planning range, not a quota.
-The future manuscript task must recompute it after actual pagination and must
-not add pages merely to reach the range.
+It is now a historical baseline, not a current final forecast.
+
+### 12.2 Separated quantities and present unknowns
+
+The 296-page Part I PDF identified in §1 is an immutable historical comparison
+artifact. Its page count is not an expansion allowance and must not be added to
+the scenario increments below. Exact Parts II-III manuscript baselines, hashes,
+regeneration changes, and expansion totals are not established by this plan;
+they must be discovered and audited at the framework-alpha checkpoint.
+
+The page account must keep these quantities separate:
+
+| Quantity | Present status |
+|---|---|
+| Immutable historical PDF pages | Comparison evidence only; never rewritten or treated as a flexible budget. |
+| Part I integrated-revision allowance | Historical baseline of 27-42 added pages; the new explanatory work may require more. |
+| Parts II-III regeneration changes | Unknown until exact manuscript and PDF baselines are discovered and audited. |
+| Parts IV-IX narrative | Historical planning baseline of 1,815-2,525 pages, including prose, mathematics, examples, and the then-planned visual programme. |
+| Equations | Accepted equations are preserved; their separate pagination is not yet measured. |
+| Figures and tables | Existing and new counts are distinct from prose; their page occupancy depends on layout and is not yet measured. |
+| References and endnotes | Historical reserve of 73-110 pages; source and evidence notes may expand it. |
+| Indexes and front matter | Excluded from the historical total and unresolved until the series structure and layouts are known. |
+| Layout-dependent pagination | Unknown until representative manuscript sections are rendered under candidate print and digital layouts. |
+
+### 12.3 Prospective explanatory-expansion scenarios
+
+For transparent arithmetic, split the Parts IV-IX narrative baseline into
+Parts IV-V, \(200\text{-}265+255\text{-}340=455\text{-}605\) pages, and Parts
+VI-IX, \(290\text{-}410+305\text{-}425+355\text{-}510+410\text{-}575
+=1{,}360\text{-}1{,}920\) pages. The scenarios use different rates for those
+chapter groups, explicit added-page allowances for Part I and new
+figures/tables, and a separate reference adjustment. Every fractional page is
+rounded outward. These are sensitivity assumptions, not new quotas.
+
+| Scenario | Part I added allowance beyond 27-42 | Parts IV-V explanatory prose and equation interpretation | Parts VI-IX explanatory prose and equation interpretation | Extra figure, caption, and table pages | Reference/endnote increase | Added pages before indexes/front matter | Historical-baseline-plus-scenario range |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| **Low explanatory expansion** | 6-10 | 5% of 455-605 = 23-31 | 3% of 1,360-1,920 = 41-58 | 12-18 | 5% of 73-110 = 4-6 | \((6+23+41+12+4)\text{-}(10+31+58+18+6)=86\text{-}123\) | \((1{,}915+86)\text{-}(2{,}677+123)=2{,}001\text{-}2{,}800\) |
+| **Central explanatory expansion** | 12-20 | 10% of 455-605 = 46-61 | 7% of 1,360-1,920 = 96-135 | 24-36 | 10% of 73-110 = 8-11 | \((12+46+96+24+8)\text{-}(20+61+135+36+11)=186\text{-}263\) | \((1{,}915+186)\text{-}(2{,}677+263)=2{,}101\text{-}2{,}940\) |
+| **High explanatory expansion** | 24-36 | 18% of 455-605 = 82-109 | 12% of 1,360-1,920 = 164-231 | 40-60 | 18% of 73-110 = 14-20 | \((24+82+164+40+14)\text{-}(36+109+231+60+20)=324\text{-}456\) | \((1{,}915+324)\text{-}(2{,}677+456)=2{,}239\text{-}3{,}133\) |
+
+The low case assumes that most existing explanations need only local
+definitions and interpretation. The central case assumes systematic expansion
+of mathematics-heavy Parts IV-V and substantial clarification in the more
+advanced network, route, coordination, and institutional Parts VI-IX. The high
+case allows extensive motivation, worked examples, failure cases, diagrams,
+captions, source notes, and transitions. None includes a Parts II-III
+regeneration increment or any index/front-matter allowance. Because those
+values and layout occupancy are unknown, no revised authoritative final range
+is declared.
+
+### 12.4 Mandatory pagination-calibration gate
+
+Before any revised range is accepted, a separately authorized manuscript and
+layout stage must:
+
+1. select representative prose-heavy, mathematics-heavy, figure-heavy,
+   table-heavy, and reference-heavy sections;
+2. draft them using the new explanatory standard;
+3. render them under candidate print and digital layouts;
+4. measure words, equations, figures, tables, and pages;
+5. derive updated per-volume and series ranges from those measurements;
+6. refuse to compress explanations merely to fit an old range; and
+7. refuse to add filler merely to reach a projected range.
+
+Final pagination is an observed property of reviewed manuscript and layout
+candidates, not a quota. This documentation task performs none of that
+drafting, rendering, or measurement.
 
 ---
 
@@ -879,7 +1195,16 @@ PDF:
 - the complete preservation ledger, inventory comparisons, textual and visual
   redlines, recoverable baseline artifacts, and deletion/rewrite report contain
   no unexplained loss;
-- Parts II and III remain untouched and byte-identical;
+- Parts II and III remain untouched and byte-identical during the Part I-only
+  task, without barring their later separately authorized framework-alpha
+  regeneration;
+- the complete Parts I-IX reader-comprehension standard and mathematical
+  explanation order are applied, and every drafted section passes human
+  readability review;
+- the \(\Psi_e\) explanation preserves nonnegative flow, threshold,
+  active-flow branch, and complete positive-part law;
+- the Onsager paragraph remains short, primary-source checked, and bounded as
+  structural inspiration rather than a thermodynamic identity;
 - the five-layer infrastructure and versioned-field rules are used in every
   affected example;
 - the distance/burden takeaway and its route-accounting safeguards appear at
@@ -895,7 +1220,39 @@ PDF:
 - the candidate includes no unexplained blank areas, broken headings, detached
   figures, or unreviewed page-number mappings; and
 - a separate authority explicitly permits manuscript mutation and PDF
-  generation.
+  generation; and
+- pagination is calibrated from representative rendered sections rather than
+  imposed from the historical planning range.
 
-The next possible stage is an independently reviewed Part I manuscript-revision
-authority. It has not begun.
+The next publication checkpoint is the separately authorized framework-alpha
+Parts I-III regeneration defined in `EBU_FUTURE_BOOKS_STRUCTURE.md`, after
+Framework I-4 through I-9 and framework alpha are independently accepted. The
+fresh independent audit of this documentation brief is the immediate review
+boundary. Neither stage has begun.
+
+---
+
+## 14. Revision history
+
+### 14.1 Parts I-IX readability and framework-alpha regeneration extension - 2026-08-18
+
+This prospective documentation-only extension:
+
+1. adopts one mandatory reader-comprehension and mathematical-explanation
+   standard for coordinated regeneration and every later revision of Parts
+   I-III, and for the first generation and every later revision of Parts
+   IV-IX;
+2. registers the future \(\Psi_e\) explanatory-order improvement without
+   changing the accepted flow law, constraints, notation, or scientific
+   status;
+3. registers one short, primary-source-checked Onsager lineage paragraph and
+   bounds it as structural inspiration rather than a thermodynamic identity;
+4. points the Part I handoff to the separately authorized framework-alpha
+   Parts I-III regeneration checkpoint;
+5. preserves the 27-42-page Part I allowance and the 1,915-2,677-page total as
+   historical planning baselines while adding low, central, and high
+   explanatory-expansion scenarios and a mandatory pagination-calibration
+   gate; and
+6. authorizes no manuscript, generator, LaTeX, template, image, PDF,
+   framework, model, simulation, experiment, Gate, publication, or skill
+   operation.
