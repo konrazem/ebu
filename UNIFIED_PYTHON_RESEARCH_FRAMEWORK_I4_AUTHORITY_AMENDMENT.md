@@ -129,7 +129,7 @@ remain absent and owned by later stages.
 
 ## 6. T1 validation versus production activation
 
-Synthetic validation is confined to the reserved `ebu:*:validation:* namespace,
+Synthetic validation is confined to the reserved `ebu:*:validation:*` namespace,
 records marked `SYNTHETIC_NONSCIENTIFIC`, fixed authority bytes, a temporary
 qualified local SQLite directory, and deterministic injected time/challenge
 values. It can exercise inert acceptance transitions and use consumption. It
