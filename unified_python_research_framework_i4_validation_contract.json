@@ -1,0 +1,5689 @@
+{
+  "contract_id": "ebu-framework-i4-validation/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_FULLY_MATERIALIZED_SYNTHETIC_AUTHORITY_UNIMPLEMENTED",
+  "authority": {
+    "base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "mechanical_contract": "unified_python_research_framework_i4_contract.json",
+    "dependency_contract": "unified_python_research_framework_i4_uq25_dependency_contract.json",
+    "future_fixture": "tests/framework/fixtures/authorization_vectors_v1.json",
+    "execution_authorized": false,
+    "classes": [
+      "T0",
+      "T1_SYNTHETIC_ONLY"
+    ]
+  },
+  "json_document_profile": {
+    "encoding": "UTF-8",
+    "bom": "FORBIDDEN",
+    "duplicate_keys": "REJECT",
+    "non_finite_numbers": "REJECT",
+    "comments": "FORBIDDEN",
+    "trailing_data": "REJECT",
+    "line_endings": "LF_ONLY",
+    "raw_final_newline": "EXACTLY_ONE",
+    "canonical_rule": "json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False) plus LF"
+  },
+  "fixture_schema": {
+    "top_level_field_order": [
+      "fixture_id",
+      "schema_version",
+      "authority_versions",
+      "fixed_authority",
+      "vectors"
+    ],
+    "fixture_id": "ebu-framework-i4-authorization-v1",
+    "schema_version": 1,
+    "authority_versions": {
+      "mechanical": "1.0.0",
+      "dependency": "1.0.0",
+      "validation": "1.0.0"
+    },
+    "vector_field_order": [
+      "vector_id",
+      "group",
+      "category",
+      "name",
+      "interface",
+      "effective_input",
+      "expected"
+    ],
+    "effective_input_fields": [
+      "profile_case",
+      "key_case",
+      "issuer_case",
+      "delegation_case",
+      "time_case",
+      "revocation_case",
+      "scope_case",
+      "predecessor_case",
+      "binding_case",
+      "store_case",
+      "information_case",
+      "namespace_case",
+      "reachability_case"
+    ],
+    "expected_fields": [
+      "outcome",
+      "failure_code",
+      "failure_id",
+      "failure_ordinal",
+      "completed_check_count",
+      "provider_calls",
+      "service_calls",
+      "sqlite_begin_count",
+      "protected_mutation_count",
+      "model_step_count",
+      "predicate_truth_set"
+    ]
+  },
+  "fixed_authority": {
+    "fixture_namespace": "ebu:*:validation:*",
+    "record_marking": "SYNTHETIC_NONSCIENTIFIC",
+    "challenge_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "injected_monotonic_start_ns": 1000000000,
+    "injected_monotonic_end_ns": 1001000000,
+    "injected_attested_utc": "2030-01-01T00:00:10.000000Z",
+    "synthetic_seed_derivation": "SHA-256 UTF-8 of each key label; RFC 8032 reference signing algorithm; no randomness",
+    "synthetic_key_seeds_hex": {
+      "ebu-i4-validation-issuer-root-1": "f39cf08f60fae324eef9f287979a91898758b3ce1b9dd5fd034d68a3b115070a",
+      "ebu-i4-validation-issuer-root-2": "5a75d368f1fa05f23f387f6acb1125926687a60ec170d331765f44faf0daa043",
+      "ebu-i4-validation-issuer-root-3": "894ffd710328ea4174872dd78c526ce2de9f35e819eb7aab6db41eebe6fc0961",
+      "ebu-i4-validation-revocation-root-1": "bae90ff4e2363938d7b7c04907621cf60118937d71304fda3a4ab6c5941e9403",
+      "ebu-i4-validation-revocation-root-2": "c2547e0a1a5c0112204e3e422bfe86280f01b0ad880af669e94808ccd2ae4c3f",
+      "ebu-i4-validation-revocation-root-3": "5251f4e705bdf84e7543ab5e78472d11db71fb7e3a0339facaefe1258d9976dc",
+      "ebu-i4-validation-time-1": "08a8688b19791798fbe80d8190a49145f654a7de418d8a73b14e9f9de813965e",
+      "ebu-i4-validation-time-2": "ba2907b5e91d1a556fec11f7e1e60a972ff3732824266e25fff73a2945ba5ae4",
+      "ebu-i4-validation-time-3": "88362a0cb55df1784bb4f87e3582f887b29261c988103b4f7523ef1fcef4f7a1",
+      "ebu-i4-validation-issuer-1": "caa93a68072ca205c1f61a61b1e5038d426b58d131b4143ba6bf02f5ff308cc3",
+      "ebu-i4-validation-delegate-1": "b480adb575129c877991129830c1c7433392eace65da066a69277ecada5981e4"
+    },
+    "rfc8032_vector_ids": [
+      "RFC8032-7.1-TEST-1",
+      "RFC8032-7.1-TEST-2",
+      "RFC8032-7.1-TEST-3"
+    ],
+    "baseline_effective_input": {
+      "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+      "key_case": "VALID",
+      "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+      "delegation_case": "VALID_NONE",
+      "time_case": "VALID_FRESH_SEQ1",
+      "revocation_case": "VALID_SEQ0_EMPTY",
+      "scope_case": "VALID_ACCEPT_REGISTRY",
+      "predecessor_case": "VALID",
+      "binding_case": "NOT_APPLICABLE",
+      "store_case": "VALID_QUALIFIED_TEMP",
+      "information_case": "NOT_APPLICABLE",
+      "namespace_case": "VALIDATION",
+      "reachability_case": "CLOSED"
+    },
+    "record_construction_rule": "All synthetic records use exact contract field order, validation namespace IDs, semantic version 1.0.0, fixed timestamps around injected_attested_utc, and ECJ-1/object hashes reconstructed before signatures."
+  },
+  "ordering": "vectors appear in exact array order; IDs are contiguous i4v-001 through i4v-126; no sorting at reconstruction",
+  "failure_id_derivation": {
+    "domain": "ebu.failure-id.v1",
+    "stage": "I-4",
+    "interface_version": "1.0.0",
+    "object_refs": [],
+    "event_key": "NOT_APPLICABLE",
+    "failure_ordinal": "numeric vector ordinal",
+    "framing": "accepted errors.py 8-byte big-endian length frame and SHA-256"
+  },
+  "category_counts": {
+    "delegation": 12,
+    "information": 12,
+    "issuer": 10,
+    "precedence": 10,
+    "provider": 20,
+    "reachability": 9,
+    "revocation": 12,
+    "scope": 15,
+    "single_use": 11,
+    "time": 9,
+    "transition": 6
+  },
+  "outcome_counts": {
+    "FAILURE": 100,
+    "STATIC_PASS": 5,
+    "SUCCESS": 21
+  },
+  "vector_count": 126,
+  "test_methods": [
+    {
+      "path": "tests/framework/test_authorization.py",
+      "class": "FrameworkI4ProviderTests",
+      "method": "test_i4v_001_through_i4v_020_provider",
+      "vectors": 20,
+      "completed": 20
+    },
+    {
+      "path": "tests/framework/test_authorization.py",
+      "class": "FrameworkI4TrustTests",
+      "method": "test_i4v_021_through_i4v_063_trust",
+      "vectors": 43,
+      "completed": 43
+    },
+    {
+      "path": "tests/framework/test_authorization.py",
+      "class": "FrameworkI4AuthorizationTests",
+      "method": "test_i4v_064_through_i4v_078_scope",
+      "vectors": 15,
+      "completed": 15
+    },
+    {
+      "path": "tests/framework/test_authorization_use.py",
+      "class": "FrameworkI4AuthorizationUseTests",
+      "method": "test_i4v_079_through_i4v_095_use_and_transitions",
+      "vectors": 17,
+      "completed": 17
+    },
+    {
+      "path": "tests/framework/test_capabilities.py",
+      "class": "FrameworkI4CapabilitiesTests",
+      "method": "test_i4v_096_through_i4v_107_information",
+      "vectors": 12,
+      "completed": 12
+    },
+    {
+      "path": "tests/framework/test_authorization.py",
+      "class": "FrameworkI4PrecedenceTests",
+      "method": "test_i4v_108_through_i4v_117_precedence",
+      "vectors": 10,
+      "completed": 10
+    },
+    {
+      "path": "tests/framework/test_capabilities.py",
+      "class": "FrameworkI4ReachabilityTests",
+      "method": "test_i4v_118_through_i4v_126_reachability",
+      "vectors": 9,
+      "completed": 9
+    },
+    {
+      "path": "tests/framework/test_i3_integration.py",
+      "class": "FrameworkI3IntegrationTests",
+      "method": "test_root_api_modules_import_graph_and_failure_inventory",
+      "vectors": 0,
+      "completed": 8
+    },
+    {
+      "path": "tests/framework/test_primitives_envelopes.py",
+      "class": "FrameworkI2StaticAuditTests",
+      "method": "test_source_ast_api_import_and_reachability",
+      "vectors": 0,
+      "completed": 6
+    }
+  ],
+  "regression_groups": [
+    {
+      "id": "I2_ROOT_PREFIX",
+      "count": 127,
+      "rule": "exact names/order/digest unchanged"
+    },
+    {
+      "id": "I3_ROOT_PREFIX",
+      "count": 219,
+      "rule": "exact 127 prefix plus exact 92-name I-3 suffix unchanged"
+    },
+    {
+      "id": "I2_FAILURE_PREFIX",
+      "count": 53,
+      "rule": "exact names/order/digest unchanged"
+    },
+    {
+      "id": "I3_FAILURE_PREFIX",
+      "count": 88,
+      "rule": "exact 53 prefix plus exact 35-code suffix unchanged"
+    },
+    {
+      "id": "I3_FIXTURE",
+      "count": 544,
+      "rule": "exact bytes and SHA-256 unchanged"
+    },
+    {
+      "id": "I3_IMPORT_GRAPH",
+      "count": 91,
+      "rule": "exact 15-module direct edges unchanged"
+    }
+  ],
+  "collision_audit": {
+    "key": "ECJ-1 of [interface,effective_input] excluding vector_id, name, and expected",
+    "identical_effective_input_collisions": 0,
+    "conflicting_outcome_collisions": 0,
+    "rule": "any conflicting collision fails closed"
+  },
+  "expected_projection_contract": {
+    "projection": "For every vector, the complete expected projection is the exact expected object in its declared field order. No runtime exception text or undeclared field may enter.",
+    "hash_rule": "Each aggregate subject below is encoded by json.dumps(subject,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False), UTF-8, plus exactly one LF, then raw SHA-256.",
+    "complete_failure_rule": "For every FAILURE vector, the exact vector interface, vector name as ordered check name, failure_code, failure_id, failure_ordinal, completed-check count, invocation counts, and predicate truth set combine with mechanical-contract failure_rule.common_envelope, retry_classes, durability_states, summary_rule, and evidence_rule to form the complete expected FailureEnvelope; omission, additional evidence, dynamic exception text, or a different derived failure ID fails closed.",
+    "component_digests": [
+      {"name":"ids","exact_subject":"[vector_id for vectors in order]","byte_count":1262,"sha256":"2666ea06526f7eae3a85e92806b91035968d19a74fe6025fafc16e63b44b5ade"},
+      {"name":"names","exact_subject":"[name for vectors in order]","byte_count":2821,"sha256":"8121b2ad508c0a80b08a7cb8bb3acdbf3914e2117d62e22b5bc7ca98547365b5"},
+      {"name":"effective_inputs","exact_subject":"[[vector_id,interface,effective_input] for vectors in order]","byte_count":60951,"sha256":"dd99100c724fae9cfdbfb9892349d22bb34fcc7f547f048e43032cf842b8b04a"},
+      {"name":"expected_projections","exact_subject":"[[vector_id,expected] for vectors in order]","byte_count":55418,"sha256":"c5f6f3f0c51817d8fe3e94c278e83be613b6b6eaa54e51f66ade0a97d870eeb2"},
+      {"name":"outcomes","exact_subject":"[[vector_id,expected.outcome] for vectors in order]","byte_count":2794,"sha256":"ee7b0678c6f78030e7fef8686ec364ca8fc9c523eb3a5e4b464561bfbba648b3"},
+      {"name":"failure_ids","exact_subject":"[[vector_id,expected.failure_id] for FAILURE vectors in order]","byte_count":10302,"sha256":"fcc30e072c73e3530993f47805df7543ee3335b1f0cc6ec128ae68a6e4e84ed7"},
+      {"name":"predicate_truth_sets","exact_subject":"[[vector_id,expected.predicate_truth_set] for vectors in order]","byte_count":4883,"sha256":"db893fe05ddf1052ae1e03f392c9a8966ba34e6eba052cea5e9bd1d8b2a5b63b"},
+      {"name":"invocation_counts","exact_subject":"[[vector_id,expected.provider_calls,expected.service_calls,expected.sqlite_begin_count,expected.protected_mutation_count,expected.model_step_count] for vectors in order]","byte_count":11594,"sha256":"42885c5529aa82a7a0b594a497fc369d6120aa8dd31981666c6cd410747a26bf"}
+    ]
+  },
+  "reconstruction": {
+    "fixture_projection": "{'fixture_id':'ebu-framework-i4-authorization-v1','schema_version':1,'authority_versions':fixture_schema.authority_versions,'fixed_authority':fixed_authority,'vectors':vectors}",
+    "route_a": "strict JSON parse with duplicate-pair hook; json.dumps canonical encoder; append LF",
+    "route_b": "strict JSON parse with duplicate-pair hook; separately written recursive encoder for null/bool/int/string/list/dict using code-point key order; append LF",
+    "shared_encoder": false,
+    "required_agreement": "byte-for-byte, byte count, SHA-256, vector/order/category/outcome/call-count/failure-ID/collision projections",
+    "future_fixture_byte_count": 132231,
+    "future_fixture_sha256": "10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa"
+  },
+  "validation_safety": {
+    "synthetic_only": true,
+    "production_keys": false,
+    "real_endpoints": false,
+    "live_randomness": false,
+    "time_injection": "validation-only exact boundary",
+    "sqlite": "qualified temporary directory only",
+    "forbidden_imports": [
+      "ebu_framework.execution",
+      "ebu_framework.events",
+      "ebu_framework.bridge",
+      "ebu_framework.dynamic",
+      "ebu_framework.publication",
+      "ebu_framework.recovery"
+    ],
+    "forbidden_calls": [
+      "policy_propose",
+      "measure_state",
+      "project_state",
+      "advance_epoch",
+      "begin_bound_scientific_execution",
+      "runner",
+      "finalizer"
+    ],
+    "model_state_advance_count": 0
+  },
+  "vectors": [
+    {
+      "vector_id": "i4v-001",
+      "group": "V4",
+      "category": "provider",
+      "name": "rfc8032-test-1",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "RFC8032_TEST_1",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 13,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-002",
+      "group": "V4",
+      "category": "provider",
+      "name": "rfc8032-test-2",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "RFC8032_TEST_2",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 13,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-003",
+      "group": "V4",
+      "category": "provider",
+      "name": "rfc8032-test-3",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "RFC8032_TEST_3",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 13,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-004",
+      "group": "V4",
+      "category": "provider",
+      "name": "reject-ed25519ctx",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "ED25519CTX",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_PROFILE_UNSUPPORTED",
+        "failure_id": "ebu:failure:core:sha256-475ce9c4fe505e70b68d11aff1800f8b057d223f54ad86ac509c256dffa93b83",
+        "failure_ordinal": 4,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_PROFILE_UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-005",
+      "group": "V4",
+      "category": "provider",
+      "name": "reject-ed25519ph",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "ED25519PH",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_PROFILE_UNSUPPORTED",
+        "failure_id": "ebu:failure:core:sha256-332b66aa4d6f1a1a955e326771da33166db738899f2f532f0a52caac594442fa",
+        "failure_ordinal": 5,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_PROFILE_UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-006",
+      "group": "V4",
+      "category": "provider",
+      "name": "reject-prehash",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "PREHASH",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_PROFILE_UNSUPPORTED",
+        "failure_id": "ebu:failure:core:sha256-efb78627969c0e1fe0a20a215d26ce8bcf48384710d77ec43490376fc26c8b55",
+        "failure_ordinal": 6,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_PROFILE_UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-007",
+      "group": "V4",
+      "category": "provider",
+      "name": "key-31-bytes",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "KEY_LENGTH_31",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "PUBLIC_KEY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-0938075e5292668edb5a03fde002c898d23713ed9c0405aec72d875290d69aba",
+        "failure_ordinal": 7,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "PUBLIC_KEY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-008",
+      "group": "V4",
+      "category": "provider",
+      "name": "key-33-bytes",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "KEY_LENGTH_33",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "PUBLIC_KEY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-7fab3fcc140ba6335a1ac93f5b936c68aca72cf72e19bb050f9486a7bbd4e333",
+        "failure_ordinal": 8,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "PUBLIC_KEY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-009",
+      "group": "V4",
+      "category": "provider",
+      "name": "signature-63-bytes",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "SIGNATURE_LENGTH_63",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-cbf7178ed87def57adc8cb68990ee401ce5e238974c67a88b9ea4a13c64f5028",
+        "failure_ordinal": 9,
+        "completed_check_count": 5,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-010",
+      "group": "V4",
+      "category": "provider",
+      "name": "signature-65-bytes",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "SIGNATURE_LENGTH_65",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-6a6fc9f0c30bda08da7a2c268aa23353aa732f7245f1225e080ee0a8d80ba259",
+        "failure_ordinal": 10,
+        "completed_check_count": 5,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-011",
+      "group": "V4",
+      "category": "provider",
+      "name": "base64-padding",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "BASE64_PADDING",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-47a0a499ea180c33a86c3cb0db87780647fbe11910d28711a30ec9d4f919ea88",
+        "failure_ordinal": 11,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-012",
+      "group": "V4",
+      "category": "provider",
+      "name": "base64-nonalphabet",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "BASE64_NONALPHABET",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-29270492e21f894694d1c34283306f37418bf96d10b113feff3c733cefbf2fd7",
+        "failure_ordinal": 12,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-013",
+      "group": "V4",
+      "category": "provider",
+      "name": "noncanonical-point",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "NONCANONICAL_Y",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "PUBLIC_KEY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-315a1b40e4ec352b0cab94135057f0524dde4d592a1676da642144a226217b1e",
+        "failure_ordinal": 13,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "PUBLIC_KEY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-014",
+      "group": "V4",
+      "category": "provider",
+      "name": "small-order-public",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "SMALL_ORDER_PUBLIC",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "PUBLIC_KEY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-47b0a43f9758ce53b175c6b9762add8ca804747277617ef6b88a926057b18e52",
+        "failure_ordinal": 14,
+        "completed_check_count": 9,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "PUBLIC_KEY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-015",
+      "group": "V4",
+      "category": "provider",
+      "name": "small-order-r",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "SMALL_ORDER_R",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-dfee00e1b19acc33e414da1b42845002da633e1a20689918d9bcf2acd1498ae9",
+        "failure_ordinal": 15,
+        "completed_check_count": 11,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-016",
+      "group": "V4",
+      "category": "provider",
+      "name": "s-equals-l",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "S_EQUALS_L",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-a105e919ae82394aa4261e4b07e3ead728ae02c63d676ffc880be2327dc3a06b",
+        "failure_ordinal": 16,
+        "completed_check_count": 12,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-017",
+      "group": "V4",
+      "category": "provider",
+      "name": "s-greater-l",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "S_GREATER_L",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_ENCODING_INVALID",
+        "failure_id": "ebu:failure:core:sha256-c5fbc3f61f0c3ab5bddc7d7c2c03f1c1a80beaf867888e5e8b40290b67cdb272",
+        "failure_ordinal": 17,
+        "completed_check_count": 12,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_ENCODING_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-018",
+      "group": "V4",
+      "category": "provider",
+      "name": "wrong-key",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "WRONG_KEY",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_INVALID",
+        "failure_id": "ebu:failure:core:sha256-9c26410501d140f0d348efa6be40ee4d8cbbeb76fe6aaeb501da287e6c0ae240",
+        "failure_ordinal": 18,
+        "completed_check_count": 13,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-019",
+      "group": "V4",
+      "category": "provider",
+      "name": "wrong-message",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "WRONG_MESSAGE",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_INVALID",
+        "failure_id": "ebu:failure:core:sha256-b48db8251e1baee1f7a26acab55552411c84a420bf0578c6ea2f746eb3ec9cde",
+        "failure_ordinal": 19,
+        "completed_check_count": 13,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-020",
+      "group": "V4",
+      "category": "provider",
+      "name": "wrong-signature",
+      "interface": "trust.verify_ed25519_signature",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "WRONG_SIGNATURE",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_INVALID",
+        "failure_id": "ebu:failure:core:sha256-bfe71261b69c479c34bdc082ef349ebb133824772eb8d9e2ef4ad6debb6453ac",
+        "failure_ordinal": 20,
+        "completed_check_count": 13,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-021",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-genesis-success",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-022",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-threshold-one",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "THRESHOLD_ONE",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ROOT_THRESHOLD_NOT_MET",
+        "failure_id": "ebu:failure:core:sha256-444e3a01673f727f153885cc762f749cb1e53897fe2bd5e244ab110aec1b5c49",
+        "failure_ordinal": 22,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ROOT_THRESHOLD_NOT_MET"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-023",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-duplicate-root",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "DUPLICATE_ROOT",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ROOT_THRESHOLD_NOT_MET",
+        "failure_id": "ebu:failure:core:sha256-2153715ce7556f67038c1735d28d06fed3032b2cdc9833e0645782a0978cfd3a",
+        "failure_ordinal": 23,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ROOT_THRESHOLD_NOT_MET"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-024",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-proof-order",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "PROOF_ORDER",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ROOT_PROOF_ORDER_INVALID",
+        "failure_id": "ebu:failure:core:sha256-fff147cbc1e76b1f92e3492e35791c8eb55ef46d4f096506d8fa8f432e2584e2",
+        "failure_ordinal": 24,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ROOT_PROOF_ORDER_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-025",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-rollback",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "ROLLBACK",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_REGISTRY_ROLLBACK",
+        "failure_id": "ebu:failure:core:sha256-66246d16ef410be454b7c0d0bcf5d940022cd1a3769749feee690894c9ecf6ec",
+        "failure_ordinal": 25,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_REGISTRY_ROLLBACK"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-026",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-gap",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "GAP",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_REGISTRY_GAP",
+        "failure_id": "ebu:failure:core:sha256-2685f57f31fa34843eb6049dcfc80ac156c6bf3d43378d9472481ab043ae53c9",
+        "failure_ordinal": 26,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_REGISTRY_GAP"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-027",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-equivocation",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "EQUIVOCATION",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_REGISTRY_EQUIVOCATION",
+        "failure_id": "ebu:failure:core:sha256-2cfe7a2f580b39fefd7234795d29af6aab6d49ea5c07229a6aebd1898507e101",
+        "failure_ordinal": 27,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_REGISTRY_EQUIVOCATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-028",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-expired",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "EXPIRED",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_REGISTRY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-45f0db283b8da0e38a2f1bf1dee0edb8ef3c3ddea4210b4412cf25c8941972ce",
+        "failure_ordinal": 28,
+        "completed_check_count": 5,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_REGISTRY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-029",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-key-expired",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "KEY_EXPIRED",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_KEY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-411bfaebc0d75a3a84f515d39854d1500832dd4c92f430732c76640c9a0b6d8b",
+        "failure_ordinal": 29,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_KEY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-030",
+      "group": "V4",
+      "category": "issuer",
+      "name": "issuer-key-id",
+      "interface": "trust.validate_issuer_registry_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "KEY_ID_MISMATCH",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "KEY_ID_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-bc8fee1c00b4dfd7e5a248c55d0a97de8bd9b274ed1cd8cd258417cf3b620b3e",
+        "failure_ordinal": 30,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "KEY_ID_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-031",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-zero-success",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 9,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-032",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-one-success",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_ONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 9,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-033",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-stage-escalation",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "STAGE_ESCALATION",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_SCOPE_ESCALATION",
+        "failure_id": "ebu:failure:core:sha256-eeed56ab8acd0d50fb65a5f4098a790c126dff8372987713f56419a54993c3d8",
+        "failure_ordinal": 33,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_SCOPE_ESCALATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-034",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-operation-escalation",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "OPERATION_ESCALATION",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_SCOPE_ESCALATION",
+        "failure_id": "ebu:failure:core:sha256-77e81acc44e254246f3226c824354945e9be9dcf2e4220f429680fc12ee87343",
+        "failure_ordinal": 34,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_SCOPE_ESCALATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-035",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-target-escalation",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "TARGET_ESCALATION",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_SCOPE_ESCALATION",
+        "failure_id": "ebu:failure:core:sha256-b83815d08c9d324a1e3b1e5cc5df795681275688037ddf5175c993e65d5026ce",
+        "failure_ordinal": 35,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_SCOPE_ESCALATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-036",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-time-escalation",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "TIME_ESCALATION",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_SCOPE_ESCALATION",
+        "failure_id": "ebu:failure:core:sha256-8c215d68f66f012dd85f0af2b4806a74d5ab9edab8b141be98b97e80e2865d46",
+        "failure_ordinal": 36,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_SCOPE_ESCALATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-037",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-exclusion-drop",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "EXCLUSION_DROP",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_SCOPE_ESCALATION",
+        "failure_id": "ebu:failure:core:sha256-717f2cf5288ca1dcfe17ed8280e3b858b7a50d083976dddb7374cd6fbd981324",
+        "failure_ordinal": 37,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_SCOPE_ESCALATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-038",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-depth-five",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "DEPTH_FIVE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_DEPTH_EXCEEDED",
+        "failure_id": "ebu:failure:core:sha256-d80bc5b0d05216ee756f6131da71927fbf67419900d1b32a97eb559a0c6cfcbd",
+        "failure_ordinal": 38,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 4,
+          "verify": 4
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_DEPTH_EXCEEDED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-039",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-repeated-credential",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "REPEATED_CREDENTIAL",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_CYCLE",
+        "failure_id": "ebu:failure:core:sha256-8efc48cd3fb6dc447c6b4d944c975a2ca7d97af3cf390057871e92300a3b2192",
+        "failure_ordinal": 39,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_CYCLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-040",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-repeated-issuer-key",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "REPEATED_ISSUER_KEY",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_CYCLE",
+        "failure_id": "ebu:failure:core:sha256-d4476518dd990b31fa1e95c29166be1d644de5a8b6e5bab2543d7eb092117f59",
+        "failure_ordinal": 40,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_CYCLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-041",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-cycle",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "CYCLE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_CYCLE",
+        "failure_id": "ebu:failure:core:sha256-d35609b6ff92503ba49d4e40c6bdba0cec5de539cb9e7c57bc5ef570411adf59",
+        "failure_ordinal": 41,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_CYCLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-042",
+      "group": "V4",
+      "category": "delegation",
+      "name": "delegation-continuity",
+      "interface": "trust.validate_delegation_chain",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "CONTINUITY_BREAK",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DELEGATION_CHAIN_INVALID",
+        "failure_id": "ebu:failure:core:sha256-ed60d00a56d4d5ae7791fbf70632e4cf65abf4ba164f3afd3406fa0e673ea3a7",
+        "failure_ordinal": 42,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DELEGATION_CHAIN_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-043",
+      "group": "V4",
+      "category": "time",
+      "name": "time-fresh-success",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-044",
+      "group": "V4",
+      "category": "time",
+      "name": "time-challenge-mismatch",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "CHALLENGE_MISMATCH",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_CHALLENGE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-746728f472130c2cea3cadbf705305b773b58fa5fa46d9fb7b7f656e2c4423f2",
+        "failure_ordinal": 44,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_CHALLENGE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-045",
+      "group": "V4",
+      "category": "time",
+      "name": "time-use-key-mismatch",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "USE_KEY_MISMATCH",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_CHALLENGE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-75af8885784805dd008073c6413f1019462a93c357f02a5217abfff125878eb1",
+        "failure_ordinal": 45,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_CHALLENGE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-046",
+      "group": "V4",
+      "category": "time",
+      "name": "time-profile-mismatch",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "PROFILE_MISMATCH",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_CHALLENGE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-309de3ec25da67237130a8d1d1a42558a5da71dacdbfa244c8b611c681323136",
+        "failure_ordinal": 46,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_CHALLENGE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-047",
+      "group": "V4",
+      "category": "time",
+      "name": "time-signer-unpinned",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "SIGNER_UNPINNED",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_KEY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-45fff070c2536c7a003686c1adef839e36b1c48c816b4a8ac331134256cc8e68",
+        "failure_ordinal": 47,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_KEY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-048",
+      "group": "V4",
+      "category": "time",
+      "name": "time-window-over-30",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "WINDOW_OVER_30",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_STALE",
+        "failure_id": "ebu:failure:core:sha256-89a64c3946f0e65b4fc7841ad7c6907eb26f607640d22a470f50a85578e4e560",
+        "failure_ordinal": 48,
+        "completed_check_count": 5,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_STALE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-049",
+      "group": "V4",
+      "category": "time",
+      "name": "time-stale",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "STALE",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_STALE",
+        "failure_id": "ebu:failure:core:sha256-177966ae3cad12e0721137a698a3cd2c915ada488db2db62ca6c6a7d76fdbf26",
+        "failure_ordinal": 49,
+        "completed_check_count": 5,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_STALE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-050",
+      "group": "V4",
+      "category": "time",
+      "name": "time-sequence-replay",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "SEQUENCE_REPLAY",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_SEQUENCE_INVALID",
+        "failure_id": "ebu:failure:core:sha256-488e22ef1e83d7e66540536110ac880311c3c53b88c7f96de3c9feb2f0357d4b",
+        "failure_ordinal": 50,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_SEQUENCE_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-051",
+      "group": "V4",
+      "category": "time",
+      "name": "time-service-missing",
+      "interface": "trust.validate_trusted_time_attestation",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "SERVICE_MISSING",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_UNAVAILABLE",
+        "failure_id": "ebu:failure:core:sha256-3a677e0966ea2b31dd8c78f23e5334d126dc76f989e96f7d29acf10ac3a0b3b5",
+        "failure_ordinal": 51,
+        "completed_check_count": 2,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_UNAVAILABLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-052",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-success",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 10,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-053",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-expired",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "EXPIRED",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "REVOCATION_SNAPSHOT_EXPIRED",
+        "failure_id": "ebu:failure:core:sha256-c11e92b478bc271e38457905547fa751a3feef8406bba970d1113853ab7ae1eb",
+        "failure_ordinal": 53,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "REVOCATION_SNAPSHOT_EXPIRED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-054",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-rollback",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "ROLLBACK",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "REVOCATION_ROLLBACK",
+        "failure_id": "ebu:failure:core:sha256-1e729f3a3ac30f20501cdccddff26ac3c57798b3dbc98af0e133c866b1e3b625",
+        "failure_ordinal": 54,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "REVOCATION_ROLLBACK"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-055",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-gap",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "GAP",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "REVOCATION_GAP",
+        "failure_id": "ebu:failure:core:sha256-97297464911ec082ed0130932bffbda8cae445fea5ff0938a75f09e1325ee96f",
+        "failure_ordinal": 55,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "REVOCATION_GAP"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-056",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-equivocation",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "EQUIVOCATION",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "REVOCATION_EQUIVOCATION",
+        "failure_id": "ebu:failure:core:sha256-a5bbaef7b836301638ef9b61b94fdd5e3c6327c9d0d0c587f9ba929839b62df0",
+        "failure_ordinal": 56,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "REVOCATION_EQUIVOCATION"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-057",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-service-missing",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "SERVICE_MISSING",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "REVOCATION_UNAVAILABLE",
+        "failure_id": "ebu:failure:core:sha256-02af637b910a7e7a3caf4334c3f4fcc692837e5dfe0615fba66dd4cc404b753f",
+        "failure_ordinal": 57,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "REVOCATION_UNAVAILABLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-058",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revocation-threshold-one",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "THRESHOLD_ONE",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ROOT_THRESHOLD_NOT_MET",
+        "failure_id": "ebu:failure:core:sha256-ab3303272995034c21dada9232987046f60b0329004e8bf1a037ba6b5b64a4b6",
+        "failure_ordinal": 58,
+        "completed_check_count": 2,
+        "provider_calls": {
+          "verify_key_constructor": 1,
+          "verify": 1
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ROOT_THRESHOLD_NOT_MET"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-059",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revoked-issuer",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "REVOKED_ISSUER",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_REVOKED",
+        "failure_id": "ebu:failure:core:sha256-6f843e4841ba479fc151114004b82f9e68e0e01faffe911bdce6ea518dcd8c88",
+        "failure_ordinal": 59,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_REVOKED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-060",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revoked-key",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "REVOKED_KEY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_REVOKED",
+        "failure_id": "ebu:failure:core:sha256-6281643d8871470e2d2f6c4d4b76e485d55553d9a336b8251c85dcebf6bce767",
+        "failure_ordinal": 60,
+        "completed_check_count": 7,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_REVOKED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-061",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revoked-delegation",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "REVOKED_DELEGATION",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_REVOKED",
+        "failure_id": "ebu:failure:core:sha256-d284fb2c69d2adcc186fba4167eaa47933fa1d0ce9d9485c0b478259171444a8",
+        "failure_ordinal": 61,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_REVOKED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-062",
+      "group": "V4",
+      "category": "revocation",
+      "name": "revoked-authorization",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "REVOKED_AUTHORIZATION",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_REVOKED",
+        "failure_id": "ebu:failure:core:sha256-ac380a10133f7eff1bdcd4664f9eb3274eee5f27722724f7a0fea66c2dceb2a6",
+        "failure_ordinal": 62,
+        "completed_check_count": 9,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_REVOKED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-063",
+      "group": "V4",
+      "category": "revocation",
+      "name": "trust-profile-successor",
+      "interface": "trust.validate_revocation_snapshot",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "TRUST_PROFILE_SUCCESSOR",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_REVOKED",
+        "failure_id": "ebu:failure:core:sha256-c9d8af99968245a541ecd33e1da05266e1eb81ea68c1c3049993044dbeca1427",
+        "failure_ordinal": 63,
+        "completed_check_count": 10,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_REVOKED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-064",
+      "group": "V4",
+      "category": "scope",
+      "name": "authorization-success",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 67,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-065",
+      "group": "V4",
+      "category": "scope",
+      "name": "stage-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "STAGE_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_STAGE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-fe8ef75f1c0659a98417d2e446a53b444d6b5dc4a60600b689ef0541d367264d",
+        "failure_ordinal": 65,
+        "completed_check_count": 49,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_STAGE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-066",
+      "group": "V4",
+      "category": "scope",
+      "name": "operation-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "OPERATION_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_OPERATION_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-07dc9d8d764bdfb9c73f305351713bf16288bd0037768f5e33367f2c238c4aea",
+        "failure_ordinal": 66,
+        "completed_check_count": 50,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_OPERATION_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-067",
+      "group": "V4",
+      "category": "scope",
+      "name": "target-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "TARGET_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_TARGET_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-1c20ea063eaa98dfd82abe7bdc0fcd906be8e907e2da58bbeab38f71d23cb21b",
+        "failure_ordinal": 67,
+        "completed_check_count": 51,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_TARGET_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-068",
+      "group": "V4",
+      "category": "scope",
+      "name": "configuration-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "CONFIGURATION_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_CONFIGURATION_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-ac57457da0fedfac2022569958e82184958fe1f18d1b453b9607c76b4e5f2de2",
+        "failure_ordinal": 68,
+        "completed_check_count": 52,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_CONFIGURATION_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-069",
+      "group": "V4",
+      "category": "scope",
+      "name": "binding-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "BINDING_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_BINDING_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-c6b07af0ac7731fe689b76a33cdbf96d331f74f5e64745b5a95e15b44626b31e",
+        "failure_ordinal": 69,
+        "completed_check_count": 53,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_BINDING_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-070",
+      "group": "V4",
+      "category": "scope",
+      "name": "execution-identity-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "EXECUTION_IDENTITY_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-79742d39bf98dd64f9bacab617e61c665987e42a33483c474f502036caa86ecf",
+        "failure_ordinal": 70,
+        "completed_check_count": 54,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-071",
+      "group": "V4",
+      "category": "scope",
+      "name": "predecessor-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID",
+        "predecessor_case": "MISMATCH",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_PREDECESSOR_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-dce133c60dfee8c61dd6e52c1e0a04a9a6f8b3fca16e06b2376968470fa8b04f",
+        "failure_ordinal": 71,
+        "completed_check_count": 59,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_PREDECESSOR_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-072",
+      "group": "V4",
+      "category": "scope",
+      "name": "lifecycle-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "LIFECYCLE_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_LIFECYCLE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-30d3533655e85587cec954608b1ccd289e9e025eea21b7f15f6eace38ce25348",
+        "failure_ordinal": 72,
+        "completed_check_count": 58,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_LIFECYCLE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-073",
+      "group": "V4",
+      "category": "scope",
+      "name": "exclusion-match",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "EXCLUSION_MATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_EXCLUSION_MATCH",
+        "failure_id": "ebu:failure:core:sha256-57ddf04e677efdaade57d2f36278b047343026ce045eee3e6c6b6ed7582b6fab",
+        "failure_ordinal": 73,
+        "completed_check_count": 57,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_EXCLUSION_MATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-074",
+      "group": "V4",
+      "category": "scope",
+      "name": "binding-configuration-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID",
+        "predecessor_case": "VALID",
+        "binding_case": "CONFIGURATION_MISMATCH",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "BINDING_CONFIGURATION_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-e7f9bd5a663214ee7bf73a886e22f9a0df47e82ab3dade7c6f721c011adfab32",
+        "failure_ordinal": 74,
+        "completed_check_count": 64,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "BINDING_CONFIGURATION_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-075",
+      "group": "V4",
+      "category": "scope",
+      "name": "authorization-not-yet-valid",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "NOT_YET_VALID",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_SCOPE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-793096cb8e54a7aaf6c5e9b7a34c57e288b2bd3e002d2671f085644e553eaa15",
+        "failure_ordinal": 75,
+        "completed_check_count": 55,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_SCOPE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-076",
+      "group": "V4",
+      "category": "scope",
+      "name": "authorization-expired",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "EXPIRED",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_SCOPE_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-84cc877528e645b0ccf99539f00f7f0efeec79a122277077a3458dfbdc575ca3",
+        "failure_ordinal": 76,
+        "completed_check_count": 55,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_SCOPE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-077",
+      "group": "V4",
+      "category": "scope",
+      "name": "multiple-operation-formation",
+      "interface": "authorization.StageAuthorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "MULTIPLE_OPERATIONS",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "I4_RECORD_FORMATION_INVALID",
+        "failure_id": "ebu:failure:core:sha256-87d808620e479237224ee39f35a771d1bbb590b7247ea94fa7550729549870f7",
+        "failure_ordinal": 77,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "I4_RECORD_FORMATION_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-078",
+      "group": "V4",
+      "category": "scope",
+      "name": "separate-execution-identity-success",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_EXECUTE_BOUND_RUN",
+        "predecessor_case": "VALID",
+        "binding_case": "VALID",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 67,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-079",
+      "group": "V4",
+      "category": "single_use",
+      "name": "consume-success",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 75,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-080",
+      "group": "V4",
+      "category": "single_use",
+      "name": "consume-duplicate",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "DUPLICATE",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_ALREADY_CONSUMED",
+        "failure_id": "ebu:failure:core:sha256-03190e81154ab43f6c11a7b2dea5e65a435f755184361e85a23a7841e0dbb965",
+        "failure_ordinal": 80,
+        "completed_check_count": 75,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_ALREADY_CONSUMED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-081",
+      "group": "V4",
+      "category": "single_use",
+      "name": "consume-lock",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "LOCKED",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_UNRESOLVED",
+        "failure_id": "ebu:failure:core:sha256-26821c6c39e949cf8aa037bf1ab14cf084dfc6a06d38799360b413d2ef569778",
+        "failure_ordinal": 81,
+        "completed_check_count": 70,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-082",
+      "group": "V4",
+      "category": "single_use",
+      "name": "consume-unsupported-fs",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "UNSUPPORTED_FS",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_STORE_UNSUPPORTED",
+        "failure_id": "ebu:failure:core:sha256-0df9db277a051bf8dff38deae70053b7473700be2e8db0afd7ab990665299b71",
+        "failure_ordinal": 82,
+        "completed_check_count": 69,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_STORE_UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-083",
+      "group": "V4",
+      "category": "single_use",
+      "name": "consume-io",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "IO_FAILURE",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_UNRESOLVED",
+        "failure_id": "ebu:failure:core:sha256-c4333c959f02956be826e68e6878d13df79ea92fea9363afebb91ecb89b48488",
+        "failure_ordinal": 83,
+        "completed_check_count": 72,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-084",
+      "group": "V4",
+      "category": "single_use",
+      "name": "ambiguous-exact-recheck",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "AMBIGUOUS_EXACT",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 75,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-085",
+      "group": "V4",
+      "category": "single_use",
+      "name": "ambiguous-missing",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "AMBIGUOUS_MISSING",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_UNRESOLVED",
+        "failure_id": "ebu:failure:core:sha256-7c51031a83967ef3485159d98e92d2bc74cbf10bb0ce1bb8b6c7d6c779b4da59",
+        "failure_ordinal": 85,
+        "completed_check_count": 75,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-086",
+      "group": "V4",
+      "category": "single_use",
+      "name": "sqlite-schema",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "SCHEMA_MISMATCH",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SQLITE_SCHEMA_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-c385ba3f87087297b9a20da362b5789f360937f8d1c7da325724d54dad06a4ce",
+        "failure_ordinal": 86,
+        "completed_check_count": 69,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SQLITE_SCHEMA_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-087",
+      "group": "V4",
+      "category": "single_use",
+      "name": "sqlite-version",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VERSION_UNSUPPORTED",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SQLITE_VERSION_UNSUPPORTED",
+        "failure_id": "ebu:failure:core:sha256-47a748b19817960f035e188a0bb3a0d56db09fb4c1dda12b4d0b99c9dec3ea3a",
+        "failure_ordinal": 87,
+        "completed_check_count": 69,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SQLITE_VERSION_UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-088",
+      "group": "V4",
+      "category": "single_use",
+      "name": "ledger-coupling",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "LEDGER_FAILURE",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_LEDGER_FAILURE",
+        "failure_id": "ebu:failure:core:sha256-393b24c2218871670edc1ab22b6efb4790d8fda618bc904d6d7f5d666383c947",
+        "failure_ordinal": 88,
+        "completed_check_count": 74,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_LEDGER_FAILURE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-089",
+      "group": "V4",
+      "category": "single_use",
+      "name": "permanent-consumed",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "PERMANENT_AFTER_EXPIRY",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_ALREADY_CONSUMED",
+        "failure_id": "ebu:failure:core:sha256-7bdc53573ab39a75118000348401fc0ce7caeb485d9fa97e0b0ef5784ae6ab9d",
+        "failure_ordinal": 89,
+        "completed_check_count": 75,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 1,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_ALREADY_CONSUMED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-090",
+      "group": "V4",
+      "category": "transition",
+      "name": "registry-accept",
+      "interface": "authorization_use.accept_registry_object",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_CONSUMED_ROW",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 1,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-091",
+      "group": "V4",
+      "category": "transition",
+      "name": "registry-supersede",
+      "interface": "authorization_use.supersede_registry_object",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_SUPERSEDE",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_CONSUMED_ROW",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 1,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-092",
+      "group": "V4",
+      "category": "transition",
+      "name": "configuration-accept",
+      "interface": "authorization_use.accept_experiment_configuration",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_CONFIGURATION",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_CONSUMED_ROW",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 1,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-093",
+      "group": "V4",
+      "category": "transition",
+      "name": "binding-accept",
+      "interface": "authorization_use.accept_execution_binding",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_BINDING",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_CONSUMED_ROW",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 1,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-094",
+      "group": "V4",
+      "category": "transition",
+      "name": "operational-ledger-append",
+      "interface": "authorization_use.append_operational_ledger_entry",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_APPEND_LEDGER",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_CONSUMED_ROW",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 1,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-095",
+      "group": "V4",
+      "category": "transition",
+      "name": "mutation-failure-consumed",
+      "interface": "authorization_use.accept_registry_object",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "MUTATION_CONFLICT",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_CONSUMED_ROW",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "REGISTRY_ACCEPTANCE_INVALID",
+        "failure_id": "ebu:failure:core:sha256-051e02cd116673c57ad1be9640cda853d61d765ae42c02a3baa6339be37c4946",
+        "failure_ordinal": 95,
+        "completed_check_count": 8,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 1,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "REGISTRY_ACCEPTANCE_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-096",
+      "group": "V5",
+      "category": "information",
+      "name": "stateless-success",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "VALID_STATELESS",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-097",
+      "group": "V5",
+      "category": "information",
+      "name": "stateful-success",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "VALID_STATEFUL",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-098",
+      "group": "V5",
+      "category": "information",
+      "name": "not-visible",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_VISIBLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_NOT_VISIBLE",
+        "failure_id": "ebu:failure:core:sha256-8cdae7d95dd1962a9063c2912d64da4952cee4abb067a25de1b49e5e451244da",
+        "failure_ordinal": 98,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_NOT_VISIBLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-099",
+      "group": "V5",
+      "category": "information",
+      "name": "future-availability",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "FUTURE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_NOT_AVAILABLE",
+        "failure_id": "ebu:failure:core:sha256-f7ead2786ceef6769ba4c543d4d807090b0ecbc773d14f6d840507aa976791ae",
+        "failure_ordinal": 99,
+        "completed_check_count": 2,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_NOT_AVAILABLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-100",
+      "group": "V5",
+      "category": "information",
+      "name": "too-old",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "TOO_OLD",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_TOO_OLD",
+        "failure_id": "ebu:failure:core:sha256-00a6080841aaa5d7a01b9b24cbb2140ea2c255975e20184178c6cc2651602fec",
+        "failure_ordinal": 100,
+        "completed_check_count": 3,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_TOO_OLD"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-101",
+      "group": "V5",
+      "category": "information",
+      "name": "stateless-memory-present",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "STATELESS_MEMORY_PRESENT",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_CAPABILITY_INVALID",
+        "failure_id": "ebu:failure:core:sha256-79c9f9a23caa5d0dd59c8a6ba6d8624a2bf8efc7405578230c489dd7cf9cf2b1",
+        "failure_ordinal": 101,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_CAPABILITY_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-102",
+      "group": "V5",
+      "category": "information",
+      "name": "current-memory-mismatch",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "CURRENT_MEMORY_MISMATCH",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "CURRENT_MEMORY_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-0ee8c9386782df95a1c8528d63d70efcd043ce493e9e5d8ac8533f33204b1187",
+        "failure_ordinal": 102,
+        "completed_check_count": 4,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "CURRENT_MEMORY_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-103",
+      "group": "V5",
+      "category": "information",
+      "name": "traversal",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "TRAVERSAL",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_TRAVERSAL_FORBIDDEN",
+        "failure_id": "ebu:failure:core:sha256-6463c982eb4eeb83bde1a26f1845ec477171c36186af303d9aea2a4fb5b0ef56",
+        "failure_ordinal": 103,
+        "completed_check_count": 5,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_TRAVERSAL_FORBIDDEN"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-104",
+      "group": "V5",
+      "category": "information",
+      "name": "read-set-denied",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "READ_SET_DENIED",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_READ_SET_DENIED",
+        "failure_id": "ebu:failure:core:sha256-1902e4347ef990de2f408e7be91e64d6e8979f57462b1dbda1016bb9c7ef3826",
+        "failure_ordinal": 104,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_READ_SET_DENIED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-105",
+      "group": "V5",
+      "category": "information",
+      "name": "read-set-duplicate",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "READ_SET_DUPLICATE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_READ_SET_DENIED",
+        "failure_id": "ebu:failure:core:sha256-fae61ed281a5e8e0ea857aa371d2388eb4e1a9f7b008b56a209ef9ba9cb3f62d",
+        "failure_ordinal": 105,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_READ_SET_DENIED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-106",
+      "group": "V5",
+      "category": "information",
+      "name": "availability-boundary-success",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "AVAILABILITY_EQUALS_NOW",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-107",
+      "group": "V5",
+      "category": "information",
+      "name": "age-boundary-success",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "AGE_EQUALS_MAX",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "SUCCESS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 6,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-108",
+      "group": "V4",
+      "category": "precedence",
+      "name": "profile-before-signature",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "PIN_MISMATCH",
+        "key_case": "WRONG_SIGNATURE",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUST_PROFILE_PIN_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-e5c5d86a542aabcc08c07b3b0ecfceaceb11400587ff8d0b66039698b4ace0e7",
+        "failure_ordinal": 108,
+        "completed_check_count": 11,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUST_PROFILE_PIN_MISMATCH",
+          "SIGNATURE_INVALID"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-109",
+      "group": "V4",
+      "category": "precedence",
+      "name": "issuer-before-delegation",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "GAP",
+        "delegation_case": "CYCLE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "ISSUER_REGISTRY_GAP",
+        "failure_id": "ebu:failure:core:sha256-932f991f3c9b36653722694214ec64c138e2cde88d3dca72cc92318e9f4d076d",
+        "failure_ordinal": 109,
+        "completed_check_count": 15,
+        "provider_calls": {
+          "verify_key_constructor": 2,
+          "verify": 2
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "ISSUER_REGISTRY_GAP",
+          "DELEGATION_CYCLE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-110",
+      "group": "V4",
+      "category": "precedence",
+      "name": "signature-before-time",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "WRONG_SIGNATURE",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "STALE",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "SIGNATURE_INVALID",
+        "failure_id": "ebu:failure:core:sha256-0606b164e45f4869a1163f755e8ec328091f64a546c9ce21a5f3b940a425c67f",
+        "failure_ordinal": 110,
+        "completed_check_count": 22,
+        "provider_calls": {
+          "verify_key_constructor": 3,
+          "verify": 3
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "SIGNATURE_INVALID",
+          "TRUSTED_TIME_STALE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-111",
+      "group": "V4",
+      "category": "precedence",
+      "name": "time-before-revocation",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "STALE",
+        "revocation_case": "ROLLBACK",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "TRUSTED_TIME_STALE",
+        "failure_id": "ebu:failure:core:sha256-b37958cf9857fa088fbed7c40c11164a57a58025f24cba1cf92f9ac17189b8f0",
+        "failure_ordinal": 111,
+        "completed_check_count": 36,
+        "provider_calls": {
+          "verify_key_constructor": 4,
+          "verify": 4
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "TRUSTED_TIME_STALE",
+          "REVOCATION_ROLLBACK"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-112",
+      "group": "V4",
+      "category": "precedence",
+      "name": "revocation-before-scope",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "REVOKED_AUTHORIZATION",
+        "scope_case": "TARGET_MISMATCH",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_REVOKED",
+        "failure_id": "ebu:failure:core:sha256-98818105557a0966350677c65fb2137ae10b55d92082142b2612c77bb11c6c41",
+        "failure_ordinal": 112,
+        "completed_check_count": 47,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_REVOKED",
+          "AUTHORIZATION_TARGET_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-113",
+      "group": "V4",
+      "category": "precedence",
+      "name": "scope-before-predecessor",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "TARGET_MISMATCH",
+        "predecessor_case": "MISMATCH",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_TARGET_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-1e0a8d33c3803959bac35bd39450d7144d8cc35d32bd1a3a3919750498c0adbd",
+        "failure_ordinal": 113,
+        "completed_check_count": 51,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_TARGET_MISMATCH",
+          "AUTHORIZATION_PREDECESSOR_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-114",
+      "group": "V4",
+      "category": "precedence",
+      "name": "predecessor-before-binding",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "MISMATCH",
+        "binding_case": "CONFIGURATION_MISMATCH",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_PREDECESSOR_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-adda18574ca180b4abc45ba9d30c29d07eac6631c1675accae44e509d825dfaa",
+        "failure_ordinal": 114,
+        "completed_check_count": 59,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_PREDECESSOR_MISMATCH",
+          "BINDING_CONFIGURATION_MISMATCH"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-115",
+      "group": "V4",
+      "category": "precedence",
+      "name": "binding-before-store",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "CONFIGURATION_MISMATCH",
+        "store_case": "UNSUPPORTED_FS",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "BINDING_CONFIGURATION_MISMATCH",
+        "failure_id": "ebu:failure:core:sha256-6fcf42ff015cc11ddd6f76b96a271fdca00946b088312c150e722aaca33d4dc8",
+        "failure_ordinal": 115,
+        "completed_check_count": 64,
+        "provider_calls": {
+          "verify_key_constructor": 6,
+          "verify": 6
+        },
+        "service_calls": {
+          "trusted_time": 1,
+          "revocation": 1
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "BINDING_CONFIGURATION_MISMATCH",
+          "AUTHORIZATION_USE_STORE_UNSUPPORTED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-116",
+      "group": "V5",
+      "category": "precedence",
+      "name": "visibility-before-age",
+      "interface": "capabilities.build_synthetic_information_view",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_VISIBLE_AND_TOO_OLD",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "INFORMATION_NOT_VISIBLE",
+        "failure_id": "ebu:failure:core:sha256-27e3e49960277613efc094cfde369f0d548f70fe8c2bf83fc4cae8ad2960e35c",
+        "failure_ordinal": 116,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "INFORMATION_NOT_VISIBLE",
+          "INFORMATION_TOO_OLD"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-117",
+      "group": "V4",
+      "category": "precedence",
+      "name": "store-support-before-lock",
+      "interface": "authorization_use.consume_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "UNSUPPORTED_FS_AND_LOCKED",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "AUTHORIZATION_USE_STORE_UNSUPPORTED",
+        "failure_id": "ebu:failure:core:sha256-519dc3724dbf304bbacc3c67a11bee4f6fbf07f878ed84b4b6de1d90aa6d9c2d",
+        "failure_ordinal": 117,
+        "completed_check_count": 69,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "AUTHORIZATION_USE_STORE_UNSUPPORTED",
+          "AUTHORIZATION_USE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-118",
+      "group": "V11",
+      "category": "reachability",
+      "name": "production-bootstrap-absent",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "PRODUCTION_NO_BOOTSTRAP",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "PRODUCTION_BOOTSTRAP_MISSING",
+        "failure_id": "ebu:failure:core:sha256-6cd7f8a3bdba10f83dab31e922b73db05e1bc80ab1aa5cff494d69bf7ff625a8",
+        "failure_ordinal": 118,
+        "completed_check_count": 1,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "PRODUCTION_BOOTSTRAP_MISSING"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-119",
+      "group": "V11",
+      "category": "reachability",
+      "name": "validation-key-in-production",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "PRODUCTION",
+        "key_case": "VALIDATION_KEY",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "VALIDATION_KEY_FORBIDDEN",
+        "failure_id": "ebu:failure:core:sha256-8f94735a99f371939ff691ba708e2508e2777a0a77dd1cf0a1a745f7e9b225f6",
+        "failure_ordinal": 119,
+        "completed_check_count": 11,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "VALIDATION_KEY_FORBIDDEN"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-120",
+      "group": "V11",
+      "category": "reachability",
+      "name": "validation-namespace-in-production",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "PRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "VALIDATION_NAMESPACE_FORBIDDEN",
+        "failure_id": "ebu:failure:core:sha256-7cf9ae702902be52a9cfd091e71c88566f607f39c4e0fa53d3321f279fb0ec20",
+        "failure_ordinal": 120,
+        "completed_check_count": 11,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "VALIDATION_NAMESPACE_FORBIDDEN"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-121",
+      "group": "V11",
+      "category": "reachability",
+      "name": "dependency-receipt-mismatch",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "DEPENDENCY_MISMATCH",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "CLOSED"
+      },
+      "expected": {
+        "outcome": "FAILURE",
+        "failure_code": "DEPENDENCY_INTEGRITY_FAILURE",
+        "failure_id": "ebu:failure:core:sha256-d1374fc32a75e6e390a8a89563c9b1d72341d3603f363988f52ea4645665db81",
+        "failure_ordinal": 121,
+        "completed_check_count": 10,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": [
+          "DEPENDENCY_INTEGRITY_FAILURE"
+        ]
+      }
+    },
+    {
+      "vector_id": "i4v-122",
+      "group": "V11",
+      "category": "reachability",
+      "name": "t2-capability-absent",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "NO_T2_CAPABILITY"
+      },
+      "expected": {
+        "outcome": "STATIC_PASS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 24,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-123",
+      "group": "V11",
+      "category": "reachability",
+      "name": "scientific-lease-absent",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "NO_SCIENTIFIC_LEASE"
+      },
+      "expected": {
+        "outcome": "STATIC_PASS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 24,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-124",
+      "group": "V11",
+      "category": "reachability",
+      "name": "execution-unreachable",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "NO_EXECUTION"
+      },
+      "expected": {
+        "outcome": "STATIC_PASS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 24,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-125",
+      "group": "V11",
+      "category": "reachability",
+      "name": "gate-unreachable",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "NO_GATE"
+      },
+      "expected": {
+        "outcome": "STATIC_PASS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 24,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    },
+    {
+      "vector_id": "i4v-126",
+      "group": "V11",
+      "category": "reachability",
+      "name": "provider-signing-unreachable",
+      "interface": "authorization.validate_stage_authorization",
+      "effective_input": {
+        "profile_case": "VALID_SYNTHETIC_NONPRODUCTION",
+        "key_case": "VALID",
+        "issuer_case": "VALID_SEQ0_TWO_ROOTS",
+        "delegation_case": "VALID_NONE",
+        "time_case": "VALID_FRESH_SEQ1",
+        "revocation_case": "VALID_SEQ0_EMPTY",
+        "scope_case": "VALID_ACCEPT_REGISTRY",
+        "predecessor_case": "VALID",
+        "binding_case": "NOT_APPLICABLE",
+        "store_case": "VALID_QUALIFIED_TEMP",
+        "information_case": "NOT_APPLICABLE",
+        "namespace_case": "VALIDATION",
+        "reachability_case": "NO_SIGNING_API"
+      },
+      "expected": {
+        "outcome": "STATIC_PASS",
+        "failure_code": "NOT_APPLICABLE",
+        "failure_id": "NOT_APPLICABLE",
+        "failure_ordinal": 0,
+        "completed_check_count": 24,
+        "provider_calls": {
+          "verify_key_constructor": 0,
+          "verify": 0
+        },
+        "service_calls": {
+          "trusted_time": 0,
+          "revocation": 0
+        },
+        "sqlite_begin_count": 0,
+        "protected_mutation_count": 0,
+        "model_step_count": 0,
+        "predicate_truth_set": []
+      }
+    }
+  ],
+  "nonclaims": [
+    "No fixture is installed by this authority candidate.",
+    "No provider is imported or executed by reconstruction.",
+    "No real key, endpoint, trust profile, credential, configuration, binding, authorization, use, result, or Gate artifact exists.",
+    "T2 and T3 remain unreachable."
+  ]
+}

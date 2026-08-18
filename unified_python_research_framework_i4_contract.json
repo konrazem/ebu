@@ -1,0 +1,516 @@
+{
+  "contract_id": "ebu-framework-i4-authority/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_DOCUMENTATION_ONLY_UNIMPLEMENTED_PRODUCTION_DISABLED",
+  "authority": {
+    "branch": "framework/i-4a-authority-uq25-synthetic-validation",
+    "base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_i4_contract.json",
+    "validation_contract": "unified_python_research_framework_i4_validation_contract.json",
+    "predecessor_manifest": "unified_python_research_framework_i4_predecessor_manifest.json",
+    "dependency_decision": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_UQ25_DEPENDENCY_DECISION.md",
+    "dependency_contract": "unified_python_research_framework_i4_uq25_dependency_contract.json",
+    "governance_requirements": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_GOVERNANCE_BOOTSTRAP_REQUIREMENTS.md",
+    "governance_schema": "unified_python_research_framework_i4_governance_bootstrap_schema.json",
+    "precedence": "This pair narrowly supersedes conflicting I-4 planning prose only. Accepted I-1, I-2, and I-3 bytes and behavior remain authoritative. The dependency pair governs UQ-25. The governance pair is an uninstantiated future-bootstrap requirement. Any disagreement among an applicable Markdown and JSON pair is an integrity failure."
+  },
+  "json_document_profile": {
+    "encoding": "UTF-8",
+    "bom": "FORBIDDEN",
+    "duplicate_keys": "REJECT",
+    "non_finite_numbers": "REJECT",
+    "comments": "FORBIDDEN",
+    "trailing_data": "REJECT",
+    "line_endings": "LF_ONLY",
+    "raw_final_newline": "EXACTLY_ONE",
+    "canonical_rule": "json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False) encoded UTF-8 with exactly one final LF"
+  },
+  "scope": {
+    "stage": "I-4",
+    "design_authorized": true,
+    "documentation_materialization_authorized": true,
+    "implementation_authorized": false,
+    "dependency_installation_authorized": false,
+    "protected_operation_activation_authorized": false,
+    "production_bootstrap_authorized": false,
+    "scientific_execution_authorized": false,
+    "publication_authorized": false,
+    "recovery_authorized": false,
+    "gate_operation_authorized": false,
+    "validation_classes": ["T0", "T1_SYNTHETIC_ONLY"],
+    "explicitly_excluded_classes": ["T2", "T3"]
+  },
+  "predecessor_boundary": {
+    "root_export_count": 219,
+    "root_export_lf_sha256": "b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d",
+    "failure_code_count": 88,
+    "failure_code_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+    "i3_module_count": 15,
+    "i3_direct_import_edge_count": 91,
+    "i3_implementation_path_count": 23,
+    "i3_validation_vector_count": 544,
+    "i3_fixture_byte_count": 24179582,
+    "i3_fixture_raw_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
+    "rule": "All coordinates are immutable prefixes or predecessor evidence."
+  },
+  "resolution_register": [
+    {
+      "conflict": "AuthorizationAuthenticityEnvelope versus AuthorizationAuthenticityEnvelopeV1",
+      "resolution": "AuthorizationAuthenticityEnvelopeV1 is the sole type. The unversioned name does not exist and is not an alias.",
+      "safety": "The version is part of the closed signature and projection vocabulary."
+    },
+    {
+      "conflict": "one operation versus a set of allowed operations",
+      "resolution": "StageAuthorization.authorized_operation is exactly one AuthorizedOperation. Issuer and delegation ceilings are ordered tuples; they never turn one authorization into a set-valued grant.",
+      "safety": "Consumption burns one exact operation and prevents scope union."
+    },
+    {
+      "conflict": "ADVANCE_SCIENTIFIC_STATE versus EXECUTE_BOUND_RUN",
+      "resolution": "EXECUTE_BOUND_RUN is the sole execution-entry operation. ADVANCE_SCIENTIFIC_STATE is absent.",
+      "safety": "One consumed authority governs one bound-run entry; internal advances require a future live lease and are not separately authorizable in I-4."
+    },
+    {
+      "conflict": "missing registry and operational-ledger operations",
+      "resolution": "ACCEPT_REGISTRY_OBJECT, SUPERSEDE_REGISTRY_OBJECT, and APPEND_OPERATIONAL_LEDGER_ENTRY are added to the closed operation vocabulary.",
+      "safety": "Every I-4-owned mutation has an exact operation and cannot borrow another grant."
+    },
+    {
+      "conflict": "ExecutionIdentity inside ExecutionBinding versus accepted separate record",
+      "resolution": "The accepted separate ExecutionIdentity record is retained byte-for-byte. It is supplied separately for EXECUTE_BOUND_RUN and is never added to ExecutionBinding.",
+      "safety": "Run identity remains outside execution-semantics content while exact run authorization still binds it."
+    },
+    {
+      "conflict": "I-4-owned T2 and T3 names",
+      "resolution": "T2FixtureCapability is absent and deferred to I-6. ScientificExecutionLease is absent and deferred to I-5. CapabilityClass and AccessCapability are the only I-4 capability types. No T2/T3 constructor or factory exists.",
+      "safety": "The T1 authority package cannot manufacture later-stage capability tokens."
+    },
+    {
+      "conflict": "accepted path mutation",
+      "resolution": "registry, experiment, ledger, and hashing receive only the listed I-4 extensions; identity, envelopes, policy, observation, safety, and any future validation.py path are preserved.",
+      "safety": "The change surface is closed and predecessor hashes remain enforceable."
+    }
+  ],
+  "operations": [
+    "ACCEPT_REGISTRY_OBJECT",
+    "SUPERSEDE_REGISTRY_OBJECT",
+    "ACCEPT_EXPERIMENT_CONFIGURATION",
+    "ACCEPT_EXECUTION_BINDING",
+    "APPEND_OPERATIONAL_LEDGER_ENTRY",
+    "EXECUTE_BOUND_RUN",
+    "FINALIZE_EXECUTION_RESULT_MANIFEST",
+    "RECOVER_EXECUTION_ARTIFACTS",
+    "CREATE_CORRECTION_RECORD",
+    "PUBLISH_ARTIFACTS"
+  ],
+  "i4_activated_operations": [
+    "ACCEPT_REGISTRY_OBJECT",
+    "SUPERSEDE_REGISTRY_OBJECT",
+    "ACCEPT_EXPERIMENT_CONFIGURATION",
+    "ACCEPT_EXECUTION_BINDING",
+    "APPEND_OPERATIONAL_LEDGER_ENTRY"
+  ],
+  "later_stage_operations_validation_only": [
+    "EXECUTE_BOUND_RUN",
+    "FINALIZE_EXECUTION_RESULT_MANIFEST",
+    "RECOVER_EXECUTION_ARTIFACTS",
+    "CREATE_CORRECTION_RECORD",
+    "PUBLISH_ARTIFACTS"
+  ],
+  "runtime_conventions": {
+    "records": "frozen dataclass, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True; exact runtime types; every field required; no default; positional, missing, extra, bool-as-int, subclass, and None inputs rejected",
+    "enums": "StrEnum with exactly the listed member values; unknown values reject",
+    "protocols": "runtime_checkable Protocol only where stated; protocol objects are never serialized or hashed",
+    "absence": "Applicability.NOT_APPLICABLE is the only absence value; Applicability.APPLICABLE cannot stand in for a value",
+    "tuple_order": "ECJ-1 lexicographic order of each member projection unless a field-specific order is stated; duplicates are byte-identical projections",
+    "timestamps": "exact UTC text YYYY-MM-DDTHH:MM:SS.ffffffZ; half-open intervals [not_before,expires_at); leap seconds rejected",
+    "object_hash": "CommonObjectEnvelope object-content projection rules remain accepted I-2/I-3 rules",
+    "constructor_failure": "I4_RECORD_FORMATION_INVALID"
+  },
+  "types": [
+    {"name":"SignatureProfile","module":"trust","kind":"StrEnum","values":["EBU-Authorization-Ed25519-V1"]},
+    {"name":"TrustEvidenceKind","module":"trust","kind":"StrEnum","values":["ISSUER_REGISTRY","REVOCATION_SNAPSHOT","DELEGATION_CREDENTIAL"]},
+    {"name":"RevocableObjectKind","module":"trust","kind":"StrEnum","values":["ISSUER","KEY","DELEGATION","AUTHORIZATION","TRUST_PROFILE_SUCCESSOR"]},
+    {"name":"RootRole","module":"trust","kind":"StrEnum","values":["ISSUER_ROOT","REVOCATION_ROOT","TIME_SERVICE"]},
+    {"name":"KeyPinV1","module":"trust","kind":"record","fields":[["key_id","str"],["public_key_base64url","str"],["role","RootRole"],["not_before","str"],["expires_at","str"]],"projection":"all fields in field order; ECJ-1 encoder sorts object names"},
+    {"name":"RootThresholdV1","module":"trust","kind":"record","fields":[["role","RootRole"],["required_signatures","int"],["ordered_key_ids","tuple[str,...]"]],"rules":["required_signatures is 2","ordered_key_ids has exactly three distinct ECJ-1-ordered key IDs"]},
+    {"name":"TrustProfileV1","module":"trust","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["signature_profile","SignatureProfile"],["issuer_root_threshold","RootThresholdV1"],["revocation_root_threshold","RootThresholdV1"],["time_service_keys","tuple[KeyPinV1,...]"],["issuer_service_id","ScientificId"],["revocation_service_id","ScientificId"],["permitted_stages","tuple[str,...]"],["permitted_operations","tuple[str,...]"],["maximum_delegation_depth","int"],["maximum_time_response_age_seconds","int"],["maximum_revocation_lifetime_seconds","int"],["validation_namespace_prefix","str"],["production","bool"],["provider_distribution_name","str"],["provider_distribution_version","str"],["provider_wheel_sha256","str"]],"exclusions_from_object_content_hash":["envelope"],"rules":["thresholds are exact two-of-three","time_service_keys has exactly three distinct TIME_SERVICE keys","maximum_delegation_depth is 4","maximum_time_response_age_seconds is 30","maximum_revocation_lifetime_seconds is 300","provider identity equals dependency contract"]},
+    {"name":"IssuerKeyV1","module":"trust","kind":"record","fields":[["issuer_id","ScientificId"],["key_id","str"],["public_key_base64url","str"],["not_before","str"],["expires_at","str"]]},
+    {"name":"IssuerEntry","module":"trust","kind":"record","fields":[["issuer_id","ScientificId"],["governance_evidence_refs","tuple[ObjectRef,...]"],["active_keys","tuple[IssuerKeyV1,...]"],["maximum_stages","tuple[str,...]"],["maximum_operations","tuple[str,...]"],["target_namespace_prefixes","tuple[str,...]"],["target_kind_ids","tuple[ScientificId,...]"],["delegation_allowed","bool"],["maximum_delegated_depth","int"],["explicit_exclusions","tuple[str,...]"]]},
+    {"name":"IssuerRegistrySnapshotV1","module":"trust","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["registry_id","ScientificId"],["sequence","int"],["predecessor_snapshot_ref_or_genesis","ObjectRef|Literal['GENESIS']"],["valid_from","str"],["next_update","str"],["ordered_issuer_entries","tuple[IssuerEntry,...]"],["trust_profile_ref","ObjectRef"]],"exclusions_from_object_content_hash":["envelope"]},
+    {"name":"DelegationCredentialV1","module":"trust","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["credential_id","ScientificId"],["delegator_issuer_id","ScientificId"],["delegator_key_id","str"],["delegate_issuer_id","ScientificId"],["delegate_key_id","str"],["parent_credential_ref_or_registry_entry","ObjectRef|Literal['REGISTRY_ENTRY']"],["permitted_stages","tuple[str,...]"],["permitted_operations","tuple[str,...]"],["target_namespace_prefixes","tuple[str,...]"],["target_kind_ids","tuple[ScientificId,...]"],["not_before","str"],["expires_at","str"],["delegation_allowed","bool"],["remaining_maximum_depth","int"],["revocation_registry_ref","ObjectRef"],["explicit_exclusions","tuple[str,...]"]],"exclusions_from_object_content_hash":["envelope"]},
+    {"name":"RevocationEntryV1","module":"trust","kind":"record","fields":[["entry_kind","RevocableObjectKind"],["revoked_ref","str"],["effective_utc","str"],["reason","str"]]},
+    {"name":"RevocationSnapshotV1","module":"trust","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["snapshot_id","ScientificId"],["sequence","int"],["predecessor_snapshot_ref_or_genesis","ObjectRef|Literal['GENESIS']"],["as_of","str"],["next_update","str"],["ordered_entries","tuple[RevocationEntryV1,...]"],["trust_profile_ref","ObjectRef"]],"exclusions_from_object_content_hash":["envelope"]},
+    {"name":"TrustedTimeChallengeV1","module":"trust","kind":"record","fields":[["challenge_base64url","str"],["authorization_use_key","AuthorizationUseKey"],["trust_profile_ref","ObjectRef"],["time_service_id","ScientificId"]]},
+    {"name":"TrustedTimeAttestationV1","module":"trust","kind":"record","fields":[["trust_profile_ref","ObjectRef"],["time_service_id","ScientificId"],["signer_key_id","str"],["challenge_base64url","str"],["authorization_use_key","AuthorizationUseKey"],["attested_utc","str"],["service_sequence","int"],["issued_at","str"],["expires_at","str"],["signature_base64url","str"]],"signature_exclusion":["signature_base64url"]},
+    {"name":"AuthorizationAuthenticityEnvelopeV1","module":"trust","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["signature_profile","SignatureProfile"],["stage_authorization_ref","ObjectRef"],["trust_profile_ref","ObjectRef"],["signer_issuer_id","ScientificId"],["signer_key_id","str"],["ordered_delegation_credential_refs","tuple[ObjectRef,...]"],["signature_base64url","str"],["proof_byte_hash","ArtifactByteHash"],["signer_credential_evidence_refs","tuple[ObjectRef,...]"]],"exclusions_from_object_content_hash":["envelope"],"signature_exclusion":["signature_base64url","proof_byte_hash","signer_credential_evidence_refs"]},
+    {"name":"TrustEvidenceEnvelopeV1","module":"trust","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["signature_profile","SignatureProfile"],["evidence_kind","TrustEvidenceKind"],["evidence_ref","ObjectRef"],["trust_profile_ref","ObjectRef"],["signer_role","RootRole"],["signer_key_id","str"],["signature_base64url","str"],["proof_byte_hash","ArtifactByteHash"]],"exclusions_from_object_content_hash":["envelope"],"signature_exclusion":["signature_base64url","proof_byte_hash"]},
+    {"name":"TrustedTimeService","module":"trust","kind":"Protocol","methods":[["request","(challenge: TrustedTimeChallengeV1, /) -> TrustedTimeAttestationV1"]]},
+    {"name":"RevocationService","module":"trust","kind":"Protocol","methods":[["fetch_current","(trust_profile_ref: ObjectRef, /) -> tuple[RevocationSnapshotV1,tuple[TrustEvidenceEnvelopeV1,...]]"]]},
+    {"name":"AuthorizationStateStore","module":"trust","kind":"Protocol","methods":[["load_pinned_profile","() -> ObjectRef|Applicability"],["load_last_issuer_state","() -> tuple[int,ObjectRef]|Applicability"],["load_last_revocation_state","() -> tuple[int,ObjectRef]|Applicability"],["load_last_time_sequence","(service_id: ScientificId, /) -> int|Applicability"],["persist_validated_state","(kind: str, sequence: int, record_ref: ObjectRef, /) -> None"]]},
+    {"name":"AuthorizedOperation","module":"authorization","kind":"StrEnum","values":["ACCEPT_REGISTRY_OBJECT","SUPERSEDE_REGISTRY_OBJECT","ACCEPT_EXPERIMENT_CONFIGURATION","ACCEPT_EXECUTION_BINDING","APPEND_OPERATIONAL_LEDGER_ENTRY","EXECUTE_BOUND_RUN","FINALIZE_EXECUTION_RESULT_MANIFEST","RECOVER_EXECUTION_ARTIFACTS","CREATE_CORRECTION_RECORD","PUBLISH_ARTIFACTS"]},
+    {"name":"AuthorizationValidationStatus","module":"authorization","kind":"StrEnum","values":["VALIDATED_NOT_CONSUMED","REJECTED"]},
+    {"name":"AuthorizationCheckStatus","module":"authorization","kind":"StrEnum","values":["PASS","FAIL"]},
+    {"name":"StageAuthorization","module":"authorization","kind":"record","fields":[["envelope","CommonObjectEnvelope"],["stage","str"],["authorized_operation","AuthorizedOperation"],["target_object_refs","tuple[ObjectRef,...]"],["accepted_configuration_ref_or_not_applicable","ObjectRef|Applicability"],["accepted_execution_binding_ref_or_not_applicable","ObjectRef|Applicability"],["execution_identity_or_not_applicable","ExecutionIdentity|Applicability"],["predecessor_evidence_refs","tuple[ObjectRef,...]"],["not_before","str"],["expires_at","str"],["maximum_invocations","int"],["issuer_id","ScientificId"],["revocation_snapshot_ref","ObjectRef"],["trust_profile_ref","ObjectRef"],["exclusions","tuple[str,...]"]],"exclusions_from_object_content_hash":["envelope"],"rules":["maximum_invocations is exactly 1","target_object_refs is nonempty, ordered, duplicate-free","exactly one authorized_operation"]},
+    {"name":"AuthorizationEvidenceBundle","module":"authorization","kind":"record","fields":[["authorization","StageAuthorization"],["authenticity_envelope","AuthorizationAuthenticityEnvelopeV1"],["trust_profile","TrustProfileV1"],["issuer_registry_snapshot","IssuerRegistrySnapshotV1"],["issuer_root_proofs","tuple[TrustEvidenceEnvelopeV1,...]"],["delegation_credentials","tuple[DelegationCredentialV1,...]"],["delegation_proofs","tuple[TrustEvidenceEnvelopeV1,...]"],["predecessor_evidence","tuple[CommonObjectEnvelope,...]"],["accepted_configuration","ExperimentConfiguration|Applicability"],["accepted_binding","ExecutionBinding|Applicability"],["execution_identity","ExecutionIdentity|Applicability"],["lifecycle_witnesses","tuple[tuple[ObjectRef,LifecycleStatus],...]"],["single_use_store_identity","AuthorizationUseStoreIdentity"]]},
+    {"name":"AuthorizationCheckRecord","module":"authorization","kind":"record","fields":[["check_ordinal","int"],["check_name","str"],["status","AuthorizationCheckStatus"],["failure_code_or_not_applicable","FailureCode|Applicability"],["evidence_refs","tuple[FailureEvidenceRef,...]"]]},
+    {"name":"AuthorizationValidationRecord","module":"authorization","kind":"record","fields":[["authorization_ref","ObjectRef"],["authorization_use_key","AuthorizationUseKey"],["status","AuthorizationValidationStatus"],["completed_checks","tuple[AuthorizationCheckRecord,...]"],["effective_issuer_id","ScientificId|Applicability"],["effective_stages","tuple[str,...]"],["effective_operations","tuple[str,...]"],["effective_target_object_refs","tuple[ObjectRef,...]"],["trusted_time_attestation","TrustedTimeAttestationV1|Applicability"],["revocation_snapshot_ref","ObjectRef|Applicability"],["failure","FailureEnvelope|Applicability"]]},
+    {"name":"AuthorizationUseStatus","module":"authorization_use","kind":"StrEnum","values":["CONSUMED"]},
+    {"name":"AuthorizationUseStoreIdentity","module":"authorization_use","kind":"record","fields":[["store_id","ScientificId"],["database_path","str"],["filesystem_kind","str"],["schema_version","int"],["sqlite_version","str"],["synthetic","bool"]]},
+    {"name":"AuthorizationUseRecord","module":"authorization_use","kind":"record","fields":[["authorization_use_key","AuthorizationUseKey"],["authorization_ref","ObjectRef"],["requested_operation","AuthorizedOperation"],["target_object_refs","tuple[ObjectRef,...]"],["accepted_configuration_ref_or_not_applicable","ObjectRef|Applicability"],["accepted_execution_binding_ref_or_not_applicable","ObjectRef|Applicability"],["execution_identity_or_not_applicable","ExecutionIdentity|Applicability"],["consumed_utc","str"],["store_id","ScientificId"],["ledger_entry_id","ScientificId"],["status","AuthorizationUseStatus"]]},
+    {"name":"ConsumeOutcome","module":"authorization_use","kind":"StrEnum","values":["CONSUMED","ALREADY_CONSUMED","UNRESOLVED"]},
+    {"name":"CapabilityClass","module":"capabilities","kind":"StrEnum","values":["T0","T1","T2","T3"]},
+    {"name":"AccessCapability","module":"capabilities","kind":"record_private_constructor","fields":[["authorization_validation_ref","ObjectRef"],["configuration_ref_or_not_applicable","ObjectRef|Applicability"],["binding_ref_or_not_applicable","ObjectRef|Applicability"],["information_contract_ref","ObjectRef"],["visible_field_refs","tuple[ObjectRef,...]"],["permitted_read_refs","tuple[ObjectRef,...]"],["available_at","str"],["maximum_age_microseconds","int"],["current_memory_ref_or_not_applicable","ObjectRef|Applicability"],["traversal_allowed","bool"],["capability_class","CapabilityClass"]],"rules":["I-4 factory creates only T1 synthetic capabilities","traversal_allowed is false","copy, pickle, subclass, direct constructor, and replace are rejected"]}
+  ],
+  "hash_and_signature_contract": {
+    "key_id": "ed25519: plus lowercase raw SHA-256 hex of the exact 32 public-key bytes",
+    "base64url": "RFC 4648 URL-safe alphabet only, no equals padding, no whitespace, decode then unpadded re-encode must equal input",
+    "public_key_bytes": 32,
+    "signature_bytes": 64,
+    "scalar_order_L_decimal": "723700557733226221397318656304299424085711635937990760600195093828545425857",
+    "field_prime_p_decimal": "57896044618658097711785492504343953926634992332820282019728792003956564819949",
+    "point_rules": ["encoded y is less than p","point decompresses on edwards25519","x=0 with sign bit 1 rejects","[8]P is not identity","public key and signature R both pass"],
+    "scalar_rule": "little-endian S is strictly less than L",
+    "profile_rule": "PureEdDSA Ed25519 only; Ed25519ctx, Ed25519ph, prehash, streaming/multipart, algorithm negotiation, fallback, and caller-selected encoder are rejected before provider construction",
+    "authorization_use_key_preimage": {
+      "hash_domain": "ebu.authorization-use-key.v1",
+      "field_order": ["hash_domain","stage_authorization_ref","requested_operation","target_object_refs","accepted_configuration_ref_or_not_applicable","accepted_execution_binding_ref_or_not_applicable","execution_identity_or_not_applicable"],
+      "encoding": "ECJ-1",
+      "digest": "SHA-256 wrapped as AuthorizationUseKey",
+      "excluded": ["use time","process","host","database row ID","result","use status"]
+    },
+    "authorization_signature_message": {
+      "hash_domain": "ebu.authorization-signature-message.v1",
+      "fields": ["hash_domain","signature_profile","stage_authorization_ref","trust_profile_ref","signer_issuer_id","signer_key_id","ordered_delegation_credential_refs"],
+      "bytes": "ECJ-1 of exactly these fields"
+    },
+    "trust_evidence_signature_message": {
+      "hash_domain": "ebu.trust-evidence-signature-message.v1",
+      "fields": ["hash_domain","signature_profile","evidence_kind","evidence_ref","trust_profile_ref","signer_role","signer_key_id"],
+      "bytes": "ECJ-1 of exactly these fields"
+    },
+    "trusted_time_attestation_message": {
+      "hash_domain": "ebu.trusted-time-attestation-message.v1",
+      "fields": ["hash_domain","signature_profile","trust_profile_ref","time_service_id","signer_key_id","challenge_base64url","authorization_use_key","attested_utc","service_sequence","issued_at","expires_at"],
+      "bytes": "ECJ-1 of exactly these fields"
+    },
+    "proof_byte_hash": "ArtifactByteHash of the exact decoded 64 signature bytes",
+    "object_content_signature_exclusions": "Every signature, proof_byte_hash, proof envelope ref, and authenticity envelope ref is excluded from the object whose hash is signed; no signature message contains its own envelope hash."
+  },
+  "provider_normalization": {
+    "distribution": "PyNaCl",
+    "version": "1.6.2",
+    "imports": ["nacl.signing.VerifyKey","nacl.encoding.RawEncoder","nacl.exceptions.BadSignatureError"],
+    "call": "VerifyKey(public_key_bytes,encoder=RawEncoder).verify(message_bytes,signature_bytes,encoder=RawEncoder)",
+    "success": "return value is exact bytes and equals message_bytes",
+    "normalized_failures": ["nacl.exceptions.BadSignatureError","builtins.ValueError","builtins.TypeError","any other builtins.Exception raised by VerifyKey construction or verify"],
+    "precheck_call_count": "zero provider constructor and zero verify calls on any failed encoding, length, point, scalar, profile, key-ID, or message-canonicality precheck",
+    "verification_call_count": "one VerifyKey constructor and one verify call for each structurally admissible signature; never retry",
+    "signing_api_reachability": "FORBIDDEN"
+  },
+  "trust_mechanics": {
+    "profile": "exact three issuer roots with threshold two; exact three revocation roots with threshold two; exact three online time keys with one signature; installed ObjectRef and hash pin is out of band",
+    "root_proofs": "exactly two, distinct signer key IDs, ECJ-1 key-ID order, no surplus proof, each role matches threshold",
+    "issuer_registry": "genesis sequence is 0 with GENESIS predecessor; later sequence is exactly prior+1 and predecessor is prior ref; equal sequence requires byte-identical ref; lower is rollback; greater than prior+1 is gap; unequal same-sequence ref is equivocation; current time is within [valid_from,next_update)",
+    "delegation": "ordered leaf-to-root tuple of zero through four credentials; each proof corresponds positionally; exact issuer/key continuity; no repeated credential ref or issuer/key pair; no cycle; common trust and revocation authority; intersection-only scope; child is subset of parent in stage, operation, namespace, kind, time, and exclusions; remaining depth decreases by exactly one; scope union and multiple parents are forbidden",
+    "trusted_time": "production creates exactly 32 random bytes with secrets.token_bytes(32), canonical base64url encodes them, makes exactly one synchronous service call, accepts no caller-supplied or cached response, requires exact request binding, signer pin, strictly increasing durable service sequence, issued_at <= attested_utc < expires_at, expires_at-issued_at <=30 seconds, and local monotonic elapsed <=30 seconds",
+    "synthetic_time": "only a nonproduction validation profile may inject the exact challenge and monotonic values frozen by the validation contract; the production entry has no injection parameter",
+    "revocation": "exactly one service call returns current snapshot and exactly two ordered root proofs; genesis and continuity rules mirror issuer registry; lifetime <=300 seconds; attested time is in [as_of,next_update); entries ordered by (entry_kind,revoked_ref,effective_utc,reason), duplicate (entry_kind,revoked_ref) rejected; each issuer, key, delegation, authorization, and trust-profile successor is checked",
+    "state_persistence": "verified issuer, revocation, and time sequences are durably persisted before any later check or use; persistence uncertainty fails closed"
+  },
+  "authorization_validation_order": [
+    {"ordinal":1,"name":"STRICT_FORMATION_CANONICAL_PARSE_AND_HASHES","subchecks":["1.01 exact bundle and nested runtime types","1.02 strict ECJ-1 bytes and canonical re-encoding","1.03 every supplied CommonObjectEnvelope projection","1.04 every object-content hash","1.05 proof-byte hashes","1.06 authorization-use-key reconstruction"]},
+    {"ordinal":2,"name":"PINNED_TRUST_PROFILE_AND_SUPPORTED_PROFILES","subchecks":["2.01 installed pin exists","2.02 exact profile ObjectRef and object hash","2.03 PureEdDSA profile only","2.04 exact provider distribution/version/wheel receipt","2.05 validation/production namespace separation"]},
+    {"ordinal":3,"name":"ISSUER_REGISTRY","subchecks":["3.01 two ordered distinct issuer-root proofs","3.02 provider verification of both proofs","3.03 registry trust-profile binding","3.04 sequence, predecessor, rollback, gap, equivocation","3.05 attested interval deferred until step 6","3.06 signer issuer/key entry and key interval","3.07 durable registry sequence"]},
+    {"ordinal":4,"name":"AUTHORIZATION_SIGNATURE","subchecks":["4.01 exact message fields and ECJ-1 bytes","4.02 signer/authentication envelope cross-links","4.03 key ID and key length/canonicality","4.04 one provider verification"]},
+    {"ordinal":5,"name":"DELEGATION_CHAIN","subchecks":["5.01 positional object/proof correspondence","5.02 each object hash and signature","5.03 leaf-to-root continuity","5.04 repetition and cycle","5.05 common trust/revocation authority","5.06 temporal intersection","5.07 strict attenuation and exclusions","5.08 depth decrement and maximum four","5.09 effective issuer ceiling"]},
+    {"ordinal":6,"name":"FRESH_TRUSTED_TIME","subchecks":["6.01 OS-CSPRNG challenge or frozen validation injection","6.02 exactly one live service call","6.03 response request/profile/service/key binding","6.04 signature and key pin","6.05 issue/attested/expiry interval and 30-second limits","6.06 strictly increasing sequence","6.07 durable time sequence"]},
+    {"ordinal":7,"name":"CURRENT_REVOCATION","subchecks":["7.01 exactly one live service call","7.02 two ordered distinct revocation-root proofs","7.03 snapshot signature/profile/interval","7.04 sequence, predecessor, rollback, gap, equivocation","7.05 durable revocation sequence","7.06 issuer nonrevoked","7.07 signer key nonrevoked","7.08 every delegation nonrevoked","7.09 authorization nonrevoked","7.10 trust-profile successor notice absent"]},
+    {"ordinal":8,"name":"EXACT_REQUEST_SCOPE_AND_LIFECYCLE","subchecks":["8.01 stage","8.02 one operation","8.03 ordered exact targets","8.04 configuration ref","8.05 binding ref","8.06 separate execution identity","8.07 authorization interval at attested time","8.08 issuer and delegation ceilings","8.09 explicit exclusions","8.10 lifecycle witnesses"]},
+    {"ordinal":9,"name":"PREDECESSOR_EVIDENCE","subchecks":["9.01 exact ordered refs","9.02 each supplied envelope hash","9.03 required accepted statuses","9.04 no later-stage or result evidence"]},
+    {"ordinal":10,"name":"BINDING_CONFIGURATION_CONSISTENCY","subchecks":["10.01 applicable pairing","10.02 binding.accepted_configuration_ref exact match","10.03 execution identity configuration/binding exact match","10.04 initial policy-memory accepted pairing","10.05 policy-memory projection/hash when applicable"]},
+    {"ordinal":11,"name":"ATOMIC_SINGLE_USE_CONSUMPTION","subchecks":["11.01 store identity and path","11.02 filesystem and SQLite qualification","11.03 schema and settings","11.04 BEGIN IMMEDIATE","11.05 use insert","11.06 coupled ledger append","11.07 durable commit","11.08 exact outcome normalization"]}
+  ],
+  "validation_record_rule": "Append one PASS record after each safely completed subcheck. On failure append exactly one FAIL record for that subcheck and stop. No unperformed check is recorded. A successful validate_stage_authorization stops after 10.05 with VALIDATED_NOT_CONSUMED; consume_stage_authorization performs and records 11.01-11.08.",
+  "predicate_ownership": {
+    "rule": "Every I-4 suffix code appears exactly once below. first_eligible_check is the earliest position at which its predicate may be evaluated; authorization_validation_order and then numeric subcheck order are absolute. Interface-local and post-consumption orders are the exact named orders in trust_mechanics, acceptance_mechanics, information_capability_contract, and sqlite_contract. A later predicate is never evaluated after an earlier failure.",
+    "predicates": [
+      {"failure_code":"I4_RECORD_FORMATION_INVALID","owner":"I-4 record constructors","first_eligible_check":"1.01"},
+      {"failure_code":"PRODUCTION_BOOTSTRAP_MISSING","owner":"production entry bootstrap guard","first_eligible_check":"2.01"},
+      {"failure_code":"TRUST_PROFILE_PIN_MISMATCH","owner":"validate_trust_profile","first_eligible_check":"2.02"},
+      {"failure_code":"SIGNATURE_PROFILE_UNSUPPORTED","owner":"verify_ed25519_signature","first_eligible_check":"2.03 or the interface-local profile precheck, whichever interface is entered"},
+      {"failure_code":"KEY_ID_MISMATCH","owner":"verify_ed25519_signature","first_eligible_check":"interface-local key-ID precheck before provider construction"},
+      {"failure_code":"PUBLIC_KEY_INVALID","owner":"verify_ed25519_signature","first_eligible_check":"interface-local public-key length/point precheck before provider construction"},
+      {"failure_code":"SIGNATURE_ENCODING_INVALID","owner":"verify_ed25519_signature","first_eligible_check":"interface-local signature base64url/length/R/S precheck before provider construction"},
+      {"failure_code":"SIGNATURE_INVALID","owner":"verify_ed25519_signature","first_eligible_check":"first interface-local provider verification after every structural precheck"},
+      {"failure_code":"ROOT_THRESHOLD_NOT_MET","owner":"shared root-proof validator called only by validate_issuer_registry_snapshot and validate_revocation_snapshot","first_eligible_check":"3.01 for issuer roots; 7.02 for revocation roots"},
+      {"failure_code":"ROOT_PROOF_ORDER_INVALID","owner":"shared root-proof validator called only by validate_issuer_registry_snapshot and validate_revocation_snapshot","first_eligible_check":"3.01 for issuer roots; 7.02 for revocation roots"},
+      {"failure_code":"ISSUER_REGISTRY_INVALID","owner":"validate_issuer_registry_snapshot","first_eligible_check":"3.03"},
+      {"failure_code":"ISSUER_REGISTRY_ROLLBACK","owner":"validate_issuer_registry_snapshot","first_eligible_check":"3.04 rollback branch"},
+      {"failure_code":"ISSUER_REGISTRY_GAP","owner":"validate_issuer_registry_snapshot","first_eligible_check":"3.04 gap branch after rollback"},
+      {"failure_code":"ISSUER_REGISTRY_EQUIVOCATION","owner":"validate_issuer_registry_snapshot","first_eligible_check":"3.04 equivocation branch after rollback and gap"},
+      {"failure_code":"ISSUER_KEY_INVALID","owner":"validate_issuer_registry_snapshot","first_eligible_check":"3.06"},
+      {"failure_code":"DELEGATION_CHAIN_INVALID","owner":"validate_delegation_chain","first_eligible_check":"5.01, then 5.02, 5.03, 5.05, or 5.06 in that order"},
+      {"failure_code":"DELEGATION_SCOPE_ESCALATION","owner":"validate_delegation_chain","first_eligible_check":"5.07"},
+      {"failure_code":"DELEGATION_DEPTH_EXCEEDED","owner":"validate_delegation_chain","first_eligible_check":"5.08"},
+      {"failure_code":"DELEGATION_CYCLE","owner":"validate_delegation_chain","first_eligible_check":"5.04 after repetition"},
+      {"failure_code":"TRUSTED_TIME_UNAVAILABLE","owner":"validate_trusted_time_attestation","first_eligible_check":"6.02"},
+      {"failure_code":"TRUSTED_TIME_CHALLENGE_MISMATCH","owner":"validate_trusted_time_attestation","first_eligible_check":"6.03"},
+      {"failure_code":"TRUSTED_TIME_STALE","owner":"validate_trusted_time_attestation","first_eligible_check":"6.05"},
+      {"failure_code":"TRUSTED_TIME_SEQUENCE_INVALID","owner":"validate_trusted_time_attestation","first_eligible_check":"6.06, or 6.07 on persistence uncertainty"},
+      {"failure_code":"REVOCATION_UNAVAILABLE","owner":"validate_revocation_snapshot","first_eligible_check":"7.01"},
+      {"failure_code":"REVOCATION_SNAPSHOT_EXPIRED","owner":"validate_revocation_snapshot","first_eligible_check":"7.03"},
+      {"failure_code":"REVOCATION_ROLLBACK","owner":"validate_revocation_snapshot","first_eligible_check":"7.04 rollback branch"},
+      {"failure_code":"REVOCATION_GAP","owner":"validate_revocation_snapshot","first_eligible_check":"7.04 gap branch after rollback"},
+      {"failure_code":"REVOCATION_EQUIVOCATION","owner":"validate_revocation_snapshot","first_eligible_check":"7.04 equivocation branch after rollback and gap"},
+      {"failure_code":"AUTHORIZATION_REVOKED","owner":"validate_revocation_snapshot","first_eligible_check":"7.06 through 7.10 in exact subcheck order"},
+      {"failure_code":"AUTHORIZATION_SCOPE_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.08"},
+      {"failure_code":"AUTHORIZATION_STAGE_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.01"},
+      {"failure_code":"AUTHORIZATION_OPERATION_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.02"},
+      {"failure_code":"AUTHORIZATION_TARGET_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.03"},
+      {"failure_code":"AUTHORIZATION_CONFIGURATION_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.04"},
+      {"failure_code":"AUTHORIZATION_BINDING_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.05"},
+      {"failure_code":"AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.06"},
+      {"failure_code":"AUTHORIZATION_PREDECESSOR_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"9.01"},
+      {"failure_code":"AUTHORIZATION_LIFECYCLE_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"8.10"},
+      {"failure_code":"AUTHORIZATION_EXCLUSION_MATCH","owner":"validate_stage_authorization","first_eligible_check":"8.09"},
+      {"failure_code":"BINDING_CONFIGURATION_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"10.01, then 10.02 or 10.03"},
+      {"failure_code":"AUTHORIZATION_USE_ALREADY_CONSUMED","owner":"consume_stage_authorization","first_eligible_check":"11.05 duplicate branch followed by exact read-only coupling check"},
+      {"failure_code":"AUTHORIZATION_USE_UNRESOLVED","owner":"consume_stage_authorization","first_eligible_check":"11.04 through 11.08 at the first lock, I/O, durability, ambiguity, or unknown outcome"},
+      {"failure_code":"AUTHORIZATION_USE_STORE_UNSUPPORTED","owner":"consume_stage_authorization","first_eligible_check":"11.02"},
+      {"failure_code":"AUTHORIZATION_USE_LEDGER_FAILURE","owner":"consume_stage_authorization","first_eligible_check":"11.06"},
+      {"failure_code":"REGISTRY_ACCEPTANCE_INVALID","owner":"accept_registry_object","first_eligible_check":"post-consumption registry-acceptance local check 1"},
+      {"failure_code":"REGISTRY_SUPERSESSION_INVALID","owner":"supersede_registry_object","first_eligible_check":"post-consumption registry-supersession local check 1"},
+      {"failure_code":"INFORMATION_CAPABILITY_INVALID","owner":"build_synthetic_information_view","first_eligible_check":"information local check 1 capability/contract formation"},
+      {"failure_code":"INFORMATION_NOT_VISIBLE","owner":"build_synthetic_information_view","first_eligible_check":"information local check 2 visibility"},
+      {"failure_code":"INFORMATION_NOT_AVAILABLE","owner":"build_synthetic_information_view","first_eligible_check":"information local check 3 availability"},
+      {"failure_code":"INFORMATION_TOO_OLD","owner":"build_synthetic_information_view","first_eligible_check":"information local check 4 age"},
+      {"failure_code":"CURRENT_MEMORY_MISMATCH","owner":"build_synthetic_information_view","first_eligible_check":"information local check 5 current memory"},
+      {"failure_code":"INFORMATION_TRAVERSAL_FORBIDDEN","owner":"build_synthetic_information_view","first_eligible_check":"information local check 6 traversal"},
+      {"failure_code":"INFORMATION_READ_SET_DENIED","owner":"build_synthetic_information_view","first_eligible_check":"information local check 7 read set"},
+      {"failure_code":"VALIDATION_NAMESPACE_FORBIDDEN","owner":"validate_trust_profile","first_eligible_check":"2.05 namespace branch"},
+      {"failure_code":"VALIDATION_KEY_FORBIDDEN","owner":"validate_trust_profile","first_eligible_check":"2.05 key branch after namespace"},
+      {"failure_code":"DEPENDENCY_INTEGRITY_FAILURE","owner":"validate_trust_profile","first_eligible_check":"2.04"},
+      {"failure_code":"SQLITE_VERSION_UNSUPPORTED","owner":"consume_stage_authorization","first_eligible_check":"11.03 version branch"},
+      {"failure_code":"SQLITE_SCHEMA_MISMATCH","owner":"consume_stage_authorization","first_eligible_check":"11.03 schema/settings branch after version"},
+      {"failure_code":"CAPABILITY_ESCALATION_FORBIDDEN","owner":"build_synthetic_information_view","first_eligible_check":"information local check 8 private-constructor class ceiling"},
+      {"failure_code":"POLICY_MEMORY_PROJECTION_FAILURE","owner":"validate_stage_authorization","first_eligible_check":"10.05 projection branch"},
+      {"failure_code":"POLICY_MEMORY_MISMATCH","owner":"validate_stage_authorization","first_eligible_check":"10.04 pairing branch, then 10.05 hash branch after projection"}
+    ]
+  },
+  "operation_target_contract": {
+    "ACCEPT_REGISTRY_OBJECT": ["exact candidate object ref"],
+    "SUPERSEDE_REGISTRY_OBJECT": ["exact accepted predecessor ref","exact candidate successor ref","exact SupersessionRelation ref"],
+    "ACCEPT_EXPERIMENT_CONFIGURATION": ["exact draft ExperimentConfiguration ref"],
+    "ACCEPT_EXECUTION_BINDING": ["exact accepted ExperimentConfiguration ref","exact draft ExecutionBinding ref"],
+    "APPEND_OPERATIONAL_LEDGER_ENTRY": ["exact operational Ledger ref","exact LedgerEntry ref"],
+    "EXECUTE_BOUND_RUN": ["exact accepted configuration ref","exact accepted binding ref","exact ExecutionIdentity.identity_ref","exact runner-entry-contract ref"],
+    "FINALIZE_EXECUTION_RESULT_MANIFEST": ["exact execution identity ref","exact manifest ref"],
+    "RECOVER_EXECUTION_ARTIFACTS": ["exact manifest ref","every exact artifact ref"],
+    "CREATE_CORRECTION_RECORD": ["exact original artifact/manifest ref","exact proposed correction ref"],
+    "PUBLISH_ARTIFACTS": ["exact final manifest ref","every exact artifact ref"]
+  },
+  "acceptance_mechanics": {
+    "common": "Every mutation requires a durably matching AuthorizationUseRecord resolved from the configured store; a constructed but absent record has no authority. Consumption precedes mutation and is permanent even if the later mutation fails.",
+    "registry_acceptance": "Candidate is DRAFT or REVIEWED, exact content/hash already passes its owner validator, operation/target/lifecycle match, no conflict exists; append a new immutable ACCEPTED registry state without changing candidate content.",
+    "registry_supersession": "Predecessor is ACCEPTED, successor is DRAFT or REVIEWED, accepted I-2 SupersessionRelation validator passes, relation refs match, version increases and content changes; one atomic registry transaction appends predecessor SUPERSEDED and successor ACCEPTED states.",
+    "configuration_acceptance": "validate_experiment_configuration passes on the exact candidate and supplied fault-schedule witness; authorization targets exact draft ref; append ACCEPTED without changing configuration content.",
+    "binding_acceptance": "validate_execution_binding passes; referenced configuration is already ACCEPTED and exact; accepted_configuration_ref matches; append ACCEPTED without changing binding content.",
+    "operational_ledger": "validate_ledger passes before append; LedgerKind is OPERATIONAL; predecessor, ordinal, and head are exact; append entry and new head atomically. Scientific-ledger append remains I-5.",
+    "synthetic": "Validation profiles may perform the same transitions only in a temporary store and reserved ebu:*:validation:* namespaces. Cleanup removes only the validated temporary directory after all handles close.",
+    "production": "Until an exact governance bootstrap instance passes its schema and is operator-pinned, all five I-4 mutation callables fail PRODUCTION_BOOTSTRAP_MISSING before service, SQLite, registry, or ledger mutation."
+  },
+  "sqlite_contract": {
+    "path": "explicit absolute normalized path; existing real parent; basename authorization-use-v1.sqlite3; neither parent nor file is a symlink; no environment-variable/default/current-directory fallback",
+    "supported_filesystems": ["macOS APFS local","Linux ext4 local","Linux XFS local","Windows NTFS local"],
+    "forbidden_filesystems": ["NFS","SMB/CIFS","AFS","FUSE","overlay","tmpfs","ramdisk","FAT/exFAT","unknown","network","distributed"],
+    "sqlite_version": "3.46.0 <= sqlite3.sqlite_version < 4.0.0",
+    "schema_version": 1,
+    "ddl_lf_lines": [
+      "PRAGMA application_id=1161970993;",
+      "PRAGMA user_version=1;",
+      "CREATE TABLE authorization_store_meta(singleton INTEGER PRIMARY KEY CHECK(singleton=1),schema_version INTEGER NOT NULL CHECK(schema_version=1),store_id TEXT NOT NULL UNIQUE,pinned_profile_ref_ecj1 BLOB NOT NULL,pinned_profile_hash TEXT NOT NULL,created_utc TEXT NOT NULL) STRICT;",
+      "CREATE TABLE authorization_state(kind TEXT PRIMARY KEY CHECK(kind IN ('ISSUER','REVOCATION','TIME')),service_id TEXT NOT NULL,sequence INTEGER NOT NULL CHECK(sequence>=0),record_ref_ecj1 BLOB NOT NULL,record_hash TEXT NOT NULL,UNIQUE(kind,service_id,sequence)) STRICT;",
+      "CREATE TABLE authorization_use(use_key TEXT PRIMARY KEY,authorization_ref_ecj1 BLOB NOT NULL,requested_operation TEXT NOT NULL,target_refs_ecj1 BLOB NOT NULL,configuration_ref_ecj1 BLOB NOT NULL,binding_ref_ecj1 BLOB NOT NULL,execution_identity_ecj1 BLOB NOT NULL,consumed_utc TEXT NOT NULL,validation_record_ecj1 BLOB NOT NULL,ledger_entry_id TEXT NOT NULL UNIQUE,status TEXT NOT NULL CHECK(status='CONSUMED'),FOREIGN KEY(ledger_entry_id) REFERENCES operational_ledger(entry_id) DEFERRABLE INITIALLY DEFERRED) STRICT;",
+      "CREATE TABLE operational_ledger(entry_id TEXT PRIMARY KEY,predecessor_entry_id TEXT,entry_ordinal INTEGER NOT NULL UNIQUE CHECK(entry_ordinal>=0),payload_kind TEXT NOT NULL CHECK(payload_kind='AUTHORIZATION_USE'),payload_key TEXT NOT NULL UNIQUE,entry_ecj1 BLOB NOT NULL UNIQUE,FOREIGN KEY(predecessor_entry_id) REFERENCES operational_ledger(entry_id),FOREIGN KEY(payload_key) REFERENCES authorization_use(use_key) DEFERRABLE INITIALLY DEFERRED) STRICT;",
+      "CREATE INDEX authorization_use_operation_idx ON authorization_use(requested_operation,authorization_ref_ecj1);",
+      "CREATE UNIQUE INDEX operational_ledger_single_genesis_idx ON operational_ledger((predecessor_entry_id IS NULL)) WHERE predecessor_entry_id IS NULL;"
+    ],
+    "connection_settings_order": ["sqlite3.connect(path,timeout=0.0,isolation_level=None)","PRAGMA trusted_schema=OFF","PRAGMA foreign_keys=ON","PRAGMA journal_mode=DELETE and require returned delete","PRAGMA synchronous=FULL and require returned 2","PRAGMA temp_store=MEMORY","PRAGMA busy_timeout=0","PRAGMA query_only=OFF"],
+    "transaction_order": ["BEGIN IMMEDIATE","re-read application_id, user_version, sqlite_version, schema objects, and settings","INSERT authorization_use","read exact current operational-ledger head","derive exact next ordinal and entry ID","INSERT operational_ledger","COMMIT","close"],
+    "duplicate": "On primary-key conflict issue ROLLBACK; one read-only exact-key lookup may classify ALREADY_CONSUMED only when the stored coupled rows validate exactly; otherwise UNRESOLVED.",
+    "lock_and_io": "SQLITE_BUSY, SQLITE_LOCKED, I/O, FULL, CORRUPT, NOTADB, CANTOPEN, schema drift, setting drift, fsync/durability uncertainty, and unexpected exceptions normalize to AUTHORIZATION_USE_UNRESOLVED; no protected operation enters.",
+    "ambiguous_commit": "After COMMIT is issued and an error/connection loss occurs, perform at most one new-connection read-only recheck. Exact use plus exact coupled ledger row returns CONSUMED; missing, partial, mismatching, or unreadable state returns UNRESOLVED. Never repeat INSERT.",
+    "permanence": "No API, DDL, cleanup, expiry, correction, revocation, or administrative action deletes, resets, or reuses a consumed use key.",
+    "distributed_claim": "No distributed, replicated, network-filesystem, multi-site, or cross-database single-use claim is made.",
+    "synthetic_cleanup": "Create with tempfile.TemporaryDirectory on a qualified local filesystem; close all connections; verify realpath containment; remove only database, -journal, -wal, and -shm if present; then remove that directory. Production cleanup is forbidden."
+  },
+  "information_capability_contract": {
+    "production_build": "DEFERRED_T3_ABSENT",
+    "synthetic_factory": "build_synthetic_information_view accepts fabricated validation-namespace fields only and an injected frozen time only under a nonproduction validation profile",
+    "visibility": "every returned field ref is explicitly listed in InformationContract and AccessCapability.visible_field_refs",
+    "availability": "available_at <= injected_now; future availability fails",
+    "age": "injected_now-available_at <= maximum_age_microseconds; negative or excessive age fails",
+    "memory": "STATELESS requires NOT_APPLICABLE current memory; STATEFUL requires exact accepted current-memory ref and epoch; any predecessor or future memory fails",
+    "read_set": "attempted refs are an ordered duplicate-free subset of permitted_read_refs and of visible_field_refs",
+    "traversal": "no alias, registry, object-graph, attribute, mapping-key, path, URI, callback, descriptor, or nested-ref traversal; traversal_allowed is always false",
+    "denial": "visibility, availability, age, memory, traversal, and read-set failures occur before InformationView construction"
+  },
+  "failure_append_order": [
+    "I4_RECORD_FORMATION_INVALID","PRODUCTION_BOOTSTRAP_MISSING","TRUST_PROFILE_PIN_MISMATCH","SIGNATURE_PROFILE_UNSUPPORTED","KEY_ID_MISMATCH","PUBLIC_KEY_INVALID","SIGNATURE_ENCODING_INVALID","SIGNATURE_INVALID","ROOT_THRESHOLD_NOT_MET","ROOT_PROOF_ORDER_INVALID","ISSUER_REGISTRY_INVALID","ISSUER_REGISTRY_ROLLBACK","ISSUER_REGISTRY_GAP","ISSUER_REGISTRY_EQUIVOCATION","ISSUER_KEY_INVALID","DELEGATION_CHAIN_INVALID","DELEGATION_SCOPE_ESCALATION","DELEGATION_DEPTH_EXCEEDED","DELEGATION_CYCLE","TRUSTED_TIME_UNAVAILABLE","TRUSTED_TIME_CHALLENGE_MISMATCH","TRUSTED_TIME_STALE","TRUSTED_TIME_SEQUENCE_INVALID","REVOCATION_UNAVAILABLE","REVOCATION_SNAPSHOT_EXPIRED","REVOCATION_ROLLBACK","REVOCATION_GAP","REVOCATION_EQUIVOCATION","AUTHORIZATION_REVOKED","AUTHORIZATION_SCOPE_MISMATCH","AUTHORIZATION_STAGE_MISMATCH","AUTHORIZATION_OPERATION_MISMATCH","AUTHORIZATION_TARGET_MISMATCH","AUTHORIZATION_CONFIGURATION_MISMATCH","AUTHORIZATION_BINDING_MISMATCH","AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH","AUTHORIZATION_PREDECESSOR_MISMATCH","AUTHORIZATION_LIFECYCLE_MISMATCH","AUTHORIZATION_EXCLUSION_MATCH","BINDING_CONFIGURATION_MISMATCH","AUTHORIZATION_USE_ALREADY_CONSUMED","AUTHORIZATION_USE_UNRESOLVED","AUTHORIZATION_USE_STORE_UNSUPPORTED","AUTHORIZATION_USE_LEDGER_FAILURE","REGISTRY_ACCEPTANCE_INVALID","REGISTRY_SUPERSESSION_INVALID","INFORMATION_CAPABILITY_INVALID","INFORMATION_NOT_VISIBLE","INFORMATION_NOT_AVAILABLE","INFORMATION_TOO_OLD","CURRENT_MEMORY_MISMATCH","INFORMATION_TRAVERSAL_FORBIDDEN","INFORMATION_READ_SET_DENIED","VALIDATION_NAMESPACE_FORBIDDEN","VALIDATION_KEY_FORBIDDEN","DEPENDENCY_INTEGRITY_FAILURE","SQLITE_VERSION_UNSUPPORTED","SQLITE_SCHEMA_MISMATCH","CAPABILITY_ESCALATION_FORBIDDEN","POLICY_MEMORY_PROJECTION_FAILURE","POLICY_MEMORY_MISMATCH"
+  ],
+  "failure_rule": {
+    "starting_ordinal": 89,
+    "suffix_count": 61,
+    "resulting_count": 149,
+    "accepted_prefix": ["CANONICALIZATION_FAILURE","INVALID_ECJ1","NONCANONICAL_ECJ1","ECJ1_TYPE_UNSUPPORTED","FLOAT_FORBIDDEN","CYCLIC_OBJECT_GRAPH","DUPLICATE_OBJECT_NAME","INVALID_UNICODE_SCALAR","UNASSIGNED_UNICODE_SCALAR","UNICODE_DATA_INTEGRITY_FAILURE","UNICODE_DATA_MALFORMED","SCIENTIFIC_ID_INVALID","SEMANTIC_VERSION_INVALID","DIGEST_INVALID","DIGEST_TYPE_MISMATCH","HASH_DOMAIN_MISMATCH","ARTIFACT_TOO_LARGE","STABLE_KEY_INVALID","NAMESPACE_UNREGISTERED","RESERVED_NAMESPACE","ALLOCATION_COLLISION","ALLOCATION_CLAIM_CONFLICT","REGISTRY_IMMUTABLE","REGISTRY_RECORD_CONFLICT","ALIAS_CONFLICT","ALIAS_INVALID","REF_NOT_FOUND","VERSION_MISMATCH","HASH_MISMATCH","BOUNDARY_MISMATCH","CLOCK_MISMATCH","CONVERSION_RULE_MISMATCH","CORE_NUMBER_INVALID","DIMENSION_MISMATCH","DIVISION_BY_ZERO","ERROR_BOUND_INVALID","HORIZON_INVALID","IMPLICIT_ABSENCE_FORBIDDEN","IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN","INVALID_AGGREGATION","LIFECYCLE_TRANSITION_INVALID","NONFINITE_NUMBER_FORBIDDEN","NUMERICAL_OPERATION_UNSUPPORTED","NUMERICAL_POLICY_INCOMPLETE","NUMERICAL_POLICY_REQUIRED","QUANTITY_TYPE_MISMATCH","REGION_MISMATCH","RESOLUTION_STATE_INVALID","SIGN_CONVENTION_MISMATCH","SUPERSESSION_INVALID","TIME_BASIS_MISMATCH","UNCERTAINTY_RECORD_INVALID","UNIT_MISMATCH","I3_RECORD_FORMATION_INVALID","I3_OBJECT_CONTENT_MISMATCH","I3_COLLECTION_ORDER_INVALID","I3_DUPLICATE_MEMBER","STATE_PROJECTION_FAILURE","MISSING_COORDINATE","POLICY_MEMORY_NOT_APPLICABLE","EPOCH_MISMATCH","CONSERVATION_PROFILE_INVALID","CONSERVATION_LEVEL_REQUIREMENT_MISSING","CONSERVATION_QUANTITY_DUPLICATE","CONSERVATION_COORDINATE_DUPLICATE","CONSERVATION_FLOW_CHANNEL_DUPLICATE","CONSERVATION_UNIT_MISMATCH","CONSERVATION_EVIDENCE_INCOMPLETE","CONSERVATION_ISOLATION_INVALID","CONSERVATION_TOLERANCE_UNDECLARED","PHYSICAL_POLICY_MEMORY_CONFLATION","DISTORTION_DECLARATION_INVALID","ACTION_DECLARATION_INVALID","RESERVATION_CAPACITY_MISMATCH","MEASUREMENT_CONTRACT_MISMATCH","INADMISSIBLE_SCHEDULE","MISSING_COMPARATOR","PROVISIONAL_ROUTE_REQUIRED","INFORMATION_VIEW_DECLARATION_INVALID","CAUSAL_ATTRIBUTION_UNRESOLVED","SETTLEMENT_LINK_INVALID","SETTLEMENT_CLOSURE_FAILURE","LEDGER_LINK_INVALID","FAULT_SCHEDULE_INVALID","FAULT_EXTENSION_UNAVAILABLE","CONFIGURATION_INCOMPLETE","EXECUTION_SEMANTICS_PROJECTION_FAILURE","ARTIFACT_COMPLETENESS_INVALID"],
+    "inventory_rule": "The complete resulting inventory is accepted_prefix followed by failure_append_order with no omission, insertion, reordering, or duplicate.",
+    "accepted_prefix_lf_byte_count": 2125,
+    "accepted_prefix_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+    "suffix_lf_byte_count": 1652,
+    "suffix_lf_sha256": "9c852c935a49700365fcb7ba7cc7c905448ce9ca8f6c49754e2f8ab1843a9fb7",
+    "resulting_inventory_lf_byte_count": 3777,
+    "resulting_inventory_lf_sha256": "28b247568db9cf35d99d34798cdf3cbd995e5fe6cf6f74dab77263a07b44b51a",
+    "common_envelope": {
+      "field_order": ["schema_id","failure_id","failure_ordinal","failure_code","human_summary","stage","interface_ref","object_refs","event_key","state_advance","policy_memory_advance","durability_state","canonical_trace_state","scientific_status_effect","retry_class","evidence_refs"],
+      "stage": "I-4",
+      "event_key": "Applicability.NOT_APPLICABLE",
+      "state_advance": "NONE",
+      "policy_memory_advance": "NONE",
+      "canonical_trace_state": "Applicability.NOT_APPLICABLE",
+      "scientific_status_effect": "UNSTARTED_PRESERVED"
+    },
+    "retry_classes": {
+      "FORBIDDEN": ["I4_RECORD_FORMATION_INVALID","TRUST_PROFILE_PIN_MISMATCH","SIGNATURE_PROFILE_UNSUPPORTED","KEY_ID_MISMATCH","PUBLIC_KEY_INVALID","SIGNATURE_ENCODING_INVALID","SIGNATURE_INVALID","ROOT_THRESHOLD_NOT_MET","ROOT_PROOF_ORDER_INVALID","ISSUER_REGISTRY_INVALID","ISSUER_REGISTRY_ROLLBACK","ISSUER_REGISTRY_GAP","ISSUER_REGISTRY_EQUIVOCATION","ISSUER_KEY_INVALID","DELEGATION_CHAIN_INVALID","DELEGATION_SCOPE_ESCALATION","DELEGATION_DEPTH_EXCEEDED","DELEGATION_CYCLE","REVOCATION_ROLLBACK","REVOCATION_GAP","REVOCATION_EQUIVOCATION","AUTHORIZATION_REVOKED","AUTHORIZATION_SCOPE_MISMATCH","AUTHORIZATION_STAGE_MISMATCH","AUTHORIZATION_OPERATION_MISMATCH","AUTHORIZATION_TARGET_MISMATCH","AUTHORIZATION_CONFIGURATION_MISMATCH","AUTHORIZATION_BINDING_MISMATCH","AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH","AUTHORIZATION_PREDECESSOR_MISMATCH","AUTHORIZATION_LIFECYCLE_MISMATCH","AUTHORIZATION_EXCLUSION_MATCH","BINDING_CONFIGURATION_MISMATCH","AUTHORIZATION_USE_ALREADY_CONSUMED","REGISTRY_ACCEPTANCE_INVALID","REGISTRY_SUPERSESSION_INVALID","INFORMATION_CAPABILITY_INVALID","INFORMATION_NOT_VISIBLE","INFORMATION_NOT_AVAILABLE","INFORMATION_TOO_OLD","CURRENT_MEMORY_MISMATCH","INFORMATION_TRAVERSAL_FORBIDDEN","INFORMATION_READ_SET_DENIED","VALIDATION_NAMESPACE_FORBIDDEN","VALIDATION_KEY_FORBIDDEN","DEPENDENCY_INTEGRITY_FAILURE","SQLITE_VERSION_UNSUPPORTED","SQLITE_SCHEMA_MISMATCH","CAPABILITY_ESCALATION_FORBIDDEN","POLICY_MEMORY_PROJECTION_FAILURE","POLICY_MEMORY_MISMATCH"],
+      "REQUIRES_AUTHORITY": ["PRODUCTION_BOOTSTRAP_MISSING"],
+      "SAME_BYTES_ONLY": [],
+      "NOT_APPLICABLE": ["TRUSTED_TIME_UNAVAILABLE","TRUSTED_TIME_CHALLENGE_MISMATCH","TRUSTED_TIME_STALE","TRUSTED_TIME_SEQUENCE_INVALID","REVOCATION_UNAVAILABLE","REVOCATION_SNAPSHOT_EXPIRED","AUTHORIZATION_USE_UNRESOLVED","AUTHORIZATION_USE_STORE_UNSUPPORTED","AUTHORIZATION_USE_LEDGER_FAILURE"]
+    },
+    "durability_states": {
+      "UNRESOLVED": ["TRUSTED_TIME_SEQUENCE_INVALID","REVOCATION_ROLLBACK","REVOCATION_GAP","REVOCATION_EQUIVOCATION","AUTHORIZATION_USE_UNRESOLVED","AUTHORIZATION_USE_LEDGER_FAILURE"],
+      "NONE_DURABLE": ["AUTHORIZATION_USE_ALREADY_CONSUMED"],
+      "NOT_APPLICABLE": "all other I-4 suffix codes"
+    },
+    "summary_rule": "Exact summary is '<interface> rejected <FAILURE_CODE> at <ordered check name>'; formation uses '<Type> rejected I4_RECORD_FORMATION_INVALID'; no dynamic exception text enters.",
+    "evidence_rule": "Signature/trust failures cite AUTHORIZATION evidence refs; store failures cite OPERATIONAL_LOG refs when durably available; dependency failures cite RAW_SOURCE wheel/metadata refs; pre-evidence failures use an empty tuple. Object refs contain only safely validated exact refs."
+  },
+  "callables": [
+    {"name":"compute_authorization_use_key","module":"hashing","signature":"(*, stage_authorization_ref: ObjectRef, requested_operation: str, target_object_refs: tuple[ObjectRef,...], accepted_configuration_ref_or_not_applicable: ObjectRef|Applicability, accepted_execution_binding_ref_or_not_applicable: ObjectRef|Applicability, execution_identity_or_not_applicable: ExecutionIdentity|Applicability) -> AuthorizationUseKey","class":"T0"},
+    {"name":"verify_ed25519_signature","module":"trust","signature":"(public_key_base64url: str, message: CanonicalBytes, signature_base64url: str, /) -> None","class":"T1"},
+    {"name":"validate_trust_profile","module":"trust","signature":"(profile: TrustProfileV1, installed_distribution_receipt: CanonicalBytes, state_store: AuthorizationStateStore, /) -> None","class":"T1"},
+    {"name":"validate_issuer_registry_snapshot","module":"trust","signature":"(snapshot: IssuerRegistrySnapshotV1, root_proofs: tuple[TrustEvidenceEnvelopeV1,...], profile: TrustProfileV1, state_store: AuthorizationStateStore, /) -> tuple[AuthorizationCheckRecord,...]","class":"T1"},
+    {"name":"validate_delegation_chain","module":"trust","signature":"(credentials: tuple[DelegationCredentialV1,...], proofs: tuple[TrustEvidenceEnvelopeV1,...], issuer_snapshot: IssuerRegistrySnapshotV1, profile: TrustProfileV1, authorization: StageAuthorization, attested_utc: str, revocation: RevocationSnapshotV1, /) -> IssuerEntry","class":"T1"},
+    {"name":"validate_trusted_time_attestation","module":"trust","signature":"(challenge: TrustedTimeChallengeV1, attestation: TrustedTimeAttestationV1, profile: TrustProfileV1, state_store: AuthorizationStateStore, /) -> None","class":"T1"},
+    {"name":"validate_revocation_snapshot","module":"trust","signature":"(snapshot: RevocationSnapshotV1, root_proofs: tuple[TrustEvidenceEnvelopeV1,...], profile: TrustProfileV1, attested_utc: str, state_store: AuthorizationStateStore, /) -> None","class":"T1"},
+    {"name":"validate_stage_authorization","module":"authorization","signature":"(bundle: AuthorizationEvidenceBundle, requested_stage: str, requested_operation: AuthorizedOperation, target_object_refs: tuple[ObjectRef,...], trusted_time_service: TrustedTimeService, revocation_service: RevocationService, state_store: AuthorizationStateStore, /) -> AuthorizationValidationRecord","class":"T1"},
+    {"name":"consume_stage_authorization","module":"authorization_use","signature":"(validation: AuthorizationValidationRecord, store_identity: AuthorizationUseStoreIdentity, /) -> AuthorizationUseRecord","class":"T1"},
+    {"name":"accept_registry_object","module":"authorization_use","signature":"(candidate: RegistryRecord, validation: AuthorizationValidationRecord, use_record: AuthorizationUseRecord, store_identity: AuthorizationUseStoreIdentity, /) -> RegistryRecord","class":"T1"},
+    {"name":"supersede_registry_object","module":"authorization_use","signature":"(predecessor: RegistryRecord, successor: RegistryRecord, relation: SupersessionRelation, validation: AuthorizationValidationRecord, use_record: AuthorizationUseRecord, store_identity: AuthorizationUseStoreIdentity, /) -> tuple[RegistryRecord,RegistryRecord]","class":"T1"},
+    {"name":"accept_experiment_configuration","module":"authorization_use","signature":"(configuration: ExperimentConfiguration, fault_schedule: FaultScheduleV1|Applicability, validation: AuthorizationValidationRecord, use_record: AuthorizationUseRecord, store_identity: AuthorizationUseStoreIdentity, /) -> RegistryRecord","class":"T1"},
+    {"name":"accept_execution_binding","module":"authorization_use","signature":"(binding: ExecutionBinding, accepted_configuration: RegistryRecord, validation: AuthorizationValidationRecord, use_record: AuthorizationUseRecord, store_identity: AuthorizationUseStoreIdentity, /) -> RegistryRecord","class":"T1"},
+    {"name":"append_operational_ledger_entry","module":"authorization_use","signature":"(ledger: Ledger, entry: LedgerEntry, validation: AuthorizationValidationRecord, use_record: AuthorizationUseRecord, store_identity: AuthorizationUseStoreIdentity, /) -> tuple[Ledger,LedgerEntry]","class":"T1"},
+    {"name":"build_synthetic_information_view","module":"capabilities","signature":"(contract: InformationContract, fabricated_fields: tuple[tuple[ObjectRef,CanonicalBytes,str],...], attempted_read_set: InformationReadSet|Applicability, injected_now: str, /) -> tuple[InformationView,AccessCapability]","class":"T1"}
+  ],
+  "path_manifest": {
+    "new": [
+      "src/ebu_framework/trust.py",
+      "src/ebu_framework/authorization.py",
+      "src/ebu_framework/authorization_use.py",
+      "src/ebu_framework/capabilities.py",
+      "tests/framework/fixtures/authorization_vectors_v1.json",
+      "tests/framework/test_authorization.py",
+      "tests/framework/test_authorization_use.py",
+      "tests/framework/test_capabilities.py"
+    ],
+    "modified": [
+      "pyproject.toml",
+      "requirements-framework.lock",
+      "src/ebu_framework/__init__.py",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/hashing.py",
+      "src/ebu_framework/registry.py",
+      "src/ebu_framework/experiment.py",
+      "src/ebu_framework/ledger.py",
+      "tests/framework/test_i3_integration.py",
+      "tests/framework/test_primitives_envelopes.py"
+    ],
+    "preserved_named": [
+      "src/ebu_framework/identity.py",
+      "src/ebu_framework/envelopes.py",
+      "src/ebu_framework/policy.py",
+      "src/ebu_framework/observation.py",
+      "tests/framework/safety.py"
+    ],
+    "deferred_or_forbidden": [
+      "src/ebu_framework/validation.py",
+      "src/ebu_framework/execution.py",
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "rule": "Later implementation may change exactly the eight new and ten modified paths and no others. Predecessor manifest hashes are mandatory. Any extra path, missing row, or modification of a preserved path fails closed."
+  },
+  "direct_imports": {
+    "trust": ["canonical","identity","envelopes","hashing","errors"],
+    "authorization": ["trust","experiment","artifacts","ledger","registry","identity","hashing","errors"],
+    "authorization_use": ["authorization","ledger","registry","experiment","identity","hashing","envelopes","errors"],
+    "capabilities": ["authorization","policy","observation","experiment","hashing","identity","errors"]
+  },
+  "import_graph_rule": {
+    "new_edge_count": 28,
+    "accepted_i3_edge_count": 91,
+    "i3_plus_i4_edge_count": 119,
+    "acyclic": true,
+    "modified_predecessor_module_edges": "unchanged",
+    "external_imports": {"trust":["nacl.signing","nacl.encoding","nacl.exceptions"],"authorization_use":["sqlite3","pathlib","os"],"trusted_time_production":["secrets"]},
+    "forbidden": ["execution","events","ownership","durability","traces","bridge","dynamic","provenance","recovery","publication","validation","subprocess","socket","urllib","requests","pip","setuptools","build","historical exp_*","gate*","finalize_*","results"]
+  },
+  "module_exports": {
+    "trust": ["SignatureProfile","TrustEvidenceKind","RevocableObjectKind","RootRole","KeyPinV1","RootThresholdV1","TrustProfileV1","IssuerKeyV1","IssuerEntry","IssuerRegistrySnapshotV1","DelegationCredentialV1","RevocationEntryV1","RevocationSnapshotV1","TrustedTimeChallengeV1","TrustedTimeAttestationV1","AuthorizationAuthenticityEnvelopeV1","TrustEvidenceEnvelopeV1","TrustedTimeService","RevocationService","AuthorizationStateStore","verify_ed25519_signature","validate_trust_profile","validate_issuer_registry_snapshot","validate_delegation_chain","validate_trusted_time_attestation","validate_revocation_snapshot"],
+    "authorization": ["AuthorizedOperation","AuthorizationValidationStatus","AuthorizationCheckStatus","StageAuthorization","AuthorizationEvidenceBundle","AuthorizationCheckRecord","AuthorizationValidationRecord","validate_stage_authorization"],
+    "authorization_use": ["AuthorizationUseStatus","AuthorizationUseStoreIdentity","AuthorizationUseRecord","ConsumeOutcome","consume_stage_authorization","accept_registry_object","supersede_registry_object","accept_experiment_configuration","accept_execution_binding","append_operational_ledger_entry"],
+    "capabilities": ["CapabilityClass","AccessCapability","build_synthetic_information_view"],
+    "hashing_append": ["compute_authorization_use_key"]
+  },
+  "root_export_suffix_types": ["SignatureProfile","TrustEvidenceKind","RevocableObjectKind","RootRole","KeyPinV1","RootThresholdV1","TrustProfileV1","IssuerKeyV1","IssuerEntry","IssuerRegistrySnapshotV1","DelegationCredentialV1","RevocationEntryV1","RevocationSnapshotV1","TrustedTimeChallengeV1","TrustedTimeAttestationV1","AuthorizationAuthenticityEnvelopeV1","TrustEvidenceEnvelopeV1","TrustedTimeService","RevocationService","AuthorizationStateStore","AuthorizedOperation","AuthorizationValidationStatus","AuthorizationCheckStatus","StageAuthorization","AuthorizationEvidenceBundle","AuthorizationCheckRecord","AuthorizationValidationRecord","AuthorizationUseStatus","AuthorizationUseStoreIdentity","AuthorizationUseRecord","ConsumeOutcome","CapabilityClass","AccessCapability"],
+  "root_export_suffix_callables": ["compute_authorization_use_key","verify_ed25519_signature","validate_trust_profile","validate_issuer_registry_snapshot","validate_delegation_chain","validate_trusted_time_attestation","validate_revocation_snapshot","validate_stage_authorization","consume_stage_authorization","accept_registry_object","supersede_registry_object","accept_experiment_configuration","accept_execution_binding","append_operational_ledger_entry","build_synthetic_information_view"],
+  "root_export_rule": {
+    "accepted_prefix_count": 219,
+    "i4_suffix_type_count": 33,
+    "i4_suffix_callable_count": 15,
+    "i4_suffix_count": 48,
+    "post_i4_count": 267,
+    "framing": "each UTF-8 export name followed by LF, including final name",
+    "accepted_prefix_lf_sha256": "b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d",
+    "i4_suffix_lf_byte_count": 1114,
+    "i4_suffix_lf_sha256": "2b5919d755c747e7ff8f7ffe75bf4e7d6234954be83027defbe4f6e57784f421",
+    "post_i4_lf_byte_count": 5524,
+    "post_i4_lf_sha256": "90461e517d22fb8ec750acb19f397abb6cae0b6bf66952b9269e8546d5efe2ac"
+  },
+  "compatibility_authority": {
+    "future_changed_paths": ["tests/framework/test_i3_integration.py","tests/framework/test_primitives_envelopes.py"],
+    "test_i3_integration": ["replace root_exports[127:] whole-tail equality with root_exports[127:219] exact I-3 suffix plus root_exports[219:] exact I-4 suffix","replace whole FailureCode equality with exact [:53], [53:88], and [88:] prefix/suffix assertions","retain all module export, import graph, fixture, authority hash, projection, reachability, and predecessor checks"],
+    "test_primitives_envelopes": ["replace len(root_exports)==127 with len(root_exports)>=127 and exact root_exports[:127] equality to the accepted 127-name tuple","apply sortedness and uniqueness to root_exports[:127]; retain whole-root uniqueness and import/export equality","retain the exact failure_members[:53] assertion and every other assertion unchanged"],
+    "historical_prefixes": {"i2_root":127,"i3_root":219,"i2_failure":53,"i3_failure":88},
+    "nonweakening": "No module, import, reachability, hash, fixture, path, predecessor, or historical-prefix check may be removed or relaxed."
+  },
+  "production_fail_closed": {
+    "bootstrap_absent": "PRODUCTION_BOOTSTRAP_MISSING before any service/provider/store/mutation call",
+    "dependency_mismatch": "DEPENDENCY_INTEGRITY_FAILURE before provider import or verification",
+    "validation_profile_in_production": "VALIDATION_KEY_FORBIDDEN or VALIDATION_NAMESPACE_FORBIDDEN",
+    "later_operation": "I-4 may validate a synthetic authority record but exposes no entry callable for later-stage operations",
+    "unknown": "any unclassified exception or state is AUTHORIZATION_USE_UNRESOLVED or the earliest applicable typed failure; never permission"
+  },
+  "forbidden_reachability": [
+    "No public or private I-4 interface imports or calls execution, state projection, distortion evaluation, policy proposal, measurement, event, runner, finalizer, publication, recovery, result, simulation, trajectory, or Gate code.",
+    "No I-4 interface accepts a scientific callback, model step, successor state, result artifact bytes, or T2/T3 capability.",
+    "Validation namespaces and keys are rejected by production profiles; production roots are rejected by validation fixtures.",
+    "No authorization validation or consumption creates ScientificExecutionLease or advances model state."
+  ],
+  "nonclaims": [
+    "No real trust root, credential, endpoint, issuer, or production pin is supplied.",
+    "No distributed single-use guarantee is made.",
+    "No configuration, binding, registry object, or ledger is accepted by this documentation task.",
+    "No T2, T3, scientific execution, publication, recovery, correction, or Gate behavior is implemented or authorized.",
+    "No opaque ObjectRef proves role, content, lifecycle, truth, or scientific adequacy.",
+    "UQ-25 closure is prospective until a later implementation installs and verifies the exact lock."
+  ]
+}
