@@ -1,0 +1,7 @@
+interface:
+  display_name: "EBU Framework"
+  short_description: "Run stage-scoped EBU framework workflows"
+  default_prompt: "Use $ebu-framework to handle the authorized EBU framework stage."
+
+policy:
+  allow_implicit_invocation: false
