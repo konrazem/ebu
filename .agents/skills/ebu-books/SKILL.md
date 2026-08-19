@@ -34,21 +34,26 @@ Use this workflow only when the user explicitly invokes `$ebu-books`.
 
 ## Preserve reader comprehension
 
-For every important passage, explain concretely for an intelligent reader new
-to EBU:
+For every important mathematical passage in Parts I-IX, answer these eight
+mandatory questions in this exact order:
 
-1. the question and relevant physical, mathematical, or declared objects;
-2. every symbol and unit before calculation;
-3. the calculation;
-4. the physical or operational interpretation;
-5. why the result matters to EBU;
-6. assumptions, limitations, and conditions that make it inapplicable; and
-7. a numerical or physical example when useful and practical.
+1. What are we trying to determine?
+2. Which physical, mathematical, or declared objects are involved?
+3. What does every symbol mean, and what unit does it use?
+4. What calculation is performed?
+5. What does the result mean physically or operationally?
+6. Why is this calculation needed in EBU?
+7. Which assumptions, domains, tolerances, or limitations restrict the result?
+8. What would make the equation inapplicable?
+
+Also include a numerical or physical example when useful and practical; this
+remains outside the eight-step checklist.
 
 Perform the dedicated human-readability pass after drafting. Replace compressed
 claims, define terms at first use, connect sections, and explain caveats without
-removing them. Do not sacrifice mathematical precision, accepted signs, units,
-domains, constraints, or qualifications for simpler prose.
+removing them. Do not sacrifice mathematical precision or alter accepted
+equations, signs, units, domains, constraints, qualifications, evidence labels,
+or nonclaims for simpler prose.
 
 ## Keep pagination categories separate
 
