@@ -1,0 +1,774 @@
+{
+  "contract_id": "ebu-framework-i3c-settlement-causality-repair-validation/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_STATIC_T0_ONLY_UNIMPLEMENTED_UNAUDITED",
+  "authority": {
+    "base_head": "ff23d70c022a5c5cf3cb130b55568680de87ae97",
+    "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_i3c_settlement_causality_repair_contract.json",
+    "predecessor_manifest": "unified_python_research_framework_i3c_settlement_causality_repair_predecessor_manifest.json",
+    "controlling_atomic_sources": [
+      "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+      "atomic_generator_foundation_contract.json"
+    ]
+  },
+  "json_profile": {
+    "encoding": "UTF-8",
+    "bom": "FORBIDDEN",
+    "duplicate_keys": "REJECT",
+    "non_finite_numbers": "REJECT",
+    "comments": "FORBIDDEN",
+    "trailing_data": "FORBIDDEN",
+    "raw_final_newline": "EXACTLY_ONE_LF",
+    "canonical_rule": "Recursively sort object keys by Unicode code point; preserve array order; emit UTF-8 with ensure_ascii=false, compact comma/colon separators, no non-finite numbers, and exactly one trailing LF."
+  },
+  "safety": {
+    "permitted_class": "T0_STATIC_ONLY",
+    "permitted_methods": [
+      "strict duplicate-key JSON parsing",
+      "two independent canonical JSON encodings",
+      "raw and canonical hashing",
+      "exact integer and rational arithmetic over declared synthetic values",
+      "static predicate and precedence reconstruction",
+      "complete Git tree and predecessor identity reconstruction",
+      "path-scope, UTF-8, LF, whitespace, Markdown, table, link, fence, inline-code, and mathematical-delimiter checks",
+      "git diff --check"
+    ],
+    "forbidden_methods": [
+      "importing or invoking production ebu_framework behavior",
+      "running project tests",
+      "calling a transition, policy, settlement operation, runner, simulation, or trajectory",
+      "advancing model state",
+      "executing a Gate",
+      "installing dependencies",
+      "editing implementation, existing fixtures, tests, results, books, manuscripts, or PDFs",
+      "rendering documents",
+      "committing, pushing, merging, tagging, publishing, or opening a pull request"
+    ]
+  },
+  "historical_fixture_reconstruction": {
+    "path": "tests/framework/fixtures/i3_validation_v1.json",
+    "vector_count": 544,
+    "success_count": 184,
+    "failure_count": 360,
+    "category_counts": {
+      "ADJACENT_PRECEDENCE_PAIR": 122,
+      "FORMATION_BOUNDARY": 69,
+      "FORMATION_NEGATIVE": 69,
+      "FORMATION_POSITIVE": 69,
+      "ISOLATED_SINGLE_FAILURE": 145,
+      "MULTIPLY_INVALID_ALL_PRECEDENCE": 23,
+      "OBJECT_CONTENT_SCAN_ORDER": 1,
+      "VALIDATOR_BOUNDARY": 23,
+      "VALIDATOR_POSITIVE": 23
+    },
+    "raw_byte_count": 24179582,
+    "raw_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
+    "canonical_byte_count": 24179582,
+    "canonical_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
+    "unique_effective_input_count": 543,
+    "benign_identical_input_collision_count": 1,
+    "conflicting_outcome_collision_count": 0,
+    "settlement_vector_count": 20,
+    "component_sha256": {
+      "effective_inputs": "cbcbe59249e866cd4a9d8eec74094fed4c506ac30d46ff2b106d02a1576dc596",
+      "failure_ids": "af857c4d3c73ca897dbac82c588b8558e8f40746e0059bbdcb582a475733c999",
+      "ids": "af04f10d692e4ffac66f5af1f3585d3dbaf6ace99417b683f0469c53e0238f85",
+      "names": "31e566fd4f9dc5dd472944a8cdec25c87cf3bc04880822fca9003bdda1b5e5eb",
+      "outcomes": "5c6da4ad3fa3498db5a0c633e5ad889f18df621cf6b60d5ece9c9ca1883ed25b",
+      "predicate_truth_sets": "8812d40f5eb8f79722cf6aefe2df0eff7adae0494415ec146b3e9ab950be9f89",
+      "successful_projections": "a6d463d310f6289721531e2dfef0ef7944ee242eb5f9f245bbc47decbac90a7d"
+    },
+    "two_independent_encoders_required": true,
+    "immutable": true
+  },
+  "validator_precedence": [
+    "I3_OBJECT_CONTENT_MISMATCH",
+    "IMPLICIT_ABSENCE_FORBIDDEN",
+    "I3_COLLECTION_ORDER_INVALID",
+    "I3_DUPLICATE_MEMBER",
+    "SETTLEMENT_LINK_INVALID",
+    "CONSERVATION_UNIT_MISMATCH",
+    "SETTLEMENT_CLOSURE_FAILURE",
+    "CAUSAL_ATTRIBUTION_UNRESOLVED",
+    "HASH_MISMATCH"
+  ],
+  "supplemental_vector_schema": {
+    "required_top_level_fields": [
+      "id",
+      "name",
+      "category",
+      "validation_layer",
+      "input",
+      "expected"
+    ],
+    "input_fields": [
+      "group_causal_status",
+      "argument_causal_status",
+      "child_causal_contribution",
+      "child_settlement_link",
+      "shares",
+      "declared_share_total",
+      "residual",
+      "measured_total",
+      "closure_state",
+      "group_settlement_link",
+      "physical_measurement_rewrite",
+      "validator_invoked",
+      "upstream_numeric_condition",
+      "additional_active_failures"
+    ],
+    "quantity_shape": {
+      "amount": "exact base-10 integer string",
+      "unit": "declared unit token"
+    },
+    "share_shape": {
+      "amount": "exact base-10 integer string",
+      "unit": "declared unit token",
+      "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF, NONINSTITUTIONAL_OBJECT_REF, MISSING, or MALFORMED",
+      "evidence_role": "NONE, INSTITUTIONAL, or CAUSAL_IDENTIFICATION"
+    },
+    "no_defaults": true
+  },
+  "supplemental_case_order": [
+    "I3C-SCR-001",
+    "I3C-SCR-002",
+    "I3C-SCR-003",
+    "I3C-SCR-004",
+    "I3C-SCR-005",
+    "I3C-SCR-006",
+    "I3C-SCR-007",
+    "I3C-SCR-008",
+    "I3C-SCR-009",
+    "I3C-SCR-010",
+    "I3C-SCR-011",
+    "I3C-SCR-012",
+    "I3C-SCR-013",
+    "I3C-SCR-014",
+    "I3C-SCR-015",
+    "I3C-SCR-016",
+    "I3C-SCR-017",
+    "I3C-SCR-018",
+    "I3C-SCR-019",
+    "I3C-SCR-020",
+    "I3C-SCR-021",
+    "I3C-SCR-022",
+    "I3C-SCR-023",
+    "I3C-SCR-024",
+    "I3C-SCR-025",
+    "I3C-SCR-026",
+    "I3C-SCR-027",
+    "I3C-SCR-028",
+    "I3C-SCR-029",
+    "I3C-SCR-030",
+    "I3C-SCR-031",
+    "I3C-SCR-032",
+    "I3C-SCR-033",
+    "I3C-SCR-034",
+    "I3C-SCR-035",
+    "I3C-SCR-036"
+  ],
+  "supplemental_vectors": [
+    {
+      "id": "I3C-SCR-001",
+      "name": "UNIDENTIFIED_NO_CAUSAL_CLAIM_NO_SETTLEMENT",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED",
+        "argument_causal_status": "UNIDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": false,
+        "shares": [],
+        "declared_share_total": {"amount": "0", "unit": "EBU"},
+        "residual": {"amount": "12", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED",
+        "group_settlement_link": false,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "Nonidentified causality with no causal claim and no settlement is valid."}
+    },
+    {
+      "id": "I3C-SCR-002",
+      "name": "UNIDENTIFIED_INSTITUTIONAL_SHARES_NONZERO_RESIDUAL",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED",
+        "argument_causal_status": "UNIDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": true,
+        "shares": [
+          {"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"},
+          {"amount": "6", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}
+        ],
+        "declared_share_total": {"amount": "11", "unit": "EBU"},
+        "residual": {"amount": "1", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "Institutional shares close with an explicit nonzero residual and carry no causal claim."}
+    },
+    {
+      "id": "I3C-SCR-003",
+      "name": "UNIDENTIFIED_INSTITUTIONAL_SHARES_ZERO_RESIDUAL",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED",
+        "argument_causal_status": "UNIDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": true,
+        "shares": [
+          {"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"},
+          {"amount": "7", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}
+        ],
+        "declared_share_total": {"amount": "12", "unit": "EBU"},
+        "residual": {"amount": "0", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "A zero residual remains explicit when shares exactly equal measurement."}
+    },
+    {
+      "id": "I3C-SCR-004",
+      "name": "PARTIALLY_IDENTIFIED_WITH_INDEPENDENT_SETTLEMENT",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "PARTIALLY_IDENTIFIED",
+        "argument_causal_status": "PARTIALLY_IDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": true,
+        "shares": [{"amount": "4", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "4", "unit": "EBU"},
+        "residual": {"amount": "8", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "PARTIALLY_IDENTIFIED is nonidentified for causal claims but does not bar institutional settlement."}
+    },
+    {
+      "id": "I3C-SCR-005",
+      "name": "NOT_APPLICABLE_CHILD_CAUSALITY_WITH_SETTLEMENT",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED",
+        "argument_causal_status": "UNIDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": true,
+        "shares": [{"amount": "12", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "12", "unit": "EBU"},
+        "residual": {"amount": "0", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "NOT_APPLICABLE applies to the child causal-contribution field, not to the causal-status enum."}
+    },
+    {
+      "id": "I3C-SCR-006",
+      "name": "IDENTIFIED_HISTORICAL_SETTLEMENT_BEHAVIOR",
+      "category": "ACCEPTED_HISTORICAL_PRESERVATION",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "IDENTIFIED",
+        "argument_causal_status": "IDENTIFIED",
+        "child_causal_contribution": "NUMERIC_OBJECT_REF",
+        "child_settlement_link": true,
+        "shares": [{"amount": "1", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "1", "unit": "EBU"},
+        "residual": {"amount": "1", "unit": "EBU"},
+        "measured_total": {"amount": "2", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "Accepted identified-causality settlement behavior remains valid."}
+    },
+    {
+      "id": "I3C-SCR-007",
+      "name": "IDENTIFIED_CAUSAL_RECORD_WITHOUT_SETTLEMENT",
+      "category": "ACCEPTED_HISTORICAL_PRESERVATION",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "IDENTIFIED",
+        "argument_causal_status": "IDENTIFIED",
+        "child_causal_contribution": "NUMERIC_OBJECT_REF",
+        "child_settlement_link": false,
+        "shares": [],
+        "declared_share_total": {"amount": "0", "unit": "EBU"},
+        "residual": {"amount": "12", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED",
+        "group_settlement_link": false,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "Identified causal records do not require an institutional settlement."}
+    },
+    {
+      "id": "I3C-SCR-008",
+      "name": "UNIDENTIFIED_ZERO_AMOUNT_SHARE",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED",
+        "argument_causal_status": "UNIDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": true,
+        "shares": [{"amount": "0", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "0", "unit": "EBU"},
+        "residual": {"amount": "12", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "A numeric zero institutional share is not a causal claim."}
+    },
+    {
+      "id": "I3C-SCR-009",
+      "name": "MIXED_DIRECT_STATUS_WITHOUT_CAUSAL_CLAIM",
+      "category": "ACCEPTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED",
+        "argument_causal_status": "IDENTIFIED",
+        "child_causal_contribution": "NOT_APPLICABLE",
+        "child_settlement_link": true,
+        "shares": [{"amount": "2", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "2", "unit": "EBU"},
+        "residual": {"amount": "10", "unit": "EBU"},
+        "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT",
+        "group_settlement_link": true,
+        "physical_measurement_rewrite": false,
+        "validator_invoked": true,
+        "upstream_numeric_condition": "VALID",
+        "additional_active_failures": []
+      },
+      "expected": {"accepted": true, "outcome": "SUCCESS", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "The effective status is nonidentified, but institutional settlement remains allowed without a causal claim."}
+    },
+    {
+      "id": "I3C-SCR-010",
+      "name": "UNIDENTIFIED_NUMERIC_CAUSAL_CONTRIBUTION",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "Numeric causal contribution is prohibited under nonidentified causality."}
+    },
+    {
+      "id": "I3C-SCR-011",
+      "name": "UNIDENTIFIED_LINKED_CAUSAL_EVIDENCE",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "LINKED_EVIDENCE_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "A linked causal-evidence reference remains a causal claim."}
+    },
+    {
+      "id": "I3C-SCR-012",
+      "name": "INSTITUTIONAL_SHARE_RELABELLED_CAUSAL",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "LINKED_EVIDENCE_OBJECT_REF", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "CAUSAL_IDENTIFICATION"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "Institutional evidence represented through a causal-contribution link is prohibited relabelling."}
+    },
+    {
+      "id": "I3C-SCR-013",
+      "name": "MISSING_INSTITUTIONAL_RULE_REF",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "RECORD_FORMATION",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "MISSING", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "I3_RECORD_FORMATION_INVALID", "active_failures": ["I3_RECORD_FORMATION_INVALID"], "reason": "SettlementShare.rule_ref is mandatory."}
+    },
+    {
+      "id": "I3C-SCR-014",
+      "name": "MALFORMED_INSTITUTIONAL_RULE_REF",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "RECORD_FORMATION",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "MALFORMED", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "I3_RECORD_FORMATION_INVALID", "active_failures": ["I3_RECORD_FORMATION_INVALID"], "reason": "A non-ObjectRef rule reference cannot form SettlementShare."}
+    },
+    {
+      "id": "I3C-SCR-015",
+      "name": "SHARES_WITHOUT_PRESENT_EXPLICIT_CLOSURE",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_CLOSURE_FAILURE", "active_failures": ["SETTLEMENT_CLOSURE_FAILURE"], "reason": "Supplied shares require an explicit PRESENT closure."}
+    },
+    {
+      "id": "I3C-SCR-016",
+      "name": "INCOMPATIBLE_SHARE_UNIT",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "USD", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CONSERVATION_UNIT_MISMATCH", "active_failures": ["CONSERVATION_UNIT_MISMATCH"], "reason": "Every share amount must use the measured-total unit and dimension."}
+    },
+    {
+      "id": "I3C-SCR-017",
+      "name": "INCOMPATIBLE_RESIDUAL_UNIT",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "USD"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CONSERVATION_UNIT_MISMATCH", "active_failures": ["CONSERVATION_UNIT_MISMATCH"], "reason": "Residual unit and dimension must match measured total."}
+    },
+    {
+      "id": "I3C-SCR-018",
+      "name": "MEASURED_TOTAL_ARITHMETIC_MISMATCH",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "6", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_CLOSURE_FAILURE", "active_failures": ["SETTLEMENT_CLOSURE_FAILURE"], "reason": "Five plus six does not equal measured total twelve."}
+    },
+    {
+      "id": "I3C-SCR-019",
+      "name": "ACTUAL_SHARE_SUM_MISMATCH",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [
+          {"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"},
+          {"amount": "6", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}
+        ],
+        "declared_share_total": {"amount": "10", "unit": "EBU"}, "residual": {"amount": "2", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_CLOSURE_FAILURE", "active_failures": ["SETTLEMENT_CLOSURE_FAILURE"], "reason": "Actual supplied shares sum to eleven, not the declared share total ten."}
+    },
+    {
+      "id": "I3C-SCR-020",
+      "name": "NEGATIVE_AMOUNT_FORBIDDEN_BY_EXISTING_RULE",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "UPSTREAM_EXISTING_NUMERIC_RULE",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "-1", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "-1", "unit": "EBU"}, "residual": {"amount": "13", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "NEGATIVE_PROHIBITED_BY_DECLARED_RULE", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "QUANTITY_TYPE_MISMATCH", "active_failures": ["QUANTITY_TYPE_MISMATCH"], "reason": "The pre-existing declared amount-domain owner rejects this negative; the repair creates no universal negativity rule."}
+    },
+    {
+      "id": "I3C-SCR-021",
+      "name": "MALFORMED_CORE_NUMBER_AMOUNT",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "UPSTREAM_EXISTING_NUMERIC_RULE",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "INVALID", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "MALFORMED_CORE_NUMBER", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CORE_NUMBER_INVALID", "active_failures": ["CORE_NUMBER_INVALID"], "reason": "Malformed numeric formation fails before settlement arithmetic."}
+    },
+    {
+      "id": "I3C-SCR-022",
+      "name": "SETTLEMENT_ATTEMPTS_PHYSICAL_MEASUREMENT_REWRITE",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "UPSTREAM_IMMUTABLE_PHYSICAL_RECORD",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": true, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "REGISTRY_IMMUTABLE", "active_failures": ["REGISTRY_IMMUTABLE"], "reason": "Settlement cannot replace an accepted immutable physical measurement."}
+    },
+    {
+      "id": "I3C-SCR-023",
+      "name": "GOVERNING_VALIDATOR_BYPASS",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "ACCEPTANCE_BOUNDARY",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": false, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAIL_CLOSED_NO_ACCEPTANCE", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "No validator invocation means no accepted settlement result; no alternate success path exists."}
+    },
+    {
+      "id": "I3C-SCR-024",
+      "name": "GROUP_UNIDENTIFIED_ARGUMENT_IDENTIFIED_CAUSAL_BYPASS",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "IDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "An IDENTIFIED argument cannot bypass an UNIDENTIFIED group receipt."}
+    },
+    {
+      "id": "I3C-SCR-025",
+      "name": "GROUP_IDENTIFIED_ARGUMENT_UNIDENTIFIED_CAUSAL_BYPASS",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "IDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "An IDENTIFIED group receipt cannot bypass an UNIDENTIFIED direct argument."}
+    },
+    {
+      "id": "I3C-SCR-026",
+      "name": "PARTIALLY_IDENTIFIED_NUMERIC_CAUSAL_CLAIM",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "PARTIALLY_IDENTIFIED", "argument_causal_status": "PARTIALLY_IDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "PARTIALLY_IDENTIFIED remains nonidentified for numeric child causal claims."}
+    },
+    {
+      "id": "I3C-SCR-027",
+      "name": "EMPTY_SHARES_WITH_PRESENT_CLOSURE",
+      "category": "REJECTED_HISTORICAL_PRESERVATION",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_CLOSURE_FAILURE", "active_failures": ["SETTLEMENT_CLOSURE_FAILURE"], "reason": "The accepted empty-shares/PRESENT rejection remains unchanged."}
+    },
+    {
+      "id": "I3C-SCR-028",
+      "name": "INVALID_CHILD_SETTLEMENT_LINK",
+      "category": "REJECTED_HISTORICAL_PRESERVATION",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": ["SETTLEMENT_LINK_INVALID"]
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_LINK_INVALID", "active_failures": ["SETTLEMENT_LINK_INVALID"], "reason": "Independent settlement permission does not weaken exact link validation."}
+    },
+    {
+      "id": "I3C-SCR-029",
+      "name": "PRECEDENCE_UNIT_BEFORE_CLOSURE_BEFORE_CAUSAL",
+      "category": "PREDICATE_PRECEDENCE",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "USD", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "4", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CONSERVATION_UNIT_MISMATCH", "active_failures": ["CONSERVATION_UNIT_MISMATCH", "SETTLEMENT_CLOSURE_FAILURE", "CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "Unit mismatch retains precedence over closure and causal failures."}
+    },
+    {
+      "id": "I3C-SCR-030",
+      "name": "PRECEDENCE_CLOSURE_BEFORE_CAUSAL",
+      "category": "PREDICATE_PRECEDENCE",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "6", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_CLOSURE_FAILURE", "active_failures": ["SETTLEMENT_CLOSURE_FAILURE", "CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "Closure retains precedence over causal attribution."}
+    },
+    {
+      "id": "I3C-SCR-031",
+      "name": "PRECEDENCE_CAUSAL_BEFORE_HASH",
+      "category": "PREDICATE_PRECEDENCE",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": ["HASH_MISMATCH"]
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CAUSAL_ATTRIBUTION_UNRESOLVED", "active_failures": ["CAUSAL_ATTRIBUTION_UNRESOLVED", "HASH_MISMATCH"], "reason": "Causal failure retains precedence over hash mismatch."}
+    },
+    {
+      "id": "I3C-SCR-032",
+      "name": "PRECEDENCE_LINK_BEFORE_UNIT_CLOSURE_CAUSAL",
+      "category": "PREDICATE_PRECEDENCE",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "USD", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "4", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": ["SETTLEMENT_LINK_INVALID"]
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_LINK_INVALID", "active_failures": ["SETTLEMENT_LINK_INVALID", "CONSERVATION_UNIT_MISMATCH", "SETTLEMENT_CLOSURE_FAILURE", "CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "Link failure retains precedence over every affected later predicate."}
+    },
+    {
+      "id": "I3C-SCR-033",
+      "name": "PRECEDENCE_COLLECTION_ORDER_BEFORE_CAUSAL",
+      "category": "PREDICATE_PRECEDENCE",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": false,
+        "shares": [], "declared_share_total": {"amount": "0", "unit": "EBU"}, "residual": {"amount": "12", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "UNRESOLVED", "group_settlement_link": false, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": ["I3_COLLECTION_ORDER_INVALID"]
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "I3_COLLECTION_ORDER_INVALID", "active_failures": ["I3_COLLECTION_ORDER_INVALID", "CAUSAL_ATTRIBUTION_UNRESOLVED"], "reason": "Unrelated earlier predicate ordering is preserved."}
+    },
+    {
+      "id": "I3C-SCR-034",
+      "name": "IDENTIFIED_ARITHMETIC_FAILURE_PRESERVED",
+      "category": "REJECTED_HISTORICAL_PRESERVATION",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "IDENTIFIED", "argument_causal_status": "IDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "6", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "SETTLEMENT_CLOSURE_FAILURE", "active_failures": ["SETTLEMENT_CLOSURE_FAILURE"], "reason": "Identified causality does not excuse bad arithmetic."}
+    },
+    {
+      "id": "I3C-SCR-035",
+      "name": "IDENTIFIED_UNIT_FAILURE_PRESERVED",
+      "category": "REJECTED_HISTORICAL_PRESERVATION",
+      "validation_layer": "SETTLEMENT_VALIDATOR",
+      "input": {
+        "group_causal_status": "IDENTIFIED", "argument_causal_status": "IDENTIFIED", "child_causal_contribution": "NUMERIC_OBJECT_REF", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "USD", "rule_ref": "VALID_INSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAILURE", "first_failure": "CONSERVATION_UNIT_MISMATCH", "active_failures": ["CONSERVATION_UNIT_MISMATCH"], "reason": "Identified causality does not excuse incompatible units."}
+    },
+    {
+      "id": "I3C-SCR-036",
+      "name": "WELL_FORMED_BUT_NONINSTITUTIONAL_RULE_REF",
+      "category": "REJECTED_PROSPECTIVELY",
+      "validation_layer": "EXTERNAL_INSTITUTIONAL_RULE_ACCEPTANCE",
+      "input": {
+        "group_causal_status": "UNIDENTIFIED", "argument_causal_status": "UNIDENTIFIED", "child_causal_contribution": "NOT_APPLICABLE", "child_settlement_link": true,
+        "shares": [{"amount": "5", "unit": "EBU", "rule_ref": "NONINSTITUTIONAL_OBJECT_REF", "evidence_role": "INSTITUTIONAL"}],
+        "declared_share_total": {"amount": "5", "unit": "EBU"}, "residual": {"amount": "7", "unit": "EBU"}, "measured_total": {"amount": "12", "unit": "EBU"},
+        "closure_state": "PRESENT", "group_settlement_link": true, "physical_measurement_rewrite": false, "validator_invoked": true, "upstream_numeric_condition": "VALID", "additional_active_failures": []
+      },
+      "expected": {"accepted": false, "outcome": "FAIL_CLOSED_NO_ACCEPTANCE", "first_failure": "NOT_APPLICABLE", "active_failures": [], "reason": "I-3 may not infer target role; absent independent institutional acceptance, the share has no accepted result."}
+    }
+  ],
+  "supplemental_fixture_projection": {
+    "profile": "I3C_SETTLEMENT_CAUSALITY_REPAIR_SUPPLEMENTAL_FIXTURE_V1",
+    "path": "tests/framework/fixtures/i3c_settlement_causality_repair_v1.json",
+    "top_level_shape": "supplemental_vectors array exactly",
+    "array_order": "supplemental_case_order exactly",
+    "canonical_byte_count": 34418,
+    "canonical_sha256": "f4857cd3b36e2154143617ea7bb4b7cff45cb29292df0fa837effa4c6ec7cb58",
+    "vector_count": 36,
+    "success_count": 9,
+    "rejected_or_fail_closed_count": 27,
+    "unique_effective_semantic_input_count": 36,
+    "identical_input_collision_count": 0,
+    "conflicting_outcome_collision_count": 0,
+    "encoding": "canonical JSON under json_profile plus exactly one final LF",
+    "historical_fixture_replacement": false
+  },
+  "cross_file_checks": [
+    "The four authority filenames and order equal mechanical_contract.authority.artifact_order.",
+    "The checkpoint, controlling merge, atomic feature, I-3C feature/integration, and I-3E feature/integration identities agree across Markdown, mechanical contract, validation contract, and predecessor manifest.",
+    "The controlling atomic Markdown section 12 and mechanical i3c_settlement_causality_repair object agree with the corrected semantic boundary.",
+    "The accepted I-3 contract and validation contract reconstruct strictly and retain their recorded raw/canonical identities.",
+    "The historical fixture equals accepted validation_contract.vectors byte-logically and remains 544 vectors with the frozen component identities and collision result.",
+    "Every supplemental vector has exactly the schema fields, appears once in supplemental_case_order, and has an outcome consistent with the frozen predicates and precedence.",
+    "The supplemental fixture bytes equal canonical supplemental_vectors plus one LF under two independent encoders.",
+    "No supplemental semantic input has conflicting outcomes.",
+    "No new declaration, enum member, field, failure code, export, import edge, dependency, or historical-fixture edit is authorized.",
+    "The exact future path set contains two modified paths and one new supplemental fixture and no other path.",
+    "The complete predecessor manifest reconstructs every base-tree path, mode, object type, Git object, raw SHA-256, and byte count.",
+    "The final candidate delta consists only of the four untracked authority files and has zero staged or tracked changes.",
+    "No framework behavior, test, model, transition, runner, simulation, trajectory, Gate, book render, or scientific execution occurs."
+  ],
+  "acceptance": {
+    "required_historical_vector_count": 544,
+    "required_supplemental_vector_count": 36,
+    "allowed_validation_failures": 0,
+    "skipped_checks_are_passes": false,
+    "two_independent_canonical_encodings_required": true,
+    "two_independent_predecessor_reconstructions_required": true,
+    "independent_authority_audit_required": true,
+    "candidate_self_accepts": false
+  },
+  "completion_marker": "READY_FOR_INDEPENDENT_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AUDIT"
+}

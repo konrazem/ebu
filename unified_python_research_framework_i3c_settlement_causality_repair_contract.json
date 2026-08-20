@@ -1,0 +1,389 @@
+{
+  "contract_id": "ebu-framework-i3c-settlement-causality-repair-authority/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_DOCUMENTATION_ONLY_UNIMPLEMENTED_UNAUDITED",
+  "authority": {
+    "accepted_target_branch": "framework-v0.1",
+    "base_head": "ff23d70c022a5c5cf3cb130b55568680de87ae97",
+    "candidate_branch": "framework/i-3c-settlement-causality-repair-authority",
+    "controlling_atomic_merge": "ff23d70c022a5c5cf3cb130b55568680de87ae97",
+    "accepted_atomic_feature": "d0d1eddcf6d5e3b0393dfc4d66db7d63f1c0de47",
+    "accepted_i3c_feature": "5ec122d45ebe617ebc1d761bc5d1f5172b736c41",
+    "accepted_i3c_integration": "95f3c1990d32859dd091756a68571959406f2c1b",
+    "accepted_i3e_fixture_feature": "dac8717017e8ba6d6c46b17d031095f3b898762f",
+    "accepted_i3e_integration": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_i3c_settlement_causality_repair_contract.json",
+    "validation_contract": "unified_python_research_framework_i3c_settlement_causality_repair_validation_contract.json",
+    "predecessor_manifest": "unified_python_research_framework_i3c_settlement_causality_repair_predecessor_manifest.json",
+    "artifact_order": [
+      "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AMENDMENT.md",
+      "unified_python_research_framework_i3c_settlement_causality_repair_contract.json",
+      "unified_python_research_framework_i3c_settlement_causality_repair_validation_contract.json",
+      "unified_python_research_framework_i3c_settlement_causality_repair_predecessor_manifest.json"
+    ],
+    "integrity_rule": "Markdown is the normative human rendering; this contract supplies exact mechanics and ordering; the validation contract supplies the closed supplemental vectors; the predecessor manifest supplies the complete accepted-tree identity. Any disagreement fails closed."
+  },
+  "precedence": {
+    "kind": "NARROW_PROSPECTIVE_SUPERSESSION",
+    "controlling_sources": [
+      "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md section 12",
+      "atomic_generator_foundation_contract.json.i3c_settlement_causality_repair"
+    ],
+    "supersedes_only": [
+      "the future truth condition of CAUSAL_ATTRIBUTION_UNRESOLVED in validate_settlement_closure where current code treats institutional settlement as causal attribution",
+      "the directly necessary SETTLEMENT_CLOSURE_FAILURE truth condition requiring actual supplied shares to equal declared share_total and supplied shares to have an explicit PRESENT closure"
+    ],
+    "does_not_supersede": [
+      "any declaration shape, enum member, validator signature, constructor, projection, collection rule, applicability rule, or unrelated predicate",
+      "any failure identifier, ordinal, failure-envelope rule, or precedence position",
+      "any accepted physical measurement, finite-transition, conservation, quote, receipt, GroupReceipt, lifecycle, identity, canonicalization, provenance, governance, artifact, result, or scientific rule",
+      "the historical 544-vector fixture or either accepted I-3 JSON contract",
+      "the accepted atomic-generator or parallel-interaction authority",
+      "wave/phase and electrical-voltage exclusions",
+      "any manuscript, book, or PDF"
+    ],
+    "current_runtime_rule": "The current fail-closed validate_settlement_closure implementation remains controlling until a separately authorized repair is implemented, independently audited, and integrated. Bypass is forbidden.",
+    "conflict_rule": "FAIL_CLOSED"
+  },
+  "scope": {
+    "stage": "I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_DRAFTING",
+    "documentation_only": true,
+    "static_validation_only": true,
+    "implementation_authorized": false,
+    "existing_fixture_modification_authorized": false,
+    "test_execution_authorized": false,
+    "production_framework_behavior_authorized": false,
+    "dependency_installation_authorized": false,
+    "model_state_advance_authorized": false,
+    "scientific_execution_authorized": false,
+    "book_or_pdf_work_authorized": false,
+    "commit_authorized": false,
+    "push_authorized": false,
+    "merge_authorized": false,
+    "tag_authorized": false,
+    "pull_request_authorized": false
+  },
+  "predecessor_locks": {
+    "i3_contract": {
+      "path": "unified_python_research_framework_i3_contract.json",
+      "raw_byte_count": 345638,
+      "raw_sha256": "d8acef250314e1405b048a324c9f855010f7927cc8760e2f827bba85253d7979",
+      "canonical_byte_count": 277703,
+      "canonical_sha256": "384f289fbd20524d193eed9d852334915bf41b8b18b5096f1b7fb8ca9788a534"
+    },
+    "i3_validation_contract": {
+      "path": "unified_python_research_framework_i3_validation_contract.json",
+      "raw_byte_count": 49384569,
+      "raw_sha256": "9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b",
+      "canonical_byte_count": 24191436,
+      "canonical_sha256": "ba70b9915ebc5957225adc3f4806d89a540bec86560a29d63471613af2659079"
+    },
+    "historical_fixture": {
+      "path": "tests/framework/fixtures/i3_validation_v1.json",
+      "raw_byte_count": 24179582,
+      "raw_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
+      "vector_count": 544,
+      "success_count": 184,
+      "failure_count": 360,
+      "unique_effective_input_count": 543,
+      "benign_identical_input_collision_count": 1,
+      "conflicting_outcome_collision_count": 0,
+      "immutable": true
+    },
+    "settlement_source": {
+      "path": "src/ebu_framework/settlement.py",
+      "raw_byte_count": 21669,
+      "raw_sha256": "9905bb49c333704b5638d4b80e801cd8a60b4c344a59490e5188245752c92293",
+      "git_blob": "1b5d81ca63d714196bb941887073afc5c9b9e326"
+    },
+    "i3c_test": {
+      "path": "tests/framework/test_i3c_declarations.py",
+      "raw_byte_count": 21140,
+      "raw_sha256": "3fd69c099070c7367ebf8a56230a63d47d8ac4e4e1ab0b1e93e119c589dbe877",
+      "git_blob": "9de5099c7cd1974d97c23c2098d97fa9f6422f7f"
+    },
+    "root_exports": {
+      "path": "src/ebu_framework/__init__.py",
+      "ordered_count": 219,
+      "raw_sha256": "bb28d8ed997326f0f17405030527b884f6991f9dd7516849cd2366a6b71c0244",
+      "preserve_exactly": true
+    },
+    "failure_inventory": {
+      "path": "src/ebu_framework/errors.py",
+      "ordered_count": 88,
+      "lf_projection_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+      "raw_sha256": "f23313957711a0a38cbb16f3072de74a15aa44e7258317dc98b0bc77a1c50c80",
+      "preserve_exactly": true
+    },
+    "module_import_graph": {
+      "module_count": 15,
+      "direct_edge_count": 91,
+      "preserve_exactly": true
+    }
+  },
+  "terminology": [
+    {
+      "term": "PHYSICAL_GROUP_MEASUREMENT",
+      "meaning": "Immutable group endpoint measurement referenced by GroupReceipt and represented locally for closure by GroupResidual.measured_total.",
+      "nonclaim": "Settlement does not compute, replace, or causally allocate it."
+    },
+    {
+      "term": "MATHEMATICAL_DECOMPOSITION",
+      "meaning": "Declared accounting, marginal, shadow-price, interaction, or Aumann-Shapley decomposition.",
+      "nonclaim": "It is neither causal identification nor institutional entitlement."
+    },
+    {
+      "term": "CAUSAL_CONTRIBUTION",
+      "meaning": "A child causal claim represented by ChildActionRecord.causal_contribution_ref and admissible numerically only under identified causality.",
+      "nonclaim": "A settlement amount or provenance link does not fill it."
+    },
+    {
+      "term": "INSTITUTIONAL_SETTLEMENT_SHARE",
+      "meaning": "SettlementShare.amount governed by mandatory rule_ref and independent institutional acceptance.",
+      "nonclaim": "It is not a measured causal contribution."
+    },
+    {
+      "term": "EXPLICIT_RESIDUAL",
+      "meaning": "GroupResidual.residual retained explicitly even when its exact magnitude is zero.",
+      "nonclaim": "It is not silently omitted or assigned causal meaning."
+    },
+    {
+      "term": "ARITHMETIC_CLOSURE",
+      "meaning": "Exact equality of supplied share sum, declared share_total, residual, and measured_total under compatible units and dimensions.",
+      "nonclaim": "It is not physical conservation or causal identification."
+    },
+    {
+      "term": "RULE_PROVENANCE",
+      "meaning": "Mandatory SettlementShare.rule_ref plus independently accepted institutional classification.",
+      "nonclaim": "An opaque ObjectRef alone does not prove its target role."
+    }
+  ],
+  "declaration_contract": {
+    "new_types": [],
+    "new_enum_members": [],
+    "new_fields": [],
+    "new_failure_codes": [],
+    "new_root_exports": [],
+    "new_import_edges": [],
+    "modified_declaration_shapes": [],
+    "causal_status_domain": [
+      "IDENTIFIED",
+      "PARTIALLY_IDENTIFIED",
+      "UNIDENTIFIED"
+    ],
+    "not_applicable_interpretation": "NOT_APPLICABLE is not added to CausalIdentificationStatus. The permitted case is ChildActionRecord.causal_contribution_ref equal to Applicability.NOT_APPLICABLE.",
+    "settlement_share_rule_ref": {
+      "declared_type": "ObjectRef",
+      "mandatory_at_formation": true,
+      "opaque_target_inference_forbidden": true,
+      "independent_institutional_acceptance_required": true
+    },
+    "validator_signature": "(closure: SettlementClosureRecord, quote: Quote, receipt: Receipt, group_receipt: GroupReceipt, child_actions: tuple[ChildActionRecord,...], residual: GroupResidual, shares: tuple[SettlementShare,...], causal_status: CausalIdentificationStatus, /) -> None"
+  },
+  "current_conflict": {
+    "current_causal_predicate": "causal_status is not IDENTIFIED and (bool(shares) or closure.closure_resolution.state is PRESENT or any child.causal_contribution_ref is ObjectRef or any child.settlement_share_ref is ObjectRef)",
+    "effect": "The current validator rejects independently authorized noncausal institutional shares, child settlement links, and present exact settlement closure.",
+    "current_closure_predicate": "measured_total differs from share_total plus residual, or shares are empty while closure_resolution is PRESENT",
+    "closure_gap": "The current validator does not separately establish that actual supplied share amounts sum to share_total or require PRESENT closure when shares are nonempty.",
+    "runtime_status": "FAIL_CLOSED_AND_CONTROLLING_UNTIL_AUDITED_REPAIR_INTEGRATION"
+  },
+  "corrected_predicates": {
+    "nonidentified": {
+      "expression": "causal_status != IDENTIFIED OR group_receipt.causal_status != IDENTIFIED",
+      "bypass_rule": "Both directly supplied statuses must be IDENTIFIED before a causal contribution can be admitted."
+    },
+    "causal_claim": {
+      "expression": "any(type(child.causal_contribution_ref) is ObjectRef for child in child_actions)",
+      "includes": [
+        "numeric causal-contribution claim",
+        "linked causal-contribution evidence",
+        "institutional share or its evidence represented through a causal-contribution link"
+      ],
+      "excludes": [
+        "group_receipt.settlement_ref",
+        "child.settlement_share_ref",
+        "SettlementShare.amount",
+        "SettlementClosureRecord.closure_resolution PRESENT",
+        "zero or nonzero GroupResidual.residual"
+      ]
+    },
+    "share_total": {
+      "expression": "residual.share_total == exact_sum(share.amount for share in shares in canonical order)",
+      "arithmetic": "accepted exact CoreNumberV1 arithmetic only",
+      "implicit_conversion": false,
+      "hidden_tolerance": false
+    },
+    "measured_closure": {
+      "expression": "residual.measured_total == residual.share_total + residual.residual",
+      "unit_precondition": "all compared Quantity unit_ref and dimension_ref values are exactly equal"
+    },
+    "explicit_closure": {
+      "expression": "bool(shares) iff closure.closure_resolution.state == PRESENT",
+      "historical_empty_present_rule_preserved": true,
+      "nonempty_requires_present_added": true
+    },
+    "causal_failure": {
+      "failure_code": "CAUSAL_ATTRIBUTION_UNRESOLVED",
+      "expression": "nonidentified AND causal_claim",
+      "identified_empty_child_rule_preserved": "causal_status == IDENTIFIED and not child_actions remains CAUSAL_ATTRIBUTION_UNRESOLVED"
+    },
+    "institutional_evidence_typing": {
+      "rule": "Settlement evidence must not be typed or described as causal-identification evidence unless both direct statuses are IDENTIFIED.",
+      "i3_local_expression": "A locally represented causal label requires an ObjectRef in child.causal_contribution_ref and is therefore covered by causal_claim.",
+      "opaque_target_rule": "No target role is inferred from SettlementShare.evidence_refs. External target typing must fail closed before acceptance if inconsistent."
+    },
+    "physical_measurement": {
+      "rule": "Settlement may reference but may not mutate or replace the immutable physical group measurement.",
+      "local_scope": "GroupResidual.measured_total is compared arithmetically but is not computed or written.",
+      "external_replacement_owner": "existing identity or registry immutability boundary"
+    },
+    "validator_bypass": {
+      "rule": "Any path that omits validate_settlement_closure has no accepted settlement result.",
+      "compatibility_shim_authorized": false,
+      "alternate_validator_authorized": false,
+      "fixture_specific_branch_authorized": false
+    }
+  },
+  "failure_contract": {
+    "formation_before_validator": true,
+    "validator_precedence": [
+      "I3_OBJECT_CONTENT_MISMATCH",
+      "IMPLICIT_ABSENCE_FORBIDDEN",
+      "I3_COLLECTION_ORDER_INVALID",
+      "I3_DUPLICATE_MEMBER",
+      "SETTLEMENT_LINK_INVALID",
+      "CONSERVATION_UNIT_MISMATCH",
+      "SETTLEMENT_CLOSURE_FAILURE",
+      "CAUSAL_ATTRIBUTION_UNRESOLVED",
+      "HASH_MISMATCH"
+    ],
+    "affected_ownership": {
+      "missing_or_malformed_rule_ref": "I3_RECORD_FORMATION_INVALID",
+      "settlement_link_mismatch": "SETTLEMENT_LINK_INVALID",
+      "unit_or_dimension_mismatch": "CONSERVATION_UNIT_MISMATCH",
+      "share_total_or_measured_total_or_explicit_closure_mismatch": "SETTLEMENT_CLOSURE_FAILURE",
+      "nonidentified_numeric_or_linked_causal_claim_or_relabel": "CAUSAL_ATTRIBUTION_UNRESOLVED",
+      "negative_forbidden_by_existing_rule": "EXISTING_RULE_OWNER_BEFORE_SETTLEMENT_ACCEPTANCE",
+      "physical_measurement_replacement": "EXISTING_IDENTITY_OR_REGISTRY_OWNER_BEFORE_SETTLEMENT_ACCEPTANCE",
+      "validator_bypass": "FAIL_CLOSED_NO_ACCEPTED_RESULT"
+    },
+    "new_failure_codes": [],
+    "reordering_authorized": false
+  },
+  "allowed_combinations": [
+    "UNIDENTIFIED with no causal claim and no settlement",
+    "UNIDENTIFIED with causal_contribution_ref NOT_APPLICABLE, institutional shares, valid rule_ref, compatible units, PRESENT closure, and exact zero residual",
+    "UNIDENTIFIED with causal_contribution_ref NOT_APPLICABLE, institutional shares, valid rule_ref, compatible units, PRESENT closure, and exact nonzero residual",
+    "PARTIALLY_IDENTIFIED under the same nonidentified causal prohibition with independently authorized settlement",
+    "NOT_APPLICABLE child causal-contribution field with independently authorized settlement",
+    "all historically accepted IDENTIFIED combinations whose unrelated predicates remain satisfied"
+  ],
+  "rejected_combinations": [
+    "numeric causal contribution under either nonidentified direct status",
+    "linked causal-contribution evidence under either nonidentified direct status",
+    "institutional share represented or linked as causal-identification evidence under either nonidentified direct status",
+    "missing or malformed institutional rule_ref",
+    "well-formed rule_ref not independently accepted as institutional",
+    "settlement shares without explicit PRESENT residual closure",
+    "incompatible units or dimensions",
+    "actual share sum mismatch",
+    "measured total arithmetic mismatch",
+    "amount prohibited by an existing numeric or sign rule",
+    "settlement attempt to replace physical group measurement",
+    "bypass of validate_settlement_closure",
+    "any unlisted precedence change"
+  ],
+  "future_implementation": {
+    "authorized_now": false,
+    "exact_future_path_manifest": [
+      {
+        "state": "MODIFIED",
+        "path": "src/ebu_framework/settlement.py",
+        "purpose": "Narrow only the causal predicate and complete exact supplied-share and explicit-closure checks."
+      },
+      {
+        "state": "MODIFIED",
+        "path": "tests/framework/test_i3c_declarations.py",
+        "purpose": "Retain current historical-vector coverage and add conformance for the supplemental fixture."
+      },
+      {
+        "state": "NEW",
+        "path": "tests/framework/fixtures/i3c_settlement_causality_repair_v1.json",
+        "purpose": "Materialize the validation contract supplemental_vectors array byte-for-byte."
+      }
+    ],
+    "exact_future_changed_path_count": 3,
+    "prohibited_future_paths": [
+      "src/ebu_framework/causal.py",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/__init__.py",
+      "tests/framework/test_i3_integration.py",
+      "tests/framework/fixtures/i3_validation_v1.json",
+      "unified_python_research_framework_i3_contract.json",
+      "unified_python_research_framework_i3_validation_contract.json",
+      "all unrelated production, test, fixture, package, lock, authority, result, manuscript, book, and PDF paths"
+    ],
+    "implementation_constraints": [
+      "retain the exact eight-argument positional-only validator signature",
+      "retain every declaration and projection shape",
+      "retain all failure identifiers and the exact validator precedence",
+      "retain the exact module exports and direct imports",
+      "retain historical fixture bytes and outcomes",
+      "use no new dependency",
+      "do not import, resolve, or infer opaque reference targets",
+      "do not execute scientific behavior"
+    ]
+  },
+  "supplemental_fixture_projection": {
+    "path": "tests/framework/fixtures/i3c_settlement_causality_repair_v1.json",
+    "source": "unified_python_research_framework_i3c_settlement_causality_repair_validation_contract.json.supplemental_vectors",
+    "profile": "I3C_SETTLEMENT_CAUSALITY_REPAIR_SUPPLEMENTAL_FIXTURE_V1",
+    "vector_count": 36,
+    "success_count": 9,
+    "rejected_or_fail_closed_count": 27,
+    "canonical_byte_count": 34418,
+    "canonical_sha256": "f4857cd3b36e2154143617ea7bb4b7cff45cb29292df0fa837effa4c6ec7cb58",
+    "unique_effective_semantic_input_count": 36,
+    "identical_input_collision_count": 0,
+    "conflicting_outcome_collision_count": 0,
+    "historical_fixture_replacement": false
+  },
+  "predecessor_projection": {
+    "manifest": "unified_python_research_framework_i3c_settlement_causality_repair_predecessor_manifest.json",
+    "base_tree": "41974b92b98421eb13b9d3efbeba97d324d403fd",
+    "row_count": 245,
+    "canonical_byte_count": 58124,
+    "canonical_sha256": "7352c46cfa77e5ac1a83e94229b78740f776ac49268382294eeee52be9dad74d"
+  },
+  "preservation_obligations": [
+    "all accepted physical group measurement semantics",
+    "finite transition and conservation rules",
+    "quote, receipt, and GroupReceipt semantics",
+    "lifecycle ordering",
+    "identities, canonicalization, provenance, and governance",
+    "historical receipts, artifacts, and results",
+    "existing 544-vector fixture bytes and outcomes",
+    "all unrelated failure identifiers and ordering",
+    "all unrelated root exports and import-graph properties",
+    "accepted atomic-generator and parallel-interaction authority",
+    "wave/phase and electrical-voltage exclusions",
+    "all book, manuscript, and PDF files",
+    "all predecessor paths, modes, object types, Git objects, raw bytes, and raw SHA-256 identities"
+  ],
+  "nonclaims": [
+    "Settlement amounts, marginal values, shadow prices, Aumann-Shapley shares, interaction coefficients, and provenance links do not identify causality.",
+    "Arithmetic closure is not physical conservation or causal identification.",
+    "An opaque rule_ref does not prove institutional validity and an opaque evidence_ref does not prove causal validity.",
+    "This package supplies no causal model, institutional rule, physical measurement, registry acceptance, empirical result, or scientific conclusion.",
+    "Negative settlement amounts are not universally forbidden by this repair.",
+    "No current runtime availability is claimed."
+  ],
+  "completion": {
+    "candidate_self_accepts": false,
+    "next_possible_stage": "INDEPENDENT_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AUDIT",
+    "next_stage_begun": false,
+    "implementation_begun": false,
+    "completion_marker": "READY_FOR_INDEPENDENT_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AUDIT"
+  }
+}
