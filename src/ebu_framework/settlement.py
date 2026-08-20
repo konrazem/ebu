@@ -590,24 +590,27 @@ def validate_settlement_closure(
     ):
         _failure(FailureCode.CONSERVATION_UNIT_MISMATCH, interface)
     if (
-        _core_fraction(residual.measured_total.magnitude)
+        sum(
+            (_core_fraction(share.amount.magnitude) for share in shares),
+            Fraction(),
+        )
+        != _core_fraction(residual.share_total.magnitude)
+        or _core_fraction(residual.measured_total.magnitude)
         != _core_fraction(residual.share_total.magnitude)
         + _core_fraction(residual.residual.magnitude)
-        or (
-            not shares
-            and closure.closure_resolution.state is ResolutionState.PRESENT
+        or bool(shares)
+        != (
+            closure.closure_resolution.state is ResolutionState.PRESENT
         )
     ):
         _failure(FailureCode.SETTLEMENT_CLOSURE_FAILURE, interface)
 
-    if causal_status is not CausalIdentificationStatus.IDENTIFIED and (
-        bool(shares)
-        or closure.closure_resolution.state is ResolutionState.PRESENT
-        or any(
-            type(child.causal_contribution_ref) is ObjectRef
-            or type(child.settlement_share_ref) is ObjectRef
-            for child in child_actions
-        )
+    if (
+        causal_status is not CausalIdentificationStatus.IDENTIFIED
+        or group_receipt.causal_status is not CausalIdentificationStatus.IDENTIFIED
+    ) and any(
+        type(child.causal_contribution_ref) is ObjectRef
+        for child in child_actions
     ):
         _failure(FailureCode.CAUSAL_ATTRIBUTION_UNRESOLVED, interface)
     if causal_status is CausalIdentificationStatus.IDENTIFIED and not child_actions:
