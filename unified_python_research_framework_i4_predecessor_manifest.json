@@ -1,16 +1,21 @@
 {
   "manifest_id": "ebu-framework-i4-predecessor/1",
-  "manifest_version": "1.0.0",
-  "status": "PROSPECTIVE_CLOSED_COMPLETE_POST_ATOMIC_PATH_AUTHORITY",
+  "manifest_version": "1.0.1",
+  "status": "PROSPECTIVE_CLOSED_COMPLETE_VECTOR_INTERFACE_COHERENCE_PREDECESSOR_AUTHORITY",
   "authority": {
-    "original_authority_base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
-    "implementation_predecessor_head": "59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
-    "implementation_predecessor_tree": "cdca582de7faf17db053946e4f7e8a6d83c37ffe",
-    "source_tree": "Complete Git tree at exact implementation_predecessor_head",
-    "mechanical_contract": "unified_python_research_framework_i4_contract.json",
-    "synchronization_scope": "Starting-tree identities and future I-4 dispositions only; no I-4 semantics or implementation authority changes."
+    "historical_original_authority_base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "historical_post_atomic_implementation_predecessor_head": "59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+    "accepted_target_branch": "framework-v0.1",
+    "accepted_target_head": "af20187d30dbf9af25fa31b371a76df61e899847",
+    "accepted_target_tree": "b64706288eca2fe633c3e3d4bf6c41e27201af10",
+    "correction_branch": "framework/i-4-vector-interface-coherence-authority",
+    "source_tree": "Complete Git tree at exact accepted_target_head",
+    "human_authority": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_i4_contract.json version 1.0.1",
+    "validation_contract": "unified_python_research_framework_i4_validation_contract.json version 1.0.1",
+    "synchronization_scope": "Accepted-target identities and future I-4 dispositions affected by the four-file prospective correction only; no implementation or scientific authority change."
   },
-  "selection_rule": "Every one of the 261 tracked paths in the exact implementation-predecessor tree appears exactly once in Git path order. No absent future path appears in rows. The separately frozen future I-4 path manifest names eight additions and ten modifications.",
+  "selection_rule": "Every one of the 261 tracked paths in the exact accepted-target tree appears exactly once in Git path order. No absent future path appears in rows. The separately frozen future I-4 path manifest names eight additions and ten modifications.",
   "row_schema": [
     "path",
     "mode",
@@ -41,7 +46,7 @@
   "future_i4_dispositions": [
     "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION",
     "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION",
-    "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+    "SUPERSEDED_BY_THIS_VECTOR_INTERFACE_COHERENCE_CORRECTION_THEN_PRESERVE"
   ],
   "classification_counts": {
     "ATOMIC_AUTHORITY_OR_REGISTER": 11,
@@ -63,16 +68,16 @@
   "future_i4_disposition_counts": {
     "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION": 10,
     "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION": 247,
-    "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE": 4
+    "SUPERSEDED_BY_THIS_VECTOR_INTERFACE_COHERENCE_CORRECTION_THEN_PRESERVE": 4
   },
   "row_count": 261,
   "path_lf_byte_count": 9195,
   "path_lf_sha256": "db1fff6b667b1955160cb2077cc364b25623d949eac5b6ba8e22ee466f4a61a3",
   "projection_rule": "Canonical JSON encoding of [[row[field] for field in row_schema] for row in rows] in exact row order, with sorted object keys, compact separators, UTF-8, finite numbers only, and exactly one final LF.",
-  "projection_byte_count": 64224,
-  "projection_sha256": "fc492dd68ac3aa19583eb0ca9b34ac411b0a106a415837b05e20825570a15d93",
+  "projection_byte_count": 64265,
+  "projection_sha256": "b5be352771d512fda3b1d8673e5eaa5c78943bb454512467c95730915aec3f7e",
   "projection_reconstruction": {
-    "route_a": "git ls-tree -rz -l plus git cat-file blob; Python hashlib SHA-256; Python json.dumps canonical encoder",
+    "route_a": "git ls-tree -rz plus git cat-file blob; Python hashlib SHA-256; Python json.dumps canonical encoder",
     "route_b": "git ls-tree -rz plus git cat-file --batch; independent Ruby Digest::SHA256 and JSON.generate canonical encoder",
     "required_agreement": "all paths, modes, blob IDs, byte counts, raw SHA-256 values, classifications, dispositions, projection bytes, and projection SHA-256"
   },
@@ -431,11 +436,11 @@
     {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
       "mode": "100644",
-      "git_blob": "b5e6ccd5b0cd4141bfa48245ab565372103ff5a6",
-      "raw_sha256": "7c2d352ac568f4b4fabcc2a6edfa86b420f53a4a85e2f8e13a0628675b4faf4f",
-      "byte_count": 20653,
+      "git_blob": "9da5a139f7fd6d8d756aac9cb58ff674e0799325",
+      "raw_sha256": "d376cc13639aa50ce59a38406c1720c329c83863d5e6237b5ac9f2e9801ffcc4",
+      "byte_count": 25942,
       "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
-      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_VECTOR_INTERFACE_COHERENCE_CORRECTION_THEN_PRESERVE"
     },
     {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_GOVERNANCE_BOOTSTRAP_REQUIREMENTS.md",
@@ -2294,11 +2299,11 @@
     {
       "path": "unified_python_research_framework_i4_contract.json",
       "mode": "100644",
-      "git_blob": "91635696e3daae26573384d30d9a04e942d76f13",
-      "raw_sha256": "e651f6e2d4cfa8d96655a6d6417c4221221fe5720a015c05190938177a7fa022",
-      "byte_count": 69613,
+      "git_blob": "481a44167fb0cefeeba1881c73b36825939a2766",
+      "raw_sha256": "6956d8238e37fe0f3f76ebd74e073b7db42d9c3dcd7722b7a59e62a3950bbe1f",
+      "byte_count": 80808,
       "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
-      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_VECTOR_INTERFACE_COHERENCE_CORRECTION_THEN_PRESERVE"
     },
     {
       "path": "unified_python_research_framework_i4_governance_bootstrap_schema.json",
@@ -2312,11 +2317,11 @@
     {
       "path": "unified_python_research_framework_i4_predecessor_manifest.json",
       "mode": "100644",
-      "git_blob": "1f13537f975f8caed24ad8476c4460563bad9c72",
-      "raw_sha256": "7e81e63a58fe8ed293c63ec71e649d10d9a1972afaea740f61fa1b22f6b62409",
-      "byte_count": 32534,
+      "git_blob": "01e194ead20f18d0592f391b1b769f2507daa6fc",
+      "raw_sha256": "b3e69f0c4e24d93b9d0c1aa0da2acf66b3a5b4e405b7e243cad84ee90c0ac0d3",
+      "byte_count": 111594,
       "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
-      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_VECTOR_INTERFACE_COHERENCE_CORRECTION_THEN_PRESERVE"
     },
     {
       "path": "unified_python_research_framework_i4_uq25_dependency_contract.json",
@@ -2330,11 +2335,11 @@
     {
       "path": "unified_python_research_framework_i4_validation_contract.json",
       "mode": "100644",
-      "git_blob": "c3b99f5e1fc5462f481603bb6c24517bad64420a",
-      "raw_sha256": "2496c419e0d35206e9bedfdec5e5fa07f21cb1d6ceb952c16228cc1fee54b088",
-      "byte_count": 193599,
+      "git_blob": "2e2f0daa2ed2985083633dbb1c5f1c3977e9b1ef",
+      "raw_sha256": "93ac9f284c6d6159bf4f77991014c0c85bbbb5317f06b82d771e5eeb91ec73a0",
+      "byte_count": 200128,
       "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
-      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_VECTOR_INTERFACE_COHERENCE_CORRECTION_THEN_PRESERVE"
     },
     {
       "path": "unified_python_research_framework_packaging_contract.json",
@@ -2453,18 +2458,18 @@
     "new_count": 8,
     "modified_count": 10,
     "total_count": 18,
-    "rule": "This is the unchanged original I-4 future implementation manifest. Every new path is absent from the 261-path starting tree. No nineteenth implementation path exists."
+    "rule": "This is the unchanged accepted I-4 future implementation manifest. Every new path is absent from the 261-path accepted target tree. No nineteenth implementation path exists."
   },
   "enforcement": [
-    "Before later implementation, every tracked path not authorized for modification must match the accepted post-synchronization implementation predecessor byte-for-byte.",
-    "The four synchronization paths record their historical starting-tree blobs here; after this authority is independently accepted, their accepted synchronized bytes supersede those four historical blobs and must then remain byte-identical during implementation.",
+    "Before later implementation, every tracked path not authorized for modification must match accepted target af20187d30dbf9af25fa31b371a76df61e899847 byte-for-byte.",
+    "The four prospective correction paths record their accepted-target blobs here; after an independently accepted correction integration, the corrected bytes supersede only these four predecessor identities and must then remain byte-identical during implementation.",
     "Only the ten exact modified paths may differ during later I-4 implementation, and only under separate implementation authority.",
     "Each of the eight exact new paths must be absent before later implementation and created exactly once; no additional path may be introduced.",
     "Every non-I-4 implementation path must be preserved during later implementation."
   ],
   "nonclaims": [
     "This manifest authorizes no implementation, dependency installation, test execution, scientific execution, commit, integration, or publication.",
-    "The four historical synchronization-input identities do not override the accepted synchronized authority bytes after a later independent audit and acceptance.",
-    "No book, manuscript, PDF, generator, image, result, D1/D2 authority, or D1/D2 implementation path may change in this synchronization."
+    "The accepted-target identities remain historical predecessor evidence; this draft does not rewrite the accepted af20187 package as if it already contained the correction.",
+    "No predecessor implementation path changes in this documentation-only correction."
   ]
 }
