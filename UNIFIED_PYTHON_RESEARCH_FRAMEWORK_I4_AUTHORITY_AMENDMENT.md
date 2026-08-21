@@ -1,30 +1,40 @@
 # Unified Python Research Framework I-4 Authority Amendment
 
-Status: prospective post-atomic documentation-only authority synchronization
-candidate; unimplemented; production disabled.
+Status: prospective documentation-only I-4 vector/interface coherence
+correction; unimplemented; production disabled.
 
 ## 1. Decision
 
-This amendment prospectively closes Framework I-4 external authorization,
-local single-use, registry/configuration/binding acceptance, operational-ledger
-append, and synthetic information-capability mechanics. This revision performs
-only the mechanical synchronization required after the accepted D1 atomic and
-D2 interaction declarations occupied additive positions that were open when
-I-4 was first frozen. Its mechanical
-rendering is `unified_python_research_framework_i4_contract.json`. The
-validation authority is
+This amendment prospectively corrects the callable/interface coherence of the
+accepted Framework I-4 authority before any implementation candidate can be
+accepted. It supersedes mechanical and validation authority version `1.0.0`
+with version `1.0.1` only for the exact boundary stated in §2. It does not
+repair implementation code. Its mechanical rendering is
+`unified_python_research_framework_i4_contract.json`. The validation authority is
 `unified_python_research_framework_i4_validation_contract.json`. The closed
 predecessor inventory is
 `unified_python_research_framework_i4_predecessor_manifest.json`.
+
+The accepted post-atomic synchronization remains historical authority. This
+correction does not describe that package as if it had already contained
+these changes. It retains the accepted scientific/security decisions and
+adds an exact executable interface, validation owner, and exercise class to
+every vector; corrects acquisition and context ownership; makes count scope
+call-local; and adds the one explicit expected-current-memory factory
+argument required to represent stateless versus stateful requests.
 
 The UQ-25 pair prospectively selects `PyNaCl==1.6.2` with the exact
 `cffi==2.1.1` and `pycparser==3.0` closure. The governance pair defines a
 future production-bootstrap requirement but supplies no instance.
 
-This task changes authority documents only. It authorizes no Python edit,
-fixture installation, dependency installation, provider import, protected
-operation, production bootstrap, test execution, commit, integration, or
-push.
+This task changes exactly four authority documents only. It authorizes no
+Python edit, fixture installation, dependency installation, provider import,
+protected operation, production bootstrap, test execution, commit,
+integration, or push.
+
+The present materializability repair changes only this amendment and the two
+version `1.0.1` JSON contracts. It keeps the candidate predecessor manifest
+byte-identical.
 
 ## 2. Authority coordinates and narrow precedence
 
@@ -52,12 +62,20 @@ remain historical locks on the unchanged I-4 design:
 | I-3 validation raw | `9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b` |
 | I-3 validation canonical | `ba70b9915ebc5957225adc3f4806d89a540bec86560a29d63471613af2659079` |
 
-The synchronized implementation predecessor is merge commit
+The historical post-atomic synchronization used implementation predecessor
 `59594823e24eaf6ca83e1e2aa4a1129d8e109ae5`, tree
 `cdca582de7faf17db053946e4f7e8a6d83c37ffe`, subject “Integrate EBU
 interaction declarations D2,” empty body, and ordered parents
 `297535d787355b9911fc01ae5b777a553aa9815b` and
 `cab2b5b35f0b289f9e3e93d6e944195692207446`.
+
+This correction starts from accepted `framework-v0.1` merge commit
+`af20187d30dbf9af25fa31b371a76df61e899847`, tree
+`b64706288eca2fe633c3e3d4bf6c41e27201af10`, subject “Integrate Framework
+I-4 post-atomic authority synchronization,” empty body, and ordered parents
+`59594823e24eaf6ca83e1e2aa4a1129d8e109ae5` and
+`ea188e1123b872d90b49021ca77363d65122ce81`. The prospective correction
+branch is `framework/i-4-vector-interface-coherence-authority`.
 
 The accepted additive history is exact:
 
@@ -66,17 +84,24 @@ The accepted additive history is exact:
 | D1 | authority integration `48a9f953895994da96e46a00c6a6dd29c72e9497`; implementation `9a055d467bb84630c5cf7bf31f95f18aad3a1db9`; integration `297535d787355b9911fc01ae5b777a553aa9815b` | 18 root exports and 14 failures |
 | D2 | implementation `cab2b5b35f0b289f9e3e93d6e944195692207446`; integration `59594823e24eaf6ca83e1e2aa4a1129d8e109ae5` | 24 root exports and 22 failures |
 
-Within I-4 only, this synchronization supersedes the original incompatible
-predecessor coordinates, ordinal positions, aggregate counts and hashes,
-import and signature projections, fixture projections, and regression
-expectations. It does not redesign or weaken any I-4 scientific, security,
-dependency, governance, operation, schema, callable, behavioral, validation,
-or nonclaim rule. It does not reopen accepted I-1 through I-3, the accepted
-I-3C repair, atomic-generator foundation, D1, or D2 behavior. The specification
-and plan remain authoritative outside that narrow scope. The dependency pair
-governs only UQ-25 and remains byte-identical. The governance pair governs only
-the requirements for a later bootstrap and remains byte-identical. A
-Markdown/JSON mismatch is an integrity failure; it is never permission to
+Within I-4 only, version `1.0.1` supersedes version `1.0.0` for vector
+interface/owner declarations, exercise classes, executable materialization,
+complete-invocation counts, time-relative issuer ownership, trusted-time and
+revocation service-acquisition ownership, authorization-specific revocation
+ownership, the expected-current-memory factory argument, and the fixture,
+signature, aggregate, predecessor, and authority identities that mechanically
+depend on those changes. It also normalizes the three algorithm-label byte
+cases to `SIGNATURE_INVALID`: the public verifier has no profile-selection
+argument, so those exact byte calls reach one PureEdDSA provider attempt.
+
+This correction does not reopen accepted I-1 through I-3, the accepted I-3C
+repair, atomic-generator foundation, D1, or D2 behavior. It preserves the 185
+failure identifiers and order, 309 root exports and order, all type and enum
+inventories, both acyclic import graphs, the 18-path future implementation
+boundary, UQ-25, governance, dependency closure, and production-bootstrap
+absence. The specification and plan remain authoritative outside the narrow
+supersession. The dependency pair and governance pair remain byte-identical.
+A Markdown/JSON mismatch is an integrity failure; it is never permission to
 select convenient clauses.
 
 ## 3. Accepted predecessor boundary
@@ -85,7 +110,11 @@ Historically, I-4 was projected after exactly 219 ordered root exports, 88
 ordered failure codes, and 15 I-3 modules with 91 direct edges. Those original
 coordinates remain recorded in §2 and the mechanical contract.
 
-After accepted D1 and D2, I-4 implementation begins from exactly:
+After the accepted post-atomic authority integration, corrected I-4
+implementation would begin only from exact target
+`af20187d30dbf9af25fa31b371a76df61e899847` and tree
+`b64706288eca2fe633c3e3d4bf6c41e27201af10`. Its unchanged implementation
+surface has exactly:
 
 - 261 ordered root exports, 5,724 LF-framed bytes, SHA-256
   `1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9`;
@@ -99,14 +128,20 @@ After accepted D1 and D2, I-4 implementation begins from exactly:
 - byte-identical `i3_validation_v1.json` at 24,179,582 bytes and SHA-256
   `e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5`.
 
-Every one of the 261 tracked predecessor paths, modes, Git blobs, byte lengths,
-raw digests, classifications, and future I-4 dispositions appears exactly once
-in the predecessor manifest. That inventory includes the original I-1 through
-I-4 authority, accepted I-3C repair, atomic-generator foundation, D1/D2
-authority and implementations, workflow skills, book-planning documents,
-scientific results, images, and PDFs. Every non-I-4 implementation path must be
-preserved during later implementation. An implementation must stop before
-editing if any applicable identity does not match.
+Every one of the target's 261 tracked predecessor paths, modes, Git blobs,
+byte lengths, raw digests, classifications, and future I-4 dispositions
+appears exactly once in the corrected predecessor manifest. The four authority
+rows name their accepted-target blobs and are the only rows marked for
+supersession by this prospective correction. The other 257 target rows retain
+their accepted classifications and either preservation or separately
+authorized future-implementation disposition. No predecessor implementation
+path changes. A later implementation must stop before editing if any
+applicable identity does not match.
+
+The 261-row predecessor projection is 64,265 canonical bytes with SHA-256
+`b5be352771d512fda3b1d8673e5eaa5c78943bb454512467c95730915aec3f7e`.
+Its ordered path-only LF projection is 9,195 bytes with SHA-256
+`db1fff6b667b1955160cb2077cc364b25623d949eac5b6ba8e22ee466f4a61a3`.
 
 ## 4. Exact I-4 scope and nonclaims
 
@@ -174,10 +209,26 @@ Production has no injected challenge, clock, provider transcript, filesystem
 classification, profile, key, endpoint, or service. It creates exactly 32
 challenge bytes with `secrets.token_bytes(32)` and calls real services only
 after an installed profile pin and dependency receipt pass. A production
-profile rejects every validation key and namespace. A validation profile
-cannot be installed as production.
+profile first rejects every validation key with
+`VALIDATION_KEY_FORBIDDEN`. Only after that check passes does it reject a
+validation namespace with `VALIDATION_NAMESPACE_FORBIDDEN`. This exact
+key-before-namespace order remains runtime authority. `i4v-119` dynamically
+tests fixture-key rejection. The later namespace branch remains a real runtime
+failure, but `i4v-120` verifies that branch and its order by static
+source/authority analysis rather than by fabricating a production-valid key.
+A validation profile cannot be installed as production.
 
-Until a separately authorized governance bootstrap instance is schema-valid,
+For validation-vector materialization only, `profile_case: PRODUCTION` uses a
+synthetic temporary state-store witness for dynamic `i4v-119` only. The witness
+passes the earlier pinned-profile and bootstrap checks solely to reach the
+validation-key predicate at subcheck `2.05`; it neither creates nor installs
+repository production bootstrap material and may not make `i4v-120` dynamic.
+Every RFC and seeded fixture key remains in the production-forbidden set. No
+fixture, synthetic, label-based, or test-context exception may make any of
+those keys production-valid. The witness remains distinct from
+`PRODUCTION_NO_BOOTSTRAP`, which supplies no such witness and fails at `2.01`
+with `PRODUCTION_BOOTSTRAP_MISSING`. Outside that validation-only witness,
+until a separately authorized governance bootstrap instance is schema-valid,
 independently approved, installed, and operator-pinned, every protected
 production interface fails `PRODUCTION_BOOTSTRAP_MISSING` before provider,
 service, SQLite, registry, or ledger mutation.
@@ -193,8 +244,12 @@ The sole signature profile is `EBU-Authorization-Ed25519-V1`:
   reject small order;
 - the little-endian scalar `S` is strictly less than RFC 8032 `L`;
 - messages are exact ECJ-1 bytes;
-- Ed25519ctx, Ed25519ph, prehash, multipart, fallback, and negotiation reject
-  before provider construction; and
+- no public verifier argument selects Ed25519ctx, Ed25519ph, prehash,
+  multipart, fallback, negotiation, or a caller-selected encoder;
+- an unsupported profile cannot form an admitted I-4 profile, while a
+  context/ph/prehash artifact supplied only as byte arguments is tested as a
+  PureEdDSA signature and normalizes to `SIGNATURE_INVALID` after the one
+  permitted provider attempt; and
 - structural precheck failure makes zero provider calls. An admissible
   signature makes exactly one `VerifyKey` construction and one `verify` call,
   with no retry.
@@ -215,11 +270,27 @@ is rollback; a jump is a gap; unequal content at the same sequence is
 equivocation. These states and time-service sequences are durably persisted
 before a protected operation.
 
+`validate_issuer_registry_snapshot` owns proof, binding, interval-formation,
+continuity, signer-membership/key-ID, and durable-sequence rules. It has no
+attested-UTC argument. Time-relative snapshot and signer-key containment are
+therefore evaluated by `validate_stage_authorization` at subcheck `6.05`,
+after fresh trusted time is available and before revocation acquisition.
+
 Delegation is a zero-to-four credential leaf-to-root chain. Every credential
 and proof is positional. Issuer/key continuity, common trust and revocation
 authority, temporal overlap, exclusions, strict subset attenuation, decrement
 of remaining depth, no repeated credential, no repeated issuer/key pair, and
 no cycle are mandatory. Parent scope union and joint delegation are absent.
+
+`validate_stage_authorization` alone creates the trusted-time challenge and
+owns the one `TrustedTimeService.request` call and
+`TRUSTED_TIME_UNAVAILABLE`. The inner attestation validator receives an
+already-constructed challenge/attestation pair. The outer callable likewise
+owns the one `RevocationService.fetch_current` call,
+`REVOCATION_UNAVAILABLE`, and issuer/key/delegation/authorization/profile-
+successor decisions. `validate_revocation_snapshot` remains limited to the
+already-materialized snapshot's proofs, validity, ordering, continuity, and
+durable sequence.
 
 ## 8. Exact validation and consumption boundary
 
@@ -227,7 +298,8 @@ Validation order is:
 
 1. strict formation, ECJ-1, object hashes, proof hashes, and use-key
    reconstruction;
-2. installed trust pin, supported profile, provider receipt, and namespace;
+2. installed trust pin, supported profile, provider receipt, validation-key
+   rejection, and only then validation-namespace rejection;
 3. issuer roots, snapshot continuity, signer key, and durable state;
 4. authorization message and signature;
 5. delegation and effective ceiling;
@@ -244,6 +316,56 @@ Every ordered subcheck is mechanical in the contract. A pass appends one
 unperformed check appears. `validate_stage_authorization` ends after step 10
 as `VALIDATED_NOT_CONSUMED`. `consume_stage_authorization` alone performs step
 11.
+
+Every validation vector now declares three separate fields:
+
+- `interface` is the exact public production callable under test;
+- `validation_owner` is the callable, constructor boundary, or authorized
+  static-analysis layer that owns the decisive rule; and
+- `exercise_class` is exactly `PRODUCTION_INTERFACE_INVOKED`,
+  `FORMATION_FAILURE_BEFORE_INTERFACE`, or `AUTHORIZED_STATIC_PASS`.
+
+There are 119 production-interface invocations, one exact
+`StageAuthorization` formation failure before interface entry, and six
+authorized static passes (`i4v-120` and `i4v-122` through `i4v-126`). No other
+vector may use a static pass. In the reachability group, `i4v-118`, `i4v-119`,
+and `i4v-121` require dynamic execution; `i4v-120` requires the exact static
+witness below; and `i4v-122` through `i4v-126` retain their static witnesses.
+Ordinary direct validation has equal interface and owner. The validation
+contract contains a 126-record interface-
+sufficiency projection that proves argument materialization, required
+service/state/object/mode/target context, owner reachability, precedence, and
+complete count scope. It reports zero unrepresentable cases, ambiguous
+owners, representative-interface substitutions, and metadata-only satisfying
+paths.
+
+The `i4v-120` witness completes exactly six checks:
+
+1. Verify the future source, authority, export, import, and path closure
+   against the accepted hashes and manifest.
+2. Verify the production validation-key guard is syntactically before the
+   namespace guard.
+3. Verify a true key predicate terminates with `VALIDATION_KEY_FORBIDDEN` and
+   cannot fall through.
+4. Verify the immediately following production validation-namespace guard
+   terminates with `VALIDATION_NAMESPACE_FORBIDDEN`.
+5. Verify the complete RFC-plus-seeded fixture-key inventory is contained in
+   the production-forbidden set, with no fixture, synthetic, label-based, or
+   test-context exception.
+6. Verify the test is static source/authority analysis only and does not claim
+   execution of the production callable, provider, service, store, or failure
+   path.
+
+This witness does not claim that `VALIDATION_NAMESPACE_FORBIDDEN` was
+dynamically produced. It changes no runtime guard, failure, signature, export,
+graph, dependency, or implementation path.
+
+Counts are scoped to work performed by the exact declared invocation. An
+inner validator does not count service acquisition performed outside it.
+`consume_stage_authorization` does not recount the 67 checks already present
+in its supplied validation record; it counts only the step-11 checks actually
+performed by that consume call. Formation and authorized-static rows count
+only their exact formation or static check boundary.
 
 A constructed `AuthorizationUseRecord` has no authority. Every protected
 mutation resolves its exact use key, row, and coupled operational-ledger row
@@ -303,17 +425,33 @@ ledger append remains I-5.
 
 ## 11. Information capability mechanics
 
-I-4 implements only `build_synthetic_information_view`. A production
-`build_information_view` and live `validate_information_read_set` remain
-absent T3 behavior.
+I-4 implements only `build_synthetic_information_view`. Its corrected
+positional-only signature is:
 
-The synthetic factory checks, in order, explicit visibility, availability no
-later than injected now, maximum age, stateless/stateful current-memory
-applicability, traversal prohibition, and attempted read-set subset/order/
-uniqueness. It creates `AccessCapability` only after every check. The
-capability constructor is private and rejects copying, pickling, subclassing,
-direct construction, and replacement. I-4 factories create only T1 synthetic
-capabilities.
+```text
+(contract: InformationContract,
+ expected_current_memory_ref_or_not_applicable: ObjectRef|Applicability,
+ fabricated_fields: tuple[tuple[ObjectRef,CanonicalBytes,str],...],
+ attempted_read_set: InformationReadSet|Applicability,
+ injected_now: str, /) -> tuple[InformationView,AccessCapability]
+```
+
+A production `build_information_view` and live
+`validate_information_read_set` remain absent T3 behavior.
+
+The explicit expected-memory argument is `Applicability.NOT_APPLICABLE` for a
+stateless request and one exact `ObjectRef` for a stateful request. The
+factory checks, in order, explicit visibility, availability no later than
+injected now, maximum age, expected/supplied current-memory applicability and
+equality, traversal prohibition, and attempted read-set subset/order/
+uniqueness. A stateless request with supplied memory fails
+`INFORMATION_CAPABILITY_INVALID`; a stateful request with a different or
+multiple supplied memory reference fails `CURRENT_MEMORY_MISMATCH`. Vector
+`i4v-101` materializes both the explicit `NOT_APPLICABLE` expectation and the
+contradictory supplied memory. The factory creates `AccessCapability` only
+after every check. The capability constructor is private and rejects copying,
+pickling, subclassing, direct construction, and replacement. I-4 factories
+create only T1 synthetic capabilities.
 
 No alias, registry, object graph, attribute, mapping-key, path, URI, callback,
 descriptor, or nested-reference traversal is allowed.
@@ -360,10 +498,14 @@ production trusted-time path. The complete module `__all__` tuples are
 mechanical.
 
 The complete signature projection preserves 65 accepted I-3 public functions,
-all 42 accepted D1/D2 additions, and the original 33 I-4 type plus 15 I-4
-callable definitions. Its 155 rows encode to 55,736 canonical bytes with
+all 42 accepted D1/D2 additions, all 33 I-4 type rows, and 14 of the 15 I-4
+callable rows byte-for-byte. Only the synthetic information factory row gains
+the explicit expected-memory argument. The 15-row I-4 callable source segment
+is 4,475 canonical bytes with SHA-256
+`767e315875c6af3a0812d1b50e5e3ffb252fd5372d8210b8576787f5726075a5`.
+The corrected 155-row combined projection is 55,808 canonical bytes with
 SHA-256
-`571200e6af088c7780202793e66a4f62ec81dcb302d8387280d6503e2afaad23`.
+`e5b7a1157aac297d48f2058ca308cfa7c5bc9c3fd1c6040fd68369e27a2ddd2b`.
 The mechanical contract freezes its exact source ownership, row construction,
 and ordering.
 
@@ -450,13 +592,47 @@ No actual package or lock file changes in this task.
 
 ## 16. Synthetic validation authority
 
-V4, V5, and V11 contain 126 exact vectors. Independent post-atomic
-classification finds all 126 byte-identical and unaffected, zero mechanically
-updated, zero invalid under the combined authority, and zero silently dropped
-or weakened. No vector contains the superseded predecessor, root-export,
-`FailureCode` inventory-ordinal, graph, or signature coordinate. The vector's
-`FailureEnvelope.failure_ordinal` remains its event-local vector ordinal, so
-its failure ID also remains exact.
+V4, V5, and V11 retain 126 exact vectors and the same category totals. The
+corrected outcome totals are 21 success, 99 failure, and 6 static pass. Every
+row gains mandatory `validation_owner` and `exercise_class`
+fields, so zero corrected fixture rows are byte-identical to version `1.0.0`.
+Forty-five rows require substantive mechanical correction; 81 preserve all
+prior effective-input and expected semantics apart from the universal owner/
+exercise declaration. No row is invalid under version `1.0.1`, and none is
+silently dropped or weakened.
+
+Of the 45 correction-affected vectors, 44 have a row-local legacy projection
+change. `i4v-101` retains its legacy row-local fields but is correction-affected
+because the shared factory materialization authority now supplies expected and
+attempted current-memory references as distinct arguments.
+
+The 45 correction-affected IDs are exactly:
+
+```text
+i4v-004 through i4v-006
+i4v-028 through i4v-029
+i4v-043 through i4v-063
+i4v-077
+i4v-079 through i4v-089
+i4v-101
+i4v-108
+i4v-117
+i4v-120
+i4v-122
+i4v-123
+i4v-126
+```
+
+The complete audit additionally found, beyond the originally reported eight
+rows, that direct inner time/snapshot vectors counted outer service work; two
+issuer-expiry rows lacked attested-time context; three algorithm-label cases
+could not produce an unsupported-profile result through a byte-only verifier;
+consume rows recounted checks carried by their input; the trust-profile pin
+precedence count ran past subcheck `2.02`; the formation row overloaded a type
+as its interface; three static rows used representative interfaces; and
+`i4v-120` could not dynamically reach the namespace guard without inventing a
+production-valid fixture key. These are corrected prospectively without
+implementation repair.
 
 | Category | Count |
 |---|---:|
@@ -472,28 +648,66 @@ its failure ID also remains exact.
 | precedence | 10 |
 | reachability | 9 |
 
-Outcomes remain 21 success, 100 failure, and 5 static pass. Every failure has
-an exact derived `FailureId`. The vectors contain 57 distinct active predicates
-and 110 total predicate activations. Aggregate call counts remain 181 provider
-constructions, 181 provider verifies, 28 trusted-time service calls, 30
-revocation service calls, 8 SQLite begins, 6 protected mutations, 2,598 safely
-completed checks, and zero model steps. There are zero effective-input
-collisions and zero conflicting outcomes.
+Outcomes are 21 success, 99 failure, and 6 static pass. Every remaining failure
+has its unchanged exact derived `FailureId` and vector-local failure ordinal.
+Only `i4v-120` removes its former derived failure ID and uses
+`NOT_APPLICABLE`; `VALIDATION_NAMESPACE_FORBIDDEN` remains an active runtime
+failure code and later guard. The three byte-verifier cases activate
+`SIGNATURE_INVALID`, leaving 55 distinct active predicates and 109 total
+predicate activations. Aggregate
+complete-invocation counts are exactly:
 
-The future fixture is the unchanged canonical projection defined by the
-validation contract: 132,231 bytes, one final LF, SHA-256
-`10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa`.
-This is both its historical and post-atomic identity because the synchronized
-coordinates are outside the fixture projection. Two independent
-standard-library routes must reconstruct identical bytes. This task does not
-create that fixture or any future I-4 path.
+| Count | Total |
+|---|---:|
+| provider `VerifyKey` constructions | 216 |
+| provider `verify` calls | 216 |
+| trusted-time service calls | 28 |
+| revocation service calls | 24 |
+| SQLite `BEGIN` calls | 8 |
+| protected mutations | 6 |
+| safely completed checks | 2,111 |
+| model steps | 0 |
+
+There are zero effective-input collisions and zero conflicting outcomes. The
+126-record interface-sufficiency projection is 68,362 canonical bytes with
+SHA-256
+`c50ca16a299039ac539fbba1172bf2384bd92f8de28dd1fe672d1bf36f447a70`.
+It proves 119 exact production invocations, one exact formation boundary, six
+authorized static passes, and 120 executable non-static owning paths, with
+zero unrepresentable, ambiguous, substituted, or metadata-only-satisfiable
+rows.
+
+The exact component projections are:
+
+| Projection | Canonical bytes | SHA-256 |
+|---|---:|---|
+| IDs | 1,262 | `2666ea06526f7eae3a85e92806b91035968d19a74fe6025fafc16e63b44b5ade` |
+| Names | 2,866 | `265f27140f88166d7889cbe22702b1a7a9f0d829173b79ae7d0ad9c0b6c88d8a` |
+| Interface declarations | 16,024 | `d1b5c49eeb62daffc1505fb64e1ad028900b55f612b008a2dc89edffd9b248f8` |
+| Effective inputs | 70,283 | `d72ba0930857d4179cd1abb5cfc4b0d8cd1a7a10ce7ae4527b956de107b85697` |
+| Expected projections | 55,222 | `efd63927d13267130cf16517f980799a58e0b3b6473c03f13e48b7d42fb89fa7` |
+| Outcomes | 2,798 | `ad62f53a8b0b486023ac0b582f9b358bf6863f14f5ad5b5f7a9e4317d9668269` |
+| Failure IDs | 10,199 | `315795a6f72e3768ebc1e648274512848eb34541b18258d5be97527fd96e3b17` |
+| Predicate truth sets | 4,815 | `b870b96c36318136484cac953667c3b460dba04027ac986c8264708c46e45e3a` |
+| Invocation counts | 11,895 | `ef29ee8c7a1f5302e35a06ed066efc1bfbdc63bd1efd0de21472d7fb671126fd` |
+| Active predicates | 1,805 | `039d916fb0bb2f19402275b79f5a2b61bc0d3ab2f3401d223cf028503e7952ad` |
+
+The corrected future fixture canonical projection is 147,087 bytes, has one
+final LF, and has SHA-256
+`6034a6c08be1c9d77424c4b0324e89287cd7fbe275ce1830407df4b8b991ad1b`.
+Independent Python and Ruby standard-library canonical encoders reconstruct
+byte-for-byte identical output. The historical version `1.0.0` fixture
+identity remains 132,231 bytes and
+`10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa`
+in Git history. This task does not create the future fixture or any future
+I-4 path.
 
 ## 17. Lifecycle and authorization boundaries
 
 The lifecycle is strictly:
 
 1. this uncommitted candidate;
-2. fresh independent authority audit;
+2. fresh independent authority re-audit;
 3. separately authorized authority commit/integration, if accepted;
 4. separately authorized implementation from the exact accepted authority;
 5. separate static/T1 synthetic implementation audit;
@@ -515,12 +729,17 @@ native library is loaded. No protected operation, model step, policy,
 measurement, simulation, trajectory, runner, finalizer, publication,
 recovery, or Gate operation runs.
 
-This revision is mechanical authority synchronization, not new scientific
-theory. D1 and D2 remain accepted and unchanged. I-4 semantics, UQ-25, and
-governance remain unchanged. Framework I-4 implementation was not begun.
-Book revision/rendering and scientific execution were not begun.
+The six authorized static rows provide source/authority/API/import/
+reachability evidence only. Their evidence, especially `i4v-120`, must not be
+described as production-call execution or a dynamically produced failure.
 
-The only next possible stage is a fresh independent I-4 authority audit. It
-has not begun.
+This revision is a prospective vector/interface coherence correction, not new
+scientific theory. D1 and D2 remain accepted and unchanged. Outside the exact
+§2 supersession boundary, I-4 semantics, UQ-25, and governance remain
+unchanged. Framework I-4 implementation was not begun. Book revision,
+rendering, and scientific execution were not begun.
 
-`READY_FOR_INDEPENDENT_I4_POST_ATOMIC_AUTHORITY_AUDIT`
+The only next possible stage is a fresh independent I-4 vector/interface
+coherence authority re-audit. It has not begun.
+
+`READY_FOR_FRESH_INDEPENDENT_I4_VECTOR_INTERFACE_COHERENCE_AUTHORITY_REAUDIT`
