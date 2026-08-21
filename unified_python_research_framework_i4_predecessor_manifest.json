@@ -1,835 +1,2470 @@
 {
   "manifest_id": "ebu-framework-i4-predecessor/1",
   "manifest_version": "1.0.0",
-  "status": "PROSPECTIVE_CLOSED_PATH_AUTHORITY",
+  "status": "PROSPECTIVE_CLOSED_COMPLETE_POST_ATOMIC_PATH_AUTHORITY",
   "authority": {
-    "base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
-    "source_tree": "Git tree at exact base_head",
-    "mechanical_contract": "unified_python_research_framework_i4_contract.json"
+    "original_authority_base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "implementation_predecessor_head": "59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+    "implementation_predecessor_tree": "cdca582de7faf17db053946e4f7e8a6d83c37ffe",
+    "source_tree": "Complete Git tree at exact implementation_predecessor_head",
+    "mechanical_contract": "unified_python_research_framework_i4_contract.json",
+    "synchronization_scope": "Starting-tree identities and future I-4 dispositions only; no I-4 semantics or implementation authority changes."
   },
-  "selection_rule": "Every accepted framework authority, package/build input, framework production source, framework fixture/test, workflow/legacy dependency boundary, exact I-4 implementation path, and directly deferred later-stage path is present exactly once. A later implementation must compare every non-null predecessor identity before editing.",
+  "selection_rule": "Every one of the 261 tracked paths in the exact implementation-predecessor tree appears exactly once in Git path order. No absent future path appears in rows. The separately frozen future I-4 path manifest names eight additions and ten modifications.",
   "row_schema": [
     "path",
+    "mode",
     "git_blob",
     "raw_sha256",
     "byte_count",
-    "ownership_stage",
     "classification",
-    "future_i4_change_authorized"
+    "future_i4_disposition"
   ],
   "classifications": [
-    "immutable predecessor",
-    "narrowly authorized compatibility modification",
-    "I-4 behavioral extension",
-    "packaging/lock modification",
-    "new I-4 path",
-    "deferred or forbidden"
+    "ATOMIC_AUTHORITY_OR_REGISTER",
+    "FRAMEWORK_AUTHORITY_OR_PLAN",
+    "FRAMEWORK_BUILD_INPUT",
+    "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+    "FRAMEWORK_TEST_OR_FIXTURE",
+    "IMAGE_OR_PDF_ARTIFACT",
+    "LEGACY_DEPENDENCY_INPUT",
+    "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+    "LEGACY_SCIENTIFIC_TEST",
+    "MANUSCRIPT_GENERATOR",
+    "REPOSITORY_ARTIFACT",
+    "REPOSITORY_GOVERNANCE_OR_METADATA",
+    "RESEARCH_DOCUMENT_OR_PROTOCOL",
+    "SCIENTIFIC_PLAN_OR_CONTRACT",
+    "SCIENTIFIC_RESULT_ARTIFACT",
+    "WORKFLOW_SKILL"
+  ],
+  "future_i4_dispositions": [
+    "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION",
+    "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION",
+    "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
   ],
   "classification_counts": {
-    "I-4 behavioral extension": 6,
-    "deferred or forbidden": 18,
-    "immutable predecessor": 51,
-    "narrowly authorized compatibility modification": 2,
-    "new I-4 path": 8,
-    "packaging/lock modification": 2
+    "ATOMIC_AUTHORITY_OR_REGISTER": 11,
+    "FRAMEWORK_AUTHORITY_OR_PLAN": 19,
+    "FRAMEWORK_BUILD_INPUT": 3,
+    "FRAMEWORK_IMPLEMENTATION_OR_DATA": 31,
+    "FRAMEWORK_TEST_OR_FIXTURE": 22,
+    "IMAGE_OR_PDF_ARTIFACT": 25,
+    "LEGACY_DEPENDENCY_INPUT": 1,
+    "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL": 33,
+    "LEGACY_SCIENTIFIC_TEST": 18,
+    "MANUSCRIPT_GENERATOR": 9,
+    "REPOSITORY_GOVERNANCE_OR_METADATA": 7,
+    "RESEARCH_DOCUMENT_OR_PROTOCOL": 22,
+    "SCIENTIFIC_PLAN_OR_CONTRACT": 9,
+    "SCIENTIFIC_RESULT_ARTIFACT": 43,
+    "WORKFLOW_SKILL": 8
   },
-  "row_count": 87,
-  "projection_byte_count": 15030,
-  "projection_sha256": "fea210c9be3677c3a70e9d97224c4bd526172d60486d0f88a9dfc7e16083572e",
+  "future_i4_disposition_counts": {
+    "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION": 10,
+    "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION": 247,
+    "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE": 4
+  },
+  "row_count": 261,
+  "path_lf_byte_count": 9195,
+  "path_lf_sha256": "db1fff6b667b1955160cb2077cc364b25623d949eac5b6ba8e22ee466f4a61a3",
+  "projection_rule": "Canonical JSON encoding of [[row[field] for field in row_schema] for row in rows] in exact row order, with sorted object keys, compact separators, UTF-8, finite numbers only, and exactly one final LF.",
+  "projection_byte_count": 64224,
+  "projection_sha256": "fc492dd68ac3aa19583eb0ca9b34ac411b0a106a415837b05e20825570a15d93",
+  "projection_reconstruction": {
+    "route_a": "git ls-tree -rz -l plus git cat-file blob; Python hashlib SHA-256; Python json.dumps canonical encoder",
+    "route_b": "git ls-tree -rz plus git cat-file --batch; independent Ruby Digest::SHA256 and JSON.generate canonical encoder",
+    "required_agreement": "all paths, modes, blob IDs, byte counts, raw SHA-256 values, classifications, dispositions, projection bytes, and projection SHA-256"
+  },
   "rows": [
     {
+      "path": ".agents/skills/ebu-books/SKILL.md",
+      "mode": "100644",
+      "git_blob": "075360cbf6d14181088c0ea326baa13517a189e7",
+      "raw_sha256": "296800f0705ef09e294fcc79ecc28c46ce0015b9c7b51328897c1ae0389c2d95",
+      "byte_count": 3355,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-books/agents/openai.yaml",
+      "mode": "100644",
+      "git_blob": "4797d19dad6f7035c0e9c441d77d87ebc8e21103",
+      "raw_sha256": "e9454635c453959af730809bb021cacde9adaf2f37ad388438ba9ea44ce9fc2f",
+      "byte_count": 222,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-books/references/profiles.md",
+      "mode": "100644",
+      "git_blob": "69df9faf8749dfcb9f7b1ee223b962ded75c403e",
+      "raw_sha256": "c5d1c68b0e86aea81f3c5574495696b91e2a66c8d1da6dae1d30603a14b70a51",
+      "byte_count": 9062,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-books/scripts/check_text_integrity.py",
+      "mode": "100755",
+      "git_blob": "03fe59dacb659d2561b009e44267222ba57c13df",
+      "raw_sha256": "ec8a4d236324bab7357eb0f8393ea3b66ea19f64beb35b9c53b4b422bd116514",
+      "byte_count": 4148,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/SKILL.md",
+      "mode": "100644",
+      "git_blob": "b978bee8560f39d5e4aeb2f56461f7cfdab669ee",
+      "raw_sha256": "81ab31ce62d58f9058a38aafd511c8f98d7e1142640967bbd3daccd1068e810c",
+      "byte_count": 2977,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/agents/openai.yaml",
+      "mode": "100644",
+      "git_blob": "ac8db7569a8c37abc43e447919d2e5915545676f",
+      "raw_sha256": "067561755d29dbb41937cd717bd39424fadc0cedc35dff7f0a5c4a084fcd83d7",
+      "byte_count": 236,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/references/profiles.md",
+      "mode": "100644",
+      "git_blob": "2aa798bb71f83d0fbc3ac5ba5542326c55e4676b",
+      "raw_sha256": "ab8e68b4c53630a9fe25367c8e40f0e51a17030e1428aaf38f0fafcda0eb8a5f",
+      "byte_count": 9791,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/scripts/check_git_scope.py",
+      "mode": "100755",
+      "git_blob": "3b6b298d74a9ebf9501e2e3053d717ac90a89289",
+      "raw_sha256": "f3a312563ed0c03059c5ee42c09e6f250671f46634123d09eb92d49c51633723",
+      "byte_count": 4902,
+      "classification": "WORKFLOW_SKILL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
       "path": ".github/workflows/tests.yml",
+      "mode": "100644",
       "git_blob": "3359df95cc0dc426e8969a0587de141df2596a48",
       "raw_sha256": "4d12f834e52bf92a723ab1e2c9723a9b395344320f3c95482b64d9133c766d23",
       "byte_count": 1610,
-      "ownership_stage": "I-9",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "git_blob": "6ff0fcdb895d8c121f0865d5778a40393a919629",
+      "raw_sha256": "9accad1a84877418575e887719f21270ac2555a6658fae0b41d2a96461ecd537",
+      "byte_count": 201,
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "AGENTS.md",
-      "git_blob": "09b22660ef2eff336b453d09bec799ee8933e516",
-      "raw_sha256": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e",
-      "byte_count": 8383,
-      "ownership_stage": "repository governance",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "mode": "100644",
+      "git_blob": "8610e8f07c3f462d6a4a6e2b4b677f56ffd89ae5",
+      "raw_sha256": "b23e3e26c336fe2db258e735f20e60e291d7f22cf9ee9d5e623d69ba141c002b",
+      "byte_count": 1853,
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "82b82d3d6824adcfe071a19bc0b530417f592eab",
+      "raw_sha256": "eb559a68163571d80bbe564d68a57a915e128090b1dbb26bfd9d1c4ec4a7b8d3",
+      "byte_count": 41359,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "875f069b189c07af458ec7816289dad27eed3744",
+      "raw_sha256": "80d83942d20745b9edeb3c5c8c05d052a616ef97ac9edb1af494d568acf68669",
+      "byte_count": 115771,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ATOMIC_INTERACTION_DECLARATION_IMPLEMENTATION_STAGING_PLAN.md",
+      "mode": "100644",
+      "git_blob": "a3d7320f31cd4209422b1dc5224d456b40586ccf",
+      "raw_sha256": "cb3b44112b974efb623bb5b748e55073dc27237c77bea2881e6abaa5d6855615",
+      "byte_count": 10237,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "CITATION.cff",
+      "mode": "100644",
+      "git_blob": "b8546b64bf92bdf31d0215cf12357a3dda97f026",
+      "raw_sha256": "1663c5494a89e6df477885642c0a00418b3c0d24c0fcd88f6bafc285a3fa3b54",
+      "byte_count": 2967,
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+      "mode": "100644",
+      "git_blob": "09c97b66502bd252470ca40081207bf209b68608",
+      "raw_sha256": "b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a",
+      "byte_count": 40027,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "DYNAMIC_COORDINATION_FOUNDATION.md",
+      "mode": "100644",
+      "git_blob": "55c926b8d192272bddf2a2caba6f1a306691ca02",
+      "raw_sha256": "6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95",
+      "byte_count": 71170,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "mode": "100644",
+      "git_blob": "fbdc149970d104667eb5def9af5494bcc7c77794",
+      "raw_sha256": "ee0aba306c863b975e4d13bfc33690845c04fa107508400c8401587980530fba",
+      "byte_count": 138686,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.1.pdf",
+      "mode": "100644",
+      "git_blob": "f50b1241a6b903687fdbcc7a6eea38a87c8af451",
+      "raw_sha256": "23706158641f7fd07407698db9029500401c659d8fbf9ffe6eb7aa7cd111d7da",
+      "byte_count": 278083,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.2.pdf",
+      "mode": "100644",
+      "git_blob": "93e3bd184d4192215bc2461b224e5535ae0886a5",
+      "raw_sha256": "95155998ca6bdbe636fb2903253c25a7fff73be34f20df5d8ebcf0dc8e839e75",
+      "byte_count": 208740,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.3.pdf",
+      "mode": "100644",
+      "git_blob": "f16822531be6f28a8a4ec5500ac0a4c3066589b7",
+      "raw_sha256": "b0ce63925eb323e7b5aab6abbe6f73d7a02241571f8911b7a800fc943779fa4c",
+      "byte_count": 224378,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.4.pdf",
+      "mode": "100644",
+      "git_blob": "ca214f32f1e447510546b055acec4b709693b996",
+      "raw_sha256": "ede1596a2ee55a8b2a2ec8f91c636266997e2860896f8c4de5d730944a1f34b8",
+      "byte_count": 176507,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.5.pdf",
+      "mode": "100644",
+      "git_blob": "0c895f7eaa037654df82541e3a549396545f9738",
+      "raw_sha256": "300157da9f9043a58b7de80f6bc8cfa6920e46a18447eca4f3cb3d8353d79494",
+      "byte_count": 70450,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.6.pdf",
+      "mode": "100644",
+      "git_blob": "582e70fbbbb6149f6aadd30a6afc03c28614bc08",
+      "raw_sha256": "dfb6f006657750528fda3bf89627aec7e8097d98d1133afdedbe9e13bfc60e1e",
+      "byte_count": 128955,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Energy_Balance_Project_Foundation_v2.9.pdf",
+      "mode": "100644",
+      "git_blob": "15a0b438b9104a9d2b4315b1a7b160842878ac13",
+      "raw_sha256": "e06f9cc384ec952652300336d54b8c0c1a05ae2302bb8d9cc8fbb2f2d0a27673",
+      "byte_count": 275536,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Foundation_v2.7_math.md",
+      "mode": "100644",
+      "git_blob": "d1ee587392c05576c29a7b990fe089478e782cd3",
+      "raw_sha256": "4f0de05073760ba280c4f82f9e3036f8de248e1033a180ce87742d336a4547df",
+      "byte_count": 31698,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Foundation_v2.7_math.pdf",
+      "mode": "100644",
+      "git_blob": "0a6248be954ee8931c3610133797bd7991805aa2",
+      "raw_sha256": "f59d507a2acfb9ac1ee39c0b35f388b476b2ec148319c60d936b453bf13dbee7",
+      "byte_count": 223620,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Foundation_v2.8_discrete.pdf",
+      "mode": "100644",
+      "git_blob": "2e8a4a54c7e8170c99fa66a66e4d777601128317",
+      "raw_sha256": "4668d0bbb977dbbca44f4b4adc09fad4acf8023738b52d8c5bc7d9cae4f33103",
+      "byte_count": 323259,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Foundation_v2.8_discrete_draft.md",
+      "mode": "100644",
+      "git_blob": "434531b259ffee742ff306589e87ec42def98ee6",
+      "raw_sha256": "e5e2eb523a2da34fe0d248ce564a0b7f37d13bb0da6c56370a98413622cf3fe4",
+      "byte_count": 38632,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "Foundation_v2.9_local_preservation.md",
+      "mode": "100644",
+      "git_blob": "6ffee8411a144bcdf53e7cd52620fbf3623916d8",
+      "raw_sha256": "17f735109f76b41cfc42a364f035cb1f3a81c535357a97be9a0f77a2dc5503fc",
+      "byte_count": 26964,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "LICENSE",
+      "mode": "100644",
       "git_blob": "4c58fe187fd6afba5c40a4c88f81291bed371cb7",
       "raw_sha256": "2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907",
       "byte_count": 1069,
-      "ownership_stage": "repository license",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "mode": "100644",
+      "git_blob": "ef659ee9c0c2b938ba2cc6f55d78f17e036fa35f",
+      "raw_sha256": "74c3f12ea0d3464364e78a3e5d15697365ae53365351c12ba48f48c1b0c118c1",
+      "byte_count": 82259,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+      "mode": "100644",
+      "git_blob": "545051533119c22be4e7fa650f3d201574411238",
+      "raw_sha256": "68aca0614f41dbfad8c248c4d43fd29835234c13dc31536f194f3dc92e6be320",
+      "byte_count": 27776,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "README.md",
+      "mode": "100644",
       "git_blob": "f450260d9c260ee18c01c9d0a5200cacdd23a8f5",
       "raw_sha256": "25722f43fc35fee20900b8a235797030b104adb6b2aae5f7a0a1abacbc051b0b",
       "byte_count": 25439,
-      "ownership_stage": "repository documentation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "RELEASE_NOTES_v2.9.0.md",
+      "mode": "100644",
+      "git_blob": "11d34e488f2853cc5a1ad91d3e5a7f75b59f1868",
+      "raw_sha256": "c229ecac7143229024e76a38f6ec152195c500ade99083482a93885367793e52",
+      "byte_count": 7754,
+      "classification": "REPOSITORY_GOVERNANCE_OR_METADATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "mode": "100644",
+      "git_blob": "e4c5dbec7e025dba102f5fa5b26843f891ad881b",
+      "raw_sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10",
+      "byte_count": 53003,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md",
+      "mode": "100644",
       "git_blob": "7860e79bd5606fc0a923ecde3c89a03cf9cd0f53",
       "raw_sha256": "a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448",
       "byte_count": 45775,
-      "ownership_stage": "I-1 authority",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "b2b4ea415af775eb2c3bbcf24b4c52b0207c82ed",
+      "raw_sha256": "78e5b5e662cce41e2421e7e534309b6c9591436d39eb135f4bb71c72906e483a",
+      "byte_count": 18759,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
       "git_blob": "01d61453d7ab149ddd3fa91f90d690e97ad299de",
       "raw_sha256": "eaa3c80efa6ff0beae6f3ad8da3be67fb61f3cc5223b2067c256732ebf7bdfbc",
       "byte_count": 156290,
-      "ownership_stage": "I-3 authority",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "b5e6ccd5b0cd4141bfa48245ab565372103ff5a6",
+      "raw_sha256": "7c2d352ac568f4b4fabcc2a6edfa86b420f53a4a85e2f8e13a0628675b4faf4f",
+      "byte_count": 20653,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_GOVERNANCE_BOOTSTRAP_REQUIREMENTS.md",
+      "mode": "100644",
+      "git_blob": "00a48d379ba4fe5a14c7187c87549d11cfcba4e4",
+      "raw_sha256": "9cea9392375623e1b95727f6ff7761735133906011f63a260831ee7656133f9f",
+      "byte_count": 15143,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_UQ25_DEPENDENCY_DECISION.md",
+      "mode": "100644",
+      "git_blob": "0c78cc5467867abe65959cc4cb69ae1972be69c2",
+      "raw_sha256": "863f0179da8db043ad98f5025cd99a0e09ccf5914f287ff2b45fcfb1730d372f",
+      "byte_count": 11721,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "mode": "100644",
       "git_blob": "8fbacfa20684b55571618930869e66dcebf11581",
       "raw_sha256": "7dfc8da2b8c31e8b66b867bc7c894f4f6218420391e21c6443c48645c884a336",
       "byte_count": 251659,
-      "ownership_stage": "I-0 planning",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+      "mode": "100644",
       "git_blob": "941b5de41b67a7b1a277adee711b7bb8caa04816",
       "raw_sha256": "713b3ceb694721710ffeca8b9efc7cb1c54317ed922a2ba5e352b01faa8c82fa",
       "byte_count": 421632,
-      "ownership_stage": "framework specification",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V2.9_BEHAVIORAL_PROTOCOL_DRAFT.md",
+      "mode": "100644",
+      "git_blob": "b06cc992a03bb9bff4bbe0b6fb48500529ad44c2",
+      "raw_sha256": "dc99e810c12d9eb10b2a21511473b549ea6f2afc3f2e233fb365b2542ab6928a",
+      "byte_count": 71142,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V2.9_OBJECTIVE_ALIGNMENT_DRAFT.md",
+      "mode": "100644",
+      "git_blob": "1c6d1c12dd7b7a53233ad8a237e25488951f9f11",
+      "raw_sha256": "8d754c3f97858dc90865b264bee7e7bd0c603715da3d16bf2c57a8be033c7864",
+      "byte_count": 51308,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V2.9_OBJECTIVE_ALIGNMENT_REVIEW.md",
+      "mode": "100644",
+      "git_blob": "3177aedf8f85d08e487dbb750beed4e7e7ceca58",
+      "raw_sha256": "ed1d4e3d24a1b756f9df4ed6d5f84720b918b047640a0da39f5f646155806449",
+      "byte_count": 44282,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_B_O14_MULTI_EDGE_PROTOCOL.md",
+      "mode": "100644",
+      "git_blob": "fa01660118dce40b086e5504fe46baa0573c2afa",
+      "raw_sha256": "b64701b6c955370d72c45a0bd9481d87966e48c2e00fe1a14add7539f441050a",
+      "byte_count": 33065,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_B_O14_RUNNER_CORRECTION.md",
+      "mode": "100644",
+      "git_blob": "a46e750539d8103af51d2cf4697104a93721f37c",
+      "raw_sha256": "3153c445e03fa4e3431ac036c53562853d33ea80536d5d46c829101f432587c9",
+      "byte_count": 9739,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+      "mode": "100644",
+      "git_blob": "2830ddf825c83f9ddb5d1f528e02fb9ae6572faa",
+      "raw_sha256": "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1",
+      "byte_count": 47986,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+      "mode": "100644",
+      "git_blob": "93e334e755f1e4b5856d18f9a01c88188e286a08",
+      "raw_sha256": "2e439afad6ba7532aae83631ef4fb7ea6648980be035674f8e2d13faeecd9b51",
+      "byte_count": 13592,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md",
+      "mode": "100644",
+      "git_blob": "21d04941134e693b97fc84544ee4e39a5cdadbc9",
+      "raw_sha256": "d81afc5d77e1d2c7ccd9ceaae44d96ce33ddbb85ddc35fe0a0a0e1141394e8c3",
+      "byte_count": 14057,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+      "mode": "100644",
+      "git_blob": "d87d1faba580d9776f7c8a429d905ee3064984a7",
+      "raw_sha256": "3122aa673f47290bbee866feb56d16afc4540f552ed7c7b458f097ef4e44d04f",
+      "byte_count": 31624,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1D_SERVICE_ALIGNMENT_DIAGNOSIS.md",
+      "mode": "100644",
+      "git_blob": "174a98f2e10c9096f9bf09fbffc24b337104d8eb",
+      "raw_sha256": "5bfeddfe0a089a7a7987f0ce192f8b003ad01f05ee4cf7b929920f25880d586e",
+      "byte_count": 24732,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1_INDEPENDENT_REVIEW.md",
+      "mode": "100644",
+      "git_blob": "8faff7958a0b6ad371522a04b5f8334ecb8f2cc0",
+      "raw_sha256": "72c42b6eb61e82f0736514fd48311152144757185007524be44d5eac6e5d233c",
+      "byte_count": 25067,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_GATE1_QUOTE_VALIDATION_PROTOCOL.md",
+      "mode": "100644",
+      "git_blob": "4ec38d70ee4cd91bbfcca7a9df5b2fae99e8efda",
+      "raw_sha256": "164d2ed2b5d4fc05c7f0754663d073ad94c8e3dd5b254393537f99b7881875cb",
+      "byte_count": 10080,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "mode": "100644",
+      "git_blob": "3311f8db171e81eb350134ad708632a8ca2743cd",
+      "raw_sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e",
+      "byte_count": 86724,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "V3.0_POST_O14_SCIENTIFIC_DISPOSITION.md",
+      "mode": "100644",
+      "git_blob": "c988c431a36ae9119ceff2131c9a3e706384474a",
+      "raw_sha256": "66aee6264b8d89234691b9f7a3446e3cd78429df13c8bc0258caae027138084c",
+      "byte_count": 29513,
+      "classification": "RESEARCH_DOCUMENT_OR_PROTOCOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "adversary_v30.py",
+      "mode": "100644",
+      "git_blob": "c085188ee0d128b8f171579c1776c0c8efdfaae5",
+      "raw_sha256": "fea724f0fb8bf702157751a320d2aba4b2b1ae4aa9d325b6c8d65ef111778557",
+      "byte_count": 29484,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "analysis.py",
+      "mode": "100644",
+      "git_blob": "46ffd075f8f6a94ea7d95b3dad0a8b7db59bc1a5",
+      "raw_sha256": "f43976d1005eaee23c6ec915cced73909e45a89dd342ff277109c7b46fc0b3bc",
+      "byte_count": 5954,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_generator_book_traceability_manifest.json",
+      "mode": "100644",
+      "git_blob": "8ba16b6b921e9fd4a86a816d336d9bcbddd715c4",
+      "raw_sha256": "fd63fdf02555b4accec98dfb2f143e4dd84dbf0ff11d24fe9fbf605fae63d5c7",
+      "byte_count": 157008,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_generator_foundation_contract.json",
+      "mode": "100644",
+      "git_blob": "af244330dc0da36e0e56600cc6b731a9a7455348",
+      "raw_sha256": "b204f06bd11e7c605acc8afadbf82021fe5e3c1030e1f3f4c3659e71afd5d8a4",
+      "byte_count": 42855,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_generator_foundation_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "04b7fc5a8d68ba1c1ae07c31359367494676417a",
+      "raw_sha256": "26e6cd35b3f62cf39d6233e97822b04172bd662b90c7424cb0169099d18be6c6",
+      "byte_count": 75209,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_generator_foundation_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "3900e0b1e02723c4e5813a71eec2e2a5c328c1f8",
+      "raw_sha256": "df54297b9c45220f28806304e30f9a654b338165ecd5970a0a2428b8e362a800",
+      "byte_count": 63776,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_interaction_declaration_contract.json",
+      "mode": "100644",
+      "git_blob": "3343c149367334018864a0c8522148097a455f7f",
+      "raw_sha256": "565cc3947d9a3abc99ece694ec823ad0f945dbb1c7634586bcf43f2e36c2549a",
+      "byte_count": 256881,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_interaction_declaration_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "20287bf07997bb9a075f5b4e4ea1752663d1c2d6",
+      "raw_sha256": "aa82f2b96b0be3f5a540c971baef77f492d64f5681a999385be9f6be20586a50",
+      "byte_count": 84137,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "atomic_interaction_declaration_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "4004f732ff3b471befc90357f7072707ac751af9",
+      "raw_sha256": "b40b80aef4a67826186fde40bf0b0ee9dec6e3db27c6809c2a2da075abe1b401",
+      "byte_count": 1618558,
+      "classification": "ATOMIC_AUTHORITY_OR_REGISTER",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "audit_v231.py",
+      "mode": "100644",
+      "git_blob": "23ffe36354b052f20038a128fbd646e06a250b4f",
+      "raw_sha256": "b547866be8f8cfb845719fa57cca2162ad0b3f966ea69343d67a9a2f641b593d",
+      "byte_count": 4746,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "audit_v30_gate1c_reproduction.py",
+      "mode": "100644",
+      "git_blob": "020dd79f8df30f812204a877d5652b6b58fddc9a",
+      "raw_sha256": "5c9ed17e49a88749bae96be97fb7706115c5f9ec6327b3e775df763f4b71fd4c",
+      "byte_count": 12229,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "audit_v30_quote.py",
+      "mode": "100644",
+      "git_blob": "01bc558cabb005f42fe79182e28582eb777052ac",
+      "raw_sha256": "ddbb5eb0047bc0649611ef2b8a70e0eee82303419a22b85fd1ee15e7106fdea2",
+      "byte_count": 7436,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "build_backend/ebu_build_backend.py",
+      "mode": "100644",
       "git_blob": "093ad5858f60efcf5ae271615a9138334176fb56",
       "raw_sha256": "afaae669d8d1521a8f67f11bdfd8583ad6ad1ad1d32920d2144b87a20f0dc862",
       "byte_count": 25097,
-      "ownership_stage": "I-1",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_BUILD_INPUT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "d0_v29.py",
+      "mode": "100644",
+      "git_blob": "f7fe2eae1629ca8c9f49a9711a39f642b056e48d",
+      "raw_sha256": "f7fdce8d946b44b4e0bfab9338fcd5c378796f9d14cd80323c53732e08a3bfe9",
+      "byte_count": 23311,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ebu_quote_v30.py",
+      "mode": "100644",
+      "git_blob": "4a458a86df48ad17547dfc26320ead1df74d0fe5",
+      "raw_sha256": "44a2ea282837f7613198a06a7037fb89f2f9fd99f05cedde65e0b1ba726e1b79",
+      "byte_count": 24858,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ebu_v22.py",
+      "mode": "100644",
+      "git_blob": "d75ae62b2cd57bd605c6274268333b2dc674a15d",
+      "raw_sha256": "46441bd65df2e80df0b12bc0ca8b2054ea6c6373cb949231a448b99ff97dc7df",
+      "byte_count": 9754,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ebu_v23.py",
+      "mode": "100644",
+      "git_blob": "ed6ecf71ea1139b569e48e1520e9c35f82c2f5ea",
+      "raw_sha256": "5314ca68d94a85b5f0ed8ee685f45fcd5b474c018ee11f9a09e93ea12633c10c",
+      "byte_count": 7658,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ebu_v24.py",
+      "mode": "100644",
+      "git_blob": "3e84f365258b175330c98e8fe21849c354a50f66",
+      "raw_sha256": "ed53ceb8899010341ebcbcc1f12708da840e3e3e61ce9fe4833fc3014dff5a73",
+      "byte_count": 7194,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ebu_v25.py",
+      "mode": "100644",
+      "git_blob": "e4627684efa04338c5cf0285265d0340d2457207",
+      "raw_sha256": "9154159524169baf5ea42ee71434f7865c6f7aed358f1c06b096dc9815388495",
+      "byte_count": 8198,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ebu_v26.py",
+      "mode": "100644",
+      "git_blob": "77c64357bbace25621da3fe7e8cf039f8b553789",
+      "raw_sha256": "4c1987080deb370b2a171d6cc3a676c682d3377a2f419d4d1e29d7a9e2a6a3ff",
+      "byte_count": 12985,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ecosystem.gif",
+      "mode": "100644",
+      "git_blob": "27b8d913084138cb7217f9c20abe2b1e0498e7ed",
+      "raw_sha256": "294b15cfb34ba73b6c96c6ec78223543393d0db2ed3b9426b2c3a7522926cf5f",
+      "byte_count": 2145263,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "ecosystem.py",
+      "mode": "100644",
+      "git_blob": "839b4145b37bbbd655c2b591119c9ab022daab90",
+      "raw_sha256": "2bc43a2799809a2f8a39c5051c9a42a8c047d40e54d10c3eb55fc64874e1f1a9",
+      "byte_count": 4560,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "energy_balance.py",
+      "mode": "100644",
+      "git_blob": "ededdd219da56ab4f6d4fcbadb1219d92f208865",
+      "raw_sha256": "f62348fbec3571bb5222a5cd4d69e224541d4713f71baee98f0bc7d93be40f77",
+      "byte_count": 11101,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v23.py",
+      "mode": "100644",
+      "git_blob": "2a9bbc8f2fb414b3d2180819f1dab63a19c3103e",
+      "raw_sha256": "357320d19a367d7968af7c4ec5bdd1fbae8d8be4618b015948d46b7fa972472d",
+      "byte_count": 6183,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v24.py",
+      "mode": "100644",
+      "git_blob": "5913646ae4ca50abb6db58169c32eeb706e0c561",
+      "raw_sha256": "c46ef71bf887f99c70419b8cdc6e1b6b72e00117bd32e6130c47f3d92648f811",
+      "byte_count": 5157,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v24_clustered.py",
+      "mode": "100644",
+      "git_blob": "b9193601640e88a865dedef2931edea3fd4a20b9",
+      "raw_sha256": "b3018ee670b3b47a786908c36e30edb22265413aeec4dcb75c14510b5cd03979",
+      "byte_count": 4431,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v25.py",
+      "mode": "100644",
+      "git_blob": "bb2c493f2325bdecfa272dcdca447dce13a57785",
+      "raw_sha256": "f389106fe549bbb4752112df2207485c16189af52d82e33e97248a49ef7bf689",
+      "byte_count": 7639,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v26.py",
+      "mode": "100644",
+      "git_blob": "77c2d734334acc2a8b385bfb37de830cec16ca10",
+      "raw_sha256": "d2ee45c33325c87954687ce7c0a9438e810ee63af4ef01573c70b3f036a7b3f7",
+      "byte_count": 14139,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v29.py",
+      "mode": "100644",
+      "git_blob": "b2428fa98c668114b2bccf4803084efac690d3f0",
+      "raw_sha256": "32cf386a3c92655b14485583315e2881b06db2b1238490ece03d8971b56afd11",
+      "byte_count": 36518,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v29_d9_d10.py",
+      "mode": "100644",
+      "git_blob": "87620bc892f0830466a509a37a731543a8e44fb9",
+      "raw_sha256": "6d704ff4581a628258d3038c873ba1f6dff5ec809d30aecbd0f855b95a8d8ff0",
+      "byte_count": 39145,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v30_adversary.py",
+      "mode": "100644",
+      "git_blob": "44515a2203c33033f10fee8b12f92398ed8518d3",
+      "raw_sha256": "4d3f5ed637ffa258f5d9d651245de5fb8f8d1c84291f5594c8be8549523434d6",
+      "byte_count": 16817,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v30_gate1dc.py",
+      "mode": "100644",
+      "git_blob": "84e40d1058b4211bd1fab8685444c3d582b129ac",
+      "raw_sha256": "89b8016c2017839faaee38b172f6041ca2d987669db448ffa260399cb872deb2",
+      "byte_count": 87661,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v30_o14.py",
+      "mode": "100644",
+      "git_blob": "9ee728a3e58ece42ac06e7499e9155be446d5981",
+      "raw_sha256": "4bd5915e89187935b26d8b36714555bf49b714e6afd702bb3baaa2d30c5cb296",
+      "byte_count": 37695,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v30_service.py",
+      "mode": "100644",
+      "git_blob": "914ae6d50c553c7f2dbac4454ef2b5cb2d1c845c",
+      "raw_sha256": "a05929dc0c3135b9ce2ae726f4ec109cd815c795972ffa238dbcb80071c28728",
+      "byte_count": 15188,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "exp_v30_service_attempt2.py",
+      "mode": "100644",
+      "git_blob": "8b1e93b910fd0c5181bdef8705df36ec18ef7b09",
+      "raw_sha256": "13c5d82a9c372acea23ca7b6fcb884d4e7d3b39c6f7b4615ebe314379cb02437",
+      "byte_count": 1242,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "experiments_v22.py",
+      "mode": "100644",
+      "git_blob": "7f4076f2954cd04a7ddb479e47349f2a4b848b2b",
+      "raw_sha256": "e5030cd1a4408878ea5e8e16d8cb9e67d505b368894741f3308e31f402022ac8",
+      "byte_count": 8847,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/B_vs_time.png",
+      "mode": "100644",
+      "git_blob": "af2f151ea9b7447b1d340ebe4036aef75c634d30",
+      "raw_sha256": "a30b16377a9f1204bb6aa639b135abf42222d367f26a3e2bd0952a446b5947fa",
+      "byte_count": 84063,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/audit.png",
+      "mode": "100644",
+      "git_blob": "ffb2df0d7f5c6e3bfb144d43e0a0e2770b919b51",
+      "raw_sha256": "d3205556488e51816fbec2a7836383f00c55174d0dfd0e2f45f7939902aa6d3e",
+      "byte_count": 53677,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/heatmap_snapshots.png",
+      "mode": "100644",
+      "git_blob": "2568fecdf5ba1f3ba469576f2c89746c1bab0403",
+      "raw_sha256": "9758cac4c88cc7fb0a5728d68746850724f8385357ac0b1aecb3f8986addfc10",
+      "byte_count": 38888,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/inflow_sweep.png",
+      "mode": "100644",
+      "git_blob": "1261c4503585d5ccf3daed336b2134328c0f0430",
+      "raw_sha256": "e90de596742b098af48bf1083b65d49d23c119e34a3b0756291b8e419e22f862",
+      "byte_count": 51457,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/phase_map.png",
+      "mode": "100644",
+      "git_blob": "54678cd55944ceb03f999ff0b9905586d0fbd92c",
+      "raw_sha256": "c38fbeb7da6e1102f3eb00d03fd0376b722075ba32c39a9a8f20907512e3d5ff",
+      "byte_count": 54336,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/shock_recovery.png",
+      "mode": "100644",
+      "git_blob": "e71d8d7d536bb3753a5c0180c512cb5320c6c22d",
+      "raw_sha256": "fb909922a80d400903778afdb7bc57f2cd57dc39817143abf9670e930eb222c8",
+      "byte_count": 61242,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v23_src_stock.png",
+      "mode": "100644",
+      "git_blob": "78c3d3fe3812f41a76b9dd195ee7c51cb305158d",
+      "raw_sha256": "f00c71792beb8ecee75a0676470295bd99ca5ff82054c0716dda502aa3bc6d3b",
+      "byte_count": 71574,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v23_viable.png",
+      "mode": "100644",
+      "git_blob": "6f069ac4e2cb8b553eae525faafa6d7eaade9325",
+      "raw_sha256": "a1a8c41341c612d5f8093120c25d4b8179df19b07050a5b8a1c377f8e34e979f",
+      "byte_count": 49044,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v24_clustered.png",
+      "mode": "100644",
+      "git_blob": "04f4d86f417aa347c3c7d99a0800ed4dfdab914d",
+      "raw_sha256": "bcef783d358df6ae831aef493da8030a055d653cde94db23f44531cbb53c74c2",
+      "byte_count": 29813,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v24_stock.png",
+      "mode": "100644",
+      "git_blob": "fc813f34d391cd6b69c82fa0ad7ef1ad5aca87c4",
+      "raw_sha256": "589d527aaa497de7e65bc459862a431384288e3bc76b24c52186868bd99e7a99",
+      "byte_count": 68188,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v24_viable.png",
+      "mode": "100644",
+      "git_blob": "89a9c65e3b8043e8f2918903490c38a89d06d86c",
+      "raw_sha256": "e8336eb061be2237bf529ff20c0e3807548383fa5b72f09cb62b82fec99b3781",
+      "byte_count": 40809,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v25_compare.png",
+      "mode": "100644",
+      "git_blob": "c60d503439b5ebe95280f75239f5c34541bf04fa",
+      "raw_sha256": "2c7b5dc7f91773fb6349655f4cb729f9f21b18db88f90663acefd86ab39e7cb9",
+      "byte_count": 42749,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v26_policies.png",
+      "mode": "100644",
+      "git_blob": "7bcdcae613463b45c3781f13f596a9fae3758846",
+      "raw_sha256": "828a9c8750f31fc4f46e8df5aef0a4c2a31d4b1345ed454c322255c10cb626c3",
+      "byte_count": 43866,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/v26_random.png",
+      "mode": "100644",
+      "git_blob": "cfded1427246f102d18cc456291b167d70f635e0",
+      "raw_sha256": "72f9885d64565135494083d135a4a5c1fcd4873e440cabc2694a08cd982a5daa",
+      "byte_count": 52063,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "figures/viable_vs_time.png",
+      "mode": "100644",
+      "git_blob": "9495db2629882ba5fc54786bb6cd709e2dd24678",
+      "raw_sha256": "f71a9eb5230fdd80bf73b2c02ff2132c192735c17a8ee8255b60ef7f5a41c7ce",
+      "byte_count": 46256,
+      "classification": "IMAGE_OR_PDF_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "finalize_v30_gate1dc.py",
+      "mode": "100644",
+      "git_blob": "fbcefe2a2fab97a9e326904d9b34d55bc915447d",
+      "raw_sha256": "f4c7af1415d38e753aacf1be644047d6744cefaa36da9bc87042cc1946db2e85",
+      "byte_count": 82321,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "gate1dc_v30.py",
+      "mode": "100644",
+      "git_blob": "e41bc0b3cba1dfea4499e57c5b6d359cedb9db0d",
+      "raw_sha256": "33ebb3c83d5a4cb6653012e71fe1f5bd3929eb7efe7488f1ce1851134707cf80",
+      "byte_count": 56551,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper.py",
+      "mode": "100644",
+      "git_blob": "27730b9ffa1a697610a856bde086e06b2b66280e",
+      "raw_sha256": "85a67b139b46af849981b5acbfd7d02b68839dc0141f02ce14afbd64c10beed6",
+      "byte_count": 20322,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v22.py",
+      "mode": "100644",
+      "git_blob": "85b69a1ee368214c896a5ed4df564f4047befbb8",
+      "raw_sha256": "1d04e1d81b1d69b365df2653ca6bed2cd3233fdad9281634ac47714e28a46039",
+      "byte_count": 18240,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v23.py",
+      "mode": "100644",
+      "git_blob": "146a6a6c99b01e4e6bbb606c3c22fe6552da72b9",
+      "raw_sha256": "f9f010dec7cf91ea881b1cbc6d03f3cb331627512b6a54c24d6d5cb3be254a58",
+      "byte_count": 16237,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v24.py",
+      "mode": "100644",
+      "git_blob": "88e6db96b7192b13c4c73e967864bb5225d28c57",
+      "raw_sha256": "a5aac3b32106c069d61cdc41a2c99dac971eeb987d3a4cae6e1f8a3a6dd4eedd",
+      "byte_count": 12886,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v25.py",
+      "mode": "100644",
+      "git_blob": "1f4f46bf4820ed2f2857969f527dd1fd0fac1ba6",
+      "raw_sha256": "8941b19108814bf9226d86ffef858f9b611ba11cb803332838aafbb06de06ca0",
+      "byte_count": 13286,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v26.py",
+      "mode": "100644",
+      "git_blob": "eeef623d00012870f48036a9767faa39f0704725",
+      "raw_sha256": "62796159347ee325d54eef8c1d8ff8f2c58258bb0997beca7f0df07e432dfce7",
+      "byte_count": 16308,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v27_math.py",
+      "mode": "100644",
+      "git_blob": "3a5b16eabe1b31e5ad7f137f7516fc06256d3d7d",
+      "raw_sha256": "9e3541bffdbac1343d62e35ee646bc605e78c4003450990164e53af712361da1",
+      "byte_count": 23311,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v28_discrete.py",
+      "mode": "100644",
+      "git_blob": "1a5f8410c629df0994c05cc4126d06bceabce5db",
+      "raw_sha256": "00a0604ee6fc89827c09efd649db3d98fe066d05ab43fc3f0ffd20f95b0d389a",
+      "byte_count": 48186,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "make_paper_v29.py",
+      "mode": "100644",
+      "git_blob": "697d3763479b4e0b6e2b36ef45376997ee52471c",
+      "raw_sha256": "94d4b22b02af4771159eb60fce5d46a0113ccc7bc0ae034309cccdbccd318cf0",
+      "byte_count": 46441,
+      "classification": "MANUSCRIPT_GENERATOR",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "o14_v30.py",
+      "mode": "100644",
+      "git_blob": "2d208e0aba3446fbfb209b9d5ddaec056342c20c",
+      "raw_sha256": "6d23ce9d481345c5f1d01dd7dd42b1742301fe67e1587b1f6da68af6c4f6eccb",
+      "byte_count": 39974,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "p1c_v29.py",
+      "mode": "100644",
+      "git_blob": "e320c260bf3192f4657bb331c1c71e35f9650f97",
+      "raw_sha256": "a30c869000080b4b0235a9ba1daa517a5b0fe734ba55ac423ae3042da5940729",
+      "byte_count": 20062,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "pyproject.toml",
+      "mode": "100644",
       "git_blob": "c7610a04dec31dabd869e7fc821a024106fa7849",
       "raw_sha256": "d7101de32a23f446f7875cf259671bd5ea26939f7dc9c5605a4986feaed0766d",
       "byte_count": 384,
-      "ownership_stage": "I-1 plus I-4 dependency extension",
-      "classification": "packaging/lock modification",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_BUILD_INPUT",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "requirements-framework.lock",
+      "mode": "100644",
       "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
       "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "byte_count": 0,
-      "ownership_stage": "I-1 plus I-4 dependency extension",
-      "classification": "packaging/lock modification",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_BUILD_INPUT",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "requirements.txt",
+      "mode": "100644",
       "git_blob": "51069346e8928ed15538fa600474079c78ed71cd",
       "raw_sha256": "e06882aad521f9ebe67b58b4cf77fbf0f7cc8bcb36275ef96a9f8e1110f7e1ee",
       "byte_count": 533,
-      "ownership_stage": "legacy manuscript tooling",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "LEGACY_DEPENDENCY_INPUT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.4/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "6bd2368875bda4d976342d0e3bd18fc57ad3321f",
+      "raw_sha256": "1e155c86bc8e157c6cdc7c94bb97895ca46f6601d0e6762dc5da00019f167f6b",
+      "byte_count": 2310,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.4/v22_experiments.txt",
+      "mode": "100644",
+      "git_blob": "07726ce290ad781265a1efdcfdbc37083de52fbc",
+      "raw_sha256": "313251393bdd84a1008de74d6368a6f9f84bd2e4fb278f554f7a0605e18fce9c",
+      "byte_count": 1880,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.4/v231_audit.txt",
+      "mode": "100644",
+      "git_blob": "f9f5899854522d4841364d97a62778e7e93f2023",
+      "raw_sha256": "1aab7b037540ba9a5b6b3dcfbb7793913e75ac79a16d9fa6686b79871e92b444",
+      "byte_count": 1104,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.4/v23_regeneration.txt",
+      "mode": "100644",
+      "git_blob": "463fd0681c5cd4692cfee2f8a6e5ad0ce63e029e",
+      "raw_sha256": "5546e459a4b2d6b0944a6111d2c444bf881a0a04ab5ad7fb1e02ef571ebfb14b",
+      "byte_count": 954,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.4/v24_clustered.txt",
+      "mode": "100644",
+      "git_blob": "2e6711cb090e6494c8ad29c53d5b65b6aceabd7f",
+      "raw_sha256": "b1bcf9fcdd38aa21c60bb4b9dbc42ca4696928ca6ec35496a0ba450157aa0c32",
+      "byte_count": 483,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.4/v24_regeneration.txt",
+      "mode": "100644",
+      "git_blob": "44874550885a4c391b03565e27adf05a38a7b006",
+      "raw_sha256": "415ab58fb6411c56fef4cd8fdeeb97c63938cd01cbe1a45ffbc28e70d07aa32c",
+      "byte_count": 1073,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.6/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "5cbf3ea38dc4e6c49f5946e6ead7c7778dee5ab5",
+      "raw_sha256": "db6bc64f2464a8d046c283409f85fc3feb2e2db743b5889e06309d01bd687128",
+      "byte_count": 3814,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.6/v26_experiments.txt",
+      "mode": "100644",
+      "git_blob": "068438ea16f325d3973d3a06b955a9befa59b9a0",
+      "raw_sha256": "375a5ea220ff6beb50096ce15044cdf259e1b818e9659be37397651741c15583",
+      "byte_count": 2054,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.7/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "38fa7c0c6104c3b8ef17eb76b3e03c435abaaf65",
+      "raw_sha256": "eee0393f013a88dd05eee94a21ac954b6fda29b62b05d22b91a8e94a83f2a8a2",
+      "byte_count": 5770,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.8/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "da17448a6d3b4fae0c1cbf52a0992feade66fcd7",
+      "raw_sha256": "c6c8faad574f37b54210b14420815eb3fcb379a84e4178e8b4f1f306333ec80a",
+      "byte_count": 8946,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.8/v28_validation.txt",
+      "mode": "100644",
+      "git_blob": "50e8f470108e5431ffa3b53487b59df2b0585a41",
+      "raw_sha256": "20291fc7d3207eb0515bd8f55126b29161c6410d65a5c9ced58b7b43278b47e5",
+      "byte_count": 15173,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/RELEASE_MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "4351c144618be064d287accfe741b4eb0bad863d",
+      "raw_sha256": "84686cfe4305eb297cc467d9cda40428a9ce9b8cc3d60a9aec0c46e112d2f1cf",
+      "byte_count": 8599,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/ATTEMPT_1_FAILURE.md",
+      "mode": "100644",
+      "git_blob": "ccd7e94392bf3c05968f7fbce288551857694698",
+      "raw_sha256": "8040017632a8911702144ef0423e4d8de22b55ca2f2e6ab4bf45d687e050555d",
+      "byte_count": 4367,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/ATTEMPT_1_stdout.txt",
+      "mode": "100644",
+      "git_blob": "5eeaf4c7f5dc594d945aa6950e66697d03c3636b",
+      "raw_sha256": "79d1def9fc5bc81672ce112639f01ba39f931407dee8c2463464fdcb4b8571ab",
+      "byte_count": 513,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/ATTEMPT_2_SERIALIZATION_REPAIR.md",
+      "mode": "100644",
+      "git_blob": "41ad4d8a7ab471ea6c76a2cd160f298ed42f3f4c",
+      "raw_sha256": "48d5a89870d7e0d30e3c06855d71f6a55d1ebb8842773a110625002b8c957a48",
+      "byte_count": 6866,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "fc606b8f8ae23ed6e55186898393234a7101938c",
+      "raw_sha256": "dc04c7ce0f9222b0a8784ab00f352a15d618cdaac4887dc7595a824c91b80c9b",
+      "byte_count": 4530,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/v29_d9_d10_stdout.txt",
+      "mode": "100644",
+      "git_blob": "bb469251b27c723b769983c787e9955948256d77",
+      "raw_sha256": "c9537419b657671878df4abc05b0c44b36f4d401d0840512057c497aad528b8a",
+      "byte_count": 4587,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/v29_d9_d10_summary.json",
+      "mode": "100644",
+      "git_blob": "04b47cbfec393858f1d0f4b9922991d8b06cead6",
+      "raw_sha256": "55603b5751b5b945e66165614d6c9993a6f4defadfb8aa2143f50558d536d3b4",
+      "byte_count": 267848,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/d9_d10/v29_d9_d10_trace.jsonl.gz",
+      "mode": "100644",
+      "git_blob": "3115055259c714b36cc963c793b214c1a5b693cb",
+      "raw_sha256": "4b1ef577c64e000566e464362703da34ddd98eacdd3fa35812523b63b3da3da5",
+      "byte_count": 2852962,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/deterministic/v29_deterministic_stdout.txt",
+      "mode": "100644",
+      "git_blob": "49646e08e54e1c7c9db3270258b9e8263a81b66f",
+      "raw_sha256": "7a5fa39e4936d270fb6e0e8c068fc58aee34585654d8fe979d9f16c81c0389b1",
+      "byte_count": 19508,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/deterministic/v29_deterministic_summary.json",
+      "mode": "100644",
+      "git_blob": "bc144affbf68d66faced0865151a5aee81b24708",
+      "raw_sha256": "5501fbc289b087bd31e86337c27f60ecb2582ab75c7919148b870787a5c70c7c",
+      "byte_count": 35925,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v2.9/deterministic/v29_deterministic_trace.json",
+      "mode": "100644",
+      "git_blob": "f2368471e49df3084001900e757687bb348a4316",
+      "raw_sha256": "c6f79056940ef6780ffad5b334efcb61e41fe9465a3d6a28fdf1960df6c458fc",
+      "byte_count": 5599639,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "6c3f5b9d48798f3e2f81d0f34c2dad40ff8b4950",
+      "raw_sha256": "b08d4859afcad5832d99b94b6e2adf890f5017477268201192423ef25f2d613f",
+      "byte_count": 7381,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1/v30_quote_audit.txt",
+      "mode": "100644",
+      "git_blob": "981d9ea4f10bf9d441f7863d4cf0d55496e6be0f",
+      "raw_sha256": "4c0af3cfc29baa9345eb03c533a0bc851bef03d817b72863c2703f655de1453d",
+      "byte_count": 1502,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1/v30_quote_validation.txt",
+      "mode": "100644",
+      "git_blob": "0a8d3e91c5fde0921986c9ec5310c8a45688e77e",
+      "raw_sha256": "2ff01f308a6b75ad1d6a8fc5e420a72df0f35614855d12a7d6690e8bdf4d7ab3",
+      "byte_count": 3338,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1c/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "3632c4b8ff59bef033abe0abe053f230f1df2471",
+      "raw_sha256": "e24753e51733a174065b18af758bffbde17c9c0e6bf70913677d3c80e1cb467a",
+      "byte_count": 12477,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1c/v30_adversarial_stdout.txt",
+      "mode": "100644",
+      "git_blob": "aabe3ef20ff1676b888ab098548b21cde4f1ea7d",
+      "raw_sha256": "14592386d905f7b1b50ff478f76dc83df3ebec18760befc5578968a9e74e779a",
+      "byte_count": 9476,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1c/v30_adversarial_summary.json",
+      "mode": "100644",
+      "git_blob": "0e70bf158509d379f3045abb03ccbd994f30238c",
+      "raw_sha256": "7114ea702132a0b95ca00e5cda6afc2ccd9d70207bc0dc450b2e5b4fefe42263",
+      "byte_count": 80505,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1c/v30_adversarial_trace.jsonl.gz",
+      "mode": "100644",
+      "git_blob": "8e447a851b5006a6783fc7c4b4bb8f4acd6b57a5",
+      "raw_sha256": "e4c09e8aa54e0ddc87bf37be77138f7cf87abaed277349eaddd4e5755897b0fd",
+      "byte_count": 40001,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/ATTEMPT_1_RESERVE_TOLERANCE_DEFECT.md",
+      "mode": "100644",
+      "git_blob": "94a750aff0dc7f1aa1419854498f56a1ed2005df",
+      "raw_sha256": "f92a51ee4ef225fe88988932b0a1da9b53587d786a82c94c4280cdb27b5ca236",
+      "byte_count": 5552,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "b1b8abaa9c236d7b5fbac7d1baf315cfe32806ba",
+      "raw_sha256": "17868276c9deb839a135ee585b03d2e401a15e628f47040fede4413e8e744232",
+      "byte_count": 13798,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/attempt2/ATTEMPT_2_COMPARISON.md",
+      "mode": "100644",
+      "git_blob": "9d01a84252bf64cdc16bde37f532f57ba5c245a0",
+      "raw_sha256": "f4e1b17d0143efcd0ec8d868028c387fe38e256cfff0a7f578e2fff207dee985",
+      "byte_count": 8560,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/attempt2/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "ea610db578b178ec8902f59987156d106a37b8d6",
+      "raw_sha256": "5661f668a7e4cd2f0196185ccc33100f1ee283ccf4eed254a3de045313ba5580",
+      "byte_count": 8584,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/attempt2/v30_service_alignment_stdout.txt",
+      "mode": "100644",
+      "git_blob": "be0bf91135bd4382649a0110d764832c8334f4d1",
+      "raw_sha256": "4198d587ae3002daf387b1e3a1ef7c8b98c838e0c0812fc9a16038ea9722a319",
+      "byte_count": 16683,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/attempt2/v30_service_alignment_summary.json",
+      "mode": "100644",
+      "git_blob": "a61368d0d545d5a60e49dc66f0f2d7e3f708e7bb",
+      "raw_sha256": "f2b065b5040ebb9151aca7de4a85831d054c89c21d690d61bfa4dabd42a96bc4",
+      "byte_count": 132346,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/attempt2/v30_service_alignment_trace.jsonl.gz",
+      "mode": "100644",
+      "git_blob": "cd1cb4835955cd6e09a6ac97ea97a8cdeed8a429",
+      "raw_sha256": "b509606eb10c7d94500b735edb5cb31ab81616e6114081661cdf3be821fd095b",
+      "byte_count": 64119,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/v30_service_alignment_stdout.txt",
+      "mode": "100644",
+      "git_blob": "949d8661e831c392235910173c37fbb87102e871",
+      "raw_sha256": "dacf9891ccb912641f60889f8bf9066fe7623f6aeb2cb9611d93afb3b80e4fb8",
+      "byte_count": 16710,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/v30_service_alignment_summary.json",
+      "mode": "100644",
+      "git_blob": "13f33ee3316997bd8c913d6f02989d5ec9740e82",
+      "raw_sha256": "bd8de06658f68ff0d1b2aa337022daf4768d0ae620fb6a3cc79e88eeab41a867",
+      "byte_count": 132358,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1d/v30_service_alignment_trace.jsonl.gz",
+      "mode": "100644",
+      "git_blob": "99e3cfa72bab95bf5e0b6ff948a9c9ae13afa5e6",
+      "raw_sha256": "3cb97610774ee94f9dab6c777c8b6d7a3496eeeaf254d580cdf30e3babbce3ab",
+      "byte_count": 64119,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1db/MANIFEST.md",
+      "mode": "100644",
+      "git_blob": "d5ae24d6ad264e4bcd368ae46dbecb6d4fee044c",
+      "raw_sha256": "f9129a2b32869dc47a01df0b86258bec10ec2b3cb57583ff9f01639aafc5b7e1",
+      "byte_count": 17488,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1db/v30_o14_stdout.txt",
+      "mode": "100644",
+      "git_blob": "b2341e4da04ae90b13b37d06cea5eddb10c4fc55",
+      "raw_sha256": "dff9b2329082898904f5a11ba6858e31404b9e3901d1f86da4b848d8362caacc",
+      "byte_count": 9949,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1db/v30_o14_summary.json",
+      "mode": "100644",
+      "git_blob": "e7a3f618605234d4dbae52af9f2991a2039c2c60",
+      "raw_sha256": "4c258f822d5cd4ae5d9a5fe70909cf5a00a305ae4d34b26dc67491429ea68327",
+      "byte_count": 221894,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "results/v3.0/gate1db/v30_o14_trace.jsonl.gz",
+      "mode": "100644",
+      "git_blob": "58eead9294d32991a64230b95a049188640a7c57",
+      "raw_sha256": "77d190caced2bdc22427213e2b0ca5a481fb537593848560d80c5ea0a8f5991d",
+      "byte_count": 4569832,
+      "classification": "SCIENTIFIC_RESULT_ARTIFACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "serialization_v29.py",
+      "mode": "100644",
+      "git_blob": "869efcc09e99781e367f2cb29044b038eee90257",
+      "raw_sha256": "ce41b7931b90f479db149a1003aeba98a52b7836cc856dfb5572eb83854a6476",
+      "byte_count": 5528,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "service_v30.py",
+      "mode": "100644",
+      "git_blob": "182b46ba9f25f824260c2d8ac4c9faba629d6b5e",
+      "raw_sha256": "a83bcd5e449b8804f44607e56326ec392324cdfed71260e28fdc4c48899d44e0",
+      "byte_count": 36872,
+      "classification": "LEGACY_SCIENTIFIC_IMPLEMENTATION_OR_TOOL",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/__init__.py",
-      "git_blob": "afdad89680216d974856b015a8a045da4df9b55a",
-      "raw_sha256": "bb28d8ed997326f0f17405030527b884f6991f9dd7516849cd2366a6b71c0244",
-      "byte_count": 12077,
-      "ownership_stage": "I-1/I-2",
-      "classification": "I-4 behavioral extension",
-      "future_i4_change_authorized": true
+      "mode": "100644",
+      "git_blob": "a0488e03687663a8f13e6e1e25369deee346b7ef",
+      "raw_sha256": "403070d5cee240b6c92f155588a547210cb7a3087a4b095b4fbb3713a39f735c",
+      "byte_count": 15262,
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/actions.py",
+      "mode": "100644",
       "git_blob": "92dc0a8208886a967c75756d54537b06c90f737b",
       "raw_sha256": "340e381e5204e0d25e72c4f49eafd93171628343b29f7c6e86b44381cca5701f",
       "byte_count": 15809,
-      "ownership_stage": "I-3B",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/artifacts.py",
+      "mode": "100644",
       "git_blob": "6ea3dd49066d96d0d648a556e59ec0c5c0789c23",
       "raw_sha256": "2cda58d0f58774e2e26e5737279532f396713b87a1b0f0139c34c1019804d43a",
       "byte_count": 11863,
-      "ownership_stage": "I-3D",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "src/ebu_framework/atomic.py",
+      "mode": "100644",
+      "git_blob": "39446d7589f64068327478b09d6aacc7e0b13988",
+      "raw_sha256": "57e4e7b41207c5b7e69c901a0ad5c00bfdfbfac63ee1dc9065d0b6dcc13e88d9",
+      "byte_count": 70230,
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/canonical.py",
+      "mode": "100644",
       "git_blob": "9578a62465a540250c21cfb1c7a6557af81fe10f",
       "raw_sha256": "bab32cdf20b98a5fa9f4f723c84ca2e3650baf3f734ac0c4fd8dc84496ca9990",
       "byte_count": 17814,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/causal.py",
+      "mode": "100644",
       "git_blob": "dceb2656df8c1a6ace3bd7e1cabda74766ebfa0e",
       "raw_sha256": "692190d64474e4eafce2046bfa11a648f665b616be95ddecf8f56c54c0ea9027",
       "byte_count": 6727,
-      "ownership_stage": "I-3C",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/commitments.py",
+      "mode": "100644",
       "git_blob": "8bd75cd589e1903d2787cbb84f0ecc1c88a247c0",
       "raw_sha256": "1756561f2dfd4157ab3bf1343525ffc816a91bac781b39e30ea65f0182d6a504",
       "byte_count": 13273,
-      "ownership_stage": "I-3B",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/conservation.py",
+      "mode": "100644",
       "git_blob": "0849be77569ec6e3dba55d4dda49e0e651e9d8b1",
       "raw_sha256": "f7299e5afbc73857684b6444d387da137bee7015c31626d8494a0096314844bf",
       "byte_count": 34721,
-      "ownership_stage": "I-3A",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/data/__init__.py",
+      "mode": "100644",
       "git_blob": "ff49cf8cef991c4df811208e1a4f5f6bd155ed9e",
       "raw_sha256": "eae6506fdc261543ffb8e48c1f32c27055f4b567391cee841307e21cfb8d93b1",
       "byte_count": 91,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/data/core_registry_v1.json",
+      "mode": "100644",
       "git_blob": "98064a5437b34a7a9054c5c16285d65fc9993445",
       "raw_sha256": "7797eabca9336b9704c9c337969d1f382d2cb852a61ee13a349dbe88eec6d8e7",
       "byte_count": 1132,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt",
+      "mode": "100644",
       "git_blob": "5d5ab6160397b6affc999a58918dd922090b4e73",
       "raw_sha256": "d5687a48c95c7d6e1ec59cb29c0f2e8b052018eb069a4371b7368d0561e12a29",
       "byte_count": 837688,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt",
+      "mode": "100644",
       "git_blob": "ea963a7162ce6e913a9f5a98e940b52181ac68dd",
       "raw_sha256": "806e9aed65037197f1ec85e12be6e8cd870fc5608b4de0fffd990f689f376a73",
       "byte_count": 1913704,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/distortion.py",
+      "mode": "100644",
       "git_blob": "e574aa48e2f7d5e84e67e4db017045b020f52f80",
       "raw_sha256": "7dde4f5d6ecd40a1ecc9d7b48d88ccfb105c025c1f8df362f6f870423967d690",
       "byte_count": 5919,
-      "ownership_stage": "I-3A",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/envelopes.py",
+      "mode": "100644",
       "git_blob": "89e1d094eac8c03a17a3e7765996860e74353634",
       "raw_sha256": "c5e6f0bdce1f2442a1faddd55fcc849ae0286a3fd625ae1585bc0a0e0eff1e16",
       "byte_count": 21424,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/errors.py",
-      "git_blob": "0ae46032d56706be5e63b7ceab281e3a39320ee3",
-      "raw_sha256": "f23313957711a0a38cbb16f3072de74a15aa44e7258317dc98b0bc77a1c50c80",
-      "byte_count": 31301,
-      "ownership_stage": "I-1/I-2",
-      "classification": "I-4 behavioral extension",
-      "future_i4_change_authorized": true
+      "mode": "100644",
+      "git_blob": "87667f1287326e2b17c7357c161ff4cea8370e9f",
+      "raw_sha256": "ab9449e55fa181e892fbde716f786dace4704ad4e525b207983a61f34a212776",
+      "byte_count": 33887,
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/experiment.py",
+      "mode": "100644",
       "git_blob": "33d562e1bd813512e878cfed17ea4a609190a3a6",
       "raw_sha256": "bef712f551f6ad4db60823416424eebcd923618362574398ecf4a4cc0f1af9a6",
       "byte_count": 19374,
-      "ownership_stage": "I-3D",
-      "classification": "I-4 behavioral extension",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/faults.py",
+      "mode": "100644",
       "git_blob": "3aded2e1b639fad96db6dcc9c220ecfe57288653",
       "raw_sha256": "bfcb44b528e7ea3ad0c4e4997f08b21cb5ee739654d46f91a8f9062d55dabf5e",
       "byte_count": 12750,
-      "ownership_stage": "I-3D",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/hashing.py",
+      "mode": "100644",
       "git_blob": "c3b57e3d499d0306a2c962694b42fab3d6ef09e9",
       "raw_sha256": "6326bd67c94754a8a002f5b8e31ab888550f65da4d9006d4e40171fba331ba5d",
       "byte_count": 27422,
-      "ownership_stage": "I-1/I-2",
-      "classification": "I-4 behavioral extension",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/identity.py",
+      "mode": "100644",
       "git_blob": "b2670d71d5e5c35e5c66fa8d6337fb6ba43c88cd",
       "raw_sha256": "16e282d38e737ae0434f016c661f3b988a9f8a0359a2b2faf1d85403ef88e29b",
       "byte_count": 8470,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "src/ebu_framework/interaction.py",
+      "mode": "100644",
+      "git_blob": "b39804554eaebf189959629d3561c0eae5fbf64f",
+      "raw_sha256": "198f1a63e09d682b94a5fb127eec6445ac18f9241c84acbdb5e05c7c8ee54804",
+      "byte_count": 100478,
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/ledger.py",
+      "mode": "100644",
       "git_blob": "054f61a04324e9fc0f1e4a92071a2335addfcfd9",
       "raw_sha256": "c0662e6216019ea2f650e060ae85f77ca15db03dba769ead12b1829e88ad7f2a",
       "byte_count": 9668,
-      "ownership_stage": "I-3C",
-      "classification": "I-4 behavioral extension",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/network.py",
+      "mode": "100644",
       "git_blob": "85b641ed01a1dcc519de6310ebcc779ac47b4d99",
       "raw_sha256": "644fa2de28452010380dc4e6defb1078180f902ce9eedfb4334420ed7ce8dc22",
       "byte_count": 14965,
-      "ownership_stage": "I-3B",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/numeric.py",
+      "mode": "100644",
       "git_blob": "9599cf300e2842adead842ade7a1f44423b82f9e",
       "raw_sha256": "99c4a431f6d0c102d81ab9a4c901b15669d237607db209a202e1c5ed7d7785ad",
       "byte_count": 38657,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/observation.py",
+      "mode": "100644",
       "git_blob": "867f76154105fa60bfe117925e0d87496356dfd9",
       "raw_sha256": "6ed82cafd3bd95ae8c18e2904d7aab8c28d04cd6480e72f1225164ce194bad74",
       "byte_count": 8891,
-      "ownership_stage": "I-3B",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/policy.py",
+      "mode": "100644",
       "git_blob": "0f2ea8fc528c4c462909f0ceeee7a680a3be8e6b",
       "raw_sha256": "f723f34f9fb5945552a82ad1030832e1f518e5dc5eacf7a26fcb24d1f7647197",
       "byte_count": 17394,
-      "ownership_stage": "I-3C",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/primitives.py",
+      "mode": "100644",
       "git_blob": "eb84a511e683275e340245921dea8a0f27af7d69",
       "raw_sha256": "fe44606d1a78cf583477ef44256a3f5ca446e2a2654440517404fd1f18328d50",
       "byte_count": 54229,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/py.typed",
+      "mode": "100644",
       "git_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
       "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "byte_count": 0,
-      "ownership_stage": "I-1/I-2",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/registry.py",
+      "mode": "100644",
       "git_blob": "fbe95f8dab18f3ba43f52e83a79e5e011ed27ec0",
       "raw_sha256": "508b4b183b2658b4dbc15ebc80c61969833e2e8bbddf4ab1dfe5616075e97d21",
       "byte_count": 16659,
-      "ownership_stage": "I-1/I-2",
-      "classification": "I-4 behavioral extension",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/scheduling.py",
+      "mode": "100644",
       "git_blob": "f75247ffd84f6b48cb45344773b4270985a57c23",
       "raw_sha256": "ed408d4c8a701ea98003cfb31a569d916351fb9a8239f0665077255e112dd4a1",
       "byte_count": 12375,
-      "ownership_stage": "I-3B",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/settlement.py",
-      "git_blob": "1b5d81ca63d714196bb941887073afc5c9b9e326",
-      "raw_sha256": "9905bb49c333704b5638d4b80e801cd8a60b4c344a59490e5188245752c92293",
-      "byte_count": 21669,
-      "ownership_stage": "I-3C",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "mode": "100644",
+      "git_blob": "3c698e9b22995c7895cd7c1c79bc12d8f1d4e660",
+      "raw_sha256": "f850e6163ff3917f9843a6ee66a84385119ac68d0216b31e032238f62240c5c1",
+      "byte_count": 21764,
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "src/ebu_framework/state.py",
+      "mode": "100644",
       "git_blob": "ca5221a7455653b6c0a06325b70b04ad3eb71c9f",
       "raw_sha256": "1a8ddf2bf634a284bd49b52350bb575ea395ee3840f7329c8c7bef7a1d14113a",
       "byte_count": 20971,
-      "ownership_stage": "I-3A",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_IMPLEMENTATION_OR_DATA",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_energy_balance.py",
+      "mode": "100644",
+      "git_blob": "c7bf6035027ef8e99ada2e49fa1a575919fecb8e",
+      "raw_sha256": "62fdfab911657cc3664991867b913a6fad884515970a8971be5a6c9708886845",
+      "byte_count": 6087,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_math.py",
+      "mode": "100644",
+      "git_blob": "e7b4a8aa2af02b8856d38c15670f677b728fd896",
+      "raw_sha256": "16bd571c13ea3fd89332e4dccbe793db926c1892267be70638cb7b2ba5e9bc88",
+      "byte_count": 12921,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v22.py",
+      "mode": "100644",
+      "git_blob": "403f3db1a7cc2d01860f4e7be89aa27efa5fb06d",
+      "raw_sha256": "4f8342241a0e4e431d5c8edfe25d7e1f9e0ce48b363aefc850850d225b003468",
+      "byte_count": 5716,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v23.py",
+      "mode": "100644",
+      "git_blob": "f5160d61dad3d4905fcda8c860d3ee835cfdfa70",
+      "raw_sha256": "cb0c246ed95c0dfae4ffa4bc99b7d0b459a02a476abaafc4dde6dcedd57f30f4",
+      "byte_count": 3961,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v24.py",
+      "mode": "100644",
+      "git_blob": "14f4050eaa5603e0bf20f7d15aa886f1803a2f13",
+      "raw_sha256": "506da057e6303b022e00f5fd670410401b082e12b5725f7773c4bec7ec81253f",
+      "byte_count": 3492,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v25.py",
+      "mode": "100644",
+      "git_blob": "c5e9ffb0813b9b90567f2b1ae4e8bb7b04a0b1a7",
+      "raw_sha256": "d65b4a1dc45f065fe3b5494e542442a33ebe87315723d06e8e5dbb861356fd89",
+      "byte_count": 8058,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v26.py",
+      "mode": "100644",
+      "git_blob": "489bc63cb27f1ae400755bb4c0f25259622f9846",
+      "raw_sha256": "3f716d1b160da1d747637404f2a1b634efc7a9c409960880c97a8a158dc7409a",
+      "byte_count": 11490,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v28.py",
+      "mode": "100644",
+      "git_blob": "db582d7893482cbb706781bf254a848e5b93daae",
+      "raw_sha256": "139e93a2b70bf3c64fa6f71a3c3b7be993de39cc5066158cb2110d4243bd6203",
+      "byte_count": 41735,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v29.py",
+      "mode": "100644",
+      "git_blob": "d62aa1d48c3552dd9d95a43146d57ec51fca4c83",
+      "raw_sha256": "487975c79ad7ba9bd02caa80ea2a80bf7e809201a83cabc3fa930c92bba430d8",
+      "byte_count": 42569,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v29_behavior.py",
+      "mode": "100644",
+      "git_blob": "00756af8359e19076c87a335310d76df24e33291",
+      "raw_sha256": "aca3bd9ec802b71d4ab48382e207037ab3b72cc44147aebd131006d66eab845e",
+      "byte_count": 33879,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v29_d9_d10.py",
+      "mode": "100644",
+      "git_blob": "d2d109e4a2fa84c88f7f2ef65e4f75ba3892ceb0",
+      "raw_sha256": "379c8abc087274aacc0f920729d690a039800a129add5515db7af83e5ae4b709",
+      "byte_count": 42635,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v29_p1c.py",
+      "mode": "100644",
+      "git_blob": "66587fdcbe82c80c05265de50b7a90fe2ecf9699",
+      "raw_sha256": "6cc3d8071244c8130d119ae1a0ddb024d8d4985f9b908dec7b61413dd1fb4a9c",
+      "byte_count": 32923,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v29_serialization.py",
+      "mode": "100644",
+      "git_blob": "cfe2b8e014a8bf646a7247cc2bc391dbe4986b83",
+      "raw_sha256": "7eecccf07ed185065949b28a7b897c6fc6f83900c5fa63e84ac9df311b4874b1",
+      "byte_count": 16781,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v30_adversary.py",
+      "mode": "100644",
+      "git_blob": "58e3f5994e97954b7a755f6dd9c0acb38bf76ff3",
+      "raw_sha256": "4418a86e47a453a23243fa0ff74f558aee251ccac66c4eaab0ef7050ec028a5e",
+      "byte_count": 24792,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v30_gate1dc.py",
+      "mode": "100644",
+      "git_blob": "dfac29f14b8bfebd442d8108a9d40f779b061c0a",
+      "raw_sha256": "1f143f1d3d73cea2f8ec192b257d77a9e0c12635c36c66dd82d9422f188ff9e4",
+      "byte_count": 97851,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v30_o14.py",
+      "mode": "100644",
+      "git_blob": "a18bbe6b3ca5c0a90f222d340ec3045650f203b4",
+      "raw_sha256": "9bb5d1228ae1912197f3a43860fef036806c08851bf28781134d735df6751bc0",
+      "byte_count": 79208,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v30_quote.py",
+      "mode": "100644",
+      "git_blob": "949736b698651da67f5ee211f85da1d366299246",
+      "raw_sha256": "7f0f38ce8e88c2962492dd96cd016ca26f9c07f33b2b94025151094d466ea9ee",
+      "byte_count": 42614,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "test_v30_service.py",
+      "mode": "100644",
+      "git_blob": "25d365ed8a0996adb2291e6e77a0a5c6d076603c",
+      "raw_sha256": "3d0e14e0424a8c6dffd20f6911307f81e626f261427138da5790695355dd9035",
+      "byte_count": 38928,
+      "classification": "LEGACY_SCIENTIFIC_TEST",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "tests/framework/fixtures/atomic_declaration_v1.json",
+      "mode": "100644",
+      "git_blob": "29ac0b0602a265ad7b7f1cdf44f8cc69384e20da",
+      "raw_sha256": "6b4ecac191320e4ee6b02763249fdc9db14b7fb19091814ca10c6703e36acda9",
+      "byte_count": 469664,
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/fixtures/ecj1_vectors.json",
+      "mode": "100644",
       "git_blob": "ff5c3fb2fb6f50c2bc3f6c34da8fe200516bd5e5",
       "raw_sha256": "a8f1fe60d61b636da95192e61c2c387612e23d6c11fb930c3715d53f9e6ce94f",
       "byte_count": 2389,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/fixtures/hash_preimages_v1.json",
+      "mode": "100644",
       "git_blob": "dcccc5df199b30f3ab9d5f966206e30babd12971",
       "raw_sha256": "bf6cf75d0c9c095d142eb499200abdc4147d1c3a50595fa87b0634bee377a51d",
       "byte_count": 2678,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/fixtures/i3_validation_v1.json",
+      "mode": "100644",
       "git_blob": "7dc6d8a789e83414a15cbfd0939426f6b5444374",
       "raw_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
       "byte_count": 24179582,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "tests/framework/fixtures/i3c_settlement_causality_repair_v1.json",
+      "mode": "100644",
+      "git_blob": "b1a0fd229090d5f9d68aabf8b5bbf761aea43b5e",
+      "raw_sha256": "f4857cd3b36e2154143617ea7bb4b7cff45cb29292df0fa837effa4c6ec7cb58",
+      "byte_count": 34418,
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "tests/framework/fixtures/interaction_declaration_v1.json",
+      "mode": "100644",
+      "git_blob": "284ee846b4fb962bb6b7a81af8349592d0745235",
+      "raw_sha256": "33f577a28f1964ad79c80a2909512e196825f875f30959c8752d8190fed29399",
+      "byte_count": 662163,
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/fixtures/numeric_vectors_v1.json",
+      "mode": "100644",
       "git_blob": "4950e5a116905399a95fdd89f5da2b2a53be17a3",
       "raw_sha256": "97c55e32319eb734c861fcce08a04f2e167afc6e32cd832bac2ec6d37277287a",
       "byte_count": 815982,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/fixtures/scientific_id_vectors_v1.json",
+      "mode": "100644",
       "git_blob": "a4fc5f39b275dcef05386036ed5fa13b2b9ca5d7",
       "raw_sha256": "af6920dee3db2c6240634ee057835a71581bbfbd5dc5b6bcab3c72436c27b9c9",
       "byte_count": 2483,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/fixtures/unicode/15.0.0/NormalizationTest.txt",
+      "mode": "100644",
       "git_blob": "e75b4801c9b13daf689d09139745e3fb6a2a991b",
       "raw_sha256": "fb9ac8cc154a80cad6caac9897af55a4e75176af6f4e2bb6edc2bf8b1d57f326",
       "byte_count": 2625136,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/safety.py",
+      "mode": "100644",
       "git_blob": "aed40a86f2a23f56fece345288db189ea59be4d0",
       "raw_sha256": "40346595695d908a575dbc8fe8228564f2e182268a0822b93ce5b0db03246eb6",
       "byte_count": 4633,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "tests/framework/test_atomic_declarations.py",
+      "mode": "100644",
+      "git_blob": "100c73218021f9b4fae64ee20761738c4f28e523",
+      "raw_sha256": "4f448accb50529d9507de996aa13cad741f8287449ceb4bf0dd3a38b58d030b5",
+      "byte_count": 73074,
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_ecj1.py",
+      "mode": "100644",
       "git_blob": "9939c4b225c9fac356d612b238ebda9931dd989e",
       "raw_sha256": "e5cbcce730814736da70d6fcdb4a39c05f1061a0a9bc92778ddc00cb08bb75a1",
       "byte_count": 6889,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_hash_preimages.py",
+      "mode": "100644",
       "git_blob": "6cacad659e0280aff857f2eb921cfe5c36f8d4ab",
       "raw_sha256": "a749cb651948d535a2fb5dd64769f366e663eb76cad3a931e050c050bdd2efc3",
       "byte_count": 13691,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_i3_integration.py",
+      "mode": "100644",
       "git_blob": "206df543cc5f75f0510d833ee8f16625b0d6dc5e",
       "raw_sha256": "1cc4c08f15bad5e01d45ea7915788fbe3474308bb03f437e63a99348199d7318",
       "byte_count": 43276,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "narrowly authorized compatibility modification",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_i3a_declarations.py",
+      "mode": "100644",
       "git_blob": "a53a486362206d82712f656f3e0cc39100648e6f",
       "raw_sha256": "97bccd17a108124a43b1c631ba46afcf057804fabcf2f25a743919a401cae261",
       "byte_count": 21292,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_i3b_declarations.py",
+      "mode": "100644",
       "git_blob": "e73deba00ec2576848933dee351fb763bf23c79a",
       "raw_sha256": "69f2dda809de6593230552382e5239a49db13adec337be621e5fb4db9f3a7230",
       "byte_count": 18563,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_i3c_declarations.py",
-      "git_blob": "9de5099c7cd1974d97c23c2098d97fa9f6422f7f",
-      "raw_sha256": "3fd69c099070c7367ebf8a56230a63d47d8ac4e4e1ab0b1e93e119c589dbe877",
-      "byte_count": 21140,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "mode": "100644",
+      "git_blob": "1bd0bc20429dbf275aad7052d80ea59649c4a5b0",
+      "raw_sha256": "8f77de7f6f4e79a581b9dd128f32f7c331026f043b84290550f99a6a97085ef0",
+      "byte_count": 50192,
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_i3d_declarations.py",
+      "mode": "100644",
       "git_blob": "5d4b32d8f07560da19bf061dcd5d3915258862e9",
       "raw_sha256": "97ac0b9293b681264b41caa00461fe0040082312052b14e039c2e2aecaf03d4f",
       "byte_count": 41017,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_identity_registry.py",
+      "mode": "100644",
       "git_blob": "c0bd3b1562496e6c1df93abb0a601939e01c82bd",
       "raw_sha256": "9d8aedcda14f39090f5dac93335700ab07fb5de45c942c9671569061ebd01ad1",
       "byte_count": 9855,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "tests/framework/test_interaction_declarations.py",
+      "mode": "100644",
+      "git_blob": "0a9ff2d3b6dc377efa5aaec7d1c585b8f58dd772",
+      "raw_sha256": "2d033554f489fb399d0ec300efd7d38f63248e60210904f31dbae4fdc4a9071e",
+      "byte_count": 93958,
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_numeric.py",
+      "mode": "100644",
       "git_blob": "c600fafa86489f22bdc0072593fb150e39512da9",
       "raw_sha256": "8bb9016735868f46d1b1f884f418b0b99d331ed9ac6ffb7aadfb78077060c0d8",
       "byte_count": 18705,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "tests/framework/test_primitives_envelopes.py",
+      "mode": "100644",
       "git_blob": "b7097e822f81a02c57bed509eb0d367988d211cd",
       "raw_sha256": "7b064aad5a500e4f154f9531a4d0573080760d0be7e58d06074a3917dd1bd8ac",
       "byte_count": 45609,
-      "ownership_stage": "accepted I-1/I-2/I-3 validation",
-      "classification": "narrowly authorized compatibility modification",
-      "future_i4_change_authorized": true
+      "classification": "FRAMEWORK_TEST_OR_FIXTURE",
+      "future_i4_disposition": "MODIFY_ONLY_UNDER_SEPARATE_ACCEPTED_I4_IMPLEMENTATION"
     },
     {
       "path": "unified_python_research_framework_i3_contract.json",
+      "mode": "100644",
       "git_blob": "9c7730652f160803ba52ce2b9bdb98d4cdee102e",
       "raw_sha256": "d8acef250314e1405b048a324c9f855010f7927cc8760e2f827bba85253d7979",
       "byte_count": 345638,
-      "ownership_stage": "I-3 authority",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
       "path": "unified_python_research_framework_i3_validation_contract.json",
+      "mode": "100644",
       "git_blob": "3d06ab15713673050f29422ec2b21d85b257a938",
       "raw_sha256": "9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b",
       "byte_count": 49384569,
-      "ownership_stage": "I-3 authority",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "unified_python_research_framework_i3c_settlement_causality_repair_contract.json",
+      "mode": "100644",
+      "git_blob": "d16082f8462034ff0eab4bd1e3a7b02561f4c543",
+      "raw_sha256": "2ffc97f0bd93a219a56e324a806c01b0e48c5b8882b674aa1f67cc3ff0872c93",
+      "byte_count": 20877,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "unified_python_research_framework_i3c_settlement_causality_repair_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "245d1d22a2185f4718b21e6a6e70e28b9e3e506e",
+      "raw_sha256": "dc8a03c1ec92daf0f8edebd7c2a8b827541ea0b47bf7463a33d8d21f7092159d",
+      "byte_count": 78166,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "unified_python_research_framework_i3c_settlement_causality_repair_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "08c528322d98b2497013ae363e552ee99a744b39",
+      "raw_sha256": "6cf24ff04632a70191b45d297d449df2a5ad662a6cd5408cd4bd5e8e1bab7a36",
+      "byte_count": 49734,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "unified_python_research_framework_i4_contract.json",
+      "mode": "100644",
+      "git_blob": "91635696e3daae26573384d30d9a04e942d76f13",
+      "raw_sha256": "e651f6e2d4cfa8d96655a6d6417c4221221fe5720a015c05190938177a7fa022",
+      "byte_count": 69613,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+    },
+    {
+      "path": "unified_python_research_framework_i4_governance_bootstrap_schema.json",
+      "mode": "100644",
+      "git_blob": "b92487d0877544c91ec5b961fbe7f5a0d58660c3",
+      "raw_sha256": "c496ae223f823b30e9e06782c9151a2f13e568d5ca84dd6df02fc52e901eff8d",
+      "byte_count": 21567,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "unified_python_research_framework_i4_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "1f13537f975f8caed24ad8476c4460563bad9c72",
+      "raw_sha256": "7e81e63a58fe8ed293c63ec71e649d10d9a1972afaea740f61fa1b22f6b62409",
+      "byte_count": 32534,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
+    },
+    {
+      "path": "unified_python_research_framework_i4_uq25_dependency_contract.json",
+      "mode": "100644",
+      "git_blob": "cbeffd2b65e7e95cb0d7c4e5d051257cc24cb495",
+      "raw_sha256": "55b9a146927e0c37488dbf8489fc3d3d9afc05e8fc52bd7c402189fd5d598338",
+      "byte_count": 32485,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
+    },
+    {
+      "path": "unified_python_research_framework_i4_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "c3b99f5e1fc5462f481603bb6c24517bad64420a",
+      "raw_sha256": "2496c419e0d35206e9bedfdec5e5fa07f21cb1d6ceb952c16228cc1fee54b088",
+      "byte_count": 193599,
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "SUPERSEDED_BY_THIS_POST_ATOMIC_SYNCHRONIZATION_THEN_PRESERVE"
     },
     {
       "path": "unified_python_research_framework_packaging_contract.json",
+      "mode": "100644",
       "git_blob": "32b1b2cc21023e2ff35171824968af548f0f7be3",
       "raw_sha256": "edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351",
       "byte_count": 54712,
-      "ownership_stage": "I-1 authority",
-      "classification": "immutable predecessor",
-      "future_i4_change_authorized": false
+      "classification": "FRAMEWORK_AUTHORITY_OR_PLAN",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "src/ebu_framework/trust.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v29_d9_d10_plan.json",
+      "mode": "100644",
+      "git_blob": "4fdf232749fc597f204953db50a723c29338740a",
+      "raw_sha256": "a931bc09e2a7cbb86f12c3c805fbb851aae84e09e240558c8cc2176183dff5bd",
+      "byte_count": 25859,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "src/ebu_framework/authorization.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v29_deterministic_plan.json",
+      "mode": "100644",
+      "git_blob": "27b0769800958eb8dd0730d38d142fdaf651b71c",
+      "raw_sha256": "a1a5ccaa2b7a740b0a33941350e33459f161041dae4d0bd751c89fa297ad9e8f",
+      "byte_count": 34609,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "src/ebu_framework/authorization_use.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v30_gate1dc_execution_finalization_contract.json",
+      "mode": "100644",
+      "git_blob": "437daaecb8a102172e1b70adb7a5ba4798c730c3",
+      "raw_sha256": "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155",
+      "byte_count": 66706,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "src/ebu_framework/capabilities.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v30_gate1dc_macos_environment_compatibility_contract.json",
+      "mode": "100644",
+      "git_blob": "b512dec0512fc0a3b5997004fb7b6323d2efbd3e",
+      "raw_sha256": "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b",
+      "byte_count": 15760,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "tests/framework/fixtures/authorization_vectors_v1.json",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v30_gate1dc_macos_python_launcher_compatibility_contract.json",
+      "mode": "100644",
+      "git_blob": "0620394a805f2885e8bab215fd63c947bc56c3b5",
+      "raw_sha256": "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82",
+      "byte_count": 13040,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "tests/framework/test_authorization.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v30_gate1dc_outcome_discrimination_plan.json",
+      "mode": "100644",
+      "git_blob": "682e1ac8d0dfac635da3d45a5b8dbcee34e01862",
+      "raw_sha256": "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe",
+      "byte_count": 44057,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "tests/framework/test_authorization_use.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v30_o14_multi_edge_plan.json",
+      "mode": "100644",
+      "git_blob": "853fa8718af6a233904c5d4ef70b1f68e02dfbf0",
+      "raw_sha256": "00c4dd472eb332e57865f845e41265032fa69ef3535bb170a8ade013f783d22a",
+      "byte_count": 34959,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "tests/framework/test_capabilities.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-4",
-      "classification": "new I-4 path",
-      "future_i4_change_authorized": true
+      "path": "v30_quote_validation_plan.json",
+      "mode": "100644",
+      "git_blob": "12b7bfef014e4cbe99af5129b4ee402009d85a57",
+      "raw_sha256": "5f01a1fd554bfb2f5e684dc318a805f2887d51274e456c98d1a1d5788d1a6f4f",
+      "byte_count": 14474,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     },
     {
-      "path": "src/ebu_framework/events.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/ownership.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/durability.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/traces.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/execution.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/bridge.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/dynamic.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/provenance.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/recovery.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/publication.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "src/ebu_framework/validation.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_event_ownership.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_inert_durability.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_bridge_exact_fixtures.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_dynamic_static_identities.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_route_guards.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_artifact_recovery_publication.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
-    },
-    {
-      "path": "tests/framework/test_validation_reachability.py",
-      "git_blob": null,
-      "raw_sha256": null,
-      "byte_count": null,
-      "ownership_stage": "I-5 or later",
-      "classification": "deferred or forbidden",
-      "future_i4_change_authorized": false
+      "path": "v30_service_alignment_plan.json",
+      "mode": "100644",
+      "git_blob": "8e46ad34af42a1064520961460c1dbb33f4a86e7",
+      "raw_sha256": "7a5676e2013d3baa4f18d48443fe448f1d6d0973be79b5c1ca8634a95bfa4f7c",
+      "byte_count": 22925,
+      "classification": "SCIENTIFIC_PLAN_OR_CONTRACT",
+      "future_i4_disposition": "PRESERVE_BYTE_IDENTICAL_DURING_I4_IMPLEMENTATION"
     }
   ],
+  "future_i4_path_manifest": {
+    "new": [
+      "src/ebu_framework/trust.py",
+      "src/ebu_framework/authorization.py",
+      "src/ebu_framework/authorization_use.py",
+      "src/ebu_framework/capabilities.py",
+      "tests/framework/fixtures/authorization_vectors_v1.json",
+      "tests/framework/test_authorization.py",
+      "tests/framework/test_authorization_use.py",
+      "tests/framework/test_capabilities.py"
+    ],
+    "modified": [
+      "pyproject.toml",
+      "requirements-framework.lock",
+      "src/ebu_framework/__init__.py",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/hashing.py",
+      "src/ebu_framework/registry.py",
+      "src/ebu_framework/experiment.py",
+      "src/ebu_framework/ledger.py",
+      "tests/framework/test_i3_integration.py",
+      "tests/framework/test_primitives_envelopes.py"
+    ],
+    "new_count": 8,
+    "modified_count": 10,
+    "total_count": 18,
+    "rule": "This is the unchanged original I-4 future implementation manifest. Every new path is absent from the 261-path starting tree. No nineteenth implementation path exists."
+  },
   "enforcement": [
-    "No path outside a row classified as I-4 behavioral extension, packaging/lock modification, narrowly authorized compatibility modification, or new I-4 path may change.",
-    "Every non-null git_blob, raw_sha256, and byte_count must match base_head before implementation.",
-    "Every new I-4 path must be absent at base and created once.",
-    "Every deferred or forbidden path must remain absent/unmodified in I-4.",
-    "The complete post-implementation changed-path set must equal the authorized changed/new rows; omission and addition both fail closed."
+    "Before later implementation, every tracked path not authorized for modification must match the accepted post-synchronization implementation predecessor byte-for-byte.",
+    "The four synchronization paths record their historical starting-tree blobs here; after this authority is independently accepted, their accepted synchronized bytes supersede those four historical blobs and must then remain byte-identical during implementation.",
+    "Only the ten exact modified paths may differ during later I-4 implementation, and only under separate implementation authority.",
+    "Each of the eight exact new paths must be absent before later implementation and created exactly once; no additional path may be introduced.",
+    "Every non-I-4 implementation path must be preserved during later implementation."
   ],
   "nonclaims": [
-    "This manifest authorizes no implementation.",
-    "Candidate authority-document paths are not implementation paths and are intentionally outside predecessor rows."
+    "This manifest authorizes no implementation, dependency installation, test execution, scientific execution, commit, integration, or publication.",
+    "The four historical synchronization-input identities do not override the accepted synchronized authority bytes after a later independent audit and acceptance.",
+    "No book, manuscript, PDF, generator, image, result, D1/D2 authority, or D1/D2 implementation path may change in this synchronization."
   ]
 }
