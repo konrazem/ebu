@@ -517,6 +517,32 @@ def validate_execution_binding(binding: ExecutionBinding, /) -> None:
     return None
 
 
+def _validate_configuration_acceptance(
+    configuration: ExperimentConfiguration,
+    fault_schedule: FaultScheduleV1 | Applicability,
+    /,
+) -> None:
+    validate_experiment_configuration(configuration, fault_schedule)
+    return None
+
+
+def _validate_binding_acceptance(
+    binding: ExecutionBinding, accepted_configuration: object, /
+) -> None:
+    validate_execution_binding(binding)
+    if (
+        type(accepted_configuration).__name__ != "RegistryRecord"
+        or type(accepted_configuration).__module__ != "ebu_framework.registry"
+        or accepted_configuration.lifecycle_status.value != "ACCEPTED"
+        or binding.accepted_configuration_ref != accepted_configuration.object_ref
+    ):
+        _failure(
+            FailureCode.BINDING_CONFIGURATION_MISMATCH,
+            "_validate_binding_acceptance",
+        )
+    return None
+
+
 __all__ = (
     "ExperimentConfiguration",
     "ExecutionBinding",

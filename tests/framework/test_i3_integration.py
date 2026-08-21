@@ -41,6 +41,8 @@ _VALIDATION_PATH = (
     _REPO_ROOT / "unified_python_research_framework_i3_validation_contract.json"
 )
 _FIXTURE_PATH = _REPO_ROOT / "tests/framework/fixtures/i3_validation_v1.json"
+_I4_MECHANICAL_PATH = _REPO_ROOT / "unified_python_research_framework_i4_contract.json"
+_D2_MECHANICAL_PATH = _REPO_ROOT / "atomic_interaction_declaration_contract.json"
 
 _MODULES = {
     "state": state_module,
@@ -496,6 +498,14 @@ class I3IntegrationTests(unittest.TestCase):
         suffix_types = tuple(mechanical["root_export_suffix_types"])
         suffix_callables = tuple(mechanical["root_export_suffix_callables"])
         suffix = suffix_types + suffix_callables
+        _, i4_mechanical = _strict_load(_I4_MECHANICAL_PATH, dict)
+        _, d2_mechanical = _strict_load(_D2_MECHANICAL_PATH, dict)
+        d2_surface = d2_mechanical["proposed_surface"]
+        d1_suffix = root_exports[219:237]
+        d2_suffix = root_exports[237:261]
+        i4_suffix = tuple(i4_mechanical["root_export_suffix_types"]) + tuple(
+            i4_mechanical["root_export_suffix_callables"]
+        )
         self.assertEqual(len(prefix), mechanical["accepted_root_prefix_count"])
         self.assertEqual(
             hashlib.sha256(
@@ -503,10 +513,28 @@ class I3IntegrationTests(unittest.TestCase):
             ).hexdigest(),
             mechanical["accepted_root_prefix_lf_sha256"],
         )
-        self.assertEqual(root_exports[127:], suffix)
+        self.assertEqual(root_exports[127:219], suffix)
+        self.assertEqual(
+            d1_suffix, tuple(d2_surface["d1_root_export_suffix"])
+        )
+        self.assertEqual(
+            d2_suffix, tuple(d2_surface["d2_root_export_suffix"])
+        )
+        self.assertEqual(root_exports[261:], i4_suffix)
+        root_rule = i4_mechanical["root_export_rule"]
+        for names, byte_key, digest_key in (
+            (d1_suffix, "accepted_d1_suffix_lf_byte_count", "accepted_d1_suffix_lf_sha256"),
+            (d2_suffix, "accepted_d2_suffix_lf_byte_count", "accepted_d2_suffix_lf_sha256"),
+            (i4_suffix, "i4_suffix_lf_byte_count", "i4_suffix_lf_sha256"),
+            (root_exports, "post_i4_lf_byte_count", "post_i4_lf_sha256"),
+        ):
+            projection = b"".join(name.encode("utf-8") + b"\n" for name in names)
+            self.assertEqual(len(projection), root_rule[byte_key])
+            self.assertEqual(hashlib.sha256(projection).hexdigest(), root_rule[digest_key])
         self.assertEqual(len(suffix_types), 69)
         self.assertEqual(len(suffix_callables), 23)
-        self.assertEqual(len(root_exports), mechanical["post_i3_root_export_count"])
+        self.assertEqual(len(root_exports[:219]), mechanical["post_i3_root_export_count"])
+        self.assertEqual(len(root_exports), 309)
         self.assertEqual(len(root_exports), len(set(root_exports)))
         self.assertTrue(all(not name.startswith("_") for name in suffix))
         self.assertEqual(framework.__version__, "0.1.0a1")
@@ -684,7 +712,28 @@ class I3IntegrationTests(unittest.TestCase):
         historical = tuple(compatibility["historical_prefix"])
         i3_suffix = tuple(mechanical["failure_append_order"])
         complete = historical + i3_suffix
-        self.assertEqual(tuple(code.value for code in FailureCode), complete)
+        failure_values = tuple(code.value for code in FailureCode)
+        i4_failures = tuple(i4_mechanical["failure_append_order"])
+        d2_failures = d2_mechanical["failure_contract"]
+        self.assertEqual(failure_values[:53], historical)
+        self.assertEqual(failure_values[53:88], i3_suffix)
+        self.assertEqual(
+            failure_values[88:102], tuple(d2_failures["d1_append_order"])
+        )
+        self.assertEqual(
+            failure_values[102:124], tuple(d2_failures["d2_append_order"])
+        )
+        self.assertEqual(failure_values[124:], i4_failures)
+        failure_rule = i4_mechanical["failure_rule"]
+        for names, byte_key, digest_key in (
+            (failure_values[88:102], "accepted_d1_suffix_lf_byte_count", "accepted_d1_suffix_lf_sha256"),
+            (failure_values[102:124], "accepted_d2_suffix_lf_byte_count", "accepted_d2_suffix_lf_sha256"),
+            (failure_values[124:], "suffix_lf_byte_count", "suffix_lf_sha256"),
+            (failure_values, "resulting_inventory_lf_byte_count", "resulting_inventory_lf_sha256"),
+        ):
+            projection = b"".join(name.encode("ascii") + b"\n" for name in names)
+            self.assertEqual(len(projection), failure_rule[byte_key])
+            self.assertEqual(hashlib.sha256(projection).hexdigest(), failure_rule[digest_key])
         self.assertEqual((len(historical), len(i3_suffix), len(complete)), (53, 35, 88))
         for names, expected_bytes, expected_digest in (
             (

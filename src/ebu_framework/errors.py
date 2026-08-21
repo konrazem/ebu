@@ -7,6 +7,8 @@ name its stage and interface explicitly.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass
 from enum import StrEnum
 import hashlib
@@ -34,6 +36,12 @@ _LEGACY_I1_MODULES = frozenset(
         "ebu_framework.identity",
         "ebu_framework.registry",
     }
+)
+_I4_FAILURE_ORDINAL: ContextVar[int] = ContextVar(
+    "ebu_i4_failure_ordinal", default=0
+)
+_I4_ORDERED_CHECK_NAME: ContextVar[str | None] = ContextVar(
+    "ebu_i4_ordered_check_name", default=None
 )
 
 
@@ -184,6 +192,69 @@ class FailureCode(StrEnum):
     CAUSAL_SETTLEMENT_CONFLATION = "CAUSAL_SETTLEMENT_CONFLATION"
     SETTLEMENT_RESIDUAL_CLOSURE_MISSING = "SETTLEMENT_RESIDUAL_CLOSURE_MISSING"
     PROHIBITED_INTERFERENCE_CLAIM = "PROHIBITED_INTERFERENCE_CLAIM"
+    I4_RECORD_FORMATION_INVALID = "I4_RECORD_FORMATION_INVALID"
+    PRODUCTION_BOOTSTRAP_MISSING = "PRODUCTION_BOOTSTRAP_MISSING"
+    TRUST_PROFILE_PIN_MISMATCH = "TRUST_PROFILE_PIN_MISMATCH"
+    SIGNATURE_PROFILE_UNSUPPORTED = "SIGNATURE_PROFILE_UNSUPPORTED"
+    KEY_ID_MISMATCH = "KEY_ID_MISMATCH"
+    PUBLIC_KEY_INVALID = "PUBLIC_KEY_INVALID"
+    SIGNATURE_ENCODING_INVALID = "SIGNATURE_ENCODING_INVALID"
+    SIGNATURE_INVALID = "SIGNATURE_INVALID"
+    ROOT_THRESHOLD_NOT_MET = "ROOT_THRESHOLD_NOT_MET"
+    ROOT_PROOF_ORDER_INVALID = "ROOT_PROOF_ORDER_INVALID"
+    ISSUER_REGISTRY_INVALID = "ISSUER_REGISTRY_INVALID"
+    ISSUER_REGISTRY_ROLLBACK = "ISSUER_REGISTRY_ROLLBACK"
+    ISSUER_REGISTRY_GAP = "ISSUER_REGISTRY_GAP"
+    ISSUER_REGISTRY_EQUIVOCATION = "ISSUER_REGISTRY_EQUIVOCATION"
+    ISSUER_KEY_INVALID = "ISSUER_KEY_INVALID"
+    DELEGATION_CHAIN_INVALID = "DELEGATION_CHAIN_INVALID"
+    DELEGATION_SCOPE_ESCALATION = "DELEGATION_SCOPE_ESCALATION"
+    DELEGATION_DEPTH_EXCEEDED = "DELEGATION_DEPTH_EXCEEDED"
+    DELEGATION_CYCLE = "DELEGATION_CYCLE"
+    TRUSTED_TIME_UNAVAILABLE = "TRUSTED_TIME_UNAVAILABLE"
+    TRUSTED_TIME_CHALLENGE_MISMATCH = "TRUSTED_TIME_CHALLENGE_MISMATCH"
+    TRUSTED_TIME_STALE = "TRUSTED_TIME_STALE"
+    TRUSTED_TIME_SEQUENCE_INVALID = "TRUSTED_TIME_SEQUENCE_INVALID"
+    REVOCATION_UNAVAILABLE = "REVOCATION_UNAVAILABLE"
+    REVOCATION_SNAPSHOT_EXPIRED = "REVOCATION_SNAPSHOT_EXPIRED"
+    REVOCATION_ROLLBACK = "REVOCATION_ROLLBACK"
+    REVOCATION_GAP = "REVOCATION_GAP"
+    REVOCATION_EQUIVOCATION = "REVOCATION_EQUIVOCATION"
+    AUTHORIZATION_REVOKED = "AUTHORIZATION_REVOKED"
+    AUTHORIZATION_SCOPE_MISMATCH = "AUTHORIZATION_SCOPE_MISMATCH"
+    AUTHORIZATION_STAGE_MISMATCH = "AUTHORIZATION_STAGE_MISMATCH"
+    AUTHORIZATION_OPERATION_MISMATCH = "AUTHORIZATION_OPERATION_MISMATCH"
+    AUTHORIZATION_TARGET_MISMATCH = "AUTHORIZATION_TARGET_MISMATCH"
+    AUTHORIZATION_CONFIGURATION_MISMATCH = "AUTHORIZATION_CONFIGURATION_MISMATCH"
+    AUTHORIZATION_BINDING_MISMATCH = "AUTHORIZATION_BINDING_MISMATCH"
+    AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH = (
+        "AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH"
+    )
+    AUTHORIZATION_PREDECESSOR_MISMATCH = "AUTHORIZATION_PREDECESSOR_MISMATCH"
+    AUTHORIZATION_LIFECYCLE_MISMATCH = "AUTHORIZATION_LIFECYCLE_MISMATCH"
+    AUTHORIZATION_EXCLUSION_MATCH = "AUTHORIZATION_EXCLUSION_MATCH"
+    BINDING_CONFIGURATION_MISMATCH = "BINDING_CONFIGURATION_MISMATCH"
+    AUTHORIZATION_USE_ALREADY_CONSUMED = "AUTHORIZATION_USE_ALREADY_CONSUMED"
+    AUTHORIZATION_USE_UNRESOLVED = "AUTHORIZATION_USE_UNRESOLVED"
+    AUTHORIZATION_USE_STORE_UNSUPPORTED = "AUTHORIZATION_USE_STORE_UNSUPPORTED"
+    AUTHORIZATION_USE_LEDGER_FAILURE = "AUTHORIZATION_USE_LEDGER_FAILURE"
+    REGISTRY_ACCEPTANCE_INVALID = "REGISTRY_ACCEPTANCE_INVALID"
+    REGISTRY_SUPERSESSION_INVALID = "REGISTRY_SUPERSESSION_INVALID"
+    INFORMATION_CAPABILITY_INVALID = "INFORMATION_CAPABILITY_INVALID"
+    INFORMATION_NOT_VISIBLE = "INFORMATION_NOT_VISIBLE"
+    INFORMATION_NOT_AVAILABLE = "INFORMATION_NOT_AVAILABLE"
+    INFORMATION_TOO_OLD = "INFORMATION_TOO_OLD"
+    CURRENT_MEMORY_MISMATCH = "CURRENT_MEMORY_MISMATCH"
+    INFORMATION_TRAVERSAL_FORBIDDEN = "INFORMATION_TRAVERSAL_FORBIDDEN"
+    INFORMATION_READ_SET_DENIED = "INFORMATION_READ_SET_DENIED"
+    VALIDATION_NAMESPACE_FORBIDDEN = "VALIDATION_NAMESPACE_FORBIDDEN"
+    VALIDATION_KEY_FORBIDDEN = "VALIDATION_KEY_FORBIDDEN"
+    DEPENDENCY_INTEGRITY_FAILURE = "DEPENDENCY_INTEGRITY_FAILURE"
+    SQLITE_VERSION_UNSUPPORTED = "SQLITE_VERSION_UNSUPPORTED"
+    SQLITE_SCHEMA_MISMATCH = "SQLITE_SCHEMA_MISMATCH"
+    CAPABILITY_ESCALATION_FORBIDDEN = "CAPABILITY_ESCALATION_FORBIDDEN"
+    POLICY_MEMORY_PROJECTION_FAILURE = "POLICY_MEMORY_PROJECTION_FAILURE"
+    POLICY_MEMORY_MISMATCH = "POLICY_MEMORY_MISMATCH"
 
 
 class Applicability(StrEnum):
@@ -818,6 +889,94 @@ def _fail(
         canonical_trace_state=canonical_trace_state,
         scientific_status_effect=scientific_status_effect,
         retry_class=retry_class,
+        evidence_refs=evidence_refs,
+    )
+
+
+@contextmanager
+def _i4_validation_context(failure_ordinal: int, ordered_check_name: str):
+    """Bind the event-local coordinates used by one authorized synthetic vector."""
+
+    if type(failure_ordinal) is not int or failure_ordinal < 0:
+        raise TypeError("I-4 validation failure ordinal must be nonnegative")
+    if type(ordered_check_name) is not str or not ordered_check_name:
+        raise TypeError("I-4 validation check name must be nonempty text")
+    ordinal_token = _I4_FAILURE_ORDINAL.set(failure_ordinal)
+    check_token = _I4_ORDERED_CHECK_NAME.set(ordered_check_name)
+    try:
+        yield
+    finally:
+        _I4_ORDERED_CHECK_NAME.reset(check_token)
+        _I4_FAILURE_ORDINAL.reset(ordinal_token)
+
+
+_I4_REQUIRES_AUTHORITY = frozenset({FailureCode.PRODUCTION_BOOTSTRAP_MISSING})
+_I4_NOT_APPLICABLE_RETRY = frozenset(
+    {
+        FailureCode.TRUSTED_TIME_UNAVAILABLE,
+        FailureCode.TRUSTED_TIME_CHALLENGE_MISMATCH,
+        FailureCode.TRUSTED_TIME_STALE,
+        FailureCode.TRUSTED_TIME_SEQUENCE_INVALID,
+        FailureCode.REVOCATION_UNAVAILABLE,
+        FailureCode.REVOCATION_SNAPSHOT_EXPIRED,
+        FailureCode.AUTHORIZATION_USE_UNRESOLVED,
+        FailureCode.AUTHORIZATION_USE_STORE_UNSUPPORTED,
+        FailureCode.AUTHORIZATION_USE_LEDGER_FAILURE,
+    }
+)
+_I4_UNRESOLVED_DURABILITY = frozenset(
+    {
+        FailureCode.TRUSTED_TIME_SEQUENCE_INVALID,
+        FailureCode.REVOCATION_ROLLBACK,
+        FailureCode.REVOCATION_GAP,
+        FailureCode.REVOCATION_EQUIVOCATION,
+        FailureCode.AUTHORIZATION_USE_UNRESOLVED,
+        FailureCode.AUTHORIZATION_USE_LEDGER_FAILURE,
+    }
+)
+
+
+def _i4_fail(
+    code: FailureCode,
+    module: str,
+    interface: str,
+    ordered_check_name: str,
+    *,
+    object_refs: tuple[FailureObjectRef, ...] = (),
+    evidence_refs: tuple[FailureEvidenceRef, ...] = (),
+) -> NoReturn:
+    """Raise one normalized fail-closed I-4 failure envelope."""
+
+    check_name = _I4_ORDERED_CHECK_NAME.get() or ordered_check_name
+    summary = (
+        f"{interface} rejected {code.value}"
+        if code is FailureCode.I4_RECORD_FORMATION_INVALID
+        else f"{interface} rejected {code.value} at {check_name}"
+    )
+    retry = (
+        RetryClass.REQUIRES_AUTHORITY
+        if code in _I4_REQUIRES_AUTHORITY
+        else RetryClass.NOT_APPLICABLE
+        if code in _I4_NOT_APPLICABLE_RETRY
+        else RetryClass.FORBIDDEN
+    )
+    durability = (
+        DurabilityState.UNRESOLVED
+        if code in _I4_UNRESOLVED_DURABILITY
+        else DurabilityState.NONE_DURABLE
+        if code is FailureCode.AUTHORIZATION_USE_ALREADY_CONSUMED
+        else DurabilityState.NOT_APPLICABLE
+    )
+    _fail(
+        code,
+        summary,
+        stage=FailureStage.I4,
+        interface_ref=FailureInterfaceRef(module, interface, "1.0.0"),
+        object_refs=object_refs,
+        failure_ordinal=_I4_FAILURE_ORDINAL.get(),
+        durability_state=durability,
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=retry,
         evidence_refs=evidence_refs,
     )
 
