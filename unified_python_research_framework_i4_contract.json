@@ -3,8 +3,11 @@
   "contract_version": "1.0.0",
   "status": "PROSPECTIVE_DOCUMENTATION_ONLY_UNIMPLEMENTED_PRODUCTION_DISABLED",
   "authority": {
-    "branch": "framework/i-4a-authority-uq25-synthetic-validation",
-    "base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "branch": "framework/i-4-post-atomic-authority-sync",
+    "base_head": "59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+    "base_tree": "cdca582de7faf17db053946e4f7e8a6d83c37ffe",
+    "original_authority_branch": "framework/i-4a-authority-uq25-synthetic-validation",
+    "original_authority_base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
     "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
     "mechanical_contract": "unified_python_research_framework_i4_contract.json",
     "validation_contract": "unified_python_research_framework_i4_validation_contract.json",
@@ -13,7 +16,25 @@
     "dependency_contract": "unified_python_research_framework_i4_uq25_dependency_contract.json",
     "governance_requirements": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_GOVERNANCE_BOOTSTRAP_REQUIREMENTS.md",
     "governance_schema": "unified_python_research_framework_i4_governance_bootstrap_schema.json",
-    "precedence": "This pair narrowly supersedes conflicting I-4 planning prose only. Accepted I-1, I-2, and I-3 bytes and behavior remain authoritative. The dependency pair governs UQ-25. The governance pair is an uninstantiated future-bootstrap requirement. Any disagreement among an applicable Markdown and JSON pair is an integrity failure."
+    "precedence": "This synchronized pair narrowly supersedes only the original I-4 predecessor coordinates, additive ordinal positions, aggregate counts and hashes, import/signature projections, fixture projections, and regression expectations made obsolete by accepted D1 and D2. The original I-4 scientific, security, dependency, governance, operation, schema, callable, behavioral, validation, and nonclaim semantics remain authoritative. Accepted I-1 through I-3, I-3C repair, atomic-generator foundation, D1, and D2 bytes and behavior remain authoritative. The dependency pair governs UQ-25 unchanged. The governance pair remains an uninstantiated future-bootstrap requirement. Any disagreement among an applicable Markdown and JSON pair is an integrity failure."
+  },
+  "historical_authority": {
+    "original_base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "original_root_export_count": 219,
+    "original_root_export_lf_byte_count": 4410,
+    "original_root_export_lf_sha256": "b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d",
+    "original_failure_code_count": 88,
+    "original_failure_code_lf_byte_count": 2125,
+    "original_failure_code_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+    "original_module_count": 15,
+    "original_direct_import_edge_count": 91,
+    "original_post_i4_root_export_count": 267,
+    "original_post_i4_root_export_lf_byte_count": 5524,
+    "original_post_i4_root_export_lf_sha256": "90461e517d22fb8ec750acb19f397abb6cae0b6bf66952b9269e8546d5efe2ac",
+    "original_post_i4_failure_count": 149,
+    "original_post_i4_failure_lf_byte_count": 3777,
+    "original_post_i4_failure_lf_sha256": "28b247568db9cf35d99d34798cdf3cbd995e5fe6cf6f74dab77263a07b44b51a",
+    "rule": "These values preserve the coordinates against which the accepted I-4 authority was developed. They are historical locks, not the implementation predecessor after accepted D1 and D2."
   },
   "json_document_profile": {
     "encoding": "UTF-8",
@@ -42,17 +63,36 @@
     "explicitly_excluded_classes": ["T2", "T3"]
   },
   "predecessor_boundary": {
-    "root_export_count": 219,
-    "root_export_lf_sha256": "b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d",
-    "failure_code_count": 88,
-    "failure_code_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
-    "i3_module_count": 15,
-    "i3_direct_import_edge_count": 91,
+    "implementation_predecessor_head": "59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+    "implementation_predecessor_tree": "cdca582de7faf17db053946e4f7e8a6d83c37ffe",
+    "tracked_path_count": 261,
+    "root_export_count": 261,
+    "root_export_lf_byte_count": 5724,
+    "root_export_lf_sha256": "1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9",
+    "failure_code_count": 124,
+    "failure_code_lf_byte_count": 3242,
+    "failure_code_lf_sha256": "115490be2e724f70efe15cec77f9ec2ee5cd5f7c41b7b37a5e5054dc7fea14f0",
+    "package_module_count": 25,
+    "package_direct_import_edge_count": 124,
+    "i3_d1_d2_module_count": 17,
+    "i3_d1_d2_direct_import_edge_count": 103,
+    "cycle_count": 0,
     "i3_implementation_path_count": 23,
     "i3_validation_vector_count": 544,
     "i3_fixture_byte_count": 24179582,
     "i3_fixture_raw_sha256": "e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5",
-    "rule": "All coordinates are immutable prefixes or predecessor evidence."
+    "rule": "The accepted 219-name and 88-code I-3E prefixes remain immutable. Accepted D1 and D2 append exactly 42 exports and 36 failures before the unchanged I-4 suffix. All current coordinates are immutable prefixes or predecessor evidence for later I-4 implementation."
+  },
+  "post_atomic_synchronization": {
+    "kind": "MECHANICAL_PREDECESSOR_AND_ADDITIVE_SURFACE_SYNCHRONIZATION_ONLY",
+    "reason": "The accepted I-4 suffix was frozen before accepted D1 and D2 occupied the next additive export and failure positions. Applying the old aggregate coordinates unchanged would conflict with their accepted order and identities.",
+    "accepted_history": [
+      {"stage":"D1","authority_integration":"48a9f953895994da96e46a00c6a6dd29c72e9497","implementation_commit":"9a055d467bb84630c5cf7bf31f95f18aad3a1db9","integration_commit":"297535d787355b9911fc01ae5b777a553aa9815b","root_export_suffix_count":18,"failure_suffix_count":14},
+      {"stage":"D2","implementation_commit":"cab2b5b35f0b289f9e3e93d6e944195692207446","integration_commit":"59594823e24eaf6ca83e1e2aa4a1129d8e109ae5","root_export_suffix_count":24,"failure_suffix_count":22}
+    ],
+    "accepted_atomic_contract": {"path":"atomic_interaction_declaration_contract.json","raw_sha256":"565cc3947d9a3abc99ece694ec823ad0f945dbb1c7634586bcf43f2e36c2549a"},
+    "unchanged_domains": ["I-4 scientific rules","I-4 security rules","I-4 dependency closure","I-4 governance requirements","I-4 operations","I-4 schemas and type signatures","I-4 callable signatures","I-4 behavior and validation semantics","I-4 implementation path manifest","I-4 nonclaims","accepted D1","accepted D2"],
+    "superseded_only": ["implementation predecessor coordinates","additive ordinal positions","aggregate counts and hashes","import projections","signature projections","fixture projections","regression expectations"]
   },
   "resolution_register": [
     {
@@ -360,17 +400,31 @@
     "I4_RECORD_FORMATION_INVALID","PRODUCTION_BOOTSTRAP_MISSING","TRUST_PROFILE_PIN_MISMATCH","SIGNATURE_PROFILE_UNSUPPORTED","KEY_ID_MISMATCH","PUBLIC_KEY_INVALID","SIGNATURE_ENCODING_INVALID","SIGNATURE_INVALID","ROOT_THRESHOLD_NOT_MET","ROOT_PROOF_ORDER_INVALID","ISSUER_REGISTRY_INVALID","ISSUER_REGISTRY_ROLLBACK","ISSUER_REGISTRY_GAP","ISSUER_REGISTRY_EQUIVOCATION","ISSUER_KEY_INVALID","DELEGATION_CHAIN_INVALID","DELEGATION_SCOPE_ESCALATION","DELEGATION_DEPTH_EXCEEDED","DELEGATION_CYCLE","TRUSTED_TIME_UNAVAILABLE","TRUSTED_TIME_CHALLENGE_MISMATCH","TRUSTED_TIME_STALE","TRUSTED_TIME_SEQUENCE_INVALID","REVOCATION_UNAVAILABLE","REVOCATION_SNAPSHOT_EXPIRED","REVOCATION_ROLLBACK","REVOCATION_GAP","REVOCATION_EQUIVOCATION","AUTHORIZATION_REVOKED","AUTHORIZATION_SCOPE_MISMATCH","AUTHORIZATION_STAGE_MISMATCH","AUTHORIZATION_OPERATION_MISMATCH","AUTHORIZATION_TARGET_MISMATCH","AUTHORIZATION_CONFIGURATION_MISMATCH","AUTHORIZATION_BINDING_MISMATCH","AUTHORIZATION_EXECUTION_IDENTITY_MISMATCH","AUTHORIZATION_PREDECESSOR_MISMATCH","AUTHORIZATION_LIFECYCLE_MISMATCH","AUTHORIZATION_EXCLUSION_MATCH","BINDING_CONFIGURATION_MISMATCH","AUTHORIZATION_USE_ALREADY_CONSUMED","AUTHORIZATION_USE_UNRESOLVED","AUTHORIZATION_USE_STORE_UNSUPPORTED","AUTHORIZATION_USE_LEDGER_FAILURE","REGISTRY_ACCEPTANCE_INVALID","REGISTRY_SUPERSESSION_INVALID","INFORMATION_CAPABILITY_INVALID","INFORMATION_NOT_VISIBLE","INFORMATION_NOT_AVAILABLE","INFORMATION_TOO_OLD","CURRENT_MEMORY_MISMATCH","INFORMATION_TRAVERSAL_FORBIDDEN","INFORMATION_READ_SET_DENIED","VALIDATION_NAMESPACE_FORBIDDEN","VALIDATION_KEY_FORBIDDEN","DEPENDENCY_INTEGRITY_FAILURE","SQLITE_VERSION_UNSUPPORTED","SQLITE_SCHEMA_MISMATCH","CAPABILITY_ESCALATION_FORBIDDEN","POLICY_MEMORY_PROJECTION_FAILURE","POLICY_MEMORY_MISMATCH"
   ],
   "failure_rule": {
-    "starting_ordinal": 89,
+    "accepted_i3e_prefix_count": 88,
+    "accepted_d1_suffix_count": 14,
+    "accepted_d2_suffix_count": 22,
+    "accepted_prefix_count": 124,
+    "starting_ordinal": 125,
+    "ending_ordinal": 185,
     "suffix_count": 61,
-    "resulting_count": 149,
-    "accepted_prefix": ["CANONICALIZATION_FAILURE","INVALID_ECJ1","NONCANONICAL_ECJ1","ECJ1_TYPE_UNSUPPORTED","FLOAT_FORBIDDEN","CYCLIC_OBJECT_GRAPH","DUPLICATE_OBJECT_NAME","INVALID_UNICODE_SCALAR","UNASSIGNED_UNICODE_SCALAR","UNICODE_DATA_INTEGRITY_FAILURE","UNICODE_DATA_MALFORMED","SCIENTIFIC_ID_INVALID","SEMANTIC_VERSION_INVALID","DIGEST_INVALID","DIGEST_TYPE_MISMATCH","HASH_DOMAIN_MISMATCH","ARTIFACT_TOO_LARGE","STABLE_KEY_INVALID","NAMESPACE_UNREGISTERED","RESERVED_NAMESPACE","ALLOCATION_COLLISION","ALLOCATION_CLAIM_CONFLICT","REGISTRY_IMMUTABLE","REGISTRY_RECORD_CONFLICT","ALIAS_CONFLICT","ALIAS_INVALID","REF_NOT_FOUND","VERSION_MISMATCH","HASH_MISMATCH","BOUNDARY_MISMATCH","CLOCK_MISMATCH","CONVERSION_RULE_MISMATCH","CORE_NUMBER_INVALID","DIMENSION_MISMATCH","DIVISION_BY_ZERO","ERROR_BOUND_INVALID","HORIZON_INVALID","IMPLICIT_ABSENCE_FORBIDDEN","IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN","INVALID_AGGREGATION","LIFECYCLE_TRANSITION_INVALID","NONFINITE_NUMBER_FORBIDDEN","NUMERICAL_OPERATION_UNSUPPORTED","NUMERICAL_POLICY_INCOMPLETE","NUMERICAL_POLICY_REQUIRED","QUANTITY_TYPE_MISMATCH","REGION_MISMATCH","RESOLUTION_STATE_INVALID","SIGN_CONVENTION_MISMATCH","SUPERSESSION_INVALID","TIME_BASIS_MISMATCH","UNCERTAINTY_RECORD_INVALID","UNIT_MISMATCH","I3_RECORD_FORMATION_INVALID","I3_OBJECT_CONTENT_MISMATCH","I3_COLLECTION_ORDER_INVALID","I3_DUPLICATE_MEMBER","STATE_PROJECTION_FAILURE","MISSING_COORDINATE","POLICY_MEMORY_NOT_APPLICABLE","EPOCH_MISMATCH","CONSERVATION_PROFILE_INVALID","CONSERVATION_LEVEL_REQUIREMENT_MISSING","CONSERVATION_QUANTITY_DUPLICATE","CONSERVATION_COORDINATE_DUPLICATE","CONSERVATION_FLOW_CHANNEL_DUPLICATE","CONSERVATION_UNIT_MISMATCH","CONSERVATION_EVIDENCE_INCOMPLETE","CONSERVATION_ISOLATION_INVALID","CONSERVATION_TOLERANCE_UNDECLARED","PHYSICAL_POLICY_MEMORY_CONFLATION","DISTORTION_DECLARATION_INVALID","ACTION_DECLARATION_INVALID","RESERVATION_CAPACITY_MISMATCH","MEASUREMENT_CONTRACT_MISMATCH","INADMISSIBLE_SCHEDULE","MISSING_COMPARATOR","PROVISIONAL_ROUTE_REQUIRED","INFORMATION_VIEW_DECLARATION_INVALID","CAUSAL_ATTRIBUTION_UNRESOLVED","SETTLEMENT_LINK_INVALID","SETTLEMENT_CLOSURE_FAILURE","LEDGER_LINK_INVALID","FAULT_SCHEDULE_INVALID","FAULT_EXTENSION_UNAVAILABLE","CONFIGURATION_INCOMPLETE","EXECUTION_SEMANTICS_PROJECTION_FAILURE","ARTIFACT_COMPLETENESS_INVALID"],
+    "resulting_count": 185,
+    "accepted_prefix": ["CANONICALIZATION_FAILURE","INVALID_ECJ1","NONCANONICAL_ECJ1","ECJ1_TYPE_UNSUPPORTED","FLOAT_FORBIDDEN","CYCLIC_OBJECT_GRAPH","DUPLICATE_OBJECT_NAME","INVALID_UNICODE_SCALAR","UNASSIGNED_UNICODE_SCALAR","UNICODE_DATA_INTEGRITY_FAILURE","UNICODE_DATA_MALFORMED","SCIENTIFIC_ID_INVALID","SEMANTIC_VERSION_INVALID","DIGEST_INVALID","DIGEST_TYPE_MISMATCH","HASH_DOMAIN_MISMATCH","ARTIFACT_TOO_LARGE","STABLE_KEY_INVALID","NAMESPACE_UNREGISTERED","RESERVED_NAMESPACE","ALLOCATION_COLLISION","ALLOCATION_CLAIM_CONFLICT","REGISTRY_IMMUTABLE","REGISTRY_RECORD_CONFLICT","ALIAS_CONFLICT","ALIAS_INVALID","REF_NOT_FOUND","VERSION_MISMATCH","HASH_MISMATCH","BOUNDARY_MISMATCH","CLOCK_MISMATCH","CONVERSION_RULE_MISMATCH","CORE_NUMBER_INVALID","DIMENSION_MISMATCH","DIVISION_BY_ZERO","ERROR_BOUND_INVALID","HORIZON_INVALID","IMPLICIT_ABSENCE_FORBIDDEN","IMPLICIT_NUMERIC_CONVERSION_FORBIDDEN","INVALID_AGGREGATION","LIFECYCLE_TRANSITION_INVALID","NONFINITE_NUMBER_FORBIDDEN","NUMERICAL_OPERATION_UNSUPPORTED","NUMERICAL_POLICY_INCOMPLETE","NUMERICAL_POLICY_REQUIRED","QUANTITY_TYPE_MISMATCH","REGION_MISMATCH","RESOLUTION_STATE_INVALID","SIGN_CONVENTION_MISMATCH","SUPERSESSION_INVALID","TIME_BASIS_MISMATCH","UNCERTAINTY_RECORD_INVALID","UNIT_MISMATCH","I3_RECORD_FORMATION_INVALID","I3_OBJECT_CONTENT_MISMATCH","I3_COLLECTION_ORDER_INVALID","I3_DUPLICATE_MEMBER","STATE_PROJECTION_FAILURE","MISSING_COORDINATE","POLICY_MEMORY_NOT_APPLICABLE","EPOCH_MISMATCH","CONSERVATION_PROFILE_INVALID","CONSERVATION_LEVEL_REQUIREMENT_MISSING","CONSERVATION_QUANTITY_DUPLICATE","CONSERVATION_COORDINATE_DUPLICATE","CONSERVATION_FLOW_CHANNEL_DUPLICATE","CONSERVATION_UNIT_MISMATCH","CONSERVATION_EVIDENCE_INCOMPLETE","CONSERVATION_ISOLATION_INVALID","CONSERVATION_TOLERANCE_UNDECLARED","PHYSICAL_POLICY_MEMORY_CONFLATION","DISTORTION_DECLARATION_INVALID","ACTION_DECLARATION_INVALID","RESERVATION_CAPACITY_MISMATCH","MEASUREMENT_CONTRACT_MISMATCH","INADMISSIBLE_SCHEDULE","MISSING_COMPARATOR","PROVISIONAL_ROUTE_REQUIRED","INFORMATION_VIEW_DECLARATION_INVALID","CAUSAL_ATTRIBUTION_UNRESOLVED","SETTLEMENT_LINK_INVALID","SETTLEMENT_CLOSURE_FAILURE","LEDGER_LINK_INVALID","FAULT_SCHEDULE_INVALID","FAULT_EXTENSION_UNAVAILABLE","CONFIGURATION_INCOMPLETE","EXECUTION_SEMANTICS_PROJECTION_FAILURE","ARTIFACT_COMPLETENESS_INVALID","EXTENT_DECLARATION_INVALID","EXTENT_DIVISIBILITY_UNDECLARED","ATOMIC_REFINEMENT_INVALID","GENERATOR_DECLARATION_INVALID","GENERATOR_LINK_INVALID","AUGMENTED_STATE_INCOMPLETE","REPARAMETERIZATION_WITNESS_INVALID","HYBRID_ACTIVATION_INVALID","FIXED_ACTIVATION_ACCOUNT_DUPLICATED","RECONSTRUCTION_CLAIM_UNSUPPORTED","BOUNDARY_HISTORY_EQUIVALENCE_INVALID","BOUNDARY_ACCOUNT_PRESERVATION_INCOMPLETE","FORBIDDEN_DECLARATION_RUNTIME_BEHAVIOR","VALIDATOR_BYPASS_FORBIDDEN","OBJECTIVE_GRAMMAR_INVALID","SUBSET_PROTOCOL_INCOMPLETE","SUBSET_LATTICE_INCOMPLETE","MOBIUS_CLOSURE_FAILURE","TRUNCATION_RESIDUAL_MISMATCH","COMPARATOR_INTERACTION_INVALID","MIXED_MARGINAL_WITNESS_INVALID","COMMUTATOR_WITNESS_INVALID","COMMUTATIVITY_SCOPE_OVERCLAIM","SHARED_CONSTRAINT_OWNERSHIP_INVALID","SHARED_BOUNDARY_VISIBILITY_MISSING","INTERACTION_TOPOLOGY_INVALID","HIDDEN_STATE_TOPOLOGY_UNRESOLVED","BOUNDARY_INTERACTION_PRESERVATION_INVALID","ALLOCATION_FEASIBILITY_INVALID","OPTIMALITY_CERTIFICATE_INAPPLICABLE","SCALAR_DECOMPOSITION_INVALID","DECOMPOSITION_PROVENANCE_INCOMPLETE","INSTITUTIONAL_RULE_INVALID","CAUSAL_SETTLEMENT_CONFLATION","SETTLEMENT_RESIDUAL_CLOSURE_MISSING","PROHIBITED_INTERFERENCE_CLAIM"],
     "inventory_rule": "The complete resulting inventory is accepted_prefix followed by failure_append_order with no omission, insertion, reordering, or duplicate.",
-    "accepted_prefix_lf_byte_count": 2125,
-    "accepted_prefix_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+    "accepted_i3e_prefix_lf_byte_count": 2125,
+    "accepted_i3e_prefix_lf_sha256": "0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3",
+    "accepted_d1_suffix_lf_byte_count": 438,
+    "accepted_d1_suffix_lf_sha256": "3a3f8b273b2a53170451e8f57f4d4d6c80594cda682258432f3e68622a10df69",
+    "accepted_d2_suffix_lf_byte_count": 679,
+    "accepted_d2_suffix_lf_sha256": "ff54dab7aeb2a3adb2408c9a07e6a7391781bcdcf1a4ed95691575d288e0ede9",
+    "accepted_prefix_lf_byte_count": 3242,
+    "accepted_prefix_lf_sha256": "115490be2e724f70efe15cec77f9ec2ee5cd5f7c41b7b37a5e5054dc7fea14f0",
     "suffix_lf_byte_count": 1652,
     "suffix_lf_sha256": "9c852c935a49700365fcb7ba7cc7c905448ce9ca8f6c49754e2f8ab1843a9fb7",
-    "resulting_inventory_lf_byte_count": 3777,
-    "resulting_inventory_lf_sha256": "28b247568db9cf35d99d34798cdf3cbd995e5fe6cf6f74dab77263a07b44b51a",
+    "inventory_ordinal_rule": "failure_append_order index i has one-based FailureCode inventory ordinal 125+i; these inventory ordinals are distinct from FailureEnvelope.failure_ordinal event coordinates",
+    "inventory_ordinal_projection_byte_count": 2142,
+    "inventory_ordinal_projection_sha256": "b896bb85eca959a8a8693231a70ba55cd9c4f85c1c12d19f817ad3948e7bac0c",
+    "resulting_inventory_lf_byte_count": 4894,
+    "resulting_inventory_lf_sha256": "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
     "common_envelope": {
       "field_order": ["schema_id","failure_id","failure_ordinal","failure_code","human_summary","stage","interface_ref","object_refs","event_key","state_advance","policy_memory_advance","durability_state","canonical_trace_state","scientific_status_effect","retry_class","evidence_refs"],
       "stage": "I-4",
@@ -411,6 +465,22 @@
     {"name":"append_operational_ledger_entry","module":"authorization_use","signature":"(ledger: Ledger, entry: LedgerEntry, validation: AuthorizationValidationRecord, use_record: AuthorizationUseRecord, store_identity: AuthorizationUseStoreIdentity, /) -> tuple[Ledger,LedgerEntry]","class":"T1"},
     {"name":"build_synthetic_information_view","module":"capabilities","signature":"(contract: InformationContract, fabricated_fields: tuple[tuple[ObjectRef,CanonicalBytes,str],...], attempted_read_set: InformationReadSet|Applicability, injected_now: str, /) -> tuple[InformationView,AccessCapability]","class":"T1"}
   ],
+  "combined_signature_projection": {
+    "pre_atomic_source": {"path":"atomic_interaction_declaration_contract.json","raw_sha256":"565cc3947d9a3abc99ece694ec823ad0f945dbb1c7634586bcf43f2e36c2549a"},
+    "segments": [
+      {"owner":"I-3","kind":"PUBLIC_FUNCTION","count":65,"source_json_pointer":"/current_surface/public_function_signatures","canonical_byte_count":11926,"canonical_sha256":"97ff9973855cec4b251f71a89eaa24118e1969cd789c6c561bf6d9a242ce242e"},
+      {"owner":"D1","kinds":{"TYPE":9,"CALLABLE":9},"count":18,"source_selection":"/proposed_surface/new_signatures rows whose module is atomic, retaining source order","canonical_byte_count":9462,"canonical_sha256":"23d19dd013c9fb84b18675bd2b416bafdb5ce7425c045dd45ded87d3a6a4d83c"},
+      {"owner":"D2","kinds":{"TYPE":12,"CALLABLE":12},"count":24,"source_selection":"/proposed_surface/new_signatures rows whose module is interaction, retaining source order","canonical_byte_count":12942,"canonical_sha256":"ef86ff3e77453b49753729a0aae8932a0332e168407901b11629b8e138eadcba"},
+      {"owner":"I-4","kind":"TYPE","count":33,"source_json_pointer":"/types","canonical_byte_count":12282,"canonical_sha256":"34ad3400b8b3b03a644534279fa1bc132b9e9e9491ed460f874b282852577551"},
+      {"owner":"I-4","kind":"CALLABLE","count":15,"source_json_pointer":"/callables","canonical_byte_count":4403,"canonical_sha256":"c0f9908fbd7890dff935052a48fe1d7534bc0dce7aa4668a01466121f24928fd"}
+    ],
+    "ordering": "The 65 accepted public-function rows in source order, then all 42 accepted D1/D2 new-signature rows in their source order, then the 33 I-4 type definitions in /types order, then the 15 I-4 callable definitions in /callables order.",
+    "row_rule": "I-3 row=[I-3,PUBLIC_FUNCTION,module,name,signature]. Each D1/D2 row=[owner,TYPE-or-CALLABLE,module,name,signature], where owner is selected by atomic/interaction module and CALLABLE begins validate_. Each I-4 row=[I-4,TYPE-or-CALLABLE,module,name,complete source object].",
+    "row_count": 155,
+    "canonical_byte_count": 55736,
+    "canonical_sha256": "571200e6af088c7780202793e66a4f62ec81dcb302d8387280d6503e2afaad23",
+    "preservation_rule": "All 65 I-3 rows, all 42 accepted D1/D2 rows, and every original I-4 type and callable definition are exact and unchanged."
+  },
   "path_manifest": {
     "new": [
       "src/ebu_framework/trust.py",
@@ -455,11 +525,26 @@
     "capabilities": ["authorization","policy","observation","experiment","hashing","identity","errors"]
   },
   "import_graph_rule": {
-    "new_edge_count": 28,
-    "accepted_i3_edge_count": 91,
-    "i3_plus_i4_edge_count": 119,
+    "i4_new_module_count": 4,
+    "i4_new_edge_count": 28,
+    "pre_i4_package_module_count": 25,
+    "pre_i4_package_direct_import_edge_count": 124,
+    "post_i4_package_module_count": 29,
+    "post_i4_package_direct_import_edge_count": 152,
+    "pre_i4_i3_d1_d2_module_count": 17,
+    "pre_i4_i3_d1_d2_direct_edge_count": 103,
+    "post_i4_i3_d1_d2_extension_module_count": 21,
+    "post_i4_i3_d1_d2_extension_direct_edge_count": 131,
     "acyclic": true,
     "modified_predecessor_module_edges": "unchanged",
+    "pre_i4_graph_source": {"path":"atomic_interaction_declaration_contract.json","json_pointer":"/proposed_surface/post_d2_direct_imports","raw_source_sha256":"565cc3947d9a3abc99ece694ec823ad0f945dbb1c7634586bcf43f2e36c2549a"},
+    "combined_module_order": "atomic_interaction_declaration_contract.json /proposed_surface/acyclic_order followed by trust, authorization, authorization_use, capabilities",
+    "combined_projection_rule": "Canonical JSON plus LF of [[module,direct_imports[module]] for module in combined_module_order], using the accepted post-D2 direct imports followed by this contract's four direct_imports entries.",
+    "combined_projection_byte_count": 2119,
+    "combined_projection_sha256": "39067eb9b252c6b47e7dc6e640721b0c3aea6f134ab9c78e5c032874adf8082c",
+    "extension_projection_rule": "The same projection in combined-module order after excluding the eight I-1/I-2 source modules errors, canonical, identity, hashing, envelopes, numeric, primitives, and registry; direct imports may target any package module. This leaves the 15 I-3 sources, atomic, interaction, trust, authorization, authorization_use, and capabilities.",
+    "extension_projection_byte_count": 1776,
+    "extension_projection_sha256": "5fb42598a0ec166ff9a60ad4033d1f90a53ee176d99bb5bef43b4536f39d32be",
     "external_imports": {"trust":["nacl.signing","nacl.encoding","nacl.exceptions"],"authorization_use":["sqlite3","pathlib","os"],"trusted_time_production":["secrets"]},
     "forbidden": ["execution","events","ownership","durability","traces","bridge","dynamic","provenance","recovery","publication","validation","subprocess","socket","urllib","requests","pip","setuptools","build","historical exp_*","gate*","finalize_*","results"]
   },
@@ -473,23 +558,33 @@
   "root_export_suffix_types": ["SignatureProfile","TrustEvidenceKind","RevocableObjectKind","RootRole","KeyPinV1","RootThresholdV1","TrustProfileV1","IssuerKeyV1","IssuerEntry","IssuerRegistrySnapshotV1","DelegationCredentialV1","RevocationEntryV1","RevocationSnapshotV1","TrustedTimeChallengeV1","TrustedTimeAttestationV1","AuthorizationAuthenticityEnvelopeV1","TrustEvidenceEnvelopeV1","TrustedTimeService","RevocationService","AuthorizationStateStore","AuthorizedOperation","AuthorizationValidationStatus","AuthorizationCheckStatus","StageAuthorization","AuthorizationEvidenceBundle","AuthorizationCheckRecord","AuthorizationValidationRecord","AuthorizationUseStatus","AuthorizationUseStoreIdentity","AuthorizationUseRecord","ConsumeOutcome","CapabilityClass","AccessCapability"],
   "root_export_suffix_callables": ["compute_authorization_use_key","verify_ed25519_signature","validate_trust_profile","validate_issuer_registry_snapshot","validate_delegation_chain","validate_trusted_time_attestation","validate_revocation_snapshot","validate_stage_authorization","consume_stage_authorization","accept_registry_object","supersede_registry_object","accept_experiment_configuration","accept_execution_binding","append_operational_ledger_entry","build_synthetic_information_view"],
   "root_export_rule": {
-    "accepted_prefix_count": 219,
+    "accepted_i3e_prefix_count": 219,
+    "accepted_d1_suffix_count": 18,
+    "accepted_d2_suffix_count": 24,
+    "accepted_prefix_count": 261,
     "i4_suffix_type_count": 33,
     "i4_suffix_callable_count": 15,
     "i4_suffix_count": 48,
-    "post_i4_count": 267,
+    "post_i4_count": 309,
     "framing": "each UTF-8 export name followed by LF, including final name",
-    "accepted_prefix_lf_sha256": "b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d",
+    "accepted_i3e_prefix_lf_byte_count": 4410,
+    "accepted_i3e_prefix_lf_sha256": "b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d",
+    "accepted_d1_suffix_lf_byte_count": 602,
+    "accepted_d1_suffix_lf_sha256": "0c0b191b5676565d9c792e29a8dbae60ef6388d060d62b0e99d4fd5b90dac60d",
+    "accepted_d2_suffix_lf_byte_count": 712,
+    "accepted_d2_suffix_lf_sha256": "8e4439222643f4fb66d7b66b0dc4cdf58f9211ed3fc059fc1379bb93607c5e53",
+    "accepted_prefix_lf_byte_count": 5724,
+    "accepted_prefix_lf_sha256": "1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9",
     "i4_suffix_lf_byte_count": 1114,
     "i4_suffix_lf_sha256": "2b5919d755c747e7ff8f7ffe75bf4e7d6234954be83027defbe4f6e57784f421",
-    "post_i4_lf_byte_count": 5524,
-    "post_i4_lf_sha256": "90461e517d22fb8ec750acb19f397abb6cae0b6bf66952b9269e8546d5efe2ac"
+    "post_i4_lf_byte_count": 6838,
+    "post_i4_lf_sha256": "aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8"
   },
   "compatibility_authority": {
     "future_changed_paths": ["tests/framework/test_i3_integration.py","tests/framework/test_primitives_envelopes.py"],
-    "test_i3_integration": ["replace root_exports[127:] whole-tail equality with root_exports[127:219] exact I-3 suffix plus root_exports[219:] exact I-4 suffix","replace whole FailureCode equality with exact [:53], [53:88], and [88:] prefix/suffix assertions","retain all module export, import graph, fixture, authority hash, projection, reachability, and predecessor checks"],
+    "test_i3_integration": ["replace root_exports[127:] whole-tail equality with exact root_exports[127:219] I-3, [219:237] D1, [237:261] D2, and [261:] I-4 suffix assertions","replace whole FailureCode equality with exact [:53], [53:88], [88:102], [102:124], and [124:] prefix/suffix assertions","retain all module export, import graph, D1/D2 fixture, authority hash, projection, reachability, and predecessor checks"],
     "test_primitives_envelopes": ["replace len(root_exports)==127 with len(root_exports)>=127 and exact root_exports[:127] equality to the accepted 127-name tuple","apply sortedness and uniqueness to root_exports[:127]; retain whole-root uniqueness and import/export equality","retain the exact failure_members[:53] assertion and every other assertion unchanged"],
-    "historical_prefixes": {"i2_root":127,"i3_root":219,"i2_failure":53,"i3_failure":88},
+    "historical_prefixes": {"i2_root":127,"i3_root":219,"d1_root":237,"d2_root":261,"i2_failure":53,"i3_failure":88,"d1_failure":102,"d2_failure":124},
     "nonweakening": "No module, import, reachability, hash, fixture, path, predecessor, or historical-prefix check may be removed or relaxed."
   },
   "production_fail_closed": {
@@ -506,11 +601,14 @@
     "No authorization validation or consumption creates ScientificExecutionLease or advances model state."
   ],
   "nonclaims": [
+    "This synchronization is mechanical authority maintenance, not new scientific theory; accepted D1 and D2 remain unchanged.",
+    "No I-4 scientific, security, dependency, governance, operation, schema, callable, behavioral, validation, or nonclaim rule is redesigned.",
     "No real trust root, credential, endpoint, issuer, or production pin is supplied.",
     "No distributed single-use guarantee is made.",
     "No configuration, binding, registry object, or ledger is accepted by this documentation task.",
     "No T2, T3, scientific execution, publication, recovery, correction, or Gate behavior is implemented or authorized.",
     "No opaque ObjectRef proves role, content, lifecycle, truth, or scientific adequacy.",
-    "UQ-25 closure is prospective until a later implementation installs and verifies the exact lock."
+    "UQ-25 closure is prospective until a later implementation installs and verifies the exact lock.",
+    "Framework I-4 implementation, book revision or rendering, and scientific execution are not begun."
   ]
 }

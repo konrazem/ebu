@@ -1,13 +1,16 @@
 # Unified Python Research Framework I-4 Authority Amendment
 
-Status: prospective documentation-only authority candidate; unimplemented;
-production disabled.
+Status: prospective post-atomic documentation-only authority synchronization
+candidate; unimplemented; production disabled.
 
 ## 1. Decision
 
 This amendment prospectively closes Framework I-4 external authorization,
 local single-use, registry/configuration/binding acceptance, operational-ledger
-append, and synthetic information-capability mechanics. Its mechanical
+append, and synthetic information-capability mechanics. This revision performs
+only the mechanical synchronization required after the accepted D1 atomic and
+D2 interaction declarations occupied additive positions that were open when
+I-4 was first frozen. Its mechanical
 rendering is `unified_python_research_framework_i4_contract.json`. The
 validation authority is
 `unified_python_research_framework_i4_validation_contract.json`. The closed
@@ -18,20 +21,23 @@ The UQ-25 pair prospectively selects `PyNaCl==1.6.2` with the exact
 `cffi==2.1.1` and `pycparser==3.0` closure. The governance pair defines a
 future production-bootstrap requirement but supplies no instance.
 
-This task creates authority documents only. It authorizes no Python edit,
+This task changes authority documents only. It authorizes no Python edit,
 fixture installation, dependency installation, provider import, protected
 operation, production bootstrap, test execution, commit, integration, or
 push.
 
 ## 2. Authority coordinates and narrow precedence
 
-The exact base is merge commit
+The original accepted I-4 authority was developed against merge commit
 `eaafbb50f30f3ed3e1300bc9d96456f570d17e13`, subject “Integrate Framework
 I-3E root exports fixture and integration,” with ordered parents
 `4ab0da08a55dd3c9db197ab669a4e0d3050bb1fa` and
-`dac8717017e8ba6d6c46b17d031095f3b898762f`.
+`dac8717017e8ba6d6c46b17d031095f3b898762f`. That historical coordinate and
+the projections derived from it remain explicit evidence; they are not erased
+or relabelled as the current implementation predecessor.
 
-The following predecessor identities are mandatory:
+The following identities were mandatory at that original authority base and
+remain historical locks on the unchanged I-4 design:
 
 | Source | Raw SHA-256 |
 |---|---|
@@ -46,32 +52,61 @@ The following predecessor identities are mandatory:
 | I-3 validation raw | `9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b` |
 | I-3 validation canonical | `ba70b9915ebc5957225adc3f4806d89a540bec86560a29d63471613af2659079` |
 
-Within I-4 only, this amendment and its contract supersede inconsistent
-planning prose about names, operations, fields, ownership, paths, provider
-closure, validation, and activation. They do not reopen accepted I-1, I-2, or
-I-3 behavior. The specification and plan remain authoritative outside that
-narrow scope. The dependency pair governs only UQ-25. The governance pair
-governs only the requirements for a later bootstrap. A Markdown/JSON mismatch
-is an integrity failure; it is never permission to select convenient clauses.
+The synchronized implementation predecessor is merge commit
+`59594823e24eaf6ca83e1e2aa4a1129d8e109ae5`, tree
+`cdca582de7faf17db053946e4f7e8a6d83c37ffe`, subject “Integrate EBU
+interaction declarations D2,” empty body, and ordered parents
+`297535d787355b9911fc01ae5b777a553aa9815b` and
+`cab2b5b35f0b289f9e3e93d6e944195692207446`.
+
+The accepted additive history is exact:
+
+| Stage | Authority/integration history | Accepted additive surface |
+|---|---|---|
+| D1 | authority integration `48a9f953895994da96e46a00c6a6dd29c72e9497`; implementation `9a055d467bb84630c5cf7bf31f95f18aad3a1db9`; integration `297535d787355b9911fc01ae5b777a553aa9815b` | 18 root exports and 14 failures |
+| D2 | implementation `cab2b5b35f0b289f9e3e93d6e944195692207446`; integration `59594823e24eaf6ca83e1e2aa4a1129d8e109ae5` | 24 root exports and 22 failures |
+
+Within I-4 only, this synchronization supersedes the original incompatible
+predecessor coordinates, ordinal positions, aggregate counts and hashes,
+import and signature projections, fixture projections, and regression
+expectations. It does not redesign or weaken any I-4 scientific, security,
+dependency, governance, operation, schema, callable, behavioral, validation,
+or nonclaim rule. It does not reopen accepted I-1 through I-3, the accepted
+I-3C repair, atomic-generator foundation, D1, or D2 behavior. The specification
+and plan remain authoritative outside that narrow scope. The dependency pair
+governs only UQ-25 and remains byte-identical. The governance pair governs only
+the requirements for a later bootstrap and remains byte-identical. A
+Markdown/JSON mismatch is an integrity failure; it is never permission to
+select convenient clauses.
 
 ## 3. Accepted predecessor boundary
 
-I-4 begins from exactly:
+Historically, I-4 was projected after exactly 219 ordered root exports, 88
+ordered failure codes, and 15 I-3 modules with 91 direct edges. Those original
+coordinates remain recorded in §2 and the mechanical contract.
 
-- 219 ordered root exports, LF-framed digest
-  `b79f89d46e7817d7ea8ba819497641754007bf52e712372ac50b41ef06d66c3d`;
-- 88 ordered failure codes, LF-framed digest
-  `0a9e0c22d74d0a1891af19546422296881d2fa6ba16319238def55578c9706d3`;
-- 15 I-3 modules and 91 exact direct package-import edges;
+After accepted D1 and D2, I-4 implementation begins from exactly:
+
+- 261 ordered root exports, 5,724 LF-framed bytes, SHA-256
+  `1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9`;
+- 124 ordered failure codes, 3,242 LF-framed bytes, SHA-256
+  `115490be2e724f70efe15cec77f9ec2ee5cd5f7c41b7b37a5e5054dc7fea14f0`;
+- 25 package modules and 124 exact direct package-import edges;
+- 17 I-3+D1+D2 modules and 103 exact direct edges;
+- zero cycles;
 - 23 accepted I-3 implementation paths;
 - 544 I-3 validation vectors; and
 - byte-identical `i3_validation_v1.json` at 24,179,582 bytes and SHA-256
   `e5790524bb7d63dcc18e15cd933d801c225253230f09b06d9828a703fc6218c5`.
 
-Every predecessor blob, byte length, raw digest, stage owner, classification,
-and permitted future disposition appears exactly once in the predecessor
-manifest. An implementation must stop before editing if any non-null identity
-does not match.
+Every one of the 261 tracked predecessor paths, modes, Git blobs, byte lengths,
+raw digests, classifications, and future I-4 dispositions appears exactly once
+in the predecessor manifest. That inventory includes the original I-1 through
+I-4 authority, accepted I-3C repair, atomic-generator foundation, D1/D2
+authority and implementations, workflow skills, book-planning documents,
+scientific results, images, and PDFs. Every non-I-4 implementation path must be
+preserved during later implementation. An implementation must stop before
+editing if any applicable identity does not match.
 
 ## 4. Exact I-4 scope and nonclaims
 
@@ -283,26 +318,54 @@ capabilities.
 No alias, registry, object graph, attribute, mapping-key, path, URI, callback,
 descriptor, or nested-reference traversal is allowed.
 
-## 12. Failure, export, and import closure
+## 12. Failure, export, import, and signature closure
 
-The 61-code I-4 suffix begins at ordinal 89 and ends at ordinal 149.
+The accepted failure order is the 88-code I-3E prefix, the 14-code D1 suffix,
+the 22-code D2 suffix, and the unchanged 61-code I-4 suffix. The I-4 suffix
+therefore begins at one-based `FailureCode` inventory ordinal 125 and ends at
+ordinal 185. Its names and internal order remain byte-identical: 1,652
+LF-framed bytes and SHA-256
+`9c852c935a49700365fcb7ba7cc7c905448ce9ca8f6c49754e2f8ab1843a9fb7`.
+The complete 185-code projection is 4,894 LF-framed bytes with SHA-256
+`7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3`.
+These inventory ordinals are distinct from the event-local
+`FailureEnvelope.failure_ordinal` coordinate; the latter is not renumbered by
+an enum-prefix insertion.
+
 `FailureEnvelope` retains the accepted 16-field projection. Every code's
 summary, retry class, durability state, scientific effect, and evidence rule
 is frozen in the contract. No I-4 failure reports state or policy-memory
 advance.
 
-The exact 48-name root suffix contains 33 types followed by 15 callables. It
-is appended after the accepted 219 names, producing 267 exports. Its
-LF-framed digest is
+The exact forward root order is the accepted 219-name I-3E prefix, accepted
+18-name D1 suffix, accepted 24-name D2 suffix, and unchanged 48-name I-4
+suffix. The I-4 suffix contains 33 types followed by 15 callables. Its 1,114
+LF-framed bytes and SHA-256 remain
 `2b5919d755c747e7ff8f7ffe75bf4e7d6234954be83027defbe4f6e57784f421`;
-the complete 267-name digest is
-`90461e517d22fb8ec750acb19f397abb6cae0b6bf66952b9269e8546d5efe2ac`.
+the complete 309-name projection is 6,838 LF-framed bytes with SHA-256
+`aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8`.
 
-The four I-4 modules add exactly 28 direct package edges. All 91 accepted I-3
-edges remain byte-identical, giving 119 I-3-plus-I-4 edges. The graph is
-acyclic. Provider imports exist only in `trust.py`; SQLite imports only in
-`authorization_use.py`; OS randomness only in the production trusted-time
-path. The complete module `__all__` tuples are mechanical.
+The accepted post-D2 package graph has 25 modules and 124 direct edges. The
+four unchanged I-4 modules—`trust`, `authorization`, `authorization_use`, and
+`capabilities`—add exactly 28 direct edges and change no predecessor module
+edge. The combined package has 29 modules and 152 direct edges. Its canonical
+ordered graph projection is 2,119 bytes with SHA-256
+`39067eb9b252c6b47e7dc6e640721b0c3aea6f134ab9c78e5c032874adf8082c`.
+The I-3+D1+D2+I-4 extension projection has 21 source modules and 131 direct
+edges; its canonical projection is 1,776 bytes with SHA-256
+`5fb42598a0ec166ff9a60ad4033d1f90a53ee176d99bb5bef43b4536f39d32be`.
+Both graphs have zero cycles. Provider imports exist only in `trust.py`;
+SQLite imports only in `authorization_use.py`; OS randomness only in the
+production trusted-time path. The complete module `__all__` tuples are
+mechanical.
+
+The complete signature projection preserves 65 accepted I-3 public functions,
+all 42 accepted D1/D2 additions, and the original 33 I-4 type plus 15 I-4
+callable definitions. Its 155 rows encode to 55,736 canonical bytes with
+SHA-256
+`571200e6af088c7780202793e66a4f62ec81dcb302d8387280d6503e2afaad23`.
+The mechanical contract freezes its exact source ownership, row construction,
+and ordering.
 
 ## 13. Closed implementation path manifest
 
@@ -346,11 +409,12 @@ Two accepted tests contain final-snapshot assumptions that cannot survive an
 append-only I-4 API.
 
 In `tests/framework/test_i3_integration.py`, future implementation replaces
-the whole tail assertion with exact `[127:219]` I-3 and `[219:]` I-4 suffix
-assertions. Failure inventory changes from exact whole 88 to exact `[:53]`,
-`[53:88]`, and `[88:]` assertions. All authority hashes, fixture checks,
-module exports, import graph, projection, collision, reachability, and
-predecessor checks remain.
+the whole tail assertion with exact `[127:219]` I-3, `[219:237]` D1,
+`[237:261]` D2, and `[261:]` I-4 suffix assertions. Failure inventory changes
+from exact whole 88 to exact `[:53]`, `[53:88]`, `[88:102]`, `[102:124]`, and
+`[124:]` assertions. All authority hashes, D1/D2 and I-3 fixture checks, module
+exports, import graph, projection, collision, reachability, and predecessor
+checks remain.
 
 In `tests/framework/test_primitives_envelopes.py`, future implementation
 changes the exact root length to at least 127 and applies the accepted
@@ -386,7 +450,13 @@ No actual package or lock file changes in this task.
 
 ## 16. Synthetic validation authority
 
-V4, V5, and V11 contain 126 exact vectors:
+V4, V5, and V11 contain 126 exact vectors. Independent post-atomic
+classification finds all 126 byte-identical and unaffected, zero mechanically
+updated, zero invalid under the combined authority, and zero silently dropped
+or weakened. No vector contains the superseded predecessor, root-export,
+`FailureCode` inventory-ordinal, graph, or signature coordinate. The vector's
+`FailureEnvelope.failure_ordinal` remains its event-local vector ordinal, so
+its failure ID also remains exact.
 
 | Category | Count |
 |---|---:|
@@ -402,16 +472,21 @@ V4, V5, and V11 contain 126 exact vectors:
 | precedence | 10 |
 | reachability | 9 |
 
-Outcomes are 21 success, 100 failure, and 5 static pass. Every failure has an
-exact derived `FailureId`. Every vector freezes provider/service/SQLite/
-mutation/model-step call counts and safely completed checks. There are zero
-effective-input collisions and zero conflicting outcomes.
+Outcomes remain 21 success, 100 failure, and 5 static pass. Every failure has
+an exact derived `FailureId`. The vectors contain 57 distinct active predicates
+and 110 total predicate activations. Aggregate call counts remain 181 provider
+constructions, 181 provider verifies, 28 trusted-time service calls, 30
+revocation service calls, 8 SQLite begins, 6 protected mutations, 2,598 safely
+completed checks, and zero model steps. There are zero effective-input
+collisions and zero conflicting outcomes.
 
-The future fixture is the canonical projection defined by the validation
-contract: 132,231 bytes, one final LF, SHA-256
+The future fixture is the unchanged canonical projection defined by the
+validation contract: 132,231 bytes, one final LF, SHA-256
 `10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa`.
-Two independent standard-library routes must reconstruct identical bytes.
-This task does not create that fixture.
+This is both its historical and post-atomic identity because the synchronized
+coordinates are outside the fixture projection. Two independent
+standard-library routes must reconstruct identical bytes. This task does not
+create that fixture or any future I-4 path.
 
 ## 17. Lifecycle and authorization boundaries
 
@@ -440,5 +515,12 @@ native library is loaded. No protected operation, model step, policy,
 measurement, simulation, trajectory, runner, finalizer, publication,
 recovery, or Gate operation runs.
 
+This revision is mechanical authority synchronization, not new scientific
+theory. D1 and D2 remain accepted and unchanged. I-4 semantics, UQ-25, and
+governance remain unchanged. Framework I-4 implementation was not begun.
+Book revision/rendering and scientific execution were not begun.
+
 The only next possible stage is a fresh independent I-4 authority audit. It
 has not begun.
+
+`READY_FOR_INDEPENDENT_I4_POST_ATOMIC_AUTHORITY_AUDIT`

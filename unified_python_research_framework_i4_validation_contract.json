@@ -3,7 +3,9 @@
   "contract_version": "1.0.0",
   "status": "PROSPECTIVE_FULLY_MATERIALIZED_SYNTHETIC_AUTHORITY_UNIMPLEMENTED",
   "authority": {
-    "base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+    "base_head": "59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+    "base_tree": "cdca582de7faf17db053946e4f7e8a6d83c37ffe",
+    "original_authority_base_head": "eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
     "mechanical_contract": "unified_python_research_framework_i4_contract.json",
     "dependency_contract": "unified_python_research_framework_i4_uq25_dependency_contract.json",
     "future_fixture": "tests/framework/fixtures/authorization_vectors_v1.json",
@@ -127,7 +129,7 @@
     "interface_version": "1.0.0",
     "object_refs": [],
     "event_key": "NOT_APPLICABLE",
-    "failure_ordinal": "numeric vector ordinal",
+    "failure_ordinal": "numeric vector ordinal used as the FailureEnvelope event coordinate; it is not the one-based FailureCode inventory ordinal and is unchanged by D1/D2 prefix insertion",
     "framing": "accepted errors.py 8-byte big-endian length frame and SHA-256"
   },
   "category_counts": {
@@ -149,6 +151,29 @@
     "SUCCESS": 21
   },
   "vector_count": 126,
+  "post_atomic_vector_classification": {
+    "classes": ["BYTE_IDENTICAL_UNAFFECTED","MECHANICALLY_UPDATED","INVALID_UNDER_COMBINED_AUTHORITY"],
+    "byte_identical_unaffected": {"first_id":"i4v-001","last_id":"i4v-126","contiguous_inclusive":true,"count":126},
+    "mechanically_updated": {"vector_ids":[],"count":0},
+    "invalid_under_combined_authority": {"vector_ids":[],"count":0},
+    "classification_projection_rule": "Canonical JSON plus LF of [[vector_id,BYTE_IDENTICAL_UNAFFECTED] for every vector in exact vector order].",
+    "classification_projection_byte_count": 5042,
+    "classification_projection_sha256": "569ef6c820068451c0637baff212dda683f15597d516ce973a5449788ea2b361",
+    "reason": "No vector effective_input or expected object contains the superseded base commit, root-export prefix, FailureCode inventory ordinal, import graph, or combined-signature coordinate. FailureEnvelope.failure_ordinal is the vector-local event coordinate and remains exact; the I-4 FailureCode inventory ordinals move separately to 125-185.",
+    "silently_dropped_or_weakened_count": 0
+  },
+  "post_atomic_static_reconstruction": {
+    "active_predicate_unique_count": 57,
+    "active_predicate_activation_count": 110,
+    "active_predicate_projection_rule": "Canonical JSON plus LF of [[predicate,number_of_vectors_whose_expected.predicate_truth_set_contains_predicate] for predicates in first-appearance order].",
+    "active_predicate_projection_byte_count": 1878,
+    "active_predicate_projection_sha256": "17ce1975cc4ab9117947c84c3a233a2cab1d5fc1e0f6432fea6dd28a61517b49",
+    "call_count_totals": {"provider_verify_key_constructor":181,"provider_verify":181,"service_trusted_time":28,"service_revocation":30,"sqlite_begin":8,"protected_mutation":6,"model_step":0,"completed_checks":2598},
+    "failure_inventory_ordinal_rule": "For each failure code in mechanical-contract failure_append_order at zero-based index i, the one-based FailureCode inventory ordinal is 125+i. This does not alter vector expected.failure_ordinal.",
+    "failure_inventory_ordinal_projection_byte_count": 2142,
+    "failure_inventory_ordinal_projection_sha256": "b896bb85eca959a8a8693231a70ba55cd9c4f85c1c12d19f817ad3948e7bac0c",
+    "collision_counts": {"identical_effective_input":0,"conflicting_outcome":0}
+  },
   "test_methods": [
     {
       "path": "tests/framework/test_authorization.py",
@@ -226,6 +251,18 @@
       "rule": "exact 127 prefix plus exact 92-name I-3 suffix unchanged"
     },
     {
+      "id": "D1_ROOT_PREFIX",
+      "count": 237,
+      "rule": "exact 219-name I-3E prefix plus exact 18-name D1 suffix unchanged"
+    },
+    {
+      "id": "D2_ROOT_PREFIX",
+      "count": 261,
+      "byte_count": 5724,
+      "sha256": "1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9",
+      "rule": "exact 237-name post-D1 prefix plus exact 24-name D2 suffix unchanged"
+    },
+    {
       "id": "I2_FAILURE_PREFIX",
       "count": 53,
       "rule": "exact names/order/digest unchanged"
@@ -236,16 +273,89 @@
       "rule": "exact 53 prefix plus exact 35-code suffix unchanged"
     },
     {
+      "id": "D1_FAILURE_PREFIX",
+      "count": 102,
+      "rule": "exact 88-code I-3E prefix plus exact 14-code D1 suffix unchanged"
+    },
+    {
+      "id": "D2_FAILURE_PREFIX",
+      "count": 124,
+      "byte_count": 3242,
+      "sha256": "115490be2e724f70efe15cec77f9ec2ee5cd5f7c41b7b37a5e5054dc7fea14f0",
+      "rule": "exact 102-code post-D1 prefix plus exact 22-code D2 suffix unchanged"
+    },
+    {
       "id": "I3_FIXTURE",
       "count": 544,
       "rule": "exact bytes and SHA-256 unchanged"
     },
     {
+      "id": "D1_FIXTURE",
+      "count": 731,
+      "byte_count": 469664,
+      "sha256": "6b4ecac191320e4ee6b02763249fdc9db14b7fb19091814ca10c6703e36acda9",
+      "rule": "accepted D1 fixture remains byte-identical"
+    },
+    {
+      "id": "D2_FIXTURE",
+      "count": 1043,
+      "byte_count": 662163,
+      "sha256": "33f577a28f1964ad79c80a2909512e196825f875f30959c8752d8190fed29399",
+      "rule": "accepted D2 fixture remains byte-identical"
+    },
+    {
       "id": "I3_IMPORT_GRAPH",
+      "module_count": 15,
       "count": 91,
-      "rule": "exact 15-module direct edges unchanged"
+      "cycle_count": 0,
+      "rule": "exact accepted I-3 declaration-source modules and direct imports unchanged"
+    },
+    {
+      "id": "PRE_I4_PACKAGE_IMPORT_GRAPH",
+      "module_count": 25,
+      "count": 124,
+      "cycle_count": 0,
+      "rule": "exact accepted post-D2 module ownership, direct imports, and order unchanged"
+    },
+    {
+      "id": "PRE_I4_EXTENSION_IMPORT_GRAPH",
+      "module_count": 17,
+      "count": 103,
+      "cycle_count": 0,
+      "rule": "exact accepted I-3+D1+D2 declaration-source graph unchanged"
+    },
+    {
+      "id": "POST_I4_PACKAGE_IMPORT_GRAPH",
+      "module_count": 29,
+      "count": 152,
+      "cycle_count": 0,
+      "rule": "accepted post-D2 package graph followed by the unchanged four-module, 28-edge I-4 contribution"
+    },
+    {
+      "id": "POST_I4_EXTENSION_IMPORT_GRAPH",
+      "module_count": 21,
+      "count": 131,
+      "cycle_count": 0,
+      "rule": "exact I-3+D1+D2+I-4 declaration and authorization source-module projection"
+    },
+    {
+      "id": "COMBINED_SIGNATURE_PROJECTION",
+      "count": 155,
+      "byte_count": 55736,
+      "sha256": "571200e6af088c7780202793e66a4f62ec81dcb302d8387280d6503e2afaad23",
+      "rule": "65 accepted I-3 public functions, 42 accepted D1/D2 additions, 33 I-4 types, and 15 I-4 callables remain exact"
     }
   ],
+  "generated_path_expectations": {
+    "future_fixture": "tests/framework/fixtures/authorization_vectors_v1.json",
+    "future_fixture_must_be_absent_during_authority_synchronization": true,
+    "future_test_paths": ["tests/framework/test_authorization.py","tests/framework/test_authorization_use.py","tests/framework/test_capabilities.py"],
+    "complete_future_path_manifest_source": "unified_python_research_framework_i4_contract.json /path_manifest",
+    "expected_new_path_count": 8,
+    "expected_modified_path_count": 10,
+    "materialization_authorized_now": false,
+    "additional_generated_path_count": 0
+  },
   "collision_audit": {
     "key": "ECJ-1 of [interface,effective_input] excluding vector_id, name, and expected",
     "identical_effective_input_collisions": 0,
@@ -273,8 +383,12 @@
     "route_b": "strict JSON parse with duplicate-pair hook; separately written recursive encoder for null/bool/int/string/list/dict using code-point key order; append LF",
     "shared_encoder": false,
     "required_agreement": "byte-for-byte, byte count, SHA-256, vector/order/category/outcome/call-count/failure-ID/collision projections",
+    "historical_future_fixture_byte_count": 132231,
+    "historical_future_fixture_sha256": "10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa",
     "future_fixture_byte_count": 132231,
-    "future_fixture_sha256": "10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa"
+    "future_fixture_sha256": "10ab53cd9d612c88ef77ad8ee9416e18def2c88ac0eb71f9cb3c25c409e3d0aa",
+    "post_atomic_identity_changed": false,
+    "post_atomic_identity_reason": "The fixture projection contains the unchanged fixture schema, authority_versions, fixed synthetic authority, and byte-identical 126 vectors only. Mechanical predecessor, FailureCode inventory ordinal, export, import-graph, and combined-signature coordinates remain outside the fixture projection."
   },
   "validation_safety": {
     "synthetic_only": true,
@@ -5681,9 +5795,11 @@
     }
   ],
   "nonclaims": [
+    "Post-atomic synchronization changes no vector scientific or security content; D1 and D2 remain accepted and unchanged.",
     "No fixture is installed by this authority candidate.",
     "No provider is imported or executed by reconstruction.",
     "No real key, endpoint, trust profile, credential, configuration, binding, authorization, use, result, or Gate artifact exists.",
-    "T2 and T3 remain unreachable."
+    "T2 and T3 remain unreachable.",
+    "Framework I-4 implementation, book revision or rendering, and scientific execution are not begun."
   ]
 }
