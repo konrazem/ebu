@@ -6,7 +6,7 @@ import hashlib
 from typing import Any, TypeVar
 
 from .canonical import ECJ1Value, encode_ecj1
-from .errors import FailureCode, _fail
+from .errors import Applicability, FailureCode, _fail
 from .identity import (
     ArtifactByteHash,
     AugmentedClosedLoopReplayStateHash,
@@ -108,6 +108,80 @@ def compute_object_content_hash(
             ),
         },
         ObjectContentHash,
+    )
+
+
+def compute_authorization_use_key(
+    *,
+    stage_authorization_ref: ObjectRef,
+    requested_operation: str,
+    target_object_refs: tuple[ObjectRef, ...],
+    accepted_configuration_ref_or_not_applicable: ObjectRef | Applicability,
+    accepted_execution_binding_ref_or_not_applicable: ObjectRef | Applicability,
+    execution_identity_or_not_applicable: ExecutionIdentity | Applicability,
+) -> AuthorizationUseKey:
+    """Hash one exact authorization request without run-local use metadata."""
+
+    _exact(stage_authorization_ref, ObjectRef, "stage_authorization_ref")
+    if type(requested_operation) is not str or not requested_operation:
+        _fail(
+            FailureCode.CANONICALIZATION_FAILURE,
+            "requested_operation must be nonempty text",
+        )
+    if type(target_object_refs) is not tuple or not target_object_refs or not all(
+        type(reference) is ObjectRef for reference in target_object_refs
+    ):
+        _fail(
+            FailureCode.DIGEST_TYPE_MISMATCH,
+            "target_object_refs require a nonempty exact ObjectRef tuple",
+        )
+    ref_keys = tuple(bytes(encode_ecj1(reference.to_ecj1())) for reference in target_object_refs)
+    if ref_keys != tuple(sorted(ref_keys)) or len(ref_keys) != len(set(ref_keys)):
+        _fail(
+            FailureCode.CANONICALIZATION_FAILURE,
+            "target_object_refs must be ECJ-1 ordered and duplicate-free",
+        )
+
+    def optional_ref(value: object, field: str) -> ECJ1Value:
+        if type(value) is ObjectRef:
+            return value.to_ecj1()
+        if value is Applicability.NOT_APPLICABLE:
+            return Applicability.NOT_APPLICABLE.value
+        _fail(
+            FailureCode.DIGEST_TYPE_MISMATCH,
+            f"{field} requires ObjectRef or NOT_APPLICABLE",
+        )
+
+    execution: ECJ1Value
+    if execution_identity_or_not_applicable is Applicability.NOT_APPLICABLE:
+        execution = Applicability.NOT_APPLICABLE.value
+    elif (
+        type(execution_identity_or_not_applicable).__name__ == "ExecutionIdentity"
+        and hasattr(execution_identity_or_not_applicable, "to_ecj1")
+    ):
+        execution = execution_identity_or_not_applicable.to_ecj1()
+    else:
+        _fail(
+            FailureCode.DIGEST_TYPE_MISMATCH,
+            "execution_identity_or_not_applicable requires ExecutionIdentity or NOT_APPLICABLE",
+        )
+    return _hash_preimage(
+        {
+            "hash_domain": "ebu.authorization-use-key.v1",
+            "stage_authorization_ref": stage_authorization_ref.to_ecj1(),
+            "requested_operation": requested_operation,
+            "target_object_refs": [reference.to_ecj1() for reference in target_object_refs],
+            "accepted_configuration_ref_or_not_applicable": optional_ref(
+                accepted_configuration_ref_or_not_applicable,
+                "accepted_configuration_ref_or_not_applicable",
+            ),
+            "accepted_execution_binding_ref_or_not_applicable": optional_ref(
+                accepted_execution_binding_ref_or_not_applicable,
+                "accepted_execution_binding_ref_or_not_applicable",
+            ),
+            "execution_identity_or_not_applicable": execution,
+        },
+        AuthorizationUseKey,
     )
 
 
@@ -674,4 +748,5 @@ __all__ = (
     "compute_represented_state_projection_hash",
     "compute_source_file_raw_sha256",
     "compute_state_payload_hash",
+    "compute_authorization_use_key",
 )

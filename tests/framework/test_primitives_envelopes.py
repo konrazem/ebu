@@ -28,6 +28,40 @@ I2_PATHS = (
     "tests/framework/test_numeric.py",
     "tests/framework/test_primitives_envelopes.py",
 )
+_ACCEPTED_I2_ROOT_EXPORTS = (
+    "AccountingBoundary", "AliasRecord", "Applicability", "ArtifactByteHash",
+    "AugmentedClosedLoopReplayStateHash", "AuthorizationUseKey", "Binary64BitsV1", "CanonicalBytes",
+    "CanonicalScientificTracePayloadHash", "CanonicalTracePrefixHash", "CanonicalTraceRowHash", "CanonicalTraceState",
+    "CanonicalizationVersion", "ClaimStatus", "ClockSystem", "CommonObjectEnvelope",
+    "ComparisonResult", "CompatibilityResult", "Completeness", "ConversionRule",
+    "CoreNumberV1", "DecimalV1", "Dimension", "DurabilityState",
+    "Duration", "ECJ1Value", "Epoch", "ErrorBound",
+    "ExactConversion", "ExecutionSemanticsHash", "FailureCode", "FailureEnvelope",
+    "FailureEventKey", "FailureEvidenceRef", "FailureId", "FailureInterfaceRef",
+    "FailureObjectRef", "FailureStage", "Horizon", "InformationViewHash",
+    "Instant", "IntegerV1", "LifecycleStatus", "LifecycleTransition",
+    "LifecycleValidationResult", "NamespaceEntry", "NamespaceRegistrySnapshot", "NumericalOperation",
+    "NumericalPolicyV1", "NumericalResult", "NumericalVariant", "ObjectContentHash",
+    "ObjectRef", "OperandValidationResult", "PolicyMemoryAdvance", "PolicyMemoryPayloadHash",
+    "ProposalSetHash", "Quantity", "QuantityContext", "RationalV1",
+    "RecordMetadata", "Region", "RegistryRecord", "RepresentedStateProjectionHash",
+    "ResolutionDetail", "ResolutionRecord", "ResolutionState", "ResourceType",
+    "RetryClass", "RuntimeConstraintSet", "ScientificId", "ScientificIdAllocationClaimV1",
+    "ScientificStatusEffect", "SemanticVersion", "ServiceType", "SignConvention",
+    "SourceFileRawSha256", "StateAdvance", "StatePayloadHash", "SupersessionRelation",
+    "SupersessionValidationResult", "UncertaintyKind", "UncertaintyRecord", "Unit",
+    "__version__", "allocate_scientific_id", "apply_exact_core_operation", "compute_artifact_byte_hash",
+    "compute_augmented_replay_state_hash", "compute_canonical_trace_payload_hash", "compute_canonical_trace_prefix_hash", "compute_canonical_trace_row_hash",
+    "compute_execution_semantics_hash", "compute_information_view_hash", "compute_object_content_hash", "compute_policy_memory_payload_hash",
+    "compute_proposal_set_hash", "compute_represented_state_projection_hash", "compute_source_file_raw_sha256", "compute_state_payload_hash",
+    "convert_quantity_exact", "decimal_to_rational_exact", "encode_ecj1", "normalize_core_number",
+    "parse_ecj1", "parse_scientific_id", "parse_semantic_version", "register_draft",
+    "resolve_alias", "resolve_ref", "validate_boundary_compatibility", "validate_clock_compatibility",
+    "validate_conversion_rule", "validate_dimension_compatibility", "validate_horizon", "validate_lifecycle_transition",
+    "validate_numerical_policy", "validate_object_envelope", "validate_quantity", "validate_region_compatibility",
+    "validate_resolution_detail", "validate_resource_service_compatibility", "validate_sign_convention_compatibility", "validate_supersession_relation",
+    "validate_time_basis", "validate_uncertainty_record", "validate_unit_compatibility",
+)
 MODULE_ALL = {
     "errors": (
         "Applicability", "CanonicalTraceState", "DurabilityState", "FailureCode",
@@ -393,9 +427,11 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
         for module, expected in MODULE_ALL.items():
             self.assertEqual(_literal_assignment(trees[module], "__all__"), expected)
         root_exports = _literal_assignment(trees["__init__"], "__all__")
-        self.assertEqual(len(root_exports), 127)
-        self.assertEqual(root_exports, tuple(sorted(root_exports)))
-        self.assertEqual(len(set(root_exports)), 127)
+        self.assertGreaterEqual(len(root_exports), 127)
+        self.assertEqual(root_exports[:127], _ACCEPTED_I2_ROOT_EXPORTS)
+        self.assertEqual(root_exports[:127], tuple(sorted(root_exports[:127])))
+        self.assertEqual(len(set(root_exports[:127])), 127)
+        self.assertEqual(len(set(root_exports)), len(root_exports))
         root_imports = {alias.asname or alias.name for node in trees["__init__"].body if isinstance(node, ast.ImportFrom) for alias in node.names}
         self.assertEqual(set(root_exports) - {"__version__"}, root_imports)
         self.assertEqual(_literal_assignment(trees["__init__"], "__version__"), "0.1.0a1")

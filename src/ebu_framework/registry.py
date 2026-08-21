@@ -333,6 +333,22 @@ def register_draft(
         return record
 
 
+def _with_lifecycle_status(
+    record: RegistryRecord, status: LifecycleStatus, /
+) -> RegistryRecord:
+    if type(record) is not RegistryRecord or type(status) is not LifecycleStatus:
+        _fail(
+            FailureCode.REGISTRY_RECORD_CONFLICT,
+            "registry lifecycle replacement requires exact record and status",
+        )
+    transitioned = object.__new__(RegistryRecord)
+    object.__setattr__(transitioned, "object_ref", record.object_ref)
+    object.__setattr__(transitioned, "object_kind", record.object_kind)
+    object.__setattr__(transitioned, "canonical_value", record.canonical_value)
+    object.__setattr__(transitioned, "lifecycle_status", status)
+    return transitioned
+
+
 def resolve_ref(registry: _ObjectRegistryStore, reference: ObjectRef) -> RegistryRecord:
     if type(registry) is not _ObjectRegistryStore or type(reference) is not ObjectRef:
         _fail(FailureCode.REF_NOT_FOUND, "invalid registry or reference")

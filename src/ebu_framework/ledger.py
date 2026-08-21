@@ -288,6 +288,31 @@ def validate_ledger(ledger: Ledger, entries: tuple[LedgerEntry, ...], /) -> None
     return None
 
 
+def _validate_operational_append(ledger: Ledger, entry: LedgerEntry, /) -> None:
+    if type(ledger) is not Ledger or type(entry) is not LedgerEntry:
+        _formation_failure("_validate_operational_append")
+    if ledger.ledger_kind is not LedgerKind.OPERATIONAL:
+        _failure(FailureCode.LEDGER_LINK_INVALID, "_validate_operational_append")
+    entry_ref = _envelope_ref(entry)
+    if not (
+        entry.ledger_id == ledger.envelope.object_id
+        and entry.entry_ordinal.value == len(ledger.entry_refs) - 1
+        and bool(ledger.entry_refs)
+        and ledger.entry_refs[-1] == entry_ref
+        and ledger.head_entry_ref == entry_ref
+        and (
+            (entry.entry_ordinal.value == 0 and entry.predecessor_entry_ref is Applicability.NOT_APPLICABLE)
+            or (
+                entry.entry_ordinal.value > 0
+                and entry.predecessor_entry_ref == ledger.entry_refs[-2]
+            )
+        )
+    ):
+        _failure(FailureCode.LEDGER_LINK_INVALID, "_validate_operational_append")
+    if not _object_hash_matches(ledger) or not _object_hash_matches(entry):
+        _failure(FailureCode.HASH_MISMATCH, "_validate_operational_append")
+
+
 __all__ = (
     "Ledger",
     "LedgerEntry",
