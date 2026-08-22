@@ -430,8 +430,24 @@ def test_i3a_runtime_and_static_inventory() -> None:
 
     failure_suffix = contract["failure_append_order"]
     assert type(failure_suffix) is list and len(failure_suffix) == 35
-    assert tuple(code.value for code in FailureCode) == (
-        _I1_I2_FAILURE_PREFIX + tuple(failure_suffix)
+    compatibility = _load_contract(
+        _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
+    )
+    failures = tuple(code.value for code in FailureCode)
+    failure_slices = compatibility["current_surface"]["failure_slices"]
+    failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
+    import hashlib
+
+    assert failures == tuple(compatibility["current_surface"]["failure_order"])
+    assert len(failures) == 185
+    assert tuple(
+        failures[row["start"] : row["stop"]] for row in failure_slices
+    ) == tuple(tuple(row["values"]) for row in failure_slices)
+    assert failures[:53] == _I1_I2_FAILURE_PREFIX
+    assert failures[53:88] == tuple(failure_suffix)
+    assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
+        4894,
+        "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
     )
 
     contamination = contract["state_projection_contamination_ownership"]

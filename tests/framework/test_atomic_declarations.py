@@ -1554,29 +1554,73 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         )
 
     def test_exact_failure_and_root_export_inventories(self) -> None:
-        failures = tuple(code.value for code in FailureCode)
-        self.assertEqual(len(failures), 102)
-        self.assertEqual(failures[:88], tuple(_CONTRACT["current_surface"]["failure_order"]))
-        self.assertEqual(
-            failures[88:], tuple(_CONTRACT["failure_contract"]["d1_append_order"])
+        compatibility = _load_json(
+            _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
         )
-        failure_projection = ("\n".join(failures) + "\n").encode()
+        assert type(compatibility) is dict
+        current_surface = compatibility["current_surface"]
+        failure_slices = current_surface["failure_slices"]
+        export_slices = current_surface["root_export_slices"]
+        failures = tuple(code.value for code in FailureCode)
+        self.assertEqual(len(failures), 185)
+        self.assertEqual(failures[:88], tuple(_CONTRACT["current_surface"]["failure_order"]))
+        self.assertEqual(failures[88:102], tuple(failure_slices[2]["values"]))
         self.assertEqual(
-            hashlib.sha256(failure_projection).hexdigest(),
-            "0c395c7f1291999df805a5357ec83332f5ee96c5b1b35432953e2542027544f9",
+            failures[88:102], tuple(_CONTRACT["failure_contract"]["d1_append_order"])
+        )
+        self.assertEqual(failures[102:124], tuple(failure_slices[3]["values"]))
+        self.assertEqual(failures[124:185], tuple(failure_slices[4]["values"]))
+        self.assertEqual(failures, tuple(current_surface["failure_order"]))
+        failure_projection = ("\n".join(failures) + "\n").encode()
+        failure_prefix_projection = ("\n".join(failures[:102]) + "\n").encode()
+        self.assertEqual(
+            (
+                len(failure_prefix_projection),
+                hashlib.sha256(failure_prefix_projection).hexdigest(),
+            ),
+            (
+                2563,
+                "0c395c7f1291999df805a5357ec83332f5ee96c5b1b35432953e2542027544f9",
+            ),
+        )
+        self.assertEqual(
+            (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
+            (
+                4894,
+                "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
+            ),
         )
         exports = tuple(ebu_framework.__all__)
-        self.assertEqual(len(exports), 237)
+        self.assertEqual(len(exports), 309)
         self.assertEqual(
             exports[:219], tuple(_CONTRACT["current_surface"]["root_export_order"])
         )
+        self.assertEqual(exports[219:237], tuple(export_slices[2]["values"]))
         self.assertEqual(
-            exports[219:], tuple(_CONTRACT["proposed_surface"]["d1_root_export_suffix"])
+            exports[219:237],
+            tuple(_CONTRACT["proposed_surface"]["d1_root_export_suffix"]),
         )
+        self.assertEqual(exports[237:261], tuple(export_slices[3]["values"]))
+        self.assertEqual(exports[261:309], tuple(export_slices[4]["values"]))
+        self.assertEqual(exports, tuple(current_surface["root_export_order"]))
         export_projection = ("\n".join(exports) + "\n").encode()
+        export_prefix_projection = ("\n".join(exports[:237]) + "\n").encode()
         self.assertEqual(
-            hashlib.sha256(export_projection).hexdigest(),
-            "b78004bc3368d2d7bd8a50de9829bb1b693bffc6a96a8663336aea7922c41d29",
+            (
+                len(export_prefix_projection),
+                hashlib.sha256(export_prefix_projection).hexdigest(),
+            ),
+            (
+                5012,
+                "b78004bc3368d2d7bd8a50de9829bb1b693bffc6a96a8663336aea7922c41d29",
+            ),
+        )
+        self.assertEqual(
+            (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
+            (
+                6838,
+                "aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8",
+            ),
         )
 
     def test_exact_direct_imports_and_acyclic_graph(self) -> None:
@@ -1617,6 +1661,26 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             visit(name)
 
     def test_existing_public_signatures_and_predecessor_bytes_are_preserved(self) -> None:
+        compatibility = _load_json(
+            _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
+        )
+        compatibility_manifest = _load_json(
+            _REPO_ROOT / "post_i4_legacy_test_compatibility_predecessor_manifest.json"
+        )
+        assert type(compatibility) is dict
+        assert type(compatibility_manifest) is dict
+        compatibility_paths = frozenset(
+            compatibility["future_implementation"]["exact_paths"]
+        )
+        reconciled = {
+            row["path"]: row
+            for row in compatibility_manifest["repeated_historical_lock_reconciliation"]
+        }
+        current_rows = {
+            row["path"]: row for row in compatibility_manifest["rows"]
+        }
+        import subprocess
+
         for module_name, function_name, expected in _CONTRACT["current_surface"]["public_function_signatures"]:
             function = getattr(importlib.import_module(f"ebu_framework.{module_name}"), function_name)
             actual = str(inspect.signature(function)).replace("'", "")
@@ -1632,17 +1696,105 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             path = _REPO_ROOT / row["path"]
             with self.subTest(path=row["path"]):
                 payload = path.read_bytes()
-                self.assertEqual(len(payload), row["byte_count"])
-                self.assertEqual(hashlib.sha256(payload).hexdigest(), row["raw_sha256"])
+                comparison_payload = payload
+                current_base_payload = None
+                current_row = None
+                if row["path"] in compatibility_paths:
+                    comparison_payload = subprocess.run(
+                        ["git", "cat-file", "blob", row["git_object"]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    current_row = current_rows[row["path"]]
+                elif row["path"] in reconciled:
+                    reconciliation = reconciled[row["path"]]
+                    comparison_payload = subprocess.run(
+                        [
+                            "git",
+                            "cat-file",
+                            "blob",
+                            reconciliation["historical_git_object"],
+                        ],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    current_row = current_rows[row["path"]]
+                if current_row is not None:
+                    current_base_payload = subprocess.run(
+                        ["git", "cat-file", "blob", current_row["git_object"]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    tree_row = subprocess.run(
+                        [
+                            "git",
+                            "ls-tree",
+                            _MANIFEST["authority"]["base_commit"],
+                            "--",
+                            row["path"],
+                        ],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    ).stdout.split()
+                    self.assertEqual(tree_row[2], row["git_object"])
+                self.assertEqual(len(comparison_payload), row["byte_count"])
+                if current_base_payload is not None:
+                    self.assertEqual(len(current_base_payload), current_row["byte_count"])
+                    if row["path"] not in compatibility_paths:
+                        self.assertEqual(len(payload), current_row["byte_count"])
+                self.assertEqual(
+                    hashlib.sha256(comparison_payload).hexdigest(),
+                    row["raw_sha256"],
+                )
+                if current_base_payload is not None:
+                    self.assertEqual(
+                        hashlib.sha256(current_base_payload).hexdigest(),
+                        current_row["raw_sha256"],
+                    )
+                    if row["path"] not in compatibility_paths:
+                        self.assertEqual(
+                            hashlib.sha256(payload).hexdigest(),
+                            current_row["raw_sha256"],
+                        )
                 mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
                 self.assertEqual(mode, row["mode"])
 
     def test_no_d2_surface_or_prohibited_reachability(self) -> None:
+        compatibility = _load_json(
+            _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
+        )
+        assert type(compatibility) is dict
+        current_surface = compatibility["current_surface"]
         source = _ATOMIC_PATH.read_text(encoding="utf-8")
         tree = ast.parse(source)
         d2_names = tuple(_CONTRACT["proposed_surface"]["d2_root_export_suffix"])
-        self.assertTrue(all(name not in ebu_framework.__all__ for name in d2_names))
-        self.assertFalse((_REPO_ROOT / "src/ebu_framework/interaction.py").exists())
+        root_exports = tuple(ebu_framework.__all__)
+        self.assertEqual(root_exports[237:261], d2_names)
+        self.assertEqual(
+            tuple(
+                root_exports[row["start"] : row["stop"]]
+                for row in current_surface["root_export_slices"]
+            ),
+            tuple(
+                tuple(row["values"]) for row in current_surface["root_export_slices"]
+            ),
+        )
+        self.assertEqual(root_exports, tuple(current_surface["root_export_order"]))
+        interaction_payload = (
+            _REPO_ROOT / "src/ebu_framework/interaction.py"
+        ).read_bytes()
+        self.assertEqual(
+            (len(interaction_payload), hashlib.sha256(interaction_payload).hexdigest()),
+            (
+                100478,
+                "198f1a63e09d682b94a5fb127eec6445ac18f9241c84acbdb5e05c7c8ee54804",
+            ),
+        )
         forbidden_imports = {
             "asyncio",
             "importlib",
