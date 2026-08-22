@@ -1,0 +1,1251 @@
+{
+  "contract_id": "ebu-framework-post-i4-legacy-test-compatibility-validation/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_STATIC_VALIDATION_ONLY_UNAUDITED",
+  "authority": {
+    "base_head": "e0029b9129e53801c91c4735ac7526adeea7fde2",
+    "base_tree": "8bf02044d9cb3dcaf2337a4a485bca7c28642b93",
+    "human_authority": "POST_I4_LEGACY_TEST_COMPATIBILITY_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "post_i4_legacy_test_compatibility_contract.json",
+    "predecessor_manifest": "post_i4_legacy_test_compatibility_predecessor_manifest.json",
+    "future_implementation_authorized": false,
+    "test_execution_authorized": false,
+    "framework_import_authorized": false,
+    "scientific_execution_authorized": false
+  },
+  "json_document_profile": {
+    "encoding": "UTF-8",
+    "bom": false,
+    "duplicate_keys": "REJECT",
+    "non_finite_numbers": "REJECT",
+    "comments": "REJECT",
+    "trailing_data": "REJECT",
+    "line_endings": "LF_ONLY",
+    "raw_final_newline": "EXACTLY_ONE",
+    "canonical_rule": "Recursively sort object keys by Unicode code point; preserve array order; compact separators; UTF-8; ensure_ascii=false; finite numbers only; append exactly one LF."
+  },
+  "safety": {
+    "permitted": [
+      "read-only Git inspection",
+      "strict text and JSON parsing",
+      "static Python AST parsing without imports",
+      "hashing",
+      "exact integer arithmetic",
+      "in-memory Git archive parsing",
+      "repository scope utility",
+      "git diff --check"
+    ],
+    "forbidden": [
+      "import ebu_framework or any framework test/provider module",
+      "execute unittest, pytest, nox, tox, or any test method",
+      "install or resolve dependencies",
+      "invoke a runner, callback, policy, model, simulation, trajectory, Gate, result, finalizer, publication, or scientific operation",
+      "create cache, bytecode, build, dependency, test, coverage, or temporary residue"
+    ],
+    "model_state_advance_count": 0,
+    "scientific_execution_count": 0
+  },
+  "method_containers": [
+    {
+      "container_id": "M01",
+      "path": "tests/framework/test_primitives_envelopes.py",
+      "source_class_name": "FrameworkI2SourceAuditTests",
+      "container_name": "test_ast_import_export_and_reachability_contract",
+      "base_assertion_count": 27,
+      "affected_assertion_ordinals": [
+        20
+      ],
+      "unaffected_neighbor_assertion_count": 26,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 7832,
+      "unaffected_neighbor_ast_lf_sha256": "6b8113c0453420c6d378ad3f92b85f1d66b169bc6eeb1047db5679f7729d78f2",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M02",
+      "path": "tests/framework/test_i3a_declarations.py",
+      "source_class_name": null,
+      "container_name": "test_i3a_runtime_and_static_inventory",
+      "base_assertion_count": 36,
+      "affected_assertion_ordinals": [
+        28
+      ],
+      "unaffected_neighbor_assertion_count": 35,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 10090,
+      "unaffected_neighbor_ast_lf_sha256": "ec02ce3ba0ed7486d93085fb197f5abc1903bbfb354a10d5a444cc77d2b5192e",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M03",
+      "path": "tests/framework/test_i3b_declarations.py",
+      "source_class_name": null,
+      "container_name": "test_i3b_runtime_and_static_inventory",
+      "base_assertion_count": 34,
+      "affected_assertion_ordinals": [
+        34
+      ],
+      "unaffected_neighbor_assertion_count": 33,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 8442,
+      "unaffected_neighbor_ast_lf_sha256": "8d3b3fa78755abdcd41289b969513a5324fc7ac1ea6c0ba578e4ebc641e5a9f7",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M04",
+      "path": "tests/framework/test_i3c_declarations.py",
+      "source_class_name": null,
+      "container_name": "test_i3c_runtime_and_static_inventory",
+      "base_assertion_count": 38,
+      "affected_assertion_ordinals": [
+        37,
+        38
+      ],
+      "unaffected_neighbor_assertion_count": 36,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 9181,
+      "unaffected_neighbor_ast_lf_sha256": "5beed506f454916c4d3dd9e9666142b7f91b8851a34804a232caccba7ffd48a0",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M05",
+      "path": "tests/framework/test_i3d_declarations.py",
+      "source_class_name": null,
+      "container_name": "_runtime_and_static_inventory",
+      "base_assertion_count": 42,
+      "affected_assertion_ordinals": [
+        40,
+        41
+      ],
+      "unaffected_neighbor_assertion_count": 40,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 9711,
+      "unaffected_neighbor_ast_lf_sha256": "f1e509495294dba2cfc12da04dd973cda6747c964f301baf2af952b78e46a177",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M06",
+      "path": "tests/framework/test_atomic_declarations.py",
+      "source_class_name": "AtomicDeclarationContractTests",
+      "container_name": "test_exact_failure_and_root_export_inventories",
+      "base_assertion_count": 8,
+      "affected_assertion_ordinals": [
+        1,
+        3,
+        4,
+        5,
+        7,
+        8
+      ],
+      "unaffected_neighbor_assertion_count": 2,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 836,
+      "unaffected_neighbor_ast_lf_sha256": "75fbe5a07219fb8bda67b9bd5c35c3989f4d5952ca7d3c043bf2fd07cb5e72c8",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M07",
+      "path": "tests/framework/test_atomic_declarations.py",
+      "source_class_name": "AtomicDeclarationContractTests",
+      "container_name": "test_existing_public_signatures_and_predecessor_bytes_are_preserved",
+      "base_assertion_count": 4,
+      "affected_assertion_ordinals": [
+        2,
+        3
+      ],
+      "unaffected_neighbor_assertion_count": 2,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 370,
+      "unaffected_neighbor_ast_lf_sha256": "4ec670be37259a72a5e00b660cd5f6cac5509882881dd15b7024fb6cb24968cc",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M08",
+      "path": "tests/framework/test_atomic_declarations.py",
+      "source_class_name": "AtomicDeclarationContractTests",
+      "container_name": "test_no_d2_surface_or_prohibited_reachability",
+      "base_assertion_count": 4,
+      "affected_assertion_ordinals": [
+        1,
+        2
+      ],
+      "unaffected_neighbor_assertion_count": 2,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 399,
+      "unaffected_neighbor_ast_lf_sha256": "d5c324f77d75d0f8e6d63d0050b2f504036cfc3674a1e926d7bb0d2053e215b0",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M09",
+      "path": "tests/framework/test_interaction_declarations.py",
+      "source_class_name": "InteractionDeclarationContractTests",
+      "container_name": "test_exact_failure_and_root_export_inventories",
+      "base_assertion_count": 7,
+      "affected_assertion_ordinals": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "unaffected_neighbor_assertion_count": 1,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 412,
+      "unaffected_neighbor_ast_lf_sha256": "d0713cbcbc51b761a3c58fd487ab19984e5479388d4a60ffa328e86a172adb26",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M10",
+      "path": "tests/framework/test_interaction_declarations.py",
+      "source_class_name": "InteractionDeclarationContractTests",
+      "container_name": "test_exact_imports_graphs_and_inertness",
+      "base_assertion_count": 8,
+      "affected_assertion_ordinals": [
+        2,
+        3,
+        4
+      ],
+      "unaffected_neighbor_assertion_count": 5,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 1389,
+      "unaffected_neighbor_ast_lf_sha256": "b8374be6852f33a575f80661360832dfcaa4d04efc884327ae64626f6deb0737",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    },
+    {
+      "container_id": "M11",
+      "path": "tests/framework/test_interaction_declarations.py",
+      "source_class_name": "InteractionDeclarationContractTests",
+      "container_name": "test_predecessor_signatures_and_d1_bytes_are_preserved",
+      "base_assertion_count": 8,
+      "affected_assertion_ordinals": [
+        6,
+        7
+      ],
+      "unaffected_neighbor_assertion_count": 6,
+      "unaffected_neighbor_ast_projection_rule": "LF-join ast.dump(node, annotate_fields=True, include_attributes=False) for every assertion node outside affected_assertion_ordinals in source order, including final LF.",
+      "unaffected_neighbor_ast_lf_byte_count": 1624,
+      "unaffected_neighbor_ast_lf_sha256": "63d0a9bbb4254e580c9a89138030ecd3fb2e28bbe96929e2a81b49b40be94f84",
+      "preservation_rule": "Every projected neighboring assertion must remain AST-identical and in the same relative order; replacements may occur only at affected ordinals."
+    }
+  ],
+  "assertion_dispositions": [
+    {
+      "site_id": "A01",
+      "container_id": "M01",
+      "assertion_ordinal": 20,
+      "base_line_start": 462,
+      "base_line_end": 462,
+      "base_source": "self.assertFalse(any(term in lowered for term in forbidden_terms), name)",
+      "base_ast_byte_count": 410,
+      "base_ast_sha256": "ceddc90cb2f90cf1ce1812fa933a16ae7eec050b5b88df48665c63a617582375",
+      "historical_expectation": "None of runner, finalizer, gate1, results/, experiment, trajectory, or model_step occurs in any of the nine I-1/I-2 audit sources, including root __init__.py.",
+      "historically_valid_stage": "I2 terminal root before I3E root integration",
+      "accepted_superseding_stage": "I3E root-export integration eaafbb50f30f3ed3e1300bc9d96456f570d17e13",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Retain the complete forbidden-term set over the eight I-1/I-2 implementation modules.",
+        "For root __init__.py, retain exact absence of runner, finalizer, gate1, results/, trajectory, and model_step.",
+        "Permit experiment only through the exact accepted relative import/export surface and simultaneously require the exact current 309-name root aggregate, exact historical slices, whole-root uniqueness, and import/export equality."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A02",
+      "container_id": "M02",
+      "assertion_ordinal": 28,
+      "base_line_start": 433,
+      "base_line_end": 435,
+      "base_source": "assert tuple(code.value for code in FailureCode) == (\n        _I1_I2_FAILURE_PREFIX + tuple(failure_suffix)\n    )",
+      "base_ast_byte_count": 468,
+      "base_ast_sha256": "0fb2bdb10da2fbefaf0f18c1b72a2bacd0d6efb6dacbf15c9844b28c7d001e6a",
+      "historical_expectation": "The complete FailureCode tuple equals the 53-code I-1/I-2 prefix followed by the 35-code I-3 slice, total 88.",
+      "historically_valid_stage": "I3A through pre-D1",
+      "accepted_superseding_stage": "D1 integration 297535d787355b9911fc01ae5b777a553aa9815b, D2 integration 59594823e24eaf6ca83e1e2aa4a1129d8e109ae5, and I4 integration e0029b9129e53801c91c4735ac7526adeea7fde2",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require exact failure slices [0:53], [53:88], [88:102], [102:124], and [124:185] from the mechanical contract.",
+        "Require exact current length 185 and LF projection 4894 / 7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A03",
+      "container_id": "M03",
+      "assertion_ordinal": 34,
+      "base_line_start": 410,
+      "base_line_end": 412,
+      "base_source": "assert tuple(code.value for code in FailureCode)[-35:] == tuple(\n        contract[\"failure_append_order\"]\n    )",
+      "base_ast_byte_count": 559,
+      "base_ast_sha256": "50c920ae22707e126c478e26bbbe69b03e3056e2a335a28a4442c656349181de",
+      "historical_expectation": "The last 35 FailureCode members are the I-3 failure_append_order.",
+      "historically_valid_stage": "I3B through pre-D1",
+      "accepted_superseding_stage": "D1 integration 297535d787355b9911fc01ae5b777a553aa9815b",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Replace tail selection with exact owned slice FailureCode[53:88].",
+        "Also require the exact current 185-code aggregate or a shared exact helper sourced only from this accepted contract."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A04",
+      "container_id": "M04",
+      "assertion_ordinal": 37,
+      "base_line_start": 1080,
+      "base_line_end": 1080,
+      "base_source": "assert len(FailureCode) == 88",
+      "base_ast_byte_count": 153,
+      "base_ast_sha256": "6f2f97ca743e6c0365ae7590a006669b070833765f0bc27d0bce7ad647a366b0",
+      "historical_expectation": "The complete FailureCode length is 88.",
+      "historically_valid_stage": "I3C/I3D through pre-D1",
+      "accepted_superseding_stage": "D1, D2, and I4 additive integrations",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require exact current length 185.",
+        "Require exact stage slice endpoints 53, 88, 102, 124, and 185."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A06",
+      "container_id": "M05",
+      "assertion_ordinal": 40,
+      "base_line_start": 917,
+      "base_line_end": 917,
+      "base_source": "assert len(FailureCode) == 88",
+      "base_ast_byte_count": 153,
+      "base_ast_sha256": "6f2f97ca743e6c0365ae7590a006669b070833765f0bc27d0bce7ad647a366b0",
+      "historical_expectation": "The complete FailureCode length is 88.",
+      "historically_valid_stage": "I3C/I3D through pre-D1",
+      "accepted_superseding_stage": "D1, D2, and I4 additive integrations",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require exact current length 185.",
+        "Require exact stage slice endpoints 53, 88, 102, 124, and 185."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A05",
+      "container_id": "M04",
+      "assertion_ordinal": 38,
+      "base_line_start": 1081,
+      "base_line_end": 1083,
+      "base_source": "assert tuple(code.value for code in FailureCode)[-35:] == tuple(\n        contract[\"failure_append_order\"]\n    )",
+      "base_ast_byte_count": 559,
+      "base_ast_sha256": "50c920ae22707e126c478e26bbbe69b03e3056e2a335a28a4442c656349181de",
+      "historical_expectation": "The last 35 FailureCode members are the I-3 failure_append_order.",
+      "historically_valid_stage": "I3C/I3D through pre-D1",
+      "accepted_superseding_stage": "D1 integration 297535d787355b9911fc01ae5b777a553aa9815b",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Replace tail selection with exact owned slice FailureCode[53:88].",
+        "Retain the exact I-3 slice order and add exact later D1, D2, and I4 slice checks."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A07",
+      "container_id": "M05",
+      "assertion_ordinal": 41,
+      "base_line_start": 918,
+      "base_line_end": 920,
+      "base_source": "assert tuple(code.value for code in FailureCode)[-35:] == tuple(\n        contract[\"failure_append_order\"]\n    )",
+      "base_ast_byte_count": 559,
+      "base_ast_sha256": "50c920ae22707e126c478e26bbbe69b03e3056e2a335a28a4442c656349181de",
+      "historical_expectation": "The last 35 FailureCode members are the I-3 failure_append_order.",
+      "historically_valid_stage": "I3C/I3D through pre-D1",
+      "accepted_superseding_stage": "D1 integration 297535d787355b9911fc01ae5b777a553aa9815b",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Replace tail selection with exact owned slice FailureCode[53:88].",
+        "Retain the exact I-3 slice order and add exact later D1, D2, and I4 slice checks."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A08",
+      "container_id": "M06",
+      "assertion_ordinal": 1,
+      "base_line_start": 1558,
+      "base_line_end": 1558,
+      "base_source": "self.assertEqual(len(failures), 102)",
+      "base_ast_byte_count": 194,
+      "base_ast_sha256": "21f9e54289d6ab597ff8ce06bfc460e695db7c887c3dfc869d685611717706e4",
+      "historical_expectation": "Complete failure length is 102 after D1.",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 and I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require exact current length 185."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A09",
+      "container_id": "M06",
+      "assertion_ordinal": 3,
+      "base_line_start": 1560,
+      "base_line_end": 1562,
+      "base_source": "self.assertEqual(\n            failures[88:], tuple(_CONTRACT[\"failure_contract\"][\"d1_append_order\"])\n        )",
+      "base_ast_byte_count": 418,
+      "base_ast_sha256": "fc26fa6b61d1c039abf10a7427b1b660212c8d0100d9b5bc9f6453b372da6c92",
+      "historical_expectation": "FailureCode[88:] equals only the 14-code D1 append order.",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 and I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Replace with exact D1 owned slice FailureCode[88:102].",
+        "Add exact D2 [102:124], I4 [124:185], and current aggregate checks."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A10",
+      "container_id": "M06",
+      "assertion_ordinal": 4,
+      "base_line_start": 1564,
+      "base_line_end": 1567,
+      "base_source": "self.assertEqual(\n            hashlib.sha256(failure_projection).hexdigest(),\n            \"0c395c7f1291999df805a5357ec83332f5ee96c5b1b35432953e2542027544f9\",\n        )",
+      "base_ast_byte_count": 373,
+      "base_ast_sha256": "c753e503838f8892460f7ea491227b144a5c21ac981e5b5000ee192d29757409",
+      "historical_expectation": "The whole failure projection has the post-D1 SHA-256 0c395c7f...",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 and I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Apply 2563-byte post-D1 hash 0c395c7f1291999df805a5357ec83332f5ee96c5b1b35432953e2542027544f9 to FailureCode[:102].",
+        "Apply 4894-byte current hash 7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3 to the whole current inventory."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A11",
+      "container_id": "M06",
+      "assertion_ordinal": 5,
+      "base_line_start": 1569,
+      "base_line_end": 1569,
+      "base_source": "self.assertEqual(len(exports), 237)",
+      "base_ast_byte_count": 193,
+      "base_ast_sha256": "8cd19108a13165d318e6d2c04121aa5ec04c2d8e1843e9bcf6262b45b8450e52",
+      "historical_expectation": "Complete root export length is 237 after D1.",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 and I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require exact current length 309."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A12",
+      "container_id": "M06",
+      "assertion_ordinal": 7,
+      "base_line_start": 1573,
+      "base_line_end": 1575,
+      "base_source": "self.assertEqual(\n            exports[219:], tuple(_CONTRACT[\"proposed_surface\"][\"d1_root_export_suffix\"])\n        )",
+      "base_ast_byte_count": 424,
+      "base_ast_sha256": "51e8ed9d696e3fa6d5251059ba441cbfc4d9fbf640790ff2fba4487c3cef746d",
+      "historical_expectation": "Root exports[219:] equals only the 18-name D1 suffix.",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 and I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Replace with exact D1 owned slice root_exports[219:237].",
+        "Add exact D2 [237:261], I4 [261:309], and current aggregate checks."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A13",
+      "container_id": "M06",
+      "assertion_ordinal": 8,
+      "base_line_start": 1577,
+      "base_line_end": 1580,
+      "base_source": "self.assertEqual(\n            hashlib.sha256(export_projection).hexdigest(),\n            \"b78004bc3368d2d7bd8a50de9829bb1b693bffc6a96a8663336aea7922c41d29\",\n        )",
+      "base_ast_byte_count": 372,
+      "base_ast_sha256": "c53cfb644def2d83d0cb53ae40a4e500df1e2cb441e92e0d88fd7c0ffc0f87c5",
+      "historical_expectation": "The whole root projection has the post-D1 SHA-256 b78004bc...",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 and I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Apply 5012-byte post-D1 hash b78004bc3368d2d7bd8a50de9829bb1b693bffc6a96a8663336aea7922c41d29 to root_exports[:237].",
+        "Apply 6838-byte current hash aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8 to the whole current inventory."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A14",
+      "container_id": "M07",
+      "assertion_ordinal": 2,
+      "base_line_start": 1635,
+      "base_line_end": 1635,
+      "base_source": "self.assertEqual(len(payload), row[\"byte_count\"])",
+      "base_ast_byte_count": 265,
+      "base_ast_sha256": "ce0a8e33b8cc7960897d85ee6ed059dbe8eb4f7ec0761550dc59c0f87ff29314",
+      "historical_expectation": "Every non-excluded atomic-declaration predecessor row must have its historical byte length at the current working path.",
+      "historically_valid_stage": "D1 implementation against a99319 predecessor",
+      "accepted_superseding_stage": "Accepted I4 authority and implementation changed exactly 12 locked current paths",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_PREDECESSOR_SUBTESTS",
+      "stale_evaluation_instance_count": 12,
+      "reported_obsolete_failure_instance_count": 12,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "For unchanged manifest rows, retain current-path byte-length equality.",
+        "For the exact 12 reconciled rows, reconstruct historical bytes from the historical Git object and compare current-path length against the exact current base-tree manifest row."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A15",
+      "container_id": "M07",
+      "assertion_ordinal": 3,
+      "base_line_start": 1636,
+      "base_line_end": 1636,
+      "base_source": "self.assertEqual(hashlib.sha256(payload).hexdigest(), row[\"raw_sha256\"])",
+      "base_ast_byte_count": 371,
+      "base_ast_sha256": "623863a795fac20e79ad1aff5d09444ed9ce58a3304cc594a793c771c8969af0",
+      "historical_expectation": "Every non-excluded atomic-declaration predecessor row must have its historical raw SHA-256 at the current working path.",
+      "historically_valid_stage": "D1 implementation against a99319 predecessor",
+      "accepted_superseding_stage": "Accepted I4 authority and implementation changed exactly 12 locked current paths",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_PREDECESSOR_SUBTESTS",
+      "stale_evaluation_instance_count": 12,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 12,
+      "exact_replacement_invariant": [
+        "For unchanged manifest rows, retain current-path digest equality.",
+        "For the exact 12 reconciled rows, reconstruct the historical digest from Git and compare the current-path digest against the exact current base-tree manifest row."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A16",
+      "container_id": "M08",
+      "assertion_ordinal": 1,
+      "base_line_start": 1644,
+      "base_line_end": 1644,
+      "base_source": "self.assertTrue(all(name not in ebu_framework.__all__ for name in d2_names))",
+      "base_ast_byte_count": 427,
+      "base_ast_sha256": "dd1b20c7ba02637158aa54e9d262a94c89478211f8f0d0f7e37e14f3b46fcd26",
+      "historical_expectation": "Every D2 root-export name is absent from the root export tuple.",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 integration 59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require the exact 24-name D2 slice root_exports[237:261].",
+        "Require all earlier and later exact slices and the current 309-name aggregate."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A17",
+      "container_id": "M08",
+      "assertion_ordinal": 2,
+      "base_line_start": 1645,
+      "base_line_end": 1645,
+      "base_source": "self.assertFalse((_REPO_ROOT / \"src/ebu_framework/interaction.py\").exists())",
+      "base_ast_byte_count": 264,
+      "base_ast_sha256": "c7db66d372d257d4bc82309f8db2797467833c12f115fbd362f0d24132bb335f",
+      "historical_expectation": "src/ebu_framework/interaction.py does not exist.",
+      "historically_valid_stage": "D1",
+      "accepted_superseding_stage": "D2 integration 59594823e24eaf6ca83e1e2aa4a1129d8e109ae5",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require interaction.py to exist with exact accepted D2/current identity: 100478 bytes and SHA-256 198f1a63e09d682b94a5fb127eec6445ac18f9241c84acbdb5e05c7c8ee54804.",
+        "Retain atomic.py forbidden-import and prohibited-call checks unchanged."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A18",
+      "container_id": "M09",
+      "assertion_ordinal": 1,
+      "base_line_start": 1834,
+      "base_line_end": 1834,
+      "base_source": "self.assertEqual(failures, expected_failures)",
+      "base_ast_byte_count": 169,
+      "base_ast_sha256": "4a59152e5f0197b80d7084696ea75b3be288f8872ef0213884b15e4808578362",
+      "historical_expectation": "Whole failures equal the exact 124-code post-D2 sequence.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require failures[:124] equals the exact post-D2 prefix, failures[124:185] equals the exact I4 suffix, and whole failures equals the exact 185-code current aggregate."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A19",
+      "container_id": "M09",
+      "assertion_ordinal": 2,
+      "base_line_start": 1835,
+      "base_line_end": 1835,
+      "base_source": "self.assertEqual(len(failures), 124)",
+      "base_ast_byte_count": 194,
+      "base_ast_sha256": "2e3a5d82f43fdc1b29c623ee234fb1d71a95f96f11ed2204c007ca24da5a6a22",
+      "historical_expectation": "Complete failure length is 124.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require exact current length 185."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A20",
+      "container_id": "M09",
+      "assertion_ordinal": 3,
+      "base_line_start": 1836,
+      "base_line_end": 1839,
+      "base_source": "self.assertEqual(\n            hashlib.sha256((\"\\n\".join(failures) + \"\\n\").encode()).hexdigest(),\n            \"115490be2e724f70efe15cec77f9ec2ee5cd5f7c41b7b37a5e5054dc7fea14f0\",\n        )",
+      "base_ast_byte_count": 550,
+      "base_ast_sha256": "8e8e44de5ea1857cc723f574750bad3193b6f0aba8c14a957cfa6b3f791f4953",
+      "historical_expectation": "Whole failure projection has post-D2 hash 115490be...",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Apply 3242-byte post-D2 hash 115490be2e724f70efe15cec77f9ec2ee5cd5f7c41b7b37a5e5054dc7fea14f0 to failures[:124].",
+        "Apply exact current 4894-byte hash to whole failures."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A21",
+      "container_id": "M09",
+      "assertion_ordinal": 4,
+      "base_line_start": 1846,
+      "base_line_end": 1846,
+      "base_source": "self.assertEqual(exports, expected_exports)",
+      "base_ast_byte_count": 167,
+      "base_ast_sha256": "4e15ea50e9867bb1dfe3c05d79b545ffb6562858e876dc97fbe3a3b9482fdfea",
+      "historical_expectation": "Whole exports equal the exact 261-name post-D2 sequence.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require exports[:261] equals the exact post-D2 prefix, exports[261:309] equals the exact I4 suffix, and whole exports equals the exact 309-name current aggregate."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A22",
+      "container_id": "M09",
+      "assertion_ordinal": 5,
+      "base_line_start": 1847,
+      "base_line_end": 1847,
+      "base_source": "self.assertEqual(len(exports), 261)",
+      "base_ast_byte_count": 193,
+      "base_ast_sha256": "53d8518ee3eedda61499e81b9b46fb1f16ca6996ba1e40daf93f17fc5b9ac6f2",
+      "historical_expectation": "Complete root export length is 261.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require exact current length 309."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A23",
+      "container_id": "M09",
+      "assertion_ordinal": 6,
+      "base_line_start": 1848,
+      "base_line_end": 1851,
+      "base_source": "self.assertEqual(\n            hashlib.sha256((\"\\n\".join(exports) + \"\\n\").encode()).hexdigest(),\n            \"1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9\",\n        )",
+      "base_ast_byte_count": 549,
+      "base_ast_sha256": "e4864a8d11d6a62bbd21f235795214e21420a8f041bd8de13d069f46acf5d97b",
+      "historical_expectation": "Whole root projection has post-D2 hash 1506b3b7...",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Apply 5724-byte post-D2 hash 1506b3b72fd2be9227aab349f7e84e69e3a77c7233fc8da3d244d7471292f4d9 to exports[:261].",
+        "Apply exact current 6838-byte hash to whole exports."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A24",
+      "container_id": "M10",
+      "assertion_ordinal": 2,
+      "base_line_start": 1868,
+      "base_line_end": 1868,
+      "base_source": "self.assertEqual(len(graph), 25)",
+      "base_ast_byte_count": 190,
+      "base_ast_sha256": "fecf5319efbd4e80a5d39b417addbfd01bac911826e37a132461f548cb21369c",
+      "historical_expectation": "Package graph has exactly 25 modules.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 1,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Require exact current 29-module order and set.",
+        "Retain exact post-D2 25-module subgraph and exact four I4 module additions."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A25",
+      "container_id": "M10",
+      "assertion_ordinal": 3,
+      "base_line_start": 1869,
+      "base_line_end": 1869,
+      "base_source": "self.assertEqual(sum(len(values) for values in graph.values()), 124)",
+      "base_ast_byte_count": 425,
+      "base_ast_sha256": "299e8418d291bc884e773454392e9c6c2ae8d14bdad060c6f93a003316359a42",
+      "historical_expectation": "Package graph has exactly 124 direct edges.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require exact current 152-edge count and 2119-byte/39067e... projection.",
+        "Retain exact post-D2 124 edges and exact 28 I4 edges."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A26",
+      "container_id": "M10",
+      "assertion_ordinal": 4,
+      "base_line_start": 1873,
+      "base_line_end": 1873,
+      "base_source": "self.assertEqual(graph, expected_graph)",
+      "base_ast_byte_count": 163,
+      "base_ast_sha256": "8427a01ae363c64d61e168f88ebce9c07937f5c1d3ca2c1446feafb23bd639a4",
+      "historical_expectation": "Whole graph equals only post-D2 direct imports.",
+      "historically_valid_stage": "D2",
+      "accepted_superseding_stage": "I4",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_AFTER_EARLIER_ORDINARY",
+      "stale_evaluation_instance_count": 1,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 1,
+      "exact_replacement_invariant": [
+        "Require the exact current graph mapping from the mechanical contract.",
+        "Require the exact 21-module/131-edge extension projection and zero cycles while retaining the 17-module/103-edge post-D2 extension slice."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A27",
+      "container_id": "M11",
+      "assertion_ordinal": 6,
+      "base_line_start": 1972,
+      "base_line_end": 1972,
+      "base_source": "self.assertEqual(len(payload), row[\"byte_count\"])",
+      "base_ast_byte_count": 265,
+      "base_ast_sha256": "ce0a8e33b8cc7960897d85ee6ed059dbe8eb4f7ec0761550dc59c0f87ff29314",
+      "historical_expectation": "Every non-excluded interaction-declaration predecessor row must have its historical byte length at the current working path.",
+      "historically_valid_stage": "D2 implementation against a99319 predecessor",
+      "accepted_superseding_stage": "Accepted I4 authority and implementation changed exactly 12 locked current paths",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "REPORTED_PREDECESSOR_SUBTESTS",
+      "stale_evaluation_instance_count": 12,
+      "reported_obsolete_failure_instance_count": 12,
+      "masked_stale_evaluation_instance_count": 0,
+      "exact_replacement_invariant": [
+        "Use the same exact historical-object/current-path split as A14.",
+        "Retain the three explicit D1 byte locks and all 65 historical public-signature checks.",
+        "Add the exact 155-row accepted current signature projection check."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    },
+    {
+      "site_id": "A28",
+      "container_id": "M11",
+      "assertion_ordinal": 7,
+      "base_line_start": 1973,
+      "base_line_end": 1973,
+      "base_source": "self.assertEqual(hashlib.sha256(payload).hexdigest(), row[\"raw_sha256\"])",
+      "base_ast_byte_count": 371,
+      "base_ast_sha256": "623863a795fac20e79ad1aff5d09444ed9ce58a3304cc594a793c771c8969af0",
+      "historical_expectation": "Every non-excluded interaction-declaration predecessor row must have its historical raw SHA-256 at the current working path.",
+      "historically_valid_stage": "D2 implementation against a99319 predecessor",
+      "accepted_superseding_stage": "Accepted I4 authority and implementation changed exactly 12 locked current paths",
+      "current_static_disposition": "STALE_TERMINAL_SNAPSHOT_PREMISE",
+      "action": "REPLACE",
+      "report_class": "MASKED_PREDECESSOR_SUBTESTS",
+      "stale_evaluation_instance_count": 12,
+      "reported_obsolete_failure_instance_count": 0,
+      "masked_stale_evaluation_instance_count": 12,
+      "exact_replacement_invariant": [
+        "Use the same exact historical-object/current-path split as A15.",
+        "Retain historical manifest modes and current base-tree modes exactly."
+      ],
+      "neighbor_rule": "Retain every assertion in this container outside the closed affected ordinal set exactly as sealed by the container neighbor projection."
+    }
+  ],
+  "assertion_accounting": {
+    "method_count": 11,
+    "container_count": 11,
+    "distinct_stale_ast_assertion_site_count": 28,
+    "stale_assertion_evaluation_instance_count": 72,
+    "reported_ordinary_instance_count": 9,
+    "reported_predecessor_subtest_instance_count": 24,
+    "reported_obsolete_failure_instance_count": 33,
+    "masked_stale_evaluation_instance_count": 39,
+    "reported_count_rule": "Only the first stale assertion reached per ordinary method and the first stale length assertion reached in each named predecessor subtest contributes to 33. Masked sites are enumerated but never added to the reported failure count."
+  },
+  "repeated_historical_lock_paths": [
+    "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+    "unified_python_research_framework_i4_contract.json",
+    "unified_python_research_framework_i4_predecessor_manifest.json",
+    "unified_python_research_framework_i4_validation_contract.json",
+    "pyproject.toml",
+    "requirements-framework.lock",
+    "src/ebu_framework/experiment.py",
+    "src/ebu_framework/hashing.py",
+    "src/ebu_framework/ledger.py",
+    "src/ebu_framework/registry.py",
+    "tests/framework/test_i3_integration.py",
+    "tests/framework/test_primitives_envelopes.py"
+  ],
+  "future_implementation_path_boundary": {
+    "authorized_now": false,
+    "separate_authorization_required": true,
+    "exact_path_count": 7,
+    "exact_paths": [
+      "tests/framework/test_primitives_envelopes.py",
+      "tests/framework/test_i3a_declarations.py",
+      "tests/framework/test_i3b_declarations.py",
+      "tests/framework/test_i3c_declarations.py",
+      "tests/framework/test_i3d_declarations.py",
+      "tests/framework/test_atomic_declarations.py",
+      "tests/framework/test_interaction_declarations.py"
+    ],
+    "eighth_path_authorized": false,
+    "production_paths_authorized": [],
+    "fixtures_authorized": [],
+    "authority_paths_authorized": [],
+    "constraints": [
+      "Only assertion compatibility described by this package may change.",
+      "Every unaffected assertion is preserved mechanically by the validation contract.",
+      "No accepted behavioral method, vector, fixture, declaration, signature, failure precedence, graph edge, or stage-owned byte may change."
+    ]
+  },
+  "combined_signature_order_validation": {
+    "accepted_source": "atomic_interaction_declaration_contract.json /proposed_surface/new_signatures",
+    "accepted_source_row_count": 42,
+    "accepted_source_canonical_byte_count": 22402,
+    "accepted_source_canonical_sha256": "454b3ead7c9d593cc86cc41be66d137b0ed59fd735643d923b4bb5a44cfbd132",
+    "source_module_to_owner": {
+      "atomic": "D1",
+      "interaction": "D2"
+    },
+    "accepted_owner_counts": {
+      "D1": 18,
+      "D2": 24
+    },
+    "accepted_row_projection_canonical_byte_count": 22990,
+    "accepted_row_projection_canonical_sha256": "ad79beb46e9879bbfecb7ee1be5aa20b4b482ad4bd0c60ef11b6426cc79cba24",
+    "accepted_complete_projection": {
+      "ordered_segment_counts": [
+        65,
+        42,
+        33,
+        15
+      ],
+      "row_count": 155,
+      "canonical_byte_count": 55808,
+      "canonical_sha256": "e5b7a1157aac297d48f2058ca308cfa7c5bc9c3fd1c6040fd68369e27a2ddd2b",
+      "required_disposition": "ACCEPT"
+    },
+    "grouped_owner_negative_control": {
+      "construction": "Use the same 155 rows, but form the second segment by selecting all 18 D1-owned rows in relative source order and then all 24 D2-owned rows in relative source order.",
+      "row_count": 155,
+      "canonical_byte_count": 55808,
+      "canonical_sha256": "2f5d9bc38522ab03e363adc8bdd4ef001c8083934cdbdf711b13549decdcdfc6",
+      "same_row_multiset_as_accepted": true,
+      "unchanged_segments": [
+        "65-row I-3 first segment",
+        "33-row I-4 type third segment",
+        "15-row I-4 callable fourth segment"
+      ],
+      "difference_confined_to": "D1/D2 ordering within the 42-row second segment",
+      "required_disposition": "REJECT"
+    },
+    "independent_reconstruction_rule": "Read the complete accepted 42-row source array directly; construct and compare every owned row at its original ordinal before deriving the 18/24 owner counts. Owner-filtered component projections may be checked as membership evidence but must never be concatenated to reconstruct accepted combined order.",
+    "forbidden_reconstructions": [
+      "sorting the 42-row source sequence",
+      "regrouping rows by owner",
+      "partitioning the accepted second segment into ordered D1 then D2 segments",
+      "order-insensitive or multiset-only acceptance"
+    ]
+  },
+  "markdown_contract": {
+    "path": "POST_I4_LEGACY_TEST_COMPATIBILITY_AUTHORITY_AMENDMENT.md",
+    "required_headings": [
+      "# Post-I-4 Legacy-Test Compatibility Authority Amendment",
+      "## 1. Decision and exact boundary",
+      "## 2. Checkpoint, precedence, and accepted lineage",
+      "## 3. Why the failures are obsolete rather than behavioral regressions",
+      "## 4. Exact current accepted surface",
+      "## 5. Exact affected methods and accounting",
+      "## 6. Assertion-level disposition",
+      "## 7. Historical-byte semantics",
+      "## 8. Closed later implementation boundary",
+      "## 9. Preservation and nonweakening rules",
+      "## 10. Static validation contract",
+      "## 11. Lifecycle",
+      "## 12. Required nonclaims and completion boundary"
+    ],
+    "heading_order": "EXACT",
+    "required_table_headers": [
+      "Stage | Commit | Purpose",
+      "Owner | Slice | Count | LF bytes | SHA-256",
+      "Requested method label | Source class | Path | Reported instances",
+      "Site range | Disposition | Exact replacement family",
+      "Historical/current class | Paths | Mechanical rule",
+      "Step | Lifecycle stage | Present status"
+    ],
+    "required_relative_links": [
+      "post_i4_legacy_test_compatibility_contract.json",
+      "post_i4_legacy_test_compatibility_validation_contract.json",
+      "post_i4_legacy_test_compatibility_predecessor_manifest.json",
+      "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+      "unified_python_research_framework_i4_contract.json",
+      "atomic_interaction_declaration_contract.json"
+    ],
+    "fenced_code_blocks_minimum": 2,
+    "fence_language_required": true,
+    "inline_code_span_minimum": 20,
+    "math_rule": "Outside code spans/fences, every $ or $$ delimiter is balanced and encloses nonempty content; escaped dollars are ignored."
+  },
+  "static_validation_checks": [
+    {
+      "check_id": "V01_REPOSITORY_IDENTITY",
+      "requirement": "Verify repository root, isolated worktree, requested branch, HEAD, tree, local target, remote-tracking target, freshly queried live target, accepted I4 ancestry, unrelated checkout identity/cleanliness, worktree registry, and absence of Git lock files.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V02_CANDIDATE_SCOPE",
+      "requirement": "Require exactly the four candidate paths untracked and unstaged; empty index; no tracked modification; no other untracked or ignored-generated path; feature HEAD unchanged; target refs unchanged.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V03_STRICT_JSON",
+      "requirement": "Decode UTF-8 strictly; reject BOM, duplicate object keys at every depth, NaN/Infinity/-Infinity, comments, invalid encoding, and trailing data; require top-level object.",
+      "class": "STRICT_JSON"
+    },
+    {
+      "check_id": "V04_CANONICAL_JSON_TWO_ENCODERS",
+      "requirement": "Canonicalize each JSON independently with Python and Ruby standard libraries under the frozen profile; require byte identity, finite values, one final LF, and report canonical bytes/SHA-256.",
+      "class": "CANONICAL_JSON"
+    },
+    {
+      "check_id": "V05_PREDECESSOR_ROUTE_A",
+      "requirement": "Reconstruct all 269 predecessor rows with git ls-tree -rz and git cat-file blob; verify order, modes, object types, Git objects, byte counts, raw SHA-256, path projection, and row projection.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V06_PREDECESSOR_ROUTE_B",
+      "requirement": "Independently reconstruct the same tree through in-memory git archive tar members; verify all paths, modes, lengths, and raw SHA-256 agree with Route A and the manifest.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V07_FAILURE_SURFACE",
+      "requirement": "Statically parse FailureCode assignments without importing the package; require exact 185 order, five exact slices, every slice/current byte count and SHA-256, uniqueness, and ordinal continuity.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V08_ROOT_EXPORT_SURFACE",
+      "requirement": "Statically parse root __all__ without importing the package; require exact 309 order, five exact slices, every slice/current byte count and SHA-256, uniqueness, and exact import/export equality.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V09_GRAPH_SURFACE",
+      "requirement": "Statically parse all relative imports including from . import module; require exact 29 modules/152 edges, exact 21 extension modules/131 edges, both canonical projections, no unexpected edge, and zero cycles.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V10_MODULE_EXPORTS",
+      "requirement": "Statically parse every package module __all__; require exact 29-row mapping, 308 symbol occurrences, 7901-byte projection, and SHA-256 15060b243394b0846582b093f5360b9bb2f3f25bafce8c39dc607a667d75a4e4.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V11_SIGNATURE_SURFACE",
+      "requirement": "Reconstruct exactly four ordered segments from the two accepted contracts: 65 I3 rows; the complete 42-row D1/D2 source array in its accepted interleaved order with ownership attached per row; 33 I4 type rows; and 15 I4 callable rows. Require exact segment identities and the 155-row/55808-byte/e5b7a1... accepted combined projection; statically verify named source declarations exist. No sorting, regrouping, owner partitioning, or order-insensitive reconstruction is permitted.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V12_METHOD_COVERAGE",
+      "requirement": "Require the exact seven paths, eleven requested labels, actual source class names, method names, wrapper/helper bindings, and base source identities.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V13_ASSERTION_COVERAGE",
+      "requirement": "Require exactly 28 stale AST sites, 72 stale evaluation instances, 33 reported instances, and 39 masked instances; verify each base AST fingerprint and every unaffected-neighbor projection.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V14_REPLACEMENT_NONWEAKENING",
+      "requirement": "Require every affected site to be replaced only by its exact invariant; forbid deletion-only changes, membership/nonempty weakening, or alteration of a neighboring assertion.",
+      "class": "STATIC_AST"
+    },
+    {
+      "check_id": "V15_SEVEN_PATH_BOUNDARY",
+      "requirement": "Require exactly seven later implementation paths and reject an eighth; require no production, fixture, authority, metadata, lock, manuscript, result, or scientific-record path.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V16_HISTORICAL_BYTES",
+      "requirement": "Reconstruct all 12 historical locks at their historical Git objects; require four current authority identities, eight current I4 implementation identities, unchanged-row working identities, and no rewrite of historical manifests.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V17_D1_D2_LOCKS",
+      "requirement": "Require the exact accepted/current identities of atomic.py, interaction.py, both declaration fixtures, and both declaration test files; prospectively authorize no change.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V18_MARKDOWN_STRUCTURE",
+      "requirement": "Require the exact ordered heading inventory, required tables, valid relative links, balanced fenced code blocks with declared languages, balanced inline code spans, and balanced nonempty inline/display mathematical delimiters outside code.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V19_TEXT_INTEGRITY",
+      "requirement": "For all four candidates require UTF-8, no BOM, LF-only, exactly one final LF, no trailing whitespace, no NUL, and no Unicode replacement character.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V20_NO_FRAMEWORK_OR_PROVIDER_IMPORT",
+      "requirement": "Inspect validation commands and process evidence; no ebu_framework, provider, nacl, sqlite-backed framework, test module, or production module import is permitted. Parsing source text with ast is permitted.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V21_NO_TEST_OR_EXECUTION",
+      "requirement": "Require zero unittest/pytest/nox/tox test invocation; zero runner, model, simulation, trajectory, Gate, result, provider, dependency-installation, or scientific state operation.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V22_MARKDOWN_JSON_AGREEMENT",
+      "requirement": "Compare every identity, count, slice boundary, hash, affected method, failure accounting value, path boundary, lifecycle step, nonclaim, and completion marker shared by Markdown and JSON; mismatch fails closed.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V23_SCOPE_UTILITY",
+      "requirement": "Run .agents/skills/ebu-framework/scripts/check_git_scope.py against the exact base and four candidate paths; require PASS and no out-of-scope path.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V24_DIFF_CHECK",
+      "requirement": "Run git diff --no-index --check /dev/null once per untracked candidate; require exit status 1 because the candidate differs from /dev/null and require empty diagnostic output, which proves no whitespace error. Ordinary git diff --check must exit 0 with empty output.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V25_RESIDUE",
+      "requirement": "Require no cache, bytecode, build, dependency, test, coverage, temporary, editor, or generated residue in the isolated worktree.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V26_FINAL_STATE",
+      "requirement": "Recheck HEAD/tree/branch, empty index, no tracked diff, exactly four untracked unstaged candidates, no ignored residue, no ref movement, and no commit/push/merge/tag/PR.",
+      "class": "READ_ONLY_GIT"
+    },
+    {
+      "check_id": "V27_SIGNATURE_INTERLEAVED_SOURCE_ORDER",
+      "requirement": "Independently read all 42 rows of atomic_interaction_declaration_contract.json /proposed_surface/new_signatures in original ordinal order; map atomic rows to D1 and interaction rows to D2 without reordering; require the exact 42-row source and row-projection identities, exact 18/24 owner counts within that sequence, and the accepted e5b7a115... complete projection.",
+      "class": "STATIC_TEXT"
+    },
+    {
+      "check_id": "V28_SIGNATURE_GROUPED_ORDER_NEGATIVE_CONTROL",
+      "requirement": "Construct the same-row grouped D1-then-D2 alternative while leaving the I3 and I4 segments unchanged; require exactly 155 rows, 55808 canonical bytes, SHA-256 2f5d9bc38522ab03e363adc8bdd4ef001c8083934cdbdf711b13549decdcdfc6, inequality from the accepted sequence confined to D1/D2 order, and mandatory rejection.",
+      "class": "STATIC_TEXT"
+    }
+  ],
+  "static_validation_accounting": {
+    "prior_atomic_check_count": 798,
+    "ordering_specific_positive_check_count": 1,
+    "ordering_specific_negative_check_count": 1,
+    "required_atomic_check_count": 800,
+    "named_validation_group_count": 28,
+    "all_prior_checks_retained": true,
+    "skipped_terminated_or_zero_check_is_pass": false
+  },
+  "strict_json_acceptance": {
+    "candidate_json_count": 3,
+    "duplicate_key_rejection": "object_pairs_hook or equivalent at every object",
+    "non_finite_rejection": "reject NaN, Infinity, and -Infinity lexemes and values",
+    "invalid_encoding_rejection": "strict UTF-8 decode",
+    "trailing_data_rejection": "single raw_decode/json parse must consume all non-whitespace bytes",
+    "canonical_encoders": [
+      "Python 3 standard library json with sort_keys=true, separators=(comma,colon), ensure_ascii=false, allow_nan=false, plus LF",
+      "Ruby standard library JSON after recursive Unicode-code-point key sorting, generator NaN disabled, plus LF"
+    ],
+    "required_encoder_agreement": "BYTE_IDENTICAL_FOR_EACH_JSON"
+  },
+  "predecessor_reconstruction": {
+    "route_a": "git ls-tree -rz --full-tree <base_head>, then git cat-file blob <object> for each row.",
+    "route_b": "git archive --format=tar <base_head>, read every regular or symbolic-link member in memory, normalize modes to 100644/100755/120000, and independently recompute paths, byte counts, and raw SHA-256 values.",
+    "required_agreement": "Both routes must yield exactly 269 paths in the same Git order and identical mode, payload length, and raw SHA-256 for every row. Route A additionally supplies Git object IDs.",
+    "expected_row_count": 269,
+    "expected_row_projection_byte_count": 46048,
+    "expected_row_projection_sha256": "afea6fdeaee2423360822433a21e87f7e13ea39fe9b1d71b5ed248f6be166727"
+  },
+  "residue_forbidden_globs": [
+    "**/__pycache__/**",
+    "**/*.pyc",
+    "**/*.pyo",
+    ".pytest_cache/**",
+    ".mypy_cache/**",
+    ".ruff_cache/**",
+    ".coverage",
+    "coverage.xml",
+    "htmlcov/**",
+    "build/**",
+    "dist/**",
+    "*.egg-info/**",
+    "node_modules/**",
+    "vendor/**",
+    "tmp/**",
+    "temp/**",
+    "*.tmp",
+    "*.swp",
+    "*.swo",
+    ".DS_Store"
+  ],
+  "acceptance": {
+    "all_checks_required": true,
+    "skipped_or_zero_check_is_pass": false,
+    "independent_authority_audit_required": true,
+    "candidate_self_accepts": false,
+    "next_possible_stage": "INDEPENDENT_AUTHORITY_AUDIT",
+    "next_stage_begun": false
+  },
+  "nonclaims": [
+    "This package changes no framework behavior.",
+    "This package changes no scientific theory or result.",
+    "This package does not reinterpret the 53 accepted I-4 behavioral methods.",
+    "This package authorizes no production-source edit.",
+    "This package authorizes no immediate test edit.",
+    "This package authorizes no I-5 authority or implementation.",
+    "This package authorizes no model, simulation, runner, Gate, experiment, or scientific execution.",
+    "This package authorizes no manuscript, book, rendering, or PDF work.",
+    "This package exists only to permit a later closed seven-path compatibility implementation after independent acceptance."
+  ],
+  "completion_marker": "POST_I4_LEGACY_TEST_COMPATIBILITY_VALIDATION_CONTRACT_READY"
+}
