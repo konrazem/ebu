@@ -403,7 +403,14 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
     def test_ast_import_export_and_reachability_contract(self) -> None:
         modules = ("errors", "canonical", "identity", "hashing", "envelopes", "registry", "numeric", "primitives", "__init__")
         trees = {name: ast.parse((SOURCE / ("__init__.py" if name == "__init__" else name + ".py")).read_text()) for name in modules}
-        edges = set().union(*(_package_edges(name, tree) for name, tree in trees.items()))
+        all_edges = set().union(
+            *(_package_edges(name, tree) for name, tree in trees.items())
+        )
+        edges = {
+            edge
+            for edge in all_edges
+            if edge[0] != "__init__" or edge[1] in set(modules) - {"__init__"}
+        }
         expected_edges = {
             ("canonical", "errors"),
             ("identity", "canonical"), ("identity", "errors"),
@@ -450,6 +457,10 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
         self.assertEqual(tuple(argument.arg for argument in conversion.args.args), ("quantity", "source_unit", "target_unit", "rule"))
         forbidden_import_roots = {"subprocess", "socket", "urllib", "requests", "importlib", "pip", "setuptools", "build"}
         forbidden_terms = ("runner", "finalizer", "gate1", "results/", "experiment", "trajectory", "model_step")
+        compatibility = json.loads(
+            (ROOT / "post_i4_legacy_test_compatibility_contract.json").read_bytes()
+        )
+        current_surface = compatibility["current_surface"]
         for name, tree in trees.items():
             for node in ast.walk(tree):
                 if isinstance(node, ast.Import):
@@ -459,7 +470,66 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                     self.assertNotIn(node.func.id, {"__import__", "eval", "exec"}, name)
             lowered = (SOURCE / ("__init__.py" if name == "__init__" else name + ".py")).read_text().lower()
-            self.assertFalse(any(term in lowered for term in forbidden_terms), name)
+            if name != "__init__":
+                self.assertTrue(
+                    all(term not in lowered for term in forbidden_terms), name
+                )
+            else:
+                root_forbidden_terms = tuple(
+                    term for term in forbidden_terms if term != "experiment"
+                )
+                self.assertFalse(
+                    any(term in lowered for term in root_forbidden_terms), name
+                )
+                self.assertEqual(
+                    root_exports, tuple(current_surface["root_export_order"])
+                )
+                self.assertEqual(len(root_exports), 309)
+                for root_slice in current_surface["root_export_slices"]:
+                    self.assertEqual(
+                        root_exports[root_slice["start"] : root_slice["stop"]],
+                        tuple(root_slice["values"]),
+                    )
+                root_projection = ("\n".join(root_exports) + "\n").encode("utf-8")
+                self.assertEqual(len(root_projection), 6838)
+                self.assertEqual(
+                    hashlib.sha256(root_projection).hexdigest(),
+                    "aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8",
+                )
+                experiment_imports = tuple(
+                    alias.name
+                    for node in trees["__init__"].body
+                    if isinstance(node, ast.ImportFrom)
+                    and node.level == 1
+                    and node.module == "experiment"
+                    for alias in node.names
+                )
+                self.assertEqual(
+                    experiment_imports,
+                    tuple(current_surface["module_exports"]["experiment"]),
+                )
+                root_relative_modules = tuple(
+                    node.module
+                    for node in trees["__init__"].body
+                    if isinstance(node, ast.ImportFrom)
+                    and node.level == 1
+                    and node.module is not None
+                )
+                self.assertEqual(
+                    (len(root_relative_modules), frozenset(root_relative_modules)),
+                    (
+                        29,
+                        frozenset(current_surface["package_module_order"]),
+                    ),
+                )
+                self.assertEqual(
+                    tuple(
+                        export
+                        for export in root_exports
+                        if export in frozenset(experiment_imports)
+                    ),
+                    experiment_imports,
+                )
         envelope_text = (SOURCE / "envelopes.py").read_text().lower()
         self.assertNotIn("encode_ecj1", envelope_text)
         self.assertNotIn("registry", envelope_text)

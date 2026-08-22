@@ -407,8 +407,23 @@ def test_i3b_runtime_and_static_inventory() -> None:
     for module in dependency_graph:
         visit(module)
 
-    assert tuple(code.value for code in FailureCode)[-35:] == tuple(
-        contract["failure_append_order"]
+    compatibility = _load_contract(
+        _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
+    )
+    failures = tuple(code.value for code in FailureCode)
+    failure_slices = compatibility["current_surface"]["failure_slices"]
+    failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
+    import hashlib
+
+    assert failures[53:88] == tuple(contract["failure_append_order"])
+    assert tuple(
+        failures[row["start"] : row["stop"]] for row in failure_slices
+    ) == tuple(tuple(row["values"]) for row in failure_slices)
+    assert failures == tuple(compatibility["current_surface"]["failure_order"])
+    assert len(failures) == 185
+    assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
+        4894,
+        "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
     )
 
 

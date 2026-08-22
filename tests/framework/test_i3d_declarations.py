@@ -914,9 +914,24 @@ def _runtime_and_static_inventory() -> None:
         visit(module)
     assert len(visited) == 15
 
-    assert len(FailureCode) == 88
-    assert tuple(code.value for code in FailureCode)[-35:] == tuple(
-        contract["failure_append_order"]
+    compatibility = _load_contract(
+        _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
+    )
+    failures = tuple(code.value for code in FailureCode)
+    failure_slices = compatibility["current_surface"]["failure_slices"]
+    failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
+    assert (len(failures), tuple(row["stop"] for row in failure_slices)) == (
+        185,
+        (53, 88, 102, 124, 185),
+    )
+    assert failures[53:88] == tuple(contract["failure_append_order"])
+    assert tuple(
+        failures[row["start"] : row["stop"]] for row in failure_slices
+    ) == tuple(tuple(row["values"]) for row in failure_slices)
+    assert failures == tuple(compatibility["current_surface"]["failure_order"])
+    assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
+        4894,
+        "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
     )
     assert "OPERATIONAL_DURABILITY_EVENT" not in FaultClass.__members__
 
