@@ -1,0 +1,4294 @@
+{
+  "contract_id": "ebu-framework-i5-authority/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_DOCUMENTATION_ONLY_UNIMPLEMENTED_EXECUTION_DISABLED",
+  "authority": {
+    "branch": "framework/i-5-event-durability-trace-authority",
+    "base_head": "98b9dea874ca57e4ed5f8aaea1584514af0e3823",
+    "base_tree": "112db4b465ac77df52ccbbf655292083579e45a8",
+    "human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I5_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_i5_contract.json",
+    "validation_contract": "unified_python_research_framework_i5_validation_contract.json",
+    "predecessor_manifest": "unified_python_research_framework_i5_predecessor_manifest.json",
+    "implementation_path_manifest": "unified_python_research_framework_i5_implementation_path_manifest.json",
+    "precedence": "This JSON is the exact mechanical schema/order source; Markdown is its normative human rendering. A mismatch is an integrity failure."
+  },
+  "json_document_profile": {
+    "encoding": "UTF-8",
+    "bom": false,
+    "duplicate_keys": "REJECT",
+    "non_finite_numbers": "REJECT",
+    "comments": "REJECT",
+    "trailing_data": "REJECT",
+    "line_endings": "LF",
+    "raw_final_newline": "EXACTLY_ONE",
+    "canonical_rule": "RFC-8259-compatible JSON, sorted object keys, compact separators, ensure_ascii=false, UTF-8, then one LF."
+  },
+  "scope": {
+    "stage": "I-5_AUTHORITY_DRAFTING",
+    "authority_files_authorized": true,
+    "implementation_authorized": false,
+    "scientific_execution_authorized": false,
+    "state_advancement_authorized": false,
+    "backend_acceptance_authorized": false,
+    "fault_delivery_authorized": false,
+    "runner_authorized": false,
+    "publication_or_recovery_authorized": false,
+    "validation_classes": [
+      "V6",
+      "V7",
+      "V11_STATIC"
+    ],
+    "permitted_actions": [
+      "read-only Git inspection",
+      "static text and AST parsing",
+      "strict JSON parsing",
+      "hashing",
+      "deterministic arithmetic"
+    ]
+  },
+  "checkpoint": {
+    "target_branch": "framework-v0.1",
+    "head": "98b9dea874ca57e4ed5f8aaea1584514af0e3823",
+    "tree": "112db4b465ac77df52ccbbf655292083579e45a8",
+    "accepted_compatibility_feature": "7cc32e6a8e617cd07ad1669d29fa67fbff496307",
+    "tracked_path_count": 273,
+    "accepted_failure_count": 185,
+    "accepted_root_export_count": 309,
+    "accepted_package_modules": 29,
+    "accepted_package_edges": 152,
+    "accepted_extension_modules": 21,
+    "accepted_extension_edges": 131,
+    "accepted_combined_signature_rows": 155
+  },
+  "governing_source_locks": [
+    {
+      "path": "AGENTS.md",
+      "raw_byte_count": 1853,
+      "raw_sha256": "b23e3e26c336fe2db258e735f20e60e291d7f22cf9ee9d5e623d69ba141c002b",
+      "role": "repository governance"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/SKILL.md",
+      "raw_byte_count": 2977,
+      "raw_sha256": "81ab31ce62d58f9058a38aafd511c8f98d7e1142640967bbd3daccd1068e810c",
+      "role": "workflow skill"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/references/profiles.md",
+      "raw_byte_count": 9791,
+      "raw_sha256": "ab8e68b4c53630a9fe25367c8e40f0e51a17030e1428aaf38f0fafcda0eb8a5f",
+      "role": "authority-drafting profile"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+      "raw_byte_count": 421632,
+      "raw_sha256": "713b3ceb694721710ffeca8b9efc7cb1c54317ed922a2ba5e352b01faa8c82fa",
+      "role": "controlling specification"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "raw_byte_count": 251659,
+      "raw_sha256": "7dfc8da2b8c31e8b66b867bc7c894f4f6218420391e21c6443c48645c884a336",
+      "role": "controlling planning input"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "raw_byte_count": 138686,
+      "raw_sha256": "ee0aba306c863b975e4d13bfc33690845c04fa107508400c8401587980530fba",
+      "role": "future-books boundary"
+    },
+    {
+      "path": "DYNAMIC_COORDINATION_FOUNDATION.md",
+      "raw_byte_count": 71170,
+      "raw_sha256": "6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95",
+      "role": "exact ten-phase source"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "raw_byte_count": 53003,
+      "raw_sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10",
+      "role": "joint-group and physical-boundary source"
+    },
+    {
+      "path": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+      "raw_byte_count": 27776,
+      "raw_sha256": "68aca0614f41dbfad8c248c4d43fd29835234c13dc31536f194f3dc92e6be320",
+      "role": "UQ register"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md",
+      "raw_byte_count": 45775,
+      "raw_sha256": "a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448",
+      "role": "accepted I-1 authority"
+    },
+    {
+      "path": "unified_python_research_framework_packaging_contract.json",
+      "raw_byte_count": 54712,
+      "raw_sha256": "edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351",
+      "role": "accepted I-1 mechanical authority"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
+      "raw_byte_count": 156290,
+      "raw_sha256": "eaa3c80efa6ff0beae6f3ad8da3be67fb61f3cc5223b2067c256732ebf7bdfbc",
+      "role": "accepted I-3 authority"
+    },
+    {
+      "path": "unified_python_research_framework_i3_contract.json",
+      "raw_byte_count": 345638,
+      "raw_sha256": "d8acef250314e1405b048a324c9f855010f7927cc8760e2f827bba85253d7979",
+      "role": "accepted I-3 mechanical authority"
+    },
+    {
+      "path": "unified_python_research_framework_i3_validation_contract.json",
+      "raw_byte_count": 49384569,
+      "raw_sha256": "9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b",
+      "role": "accepted I-3 validation authority"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3C_SETTLEMENT_CAUSALITY_REPAIR_AUTHORITY_AMENDMENT.md",
+      "raw_byte_count": 18759,
+      "raw_sha256": "78e5b5e662cce41e2421e7e534309b6c9591436d39eb135f4bb71c72906e483a",
+      "role": "accepted I-3C repair authority"
+    },
+    {
+      "path": "unified_python_research_framework_i3c_settlement_causality_repair_contract.json",
+      "raw_byte_count": 20877,
+      "raw_sha256": "2ffc97f0bd93a219a56e324a806c01b0e48c5b8882b674aa1f67cc3ff0872c93",
+      "role": "accepted I-3C repair contract"
+    },
+    {
+      "path": "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+      "raw_byte_count": 41359,
+      "raw_sha256": "eb559a68163571d80bbe564d68a57a915e128090b1dbb26bfd9d1c4ec4a7b8d3",
+      "role": "accepted atomic-generator/interaction authority"
+    },
+    {
+      "path": "atomic_generator_foundation_contract.json",
+      "raw_byte_count": 42855,
+      "raw_sha256": "b204f06bd11e7c605acc8afadbf82021fe5e3c1030e1f3f4c3659e71afd5d8a4",
+      "role": "accepted atomic-generator/interaction contract"
+    },
+    {
+      "path": "atomic_generator_foundation_validation_contract.json",
+      "raw_byte_count": 63776,
+      "raw_sha256": "df54297b9c45220f28806304e30f9a654b338165ecd5970a0a2428b8e362a800",
+      "role": "accepted atomic-generator validation"
+    },
+    {
+      "path": "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+      "raw_byte_count": 115771,
+      "raw_sha256": "80d83942d20745b9edeb3c5c8c05d052a616ef97ac9edb1af494d568acf68669",
+      "role": "accepted D1/D2 declaration authority"
+    },
+    {
+      "path": "atomic_interaction_declaration_contract.json",
+      "raw_byte_count": 256881,
+      "raw_sha256": "565cc3947d9a3abc99ece694ec823ad0f945dbb1c7634586bcf43f2e36c2549a",
+      "role": "accepted D1/D2 contract"
+    },
+    {
+      "path": "atomic_interaction_declaration_validation_contract.json",
+      "raw_byte_count": 1618558,
+      "raw_sha256": "b40b80aef4a67826186fde40bf0b0ee9dec6e3db27c6809c2a2da075abe1b401",
+      "role": "accepted D1/D2 validation"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+      "raw_byte_count": 37767,
+      "raw_sha256": "9414005a6f6fcfc9868c5094c350b43172c28d8510cac390a89c5c3c95b75365",
+      "role": "accepted I-4 authority"
+    },
+    {
+      "path": "unified_python_research_framework_i4_contract.json",
+      "raw_byte_count": 86797,
+      "raw_sha256": "dcd26f45dd33086acb29bc76710d3a9215a5d3b04878c54f9ec52a5970a6574d",
+      "role": "accepted I-4 mechanical authority"
+    },
+    {
+      "path": "unified_python_research_framework_i4_validation_contract.json",
+      "raw_byte_count": 324578,
+      "raw_sha256": "a662ffee52bd4c9b8f926b23624d8d8fad4b64223e1fa61234f852f1a0c9b9ec",
+      "role": "accepted I-4 validation"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_GOVERNANCE_BOOTSTRAP_REQUIREMENTS.md",
+      "raw_byte_count": 15143,
+      "raw_sha256": "9cea9392375623e1b95727f6ff7761735133906011f63a260831ee7656133f9f",
+      "role": "governance/bootstrap boundary"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_UQ25_DEPENDENCY_DECISION.md",
+      "raw_byte_count": 11721,
+      "raw_sha256": "863f0179da8db043ad98f5025cd99a0e09ccf5914f287ff2b45fcfb1730d372f",
+      "role": "accepted dependency decision"
+    },
+    {
+      "path": "unified_python_research_framework_i4_uq25_dependency_contract.json",
+      "raw_byte_count": 32485,
+      "raw_sha256": "55b9a146927e0c37488dbf8489fc3d3d9afc05e8fc52bd7c402189fd5d598338",
+      "role": "accepted dependency contract"
+    },
+    {
+      "path": "post_i4_legacy_test_compatibility_contract.json",
+      "raw_byte_count": 102133,
+      "raw_sha256": "347f2fc9cd44bab3c1bfa1ae6b8b6da8c544ef13f1e41494d05b4bfffea2aa82",
+      "role": "accepted compatibility surface"
+    },
+    {
+      "path": "post_i4_legacy_test_compatibility_validation_contract.json",
+      "raw_byte_count": 67952,
+      "raw_sha256": "fcb9c9bb2a42902dec60abe8dcfb2a9d0366f15d794262e56a142072b984c5a1",
+      "role": "accepted compatibility validation"
+    }
+  ],
+  "planning_catalogue_reconciliation": [
+    {
+      "issue": "The controlling ten-phase sources freeze ordinals and full prose but do not assign semantic enum labels.",
+      "resolution": "PhaseOrdinal members are neutral PHASE_1 through PHASE_10 only; /ten_phase_order.normative_text is the exact accepted name/meaning and cannot be shortened or replaced.",
+      "scope": "Nomenclature only; no phase content or order changes."
+    },
+    {
+      "issue": "Canonical trace row, prefix, and payload hash domains and callables already exist in the accepted I-1 surface.",
+      "resolution": "I-5 reuses compute_canonical_trace_row_hash, compute_canonical_trace_prefix_hash, and compute_canonical_trace_payload_hash byte-identically. TraceDigest is only a closed alias of their accepted result wrappers.",
+      "scope": "No accepted domain, preimage, callable, result type, or export is duplicated or redefined."
+    },
+    {
+      "issue": "Plan §10.2 names the compact all-stage I-5 public families, while this task requires exact typed sub-outcomes, reconstruction evidence, T3 guards, and inert fault-hook declarations.",
+      "resolution": "Every plan-named event, ownership, durability, and trace type is retained exactly; supplementary I-5 public records/enums make the task-required distinctions explicit. This amendment prospectively narrows only the I-5 catalogue and does not alter accepted I-1 through I-4 exports.",
+      "scope": "Representational I-5 additions only; no scientific or backend decision."
+    },
+    {
+      "issue": "Plan §10.2 lists ScientificExecutionLease under capabilities, but the task-authorized I-5 path table assigns T3 entry/lease responsibility to new execution.py and does not authorize capabilities.py modification.",
+      "resolution": "ScientificExecutionLease is declared by execution.py for I-5; capabilities.py remains byte-identical and supplies only the already accepted capability prerequisites.",
+      "scope": "Narrow prospective I-5 ownership resolution; no lease is constructible under I-5."
+    },
+    {
+      "issue": "The plan names CommitOutcome while the task requires separate requested, committed, rejected, ambiguous, and unavailable evidence forms.",
+      "resolution": "CommitOutcome is the exact five-member enum; AtomicCommitOutcome is its closed concrete evidence union, with DurablePrefixEvidence representing committed prefix evidence and separate inert failure evidence records.",
+      "scope": "Typed abstract classification only; zero accepted stores."
+    }
+  ],
+  "ten_phase_order": [
+    {
+      "ordinal": 1,
+      "name": "PHASE_1",
+      "normative_text": "Mature delayed effects and arrivals due at the start of epoch k."
+    },
+    {
+      "ordinal": 2,
+      "name": "PHASE_2",
+      "normative_text": "Apply declared exogenous topology changes, failures, repairs, and capacity deratings effective at k."
+    },
+    {
+      "ordinal": 3,
+      "name": "PHASE_3",
+      "normative_text": "Record the resulting state and make the permitted measurement available to the policy."
+    },
+    {
+      "ordinal": 4,
+      "name": "PHASE_4",
+      "normative_text": "Propose starts, stops, reservations, releases, routes, and reroutes using only permitted information."
+    },
+    {
+      "ordinal": 5,
+      "name": "PHASE_5",
+      "normative_text": "Screen prerequisites, deadlines, commitments, safety constraints, topology, and capacity."
+    },
+    {
+      "ordinal": 6,
+      "name": "PHASE_6",
+      "normative_text": "Admit, reject, defer, or partially accept requests using the frozen allocation and queue disciplines."
+    },
+    {
+      "ordinal": 7,
+      "name": "PHASE_7",
+      "normative_text": "Build joint-transition groups using the imported Part VI rule and form the exact joint-transition proposal for every accepted group without yet mutating physical state."
+    },
+    {
+      "ordinal": 8,
+      "name": "PHASE_8",
+      "normative_text": "Validate a disjoint update-ownership record, then commit each proposed physical transition, completed flow, conversion, loss, consumption, congestion effect, expiry, resource use, and physical coordination burden exactly once while recording the corresponding accounts."
+    },
+    {
+      "ordinal": 9,
+      "name": "PHASE_9",
+      "normative_text": "Register new in-transit payloads and delayed-effect events; update commitments, reservations, and unresolved statuses."
+    },
+    {
+      "ordinal": 10,
+      "name": "PHASE_10",
+      "normative_text": "Apply declared natural drive for the remainder of the epoch and produce the end-of-epoch record."
+    }
+  ],
+  "runtime_conventions": {
+    "records": "exact frozen slotted dataclasses; post-init validates without mutation",
+    "enums": "exact enum class; aliases and subclasses rejected",
+    "protocols": "declarations only, no accepted implementation",
+    "absence": "Applicability.NOT_APPLICABLE, never None",
+    "tuples": "exact tuple in stated order; no list/set coercion",
+    "bytes": "exact bytes; no bytearray/memoryview coercion",
+    "integers": "exact int excluding bool",
+    "text": "NFC and visible ASCII where identity vocabulary is specified",
+    "constructor_failure": "I5_RECORD_FORMATION_INVALID unless an earlier accepted primitive formation failure owns the malformed primitive",
+    "determinism": "No clock, randomness, process identity, filesystem enumeration, hash iteration, network input, callback, or scientific function affects an I-5 result."
+  },
+  "types": [
+    {
+      "name": "EventKeyDigest",
+      "module": "hashing",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, value: str)",
+      "field_order": [
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "annotation": "str",
+          "rule": "lowercase sha256:<64 hex> grammar"
+        }
+      ],
+      "validation": "Reject bool/subclasses, malformed digest text, and non-NFC text.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "EventDeclarationDigest",
+      "module": "hashing",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, value: str)",
+      "field_order": [
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "annotation": "str",
+          "rule": "lowercase sha256:<64 hex> grammar"
+        }
+      ],
+      "validation": "Reject bool/subclasses, malformed digest text, and non-NFC text.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "OwnershipDigest",
+      "module": "hashing",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, value: str)",
+      "field_order": [
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "annotation": "str",
+          "rule": "lowercase sha256:<64 hex> grammar"
+        }
+      ],
+      "validation": "Reject bool/subclasses, malformed digest text, and non-NFC text.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "PhaseCommitDigest",
+      "module": "hashing",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, value: str)",
+      "field_order": [
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "annotation": "str",
+          "rule": "lowercase sha256:<64 hex> grammar"
+        }
+      ],
+      "validation": "Reject bool/subclasses, malformed digest text, and non-NFC text.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "DurabilityEvidenceDigest",
+      "module": "hashing",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, value: str)",
+      "field_order": [
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "annotation": "str",
+          "rule": "lowercase sha256:<64 hex> grammar"
+        }
+      ],
+      "validation": "Reject bool/subclasses, malformed digest text, and non-NFC text.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "RunEnvelopeDigest",
+      "module": "hashing",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, value: str)",
+      "field_order": [
+        "value"
+      ],
+      "fields": [
+        {
+          "name": "value",
+          "annotation": "str",
+          "rule": "lowercase sha256:<64 hex> grammar"
+        }
+      ],
+      "validation": "Reject bool/subclasses, malformed digest text, and non-NFC text.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "TraceDigest",
+      "module": "hashing",
+      "kind": "closed-type-alias",
+      "signature": "CanonicalTraceRowHash|CanonicalTracePrefixHash|CanonicalScientificTracePayloadHash",
+      "field_order": [],
+      "validation": "Exact accepted trace digest wrappers only; I-5 creates no new trace hash domain.",
+      "applicability": "Tagged by the accepted concrete digest type."
+    },
+    {
+      "name": "PhaseOrdinal",
+      "module": "events",
+      "kind": "IntEnum",
+      "values": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "field_order": [],
+      "validation": "Values map one-to-one in ordinal order to /ten_phase_order; integer subclasses and out-of-range values fail.",
+      "applicability": "Always exact; no aliases and no unknown members.",
+      "members": [
+        {
+          "name": "PHASE_1",
+          "value": 1
+        },
+        {
+          "name": "PHASE_2",
+          "value": 2
+        },
+        {
+          "name": "PHASE_3",
+          "value": 3
+        },
+        {
+          "name": "PHASE_4",
+          "value": 4
+        },
+        {
+          "name": "PHASE_5",
+          "value": 5
+        },
+        {
+          "name": "PHASE_6",
+          "value": 6
+        },
+        {
+          "name": "PHASE_7",
+          "value": 7
+        },
+        {
+          "name": "PHASE_8",
+          "value": 8
+        },
+        {
+          "name": "PHASE_9",
+          "value": 9
+        },
+        {
+          "name": "PHASE_10",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "name": "EventKey",
+      "module": "events",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, epoch: int, phase_ordinal: PhaseOrdinal, declared_priority: int, group_or_scope_id: str, event_kind: str, primary_object_id: str, local_sequence: int)",
+      "field_order": [
+        "epoch",
+        "phase_ordinal",
+        "declared_priority",
+        "group_or_scope_id",
+        "event_kind",
+        "primary_object_id",
+        "local_sequence"
+      ],
+      "fields": [
+        {
+          "name": "epoch",
+          "annotation": "int",
+          "rule": "exact nonnegative integer"
+        },
+        {
+          "name": "phase_ordinal",
+          "annotation": "PhaseOrdinal",
+          "rule": "exact enum"
+        },
+        {
+          "name": "declared_priority",
+          "annotation": "int",
+          "rule": "exact integer fixed before mutation"
+        },
+        {
+          "name": "group_or_scope_id",
+          "annotation": "str",
+          "rule": "nonempty visible ASCII opaque identity"
+        },
+        {
+          "name": "event_kind",
+          "annotation": "str",
+          "rule": "nonempty visible ASCII closed by the later scientific adapter"
+        },
+        {
+          "name": "primary_object_id",
+          "annotation": "str",
+          "rule": "valid ScientificId text"
+        },
+        {
+          "name": "local_sequence",
+          "annotation": "int",
+          "rule": "exact nonnegative integer assigned before mutation"
+        }
+      ],
+      "validation": "Lexicographic order is exactly field order. Equal keys are invalid, never tie-broken.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "EventDeclaration",
+      "module": "events",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, key: EventKey, event_ref: ObjectRef, declared_simultaneity_ref: ObjectRef|Applicability, payload_hash: Sha256Digest, predecessor_event_key: EventKey|Applicability)",
+      "field_order": [
+        "key",
+        "event_ref",
+        "declared_simultaneity_ref",
+        "payload_hash",
+        "predecessor_event_key"
+      ],
+      "fields": [
+        {
+          "name": "key",
+          "annotation": "EventKey",
+          "rule": "exact key"
+        },
+        {
+          "name": "event_ref",
+          "annotation": "ObjectRef",
+          "rule": "stable immutable event identity"
+        },
+        {
+          "name": "declared_simultaneity_ref",
+          "annotation": "ObjectRef|Applicability",
+          "rule": "joint group or NOT_APPLICABLE"
+        },
+        {
+          "name": "payload_hash",
+          "annotation": "Sha256Digest",
+          "rule": "hash of inert declared payload bytes"
+        },
+        {
+          "name": "predecessor_event_key",
+          "annotation": "EventKey|Applicability",
+          "rule": "literal preceding key or NOT_APPLICABLE only for the first event"
+        }
+      ],
+      "validation": "Declaration is immutable, contains no callable, and binds key, identity, payload, simultaneity, and predecessor.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "PhaseCommitRecord",
+      "module": "events",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, epoch: int, phase_ordinal: PhaseOrdinal, previous_phase_commit_digest: PhaseCommitDigest|Applicability, ordered_event_digests: tuple[EventDeclarationDigest,...], epoch_ownership_digest: OwnershipDigest, physical_phase_record_ref: ObjectRef|Applicability, trace_row_digest: TraceDigest)",
+      "field_order": [
+        "epoch",
+        "phase_ordinal",
+        "previous_phase_commit_digest",
+        "ordered_event_digests",
+        "epoch_ownership_digest",
+        "physical_phase_record_ref",
+        "trace_row_digest"
+      ],
+      "fields": [
+        {
+          "name": "epoch",
+          "annotation": "int",
+          "rule": "exact nonnegative integer"
+        },
+        {
+          "name": "phase_ordinal",
+          "annotation": "PhaseOrdinal",
+          "rule": "exact phase"
+        },
+        {
+          "name": "previous_phase_commit_digest",
+          "annotation": "PhaseCommitDigest|Applicability",
+          "rule": "NOT_APPLICABLE only for phase 1"
+        },
+        {
+          "name": "ordered_event_digests",
+          "annotation": "tuple[EventDeclarationDigest,...]",
+          "rule": "literal key order, duplicate-free"
+        },
+        {
+          "name": "epoch_ownership_digest",
+          "annotation": "OwnershipDigest",
+          "rule": "same epoch ownership authority"
+        },
+        {
+          "name": "physical_phase_record_ref",
+          "annotation": "ObjectRef|Applicability",
+          "rule": "required for phase 8; otherwise exact applicability rule"
+        },
+        {
+          "name": "trace_row_digest",
+          "annotation": "TraceDigest",
+          "rule": "row committed in the same abstract group"
+        }
+      ],
+      "validation": "Records a phase result but cannot apply an update; phases form an exact predecessor chain.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "TraceCompleteness",
+      "module": "events",
+      "kind": "StrEnum",
+      "values": [
+        "COMPLETE",
+        "DECLARED_FAULT_TERMINAL",
+        "PARTIAL_DURABLE_PREFIX",
+        "NO_DURABLE_TRACE",
+        "UNRESOLVED_DURABILITY",
+        "INVALID"
+      ],
+      "field_order": [],
+      "validation": "DECLARED_FAULT_TERMINAL is representable but unreachable until separate UQ-38 fault authority.",
+      "applicability": "Always exact; no aliases and no unknown members."
+    },
+    {
+      "name": "OwnershipKind",
+      "module": "ownership",
+      "kind": "StrEnum",
+      "values": [
+        "PHYSICAL_UPDATE",
+        "INFORMATIONAL_POLICY_MEMORY"
+      ],
+      "field_order": [],
+      "validation": "Only PHYSICAL_UPDATE may occur in UpdateOwnershipClaim; informational memory is deliberately separate.",
+      "applicability": "Always exact; no aliases and no unknown members."
+    },
+    {
+      "name": "OpaqueLocusKey",
+      "module": "ownership",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, namespace: str, coordinate: bytes)",
+      "field_order": [
+        "namespace",
+        "coordinate"
+      ],
+      "fields": [
+        {
+          "name": "namespace",
+          "annotation": "str",
+          "rule": "nonempty visible ASCII"
+        },
+        {
+          "name": "coordinate",
+          "annotation": "bytes",
+          "rule": "nonempty opaque bytes; never interpreted by I-5"
+        }
+      ],
+      "validation": "Orders by namespace then unsigned byte lexicographic coordinate.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "UpdateOwnershipClaim",
+      "module": "ownership",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, epoch: int, phase_ordinal: PhaseOrdinal, event_key: EventKey, owner_ref: ObjectRef, locus: OpaqueLocusKey, ownership_kind: OwnershipKind)",
+      "field_order": [
+        "epoch",
+        "phase_ordinal",
+        "event_key",
+        "owner_ref",
+        "locus",
+        "ownership_kind"
+      ],
+      "fields": [
+        {
+          "name": "epoch",
+          "annotation": "int",
+          "rule": "exact nonnegative integer"
+        },
+        {
+          "name": "phase_ordinal",
+          "annotation": "PhaseOrdinal",
+          "rule": "exact phase"
+        },
+        {
+          "name": "event_key",
+          "annotation": "EventKey",
+          "rule": "same epoch and phase"
+        },
+        {
+          "name": "owner_ref",
+          "annotation": "ObjectRef",
+          "rule": "stable proposed-update identity"
+        },
+        {
+          "name": "locus",
+          "annotation": "OpaqueLocusKey",
+          "rule": "opaque physical locus"
+        },
+        {
+          "name": "ownership_kind",
+          "annotation": "OwnershipKind",
+          "rule": "must be PHYSICAL_UPDATE"
+        }
+      ],
+      "validation": "Claims one physical locus for one proposed update without allocating, transforming, or resolving conflicts.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "OwnershipConflict",
+      "module": "ownership",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, locus: OpaqueLocusKey, first_claim: UpdateOwnershipClaim, second_claim: UpdateOwnershipClaim)",
+      "field_order": [
+        "locus",
+        "first_claim",
+        "second_claim"
+      ],
+      "fields": [
+        {
+          "name": "locus",
+          "annotation": "OpaqueLocusKey",
+          "rule": "shared exact locus"
+        },
+        {
+          "name": "first_claim",
+          "annotation": "UpdateOwnershipClaim",
+          "rule": "lower canonical claim"
+        },
+        {
+          "name": "second_claim",
+          "annotation": "UpdateOwnershipClaim",
+          "rule": "higher canonical claim"
+        }
+      ],
+      "validation": "Canonical conflict witness; first_claim is strictly less than second_claim.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "EpochUpdateOwnership",
+      "module": "ownership",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, epoch: int, claims: tuple[UpdateOwnershipClaim,...], digest: OwnershipDigest)",
+      "field_order": [
+        "epoch",
+        "claims",
+        "digest"
+      ],
+      "fields": [
+        {
+          "name": "epoch",
+          "annotation": "int",
+          "rule": "exact nonnegative integer"
+        },
+        {
+          "name": "claims",
+          "annotation": "tuple[UpdateOwnershipClaim,...]",
+          "rule": "canonical order, duplicate-free and locus-disjoint"
+        },
+        {
+          "name": "digest",
+          "annotation": "OwnershipDigest",
+          "rule": "exact epoch projection digest"
+        }
+      ],
+      "validation": "Epoch-wide physical ownership is explicit and immutable.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "OwnershipValidationRecord",
+      "module": "ownership",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, status: Literal['DISJOINT','CONFLICT'], ownership: EpochUpdateOwnership|Applicability, conflict: OwnershipConflict|Applicability)",
+      "field_order": [
+        "status",
+        "ownership",
+        "conflict"
+      ],
+      "fields": [
+        {
+          "name": "status",
+          "annotation": "Literal['DISJOINT','CONFLICT']",
+          "rule": "exact closed literal"
+        },
+        {
+          "name": "ownership",
+          "annotation": "EpochUpdateOwnership|Applicability",
+          "rule": "present exactly on DISJOINT"
+        },
+        {
+          "name": "conflict",
+          "annotation": "OwnershipConflict|Applicability",
+          "rule": "present exactly on CONFLICT"
+        }
+      ],
+      "validation": "Exactly one of ownership/conflict is applicable; CONFLICT grants no resolution.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "CommitOutcome",
+      "module": "durability",
+      "kind": "StrEnum",
+      "values": [
+        "REQUESTED",
+        "COMMITTED",
+        "REJECTED",
+        "AMBIGUOUS",
+        "UNAVAILABLE"
+      ],
+      "field_order": [],
+      "validation": "REQUESTED is pre-outcome only; all other members are terminal classifications for one attempt.",
+      "applicability": "Always exact; no aliases and no unknown members."
+    },
+    {
+      "name": "PolicyMemoryTransaction",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, decision_ref: ObjectRef, prior_memory_hash: PolicyMemoryPayloadHash|Applicability, next_memory_hash: PolicyMemoryPayloadHash|Applicability, trace_row_digest: TraceDigest)",
+      "field_order": [
+        "decision_ref",
+        "prior_memory_hash",
+        "next_memory_hash",
+        "trace_row_digest"
+      ],
+      "fields": [
+        {
+          "name": "decision_ref",
+          "annotation": "ObjectRef",
+          "rule": "immutable policy-decision record"
+        },
+        {
+          "name": "prior_memory_hash",
+          "annotation": "PolicyMemoryPayloadHash|Applicability",
+          "rule": "stateful hash or NOT_APPLICABLE"
+        },
+        {
+          "name": "next_memory_hash",
+          "annotation": "PolicyMemoryPayloadHash|Applicability",
+          "rule": "same applicability as prior"
+        },
+        {
+          "name": "trace_row_digest",
+          "annotation": "TraceDigest",
+          "rule": "coupled row"
+        }
+      ],
+      "validation": "Decision, next memory, and trace row are one abstract atomic group; no policy is invoked.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "PhysicalPhaseTransaction",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, phase_commit: PhaseCommitRecord, ownership: EpochUpdateOwnership, ledger_evidence_ref: ObjectRef, trace_row_digest: TraceDigest)",
+      "field_order": [
+        "phase_commit",
+        "ownership",
+        "ledger_evidence_ref",
+        "trace_row_digest"
+      ],
+      "fields": [
+        {
+          "name": "phase_commit",
+          "annotation": "PhaseCommitRecord",
+          "rule": "immutable phase record"
+        },
+        {
+          "name": "ownership",
+          "annotation": "EpochUpdateOwnership",
+          "rule": "same epoch"
+        },
+        {
+          "name": "ledger_evidence_ref",
+          "annotation": "ObjectRef",
+          "rule": "immutable evidence reference"
+        },
+        {
+          "name": "trace_row_digest",
+          "annotation": "TraceDigest",
+          "rule": "must equal phase record row"
+        }
+      ],
+      "validation": "Physical record, ownership, ledger evidence, and trace row are one abstract group; no state is advanced.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "AtomicStoreRequest",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, request_ref: ObjectRef, expected_trace_prefix: TraceDigest, expected_phase_predecessor: PhaseCommitDigest|Applicability, policy_memory_transaction: PolicyMemoryTransaction|Applicability, physical_phase_transaction: PhysicalPhaseTransaction|Applicability, attempt_ordinal: int)",
+      "field_order": [
+        "request_ref",
+        "expected_trace_prefix",
+        "expected_phase_predecessor",
+        "policy_memory_transaction",
+        "physical_phase_transaction",
+        "attempt_ordinal"
+      ],
+      "fields": [
+        {
+          "name": "request_ref",
+          "annotation": "ObjectRef",
+          "rule": "stable request identity"
+        },
+        {
+          "name": "expected_trace_prefix",
+          "annotation": "TraceDigest",
+          "rule": "literal pre-commit prefix"
+        },
+        {
+          "name": "expected_phase_predecessor",
+          "annotation": "PhaseCommitDigest|Applicability",
+          "rule": "exact predecessor"
+        },
+        {
+          "name": "policy_memory_transaction",
+          "annotation": "PolicyMemoryTransaction|Applicability",
+          "rule": "policy phase or NOT_APPLICABLE"
+        },
+        {
+          "name": "physical_phase_transaction",
+          "annotation": "PhysicalPhaseTransaction|Applicability",
+          "rule": "physical phase or NOT_APPLICABLE"
+        },
+        {
+          "name": "attempt_ordinal",
+          "annotation": "int",
+          "rule": "exact nonnegative integer"
+        }
+      ],
+      "validation": "At least one transaction is applicable; the trace row is common when both apply.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "DurablePrefixEvidence",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, request_ref: ObjectRef, committed_prefix: TraceDigest, phase_commit_digest: PhaseCommitDigest|Applicability, evidence_digest: DurabilityEvidenceDigest)",
+      "field_order": [
+        "request_ref",
+        "committed_prefix",
+        "phase_commit_digest",
+        "evidence_digest"
+      ],
+      "fields": [
+        {
+          "name": "request_ref",
+          "annotation": "ObjectRef",
+          "rule": "request identity"
+        },
+        {
+          "name": "committed_prefix",
+          "annotation": "TraceDigest",
+          "rule": "exact requested extension"
+        },
+        {
+          "name": "phase_commit_digest",
+          "annotation": "PhaseCommitDigest|Applicability",
+          "rule": "exact committed phase or NOT_APPLICABLE"
+        },
+        {
+          "name": "evidence_digest",
+          "annotation": "DurabilityEvidenceDigest",
+          "rule": "digest excluding itself"
+        }
+      ],
+      "validation": "Abstract evidence only; neither this object nor a Python collection proves real durability.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "AtomicStoreRejection",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, request_ref: ObjectRef, preserved_prefix: TraceDigest, failure_code: FailureCode)",
+      "field_order": [
+        "request_ref",
+        "preserved_prefix",
+        "failure_code"
+      ],
+      "fields": [
+        {
+          "name": "request_ref",
+          "annotation": "ObjectRef",
+          "rule": "request identity"
+        },
+        {
+          "name": "preserved_prefix",
+          "annotation": "TraceDigest",
+          "rule": "byte-identical expected prefix"
+        },
+        {
+          "name": "failure_code",
+          "annotation": "FailureCode",
+          "rule": "exact rejection cause"
+        }
+      ],
+      "validation": "Rejected commit preserves the exact known prefix and changes nothing.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "AtomicStoreAmbiguity",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, request_ref: ObjectRef, last_confirmed_prefix: TraceDigest|Applicability, evidence_refs: tuple[ObjectRef,...])",
+      "field_order": [
+        "request_ref",
+        "last_confirmed_prefix",
+        "evidence_refs"
+      ],
+      "fields": [
+        {
+          "name": "request_ref",
+          "annotation": "ObjectRef",
+          "rule": "request identity"
+        },
+        {
+          "name": "last_confirmed_prefix",
+          "annotation": "TraceDigest|Applicability",
+          "rule": "known prefix or NOT_APPLICABLE"
+        },
+        {
+          "name": "evidence_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "ordered duplicate-free recovery evidence"
+        }
+      ],
+      "validation": "Ambiguity is never treated as committed or rejected and cannot be retried as if absent.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "AtomicStoreUnavailable",
+      "module": "durability",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, request_ref: ObjectRef, preserved_prefix: TraceDigest)",
+      "field_order": [
+        "request_ref",
+        "preserved_prefix"
+      ],
+      "fields": [
+        {
+          "name": "request_ref",
+          "annotation": "ObjectRef",
+          "rule": "request identity"
+        },
+        {
+          "name": "preserved_prefix",
+          "annotation": "TraceDigest",
+          "rule": "unchanged prefix"
+        }
+      ],
+      "validation": "No backend attempt occurred and the prefix remains exact.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "AtomicCommitOutcome",
+      "module": "durability",
+      "kind": "closed-type-alias",
+      "signature": "DurablePrefixEvidence|AtomicStoreRejection|AtomicStoreAmbiguity|AtomicStoreUnavailable",
+      "field_order": [],
+      "validation": "Exactly one concrete outcome type; REQUESTED has no outcome object.",
+      "applicability": "Always applicable after classification."
+    },
+    {
+      "name": "AtomicStore",
+      "module": "durability",
+      "kind": "runtime-checkable-Protocol",
+      "signature": "commit(self, request: AtomicStoreRequest, /) -> AtomicCommitOutcome",
+      "field_order": [],
+      "validation": "Declaration only. No conforming production or validation implementation is accepted by I-5.",
+      "applicability": "Prospective backend boundary only."
+    },
+    {
+      "name": "PolicyDecisionStore",
+      "module": "durability",
+      "kind": "runtime-checkable-Protocol",
+      "signature": "commit_policy_decision(self, transaction: PolicyMemoryTransaction, expected_prefix: CanonicalTracePrefixHash, /) -> AtomicCommitOutcome",
+      "field_order": [],
+      "validation": "Declaration only. It supplies no implementation and cannot invoke a policy.",
+      "applicability": "Prospective abstract policy-decision transaction boundary only."
+    },
+    {
+      "name": "PhaseCommitStore",
+      "module": "durability",
+      "kind": "runtime-checkable-Protocol",
+      "signature": "commit_phase(self, transaction: PhysicalPhaseTransaction, expected_prefix: CanonicalTracePrefixHash, /) -> AtomicCommitOutcome",
+      "field_order": [],
+      "validation": "Declaration only. It supplies no implementation and cannot advance state.",
+      "applicability": "Prospective abstract physical-phase transaction boundary only."
+    },
+    {
+      "name": "TraceRowKind",
+      "module": "traces",
+      "kind": "StrEnum",
+      "values": [
+        "EVENT_DECLARATION",
+        "PROPOSAL",
+        "SCREENING",
+        "PHASE_COMMIT",
+        "POLICY_MEMORY",
+        "DURABILITY_OUTCOME"
+      ],
+      "field_order": [],
+      "validation": "Closed inert row vocabulary for I-5; later scientific row extensions require later authority.",
+      "applicability": "Always exact; no aliases and no unknown members."
+    },
+    {
+      "name": "TraceHeader",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, trace_schema_ref: ObjectRef, accepted_configuration_object_content_hash: ObjectContentHash|Applicability, execution_semantics_hash: ExecutionSemanticsHash|Applicability, initial_state_payload_hash: StatePayloadHash|Applicability, initial_policy_memory_payload_hash: PolicyMemoryPayloadHash|Applicability)",
+      "field_order": [
+        "trace_schema_ref",
+        "accepted_configuration_object_content_hash",
+        "execution_semantics_hash",
+        "initial_state_payload_hash",
+        "initial_policy_memory_payload_hash"
+      ],
+      "fields": [
+        {
+          "name": "trace_schema_ref",
+          "annotation": "ObjectRef",
+          "rule": "accepted trace schema"
+        },
+        {
+          "name": "accepted_configuration_object_content_hash",
+          "annotation": "ObjectContentHash|Applicability",
+          "rule": "scientific configuration hash or NOT_APPLICABLE for inert validation"
+        },
+        {
+          "name": "execution_semantics_hash",
+          "annotation": "ExecutionSemanticsHash|Applicability",
+          "rule": "accepted semantics or inert NOT_APPLICABLE"
+        },
+        {
+          "name": "initial_state_payload_hash",
+          "annotation": "StatePayloadHash|Applicability",
+          "rule": "scientific state or inert NOT_APPLICABLE"
+        },
+        {
+          "name": "initial_policy_memory_payload_hash",
+          "annotation": "PolicyMemoryPayloadHash|Applicability",
+          "rule": "stateful memory or NOT_APPLICABLE"
+        }
+      ],
+      "validation": "Immutable header declaration; inert validation requires all scientific coordinates NOT_APPLICABLE.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "TraceFooter",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, terminal_or_last_confirmed_state_payload_hash: StatePayloadHash|Applicability, terminal_or_last_confirmed_policy_memory_payload_hash: PolicyMemoryPayloadHash|Applicability, confirmed_row_count: int, trace_completeness: TraceCompleteness)",
+      "field_order": [
+        "terminal_or_last_confirmed_state_payload_hash",
+        "terminal_or_last_confirmed_policy_memory_payload_hash",
+        "confirmed_row_count",
+        "trace_completeness"
+      ],
+      "fields": [
+        {
+          "name": "terminal_or_last_confirmed_state_payload_hash",
+          "annotation": "StatePayloadHash|Applicability",
+          "rule": "terminal/known state or inert NOT_APPLICABLE"
+        },
+        {
+          "name": "terminal_or_last_confirmed_policy_memory_payload_hash",
+          "annotation": "PolicyMemoryPayloadHash|Applicability",
+          "rule": "corresponding memory or NOT_APPLICABLE"
+        },
+        {
+          "name": "confirmed_row_count",
+          "annotation": "int",
+          "rule": "exact nonnegative count"
+        },
+        {
+          "name": "trace_completeness",
+          "annotation": "TraceCompleteness",
+          "rule": "exact explicit status"
+        }
+      ],
+      "validation": "Immutable footer declaration; it does not finalize bytes or infer completeness.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "CanonicalScientificTracePayloadV1",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, header: TraceHeader, ordered_rows: tuple[CanonicalTraceRow,...], footer: TraceFooter, payload_hash: CanonicalScientificTracePayloadHash)",
+      "field_order": [
+        "header",
+        "ordered_rows",
+        "footer",
+        "payload_hash"
+      ],
+      "fields": [
+        {
+          "name": "header",
+          "annotation": "TraceHeader",
+          "rule": "exact immutable header"
+        },
+        {
+          "name": "ordered_rows",
+          "annotation": "tuple[CanonicalTraceRow,...]",
+          "rule": "literal canonical row order"
+        },
+        {
+          "name": "footer",
+          "annotation": "TraceFooter",
+          "rule": "exact immutable footer"
+        },
+        {
+          "name": "payload_hash",
+          "annotation": "CanonicalScientificTracePayloadHash",
+          "rule": "accepted domain digest excluding itself"
+        }
+      ],
+      "validation": "Exact canonical scientific payload container using the already accepted hash domain; I-5 validation may construct only inert NOT_APPLICABLE scientific coordinates.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "CanonicalTraceRow",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, row_index: int, row_kind: TraceRowKind, event_key: EventKey|Applicability, phase_ordinal: PhaseOrdinal, predecessor_row_digest: TraceDigest|Applicability, record_refs: tuple[ObjectRef,...], payload_hashes: tuple[Sha256Digest,...])",
+      "field_order": [
+        "row_index",
+        "row_kind",
+        "event_key",
+        "phase_ordinal",
+        "predecessor_row_digest",
+        "record_refs",
+        "payload_hashes"
+      ],
+      "fields": [
+        {
+          "name": "row_index",
+          "annotation": "int",
+          "rule": "exact nonnegative contiguous index"
+        },
+        {
+          "name": "row_kind",
+          "annotation": "TraceRowKind",
+          "rule": "exact kind"
+        },
+        {
+          "name": "event_key",
+          "annotation": "EventKey|Applicability",
+          "rule": "required for event-bound rows"
+        },
+        {
+          "name": "phase_ordinal",
+          "annotation": "PhaseOrdinal",
+          "rule": "exact phase"
+        },
+        {
+          "name": "predecessor_row_digest",
+          "annotation": "TraceDigest|Applicability",
+          "rule": "NOT_APPLICABLE only for row zero"
+        },
+        {
+          "name": "record_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical duplicate-free stable refs"
+        },
+        {
+          "name": "payload_hashes",
+          "annotation": "tuple[Sha256Digest,...]",
+          "rule": "canonical duplicate-free dummy/replay-relevant hashes"
+        }
+      ],
+      "validation": "Canonical row excludes wall clock, execution identity, host, process, storage, publication, and diagnostics.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "TraceRowFrame",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, row_digest: TraceDigest, frame_bytes: bytes)",
+      "field_order": [
+        "row_digest",
+        "frame_bytes"
+      ],
+      "fields": [
+        {
+          "name": "row_digest",
+          "annotation": "TraceDigest",
+          "rule": "digest of exact row projection"
+        },
+        {
+          "name": "frame_bytes",
+          "annotation": "bytes",
+          "rule": "u64be length plus ECJ-1 row bytes"
+        }
+      ],
+      "validation": "Exact binary row frame; bytes determine the digest.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "CanonicalTracePrefix",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, row_frames: tuple[TraceRowFrame,...], row_count: int, prefix_digest: TraceDigest)",
+      "field_order": [
+        "row_frames",
+        "row_count",
+        "prefix_digest"
+      ],
+      "fields": [
+        {
+          "name": "row_frames",
+          "annotation": "tuple[TraceRowFrame,...]",
+          "rule": "literal ordered frames"
+        },
+        {
+          "name": "row_count",
+          "annotation": "int",
+          "rule": "equals tuple length"
+        },
+        {
+          "name": "prefix_digest",
+          "annotation": "TraceDigest",
+          "rule": "digest of concatenated frame bytes"
+        }
+      ],
+      "validation": "Immutable literal bytes, not a mutable collection or a summary claim.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "TraceExtensionEvidence",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, prior_prefix_digest: TraceDigest, extended_prefix_digest: TraceDigest, appended_row_digests: tuple[TraceDigest,...])",
+      "field_order": [
+        "prior_prefix_digest",
+        "extended_prefix_digest",
+        "appended_row_digests"
+      ],
+      "fields": [
+        {
+          "name": "prior_prefix_digest",
+          "annotation": "TraceDigest",
+          "rule": "exact prior"
+        },
+        {
+          "name": "extended_prefix_digest",
+          "annotation": "TraceDigest",
+          "rule": "exact extension"
+        },
+        {
+          "name": "appended_row_digests",
+          "annotation": "tuple[TraceDigest,...]",
+          "rule": "nonempty literal suffix"
+        }
+      ],
+      "validation": "Extended prefix must be strictly longer; byte-identical extension claims fail.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "CompleteTraceEvidence",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, trace_digest: TraceDigest, last_prefix_digest: TraceDigest, confirmed_row_count: int, completeness: TraceCompleteness, terminal_state_hash: StatePayloadHash|Applicability, terminal_memory_hash: PolicyMemoryPayloadHash|Applicability)",
+      "field_order": [
+        "trace_digest",
+        "last_prefix_digest",
+        "confirmed_row_count",
+        "completeness",
+        "terminal_state_hash",
+        "terminal_memory_hash"
+      ],
+      "fields": [
+        {
+          "name": "trace_digest",
+          "annotation": "TraceDigest",
+          "rule": "full canonical trace digest"
+        },
+        {
+          "name": "last_prefix_digest",
+          "annotation": "TraceDigest",
+          "rule": "same complete bytes"
+        },
+        {
+          "name": "confirmed_row_count",
+          "annotation": "int",
+          "rule": "exact positive count"
+        },
+        {
+          "name": "completeness",
+          "annotation": "TraceCompleteness",
+          "rule": "COMPLETE or authorized terminal status"
+        },
+        {
+          "name": "terminal_state_hash",
+          "annotation": "StatePayloadHash|Applicability",
+          "rule": "terminal or last-confirmed state"
+        },
+        {
+          "name": "terminal_memory_hash",
+          "annotation": "PolicyMemoryPayloadHash|Applicability",
+          "rule": "corresponding memory or NOT_APPLICABLE"
+        }
+      ],
+      "validation": "Completeness requires literal rows plus terminal evidence; a run envelope is not a substitute.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "MinimumReconstructableTrace",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, accepted_event_keys: tuple[EventKey,...], phase_commit_digests: tuple[PhaseCommitDigest,...], ownership_digest: OwnershipDigest, proposal_and_screen_refs: tuple[ObjectRef,...], policy_memory_transaction_refs: tuple[ObjectRef,...], trace_prefix: CanonicalTracePrefix, commit_dispositions: tuple[CommitOutcome,...], completeness: TraceCompleteness)",
+      "field_order": [
+        "accepted_event_keys",
+        "phase_commit_digests",
+        "ownership_digest",
+        "proposal_and_screen_refs",
+        "policy_memory_transaction_refs",
+        "trace_prefix",
+        "commit_dispositions",
+        "completeness"
+      ],
+      "fields": [
+        {
+          "name": "accepted_event_keys",
+          "annotation": "tuple[EventKey,...]",
+          "rule": "exact total order"
+        },
+        {
+          "name": "phase_commit_digests",
+          "annotation": "tuple[PhaseCommitDigest,...]",
+          "rule": "phase predecessor chain"
+        },
+        {
+          "name": "ownership_digest",
+          "annotation": "OwnershipDigest",
+          "rule": "epoch disposition"
+        },
+        {
+          "name": "proposal_and_screen_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical dispositions"
+        },
+        {
+          "name": "policy_memory_transaction_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical transition identities"
+        },
+        {
+          "name": "trace_prefix",
+          "annotation": "CanonicalTracePrefix",
+          "rule": "literal durable bytes"
+        },
+        {
+          "name": "commit_dispositions",
+          "annotation": "tuple[CommitOutcome,...]",
+          "rule": "one per attempt"
+        },
+        {
+          "name": "completeness",
+          "annotation": "TraceCompleteness",
+          "rule": "exact status"
+        }
+      ],
+      "validation": "Data-minimized UQ-29 record sufficient for I-5 reconstruction, not a scientific payload.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "RunTraceEnvelopeV1",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, canonical_trace_digest: TraceDigest|Applicability, execution_binding_ref: ObjectRef|Applicability, execution_identity: ExecutionIdentity|Applicability, operational_evidence_refs: tuple[ObjectRef,...], completeness: TraceCompleteness, envelope_digest: RunEnvelopeDigest)",
+      "field_order": [
+        "canonical_trace_digest",
+        "execution_binding_ref",
+        "execution_identity",
+        "operational_evidence_refs",
+        "completeness",
+        "envelope_digest"
+      ],
+      "fields": [
+        {
+          "name": "canonical_trace_digest",
+          "annotation": "TraceDigest|Applicability",
+          "rule": "full trace or known prefix"
+        },
+        {
+          "name": "execution_binding_ref",
+          "annotation": "ObjectRef|Applicability",
+          "rule": "run binding if applicable"
+        },
+        {
+          "name": "execution_identity",
+          "annotation": "ExecutionIdentity|Applicability",
+          "rule": "run-specific identity"
+        },
+        {
+          "name": "operational_evidence_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical run evidence"
+        },
+        {
+          "name": "completeness",
+          "annotation": "TraceCompleteness",
+          "rule": "explicit status"
+        },
+        {
+          "name": "envelope_digest",
+          "annotation": "RunEnvelopeDigest",
+          "rule": "projection excluding itself"
+        }
+      ],
+      "validation": "Operational envelope is immutable evidence but never the deterministic replay target or publication record.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "TraceValidationStatus",
+      "module": "traces",
+      "kind": "StrEnum",
+      "values": [
+        "VALID_PREFIX",
+        "VALID_COMPLETE",
+        "INVALID",
+        "AMBIGUOUS"
+      ],
+      "field_order": [],
+      "validation": "Exact evidence classification; AMBIGUOUS cannot be upgraded by assumption.",
+      "applicability": "Always exact; no aliases and no unknown members."
+    },
+    {
+      "name": "TraceValidationResult",
+      "module": "traces",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, status: TraceValidationStatus, confirmed_prefix: CanonicalTracePrefix|Applicability, complete_evidence: CompleteTraceEvidence|Applicability)",
+      "field_order": [
+        "status",
+        "confirmed_prefix",
+        "complete_evidence"
+      ],
+      "fields": [
+        {
+          "name": "status",
+          "annotation": "TraceValidationStatus",
+          "rule": "exact status"
+        },
+        {
+          "name": "confirmed_prefix",
+          "annotation": "CanonicalTracePrefix|Applicability",
+          "rule": "present for valid known prefix"
+        },
+        {
+          "name": "complete_evidence",
+          "annotation": "CompleteTraceEvidence|Applicability",
+          "rule": "present only for VALID_COMPLETE"
+        }
+      ],
+      "validation": "Validation classifies supplied bytes and evidence without repairing or finalizing them.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "ProposalRecord",
+      "module": "execution",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, event_key: EventKey, proposal_ref: ObjectRef, common_pre_state_hash: StatePayloadHash, proposed_update_refs: tuple[ObjectRef,...])",
+      "field_order": [
+        "event_key",
+        "proposal_ref",
+        "common_pre_state_hash",
+        "proposed_update_refs"
+      ],
+      "fields": [
+        {
+          "name": "event_key",
+          "annotation": "EventKey",
+          "rule": "exact proposed event"
+        },
+        {
+          "name": "proposal_ref",
+          "annotation": "ObjectRef",
+          "rule": "immutable proposal identity"
+        },
+        {
+          "name": "common_pre_state_hash",
+          "annotation": "StatePayloadHash",
+          "rule": "common supplied pre-state hash"
+        },
+        {
+          "name": "proposed_update_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical duplicate-free refs"
+        }
+      ],
+      "validation": "Boundary record only; I-5 construction cannot invoke a scientific proposal callback.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "ScreeningDisposition",
+      "module": "execution",
+      "kind": "StrEnum",
+      "values": [
+        "ADMIT",
+        "REJECT",
+        "DEFER",
+        "PARTIAL"
+      ],
+      "field_order": [],
+      "validation": "Records a supplied disposition; I-5 does not select it.",
+      "applicability": "Always exact; no aliases and no unknown members."
+    },
+    {
+      "name": "ScreeningResult",
+      "module": "execution",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, proposal_ref: ObjectRef, disposition: ScreeningDisposition, admitted_update_refs: tuple[ObjectRef,...], reason_refs: tuple[ObjectRef,...])",
+      "field_order": [
+        "proposal_ref",
+        "disposition",
+        "admitted_update_refs",
+        "reason_refs"
+      ],
+      "fields": [
+        {
+          "name": "proposal_ref",
+          "annotation": "ObjectRef",
+          "rule": "proposal identity"
+        },
+        {
+          "name": "disposition",
+          "annotation": "ScreeningDisposition",
+          "rule": "supplied result"
+        },
+        {
+          "name": "admitted_update_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical subset"
+        },
+        {
+          "name": "reason_refs",
+          "annotation": "tuple[ObjectRef,...]",
+          "rule": "canonical evidence refs"
+        }
+      ],
+      "validation": "Boundary record only; no constraints, queues, or allocation rules execute.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "PhaseCommitRequest",
+      "module": "execution",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, phase_ordinal: PhaseOrdinal, proposals: tuple[ProposalRecord,...], screening_results: tuple[ScreeningResult,...], ownership: EpochUpdateOwnership, atomic_request: AtomicStoreRequest)",
+      "field_order": [
+        "phase_ordinal",
+        "proposals",
+        "screening_results",
+        "ownership",
+        "atomic_request"
+      ],
+      "fields": [
+        {
+          "name": "phase_ordinal",
+          "annotation": "PhaseOrdinal",
+          "rule": "exact phase"
+        },
+        {
+          "name": "proposals",
+          "annotation": "tuple[ProposalRecord,...]",
+          "rule": "event-key order"
+        },
+        {
+          "name": "screening_results",
+          "annotation": "tuple[ScreeningResult,...]",
+          "rule": "one per proposal"
+        },
+        {
+          "name": "ownership",
+          "annotation": "EpochUpdateOwnership",
+          "rule": "same epoch"
+        },
+        {
+          "name": "atomic_request",
+          "annotation": "AtomicStoreRequest",
+          "rule": "exact transaction boundary"
+        }
+      ],
+      "validation": "Declaration only; it cannot commit or mutate state.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "T3EntryGuard",
+      "module": "execution",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, stage_authorization_ref: ObjectRef, authorization_use_ref: ObjectRef, execution_binding_ref: ObjectRef, capability_ref: ObjectRef, real_durability_backend_ref: ObjectRef|Applicability)",
+      "field_order": [
+        "stage_authorization_ref",
+        "authorization_use_ref",
+        "execution_binding_ref",
+        "capability_ref",
+        "real_durability_backend_ref"
+      ],
+      "fields": [
+        {
+          "name": "stage_authorization_ref",
+          "annotation": "ObjectRef",
+          "rule": "accepted authorization"
+        },
+        {
+          "name": "authorization_use_ref",
+          "annotation": "ObjectRef",
+          "rule": "consumed exact operation"
+        },
+        {
+          "name": "execution_binding_ref",
+          "annotation": "ObjectRef",
+          "rule": "accepted binding"
+        },
+        {
+          "name": "capability_ref",
+          "annotation": "ObjectRef",
+          "rule": "T3 capability"
+        },
+        {
+          "name": "real_durability_backend_ref",
+          "annotation": "ObjectRef|Applicability",
+          "rule": "must be applicable under later UQ-26 authority"
+        }
+      ],
+      "validation": "I-5 has no accepted backend; therefore no I-5-valid T3 entry guard can be constructed.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "ScientificExecutionLease",
+      "module": "execution",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, guard: T3EntryGuard, lease_ref: ObjectRef, operation: str, consumed: bool)",
+      "field_order": [
+        "guard",
+        "lease_ref",
+        "operation",
+        "consumed"
+      ],
+      "fields": [
+        {
+          "name": "guard",
+          "annotation": "T3EntryGuard",
+          "rule": "valid exact guard"
+        },
+        {
+          "name": "lease_ref",
+          "annotation": "ObjectRef",
+          "rule": "single live lease identity"
+        },
+        {
+          "name": "operation",
+          "annotation": "str",
+          "rule": "exact protected T3 callable"
+        },
+        {
+          "name": "consumed",
+          "annotation": "bool",
+          "rule": "must be false on formation"
+        }
+      ],
+      "validation": "Validation may neither construct nor validate a lease; I-5 cannot produce one because backend authority is absent.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    },
+    {
+      "name": "FaultHookBoundary",
+      "module": "faults",
+      "kind": "frozen-slotted-dataclass",
+      "ordered": true,
+      "signature": "(*, applicability: Applicability, fault_schedule_ref: ObjectRef|Applicability, delivery_ref: ObjectRef|Applicability)",
+      "field_order": [
+        "applicability",
+        "fault_schedule_ref",
+        "delivery_ref"
+      ],
+      "fields": [
+        {
+          "name": "applicability",
+          "annotation": "Applicability",
+          "rule": "must be NOT_APPLICABLE"
+        },
+        {
+          "name": "fault_schedule_ref",
+          "annotation": "ObjectRef|Applicability",
+          "rule": "must be NOT_APPLICABLE"
+        },
+        {
+          "name": "delivery_ref",
+          "annotation": "ObjectRef|Applicability",
+          "rule": "must be NOT_APPLICABLE"
+        }
+      ],
+      "validation": "Accepts the inert NOT_APPLICABLE boundary only; it names no fault kind, target, acknowledgement, continuation, or terminal semantics.",
+      "applicability": "Exact concrete type at every applicable coordinate; NOT_APPLICABLE only where the annotation explicitly includes Applicability."
+    }
+  ],
+  "public_type_count": 50,
+  "callables": [
+    {
+      "name": "compute_event_key_digest",
+      "module": "hashing",
+      "signature": "(*, epoch: int, phase_ordinal: int, declared_priority: int, group_or_scope_id: str, event_kind: str, primary_object_id: str, local_sequence: int) -> EventKeyDigest",
+      "class": "T0",
+      "behavior": "Hash the exact seven primitive EventKey coordinates in domain ebu.event-key.v1 without importing events.",
+      "failure_precedence": [
+        "EVENT_KEY_INVALID",
+        "HASH_DOMAIN_MISMATCH",
+        "I5_HASH_COLLISION"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "compute_event_declaration_digest",
+      "module": "hashing",
+      "signature": "(*, event_key_digest: EventKeyDigest, event_ref: ObjectRef, declared_simultaneity_ref_or_not_applicable: ObjectRef|Applicability, payload_hash: ObjectContentHash, predecessor_event_key_digest_or_not_applicable: EventKeyDigest|Applicability) -> EventDeclarationDigest",
+      "class": "T0",
+      "behavior": "Hash the exact immutable declaration projection using only existing identity types and local digest wrappers.",
+      "failure_precedence": [
+        "EVENT_IDENTITY_INVALID",
+        "HASH_DOMAIN_MISMATCH",
+        "I5_HASH_COLLISION"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "compute_ownership_digest",
+      "module": "hashing",
+      "signature": "(projection_kind: Literal['CLAIM','EPOCH'], projection: ECJ1Value, /) -> OwnershipDigest",
+      "class": "T0",
+      "behavior": "Hash the closed tagged claim or epoch-ownership ECJ-1 projection without importing ownership.",
+      "failure_precedence": [
+        "UPDATE_OWNERSHIP_CLAIM_INVALID",
+        "HASH_DOMAIN_MISMATCH",
+        "I5_HASH_COLLISION"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "compute_phase_commit_digest",
+      "module": "hashing",
+      "signature": "(projection: ECJ1Value, /) -> PhaseCommitDigest",
+      "class": "T0",
+      "behavior": "Hash the closed phase-commit ECJ-1 projection without importing events.",
+      "failure_precedence": [
+        "PHASE_COMMIT_RECORD_INVALID",
+        "HASH_DOMAIN_MISMATCH",
+        "I5_HASH_COLLISION"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "compute_durability_evidence_digest",
+      "module": "hashing",
+      "signature": "(projection_without_evidence_digest: ECJ1Value, /) -> DurabilityEvidenceDigest",
+      "class": "T0",
+      "behavior": "Hash the evidence projection excluding its digest without importing durability.",
+      "failure_precedence": [
+        "DURABILITY_EVIDENCE_INCONSISTENT",
+        "HASH_DOMAIN_MISMATCH",
+        "I5_HASH_COLLISION"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "compute_run_envelope_digest",
+      "module": "hashing",
+      "signature": "(projection_without_envelope_digest: ECJ1Value, /) -> RunEnvelopeDigest",
+      "class": "T0",
+      "behavior": "Hash the run-envelope projection excluding its digest without importing traces.",
+      "failure_precedence": [
+        "RUN_TRACE_ENVELOPE_INVALID",
+        "HASH_DOMAIN_MISMATCH",
+        "I5_HASH_COLLISION"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "order_event_keys",
+      "module": "events",
+      "signature": "(declarations: tuple[EventDeclaration,...], /) -> tuple[EventDeclaration,...]",
+      "class": "T0",
+      "behavior": "Return a stable lexicographic order; reject equal keys and invalid literal predecessors.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "EVENT_KEY_INVALID",
+        "EVENT_KEY_DUPLICATE",
+        "EVENT_ORDER_INVALID",
+        "PHASE_PREDECESSOR_MISMATCH",
+        "PHASE_8_PHASE_9_DUPLICATE_IDENTIFIER"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_event_declaration",
+      "module": "events",
+      "signature": "(declaration: EventDeclaration, /) -> None",
+      "class": "T0",
+      "behavior": "Validate formation, stable identity, phase applicability, and digest inputs only.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "PHASE_ORDINAL_INVALID",
+        "EVENT_KEY_INVALID",
+        "EVENT_IDENTITY_INVALID"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_phase_commit_record",
+      "module": "events",
+      "signature": "(record: PhaseCommitRecord, expected_previous: PhaseCommitDigest|Applicability, /) -> None",
+      "class": "T0",
+      "behavior": "Validate exact phase predecessor, event order, ownership binding, and trace binding.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "PHASE_COMMIT_RECORD_INVALID",
+        "PHASE_PREDECESSOR_MISMATCH",
+        "EVENT_ORDER_INVALID"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "build_epoch_update_ownership",
+      "module": "ownership",
+      "signature": "(epoch: int, claims: tuple[UpdateOwnershipClaim,...], /) -> EpochUpdateOwnership",
+      "class": "T0",
+      "behavior": "Canonicalize supplied claims after conflict validation; allocate nothing.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "UPDATE_OWNERSHIP_CLAIM_INVALID",
+        "INFORMATIONAL_MEMORY_OWNERSHIP_FORBIDDEN",
+        "OWNERSHIP_ORDER_INVALID",
+        "UPDATE_OWNERSHIP_CONFLICT"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_update_ownership",
+      "module": "ownership",
+      "signature": "(claims: tuple[UpdateOwnershipClaim,...], /) -> OwnershipValidationRecord",
+      "class": "T0",
+      "behavior": "Return DISJOINT or the lexicographically first conflict witness; resolve nothing.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "UPDATE_OWNERSHIP_CLAIM_INVALID",
+        "INFORMATIONAL_MEMORY_OWNERSHIP_FORBIDDEN",
+        "OWNERSHIP_ORDER_INVALID",
+        "PHASE_OWNERSHIP_MISMATCH",
+        "UPDATE_OWNERSHIP_CONFLICT"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "build_atomic_commit_request",
+      "module": "durability",
+      "signature": "(*, request_ref: ObjectRef, expected_trace_prefix: TraceDigest, expected_phase_predecessor: PhaseCommitDigest|Applicability, policy_memory_transaction: PolicyMemoryTransaction|Applicability, physical_phase_transaction: PhysicalPhaseTransaction|Applicability, attempt_ordinal: int) -> AtomicStoreRequest",
+      "class": "T1",
+      "behavior": "Build one inert abstract atomic group from supplied records.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "ATOMIC_COMMIT_REQUEST_INVALID",
+        "POLICY_MEMORY_TRANSACTION_INVALID",
+        "PHYSICAL_PHASE_TRANSACTION_INVALID"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "classify_inert_commit_failure",
+      "module": "durability",
+      "signature": "(request: AtomicStoreRequest, observed: Literal['REJECTED','AMBIGUOUS','UNAVAILABLE'], evidence_refs: tuple[ObjectRef,...], /) -> AtomicStoreRejection|AtomicStoreAmbiguity|AtomicStoreUnavailable",
+      "class": "T1",
+      "behavior": "Classify dummy-store observations without IO or retry.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "COMMIT_REJECTED",
+        "COMMIT_AMBIGUOUS",
+        "DURABILITY_UNAVAILABLE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_atomic_commit_outcome",
+      "module": "durability",
+      "signature": "(request: AtomicStoreRequest, outcome: AtomicCommitOutcome, /) -> None",
+      "class": "T1",
+      "behavior": "Validate identity, evidence, prefix, and disposition; ambiguity fails closed.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "EXPECTED_TRACE_PREFIX_MISMATCH",
+        "COMMIT_REJECTED",
+        "COMMIT_AMBIGUOUS",
+        "DURABILITY_UNAVAILABLE",
+        "DURABILITY_EVIDENCE_MISSING",
+        "DURABILITY_EVIDENCE_INCONSISTENT"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_policy_memory_transaction",
+      "module": "durability",
+      "signature": "(transaction: PolicyMemoryTransaction, /) -> None",
+      "class": "T0",
+      "behavior": "Validate supplied before/after applicability and row coupling without calling policy.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "POLICY_MEMORY_TRANSACTION_INVALID"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_durable_prefix",
+      "module": "durability",
+      "signature": "(expected: CanonicalTracePrefix, observed: CanonicalTracePrefix, outcome: CommitOutcome, /) -> None",
+      "class": "T1",
+      "behavior": "On failure require byte-identical preservation; on commit require one declared literal extension.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "EXPECTED_TRACE_PREFIX_MISMATCH",
+        "TRACE_PREFIX_MUTATION_FORBIDDEN",
+        "TRACE_EXTENSION_IDENTITY_INVALID"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "project_canonical_trace_row",
+      "module": "traces",
+      "signature": "(row: CanonicalTraceRow, /) -> bytes",
+      "class": "T0",
+      "behavior": "Return exact ECJ-1 bytes for the closed row field projection.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "TRACE_ROW_INVALID",
+        "TRACE_ROW_PREDECESSOR_MISMATCH"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "frame_trace_row",
+      "module": "traces",
+      "signature": "(row: CanonicalTraceRow, /) -> TraceRowFrame",
+      "class": "T0",
+      "behavior": "Prefix ECJ-1 bytes with u64be length and bind the row digest.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "TRACE_ROW_INVALID",
+        "HASH_MISMATCH"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "build_trace_prefix",
+      "module": "traces",
+      "signature": "(frames: tuple[TraceRowFrame,...], /) -> CanonicalTracePrefix",
+      "class": "T0",
+      "behavior": "Build literal contiguous bytes; reject gaps, predecessor mismatch, and summaries.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "TRACE_ROW_GAP",
+        "TRACE_ROW_PREDECESSOR_MISMATCH",
+        "TRACE_PREFIX_INVALID",
+        "TRACE_PREFIX_NOT_LITERAL"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "extend_trace_prefix",
+      "module": "traces",
+      "signature": "(prefix: CanonicalTracePrefix, appended: tuple[TraceRowFrame,...], /) -> tuple[CanonicalTracePrefix,TraceExtensionEvidence]",
+      "class": "T0",
+      "behavior": "Append a nonempty literal suffix; never mutate prior bytes.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "TRACE_PREFIX_INVALID",
+        "TRACE_PREFIX_MUTATION_FORBIDDEN",
+        "TRACE_EXTENSION_IDENTITY_INVALID",
+        "TRACE_ROW_GAP"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_complete_trace_evidence",
+      "module": "traces",
+      "signature": "(prefix: CanonicalTracePrefix, evidence: CompleteTraceEvidence, /) -> TraceValidationResult",
+      "class": "T0",
+      "behavior": "Classify completeness only from literal rows and exact terminal evidence.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "TRACE_COMPLETENESS_INVALID",
+        "TRACE_EQUIVOCAL",
+        "TRACE_EVIDENCE_MISSING",
+        "MINIMUM_TRACE_INCOMPLETE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "build_minimum_reconstructable_trace",
+      "module": "traces",
+      "signature": "(*, events: tuple[EventDeclaration,...], phases: tuple[PhaseCommitRecord,...], ownership: EpochUpdateOwnership, proposal_and_screen_refs: tuple[ObjectRef,...], policy_memory_transaction_refs: tuple[ObjectRef,...], prefix: CanonicalTracePrefix, commit_dispositions: tuple[CommitOutcome,...], completeness: TraceCompleteness) -> MinimumReconstructableTrace",
+      "class": "T0",
+      "behavior": "Build the data-minimized UQ-29 reconstruction record.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "EVENT_ORDER_INVALID",
+        "PHASE_PREDECESSOR_MISMATCH",
+        "MINIMUM_TRACE_INCOMPLETE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "build_run_trace_envelope",
+      "module": "traces",
+      "signature": "(*, canonical_trace_digest: TraceDigest|Applicability, execution_binding_ref: ObjectRef|Applicability, execution_identity: ExecutionIdentity|Applicability, operational_evidence_refs: tuple[ObjectRef,...], completeness: TraceCompleteness) -> RunTraceEnvelopeV1",
+      "class": "T0",
+      "behavior": "Build separate run-specific evidence; never finalize or publish.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "TRACE_EVIDENCE_MISSING",
+        "RUN_TRACE_ENVELOPE_INVALID"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_inert_fault_hook",
+      "module": "faults",
+      "signature": "(hook: FaultHookBoundary, /) -> None",
+      "class": "T0",
+      "behavior": "Accept exactly the all-NOT_APPLICABLE boundary; reject every delivery attempt.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "FAULT_HOOK_INVALID",
+        "FAULT_EXTENSION_UNAVAILABLE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_t3_entry_guard",
+      "module": "execution",
+      "signature": "(guard: T3EntryGuard, /) -> None",
+      "class": "T3_GUARD_ONLY",
+      "behavior": "Fail before execution because no real durability backend is accepted by I-5.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "validate_scientific_execution_lease",
+      "module": "execution",
+      "signature": "(lease: ScientificExecutionLease, operation: str, /) -> None",
+      "class": "T3_GUARD_ONLY",
+      "behavior": "Fail before execution under I-5; validation cannot import or invoke it.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "begin_bound_scientific_execution",
+      "module": "execution",
+      "signature": "(*, guard: T3EntryGuard, requested_operation: str) -> ScientificExecutionLease",
+      "class": "T3",
+      "behavior": "Prospective entry signature; always fails at the backend guard under I-5.",
+      "failure_precedence": [
+        "I5_RECORD_FORMATION_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "propose_phase_updates",
+      "module": "execution",
+      "signature": "(*, lease: ScientificExecutionLease, phase: PhaseOrdinal, state_ref: ObjectRef, adapter_ref: ObjectRef) -> tuple[ProposalRecord,...]",
+      "class": "T3",
+      "behavior": "Prospective scientific adapter boundary; unavailable and no callback executes under I-5.",
+      "failure_precedence": [
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        "EXECUTION_CALLBACK_FORBIDDEN"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "screen_and_admit",
+      "module": "execution",
+      "signature": "(*, lease: ScientificExecutionLease, proposals: tuple[ProposalRecord,...], screening_adapter_ref: ObjectRef) -> tuple[ScreeningResult,...]",
+      "class": "T3",
+      "behavior": "Prospective screening boundary; unavailable and no policy/constraint callback executes under I-5.",
+      "failure_precedence": [
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        "EXECUTION_CALLBACK_FORBIDDEN"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "propose_joint_transition",
+      "module": "execution",
+      "signature": "(*, lease: ScientificExecutionLease, proposals: tuple[ProposalRecord,...], joint_adapter_ref: ObjectRef) -> ProposalRecord",
+      "class": "T3",
+      "behavior": "Prospective common-pre-state joint boundary; unavailable under I-5.",
+      "failure_precedence": [
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        "EXECUTION_CALLBACK_FORBIDDEN"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "commit_phase_updates",
+      "module": "execution",
+      "signature": "(*, lease: ScientificExecutionLease, request: PhaseCommitRequest) -> PhaseCommitRecord",
+      "class": "T3",
+      "behavior": "Prospective commit boundary; I-5 always refuses before state or store access.",
+      "failure_precedence": [
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        "SCIENTIFIC_STATE_ADVANCE_FORBIDDEN"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    },
+    {
+      "name": "advance_epoch",
+      "module": "execution",
+      "signature": "(*, lease: ScientificExecutionLease, epoch: int, initial_state_ref: ObjectRef, phase_input_refs: tuple[ObjectRef,...]) -> RunTraceEnvelopeV1",
+      "class": "T3",
+      "behavior": "Prospective exact ten-phase entry; I-5 always refuses before phase 1.",
+      "failure_precedence": [
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        "SCIENTIFIC_STATE_ADVANCE_FORBIDDEN"
+      ],
+      "immutability": "Inputs are observationally immutable; rejection returns no partial value and performs no mutation."
+    }
+  ],
+  "public_callable_count": 32,
+  "required_private_signatures": [
+    {
+      "module": "events",
+      "name": "_event_key_projection",
+      "signature": "(key: EventKey, /) -> tuple[object,...]"
+    },
+    {
+      "module": "events",
+      "name": "_phase_identity_guard",
+      "signature": "(declarations: tuple[EventDeclaration,...], /) -> None"
+    },
+    {
+      "module": "ownership",
+      "name": "_claim_order_key",
+      "signature": "(claim: UpdateOwnershipClaim, /) -> tuple[object,...]"
+    },
+    {
+      "module": "durability",
+      "name": "_transaction_trace_digest",
+      "signature": "(request: AtomicStoreRequest, /) -> TraceDigest"
+    },
+    {
+      "module": "traces",
+      "name": "_trace_row_ecj1_projection",
+      "signature": "(row: CanonicalTraceRow, /) -> dict[str,object]"
+    },
+    {
+      "module": "traces",
+      "name": "_literal_prefix_bytes",
+      "signature": "(prefix: CanonicalTracePrefix, /) -> bytes"
+    },
+    {
+      "module": "execution",
+      "name": "_require_i5_unavailable_backend",
+      "signature": "(guard: T3EntryGuard, /) -> NoReturn"
+    },
+    {
+      "module": "hashing",
+      "name": "_i5_frame_fields",
+      "signature": "(domain: bytes, fields: tuple[bytes,...], /) -> bytes"
+    },
+    {
+      "module": "faults",
+      "name": "_reject_fault_delivery",
+      "signature": "(hook: FaultHookBoundary, /) -> None"
+    }
+  ],
+  "required_private_signature_count": 9,
+  "event_contract": {
+    "key_field_order": [
+      "epoch",
+      "phase_ordinal",
+      "declared_priority",
+      "group_or_scope_id",
+      "event_kind",
+      "primary_object_id",
+      "local_sequence"
+    ],
+    "total_order": "exact Python-independent lexicographic order over normalized field projections",
+    "equal_key_rule": "reject EVENT_KEY_DUPLICATE before predecessor or phase-cross checks",
+    "phase_8_phase_9_rule": "no phase-9 primary_object_id may equal a phase-8 committed primary_object_id in the same epoch",
+    "simultaneity": "common pre-state and joint proposal are recorded; child bookkeeping order has no physical meaning",
+    "state_effect": "none"
+  },
+  "ownership_contract": {
+    "scope": "all physical update claims for one epoch",
+    "conflict": "equal OpaqueLocusKey with unequal owner/event identity",
+    "conflict_order": "sort claims by [locus.namespace,locus.coordinate,event_key fields,owner_ref projection], inspect adjacent equal loci, report first pair",
+    "informational_memory": "Policy-memory ownership is informational and cannot enter EpochUpdateOwnership",
+    "resolution": "none; a conflict is rejection, not allocation",
+    "state_effect": "none"
+  },
+  "durability_contract": {
+    "status": "ABSTRACT_OBLIGATION_ONLY",
+    "atomic_group": [
+      "phase predecessor",
+      "expected literal trace prefix",
+      "policy decision",
+      "next policy memory",
+      "physical phase record",
+      "ownership",
+      "ledger evidence",
+      "trace row"
+    ],
+    "outcomes": [
+      "REQUESTED",
+      "COMMITTED",
+      "REJECTED",
+      "AMBIGUOUS",
+      "UNAVAILABLE"
+    ],
+    "success": "COMMITTED requires matching request, exactly one declared prefix extension, phase predecessor, and self-consistent evidence.",
+    "failure_prefix": "REJECTED and UNAVAILABLE preserve byte-identical expected prefix.",
+    "ambiguity": "AMBIGUOUS preserves only last confirmed evidence and is never silently retried or upgraded.",
+    "recovery_boundary": "Recovery may inspect later evidence but is not implemented or authorized here.",
+    "accepted_backends": [],
+    "python_object_nonclaim": "Protocol conformance, an in-memory object, or a returned record is not evidence of durable atomicity."
+  },
+  "trace_contract": {
+    "row_projection": [
+      "schema_tag=ebu.trace-row.v1",
+      "row_index",
+      "row_kind",
+      "event_key",
+      "phase_ordinal",
+      "predecessor_row_digest",
+      "record_refs",
+      "payload_hashes"
+    ],
+    "row_encoding": "ECJ-1 exact UTF-8 bytes",
+    "row_frame": "u64be(len(row_ecj1)) || row_ecj1",
+    "prefix": "literal concatenation of row frames; hash is over exact bytes under ebu.trace-prefix.v1",
+    "full_trace": "header tag + literal prefix + exact completeness footer under ebu.full-trace.v1",
+    "immutability": "accepted prefix bytes can only remain exact and become a literal leading prefix of a later separately authorized extension",
+    "byte_identical_extension": "forbidden: an extension appends at least one row",
+    "gaps_equivocation": "missing index, predecessor mismatch, conflicting bytes at an index, or inconsistent completeness fails closed",
+    "finalization": "deferred to I-8",
+    "correction": "never mutates or reinterprets historical trace; later linked correction authority required",
+    "publication": "deferred and separate"
+  },
+  "minimum_reconstructable_trace": {
+    "uq": "UQ-29",
+    "required_determinations": [
+      "accepted event order",
+      "phase predecessor",
+      "ownership disposition",
+      "proposal/screen/commit disposition",
+      "policy-memory transition identity",
+      "trace predecessor",
+      "commit outcome",
+      "complete/incomplete/ambiguous/invalid classification"
+    ],
+    "required_records": [
+      "EventDeclaration",
+      "PhaseCommitRecord",
+      "EpochUpdateOwnership",
+      "ProposalRecord and ScreeningResult references",
+      "PolicyMemoryTransaction references",
+      "CommitOutcome",
+      "CanonicalTracePrefix",
+      "TraceCompleteness"
+    ],
+    "required_bytes": [
+      "exact EventKey projections",
+      "exact phase-commit digests",
+      "literal framed trace rows and prefix bytes"
+    ],
+    "excluded_data": [
+      "domain payload values not needed by the listed determinations",
+      "sensitive or personal data",
+      "host/process metadata",
+      "publication metadata"
+    ],
+    "claim": "Minimum for the inert I-5 reconstruction questions only, not for scientific replay in a later domain."
+  },
+  "execution_boundary": {
+    "t3_entry": "requires accepted authorization use, binding, T3 capability, and a separately accepted real durability backend",
+    "i5_backend_guard": "always fails REAL_DURABILITY_BACKEND_UNAVAILABLE before a lease or callback",
+    "validation_import_execution": false,
+    "validation_constructs_lease": false,
+    "callable_behavior": "T3 signatures are prospective and fail-closed; I-5 implements no runner, orchestration body, callback dispatch, state step, schedule, world, or trajectory.",
+    "anti_disguise": [
+      "registered/candidate state or policy implies T3",
+      "one tick or substep implies T3",
+      "runner/finalizer/Gate reachability is forbidden",
+      "unit-test naming does not reclassify scientific execution"
+    ]
+  },
+  "fault_hook_contract": {
+    "accepted_boundary": {
+      "applicability": "NOT_APPLICABLE",
+      "fault_schedule_ref": "NOT_APPLICABLE",
+      "delivery_ref": "NOT_APPLICABLE"
+    },
+    "all_other_inputs": "reject FAULT_EXTENSION_UNAVAILABLE after formation checks",
+    "fault_schedule_execution": false,
+    "invented_semantics": [],
+    "deferred_question": "UQ-38"
+  },
+  "uq_dispositions": {
+    "UQ-26": {
+      "i5_freezes": [
+        "abstract atomic grouping",
+        "expected-prefix and phase-predecessor binding",
+        "typed outcomes",
+        "failure-prefix preservation",
+        "ambiguity classification",
+        "recovery evidence boundary"
+      ],
+      "open": [
+        "backend selection",
+        "filesystem/database/distributed durability",
+        "real crash consistency",
+        "recovery implementation",
+        "operational deployment"
+      ],
+      "status": "NARROW_ABSTRACT_SLICE_FROZEN_REAL_BACKEND_OPEN"
+    },
+    "UQ-29": {
+      "i5_freezes": "minimum/data-minimized inert reconstructable trace and literal durable-prefix granularity",
+      "status": "NARROW_I5_SLICE_FROZEN_LATER_SCIENTIFIC_PAYLOAD_OPEN"
+    },
+    "DC25": {
+      "durable_receipt_trace_mechanics": "I-5 declarations only",
+      "correction_authority": "deferred",
+      "publication_semantics": "deferred",
+      "historical_mutation": false
+    }
+  },
+  "hash_domains": [
+    {
+      "kind": "EVENT_KEY",
+      "domain": "ebu.event-key.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "synthetic_fields_utf8": [
+        "0",
+        "1",
+        "0",
+        "scope-a",
+        "dummy",
+        "ebu:synthetic:event:a",
+        "0"
+      ],
+      "synthetic_preimage_hex": "00000000000000106562752e6576656e742d6b65792e7631000000000000000130000000000000000131000000000000000130000000000000000773636f70652d61000000000000000564756d6d7900000000000000156562753a73796e7468657469633a6576656e743a61000000000000000130",
+      "preimage_byte_count": 117,
+      "synthetic_sha256": "sha256:a10236b81dc0a918b6f1c493d60551bd0a685228a4b49d0bb2d7028e69a28192",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "EVENT_DECLARATION",
+      "domain": "ebu.event-declaration.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "synthetic_fields_utf8": [
+        "sha256:0101010101010101010101010101010101010101010101010101010101010101",
+        "ebu:synthetic:event:a",
+        "NOT_APPLICABLE",
+        "sha256:0202020202020202020202020202020202020202020202020202020202020202",
+        "NOT_APPLICABLE"
+      ],
+      "synthetic_preimage_hex": "00000000000000186562752e6576656e742d6465636c61726174696f6e2e763100000000000000477368613235363a3031303130313031303130313031303130313031303130313031303130313031303130313031303130313031303130313031303130313031303130313031303100000000000000156562753a73796e7468657469633a6576656e743a61000000000000000e4e4f545f4150504c494341424c4500000000000000477368613235363a30323032303230323032303230323032303230323032303230323032303230323032303230323032303230323032303230323032303230323032303230323032000000000000000e4e4f545f4150504c494341424c45",
+      "preimage_byte_count": 263,
+      "synthetic_sha256": "sha256:36dc5da6c06f2af30855936eab028d494448807548e89a133527bd5770c966cd",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "OWNERSHIP_CLAIM",
+      "domain": "ebu.ownership-claim.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "synthetic_fields_utf8": [
+        "0",
+        "8",
+        "sha256:0303030303030303030303030303030303030303030303030303030303030303",
+        "ebu:synthetic:owner:a",
+        "opaque",
+        "00",
+        "PHYSICAL_UPDATE"
+      ],
+      "synthetic_preimage_hex": "00000000000000166562752e6f776e6572736869702d636c61696d2e763100000000000000013000000000000000013800000000000000477368613235363a3033303330333033303330333033303330333033303330333033303330333033303330333033303330333033303330333033303330333033303330333033303300000000000000156562753a73796e7468657469633a6f776e65723a6100000000000000066f706171756500000000000000023030000000000000000f504859534943414c5f555044415445",
+      "preimage_byte_count": 203,
+      "synthetic_sha256": "sha256:684abb6dfbd2950d4f5ddb16203e0726dc16f2c44e20a2194fc6a69ba4e996f5",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "EPOCH_OWNERSHIP",
+      "domain": "ebu.epoch-ownership.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2
+      ],
+      "synthetic_fields_utf8": [
+        "0",
+        "1",
+        "sha256:0404040404040404040404040404040404040404040404040404040404040404"
+      ],
+      "synthetic_preimage_hex": "00000000000000166562752e65706f63682d6f776e6572736869702e763100000000000000013000000000000000013100000000000000477368613235363a30343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034",
+      "preimage_byte_count": 127,
+      "synthetic_sha256": "sha256:e1a6324c6d214507e626eb96024b90757a2a04a66bcf01aef3725f478b96d102",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "PHASE_COMMIT",
+      "domain": "ebu.phase-commit.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "synthetic_fields_utf8": [
+        "0",
+        "8",
+        "sha256:0505050505050505050505050505050505050505050505050505050505050505",
+        "1",
+        "sha256:0606060606060606060606060606060606060606060606060606060606060606",
+        "sha256:0707070707070707070707070707070707070707070707070707070707070707",
+        "sha256:0808080808080808080808080808080808080808080808080808080808080808"
+      ],
+      "synthetic_preimage_hex": "00000000000000136562752e70686173652d636f6d6d69742e763100000000000000013000000000000000013800000000000000477368613235363a3035303530353035303530353035303530353035303530353035303530353035303530353035303530353035303530353035303530353035303530353035303500000000000000013100000000000000477368613235363a3036303630363036303630363036303630363036303630363036303630363036303630363036303630363036303630363036303630363036303630363036303600000000000000477368613235363a3037303730373037303730373037303730373037303730373037303730373037303730373037303730373037303730373037303730373037303730373037303700000000000000477368613235363a30383038303830383038303830383038303830383038303830383038303830383038303830383038303830383038303830383038303830383038303830383038",
+      "preimage_byte_count": 370,
+      "synthetic_sha256": "sha256:8a10e66ee1734b1ca080c465689ea16775fcbc285225904c9bfe2e78e65a96df",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "DURABILITY_EVIDENCE",
+      "domain": "ebu.durability-evidence.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2
+      ],
+      "synthetic_fields_utf8": [
+        "ebu:synthetic:request:a",
+        "sha256:0909090909090909090909090909090909090909090909090909090909090909",
+        "sha256:0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+      ],
+      "synthetic_preimage_hex": "000000000000001a6562752e6475726162696c6974792d65766964656e63652e763100000000000000176562753a73796e7468657469633a726571756573743a6100000000000000477368613235363a3039303930393039303930393039303930393039303930393039303930393039303930393039303930393039303930393039303930393039303930393039303900000000000000477368613235363a30613061306130613061306130613061306130613061306130613061306130613061306130613061306130613061306130613061306130613061306130613061",
+      "preimage_byte_count": 223,
+      "synthetic_sha256": "sha256:3436c8bcc563c71822476883953f6dc2035cb2bcf4b701755d5ea18c246767ed",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "RUN_ENVELOPE",
+      "domain": "ebu.run-envelope.v1",
+      "authority_status": "NEW_I5_DOMAIN",
+      "field_order": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "synthetic_fields_utf8": [
+        "sha256:0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c",
+        "NOT_APPLICABLE",
+        "NOT_APPLICABLE",
+        "0",
+        "PARTIAL_DURABLE_PREFIX"
+      ],
+      "synthetic_preimage_hex": "00000000000000136562752e72756e2d656e76656c6f70652e763100000000000000477368613235363a30633063306330633063306330633063306330633063306330633063306330633063306330633063306330633063306330633063306330633063306330633063000000000000000e4e4f545f4150504c494341424c45000000000000000e4e4f545f4150504c494341424c4500000000000000013000000000000000165041525449414c5f44555241424c455f505245464958",
+      "preimage_byte_count": 189,
+      "synthetic_sha256": "sha256:5fcc15e49a67f24bce804dbe149e69de891059c28f964a88a76d1b7180924c90",
+      "framing": "FRAME(domain) || FRAME(field_1) ... where FRAME(x)=u64be(len(x))||x",
+      "self_reference_exclusion": "The output digest field is excluded; no accepted predecessor hash domain changes."
+    },
+    {
+      "kind": "TRACE_ROW",
+      "domain": "ebu.canonical-trace-row.v1",
+      "authority_status": "ACCEPTED_I1_DOMAIN_REUSED_BYTE_IDENTICALLY",
+      "accepted_callable": "compute_canonical_trace_row_hash",
+      "accepted_result_type": "CanonicalTraceRowHash",
+      "field_order": [
+        "hash_domain",
+        "trace_schema_ref",
+        "row_index",
+        "epoch",
+        "event_key",
+        "phase_ordinal",
+        "scientific_object_refs",
+        "predecessor_state_payload_hash",
+        "successor_state_payload_hash",
+        "information_view_hash_or_not_applicable",
+        "before_policy_memory_payload_hash_or_not_applicable",
+        "after_policy_memory_payload_hash_or_not_applicable",
+        "augmented_replay_state_hash_or_not_applicable",
+        "proposal_set_hash_or_not_applicable",
+        "admission_group_and_ownership_facts",
+        "typed_quantities",
+        "uncertainty_values",
+        "lifecycle_transitions",
+        "declared_scientific_or_model_faults",
+        "scientifically_relevant_failures",
+        "resolution_state",
+        "predecessor_trace_row_hash_or_genesis"
+      ],
+      "synthetic_fields_ecj1": {
+        "hash_domain": "ebu.canonical-trace-row.v1",
+        "trace_schema_ref": {
+          "object_content_hash": "sha256:4040404040404040404040404040404040404040404040404040404040404040",
+          "object_id": "ebu:synthetic:i5:trace-schema",
+          "object_version": "1.0.0"
+        },
+        "row_index": 0,
+        "epoch": 0,
+        "event_key": [
+          0,
+          1,
+          0,
+          "scope-a",
+          "DUMMY_EVENT",
+          "ebu:synthetic:i5:event-a",
+          0
+        ],
+        "phase_ordinal": 1,
+        "scientific_object_refs": [],
+        "predecessor_state_payload_hash": "sha256:4141414141414141414141414141414141414141414141414141414141414141",
+        "successor_state_payload_hash": "sha256:4242424242424242424242424242424242424242424242424242424242424242",
+        "information_view_hash_or_not_applicable": "NOT_APPLICABLE",
+        "before_policy_memory_payload_hash_or_not_applicable": "NOT_APPLICABLE",
+        "after_policy_memory_payload_hash_or_not_applicable": "NOT_APPLICABLE",
+        "augmented_replay_state_hash_or_not_applicable": "NOT_APPLICABLE",
+        "proposal_set_hash_or_not_applicable": "NOT_APPLICABLE",
+        "admission_group_and_ownership_facts": [],
+        "typed_quantities": [],
+        "uncertainty_values": [],
+        "lifecycle_transitions": [],
+        "declared_scientific_or_model_faults": [],
+        "scientifically_relevant_failures": [],
+        "resolution_state": "PRESENT",
+        "predecessor_trace_row_hash_or_genesis": "GENESIS"
+      },
+      "synthetic_preimage_hex": "7b2261646d697373696f6e5f67726f75705f616e645f6f776e6572736869705f6661637473223a5b5d2c2261667465725f706f6c6963795f6d656d6f72795f7061796c6f61645f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c226175676d656e7465645f7265706c61795f73746174655f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c226265666f72655f706f6c6963795f6d656d6f72795f7061796c6f61645f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c226465636c617265645f736369656e74696669635f6f725f6d6f64656c5f6661756c7473223a5b5d2c2265706f6368223a302c226576656e745f6b6579223a5b302c312c302c2273636f70652d61222c2244554d4d595f4556454e54222c226562753a73796e7468657469633a69353a6576656e742d61222c305d2c22686173685f646f6d61696e223a226562752e63616e6f6e6963616c2d74726163652d726f772e7631222c22696e666f726d6174696f6e5f766965775f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c226c6966656379636c655f7472616e736974696f6e73223a5b5d2c2270686173655f6f7264696e616c223a312c227072656465636573736f725f73746174655f7061796c6f61645f68617368223a227368613235363a34313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431222c227072656465636573736f725f74726163655f726f775f686173685f6f725f67656e65736973223a2247454e45534953222c2270726f706f73616c5f7365745f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c227265736f6c7574696f6e5f7374617465223a2250524553454e54222c22726f775f696e646578223a302c22736369656e74696669635f6f626a6563745f72656673223a5b5d2c22736369656e7469666963616c6c795f72656c6576616e745f6661696c75726573223a5b5d2c22737563636573736f725f73746174655f7061796c6f61645f68617368223a227368613235363a34323432343234323432343234323432343234323432343234323432343234323432343234323432343234323432343234323432343234323432343234323432222c2274726163655f736368656d615f726566223a7b226f626a6563745f636f6e74656e745f68617368223a227368613235363a34303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430222c226f626a6563745f6964223a226562753a73796e7468657469633a69353a74726163652d736368656d61222c226f626a6563745f76657273696f6e223a22312e302e30227d2c2274797065645f7175616e746974696573223a5b5d2c22756e6365727461696e74795f76616c756573223a5b5d7d",
+      "preimage_byte_count": 1177,
+      "synthetic_sha256": "sha256:2baa49f2f7986a052e24e86152362456b0f564d20dd0ca759a518ff7805700cb",
+      "framing": "Exact ECJ-1 UTF-8 bytes of the accepted preimage object; no outer FRAME and no final LF.",
+      "self_reference_exclusion": "The sibling output hash is absent. I-5 does not add, rename, or reinterpret this accepted domain."
+    },
+    {
+      "kind": "TRACE_PREFIX",
+      "domain": "ebu.canonical-trace-prefix.v1",
+      "authority_status": "ACCEPTED_I1_DOMAIN_REUSED_BYTE_IDENTICALLY",
+      "accepted_callable": "compute_canonical_trace_prefix_hash",
+      "accepted_result_type": "CanonicalTracePrefixHash",
+      "field_order": [
+        "hash_domain",
+        "trace_header",
+        "ordered_rows",
+        "confirmed_row_count",
+        "last_confirmed_state_payload_hash",
+        "last_confirmed_policy_memory_payload_hash_or_not_applicable",
+        "last_confirmed_augmented_replay_state_hash_or_not_applicable",
+        "completeness_state"
+      ],
+      "synthetic_fields_ecj1": {
+        "hash_domain": "ebu.canonical-trace-prefix.v1",
+        "trace_header": {
+          "validation_case": "i5-synthetic"
+        },
+        "ordered_rows": [],
+        "confirmed_row_count": 0,
+        "last_confirmed_state_payload_hash": "sha256:4343434343434343434343434343434343434343434343434343434343434343",
+        "last_confirmed_policy_memory_payload_hash_or_not_applicable": "NOT_APPLICABLE",
+        "last_confirmed_augmented_replay_state_hash_or_not_applicable": "NOT_APPLICABLE",
+        "completeness_state": "PARTIAL_DURABLE_PREFIX"
+      },
+      "synthetic_preimage_hex": "7b22636f6d706c6574656e6573735f7374617465223a225041525449414c5f44555241424c455f505245464958222c22636f6e6669726d65645f726f775f636f756e74223a302c22686173685f646f6d61696e223a226562752e63616e6f6e6963616c2d74726163652d7072656669782e7631222c226c6173745f636f6e6669726d65645f6175676d656e7465645f7265706c61795f73746174655f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c226c6173745f636f6e6669726d65645f706f6c6963795f6d656d6f72795f7061796c6f61645f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c226c6173745f636f6e6669726d65645f73746174655f7061796c6f61645f68617368223a227368613235363a34333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433222c226f7264657265645f726f7773223a5b5d2c2274726163655f686561646572223a7b2276616c69646174696f6e5f63617365223a2269352d73796e746865746963227d7d",
+      "preimage_byte_count": 454,
+      "synthetic_sha256": "sha256:11d47f87a471f939cd946f1d0c41a38390df5e0c45354dad6fe33e62aa4fdddb",
+      "framing": "Exact ECJ-1 UTF-8 bytes of the accepted preimage object; no outer FRAME and no final LF.",
+      "self_reference_exclusion": "The sibling output hash is absent. I-5 does not add, rename, or reinterpret this accepted domain."
+    },
+    {
+      "kind": "FULL_TRACE",
+      "domain": "ebu.canonical-scientific-trace-payload.v1",
+      "authority_status": "ACCEPTED_I1_DOMAIN_REUSED_BYTE_IDENTICALLY",
+      "accepted_callable": "compute_canonical_trace_payload_hash",
+      "accepted_result_type": "CanonicalScientificTracePayloadHash",
+      "field_order": [
+        "hash_domain",
+        "trace_schema_ref",
+        "accepted_configuration_object_content_hash",
+        "execution_semantics_hash",
+        "initial_state_payload_hash",
+        "initial_policy_memory_payload_hash_or_not_applicable",
+        "initial_augmented_replay_state_hash_or_not_applicable",
+        "ordered_external_scientific_input_payload_hashes",
+        "fault_schedule_object_content_hash_or_not_applicable",
+        "stochastic_stream_identities_and_draw_coordinates_or_not_applicable",
+        "ordered_rows",
+        "terminal_or_last_confirmed_state_payload_hash",
+        "terminal_or_last_confirmed_policy_memory_payload_hash_or_not_applicable",
+        "terminal_or_last_confirmed_augmented_replay_state_hash_or_not_applicable",
+        "confirmed_row_count",
+        "trace_completeness_state"
+      ],
+      "synthetic_fields_ecj1": {
+        "hash_domain": "ebu.canonical-scientific-trace-payload.v1",
+        "trace_schema_ref": {
+          "object_content_hash": "sha256:4040404040404040404040404040404040404040404040404040404040404040",
+          "object_id": "ebu:synthetic:i5:trace-schema",
+          "object_version": "1.0.0"
+        },
+        "accepted_configuration_object_content_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "execution_semantics_hash": "sha256:4545454545454545454545454545454545454545454545454545454545454545",
+        "initial_state_payload_hash": "sha256:4141414141414141414141414141414141414141414141414141414141414141",
+        "initial_policy_memory_payload_hash_or_not_applicable": "NOT_APPLICABLE",
+        "initial_augmented_replay_state_hash_or_not_applicable": "NOT_APPLICABLE",
+        "ordered_external_scientific_input_payload_hashes": [],
+        "fault_schedule_object_content_hash_or_not_applicable": "NOT_APPLICABLE",
+        "stochastic_stream_identities_and_draw_coordinates_or_not_applicable": "NOT_APPLICABLE",
+        "ordered_rows": [],
+        "terminal_or_last_confirmed_state_payload_hash": "sha256:4343434343434343434343434343434343434343434343434343434343434343",
+        "terminal_or_last_confirmed_policy_memory_payload_hash_or_not_applicable": "NOT_APPLICABLE",
+        "terminal_or_last_confirmed_augmented_replay_state_hash_or_not_applicable": "NOT_APPLICABLE",
+        "confirmed_row_count": 0,
+        "trace_completeness_state": "PARTIAL_DURABLE_PREFIX"
+      },
+      "synthetic_preimage_hex": "7b2261636365707465645f636f6e66696775726174696f6e5f6f626a6563745f636f6e74656e745f68617368223a227368613235363a34343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434343434222c22636f6e6669726d65645f726f775f636f756e74223a302c22657865637574696f6e5f73656d616e746963735f68617368223a227368613235363a34353435343534353435343534353435343534353435343534353435343534353435343534353435343534353435343534353435343534353435343534353435222c226661756c745f7363686564756c655f6f626a6563745f636f6e74656e745f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c22686173685f646f6d61696e223a226562752e63616e6f6e6963616c2d736369656e74696669632d74726163652d7061796c6f61642e7631222c22696e697469616c5f6175676d656e7465645f7265706c61795f73746174655f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c22696e697469616c5f706f6c6963795f6d656d6f72795f7061796c6f61645f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c22696e697469616c5f73746174655f7061796c6f61645f68617368223a227368613235363a34313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431343134313431222c226f7264657265645f65787465726e616c5f736369656e74696669635f696e7075745f7061796c6f61645f686173686573223a5b5d2c226f7264657265645f726f7773223a5b5d2c2273746f636861737469635f73747265616d5f6964656e7469746965735f616e645f647261775f636f6f7264696e617465735f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c227465726d696e616c5f6f725f6c6173745f636f6e6669726d65645f6175676d656e7465645f7265706c61795f73746174655f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c227465726d696e616c5f6f725f6c6173745f636f6e6669726d65645f706f6c6963795f6d656d6f72795f7061796c6f61645f686173685f6f725f6e6f745f6170706c696361626c65223a224e4f545f4150504c494341424c45222c227465726d696e616c5f6f725f6c6173745f636f6e6669726d65645f73746174655f7061796c6f61645f68617368223a227368613235363a34333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433343334333433222c2274726163655f636f6d706c6574656e6573735f7374617465223a225041525449414c5f44555241424c455f505245464958222c2274726163655f736368656d615f726566223a7b226f626a6563745f636f6e74656e745f68617368223a227368613235363a34303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430343034303430222c226f626a6563745f6964223a226562753a73796e7468657469633a69353a74726163652d736368656d61222c226f626a6563745f76657273696f6e223a22312e302e30227d7d",
+      "preimage_byte_count": 1325,
+      "synthetic_sha256": "sha256:1ac42875dddd575ec8a4d4df4b539757433fdab7f3074d201389a888bbbcd1a0",
+      "framing": "Exact ECJ-1 UTF-8 bytes of the accepted preimage object; no outer FRAME and no final LF.",
+      "self_reference_exclusion": "The sibling output hash is absent. I-5 does not add, rename, or reinterpret this accepted domain."
+    }
+  ],
+  "hash_domain_count": 10,
+  "accepted_hash_domains_unchanged": true,
+  "failure_append_order": [
+    "I5_RECORD_FORMATION_INVALID",
+    "PHASE_ORDINAL_INVALID",
+    "EVENT_KEY_INVALID",
+    "EVENT_KEY_DUPLICATE",
+    "EVENT_ORDER_INVALID",
+    "EVENT_IDENTITY_INVALID",
+    "PHASE_8_PHASE_9_DUPLICATE_IDENTIFIER",
+    "PHASE_PREDECESSOR_MISMATCH",
+    "PHASE_COMMIT_RECORD_INVALID",
+    "UPDATE_OWNERSHIP_CLAIM_INVALID",
+    "INFORMATIONAL_MEMORY_OWNERSHIP_FORBIDDEN",
+    "UPDATE_OWNERSHIP_CONFLICT",
+    "OWNERSHIP_ORDER_INVALID",
+    "PHASE_OWNERSHIP_MISMATCH",
+    "ATOMIC_COMMIT_REQUEST_INVALID",
+    "EXPECTED_TRACE_PREFIX_MISMATCH",
+    "COMMIT_REJECTED",
+    "COMMIT_AMBIGUOUS",
+    "DURABILITY_UNAVAILABLE",
+    "DURABILITY_EVIDENCE_MISSING",
+    "DURABILITY_EVIDENCE_INCONSISTENT",
+    "POLICY_MEMORY_TRANSACTION_INVALID",
+    "PHYSICAL_PHASE_TRANSACTION_INVALID",
+    "TRACE_ROW_INVALID",
+    "TRACE_ROW_PREDECESSOR_MISMATCH",
+    "TRACE_ROW_GAP",
+    "TRACE_PREFIX_INVALID",
+    "TRACE_PREFIX_NOT_LITERAL",
+    "TRACE_PREFIX_MUTATION_FORBIDDEN",
+    "TRACE_EXTENSION_IDENTITY_INVALID",
+    "TRACE_COMPLETENESS_INVALID",
+    "TRACE_EQUIVOCAL",
+    "TRACE_EVIDENCE_MISSING",
+    "MINIMUM_TRACE_INCOMPLETE",
+    "RUN_TRACE_ENVELOPE_INVALID",
+    "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+    "T3_ENTRY_GUARD_FAILED",
+    "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+    "EXECUTION_CALLBACK_FORBIDDEN",
+    "SCIENTIFIC_STATE_ADVANCE_FORBIDDEN",
+    "I5_HASH_COLLISION",
+    "FAULT_HOOK_INVALID"
+  ],
+  "failure_inventory": [
+    {
+      "ordinal": 186,
+      "code": "I5_RECORD_FORMATION_INVALID",
+      "owner": "errors",
+      "meaning_and_activation_predicate": "an I-5 constructor receives a missing, extra, wrongly ordered, wrongly typed, non-exact, noncanonical, or inapplicable field before any semantic interface check",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 187,
+      "code": "PHASE_ORDINAL_INVALID",
+      "owner": "events",
+      "meaning_and_activation_predicate": "a phase is not the exact PhaseOrdinal member PHASE_1 through PHASE_10 or disagrees with the accepted ordinal/name row",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 188,
+      "code": "EVENT_KEY_INVALID",
+      "owner": "events",
+      "meaning_and_activation_predicate": "one of the seven EventKey coordinates violates its exact type, grammar, range, or pre-mutation assignment rule",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 189,
+      "code": "EVENT_KEY_DUPLICATE",
+      "owner": "events",
+      "meaning_and_activation_predicate": "two declarations have equal full EventKey values",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 190,
+      "code": "EVENT_ORDER_INVALID",
+      "owner": "events",
+      "meaning_and_activation_predicate": "supplied declaration order is not the exact increasing EventKey order or declared predecessor does not occupy the immediately previous position",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 191,
+      "code": "EVENT_IDENTITY_INVALID",
+      "owner": "events",
+      "meaning_and_activation_predicate": "event_ref, primary_object_id, payload hash, phase identity, or declared simultaneity is inconsistent within one declaration",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 192,
+      "code": "PHASE_8_PHASE_9_DUPLICATE_IDENTIFIER",
+      "owner": "events",
+      "meaning_and_activation_predicate": "a phase-9 registration repeats an identifier already physically committed in phase 8",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 193,
+      "code": "PHASE_PREDECESSOR_MISMATCH",
+      "owner": "events",
+      "meaning_and_activation_predicate": "a non-first phase or event names a predecessor other than the exact immediately accepted digest/key, or a first item supplies a predecessor",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 194,
+      "code": "PHASE_COMMIT_RECORD_INVALID",
+      "owner": "events",
+      "meaning_and_activation_predicate": "phase, event digests, ownership binding, physical-record applicability, or trace-row binding is internally inconsistent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 195,
+      "code": "UPDATE_OWNERSHIP_CLAIM_INVALID",
+      "owner": "ownership",
+      "meaning_and_activation_predicate": "a claim has mismatched epoch/phase/event/owner/locus fields or a noncanonical opaque locus",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 196,
+      "code": "INFORMATIONAL_MEMORY_OWNERSHIP_FORBIDDEN",
+      "owner": "ownership",
+      "meaning_and_activation_predicate": "an informational policy-memory coordinate is presented as physical ownership",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 197,
+      "code": "UPDATE_OWNERSHIP_CONFLICT",
+      "owner": "ownership",
+      "meaning_and_activation_predicate": "two different owners claim the same opaque physical locus",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 198,
+      "code": "OWNERSHIP_ORDER_INVALID",
+      "owner": "ownership",
+      "meaning_and_activation_predicate": "claims are not in the exact locus/event/owner canonical order or contain an exact duplicate",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 199,
+      "code": "PHASE_OWNERSHIP_MISMATCH",
+      "owner": "events",
+      "meaning_and_activation_predicate": "a claim epoch/phase disagrees with its EventKey or the epoch-wide ownership record",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 200,
+      "code": "ATOMIC_COMMIT_REQUEST_INVALID",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "the request has no applicable transaction, mismatched shared trace row, invalid attempt ordinal, or inconsistent request identity",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 201,
+      "code": "EXPECTED_TRACE_PREFIX_MISMATCH",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "the observed/request-bound prefix digest or literal bytes differ from the exact expected prefix",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 202,
+      "code": "COMMIT_REJECTED",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "the supplied inert outcome is exactly REJECTED after request and expected-prefix validation",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 203,
+      "code": "COMMIT_AMBIGUOUS",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "the inert observation cannot establish committed versus uncommitted",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 204,
+      "code": "DURABILITY_UNAVAILABLE",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "the abstract store boundary was unavailable before an accepted commit outcome and the exact prefix is preserved",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 205,
+      "code": "DURABILITY_EVIDENCE_MISSING",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "a COMMITTED or AMBIGUOUS classification lacks the exact evidence required for that classification",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 206,
+      "code": "DURABILITY_EVIDENCE_INCONSISTENT",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "evidence request, prefix, phase, exclusion projection, or evidence digest conflicts with the request/outcome",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 207,
+      "code": "POLICY_MEMORY_TRANSACTION_INVALID",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "decision, before/after memory applicability, lineage, or trace-row coupling is inconsistent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 208,
+      "code": "PHYSICAL_PHASE_TRANSACTION_INVALID",
+      "owner": "durability",
+      "meaning_and_activation_predicate": "phase record, epoch ownership, ledger evidence, or common trace-row binding is inconsistent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 209,
+      "code": "TRACE_ROW_INVALID",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "row index/kind/phase/event applicability, canonical refs/hashes, or ECJ-1 projection violates the closed row schema",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 210,
+      "code": "TRACE_ROW_PREDECESSOR_MISMATCH",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "row zero does not use the genesis applicability rule or a later row does not name the immediately preceding row hash",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 211,
+      "code": "TRACE_ROW_GAP",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "literal row indices are not contiguous from the prefix start or an appended suffix does not begin at the prior row count",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 212,
+      "code": "TRACE_PREFIX_INVALID",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "row count, frames, frame lengths, row digests, prefix digest, or literal concatenation is inconsistent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 213,
+      "code": "TRACE_PREFIX_NOT_LITERAL",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "a prefix claim supplies only metadata/hash/count and not the exact ordered frame bytes",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 214,
+      "code": "TRACE_PREFIX_MUTATION_FORBIDDEN",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "observed prior prefix bytes differ from the accepted literal prefix",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 215,
+      "code": "TRACE_EXTENSION_IDENTITY_INVALID",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "an extension is empty or claims byte identity as growth",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 216,
+      "code": "TRACE_COMPLETENESS_INVALID",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "completeness status, confirmed count, terminal evidence, or complete-payload binding violates its exact applicability rule",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 217,
+      "code": "TRACE_EQUIVOCAL",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "two supplied evidence paths assign different bytes/digests or completeness to the same row index/prefix coordinate",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 218,
+      "code": "TRACE_EVIDENCE_MISSING",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "the classification requires literal prefix/full-trace/terminal evidence that is absent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 219,
+      "code": "MINIMUM_TRACE_INCOMPLETE",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "one of the eight UQ-29 reconstruction determinations cannot be made from the supplied minimum record and bytes",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 220,
+      "code": "RUN_TRACE_ENVELOPE_INVALID",
+      "owner": "traces",
+      "meaning_and_activation_predicate": "canonical trace reference, binding/identity applicability, operational evidence order, completeness, or exclusion digest is inconsistent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 221,
+      "code": "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+      "owner": "execution",
+      "meaning_and_activation_predicate": "a lease is malformed, consumed, nonlocal, wrong-operation, wrong-binding, reconstructed, or otherwise not an exact live lease",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 222,
+      "code": "T3_ENTRY_GUARD_FAILED",
+      "owner": "execution",
+      "meaning_and_activation_predicate": "accepted authorization use, execution binding, T3 capability, operation binding, or required backend prerequisite is absent or inconsistent",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 223,
+      "code": "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+      "owner": "execution",
+      "meaning_and_activation_predicate": "T3 entry requires a real backend but I-5 accepts none",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 224,
+      "code": "EXECUTION_CALLBACK_FORBIDDEN",
+      "owner": "execution",
+      "meaning_and_activation_predicate": "an I-5 or validation path attempts to invoke a scientific callback",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 225,
+      "code": "SCIENTIFIC_STATE_ADVANCE_FORBIDDEN",
+      "owner": "execution",
+      "meaning_and_activation_predicate": "an I-5 or validation path could advance scientific state",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 226,
+      "code": "I5_HASH_COLLISION",
+      "owner": "hashing",
+      "meaning_and_activation_predicate": "distinct valid I-5 preimages produce the same digest; fail closed without resolution",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    },
+    {
+      "ordinal": 227,
+      "code": "FAULT_HOOK_INVALID",
+      "owner": "faults",
+      "meaning_and_activation_predicate": "the fault hook is not exactly the all-NOT_APPLICABLE inert boundary",
+      "no_effect": "No state, policy memory, durable prefix, accepted evidence, ownership, or input changes.",
+      "stage": "I5"
+    }
+  ],
+  "failure_rule": {
+    "accepted_prefix_count": 185,
+    "starting_ordinal": 186,
+    "ending_ordinal": 227,
+    "suffix_count": 42,
+    "resulting_count": 227,
+    "accepted_prefix": {
+      "count": 185,
+      "lf_byte_count": 4894,
+      "lf_sha256": "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3"
+    },
+    "suffix": {
+      "count": 42,
+      "lf_byte_count": 1103,
+      "lf_sha256": "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681"
+    },
+    "future_surface": {
+      "count": 227,
+      "lf_byte_count": 5997,
+      "lf_sha256": "4cb1daceb30c0f106e7ba288980d379da2403236593948b4be47247704555ae4"
+    },
+    "projection": "one code value plus LF in enum order",
+    "accepted_prefix_preserved_byte_identical": true
+  },
+  "module_exports": {
+    "errors": [
+      "Applicability",
+      "CanonicalTraceState",
+      "DurabilityState",
+      "FailureCode",
+      "FailureEnvelope",
+      "FailureEventKey",
+      "FailureEvidenceRef",
+      "FailureId",
+      "FailureInterfaceRef",
+      "FailureObjectRef",
+      "FailureStage",
+      "PolicyMemoryAdvance",
+      "RetryClass",
+      "ScientificStatusEffect",
+      "StateAdvance"
+    ],
+    "canonical": [
+      "CanonicalBytes",
+      "CanonicalizationVersion",
+      "ECJ1Value",
+      "encode_ecj1",
+      "parse_ecj1"
+    ],
+    "identity": [
+      "ArtifactByteHash",
+      "AugmentedClosedLoopReplayStateHash",
+      "AuthorizationUseKey",
+      "CanonicalScientificTracePayloadHash",
+      "CanonicalTracePrefixHash",
+      "CanonicalTraceRowHash",
+      "ExecutionSemanticsHash",
+      "InformationViewHash",
+      "ObjectContentHash",
+      "ObjectRef",
+      "PolicyMemoryPayloadHash",
+      "ProposalSetHash",
+      "RepresentedStateProjectionHash",
+      "ScientificId",
+      "ScientificIdAllocationClaimV1",
+      "SemanticVersion",
+      "SourceFileRawSha256",
+      "StatePayloadHash",
+      "parse_scientific_id",
+      "parse_semantic_version"
+    ],
+    "hashing": [
+      "compute_artifact_byte_hash",
+      "compute_augmented_replay_state_hash",
+      "compute_canonical_trace_payload_hash",
+      "compute_canonical_trace_prefix_hash",
+      "compute_canonical_trace_row_hash",
+      "compute_execution_semantics_hash",
+      "compute_information_view_hash",
+      "compute_object_content_hash",
+      "compute_policy_memory_payload_hash",
+      "compute_proposal_set_hash",
+      "compute_represented_state_projection_hash",
+      "compute_source_file_raw_sha256",
+      "compute_state_payload_hash",
+      "compute_authorization_use_key",
+      "EventKeyDigest",
+      "EventDeclarationDigest",
+      "OwnershipDigest",
+      "PhaseCommitDigest",
+      "DurabilityEvidenceDigest",
+      "RunEnvelopeDigest",
+      "TraceDigest",
+      "compute_event_key_digest",
+      "compute_event_declaration_digest",
+      "compute_ownership_digest",
+      "compute_phase_commit_digest",
+      "compute_durability_evidence_digest",
+      "compute_run_envelope_digest"
+    ],
+    "envelopes": [
+      "CommonObjectEnvelope",
+      "LifecycleStatus",
+      "LifecycleTransition",
+      "LifecycleValidationResult",
+      "RecordMetadata",
+      "SupersessionRelation",
+      "SupersessionValidationResult",
+      "validate_lifecycle_transition",
+      "validate_object_envelope",
+      "validate_supersession_relation"
+    ],
+    "numeric": [
+      "Binary64BitsV1",
+      "ComparisonResult",
+      "Completeness",
+      "CoreNumberV1",
+      "DecimalV1",
+      "ErrorBound",
+      "ExactConversion",
+      "IntegerV1",
+      "NumericalOperation",
+      "NumericalPolicyV1",
+      "NumericalResult",
+      "NumericalVariant",
+      "OperandValidationResult",
+      "QuantityContext",
+      "RationalV1",
+      "RuntimeConstraintSet",
+      "apply_exact_core_operation",
+      "decimal_to_rational_exact",
+      "normalize_core_number",
+      "validate_numerical_policy"
+    ],
+    "primitives": [
+      "AccountingBoundary",
+      "ClaimStatus",
+      "ClockSystem",
+      "CompatibilityResult",
+      "ConversionRule",
+      "Dimension",
+      "Duration",
+      "Epoch",
+      "Horizon",
+      "Instant",
+      "Quantity",
+      "Region",
+      "ResolutionDetail",
+      "ResolutionState",
+      "ResourceType",
+      "ServiceType",
+      "SignConvention",
+      "UncertaintyKind",
+      "UncertaintyRecord",
+      "Unit",
+      "convert_quantity_exact",
+      "validate_boundary_compatibility",
+      "validate_clock_compatibility",
+      "validate_conversion_rule",
+      "validate_dimension_compatibility",
+      "validate_horizon",
+      "validate_quantity",
+      "validate_region_compatibility",
+      "validate_resolution_detail",
+      "validate_resource_service_compatibility",
+      "validate_sign_convention_compatibility",
+      "validate_time_basis",
+      "validate_uncertainty_record",
+      "validate_unit_compatibility"
+    ],
+    "registry": [
+      "AliasRecord",
+      "NamespaceEntry",
+      "NamespaceRegistrySnapshot",
+      "RegistryRecord",
+      "ResolutionRecord",
+      "allocate_scientific_id",
+      "register_draft",
+      "resolve_alias",
+      "resolve_ref"
+    ],
+    "state": [
+      "SystemState",
+      "RepresentedState",
+      "ProjectionContract",
+      "validate_state_record",
+      "validate_projection_contract"
+    ],
+    "conservation": [
+      "ConservationAccountLevel",
+      "ConservationProfile",
+      "ConservationProfileSelection",
+      "ConservedQuantityDeclaration",
+      "CoordinateCoefficient",
+      "TransformationDeclarationKind",
+      "InternalTransformationOrInvariantDeclaration",
+      "BoundaryFlowDirection",
+      "BoundaryFlowRollupRole",
+      "BoundaryFlowChannelDeclaration",
+      "ConservationEvidence",
+      "ExactResidualExpectation",
+      "UncertaintyAwareResidualExpectation",
+      "ResidualExpectation",
+      "validate_conservation_profile_selection",
+      "validate_conservation_profile"
+    ],
+    "distortion": [
+      "DistortionModel",
+      "validate_distortion_model"
+    ],
+    "actions": [
+      "ActionDefinition",
+      "ActionInstance",
+      "EffectiveInterval",
+      "WriteSupport",
+      "ConstraintSupport",
+      "ActionStatus",
+      "validate_action_definition",
+      "validate_action_instance"
+    ],
+    "network": [
+      "Provider",
+      "ProviderNetwork",
+      "TopologySnapshot",
+      "CapacityLocus",
+      "RoutePlan",
+      "RouteSemanticsStatus",
+      "AvailabilityStatus",
+      "validate_provider_network",
+      "validate_route_plan"
+    ],
+    "commitments": [
+      "Commitment",
+      "Reservation",
+      "CapacityRecord",
+      "validate_commitment",
+      "validate_reservation",
+      "validate_capacity_record"
+    ],
+    "observation": [
+      "Measurement",
+      "MeasurementContract",
+      "validate_measurement"
+    ],
+    "scheduling": [
+      "Schedule",
+      "ComparatorSchedule",
+      "ComparatorKind",
+      "CoordinationEventDeclaration",
+      "validate_schedule"
+    ],
+    "policy": [
+      "InformationContract",
+      "InformationView",
+      "InformationReadSet",
+      "PolicyMemoryState",
+      "MemoryMode",
+      "validate_information_view",
+      "validate_policy_memory_state"
+    ],
+    "causal": [
+      "CausalIdentificationStatus",
+      "CausalRemainder",
+      "validate_causal_remainder"
+    ],
+    "settlement": [
+      "Quote",
+      "Receipt",
+      "GroupReceipt",
+      "ChildActionRecord",
+      "SettlementShare",
+      "GroupResidual",
+      "SettlementClosureRecord",
+      "validate_settlement_closure"
+    ],
+    "ledger": [
+      "Ledger",
+      "LedgerEntry",
+      "LedgerKind",
+      "validate_ledger"
+    ],
+    "faults": [
+      "FaultScheduleV1",
+      "FaultDirectiveV1",
+      "FaultClass",
+      "FaultTargetCoordinate",
+      "FaultScheduleClass",
+      "validate_fault_schedule_boundary",
+      "FaultHookBoundary",
+      "validate_inert_fault_hook"
+    ],
+    "experiment": [
+      "ExperimentConfiguration",
+      "ExecutionBinding",
+      "ExecutionMode",
+      "OperationalExclusion",
+      "ExecutionIdentity",
+      "validate_experiment_configuration",
+      "validate_execution_binding"
+    ],
+    "artifacts": [
+      "ArtifactRecord",
+      "ExecutionResultManifest",
+      "validate_execution_result_manifest"
+    ],
+    "atomic": [
+      "ExtentDefinition",
+      "AtomicRefinementDeclaration",
+      "QuantityParticipationGeneratorDeclaration",
+      "StateTransformationGeneratorDeclaration",
+      "ConstitutiveGeneratorLink",
+      "RegularityAndReparameterizationWitness",
+      "HybridActivationDeclaration",
+      "FiniteReconstructionWitness",
+      "BoundaryHistoryEquivalenceWitness",
+      "validate_extent_definition",
+      "validate_atomic_refinement",
+      "validate_quantity_participation_generator",
+      "validate_state_transformation_generator",
+      "validate_constitutive_generator_link",
+      "validate_regularity_and_reparameterization_witness",
+      "validate_hybrid_activation",
+      "validate_finite_reconstruction",
+      "validate_boundary_history_equivalence"
+    ],
+    "interaction": [
+      "JointObjectiveDeclaration",
+      "FiniteSetInteractionWitness",
+      "SameBaselineNonadditivityWitness",
+      "SerialComparatorInteractionWitness",
+      "MixedMarginalWitness",
+      "CommutatorWitness",
+      "SharedConstraintFactor",
+      "InteractionTopologySnapshot",
+      "AllocationOptimalityWitness",
+      "ScalarDecompositionWitness",
+      "InstitutionalAcceptanceRule",
+      "InstitutionalSettlementRule",
+      "validate_joint_objective",
+      "validate_finite_set_interaction",
+      "validate_same_baseline_nonadditivity",
+      "validate_serial_comparator_interaction",
+      "validate_mixed_marginal",
+      "validate_commutator",
+      "validate_shared_constraint_factor",
+      "validate_interaction_topology_snapshot",
+      "validate_allocation_optimality",
+      "validate_scalar_decomposition",
+      "validate_institutional_acceptance_rule",
+      "validate_institutional_settlement_rule"
+    ],
+    "trust": [
+      "SignatureProfile",
+      "TrustEvidenceKind",
+      "RevocableObjectKind",
+      "RootRole",
+      "KeyPinV1",
+      "RootThresholdV1",
+      "TrustProfileV1",
+      "IssuerKeyV1",
+      "IssuerEntry",
+      "IssuerRegistrySnapshotV1",
+      "DelegationCredentialV1",
+      "RevocationEntryV1",
+      "RevocationSnapshotV1",
+      "TrustedTimeChallengeV1",
+      "TrustedTimeAttestationV1",
+      "AuthorizationAuthenticityEnvelopeV1",
+      "TrustEvidenceEnvelopeV1",
+      "TrustedTimeService",
+      "RevocationService",
+      "AuthorizationStateStore",
+      "verify_ed25519_signature",
+      "validate_trust_profile",
+      "validate_issuer_registry_snapshot",
+      "validate_delegation_chain",
+      "validate_trusted_time_attestation",
+      "validate_revocation_snapshot"
+    ],
+    "authorization": [
+      "AuthorizedOperation",
+      "AuthorizationValidationStatus",
+      "AuthorizationCheckStatus",
+      "StageAuthorization",
+      "AuthorizationEvidenceBundle",
+      "AuthorizationCheckRecord",
+      "AuthorizationValidationRecord",
+      "validate_stage_authorization"
+    ],
+    "authorization_use": [
+      "AuthorizationUseStatus",
+      "AuthorizationUseStoreIdentity",
+      "AuthorizationUseRecord",
+      "ConsumeOutcome",
+      "consume_stage_authorization",
+      "accept_registry_object",
+      "supersede_registry_object",
+      "accept_experiment_configuration",
+      "accept_execution_binding",
+      "append_operational_ledger_entry"
+    ],
+    "capabilities": [
+      "CapabilityClass",
+      "AccessCapability",
+      "build_synthetic_information_view"
+    ],
+    "events": [
+      "PhaseOrdinal",
+      "EventKey",
+      "EventDeclaration",
+      "PhaseCommitRecord",
+      "TraceCompleteness",
+      "order_event_keys",
+      "validate_event_declaration",
+      "validate_phase_commit_record"
+    ],
+    "ownership": [
+      "OwnershipKind",
+      "OpaqueLocusKey",
+      "UpdateOwnershipClaim",
+      "OwnershipConflict",
+      "EpochUpdateOwnership",
+      "OwnershipValidationRecord",
+      "build_epoch_update_ownership",
+      "validate_update_ownership"
+    ],
+    "durability": [
+      "CommitOutcome",
+      "PolicyMemoryTransaction",
+      "PhysicalPhaseTransaction",
+      "AtomicStoreRequest",
+      "DurablePrefixEvidence",
+      "AtomicStoreRejection",
+      "AtomicStoreAmbiguity",
+      "AtomicStoreUnavailable",
+      "AtomicCommitOutcome",
+      "AtomicStore",
+      "PolicyDecisionStore",
+      "PhaseCommitStore",
+      "build_atomic_commit_request",
+      "classify_inert_commit_failure",
+      "validate_atomic_commit_outcome",
+      "validate_policy_memory_transaction",
+      "validate_durable_prefix"
+    ],
+    "traces": [
+      "TraceRowKind",
+      "TraceHeader",
+      "TraceFooter",
+      "CanonicalScientificTracePayloadV1",
+      "CanonicalTraceRow",
+      "TraceRowFrame",
+      "CanonicalTracePrefix",
+      "TraceExtensionEvidence",
+      "CompleteTraceEvidence",
+      "MinimumReconstructableTrace",
+      "RunTraceEnvelopeV1",
+      "TraceValidationStatus",
+      "TraceValidationResult",
+      "project_canonical_trace_row",
+      "frame_trace_row",
+      "build_trace_prefix",
+      "extend_trace_prefix",
+      "validate_complete_trace_evidence",
+      "build_minimum_reconstructable_trace",
+      "build_run_trace_envelope"
+    ],
+    "execution": [
+      "ProposalRecord",
+      "ScreeningDisposition",
+      "ScreeningResult",
+      "PhaseCommitRequest",
+      "T3EntryGuard",
+      "ScientificExecutionLease",
+      "validate_t3_entry_guard",
+      "validate_scientific_execution_lease",
+      "begin_bound_scientific_execution",
+      "propose_phase_updates",
+      "screen_and_admit",
+      "propose_joint_transition",
+      "commit_phase_updates",
+      "advance_epoch"
+    ]
+  },
+  "root_export_suffix_types": [
+    "EventKeyDigest",
+    "EventDeclarationDigest",
+    "OwnershipDigest",
+    "PhaseCommitDigest",
+    "DurabilityEvidenceDigest",
+    "RunEnvelopeDigest",
+    "TraceDigest",
+    "PhaseOrdinal",
+    "EventKey",
+    "EventDeclaration",
+    "PhaseCommitRecord",
+    "TraceCompleteness",
+    "OwnershipKind",
+    "OpaqueLocusKey",
+    "UpdateOwnershipClaim",
+    "OwnershipConflict",
+    "EpochUpdateOwnership",
+    "OwnershipValidationRecord",
+    "CommitOutcome",
+    "PolicyMemoryTransaction",
+    "PhysicalPhaseTransaction",
+    "AtomicStoreRequest",
+    "DurablePrefixEvidence",
+    "AtomicStoreRejection",
+    "AtomicStoreAmbiguity",
+    "AtomicStoreUnavailable",
+    "AtomicCommitOutcome",
+    "AtomicStore",
+    "PolicyDecisionStore",
+    "PhaseCommitStore",
+    "TraceRowKind",
+    "TraceHeader",
+    "TraceFooter",
+    "CanonicalScientificTracePayloadV1",
+    "CanonicalTraceRow",
+    "TraceRowFrame",
+    "CanonicalTracePrefix",
+    "TraceExtensionEvidence",
+    "CompleteTraceEvidence",
+    "MinimumReconstructableTrace",
+    "RunTraceEnvelopeV1",
+    "TraceValidationStatus",
+    "TraceValidationResult",
+    "ProposalRecord",
+    "ScreeningDisposition",
+    "ScreeningResult",
+    "PhaseCommitRequest",
+    "T3EntryGuard",
+    "ScientificExecutionLease",
+    "FaultHookBoundary"
+  ],
+  "root_export_suffix_callables": [
+    "compute_event_key_digest",
+    "compute_event_declaration_digest",
+    "compute_ownership_digest",
+    "compute_phase_commit_digest",
+    "compute_durability_evidence_digest",
+    "compute_run_envelope_digest",
+    "order_event_keys",
+    "validate_event_declaration",
+    "validate_phase_commit_record",
+    "build_epoch_update_ownership",
+    "validate_update_ownership",
+    "build_atomic_commit_request",
+    "classify_inert_commit_failure",
+    "validate_atomic_commit_outcome",
+    "validate_policy_memory_transaction",
+    "validate_durable_prefix",
+    "project_canonical_trace_row",
+    "frame_trace_row",
+    "build_trace_prefix",
+    "extend_trace_prefix",
+    "validate_complete_trace_evidence",
+    "build_minimum_reconstructable_trace",
+    "build_run_trace_envelope",
+    "validate_inert_fault_hook",
+    "validate_t3_entry_guard",
+    "validate_scientific_execution_lease",
+    "begin_bound_scientific_execution",
+    "propose_phase_updates",
+    "screen_and_admit",
+    "propose_joint_transition",
+    "commit_phase_updates",
+    "advance_epoch"
+  ],
+  "root_export_rule": {
+    "accepted_prefix_count": 309,
+    "type_suffix_count": 50,
+    "callable_suffix_count": 32,
+    "suffix_count": 82,
+    "resulting_count": 391,
+    "accepted_prefix": {
+      "count": 309,
+      "lf_byte_count": 6838,
+      "lf_sha256": "aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8"
+    },
+    "suffix": {
+      "count": 82,
+      "lf_byte_count": 1787,
+      "lf_sha256": "0b593d0d045da2ce3ffb46bc192ceb1b7aea58d2212bb14981ac716dbd02f508"
+    },
+    "future_surface": {
+      "count": 391,
+      "lf_byte_count": 8625,
+      "lf_sha256": "f27ed982d7e646be870404239ad617d181df8276728f9a3f1fc878c5bbfa46db"
+    },
+    "projection": "one export plus LF in exact root order",
+    "accepted_prefix_preserved_byte_identical": true,
+    "module_export_projection": {
+      "symbol_count": 390,
+      "canonical_byte_count": 9927,
+      "canonical_sha256": "94ba72bd338598f463e0f638407314533cac8d3174db92c27bc05bbadd6ec765",
+      "rule": "canonical JSON plus LF of [[module,exports]...] in module order"
+    }
+  },
+  "combined_signature_projection": {
+    "accepted_row_count": 155,
+    "i5_type_rows": 50,
+    "i5_callable_rows": 32,
+    "i5_row_count": 82,
+    "future_row_count": 237,
+    "i5_canonical_byte_count": 62204,
+    "i5_canonical_sha256": "24898c5185da5fb0af7b4b19d46569ab38eb0c4c811c81a2f543a7332a3cd8bc",
+    "future_canonical_byte_count": 118010,
+    "future_canonical_sha256": "083a429b0fd36dda80d62a9113fe81e758c17c210385d10e76dc2c2a80dbdaba",
+    "ordering": "accepted 155 rows unchanged, then 50 I-5 type rows, then 32 I-5 callable rows",
+    "row_rule": "[owner,TYPE-or-CALLABLE,module,name,complete declaration object] for I-5; accepted predecessor row rules unchanged"
+  },
+  "import_graph": {
+    "module_order": [
+      "errors",
+      "canonical",
+      "identity",
+      "hashing",
+      "envelopes",
+      "numeric",
+      "primitives",
+      "registry",
+      "state",
+      "conservation",
+      "distortion",
+      "actions",
+      "network",
+      "commitments",
+      "observation",
+      "scheduling",
+      "policy",
+      "causal",
+      "settlement",
+      "ledger",
+      "faults",
+      "experiment",
+      "artifacts",
+      "atomic",
+      "interaction",
+      "trust",
+      "authorization",
+      "authorization_use",
+      "capabilities",
+      "events",
+      "ownership",
+      "durability",
+      "traces",
+      "execution"
+    ],
+    "direct_imports": {
+      "actions": [
+        "state",
+        "primitives",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "artifacts": [
+        "experiment",
+        "ledger",
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "canonical": [
+        "errors"
+      ],
+      "causal": [
+        "primitives",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "commitments": [
+        "actions",
+        "network",
+        "primitives",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "conservation": [
+        "primitives",
+        "numeric",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "distortion": [
+        "state",
+        "primitives",
+        "numeric",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "envelopes": [
+        "canonical",
+        "errors",
+        "hashing",
+        "identity"
+      ],
+      "errors": [],
+      "experiment": [
+        "conservation",
+        "policy",
+        "faults",
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "faults": [
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "hashing": [
+        "canonical",
+        "errors",
+        "identity"
+      ],
+      "identity": [
+        "canonical",
+        "errors"
+      ],
+      "ledger": [
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "network": [
+        "state",
+        "actions",
+        "primitives",
+        "identity",
+        "envelopes",
+        "registry",
+        "errors"
+      ],
+      "numeric": [
+        "canonical",
+        "errors",
+        "identity"
+      ],
+      "observation": [
+        "state",
+        "primitives",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "policy": [
+        "observation",
+        "scheduling",
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "primitives": [
+        "envelopes",
+        "errors",
+        "identity",
+        "numeric"
+      ],
+      "registry": [
+        "canonical",
+        "errors",
+        "envelopes",
+        "identity"
+      ],
+      "scheduling": [
+        "actions",
+        "network",
+        "commitments",
+        "primitives",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "settlement": [
+        "actions",
+        "observation",
+        "causal",
+        "primitives",
+        "numeric",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "state": [
+        "canonical",
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "atomic": [
+        "primitives",
+        "numeric",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "interaction": [
+        "atomic",
+        "causal",
+        "primitives",
+        "numeric",
+        "identity",
+        "envelopes",
+        "errors"
+      ],
+      "trust": [
+        "canonical",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "authorization": [
+        "trust",
+        "experiment",
+        "artifacts",
+        "ledger",
+        "registry",
+        "identity",
+        "hashing",
+        "errors"
+      ],
+      "authorization_use": [
+        "authorization",
+        "ledger",
+        "registry",
+        "experiment",
+        "identity",
+        "hashing",
+        "envelopes",
+        "errors"
+      ],
+      "capabilities": [
+        "authorization",
+        "policy",
+        "observation",
+        "experiment",
+        "hashing",
+        "identity",
+        "errors"
+      ],
+      "events": [
+        "actions",
+        "faults",
+        "primitives",
+        "identity",
+        "hashing",
+        "errors"
+      ],
+      "ownership": [
+        "events",
+        "state",
+        "identity",
+        "hashing",
+        "errors"
+      ],
+      "durability": [
+        "events",
+        "ownership",
+        "policy",
+        "ledger",
+        "hashing",
+        "errors"
+      ],
+      "traces": [
+        "events",
+        "policy",
+        "state",
+        "experiment",
+        "artifacts",
+        "hashing",
+        "canonical",
+        "errors"
+      ],
+      "execution": [
+        "authorization",
+        "authorization_use",
+        "capabilities",
+        "experiment",
+        "events",
+        "ownership",
+        "durability",
+        "traces",
+        "actions",
+        "state",
+        "policy",
+        "scheduling",
+        "faults",
+        "identity",
+        "errors"
+      ]
+    },
+    "package_module_count": 34,
+    "package_direct_edge_count": 192,
+    "package_cycle_count": 0,
+    "package_projection_byte_count": 2619,
+    "package_projection_sha256": "96055fd0d2dc4dd0f3bcbf2cb169967c7bceffc8d70b50252e154b5649c38bcb",
+    "extension_module_order": [
+      "state",
+      "conservation",
+      "distortion",
+      "actions",
+      "network",
+      "commitments",
+      "observation",
+      "scheduling",
+      "policy",
+      "causal",
+      "settlement",
+      "ledger",
+      "faults",
+      "experiment",
+      "artifacts",
+      "atomic",
+      "interaction",
+      "trust",
+      "authorization",
+      "authorization_use",
+      "capabilities",
+      "events",
+      "ownership",
+      "durability",
+      "traces",
+      "execution"
+    ],
+    "extension_module_count": 26,
+    "extension_direct_edge_count": 171,
+    "extension_cycle_count": 0,
+    "extension_projection_byte_count": 2276,
+    "extension_projection_sha256": "91968c5320599969fb29824dfed009174e2c3de6136d6aaa59eb36f2ef439909",
+    "projection_rule": "canonical JSON plus LF of [[module,direct_imports[module]]...]",
+    "prohibited_imports": [
+      "validation from execution or execution from validation",
+      "historical runner/finalizer/Gate modules",
+      "importlib and __import__ dynamic imports",
+      "network and subprocess modules",
+      "production bootstrap",
+      "unlisted backend or new dependency"
+    ]
+  },
+  "future_implementation_paths": [
+    "src/ebu_framework/events.py",
+    "src/ebu_framework/ownership.py",
+    "src/ebu_framework/durability.py",
+    "src/ebu_framework/traces.py",
+    "src/ebu_framework/execution.py",
+    "src/ebu_framework/hashing.py",
+    "src/ebu_framework/faults.py",
+    "src/ebu_framework/errors.py",
+    "src/ebu_framework/__init__.py",
+    "tests/framework/test_event_ownership.py",
+    "tests/framework/test_inert_durability.py"
+  ],
+  "future_implementation_path_count": 11,
+  "compatibility_test_changes_required": false,
+  "compatibility_reason": "Accepted post-I-4 tests derive additive failures, exports, modules, edges, signatures, and hash-domain inventories; no historical compatibility test requires weakening or editing.",
+  "validation_authority": {
+    "classes": [
+      "V6",
+      "V7",
+      "V11_STATIC"
+    ],
+    "vectors_storage": "Only unified_python_research_framework_i5_validation_contract.json; no fixture path.",
+    "V6": "opaque coordinates and inert event/ownership records only",
+    "V7": "dummy bytes and inert abstract stores only; no real durability",
+    "V11": "source/text/AST reachability only; execution module is not imported",
+    "forbidden": [
+      "scientific callback",
+      "policy execution",
+      "state transformation",
+      "real durability",
+      "fault delivery",
+      "T3 entry",
+      "production bootstrap"
+    ]
+  },
+  "theorem_and_nonclaim_boundary": {
+    "mechanical_guarantees": [
+      "Given exact valid records, EventKey comparison is a total lexicographic order.",
+      "The ownership validator deterministically reports the first exact opaque-locus conflict.",
+      "Literal trace-prefix verification detects any byte change, gap, predecessor mismatch, or empty extension claim.",
+      "The abstract transaction schema requires the listed records to share one commit outcome."
+    ],
+    "nonclaims": [
+      "The records do not prove physical correctness, existence or uniqueness of dynamics, optimality, causality, settlement fairness, empirical validity, production durability, real-backend crash safety, distributed consensus, fault semantics, stochastic behavior, route behavior, recovery, publication, or a scientific result."
+    ]
+  },
+  "lifecycle": [
+    "I-5 authority drafting",
+    "independent authority audit",
+    "authority feature commit and push",
+    "independent authority integration",
+    "separate I-5 implementation",
+    "independent implementation audit and feature push",
+    "independent implementation integration",
+    "clean full framework discovery and I-5 evidence",
+    "only then I-6 authority"
+  ],
+  "lifecycle_rule": "No step authorizes its successor.",
+  "completion": {
+    "candidate_files": 5,
+    "tracked_files_modified": 0,
+    "implementation_materialized": false,
+    "tests_executed": false,
+    "framework_imported": false,
+    "model_state_advanced": false,
+    "scientific_execution": false,
+    "backend_accepted": false,
+    "publication_performed": false
+  }
+}

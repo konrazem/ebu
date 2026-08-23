@@ -1,0 +1,643 @@
+{
+  "manifest_id": "ebu-framework-i5-implementation-paths/1",
+  "manifest_version": "1.0.0",
+  "status": "PROSPECTIVE_CLOSED_PATH_AUTHORITY_IMPLEMENTATION_NOT_AUTHORIZED",
+  "authority": {
+    "base_head": "98b9dea874ca57e4ed5f8aaea1584514af0e3823",
+    "base_tree": "112db4b465ac77df52ccbbf655292083579e45a8",
+    "candidate_branch": "framework/i-5-event-durability-trace-authority",
+    "human_authority": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I5_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_i5_contract.json",
+    "predecessor_manifest": "unified_python_research_framework_i5_predecessor_manifest.json",
+    "implementation_authorized": false
+  },
+  "path_order": [
+    "src/ebu_framework/events.py",
+    "src/ebu_framework/ownership.py",
+    "src/ebu_framework/durability.py",
+    "src/ebu_framework/traces.py",
+    "src/ebu_framework/execution.py",
+    "src/ebu_framework/hashing.py",
+    "src/ebu_framework/faults.py",
+    "src/ebu_framework/errors.py",
+    "src/ebu_framework/__init__.py",
+    "tests/framework/test_event_ownership.py",
+    "tests/framework/test_inert_durability.py"
+  ],
+  "path_count": 11,
+  "new_count": 7,
+  "modified_count": 4,
+  "compatibility_test_modified_count": 0,
+  "compatibility_decision": {
+    "existing_compatibility_test_change_required": false,
+    "reason": "The accepted post-I-4 additive compatibility contract derives future inventories, so I-5 additions do not require editing any existing test.",
+    "existing_test_paths_authorized_for_change": []
+  },
+  "row_schema": [
+    "path",
+    "status",
+    "owner",
+    "purpose",
+    "expected_mode",
+    "allowed_declarations_or_assertions",
+    "expected_direct_imports",
+    "required_tests_or_authority_source",
+    "prohibited_behavior",
+    "reason_cannot_remain_unchanged",
+    "scientific_execution_absent",
+    "real_durability_backend_absent",
+    "predecessor"
+  ],
+  "rows": [
+    {
+      "path": "src/ebu_framework/events.py",
+      "status": "NEW",
+      "owner": "events",
+      "purpose": "Ten-phase constants, EventKey ordering, immutable event and phase-commit declarations.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "PhaseOrdinal",
+        "EventKey",
+        "EventDeclaration",
+        "PhaseCommitRecord",
+        "TraceCompleteness",
+        "order_event_keys",
+        "validate_event_declaration",
+        "validate_phase_commit_record"
+      ],
+      "expected_direct_imports": [
+        "actions",
+        "faults",
+        "primitives",
+        "identity",
+        "hashing",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_event_ownership.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The accepted package has no event-kernel module.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    },
+    {
+      "path": "src/ebu_framework/ownership.py",
+      "status": "NEW",
+      "owner": "ownership",
+      "purpose": "Epoch-wide physical update ownership and deterministic conflict detection.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "OwnershipKind",
+        "OpaqueLocusKey",
+        "UpdateOwnershipClaim",
+        "OwnershipConflict",
+        "EpochUpdateOwnership",
+        "OwnershipValidationRecord",
+        "build_epoch_update_ownership",
+        "validate_update_ownership"
+      ],
+      "expected_direct_imports": [
+        "events",
+        "state",
+        "identity",
+        "hashing",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_event_ownership.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The accepted package has no physical ownership partition module.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    },
+    {
+      "path": "src/ebu_framework/durability.py",
+      "status": "NEW",
+      "owner": "durability",
+      "purpose": "Abstract atomic grouping, typed outcomes, and prefix-preservation declarations.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "CommitOutcome",
+        "PolicyMemoryTransaction",
+        "PhysicalPhaseTransaction",
+        "AtomicStoreRequest",
+        "DurablePrefixEvidence",
+        "AtomicStoreRejection",
+        "AtomicStoreAmbiguity",
+        "AtomicStoreUnavailable",
+        "AtomicCommitOutcome",
+        "AtomicStore",
+        "PolicyDecisionStore",
+        "PhaseCommitStore",
+        "build_atomic_commit_request",
+        "classify_inert_commit_failure",
+        "validate_atomic_commit_outcome",
+        "validate_policy_memory_transaction",
+        "validate_durable_prefix"
+      ],
+      "expected_direct_imports": [
+        "events",
+        "ownership",
+        "policy",
+        "ledger",
+        "hashing",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_inert_durability.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The accepted package has no abstract durability transaction module.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    },
+    {
+      "path": "src/ebu_framework/traces.py",
+      "status": "NEW",
+      "owner": "traces",
+      "purpose": "Canonical inert rows, literal framed prefixes, completeness, reconstruction, and run-envelope declarations.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "TraceRowKind",
+        "TraceHeader",
+        "TraceFooter",
+        "CanonicalScientificTracePayloadV1",
+        "CanonicalTraceRow",
+        "TraceRowFrame",
+        "CanonicalTracePrefix",
+        "TraceExtensionEvidence",
+        "CompleteTraceEvidence",
+        "MinimumReconstructableTrace",
+        "RunTraceEnvelopeV1",
+        "TraceValidationStatus",
+        "TraceValidationResult",
+        "project_canonical_trace_row",
+        "frame_trace_row",
+        "build_trace_prefix",
+        "extend_trace_prefix",
+        "validate_complete_trace_evidence",
+        "build_minimum_reconstructable_trace",
+        "build_run_trace_envelope"
+      ],
+      "expected_direct_imports": [
+        "events",
+        "policy",
+        "state",
+        "experiment",
+        "artifacts",
+        "hashing",
+        "canonical",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_inert_durability.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The accepted package has no canonical trace/prefix module.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    },
+    {
+      "path": "src/ebu_framework/execution.py",
+      "status": "NEW",
+      "owner": "execution",
+      "purpose": "Prospective T3 signatures and fail-closed backend/lease guards only.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "ProposalRecord",
+        "ScreeningDisposition",
+        "ScreeningResult",
+        "PhaseCommitRequest",
+        "T3EntryGuard",
+        "ScientificExecutionLease",
+        "validate_t3_entry_guard",
+        "validate_scientific_execution_lease",
+        "begin_bound_scientific_execution",
+        "propose_phase_updates",
+        "screen_and_admit",
+        "propose_joint_transition",
+        "commit_phase_updates",
+        "advance_epoch"
+      ],
+      "expected_direct_imports": [
+        "authorization",
+        "authorization_use",
+        "capabilities",
+        "experiment",
+        "events",
+        "ownership",
+        "durability",
+        "traces",
+        "actions",
+        "state",
+        "policy",
+        "scheduling",
+        "faults",
+        "identity",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The accepted package has no explicit T3 entry boundary; static implementation must make it unreachable from validation.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    },
+    {
+      "path": "src/ebu_framework/hashing.py",
+      "status": "MODIFIED",
+      "owner": "hashing",
+      "purpose": "Append I-5 digest wrappers, framed hash domains, and exact digest callables.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "EventKeyDigest",
+        "EventDeclarationDigest",
+        "OwnershipDigest",
+        "PhaseCommitDigest",
+        "DurabilityEvidenceDigest",
+        "RunEnvelopeDigest",
+        "TraceDigest",
+        "compute_event_key_digest",
+        "compute_event_declaration_digest",
+        "compute_ownership_digest",
+        "compute_phase_commit_digest",
+        "compute_durability_evidence_digest",
+        "compute_run_envelope_digest"
+      ],
+      "expected_direct_imports": [
+        "canonical",
+        "errors",
+        "identity"
+      ],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_event_ownership.py",
+        "tests/framework/test_inert_durability.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "New I-5 identities require distinct frozen domains while preserving every accepted domain and signature.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": {
+        "mode": "100644",
+        "git_blob": "dff448f4dad0aab420553d548133cad206c1928f",
+        "byte_count": 30708,
+        "raw_sha256": "f34c15a8e7a91df864af9df28021474aaeeb3a3fa081a37d294c550f39d62755"
+      },
+      "preservation_rule": "All accepted declarations, signatures, order, behavior, and bytes outside the minimal append/insertion points remain semantically unchanged."
+    },
+    {
+      "path": "src/ebu_framework/faults.py",
+      "status": "MODIFIED",
+      "owner": "faults",
+      "purpose": "Append the inert all-NOT_APPLICABLE hook declaration and validator.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "FaultHookBoundary",
+        "validate_inert_fault_hook"
+      ],
+      "expected_direct_imports": [
+        "primitives",
+        "identity",
+        "envelopes",
+        "hashing",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_inert_durability.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "I-5 requires an explicit hook boundary that cannot deliver a fault kind.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": {
+        "mode": "100644",
+        "git_blob": "3aded2e1b639fad96db6dcc9c220ecfe57288653",
+        "byte_count": 12750,
+        "raw_sha256": "bfcb44b528e7ea3ad0c4e4997f08b21cb5ee739654d46f91a8f9062d55dabf5e"
+      },
+      "preservation_rule": "All accepted declarations, signatures, order, behavior, and bytes outside the minimal append/insertion points remain semantically unchanged."
+    },
+    {
+      "path": "src/ebu_framework/errors.py",
+      "status": "MODIFIED",
+      "owner": "errors",
+      "purpose": "Append 42 FailureCode members and necessary static failure mapping; preserve the already accepted FailureStage.I5 member.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "I5_RECORD_FORMATION_INVALID",
+        "PHASE_ORDINAL_INVALID",
+        "EVENT_KEY_INVALID",
+        "EVENT_KEY_DUPLICATE",
+        "EVENT_ORDER_INVALID",
+        "EVENT_IDENTITY_INVALID",
+        "PHASE_8_PHASE_9_DUPLICATE_IDENTIFIER",
+        "PHASE_PREDECESSOR_MISMATCH",
+        "PHASE_COMMIT_RECORD_INVALID",
+        "UPDATE_OWNERSHIP_CLAIM_INVALID",
+        "INFORMATIONAL_MEMORY_OWNERSHIP_FORBIDDEN",
+        "UPDATE_OWNERSHIP_CONFLICT",
+        "OWNERSHIP_ORDER_INVALID",
+        "PHASE_OWNERSHIP_MISMATCH",
+        "ATOMIC_COMMIT_REQUEST_INVALID",
+        "EXPECTED_TRACE_PREFIX_MISMATCH",
+        "COMMIT_REJECTED",
+        "COMMIT_AMBIGUOUS",
+        "DURABILITY_UNAVAILABLE",
+        "DURABILITY_EVIDENCE_MISSING",
+        "DURABILITY_EVIDENCE_INCONSISTENT",
+        "POLICY_MEMORY_TRANSACTION_INVALID",
+        "PHYSICAL_PHASE_TRANSACTION_INVALID",
+        "TRACE_ROW_INVALID",
+        "TRACE_ROW_PREDECESSOR_MISMATCH",
+        "TRACE_ROW_GAP",
+        "TRACE_PREFIX_INVALID",
+        "TRACE_PREFIX_NOT_LITERAL",
+        "TRACE_PREFIX_MUTATION_FORBIDDEN",
+        "TRACE_EXTENSION_IDENTITY_INVALID",
+        "TRACE_COMPLETENESS_INVALID",
+        "TRACE_EQUIVOCAL",
+        "TRACE_EVIDENCE_MISSING",
+        "MINIMUM_TRACE_INCOMPLETE",
+        "RUN_TRACE_ENVELOPE_INVALID",
+        "SCIENTIFIC_EXECUTION_LEASE_INVALID",
+        "T3_ENTRY_GUARD_FAILED",
+        "REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        "EXECUTION_CALLBACK_FORBIDDEN",
+        "SCIENTIFIC_STATE_ADVANCE_FORBIDDEN",
+        "I5_HASH_COLLISION",
+        "FAULT_HOOK_INVALID"
+      ],
+      "expected_direct_imports": [],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_event_ownership.py",
+        "tests/framework/test_inert_durability.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The exact I-5 failures do not exist in the accepted 185-code surface.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": {
+        "mode": "100644",
+        "git_blob": "8e11452d406a2064de7d50a619adebedec740603",
+        "byte_count": 41050,
+        "raw_sha256": "65507d7cc42e30fa092c830e39919a330c3c81837d52e00ce08f5c0d7342221a"
+      },
+      "preservation_rule": "All accepted declarations, signatures, order, behavior, and bytes outside the minimal append/insertion points remain semantically unchanged."
+    },
+    {
+      "path": "src/ebu_framework/__init__.py",
+      "status": "MODIFIED",
+      "owner": "root_exports",
+      "purpose": "Append exactly 82 I-5 root exports after the accepted 309-name prefix.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [
+        "EventKeyDigest",
+        "EventDeclarationDigest",
+        "OwnershipDigest",
+        "PhaseCommitDigest",
+        "DurabilityEvidenceDigest",
+        "RunEnvelopeDigest",
+        "TraceDigest",
+        "PhaseOrdinal",
+        "EventKey",
+        "EventDeclaration",
+        "PhaseCommitRecord",
+        "TraceCompleteness",
+        "OwnershipKind",
+        "OpaqueLocusKey",
+        "UpdateOwnershipClaim",
+        "OwnershipConflict",
+        "EpochUpdateOwnership",
+        "OwnershipValidationRecord",
+        "CommitOutcome",
+        "PolicyMemoryTransaction",
+        "PhysicalPhaseTransaction",
+        "AtomicStoreRequest",
+        "DurablePrefixEvidence",
+        "AtomicStoreRejection",
+        "AtomicStoreAmbiguity",
+        "AtomicStoreUnavailable",
+        "AtomicCommitOutcome",
+        "AtomicStore",
+        "PolicyDecisionStore",
+        "PhaseCommitStore",
+        "TraceRowKind",
+        "TraceHeader",
+        "TraceFooter",
+        "CanonicalScientificTracePayloadV1",
+        "CanonicalTraceRow",
+        "TraceRowFrame",
+        "CanonicalTracePrefix",
+        "TraceExtensionEvidence",
+        "CompleteTraceEvidence",
+        "MinimumReconstructableTrace",
+        "RunTraceEnvelopeV1",
+        "TraceValidationStatus",
+        "TraceValidationResult",
+        "ProposalRecord",
+        "ScreeningDisposition",
+        "ScreeningResult",
+        "PhaseCommitRequest",
+        "T3EntryGuard",
+        "ScientificExecutionLease",
+        "FaultHookBoundary",
+        "compute_event_key_digest",
+        "compute_event_declaration_digest",
+        "compute_ownership_digest",
+        "compute_phase_commit_digest",
+        "compute_durability_evidence_digest",
+        "compute_run_envelope_digest",
+        "order_event_keys",
+        "validate_event_declaration",
+        "validate_phase_commit_record",
+        "build_epoch_update_ownership",
+        "validate_update_ownership",
+        "build_atomic_commit_request",
+        "classify_inert_commit_failure",
+        "validate_atomic_commit_outcome",
+        "validate_policy_memory_transaction",
+        "validate_durable_prefix",
+        "project_canonical_trace_row",
+        "frame_trace_row",
+        "build_trace_prefix",
+        "extend_trace_prefix",
+        "validate_complete_trace_evidence",
+        "build_minimum_reconstructable_trace",
+        "build_run_trace_envelope",
+        "validate_inert_fault_hook",
+        "validate_t3_entry_guard",
+        "validate_scientific_execution_lease",
+        "begin_bound_scientific_execution",
+        "propose_phase_updates",
+        "screen_and_admit",
+        "propose_joint_transition",
+        "commit_phase_updates",
+        "advance_epoch"
+      ],
+      "expected_direct_imports": [],
+      "required_tests_or_authority_source": [
+        "tests/framework/test_event_ownership.py",
+        "tests/framework/test_inert_durability.py"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "The closed I-5 public surface must be exported without changing the accepted prefix.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": {
+        "mode": "100644",
+        "git_blob": "2605f8c73e4b3dec83c5e27ab07d235cd0bb6a4c",
+        "byte_count": 18185,
+        "raw_sha256": "9c41796fc9a0a4e4bbb32b6d69a2fd7b520f0ed02ba60f86d3757d5798dbc7bb"
+      },
+      "preservation_rule": "All accepted declarations, signatures, order, behavior, and bytes outside the minimal append/insertion points remain semantically unchanged."
+    },
+    {
+      "path": "tests/framework/test_event_ownership.py",
+      "status": "NEW",
+      "owner": "V6_validation",
+      "purpose": "Materialize V6 event/order/ownership vectors and static no-effect assertions.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [],
+      "expected_direct_imports": [
+        "events",
+        "ownership",
+        "hashing",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "unified_python_research_framework_i5_validation_contract.json"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "No accepted test owns the closed V6 I-5 vector inventory.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    },
+    {
+      "path": "tests/framework/test_inert_durability.py",
+      "status": "NEW",
+      "owner": "V7_V11_validation",
+      "purpose": "Materialize inert V7 durability/trace/fault vectors and V11 AST reachability evidence without importing execution.",
+      "expected_mode": "100644",
+      "allowed_declarations_or_assertions": [],
+      "expected_direct_imports": [
+        "durability",
+        "traces",
+        "faults",
+        "hashing",
+        "errors"
+      ],
+      "required_tests_or_authority_source": [
+        "unified_python_research_framework_i5_validation_contract.json"
+      ],
+      "prohibited_behavior": [
+        "scientific callback or policy invocation",
+        "scientific state/model advance",
+        "runner, trajectory, schedule, world, Gate, finalizer, recovery, publication, or fault delivery",
+        "network, subprocess, entropy, dynamic import, production bootstrap, hidden backend, or new dependency",
+        "real durability or crash-safety claim"
+      ],
+      "reason_cannot_remain_unchanged": "No accepted test owns the closed V7/V11 I-5 vector inventory.",
+      "scientific_execution_absent": true,
+      "real_durability_backend_absent": true,
+      "predecessor": "ABSENT"
+    }
+  ],
+  "closure_rules": [
+    "No path outside path_order may change or appear during later implementation without new authority.",
+    "Tests consume vectors embedded in the validation contract; no fixture is authorized.",
+    "Validation modules must not import execution; execution must not import validation.",
+    "The execution module may only materialize declarations and unconditional fail-closed prerequisites under I-5.",
+    "No dependencies, backend files, configuration, databases, caches, build outputs, or generated evidence paths are authorized."
+  ],
+  "later_audit_and_integration": [
+    "verify predecessor HEAD/tree and every preserved path",
+    "review complete implementation diff against every row",
+    "strictly reconstruct failures, exports, signatures, hash vectors, and import graphs",
+    "run separately authorized I-5 V6/V7/V11 evidence and clean full discovery",
+    "independent implementation audit and feature push",
+    "independent implementation integration",
+    "only then clean full framework discovery and I-5 evidence"
+  ],
+  "lifecycle": [
+    "I-5 authority drafting",
+    "independent authority audit",
+    "authority feature commit and push",
+    "independent authority integration",
+    "separate I-5 implementation",
+    "independent implementation audit and feature push",
+    "independent implementation integration",
+    "clean full framework discovery and I-5 evidence",
+    "only then I-6 authority"
+  ],
+  "lifecycle_rule": "No step authorizes its successor. This manifest itself authorizes no implementation, tests, commit, push, integration, execution, backend, or publication.",
+  "nonclaims": [
+    "The records do not prove physical correctness, existence or uniqueness of dynamics, optimality, causality, settlement fairness, empirical validity, production durability, real-backend crash safety, distributed consensus, fault semantics, stochastic behavior, route behavior, recovery, publication, or a scientific result."
+  ]
+}
