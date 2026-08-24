@@ -3688,5 +3688,334 @@
       "COUNTEREXAMPLE": 28
     }
   },
+  "canonical_topology_motif_programme": {
+    "programme_version": "1.0.0",
+    "status": "PROSPECTIVE_REPLACEMENT_AND_CONSOLIDATION_NO_BOOK_EDIT_AUTHORIZED",
+    "authority": {
+      "accepted_predecessor_commit": "72183037b00930a766f0f0f613d8689bdfd82e8e",
+      "accepted_predecessor_tree": "74ca6cc46b77bc1c13a3b1d2e736e0a56f246188",
+      "human_authority": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+      "mechanical_contract": "canonical_topology_motif_programme_contract.json",
+      "validation_contract": "canonical_topology_motif_programme_validation_contract.json",
+      "predecessor_manifest": "canonical_topology_motif_programme_predecessor_manifest.json",
+      "open_problem_register": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+      "future_books_register": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "book_editing_authorized": false,
+      "rendering_authorized": false,
+      "manuscript_or_pdf_created": false
+    },
+    "editorial_mode": "REPLACEMENT_AND_CONSOLIDATION_NOT_ADDITIVE",
+    "preserved_spine": [
+      "V",
+      "mu=grad V",
+      "f_e",
+      "Psi_e",
+      "J_e",
+      "G_T",
+      "finite EBU"
+    ],
+    "current_parts_i_iii_new_standalone_topology_chapter_count": 0,
+    "chapter_replacements": [
+      {
+        "part": "I",
+        "chapter": "16",
+        "action": "REPLACE_AND_CONSOLIDATE",
+        "treatment": "Shared-source and parallel action explanation.",
+        "merged_from": [
+          "Part I Chapter 24 overlapping practice"
+        ]
+      },
+      {
+        "part": "I",
+        "chapter": "17",
+        "action": "REWRITE_IN_PLACE",
+        "treatment": "Retain route and Bellman reasoning; replace Fermat and wave content with dependency-DAG and recursive-reuse intuition.",
+        "removed_concepts": [
+          "Fermat analogy",
+          "physical-wave treatment"
+        ]
+      },
+      {
+        "part": "I",
+        "chapter": "24",
+        "action": "MERGE",
+        "treatment": "Merge overlapping parallel-action practice into Chapter 16; do not retain a duplicate teaching unit."
+      },
+      {
+        "part": "I",
+        "chapter": "26",
+        "action": "SYNCHRONIZE",
+        "treatment": "Synchronize terminology, dependency-DAG intuition, recursive reuse, and nonclaims with Chapters 16 and 17."
+      },
+      {
+        "part": "II",
+        "chapter": "37",
+        "action": "REPLACE",
+        "treatment": "Atomic and parallel interaction calculus with nonzero empty baseline, Boolean Mobius coefficients, hyperedges, shared factors, commutators, structural and active topology, and recursive boundary equivalence."
+      },
+      {
+        "part": "II",
+        "chapter": "42",
+        "action": "REWRITE_IN_PLACE",
+        "treatment": "Retain route and dynamic-programming reasoning and remove wave content."
+      },
+      {
+        "part": "II",
+        "chapter": "43",
+        "action": "REWRITE_IN_PLACE",
+        "treatment": "Use complete history-wide boundary equivalence rather than snapshot or endpoint equivalence."
+      },
+      {
+        "part": "III",
+        "chapter": "47",
+        "action": "REGENERATE_UNDER_SEPARATE_BOOK_AUTHORITY",
+        "treatment": "Synchronize against accepted D1, D2, I-3C, I-4, and I-5 while preserving D0-O14 history."
+      },
+      {
+        "part": "III",
+        "chapter": "51",
+        "action": "REWRITE_IN_PLACE",
+        "treatment": "Separate lifecycle, institutional share, causality, residual, and settlement."
+      },
+      {
+        "part": "III",
+        "chapter": "62",
+        "action": "REPLACE",
+        "treatment": "Replace obsolete O3/O5/framework roadmap with the accepted post-atomic and topology/motif boundaries."
+      }
+    ],
+    "future_allocation": {
+      "principal_unit": {
+        "title": "Canonical Motifs, Topology Benchmarks, and Recursive Reuse",
+        "owning_part": "VI",
+        "placement": "After sequential-parallel and higher-order interaction foundations.",
+        "required_content": [
+          "canonical equivalence",
+          "five-layer topology",
+          "identity/performance separation",
+          "recursive encapsulation",
+          "exact Fibonacci occurrence count",
+          "A1-A8 conditional compression",
+          "polynomial size/cost bound",
+          "recursive surplus J_n",
+          "raw Boolean correction locality including the empty-set case",
+          "normalized equality with raw coefficients on nonempty subsets",
+          "arbitrary black-box lower bound",
+          "negative controls"
+        ]
+      },
+      "proof_appendix": [
+        "canonical and isomorphism proof",
+        "finite poset enumeration",
+        "raw Boolean and prospective feasible-poset Mobius proofs, plus the normalized nonempty identity",
+        "recursive compression proof",
+        "explicit size and cost assumptions",
+        "dependency invalidation and upward-cone proof",
+        "arbitrary black-box lower bound",
+        "negative controls"
+      ],
+      "part_viii": "Short cross-reference only for active topology and geometry.",
+      "atlas": "Separate versioned nonnormative research companion."
+    },
+    "theorem_and_claim_trace": [
+      {
+        "claim_id": "CTMP-AM-01",
+        "classification": "ACCEPTED_MATHEMATICS",
+        "claim": "Canonical minimum is invariant under allowed relabeling.",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-CT-02",
+        "classification": "CONDITIONAL_THEOREM",
+        "claim": "Equal canonical bytes characterize colored layered isomorphism under a faithful normalized encoding.",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-AM-03",
+        "classification": "ACCEPTED_MATHEMATICS",
+        "claim": "The declared ordered recursive family has N(M_n)=F_{n+1}.",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-CT-04",
+        "classification": "CONDITIONAL_THEOREM",
+        "claim": "A1-A8 and bounded summary/composition cost give O(n) level work after bases.",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-CT-05",
+        "classification": "CONDITIONAL_THEOREM",
+        "claim": "Polynomial summary and composition cost give T(n)=O(n^{dp+1}).",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-AM-06",
+        "classification": "ACCEPTED_MATHEMATICS",
+        "claim": "Under unchanged F13, a raw Boolean subset correction changes exactly its algebraic upward cone on every subset including empty; normalized coefficients equal raw coefficients on nonempty subsets and use I_norm(empty)=0 by convention.",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-EH-07",
+        "classification": "EMPIRICAL_HYPOTHESIS",
+        "claim": "Recursive surplus J_n requires a future common-protocol measurement.",
+        "book_owner": "Part VI after accepted evidence"
+      },
+      {
+        "claim_id": "CTMP-AM-08",
+        "classification": "ACCEPTED_MATHEMATICS",
+        "claim": "Every entry is necessary for exact worst-case reconstruction of an arbitrary black-box subset table.",
+        "book_owner": "Part VI and proof appendix"
+      },
+      {
+        "claim_id": "CTMP-FO-13",
+        "classification": "FINITE_OBSERVATION",
+        "claim": "Strict-poset enumeration gives labeled/unlabeled counts 3/2, 19/5, and 219/16 for n=2,3,4.",
+        "book_owner": "Proof appendix and nonnormative atlas only"
+      },
+      {
+        "claim_id": "CTMP-FO-14",
+        "classification": "FINITE_OBSERVATION",
+        "claim": "The unweighted three-action pair/triple support schema has eight isomorphism classes.",
+        "book_owner": "Proof appendix and nonnormative atlas only"
+      }
+    ],
+    "feature_teaching_required_fields": [
+      "feature",
+      "problem",
+      "capability",
+      "life_example",
+      "equation_or_proof",
+      "spine_connection",
+      "declaration_requirements",
+      "adjacent_limit"
+    ],
+    "feature_teaching_records": [
+      {
+        "feature": "Layered topology",
+        "problem": "One graph can silently mix prerequisites, shared factors, order, interaction, and boundaries.",
+        "capability": "Keeps five kinds of relation typed and auditable.",
+        "life_example": "A clinic route can distinguish a required refrigeration step, a shared warehouse, delivery order, joint capacity effects, and the hospital boundary.",
+        "equation_or_proof": "Theta=(P,C,O,H,B).",
+        "spine_connection": "The layers declare the structure around actions evaluated by finite EBU without changing the V-to-EBU derivation.",
+        "declaration_requirements": "Typed vertices, colors, layer-specific relations, versions, and provenance.",
+        "adjacent_limit": "A layer records declared structure, not measured performance or causality."
+      },
+      {
+        "feature": "Canonical equivalence",
+        "problem": "The same structure can receive different local names.",
+        "capability": "Produces one stable identity under allowed relabeling.",
+        "life_example": "Two hospitals can describe the same three-role supply motif with different local record IDs.",
+        "equation_or_proof": "Can_v(Theta)=min over allowed permutations of Serialize_v(pi Theta).",
+        "spine_connection": "Canonical identity makes declarations reusable around the unchanged finite EBU calculation.",
+        "declaration_requirements": "Faithful schema, colors, layer preservation, version, exhaustive supported bound, and digest domain.",
+        "adjacent_limit": "Equal identity does not imply equal EBU, service, robustness, or fairness."
+      },
+      {
+        "feature": "Identity/performance separation",
+        "problem": "A structural label can be mistaken for a score.",
+        "capability": "Allows comparison without contaminating identity with outcomes.",
+        "life_example": "Two identical warehouse layouts can perform differently because their stocks and histories differ.",
+        "equation_or_proof": "Canonical bytes exclude measured EBU and result fields.",
+        "spine_connection": "Performance still comes from finite EBU after the complete state and history are declared.",
+        "declaration_requirements": "Separate topology and benchmark/result references.",
+        "adjacent_limit": "Topology identity never certifies a benefit."
+      },
+      {
+        "feature": "Fibonacci motif family",
+        "problem": "Repeated definitions and expanded occurrences are easily conflated.",
+        "capability": "Gives the first exact recursive worked family with distinct definition and occurrence identities.",
+        "life_example": "A reusable service package combines the previous two package levels while every delivered occurrence remains individually traceable.",
+        "equation_or_proof": "M_{n+1}=C(M_n,M_{n-1}); N(M_n)=F_{n+1}.",
+        "spine_connection": "Each occurrence can still contain actions whose burden follows the preserved generator-to-EBU spine.",
+        "declaration_requirements": "Two immutable bases, ordered child roles, composition version, and occurrence identity rule.",
+        "adjacent_limit": "Fibonacci is not a universal law and visual similarity is not evidence."
+      },
+      {
+        "feature": "Certified recursive boundary compression",
+        "problem": "Expanding every occurrence repeats work when an exact sufficient boundary exists.",
+        "capability": "Reuses two certified summaries to derive the next level.",
+        "life_example": "A nested care network can reuse a certified interface summary instead of reopening every internal appointment for a declared external query.",
+        "equation_or_proof": "B_{n+1}=Phi(B_n,B_{n-1}) under A1-A8.",
+        "spine_connection": "The summary must preserve every externally relevant input to finite EBU and its accounts.",
+        "declaration_requirements": "All A1-A8 evidence, query domain, state, history, horizon, boundary, interactions, and provenance.",
+        "adjacent_limit": "Hidden queues, commitments, factors, losses, or history reopen the interior."
+      },
+      {
+        "feature": "Polynomial cost statement",
+        "problem": "A linear number of levels can hide growing summary or composition work.",
+        "capability": "States size and cost assumptions beside the compression claim.",
+        "life_example": "A regional planner can distinguish a compact interface from one whose report grows with every internal facility.",
+        "equation_or_proof": "If s_k=O(k^d) and Phi costs O((s_k+s_{k-1})^p), then T(n)=O(n^{dp+1}).",
+        "spine_connection": "Cost accounting is about evaluation work, not a change to the EBU equation.",
+        "declaration_requirements": "Measured or proved summary size, composition cost, output size, and query coverage.",
+        "adjacent_limit": "Growth in the expanded occurrence count removes the claimed compression."
+      },
+      {
+        "feature": "Raw and normalized Boolean Mobius correction locality",
+        "problem": "A corrected subset value can silently leave stale higher-order coefficients.",
+        "capability": "Identifies the exact raw algebraic upward cone and keeps the normalized empty convention distinct from the F13 raw empty coefficient.",
+        "life_example": "Correcting a measured pair updates that pair and every larger coalition containing it; correcting a nonzero waiting baseline alternates across every nonempty order.",
+        "equation_or_proof": "I_raw(S)=sum_{T subseteq S}(-1)^(|S|-|T|)E(T), including I_raw(empty)=E(empty). Delta I_raw(S)=(-1)^(|S|-|Q|)delta on Q's upward cone. I_norm(empty)=0, and the alternating subset sum proves I_norm(S)=I_raw(S) for nonempty S.",
+        "spine_connection": "Subset values remain finite EBU comparisons with an explicit empty baseline.",
+        "declaration_requirements": "Complete Boolean subset domain, removal semantics, explicit possibly nonzero empty baseline, raw-versus-normalized transform name, and correction identity.",
+        "adjacent_limit": "Operational caches may require wider revalidation when boundary or evidence meaning changes."
+      },
+      {
+        "feature": "Recursive surplus",
+        "problem": "A larger recursive motif can differ from the sum of its two declared children.",
+        "capability": "Makes the difference a same-protocol empirical question.",
+        "life_example": "Two cooperating service teams may jointly remove more or less burden than their separately normalized contributions.",
+        "equation_or_proof": "R_n=E(M_n)-E(empty); J_n=R_{n+1}-R_n-R_{n-1}.",
+        "spine_connection": "Each E value is measured by the unchanged finite EBU spine under a common protocol.",
+        "declaration_requirements": "Common state, history, boundary, horizon, feasibility, losses, accounts, commitments, and settlement semantics.",
+        "adjacent_limit": "The sign is unobserved here and does not prove causality or fairness."
+      },
+      {
+        "feature": "Arbitrary black-box lower bound",
+        "problem": "A compression claim can hide an unmeasured subset.",
+        "capability": "Shows why declared structure is the information that makes compression possible.",
+        "life_example": "If one coalition was never tested, its result can differ while every recorded experiment stays unchanged.",
+        "equation_or_proof": "Changing unqueried E(Q) by delta changes every raw Mobius coefficient I_raw(S) on Q's upward cone, including the empty coefficient when Q is empty.",
+        "spine_connection": "The theorem constrains how many finite EBU subset values an arbitrary table requires.",
+        "declaration_requirements": "Exact query transcript, arbitrary-table premise, and nonzero witness delta.",
+        "adjacent_limit": "The bound does not forbid compression under proved topology, feasibility, factorization, or sufficient boundaries."
+      },
+      {
+        "feature": "Domain responsibility cycle",
+        "problem": "A generic framework cannot infer which real relations are meaningful.",
+        "capability": "Lets domain experts refine declared structure through repeated measurement.",
+        "life_example": "A hospital declares shared capacity, measures outcomes, corrects the boundary, measures again, and only then certifies a reusable motif.",
+        "equation_or_proof": "declare -> measure EBU -> refine -> measure again -> certified recursive structure.",
+        "spine_connection": "Every measurement still uses the accepted generator-to-finite-EBU foundation.",
+        "declaration_requirements": "Domain evidence, type, completeness, versions, provenance, and frozen-protocol consistency.",
+        "adjacent_limit": "The cycle proves no universal benefit, causality, fairness, or social sufficiency."
+      }
+    ],
+    "excluded_concepts": [
+      "electrical voltage as EBU",
+      "physical-wave programme",
+      "physical phase-interference programme",
+      "superposition as an EBU law",
+      "Fermat-wave restoration"
+    ],
+    "fibonacci_rule": "First exact recursive worked family; not universal and not inferred from visual similarity.",
+    "i6_noninterference": {
+      "bridge_version": "0.2",
+      "topology_prerequisite": false,
+      "topology_blocker": false,
+      "scope_expansion": false
+    },
+    "completion_checks": {
+      "chapter_replacement_record_count": 10,
+      "theorem_and_claim_trace_count": 10,
+      "feature_teaching_record_count": 10,
+      "required_feature_field_count": 8,
+      "current_parts_i_iii_new_standalone_topology_chapter_count": 0,
+      "manuscript_or_pdf_created": false,
+      "book_revision_begun": false,
+      "independent_book_revision_authority_required": true
+    },
+    "completion_marker": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_BOOK_TRACEABILITY_SYNCHRONIZED"
+  },
   "completion_marker": "ATOMIC_GENERATOR_BOOK_TRACEABILITY_MANIFEST_READY"
 }

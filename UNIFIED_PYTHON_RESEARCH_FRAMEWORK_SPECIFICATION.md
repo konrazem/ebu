@@ -6276,3 +6276,202 @@ Historical validation v1.0.1 changed 227 vectors and preserved 317 relative to v
 There is no universal zero-residual rule or hidden tolerance. Exact expected residual may be nonzero. I-3 declares but does not compute conservation residuals, measurements, routes, causal contributions, settlement allocations, traces, or results. Physical state, policy memory, causal attribution, and settlement remain distinct. Residual behavior is I-5, Bridge behavior I-6, Dynamic behavior I-7, and finalization/publication behavior I-8.
 
 The review decomposition and exclusive path inventories are those in §22.2. The prerequisite authority was independently accepted before I-3A began; I-3A, I-3B, and I-3C are accepted and integrated, and the separate one-time regression-compatibility repair is accepted and integrated. Their historical validation evidence remains complete and their bytes remain frozen. This authority correction begins no I-3D implementation, framework execution, scientific execution, model-state advance, or later stage.
+
+## 23. Prospective Canonical Topology / Motif Programme synchronization
+
+This section is prospective documentation authority at accepted predecessor
+commit 72183037b00930a766f0f0f613d8689bdfd82e8e, tree
+74ca6cc46b77bc1c13a3b1d2e736e0a56f246188. Its normative human source is
+CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md; its mechanical sources are
+canonical_topology_motif_programme_contract.json and
+canonical_topology_motif_programme_validation_contract.json. It implements
+nothing and changes no accepted I-1–I-6 behavior.
+
+### 23.1 Responsibility partition
+
+The layered structural declaration is
+
+\[
+\Theta=(P,\mathcal C,\mathcal O,\mathcal H,\mathcal B),
+\]
+
+where the layers respectively own prerequisite/admissibility, shared-factor
+incidence, order/concurrency/commutation evidence, pair/higher-order structural
+support, and parent/port/boundary/dependency relations. Local vertex names may
+be permuted. Semantic types, roles, units, versions, factor kinds, ordered
+child roles, port meanings, and protocol digests remain colors.
+
+The canonical minimum is
+
+\[
+\operatorname{Can}_v(\Theta)=
+\min_{\pi\in S_n}\operatorname{Serialize}_v(\pi\Theta).
+\]
+
+I-1 responsibility owns the versioned canonical byte grammar, digest domain,
+length framing, and dedicated CanonicalTopologyId. Future Stage A uses an
+exhaustive lexicographic permutation algorithm for exactly \(0\le n\le8\) and
+must emit CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED without an identity above that
+bound. The bound is an implementation safety choice, not a scalability claim.
+
+I-3 responsibility owns only inert typed structural records:
+LayeredTopologyDeclaration, CanonicalTopologyWitness,
+RecursiveMotifDeclaration, CertifiedBoundarySummaryDeclaration, and static
+envelope shapes for TopologyBenchmarkDeclaration and
+TopologyBenchmarkResult. These records reference accepted declarations and do
+not copy or reinterpret their scientific meaning. I-4 owns any later
+capability gate. I-5 owns any separately authorized event, provenance,
+dependency, correction, and durability integration. I-6 remains exactly the
+Bridge v0.2 adapter and is neither changed nor blocked.
+
+Canonical structural identity excludes measured EBU, feasibility, service,
+interaction value, robustness, causality, settlement, fairness, and social
+value. Equal canonical bytes characterize color- and layer-preserving
+isomorphism only under the faithful normalized schema; a generic object digest
+does not supply that proof.
+
+### 23.2 Recursive declaration boundary
+
+For immutable bases and an ordered composition rule,
+
+\[
+M_{n+1}=C(M_n,M_{n-1}),\qquad N(M_n)=F_{n+1}.
+\]
+
+This is an exact count for the declared family, not a general EBU recurrence.
+Boundary-summary reuse is conditional:
+
+\[
+B_{n+1}=\Phi(B_n,B_{n-1})
+\]
+
+requires all A1–A8 obligations frozen in the companion contract: immutable
+versioned identity; query sufficiency; complete composition; no hidden
+cross-boundary relation; complete interaction preservation; complete future
+key separation; dependency/alias/correction/invalidation closure; and
+history-wide boundary equivalence. Under uniformly bounded summaries and
+composition the work is \(O(n)\) after the bases. If
+\(s_k=O(k^d)\) and composition costs
+\(O((s_k+s_{k-1})^p)\), the conditional bound is
+\(T(n)=O(n^{dp+1})\), subject to output size.
+
+Canonical equivalence, feasible-poset restriction, proven sparse hypergraph
+support, structural additivity, recursive boundary compression, and Boolean
+correction locality are six different capabilities. None may substitute for
+another.
+
+For Boolean subset values, unchanged Atomic F13 defines the raw coefficient on
+every subset, including the empty set,
+
+\[
+I_{\mathrm{raw}}(S)=
+\sum_{T\subseteq S}(-1)^{|S|-|T|}E(T),
+\qquad I_{\mathrm{raw}}(\varnothing)=E(\varnothing).
+\]
+
+No zero empty baseline is assumed. A correction of any raw \(E(Q)\) by
+\(\delta\), including \(Q=\varnothing\), changes
+
+\[
+\Delta I_{\mathrm{raw}}(S)=
+\begin{cases}
+(-1)^{|S|-|Q|}\delta,&Q\subseteq S,\\
+0,&Q\nsubseteq S.
+\end{cases}
+\]
+
+This includes
+\(\Delta I_{\mathrm{raw}}(\varnothing)=\delta\) when
+\(Q=S=\varnothing\). If normalization is used, it has the separately named
+convention
+
+\[
+\widetilde E(S)=E(S)-E(\varnothing),\qquad
+I_{\mathrm{norm}}(\varnothing)=0,
+\]
+
+and the alternating subset sum proves
+\(I_{\mathrm{norm}}(S)=I_{\mathrm{raw}}(S)\) for every nonempty \(S\).
+Therefore changing \(E(\varnothing)\) by \(\delta\) changes both transforms
+at every nonempty \(S\) by \((-1)^{|S|}\delta\), while their empty
+coefficients remain deliberately different. The frozen static witnesses
+include a nonzero-baseline pair and a pure three-way coefficient with zero
+pair coefficients.
+
+This is algebraic locality, not an operational cache authorization. For an
+arbitrary \(N\)-action black-box table, fewer than \(2^N\) queries leave an
+unqueried \(Q\); changing only that entry preserves the complete observed
+transcript while changing every coefficient in its upward cone. Therefore
+every arbitrary entry is necessary absent declared structure.
+
+The separately measured recursive quantity is
+
+\[
+R_n=E(M_n)-E(\varnothing),\qquad
+J_n=R_{n+1}-R_n-R_{n-1}.
+\]
+
+No value or sign of \(J_n\) is observed or predicted here.
+
+### 23.3 Stage boundaries and exact prospective paths
+
+Future Stage A requires separate implementation authority. It may create:
+
+- src/ebu_framework/topology.py;
+- tests/framework/fixtures/canonical_topology_v1.json; and
+- tests/framework/test_canonical_topology.py.
+
+It may make only tightly scoped changes to:
+
+- src/ebu_framework/identity.py;
+- src/ebu_framework/hashing.py;
+- src/ebu_framework/errors.py; and
+- src/ebu_framework/__init__.py.
+
+Its compatibility suite must explicitly include
+tests/framework/test_primitives_envelopes.py,
+tests/framework/test_i3_integration.py,
+tests/framework/test_i3a_declarations.py,
+tests/framework/test_i3b_declarations.py,
+tests/framework/test_i3c_declarations.py,
+tests/framework/test_i3d_declarations.py,
+tests/framework/test_atomic_declarations.py, and
+tests/framework/test_interaction_declarations.py.
+
+Stage A is static and inert. It may parse, validate, canonicalize, hash, and
+compare declarations and static fixtures. It may not infer topology, calculate
+scientific EBU, call transitions or runners, optimize, benchmark, cache
+results, materialize a result, or execute a scientific model.
+
+Only a separately authorized Stage B may create a production-independent
+research/topology/ area for full/compressed finite calculations, enumeration,
+Fibonacci/Lucas/chain/tree/balanced/random-recursive/perturbed-substitution
+controls, boundary negatives, correction/invalidation studies, and a
+nonnormative atlas. Protocol, plan, execution, result, and publication
+authorities remain separate.
+
+Stage C is unavailable. No committed runtime-cache path is named. Concrete
+query-domain sufficiency, dependency and alias closure, correction and
+invalidation, history-wide equivalence, interaction preservation, performance,
+audit, durability, recovery, correction, and publication must be fixed before
+any future runtime-reuse authority.
+
+### 23.4 Domain and I-6 noninterference
+
+Providers, institutions, and scientific domain authorities declare and
+measure meaningful relations. EBU validates their type, completeness claim,
+version, provenance, and consistent frozen-protocol use; it does not make
+universal topology identification an EBU responsibility. The positive cycle
+is declare → measure EBU → refine → measure again → certified recursive
+structure. It supports testable cooperation and synergy questions but proves
+no causality, fairness, universal benefit, or social sufficiency.
+
+Canonical topology is neither prerequisite nor blocker for I-6. No topology
+benchmark, Fibonacci primitive, inference, cache behavior, type, validator,
+fixture, failure code, or path enters I-6. Later Stage B may reference
+separately authorized I-6 evidence without changing Bridge v0.2.
+
+The excluded voltage, wave, phase-interference, and superposition concepts
+remain excluded. This synchronization authorizes no implementation, test
+execution, benchmark, model-state advance, result, manuscript/PDF change,
+atlas, commit, push, or publication.
