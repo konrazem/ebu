@@ -354,6 +354,78 @@ def validate_fault_schedule_boundary(schedule: FaultScheduleV1, /) -> None:
     return None
 
 
+def _i5_fault_failure(code: FailureCode, interface: str) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I5,
+        interface_ref=FailureInterfaceRef(
+            "ebu_framework.faults", interface, "1.0.0"
+        ),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _i5_strict_formation(cls: type) -> type:
+    generated_init = cls.__init__
+
+    def strict_init(self: object, *args: object, **kwargs: object) -> None:
+        expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
+        if args or set(kwargs) != expected_fields:
+            _i5_fault_failure(FailureCode.I5_RECORD_FORMATION_INVALID, cls.__name__)
+        generated_init(self, **kwargs)
+
+    strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
+    cls.__init__ = strict_init  # type: ignore[method-assign]
+    return cls
+
+
+@_i5_strict_formation
+@dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class FaultHookBoundary:
+    applicability: Applicability
+    fault_schedule_ref: ObjectRef | Applicability
+    delivery_ref: ObjectRef | Applicability
+
+
+def _reject_fault_delivery(hook: FaultHookBoundary, /) -> None:
+    _i5_fault_failure(
+        FailureCode.FAULT_EXTENSION_UNAVAILABLE,
+        "validate_inert_fault_hook",
+    )
+
+
+def validate_inert_fault_hook(hook: FaultHookBoundary, /) -> None:
+    interface = "validate_inert_fault_hook"
+    if not (
+        type(hook) is FaultHookBoundary
+        and type(hook.applicability) is Applicability
+        and (
+            type(hook.fault_schedule_ref) is ObjectRef
+            or hook.fault_schedule_ref is Applicability.NOT_APPLICABLE
+        )
+        and (
+            type(hook.delivery_ref) is ObjectRef
+            or hook.delivery_ref is Applicability.NOT_APPLICABLE
+        )
+    ):
+        _i5_fault_failure(FailureCode.I5_RECORD_FORMATION_INVALID, interface)
+    if (
+        hook.applicability is Applicability.APPLICABLE
+        and hook.fault_schedule_ref is Applicability.NOT_APPLICABLE
+        and hook.delivery_ref is Applicability.NOT_APPLICABLE
+    ):
+        _i5_fault_failure(FailureCode.FAULT_HOOK_INVALID, interface)
+    if not (
+        hook.applicability is Applicability.NOT_APPLICABLE
+        and hook.fault_schedule_ref is Applicability.NOT_APPLICABLE
+        and hook.delivery_ref is Applicability.NOT_APPLICABLE
+    ):
+        _reject_fault_delivery(hook)
+    return None
+
+
 __all__ = (
     "FaultScheduleV1",
     "FaultDirectiveV1",
@@ -361,4 +433,6 @@ __all__ = (
     "FaultTargetCoordinate",
     "FaultScheduleClass",
     "validate_fault_schedule_boundary",
+    "FaultHookBoundary",
+    "validate_inert_fault_hook",
 )

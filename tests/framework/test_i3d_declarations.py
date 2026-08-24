@@ -750,7 +750,10 @@ def _assert_failure(
 
 def _runtime_and_static_inventory() -> None:
     contract = _load_contract(_MECHANICAL_CONTRACT)
-    module_exports = contract["module_exports"]
+    module_exports = dict(contract["module_exports"])
+    module_exports["faults"] = _load_contract(
+        _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+    )["current_surface"]["module_exports"]["faults"]
     direct_imports = contract["direct_imports"]
     assert type(module_exports) is dict and type(direct_imports) is dict
 
@@ -921,17 +924,42 @@ def _runtime_and_static_inventory() -> None:
     failure_slices = compatibility["current_surface"]["failure_slices"]
     failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
     assert (len(failures), tuple(row["stop"] for row in failure_slices)) == (
-        185,
+        227,
         (53, 88, 102, 124, 185),
     )
     assert failures[53:88] == tuple(contract["failure_append_order"])
     assert tuple(
         failures[row["start"] : row["stop"]] for row in failure_slices
     ) == tuple(tuple(row["values"]) for row in failure_slices)
-    assert failures == tuple(compatibility["current_surface"]["failure_order"])
-    assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
-        4894,
-        "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
+    assert (
+        failures[:185],
+        failures[185:227],
+        failures,
+    ) == (
+        tuple(compatibility["current_surface"]["failure_order"]),
+        tuple(
+            _load_contract(
+                _REPO_ROOT / "unified_python_research_framework_i5_contract.json"
+            )["failure_append_order"]
+        ),
+        tuple(
+            _load_contract(
+                _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+            )["current_surface"]["failure_order"]
+        ),
+    )
+    assert (
+        len(failure_projection),
+        hashlib.sha256(failure_projection).hexdigest(),
+        len(("\n".join(failures[185:227]) + "\n").encode("utf-8")),
+        hashlib.sha256(
+            ("\n".join(failures[185:227]) + "\n").encode("utf-8")
+        ).hexdigest(),
+    ) == (
+        5997,
+        "4cb1daceb30c0f106e7ba288980d379da2403236593948b4be47247704555ae4",
+        1103,
+        "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
     )
     assert "OPERATIONAL_DURABILITY_EVENT" not in FaultClass.__members__
 
