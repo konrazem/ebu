@@ -9,6 +9,7 @@
 **Part I integrated-revision extension:** prospective explanatory, visual, institutional, and typography plan
 **Part I layout-and-distance emphasis:** prospective measured layout, distance/burden, and non-destructive preservation requirements
 **Series-readability and framework-alpha regeneration extension:** 2026-08-18 prospective documentation authority at `9c4b121acd51ce7cbaab1bad7b3b5bab9eaebd6f`
+**Canonical Topology / Motif Programme extension:** prospective replacement and consolidation authority at accepted predecessor 72183037b00930a766f0f0f613d8689bdfd82e8e
 **Language:** English
 **Purpose:** Preserve the complete future-book architecture, chapter purposes, transitions, overlap controls, scientific dependencies, figure expectations, and research stop conditions in one handoff document.
 
@@ -22,14 +23,20 @@ Parts I-III already exist. The future series should contain six further books in
 2. **Part V - *Homeostasis Through Time***
 3. **Part VI - *Sequential and Parallel EBU Dynamics***
 4. **Part VII - *Across Distance***
-5. **Part VIII - *Dynamic Coordination Fields and Society Geometry***
+5. **Part VIII - *Dynamic Coordination and Society Geometry***
 6. **Part IX - *The Action-Accounted Economy***
 
 The scientific progression is:
 
 > **measurement -> time -> multiple actions -> distance -> coordination -> economy**
 
-This order replaces the earlier planning order in which *Sequential and Parallel EBU Dynamics* and *Dynamic Coordination Fields and Society Geometry* were numbered VIII and IX while *Across Distance* and *The Action-Accounted Economy* retained their old VI and VII numbers. Those old numbers made the reading sequence discontinuous. The titles and scientific purposes are preserved; only the order of the ungenerated books changes.
+This order replaces the earlier planning order in which *Sequential and
+Parallel EBU Dynamics* and the former *Dynamic Coordination Fields and Society
+Geometry* were numbered VIII and IX while *Across Distance* and *The
+Action-Accounted Economy* retained their old VI and VII numbers. Those old
+numbers made the reading sequence discontinuous. The later Canonical Topology /
+Motif Programme replacement also narrows Part VIII to dynamic coordination and
+a short active-topology/geometry cross-reference.
 
 The key editorial decision is also fixed:
 
@@ -58,11 +65,13 @@ This architecture was reconciled against the project files available in the curr
 - the Gate 1D-C outcome-discrimination protocol and frozen JSON plan;
 - the previous `EBU_FUTURE_BOOKS_STRUCTURE.md` planning register.
 
-Electrical-network theory is a comparison domain for the future Part VI and
-Part VIII research programmes, not an authority that proves EBU. The relevant
-comparison begins with Kirchhoff-style potential-difference closure and
-node-flow conservation, then tests exactly where nonlinear, capacity-limited,
-and dynamic networks cease to behave like ideal linear circuits.
+CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md is the prospective canonical
+identity, recursive motif, staging, and book-replacement authority.
+
+The later Canonical Topology / Motif Programme replacement removes the
+electrical-voltage, physical-wave, phase-interference, and
+superposition-as-EBU routes. They are neither evidence for EBU nor future book,
+framework, experimental, or publication obligations.
 
 The Git repository and its history remain the final authority for committed study status, original Task 2, robust-P1C, Gate 1E, Gate 2, locks, hashes, and official results. This planning document does not authorize an experiment, edit a locked protocol, or convert a proposed result into an observed result.
 
@@ -126,7 +135,10 @@ Every figure must carry one of these evidence labels:
 - **Research hypothesis**
 - **Institutional design choice**
 
-This is especially important for gravity, charge, Fermat, diffusion, entropy, waves, cooperation, behavioural change, and economic transition.
+This is especially important for gravity, charge, diffusion, entropy,
+cooperation, behavioural change, and economic transition. Removed Fermat,
+voltage, physical-wave, phase-interference, and superposition content must not
+be restored as analogy or hypothesis.
 
 ### 2.5 Standard descriptive chapter pattern
 
@@ -200,8 +212,8 @@ reader but must not silently replace the original source. DOI, edition, page
 range, correction or retraction status, and stable archival identifier should
 be recorded where available.
 
-The source list in §7.4 is an initial, non-exhaustive map for the newly added
-sequential-parallel and circuit-network programme. It is not the complete
+The antecedent map in §7.4 is an initial, non-exhaustive map for the
+sequential-parallel and canonical topology/motif programme. It is not the complete
 bibliography for Parts IV-IX. Each part requires its own literature checkpoint
 before manuscript generation. A later, separately authorized bibliography
 stage may create a machine-readable reference database; this planning update
@@ -331,7 +343,7 @@ The Unified Explanatory Editions already contain many subjects that appeared as 
 | Outcome discrimination | Part III Chapters 58-59 already explain Gate 1D, O14, behavioural differences, buffering, multiplexing, the flat outcome, and F13. Chapter 60 introduces measurement, latency, uncertainty, and privacy. | A new discriminating instrument, Gate 1D-C execution and result, robust-P1C alignment, Gate 1E, and a completed local evidence ledger. |
 | Long-run homeostasis | Part II Chapter 43 and Part III Sections 62.17-62.18 already introduce invariance, stability, attraction, and the boundary of the missing theorem. | The actual constrained theorem programme, proofs, assumptions, adversarial simulations, and counterexamples. |
 | Sequential actions and simultaneity | Part I already introduces several actors on a nonlinear field; Part II Chapter 37 introduces composition, simultaneity, and shared sources; Part III contains exact quote and receipt telescoping examples. | A general sequential-parallel bridge, named comparators, true interaction, many-action systems, group receipts, allocation, batching, and shared-capacity experiments. |
-| Distance, gravity, Fermat, and Bellman | Part I already treats route epochs and warns that distance is not the formula. Part II Sections 30.7 and 32.7 and Chapter 42 already explain why the graph is not gravity, why EBU is not \(q_1q_2/r^2\), Bellman reasoning, Fermat as an analogy, long-range medicine, and route redesign. Part III Section 62.9 repeats the frontier. | Typed time-dependent routes, changing live states, replanning, congestion, multi-resource paths, uncertainty, provisional settlement, route-wide group effects, cooperation experiments, and adaptive infrastructure. |
+| Distance, gravity, and Bellman | Part I already treats route epochs and warns that distance is not the formula. Part II Sections 30.7 and 32.7 and Chapter 42 already explain why the graph is not gravity, why EBU is not \(q_1q_2/r^2\), Bellman reasoning, long-range medicine, and route redesign. Removed Fermat and physical-wave material is not part of the retained foundation. | Typed time-dependent routes, changing live states, replanning, congestion, multi-resource paths, uncertainty, provisional settlement, route-wide group effects, cooperation experiments, and adaptive infrastructure. |
 | Receipts and actor closure | Part II Chapter 35 and Part III Chapter 51 already define action receipts, actor lines, exact closure, and why actor signs are not zero-sum. | Group and route receipts, causal identifiability, O3, binding quotes, residual allocation, institutional reserves, products, supply histories, and economy-scale settlement. |
 | Money and the economy | Parts I-III already explain that EBU is not money, a price, a wallet, or buyer-to-seller transfer. Part III Chapters 50-51 and Sections 62.12-62.16 introduce necessary high-burden actions, poverty, collaboration, games, and the economy as a research destination. | A complete institutional synthesis: binding quotes, access, priority, common services, privacy safeguards, enterprise, governance, pilots, behavioural studies, and a functioning economy simulation. |
 
@@ -342,7 +354,6 @@ The following recovered chapter ideas are already substantially present in Parts
 - Why distance alone is not an EBU formula.
 - Why EBU is not \(q_1q_2/r^2\).
 - What the gravity analogy helps explain and where it fails.
-- Fermat's principle without a “knowing photon.”
 - Bellman recursion in plain language.
 
 They are consolidated into one short bridge chapter in the new Part VII:
@@ -350,6 +361,37 @@ They are consolidated into one short bridge chapter in the new Part VII:
 > **Known Route Foundations and the Unresolved Boundary**
 
 That chapter will cite the existing explanations and then move immediately to time dependence, congestion, changing states, uncertainty, group effects, and adaptive networks.
+
+### 3.2 Exact Parts I–III replacement ledger
+
+No standalone topology chapter is added to current Parts I–III. A later
+separately authorized manuscript task must modify the accepted manuscripts
+non-destructively and apply these replacements:
+
+| Part/chapter | Editorial action | Required treatment |
+|---|---|---|
+| I.16 | Replace and consolidate | Shared-source and parallel action explanation |
+| I.24 | Merge | Move overlapping parallel-action practice into Chapter 16; retain no duplicate unit |
+| I.17 | Rewrite in place | Retain route and Bellman reasoning; replace Fermat and physical-wave material with dependency-DAG and recursive-reuse intuition |
+| I.26 | Synchronize | Align terminology, dependency-DAG intuition, recursive reuse, and nonclaims |
+| II.37 | Replace | Atomic and parallel interaction calculus: nonzero empty baseline, Boolean Möbius coefficients, hyperedges, shared factors, commutators, structural/active topology, and recursive boundary equivalence |
+| II.42 | Rewrite in place | Retain route and dynamic programming; remove physical-wave material |
+| II.43 | Rewrite in place | Use complete history-wide equivalence, not snapshot or endpoint equivalence |
+| III.47 | Regenerate under separate authority | Synchronize with accepted D1, D2, I-3C, I-4, and I-5 while preserving D0–O14 history |
+| III.51 | Rewrite in place | Separate lifecycle, institutional share, causality, residual, and settlement |
+| III.62 | Replace | Remove obsolete O3/O5/framework roadmap and use the accepted post-atomic remainder |
+
+The preserved explanatory spine is
+
+\[
+V\to\mu=\nabla V\to f_e\to\Psi_e\to J_e\to G_T\to
+\text{finite EBU}.
+\]
+
+Every major feature-teaching record must make the practical problem,
+capability, life-facing example, equation or proof, connection to this spine,
+declaration/evidence requirements, and adjacent limit accessible. Capabilities
+remain prominent and limitations remain adjacent.
 
 ---
 
@@ -361,9 +403,9 @@ Global chapter numbers are not yet frozen. Part-local labels such as IV.1 and V.
 |---|---|---|---:|---:|---:|---:|---:|
 | IV | *When Outcomes Must Discriminate* | Can local EBU decisions be measured with an outcome instrument that is sensitive under delay and uncertainty? | 15 | 40,000-51,000 | 27-38 | 200-265 | 7-11 |
 | V | *Homeostasis Through Time* | Under what assumptions is the viable region invariant, stable, or attractive over an unbounded future? | 16 | 51,000-67,000 | 38-54 | 255-340 | 9-13 |
-| VI | *Sequential and Parallel EBU Dynamics* | How do multiple actions combine, when is parallel execution genuinely different from a named sequential comparison, and which network-potential analogies remain valid? | 19 | 56,000-78,000 | 45-72 | 290-410 | 14-21 |
+| VI | *Sequential and Parallel EBU Dynamics* | How do multiple actions combine, when is parallel execution genuinely different from a named sequential comparison, and when can canonical motifs support certified recursive reuse? | 19 | 56,000-78,000 | 45-72 | 290-410 | 14-21 |
 | VII | *Across Distance* | How do verified actions compose through changing routes, actors, capacities, regions, and infrastructure? | 18 | 59,000-81,000 | 44-66 | 305-425 | 12-18 |
-| VIII | *Dynamic Coordination Fields and Society Geometry* | How should providers and actions be timed, placed, and connected across a dynamic network, including systems with storage, switching, and propagation? | 18 | 66,000-94,000 | 58-90 | 355-510 | 15-23 |
+| VIII | *Dynamic Coordination and Society Geometry* | How should providers and actions be timed, placed, and coordinated under declared boundaries, capacities, information, uncertainty, resilience, fairness, and autonomy? | 18 | 66,000-94,000 | 58-90 | 355-510 | 15-23 |
 | IX | *The Action-Accounted Economy* | How can verified physical action accounting support institutions without pretending that institutional choices are laws of physics? | 22 | 75,000-103,000 | 45-72 | 410-575 | 16-24 |
 
 These figures are retained as historical planning baselines. They include the
@@ -420,7 +462,7 @@ figure.
 | IV -> V | A validated observation-quote-execution-settlement cycle with stated sensitivity and uncertainty boundaries. | If one transition is measurable and conservatively feasible, does repeating controlled transitions preserve viability through time? |
 | V -> VI | A conditional one-action or conservatively serialized long-run theorem. | What changes when actions overlap, share sources, occur in different orders, or must be measured as a group? |
 | VI -> VII | Exact multiple-action composition, interaction definitions, group receipts, and an explicit O3 boundary. | How do those action groups propagate through routes whose states, capacities, actors, and needs change during execution? |
-| VII -> VIII | Dynamic routing, cooperation, shared capacity, resilience, and infrastructure adaptation. | Can timing, placement, topology, phase, and scheduling systematically improve the whole network? |
+| VII -> VIII | Dynamic routing, cooperation, shared capacity, resilience, and infrastructure adaptation. | Can timing, placement, capacity, information, and scheduling improve declared outcomes under common constraints? |
 | VIII -> IX | Tested coordination mechanisms and their physical, fairness, resilience, autonomy, and uncertainty limits. | How should measurement, access, guarantees, responsibility, privacy, enterprise, and governance use those results? |
 
 One recurring region should connect all six future books. Its hospital first exposes O14 buffering, then encounters delayed measurements and drought, then several simultaneous needs, then distant medicine and flood repairs, then network redesign, and finally a complete action-accounted institutional day.
@@ -565,7 +607,7 @@ cap objective.
 | V.12 | **Persistent Disturbances and Practical Stability** | Replaces ideal zero-disturbance claims with bounded-disturbance tubes, input-to-state style reasoning, and explicit residual neighbourhoods. | Disturbance tubes, worst-case envelopes, and noise-amplitude sweeps. |
 | V.13 | **Regeneration, Delay, Reserve Boundaries, and Allee Danger** | Tests how logistic regeneration, Allee thresholds, delayed action, and reserve certification interact. Shows why current stock is not identical to future regenerative capacity. | Bifurcation-like regime maps and delayed-collapse counterexamples. |
 | V.14 | **Coupled Resources and Interacting Fields** | Extends the theorem cautiously from one represented resource to coupled water, energy, material, health, or ecological fields. Refuses unjustified scalar aggregation and states when separate accounts are required. | Coupled-state diagrams and failure of a misleading single scalar. |
-| V.15 | **Long-Horizon Simulations as Theorem Adversaries** | Uses Python sweeps, boundary searches, disturbances, and assumption-removal experiments to attack the proof and find counterexamples. Simulation supports scope testing; it does not supply the word “forever.” | Phase portraits, parameter maps, adversarial seeds, and theorem-failure plots. |
+| V.15 | **Long-Horizon Simulations as Theorem Adversaries** | Uses Python sweeps, boundary searches, disturbances, and assumption-removal experiments to attack the proof and find counterexamples. Simulation supports scope testing; it does not supply the word “forever.” | State portraits, parameter maps, adversarial seeds, and theorem-failure plots. |
 | V.16 | **The Strongest Homeostasis Theorem Actually Earned** | States the final theorem at exactly the scope supported by proof and tests. If shared-source settlement remains unresolved, it may use one action per source or conservative serialization and must say so. Ends by exposing the multiple-action boundary inherited by Part VI. | Final theorem box, assumptions table, evidence ledger, and boundary cases. |
 
 ### Target conclusion
@@ -582,14 +624,21 @@ The exact wording must follow the theorem actually proved. If attraction is not 
 
 ## 7. Part VI - *Sequential and Parallel EBU Dynamics*
 
-**Central question:** How do several actions combine, when does parallel execution produce a genuinely different physical result from a declared sequential comparison, and which parts of electrical-network reasoning can supply useful models without being mistaken for EBU laws?
+**Central question:** How do several actions combine, when does parallel
+execution produce a genuinely different physical result from a declared
+sequential comparison, and when can canonical layered motifs support certified
+recursive reuse without confusing structure with performance?
 
 **Reader-comprehension generation gate:** Part VI cannot be generated until
 every section passes §§2.8-2.10. Its advanced interaction, network, causal, and
 settlement distinctions do not permit compressed academic language in place
 of concrete explanation.
 
-**Foundation:** `SEQUENTIAL_PARALLEL_BRIDGE.md` v0.2 is the committed analytical checkpoint. This book must test it, preserve its distinctions, and amend it prospectively if later evidence exposes an error before manuscript generation.
+**Foundations:** `SEQUENTIAL_PARALLEL_BRIDGE.md` v0.2 remains the committed
+many-action checkpoint. The prospective Canonical Topology / Motif Programme
+authority adds the structural and recursive teaching boundary without changing
+the Bridge. This book must preserve both authorities' distinctions and must not
+treat topology as an I-6 prerequisite.
 
 ### 7.1 Core theory that must be preserved
 
@@ -657,158 +706,155 @@ and grouping is cheaper only if:
 
 This is a conditional model to test, not a universal EBU law.
 
-### 7.2 Network-potential and Kirchhoff analogy programme
+### 7.2 Canonical topology and motif programme
 
-The circuit comparison has one exact algebraic core and several conditional
-physical models. It is valuable enough for a dedicated Part VI chapter, but
-its claim status is **Analogy** until a named domain supplies and validates
-the required physical constitutive laws.
+The electrical-voltage, physical-wave, phase-interference, and
+superposition-as-EBU programmes are removed. They are not open research
+obligations and must not be restored through analogy, chapter titles, figures,
+framework adapters, or validation plans.
 
-Treat \(D(X)\) provisionally as a scalar node potential on a directed graph of
-represented states. For an edge \(e:u\rightarrow v\), define:
-
-\[
-\Delta D_e=D(X_u)-D(X_v).
-\]
-
-For any consecutive state path \(P\), the directed differences telescope:
+The replacement capability is a typed layered structural declaration:
 
 \[
-\boxed{\sum_{e\in P}\Delta D_e=D(X_{\mathrm{start}})-D(X_{\mathrm{end}}).}
+\Theta=(P,\mathcal C,\mathcal O,\mathcal H,\mathcal B),
 \]
 
-For a closed path that returns to the same complete represented state under
-the same distortion model and accounting boundary:
+where the layers separate prerequisites, shared factors, order/concurrency,
+pair and higher-order structural support, and parent/boundary/dependency
+relations. Only local vertex names are relabeled; semantic types, roles, units,
+versions, factor kinds, ordered child roles, port meanings, and protocol
+digests remain colors.
+
+For schema version \(v\),
 
 \[
-\boxed{\sum_{e\in C}\Delta D_e=0.}
+\operatorname{Can}_v(\Theta)=
+\min_{\pi\in S_n}\operatorname{Serialize}_v(\pi\Theta).
 \]
 
-This is the EBU analogue of potential-difference closure used in
-Kirchhoff-style voltage accounting. Here it follows from a scalar state
-function; it is not evidence that \(D\) is electrical voltage or that EBU has
-been derived from electromagnetism. A nonzero measured loop residual is a
-diagnostic for inconsistent endpoints, changed boundaries, omitted state,
-unrepresented external drive, measurement error, or implementation error. It
-must not be interpreted automatically as created or destroyed physical value.
+The canonical minimum is relabeling invariant. Under a faithful versioned
+colored layered encoding, equal canonical bytes characterize isomorphism.
+Canonical identity is structural only: it excludes measured EBU, feasibility,
+service, interaction value, causality, settlement, fairness, and social value.
 
-The parallel comparison is equally precise but easy to misuse. Circuit
-branches between the same two nodes share one voltage difference; their branch
-currents, not their voltage drops, combine through node conservation.
-Correspondingly, an EBU joint group has one common before-to-after distortion
-difference. Its same-baseline child values are not automatically additive.
-For a genuinely conserved typed resource at a source node, a separate
-stock-flow equation may be tested:
+The first exact recursive worked family is
 
 \[
-\boxed{
-\sum_j\int_{t_0}^{t_1}f^{\mathrm{in}}_j(t)\,dt
--\sum_k\int_{t_0}^{t_1}f^{\mathrm{out}}_k(t)\,dt
--L_{[t_0,t_1]}
-=s(t_1)-s(t_0).
-}
+M_{n+1}=C(M_n,M_{n-1}),\qquad N(M_n)=F_{n+1},
 \]
 
-Here \(s\) is the stored resource, the \(f\) terms are typed flow rates, and
-\(L_{[t_0,t_1]}\) is typed loss over the same declared interval and boundary.
-A discrete model may use the corresponding integrated transferred quantities.
-This Kirchhoff-current-like balance can constrain simultaneous actions
-attached to one source, but it does not make EBU itself a conserved current or
-token.
+with immutable bases, ordered child roles, and distinct definition and
+occurrence identities. This is an exact induction for the declared family, not
+a universal Fibonacci law and not a conclusion from visual resemblance.
 
-The future deterministic programme should specify at least these models:
+A certified summary recurrence,
 
-| Model | Circuit structure used | EBU question | Required limitation or falsifier |
-|---|---|---|---|
-| **K1 - State-potential path ledger** | Directed node potentials and voltage-drop closure | Do sequential EBU records telescope and do closed state cycles close under one complete \(D\) and boundary? | Any unexplained residual fails ledger closure; closure alone does not validate the physical meaning of \(D\). |
-| **K2 - Ideal common-terminal branches** | Parallel branches with a common terminal difference and separately conserved flows | When a domain legitimately maps actions to branches joining the same complete represented terminals, do they share one endpoint difference while typed flows close separately, without summing voltage-like EBU drops? | Different complete endpoints, coupling, source change, or capacity conflict invalidates the ideal-branch model. |
-| **K3 - Finite shared source** | A current-limited source or source with internal impedance feeding simultaneous loads | How do source depletion, capacity allocation, node-condition change, and quantity-fixed versus rule-replayed comparators affect several actions attached to one source? | A model that omits source stock, loss, allocation, or voltage/field sag is incomplete; allocation differences are not automatically simultaneity effects. |
-| **K4 - Nonlinear branch or observable** | Nonlinear constitutive response, saturation, or a quadratic power/energy-like observable | When does \(N_G\neq0\) record failure of naive superposition while \(I_{G\mid\pi}=0\) still holds for endpoint-equivalent execution? | A cross-term alone cannot establish causal synergy or a uniquely parallel mechanism. |
-| **K5 - Switched storage and dynamic network** | Capacitor/inductor-like memory, switches, delay, recovery, and finite horizon | When do order, timing, stored state, and horizon make sequential schedules differ from simultaneous execution? | If the storage/memory state or external drive is omitted, any apparent order effect is uninterpretable. |
-| **K6 - Loss-aware cancellation** | Opposing branch effects with heat, wear, leakage, or source consumption retained | Can target effects cancel while the complete state still records resource use and irreversible burden? | Returning only the visible target coordinate to baseline is not a closed-state cycle. |
+\[
+B_{n+1}=\Phi(B_n,B_{n-1}),
+\]
 
-No universal resistance, conductance, capacitance, inductance, voltage,
-current, power, or energy interpretation is introduced here. In particular,
-the familiar series- and parallel-resistance formulae require an independently
-validated constitutive relation between potential difference and flow. A
-future domain may propose an action-impedance or conductance model only by
-declaring its units, state variables, boundary, linearity range, conservation
-law, and falsifiers. The physical use of Kirchhoff's voltage law must also
-respect the electrical model's own validity conditions; a time-varying or
-distributed electromagnetic system cannot be simplified to an ordinary
-lumped static loop merely to resemble EBU.
+requires all eight conditions fixed by the Canonical Topology / Motif Programme
+authority: immutable identity, concrete-query sufficiency, complete
+composition, cross-boundary closure, interaction preservation, complete future
+key separation, dependency/alias/correction/invalidation closure, and
+history-wide boundary equivalence. Under bounded summaries and bounded
+composition, the number of new composition calls is linear in motif level. If
+\(s_k=O(k^d)\) and composition costs
+\(O((s_k+s_{k-1})^p)\), the conditional bound is
+\(T(n)=O(n^{dp+1})\), subject to output size.
 
-The circuit chapter's historical allocation is approximately 4,000-7,000
-words, 5-10 figures, and 20-40 illustrated narrative pages inside the revised
-Part VI budget, plus its share of the volume's reference reserve. These are
-planning baselines subject to the §4.3 calibration gate, not limits on the
-explanation. Its essential
-figures are a state-potential path, a common-terminal branch diagram, a
-finite-source capacity/sag model, a nonlinear-superposition counterexample,
-and a switched-storage order comparison.
+The empirical same-protocol recursive surplus is
 
-### 7.3 Initial prior-art and candidate-contribution map
+\[
+R_n=E(M_n)-E(\varnothing),\qquad
+J_n=R_{n+1}-R_n-R_{n-1}.
+\]
 
-The initial review confirms that the programme has substantial prior art. The
-correct question is not whether all underlying mathematics is new; it is
-whether the EBU programme combines the layers in a scientifically useful and
-properly delimited way.
+No sign or value is assumed. The complete unit must keep six concepts
+separate: canonical equivalence, feasible-poset restriction, proven sparse
+hypergraph support, structural additivity, recursive boundary compression, and
+correction locality.
 
-| EBU topic | Established antecedent or neighbouring field | What is already covered | EBU-specific delta or remaining question |
-|---|---|---|---|
-| Scalar path and closed-loop differences | Kirchhoff's circuit equations and conservative-potential accounting | Path sums of differences telescope; a closed loop has zero net difference when one scalar potential and boundary apply. | \(D(X)\) is a declared state function, not voltage. K1 uses closure as a consistency diagnostic and must test omitted state, changing boundaries, and external drive. |
-| Topological network conservation | Tellegen's theorem, network thermodynamics, bond graphs, port-Hamiltonian systems, and dissipativity theory | Network topology, effort/flow pairing, storage, dissipation, and interconnection have long been generalized beyond ideal linear circuits. | K2-K6 must state typed constitutive laws and failure conditions. The EBU ledger must not rename an established conservation or energy theorem as a new EBU law. |
-| Sequential order and non-commuting actions | Lie commutators, the Baker-Campbell-Hausdorff family, and operator splitting | Composition order can generate correction terms and different endpoints when operators do not commute. | Part VI still needs a physically declared action map, feasible schedule set, and purpose-specific comparator; operator algebra does not select the institutional or scientific comparator. |
-| Higher-order interaction decomposition | Harsanyi dividends, Möbius and interaction transforms, Shapley/Banzhaf interaction indices, factorial/ANOVA methods, and Sobol sensitivity analysis | Pairwise and higher-order non-additivity can be decomposed in several established ways. | \(I_{G\mid\pi}\) is a named endpoint comparison, not automatically a unique decomposition. Competing decompositions must be compared and none may be called causal without identification. |
-| Causal interaction and child contribution | Structural causal models, potential outcomes, and sufficient-cause interaction theory | Statistical or algebraic interaction is not identical to causal or mechanistic interaction; causal claims require interventions and assumptions. | The EBU record explicitly separates the observed joint transition from identified child effects and must preserve `UNIDENTIFIED` when the evidence is insufficient. |
-| Group allocation and settlement | Shapley values, Harsanyi dividends, Aumann-Shapley allocation, and cooperative-game interaction indices | A group total can be allocated under declared axioms or bargaining rules. | Settlement shares are institutional assignments unless a physical causal design identifies them. Closure of assigned shares does not make them measured contributions. |
-| Shared source, overlap, and capacity | Resource-constrained project scheduling, queueing and congestion models, and congestion games | Simultaneous activities can share scarce capacity, create queues, change feasible schedules, and impose externalities. | The proposed parallel-group rule unifies shared source, shared field, overlapping time, shared capacity, and one accounting boundary with joint-transition measurement and receipts. This integration is a candidate contribution, not yet a proved novelty. |
-| Dynamic storage, switching, and propagation | Network thermodynamics, dissipative systems, port-Hamiltonian models, and splitting methods | Memory, storage, loss, switching, and interconnection already have mature mathematical frameworks. | Part VIII must test whether an EBU domain adapter adds explanatory or predictive value beyond those frameworks and must reject an electrical analogy when it does not. |
-| Potential-like incentives and coordination | Potential games and congestion games | A scalar potential can organize strategic incentives in defined classes of games. | EBU distortion is a physical-state account, not automatically a payoff potential. Any bridge to incentives or institutions requires a separate model and evidence. |
+### 7.3 Why structure is the compression mechanism
 
-The strongest defensible originality statement at this planning stage is:
+For Boolean subset values, the unchanged Atomic F13 raw transform applies to
+every subset, including the empty set:
 
-> The underlying identities, conservation models, interaction transforms,
-> causal safeguards, scheduling problems, and allocation rules are not claimed
-> as new. The candidate EBU contribution is the typed, receipt-backed protocol
-> that keeps four objects separate in one many-action workflow: the measured
-> joint physical transition, comparator-relative parallel interaction,
-> causally identified child contributions, and institutionally assigned
-> settlement shares, including explicit shared-source grouping and provenance.
+\[
+I_{\mathrm{raw}}(S)=
+\sum_{T\subseteq S}(-1)^{|S|-|T|}E(T),
+\qquad I_{\mathrm{raw}}(\varnothing)=E(\varnothing).
+\]
 
-This is a **candidate contribution**, not a confirmed novelty claim. The review
-did not locate one source containing that whole package, but absence from this
-initial search is not evidence that no such source exists.
+Changing any raw \(E(Q)\) by \(\delta\), including
+\(Q=\varnothing\), changes the raw coefficients by
 
-### 7.4 Seed bibliography for the Part VI-VIII programme
+\[
+\Delta I_{\mathrm{raw}}(S)=
+\begin{cases}
+(-1)^{|S|-|Q|}\delta,&Q\subseteq S,\\
+0,&Q\nsubseteq S.
+\end{cases}
+\]
 
-The following sources are the minimum starting set, not a closed bibliography:
+This includes the raw empty-to-empty delta \(\delta\). Normalization is
+separate:
 
-1. G. Kirchhoff, “Ueber die Auflösung der Gleichungen, auf welche man bei der Untersuchung der linearen Vertheilung galvanischer Ströme geführt wird,” *Annalen der Physik* 148(12), 497-508 (1847), [doi:10.1002/andp.18471481202](https://doi.org/10.1002/andp.18471481202).
-2. B. D. H. Tellegen, “A General Network Theorem, with Applications,” *Philips Research Reports* 7, 259-269 (1952).
-3. G. F. Oster and C. A. Desoer, “Tellegen's Theorem and Thermodynamic Inequalities,” *Journal of Theoretical Biology* 32(2), 219-241 (1971), [doi:10.1016/0022-5193(71)90162-7](https://doi.org/10.1016/0022-5193(71)90162-7).
-4. G. Oster, A. Perelson, and A. Katchalsky, “Network Thermodynamics,” *Nature* 234, 393-399 (1971), [doi:10.1038/234393a0](https://doi.org/10.1038/234393a0).
-5. G. F. Oster, A. S. Perelson, and A. Katchalsky, “Network thermodynamics: dynamic modelling of biophysical systems,” *Quarterly Reviews of Biophysics* 6(1), 1-134 (1973), [doi:10.1017/S0033583500000081](https://doi.org/10.1017/S0033583500000081).
-6. J. C. Willems, “Dissipative Dynamical Systems Part I: General Theory,” *Archive for Rational Mechanics and Analysis* 45, 321-351 (1972), [doi:10.1007/BF00276493](https://doi.org/10.1007/BF00276493).
-7. B. M. Maschke and A. J. van der Schaft, “Port-Controlled Hamiltonian Systems: Modelling Origins and Systemtheoretic Properties,” *IFAC Proceedings Volumes* 25(13), 359-365 (1992), [doi:10.1016/S1474-6670(17)52308-3](https://doi.org/10.1016/S1474-6670(17)52308-3).
-8. G. Strang, “On the Construction and Comparison of Difference Schemes,” *SIAM Journal on Numerical Analysis* 5(3), 506-517 (1968), [doi:10.1137/0705041](https://doi.org/10.1137/0705041).
-9. P. Brucker, A. Drexl, R. Möhring, K. Neumann, and E. Pesch, “Resource-constrained project scheduling: Notation, classification, models, and methods,” *European Journal of Operational Research* 112(1), 3-41 (1999), [doi:10.1016/S0377-2217(98)00204-5](https://doi.org/10.1016/S0377-2217(98)00204-5).
-10. R. W. Rosenthal, “A Class of Games Possessing Pure-Strategy Nash Equilibria,” *International Journal of Game Theory* 2, 65-67 (1973), [doi:10.1007/BF01737559](https://doi.org/10.1007/BF01737559).
-11. D. Monderer and L. S. Shapley, “Potential Games,” *Games and Economic Behavior* 14(1), 124-143 (1996), [doi:10.1006/game.1996.0044](https://doi.org/10.1006/game.1996.0044).
-12. L. S. Shapley, “A Value for N-Person Games,” in *Contributions to the Theory of Games II*, Annals of Mathematics Studies 28, 307-317 (1953); 1952 precursor [RAND P-295, doi:10.7249/P0295](https://doi.org/10.7249/P0295).
-13. J. C. Harsanyi, “A Simplified Bargaining Model for the n-Person Cooperative Game,” *International Economic Review* 4(2), 194-220 (1963), [doi:10.2307/2525487](https://doi.org/10.2307/2525487).
-14. R. J. Aumann and L. S. Shapley, *Values of Non-Atomic Games*, Princeton University Press (1974), ISBN 0-691-08103-4.
-15. M. Grabisch and M. Roubens, “An Axiomatic Approach to the Concept of Interaction among Players in Cooperative Games,” *International Journal of Game Theory* 28, 547-565 (1999), [doi:10.1007/s001820050125](https://doi.org/10.1007/s001820050125).
-16. D. Denneberg and M. Grabisch, “Interaction Transform of Set Functions over a Finite Set,” *Information Sciences* 121(1-2), 149-170 (1999), [doi:10.1016/S0020-0255(99)00099-7](https://doi.org/10.1016/S0020-0255(99)00099-7).
-17. I. M. Sobol', “Sensitivity Estimates for Nonlinear Mathematical Models,” *Mathematical Modeling and Computational Experiment* 1(4), 407-414 (1993), translated from “On sensitivity estimation for nonlinear mathematical models,” *Matematicheskoe Modelirovanie* 2(1), 112-118 (1990), [Math-Net.Ru: mm2320](https://www.mathnet.ru/eng/mm2320).
-18. J. Pearl, “The Foundations of Causal Inference,” *Sociological Methodology* 40, 75-149 (2010), [doi:10.1111/j.1467-9531.2010.01228.x](https://doi.org/10.1111/j.1467-9531.2010.01228.x).
-19. T. J. VanderWeele and J. M. Robins, “Empirical and Counterfactual Conditions for Sufficient Cause Interactions,” *Biometrika* 95(1), 49-61 (2008), [doi:10.1093/biomet/asm090](https://doi.org/10.1093/biomet/asm090).
+\[
+\widetilde E(S)=E(S)-E(\varnothing),\qquad
+I_{\mathrm{norm}}(\varnothing)=0.
+\]
 
-This seed list must be expanded before writing the books. In particular, Parts
-IV, V, VII, and IX still need dedicated reviews of metrology and
-identifiability, viability and control, time-dependent routing and queueing,
-and institutional economics, governance, access, privacy, rebound, and
-transition respectively.
+For every nonempty \(S\), the alternating subset sum is zero, so
+\(I_{\mathrm{norm}}(S)=I_{\mathrm{raw}}(S)\). A correction to
+\(E(\varnothing)\) therefore changes both nonempty transforms by
+\((-1)^{|S|}\delta\), but it does not change the normalized empty convention.
+The teaching unit must show a nonzero-baseline pair example and a pure
+three-way example with zero pair coefficients. It must never assume
+\(E(\varnothing)=0\).
+
+The algebraic change is local to the upward cone of \(Q\). Operational
+revalidation can be wider when aliases, histories, boundaries, feasibility,
+removal semantics, or evidence change.
+
+The positive lower bound is equally important. An exact procedure that queries
+fewer than all \(2^N\) entries of an arbitrary black-box subset table leaves an
+unqueried \(Q\). Changing only that entry preserves every observed input while
+changing every Möbius coefficient above \(Q\). Thus arbitrary exact analysis
+requires every entry. Any honest compression must identify the information
+that replaces missing queries: declared topology, equivalence, feasible-domain
+restriction, proved factorization, sufficient boundaries, or another proved
+restriction.
+
+Providers, institutions, and scientific domain authorities declare and
+measure meaningful relations. EBU validates their types, completeness claims,
+versions, provenance, and consistent frozen-protocol use. The positive cycle is
+
+\[
+\text{declare}\to\text{measure EBU}\to\text{refine}\to
+\text{measure again}\to\text{certified recursive structure}.
+\]
+
+This can make cooperation, synergy, redundancy, and recursive reuse testable.
+It proves no causality, fairness, universal benefit, or social sufficiency.
+
+### 7.4 Prior-art and proof allocation
+
+Canonical labeling, graph isomorphism, combinatorial species, substitution
+systems, incidence algebras, Möbius inversion, hypergraph factorization,
+dynamic programming, sufficient statistics, memoization, dependency graphs,
+and information-theoretic query lower bounds are established antecedent
+families. The EBU-specific work is the typed integration with accepted atomic
+interaction, complete histories, boundary accounting, provenance, and
+fail-closed evidence rules. No global novelty claim is made without a separate
+claim-by-claim literature review.
+
+The mathematical appendix owns the canonical/isomorphism proof, finite-poset
+enumeration, Boolean and prospective feasible-poset Möbius proofs, recursive
+compression proof, size/cost assumptions, dependency invalidation and
+upward-cone proof, the arbitrary-table lower bound, and negative controls. A
+separate versioned atlas may be a nonnormative research companion only after
+Stage B evidence exists.
 
 ### Detailed chapter structure
 
@@ -821,15 +867,15 @@ transition respectively.
 | VI.5 | **What Counts as a Parallel Group** | Defines temporal overlap, shared sources, shared fields, shared constraints, and common accounting boundaries. Requires one complete atomic joint before/after transition for the group's physical balance and tests whether overlap in time alone is enough to require group measurement. | Interval-overlap diagrams, atomic-transition ledgers, and group-boundary counterexamples. |
 | VI.6 | **The Sequential-Parallel Bridge** | Derives \(I_{G\mid\pi}\) and explains why the comparator is part of the scientific statement. Provides positive, zero, and negative interaction examples. | Endpoint triangle diagrams and interaction plots. |
 | VI.7 | **State Equivalence and EBU Equivalence** | Shows that identical endpoints imply identical EBU, while equal distortion can hide different states and future capacities. Explains when endpoint EBU alone is insufficient for later dynamics. | Equal-D/different-state contours and future-divergence examples. |
-| VI.8 | **Commuting and Non-Commuting Actions** | Defines when action order changes the endpoint. Develops comparator sets or ranges for non-commuting actions and shows why “the sequential result” may not exist uniquely. | Commutator examples, order matrices, and comparator-range plots. |
+| VI.8 | **Commuting, Non-Commuting, and Comparator-Relative Actions** | Defines when action order changes the endpoint. Compares reservation order, start-time order, physically natural order, feasible extrema, policy-defined canonical order, and reported ranges without selecting a universal comparator. | Commutator examples, order matrices, comparator decision table, and sensitivity plots. |
 | VI.9 | **Nonlinear Cross-Terms Are Not Automatically Interaction** | Corrects the tempting but false inference that every \(ab\) term proves parallel synergy. Separates shared nonlinear evaluation from endpoint-changing simultaneity. | Symbolic expansions and matched-endpoint simulations. |
-| VI.10 | **Network Potentials, Kirchhoff Models, Control Volumes, and Their Limits** | Places K1-K6 beside Kirchhoff, Tellegen, control-volume balances, network thermodynamics, dissipativity, and port-Hamiltonian precedents. Develops potential-path closure, typed node balances, common-terminal branches, finite shared sources, nonlinear response, switched storage, and loss-aware cancellation while keeping physical conservation, represented-stock closure, voltage-like differences, EBU, causal contributions, and settlement shares distinct. Equivalent-resistance or zero-residual formulae do not transfer without validated constitutive and boundary profiles. | Prior-art/EBU-delta table, circuit/control-volume/EBU mapping table, loop and boundary-closure diagnostics, shared-source flow/sag figures, nonlinear and dynamic counterexamples, and explicit analogy-failure cards. |
-| VI.11 | **Synergy, Interference, Redundancy, and Capacity Conflict** | Builds an operational taxonomy based on endpoint differences relative to declared comparators. Requires each label to correspond to a measurable physical mechanism. | Paired positive/negative/zero interaction worlds. |
+| VI.10 | **Control Volumes, Shared Factors, and Complete Boundaries** | Separates represented-stock, open-control-volume, and isolated claims; preserves typed source stock, flow, loss, conversion, burden, process accounts, queues, commitments, and internal-transfer cancellation exactly once. | Boundary/account mapping, shared-source stock-flow figures, hidden-input failures, and roll-up diagnostics. |
+| VI.11 | **Synergy, Redundancy, and Capacity Conflict** | Builds an operational taxonomy from endpoint differences relative to declared comparators. Requires each label to correspond to a measurable mechanism and keeps positive/negative interaction distinct from excluded physical phase language. | Paired positive/negative/zero interaction worlds. |
 | VI.12 | **Cancellation Without Annihilation** | Uses a state containing target deviation and resource use to show why opposite effects and internal child-to-child transfers can cancel in a roll-up while physical costs remain. Extends the example to waste, heat, wear, time, and attention. | Resource-retaining cancellation plots, child/parent control-volume roll-ups, and incomplete-state failures. |
 | VI.13 | **The Deterministic Two-Action Test Matrix** | Registers the minimal controlled matrix: endpoint equivalence, nonlinear no-interaction, positive interaction, negative interaction, cancellation, redundancy, capacity conflict, and both sequential orders. | Full expected-results table, traces, and falsifiers. |
 | VI.14 | **Many-Action Systems and Higher-Order Interaction** | Generalizes the bridge to \(n\) actions and introduces pairwise, triple, and higher-order decompositions as analytical tools. Taylor or inclusion-exclusion-like decompositions must not be mistaken for unique causal allocation. | Interaction-order diagrams and scaling experiments. |
-| VI.15 | **Choosing the Sequential Comparator** | Compares reservation order, start-time order, physically natural order, best and worst feasible schedules, a policy-defined canonical order, and a reported range. No canonical rule is selected without purpose-specific tests. | Comparator decision table and sensitivity analysis. |
-| VI.16 | **Shared Sources, Reservations, and the Committed Field** | Extends the state to include already accepted actions and source budgets. Connects group action physics to O3 and the K3 finite-source model, and shows why independently valid quotes can conflict at execution. | Shared-source capacity, flow, and field-sag maps plus stale-commitment failures. |
+| VI.15 | **Canonical Motifs, Topology Benchmarks, and Recursive Reuse** | After the higher-order foundation, teaches layered topology, canonical equivalence, identity/performance separation, recursive encapsulation, exact Fibonacci counting, A1-A8 compression, polynomial size/cost limits, \(J_n\), correction locality, the arbitrary-table lower bound, domain responsibility, and negative controls. No benchmark result is presumed. | Relabeling and layer-separation schematics, Fibonacci occurrence tree, full-versus-summary dependency diagram, upward-cone correction table, black-box witness, and adjacent nonclaim cards. |
+| VI.16 | **Shared Sources, Reservations, and the Committed State** | Extends the state to include accepted actions and source budgets, connects group physics to O3, and shows why independently valid quotes can conflict at execution. | Shared-source capacity and stock-flow maps plus stale-commitment failures. |
 | VI.17 | **Group Measurement and Causal Identifiability** | Separates the objectively measured group endpoint from estimates of individual causal contribution. Defines when separate meters, controlled interventions, or validated causal models make contributions identifiable. | Identifiable/non-identifiable examples and causal-evidence ladder. |
 | VI.18 | **Group Quotes, Child Receipts, and Allocation Closure** | Defines one group record that preserves every child action, actor, provider, promise, and residual. Tests the closure condition for actor shares plus institutional accounts while refusing to disguise allocation as measurement. | Group-receipt schema, closure equations, and allocation counterexamples. |
 | VI.19 | **Receipt Batching, Settlement Horizons, and the Many-Action Ledger** | Tests the batching inequality, delayed effects, provisional records, and later settlement. Closes the evidence ledger and identifies what must be carried into route-wide action chains. | Cost break-even plots, open/settled receipt timelines, and final claim ledger. |
@@ -841,14 +887,14 @@ transition respectively.
 - individual causal attribution when actions are inseparable;
 - O3 shared-source settlement and allocation;
 - joining or leaving a group after a quote is issued;
-- large-\(n\) scaling, stochastic actions, and incomplete observation;
+- many-action scaling, stochastic actions, and incomplete observation;
 - delayed and cross-boundary effects whose causal chains overlap;
-- which domains, if any, justify a measurable action impedance, conductance,
-  capacitance, or other constitutive analogue;
-- when a Kirchhoff-style graph is a faithful physical model rather than only
-  a ledger-consistency visualization;
-- how distributed, time-varying, or field-coupled electrical cases should be
-  represented without importing an invalid lumped-circuit approximation.
+- faithful scalable canonical labeling beyond exhaustive \(n\le8\);
+- feasible-poset calculus for declared domains;
+- boundary-summary sufficiency for concrete query families;
+- correction, alias, dependency, and cache-invalidation authority;
+- empirical recursive surplus \(J_n\); and
+- controlled Fibonacci, substitution, and geometric comparisons.
 
 **Closing transition to Part VII:** Part VI can define and test multiple actions inside a declared boundary. A medicine route crosses many boundaries, actors, clocks, capacities, and changing states. Part VII composes the many-action theory across distance.
 
@@ -862,7 +908,10 @@ transition respectively.
 every section passes §§2.8-2.10, including concrete route objects, before/after
 states, comparators, units, tolerances, examples, nonclaims, and human reading.
 
-**What this book must not repeat:** the elementary claims that distance alone is not EBU, EBU is not \(q_1q_2/r^2\), Fermat is an analogy, or Bellman recursion can plan a path. Those foundations already exist in Parts I-II.
+**What this book must not repeat:** the elementary claims that distance alone
+is not EBU, EBU is not \(q_1q_2/r^2\), or Bellman recursion can plan a path.
+Those foundations already exist in Parts I-II. The removed Fermat and
+physical-wave material is not restored.
 
 ### Distance and burden generator rule
 
@@ -899,12 +948,12 @@ O-number, framework mechanism, or figure allocation.
 
 | Ch. | Working title | What the chapter does | Required evidence and figures |
 |---|---|---|---|
-| VII.1 | **Known Route Foundations and the Unresolved Boundary** | Consolidates the prior gravity, Fermat, Bellman, and distance material into one concise bridge with exact cross-references. States the new frontier: live time-dependent routes, congestion, uncertainty, group effects, and infrastructure adaptation. | One “already established/new work” table and one route schematic. |
+| VII.1 | **Known Route Foundations and the Unresolved Boundary** | Consolidates the prior route, Bellman, burden, and distance material into one concise bridge with exact cross-references. States the new frontier: live time-dependent routes, congestion, uncertainty, group effects, and infrastructure adaptation. Removed Fermat and physical-wave material is not reproduced. | One “already established/new work” table and one route schematic. |
 | VII.2 | **The Planet as a Typed, Time-Dependent Graph** | Defines nodes, edges, carriers, capacities, states, permissions, and epochs. A geographic kilometre is separated from travel time, energy, loss, risk, and service effect. | Layered graph maps and edge-type tables. |
-| VII.3 | **A Route as a Composition of Verified Local Actions** | Builds an end-to-end route from local quote-execute-verify-settle epochs. Uses sequential telescoping and the K1 path-ledger closure diagnostic while preserving physical boundary transfers, intermediate losses, actors, and state changes. Internal segment transfers cancel only at the declared route roll-up. It does not claim that a transport route is an electrical circuit. | Route receipt chain, typed boundary-transfer and potential-difference-style closure diagrams, and endpoint-versus-segment audit. |
+| VII.3 | **A Route as a Composition of Verified Local Actions** | Builds an end-to-end route from local quote-execute-verify-settle epochs. Uses sequential telescoping while preserving physical boundary transfers, intermediate losses, actors, and state changes. Internal segment transfers cancel only at the declared route roll-up. | Route receipt chain, typed boundary-transfer diagrams, and endpoint-versus-segment audit. |
 | VII.4 | **When Live States Break a Static Shortest Path** | Shows why a route chosen at departure can become infeasible or inferior after stocks, weather, capacity, or need change. Defines safe replanning without rewriting completed segments. | Dynamic shortest-path traces and route-switch examples. |
 | VII.5 | **Urgency, Perishability, and an Evolving Need** | Places time, decay, patient condition, service delay, and opportunity cost inside the represented state. Explains why urgent air transport can outperform slower rail without declaring air universally best. | Delay-harm curves and mode comparisons. |
-| VII.6 | **Capacity, Congestion, and Shared Infrastructure** | Models queues, shared cold chains, warehouses, ports, roads, and source budgets. Connects route congestion to the many-action framework of Part VI and tests typed source-node stock-flow closure without treating EBU as the conserved flow. | Capacity phase maps, source-node balance diagrams, and congestion externality plots. |
+| VII.6 | **Capacity, Congestion, and Shared Infrastructure** | Models queues, shared cold chains, warehouses, ports, roads, and source budgets. Connects route congestion to the many-action framework of Part VI and tests typed source-node stock-flow closure without treating EBU as the conserved flow. | Capacity-regime maps, source-node balance diagrams, and congestion externality plots. |
 | VII.7 | **Multi-Resource Routes Without False Scalar Collapse** | Tracks medicine, cooling energy, packaging, staff time, vehicle wear, and ecological effects as typed accounts. States when aggregation weights are declarations rather than physical identities. | Multi-layer Sankey-like accounts and scalar-collapse counterexamples. |
 | VII.8 | **Uncertainty and Robust Route Feasibility** | Extends Part IV uncertainty envelopes across multiple segments and growing observation age. Tests worst-case feasibility, safety margins, and route failure probabilities without mixing them with prices. | Uncertainty propagation bands and robust-route maps. |
 | VII.9 | **Quote, Reserve, Execute, Verify, and Settle Across a Route** | Defines reservations, expiry, segment confirmation, route-wide guarantees, re-quotation, and settlement boundaries. Prevents double settlement when routes are replanned. | Lifecycle sequence, quote epochs, and duplicate-prevention examples. |
@@ -926,77 +975,87 @@ O-number, framework mechanism, or figure allocation.
 
 ---
 
-## 9. Part VIII - *Dynamic Coordination Fields and Society Geometry*
+## 9. Part VIII - *Dynamic Coordination and Society Geometry*
 
-**Central question:** How should providers and their actions be arranged across time, sequence, space, and network structure to improve verified system outcomes?
+**Central question:** How should providers and actions be timed, placed, and
+coordinated under declared boundaries, capacities, uncertainty, resilience,
+fairness, autonomy, and institutional constraints?
 
 **Reader-comprehension generation gate:** Part VIII cannot be generated until
-every section passes §§2.8-2.10. Advanced field, topology, spectral, wave, and
-scaling material must remain mathematically precise and newly readable.
+every section passes §§2.8-2.10. It owns dynamic coordination and a short
+active-topology/geometry cross-reference. It does not own a second canonical
+topology, motif, recurrence, or atlas programme.
 
-**Central principle:**
-
-> System performance depends not only on what actors do, but also on their relative timing, sequence, location, and structure.
-
-For provider placement \(P\), schedule \(\sigma\), and horizon \(T\):
+For provider placement \(P\), schedule \(\sigma\), and horizon \(T\),
 
 \[
-EBU_G(P,\sigma;T)=D(X_0)-D\!\left(X_G(P,\sigma;T)\right).
+EBU_G(P,\sigma;T)=D(X_0)-D(X_G(P,\sigma;T)).
 \]
 
-Relative to a declared reference schedule \(\rho\), define coordination advantage:
+Relative to a declared reference schedule \(\rho\),
 
 \[
-\boxed{C_{\sigma\mid\rho}(T)=EBU_\sigma(T)-EBU_\rho(T)=D(X_\rho(T))-D(X_\sigma(T)).}
+C_{\sigma\mid\rho}(T)=
+EBU_\sigma(T)-EBU_\rho(T)
+=D(X_\rho(T))-D(X_\sigma(T)).
 \]
 
-The provisional design problem is:
+The feasibility-first design grammar is:
 
-\[
-\boxed{(P^*,\sigma^*)=\arg\max_{P,\sigma}EBU_G(P,\sigma;T)}
-\]
+1. declare admissible states, histories, actions, schedules, boundaries,
+   capacities, commitments, service obligations, and information;
+2. reject inadmissible candidates;
+3. compare the remaining candidates with a declared scalar or vector
+   objective, units, horizon, uncertainty, comparator, and tie rule; and
+4. report trade-offs when no scientifically justified scalarization exists.
 
-subject to resource, capacity, fairness, resilience, uncertainty, autonomy, measurement-cost, and coordination-cost constraints.
+No universal maximize-EBU rule is adopted.
 
 ### Detailed chapter structure
 
 | Ch. | Working title | What the chapter does | Required evidence and figures |
 |---|---|---|---|
-| VIII.1 | **From Dynamic Routes to a Coordination Field** | Shows why locally good routes can still create system-wide peaks, conflicts, or fragility. Defines the new object: a network of providers whose actions interact through timing and structure. | Local-versus-system outcome example and dependency map. |
-| VIII.2 | **State, Providers, Schedules, and Evaluation Horizons** | Defines the minimal dynamic coordination model: provider nodes, actions, capacities, delays, schedules, commitments, state, and horizon. Separates physical variables from policy variables. | Object diagram, units table, and reference configuration. |
-| VIII.3 | **Actions as Time-Dependent Signals** | Represents action intensity, duration, start time, and recovery as signals acting on a field. Establishes when continuous, discrete, pulse, or event-based descriptions are appropriate. Uses switched storage and RC/RL-like models as declared analogies for memory and delay, never as automatic electrical identities. | Signal plots, matched discrete/continuous examples, and switched-storage response comparisons. |
-| VIII.4 | **Coordination Advantage Requires a Reference** | Derives \(C_{\sigma\mid\rho}\) and imports the comparator discipline from Part VI. Shows why an apparently good schedule has no interpretable advantage until the reference is declared. | Reference-schedule comparisons and sign examples. |
-| VIII.5 | **One Objective Is Not Enough** | Defines total EBU, peak distortion, recovery time, unmet need, resource use, resilience, fairness, autonomy, uncertainty, and coordination cost. Uses Pareto frontiers where no single scalar is justified. | Metric dashboard and Pareto plots. |
-| VIII.6 | **Sequence, Timing, and Scheduling** | Tests order, start-time offsets, batching, maintenance windows, and shared capacity. Connects schedule optimization to many-action interaction without assuming that maximum simultaneity is best. | Gantt-like schedules, capacity traces, and optimality counterexamples. |
-| VIII.7 | **Phase Distribution and Peak Reduction** | Studies whether shifting action phases reduces peaks or causes harmful delay. Defines phase only where periodic or quasi-periodic structure exists. | Phase sweeps, peak maps, and phase-response curves. |
-| VIII.8 | **Provider Placement and Geometry** | Compares centralized, distributed, near-need, near-source, and hybrid placement under transport, response-time, capacity, and failure constraints. | Spatial layouts and placement trade-off surfaces. |
-| VIII.9 | **Topology Comparison Under Common Rules** | Compares line, ring, hub, lattice, modular, small-world, hierarchical, recursive, distributed, learned, and circuit-inspired graphs under a common outer boundary, equal external budgets, equal initial/terminal inventory accounting, identical objectives, and all relevant losses. No attractive topology or electrical analogy is privileged in advance, and hidden-input improvements are falsifiers. | Common-boundary benchmark panels, external-budget and terminal-inventory audits, and performance tables. |
-| VIII.10 | **Propagation, Delay, and Causal Reach** | Tests how disturbances and actions propagate through edges with distance-dependent or state-dependent delays. Defines causal reach, distinguishes propagation from simultaneous correlation, requires all relevant field boundary fluxes, and separates valid lumped-network models from distributed or time-varying cases that require richer field equations. | Space-time plots, boundary-flux and delay-versus-distance tests, and lumped-versus-distributed failure examples. |
-| VIII.11 | **When the Word “Wave” Is Earned** | Requires propagation, distance-dependent delay, amplitude and phase, reproducible reinforcement or cancellation, and identifiable modes before calling a pattern a wave. Provides non-wave counterexamples. | Space-time heatmaps, interference experiments, and falsifier checklist. |
-| VIII.12 | **Graph Spectra and Coordination Modes** | Uses eigenvalues and eigenvectors as analytical tools for network modes, synchronization, bottlenecks, and recovery. Clearly separates mathematical modes from observed physical propagation. | Spectral plots and mode reconstruction tests. |
-| VIII.13 | **Interaction Hierarchies Across Space and Time** | Extends pairwise and higher-order interaction diagnostics from Part VI to distributed schedules and defines multi-level boundary roll-up in which internal transfers cancel exactly once. Taylor expansions and interaction decompositions remain tools, not automatic causal allocations. | Pair/triple interaction maps, child/parent boundary ledgers, and truncation-error plots. |
-| VIII.14 | **Resilience, Failure, and Recovery** | Tests node loss, edge loss, delayed information, correlated failure, reserve exhaustion, and adversarial load. Compares efficiency under normal operation with graceful degradation. | Failure cascades, recovery trajectories, and resilience frontiers. |
-| VIII.15 | **Scaling Laws, Saturation, and Regime Change** | Searches for linear, sublinear, superlinear, saturating, and threshold behaviour as system size grows. Fits alternatives and reports uncertainty rather than choosing a power law because it looks plausible. | Log-log and linear comparisons, residuals, and regime maps. |
-| VIII.16 | **Sequences, Periodicity, and Recurrence Hypotheses** | Tests Fibonacci-like recurrences, other integer sequences, oscillations, and periodic schedules against null and alternative models. A recognizable sequence is a hypothesis, not evidence of a law. | Model-comparison plots and out-of-sample predictions. |
-| VIII.17 | **Modularity, Hierarchy, Self-Similarity, and Fractal Hypotheses** | Compares modular, hierarchical, recursive, and self-similar organization. A fractal claim requires scale range, reproducible scaling, and predictive value beyond simpler alternatives. | Multiscale network plots and competing-model evidence. |
-| VIII.18 | **Society-Scale Coordination Experiments and the Evidence Ledger** | Runs the strongest surviving models at larger scale with fairness, autonomy, privacy, uncertainty, coordination cost, boundary roll-up, and omitted-flow audits included. States what coordination can inform before institutions choose how to use it. | Society-scale simulations, boundary-completeness and hidden-input falsifiers, sensitivity analyses, and final claim ledger. |
+| VIII.1 | **From Dynamic Routes to Coordination** | Shows why locally valid routes can create system-wide peaks, conflicts, or fragility. Defines provider, action, capacity, commitment, state, and horizon objects without inferring their domain meaning. | Local-versus-system example and responsibility map. |
+| VIII.2 | **Complete State, Histories, and Evaluation Horizons** | Separates physical state, policy memory, information, commitments, pending effects, and settlement history. | Complete/incomplete state diagrams and hidden-history counterexamples. |
+| VIII.3 | **Actions Through Time** | Represents start, duration, completion, delay, recovery, and event order with declared clocks and modes. | Timelines and matched discrete/hybrid examples. |
+| VIII.4 | **Coordination Advantage Requires a Reference** | Derives \(C_{\sigma\mid\rho}\) and shows why timing or placement has no interpretable advantage without a frozen comparator. | Reference-schedule comparisons and sign examples. |
+| VIII.5 | **Feasibility Before Objectives** | Applies the accepted scalar-or-vector grammar to service, burden, resource use, resilience, uncertainty, fairness, autonomy, and coordination cost. | Feasibility filters and Pareto examples. |
+| VIII.6 | **Sequence, Timing, and Shared Capacity** | Tests order, start-time offsets, batching, maintenance windows, reservations, and capacity conflicts without assuming maximum simultaneity is best. | Schedules, capacity traces, and counterexamples. |
+| VIII.7 | **Staggering and Peak Reduction** | Studies whether delayed or staggered actions reduce peaks or cause harmful service delay under a declared horizon. | Offset sweeps, peak maps, and delay trade-offs. |
+| VIII.8 | **Provider Placement Under Common Boundaries** | Compares centralized, distributed, near-need, near-source, and hybrid placement with equal external budgets and complete route, loss, delay, and service accounting. | Placement trade-off surfaces and hidden-input falsifiers. |
+| VIII.9 | **Active Topology and Geometry: Cross-Reference Only** | Briefly connects currently active provider/action relations and spatial placement to the canonical structural definitions and Stage B evidence owned principally by Part VI. It introduces no motif catalogue, canonical proof, recurrence study, benchmark, or atlas. | One cross-reference diagram and one identity-versus-performance card. |
+| VIII.10 | **Delay, Causal Reach, and Observation Age** | Distinguishes delayed effects, common causes, and causal reach using complete clocks, histories, interventions, and uncertainty. | Time-indexed dependency diagrams and delayed-causality failures. |
+| VIII.11 | **Information Views and Stale Decisions** | Compares complete, local, delayed, private, and strategically reported information under frozen read sets. | Information-view diagrams and stale-decision counterexamples. |
+| VIII.12 | **Queues, Reservations, and Commitment Conflicts** | Tests queue disciplines and reservation reconciliation while separating scientific feasibility from institutional priority. | Queue traces, commitment conflicts, and unresolved-priority cases. |
+| VIII.13 | **Boundary Roll-Up Through Time** | Applies history-wide equivalence and cancels eligible internal transfers exactly once while retaining loss, burden, residual, and delayed effects. | Child/parent history ledgers and boundary-negative controls. |
+| VIII.14 | **Resilience, Failure, and Recovery** | Tests provider loss, route loss, delayed information, correlated failure, reserve exhaustion, and adversarial load. | Failure cascades, recovery histories, and resilience frontiers. |
+| VIII.15 | **Scaling, Saturation, and Regime Change** | Compares linear, sublinear, superlinear, saturating, and threshold models under common data and reports uncertainty without privileging a visual pattern. | Competing-model residuals and regime maps. |
+| VIII.16 | **Cooperation, Redundancy, and Conflict** | Measures group outcomes and comparator-relative interaction while keeping structural support, active relations, causal attribution, settlement, and social judgment distinct. | Positive/negative/zero worlds and causal nonclaim cards. |
+| VIII.17 | **Coordination Overhead, Privacy, and Contestability** | Accounts for information, negotiation, monitoring, appeal, autonomy, and power costs rather than treating coordination as free. | Overhead ledgers and privacy/contestability cases. |
+| VIII.18 | **Controlled Coordination Evidence Ledger** | Integrates surviving timing, placement, capacity, history, resilience, and institutional-boundary findings and states exactly what remains unresolved. | Registered-result ledger, sensitivity analysis, falsifier table, and claim-status map. |
 
 ### Non-negotiable research discipline
 
-- Waves are not assumed.
-- Fibonacci-like sequences are not assumed.
-- Power laws are not assumed.
-- Fractals are not assumed.
-- Centralization is not assumed to be efficient.
-- Decentralization is not assumed to be resilient.
-- The best physical objective is not assumed to be the best institution.
-- A circuit analogy is not assumed to be an electrical derivation of EBU.
-- Kirchhoff closure, linear superposition, and equivalent-resistance formulae
-  are not assumed outside their explicitly declared model conditions.
+- Canonical identity is not performance.
+- Active topology is not structural support, physical transport, causal
+  attribution, settlement, or institutional authority.
+- Timing offsets are not a physical-phase programme.
+- Fibonacci, other recurrences, and geometric resemblance are not assumed.
+- Power laws and scale-free claims are not assumed.
+- Centralization is not assumed efficient.
+- Decentralization is not assumed resilient.
+- Cooperation is not assumed beneficial, causal, fair, or socially sufficient.
+- A physically preferred arrangement does not select an institution.
+- The excluded voltage, physical-wave, phase-interference, and superposition
+  programmes remain removed.
 
-Candidate patterns must compete against simpler models using the same data, objectives, constraints, and validation rules.
+Candidate models must compete under the same data, objective grammar,
+constraints, boundary, history, accounts, uncertainty, and validation rules.
 
-**Closing transition to Part IX:** Part VIII identifies physically promising coordination mechanisms and their limits. Part IX must decide how an institution can quote, measure, guarantee, contest, and learn from those actions without converting a physical model into unaccountable social power.
+**Closing transition to Part IX:** Part VIII can identify conditional
+coordination trade-offs and their limits. Part IX must decide how institutions
+quote, authorize, measure, contest, and learn without converting a physical
+model into unaccountable social power.
 
 ---
 
@@ -1060,7 +1119,7 @@ Fraud, sensor manipulation, material actor deviation, and knowingly experimental
 | Ch. | Working title | What the chapter does | Required evidence and figures |
 |---|---|---|---|
 | IX.1 | **From a Physical Action Equation to an Economy** | Summarizes the validated chain from Parts I-VIII and separates established science from the institutional choices still required. Defines the minimum evidence needed before broader adoption. | Series dependency map and claim-status ledger. |
-| IX.2 | **Money and EBU Answer Different Questions** | Explains money as a system of claims, prices, and exchange while EBU records represented physical transition consequences. Shows why both can coexist during observation and transition phases. | Side-by-side transaction examples and non-equivalence table. |
+| IX.2 | **Money and EBU Answer Different Questions** | Explains money as a system of claims, prices, and exchange while EBU records represented physical transition consequences. Shows why both can coexist during observation and transition stages. | Side-by-side transaction examples and non-equivalence table. |
 | IX.3 | **An EBU Transaction Is Not Buyer-to-Seller Payment** | Reuses, without re-proving, actor closure to explain why several actors may receive positive lines and why actor balances need not be equal and opposite. Prevents EBU from being described as a conserved token. | Actor-line diagrams and monetary-closure comparison. |
 | IX.4 | **The Complete Economic Action Record** | Integrates request, permission, quote, acceptance, commitments, child actions, route segments, construction burden, measurements, certification, field versions, physical boundary transfers, represented-stock and physical residuals, EBU accounting, causal lines, authorization, institutional responsibility/settlement, and worker-compensation references into one auditable but layered record. It freezes physical burden \(\neq\) personal blame \(\neq\) institutional responsibility \(\neq\) compensation. | Full five-layer record schema, field-epoch lineage, non-equivalence table, and end-to-end lifecycle. |
 | IX.5 | **Products and Services as Verified Supply Histories** | Replaces a single product label with a versioned chain of material, energy, useful stock, service, transport, labour, maintenance, loss, uncertainty, and lifecycle records. Defines product-system boundaries and multi-scale closure rules to prevent omission, duplicate internal transfers, and infinite regress. | Product provenance and lifecycle control-volume graph, roll-up ledger, and complete/incomplete history examples. |
@@ -1111,20 +1170,27 @@ Part IX must present the long-term destination positively while making clear tha
 | Outcome sensitivity and instrument validation | Part IV | Part III Chapters 58-59 |
 | Observation age, uncertainty, robust permission, Gate 1E | Part IV | Part III Chapter 60 |
 | Recursive feasibility, invariance, stability, attraction, recovery, and compositional homeostasis proofs | Part V | Part II Chapter 43; Part III 62.17-62.18; Part I explains but does not prove the distinction |
-| Reduced stock ledgers, open control volumes, isolated conservation, residual observability, boundary roll-up, explanatory corrections, selective visuals, and five-layer infrastructure separation | Historical Part I 27-42-page integrated-revision baseline, `PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md`, and `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` | Part IV owns measurement; Part V owns conservation-manifold/homeostasis separation and proofs; Part VI owns atomic groups and Kirchhoff/control-volume comparison; Part VII owns physical infrastructure actions, field versions, and future transaction consequences; Part VIII owns fields, waves, hierarchy, and roll-up; Part IX owns authorization, responsibility, public provision, compensation, product/lifecycle/supply-network closure, and disputes |
-| Dissipation-potential explanation and bounded Onsager lineage | Future Part I regeneration under separate authority | Derive \(\Psi_e\) as accumulated opposition before differentiating it; preserve nonnegative thresholded flow; add only the short structural-inspiration paragraph; verify the historical citation against primary sources; make no thermodynamic identity or reciprocal-relations claim. |
-| O1-Q/F/M/I/E and certified field epochs | Part I defines the split; Parts IV, V, VII, and IX own the unresolved work by layer | O1-Q forbids speculative immediate credit; O1-F makes certified changes prospective; O1-M/I/E remain open and O1-E links to O6 |
-| Sequential telescoping and parallel interaction | Part VI | Part II Chapter 37; `SEQUENTIAL_PARALLEL_BRIDGE.md` |
-| Network-potential closure, shared-source flow models, and circuit-analogy limits | Part VI | §7.3 prior-art map; Part VIII extends storage, switching, propagation, and topology tests |
-| Group receipts, causal identifiability, O3, batching | Part VI | Part II Chapter 35; Part III Chapter 51 |
-| Dynamic routes, route actors, cooperation, adaptive infrastructure | Part VII | Part II Chapter 42; Part III 62.9-62.11 |
-| Timing, placement, topology, waves, spectra, scaling | Part VIII | Parts VI-VII provide prerequisites |
-| Binding quotes, residuals, reserves, enterprise, intentional misconduct, sanctions, liability, compensation, withholding, and governance | Part IX | Parts III-IV and VI-VIII provide prerequisites |
-| Access, poverty, disability, rationing, common services | Part IX | Part III 62.12-62.16 introduces the boundary |
+| Reduced stock ledgers, open control volumes, isolated conservation, residual observability, and boundary roll-up | Historical Part I integrated-revision baseline and Conservation and Boundary Accounting Foundation | Part IV owns measurement; Part V owns homeostasis separation; Part VI owns atomic groups and recursive boundary equivalence; Part VII owns route accounting; Part VIII owns dynamic roll-up; Part IX owns institutional closure |
+| Dissipation-potential explanation and bounded Onsager lineage | Future Part I regeneration under separate authority | Derive \(\Psi_e\) as accumulated opposition before differentiating; preserve the nonnegative thresholded flow and thermodynamic nonclaims |
+| O1-Q/F/M/I/E and certified field epochs | Part I defines the split; Parts IV, V, VII, and IX own unresolved work by layer | O1-Q forbids speculative current credit; O1-F makes certified changes prospective |
+| Sequential telescoping and parallel interaction | Part VI | Part II Chapter 37 and Sequential–Parallel Bridge v0.2 |
+| Canonical motifs, topology benchmarks, recursive reuse, and proof appendix | Part VI | Canonical Topology / Motif Programme authority; Part VIII receives only a short active-topology/geometry cross-reference |
+| Group receipts, causal identifiability, O3, and batching | Part VI | Part II Chapter 35; Part III Chapter 51 |
+| Dynamic routes, route actors, cooperation, and adaptive infrastructure | Part VII | Part II Chapter 42; Part III 62.9-62.11 |
+| Timing, placement, information, capacity, resilience, and dynamic coordination | Part VIII | Parts VI-VII provide prerequisites |
+| Binding quotes, residuals, reserves, enterprise, misconduct, sanctions, liability, compensation, withholding, and governance | Part IX | Parts III-IV and VI-VIII provide prerequisites |
+| Access, poverty, disability, rationing, and common services | Part IX | Part III 62.12-62.16 introduces the boundary |
 
 The allocation rule is:
 
-> A later book may summarize an earlier result in one bridge section, but it may not re-present an established explanation as a new theorem or new chapter programme.
+> A later book may summarize an earlier result in one bridge section, but it
+> may not re-present an established explanation as a new theorem or a duplicate
+> chapter programme.
+
+The complete canonical motif programme belongs principally to Part VI after
+sequential-parallel and higher-order interaction foundations. Part VIII's one
+short cross-reference does not reopen the canonical proof, motif catalogue,
+Fibonacci count, benchmark programme, or atlas.
 
 ---
 
@@ -1206,33 +1272,48 @@ A missing unit, unknown boundary channel, duplicate roll-up transfer, or
 undeclared tolerance must fail closed. This paragraph records scientific and
 accounting requirements only; it grants no framework implementation authority.
 
-### 12.5 Future circuit-inspired domain adapters
+### 12.5 Canonical topology declarations and stage boundary
 
-K1-K6 do not add an I-1 core type or silently expand the accepted framework
-file manifest. They identify possible later Part VI/Part VIII domain adapters:
+A later, separately authorized Stage A may add only inert declarations, pure
+validators, exhaustive canonical identity for exactly \(0\le n\le8\), a
+topology-specific typed digest, and static conformance fixtures. The exact
+prospective new paths are src/ebu_framework/topology.py,
+tests/framework/fixtures/canonical_topology_v1.json, and
+tests/framework/test_canonical_topology.py. Tightly scoped future changes may
+touch only identity.py, hashing.py, errors.py, and package exports as frozen in
+the mechanical authority.
 
-- a state-potential graph projection for path and loop closure;
-- a typed resource-flow conservation model with stock and loss;
-- a domain-owned constitutive branch relation between declared potential-like
-  difference and flow;
-- a finite-source capacity/internal-impedance model; and
-- a switched-storage dynamic model with explicit memory and horizon.
+Stage A may not infer topology, call transitions, calculate EBU, optimize,
+benchmark, cache results, materialize a result, or execute a scientific model.
+The inert benchmark declaration/result shapes are not permission to run or
+publish a benchmark.
 
-Before any such adapter is implemented, the applicable framework extension
-stage must freeze its types, units, numerical policy, capability class,
-constitutive assumptions, falsifiers, and exact files. The adapter must fail
-closed when the analogy's conditions do not hold. It must not expose a generic
-“apply Kirchhoff” function, manufacture an action resistance, or treat EBU as
-voltage, current, power, energy, or a conserved token.
+Only a separately authorized Stage B may create a production-independent
+research/topology/ area for finite full/compressed comparisons, enumeration,
+declared recursive controls, boundary negatives, correction/invalidation, and
+a nonnormative atlas. Protocol, plan, execution, result, and publication
+authorities remain separate.
+
+Stage C is unavailable. No committed runtime-cache path is named. Concrete
+query-domain sufficiency, dependency and alias closure, correction and
+invalidation, history-wide equivalence, interaction preservation, performance,
+audit, durability, recovery, correction, and publication must be accepted
+before any runtime reuse.
+
+Bridge v0.2 and I-6 remain exact and unchanged. Topology is neither prerequisite
+nor blocker; no topology benchmark, Fibonacci primitive, inference, or cache
+enters I-6.
 
 ---
 
 ## 13. Research and manuscript-generation sequence
 
 The documentation foundation through the framework specification and I-0 plan
-was accepted at `foundation-v0.1.0`. The circuit-network, literature, and
-conservation-accounting extensions are later planning work and are not
-retroactively part of that immutable tag. Later framework stages remain on
+was accepted at `foundation-v0.1.0`. The historical circuit-network extension
+is superseded prospectively by the Canonical Topology / Motif Programme
+replacement. The literature and conservation-accounting extensions remain
+later planning work and are not retroactively part of that immutable tag.
+Later framework stages remain on
 their own authorized histories. At checkpoint
 `9c4b121acd51ce7cbaab1bad7b3b5bab9eaebd6f`, Framework I-4 authority is
 integrated and Framework I-4 implementation has not begun. Any acceptance,
@@ -1256,7 +1337,9 @@ must not move.
 2. Maintain `DYNAMIC_COORDINATION_FOUNDATION.md` v0.1 with state, network, schedule, objectives, constraints, theorem candidates, and falsifiers.
 3. Preserve the common notation and claim-status vocabulary.
 4. Preserve the accepted unified Python framework specification and I-0 implementation plan.
-5. Review this K1-K6 circuit-network extension as a prospective documentation patch; do not treat it as an observed result or framework implementation authority.
+5. Maintain the Canonical Topology / Motif Programme as prospective
+   replacement authority; do not treat its Stage A declarations, Stage B
+   research families, \(J_n\), or atlas as implemented or observed.
 6. Maintain `CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md` v0.1 and preserve its three account levels, Part I terminology correction, nonclaims, and exact historical compatibility.
 7. Maintain a claim-by-claim literature map that records established antecedents, EBU-specific formulations, candidate contributions, nonclaims, and unresolved searches.
 8. Complete a dedicated literature checkpoint for each part before its manuscript-generation gate; the §7.4 seed bibliography is not sufficient for Parts IV-IX as a whole.
@@ -1336,19 +1419,33 @@ following work proceed under separate authority:
 4. complete Gate 1E in its repository-defined scope;
 5. develop the Part V constrained transition, viable-set, recursive-feasibility, invariance, Lyapunov, disturbance, and counterexample programme;
 6. preregister and execute the deterministic two-action sequential-parallel test matrix;
-7. complete the systematic literature comparison for the specific sequential-parallel and K1-K6 claims, then prospectively specify, preregister, and test K1-K6, including path closure, common-terminal branches, finite shared sources, nonlinear superposition failure, switched storage, and loss-aware cancellation. These tests must compete against established non-EBU models and retain every analogy limitation;
+7. complete the systematic literature comparison for sequential-parallel,
+   canonical labeling, recursive composition, incidence-algebra,
+   factorization, boundary-sufficiency, invalidation, and query-lower-bound
+   claims before any novelty statement;
 8. execute many-action, comparator, shared-source, O3, group-receipt, allocation, batching, and delayed-settlement studies;
 9. execute dynamic route, actor, congestion, uncertainty, cooperation, fairness, and adaptive-infrastructure studies;
-10. execute timing, phase, placement, topology, propagation, spectral, resilience, scaling, and pattern-discovery studies, including only those dynamic circuit analogies that survive K1-K6; and
+10. under a separate Stage B protocol, compare full and certified compressed
+    finite computations across Fibonacci, Lucas, chain, tree, balanced,
+    random-recursive, perturbed-substitution, boundary-negative, and
+    correction/invalidation controls; separately execute timing, placement,
+    information, capacity, resilience, scaling, and coordination studies; and
 11. execute quote, residual, reserve, access, enterprise, behaviour, governance, fraud, transition, and complete-economy simulation studies.
 
 ### Phase G - Generate Parts IV-IX only at evidence-complete checkpoints
 
 1. Generate Part IV after Gate 1D-C, robust-P1C alignment, and relevant Gate 1E results are committed.
 2. Generate Part V after the strongest constrained homeostasis theorem and adversarial simulations meet their declared threshold.
-3. Generate Part VI after the sequential-parallel bridge, two-action matrix, K1-K6 circuit-network model suite, many-action core, group receipts, and O3 boundary are validated. The manuscript must include both the useful correspondence and the failed analogies.
+3. Generate Part VI after the sequential-parallel bridge, two-action matrix,
+   many-action and higher-order core, group receipts, O3 boundary, accepted
+   canonical identity proofs, and any claimed Stage B motif evidence are
+   complete. The canonical motif unit must place every capability beside its
+   assumptions and negative controls.
 4. Generate Part VII after route composition, actor closure, congestion, cooperation, fairness, and adaptive-network studies are complete.
-5. Generate Part VIII after Dynamic Coordination, storage/switching and lumped-versus-distributed network comparisons, wave diagnostics, topology comparison, resilience, scaling, and pattern tests are complete.
+5. Generate Part VIII after timing, placement, information, capacity,
+   history-wide roll-up, resilience, coordination-overhead, and scaling
+   studies are complete. Its active-topology/geometry treatment remains one
+   short cross-reference to Part VI.
 6. Generate Part IX last, after the quote, residual, reserve, access, governance, behavioural, transition, and complete-economy programme can synthesize the surviving results.
 
 Every Part IV-IX generation gate inherits §§2.8-2.10 and also requires the
@@ -1395,14 +1492,24 @@ be stable, and it does not authorize any later scientific or publication stage.
 7. No future result chapter may be written as if a preregistered study has already produced its intended result.
 8. No theorem may claim more than its explicit assumptions support.
 9. No allocation rule may be presented as a physically measured causal contribution unless identifiability evidence exists.
-10. No wave, power law, Fibonacci recurrence, fractal, behavioural transformation, or economy-wide benefit may be assumed in advance.
-11. No Kirchhoff law, circuit topology, superposition principle, or equivalent-resistance formula may be presented as validation or derivation of EBU. Each use must declare whether it is an algebraic correspondence, a domain model, or an explanatory analogy.
+10. Voltage, physical-wave, phase-interference, and superposition-as-EBU
+    concepts remain excluded. Power laws, universal Fibonacci recurrence,
+    fractals, behavioural transformation, and economy-wide benefit may not be
+    assumed.
+11. Canonical identity may not be presented as performance evidence. The
+    exact Fibonacci count applies only to the declared family; A1–A8,
+    output-size, and query-domain assumptions must accompany every compression
+    claim.
 12. Framework I-4 authority is integrated at the 2026-08-18 prospective
     checkpoint, but Framework I-4 implementation has not begun. This register
     authorizes no I-4 implementation, later framework stage, Bridge change, or
     Dynamic Coordination implementation change.
 13. No account may impose a universal zero residual, infer isolation from ledger closure, use a hidden global tolerance, or treat an omitted flow as a structural improvement.
-14. No future manuscript may claim that the EBU sequential-parallel equations, Kirchhoff analogy, interaction decomposition, shared-capacity problem, causal attribution method, or allocation rule is globally novel until the applicable claim-by-claim literature checkpoint is complete.
+14. No future manuscript may claim that the EBU sequential-parallel
+    equations, canonical topology integration, recursive compression,
+    interaction decomposition, shared-capacity problem, causal attribution
+    method, or allocation rule is globally novel until the applicable
+    claim-by-claim literature checkpoint is complete.
 15. No historical D0, P1C, service, Gate 1D-C, or other Gate model may be retroactively described as isolated or physically boundary-complete without separate evidence and authority.
 16. No Part I construction or restoration example may equate physical burden
     with personal blame, institutional responsibility, or worker
@@ -1422,33 +1529,32 @@ be stable, and it does not authorize any later scientific or publication stage.
 
 ## 15. Immediate next deliverables
 
-1. **Independent book-brief audit** - independently review exactly this
-   planning update for the Parts I-IX comprehension standard, the pending
-   \(\Psi_e\) and Onsager explanations, framework-alpha sequence, page-scenario
-   arithmetic, historical-baseline preservation, and nonclaims. Do not begin
-   book regeneration, skill creation, framework implementation, or scientific
-   execution.
-2. **Prospective documentation acceptance** - only if separately authorized
-   after review, commit only the exact accepted documentation paths and
-   reconcile their identities prospectively. The existence of this unstaged
-   brief authorizes no staging, commit, push, tag, or publication.
-3. **Framework I-4 implementation** - this is the next framework stage in the
-   accepted sequence, but it requires separate authority and has not begun.
+1. **Independent Canonical Topology / Motif Programme authority audit** —
+   review exactly the five new and five synchronized paths for mathematical
+   claims, schema agreement, source identities, complete predecessor
+   reconstruction, projection hashes, stage boundaries, book replacement,
+   I-6 noninterference, scope, and nonclaims. Do not begin Stage A, Stage B,
+   Stage C, book generation, atlas work, or scientific execution.
+2. **Prospective documentation acceptance** — only after separate
+   authorization, commit exactly an independently accepted package and
+   reconcile its identities. This unstaged candidate authorizes no staging,
+   commit, push, tag, or publication.
+3. **Later Stage A implementation authority** — possible only after acceptance;
+   limited to inert declarations, pure validators, exhaustive \(n\le8\)
+   canonical identity, typed identity, and static conformance fixtures. It is
+   not begun.
 
-The following accepted work remains later, separately authorized backlog rather
-than an immediate consequence of this update:
+The separately authorized backlog retains Gate, framework, book, route,
+coordination, institutional, and publication work at their existing
+boundaries. For this programme specifically:
 
-- complete Framework I-5 through I-9 and framework alpha in order;
-- perform the framework-alpha Parts I-III regeneration checkpoint under
-  separate manuscript and PDF authorities;
-- allow user review while separately authorized protocols are prepared;
-- undertake any Gate 1D-C incident remedy, robust-P1C, Gate 1E, deterministic
-  parallel-testing, K1-K6, or other scientific work only at its proper later
-  boundary;
-- maintain Bridge, Dynamic Coordination, conservation, boundary-accounting,
-  literature, originality, and nearest-antecedent work under their respective
-  authorities; and
-- generate Parts IV-IX only after their evidence and §§2.8-2.10 gates pass.
+- Stage B requires a frozen protocol, plan, implementation, pre-execution
+  validation, execution, result, interpretation, correction, and publication
+  sequence;
+- Stage C remains unavailable and names no committed runtime-cache path;
+- book and PDF edits require independent manuscript authority;
+- the nonnormative atlas requires accepted Stage B evidence; and
+- Bridge v0.2 and I-6 remain unchanged and unblocked.
 
 ---
 
@@ -1467,6 +1573,10 @@ This revision makes five structural corrections:
 This is now the preferred handoff architecture, subject to repository reconciliation and later evidence-driven revision.
 
 ### 16.2 Circuit-network extension - 2026-08-13
+
+**Historical status:** superseded prospectively by §16.8. The items below
+record the earlier planning decision and create no current programme,
+prerequisite, adapter, benchmark, or book obligation.
 
 This extension:
 
@@ -1596,3 +1706,36 @@ This prospective documentation-only extension:
 7. authorizes no manuscript, generator, LaTeX, template, image, PDF,
    framework, model, simulation, experiment, Gate, publication, or skill
    operation.
+
+### 16.8 Canonical Topology / Motif Programme replacement
+
+This prospective documentation-only replacement:
+
+1. supersedes the future electrical-voltage, physical-wave,
+   phase-interference, superposition, K1–K6, and competing Part VIII
+   topology/recurrence programme while retaining their historical record;
+2. freezes the five-layer \(\Theta=(P,\mathcal C,\mathcal O,\mathcal H,\mathcal
+   B)\) structural object, faithful small-\(n\) canonical identity, and
+   identity/performance separation;
+3. places the complete Canonical Motifs, Topology Benchmarks, and Recursive
+   Reuse teaching unit principally in Part VI after higher-order interaction;
+4. makes Part VIII's active-topology/geometry treatment one short
+   cross-reference and replaces its former wave, spectral, recurrence, and
+   motif chapters with dynamic coordination content;
+5. freezes the Parts I–III replacement ledger without adding a standalone
+   topology chapter;
+6. preserves the explanatory spine
+   \(V\to\mu=\nabla V\to f_e\to\Psi_e\to J_e\to G_T\to\) finite EBU;
+7. assigns canonical/isomorphism, poset enumeration, Möbius, recursive
+   compression, size/cost, invalidation/upward-cone, lower-bound, and
+   negative-control proofs to the mathematical appendix;
+8. keeps any atlas separate, versioned, and nonnormative;
+9. preserves Bridge v0.2 and I-6 exactly, with topology neither prerequisite
+   nor blocker; and
+10. authorizes no implementation, protocol, benchmark, execution, result,
+    manuscript/PDF edit, atlas, commit, push, or publication.
+
+The next possible stage is independent audit of the exact ten-path authority
+package. It is not begun by this register.
+
+CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_BOOK_STRUCTURE_SYNCHRONIZED

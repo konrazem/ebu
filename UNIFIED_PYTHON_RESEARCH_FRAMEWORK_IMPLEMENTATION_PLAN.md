@@ -3844,3 +3844,133 @@ Every vector includes complete ordered arguments, exact recursive runtime descri
 I-3A owns 5 exact paths, I-3B 6, I-3C 5, I-3D 4, and I-3E 3, exactly as assigned in §22.2. The corrected authority was accepted before I-3A started; I-3A, I-3B, and I-3C are accepted and integrated. The accepted one-time test repair is outside these counts and remains frozen. I-3D and I-3E remain unimplemented.
 
 Reduced/open accounts remain first-class, isolated completeness remains only a local declaration claim, and historical models require no migration. There is no universal zero residual or hidden tolerance. Residual computation is I-5, Bridge is I-6, Dynamic Coordination is I-7, and finalization/publication is I-8. None has begun.
+
+## 23. Prospective Canonical Topology / Motif Programme staging
+
+This section synchronizes the future implementation sequence with
+CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md and its two mechanical
+contracts. It is documentation only. It does not begin an implementation
+stage, run a test, or change the accepted I-1–I-6 path manifests.
+
+### 23.1 Stage A — separately authorized static implementation
+
+Stage A owns inert declaration formation, pure validation, versioned canonical
+serialization, the dedicated structural identity, and static conformance
+fixtures. The exact prospective new paths are:
+
+1. src/ebu_framework/topology.py;
+2. tests/framework/fixtures/canonical_topology_v1.json; and
+3. tests/framework/test_canonical_topology.py.
+
+Only tightly scoped future changes are permitted in:
+
+4. src/ebu_framework/identity.py;
+5. src/ebu_framework/hashing.py;
+6. src/ebu_framework/errors.py; and
+7. src/ebu_framework/__init__.py.
+
+The future authority must assign exact types, signatures, failure ordinals,
+exports, fixture bytes, test count, and path projection before any edit. It
+must implement exhaustive color- and layer-preserving canonicalization for
+exactly \(0\le n\le8\); \(n>8\) returns
+CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED without a heuristic identity.
+
+The exact inert shapes are LayeredTopologyDeclaration,
+CanonicalTopologyWitness, RecursiveMotifDeclaration,
+CertifiedBoundarySummaryDeclaration, TopologyBenchmarkDeclaration, and
+TopologyBenchmarkResult. Benchmark types are static envelopes only: Stage A
+does not compute or create a scientific result.
+
+Stage A may use static declaration fixtures and pure parsing, schema,
+canonicalization, hashing, comparison, and arithmetic checks. It must not
+import or call a transition, model step, runner, experiment, optimizer,
+benchmark, EBU calculator, result writer, renderer, or runtime cache.
+
+Its static arithmetic coverage must preserve unchanged Atomic F13:
+\(I_{\mathrm{raw}}(S)\) is defined for every subset and
+\(I_{\mathrm{raw}}(\varnothing)=E(\varnothing)\). The frozen supporting
+subvectors separately require the raw empty-to-empty correction, the
+\(I_{\mathrm{norm}}(\varnothing)=0\) convention, raw/normalized equality on
+every tested nonempty subset, baseline and nonempty correction deltas,
+noncontained zero deltas, nonzero-baseline pair and pure three-way examples,
+and explicit F13 consistency. No zero baseline may be assumed.
+
+The compatibility test inventory is:
+
+- tests/framework/test_primitives_envelopes.py;
+- tests/framework/test_i3_integration.py;
+- tests/framework/test_i3a_declarations.py;
+- tests/framework/test_i3b_declarations.py;
+- tests/framework/test_i3c_declarations.py;
+- tests/framework/test_i3d_declarations.py;
+- tests/framework/test_atomic_declarations.py; and
+- tests/framework/test_interaction_declarations.py.
+
+A separately authorized Stage A must verify these paths at its accepted base
+and fail closed on a missing or changed prerequisite rather than substituting
+a different test. Passing implementation tests would establish only tested
+structural behavior, not scientific topology truth or EBU performance.
+
+### 23.2 Stage B — production-independent research only
+
+Only a separate Stage B authority may create research/topology/. Its future
+scope may include full and compressed finite computations, strict enumeration,
+Fibonacci, Lucas, chain, tree, balanced, random-recursive, and
+perturbed-substitution controls, boundary-sufficiency negatives,
+correction/invalidation studies, and a versioned nonnormative atlas.
+
+Stage B requires independently frozen analytical design, preregistration,
+implementation, pre-execution validation, execution, interpretation, result,
+correction, and publication authorities. The protocol must freeze query
+domains, full and compressed algorithms, A1–A8 evidence, complete state and
+history, boundaries, feasibility, subset/removal semantics, losses, burden,
+commitments, queues, delays, memory, settlement, service, seeds, ordering,
+comparators, cost/output-size measures, \(R_n\), \(J_n\), falsifiers, and
+negative controls before execution.
+
+Where Möbius coefficients are used, the protocol must name the raw F13
+transform on all subsets separately from any normalized nonempty transform,
+declare the explicit possibly nonzero empty baseline, and preserve their exact
+correction behavior.
+
+Structural identity, feasible-poset restriction, sparse hypergraph support,
+structural additivity, recursive boundary compression, and correction locality
+must be tested and reported separately. No result may convert structural
+equivalence into equal performance, interaction into causality, or positive
+recursive surplus into fairness or universal social benefit.
+
+### 23.3 Stage C — unavailable
+
+No committed runtime-cache path, module, namespace, artifact, or registry
+entry is reserved. Stage C remains unavailable until separate theorem and
+operational authority fixes:
+
+1. sufficient summaries for concrete query families;
+2. exact query domains;
+3. complete dependency and alias graphs;
+4. correction and invalidation semantics;
+5. history-wide boundary equivalence;
+6. interaction preservation;
+7. complete key, performance, and output-size obligations;
+8. audit evidence;
+9. correction governance; and
+10. durability, recovery, finalization, and publication.
+
+### 23.4 I-6 and book noninterference
+
+Bridge v0.2 and I-6 remain unchanged. Topology is neither prerequisite nor
+blocker. No topology benchmark, Fibonacci primitive, inference, cache, type,
+validator, fixture, test, failure, or path is assigned to I-6. A later Stage B
+may reference separately authorized I-6 evidence without expanding the
+adapter.
+
+This plan authorizes no book, PDF, result figure, data product, or atlas.
+Future editorial work is replacement/consolidation, with the complete
+Canonical Motifs, Topology Benchmarks, and Recursive Reuse unit principally
+in Part VI and only a short active-topology/geometry cross-reference in Part
+VIII. Voltage, physical wave, phase-interference, Fermat-wave, and
+superposition-as-EBU content remains excluded.
+
+The next possible programme stage is independent audit of the ten-path
+authority package. Stage A, Stage B, Stage C, book work, execution, result
+interpretation, and publication are not begun.

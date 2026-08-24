@@ -1,0 +1,854 @@
+{
+  "contract_id": "ebu-canonical-topology-motif-programme-authority/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_DOCUMENTATION_ONLY_UNIMPLEMENTED_UNEXECUTED_UNAUDITED",
+  "authority_coordinate": {
+    "repository": "ebu",
+    "accepted_branch": "framework-v0.1",
+    "accepted_commit": "72183037b00930a766f0f0f613d8689bdfd82e8e",
+    "accepted_tree": "74ca6cc46b77bc1c13a3b1d2e736e0a56f246188",
+    "candidate_branch": "framework/canonical-topology-motif-programme-authority",
+    "human_authority": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+    "validation_contract": "canonical_topology_motif_programme_validation_contract.json",
+    "predecessor_manifest": "canonical_topology_motif_programme_predecessor_manifest.json",
+    "implementation_staging_plan": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_IMPLEMENTATION_STAGING_PLAN.md",
+    "agreement_rule": "Any Markdown/JSON semantic, schema, ordering, stage, or scope mismatch is an integrity failure requiring fail-closed refusal."
+  },
+  "canonical_json_profile": {
+    "profile_id": "CTMP_CANONICAL_JSON_V1",
+    "accepted_value_domain": [
+      "null",
+      "boolean",
+      "integer",
+      "NFC UTF-8 string",
+      "array",
+      "object"
+    ],
+    "rejected_value_domain": [
+      "float",
+      "NaN",
+      "positive infinity",
+      "negative infinity",
+      "duplicate object key",
+      "non-NFC string",
+      "non-string object key",
+      "surrogate code point"
+    ],
+    "object_key_order": "Recursive Unicode code-point lexical order.",
+    "array_order": "Preserved exactly unless a field schema explicitly classifies the field as an unordered semantic set.",
+    "unordered_set_rule": "Validate members, encode each member recursively under this profile, reject duplicate encoded members, and sort by encoded bytes.",
+    "encoding": "UTF-8 without BOM.",
+    "separators": "Comma and colon with no surrounding whitespace.",
+    "whitespace": "No insignificant whitespace.",
+    "escaping": "Shortest JSON escape required by RFC 8259; preserve non-ASCII Unicode as UTF-8.",
+    "top_level_line_termination": "Exactly one LF for projected fixture and projection documents; no LF inside a digest preimage unless the schema field contains one.",
+    "strict_parse": "Reject trailing content and duplicate keys before semantic validation."
+  },
+  "topology_schema": {
+    "schema_id": "CANONICAL_TOPOLOGY_SCHEMA_V1",
+    "serializer_id": "CANONICAL_TOPOLOGY_SERIALIZE_V1",
+    "identity_domain": "ebu-framework/canonical-topology-id/v1",
+    "permutation_domain": "local_vertex_name",
+    "exhaustive_vertex_bound": {
+      "minimum": 0,
+      "maximum": 8,
+      "inclusive": true,
+      "above_bound_outcome": "CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED",
+      "above_bound_prohibition": "No heuristic, partial, probabilistic, or implementation-dependent identity may be emitted."
+    },
+    "root_field_order": [
+      "schema_version",
+      "vertices",
+      "prerequisite_layer",
+      "constraint_layer",
+      "order_layer",
+      "interaction_layer",
+      "boundary_layer"
+    ],
+    "layers": [
+      {
+        "symbol": "P",
+        "field": "prerequisite_layer",
+        "meaning": "Prerequisites and admissible configurations.",
+        "relation_order": "unordered"
+      },
+      {
+        "symbol": "C",
+        "field": "constraint_layer",
+        "meaning": "Shared-factor incidence.",
+        "relation_order": "unordered"
+      },
+      {
+        "symbol": "O",
+        "field": "order_layer",
+        "meaning": "Precedence, concurrency, and accepted commutation evidence.",
+        "relation_order": "mixed; paths and child roles ordered, independent declarations unordered"
+      },
+      {
+        "symbol": "H",
+        "field": "interaction_layer",
+        "meaning": "Structural pair and higher-order support plus typed frozen interaction references.",
+        "relation_order": "unordered support sets with ordered roles preserved inside a record"
+      },
+      {
+        "symbol": "B",
+        "field": "boundary_layer",
+        "meaning": "Parent, port, boundary, and dependency structure.",
+        "relation_order": "mixed; ports unordered unless role-ordered, histories and child roles ordered"
+      }
+    ],
+    "vertex_colors": [
+      "semantic_type",
+      "role",
+      "unit",
+      "object_version",
+      "factor_kind",
+      "ordered_child_role",
+      "boundary_port_meaning",
+      "protocol_digest"
+    ],
+    "permutable_fields": [
+      "local_vertex_name"
+    ],
+    "ordered_fields": [
+      "order_layer.precedence_paths",
+      "order_layer.comparator_steps",
+      "boundary_layer.ordered_children",
+      "boundary_layer.history_refs",
+      "recursive_motif.composition_child_roles"
+    ],
+    "unordered_fields": [
+      "vertices",
+      "prerequisite_layer.relations",
+      "constraint_layer.factor_incidence",
+      "order_layer.concurrent_sets",
+      "interaction_layer.supports",
+      "boundary_layer.ports",
+      "boundary_layer.dependencies"
+    ],
+    "canonical_byte_construction": {
+      "normalized_payload_shape": "A seven-member JSON array whose members follow root_field_order exactly; each member is recursively normalized under CTMP_CANONICAL_JSON_V1, with unordered and ordered fields treated by their frozen field classifications.",
+      "normalized_payload_final_lf": false,
+      "serializer_domain": "ebu-framework/canonical-topology-serialize/v1",
+      "serializer_domain_encoding": "UTF-8",
+      "separator": "single zero byte",
+      "schema_version": "CANONICAL_TOPOLOGY_SCHEMA_V1",
+      "length_encoding": "unsigned 64-bit big-endian normalized-payload byte length",
+      "ordered_preimage_parts": [
+        "serializer_domain",
+        "separator",
+        "schema_version",
+        "separator",
+        "length_encoding",
+        "normalized_payload_bytes"
+      ],
+      "result": "Serialize_v(Theta)",
+      "prefix_free_and_injective_basis": "Fixed domain/version framing, fixed-width payload length, faithful normalized payload, and exact ordered/unordered field classification."
+    },
+    "structural_rejections_in_precedence_order": [
+      "TOPOLOGY_SCHEMA_VERSION_INVALID",
+      "TOPOLOGY_UNKNOWN_FIELD",
+      "TOPOLOGY_VALUE_DOMAIN_INVALID",
+      "TOPOLOGY_DUPLICATE_VERTEX",
+      "TOPOLOGY_DANGLING_VERTEX",
+      "TOPOLOGY_LAYER_TYPE_MISMATCH",
+      "TOPOLOGY_DUPLICATE_RELATION",
+      "TOPOLOGY_ILLEGAL_SELF_RELATION",
+      "TOPOLOGY_STRICT_ORDER_CYCLE",
+      "TOPOLOGY_COLLECTION_ORDER_INVALID",
+      "TOPOLOGY_STORED_BYTES_NONCANONICAL",
+      "CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED",
+      "CANONICAL_TOPOLOGY_WITNESS_MISMATCH",
+      "CANONICAL_TOPOLOGY_HASH_MISMATCH"
+    ],
+    "canonical_algorithm": [
+      "Strictly parse and validate the declared value domain and exact schema.",
+      "Normalize strings to the requirement that input is already NFC; reject rather than mutate non-NFC input.",
+      "Resolve the exact local-vertex permutation domain while preserving every color and layer.",
+      "Require 0 <= n <= 8.",
+      "Enumerate all n! permutations in lexicographic permutation order.",
+      "For each permutation, normalize unordered semantic sets and preserve ordered fields.",
+      "Serialize the complete schema-versioned layered object with CANONICAL_TOPOLOGY_SERIALIZE_V1.",
+      "Select the lexicographically least serialized byte string.",
+      "Construct the identity preimage with the exact digest-preimage profile.",
+      "Return canonical bytes, minimizing permutation witness, supported size, and CanonicalTopologyId."
+    ],
+    "digest_preimage": {
+      "domain": "ebu-framework/canonical-topology-id/v1",
+      "domain_encoding": "UTF-8",
+      "separator": "single zero byte",
+      "version": "CANONICAL_TOPOLOGY_SCHEMA_V1",
+      "length_encoding": "unsigned 64-bit big-endian canonical-byte length",
+      "payload": "Can_v(Theta)",
+      "ordered_parts": [
+        "domain",
+        "separator",
+        "version",
+        "separator",
+        "length_encoding",
+        "payload"
+      ],
+      "digest": "SHA-256 lowercase hexadecimal",
+      "typed_result": "CanonicalTopologyId"
+    },
+    "mathematical_contract": {
+      "canonical_minimum": "Can_v(Theta)=min_{pi in S_n} Serialize_v(pi Theta)",
+      "relabeling_invariance": "For every sigma in S_n, Can_v(sigma Theta)=Can_v(Theta).",
+      "isomorphism_characterization": "Under a faithful normalized colored layered encoding, Can_v(Theta)=Can_v(Theta') iff Theta and Theta' are color- and layer-preserving isomorphic.",
+      "digest_assumption": "Collision resistance only; the digest is not the isomorphism proof.",
+      "performance_nonidentity": "Measured EBU, service, feasibility, robustness, causal, settlement, fairness, and social values are excluded from canonical bytes and CanonicalTopologyId."
+    }
+  },
+  "finite_observation_inventory": [
+    {
+      "observation_id": "CTMP-FO-13",
+      "classification": "FO",
+      "method": "Generate every strict labeled relation, filter irreflexive and transitive relations, and quotient under every vertex permutation.",
+      "poset_counts": [
+        {
+          "vertex_count": 2,
+          "labeled_count": 3,
+          "unlabeled_count": 2
+        },
+        {
+          "vertex_count": 3,
+          "labeled_count": 19,
+          "unlabeled_count": 5
+        },
+        {
+          "vertex_count": 4,
+          "labeled_count": 219,
+          "unlabeled_count": 16
+        }
+      ],
+      "status": "FINITE_COMBINATORIAL_OBSERVATION_NOT_DOMAIN_TOPOLOGY"
+    },
+    {
+      "observation_id": "CTMP-FO-14",
+      "classification": "FO",
+      "method": "Quotient the three possible pair-support edges under S_3 and cross the four pair-support classes with absence/presence of the one triple hyperedge.",
+      "pair_support_orbit_count": 4,
+      "triple_hyperedge_states": 2,
+      "unweighted_three_action_support_topology_count": 8,
+      "status": "FINITE_COMBINATORIAL_OBSERVATION_NOT_MEASURED_INTERACTION"
+    }
+  ],
+  "proposed_catalogue_labels": {
+    "status": "PROPOSED_RESEARCH_LABELS_NOT_CANONICAL_AUTHORITY",
+    "labels": [
+      "independent block",
+      "sequential chain",
+      "prerequisite fork",
+      "reconvergent fork",
+      "order-sensitive fork",
+      "shared-constraint fork",
+      "join",
+      "pure higher-order hyperedge",
+      "recursively encapsulated parent",
+      "active topology switch",
+      "Fibonacci recursive composite"
+    ],
+    "rule": "A label becomes authoritative only after its exact typed definition is separately accepted; visual classification is forbidden."
+  },
+  "declaration_schemas": [
+    {
+      "name": "LayeredTopologyDeclaration",
+      "stage": "A",
+      "inert": true,
+      "required_fields": [
+        "envelope",
+        "schema_version",
+        "vertices",
+        "prerequisite_layer",
+        "constraint_layer",
+        "order_layer",
+        "interaction_layer",
+        "boundary_layer",
+        "source_refs",
+        "provenance_refs"
+      ],
+      "owns": "Canonical structural projection and its local invariants only.",
+      "does_not_own": "Meaning, truth, measurement, inference, causality, settlement, or performance of referenced declarations."
+    },
+    {
+      "name": "CanonicalTopologyWitness",
+      "stage": "A",
+      "inert": true,
+      "required_fields": [
+        "envelope",
+        "topology_ref",
+        "schema_version",
+        "serializer_version",
+        "permutation_domain",
+        "permutable_vertex_count",
+        "supported_bound",
+        "canonical_bytes_sha256",
+        "canonical_bytes_length",
+        "minimizing_permutation",
+        "canonical_topology_id",
+        "conformance_status"
+      ],
+      "owns": "Evidence that a supported declaration was canonicalized under the frozen exhaustive algorithm.",
+      "does_not_own": "Scientific equivalence, performance equivalence, or large-n identity."
+    },
+    {
+      "name": "RecursiveMotifDeclaration",
+      "stage": "A",
+      "inert": true,
+      "required_fields": [
+        "envelope",
+        "motif_definition_id",
+        "motif_instance_id",
+        "base_definition_refs",
+        "ordered_composition_rule_ref",
+        "ordered_child_roles",
+        "parent_port_refs",
+        "occurrence_identity_rule",
+        "topology_schema_ref",
+        "provenance_refs"
+      ],
+      "owns": "Versioned structural recurrence and definition/occurrence separation.",
+      "does_not_own": "Fibonacci EBU, boundary sufficiency, compression eligibility, or empirical benefit."
+    },
+    {
+      "name": "CertifiedBoundarySummaryDeclaration",
+      "stage": "A",
+      "inert": true,
+      "required_fields": [
+        "envelope",
+        "motif_instance_ref",
+        "boundary_protocol_ref",
+        "query_domain_ref",
+        "summary_schema_ref",
+        "initial_augmented_state_ref",
+        "external_history_ref",
+        "horizon_ref",
+        "composition_rule_ref",
+        "a1_a8_evidence_refs",
+        "history_equivalence_ref",
+        "interaction_preservation_ref",
+        "provenance_refs"
+      ],
+      "owns": "A declaration that evidence is required for a specific summary and query domain.",
+      "does_not_own": "Inference that A1-A8 or scientific sufficiency is true."
+    },
+    {
+      "name": "TopologyBenchmarkDeclaration",
+      "stage": "A_STATIC_SHAPE_ONLY_STAGE_B_SCIENTIFIC_USE",
+      "inert": true,
+      "required_fields": [
+        "envelope",
+        "initial_augmented_state_ref",
+        "field_ref",
+        "boundary_ref",
+        "topology_ref",
+        "action_refs",
+        "schema_versions",
+        "unit_dimension_refs",
+        "horizon",
+        "measurement_epochs",
+        "external_history_ref",
+        "removal_semantics_ref",
+        "feasibility_ref",
+        "preservation_ref",
+        "shared_constraint_resolver_ref",
+        "mode_reserve_commitment_queue_delay_memory_refs",
+        "conversion_loss_burden_process_account_refs",
+        "service_obligation_refs",
+        "randomness_and_seed_rule",
+        "tie_rule",
+        "comparator_ref",
+        "numerical_policy_ref",
+        "preregistration_digest",
+        "provenance_refs"
+      ],
+      "owns": "A complete frozen prospective benchmark declaration.",
+      "does_not_own": "Permission to run, observed data, result status, or publication."
+    },
+    {
+      "name": "TopologyBenchmarkResult",
+      "stage": "A_STATIC_SHAPE_ONLY_STAGE_B_RESULT_AUTHORITY_REQUIRED",
+      "inert": true,
+      "required_fields": [
+        "envelope",
+        "benchmark_declaration_ref",
+        "execution_authority_ref",
+        "result_authority_ref",
+        "physical_group_ebu",
+        "empty_baseline",
+        "feasibility_status",
+        "preservation_status",
+        "service_status",
+        "finite_subset_table_ref",
+        "mobius_decomposition_ref",
+        "order_comparator_effect_refs",
+        "boundary_equivalence_ref",
+        "robustness_protocol_ref",
+        "evidence_refs",
+        "provenance_refs"
+      ],
+      "owns": "A future result envelope shape under separate result authority.",
+      "does_not_own": "Creation or computation of a result during Stage A."
+    }
+  ],
+  "recursive_motif_contract": {
+    "definition": "M_{n+1}=C(M_n,M_{n-1}) for n>=1 with ordered child roles.",
+    "base_counts": {
+      "N(M_0)": 1,
+      "N(M_1)": 1
+    },
+    "occurrence_count": "N(M_n)=F_{n+1}, with F_1=F_2=1.",
+    "boundary_recurrence": "B_{n+1}=Phi(B_n,B_{n-1}) only under A1-A8.",
+    "bounded_composition_cost": "Exactly n-1 new Phi calls through level n after two bases; O(n) when summary size and Phi cost are uniformly bounded.",
+    "polynomial_cost": "If s_k=O(k^d) and Phi costs O((s_k+s_{k-1})^p), T(n)=O(n^{dp+1}), subject to output size and A1-A8.",
+    "a1_a8": [
+      {
+        "id": "A1",
+        "name": "identity",
+        "requirement": "Every motif definition, instance, ordered child role, topology schema, boundary protocol, and composition rule is immutable and version-addressed."
+      },
+      {
+        "id": "A2",
+        "name": "sufficiency",
+        "requirement": "The summary answers every declared external query over the frozen initial augmented state, boundary, horizon, and admissible external history."
+      },
+      {
+        "id": "A3",
+        "name": "complete_composition",
+        "requirement": "Composition preserves carriers, units, conversions, losses, reserves, commitments, queues, delays, memory, modes, burden, process accounts, receipts, residuals, and settlement-visible content required by the query domain."
+      },
+      {
+        "id": "A4",
+        "name": "closure",
+        "requirement": "No undeclared crossing factor, constraint, hyperedge, observation, or dependency reaches hidden internals; each crossing relation is exposed."
+      },
+      {
+        "id": "A5",
+        "name": "interaction_preservation",
+        "requirement": "Reuse carries the complete exposed subset protocol, removal semantics, outcomes, and Atomic F16 equality."
+      },
+      {
+        "id": "A6",
+        "name": "cache_key_completeness",
+        "requirement": "A future key separates topology, motif, occurrence, boundary and state versions, initial/history digest, horizon, numerical policy, composition version, evidence, and provenance; performance is excluded from identity."
+      },
+      {
+        "id": "A7",
+        "name": "dependency_completeness",
+        "requirement": "The dependency DAG contains aliases, occurrences, parents, evidence, corrections, and invalidation."
+      },
+      {
+        "id": "A8",
+        "name": "history_wide_equivalence",
+        "requirement": "Reuse is backed by complete history-wide boundary equivalence, not a snapshot, endpoint, local commutator, or visual resemblance."
+      }
+    ],
+    "missing_assumption_outcome": "BOUNDARY_COMPRESSION_CERTIFICATE_INCOMPLETE"
+  },
+  "interaction_contract": {
+    "f13_authoritative_raw_mobius": {
+      "domain": "Every S subseteq A, including empty.",
+      "definition": "I_raw(S)=sum_{T subseteq S} (-1)^(|S|-|T|) E(T)",
+      "empty_identity": "I_raw(empty)=E(empty)",
+      "baseline_rule": "E(empty)=0 is never assumed.",
+      "authority_relation": "This is the unchanged Atomic F13 full-subset coefficient."
+    },
+    "normalized_mobius": {
+      "normalized_subset_value": "E_tilde(S)=E(S)-E(empty)",
+      "nonempty_definition": "For S nonempty, I_norm(S)=sum_{T subseteq S} (-1)^(|S|-|T|) E_tilde(T).",
+      "empty_convention": "I_norm(empty)=0",
+      "empty_distinction": "I_norm(empty)=0 is a normalization convention and is not the raw F13 coefficient I_raw(empty)=E(empty).",
+      "nonempty_identity": "For every nonempty S, I_norm(S)=I_raw(S).",
+      "proof": "For nonempty S, sum_{T subseteq S} (-1)^(|S|-|T|)=(1-1)^|S|=0, so subtracting E(empty) from every subset value contributes zero."
+    },
+    "raw_correction_locality": {
+      "domain": "Every Q,S subseteq A, including Q=S=empty.",
+      "statement": "If only raw E(Q) changes by delta, Delta I_raw(S)=(-1)^(|S|-|Q|) delta when Q subseteq S, and 0 otherwise.",
+      "empty_witness": "For Q=S=empty, Delta I_raw(empty)=delta."
+    },
+    "normalized_correction_response": {
+      "nonempty_statement": "For every nonempty S, Delta I_norm(S)=Delta I_raw(S) under any one-entry raw correction, including Q=empty.",
+      "baseline_correction": "If Q=empty and S is nonempty, both deltas are (-1)^|S| delta.",
+      "empty_statement": "I_norm(empty) remains 0 under every raw correction."
+    },
+    "nonzero_empty_baseline_examples": {
+      "pair": "E(empty),E(a),E(b),E(ab)=(5,8,9,15); I_raw=(5,3,4,3) and I_norm=(0,3,4,3) in subset order empty,a,b,ab.",
+      "pure_three_way": "For A={a,b,c}, E(T)=5 for every proper T and E(abc)=11; I_raw(empty)=5, every nonempty coefficient below order three is 0, and I_raw(abc)=I_norm(abc)=6."
+    },
+    "recursive_surplus": {
+      "normalized_motif_value": "R_n=E(M_n)-E(empty)",
+      "definition": "J_n=R_{n+1}-R_n-R_{n-1}",
+      "status": "EMPIRICAL_UNOBSERVED_REQUIRES_COMMON_FROZEN_PROTOCOL"
+    },
+    "arbitrary_black_box_lower_bound": {
+      "query_domain_size": "2^N",
+      "raw_mobius_definition": "I_raw(S)=sum_{T subseteq S} (-1)^(|S|-|T|) E(T)",
+      "statement": "Any exact worst-case reconstruction of an arbitrary subset table and all Boolean Möbius coefficients requires every subset entry.",
+      "witness": "With fewer than 2^N queries choose unqueried Q, change only E(Q) by nonzero delta, preserve all observed inputs, and change every raw coefficient I_raw(S) on Q's upward cone, including the empty coefficient when Q=empty.",
+      "purpose": "Topology, equivalence, feasible-domain restriction, factorization, and sufficient boundaries are the information that can justify compression."
+    }
+  },
+  "distinction_inventory": [
+    {
+      "name": "canonical_equivalence",
+      "role": "Relabeling quotient for one faithful colored layered schema.",
+      "nonclaim": "No measured-performance or history-wide boundary equivalence."
+    },
+    {
+      "name": "feasible_poset_restriction",
+      "role": "Explicit non-Boolean incidence domain for defined feasible subsets.",
+      "nonclaim": "No imputed values for infeasible subsets."
+    },
+    {
+      "name": "proven_sparse_hypergraph_support",
+      "role": "Restriction on possible structural interaction support.",
+      "nonclaim": "No coefficient sign, value, causality, or transport."
+    },
+    {
+      "name": "structural_additivity",
+      "role": "Block factorization under complete independence and account proof.",
+      "nonclaim": "No boundary-summary sufficiency."
+    },
+    {
+      "name": "recursive_boundary_compression",
+      "role": "Composition through sufficient summaries under A1-A8.",
+      "nonclaim": "No undeclared cross-boundary query coverage."
+    },
+    {
+      "name": "correction_locality",
+      "role": "Raw F13 Boolean algebraic upward-cone update on every subset, with normalized equality restricted to nonempty subsets and a zero normalized empty convention.",
+      "nonclaim": "No operational cache validity without dependency, alias, evidence, and invalidation authority."
+    }
+  ],
+  "domain_responsibility": {
+    "provider_and_domain_authority": "Declare and measure meaningful scientific, provider, institutional, physical, causal, and social relations.",
+    "ebu_authority": "Validate type, completeness claim, version, provenance, and consistent frozen-protocol use.",
+    "forbidden_inference": "EBU does not universally identify topology or infer domain meaning.",
+    "positive_cycle": [
+      "declare",
+      "measure EBU",
+      "refine",
+      "measure again",
+      "certified recursive structure"
+    ],
+    "positive_capabilities": [
+      "cooperation testing",
+      "synergy and redundancy measurement",
+      "shared-factor audit",
+      "recursive reuse certification"
+    ],
+    "nonclaims": [
+      "causality",
+      "fairness",
+      "universal benefit",
+      "social sufficiency"
+    ]
+  },
+  "stage_boundaries": {
+    "stage_a": {
+      "status": "PROSPECTIVE_SEPARATE_IMPLEMENTATION_AUTHORITY_REQUIRED",
+      "allowed": [
+        "inert declaration types",
+        "pure validators",
+        "versioned exhaustive canonicalization for 0<=n<=8",
+        "topology-specific deterministic identity",
+        "static conformance fixtures",
+        "relabeling and ordered/unordered input invariance tests"
+      ],
+      "forbidden": [
+        "EBU calculation",
+        "topology inference",
+        "transition or step call",
+        "optimization",
+        "benchmark execution",
+        "cache behavior",
+        "result materialization",
+        "scientific execution",
+        "framework runner import"
+      ]
+    },
+    "stage_b": {
+      "status": "UNAUTHORIZED_SEPARATE_PROTOCOL_PLAN_EXECUTION_RESULT_PUBLICATION_REQUIRED",
+      "production_independent_root": "research/topology/",
+      "reserved_families": [
+        "full finite computations",
+        "compressed finite computations",
+        "strict enumeration",
+        "Fibonacci controls",
+        "Lucas controls",
+        "chain controls",
+        "tree controls",
+        "balanced controls",
+        "random-recursive controls",
+        "perturbed-substitution controls",
+        "boundary negative controls",
+        "correction and invalidation experiments",
+        "versioned nonnormative atlas"
+      ],
+      "current_outputs": []
+    },
+    "stage_c": {
+      "status": "REFUSED_AND_UNAVAILABLE",
+      "committed_runtime_cache_paths": [],
+      "required_before_any_future_authority": [
+        "theorem authority for concrete sufficient summaries",
+        "exact query domains",
+        "dependency and alias closure",
+        "correction and invalidation semantics",
+        "history-wide equivalence",
+        "interaction preservation",
+        "performance and output-size obligations",
+        "audit evidence",
+        "durability",
+        "recovery",
+        "correction",
+        "publication"
+      ]
+    }
+  },
+  "prospective_stage_a_paths": {
+    "new_paths": [
+      "src/ebu_framework/topology.py",
+      "tests/framework/fixtures/canonical_topology_v1.json",
+      "tests/framework/test_canonical_topology.py"
+    ],
+    "tightly_scoped_modified_paths": [
+      "src/ebu_framework/identity.py",
+      "src/ebu_framework/hashing.py",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/__init__.py"
+    ],
+    "compatibility_tests": [
+      "tests/framework/test_primitives_envelopes.py",
+      "tests/framework/test_i3_integration.py",
+      "tests/framework/test_i3a_declarations.py",
+      "tests/framework/test_i3b_declarations.py",
+      "tests/framework/test_i3c_declarations.py",
+      "tests/framework/test_i3d_declarations.py",
+      "tests/framework/test_atomic_declarations.py",
+      "tests/framework/test_interaction_declarations.py"
+    ],
+    "current_authorization": "NONE"
+  },
+  "i6_noninterference": {
+    "bridge_version": "SEQUENTIAL_PARALLEL_BRIDGE_V0.2_UNCHANGED",
+    "topology_is_i6_prerequisite": false,
+    "topology_is_i6_blocker": false,
+    "i6_scope_expansion": false,
+    "allowed_later_use": "A separately authorized Stage B protocol may reference separately authorized I-6 evidence.",
+    "forbidden_i6_additions": [
+      "topology benchmark",
+      "Fibonacci primitive",
+      "topology inference",
+      "cache behavior"
+    ]
+  },
+  "book_replacement_contract": {
+    "mode": "REPLACEMENT_AND_CONSOLIDATION_NOT_ADDITIVE",
+    "manuscript_or_pdf_authorized": false,
+    "preserved_spine": "V -> mu=grad V -> f_e -> Psi_e -> J_e -> G_T -> finite EBU",
+    "part_i_iii_standalone_topology_chapter": false,
+    "part_i": [
+      "Replace/consolidate Chapter 16 as shared-source and parallel action treatment.",
+      "Merge overlapping Chapter 24 practice into Chapter 16.",
+      "Retain Chapter 17 route and Bellman reasoning, remove Fermat and wave content, and substitute dependency-DAG and recursive-reuse intuition.",
+      "Synchronize Chapter 26."
+    ],
+    "part_ii": [
+      "Replace Chapter 37 with atomic and parallel interaction calculus including nonzero empty baseline, Boolean Mobius, hyperedges, shared factors, commutators, structural/active topology, and recursive boundary equivalence.",
+      "Remove wave content from Chapter 42 and retain route/dynamic programming.",
+      "Update Chapter 43 to history-wide rather than snapshot or endpoint equivalence."
+    ],
+    "part_iii": [
+      "Preserve D0-O14 history.",
+      "Regenerate Chapter 47 against accepted D1, D2, I-3C, I-4, and I-5.",
+      "Update Chapter 51 for lifecycle, institutional share, causality, residual, and settlement separation.",
+      "Replace Chapter 62 obsolete O3/O5/framework roadmap."
+    ],
+    "principal_unit": {
+      "title": "Canonical Motifs, Topology Benchmarks, and Recursive Reuse",
+      "owner": "Future Part VI after sequential-parallel and higher-order foundations"
+    },
+    "proof_appendix": [
+      "canonical and isomorphism proof",
+      "finite poset enumeration",
+      "Boolean and prospective feasible-poset Mobius proof",
+      "recursive compression proof",
+      "explicit size and cost bounds",
+      "dependency invalidation and upward-cone proof",
+      "arbitrary black-box lower bound",
+      "negative controls"
+    ],
+    "part_viii": "Short cross-reference only for active topology and geometry.",
+    "atlas": "Separate versioned nonnormative research companion.",
+    "excluded_concepts": [
+      "electrical voltage",
+      "physical waves",
+      "physical phase interference",
+      "superposition as EBU law"
+    ],
+    "fibonacci_rule": "First exact recursive worked family; never universal and never inferred from visual similarity.",
+    "feature_teaching_fields": [
+      "problem",
+      "capability",
+      "life example",
+      "equation or proof",
+      "connection to preserved spine",
+      "declaration and evidence requirements",
+      "adjacent limit or falsifier"
+    ]
+  },
+  "open_problem_contract": {
+    "remaining": [
+      "scalable canonical labeling beyond exhaustive n<=8",
+      "feasible-poset calculus for declared domains",
+      "boundary-summary sufficiency for concrete query families",
+      "correction, alias, and cache invalidation authority",
+      "empirical J_n",
+      "controlled Fibonacci, substitution, and geometric comparisons"
+    ],
+    "not_reopened": [
+      "canonical relabeling proof",
+      "isomorphism characterization under faithful encoding",
+      "Fibonacci occurrence-count induction",
+      "raw Boolean Mobius correction locality, including the empty-set case, and normalized equality on nonempty subsets",
+      "conditional A1-A8 compression theorem",
+      "arbitrary black-box lower bound",
+      "provider and domain responsibility"
+    ]
+  },
+  "claim_inventory": [
+    {
+      "claim_id": "CTMP-AM-01",
+      "classification": "AM",
+      "statement": "Canonical minimum is invariant under allowed relabeling."
+    },
+    {
+      "claim_id": "CTMP-CT-02",
+      "classification": "CT",
+      "statement": "For faithful normalized encoding, equal canonical bytes characterize color- and layer-preserving isomorphism."
+    },
+    {
+      "claim_id": "CTMP-AM-03",
+      "classification": "AM",
+      "statement": "The declared ordered recursive family has N(M_n)=F_{n+1}."
+    },
+    {
+      "claim_id": "CTMP-CT-04",
+      "classification": "CT",
+      "statement": "Under A1-A8 and bounded summary/composition cost, recursive summary evaluation is O(n) in motif level."
+    },
+    {
+      "claim_id": "CTMP-CT-05",
+      "classification": "CT",
+      "statement": "Under A1-A8 and the polynomial size/cost model, T(n)=O(n^{dp+1})."
+    },
+    {
+      "claim_id": "CTMP-AM-06",
+      "classification": "AM",
+      "statement": "For the raw F13 transform on every subset including empty, one raw subset correction changes exactly its Mobius upward cone algebraically; normalized coefficients equal the raw coefficients on every nonempty subset while I_norm(empty)=0 by convention."
+    },
+    {
+      "claim_id": "CTMP-EH-07",
+      "classification": "EH",
+      "statement": "The sign and magnitude of recursive surplus J_n require a common frozen future protocol and evidence."
+    },
+    {
+      "claim_id": "CTMP-AM-08",
+      "classification": "AM",
+      "statement": "Every entry is necessary for exact worst-case reconstruction of an arbitrary 2^N black-box subset table and all Mobius coefficients."
+    },
+    {
+      "claim_id": "CTMP-IC-09",
+      "classification": "IC",
+      "statement": "Version 1 exhaustive canonicalization supports exactly 0<=n<=8 and refuses above the bound."
+    },
+    {
+      "claim_id": "CTMP-EA-10",
+      "classification": "EA",
+      "statement": "Canonical structural identity excludes measured EBU performance."
+    },
+    {
+      "claim_id": "CTMP-EA-11",
+      "classification": "EA",
+      "statement": "Providers and domain authorities declare and measure meaningful relations; EBU validates declarations and consistent use."
+    },
+    {
+      "claim_id": "CTMP-EA-12",
+      "classification": "EA",
+      "statement": "I-6 Bridge v0.2 remains unchanged and canonical topology is neither prerequisite nor blocker."
+    },
+    {
+      "claim_id": "CTMP-FO-13",
+      "classification": "FO",
+      "statement": "Finite strict-poset enumeration gives labeled/unlabeled counts 3/2 at n=2, 19/5 at n=3, and 219/16 at n=4."
+    },
+    {
+      "claim_id": "CTMP-FO-14",
+      "classification": "FO",
+      "statement": "The unweighted three-action pair/triple support schema has 4 times 2 equals 8 isomorphism classes."
+    }
+  ],
+  "projection_profiles": {
+    "claim_inventory": {
+      "profile_id": "CTMP_CLAIM_INVENTORY_PROJECTION_V1",
+      "shape": {
+        "profile": "CTMP_CLAIM_INVENTORY_PROJECTION_V1",
+        "claims": "claim_inventory preserving array order and values exactly"
+      },
+      "canonical_json_profile": "CTMP_CANONICAL_JSON_V1",
+      "byte_count": 2388,
+      "sha256": "25734db90058220bc821f06b2cbcb6a77b427d1bcd036c57df2f967c1687db8b"
+    },
+    "finite_observations": {
+      "profile_id": "CTMP_FINITE_OBSERVATION_PROJECTION_V1",
+      "shape": {
+        "profile": "CTMP_FINITE_OBSERVATION_PROJECTION_V1",
+        "observations": "finite_observation_inventory preserving array order and values exactly",
+        "catalogue": "proposed_catalogue_labels preserving keys and values exactly"
+      },
+      "canonical_json_profile": "CTMP_CANONICAL_JSON_V1",
+      "byte_count": 1387,
+      "sha256": "63d0765b242bfc60e8da33a3afcbbd7b47d93e56fa04098317b782d77d48b184"
+    },
+    "declaration_schemas": {
+      "profile_id": "CTMP_DECLARATION_SCHEMA_PROJECTION_V1",
+      "shape": {
+        "profile": "CTMP_DECLARATION_SCHEMA_PROJECTION_V1",
+        "declarations": "declaration_schemas preserving array order and values exactly"
+      },
+      "canonical_json_profile": "CTMP_CANONICAL_JSON_V1",
+      "byte_count": 3474,
+      "sha256": "96bac846409b2ffadd3e42c5f803779de33cbfa68b291b92c76db773c0fdae8d"
+    },
+    "stage_path_boundary": {
+      "profile_id": "CTMP_STAGE_PATH_BOUNDARY_PROJECTION_V1",
+      "shape": {
+        "profile": "CTMP_STAGE_PATH_BOUNDARY_PROJECTION_V1",
+        "stages": "stage_boundaries preserving keys and values exactly",
+        "paths": "prospective_stage_a_paths preserving keys and values exactly",
+        "i6": "i6_noninterference preserving keys and values exactly"
+      },
+      "canonical_json_profile": "CTMP_CANONICAL_JSON_V1",
+      "byte_count": 2658,
+      "sha256": "9467fdd0fb9354d7145e54de845d054f0f64bdd01d605ddb9a54aadcaab3a637"
+    }
+  },
+  "supersessions": [
+    "Future-book wave, voltage, phase, and superposition routes are removed rather than restored.",
+    "Part VIII broad topology programme is replaced by a short active-topology and geometry cross-reference; the complete unit belongs principally to Part VI.",
+    "Fibonacci visual-pattern hypothesis language is replaced by one exact declared recursive family plus controlled future comparisons.",
+    "Snapshot and endpoint boundary equivalence are replaced by history-wide equivalence."
+  ],
+  "nonclaims": [
+    "No framework implementation is authorized or performed.",
+    "No topology inference is authorized or performed.",
+    "No transition, trajectory, runner, benchmark, or model state is executed.",
+    "No scientific EBU value or recursive surplus is observed.",
+    "No runtime cache path or behavior is authorized.",
+    "No manuscript, PDF, figure, dataset, result, or atlas is created.",
+    "No causality, fairness, universal benefit, social sufficiency, or institutional rule follows from canonical identity.",
+    "No Fibonacci, topology, wave, voltage, phase, or superposition law of EBU is claimed."
+  ],
+  "completion_marker": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_CONTRACT_COMPLETE"
+}

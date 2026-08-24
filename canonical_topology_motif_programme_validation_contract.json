@@ -1,0 +1,1480 @@
+{
+  "contract_id": "ebu-canonical-topology-motif-programme-validation/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_STATIC_VECTORS_UNMATERIALIZED_UNIMPLEMENTED_UNEXECUTED_UNAUDITED",
+  "authority": {
+    "accepted_commit": "72183037b00930a766f0f0f613d8689bdfd82e8e",
+    "accepted_tree": "74ca6cc46b77bc1c13a3b1d2e736e0a56f246188",
+    "mechanical_contract": "canonical_topology_motif_programme_contract.json",
+    "human_authority": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+    "predecessor_manifest": "canonical_topology_motif_programme_predecessor_manifest.json",
+    "stage": "AUTHORITY_DRAFTING_STATIC_ONLY"
+  },
+  "strict_input_rules": {
+    "json_parser": "Reject duplicate object keys, trailing input, non-finite numbers, floating-point values, invalid UTF-8, BOM, and non-NFC strings.",
+    "schema": "Reject unknown fields, omitted required fields, wrong runtime types, and invalid enum/version values.",
+    "canonical_storage": "Stored projected fixtures must be byte-identical to CTMP_CANONICAL_JSON_V1 and end in exactly one LF.",
+    "semantic_sets": "Reject duplicates before canonical sorting.",
+    "ordered_fields": "Never sort histories, precedence paths, comparator steps, or ordered child roles.",
+    "above_bound": "Return CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED without an identity.",
+    "inertness": "No validator or fixture route may import or call a transition, model step, runner, optimization, EBU calculator, result writer, or cache."
+  },
+  "failure_precedence": [
+    "JSON_DUPLICATE_KEY",
+    "JSON_VALUE_DOMAIN_INVALID",
+    "JSON_TEXT_NORMALIZATION_INVALID",
+    "TOPOLOGY_SCHEMA_VERSION_INVALID",
+    "TOPOLOGY_UNKNOWN_FIELD",
+    "TOPOLOGY_REQUIRED_FIELD_MISSING",
+    "TOPOLOGY_RUNTIME_TYPE_INVALID",
+    "TOPOLOGY_DUPLICATE_VERTEX",
+    "TOPOLOGY_DANGLING_VERTEX",
+    "TOPOLOGY_LAYER_TYPE_MISMATCH",
+    "TOPOLOGY_DUPLICATE_RELATION",
+    "TOPOLOGY_ILLEGAL_SELF_RELATION",
+    "TOPOLOGY_STRICT_ORDER_CYCLE",
+    "TOPOLOGY_COLLECTION_ORDER_INVALID",
+    "TOPOLOGY_STORED_BYTES_NONCANONICAL",
+    "CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED",
+    "CANONICAL_TOPOLOGY_WITNESS_MISMATCH",
+    "CANONICAL_TOPOLOGY_HASH_MISMATCH",
+    "RECURSIVE_MOTIF_DECLARATION_INVALID",
+    "BOUNDARY_COMPRESSION_CERTIFICATE_INCOMPLETE",
+    "INTERACTION_CORRECTION_WITNESS_INVALID",
+    "I6_SCOPE_EXPANSION_FORBIDDEN",
+    "AUTHORITY_SCOPE_VIOLATION"
+  ],
+  "vector_schema": {
+    "vector_id": "Unique CTMP-V### identifier in exact array order.",
+    "category": "Coverage category.",
+    "claim_refs": "Ordered claim IDs from the mechanical contract.",
+    "stage": "AUTHORITY_STATIC, FUTURE_STAGE_A_STATIC, FUTURE_STAGE_B_SEPARATE_AUTHORITY, or STAGE_C_REFUSAL.",
+    "input": "Complete static mathematical, declaration, byte, path, or book witness.",
+    "expected": "Exact acceptance, identity relation, arithmetic, or first failure.",
+    "prohibitions": "Operations that must not occur while evaluating the vector."
+  },
+  "supporting_subvector_schema": {
+    "subvector_id": "Unique CTMP-SV### identifier in exact array order.",
+    "category": "Möbius empty-set correction coverage category.",
+    "claim_refs": "Ordered claim IDs from the mechanical contract.",
+    "primary_vector_refs": "Ordered existing CTMP-V### vectors supported without changing the primary inventory.",
+    "stage": "AUTHORITY_STATIC only.",
+    "input": "Complete exact raw table, correction, formula, or authority witness.",
+    "expected": "Exact raw and normalized coefficient arithmetic or authority relation.",
+    "prohibitions": "Operations and inferences forbidden while evaluating the subvector."
+  },
+  "supporting_subvectors": [
+    {
+      "subvector_id": "CTMP-SV001",
+      "category": "raw_empty_to_empty_correction",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "Q": [],
+        "S": [],
+        "E_raw_before": 5,
+        "delta": 7,
+        "all_other_raw_entries_held_fixed": true
+      },
+      "expected": {
+        "I_raw_before": 5,
+        "I_raw_after": 12,
+        "delta_I_raw": 7,
+        "exponent": 0,
+        "identity": "I_raw(empty)=E(empty)"
+      },
+      "prohibitions": [
+        "No E(empty)=0 assumption.",
+        "No normalized empty coefficient substituted for the raw F13 coefficient."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV002",
+      "category": "normalized_empty_convention",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "E_empty_before": 5,
+        "E_empty_after": 12
+      },
+      "expected": {
+        "I_norm_empty_before": 0,
+        "I_norm_empty_after": 0,
+        "delta_I_norm_empty": 0,
+        "status": "EXPLICIT_NORMALIZATION_CONVENTION_DISTINCT_FROM_RAW_F13"
+      },
+      "prohibitions": [
+        "No claim that I_raw(empty)=0.",
+        "No claim that E(empty)=0."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV003",
+      "category": "raw_normalized_equality_every_tested_nonempty_subset",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "universe": [
+          "a",
+          "b",
+          "c"
+        ],
+        "raw_table_in_subset_order": [
+          {
+            "S": [],
+            "E": 5
+          },
+          {
+            "S": [
+              "a"
+            ],
+            "E": 7
+          },
+          {
+            "S": [
+              "b"
+            ],
+            "E": 8
+          },
+          {
+            "S": [
+              "c"
+            ],
+            "E": 9
+          },
+          {
+            "S": [
+              "a",
+              "b"
+            ],
+            "E": 10
+          },
+          {
+            "S": [
+              "a",
+              "c"
+            ],
+            "E": 11
+          },
+          {
+            "S": [
+              "b",
+              "c"
+            ],
+            "E": 12
+          },
+          {
+            "S": [
+              "a",
+              "b",
+              "c"
+            ],
+            "E": 20
+          }
+        ]
+      },
+      "expected": {
+        "I_raw_empty": 5,
+        "I_norm_empty": 0,
+        "nonempty_coefficients": [
+          {
+            "S": [
+              "a"
+            ],
+            "I_raw": 2,
+            "I_norm": 2
+          },
+          {
+            "S": [
+              "b"
+            ],
+            "I_raw": 3,
+            "I_norm": 3
+          },
+          {
+            "S": [
+              "c"
+            ],
+            "I_raw": 4,
+            "I_norm": 4
+          },
+          {
+            "S": [
+              "a",
+              "b"
+            ],
+            "I_raw": 0,
+            "I_norm": 0
+          },
+          {
+            "S": [
+              "a",
+              "c"
+            ],
+            "I_raw": 0,
+            "I_norm": 0
+          },
+          {
+            "S": [
+              "b",
+              "c"
+            ],
+            "I_raw": 0,
+            "I_norm": 0
+          },
+          {
+            "S": [
+              "a",
+              "b",
+              "c"
+            ],
+            "I_raw": 6,
+            "I_norm": 6
+          }
+        ],
+        "proof_identity": "sum_{T subseteq S} (-1)^(|S|-|T|)=(1-1)^|S|=0 for every nonempty S"
+      },
+      "prohibitions": [
+        "No equality claim at the empty subset."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV004",
+      "category": "empty_baseline_change_nonempty_deltas",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "Q": [],
+        "delta": 7,
+        "all_nonempty_raw_E_values_held_fixed": true,
+        "universe": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "expected": {
+        "nonempty_deltas": [
+          {
+            "subset_size": 1,
+            "delta_I_raw": -7,
+            "delta_I_norm": -7
+          },
+          {
+            "subset_size": 2,
+            "delta_I_raw": 7,
+            "delta_I_norm": 7
+          },
+          {
+            "subset_size": 3,
+            "delta_I_raw": -7,
+            "delta_I_norm": -7
+          }
+        ],
+        "rule": "Delta I_raw(S)=Delta I_norm(S)=(-1)^|S| delta for every nonempty S",
+        "empty_deltas": {
+          "delta_I_raw": 7,
+          "delta_I_norm": 0
+        }
+      },
+      "prohibitions": [
+        "No treatment of normalization as holding E_tilde(T) fixed when E(empty) changes."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV005",
+      "category": "nonempty_correction_contained_subset",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "Q": [
+          "a",
+          "b"
+        ],
+        "delta": 7,
+        "tested_S": [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "b",
+            "c"
+          ]
+        ]
+      },
+      "expected": {
+        "deltas": [
+          {
+            "S": [
+              "a",
+              "b"
+            ],
+            "delta_I_raw": 7,
+            "delta_I_norm": 7
+          },
+          {
+            "S": [
+              "a",
+              "b",
+              "c"
+            ],
+            "delta_I_raw": -7,
+            "delta_I_norm": -7
+          }
+        ]
+      },
+      "prohibitions": [
+        "No operational cache-validity inference."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV006",
+      "category": "correction_not_contained_zero",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "Q": [
+          "a",
+          "b"
+        ],
+        "delta": 7,
+        "tested_S": [
+          [],
+          [
+            "c"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "c"
+          ]
+        ]
+      },
+      "expected": {
+        "delta_I_raw_for_every_tested_S": 0,
+        "delta_I_norm_for_every_tested_nonempty_S": 0,
+        "I_norm_empty": 0
+      },
+      "prohibitions": [
+        "No propagation outside Q's upward cone."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV007",
+      "category": "nonzero_empty_pair_example",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "subset_order": [
+          "empty",
+          "a",
+          "b",
+          "ab"
+        ],
+        "E": [
+          5,
+          8,
+          9,
+          15
+        ]
+      },
+      "expected": {
+        "I_raw": [
+          5,
+          3,
+          4,
+          3
+        ],
+        "I_norm": [
+          0,
+          3,
+          4,
+          3
+        ],
+        "nonempty_coefficients_equal": true
+      },
+      "prohibitions": [
+        "No suppression of the nonzero raw empty coefficient."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV008",
+      "category": "nonzero_empty_pure_three_way_example",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "universe": [
+          "a",
+          "b",
+          "c"
+        ],
+        "E_for_every_proper_subset": 5,
+        "E_abc": 11
+      },
+      "expected": {
+        "I_raw_empty": 5,
+        "all_nonempty_order_one_and_two_coefficients": 0,
+        "I_raw_abc": 6,
+        "I_norm_empty": 0,
+        "I_norm_abc": 6,
+        "classification": "PURE_THREE_WAY_WITH_NONZERO_EMPTY_BASELINE"
+      },
+      "prohibitions": [
+        "No pair coefficient fabricated.",
+        "No physical or causal interpretation."
+      ]
+    },
+    {
+      "subvector_id": "CTMP-SV009",
+      "category": "atomic_f13_consistency",
+      "claim_refs": [
+        "CTMP-AM-06",
+        "CTMP-AM-08"
+      ],
+      "primary_vector_refs": [
+        "CTMP-V021",
+        "CTMP-V023"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "f13_raw_definition": "I_raw(S)=sum_{T subseteq S} (-1)^(|S|-|T|) E(T)",
+        "f13_empty_identity": "I_raw(empty)=E(empty)",
+        "normalization_optional": true,
+        "normalization_definition": "E_tilde(S)=E(S)-E(empty)"
+      },
+      "expected": {
+        "raw_definition_byte_semantically_equal": true,
+        "empty_identity_preserved": true,
+        "normalized_nonempty_coefficients_equal_raw": true,
+        "f13_superseded": false,
+        "arbitrary_table_lower_bound_changed": false
+      },
+      "prohibitions": [
+        "No prospective authority may supersede or reinterpret F13.",
+        "No E(empty)=0 assumption."
+      ]
+    }
+  ],
+  "vectors": [
+    {
+      "vector_id": "CTMP-V001",
+      "category": "relabeling_equivalence",
+      "claim_refs": [
+        "CTMP-AM-01",
+        "CTMP-CT-02"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "schema_version": "CANONICAL_TOPOLOGY_SCHEMA_V1",
+        "left_vertices": [
+          "a",
+          "b",
+          "c"
+        ],
+        "right_vertices": [
+          "z",
+          "x",
+          "y"
+        ],
+        "bijection": [
+          [
+            "a",
+            "z"
+          ],
+          [
+            "b",
+            "x"
+          ],
+          [
+            "c",
+            "y"
+          ]
+        ],
+        "colored_layered_relations_equal_under_bijection": true
+      },
+      "expected": {
+        "accepted": true,
+        "canonical_bytes_relation": "equal",
+        "canonical_topology_id_relation": "equal"
+      },
+      "prohibitions": [
+        "No scientific EBU computation.",
+        "No performance comparison."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V002",
+      "category": "unordered_permutation_invariance",
+      "claim_refs": [
+        "CTMP-AM-01"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "field": "interaction_layer.supports",
+        "left_member_order": [
+          "support-c",
+          "support-a",
+          "support-b"
+        ],
+        "right_member_order": [
+          "support-b",
+          "support-c",
+          "support-a"
+        ],
+        "members_byte_logically_equal": true
+      },
+      "expected": {
+        "accepted": true,
+        "canonical_bytes_relation": "equal"
+      },
+      "prohibitions": [
+        "No order-sensitive interpretation of an unordered semantic set."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V003",
+      "category": "ordered_child_reversal",
+      "claim_refs": [
+        "CTMP-CT-02"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "left_ordered_children": [
+          "M_n",
+          "M_n_minus_1"
+        ],
+        "right_ordered_children": [
+          "M_n_minus_1",
+          "M_n"
+        ],
+        "composition_rule": "ordered"
+      },
+      "expected": {
+        "accepted": true,
+        "canonical_bytes_relation": "different",
+        "canonical_topology_id_relation": "different"
+      },
+      "prohibitions": [
+        "No sorting of ordered child roles."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V004",
+      "category": "cross_layer_lookalike",
+      "claim_refs": [
+        "CTMP-CT-02",
+        "CTMP-EA-10"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "left_relation": {
+          "layer": "P",
+          "endpoints": [
+            "a",
+            "b"
+          ]
+        },
+        "right_relation": {
+          "layer": "C",
+          "endpoints": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "expected": {
+        "accepted": true,
+        "canonical_bytes_relation": "different"
+      },
+      "prohibitions": [
+        "No layer collapse."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V005",
+      "category": "schema_version_separation",
+      "claim_refs": [
+        "CTMP-CT-02",
+        "CTMP-IC-09"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "payload_shape_relation": "identical",
+        "left_schema_version": "CANONICAL_TOPOLOGY_SCHEMA_V1",
+        "right_schema_version": "CANONICAL_TOPOLOGY_SCHEMA_V2"
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "TOPOLOGY_SCHEMA_VERSION_INVALID",
+        "identity_emitted": false
+      },
+      "prohibitions": [
+        "No version inference from payload shape."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V006",
+      "category": "domain_separation",
+      "claim_refs": [
+        "CTMP-EA-10"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "payload_bytes_relation": "identical",
+        "left_domain": "ebu-framework/canonical-topology-id/v1",
+        "right_domain": "ebu-framework/object-content/v1"
+      },
+      "expected": {
+        "accepted": true,
+        "digest_relation": "different",
+        "typed_id_relation": "incomparable"
+      },
+      "prohibitions": [
+        "No generic content hash substitution for CanonicalTopologyId."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V007",
+      "category": "dangling_reference",
+      "claim_refs": [],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "vertices": [
+          "a"
+        ],
+        "prerequisite_relation": [
+          "a",
+          "missing"
+        ]
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "TOPOLOGY_DANGLING_VERTEX",
+        "identity_emitted": false
+      },
+      "prohibitions": [
+        "No implicit vertex creation."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V008",
+      "category": "duplicate_relation",
+      "claim_refs": [],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "constraint_relations": [
+          [
+            "a",
+            "factor-1"
+          ],
+          [
+            "a",
+            "factor-1"
+          ]
+        ]
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "TOPOLOGY_DUPLICATE_RELATION"
+      },
+      "prohibitions": [
+        "No silent deduplication of invalid stored input."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V009",
+      "category": "strict_order_cycle",
+      "claim_refs": [],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "strict_precedence_edges": [
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "c",
+            "a"
+          ]
+        ]
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "TOPOLOGY_STRICT_ORDER_CYCLE"
+      },
+      "prohibitions": [
+        "No edge deletion or order repair."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V010",
+      "category": "malformed_unknown_field",
+      "claim_refs": [],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "unknown_field": "performance_score"
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "TOPOLOGY_UNKNOWN_FIELD"
+      },
+      "prohibitions": [
+        "No ignored extension field."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V011",
+      "category": "strict_json_duplicate_key",
+      "claim_refs": [],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "raw_json_utf8": "{\"schema_version\":\"CANONICAL_TOPOLOGY_SCHEMA_V1\",\"schema_version\":\"CANONICAL_TOPOLOGY_SCHEMA_V1\"}"
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "JSON_DUPLICATE_KEY"
+      },
+      "prohibitions": [
+        "No last-key-wins parser behavior."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V012",
+      "category": "strict_json_nonfinite",
+      "claim_refs": [],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "raw_json_utf8": "{\"value\":NaN}"
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "JSON_VALUE_DOMAIN_INVALID"
+      },
+      "prohibitions": [
+        "No permissive non-finite parsing."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V013",
+      "category": "supported_bound",
+      "claim_refs": [
+        "CTMP-IC-09"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "permutable_vertex_count": 8,
+        "expected_permutation_count": 40320
+      },
+      "expected": {
+        "accepted": true,
+        "algorithm": "exhaustive",
+        "identity_emitted": true
+      },
+      "prohibitions": [
+        "No heuristic shortcut."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V014",
+      "category": "unsupported_bound",
+      "claim_refs": [
+        "CTMP-IC-09"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "permutable_vertex_count": 9
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "CANONICAL_TOPOLOGY_SIZE_UNSUPPORTED",
+        "identity_emitted": false
+      },
+      "prohibitions": [
+        "No heuristic or partial identity."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V015",
+      "category": "identity_independent_of_performance",
+      "claim_refs": [
+        "CTMP-EA-10"
+      ],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "structural_declaration_relation": "identical",
+        "left_measured_ebu": -5,
+        "right_measured_ebu": 13
+      },
+      "expected": {
+        "accepted": true,
+        "canonical_topology_id_relation": "equal",
+        "performance_relation": "different_and_external"
+      },
+      "prohibitions": [
+        "No performance field in canonical preimage."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V016",
+      "category": "fibonacci_bases",
+      "claim_refs": [
+        "CTMP-AM-03"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "N(M_0)": 1,
+        "N(M_1)": 1,
+        "F_1": 1,
+        "F_2": 1
+      },
+      "expected": {
+        "accepted": true,
+        "base_equalities": true
+      },
+      "prohibitions": [
+        "No EBU inference."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V017",
+      "category": "fibonacci_induction",
+      "claim_refs": [
+        "CTMP-AM-03"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "assume": [
+          "N(M_k)=F_{k+1}",
+          "N(M_{k-1})=F_k"
+        ],
+        "recurrence": "N(M_{k+1})=N(M_k)+N(M_{k-1})"
+      },
+      "expected": {
+        "accepted": true,
+        "conclusion": "N(M_{k+1})=F_{k+2}"
+      },
+      "prohibitions": [
+        "No universal recurrence claim."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V018",
+      "category": "a1_a8_complete",
+      "claim_refs": [
+        "CTMP-CT-04",
+        "CTMP-CT-05"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "present_assumptions": [
+          "A1",
+          "A2",
+          "A3",
+          "A4",
+          "A5",
+          "A6",
+          "A7",
+          "A8"
+        ],
+        "uniformly_bounded_summary_and_composition": true
+      },
+      "expected": {
+        "accepted": true,
+        "conditional_linear_call_bound": "n-1 Phi calls after bases"
+      },
+      "prohibitions": [
+        "No assertion that a real domain satisfies A1-A8."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V019",
+      "category": "a1_a8_missing_each",
+      "claim_refs": [
+        "CTMP-CT-04",
+        "CTMP-CT-05"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "subcases": [
+          "missing A1",
+          "missing A2",
+          "missing A3",
+          "missing A4",
+          "missing A5",
+          "missing A6",
+          "missing A7",
+          "missing A8"
+        ]
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure_for_every_subcase": "BOUNDARY_COMPRESSION_CERTIFICATE_INCOMPLETE",
+        "compression_authorized": false
+      },
+      "prohibitions": [
+        "No checklist weakening."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V020",
+      "category": "polynomial_cost_arithmetic",
+      "claim_refs": [
+        "CTMP-CT-05"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "summary_size": "s_k=O(k^2)",
+        "composition_exponent_p": 3,
+        "level_count": "n"
+      },
+      "expected": {
+        "accepted": true,
+        "d": 2,
+        "p": 3,
+        "bound": "O(n^7)"
+      },
+      "prohibitions": [
+        "No omission of output-size lower bound."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V021",
+      "category": "correction_upward_cone",
+      "claim_refs": [
+        "CTMP-AM-06"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "transform": "I_raw under unchanged Atomic F13",
+        "universe": [
+          "a",
+          "b",
+          "c"
+        ],
+        "corrected_subset_Q": [
+          "a",
+          "b"
+        ],
+        "delta": 7
+      },
+      "expected": {
+        "raw_coefficient_deltas": [
+          {
+            "S": [
+              "a",
+              "b"
+            ],
+            "delta": 7
+          },
+          {
+            "S": [
+              "a",
+              "b",
+              "c"
+            ],
+            "delta": -7
+          }
+        ],
+        "all_other_raw_coefficient_deltas": 0,
+        "supporting_subvector_refs": [
+          "CTMP-SV001",
+          "CTMP-SV002",
+          "CTMP-SV003",
+          "CTMP-SV004",
+          "CTMP-SV005",
+          "CTMP-SV006",
+          "CTMP-SV007",
+          "CTMP-SV008",
+          "CTMP-SV009"
+        ]
+      },
+      "prohibitions": [
+        "No operational cache-validity inference."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V022",
+      "category": "hidden_cross_boundary_reopens",
+      "claim_refs": [
+        "CTMP-CT-04",
+        "CTMP-CT-05"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "a1_a8_previously_claimed": true,
+        "new_hidden_relation": {
+          "kind": "queue",
+          "crosses_parent_boundary": true,
+          "represented_in_signature": false
+        }
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "BOUNDARY_COMPRESSION_CERTIFICATE_INCOMPLETE",
+        "violated_assumptions": [
+          "A3",
+          "A4",
+          "A7",
+          "A8"
+        ],
+        "revalidation_required": true
+      },
+      "prohibitions": [
+        "No reuse from prior visual or endpoint equivalence."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V023",
+      "category": "lower_bound_witness",
+      "claim_refs": [
+        "CTMP-AM-08"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "N": 3,
+        "domain_entry_count": 8,
+        "queried_entry_count": 7,
+        "unqueried_Q": [
+          "b"
+        ],
+        "delta": 5
+      },
+      "expected": {
+        "observed_transcript_relation": "identical",
+        "changed_coefficients": [
+          [
+            "b"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "a",
+            "b",
+            "c"
+          ]
+        ],
+        "changed_coefficient_count": 4,
+        "exact_full_reconstruction_possible": false
+      },
+      "prohibitions": [
+        "No imputation of unqueried Q."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V024",
+      "category": "recursive_surplus_identity",
+      "claim_refs": [
+        "CTMP-EH-07"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "E(empty)": 4,
+        "E(M_n_minus_1)": 9,
+        "E(M_n)": 14,
+        "E(M_n_plus_1)": 26
+      },
+      "expected": {
+        "R_n_minus_1": 5,
+        "R_n": 10,
+        "R_n_plus_1": 22,
+        "J_n": 7,
+        "interpretation": "positive same-protocol recursive surplus only if every common-protocol condition is independently satisfied"
+      },
+      "prohibitions": [
+        "No observed-result status.",
+        "No causality or fairness claim."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V025",
+      "category": "book_no_bloat",
+      "claim_refs": [],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "new_standalone_topology_chapters_in_current_parts_i_iii": 0,
+        "principal_complete_unit": "Future Part VI",
+        "part_viii_treatment": "short cross-reference",
+        "atlas": "separate nonnormative companion"
+      },
+      "expected": {
+        "accepted": true,
+        "mode": "replacement_and_consolidation"
+      },
+      "prohibitions": [
+        "No additive chapter count.",
+        "No manuscript or PDF mutation."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V026",
+      "category": "book_excluded_concepts",
+      "claim_refs": [],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "searched_concepts": [
+          "electrical voltage as EBU",
+          "physical wave programme",
+          "phase interference programme",
+          "superposition as EBU law"
+        ],
+        "authorized_occurrences": 0
+      },
+      "expected": {
+        "accepted": true,
+        "future_route_reserved": false
+      },
+      "prohibitions": [
+        "No restoration through analogy or cross-reference."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V027",
+      "category": "i6_noninterference",
+      "claim_refs": [
+        "CTMP-EA-12"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "bridge_version": "0.2",
+        "i6_changed_paths": [],
+        "i6_new_requirements": [],
+        "topology_prerequisite": false,
+        "topology_blocker": false
+      },
+      "expected": {
+        "accepted": true,
+        "i6_scope_relation": "unchanged"
+      },
+      "prohibitions": [
+        "No I-6 topology benchmark, Fibonacci primitive, inference, or cache."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V028",
+      "category": "i6_scope_expansion_negative",
+      "claim_refs": [
+        "CTMP-EA-12"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "proposed_i6_addition": "canonical topology benchmark"
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "I6_SCOPE_EXPANSION_FORBIDDEN"
+      },
+      "prohibitions": [
+        "No reinterpretation of Bridge v0.2."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V029",
+      "category": "stage_a_inertness",
+      "claim_refs": [],
+      "stage": "FUTURE_STAGE_A_STATIC",
+      "input": {
+        "allowed_operations": [
+          "strict parse",
+          "schema validate",
+          "canonical serialize",
+          "hash",
+          "compare",
+          "static arithmetic"
+        ],
+        "observed_runtime_calls": []
+      },
+      "expected": {
+        "accepted": true,
+        "model_state_advanced": false,
+        "scientific_execution": false
+      },
+      "prohibitions": [
+        "No transition, runner, benchmark, optimization, or result writer."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V030",
+      "category": "stage_c_path_refusal",
+      "claim_refs": [],
+      "stage": "STAGE_C_REFUSAL",
+      "input": {
+        "proposed_committed_runtime_cache_path": "NONEMPTY_PATH_WITNESS",
+        "stage_c_theorem_authority_complete": false
+      },
+      "expected": {
+        "accepted": false,
+        "first_failure": "AUTHORITY_SCOPE_VIOLATION",
+        "reserved_path": false
+      },
+      "prohibitions": [
+        "No committed runtime-cache path name or reservation."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V031",
+      "category": "provider_domain_responsibility",
+      "claim_refs": [
+        "CTMP-EA-11"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "domain_declares_relation_meaning": true,
+        "domain_supplies_measurement_evidence": true,
+        "ebu_checks": [
+          "type",
+          "completeness claim",
+          "version",
+          "provenance",
+          "consistent use"
+        ],
+        "ebu_infers_relation_meaning": false
+      },
+      "expected": {
+        "accepted": true,
+        "universal_ebu_topology_identification_problem": false
+      },
+      "prohibitions": [
+        "No causality, fairness, universal benefit, or social-sufficiency inference."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V032",
+      "category": "predecessor_and_scope",
+      "claim_refs": [],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "accepted_commit": "72183037b00930a766f0f0f613d8689bdfd82e8e",
+        "accepted_tree": "74ca6cc46b77bc1c13a3b1d2e736e0a56f246188",
+        "authorized_added_path_count": 5,
+        "authorized_modified_path_count": 5,
+        "staged_path_count": 0,
+        "commit_created": false,
+        "push_performed": false
+      },
+      "expected": {
+        "accepted": true,
+        "candidate_path_count": 10
+      },
+      "prohibitions": [
+        "No eleventh path.",
+        "No staging, commit, push, tag, or publication."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V033",
+      "category": "finite_poset_observation",
+      "claim_refs": [
+        "CTMP-FO-13"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "method": "strict labeled relations filtered by irreflexivity and transitivity, then quotiented by every permutation",
+        "vertex_counts": [
+          2,
+          3,
+          4
+        ]
+      },
+      "expected": {
+        "labeled_counts": [
+          3,
+          19,
+          219
+        ],
+        "unlabeled_counts": [
+          2,
+          5,
+          16
+        ],
+        "classification": "FINITE_COMBINATORIAL_OBSERVATION"
+      },
+      "prohibitions": [
+        "No measured-domain or catalogue-authority inference."
+      ]
+    },
+    {
+      "vector_id": "CTMP-V034",
+      "category": "finite_interaction_support_observation",
+      "claim_refs": [
+        "CTMP-FO-14"
+      ],
+      "stage": "AUTHORITY_STATIC",
+      "input": {
+        "pair_edge_slots": 3,
+        "pair_support_orbits_under_S3": 4,
+        "triple_hyperedge_states": 2
+      },
+      "expected": {
+        "unweighted_three_action_support_topology_count": 8,
+        "arithmetic": "4 times 2",
+        "classification": "FINITE_COMBINATORIAL_OBSERVATION"
+      },
+      "prohibitions": [
+        "No coefficient-value, active-topology, causal, physical, or performance inference."
+      ]
+    }
+  ],
+  "coverage": {
+    "vector_count": 34,
+    "supporting_subvector_count": 9,
+    "required_categories": [
+      "relabeling equivalence",
+      "unordered permutations",
+      "ordered child reversal",
+      "cross-layer lookalikes differ",
+      "schema and identity domains differ",
+      "malformed, dangling, duplicate, and cyclic refusal",
+      "identity independent of performance",
+      "Fibonacci bases and induction",
+      "A1-A8 present and individually missing",
+      "polynomial cost arithmetic",
+      "correction propagation",
+      "raw and normalized Möbius empty-set distinction",
+      "raw/normalized equality on every tested nonempty subset",
+      "nonzero-baseline pair and pure three-way arithmetic",
+      "Atomic F13 consistency",
+      "hidden cross-boundary reopening",
+      "arbitrary black-box lower-bound witness",
+      "recursive surplus arithmetic and empirical status",
+      "book no-bloat and excluded concepts",
+      "I-6 noninterference",
+      "Stage A inertness",
+      "Stage C path refusal",
+      "provider/domain responsibility",
+      "predecessor and ten-path scope",
+      "finite strict-poset observations",
+      "finite pair/triple support observations"
+    ],
+    "coverage_rule": "Every listed category must have at least one exact primary vector or explicitly frozen supporting subvector, and neither kind may authorize scientific execution."
+  },
+  "cross_file_checks": [
+    {
+      "check_id": "CTMP-X001",
+      "requirement": "Accepted commit and tree agree across all five new authority files and the five synchronized existing files."
+    },
+    {
+      "check_id": "CTMP-X002",
+      "requirement": "The predecessor manifest reconstructs every recursive Git tree entry without selection or exclusion."
+    },
+    {
+      "check_id": "CTMP-X003",
+      "requirement": "Exactly five new and five modified authorized paths exist; the index is empty."
+    },
+    {
+      "check_id": "CTMP-X004",
+      "requirement": "Foundation, mechanical contract, validation contract, predecessor manifest, and staging plan agree on n<=8, A1-A8, raw F13 and normalized Möbius semantics, Stages A-C, book replacements, I-6, and nonclaims."
+    },
+    {
+      "check_id": "CTMP-X005",
+      "requirement": "Strict duplicate-key and non-finite rejection succeeds in at least two independent standard-library JSON routes."
+    },
+    {
+      "check_id": "CTMP-X006",
+      "requirement": "Independent canonical JSON encoders reproduce every recorded projection byte count and SHA-256."
+    },
+    {
+      "check_id": "CTMP-X007",
+      "requirement": "Every candidate text file is UTF-8 without BOM, uses LF only, has no trailing whitespace, and ends in exactly one LF."
+    },
+    {
+      "check_id": "CTMP-X008",
+      "requirement": "Markdown has one H1, ordered headings, balanced display-math delimiters, and every required completion marker."
+    },
+    {
+      "check_id": "CTMP-X009",
+      "requirement": "No framework import, project test, model step, runner, simulation, benchmark, renderer, manuscript generation, or scientific execution occurs."
+    },
+    {
+      "check_id": "CTMP-X010",
+      "requirement": "git diff --check completes and candidate status remains unstaged, uncommitted, and unpushed."
+    }
+  ],
+  "projection_profile": {
+    "profile_id": "CTMP_VALIDATION_VECTOR_PROJECTION_V1",
+    "canonical_json_profile": "CTMP_CANONICAL_JSON_V1",
+    "shape": {
+      "profile": "CTMP_VALIDATION_VECTOR_PROJECTION_V1",
+      "vectors": "vectors preserving array order and values exactly"
+    },
+    "byte_count": 13735,
+    "sha256": "00d27f0692d89fcc67a2b112bbfaada9757572fa1a716e687352185b6d52b1b1"
+  },
+  "supporting_subvector_projection_profile": {
+    "profile_id": "CTMP_MOBIUS_SUPPORTING_SUBVECTOR_PROJECTION_V1",
+    "canonical_json_profile": "CTMP_CANONICAL_JSON_V1",
+    "shape": {
+      "profile": "CTMP_MOBIUS_SUPPORTING_SUBVECTOR_PROJECTION_V1",
+      "supporting_subvectors": "supporting_subvectors preserving array order and values exactly"
+    },
+    "byte_count": 5027,
+    "sha256": "7a7c6cfb1dfa3163987882b300b51f525e825a0488a89f2800d306aff13acd87"
+  },
+  "acceptance": {
+    "required_vector_count": 34,
+    "ordered_ids": "Exactly CTMP-V001 through CTMP-V034 with no gap, duplicate, reorder, insertion, or deletion.",
+    "required_supporting_subvector_count": 9,
+    "ordered_supporting_subvector_ids": "Exactly CTMP-SV001 through CTMP-SV009 with no gap, duplicate, reorder, insertion, or deletion.",
+    "all_vectors_static": true,
+    "all_supporting_subvectors_static": true,
+    "scientific_execution_count": 0,
+    "model_state_advance_count": 0,
+    "materialized_fixture_count": 0,
+    "result_count": 0
+  },
+  "completion_marker": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_VALIDATION_CONTRACT_COMPLETE"
+}

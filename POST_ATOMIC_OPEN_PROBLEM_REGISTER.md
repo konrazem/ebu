@@ -154,7 +154,10 @@ removal disposition, not a solved scientific finding.
 
 Their removal does not weaken the parallel-action interaction and typology
 programme. Zero, positive, and negative pair interactions, nonzero empty
-baselines, normalized subset values, exact Möbius reconstruction and
+baselines, raw full-subset F13 coefficients including
+\(I_{\mathrm{raw}}(\varnothing)=E(\varnothing)\), optional normalized
+nonempty coefficients with \(I_{\mathrm{norm}}(\varnothing)=0\), exact
+Möbius reconstruction and
 truncation residuals, pure higher-order terms with zero pair coefficients,
 local mixed marginals, commuting and noncommuting generators, order effects,
 shared-capacity and factor-node representations, structural and active
@@ -357,4 +360,73 @@ The owning Parts and required treatments are mechanical in
 this register. The next possible stage is independent audit of the six-file
 authority package. It is not begun by this document.
 
+## 13. Canonical Topology / Motif Programme synchronization
+
+This section is prospective and depends on independent acceptance of
+CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md and its mechanical contracts.
+Its precedence is narrow: it closes or restates only the topology/motif slice
+of earlier interaction and Dynamic Coordination entries. All unrelated
+scientific, empirical, institutional, durability, and publication remainders
+above retain their accepted meaning.
+
+The only remaining Canonical Topology / Motif Programme questions are:
+
+| ID | Status | Exact remaining question | Blocks |
+|---|---|---|---|
+| CTMP-OP1 | OPEN_FOUNDATION_DECISION | Scalable faithful canonical labeling beyond the frozen exhaustive \(n\le8\) bound | Only a future large-\(n\) identity implementation or claim |
+| CTMP-OP2 | OPEN_SCIENTIFIC_MODEL | Feasible-poset incidence and Möbius calculus for explicitly declared domains with undefined subsets | Only dependent feasible-domain calculation or claim |
+| CTMP-OP3 | OPEN_SCIENTIFIC_MODEL | Boundary-summary sufficiency for concrete frozen query families | Stage B compressed evaluation and any Stage C reuse |
+| CTMP-OP4 | OPEN_MIXED | Complete correction, alias, dependency, and cache-invalidation theorem plus operational authority | Stage C runtime reuse |
+| CTMP-OP5 | OPEN_SCIENTIFIC_EMPIRICAL | Same-protocol empirical recursive surplus \(J_n=R_{n+1}-R_n-R_{n-1}\) | Only a dependent empirical claim |
+| CTMP-OP6 | OPEN_SCIENTIFIC_EMPIRICAL | Controlled Fibonacci, Lucas/substitution, and geometric comparisons under common protocols and negative controls | Only dependent comparison claims and book conclusions |
+
+These six questions do not block accepted framework stages, Bridge v0.2,
+I-6, or future Stage A inert declarations and small-\(n\) canonical identity.
+CTMP-OP3 and CTMP-OP4 block Stage C. CTMP-OP5 and CTMP-OP6 require separate
+preregistration, execution, result, interpretation, and publication authority.
+
+The following results are not reopened:
+
+- the relabeling invariance of the canonical minimum;
+- the isomorphism characterization under a faithful versioned colored layered
+  encoding;
+- the Fibonacci occurrence-count induction for the declared ordered recursive
+  family;
+- raw Boolean Möbius correction locality on the upward cone for every subset,
+  including the empty-to-empty case, together with normalized equality on
+  every nonempty subset;
+- the conditional A1–A8 boundary-compression and
+  \(T(n)=O(n^{dp+1})\) theorems;
+- the \(2^N\)-query lower bound for an arbitrary black-box subset table; and
+- provider/domain responsibility for declaring and measuring meaningful
+  relations.
+
+The theorem assumptions remain enforceable and real-domain satisfaction
+remains empirical. That does not turn a proved conditional statement back
+into an open derivation.
+
+Topology identification is not a universal EBU open problem. Providers,
+institutions, and scientific domains own the meaning and evidence of their
+relations. EBU validates declared type, completeness, version, provenance, and
+consistent frozen-protocol use. The positive cycle—declare, measure EBU,
+refine, measure again, certify recursive structure—can make cooperation and
+synergy testable without establishing causality, fairness, universal benefit,
+or social sufficiency.
+
+Earlier INT-1, INT-3, INT-4, CBA-5, CBA-9, B-10, B-12, DC-4, DC-17,
+DC-19, DC-25, UQ-07–UQ-09, UQ-29, UQ-32, and UQ-40 retain only their
+nonduplicative broader remainders after this synchronization. They do not
+reopen a canonical proof, the exact Fibonacci count, raw Boolean correction
+locality or its normalized nonempty identity, A1–A8, the black-box lower bound,
+or universal topology
+identification. Any topology/motif aspect of those rows is represented
+exclusively by CTMP-OP1–CTMP-OP6.
+
+Stage A remains inert and requires separate implementation authority. Stage B
+requires separate protocol through publication authority. Stage C names no
+committed runtime-cache path and remains unavailable. Bridge v0.2 and I-6 are
+unchanged and unblocked. Voltage, physical-wave, phase-interference, and
+superposition concepts remain excluded rather than open.
+
 POST_ATOMIC_OPEN_PROBLEM_REGISTER_READY
+CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_OPEN_REGISTER_SYNCHRONIZED
