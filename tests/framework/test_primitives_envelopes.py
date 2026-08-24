@@ -440,7 +440,60 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
         self.assertEqual(len(set(root_exports[:127])), 127)
         self.assertEqual(len(set(root_exports)), len(root_exports))
         root_imports = {alias.asname or alias.name for node in trees["__init__"].body if isinstance(node, ast.ImportFrom) for alias in node.names}
-        self.assertEqual(set(root_exports) - {"__version__"}, root_imports)
+        i5_suffix = tuple(
+            ast.literal_eval(node.value)
+            for node in trees["__init__"].body
+            if isinstance(node, ast.AugAssign)
+            and isinstance(node.target, ast.Name)
+            and node.target.id == "__all__"
+            and isinstance(node.op, ast.Add)
+        )
+        self.assertEqual(len(i5_suffix), 1)
+        current_root_exports = root_exports + i5_suffix[0]
+        lazy_assignment = next(
+            node
+            for node in trees["__init__"].body
+            if isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "_I5_EXECUTION_EXPORTS"
+        )
+        self.assertIsInstance(lazy_assignment.value, ast.Call)
+        self.assertEqual(
+            (lazy_assignment.value.func.id, len(lazy_assignment.value.args)),
+            ("frozenset", 1),
+        )
+        i5_execution_exports = frozenset(
+            ast.literal_eval(lazy_assignment.value.args[0])
+        )
+        post_i5_surface = json.loads(
+            (
+                ROOT / "post_i5_legacy_test_compatibility_contract.json"
+            ).read_bytes()
+        )["current_surface"]
+        self.assertEqual(
+            (
+                set(current_root_exports)
+                - {"__version__"}
+                - i5_execution_exports,
+                current_root_exports[:309],
+                current_root_exports[309:391],
+                current_root_exports,
+                len(i5_execution_exports),
+                i5_execution_exports,
+            ),
+            (
+                root_imports,
+                root_exports,
+                tuple(post_i5_surface["root_export_slices"][-1]["values"]),
+                tuple(post_i5_surface["root_export_order"]),
+                14,
+                frozenset(
+                    post_i5_surface["root_import_strategy"]
+                    ["i5_lazy_execution_exports_in_module_order"]
+                ),
+            ),
+        )
         self.assertEqual(_literal_assignment(trees["__init__"], "__version__"), "0.1.0a1")
         failure_code = next(node for node in trees["errors"].body if isinstance(node, ast.ClassDef) and node.name == "FailureCode")
         failure_members = tuple(
@@ -509,17 +562,26 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                     tuple(current_surface["module_exports"]["experiment"]),
                 )
                 root_relative_modules = tuple(
-                    node.module
-                    for node in trees["__init__"].body
-                    if isinstance(node, ast.ImportFrom)
-                    and node.level == 1
-                    and node.module is not None
+                    imported
+                    for node in ast.walk(trees["__init__"])
+                    if isinstance(node, ast.ImportFrom) and node.level == 1
+                    for imported in (
+                        (node.module,)
+                        if node.module is not None
+                        else tuple(alias.name for alias in node.names)
+                    )
+                )
+                root_relative_module_order = tuple(
+                    dict.fromkeys(root_relative_modules)
                 )
                 self.assertEqual(
-                    (len(root_relative_modules), frozenset(root_relative_modules)),
                     (
-                        29,
-                        frozenset(current_surface["package_module_order"]),
+                        len(root_relative_module_order),
+                        frozenset(root_relative_module_order),
+                    ),
+                    (
+                        34,
+                        frozenset(post_i5_surface["package_module_order"]),
                     ),
                 )
                 self.assertEqual(

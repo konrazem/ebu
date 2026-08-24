@@ -750,3 +750,401 @@ __all__ = (
     "compute_state_payload_hash",
     "compute_authorization_use_key",
 )
+
+
+# Framework I-5 additions are deliberately appended so every accepted I-1
+# through I-4 hash declaration and callable above retains its original body.
+from dataclasses import dataclass as _dataclass
+from typing import Literal, NoReturn, TypeAlias
+
+from .errors import (
+    FailureInterfaceRef as _FailureInterfaceRef,
+    FailureStage as _FailureStage,
+    RetryClass as _RetryClass,
+    ScientificStatusEffect as _ScientificStatusEffect,
+)
+
+
+def _i5_hash_failure(code: FailureCode, interface: str, summary: str) -> NoReturn:
+    _fail(
+        code,
+        summary,
+        stage=_FailureStage.I5,
+        interface_ref=_FailureInterfaceRef(
+            "ebu_framework.hashing", interface, "1.0.0"
+        ),
+        scientific_status_effect=_ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=_RetryClass.FORBIDDEN,
+    )
+
+
+def _i5_hash_formation(interface: str) -> NoReturn:
+    _i5_hash_failure(
+        FailureCode.I5_RECORD_FORMATION_INVALID,
+        interface,
+        f"{interface} rejected I5_RECORD_FORMATION_INVALID",
+    )
+
+
+def _i5_strict_formation(cls: type) -> type:
+    generated_init = cls.__init__
+
+    def strict_init(self: object, *args: object, **kwargs: object) -> None:
+        expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
+        if args or set(kwargs) != expected_fields:
+            _i5_hash_formation(cls.__name__)
+        generated_init(self, **kwargs)
+
+    strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
+    cls.__init__ = strict_init  # type: ignore[method-assign]
+    return cls
+
+
+def _valid_i5_digest_text(value: object) -> bool:
+    return (
+        type(value) is str
+        and len(value) == 71
+        and value.startswith("sha256:")
+        and all(character in "0123456789abcdef" for character in value[7:])
+    )
+
+
+class _I5DigestBehavior:
+    value: str
+
+    def __post_init__(self) -> None:
+        if not _valid_i5_digest_text(self.value):
+            _i5_hash_formation(type(self).__name__)
+
+    @classmethod
+    def from_hex(cls, hexadecimal: str):
+        return cls(value="sha256:" + hexadecimal)
+
+    @property
+    def hex_digest(self) -> str:
+        return self.value[7:]
+
+    def __str__(self) -> str:
+        return self.value
+
+    def to_ecj1(self) -> dict[str, str]:
+        return {"value": self.value}
+
+
+@_i5_strict_formation
+@_dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class EventKeyDigest(_I5DigestBehavior):
+    value: str
+
+
+@_i5_strict_formation
+@_dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class EventDeclarationDigest(_I5DigestBehavior):
+    value: str
+
+
+@_i5_strict_formation
+@_dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class OwnershipDigest(_I5DigestBehavior):
+    value: str
+
+
+@_i5_strict_formation
+@_dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class PhaseCommitDigest(_I5DigestBehavior):
+    value: str
+
+
+@_i5_strict_formation
+@_dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class DurabilityEvidenceDigest(_I5DigestBehavior):
+    value: str
+
+
+@_i5_strict_formation
+@_dataclass(frozen=True, slots=True, order=True, kw_only=True)
+class RunEnvelopeDigest(_I5DigestBehavior):
+    value: str
+
+
+TraceDigest: TypeAlias = (
+    CanonicalTraceRowHash
+    | CanonicalTracePrefixHash
+    | CanonicalScientificTracePayloadHash
+)
+
+
+def _i5_frame_fields(domain: bytes, fields: tuple[bytes, ...], /) -> bytes:
+    if type(domain) is not bytes or not domain or type(fields) is not tuple:
+        _i5_hash_failure(
+            FailureCode.HASH_DOMAIN_MISMATCH,
+            "_i5_frame_fields",
+            "I-5 hash framing requires an exact nonempty byte domain and tuple",
+        )
+    if not all(type(field) is bytes for field in fields):
+        _i5_hash_failure(
+            FailureCode.HASH_DOMAIN_MISMATCH,
+            "_i5_frame_fields",
+            "I-5 hash fields must be exact bytes",
+        )
+    return b"".join(
+        len(field).to_bytes(8, "big") + field for field in (domain, *fields)
+    )
+
+
+def _i5_digest(
+    *,
+    domain: bytes,
+    fields: tuple[bytes, ...],
+    digest_type: type,
+    interface: str,
+):
+    preimage = _i5_frame_fields(domain, fields)
+    hexadecimal = hashlib.sha256(preimage).hexdigest()
+    result = digest_type(value="sha256:" + hexadecimal)
+    if hashlib.sha256(preimage).hexdigest() != result.hex_digest:
+        _i5_hash_failure(
+            FailureCode.I5_HASH_COLLISION,
+            interface,
+            f"{interface} detected an inconsistent I-5 hash result",
+        )
+    return result
+
+
+def _i5_visible_ascii(value: object) -> bool:
+    return (
+        type(value) is str
+        and bool(value)
+        and value.isascii()
+        and all(0x21 <= ord(character) <= 0x7E for character in value)
+    )
+
+
+def _i5_scientific_id_text(value: object) -> bool:
+    if type(value) is not str:
+        return False
+    fields = value.split(":")
+    if len(fields) != 4 or fields[0] != "ebu":
+        return False
+    alphabet = frozenset(
+        "abcdefghijklmnopqrstuvwxyz0123456789._-"
+    )
+    return all(
+        bool(field)
+        and field[0] in "abcdefghijklmnopqrstuvwxyz0123456789"
+        and all(character in alphabet for character in field)
+        for field in fields[1:]
+    )
+
+
+def compute_event_key_digest(
+    *,
+    epoch: int,
+    phase_ordinal: int,
+    declared_priority: int,
+    group_or_scope_id: str,
+    event_kind: str,
+    primary_object_id: str,
+    local_sequence: int,
+) -> EventKeyDigest:
+    if not (
+        type(epoch) is int
+        and epoch >= 0
+        and type(phase_ordinal) is int
+        and 1 <= phase_ordinal <= 10
+        and type(declared_priority) is int
+        and _i5_visible_ascii(group_or_scope_id)
+        and _i5_visible_ascii(event_kind)
+        and _i5_scientific_id_text(primary_object_id)
+        and type(local_sequence) is int
+        and local_sequence >= 0
+    ):
+        _i5_hash_failure(
+            FailureCode.EVENT_KEY_INVALID,
+            "compute_event_key_digest",
+            "compute_event_key_digest rejected EVENT_KEY_INVALID",
+        )
+    fields = tuple(
+        value.encode("utf-8", "strict")
+        for value in (
+            str(epoch),
+            str(phase_ordinal),
+            str(declared_priority),
+            group_or_scope_id,
+            event_kind,
+            primary_object_id,
+            str(local_sequence),
+        )
+    )
+    return _i5_digest(
+        domain=b"ebu.event-key.v1",
+        fields=fields,
+        digest_type=EventKeyDigest,
+        interface="compute_event_key_digest",
+    )
+
+
+def compute_event_declaration_digest(
+    *,
+    event_key_digest: EventKeyDigest,
+    event_ref: ObjectRef,
+    declared_simultaneity_ref_or_not_applicable: ObjectRef | Applicability,
+    payload_hash: ObjectContentHash,
+    predecessor_event_key_digest_or_not_applicable: (
+        EventKeyDigest | Applicability
+    ),
+) -> EventDeclarationDigest:
+    simultaneity = declared_simultaneity_ref_or_not_applicable
+    predecessor = predecessor_event_key_digest_or_not_applicable
+    if not (
+        type(event_key_digest) is EventKeyDigest
+        and type(event_ref) is ObjectRef
+        and (
+            type(simultaneity) is ObjectRef
+            or simultaneity is Applicability.NOT_APPLICABLE
+        )
+        and type(payload_hash) is ObjectContentHash
+        and (
+            type(predecessor) is EventKeyDigest
+            or predecessor is Applicability.NOT_APPLICABLE
+        )
+    ):
+        _i5_hash_failure(
+            FailureCode.EVENT_IDENTITY_INVALID,
+            "compute_event_declaration_digest",
+            "compute_event_declaration_digest rejected EVENT_IDENTITY_INVALID",
+        )
+    fields = (
+        str(event_key_digest).encode(),
+        str(event_ref.object_id).encode(),
+        (
+            str(simultaneity.object_id).encode()
+            if type(simultaneity) is ObjectRef
+            else Applicability.NOT_APPLICABLE.value.encode()
+        ),
+        str(payload_hash).encode(),
+        (
+            str(predecessor).encode()
+            if type(predecessor) is EventKeyDigest
+            else Applicability.NOT_APPLICABLE.value.encode()
+        ),
+    )
+    return _i5_digest(
+        domain=b"ebu.event-declaration.v1",
+        fields=fields,
+        digest_type=EventDeclarationDigest,
+        interface="compute_event_declaration_digest",
+    )
+
+
+def _i5_projection_digest(
+    projection: ECJ1Value,
+    *,
+    domain: bytes,
+    digest_type: type,
+    interface: str,
+    failure_code: FailureCode,
+):
+    if type(projection) is list and all(type(item) is str for item in projection):
+        fields = tuple(item.encode("utf-8", "strict") for item in projection)
+    else:
+        try:
+            fields = (bytes(encode_ecj1(projection)),)
+        except Exception:
+            _i5_hash_failure(
+                failure_code,
+                interface,
+                f"{interface} rejected {failure_code.value}",
+            )
+    if not fields:
+        _i5_hash_failure(
+            failure_code,
+            interface,
+            f"{interface} rejected {failure_code.value}",
+        )
+    return _i5_digest(
+        domain=domain,
+        fields=fields,
+        digest_type=digest_type,
+        interface=interface,
+    )
+
+
+def compute_ownership_digest(
+    projection_kind: Literal["CLAIM", "EPOCH"],
+    projection: ECJ1Value,
+    /,
+) -> OwnershipDigest:
+    if type(projection_kind) is not str or projection_kind not in {
+        "CLAIM",
+        "EPOCH",
+    }:
+        _i5_hash_failure(
+            FailureCode.UPDATE_OWNERSHIP_CLAIM_INVALID,
+            "compute_ownership_digest",
+            "compute_ownership_digest rejected UPDATE_OWNERSHIP_CLAIM_INVALID",
+        )
+    return _i5_projection_digest(
+        projection,
+        domain=(
+            b"ebu.ownership-claim.v1"
+            if projection_kind == "CLAIM"
+            else b"ebu.epoch-ownership.v1"
+        ),
+        digest_type=OwnershipDigest,
+        interface="compute_ownership_digest",
+        failure_code=FailureCode.UPDATE_OWNERSHIP_CLAIM_INVALID,
+    )
+
+
+def compute_phase_commit_digest(
+    projection: ECJ1Value, /
+) -> PhaseCommitDigest:
+    return _i5_projection_digest(
+        projection,
+        domain=b"ebu.phase-commit.v1",
+        digest_type=PhaseCommitDigest,
+        interface="compute_phase_commit_digest",
+        failure_code=FailureCode.PHASE_COMMIT_RECORD_INVALID,
+    )
+
+
+def compute_durability_evidence_digest(
+    projection_without_evidence_digest: ECJ1Value, /
+) -> DurabilityEvidenceDigest:
+    return _i5_projection_digest(
+        projection_without_evidence_digest,
+        domain=b"ebu.durability-evidence.v1",
+        digest_type=DurabilityEvidenceDigest,
+        interface="compute_durability_evidence_digest",
+        failure_code=FailureCode.DURABILITY_EVIDENCE_INCONSISTENT,
+    )
+
+
+def compute_run_envelope_digest(
+    projection_without_envelope_digest: ECJ1Value, /
+) -> RunEnvelopeDigest:
+    return _i5_projection_digest(
+        projection_without_envelope_digest,
+        domain=b"ebu.run-envelope.v1",
+        digest_type=RunEnvelopeDigest,
+        interface="compute_run_envelope_digest",
+        failure_code=FailureCode.RUN_TRACE_ENVELOPE_INVALID,
+    )
+
+
+__all__ += (
+    "EventKeyDigest",
+    "EventDeclarationDigest",
+    "OwnershipDigest",
+    "PhaseCommitDigest",
+    "DurabilityEvidenceDigest",
+    "RunEnvelopeDigest",
+    "TraceDigest",
+    "compute_event_key_digest",
+    "compute_event_declaration_digest",
+    "compute_ownership_digest",
+    "compute_phase_commit_digest",
+    "compute_durability_evidence_digest",
+    "compute_run_envelope_digest",
+)

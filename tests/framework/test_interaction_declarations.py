@@ -1828,8 +1828,17 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         compatibility = _load_json(
             _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
         )
+        i5_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i5_contract.json"
+        )
+        post_i5_compatibility = _load_json(
+            _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+        )
         assert type(compatibility) is dict
+        assert type(i5_contract) is dict
+        assert type(post_i5_compatibility) is dict
         current_surface = compatibility["current_surface"]
+        post_i5_surface = post_i5_compatibility["current_surface"]
         failures = tuple(code.value for code in FailureCode)
         expected_failures = tuple(
             _CONTRACT["current_surface"]["failure_order"]
@@ -1841,8 +1850,15 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             failures[124:185],
             tuple(current_surface["failure_slices"][4]["values"]),
         )
-        self.assertEqual(failures, tuple(current_surface["failure_order"]))
-        self.assertEqual(len(failures), 185)
+        self.assertEqual(
+            (failures[:185], failures[185:227], failures),
+            (
+                tuple(current_surface["failure_order"]),
+                tuple(i5_contract["failure_append_order"]),
+                tuple(post_i5_surface["failure_order"]),
+            ),
+        )
+        self.assertEqual(len(failures), 227)
         failure_prefix_projection = (
             "\n".join(failures[:124]) + "\n"
         ).encode("utf-8")
@@ -1858,10 +1874,19 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
             (
-                4894,
-                "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
+                len(failure_projection),
+                hashlib.sha256(failure_projection).hexdigest(),
+                len(("\n".join(failures[185:227]) + "\n").encode()),
+                hashlib.sha256(
+                    ("\n".join(failures[185:227]) + "\n").encode()
+                ).hexdigest(),
+            ),
+            (
+                5997,
+                "4cb1daceb30c0f106e7ba288980d379da2403236593948b4be47247704555ae4",
+                1103,
+                "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
             ),
         )
         exports = tuple(ebu_framework.__all__)
@@ -1875,8 +1900,16 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             exports[261:309],
             tuple(current_surface["root_export_slices"][4]["values"]),
         )
-        self.assertEqual(exports, tuple(current_surface["root_export_order"]))
-        self.assertEqual(len(exports), 309)
+        self.assertEqual(
+            (exports[:309], exports[309:391], exports),
+            (
+                tuple(current_surface["root_export_order"]),
+                tuple(i5_contract["root_export_suffix_types"])
+                + tuple(i5_contract["root_export_suffix_callables"]),
+                tuple(post_i5_surface["root_export_order"]),
+            ),
+        )
+        self.assertEqual(len(exports), 391)
         export_prefix_projection = ("\n".join(exports[:261]) + "\n").encode(
             "utf-8"
         )
@@ -1892,10 +1925,19 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
             (
-                6838,
-                "aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8",
+                len(export_projection),
+                hashlib.sha256(export_projection).hexdigest(),
+                len(("\n".join(exports[309:391]) + "\n").encode()),
+                hashlib.sha256(
+                    ("\n".join(exports[309:391]) + "\n").encode()
+                ).hexdigest(),
+            ),
+            (
+                8625,
+                "f27ed982d7e646be870404239ad617d181df8276728f9a3f1fc878c5bbfa46db",
+                1787,
+                "0b593d0d045da2ce3ffb46bc192ceb1b7aea58d2212bb14981ac716dbd02f508",
             ),
         )
         self.assertEqual(interaction_module.__all__, tuple(_CONTRACT["proposed_surface"]["d2_root_export_suffix"]))
@@ -1904,8 +1946,13 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         compatibility = _load_json(
             _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
         )
+        post_i5_compatibility = _load_json(
+            _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+        )
         assert type(compatibility) is dict
+        assert type(post_i5_compatibility) is dict
         current_surface = compatibility["current_surface"]
+        post_i5_surface = post_i5_compatibility["current_surface"]
         tree = ast.parse(_INTERACTION_PATH.read_text(encoding="utf-8"))
         direct = [
             node.module for node in tree.body if isinstance(node, ast.ImportFrom) and node.level == 1
@@ -1940,24 +1987,145 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 if not isinstance(node, ast.ImportFrom) or node.level != 1:
                     continue
                 if node.module in modules:
-                    ordered_graph[name].append(node.module)
+                    if node.module not in ordered_graph[name]:
+                        ordered_graph[name].append(node.module)
                 elif node.module is None:
-                    ordered_graph[name].extend(
-                        alias.name for alias in node.names if alias.name in modules
-                    )
+                    for alias in node.names:
+                        if (
+                            alias.name in modules
+                            and alias.name not in ordered_graph[name]
+                        ):
+                            ordered_graph[name].append(alias.name)
+        current_ordered_graph: dict[str, list[str]] = {}
+        current_module_exports: dict[str, tuple[str, ...]] = {}
+        for name in post_i5_surface["package_module_order"]:
+            module_tree = ast.parse(
+                (package_dir / f"{name}.py").read_text(encoding="utf-8")
+            )
+            current_ordered_graph[name] = []
+            for node in module_tree.body:
+                if isinstance(node, ast.ImportFrom) and node.level == 1:
+                    if node.module in modules:
+                        if node.module not in current_ordered_graph[name]:
+                            current_ordered_graph[name].append(node.module)
+                    elif node.module is None:
+                        for alias in node.names:
+                            if (
+                                alias.name in modules
+                                and alias.name not in current_ordered_graph[name]
+                            ):
+                                current_ordered_graph[name].append(alias.name)
+            all_assignment = next(
+                node
+                for node in module_tree.body
+                if isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == "__all__"
+            )
+            module_exports = tuple(ast.literal_eval(all_assignment.value))
+            for node in module_tree.body:
+                if (
+                    isinstance(node, ast.AugAssign)
+                    and isinstance(node.target, ast.Name)
+                    and node.target.id == "__all__"
+                    and isinstance(node.op, ast.Add)
+                ):
+                    module_exports += tuple(ast.literal_eval(node.value))
+            current_module_exports[name] = module_exports
+        current_package_projection = (
+            json.dumps(
+                [
+                    [name, current_ordered_graph[name]]
+                    for name in post_i5_surface["package_module_order"]
+                ],
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        current_extension_order = post_i5_surface["extension_module_order"]
+        current_extension_projection = (
+            json.dumps(
+                [
+                    [name, current_ordered_graph[name]]
+                    for name in current_extension_order
+                ],
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        current_module_export_projection = (
+            json.dumps(
+                [
+                    [name, list(current_module_exports[name])]
+                    for name in post_i5_surface["package_module_order"]
+                ],
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
         self.assertEqual(
             tuple(ordered_graph), tuple(current_surface["package_module_order"])
         )
         self.assertEqual(
-            set(graph), set(current_surface["package_module_order"])
+            (set(graph), tuple(current_ordered_graph)),
+            (
+                set(post_i5_surface["package_module_order"]),
+                tuple(post_i5_surface["package_module_order"]),
+            ),
         )
-        self.assertEqual(len(graph), 29)
+        self.assertEqual(len(graph), 34)
         self.assertEqual(
             {name: graph[name] for name in expected_graph}, expected_graph
         )
         self.assertEqual(
-            set(graph) - set(expected_graph),
-            {"trust", "authorization", "authorization_use", "capabilities"},
+            (
+                set(graph) - set(expected_graph),
+                sum(len(values) for values in current_ordered_graph.values()),
+                len(current_extension_order),
+                sum(
+                    len(current_ordered_graph[name])
+                    for name in current_extension_order
+                ),
+                (
+                    len(current_package_projection),
+                    hashlib.sha256(current_package_projection).hexdigest(),
+                ),
+                (
+                    len(current_extension_projection),
+                    hashlib.sha256(current_extension_projection).hexdigest(),
+                ),
+            ),
+            (
+                {
+                    "trust",
+                    "authorization",
+                    "authorization_use",
+                    "capabilities",
+                    "events",
+                    "ownership",
+                    "durability",
+                    "traces",
+                    "execution",
+                },
+                192,
+                26,
+                171,
+                (
+                    2619,
+                    "96055fd0d2dc4dd0f3bcbf2cb169967c7bceffc8d70b50252e154b5649c38bcb",
+                ),
+                (
+                    2276,
+                    "91968c5320599969fb29824dfed009174e2c3de6136d6aaa59eb36f2ef439909",
+                ),
+            ),
         )
         self.assertEqual(sum(len(values) for values in ordered_graph.values()), 152)
         self.assertEqual(sum(len(values) for values in expected_graph.values()), 124)
@@ -1972,7 +2140,36 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             name: set(values)
             for name, values in current_surface["package_direct_imports"].items()
         }
-        self.assertEqual(graph, current_expected_graph)
+        self.assertEqual(
+            (
+                graph,
+                current_ordered_graph,
+                current_module_exports,
+                sum(len(values) for values in current_module_exports.values()),
+                (
+                    len(current_module_export_projection),
+                    hashlib.sha256(current_module_export_projection).hexdigest(),
+                ),
+            ),
+            (
+                {
+                    name: set(values)
+                    for name, values in post_i5_surface[
+                        "package_direct_imports"
+                    ].items()
+                },
+                post_i5_surface["package_direct_imports"],
+                {
+                    name: tuple(values)
+                    for name, values in post_i5_surface["module_exports"].items()
+                },
+                390,
+                (
+                    9927,
+                    "94ba72bd338598f463e0f638407314533cac8d3174db92c27bc05bbadd6ec765",
+                ),
+            ),
+        )
         self.assertEqual(
             ordered_graph, current_surface["package_direct_imports"]
         )
@@ -2059,7 +2256,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
 
         for name in graph:
             visit(name)
-        self.assertEqual(len(visited), 29)
+        self.assertEqual(len(visited), 34)
         forbidden_imports = {
             "asyncio", "importlib", "multiprocessing", "random", "secrets", "socket", "subprocess", "threading", "urllib"
         }
@@ -2088,6 +2285,12 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         compatibility = _load_json(
             _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
         )
+        post_i5_compatibility = _load_json(
+            _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+        )
+        i5_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i5_contract.json"
+        )
         compatibility_manifest = _load_json(
             _REPO_ROOT / "post_i4_legacy_test_compatibility_predecessor_manifest.json"
         )
@@ -2095,6 +2298,8 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             _REPO_ROOT / "unified_python_research_framework_i4_contract.json"
         )
         assert type(compatibility) is dict
+        assert type(post_i5_compatibility) is dict
+        assert type(i5_contract) is dict
         assert type(compatibility_manifest) is dict
         assert type(i4_contract) is dict
         compatibility_paths = frozenset(
@@ -2107,6 +2312,18 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         current_rows = {
             row["path"]: row for row in compatibility_manifest["rows"]
         }
+        i5_candidate_rows = {
+            row["path"]: row
+            for row in post_i5_compatibility["implementation_candidate_lock"]["rows"]
+        }
+        i5_reconciled = {
+            row["path"]: row
+            for row in post_i5_compatibility["historical_byte_contract"]
+            ["legacy_loop_reconciliation_control_flow"]["path_routes_in_order"]
+        }
+        post_i5_legacy_paths = frozenset(
+            post_i5_compatibility["future_implementation"]["legacy_test_paths"]
+        )
         import subprocess
 
         signature_rows = _CONTRACT["current_surface"]["public_function_signatures"]
@@ -2174,6 +2391,78 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             (
                 55808,
                 "e5b7a1157aac297d48f2058ca308cfa7c5bc9c3fd1c6040fd68369e27a2ddd2b",
+            ),
+        )
+        signature_contract = post_i5_compatibility["current_surface"][
+            "combined_signature_projection"
+        ]
+        i5_signature_rows = [
+            ["I-5", "TYPE", row["module"], row["name"], row]
+            for row in i5_contract["types"]
+        ] + [
+            ["I-5", "CALLABLE", row["module"], row["name"], row]
+            for row in i5_contract["callables"]
+        ]
+        current_signature_rows = combined_signatures + i5_signature_rows
+        i5_signature_projection = (
+            json.dumps(
+                i5_signature_rows,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        current_signature_projection = (
+            json.dumps(
+                current_signature_rows,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        self.assertEqual(
+            (
+                combined_signatures,
+                i5_signature_rows,
+                current_signature_rows,
+                tuple(len(segment) for segment in signature_segments)
+                + (len(i5_contract["types"]), len(i5_contract["callables"])),
+            ),
+            (
+                signature_contract["predecessor_rows"],
+                signature_contract["i5_rows"],
+                signature_contract["current_rows"],
+                (65, 42, 33, 15, 50, 32),
+            ),
+        )
+        self.assertEqual(
+            (
+                len(combined_signatures),
+                len(i5_signature_rows),
+                len(current_signature_rows),
+                (
+                    len(i5_signature_projection),
+                    hashlib.sha256(i5_signature_projection).hexdigest(),
+                ),
+                (
+                    len(current_signature_projection),
+                    hashlib.sha256(current_signature_projection).hexdigest(),
+                ),
+            ),
+            (
+                155,
+                82,
+                237,
+                (
+                    62204,
+                    "24898c5185da5fb0af7b4b19d46569ab38eb0c4c811c81a2f543a7332a3cd8bc",
+                ),
+                (
+                    118010,
+                    "083a429b0fd36dda80d62a9113fe81e758c17c210385d10e76dc2c2a80dbdaba",
+                ),
             ),
         )
         grouped_signatures = (
@@ -2255,6 +2544,18 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 comparison_payload = payload
                 current_base_payload = None
                 current_row = None
+                i5_route = i5_reconciled.get(row["path"])
+                candidate_row = i5_candidate_rows.get(row["path"])
+                historical_byte_count = (
+                    i5_route["historical_byte_count"]
+                    if i5_route is not None
+                    else row["byte_count"]
+                )
+                historical_raw_sha256 = (
+                    i5_route["historical_raw_sha256"]
+                    if i5_route is not None
+                    else row["raw_sha256"]
+                )
                 if row["path"] in compatibility_paths:
                     comparison_payload = subprocess.run(
                         ["git", "cat-file", "blob", row["git_object"]],
@@ -2271,6 +2572,19 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                             "cat-file",
                             "blob",
                             reconciliation["historical_git_object"],
+                        ],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    current_row = current_rows[row["path"]]
+                elif i5_route is not None:
+                    comparison_payload = subprocess.run(
+                        [
+                            "git",
+                            "cat-file",
+                            "blob",
+                            i5_route["historical_git_object"],
                         ],
                         cwd=_REPO_ROOT,
                         check=True,
@@ -2298,24 +2612,41 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                         text=True,
                     ).stdout.split()
                     self.assertEqual(tree_row[2], row["git_object"])
-                self.assertEqual(len(comparison_payload), row["byte_count"])
+                self.assertEqual(len(comparison_payload), historical_byte_count)
                 if current_base_payload is not None:
                     self.assertEqual(len(current_base_payload), current_row["byte_count"])
-                    if row["path"] not in compatibility_paths:
-                        self.assertEqual(len(payload), current_row["byte_count"])
+                    if (
+                        row["path"] not in compatibility_paths
+                        and row["path"] not in post_i5_legacy_paths
+                    ):
+                        self.assertEqual(
+                            (
+                                len(payload),
+                                "100755"
+                                if path.stat().st_mode & stat.S_IXUSR
+                                else "100644",
+                            ),
+                            (
+                                (candidate_row or current_row)["byte_count"],
+                                (candidate_row or current_row)["mode"],
+                            ),
+                        )
                 self.assertEqual(
                     hashlib.sha256(comparison_payload).hexdigest(),
-                    row["raw_sha256"],
+                    historical_raw_sha256,
                 )
                 if current_base_payload is not None:
                     self.assertEqual(
                         hashlib.sha256(current_base_payload).hexdigest(),
                         current_row["raw_sha256"],
                     )
-                    if row["path"] not in compatibility_paths:
+                    if (
+                        row["path"] not in compatibility_paths
+                        and row["path"] not in post_i5_legacy_paths
+                    ):
                         self.assertEqual(
                             hashlib.sha256(payload).hexdigest(),
-                            current_row["raw_sha256"],
+                            (candidate_row or current_row)["raw_sha256"],
                         )
                 mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
                 self.assertEqual(mode, row["mode"])

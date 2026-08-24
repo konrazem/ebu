@@ -1557,12 +1557,21 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         compatibility = _load_json(
             _REPO_ROOT / "post_i4_legacy_test_compatibility_contract.json"
         )
+        i5_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i5_contract.json"
+        )
+        post_i5_compatibility = _load_json(
+            _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+        )
         assert type(compatibility) is dict
+        assert type(i5_contract) is dict
+        assert type(post_i5_compatibility) is dict
         current_surface = compatibility["current_surface"]
+        post_i5_surface = post_i5_compatibility["current_surface"]
         failure_slices = current_surface["failure_slices"]
         export_slices = current_surface["root_export_slices"]
         failures = tuple(code.value for code in FailureCode)
-        self.assertEqual(len(failures), 185)
+        self.assertEqual(len(failures), 227)
         self.assertEqual(failures[:88], tuple(_CONTRACT["current_surface"]["failure_order"]))
         self.assertEqual(failures[88:102], tuple(failure_slices[2]["values"]))
         self.assertEqual(
@@ -1570,7 +1579,14 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         )
         self.assertEqual(failures[102:124], tuple(failure_slices[3]["values"]))
         self.assertEqual(failures[124:185], tuple(failure_slices[4]["values"]))
-        self.assertEqual(failures, tuple(current_surface["failure_order"]))
+        self.assertEqual(
+            (failures[:185], failures[185:227], failures),
+            (
+                tuple(current_surface["failure_order"]),
+                tuple(i5_contract["failure_append_order"]),
+                tuple(post_i5_surface["failure_order"]),
+            ),
+        )
         failure_projection = ("\n".join(failures) + "\n").encode()
         failure_prefix_projection = ("\n".join(failures[:102]) + "\n").encode()
         self.assertEqual(
@@ -1584,14 +1600,23 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
             (
-                4894,
-                "7696b43a1d0412888b6284c85ed0a67f55b74549e2df0c93daf3a48b2594b6c3",
+                len(failure_projection),
+                hashlib.sha256(failure_projection).hexdigest(),
+                len(("\n".join(failures[185:227]) + "\n").encode()),
+                hashlib.sha256(
+                    ("\n".join(failures[185:227]) + "\n").encode()
+                ).hexdigest(),
+            ),
+            (
+                5997,
+                "4cb1daceb30c0f106e7ba288980d379da2403236593948b4be47247704555ae4",
+                1103,
+                "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
             ),
         )
         exports = tuple(ebu_framework.__all__)
-        self.assertEqual(len(exports), 309)
+        self.assertEqual(len(exports), 391)
         self.assertEqual(
             exports[:219], tuple(_CONTRACT["current_surface"]["root_export_order"])
         )
@@ -1602,7 +1627,15 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         )
         self.assertEqual(exports[237:261], tuple(export_slices[3]["values"]))
         self.assertEqual(exports[261:309], tuple(export_slices[4]["values"]))
-        self.assertEqual(exports, tuple(current_surface["root_export_order"]))
+        self.assertEqual(
+            (exports[:309], exports[309:391], exports),
+            (
+                tuple(current_surface["root_export_order"]),
+                tuple(i5_contract["root_export_suffix_types"])
+                + tuple(i5_contract["root_export_suffix_callables"]),
+                tuple(post_i5_surface["root_export_order"]),
+            ),
+        )
         export_projection = ("\n".join(exports) + "\n").encode()
         export_prefix_projection = ("\n".join(exports[:237]) + "\n").encode()
         self.assertEqual(
@@ -1616,10 +1649,19 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
             (
-                6838,
-                "aa8c120278412a994869f9a4de9e353c2283a137568fec0d643b6e164f045db8",
+                len(export_projection),
+                hashlib.sha256(export_projection).hexdigest(),
+                len(("\n".join(exports[309:391]) + "\n").encode()),
+                hashlib.sha256(
+                    ("\n".join(exports[309:391]) + "\n").encode()
+                ).hexdigest(),
+            ),
+            (
+                8625,
+                "f27ed982d7e646be870404239ad617d181df8276728f9a3f1fc878c5bbfa46db",
+                1787,
+                "0b593d0d045da2ce3ffb46bc192ceb1b7aea58d2212bb14981ac716dbd02f508",
             ),
         )
 
@@ -1679,6 +1721,22 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         current_rows = {
             row["path"]: row for row in compatibility_manifest["rows"]
         }
+        post_i5_compatibility = _load_json(
+            _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+        )
+        assert type(post_i5_compatibility) is dict
+        i5_candidate_rows = {
+            row["path"]: row
+            for row in post_i5_compatibility["implementation_candidate_lock"]["rows"]
+        }
+        i5_reconciled = {
+            row["path"]: row
+            for row in post_i5_compatibility["historical_byte_contract"]
+            ["legacy_loop_reconciliation_control_flow"]["path_routes_in_order"]
+        }
+        post_i5_legacy_paths = frozenset(
+            post_i5_compatibility["future_implementation"]["legacy_test_paths"]
+        )
         import subprocess
 
         for module_name, function_name, expected in _CONTRACT["current_surface"]["public_function_signatures"]:
@@ -1699,6 +1757,18 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                 comparison_payload = payload
                 current_base_payload = None
                 current_row = None
+                i5_route = i5_reconciled.get(row["path"])
+                candidate_row = i5_candidate_rows.get(row["path"])
+                historical_byte_count = (
+                    i5_route["historical_byte_count"]
+                    if i5_route is not None
+                    else row["byte_count"]
+                )
+                historical_raw_sha256 = (
+                    i5_route["historical_raw_sha256"]
+                    if i5_route is not None
+                    else row["raw_sha256"]
+                )
                 if row["path"] in compatibility_paths:
                     comparison_payload = subprocess.run(
                         ["git", "cat-file", "blob", row["git_object"]],
@@ -1715,6 +1785,19 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                             "cat-file",
                             "blob",
                             reconciliation["historical_git_object"],
+                        ],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    current_row = current_rows[row["path"]]
+                elif i5_route is not None:
+                    comparison_payload = subprocess.run(
+                        [
+                            "git",
+                            "cat-file",
+                            "blob",
+                            i5_route["historical_git_object"],
                         ],
                         cwd=_REPO_ROOT,
                         check=True,
@@ -1742,24 +1825,41 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                         text=True,
                     ).stdout.split()
                     self.assertEqual(tree_row[2], row["git_object"])
-                self.assertEqual(len(comparison_payload), row["byte_count"])
+                self.assertEqual(len(comparison_payload), historical_byte_count)
                 if current_base_payload is not None:
                     self.assertEqual(len(current_base_payload), current_row["byte_count"])
-                    if row["path"] not in compatibility_paths:
-                        self.assertEqual(len(payload), current_row["byte_count"])
+                    if (
+                        row["path"] not in compatibility_paths
+                        and row["path"] not in post_i5_legacy_paths
+                    ):
+                        self.assertEqual(
+                            (
+                                len(payload),
+                                "100755"
+                                if path.stat().st_mode & stat.S_IXUSR
+                                else "100644",
+                            ),
+                            (
+                                (candidate_row or current_row)["byte_count"],
+                                (candidate_row or current_row)["mode"],
+                            ),
+                        )
                 self.assertEqual(
                     hashlib.sha256(comparison_payload).hexdigest(),
-                    row["raw_sha256"],
+                    historical_raw_sha256,
                 )
                 if current_base_payload is not None:
                     self.assertEqual(
                         hashlib.sha256(current_base_payload).hexdigest(),
                         current_row["raw_sha256"],
                     )
-                    if row["path"] not in compatibility_paths:
+                    if (
+                        row["path"] not in compatibility_paths
+                        and row["path"] not in post_i5_legacy_paths
+                    ):
                         self.assertEqual(
                             hashlib.sha256(payload).hexdigest(),
-                            current_row["raw_sha256"],
+                            (candidate_row or current_row)["raw_sha256"],
                         )
                 mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
                 self.assertEqual(mode, row["mode"])
@@ -1784,7 +1884,21 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                 tuple(row["values"]) for row in current_surface["root_export_slices"]
             ),
         )
-        self.assertEqual(root_exports, tuple(current_surface["root_export_order"]))
+        i5_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i5_contract.json"
+        )
+        post_i5_compatibility = _load_json(
+            _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
+        )
+        self.assertEqual(
+            (root_exports[:309], root_exports[309:391], root_exports),
+            (
+                tuple(current_surface["root_export_order"]),
+                tuple(i5_contract["root_export_suffix_types"])
+                + tuple(i5_contract["root_export_suffix_callables"]),
+                tuple(post_i5_compatibility["current_surface"]["root_export_order"]),
+            ),
+        )
         interaction_payload = (
             _REPO_ROOT / "src/ebu_framework/interaction.py"
         ).read_bytes()
