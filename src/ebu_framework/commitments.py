@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 from fractions import Fraction
-from typing import NoReturn, get_args
+from typing import Literal, NoReturn, get_args
 
 from .actions import ActionInstance, EffectiveInterval
 from .network import CapacityLocus
@@ -13,6 +13,7 @@ from .primitives import CoreNumberV1, Epoch, Quantity
 from .identity import ObjectRef
 from .envelopes import CommonObjectEnvelope, validate_object_envelope
 from .errors import (
+    Applicability,
     FailureCode,
     FailureInterfaceRef,
     FailureObjectRef,
@@ -384,6 +385,465 @@ def validate_capacity_record(record: CapacityRecord, /) -> None:
     return None
 
 
+def _i7_failure(code: FailureCode, interface: str) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I7,
+        interface_ref=FailureInterfaceRef(
+            "ebu_framework.commitments", interface, "1.0.0"
+        ),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _i7_formation_failure(interface: str) -> NoReturn:
+    _i7_failure(FailureCode.I7_RECORD_FORMATION_INVALID, interface)
+
+
+def _strict_i7_formation(cls: type) -> type:
+    generated_init = cls.__init__
+
+    def strict_init(self: object, *args: object, **kwargs: object) -> None:
+        expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
+        if args or set(kwargs) != expected_fields:
+            _i7_formation_failure(cls.__name__)
+        generated_init(self, **kwargs)
+
+    strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
+    cls.__init__ = strict_init  # type: ignore[method-assign]
+    return cls
+
+
+def _object_or_applicability(value: object) -> bool:
+    return type(value) is ObjectRef or type(value) is Applicability
+
+
+def _quantity_context(quantity: Quantity) -> tuple[object, ...]:
+    return (
+        quantity.unit_ref,
+        quantity.dimension_ref,
+        quantity.boundary_ref,
+        quantity.resource_type_ref,
+        quantity.service_type_ref,
+        quantity.region_ref,
+        quantity.time_basis_ref,
+        quantity.sign_convention_ref,
+        quantity.uncertainty_ref,
+    )
+
+
+def _quantities_share_context(values: tuple[Quantity, ...]) -> bool:
+    return bool(values) and all(
+        _quantity_context(value) == _quantity_context(values[0])
+        for value in values[1:]
+    )
+
+
+def _nonnegative_quantities(values: tuple[Quantity, ...]) -> bool:
+    return all(_core_fraction(value.magnitude) >= 0 for value in values)
+
+
+def _i7_content_hash_check(record: object, interface: str) -> None:
+    if record.envelope.to_ecj1()["object_content_payload"] != record.to_ecj1():  # type: ignore[attr-defined]
+        _i7_failure(FailureCode.HASH_MISMATCH, interface)
+    if not _object_hash_matches(record):
+        _i7_failure(FailureCode.HASH_MISMATCH, interface)
+
+
+@_strict_i7_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class AdmissionDecision:
+    envelope: CommonObjectEnvelope
+    decision_epoch: Epoch
+    request_ref: ObjectRef
+    capacity_record_ref: ObjectRef
+    topology_snapshot_ref: ObjectRef
+    commitment_ref: ObjectRef | Applicability
+    policy_decision_ref: ObjectRef | Applicability
+    presented: Quantity
+    admitted_to_queue: Quantity
+    rejected: Quantity
+    pending_outside_queue: Quantity
+    disposition: Literal["ADMIT", "REJECT", "DEFER", "PARTIAL"]
+    allocation_rule_ref: ObjectRef
+    queue_rule_ref: ObjectRef
+    admissibility_evidence_refs: tuple[ObjectRef, ...]
+    domain_authority_ref: ObjectRef
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.decision_epoch) is Epoch
+            and all(
+                type(value) is ObjectRef
+                for value in (
+                    self.request_ref,
+                    self.capacity_record_ref,
+                    self.topology_snapshot_ref,
+                    self.allocation_rule_ref,
+                    self.queue_rule_ref,
+                    self.domain_authority_ref,
+                )
+            )
+            and _object_or_applicability(self.commitment_ref)
+            and _object_or_applicability(self.policy_decision_ref)
+            and all(
+                type(value) is Quantity
+                for value in (
+                    self.presented,
+                    self.admitted_to_queue,
+                    self.rejected,
+                    self.pending_outside_queue,
+                )
+            )
+            and type(self.disposition) is str
+            and self.disposition in {"ADMIT", "REJECT", "DEFER", "PARTIAL"}
+            and _object_ref_tuple(self.admissibility_evidence_refs)
+        ):
+            _i7_formation_failure("AdmissionDecision")
+        _validate_admission_decision(self)
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
+@_strict_i7_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class QueueRecord:
+    envelope: CommonObjectEnvelope
+    capacity_locus_ref: ObjectRef
+    resource_type_ref: ObjectRef
+    epoch: Epoch
+    opening_queue: Quantity
+    admitted_arrival: Quantity
+    completed_flow: Quantity
+    expired_cancelled_abandoned: Quantity
+    closing_queue: Quantity
+    rejected_outside_queue: Quantity
+    pending_outside_queue: Quantity
+    admission_decision_refs: tuple[ObjectRef, ...]
+    queue_discipline_ref: ObjectRef
+    priority_rule_ref: ObjectRef
+    congestion_ref: ObjectRef | Applicability
+    domain_authority_ref: ObjectRef
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.epoch) is Epoch
+            and all(
+                type(value) is ObjectRef
+                for value in (
+                    self.capacity_locus_ref,
+                    self.resource_type_ref,
+                    self.queue_discipline_ref,
+                    self.priority_rule_ref,
+                    self.domain_authority_ref,
+                )
+            )
+            and all(
+                type(value) is Quantity
+                for value in (
+                    self.opening_queue,
+                    self.admitted_arrival,
+                    self.completed_flow,
+                    self.expired_cancelled_abandoned,
+                    self.closing_queue,
+                    self.rejected_outside_queue,
+                    self.pending_outside_queue,
+                )
+            )
+            and _object_ref_tuple(self.admission_decision_refs)
+            and _object_or_applicability(self.congestion_ref)
+        ):
+            _i7_formation_failure("QueueRecord")
+        _validate_queue_record(self)
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
+@_strict_i7_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class ReservationShortfall:
+    envelope: CommonObjectEnvelope
+    epoch: Epoch
+    capacity_record_ref: ObjectRef
+    reservation_refs: tuple[ObjectRef, ...]
+    affected_commitment_refs: tuple[ObjectRef, ...]
+    reserved_total: Quantity
+    usable_capacity: Quantity
+    shortfall: Quantity
+    allocation_rule_ref: ObjectRef
+    disposition_refs: tuple[ObjectRef, ...]
+    status: Literal["IMPAIRED", "BREACHED", "REROUTE_PROPOSED", "UNRESOLVED"]
+    domain_authority_ref: ObjectRef
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.epoch) is Epoch
+            and all(
+                type(value) is ObjectRef
+                for value in (
+                    self.capacity_record_ref,
+                    self.allocation_rule_ref,
+                    self.domain_authority_ref,
+                )
+            )
+            and all(
+                _object_ref_tuple(values)
+                for values in (
+                    self.reservation_refs,
+                    self.affected_commitment_refs,
+                    self.disposition_refs,
+                )
+            )
+            and all(
+                type(value) is Quantity
+                for value in (
+                    self.reserved_total,
+                    self.usable_capacity,
+                    self.shortfall,
+                )
+            )
+            and type(self.status) is str
+            and self.status
+            in {"IMPAIRED", "BREACHED", "REROUTE_PROPOSED", "UNRESOLVED"}
+        ):
+            _i7_formation_failure("ReservationShortfall")
+        _validate_reservation_shortfall(self)
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
+@_strict_i7_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class CongestionRecord:
+    envelope: CommonObjectEnvelope
+    capacity_locus_ref: ObjectRef
+    epoch: Epoch
+    requested_load: Quantity
+    admitted_load: Quantity
+    completed_flow: Quantity
+    usable_capacity: Quantity
+    opening_queue: Quantity
+    closing_queue: Quantity
+    binding_rule_ref: ObjectRef
+    effect_kinds: tuple[
+        Literal["COMPLETION", "DELAY", "LOSS", "FEASIBILITY"], ...
+    ]
+    effect_refs: tuple[ObjectRef, ...]
+    queue_record_ref: ObjectRef | Applicability
+    status: Literal["BINDING_CAPACITY_INTERACTION"]
+    domain_authority_ref: ObjectRef
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.epoch) is Epoch
+            and all(
+                type(value) is ObjectRef
+                for value in (
+                    self.capacity_locus_ref,
+                    self.binding_rule_ref,
+                    self.domain_authority_ref,
+                )
+            )
+            and all(
+                type(value) is Quantity
+                for value in (
+                    self.requested_load,
+                    self.admitted_load,
+                    self.completed_flow,
+                    self.usable_capacity,
+                    self.opening_queue,
+                    self.closing_queue,
+                )
+            )
+            and type(self.effect_kinds) is tuple
+            and all(
+                type(value) is str
+                and value in {"COMPLETION", "DELAY", "LOSS", "FEASIBILITY"}
+                for value in self.effect_kinds
+            )
+            and _object_ref_tuple(self.effect_refs)
+            and _object_or_applicability(self.queue_record_ref)
+            and type(self.status) is str
+            and self.status == "BINDING_CAPACITY_INTERACTION"
+        ):
+            _i7_formation_failure("CongestionRecord")
+        _validate_congestion_record(self)
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
+def _validate_admission_decision(decision: AdmissionDecision, /) -> None:
+    interface = "AdmissionDecision"
+    if type(decision) is not AdmissionDecision:
+        _i7_formation_failure(interface)
+    quantities = (
+        decision.presented,
+        decision.admitted_to_queue,
+        decision.rejected,
+        decision.pending_outside_queue,
+    )
+    presented, admitted, rejected, pending = (
+        _core_fraction(value.magnitude) for value in quantities
+    )
+    partition = admitted + rejected + pending
+    disposition_valid = {
+        "ADMIT": admitted == presented and rejected == 0 and pending == 0,
+        "REJECT": admitted == 0 and rejected == presented and pending == 0,
+        "DEFER": admitted == 0 and rejected == 0 and pending == presented,
+        "PARTIAL": partition == presented
+        and sum(value > 0 for value in (admitted, rejected, pending)) >= 2,
+    }[decision.disposition]
+    if not (
+        _quantities_share_context(quantities)
+        and _nonnegative_quantities(quantities)
+        and presented == partition
+        and disposition_valid
+        and bool(decision.admissibility_evidence_refs)
+        and _ordered_refs(decision.admissibility_evidence_refs)
+        and not _duplicate_refs(decision.admissibility_evidence_refs)
+    ):
+        _i7_failure(FailureCode.ADMISSION_BALANCE_FAILURE, interface)
+    _i7_content_hash_check(decision, interface)
+    return None
+
+
+def _validate_queue_record(record: QueueRecord, /) -> None:
+    interface = "QueueRecord"
+    if type(record) is not QueueRecord:
+        _i7_formation_failure(interface)
+    quantities = (
+        record.opening_queue,
+        record.admitted_arrival,
+        record.completed_flow,
+        record.expired_cancelled_abandoned,
+        record.closing_queue,
+        record.rejected_outside_queue,
+        record.pending_outside_queue,
+    )
+    opening, admitted, completed, expired, closing, rejected, pending = (
+        _core_fraction(value.magnitude) for value in quantities
+    )
+    correct_closing = opening + admitted - completed - expired
+    outside_mutation = correct_closing - rejected - pending
+    if (rejected != 0 or pending != 0) and closing == outside_mutation:
+        _i7_failure(FailureCode.REJECTED_DEMAND_QUEUE_MUTATION, interface)
+    if not (
+        _quantities_share_context(quantities)
+        and _nonnegative_quantities(quantities)
+        and closing == correct_closing
+    ):
+        _i7_failure(FailureCode.QUEUE_BALANCE_FAILURE, interface)
+    if not (
+        record.admission_decision_refs
+        and _ordered_refs(record.admission_decision_refs)
+        and not _duplicate_refs(record.admission_decision_refs)
+    ):
+        _i7_failure(FailureCode.QUEUE_BALANCE_FAILURE, interface)
+    _i7_content_hash_check(record, interface)
+    return None
+
+
+def _validate_reservation_shortfall(record: ReservationShortfall, /) -> None:
+    interface = "ReservationShortfall"
+    if type(record) is not ReservationShortfall:
+        _i7_formation_failure(interface)
+    quantities = (
+        record.reserved_total,
+        record.usable_capacity,
+        record.shortfall,
+    )
+    reserved, usable, shortfall = (
+        _core_fraction(value.magnitude) for value in quantities
+    )
+    if not (
+        _quantities_share_context(quantities)
+        and _nonnegative_quantities(quantities)
+        and shortfall == max(Fraction(0), reserved - usable)
+        and shortfall > 0
+    ):
+        _i7_failure(FailureCode.RESERVATION_SHORTFALL_INVALID, interface)
+    if not (
+        record.reservation_refs
+        and record.affected_commitment_refs
+        and all(
+            _ordered_refs(values) and not _duplicate_refs(values)
+            for values in (
+                record.reservation_refs,
+                record.affected_commitment_refs,
+                record.disposition_refs,
+            )
+        )
+    ):
+        _i7_failure(FailureCode.COMMITMENT_STATE_MISMATCH, interface)
+    _i7_content_hash_check(record, interface)
+    return None
+
+
+def _validate_congestion_record(record: CongestionRecord, /) -> None:
+    interface = "CongestionRecord"
+    if type(record) is not CongestionRecord:
+        _i7_formation_failure(interface)
+    quantities = (
+        record.requested_load,
+        record.admitted_load,
+        record.completed_flow,
+        record.usable_capacity,
+        record.opening_queue,
+        record.closing_queue,
+    )
+    requested, admitted, completed, usable, opening, closing = (
+        _core_fraction(value.magnitude) for value in quantities
+    )
+    if not (
+        _quantities_share_context(quantities)
+        and _nonnegative_quantities(quantities)
+        and completed <= usable
+    ):
+        _i7_failure(FailureCode.CAPACITY_COMPLIANCE_FAILURE, interface)
+    effect_order = ("COMPLETION", "DELAY", "LOSS", "FEASIBILITY")
+    effect_indices = tuple(effect_order.index(value) for value in record.effect_kinds)
+    if not (
+        admitted <= requested
+        and opening >= 0
+        and closing >= 0
+        and record.effect_kinds
+        and len(record.effect_kinds) == len(record.effect_refs)
+        and effect_indices == tuple(sorted(effect_indices))
+        and len(effect_indices) == len(set(effect_indices))
+        and _ordered_refs(record.effect_refs)
+        and not _duplicate_refs(record.effect_refs)
+    ):
+        _i7_failure(FailureCode.CONGESTION_DECLARATION_INVALID, interface)
+    _i7_content_hash_check(record, interface)
+    return None
+
+
 _DEPENDENCY_SENTINELS = (ActionInstance, CapacityLocus)
 
 
@@ -394,4 +854,8 @@ __all__ = (
     "validate_commitment",
     "validate_reservation",
     "validate_capacity_record",
+    "AdmissionDecision",
+    "QueueRecord",
+    "ReservationShortfall",
+    "CongestionRecord",
 )

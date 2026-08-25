@@ -183,6 +183,7 @@ from .network import (
     AvailabilityStatus,
     validate_provider_network,
     validate_route_plan,
+    TopologyChangeEvent,
 )
 from .commitments import (
     Commitment,
@@ -191,6 +192,10 @@ from .commitments import (
     validate_commitment,
     validate_reservation,
     validate_capacity_record,
+    AdmissionDecision,
+    QueueRecord,
+    ReservationShortfall,
+    CongestionRecord,
 )
 from .observation import Measurement, MeasurementContract, validate_measurement
 from .scheduling import (
@@ -365,6 +370,15 @@ from .bridge import (
     compute_same_baseline_nonadditivity,
     compute_comparator_interaction_fixture,
     compute_comparator_interaction,
+)
+from .dynamic import (
+    DelayRecord,
+    InTransitRecord,
+    DelayedEffect,
+    DynamicUpdateRecord,
+    NaturalDriveContract,
+    validate_dynamic_static_identity,
+    propose_reroute,
 )
 
 
@@ -896,4 +910,19 @@ __all__ += (
     "compute_same_baseline_nonadditivity",
     "compute_comparator_interaction_fixture",
     "compute_comparator_interaction",
+)
+
+__all__ += (
+    "TopologyChangeEvent",
+    "AdmissionDecision",
+    "QueueRecord",
+    "ReservationShortfall",
+    "CongestionRecord",
+    "DelayRecord",
+    "InTransitRecord",
+    "DelayedEffect",
+    "DynamicUpdateRecord",
+    "NaturalDriveContract",
+    "validate_dynamic_static_identity",
+    "propose_reroute",
 )

@@ -298,6 +298,47 @@ def _bridge_execution_permit(
     )
 
 
+from . import dynamic as _dynamic
+
+
+def _dynamic_execution_permit(
+    lease: ScientificExecutionLease,
+    operation: Literal["propose_reroute"],
+    /,
+) -> NoReturn:
+    if not (
+        type(operation) is str
+        and operation == "propose_reroute"
+    ):
+        _formation_failure("_dynamic_execution_permit")
+    if not (
+        type(lease) is ScientificExecutionLease
+        and type(lease.guard) is T3EntryGuard
+        and type(lease.lease_ref) is ObjectRef
+        and type(lease.operation) is str
+        and bool(lease.operation)
+        and type(lease.consumed) is bool
+    ):
+        _formation_failure("_dynamic_execution_permit")
+    if lease.consumed or lease.operation != operation:
+        _failure(
+            FailureCode.SCIENTIFIC_EXECUTION_LEASE_INVALID,
+            "_dynamic_execution_permit",
+        )
+    if not _guard_formation(lease.guard):
+        _formation_failure("_dynamic_execution_permit")
+    if lease.guard.real_durability_backend_ref is not Applicability.NOT_APPLICABLE:
+        _failure(FailureCode.T3_ENTRY_GUARD_FAILED, "_dynamic_execution_permit")
+    _fail(
+        FailureCode.REAL_DURABILITY_BACKEND_UNAVAILABLE,
+        "_dynamic_execution_permit rejected REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        stage=FailureStage.I7,
+        interface_ref=_interface("_dynamic_execution_permit"),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
 __all__ = (
     "ProposalRecord",
     "ScreeningDisposition",
