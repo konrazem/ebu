@@ -109,6 +109,7 @@ class AvailabilityStatus(StrEnum):
     FAILED = "FAILED"
     REPAIRING = "REPAIRING"
     UNRESOLVED = "UNRESOLVED"
+    ISOLATED = "ISOLATED"
 
     @classmethod
     def _missing_(cls, value: object) -> NoReturn:
@@ -440,6 +441,216 @@ def validate_route_plan(route: RoutePlan, /) -> None:
     return None
 
 
+def _i7_failure(code: FailureCode, interface: str) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I7,
+        interface_ref=FailureInterfaceRef(
+            "ebu_framework.network", interface, "1.0.0"
+        ),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _i7_formation_failure(interface: str) -> NoReturn:
+    _i7_failure(FailureCode.I7_RECORD_FORMATION_INVALID, interface)
+
+
+def _strict_i7_formation(cls: type) -> type:
+    generated_init = cls.__init__
+
+    def strict_init(self: object, *args: object, **kwargs: object) -> None:
+        expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
+        if args or set(kwargs) != expected_fields:
+            _i7_formation_failure(cls.__name__)
+        generated_init(self, **kwargs)
+
+    strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
+    cls.__init__ = strict_init  # type: ignore[method-assign]
+    return cls
+
+
+@_strict_i7_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class TopologyChangeEvent:
+    envelope: CommonObjectEnvelope
+    effective_epoch: Epoch
+    topology_before_ref: ObjectRef
+    topology_after_ref: ObjectRef
+    structural_topology_ref: ObjectRef
+    active_topology_before_ref: ObjectRef
+    active_topology_after_ref: ObjectRef
+    change_kind: Literal[
+        "AVAILABILITY",
+        "DEGRADATION",
+        "FAILURE",
+        "ISOLATION",
+        "REPAIR",
+        "MEMBERSHIP",
+    ]
+    affected_provider_refs: tuple[ObjectRef, ...]
+    affected_node_refs: tuple[ObjectRef, ...]
+    affected_edge_refs: tuple[ObjectRef, ...]
+    availability_before: AvailabilityStatus
+    availability_after: AvailabilityStatus
+    declaration_status: Literal["DOMAIN_DECLARED", "DOMAIN_OBSERVED"]
+    declaring_authority_ref: ObjectRef
+    observation_provenance_ref: ObjectRef | Applicability
+    causal_identification_protocol_ref: ObjectRef | Applicability
+    cause_claim_status: Literal[
+        "NOT_CLAIMED", "IDENTIFIED_UNDER_REFERENCED_PROTOCOL"
+    ]
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.effective_epoch) is Epoch
+            and all(
+                type(value) is ObjectRef
+                for value in (
+                    self.topology_before_ref,
+                    self.topology_after_ref,
+                    self.structural_topology_ref,
+                    self.active_topology_before_ref,
+                    self.active_topology_after_ref,
+                    self.declaring_authority_ref,
+                )
+            )
+            and type(self.change_kind) is str
+            and self.change_kind
+            in {
+                "AVAILABILITY",
+                "DEGRADATION",
+                "FAILURE",
+                "ISOLATION",
+                "REPAIR",
+                "MEMBERSHIP",
+            }
+            and all(
+                _object_ref_tuple(values)
+                for values in (
+                    self.affected_provider_refs,
+                    self.affected_node_refs,
+                    self.affected_edge_refs,
+                )
+            )
+            and type(self.availability_before) is AvailabilityStatus
+            and type(self.availability_after) is AvailabilityStatus
+            and type(self.declaration_status) is str
+            and self.declaration_status in {"DOMAIN_DECLARED", "DOMAIN_OBSERVED"}
+            and _object_or_applicability(self.observation_provenance_ref)
+            and _object_or_applicability(
+                self.causal_identification_protocol_ref
+            )
+            and type(self.cause_claim_status) is str
+            and self.cause_claim_status
+            in {"NOT_CLAIMED", "IDENTIFIED_UNDER_REFERENCED_PROTOCOL"}
+        ):
+            _i7_formation_failure("TopologyChangeEvent")
+        _validate_topology_change(self)
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
+def _availability_transition_valid(event: TopologyChangeEvent) -> bool:
+    before = event.availability_before
+    after = event.availability_after
+    if event.change_kind == "FAILURE":
+        return before is not AvailabilityStatus.FAILED and after is AvailabilityStatus.FAILED
+    if event.change_kind == "ISOLATION":
+        return before is not AvailabilityStatus.ISOLATED and after is AvailabilityStatus.ISOLATED
+    if event.change_kind == "DEGRADATION":
+        return (
+            before in {AvailabilityStatus.AVAILABLE, AvailabilityStatus.REPAIRING}
+            and after is AvailabilityStatus.DEGRADED
+        )
+    if event.change_kind == "REPAIR":
+        return (
+            before
+            in {
+                AvailabilityStatus.DEGRADED,
+                AvailabilityStatus.FAILED,
+                AvailabilityStatus.ISOLATED,
+                AvailabilityStatus.REPAIRING,
+            }
+            and after
+            in {
+                AvailabilityStatus.AVAILABLE,
+                AvailabilityStatus.DEGRADED,
+                AvailabilityStatus.REPAIRING,
+            }
+            and before is not after
+        )
+    if event.change_kind == "AVAILABILITY":
+        return (
+            before
+            in {
+                AvailabilityStatus.AVAILABLE,
+                AvailabilityStatus.DEGRADED,
+                AvailabilityStatus.REPAIRING,
+            }
+            and after in {AvailabilityStatus.AVAILABLE, AvailabilityStatus.DEGRADED}
+            and before is not after
+        )
+    return event.change_kind == "MEMBERSHIP" and before is after
+
+
+def _validate_topology_change(event: TopologyChangeEvent, /) -> None:
+    interface = "TopologyChangeEvent"
+    if type(event) is not TopologyChangeEvent:
+        _i7_formation_failure(interface)
+    layer_refs = (
+        event.structural_topology_ref,
+        event.active_topology_before_ref,
+        event.active_topology_after_ref,
+    )
+    if len(set(layer_refs)) != len(layer_refs):
+        _i7_failure(FailureCode.TOPOLOGY_LAYER_CONFLATION, interface)
+    affected = (
+        event.affected_provider_refs,
+        event.affected_node_refs,
+        event.affected_edge_refs,
+    )
+    if not any(affected) or any(
+        not _ordered_refs(values) or _duplicate_refs(values)
+        for values in affected
+    ):
+        _i7_failure(FailureCode.TOPOLOGY_LAYER_CONFLATION, interface)
+    provenance_valid = (
+        event.declaration_status == "DOMAIN_DECLARED"
+        and event.observation_provenance_ref is Applicability.NOT_APPLICABLE
+    ) or (
+        event.declaration_status == "DOMAIN_OBSERVED"
+        and type(event.observation_provenance_ref) is ObjectRef
+    )
+    if not provenance_valid:
+        _i7_failure(FailureCode.TOPOLOGY_PROVENANCE_INVALID, interface)
+    if not _availability_transition_valid(event):
+        _i7_failure(FailureCode.AVAILABILITY_TRANSITION_INVALID, interface)
+    causal_valid = (
+        event.cause_claim_status == "NOT_CLAIMED"
+        and event.causal_identification_protocol_ref
+        is Applicability.NOT_APPLICABLE
+    ) or (
+        event.cause_claim_status == "IDENTIFIED_UNDER_REFERENCED_PROTOCOL"
+        and type(event.causal_identification_protocol_ref) is ObjectRef
+    )
+    if not causal_valid:
+        _i7_failure(FailureCode.CAUSAL_ATTRIBUTION_UNRESOLVED, interface)
+    if event.envelope.to_ecj1()["object_content_payload"] != event.to_ecj1():
+        _i7_failure(FailureCode.HASH_MISMATCH, interface)
+    if not _object_hash_matches(event):
+        _i7_failure(FailureCode.HASH_MISMATCH, interface)
+    return None
+
+
 # Preserve the committed dependency edges without resolving opaque references.
 _DEPENDENCY_SENTINELS = (SystemState, NamespaceRegistrySnapshot)
 
@@ -454,4 +665,5 @@ __all__ = (
     "AvailabilityStatus",
     "validate_provider_network",
     "validate_route_plan",
+    "TopologyChangeEvent",
 )

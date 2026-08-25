@@ -278,6 +278,10 @@ def _direct_relative_imports(tree: ast.Module) -> list[str]:
 
 def test_i3b_runtime_and_static_inventory() -> None:
     contract = _load_contract(_MECHANICAL_CONTRACT)
+    i7_paths = _load_contract(
+        _REPO_ROOT
+        / "unified_python_research_framework_i7_implementation_path_manifest.json"
+    )
     module_exports = contract["module_exports"]
     direct_imports = contract["direct_imports"]
     assert type(module_exports) is dict and type(direct_imports) is dict
@@ -288,9 +292,10 @@ def test_i3b_runtime_and_static_inventory() -> None:
         assert "entropy" not in source.casefold()
         tree = ast.parse(source, filename=str(path))
         annotations.update(_class_annotations(tree))
-        assert tuple(_MODULES[module_name].__all__) == tuple(
-            module_exports[module_name]
+        expected_exports = i7_paths["module_exports"].get(
+            module_name, module_exports[module_name]
         )
+        assert tuple(_MODULES[module_name].__all__) == tuple(expected_exports)
         assert _direct_relative_imports(tree) == direct_imports[module_name]
 
     types = contract["types"]
@@ -339,8 +344,11 @@ def test_i3b_runtime_and_static_inventory() -> None:
         else:
             assert formation == "STRENUM"
             assert issubclass(runtime_value, StrEnum)
-            assert list(runtime_value.__members__) == members_or_fields
-            assert [member.value for member in runtime_value] == members_or_fields
+            expected_members = list(members_or_fields) + (
+                ["ISOLATED"] if name == "AvailabilityStatus" else []
+            )
+            assert list(runtime_value.__members__) == expected_members
+            assert [member.value for member in runtime_value] == expected_members
 
     validators = contract["validators"]
     assert type(validators) is list
@@ -414,6 +422,9 @@ def test_i3b_runtime_and_static_inventory() -> None:
     i6 = _load_contract(
         _REPO_ROOT / "unified_python_research_framework_i6_contract.json"
     )
+    i7 = _load_contract(
+        _REPO_ROOT / "unified_python_research_framework_i7_contract.json"
+    )
     failure_slices = compatibility["current_surface"]["failure_slices"]
     failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
     import hashlib
@@ -439,8 +450,9 @@ def test_i3b_runtime_and_static_inventory() -> None:
             )["current_surface"]["failure_order"]
         ),
     )
-    assert failures[227:] == tuple(i6["failure_inventory"]["append_order"])
-    assert len(failures) == i6["failure_inventory"]["future_total"] == 232
+    assert failures[227:232] == tuple(i6["failure_inventory"]["append_order"])
+    assert failures[232:] == tuple(i7["failure_inventory"]["append_order"])
+    assert len(failures) == i7["failure_inventory"]["future_total"] == 256
     assert (
         len(("\n".join(failures[:227]) + "\n").encode("utf-8")),
         hashlib.sha256(("\n".join(failures[:227]) + "\n").encode("utf-8")).hexdigest(),
@@ -455,8 +467,8 @@ def test_i3b_runtime_and_static_inventory() -> None:
         "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
     )
     assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
-        i6["failure_inventory"]["future_lf"]["byte_count"],
-        i6["failure_inventory"]["future_lf"]["sha256"],
+        i7["failure_inventory"]["future_lf"]["byte_count"],
+        i7["failure_inventory"]["future_lf"]["sha256"],
     )
 
 

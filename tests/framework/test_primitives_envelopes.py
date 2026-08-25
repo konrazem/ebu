@@ -448,8 +448,10 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
             and node.target.id == "__all__"
             and isinstance(node.op, ast.Add)
         )
-        self.assertEqual(len(export_suffixes), 2)
-        current_root_exports = root_exports + export_suffixes[0] + export_suffixes[1]
+        self.assertEqual(len(export_suffixes), 3)
+        current_root_exports = root_exports + tuple(
+            name for suffix in export_suffixes for name in suffix
+        )
         lazy_assignment = next(
             node
             for node in trees["__init__"].body
@@ -474,6 +476,15 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
         i6_contract = json.loads(
             (ROOT / "unified_python_research_framework_i6_contract.json").read_bytes()
         )
+        i7_contract = json.loads(
+            (ROOT / "unified_python_research_framework_i7_contract.json").read_bytes()
+        )
+        i7_paths = json.loads(
+            (
+                ROOT
+                / "unified_python_research_framework_i7_implementation_path_manifest.json"
+            ).read_bytes()
+        )
         self.assertEqual(
             (
                 set(current_root_exports)
@@ -482,7 +493,8 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 current_root_exports[:309],
                 current_root_exports[309:391],
                 current_root_exports[:391],
-                current_root_exports[391:],
+                current_root_exports[391:407],
+                current_root_exports[407:],
                 len(i5_execution_exports),
                 i5_execution_exports,
             ),
@@ -492,6 +504,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 tuple(post_i5_surface["root_export_slices"][-1]["values"]),
                 tuple(post_i5_surface["root_export_order"]),
                 tuple(i6_contract["root_exports"]["append_order"]),
+                tuple(i7_contract["root_exports"]["append_order"]),
                 14,
                 frozenset(
                     post_i5_surface["root_import_strategy"]
@@ -585,8 +598,10 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                         frozenset(root_relative_module_order),
                     ),
                     (
-                        i6_contract["import_graph"]["module_count"],
-                        frozenset(i6_contract["import_graph"]["package_module_order"]),
+                        i7_paths["future_import_graph"]["module_count"],
+                        frozenset(
+                            i7_paths["future_import_graph"]["package_module_order"]
+                        ),
                     ),
                 )
                 self.assertEqual(

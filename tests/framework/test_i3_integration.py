@@ -511,6 +511,14 @@ class I3IntegrationTests(unittest.TestCase):
         _, i6_contract = _strict_load(
             _REPO_ROOT / "unified_python_research_framework_i6_contract.json", dict
         )
+        _, i7_contract = _strict_load(
+            _REPO_ROOT / "unified_python_research_framework_i7_contract.json", dict
+        )
+        _, i7_paths = _strict_load(
+            _REPO_ROOT
+            / "unified_python_research_framework_i7_implementation_path_manifest.json",
+            dict,
+        )
         post_i5_surface = post_i5_compatibility["current_surface"]
         d2_surface = d2_mechanical["proposed_surface"]
         d1_suffix = root_exports[219:237]
@@ -542,7 +550,10 @@ class I3IntegrationTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            root_exports[391:], tuple(i6_contract["root_exports"]["append_order"])
+            root_exports[391:407], tuple(i6_contract["root_exports"]["append_order"])
+        )
+        self.assertEqual(
+            root_exports[407:], tuple(i7_contract["root_exports"]["append_order"])
         )
         root_rule = i4_mechanical["root_export_rule"]
         for names, byte_key, digest_key in (
@@ -573,9 +584,9 @@ class I3IntegrationTests(unittest.TestCase):
                 hashlib.sha256(current_root_projection).hexdigest(),
             ),
             (
-                i6_contract["root_exports"]["future_total"],
-                i6_contract["root_exports"]["future_lf"]["byte_count"],
-                i6_contract["root_exports"]["future_lf"]["sha256"],
+                i7_contract["root_exports"]["future_total"],
+                i7_contract["root_exports"]["future_lf"]["byte_count"],
+                i7_contract["root_exports"]["future_lf"]["sha256"],
             ),
         )
         self.assertEqual(len(root_exports), len(set(root_exports)))
@@ -591,16 +602,18 @@ class I3IntegrationTests(unittest.TestCase):
         root_source = _ROOT_PATH.read_text(encoding="utf-8", errors="strict")
         root_tree = ast.parse(root_source, filename=str(_ROOT_PATH))
         compile(root_tree, str(_ROOT_PATH), "exec", dont_inherit=True)
-        self.assertEqual(
-            _root_imports(root_tree),
-            {
-                name: tuple(exports)
-                for name, exports in mechanical["module_exports"].items()
-            },
-        )
+        expected_root_imports = {
+            name: tuple(exports)
+            for name, exports in mechanical["module_exports"].items()
+        }
+        for name in ("network", "commitments"):
+            expected_root_imports[name] = tuple(i7_paths["module_exports"][name])
+        self.assertEqual(_root_imports(root_tree), expected_root_imports)
         for module_name, names in mechanical["module_exports"].items():
             if module_name == "faults":
                 names = post_i5_surface["module_exports"]["faults"]
+            elif module_name in {"network", "commitments"}:
+                names = i7_paths["module_exports"][module_name]
             module = _MODULES[module_name]
             self.assertEqual(tuple(module.__all__), tuple(names))
             for name in names:
@@ -619,8 +632,13 @@ class I3IntegrationTests(unittest.TestCase):
                 self.assertEqual(tuple(runtime_value.__slots__), expected_fields)
             elif runtime_kind == "STRENUM":
                 self.assertTrue(issubclass(runtime_value, StrEnum))
-                self.assertEqual(tuple(runtime_value.__members__), tuple(members_or_fields))
-                self.assertEqual(tuple(member.value for member in runtime_value), tuple(members_or_fields))
+                expected_members = tuple(members_or_fields) + (
+                    ("ISOLATED",) if name == "AvailabilityStatus" else ()
+                )
+                self.assertEqual(tuple(runtime_value.__members__), expected_members)
+                self.assertEqual(
+                    tuple(member.value for member in runtime_value), expected_members
+                )
             else:
                 self.assertEqual(runtime_kind, "TAGGED_UNION")
                 self.assertEqual(
@@ -787,8 +805,12 @@ class I3IntegrationTests(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            failure_values[227:],
+            failure_values[227:232],
             tuple(i6_contract["failure_inventory"]["append_order"]),
+        )
+        self.assertEqual(
+            failure_values[232:],
+            tuple(i7_contract["failure_inventory"]["append_order"]),
         )
         future_failure_projection = b"".join(
             name.encode("ascii") + b"\n" for name in failure_values
@@ -799,8 +821,8 @@ class I3IntegrationTests(unittest.TestCase):
                 hashlib.sha256(future_failure_projection).hexdigest(),
             ),
             (
-                i6_contract["failure_inventory"]["future_lf"]["byte_count"],
-                i6_contract["failure_inventory"]["future_lf"]["sha256"],
+                i7_contract["failure_inventory"]["future_lf"]["byte_count"],
+                i7_contract["failure_inventory"]["future_lf"]["sha256"],
             ),
         )
         failure_rule = i4_mechanical["failure_rule"]

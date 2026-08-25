@@ -615,6 +615,30 @@ class FrameworkI4ReachabilityTests(unittest.TestCase):
             ),
             55,
         )
+        i7_paths = json.loads(
+            (
+                ROOT
+                / "unified_python_research_framework_i7_implementation_path_manifest.json"
+            ).read_bytes()
+        )
+        t2_patch = next(
+            row
+            for row in i7_paths["exact_construction_patches"]["rows"]
+            if row["patch_id"] == "I7-P05"
+        )
+        self.assertEqual(len(capabilities._T2_ALLOWLIST), 42)
+        self.assertEqual(
+            tuple(
+                {
+                    "fixture_path": path,
+                    "fixture_raw_sha256": str(raw_sha256),
+                    "case_id": case_id,
+                    "authorized_interface": interface,
+                }
+                for path, raw_sha256, case_id, interface in capabilities._T2_ALLOWLIST[36:]
+            ),
+            tuple(t2_patch["exact_new_rows"]),
+        )
 
 
 if __name__ == "__main__":
