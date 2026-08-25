@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from enum import StrEnum
 import hashlib
 import re
-from typing import NoReturn
+from typing import Literal, NoReturn
 
 from . import authorization as _authorization
 from . import policy as _policy
@@ -15,7 +15,17 @@ from . import observation as _observation
 from . import experiment as _experiment
 from . import hashing as _hashing
 from . import identity as _identity
-from .errors import Applicability, FailureCode, FrameworkError, _i4_fail
+from .errors import (
+    Applicability,
+    FailureCode,
+    FailureInterfaceRef,
+    FailureStage,
+    FrameworkError,
+    RetryClass,
+    ScientificStatusEffect,
+    _fail,
+    _i4_fail,
+)
 
 
 InformationContract = _policy.InformationContract
@@ -23,6 +33,7 @@ InformationView = _policy.InformationView
 InformationReadSet = _policy.InformationReadSet
 CanonicalBytes = _policy.CanonicalBytes
 ObjectRef = _identity.ObjectRef
+SourceFileRawSha256 = _identity.SourceFileRawSha256
 
 _UTC_RE = re.compile(
     r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}Z",
@@ -31,6 +42,21 @@ _UTC_RE = re.compile(
 _PRIVATE_CAPABILITY_TOKEN = object()
 _ISSUED_CAPABILITY_IDS: set[int] = set()
 _ISSUED_CAPABILITIES: list[object] = []
+_T2_FIXTURE_PATH = "tests/framework/fixtures/bridge_m1_m9_v1.json"
+_T2_FIXTURE_RAW_SHA256 = _identity.SourceFileRawSha256(
+    "sha256-raw:8768b2f976b3b928b90c3b6d4b6d141de75fd5873fb52d61048748bf054779af"
+)
+_T2_CASE_IDS = ("M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9")
+_T2_INTERFACES = (
+    "classify_joint_groups_fixture",
+    "compute_group_measurement_fixture",
+    "compute_same_baseline_nonadditivity_fixture",
+    "compute_comparator_interaction_fixture",
+)
+_ISSUED_T2_CAPABILITY_IDS: set[int] = set()
+_ISSUED_T2_CAPABILITY_NONCES: dict[int, object] = {}
+_ISSUED_T2_CAPABILITY_ROWS: dict[int, tuple[object, ...]] = {}
+_ISSUED_T2_CAPABILITIES: list[object] = []
 
 
 def _failure(code: FailureCode, check: str) -> NoReturn:
@@ -502,6 +528,227 @@ def build_synthetic_information_view(
     return view, capability
 
 
+@dataclass(
+    frozen=True,
+    slots=True,
+    eq=False,
+    order=False,
+    unsafe_hash=False,
+    init=False,
+)
+class T2FixtureCapability:
+    fixture_path: str
+    fixture_raw_sha256: SourceFileRawSha256
+    case_id: Literal["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"]
+    authorized_interface: Literal[
+        "classify_joint_groups_fixture",
+        "compute_group_measurement_fixture",
+        "compute_same_baseline_nonadditivity_fixture",
+        "compute_comparator_interaction_fixture",
+    ]
+    capability_class: CapabilityClass
+    issuance_nonce: object
+
+    def _authorized_failure(self, code: FailureCode) -> NoReturn:
+        try:
+            interface = object.__getattribute__(self, "authorized_interface")
+        except AttributeError:
+            interface = "T2FixtureCapability"
+        if type(interface) is str and interface in _T2_INTERFACES:
+            _t2_fixture_failure(code, interface)
+        _t2_failure(code, "T2FixtureCapability")
+
+    def __getattribute__(self, name: str) -> object:
+        if name != "__class__":
+            object.__getattribute__(self, "_authorized_failure")(
+                FailureCode.CAPABILITY_ESCALATION_FORBIDDEN
+            )
+        return object.__getattribute__(self, name)
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        del args
+        interface = kwargs.get("authorized_interface")
+        if type(interface) is str and interface in _T2_INTERFACES:
+            _t2_fixture_failure(
+                FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+                interface,
+            )
+        _t2_failure(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+            "T2FixtureCapability",
+        )
+
+    def __init_subclass__(cls, **kwargs: object) -> None:
+        del kwargs
+        _t2_failure(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+            "T2FixtureCapability",
+        )
+
+    def __copy__(self) -> NoReturn:
+        object.__getattribute__(self, "_authorized_failure")(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN
+        )
+
+    def __deepcopy__(self, memo: object) -> NoReturn:
+        del memo
+        object.__getattribute__(self, "_authorized_failure")(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN
+        )
+
+    def __reduce__(self) -> NoReturn:
+        object.__getattribute__(self, "_authorized_failure")(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN
+        )
+
+    def __reduce_ex__(self, protocol: object) -> NoReturn:
+        del protocol
+        object.__getattribute__(self, "_authorized_failure")(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN
+        )
+
+
+def _t2_failure(code: FailureCode, interface: str) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I6,
+        interface_ref=FailureInterfaceRef(
+            "ebu_framework.capabilities", interface, "1.0.0"
+        ),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _t2_fixture_failure(code: FailureCode, interface: str) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I6,
+        interface_ref=FailureInterfaceRef(
+            "ebu_framework.bridge", interface, "1.0.0"
+        ),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _issue_t2_fixture_capability(
+    *,
+    fixture_path: str,
+    fixture_raw_sha256: SourceFileRawSha256,
+    case_id: Literal["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"],
+    authorized_interface: Literal[
+        "classify_joint_groups_fixture",
+        "compute_group_measurement_fixture",
+        "compute_same_baseline_nonadditivity_fixture",
+        "compute_comparator_interaction_fixture",
+    ],
+) -> T2FixtureCapability:
+    if not (
+        type(fixture_path) is str
+        and type(fixture_raw_sha256) is _identity.SourceFileRawSha256
+        and type(case_id) is str
+        and case_id in _T2_CASE_IDS
+        and type(authorized_interface) is str
+        and authorized_interface in _T2_INTERFACES
+    ):
+        _t2_failure(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+            "_issue_t2_fixture_capability",
+        )
+    if fixture_path != _T2_FIXTURE_PATH:
+        _t2_fixture_failure(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+            authorized_interface,
+        )
+    if fixture_raw_sha256 != _T2_FIXTURE_RAW_SHA256:
+        _t2_fixture_failure(FailureCode.HASH_MISMATCH, authorized_interface)
+
+    capability = object.__new__(T2FixtureCapability)
+    nonce = object()
+    for name, value in (
+        ("fixture_path", fixture_path),
+        ("fixture_raw_sha256", fixture_raw_sha256),
+        ("case_id", case_id),
+        ("authorized_interface", authorized_interface),
+        ("capability_class", CapabilityClass.T2),
+        ("issuance_nonce", nonce),
+    ):
+        object.__setattr__(capability, name, value)
+    _ISSUED_T2_CAPABILITY_IDS.add(id(capability))
+    _ISSUED_T2_CAPABILITY_NONCES[id(capability)] = nonce
+    _ISSUED_T2_CAPABILITY_ROWS[id(capability)] = (
+        fixture_path,
+        fixture_raw_sha256,
+        case_id,
+        authorized_interface,
+        CapabilityClass.T2,
+        nonce,
+    )
+    _ISSUED_T2_CAPABILITIES.append(capability)
+    return capability
+
+
+def _consume_t2_fixture_capability(
+    capability: T2FixtureCapability,
+    interface: Literal[
+        "classify_joint_groups_fixture",
+        "compute_group_measurement_fixture",
+        "compute_same_baseline_nonadditivity_fixture",
+        "compute_comparator_interaction_fixture",
+    ],
+    case_id: Literal["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9"],
+    /,
+) -> None:
+    if not (
+        type(capability) is T2FixtureCapability
+        and type(interface) is str
+        and interface in _T2_INTERFACES
+        and type(case_id) is str
+        and case_id in _T2_CASE_IDS
+        and id(capability) in _ISSUED_T2_CAPABILITY_IDS
+    ):
+        if type(interface) is str and interface in _T2_INTERFACES:
+            _t2_fixture_failure(
+                FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+                interface,
+            )
+        _t2_failure(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+            "_consume_t2_fixture_capability",
+        )
+    nonce = object.__getattribute__(capability, "issuance_nonce")
+    if not (
+        _ISSUED_T2_CAPABILITY_NONCES.get(id(capability)) is nonce
+        and _ISSUED_T2_CAPABILITY_ROWS.get(id(capability))
+        == (
+            _T2_FIXTURE_PATH,
+            _T2_FIXTURE_RAW_SHA256,
+            case_id,
+            interface,
+            CapabilityClass.T2,
+            nonce,
+        )
+        and object.__getattribute__(capability, "fixture_path") == _T2_FIXTURE_PATH
+        and object.__getattribute__(capability, "fixture_raw_sha256")
+        == _T2_FIXTURE_RAW_SHA256
+        and object.__getattribute__(capability, "case_id") == case_id
+        and object.__getattribute__(capability, "authorized_interface") == interface
+        and object.__getattribute__(capability, "capability_class")
+        is CapabilityClass.T2
+    ):
+        _t2_fixture_failure(
+            FailureCode.CAPABILITY_ESCALATION_FORBIDDEN,
+            interface,
+        )
+    _ISSUED_T2_CAPABILITY_IDS.remove(id(capability))
+    del _ISSUED_T2_CAPABILITY_NONCES[id(capability)]
+    del _ISSUED_T2_CAPABILITY_ROWS[id(capability)]
+    return None
+
+
 _DEPENDENCY_SENTINELS = (
     _PRIVATE_CAPABILITY_TOKEN,
     _observation.Measurement,
@@ -513,4 +760,5 @@ __all__ = (
     "CapabilityClass",
     "AccessCapability",
     "build_synthetic_information_view",
+    "T2FixtureCapability",
 )

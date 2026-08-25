@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import EnumType, StrEnum
-from typing import NoReturn
+from typing import Literal, NoReturn
 
 from . import authorization as _authorization
 from . import authorization_use as _authorization_use
@@ -29,6 +29,7 @@ from .errors import (
     ScientificStatusEffect,
     _fail,
 )
+from . import bridge as _bridge
 
 
 def _interface(name: str) -> FailureInterfaceRef:
@@ -245,6 +246,55 @@ def advance_epoch(
     _failure(
         FailureCode.SCIENTIFIC_STATE_ADVANCE_FORBIDDEN,
         "advance_epoch",
+    )
+
+
+def _bridge_execution_permit(
+    lease: ScientificExecutionLease,
+    operation: Literal[
+        "classify_joint_groups",
+        "compute_group_measurement",
+        "compute_same_baseline_nonadditivity",
+        "compute_comparator_interaction",
+    ],
+    /,
+) -> NoReturn:
+    if not (
+        type(operation) is str
+        and operation
+        in (
+            "classify_joint_groups",
+            "compute_group_measurement",
+            "compute_same_baseline_nonadditivity",
+            "compute_comparator_interaction",
+        )
+    ):
+        _formation_failure("_bridge_execution_permit")
+    if not (
+        type(lease) is ScientificExecutionLease
+        and type(lease.guard) is T3EntryGuard
+        and type(lease.lease_ref) is ObjectRef
+        and type(lease.operation) is str
+        and bool(lease.operation)
+        and type(lease.consumed) is bool
+    ):
+        _formation_failure("_bridge_execution_permit")
+    if lease.consumed or lease.operation != operation:
+        _failure(
+            FailureCode.SCIENTIFIC_EXECUTION_LEASE_INVALID,
+            "_bridge_execution_permit",
+        )
+    if not _guard_formation(lease.guard):
+        _formation_failure("_bridge_execution_permit")
+    if lease.guard.real_durability_backend_ref is not Applicability.NOT_APPLICABLE:
+        _failure(FailureCode.T3_ENTRY_GUARD_FAILED, "_bridge_execution_permit")
+    _fail(
+        FailureCode.REAL_DURABILITY_BACKEND_UNAVAILABLE,
+        "_bridge_execution_permit rejected REAL_DURABILITY_BACKEND_UNAVAILABLE",
+        stage=FailureStage.I6,
+        interface_ref=_interface("_bridge_execution_permit"),
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
     )
 
 

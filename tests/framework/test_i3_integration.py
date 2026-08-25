@@ -508,6 +508,9 @@ class I3IntegrationTests(unittest.TestCase):
         _, post_i5_compatibility = _strict_load(
             _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json", dict
         )
+        _, i6_contract = _strict_load(
+            _REPO_ROOT / "unified_python_research_framework_i6_contract.json", dict
+        )
         post_i5_surface = post_i5_compatibility["current_surface"]
         d2_surface = d2_mechanical["proposed_surface"]
         d1_suffix = root_exports[219:237]
@@ -530,13 +533,16 @@ class I3IntegrationTests(unittest.TestCase):
             d2_suffix, tuple(d2_surface["d2_root_export_suffix"])
         )
         self.assertEqual(
-            (root_exports[261:309], root_exports[309:391], root_exports),
+            (root_exports[261:309], root_exports[309:391], root_exports[:391]),
             (
                 i4_suffix,
                 tuple(i5_mechanical["root_export_suffix_types"])
                 + tuple(i5_mechanical["root_export_suffix_callables"]),
                 tuple(post_i5_surface["root_export_order"]),
             ),
+        )
+        self.assertEqual(
+            root_exports[391:], tuple(i6_contract["root_exports"]["append_order"])
         )
         root_rule = i4_mechanical["root_export_rule"]
         for names, byte_key, digest_key in (
@@ -567,9 +573,9 @@ class I3IntegrationTests(unittest.TestCase):
                 hashlib.sha256(current_root_projection).hexdigest(),
             ),
             (
-                391,
-                post_i5_surface["root_export_lf_byte_count"],
-                post_i5_surface["root_export_lf_sha256"],
+                i6_contract["root_exports"]["future_total"],
+                i6_contract["root_exports"]["future_lf"]["byte_count"],
+                i6_contract["root_exports"]["future_lf"]["sha256"],
             ),
         )
         self.assertEqual(len(root_exports), len(set(root_exports)))
@@ -766,10 +772,10 @@ class I3IntegrationTests(unittest.TestCase):
             (
                 failure_values[124:185],
                 failure_values[185:227],
-                failure_values,
-                len(b"".join(name.encode("ascii") + b"\n" for name in failure_values)),
+                failure_values[:227],
+                len(b"".join(name.encode("ascii") + b"\n" for name in failure_values[:227])),
                 hashlib.sha256(
-                    b"".join(name.encode("ascii") + b"\n" for name in failure_values)
+                    b"".join(name.encode("ascii") + b"\n" for name in failure_values[:227])
                 ).hexdigest(),
             ),
             (
@@ -778,6 +784,23 @@ class I3IntegrationTests(unittest.TestCase):
                 tuple(post_i5_surface["failure_order"]),
                 post_i5_surface["failure_lf_byte_count"],
                 post_i5_surface["failure_lf_sha256"],
+            ),
+        )
+        self.assertEqual(
+            failure_values[227:],
+            tuple(i6_contract["failure_inventory"]["append_order"]),
+        )
+        future_failure_projection = b"".join(
+            name.encode("ascii") + b"\n" for name in failure_values
+        )
+        self.assertEqual(
+            (
+                len(future_failure_projection),
+                hashlib.sha256(future_failure_projection).hexdigest(),
+            ),
+            (
+                i6_contract["failure_inventory"]["future_lf"]["byte_count"],
+                i6_contract["failure_inventory"]["future_lf"]["sha256"],
             ),
         )
         failure_rule = i4_mechanical["failure_rule"]

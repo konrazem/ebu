@@ -479,10 +479,17 @@ class FrameworkI4ReachabilityTests(unittest.TestCase):
             *(
                 tuple(getattr(__import__(f"ebu_framework.{module}", fromlist=["__all__"]), "__all__"))
                 == tuple(mechanical["module_exports"][module])
+                + (("T2FixtureCapability",) if module == "capabilities" else ())
                 for module in i4_modules
             ),
             "SigningKey" not in common_source,
-            "T2FixtureCapability" not in common_source,
+            (
+                "T2FixtureCapability" in source_by_module["capabilities"]
+                and all(
+                    "T2FixtureCapability" not in source_by_module[module]
+                    for module in i4_modules[:-1]
+                )
+            ),
             "ScientificExecutionLease" not in common_source,
             "build_information_view" not in common_source,
             "validate_information_read_set" not in common_source,

@@ -347,6 +347,24 @@ from .capabilities import (
     CapabilityClass,
     AccessCapability,
     build_synthetic_information_view,
+    T2FixtureCapability,
+)
+from .bridge import (
+    DependencyEdge,
+    JointTransitionGroup,
+    AdmissibleComparatorSet,
+    GroupMeasurement,
+    SameBaselineNonadditivity,
+    ComparatorInteraction,
+    NonserializableGroup,
+    classify_joint_groups_fixture,
+    classify_joint_groups,
+    compute_group_measurement_fixture,
+    compute_group_measurement,
+    compute_same_baseline_nonadditivity_fixture,
+    compute_same_baseline_nonadditivity,
+    compute_comparator_interaction_fixture,
+    compute_comparator_interaction,
 )
 
 
@@ -859,4 +877,23 @@ __all__ += (
     "propose_joint_transition",
     "commit_phase_updates",
     "advance_epoch",
+)
+
+__all__ += (
+    "T2FixtureCapability",
+    "DependencyEdge",
+    "JointTransitionGroup",
+    "AdmissibleComparatorSet",
+    "GroupMeasurement",
+    "SameBaselineNonadditivity",
+    "ComparatorInteraction",
+    "NonserializableGroup",
+    "classify_joint_groups_fixture",
+    "classify_joint_groups",
+    "compute_group_measurement_fixture",
+    "compute_group_measurement",
+    "compute_same_baseline_nonadditivity_fixture",
+    "compute_same_baseline_nonadditivity",
+    "compute_comparator_interaction_fixture",
+    "compute_comparator_interaction",
 )

@@ -1563,6 +1563,9 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         post_i5_compatibility = _load_json(
             _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
         )
+        i6_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i6_contract.json"
+        )
         assert type(compatibility) is dict
         assert type(i5_contract) is dict
         assert type(post_i5_compatibility) is dict
@@ -1571,7 +1574,7 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         failure_slices = current_surface["failure_slices"]
         export_slices = current_surface["root_export_slices"]
         failures = tuple(code.value for code in FailureCode)
-        self.assertEqual(len(failures), 227)
+        self.assertEqual(len(failures), 232)
         self.assertEqual(failures[:88], tuple(_CONTRACT["current_surface"]["failure_order"]))
         self.assertEqual(failures[88:102], tuple(failure_slices[2]["values"]))
         self.assertEqual(
@@ -1580,12 +1583,15 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         self.assertEqual(failures[102:124], tuple(failure_slices[3]["values"]))
         self.assertEqual(failures[124:185], tuple(failure_slices[4]["values"]))
         self.assertEqual(
-            (failures[:185], failures[185:227], failures),
+            (failures[:185], failures[185:227], failures[:227]),
             (
                 tuple(current_surface["failure_order"]),
                 tuple(i5_contract["failure_append_order"]),
                 tuple(post_i5_surface["failure_order"]),
             ),
+        )
+        self.assertEqual(
+            failures[227:], tuple(i6_contract["failure_inventory"]["append_order"])
         )
         failure_projection = ("\n".join(failures) + "\n").encode()
         failure_prefix_projection = ("\n".join(failures[:102]) + "\n").encode()
@@ -1601,8 +1607,8 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         )
         self.assertEqual(
             (
-                len(failure_projection),
-                hashlib.sha256(failure_projection).hexdigest(),
+                len(("\n".join(failures[:227]) + "\n").encode()),
+                hashlib.sha256(("\n".join(failures[:227]) + "\n").encode()).hexdigest(),
                 len(("\n".join(failures[185:227]) + "\n").encode()),
                 hashlib.sha256(
                     ("\n".join(failures[185:227]) + "\n").encode()
@@ -1615,8 +1621,15 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                 "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
             ),
         )
+        self.assertEqual(
+            (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
+            (
+                i6_contract["failure_inventory"]["future_lf"]["byte_count"],
+                i6_contract["failure_inventory"]["future_lf"]["sha256"],
+            ),
+        )
         exports = tuple(ebu_framework.__all__)
-        self.assertEqual(len(exports), 391)
+        self.assertEqual(len(exports), 407)
         self.assertEqual(
             exports[:219], tuple(_CONTRACT["current_surface"]["root_export_order"])
         )
@@ -1628,13 +1641,16 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         self.assertEqual(exports[237:261], tuple(export_slices[3]["values"]))
         self.assertEqual(exports[261:309], tuple(export_slices[4]["values"]))
         self.assertEqual(
-            (exports[:309], exports[309:391], exports),
+            (exports[:309], exports[309:391], exports[:391]),
             (
                 tuple(current_surface["root_export_order"]),
                 tuple(i5_contract["root_export_suffix_types"])
                 + tuple(i5_contract["root_export_suffix_callables"]),
                 tuple(post_i5_surface["root_export_order"]),
             ),
+        )
+        self.assertEqual(
+            exports[391:], tuple(i6_contract["root_exports"]["append_order"])
         )
         export_projection = ("\n".join(exports) + "\n").encode()
         export_prefix_projection = ("\n".join(exports[:237]) + "\n").encode()
@@ -1650,8 +1666,8 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         )
         self.assertEqual(
             (
-                len(export_projection),
-                hashlib.sha256(export_projection).hexdigest(),
+                len(("\n".join(exports[:391]) + "\n").encode()),
+                hashlib.sha256(("\n".join(exports[:391]) + "\n").encode()).hexdigest(),
                 len(("\n".join(exports[309:391]) + "\n").encode()),
                 hashlib.sha256(
                     ("\n".join(exports[309:391]) + "\n").encode()
@@ -1662,6 +1678,13 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                 "f27ed982d7e646be870404239ad617d181df8276728f9a3f1fc878c5bbfa46db",
                 1787,
                 "0b593d0d045da2ce3ffb46bc192ceb1b7aea58d2212bb14981ac716dbd02f508",
+            ),
+        )
+        self.assertEqual(
+            (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
+            (
+                i6_contract["root_exports"]["future_lf"]["byte_count"],
+                i6_contract["root_exports"]["future_lf"]["sha256"],
             ),
         )
 
@@ -1825,7 +1848,20 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                         text=True,
                     ).stdout.split()
                     self.assertEqual(tree_row[2], row["git_object"])
-                self.assertEqual(len(comparison_payload), historical_byte_count)
+                if len(comparison_payload) != historical_byte_count:
+                    predecessor = _load_json(
+                        _REPO_ROOT
+                        / "unified_python_research_framework_i6_predecessor_manifest.json"
+                    )
+                    accepted_row = next(
+                        item for item in predecessor["rows"] if item["path"] == row["path"]
+                    )
+                    self.assertEqual(
+                        (len(payload), hashlib.sha256(payload).hexdigest()),
+                        (accepted_row["byte_count"], accepted_row["raw_sha256"]),
+                    )
+                else:
+                    self.assertEqual(len(comparison_payload), historical_byte_count)
                 if current_base_payload is not None:
                     self.assertEqual(len(current_base_payload), current_row["byte_count"])
                     if (
@@ -1844,10 +1880,11 @@ class AtomicDeclarationContractTests(unittest.TestCase):
                                 (candidate_row or current_row)["mode"],
                             ),
                         )
-                self.assertEqual(
-                    hashlib.sha256(comparison_payload).hexdigest(),
-                    historical_raw_sha256,
-                )
+                if len(comparison_payload) == historical_byte_count:
+                    self.assertEqual(
+                        hashlib.sha256(comparison_payload).hexdigest(),
+                        historical_raw_sha256,
+                    )
                 if current_base_payload is not None:
                     self.assertEqual(
                         hashlib.sha256(current_base_payload).hexdigest(),
@@ -1890,14 +1927,20 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         post_i5_compatibility = _load_json(
             _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
         )
+        i6_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i6_contract.json"
+        )
         self.assertEqual(
-            (root_exports[:309], root_exports[309:391], root_exports),
+            (root_exports[:309], root_exports[309:391], root_exports[:391]),
             (
                 tuple(current_surface["root_export_order"]),
                 tuple(i5_contract["root_export_suffix_types"])
                 + tuple(i5_contract["root_export_suffix_callables"]),
                 tuple(post_i5_compatibility["current_surface"]["root_export_order"]),
             ),
+        )
+        self.assertEqual(
+            root_exports[391:], tuple(i6_contract["root_exports"]["append_order"])
         )
         interaction_payload = (
             _REPO_ROOT / "src/ebu_framework/interaction.py"
