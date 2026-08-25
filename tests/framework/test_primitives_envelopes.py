@@ -440,7 +440,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
         self.assertEqual(len(set(root_exports[:127])), 127)
         self.assertEqual(len(set(root_exports)), len(root_exports))
         root_imports = {alias.asname or alias.name for node in trees["__init__"].body if isinstance(node, ast.ImportFrom) for alias in node.names}
-        i5_suffix = tuple(
+        export_suffixes = tuple(
             ast.literal_eval(node.value)
             for node in trees["__init__"].body
             if isinstance(node, ast.AugAssign)
@@ -448,8 +448,8 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
             and node.target.id == "__all__"
             and isinstance(node.op, ast.Add)
         )
-        self.assertEqual(len(i5_suffix), 1)
-        current_root_exports = root_exports + i5_suffix[0]
+        self.assertEqual(len(export_suffixes), 2)
+        current_root_exports = root_exports + export_suffixes[0] + export_suffixes[1]
         lazy_assignment = next(
             node
             for node in trees["__init__"].body
@@ -471,6 +471,9 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 ROOT / "post_i5_legacy_test_compatibility_contract.json"
             ).read_bytes()
         )["current_surface"]
+        i6_contract = json.loads(
+            (ROOT / "unified_python_research_framework_i6_contract.json").read_bytes()
+        )
         self.assertEqual(
             (
                 set(current_root_exports)
@@ -478,7 +481,8 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 - i5_execution_exports,
                 current_root_exports[:309],
                 current_root_exports[309:391],
-                current_root_exports,
+                current_root_exports[:391],
+                current_root_exports[391:],
                 len(i5_execution_exports),
                 i5_execution_exports,
             ),
@@ -487,6 +491,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 root_exports,
                 tuple(post_i5_surface["root_export_slices"][-1]["values"]),
                 tuple(post_i5_surface["root_export_order"]),
+                tuple(i6_contract["root_exports"]["append_order"]),
                 14,
                 frozenset(
                     post_i5_surface["root_import_strategy"]
@@ -580,8 +585,8 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                         frozenset(root_relative_module_order),
                     ),
                     (
-                        34,
-                        frozenset(post_i5_surface["package_module_order"]),
+                        i6_contract["import_graph"]["module_count"],
+                        frozenset(i6_contract["import_graph"]["package_module_order"]),
                     ),
                 )
                 self.assertEqual(
