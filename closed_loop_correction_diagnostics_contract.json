@@ -1,0 +1,369 @@
+{
+  "contract_id": "ebu.closed-loop-correction-diagnostics-implementation-authority",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_CLCD_B_AUTHORITY_ONLY",
+  "authority_coordinate": {
+    "accepted_branch": "framework-v0.1",
+    "accepted_commit": "cb13514f14260aa1d1deada03ca13845afb9289c",
+    "accepted_tree": "bb445e18cb5bde39127b1a682d9bfc17f8b102fb",
+    "human_authority": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+    "validation_contract": "closed_loop_correction_diagnostics_validation_contract.json",
+    "predecessor_manifest": "closed_loop_correction_diagnostics_predecessor_manifest.json",
+    "staging_plan": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_STAGING_PLAN.md"
+  },
+  "authority_package_scope": {
+    "additions": [
+      "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+      "closed_loop_correction_diagnostics_contract.json",
+      "closed_loop_correction_diagnostics_validation_contract.json",
+      "closed_loop_correction_diagnostics_predecessor_manifest.json",
+      "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_STAGING_PLAN.md"
+    ],
+    "modifications": [],
+    "deletions": [],
+    "mode": "100644"
+  },
+  "future_implementation_scope": {
+    "modified_paths": [
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/__init__.py"
+    ],
+    "new_paths": [
+      "src/ebu_framework/correction_protocol.py",
+      "src/ebu_framework/correction_diagnostics.py",
+      "tests/framework/fixtures/closed_loop_correction_diagnostics_v1.json",
+      "tests/framework/test_closed_loop_correction_diagnostics.py"
+    ],
+    "mode": "100644",
+    "path_count": 6
+  },
+  "closed_enums": [
+    {
+      "name": "ClosedLoopModelClass",
+      "members": [
+        "CONTINUOUS_LINEAR",
+        "CONTINUOUS_NONLINEAR",
+        "DISCRETE_IMMEDIATE",
+        "DISCRETE_ONE_STEP_DELAY",
+        "DECLARED_EXTENSION"
+      ]
+    },
+    {
+      "name": "CorrectionDiagnosticClaimStatus",
+      "members": [
+        "STATIC_CONTROL",
+        "MODEL_EXACT_UNDER_DECLARATION",
+        "PREREGISTERED_HYPOTHESIS",
+        "EMPIRICALLY_SUPPORTED_WITHIN_PROTOCOL",
+        "FALSIFIED_WITHIN_PROTOCOL",
+        "UNRESOLVED"
+      ]
+    },
+    {
+      "name": "ContinuousFeedbackRegime",
+      "members": [
+        "ASYMPTOTICALLY_STABLE_REAL_DECAY",
+        "ASYMPTOTICALLY_STABLE_DAMPED_OSCILLATION",
+        "PERSISTENT_UNDAMPED_OSCILLATION_BOUNDARY",
+        "UNSTABLE_GROWING_OSCILLATION",
+        "UNSTABLE_GROWING_REAL",
+        "SADDLE_INSTABILITY",
+        "NONASYMPTOTIC_BOUNDARY"
+      ]
+    },
+    {
+      "name": "DiscreteFeedbackRegime",
+      "members": [
+        "IMMEDIATE_MONOTONE_DECAY",
+        "IMMEDIATE_DEADBEAT",
+        "IMMEDIATE_ALTERNATING_DECAY",
+        "DELAYED_REAL_DECAY",
+        "DELAYED_CRITICAL_DECAY",
+        "DELAYED_DAMPED_OSCILLATION",
+        "PERSISTENT_BOUNDARY",
+        "UNSTABLE"
+      ]
+    }
+  ],
+  "public_schemas": [
+    {
+      "name": "RationalMatrix",
+      "fields": [
+        ["rows", "tuple[tuple[RationalV1, ...], ...]"]
+      ]
+    },
+    {
+      "name": "CoordinateConjugacyDeclaration",
+      "fields": [
+        ["action_ids", "tuple[str, ...]"],
+        ["subset_order", "tuple[tuple[str, ...], ...]"],
+        ["zeta", "RationalMatrix"],
+        ["mobius", "RationalMatrix"],
+        ["extent_basis_ref", "ObjectRef"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "FeedbackBlockDeclaration",
+      "fields": [
+        ["a", "RationalMatrix"],
+        ["b", "RationalMatrix"],
+        ["c", "RationalMatrix"],
+        ["d", "RationalMatrix"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "FeedbackPathResult",
+      "fields": [
+        ["bc", "RationalMatrix"],
+        ["first_nonzero_order", "int | Applicability"],
+        ["first_nonzero_operator", "RationalMatrix | Applicability"],
+        ["tested_through_order", "int"]
+      ]
+    },
+    {
+      "name": "ContinuousFeedbackDeclaration",
+      "fields": [
+        ["a", "RationalV1"],
+        ["d", "RationalV1"],
+        ["b", "RationalV1"],
+        ["k", "RationalV1"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "ContinuousFeedbackResult",
+      "fields": [
+        ["s", "RationalV1"],
+        ["q", "RationalV1"],
+        ["discriminant", "RationalV1"],
+        ["regime", "ContinuousFeedbackRegime"]
+      ]
+    },
+    {
+      "name": "DiscreteFeedbackDeclaration",
+      "fields": [
+        ["model_class", "ClosedLoopModelClass"],
+        ["kappa", "RationalV1"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "DiscreteFeedbackResult",
+      "fields": [
+        ["immediate_root", "RationalV1 | Applicability"],
+        ["discriminant", "RationalV1 | Applicability"],
+        ["root_modulus_squared", "RationalV1 | Applicability"],
+        ["regime", "DiscreteFeedbackRegime"]
+      ]
+    },
+    {
+      "name": "ObservabilityDeclaration",
+      "fields": [
+        ["observation", "RationalMatrix"],
+        ["modes", "tuple[RationalMatrix, ...]"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "ObservabilityResult",
+      "fields": [
+        ["visible", "tuple[bool, ...]"],
+        ["projected_modes", "tuple[RationalMatrix, ...]"]
+      ]
+    },
+    {
+      "name": "CorrectionClosureDeclaration",
+      "fields": [
+        ["stock_change", "RationalV1"],
+        ["boundary_in", "RationalV1"],
+        ["boundary_out", "RationalV1"],
+        ["generation", "RationalV1"],
+        ["consumption", "RationalV1"],
+        ["residual", "RationalV1"],
+        ["internal_transfers", "tuple[tuple[RationalV1, RationalV1], ...]"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "CorrectionClosureResult",
+      "fields": [
+        ["closure_rhs", "RationalV1"],
+        ["closes", "bool"],
+        ["internal_transfers_cancel", "bool"]
+      ]
+    },
+    {
+      "name": "DependencyGraphDeclaration",
+      "fields": [
+        ["vertices", "tuple[str, ...]"],
+        ["edges", "tuple[tuple[str, str], ...]"],
+        ["corrected_vertex", "str"],
+        ["inventory_complete", "bool"],
+        ["claim_status", "ClaimStatus"]
+      ]
+    },
+    {
+      "name": "DependencyInvalidationResult",
+      "fields": [
+        ["descendants", "tuple[str, ...]"],
+        ["topological_order", "tuple[str, ...]"]
+      ]
+    },
+    {
+      "name": "ClosedLoopCorrectionProtocol",
+      "fields": [
+        ["protocol_ref", "ObjectRef"],
+        ["protocol_version", "SemanticVersion"],
+        ["model_class", "ClosedLoopModelClass"],
+        ["physical_state_ref", "ObjectRef"],
+        ["scientific_state_ref", "ObjectRef"],
+        ["correction_state_ref", "ObjectRef"],
+        ["units_and_signs_ref", "ObjectRef"],
+        ["boundary_ref", "ObjectRef"],
+        ["clock_and_horizon_ref", "ObjectRef"],
+        ["initial_state_domain_ref", "ObjectRef"],
+        ["parameter_domain_ref", "ObjectRef"],
+        ["uncorrected_dynamics_ref", "ObjectRef"],
+        ["corrected_dynamics_ref", "ObjectRef"],
+        ["coordinate_contract_ref", "ObjectRef | Applicability"],
+        ["embedding_ref", "ObjectRef"],
+        ["projection_ref", "ObjectRef"],
+        ["observation_ref", "ObjectRef"],
+        ["correction_law_ref", "ObjectRef"],
+        ["delay_model_ref", "ObjectRef"],
+        ["constraint_and_saturation_ref", "ObjectRef"],
+        ["numerical_method_ref", "ObjectRef"],
+        ["precision_and_tolerance_ref", "ObjectRef"],
+        ["required_outputs", "tuple[str, ...]"],
+        ["falsifiers", "tuple[str, ...]"],
+        ["correction_lifecycle_ref", "ObjectRef"],
+        ["closure_contract_ref", "ObjectRef"],
+        ["dependency_contract_ref", "ObjectRef"],
+        ["claim_status", "CorrectionDiagnosticClaimStatus"],
+        ["nonclaims", "tuple[str, ...]"]
+      ]
+    }
+  ],
+  "public_callables": [
+    ["validate_closed_loop_correction_protocol", "(declaration: ClosedLoopCorrectionProtocol, /) -> ClosedLoopCorrectionProtocol"],
+    ["validate_coordinate_conjugacy", "(declaration: CoordinateConjugacyDeclaration, a_e: RationalMatrix, /) -> RationalMatrix"],
+    ["detect_feedback_path", "(declaration: FeedbackBlockDeclaration, max_order: int, /) -> FeedbackPathResult"],
+    ["classify_continuous_feedback", "(declaration: ContinuousFeedbackDeclaration, /) -> ContinuousFeedbackResult"],
+    ["classify_discrete_feedback", "(declaration: DiscreteFeedbackDeclaration, /) -> DiscreteFeedbackResult"],
+    ["evaluate_observability", "(declaration: ObservabilityDeclaration, /) -> ObservabilityResult"],
+    ["evaluate_correction_closure", "(declaration: CorrectionClosureDeclaration, /) -> CorrectionClosureResult"],
+    ["compute_dependency_invalidation", "(declaration: DependencyGraphDeclaration, /) -> DependencyInvalidationResult"]
+  ],
+  "failure_suffix": [
+    "CLCD_RECORD_FORMATION_INVALID",
+    "CLCD_PROTOCOL_INCOMPLETE",
+    "CLCD_MATRIX_SHAPE_INVALID",
+    "CLCD_COORDINATE_BASIS_INCOMPLETE",
+    "CLCD_MOBIUS_INVERSE_INVALID",
+    "CLCD_COORDINATE_EQUIVALENCE_INVALID",
+    "CLCD_FEEDBACK_BLOCK_INVALID",
+    "CLCD_FEEDBACK_PATH_INVALID",
+    "CLCD_STABILITY_CLASSIFICATION_INVALID",
+    "CLCD_DELAY_CLASSIFICATION_INVALID",
+    "CLCD_OBSERVABILITY_INVALID",
+    "CLCD_CORRECTION_CLOSURE_INVALID",
+    "CLCD_DEPENDENCY_GRAPH_INVALID",
+    "CLCD_EXECUTION_FORBIDDEN"
+  ],
+  "root_export_suffix": [
+    "ClosedLoopModelClass",
+    "CorrectionDiagnosticClaimStatus",
+    "ContinuousFeedbackRegime",
+    "DiscreteFeedbackRegime",
+    "RationalMatrix",
+    "CoordinateConjugacyDeclaration",
+    "FeedbackBlockDeclaration",
+    "FeedbackPathResult",
+    "ContinuousFeedbackDeclaration",
+    "ContinuousFeedbackResult",
+    "DiscreteFeedbackDeclaration",
+    "DiscreteFeedbackResult",
+    "ObservabilityDeclaration",
+    "ObservabilityResult",
+    "CorrectionClosureDeclaration",
+    "CorrectionClosureResult",
+    "DependencyGraphDeclaration",
+    "DependencyInvalidationResult",
+    "ClosedLoopCorrectionProtocol",
+    "validate_closed_loop_correction_protocol",
+    "validate_coordinate_conjugacy",
+    "detect_feedback_path",
+    "classify_continuous_feedback",
+    "classify_discrete_feedback",
+    "evaluate_observability",
+    "evaluate_correction_closure",
+    "compute_dependency_invalidation"
+  ],
+  "inventory_coordinates": {
+    "accepted_failures": 280,
+    "future_failures": 294,
+    "accepted_root_exports": 444,
+    "future_root_exports": 471,
+    "accepted_modules": 41,
+    "future_modules": 43,
+    "accepted_internal_edges": 289,
+    "future_internal_edges": 298,
+    "future_cycles": 0,
+    "new_public_types": 19,
+    "new_public_callables": 8,
+    "new_public_exports": 27
+  },
+  "required_outputs": [
+    "TRAJECTORIES_AND_EQUILIBRIA",
+    "SPECTRA_OR_ROOTS",
+    "DAMPING_FREQUENCY_PERIOD_VISIBILITY",
+    "PEAK_OVERSHOOT",
+    "RECOVERY_TIME",
+    "DELAY_SENSITIVITY_AND_MARGIN",
+    "CORRECTION_ACTION_RESOURCE_COST_OR_WORK",
+    "TRAJECTORY_DIFFERENCE",
+    "RECEIPT_RESIDUAL_DEPENDENCY_AND_CLOSURE",
+    "NUMERICAL_ERRORS_FAILURES_AND_UNRESOLVED_EVIDENCE"
+  ],
+  "mandatory_nonclaims": [
+    "NO_UNIVERSAL_CONTROLLER",
+    "NO_PERFECT_EFFICIENCY",
+    "NO_AUTOMATIC_TOPOLOGY",
+    "NO_AUTOMATIC_CAUSAL_ATTRIBUTION",
+    "NO_AUTOMATIC_SETTLEMENT",
+    "NO_PHYSICAL_WAVE",
+    "NO_ELECTRICAL_VOLTAGE",
+    "NO_SCIENTIFIC_EXECUTION"
+  ],
+  "import_boundary": {
+    "correction_protocol": ["identity", "numeric", "primitives", "errors"],
+    "correction_diagnostics": ["correction_protocol", "numeric", "errors"],
+    "root_new_edges": ["correction_protocol", "correction_diagnostics"],
+    "forbidden_reachability": [
+      "execution",
+      "dynamic",
+      "durability",
+      "authorization",
+      "authorization_use",
+      "publication",
+      "recovery",
+      "artifacts",
+      "traces",
+      "providers",
+      "runner",
+      "model_callback"
+    ]
+  },
+  "scientific_boundary": {
+    "framework_import_by_authority_audit": false,
+    "model_steps": 0,
+    "scientific_executions": 0,
+    "controller_activations": 0,
+    "trajectory_integrations": 0,
+    "matrix_exponentials": 0,
+    "book_or_pdf_changes": 0
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_CONTRACT_READY"
+}
