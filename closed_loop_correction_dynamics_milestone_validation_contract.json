@@ -1,0 +1,906 @@
+{
+  "contract_id": "ebu-closed-loop-correction-dynamics-milestone-validation/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_STATIC_VECTORS_UNIMPLEMENTED_UNEXECUTED_UNAUDITED",
+  "authority": {
+    "accepted_commit": "79883ad85d6c61bd32c1493cd7cc14a7062cb256",
+    "accepted_tree": "adc7a83c1a259f3fa2be39b821baf625fd2f1582",
+    "human_authority": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+    "mechanical_contract": "closed_loop_correction_dynamics_milestone_contract.json",
+    "source_manifest": "closed_loop_correction_dynamics_milestone_source_manifest.json",
+    "traceability_manifest": "closed_loop_correction_dynamics_milestone_traceability_manifest.json",
+    "stage": "CLCD_A_STATIC_AUTHORITY_ONLY"
+  },
+  "strict_input_rules": {
+    "json": "Reject duplicate keys, trailing data, non-finite numbers, floating-point values, invalid UTF-8, BOM, surrogate code points, and non-NFC strings.",
+    "math": "Use exact integers, rational strings, symbolic radicals, or independently bounded interval arithmetic; do not accept an unreported floating-point approximation as an exact identity.",
+    "scope": "Exactly five new mode-100644 authority files; no accepted path may change.",
+    "inertness": "No framework import, scientific callback, model step, trajectory, runner, Gate, optimizer, settlement, publication, or production operation.",
+    "claims": "A static vector proves only its exact arithmetic, source, scope, or traceability statement."
+  },
+  "failure_precedence": [
+    "BASE_COORDINATE_MISMATCH",
+    "SOURCE_LOCK_MISMATCH",
+    "JSON_PROFILE_INVALID",
+    "CROSS_FILE_DISAGREEMENT",
+    "PROTOCOL_FORMATION_INVALID",
+    "COORDINATE_BASIS_INCOMPLETE",
+    "MOBIUS_INVERSE_INVALID",
+    "COORDINATE_EQUIVALENCE_INVALID",
+    "SPECTRUM_PRESERVATION_INVALID",
+    "FEEDBACK_INFLUENCE_INVALID",
+    "MEMORY_KERNEL_INVALID",
+    "STABILITY_CLASSIFICATION_INVALID",
+    "DELAY_CLASSIFICATION_INVALID",
+    "OBSERVABILITY_CLASSIFICATION_INVALID",
+    "CORRECTION_RECEIPT_INVALID",
+    "CORRECTION_CLOSURE_INVALID",
+    "DEPENDENCY_PROPAGATION_INVALID",
+    "BOOK_OWNER_MISMATCH",
+    "FRAMEWORK_BOUNDARY_VIOLATION",
+    "EXCLUDED_PROGRAMME_REOPENED",
+    "SCIENTIFIC_EXECUTION_FORBIDDEN",
+    "CANDIDATE_SCOPE_VIOLATION"
+  ],
+  "vector_schema": {
+    "vector_id": "Unique CLCD-V### in exact order.",
+    "category": "Static control category.",
+    "claim_refs": "Ordered milestone claim IDs.",
+    "input": "Complete exact static witness.",
+    "expected": "Exact result, status, or first failure.",
+    "prohibitions": "Operations or interpretations forbidden by the vector."
+  },
+  "vectors": [
+    {
+      "vector_id": "CLCD-V001",
+      "category": "accepted_coordinate_and_source_locks",
+      "claim_refs": [
+        "CLCD-NC-14"
+      ],
+      "input": {
+        "accepted_commit": "79883ad85d6c61bd32c1493cd7cc14a7062cb256",
+        "accepted_tree": "adc7a83c1a259f3fa2be39b821baf625fd2f1582",
+        "source_manifest": "closed_loop_correction_dynamics_milestone_source_manifest.json"
+      },
+      "expected": {
+        "all_source_locks_match": true,
+        "accepted_path_count": 335,
+        "accepted_payload_bytes": 127139717,
+        "path_projection_bytes": 13658,
+        "path_projection_sha256": "682283368e74eb8fa5d960b7f06d112ff6f8acbd733a2cbcd00b83e3bf0e32b9",
+        "row_projection_bytes": 70258,
+        "row_projection_sha256": "9c98cd6482eea6bd67f998c939a5ba5e9fcad9c0afe722ac1562b2e25d7e4486",
+        "accepted_paths_modified": 0
+      },
+      "prohibitions": [
+        "No source reconstructed from a chat summary.",
+        "No network result substituted for a committed object."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V002",
+      "category": "two_study_answer_adoption",
+      "claim_refs": [
+        "CLCD-CT-01",
+        "CLCD-CT-02",
+        "CLCD-CT-03",
+        "CLCD-CT-04",
+        "CLCD-CT-05",
+        "CLCD-CT-06",
+        "CLCD-CT-07",
+        "CLCD-CT-08",
+        "CLCD-DO-09",
+        "CLCD-DO-10",
+        "CLCD-DO-11",
+        "CLCD-DO-12",
+        "CLCD-HYP-13"
+      ],
+      "input": {
+        "study_answer_1_sha256": "bc6837fcd0f934b2a071431ca2bec0f01e012ba16f143bd800e6eb0fb1bb922f",
+        "study_answer_2_sha256": "a4c327947518c873a351ab3ecd7b9c17b6182e8c066cea4025cd7db9aff89d79",
+        "accepted_review_sha256": "9174951adad518a7ec57439c58d0750d4947173d35fb928f3f9b137ad99500f0"
+      },
+      "expected": {
+        "valid_mathematical_content_rederived_in_accepted_review": true,
+        "study_answers_are_authority": false,
+        "missing_required_topic_count": 0
+      },
+      "prohibitions": [
+        "No chat prose promoted above committed authority.",
+        "No unsupported empirical claim inherited."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V003",
+      "category": "mobius_inverse",
+      "claim_refs": [
+        "CLCD-CT-01"
+      ],
+      "input": {
+        "subset_order": [
+          [],
+          [
+            "a"
+          ]
+        ],
+        "Z": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "M": [
+          [
+            1,
+            0
+          ],
+          [
+            -1,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "MZ": "I_2",
+        "ZM": "I_2",
+        "complete_fixed_basis": true
+      },
+      "prohibitions": [
+        "No incomplete subset basis.",
+        "No changing Z."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V004",
+      "category": "linear_similarity_and_spectrum",
+      "claim_refs": [
+        "CLCD-CT-01"
+      ],
+      "input": {
+        "Z": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "M": [
+          [
+            1,
+            0
+          ],
+          [
+            -1,
+            1
+          ]
+        ],
+        "A_E": [
+          [
+            -1,
+            0
+          ],
+          [
+            0,
+            -2
+          ]
+        ]
+      },
+      "expected": {
+        "A_I": [
+          [
+            -1,
+            0
+          ],
+          [
+            -1,
+            -2
+          ]
+        ],
+        "characteristic_polynomial": "(lambda+1)(lambda+2)",
+        "spectrum": [
+          -1,
+          -2
+        ],
+        "new_mode_created": false
+      },
+      "prohibitions": [
+        "No visual amplitude difference relabelled as a new mode."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V005",
+      "category": "nonlinear_jacobian_conjugacy",
+      "claim_refs": [
+        "CLCD-CT-02"
+      ],
+      "input": {
+        "Z": "2",
+        "M": "1/2",
+        "f_of_e": "-e^3"
+      },
+      "expected": {
+        "g_of_iota": "-4 iota^3",
+        "Dg": "-12 iota^2",
+        "M_Df_Z": "-12 iota^2"
+      },
+      "prohibitions": [
+        "No time-dependent or state-dependent coordinate transform."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V006",
+      "category": "feedback_no_physical_influence",
+      "claim_refs": [
+        "CLCD-CT-03",
+        "CLCD-CT-04",
+        "CLCD-CT-05"
+      ],
+      "input": {
+        "A": [
+          [
+            -1
+          ]
+        ],
+        "B": [
+          [
+            0
+          ]
+        ],
+        "C": [
+          [
+            2
+          ]
+        ],
+        "D": [
+          [
+            -3
+          ]
+        ],
+        "initial_correction": [
+          0
+        ]
+      },
+      "expected": {
+        "Delta": "identically zero",
+        "BC": 0,
+        "memory_kernel": "identically zero",
+        "correction_state_may_observe_physical_state": true,
+        "correction_changes_physical_trajectory": false
+      },
+      "prohibitions": [
+        "No state augmentation alone treated as physical influence."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V007",
+      "category": "second_order_feedback_influence",
+      "claim_refs": [
+        "CLCD-CT-03",
+        "CLCD-CT-04",
+        "CLCD-CT-06"
+      ],
+      "input": {
+        "A": -1,
+        "B": 1,
+        "C": -1,
+        "D": -1
+      },
+      "expected": {
+        "PKJ": -1,
+        "BC": -1,
+        "PK2J_minus_A2": -1,
+        "Delta_identically_zero": false,
+        "closed_loop_eigenvalues": [
+          "-1+i",
+          "-1-i"
+        ]
+      },
+      "prohibitions": [
+        "No oscillation attributed to the coordinate transform."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V008",
+      "category": "longer_hidden_feedback_path",
+      "claim_refs": [
+        "CLCD-CT-04"
+      ],
+      "input": {
+        "physical_dimension": 1,
+        "correction_dimension": 2,
+        "A": [
+          [
+            0
+          ]
+        ],
+        "B": [
+          [
+            1,
+            0
+          ]
+        ],
+        "C": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "D": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "expected": {
+        "BC": 0,
+        "BDC": 1,
+        "first_nonzero_difference_order": 3,
+        "Delta_identically_zero": false
+      },
+      "prohibitions": [
+        "No conclusion from BC alone when it is zero."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V009",
+      "category": "memory_kernel",
+      "claim_refs": [
+        "CLCD-CT-05"
+      ],
+      "input": {
+        "B": 2,
+        "C": 5,
+        "D": -3
+      },
+      "expected": {
+        "memory_kernel": "10 exp(-3t)",
+        "initial_condition_forcing": "2 exp(-3t) c(0)",
+        "history_dependence_when_input_nonzero": true
+      },
+      "prohibitions": [
+        "No initial-condition forcing term omitted.",
+        "No nonlinear universality claim."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V010",
+      "category": "continuous_damped_oscillation",
+      "claim_refs": [
+        "CLCD-CT-06"
+      ],
+      "input": {
+        "a": 1,
+        "d": 1,
+        "b": 1,
+        "k": 1
+      },
+      "expected": {
+        "s": 2,
+        "q": 2,
+        "discriminant": -4,
+        "eigenvalues": [
+          "-1+i",
+          "-1-i"
+        ],
+        "regime": "ASYMPTOTICALLY_STABLE_DAMPED_OSCILLATION",
+        "damping": 1,
+        "angular_frequency": 1,
+        "period": "2 pi"
+      },
+      "prohibitions": [
+        "No physical-wave claim."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V011",
+      "category": "continuous_stable_real_decay",
+      "claim_refs": [
+        "CLCD-CT-06"
+      ],
+      "input": {
+        "a": 2,
+        "d": 1,
+        "b": 0,
+        "k": 1
+      },
+      "expected": {
+        "s": 3,
+        "q": 2,
+        "discriminant": 1,
+        "eigenvalues": [
+          -1,
+          -2
+        ],
+        "regime": "ASYMPTOTICALLY_STABLE_REAL_DECAY"
+      },
+      "prohibitions": [
+        "No oscillation inferred from correction-state presence."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V012",
+      "category": "continuous_persistent_oscillation_boundary",
+      "claim_refs": [
+        "CLCD-CT-06"
+      ],
+      "input": {
+        "a": -1,
+        "d": 1,
+        "b": 2,
+        "k": 1
+      },
+      "expected": {
+        "s": 0,
+        "q": 1,
+        "discriminant": -4,
+        "eigenvalues": [
+          "i",
+          "-i"
+        ],
+        "regime": "PERSISTENT_UNDAMPED_OSCILLATION_BOUNDARY"
+      },
+      "prohibitions": [
+        "No asymptotic-stability claim."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V013",
+      "category": "continuous_growing_oscillation",
+      "claim_refs": [
+        "CLCD-CT-06"
+      ],
+      "input": {
+        "a": -1,
+        "d": -1,
+        "b": 1,
+        "k": 1
+      },
+      "expected": {
+        "s": -2,
+        "q": 2,
+        "discriminant": -4,
+        "eigenvalues": [
+          "1+i",
+          "1-i"
+        ],
+        "regime": "UNSTABLE_GROWING_OSCILLATION"
+      },
+      "prohibitions": [
+        "No correction assumed beneficial."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V014",
+      "category": "continuous_saddle_instability",
+      "claim_refs": [
+        "CLCD-CT-06"
+      ],
+      "input": {
+        "a": 1,
+        "d": 1,
+        "b": 1,
+        "k": -2
+      },
+      "expected": {
+        "s": 2,
+        "q": -1,
+        "discriminant": 8,
+        "eigenvalues": [
+          "-1+sqrt(2)",
+          "-1-sqrt(2)"
+        ],
+        "regime": "SADDLE_INSTABILITY"
+      },
+      "prohibitions": [
+        "No negative determinant classified as stable."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V015",
+      "category": "immediate_monotone_decay",
+      "claim_refs": [
+        "CLCD-CT-07"
+      ],
+      "input": {
+        "kappa": "1/2",
+        "update": "r[n+1]=(1-kappa)r[n]"
+      },
+      "expected": {
+        "root": "1/2",
+        "regime": "ASYMPTOTIC_MONOTONE_DECAY"
+      },
+      "prohibitions": [
+        "No delayed recurrence substituted."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V016",
+      "category": "immediate_alternating_decay",
+      "claim_refs": [
+        "CLCD-CT-07"
+      ],
+      "input": {
+        "kappa": "3/2",
+        "update": "r[n+1]=(1-kappa)r[n]"
+      },
+      "expected": {
+        "root": "-1/2",
+        "regime": "ASYMPTOTIC_ALTERNATING_DECAY"
+      },
+      "prohibitions": [
+        "No alternation called a physical wave."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V017",
+      "category": "one_step_delay_real_decay",
+      "claim_refs": [
+        "CLCD-CT-07"
+      ],
+      "input": {
+        "kappa": "1/8",
+        "characteristic_polynomial": "z^2-z+1/8"
+      },
+      "expected": {
+        "roots": [
+          "(1+1/sqrt(2))/2",
+          "(1-1/sqrt(2))/2"
+        ],
+        "regime": "ASYMPTOTIC_REAL_DECAY"
+      },
+      "prohibitions": [
+        "No immediate-controller margin used."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V018",
+      "category": "one_step_delay_damped_oscillation",
+      "claim_refs": [
+        "CLCD-CT-07"
+      ],
+      "input": {
+        "kappa": "1/2",
+        "characteristic_polynomial": "z^2-z+1/2"
+      },
+      "expected": {
+        "roots": [
+          "(1+i)/2",
+          "(1-i)/2"
+        ],
+        "root_modulus": "sqrt(1/2)",
+        "regime": "ASYMPTOTIC_DAMPED_OSCILLATION"
+      },
+      "prohibitions": [
+        "No continuous-time eigenvalue substituted."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V019",
+      "category": "one_step_delay_persistent_boundary",
+      "claim_refs": [
+        "CLCD-CT-07"
+      ],
+      "input": {
+        "kappa": 1,
+        "characteristic_polynomial": "z^2-z+1"
+      },
+      "expected": {
+        "roots": [
+          "(1+i sqrt(3))/2",
+          "(1-i sqrt(3))/2"
+        ],
+        "root_modulus": 1,
+        "regime": "PERSISTENT_OSCILLATION_BOUNDARY"
+      },
+      "prohibitions": [
+        "No asymptotic-convergence claim."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V020",
+      "category": "one_step_delay_instability",
+      "claim_refs": [
+        "CLCD-CT-07"
+      ],
+      "input": {
+        "kappa": "5/4",
+        "characteristic_polynomial": "z^2-z+5/4"
+      },
+      "expected": {
+        "roots": [
+          "1/2+i",
+          "1/2-i"
+        ],
+        "root_modulus": "sqrt(5/4)",
+        "regime": "UNSTABLE_OSCILLATION"
+      },
+      "prohibitions": [
+        "No gain above the delayed margin accepted as stable."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V021",
+      "category": "observability",
+      "claim_refs": [
+        "CLCD-CT-08"
+      ],
+      "input": {
+        "K": [
+          [
+            -1,
+            0
+          ],
+          [
+            0,
+            -2
+          ]
+        ],
+        "H": [
+          1,
+          0
+        ],
+        "eigenvectors": [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      },
+      "expected": {
+        "first_mode_visible": true,
+        "second_mode_visible": false,
+        "second_mode_absent_from_system": false
+      },
+      "prohibitions": [
+        "No dashboard invisibility treated as physical absence."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V022",
+      "category": "immutable_correction_receipts",
+      "claim_refs": [
+        "CLCD-DO-10"
+      ],
+      "input": {
+        "original_receipt": "R_a",
+        "correction_receipt": "R_c",
+        "correction_targets_original": true,
+        "original_preserved": true
+      },
+      "expected": {
+        "R_a_not_equal_R_c": true,
+        "R_c_not_equal_negative_R_a": true,
+        "history_mutated": false,
+        "linked_version_created": true
+      },
+      "prohibitions": [
+        "No original receipt deletion or overwrite.",
+        "No correction treated as algebraic negation of history."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V023",
+      "category": "physical_accounting_closure",
+      "claim_refs": [
+        "CLCD-DO-11"
+      ],
+      "input": {
+        "stock_change": 2,
+        "boundary_in": 10,
+        "boundary_out": 3,
+        "generation": 1,
+        "consumption": 5,
+        "residual": -1,
+        "internal_transfer": 4,
+        "internal_transfer_count_at_rollup": 1
+      },
+      "expected": {
+        "closure_rhs": 2,
+        "closure_holds": true,
+        "internal_transfer_cancels_exactly_once": true,
+        "EBU_declared_conserved_substance": false
+      },
+      "prohibitions": [
+        "No residual silently forced to zero.",
+        "No internal transfer counted twice."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V024",
+      "category": "dependency_propagation",
+      "claim_refs": [
+        "CLCD-DO-12"
+      ],
+      "input": {
+        "vertices": [
+          "q",
+          "a",
+          "b",
+          "c"
+        ],
+        "edges": [
+          [
+            "q",
+            "a"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "q",
+            "c"
+          ]
+        ],
+        "corrected": "q"
+      },
+      "expected": {
+        "descendants": [
+          "a",
+          "b",
+          "c"
+        ],
+        "valid_topological_recompute_order": [
+          "a",
+          "c",
+          "b"
+        ],
+        "prior_versions_preserved": true
+      },
+      "prohibitions": [
+        "No mutation in place.",
+        "No best-topology inference."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V025",
+      "category": "missing_dependency_edge_failure",
+      "claim_refs": [
+        "CLCD-DO-12"
+      ],
+      "input": {
+        "dependency_inventory_complete": false,
+        "outside_record_certified_unaffected": true
+      },
+      "expected": {
+        "success": false,
+        "first_failure": "DEPENDENCY_PROPAGATION_INVALID",
+        "reason": "An incomplete dependency inventory cannot certify an outside record as unaffected."
+      },
+      "prohibitions": [
+        "No absence-of-edge treated as evidence of independence."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V026",
+      "category": "book_ownership",
+      "claim_refs": [
+        "CLCD-DO-09",
+        "CLCD-DO-10",
+        "CLCD-DO-11",
+        "CLCD-DO-12",
+        "CLCD-HYP-13"
+      ],
+      "input": {
+        "future_book_structure_sha256": "f85c3e0c636f3afcd9d961673b16a0a642045a13b32d3c878e27a8d982567b59",
+        "owner_count": 11,
+        "new_chapter_appended": false
+      },
+      "expected": {
+        "all_primary_owners_present": true,
+        "chapter_count_neutral": true,
+        "current_manuscript_changed": false,
+        "current_pdf_changed": false
+      },
+      "prohibitions": [
+        "No duplicate feedback or topology chapter.",
+        "No limitation-only replacement for a positive feature explanation."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V027",
+      "category": "framework_boundary",
+      "claim_refs": [
+        "CLCD-NC-14"
+      ],
+      "input": {
+        "I6_to_I9_preserved": true,
+        "I8_physical_correction_receipt_implemented": false,
+        "scientific_feedback_controller_implemented": false,
+        "CLCD_A_accepted_file_modifications": 0
+      },
+      "expected": {
+        "success": true,
+        "current_framework_status": "PREREQUISITE_SUBSTRATE_ONLY",
+        "richer_runtime_status": "SEPARATE_FUTURE_AUTHORITY_REQUIRED"
+      },
+      "prohibitions": [
+        "No prospective field described as an existing API.",
+        "No I-8 semantics broadened."
+      ]
+    },
+    {
+      "vector_id": "CLCD-V028",
+      "category": "exclusions_and_inertness",
+      "claim_refs": [
+        "CLCD-NC-14"
+      ],
+      "input": {
+        "candidate_paths": 5,
+        "accepted_paths_modified": 0,
+        "framework_imports": 0,
+        "model_steps": 0,
+        "scientific_executions": 0,
+        "book_or_pdf_mutations": 0,
+        "excluded_programmes_reserved": 0
+      },
+      "expected": {
+        "success": true,
+        "stage": "CLCD_A_STATIC_AUTHORITY_ONLY"
+      },
+      "prohibitions": [
+        "No physical wave, phase, superposition, voltage, or universal Fibonacci/fractal programme.",
+        "No universal controller or perfect-efficiency claim.",
+        "No scientific execution."
+      ]
+    }
+  ],
+  "acceptance": {
+    "required_vector_count": 28,
+    "required_vector_ids": [
+      "CLCD-V001",
+      "CLCD-V002",
+      "CLCD-V003",
+      "CLCD-V004",
+      "CLCD-V005",
+      "CLCD-V006",
+      "CLCD-V007",
+      "CLCD-V008",
+      "CLCD-V009",
+      "CLCD-V010",
+      "CLCD-V011",
+      "CLCD-V012",
+      "CLCD-V013",
+      "CLCD-V014",
+      "CLCD-V015",
+      "CLCD-V016",
+      "CLCD-V017",
+      "CLCD-V018",
+      "CLCD-V019",
+      "CLCD-V020",
+      "CLCD-V021",
+      "CLCD-V022",
+      "CLCD-V023",
+      "CLCD-V024",
+      "CLCD-V025",
+      "CLCD-V026",
+      "CLCD-V027",
+      "CLCD-V028"
+    ],
+    "all_vectors_must_pass": true,
+    "source_locks_must_match": true,
+    "cross_file_agreement_must_pass": true,
+    "candidate_scope_must_match": true,
+    "accepted_paths_must_be_preserved": true,
+    "scientific_execution_must_equal_zero": true
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_VALIDATION_READY"
+}
