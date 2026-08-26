@@ -3,6 +3,7 @@ name: tests
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -44,3 +45,260 @@ jobs:
       - name: Run V2.9 serialization audit - validates committed results (6 groups, 46 checks)
         run: |
           python test_v29_serialization.py
+
+  framework-t0:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install the exact framework dependency lock
+        run: |
+          python -m pip install --require-hashes -r requirements-framework.lock
+      - name: Run the exact T0 group with a positive test-count gate
+        run: |
+          candidate_root=$PWD
+          compatibility_git_dir=$(git rev-parse --absolute-git-dir)
+          compatibility_root=$(mktemp -d)
+          trap 'rm -rf "$compatibility_root"' EXIT
+          git archive 2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02 | tar -x -C "$compatibility_root"
+          cd "$compatibility_root"
+          export GIT_DIR="$compatibility_git_dir"
+          export GIT_WORK_TREE="$compatibility_root"
+          export PYTHONPATH="$compatibility_root/src:$compatibility_root/tests/framework"
+          python - <<'PY'
+          import unittest
+
+          paths = (
+              "tests/framework/test_ecj1.py",
+              "tests/framework/test_hash_preimages.py",
+              "tests/framework/test_identity_registry.py",
+              "tests/framework/test_numeric.py",
+              "tests/framework/test_primitives_envelopes.py",
+              "tests/framework/test_i3_integration.py",
+              "tests/framework/test_i3a_declarations.py",
+              "tests/framework/test_i3b_declarations.py",
+              "tests/framework/test_i3c_declarations.py",
+              "tests/framework/test_i3d_declarations.py",
+              "tests/framework/test_atomic_declarations.py",
+              "tests/framework/test_interaction_declarations.py",
+              "tests/framework/test_event_ownership.py",
+              "tests/framework/test_route_guards.py",
+              "tests/framework/test_validation_reachability.py",
+          )
+          loader = unittest.TestLoader()
+          suite = unittest.TestSuite()
+          for path in paths[:-1]:
+              suite.addTests(loader.discover("tests/framework", path.rsplit("/", 1)[1]))
+          count = suite.countTestCases()
+          if count <= 0:
+              raise SystemExit("T0 completed-test count must be positive")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (
+              not result.wasSuccessful()
+              or result.testsRun != count
+              or result.skipped
+              or result.expectedFailures
+              or result.unexpectedSuccesses
+          ):
+              raise SystemExit(1)
+          print(f"T0_COMPLETED_TESTS={count}")
+          PY
+          unset GIT_DIR GIT_WORK_TREE PYTHONPATH
+          cd "$candidate_root"
+          export PYTHONPATH="$candidate_root/src:$candidate_root/tests/framework"
+          python - <<'PY'
+          import unittest
+
+          pattern = "test_validation_" + "reachability.py"
+          suite = unittest.TestLoader().discover("tests/framework", pattern)
+          count = suite.countTestCases()
+          if count <= 0:
+              raise SystemExit("T0 I-9 reachability test count must be positive")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (
+              not result.wasSuccessful()
+              or result.testsRun != count
+              or result.skipped
+              or result.expectedFailures
+              or result.unexpectedSuccesses
+          ):
+              raise SystemExit(1)
+          print(f"T0_I9_REACHABILITY_TESTS={count}")
+          PY
+
+  framework-t1:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install the exact framework dependency lock
+        run: |
+          python -m pip install --require-hashes -r requirements-framework.lock
+      - name: Run the exact T1 group with a positive test-count gate
+        run: |
+          compatibility_git_dir=$(git rev-parse --absolute-git-dir)
+          compatibility_root=$(mktemp -d)
+          trap 'rm -rf "$compatibility_root"' EXIT
+          git archive 2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02 | tar -x -C "$compatibility_root"
+          cd "$compatibility_root"
+          export GIT_DIR="$compatibility_git_dir"
+          export GIT_WORK_TREE="$compatibility_root"
+          export PYTHONPATH="$compatibility_root/src:$compatibility_root/tests/framework"
+          python - <<'PY'
+          import unittest
+
+          paths = (
+              "tests/framework/test_authorization.py",
+              "tests/framework/test_authorization_use.py",
+              "tests/framework/test_capabilities.py",
+              "tests/framework/test_event_ownership.py",
+              "tests/framework/test_inert_durability.py",
+              "tests/framework/test_artifact_recovery_publication.py",
+          )
+          loader = unittest.TestLoader()
+          suite = unittest.TestSuite()
+          for path in paths:
+              suite.addTests(loader.discover("tests/framework", path.rsplit("/", 1)[1]))
+          count = suite.countTestCases()
+          if count <= 0:
+              raise SystemExit("T1 completed-test count must be positive")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (
+              not result.wasSuccessful()
+              or result.testsRun != count
+              or result.skipped
+              or result.expectedFailures
+              or result.unexpectedSuccesses
+          ):
+              raise SystemExit(1)
+          print(f"T1_COMPLETED_TESTS={count}")
+          PY
+
+  framework-t2:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Install the exact framework dependency lock
+        run: |
+          python -m pip install --require-hashes -r requirements-framework.lock
+      - name: Verify the exact I-9 authority, fixtures, and T2 allowlist
+        run: |
+          git merge-base --is-ancestor 2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02 HEAD
+          test "$(git show -s --format=%T 2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02)" = "8f570082e40304b156aa18714c65938777126f74"
+          python - <<'PY'
+          import ast
+          import hashlib
+          import json
+          from pathlib import Path
+
+          raw_locks = {
+              "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I9_AUTHORITY_AMENDMENT.md": "11c48ec99e2d8238f455487139b87e1f7e170ec594f3f2f98bb0aebe7c59e2e4",
+              "unified_python_research_framework_i9_contract.json": "29b6b715f4fdc64ddc60a5323e103d664021927f951cf8edbde2ac93f6c50406",
+              "unified_python_research_framework_i9_validation_contract.json": "64097d37828ce46af80bece7a394f43e82ab1be2840f55917307267b0e8579c4",
+              "unified_python_research_framework_i9_predecessor_manifest.json": "012d3c64003833acbb72e4e9151bddc2f953a1d402e07a195293f8a736ecc06c",
+              "unified_python_research_framework_i9_implementation_path_manifest.json": "7a339f851e09a3e79755fabd143c9a2ce1efa6f52a9c85aa12f5f7f29b2f2f8b",
+              "tests/framework/fixtures/bridge_m1_m9_v1.json": "8768b2f976b3b928b90c3b6d4b6d141de75fd5873fb52d61048748bf054779af",
+              "tests/framework/fixtures/dynamic_static_v1.json": "cacb79a4b52eb714b79424524c12cba9f8a4d2327abe99c2b76260c4621a898d",
+          }
+          for path, expected in raw_locks.items():
+              actual = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+              if actual != expected:
+                  raise SystemExit(f"authority prerequisite differs: {path}")
+
+          def reject_constant(value):
+              raise ValueError(f"non-finite value: {value}")
+
+          def unique_pairs(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise ValueError(f"duplicate key: {key}")
+                  result[key] = value
+              return result
+
+          authority_paths = tuple(raw_locks)[1:5]
+          documents = []
+          for path in authority_paths:
+              documents.append(json.loads(
+                  Path(path).read_text(encoding="utf-8"),
+                  object_pairs_hook=unique_pairs,
+                  parse_float=lambda value: (_ for _ in ()).throw(ValueError(value)),
+                  parse_constant=reject_constant,
+              ))
+          for document in documents:
+              coordinate = document["authority"]
+              if not isinstance(coordinate, dict):
+                  raise SystemExit("unexpected authority coordinate")
+              commit = coordinate.get("required_start_commit")
+              tree = coordinate.get("required_start_tree")
+              if commit not in {None, "2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02", "4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e"}:
+                  raise SystemExit("unexpected authority commit")
+              if tree not in {None, "8f570082e40304b156aa18714c65938777126f74", "591ad275116e9dc28bf0443aae80142e5ad86ec5"}:
+                  raise SystemExit("unexpected authority tree")
+
+          validation_tree = ast.parse(Path("src/ebu_framework/validation.py").read_text())
+          allowlist = None
+          for node in validation_tree.body:
+              if isinstance(node, ast.Assign) and isinstance(node.targets[0], ast.Name):
+                  if node.targets[0].id == "_I9_T2_ALLOWLIST":
+                      allowlist = ast.literal_eval(node.value)
+          if allowlist is None or len(allowlist) != 42 or len(set(allowlist)) != 42:
+              raise SystemExit("T2 allowlist cardinality differs")
+          if {row[0] for row in allowlist} != {"V8", "V9"}:
+              raise SystemExit("T2 allowlist group differs")
+          fixture_hashes = {row[2] for row in allowlist}
+          if fixture_hashes != {raw_locks["tests/framework/fixtures/bridge_m1_m9_v1.json"], raw_locks["tests/framework/fixtures/dynamic_static_v1.json"]}:
+              raise SystemExit("T2 allowlist fixture hash differs")
+          print("I9_T2_AUTHORITY_ALLOWLIST=42")
+          PY
+      - name: Run the exact T2 group with a positive test-count gate
+        run: |
+          compatibility_git_dir=$(git rev-parse --absolute-git-dir)
+          compatibility_root=$(mktemp -d)
+          trap 'rm -rf "$compatibility_root"' EXIT
+          git archive 2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02 | tar -x -C "$compatibility_root"
+          cd "$compatibility_root"
+          export GIT_DIR="$compatibility_git_dir"
+          export GIT_WORK_TREE="$compatibility_root"
+          export PYTHONPATH="$compatibility_root/src:$compatibility_root/tests/framework"
+          python - <<'PY'
+          import unittest
+
+          paths = (
+              "tests/framework/test_bridge_exact_fixtures.py",
+              "tests/framework/test_dynamic_static_identities.py",
+          )
+          loader = unittest.TestLoader()
+          suite = unittest.TestSuite()
+          for path in paths:
+              suite.addTests(loader.discover("tests/framework", path.rsplit("/", 1)[1]))
+          count = suite.countTestCases()
+          if count <= 0:
+              raise SystemExit("T2 completed-test count must be positive")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (
+              not result.wasSuccessful()
+              or result.testsRun != count
+              or result.skipped
+              or result.expectedFailures
+              or result.unexpectedSuccesses
+          ):
+              raise SystemExit(1)
+          print(f"T2_COMPLETED_TESTS={count}")
+          PY

@@ -152,3 +152,126 @@ __all__ = (
     "synthetic_object_store",
     "synthetic_ref",
 )
+
+
+_I9_FORBIDDEN_T3_INTERFACES = (
+    "advance_epoch",
+    "begin_bound_scientific_execution",
+    "build_information_view",
+    "classify_joint_groups",
+    "commit_phase_updates",
+    "compute_group_measurement",
+    "compute_same_baseline_nonadditivity",
+    "compute_comparator_interaction",
+    "evaluate_distortion",
+    "measure_state",
+    "policy_propose",
+    "propose_joint_transition",
+    "propose_phase_updates",
+    "screen_and_admit",
+)
+_I9_FORBIDDEN_HISTORICAL_MODULE_PREFIXES = (
+    "adversary_v30",
+    "analysis",
+    "audit_v30_gate1c_reproduction",
+    "exp_",
+    "experiments_",
+    "finalize_v30_gate1dc",
+    "gate1dc_v30",
+    "make_paper",
+    "results",
+)
+_I9_FORBIDDEN_PROCESS_MODULE_PREFIXES = (
+    "http",
+    "multiprocessing",
+    "requests",
+    "socket",
+    "ssl",
+    "subprocess",
+    "urllib",
+)
+_I9_FORBIDDEN_DYNAMIC_IMPORT_CALLS = (
+    "import_module",
+    "invalidate_caches",
+    "reload",
+)
+
+
+@contextmanager
+def i9_forbidden_observation_guard() -> Iterator[None]:
+    """Observe one private I-9 validation call and reject forbidden entry."""
+
+    original_import = builtins.__import__
+    original_profile = sys.getprofile()
+    loaded_before = frozenset(sys.modules)
+    observed_calls: list[tuple[str, str]] = []
+
+    def guarded_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if level == 0 and name.startswith(
+            _I9_FORBIDDEN_HISTORICAL_MODULE_PREFIXES
+            + _I9_FORBIDDEN_PROCESS_MODULE_PREFIXES
+            + ("ebu_framework.execution",)
+        ):
+            raise AssertionError(f"forbidden I-9 process import: {name}")
+        return original_import(name, globals, locals, fromlist, level)
+
+    def observe_call(frame, event, arg):
+        if event == "call":
+            module = frame.f_globals.get("__name__", "")
+            name = frame.f_code.co_name
+        elif event == "c_call":
+            module = getattr(arg, "__module__", "")
+            name = getattr(arg, "__name__", "")
+        else:
+            return observe_call
+        if (
+            (
+                type(module) is str
+                and module.startswith("ebu_framework")
+                and name in _I9_FORBIDDEN_T3_INTERFACES
+            )
+            or (
+                type(module) is str
+                and module.startswith(
+                    _I9_FORBIDDEN_HISTORICAL_MODULE_PREFIXES
+                    + _I9_FORBIDDEN_PROCESS_MODULE_PREFIXES
+                )
+            )
+            or (
+                type(module) is str
+                and module.startswith("importlib")
+                and name in _I9_FORBIDDEN_DYNAMIC_IMPORT_CALLS
+            )
+        ):
+            observed_calls.append((module, name))
+        return observe_call
+
+    builtins.__import__ = guarded_import
+    sys.setprofile(observe_call)
+    try:
+        try:
+            yield
+        finally:
+            sys.setprofile(original_profile)
+            builtins.__import__ = original_import
+    finally:
+        loaded_after = frozenset(sys.modules)
+        newly_loaded_forbidden = tuple(
+            sorted(
+                name
+                for name in loaded_after - loaded_before
+                if name.startswith(
+                    _I9_FORBIDDEN_HISTORICAL_MODULE_PREFIXES
+                    + _I9_FORBIDDEN_PROCESS_MODULE_PREFIXES
+                    + ("ebu_framework.execution",)
+                )
+            )
+        )
+        if observed_calls or newly_loaded_forbidden:
+            raise AssertionError(
+                "forbidden I-9 observation: "
+                f"calls={observed_calls}, modules={newly_loaded_forbidden}"
+            )
+
+
+__all__ += ("i9_forbidden_observation_guard",)
