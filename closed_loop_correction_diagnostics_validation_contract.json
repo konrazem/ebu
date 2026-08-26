@@ -1,0 +1,373 @@
+{
+  "contract_id": "ebu.closed-loop-correction-diagnostics-validation",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_STATIC_AND_SYNTHETIC_VALIDATION_ONLY",
+  "authority": {
+    "accepted_commit": "cb13514f14260aa1d1deada03ca13845afb9289c",
+    "accepted_tree": "bb445e18cb5bde39127b1a682d9bfc17f8b102fb",
+    "human_authority": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+    "mechanical_contract": "closed_loop_correction_diagnostics_contract.json",
+    "predecessor_manifest": "closed_loop_correction_diagnostics_predecessor_manifest.json",
+    "staging_plan": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_STAGING_PLAN.md"
+  },
+  "strict_rules": {
+    "json": "Reject duplicate keys, trailing data, non-finite numbers, floating-point values, invalid UTF-8, BOM, surrogate code points, and non-NFC strings.",
+    "arithmetic": "Use exact RationalV1-to-Fraction conversion and return normalized RationalV1 values; no float is reachable.",
+    "execution": "Each nonstatic vector invokes its exact owning public callable once; formation failures construct the exact owning declaration once.",
+    "inertness": "No controller, model callback, runner, trajectory, matrix exponential, provider, store, filesystem, network, random source, scientific state advance, or publication operation.",
+    "scope": "The authority adds five files. Future implementation changes exactly six frozen paths."
+  },
+  "failure_precedence": [
+    "CLCD_RECORD_FORMATION_INVALID",
+    "CLCD_PROTOCOL_INCOMPLETE",
+    "CLCD_MATRIX_SHAPE_INVALID",
+    "CLCD_COORDINATE_BASIS_INCOMPLETE",
+    "CLCD_MOBIUS_INVERSE_INVALID",
+    "CLCD_COORDINATE_EQUIVALENCE_INVALID",
+    "CLCD_FEEDBACK_BLOCK_INVALID",
+    "CLCD_FEEDBACK_PATH_INVALID",
+    "CLCD_STABILITY_CLASSIFICATION_INVALID",
+    "CLCD_DELAY_CLASSIFICATION_INVALID",
+    "CLCD_OBSERVABILITY_INVALID",
+    "CLCD_CORRECTION_CLOSURE_INVALID",
+    "CLCD_DEPENDENCY_GRAPH_INVALID",
+    "CLCD_EXECUTION_FORBIDDEN"
+  ],
+  "vector_schema": {
+    "vector_id": "CLCD-B-V### in exact order",
+    "exercise_class": "STATIC, FORMATION, or OWNING_CALL",
+    "owner": "Exact declaration or public callable",
+    "case": "Closed synthetic case name",
+    "input": "Complete exact witness or named fixture materialization",
+    "expected": "Success result, exact classification, or first failure",
+    "model_steps": "Always zero"
+  },
+  "vectors": [
+    {
+      "vector_id": "CLCD-B-V001",
+      "exercise_class": "STATIC",
+      "owner": "static_analysis.accepted_coordinate",
+      "case": "BASE_AND_SCOPE",
+      "input": {"accepted_commit": "cb13514f14260aa1d1deada03ca13845afb9289c", "accepted_tree": "bb445e18cb5bde39127b1a682d9bfc17f8b102fb"},
+      "expected": {"accepted_paths": 340, "future_paths_changed": 6, "accepted_paths_modified_by_authority": 0},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V002",
+      "exercise_class": "OWNING_CALL",
+      "owner": "validate_closed_loop_correction_protocol",
+      "case": "COMPLETE_PROTOCOL",
+      "input": {"materialization": "VALID_PROTOCOL_ALL_29_FIELDS"},
+      "expected": {"success": true, "same_object_returned": true},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V003",
+      "exercise_class": "OWNING_CALL",
+      "owner": "validate_closed_loop_correction_protocol",
+      "case": "REQUIRED_OUTPUT_MISSING",
+      "input": {"materialization": "VALID_PROTOCOL_WITHOUT_RECOVERY_TIME"},
+      "expected": {"success": false, "first_failure": "CLCD_PROTOCOL_INCOMPLETE"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V004",
+      "exercise_class": "FORMATION",
+      "owner": "RationalMatrix",
+      "case": "JAGGED_MATRIX",
+      "input": {"rows": [["1"], ["0", "1"]]},
+      "expected": {"success": false, "first_failure": "CLCD_MATRIX_SHAPE_INVALID"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V005",
+      "exercise_class": "OWNING_CALL",
+      "owner": "validate_coordinate_conjugacy",
+      "case": "MOBIUS_INVERSE",
+      "input": {"action_ids": ["a"], "subset_order": [[], ["a"]], "zeta": [["1", "0"], ["1", "1"]], "mobius": [["1", "0"], ["-1", "1"]], "a_e": [["-1", "0"], ["0", "-2"]]},
+      "expected": {"a_i": [["-1", "0"], ["-1", "-2"]]},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V006",
+      "exercise_class": "OWNING_CALL",
+      "owner": "validate_coordinate_conjugacy",
+      "case": "INVALID_INVERSE",
+      "input": {"action_ids": ["a"], "subset_order": [[], ["a"]], "zeta": [["1", "0"], ["1", "1"]], "mobius": [["1", "0"], ["0", "1"]], "a_e": [["-1", "0"], ["0", "-2"]]},
+      "expected": {"success": false, "first_failure": "CLCD_MOBIUS_INVERSE_INVALID"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V007",
+      "exercise_class": "OWNING_CALL",
+      "owner": "detect_feedback_path",
+      "case": "NO_FINITE_PATH_WITH_B_ZERO",
+      "input": {"a": [["-1"]], "b": [["0"]], "c": [["2"]], "d": [["-3"]], "max_order": 4},
+      "expected": {"bc": [["0"]], "first_nonzero_order": "NOT_APPLICABLE", "tested_through_order": 4},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V008",
+      "exercise_class": "OWNING_CALL",
+      "owner": "detect_feedback_path",
+      "case": "DIRECT_BC_PATH",
+      "input": {"a": [["-1"]], "b": [["1"]], "c": [["-1"]], "d": [["-1"]], "max_order": 3},
+      "expected": {"bc": [["-1"]], "first_nonzero_order": 2, "first_nonzero_operator": [["-1"]]},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V009",
+      "exercise_class": "OWNING_CALL",
+      "owner": "detect_feedback_path",
+      "case": "HIDDEN_BDC_PATH",
+      "input": {"a": [["0"]], "b": [["1", "0"]], "c": [["0"], ["1"]], "d": [["0", "1"], ["0", "0"]], "max_order": 4},
+      "expected": {"bc": [["0"]], "first_nonzero_order": 3, "first_nonzero_operator": [["1"]]},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V010",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "STABLE_DAMPED",
+      "input": {"a": "1", "d": "1", "b": "1", "k": "1"},
+      "expected": {"s": "2", "q": "2", "discriminant": "-4", "regime": "ASYMPTOTICALLY_STABLE_DAMPED_OSCILLATION"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V011",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "STABLE_REAL",
+      "input": {"a": "2", "d": "1", "b": "0", "k": "1"},
+      "expected": {"s": "3", "q": "2", "discriminant": "1", "regime": "ASYMPTOTICALLY_STABLE_REAL_DECAY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V012",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "PERSISTENT_BOUNDARY",
+      "input": {"a": "-1", "d": "1", "b": "2", "k": "1"},
+      "expected": {"s": "0", "q": "1", "discriminant": "-4", "regime": "PERSISTENT_UNDAMPED_OSCILLATION_BOUNDARY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V013",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "GROWING_OSCILLATION",
+      "input": {"a": "-1", "d": "-1", "b": "1", "k": "1"},
+      "expected": {"s": "-2", "q": "2", "discriminant": "-4", "regime": "UNSTABLE_GROWING_OSCILLATION"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V014",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "SADDLE",
+      "input": {"a": "1", "d": "1", "b": "1", "k": "-2"},
+      "expected": {"s": "2", "q": "-1", "discriminant": "8", "regime": "SADDLE_INSTABILITY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V015",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "GROWING_REAL",
+      "input": {"a": "-2", "d": "-1", "b": "0", "k": "0"},
+      "expected": {"s": "-3", "q": "2", "discriminant": "1", "regime": "UNSTABLE_GROWING_REAL"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V016",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_continuous_feedback",
+      "case": "NONASYMPTOTIC_ZERO",
+      "input": {"a": "0", "d": "0", "b": "0", "k": "0"},
+      "expected": {"s": "0", "q": "0", "discriminant": "0", "regime": "NONASYMPTOTIC_BOUNDARY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V017",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "IMMEDIATE_MONOTONE",
+      "input": {"model_class": "DISCRETE_IMMEDIATE", "kappa": "1/2"},
+      "expected": {"immediate_root": "1/2", "regime": "IMMEDIATE_MONOTONE_DECAY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V018",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "IMMEDIATE_DEADBEAT",
+      "input": {"model_class": "DISCRETE_IMMEDIATE", "kappa": "1"},
+      "expected": {"immediate_root": "0", "regime": "IMMEDIATE_DEADBEAT"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V019",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "IMMEDIATE_ALTERNATING",
+      "input": {"model_class": "DISCRETE_IMMEDIATE", "kappa": "3/2"},
+      "expected": {"immediate_root": "-1/2", "regime": "IMMEDIATE_ALTERNATING_DECAY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V020",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "IMMEDIATE_UNSTABLE",
+      "input": {"model_class": "DISCRETE_IMMEDIATE", "kappa": "5/2"},
+      "expected": {"immediate_root": "-3/2", "regime": "UNSTABLE"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V021",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "DELAYED_REAL",
+      "input": {"model_class": "DISCRETE_ONE_STEP_DELAY", "kappa": "1/8"},
+      "expected": {"discriminant": "1/2", "root_modulus_squared": "NOT_APPLICABLE", "regime": "DELAYED_REAL_DECAY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V022",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "DELAYED_CRITICAL",
+      "input": {"model_class": "DISCRETE_ONE_STEP_DELAY", "kappa": "1/4"},
+      "expected": {"discriminant": "0", "root_modulus_squared": "1/4", "regime": "DELAYED_CRITICAL_DECAY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V023",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "DELAYED_DAMPED",
+      "input": {"model_class": "DISCRETE_ONE_STEP_DELAY", "kappa": "1/2"},
+      "expected": {"discriminant": "-1", "root_modulus_squared": "1/2", "regime": "DELAYED_DAMPED_OSCILLATION"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V024",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "DELAYED_PERSISTENT",
+      "input": {"model_class": "DISCRETE_ONE_STEP_DELAY", "kappa": "1"},
+      "expected": {"discriminant": "-3", "root_modulus_squared": "1", "regime": "PERSISTENT_BOUNDARY"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V025",
+      "exercise_class": "OWNING_CALL",
+      "owner": "classify_discrete_feedback",
+      "case": "DELAYED_UNSTABLE",
+      "input": {"model_class": "DISCRETE_ONE_STEP_DELAY", "kappa": "5/4"},
+      "expected": {"discriminant": "-4", "root_modulus_squared": "5/4", "regime": "UNSTABLE"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V026",
+      "exercise_class": "OWNING_CALL",
+      "owner": "evaluate_observability",
+      "case": "VISIBLE_AND_HIDDEN",
+      "input": {"observation": [["1", "0"]], "modes": [[["1"], ["0"]], [["0"], ["1"]]]},
+      "expected": {"visible": [true, false], "projected_modes": [[["1"]], [["0"]]]},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V027",
+      "exercise_class": "OWNING_CALL",
+      "owner": "evaluate_correction_closure",
+      "case": "CLOSING_ACCOUNT",
+      "input": {"stock_change": "2", "boundary_in": "10", "boundary_out": "3", "generation": "1", "consumption": "5", "residual": "-1", "internal_transfers": [["4", "4"]]},
+      "expected": {"closure_rhs": "2", "closes": true, "internal_transfers_cancel": true},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V028",
+      "exercise_class": "OWNING_CALL",
+      "owner": "evaluate_correction_closure",
+      "case": "NONCLOSING_ACCOUNT",
+      "input": {"stock_change": "3", "boundary_in": "10", "boundary_out": "3", "generation": "1", "consumption": "5", "residual": "-1", "internal_transfers": []},
+      "expected": {"closure_rhs": "2", "closes": false, "internal_transfers_cancel": true},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V029",
+      "exercise_class": "FORMATION",
+      "owner": "CorrectionClosureDeclaration",
+      "case": "TRANSFER_MISMATCH",
+      "input": {"internal_transfers": [["4", "3"]]},
+      "expected": {"success": false, "first_failure": "CLCD_CORRECTION_CLOSURE_INVALID"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V030",
+      "exercise_class": "OWNING_CALL",
+      "owner": "compute_dependency_invalidation",
+      "case": "REACHABLE_DEPENDENTS",
+      "input": {"vertices": ["q", "a", "b", "c"], "edges": [["q", "a"], ["a", "b"], ["q", "c"]], "corrected_vertex": "q", "inventory_complete": true},
+      "expected": {"descendants": ["a", "b", "c"], "topological_order": ["a", "c", "b"]},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V031",
+      "exercise_class": "OWNING_CALL",
+      "owner": "compute_dependency_invalidation",
+      "case": "INCOMPLETE_INVENTORY",
+      "input": {"vertices": ["q", "a"], "edges": [["q", "a"]], "corrected_vertex": "q", "inventory_complete": false},
+      "expected": {"success": false, "first_failure": "CLCD_DEPENDENCY_GRAPH_INVALID"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V032",
+      "exercise_class": "OWNING_CALL",
+      "owner": "compute_dependency_invalidation",
+      "case": "DEPENDENCY_CYCLE",
+      "input": {"vertices": ["q", "a"], "edges": [["q", "a"], ["a", "q"]], "corrected_vertex": "q", "inventory_complete": true},
+      "expected": {"success": false, "first_failure": "CLCD_DEPENDENCY_GRAPH_INVALID"},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V033",
+      "exercise_class": "STATIC",
+      "owner": "static_analysis.prohibited_reachability",
+      "case": "NO_SCIENTIFIC_OR_OPERATIONAL_PATH",
+      "input": {"new_modules": ["correction_protocol", "correction_diagnostics"]},
+      "expected": {"forbidden_imports": 0, "model_callbacks": 0, "state_advances": 0, "matrix_exponentials": 0},
+      "model_steps": 0
+    },
+    {
+      "vector_id": "CLCD-B-V034",
+      "exercise_class": "STATIC",
+      "owner": "static_analysis.nonclaim_boundary",
+      "case": "EXCLUSIONS_PRESERVED",
+      "input": {"reserved_programmes": []},
+      "expected": {"universal_controller": false, "perfect_efficiency": false, "physical_wave": false, "electrical_voltage": false, "automatic_topology": false, "scientific_execution": false},
+      "model_steps": 0
+    }
+  ],
+  "acceptance": {
+    "required_vector_count": 34,
+    "required_order": [
+      "CLCD-B-V001", "CLCD-B-V002", "CLCD-B-V003", "CLCD-B-V004", "CLCD-B-V005", "CLCD-B-V006", "CLCD-B-V007", "CLCD-B-V008", "CLCD-B-V009", "CLCD-B-V010", "CLCD-B-V011", "CLCD-B-V012", "CLCD-B-V013", "CLCD-B-V014", "CLCD-B-V015", "CLCD-B-V016", "CLCD-B-V017", "CLCD-B-V018", "CLCD-B-V019", "CLCD-B-V020", "CLCD-B-V021", "CLCD-B-V022", "CLCD-B-V023", "CLCD-B-V024", "CLCD-B-V025", "CLCD-B-V026", "CLCD-B-V027", "CLCD-B-V028", "CLCD-B-V029", "CLCD-B-V030", "CLCD-B-V031", "CLCD-B-V032", "CLCD-B-V033", "CLCD-B-V034"
+    ],
+    "exercise_counts": {"STATIC": 3, "FORMATION": 2, "OWNING_CALL": 29},
+    "expected_successes": 25,
+    "expected_failures": 6,
+    "expected_static_passes": 3,
+    "production_callable_invocations": 29,
+    "formation_constructions": 2,
+    "model_steps": 0,
+    "scientific_executions": 0
+  },
+  "fixture_projection": {
+    "profile": "Canonical JSON object with schema_id ebu.closed-loop-correction-diagnostics-fixture/1 and vectors equal to this contract's vectors; sorted keys, compact separators, UTF-8, one final LF.",
+    "raw_bytes": 10236,
+    "sha256": "a05e80b61688759481c86050f21b2548961ae20ca018a891962dbfe41b1ce3ce"
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_VALIDATION_READY"
+}
