@@ -94,6 +94,9 @@ T2_PATHS = (
     "tests/framework/test_bridge_exact_fixtures.py",
     "tests/framework/test_dynamic_static_identities.py",
 )
+CURRENT_T0_PATHS = (
+    "tests/framework/test_closed_loop_correction_diagnostics.py",
+)
 CORRECTION_AUTHORITY_FILES = (
     "POST_I9_CI_DURABILITY_CORRECTION_AUTHORITY_AMENDMENT.md",
     "post_i9_ci_durability_correction_contract.json",
@@ -157,19 +160,23 @@ COORDINATE_ENV = {
     "accepted_later_documentation_feature": "EBU_I9_LATER_DOCUMENTATION_FEATURE",
     "required_current_target": "EBU_I9_REQUIRED_CURRENT_TARGET",
 }
-IMPLEMENTATION_BASE_COMMIT = "0590a7f25382ff2623d5956174f32f55d7e1f0b1"
-IMPLEMENTATION_BASE_TREE = "c2a05a68dde929e2caecd3b38691b6b5198f77a6"
+IMPLEMENTATION_BASE_COMMIT = "5de9f64db189f0e1db4da72efc2f2049e16ab4be"
+IMPLEMENTATION_BASE_TREE = "c3dd8b47194e85679eb19e197080676771d3826f"
 CURRENT_HEAD_ENV = "EBU_POST_I9_CURRENT_HEAD"
 POST_I9_AUTHORIZED_PATHS = (
     ".github/workflows/tests.yml",
     "tests/framework/test_validation_reachability.py",
+)
+CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS = (
+    "src/ebu_framework/__init__.py",
+    "src/ebu_framework/errors.py",
 )
 LATER_DOCUMENTATION_PATHS = (
     "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "4f60b1f9ab6c0501e878d738d3687a1217a126cb15fc69ac3397d668ebc9ad70"
+TEST_SELF_SEAL = "03d632f277d5dfa5b9252235009357ccaa9562c6f22c29ac6fc254cf8385faad"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -179,6 +186,38 @@ WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_LATER_DOCUMENTATION_FEATURE: 5674ea9c33b72b94669c86e7e4f1a35c0db5775a
       EBU_I9_REQUIRED_CURRENT_TARGET: fc20d71e69cf226e6cecd9de7575f1d6249b193f
       EBU_POST_I9_CURRENT_HEAD: ${{ github.sha }}
+"""
+WORKFLOW_T1_COMPATIBILITY_BLOCK = b"""      - name: Provide the historical cross-platform temporary directory
+        run: |
+          if [ ! -d /private/tmp ]; then
+            sudo install -d -m 1777 /private/tmp
+          fi
+          test -d /private/tmp
+          test -w /private/tmp
+"""
+WORKFLOW_CLCD_T0_BLOCK = b"""      - name: Run current-head CLCD diagnostics with a positive test-count gate
+        run: |
+          export PYTHONPATH="$PWD/src:$PWD/tests/framework"
+          python - <<'PY'
+          import unittest
+
+          suite = unittest.TestLoader().discover(
+              "tests/framework", "test_closed_loop_correction_diagnostics.py"
+          )
+          count = suite.countTestCases()
+          if count <= 0:
+              raise SystemExit("T0 CLCD current-head test count must be positive")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (
+              not result.wasSuccessful()
+              or result.testsRun != count
+              or result.skipped
+              or result.expectedFailures
+              or result.unexpectedSuccesses
+          ):
+              raise SystemExit(1)
+          print(f"T0_CLCD_CURRENT_HEAD_TESTS={count}")
+          PY
 """
 EXPECTED_NEGATIVE = {
     "APPEND_UTF8_BYTES": "FAIL_UNAUTHORIZED_I9_IMPLEMENTATION_PATH_DRIFT",
@@ -416,7 +455,13 @@ def _normalized_test_bytes(raw: bytes) -> bytes:
 def _workflow_without_routing(raw: bytes) -> bytes:
     if raw.count(WORKFLOW_ROUTING_BLOCK) != 1:
         raise AssertionError("workflow historical/current routing block differs")
-    return raw.replace(WORKFLOW_ROUTING_BLOCK, b"", 1)
+    if raw.count(WORKFLOW_T1_COMPATIBILITY_BLOCK) != 1:
+        raise AssertionError("workflow T1 compatibility block differs")
+    if raw.count(WORKFLOW_CLCD_T0_BLOCK) != 1:
+        raise AssertionError("workflow CLCD T0 block differs")
+    return raw.replace(WORKFLOW_ROUTING_BLOCK, b"", 1).replace(
+        WORKFLOW_T1_COMPATIBILITY_BLOCK, b"", 1
+    ).replace(WORKFLOW_CLCD_T0_BLOCK, b"", 1)
 
 
 def _literal_assignments(tree: ast.Module) -> dict[str, object]:
@@ -989,9 +1034,14 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
 
         current_scope = self._audit_current_head_scope(correction, historical)
+        clcd_contract = json.loads(
+            (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
+                encoding="utf-8"
+            )
+        )
         self._audit_validation_ast(contract, manifest)
-        self._audit_public_surface(contract, manifest)
-        self._audit_import_graph(manifest)
+        self._audit_public_surface(contract, manifest, clcd_contract)
+        self._audit_import_graph(manifest, clcd_contract)
         self._audit_tables(contract)
         self._audit_safety_and_ci(manifest)
         self._audit_text_and_markdown(contract)
@@ -1063,7 +1113,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             self.assertTrue(candidate.is_file(), path)
             actual_mode = "100755" if candidate.stat().st_mode & 0o111 else "100644"
             self.assertEqual(actual_mode, row["mode"], path)
-            if path in POST_I9_AUTHORIZED_PATHS:
+            if path in POST_I9_AUTHORIZED_PATHS or path in CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS:
                 continue
             raw = candidate.read_bytes()
             self.assertEqual(len(raw), row["byte_count"], path)
@@ -1196,13 +1246,16 @@ class ValidationReachabilityTests(unittest.TestCase):
                 )
                 self.assertNotIn(name, forbidden_calls)
 
-    def _audit_public_surface(self, contract, manifest) -> None:
+    def _audit_public_surface(self, contract, manifest, clcd_contract) -> None:
         init_tree = ast.parse((SOURCE / "__init__.py").read_text(encoding="utf-8"))
         root_exports = _module_exports(init_tree)
-        expected_root = tuple(contract["accepted_surface"]["root_exports"]["values"])
+        expected_root = (
+            tuple(contract["accepted_surface"]["root_exports"]["values"])
+            + tuple(clcd_contract["root_export_suffix"])
+        )
         self.assertEqual(root_exports, expected_root)
-        self.assertEqual(len(root_exports), 444)
-        self.assertEqual(len(set(root_exports)), 444)
+        self.assertEqual(len(root_exports), 471)
+        self.assertEqual(len(set(root_exports)), 471)
         self.assertFalse(any(name.startswith("I9") for name in root_exports))
 
         errors_tree = ast.parse((SOURCE / "errors.py").read_text(encoding="utf-8"))
@@ -1220,13 +1273,17 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         self.assertEqual(
             failure_codes,
-            tuple(contract["accepted_surface"]["failure_codes"]["values"]),
+            tuple(contract["accepted_surface"]["failure_codes"]["values"])
+            + tuple(clcd_contract["failure_suffix"]),
         )
-        self.assertEqual(len(failure_codes), 280)
+        self.assertEqual(len(failure_codes), 294)
         self.assertFalse(any(code.startswith("I9_") for code in failure_codes))
 
         expected_exports = dict(manifest["module_exports"])
         expected_exports["validation"] = []
+        clcd_suffix = tuple(clcd_contract["root_export_suffix"])
+        expected_exports["correction_protocol"] = clcd_suffix[:20]
+        expected_exports["correction_diagnostics"] = clcd_suffix[20:]
         for module, expected in expected_exports.items():
             tree = ast.parse((SOURCE / f"{module}.py").read_text(encoding="utf-8"))
             self.assertEqual(_module_exports(tree), tuple(expected), module)
@@ -1240,9 +1297,21 @@ class ValidationReachabilityTests(unittest.TestCase):
             for node in tree.body:
                 if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
                     actual_functions[(path.stem, node.name)] = node
-        expected_rows = contract["accepted_surface"]["public_signature_rows"]["rows"]
-        self.assertEqual(len(expected_rows), 154)
-        self.assertEqual(len(actual_functions), 154)
+        expected_rows = list(contract["accepted_surface"]["public_signature_rows"]["rows"])
+        expected_rows.extend(
+            [
+                (
+                    "correction_protocol"
+                    if name == "validate_closed_loop_correction_protocol"
+                    else "correction_diagnostics",
+                    name,
+                    signature,
+                )
+                for name, signature in clcd_contract["public_callables"]
+            ]
+        )
+        self.assertEqual(len(expected_rows), 162)
+        self.assertEqual(len(actual_functions), 162)
         self.assertEqual(
             set(actual_functions), {(row[0], row[1]) for row in expected_rows}
         )
@@ -1269,25 +1338,44 @@ class ValidationReachabilityTests(unittest.TestCase):
             contract["accepted_surface"]["module_export_projection"],
         )
 
-    def _audit_import_graph(self, manifest) -> None:
+    def _audit_import_graph(self, manifest, clcd_contract) -> None:
         graph = manifest["future_import_graph"]
-        modules = tuple(graph["package_module_order"])
-        self.assertEqual(len(modules), 40)
+        modules = tuple(graph["package_module_order"]) + (
+            "correction_protocol",
+            "correction_diagnostics",
+        )
+        self.assertEqual(len(modules), 42)
         actual_imports = {}
         for module in modules:
             tree = ast.parse((SOURCE / f"{module}.py").read_text(encoding="utf-8"))
             actual_imports[module] = _direct_imports(tree, modules)
-        self.assertEqual(
-            actual_imports,
-            {module: tuple(values) for module, values in graph["direct_imports"].items()},
+        expected_imports = {
+            module: tuple(values) for module, values in graph["direct_imports"].items()
+        }
+        expected_imports.update(
+            {
+                "correction_protocol": ("errors", "identity", "numeric", "primitives"),
+                "correction_diagnostics": ("correction_protocol", "errors", "numeric"),
+            }
         )
+        for module in ("correction_protocol", "correction_diagnostics"):
+            self.assertEqual(
+                set(expected_imports[module]),
+                set(clcd_contract["import_boundary"][module]),
+            )
+        self.assertEqual(actual_imports, expected_imports)
         edges = tuple(
             (module, dependency)
             for module in modules
             for dependency in actual_imports[module]
         )
-        self.assertEqual(edges, tuple(tuple(row) for row in graph["direct_edges"]))
-        self.assertEqual(len(edges), 250)
+        expected_edges = tuple(tuple(row) for row in graph["direct_edges"]) + tuple(
+            (module, dependency)
+            for module in ("correction_protocol", "correction_diagnostics")
+            for dependency in expected_imports[module]
+        )
+        self.assertEqual(edges, expected_edges)
+        self.assertEqual(len(edges), 257)
         self.assertNotIn(("validation", "execution"), edges)
         self.assertFalse(any(target == "validation" and source != "validation" for source, target in edges))
 
@@ -1307,7 +1395,7 @@ class ValidationReachabilityTests(unittest.TestCase):
 
         for module in modules:
             visit(module)
-        self.assertEqual(len(visited), 40)
+        self.assertEqual(len(visited), 42)
 
         reachable = set()
         pending = ["validation"]
@@ -1387,6 +1475,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             "4d12f834e52bf92a723ab1e2c9723a9b395344320f3c95482b64d9133c766d23",
         )
         self.assertEqual(workflow_raw.count(WORKFLOW_ROUTING_BLOCK), 1)
+        self.assertEqual(workflow_raw.count(WORKFLOW_T1_COMPATIBILITY_BLOCK), 1)
+        self.assertEqual(workflow_raw.count(WORKFLOW_CLCD_T0_BLOCK), 1)
         for variable in tuple(COORDINATE_ENV.values()) + (CURRENT_HEAD_ENV,):
             self.assertEqual(workflow.count(f"      {variable}:"), 1, variable)
         self.assertEqual(workflow.count("  workflow_dispatch:\n"), 1)
@@ -1403,15 +1493,20 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(workflow.count('python-version: "3.14.2"'), 0)
         self.assertNotIn("python -m pip install --no-deps .", workflow)
         self.assertNotIn("python -m pip install .", workflow)
-        self.assertEqual(workflow.count("or result.skipped"), 4)
-        self.assertEqual(workflow.count("or result.expectedFailures"), 4)
-        self.assertEqual(workflow.count("or result.unexpectedSuccesses"), 4)
+        self.assertEqual(workflow.count("or result.skipped"), 5)
+        self.assertEqual(workflow.count("or result.expectedFailures"), 5)
+        self.assertEqual(workflow.count("or result.unexpectedSuccesses"), 5)
 
         t0 = workflow.split("  framework-t0:\n", 1)[1].split("  framework-t1:\n", 1)[0]
         t1 = workflow.split("  framework-t1:\n", 1)[1].split("  framework-t2:\n", 1)[0]
         t2 = workflow.split("  framework-t2:\n", 1)[1]
+        self.assertNotIn("/private/tmp", t0)
+        self.assertEqual(t1.count("/private/tmp"), 4)
+        self.assertNotIn("/private/tmp", t2)
         pattern = re.compile(r'"(tests/framework/test_[a-z0-9_]+\.py)"')
         self.assertEqual(tuple(pattern.findall(t0)), T0_PATHS)
+        for path in CURRENT_T0_PATHS:
+            self.assertEqual(t0.count(path.rsplit("/", 1)[1]), 1, path)
         self.assertEqual(tuple(pattern.findall(t1)), T1_PATHS)
         self.assertEqual(tuple(pattern.findall(t2)), T2_PATHS)
         self.assertEqual(

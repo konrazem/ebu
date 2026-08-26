@@ -139,6 +139,29 @@ jobs:
               raise SystemExit(1)
           print(f"T0_I9_REACHABILITY_TESTS={count}")
           PY
+      - name: Run current-head CLCD diagnostics with a positive test-count gate
+        run: |
+          export PYTHONPATH="$PWD/src:$PWD/tests/framework"
+          python - <<'PY'
+          import unittest
+
+          suite = unittest.TestLoader().discover(
+              "tests/framework", "test_closed_loop_correction_diagnostics.py"
+          )
+          count = suite.countTestCases()
+          if count <= 0:
+              raise SystemExit("T0 CLCD current-head test count must be positive")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if (
+              not result.wasSuccessful()
+              or result.testsRun != count
+              or result.skipped
+              or result.expectedFailures
+              or result.unexpectedSuccesses
+          ):
+              raise SystemExit(1)
+          print(f"T0_CLCD_CURRENT_HEAD_TESTS={count}")
+          PY
 
   framework-t1:
     if: github.event_name == 'push' || github.event_name == 'pull_request'
@@ -153,6 +176,13 @@ jobs:
       - name: Install the exact framework dependency lock
         run: |
           python -m pip install --require-hashes -r requirements-framework.lock
+      - name: Provide the historical cross-platform temporary directory
+        run: |
+          if [ ! -d /private/tmp ]; then
+            sudo install -d -m 1777 /private/tmp
+          fi
+          test -d /private/tmp
+          test -w /private/tmp
       - name: Run the exact T1 group with a positive test-count gate
         run: |
           compatibility_git_dir=$(git rev-parse --absolute-git-dir)
