@@ -1,0 +1,154 @@
+{
+  "manifest_id": "ebu-closed-loop-correction-dynamics-milestone-sources/1",
+  "manifest_version": "1.0.0",
+  "status": "PROSPECTIVE_SOURCE_LOCKS_UNAUDITED",
+  "accepted_coordinate": {
+    "repository": "ebu",
+    "branch": "framework-v0.1",
+    "commit": "79883ad85d6c61bd32c1493cd7cc14a7062cb256",
+    "tree": "adc7a83c1a259f3fa2be39b821baf625fd2f1582",
+    "path_count": 335,
+    "commit_subject": "Integrate post-I-9 CI durability correction",
+    "ordered_parents": [
+      "0590a7f25382ff2623d5956174f32f55d7e1f0b1",
+      "4dd5144ac2d6e34da6f199314c0bd0d0bfa3ef51"
+    ]
+  },
+  "governing_sources": [
+    {
+      "path": "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
+      "role": "accepted mathematical, scientific, institutional, and framework boundary",
+      "mode": "100644",
+      "git_blob": "637f192832bd76f767a078508ecde13be481ec7e",
+      "raw_bytes": 36083,
+      "raw_sha256": "9174951adad518a7ec57439c58d0750d4947173d35fb928f3f9b137ad99500f0"
+    },
+    {
+      "path": "coupled_interaction_inference_feedback_book_traceability_manifest.json",
+      "role": "accepted claim classification and teaching traceability",
+      "mode": "100644",
+      "git_blob": "554fae763e81c83bd8de0e455c895042a45b4363",
+      "raw_bytes": 49748,
+      "raw_sha256": "66ef4d29a28b9c7c1bccd39f7f9de73ab121c987b9092a1cb3a0c0505eb966aa",
+      "canonical_with_one_lf_bytes": 39152,
+      "canonical_with_one_lf_sha256": "19917891d0ab69d8a6b480b73e4f315dc1150f00436f77a20df864c1906b3d7a"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "role": "accepted replacement-oriented future-book ownership and generation gates",
+      "mode": "100644",
+      "git_blob": "af33c79b89372a8a1a9dc1939ca5f66974c23e56",
+      "raw_bytes": 150664,
+      "raw_sha256": "f85c3e0c636f3afcd9d961673b16a0a642045a13b32d3c878e27a8d982567b59"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I6_AUTHORITY_AMENDMENT.md",
+      "role": "accepted sequential-parallel and interaction framework boundary",
+      "mode": "100644",
+      "git_blob": "327155ad5911000184d0ecfed290b47b1d6dd18d",
+      "raw_bytes": 72509,
+      "raw_sha256": "89d13a52b210790ee3ba4f613054db7dbaf8e32a8cde73ba2d426f0f04d6149e"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I7_AUTHORITY_AMENDMENT.md",
+      "role": "accepted dynamic state, history, delay, route, queue, and pending-effect boundary",
+      "mode": "100644",
+      "git_blob": "c260f38c1009dd5873a0ce6745360de510e2b990",
+      "raw_bytes": 43795,
+      "raw_sha256": "9293d4f5a787ac57b1e5ee4faf8a01d0058d1a502463fc5a15c27b86d7659b64"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I8_AUTHORITY_AMENDMENT.md",
+      "role": "accepted immutable artifact correction and physical-correction refusal boundary",
+      "mode": "100644",
+      "git_blob": "ba25aefc907253e12b11d40124f519d70fa43e9c",
+      "raw_bytes": 36953,
+      "raw_sha256": "9cbb90ff9dac77d3fb481d257de2dafd79087c37c529b238129a46bc9088bfad"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I9_AUTHORITY_AMENDMENT.md",
+      "role": "accepted audit, fidelity, reachability, durability, and CI boundary",
+      "mode": "100644",
+      "git_blob": "d6368cf87400a67beca65143b4b281abda526853",
+      "raw_bytes": 13495,
+      "raw_sha256": "11c48ec99e2d8238f455487139b87e1f7e170ec594f3f2f98bb0aebe7c59e2e4"
+    },
+    {
+      "path": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+      "role": "accepted topology identity, recursive reuse, invalidation, and automatic-inference refusal boundary",
+      "mode": "100644",
+      "git_blob": "7c90cfc10aba9c44d07a5bd2c86b20dfaf562339",
+      "raw_bytes": 29970,
+      "raw_sha256": "3820015fa540e86b191199a65c5740459f8fd5989ec2756564859bfb45507812"
+    },
+    {
+      "path": "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+      "role": "accepted atomic, generator, interaction, and correction-locality foundation",
+      "mode": "100644",
+      "git_blob": "82b82d3d6824adcfe071a19bc0b530417f592eab",
+      "raw_bytes": 41359,
+      "raw_sha256": "eb559a68163571d80bbe564d68a57a915e128090b1dbb26bfd9d1c4ec4a7b8d3"
+    },
+    {
+      "path": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+      "role": "accepted unresolved-problem and scientific-execution boundary",
+      "mode": "100644",
+      "git_blob": "42ac0203543d57d773ea53f54c8a42aae66e8f85",
+      "raw_bytes": 32173,
+      "raw_sha256": "957206891476ce360760ab23dac541ae6df5b5de8473bc6cf23c9c4b7ae631a5"
+    }
+  ],
+  "contextual_study_inputs": [
+    {
+      "input_id": "CLCD-STUDY-ANSWER-1",
+      "description": "Coordinate revelation versus genuine dynamical modification, exact influence, memory, stability, delay, and observability tests.",
+      "raw_bytes": 10983,
+      "raw_sha256": "bc6837fcd0f934b2a071431ca2bec0f01e012ba16f143bd800e6eb0fb1bb922f",
+      "authority": false,
+      "adoption_rule": "Only content independently rederived in committed governing sources is adopted."
+    },
+    {
+      "input_id": "CLCD-STUDY-ANSWER-2",
+      "description": "Scientific and institutional importance of correction dynamics, memory, safety, accounting-governance separation, and oscillation-not-wave discipline.",
+      "raw_bytes": 9353,
+      "raw_sha256": "a4c327947518c873a351ab3ecd7b9c17b6182e8c066cea4025cd7db9aff89d79",
+      "authority": false,
+      "adoption_rule": "Only content independently rederived in committed governing sources is adopted."
+    }
+  ],
+  "candidate_delta": {
+    "additions": [
+      "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+      "closed_loop_correction_dynamics_milestone_contract.json",
+      "closed_loop_correction_dynamics_milestone_validation_contract.json",
+      "closed_loop_correction_dynamics_milestone_source_manifest.json",
+      "closed_loop_correction_dynamics_milestone_traceability_manifest.json"
+    ],
+    "modifications": [],
+    "deletions": [],
+    "required_mode": "100644",
+    "accepted_tree_paths_preserved": 335,
+    "accepted_tree_paths_modified": 0
+  },
+  "reconstruction_contract": {
+    "route_1": "git ls-tree -r --full-tree plus git cat-file for every accepted path",
+    "route_2": "independent git archive reconstruction of every accepted path",
+    "accepted_payload_bytes": 127139717,
+    "path_projection_profile": "Canonical JSON array of path strings in Git tree order, sorted object keys, compact separators, UTF-8, and exactly one final LF.",
+    "path_projection_bytes": 13658,
+    "path_projection_sha256": "682283368e74eb8fa5d960b7f06d112ff6f8acbd733a2cbcd00b83e3bf0e32b9",
+    "row_projection_profile": "Canonical JSON array in Git tree order; each row has bytes, git_blob, mode, path, and sha256; sorted object keys, compact separators, UTF-8, and exactly one final LF.",
+    "row_projection_bytes": 70258,
+    "row_projection_sha256": "9c98cd6482eea6bd67f998c939a5ba5e9fcad9c0afe722ac1562b2e25d7e4486",
+    "required_agreement": "All 335 accepted paths, modes, Git object identities, raw bytes, and raw SHA-256 identities agree; the candidate adds only the five declared paths.",
+    "live_ref_check": "A fresh read-only query of refs/heads/framework-v0.1 must equal the accepted commit before audit and before any integration."
+  },
+  "preservation": {
+    "accepted_framework_semantics_changed": false,
+    "scientific_execution_authorized": false,
+    "model_state_advance_authorized": false,
+    "manuscript_or_pdf_change_authorized": false,
+    "commit_or_push_authorized_by_this_file": false
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_SOURCE_MANIFEST_READY"
+}

@@ -1,0 +1,297 @@
+{
+  "manifest_id": "ebu-closed-loop-correction-dynamics-milestone-traceability/1",
+  "manifest_version": "1.0.0",
+  "status": "PROSPECTIVE_BOOK_AND_FRAMEWORK_TRACEABILITY_UNAUDITED",
+  "authority": {
+    "accepted_commit": "79883ad85d6c61bd32c1493cd7cc14a7062cb256",
+    "accepted_tree": "adc7a83c1a259f3fa2be39b821baf625fd2f1582",
+    "human_authority": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+    "mechanical_contract": "closed_loop_correction_dynamics_milestone_contract.json",
+    "validation_contract": "closed_loop_correction_dynamics_milestone_validation_contract.json",
+    "source_manifest": "closed_loop_correction_dynamics_milestone_source_manifest.json"
+  },
+  "status_vocabulary": [
+    "EXACT_UNDER_ASSUMPTIONS",
+    "MODEL_EXACT_UNDER_DECLARATION",
+    "PROSPECTIVE_DESIGN_OBLIGATION",
+    "INSTITUTIONAL_HYPOTHESIS",
+    "NONCLAIM_EXCLUSION"
+  ],
+  "implementation_vocabulary": [
+    "ACCEPTED_PREREQUISITE_SUBSTRATE",
+    "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+    "NOT_APPLICABLE"
+  ],
+  "records": [
+    {
+      "id": "CLCD-CT-01",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "primary_book_owner": "VI.15",
+      "supporting_book_owners": [
+        "VI.14",
+        "VIII.16"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-06"
+      ],
+      "framework_status": "ACCEPTED_PREREQUISITE_SUBSTRATE",
+      "teaching_capability": "Shows that Möbius coordinates can reveal but cannot manufacture a linear dynamical mode.",
+      "required_example": "Pump-maintenance interaction coordinates with equal spectra before and after transformation.",
+      "required_proof_or_test": "A_I=Z^-1 A_E Z and equality of characteristic polynomials.",
+      "adjacent_limit": "Changing, incomplete, filtered, clipped, estimated, or boundary-mismatched coordinates invalidate the theorem."
+    },
+    {
+      "id": "CLCD-CT-02",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "primary_book_owner": "VI.15",
+      "supporting_book_owners": [
+        "VIII.16"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-07"
+      ],
+      "framework_status": "ACCEPTED_PREREQUISITE_SUBSTRATE",
+      "teaching_capability": "Extends representation-versus-mechanism discipline to nonlinear Jacobians and unique flows.",
+      "required_example": "One nonlinear burden-flow example evaluated in total and interaction coordinates.",
+      "required_proof_or_test": "g=M f o Z, Dg=M Df Z, and Phi_I=M Phi_E Z.",
+      "adjacent_limit": "No claim without the fixed invertible map, matched state, regularity, and unique-flow assumptions."
+    },
+    {
+      "id": "CLCD-CT-03",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "primary_book_owner": "VIII.16",
+      "supporting_book_owners": [
+        "VIII.2",
+        "VIII.15"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-08"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Tests whether correction changes a physical trajectory rather than merely re-expressing it.",
+      "required_example": "Refrigeration controller compared with its uncorrected temperature dynamics.",
+      "required_proof_or_test": "Delta(t)=P exp(Kt)J-exp(At).",
+      "adjacent_limit": "Nonzero Delta does not prove physical availability, benefit, causality, or authorization."
+    },
+    {
+      "id": "CLCD-CT-04",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "primary_book_owner": "VIII.16",
+      "supporting_book_owners": [
+        "VIII.13"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-08"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Locates the earliest derivative order at which a correction path affects physical evolution.",
+      "required_example": "One direct BC path and one hidden BDC path with BC equal to zero.",
+      "required_proof_or_test": "PK^2J-A^2=BC and the complete PK^mJ-A^m sequence.",
+      "adjacent_limit": "BC equal to zero is not sufficient evidence that the whole feedback channel is inert."
+    },
+    {
+      "id": "CLCD-CT-05",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "primary_book_owner": "VIII.13",
+      "supporting_book_owners": [
+        "VIII.2",
+        "VIII.16"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-10"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Shows exactly how hidden correction state becomes observable history dependence.",
+      "required_example": "Thermostat correction memory after eliminating the controller state.",
+      "required_proof_or_test": "Variation of constants with both B exp(Dt)c(0) and B exp(Dt)C.",
+      "adjacent_limit": "The displayed kernel is limited to the declared finite-dimensional linear time-invariant model."
+    },
+    {
+      "id": "CLCD-CT-06",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "primary_book_owner": "VIII.15",
+      "supporting_book_owners": [
+        "VIII.16"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-11"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Separates safe decay, overshoot, oscillation, and instability in a declared correction model.",
+      "required_example": "Temperature correction with stable real, damped oscillatory, persistent, growing, and saddle cases.",
+      "required_proof_or_test": "Characteristic polynomial, s/q/discriminant regime map, damping, period, and recovery bound.",
+      "adjacent_limit": "Feedback is not assumed stable, beneficial, linear, observable, or perfectly efficient."
+    },
+    {
+      "id": "CLCD-CT-07",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "primary_book_owner": "VIII.10",
+      "supporting_book_owners": [
+        "VIII.15",
+        "VIII.16"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-12"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Quantifies how one-step delay narrows a controller's gain margin and can create alternating correction.",
+      "required_example": "Weekly inventory correction with immediate and one-week-old observations.",
+      "required_proof_or_test": "Immediate root 1-kappa and delayed polynomial z^2-z+kappa.",
+      "adjacent_limit": "Longer, fractional, distributed, nonlinear, or state-dependent delays require separate analysis."
+    },
+    {
+      "id": "CLCD-CT-08",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "primary_book_owner": "VIII.16",
+      "supporting_book_owners": [
+        "VIII.11"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-08",
+        "CIIF-CT-13"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Prevents a dashboard from being treated as a complete description of the system's modes.",
+      "required_example": "Two-state system with one visible and one hidden eigenmode.",
+      "required_proof_or_test": "Evaluate H v for every named mode.",
+      "adjacent_limit": "Mode visibility does not establish causality, mechanism quality, or institutional relevance."
+    },
+    {
+      "id": "CLCD-DO-09",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "primary_book_owner": "VIII.16",
+      "supporting_book_owners": [
+        "VIII.10",
+        "VIII.13",
+        "VIII.15"
+      ],
+      "accepted_source_claims": [
+        "CIIF-CT-13"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Turns correction design into a reproducible before-after diagnostic rather than an impression from a plot.",
+      "required_example": "Complete refrigerator before-after evidence table.",
+      "required_proof_or_test": "Report every output in comparative_output_order with frozen conditions and failures.",
+      "adjacent_limit": "The comparison does not choose a policy or prove that lower overshoot is fairer."
+    },
+    {
+      "id": "CLCD-DO-10",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "primary_book_owner": "VIII.3",
+      "supporting_book_owners": [
+        "IX.19"
+      ],
+      "accepted_source_claims": [
+        "CIIF-EA-14"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Makes correction auditable and learnable without erasing the original action or pretending correction is free.",
+      "required_example": "Hospital sensor recalibration with separate original and correction receipts.",
+      "required_proof_or_test": "R_a differs from R_c, R_c is not negative R_a, and all lifecycle and resource fields close.",
+      "adjacent_limit": "The accepted I-8 CorrectionRecord is artifact linkage, not this physical correction receipt."
+    },
+    {
+      "id": "CLCD-DO-11",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "primary_book_owner": "VIII.3",
+      "supporting_book_owners": [
+        "VIII.13",
+        "IX.19"
+      ],
+      "accepted_source_claims": [
+        "CIIF-EA-15"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Ensures correction resources, losses, delays, and residuals do not disappear from the account.",
+      "required_example": "Calibration correction with stock, boundary, loss, residual, and internal-transfer roll-up.",
+      "required_proof_or_test": "Delta S=B_in-B_out+G-C+R and internal transfers cancel exactly once.",
+      "adjacent_limit": "EBU is not a conserved physical substance and a residual cannot be zeroed by policy."
+    },
+    {
+      "id": "CLCD-DO-12",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "primary_book_owner": "VII.11-VII.12",
+      "supporting_book_owners": [
+        "VIII.14",
+        "VIII.3"
+      ],
+      "accepted_source_claims": [
+        "CIIF-EA-16"
+      ],
+      "framework_status": "NOT_IMPLEMENTED_SEPARATE_AUTHORITY_REQUIRED",
+      "teaching_capability": "Carries a correction to every explicitly dependent result and higher structure without recomputing unrelated records.",
+      "required_example": "Cold-chain calibration correction propagating through route and topology evidence.",
+      "required_proof_or_test": "Reachability and topological-order invalidation with a missing-edge negative control.",
+      "adjacent_limit": "No missing edge may be interpreted as proven independence and no topology is selected automatically."
+    },
+    {
+      "id": "CLCD-HYP-13",
+      "status": "INSTITUTIONAL_HYPOTHESIS",
+      "primary_book_owner": "IX.18",
+      "supporting_book_owners": [
+        "IX.19",
+        "VIII.15",
+        "VIII.17"
+      ],
+      "accepted_source_claims": [
+        "CIIF-HYP-02",
+        "CIIF-HYP-03"
+      ],
+      "framework_status": "NOT_APPLICABLE",
+      "teaching_capability": "Provides a testable route by which visible interaction and protected correction may support cooperation, disclosure, learning, and recovery.",
+      "required_example": "Shared neighbourhood cold chain plus protected hospital disclosure case.",
+      "required_proof_or_test": "Preregister outcomes, confounders, privacy, power, retaliation, free-riding, cost, and benefit-distribution measures.",
+      "adjacent_limit": "This is not a physical theorem and does not justify surveillance, blame, reward, punishment, or settlement."
+    },
+    {
+      "id": "CLCD-NC-14",
+      "status": "NONCLAIM_EXCLUSION",
+      "primary_book_owner": "ALL_ADJACENT_CLAIM_LOCATIONS",
+      "supporting_book_owners": [],
+      "accepted_source_claims": [],
+      "framework_status": "NOT_APPLICABLE",
+      "teaching_capability": "Protects the positive feature from being weakened by an unsupported universal or physical interpretation.",
+      "required_example": "An oscillating feedback controller that is temporal but not a physical wave.",
+      "required_proof_or_test": "Search every candidate file and future owner for prohibited reservations or universal claims.",
+      "adjacent_limit": "No universal controller, perfect efficiency, automatic topology, physical wave, voltage, causality, fairness, settlement, or empirical validity."
+    }
+  ],
+  "teaching_owner_order": [
+    "VI.14",
+    "VI.15",
+    "VII.11-VII.12",
+    "VIII.2",
+    "VIII.3",
+    "VIII.10",
+    "VIII.13",
+    "VIII.15",
+    "VIII.16",
+    "IX.18",
+    "IX.19"
+  ],
+  "replacement_rules": [
+    "Do not append a generic feedback chapter.",
+    "Do not duplicate the canonical topology programme in Part VIII.",
+    "Do not teach limitations without first explaining the positive capability they delimit.",
+    "Do not turn an institutional hypothesis into a physical theorem.",
+    "Do not describe a prospective correction field or receipt as implemented.",
+    "Do not edit current manuscripts or PDFs under CLCD-A."
+  ],
+  "book_status": {
+    "future_structure_synchronized": true,
+    "current_parts_I_to_III_regenerated": false,
+    "future_parts_IV_to_IX_generated": false,
+    "rendered_pdf_contains_milestone": false,
+    "separate_manuscript_authority_required": true
+  },
+  "validation": {
+    "required_record_count": 14,
+    "required_owner_count": 11,
+    "required_positive_feature_per_record": true,
+    "required_life_example_per_record": true,
+    "required_proof_or_test_per_record": true,
+    "required_adjacent_limit_per_record": true,
+    "duplicate_primary_theorem_owner_forbidden": true
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_TRACEABILITY_READY"
+}

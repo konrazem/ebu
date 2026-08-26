@@ -1,0 +1,466 @@
+{
+  "contract_id": "ebu-closed-loop-correction-dynamics-milestone-authority/1",
+  "contract_version": "1.0.0",
+  "status": "PROSPECTIVE_AUTHORITY_UNIMPLEMENTED_UNEXECUTED_UNAUDITED",
+  "authority_coordinate": {
+    "repository": "ebu",
+    "accepted_branch": "framework-v0.1",
+    "accepted_commit": "79883ad85d6c61bd32c1493cd7cc14a7062cb256",
+    "accepted_tree": "adc7a83c1a259f3fa2be39b821baf625fd2f1582",
+    "candidate_branch": "research/closed-loop-correction-dynamics-authority",
+    "human_authority": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+    "validation_contract": "closed_loop_correction_dynamics_milestone_validation_contract.json",
+    "source_manifest": "closed_loop_correction_dynamics_milestone_source_manifest.json",
+    "traceability_manifest": "closed_loop_correction_dynamics_milestone_traceability_manifest.json",
+    "agreement_rule": "Any semantic, formula, claim-status, stage, source-lock, book-owner, or scope disagreement among the four files is an integrity failure."
+  },
+  "canonical_json_profile": {
+    "profile_id": "CLCD_CANONICAL_JSON_V1",
+    "accepted_values": [
+      "null",
+      "boolean",
+      "integer",
+      "NFC UTF-8 string",
+      "array",
+      "object"
+    ],
+    "rejected_values": [
+      "float",
+      "NaN",
+      "positive infinity",
+      "negative infinity",
+      "duplicate object key",
+      "non-NFC string",
+      "surrogate code point",
+      "trailing JSON value"
+    ],
+    "object_key_order": "Recursive Unicode code-point lexical order.",
+    "array_order": "Preserved exactly.",
+    "encoding": "UTF-8 without BOM.",
+    "separators": "Comma and colon without surrounding whitespace.",
+    "top_level_projection_termination": "Exactly one LF."
+  },
+  "programme_layers": [
+    {
+      "id": "CLCD-A",
+      "name": "authority_and_preregistration",
+      "status": "AUTHORIZED_BY_THIS_PACKAGE_ONLY_AFTER_INDEPENDENT_AUDIT_AND_INTEGRATION",
+      "allowed": [
+        "static exact arithmetic",
+        "source-lock verification",
+        "protocol design",
+        "book traceability"
+      ],
+      "forbidden": [
+        "framework implementation",
+        "scientific execution",
+        "model-state advance",
+        "manuscript or PDF mutation"
+      ]
+    },
+    {
+      "id": "CLCD-B",
+      "name": "inert_implementation",
+      "status": "SEPARATE_FUTURE_AUTHORITY_REQUIRED",
+      "allowed_if_separately_authorized": [
+        "typed declarations",
+        "pure exact diagnostic functions",
+        "frozen synthetic fixtures",
+        "static and synthetic tests"
+      ],
+      "forbidden": [
+        "scientific controller activation",
+        "production operation",
+        "model-state advance",
+        "institutional policy selection"
+      ]
+    },
+    {
+      "id": "CLCD-C",
+      "name": "scientific_execution",
+      "status": "SEPARATE_FUTURE_PREREGISTRATION_AND_AUTHORITY_REQUIRED",
+      "prerequisites": [
+        "accepted CLCD-A",
+        "accepted CLCD-B if implementation is used",
+        "frozen model and data protocol",
+        "pre-execution validation",
+        "explicit execution authorization"
+      ]
+    }
+  ],
+  "adopted_claims": [
+    {
+      "id": "CLCD-CT-01",
+      "title": "fixed_coordinate_linear_conjugacy",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "statement": "For fixed complete invertible Z with M=Z^-1, A_I=M A_E Z and the linear systems have equal characteristic polynomials, spectra, algebraic multiplicities, and Jordan structure.",
+      "source_claims": [
+        "CIIF-CT-06"
+      ]
+    },
+    {
+      "id": "CLCD-CT-02",
+      "title": "fixed_coordinate_nonlinear_conjugacy",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "statement": "For g(iota)=M f(Z iota), Dg=M Df Z at corresponding states and Phi_I^t=M Phi_E^t Z when a unique flow exists.",
+      "source_claims": [
+        "CIIF-CT-07"
+      ]
+    },
+    {
+      "id": "CLCD-CT-03",
+      "title": "physical_trajectory_influence",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "statement": "Delta(t)=P exp(Kt) J-exp(At) is the exact projected physical-trajectory difference for the declared linear augmented system and zero initial correction state.",
+      "source_claims": [
+        "CIIF-CT-08"
+      ]
+    },
+    {
+      "id": "CLCD-CT-04",
+      "title": "derivative_path_influence",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "statement": "PKJ=A, PK^2J-A^2=BC, and later differences are detected by the complete PK^mJ-A^m sequence, including B D^m C paths.",
+      "source_claims": [
+        "CIIF-CT-08"
+      ]
+    },
+    {
+      "id": "CLCD-CT-05",
+      "title": "hidden_correction_memory",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "statement": "Eliminating the declared linear correction state yields initial forcing B exp(Dt)c(0) and memory kernel B exp(Dt) C.",
+      "source_claims": [
+        "CIIF-CT-10"
+      ]
+    },
+    {
+      "id": "CLCD-CT-06",
+      "title": "continuous_feedback_regimes",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "statement": "For lambda^2+(a+d)lambda+(ad+bk), the sign of s=a+d, q=ad+bk, and discriminant s^2-4q determines the frozen stability and oscillation regimes.",
+      "source_claims": [
+        "CIIF-CT-11"
+      ]
+    },
+    {
+      "id": "CLCD-CT-07",
+      "title": "discrete_delay_regimes",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "statement": "The immediate scalar controller is stable for 0<kappa<2; the frozen one-step delayed recurrence is stable for 0<kappa<1 and damped oscillatory for 1/4<kappa<1.",
+      "source_claims": [
+        "CIIF-CT-12"
+      ]
+    },
+    {
+      "id": "CLCD-CT-08",
+      "title": "mode_observability",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "statement": "For output y=H x, an eigenmode v is directly visible only when H v is nonzero.",
+      "source_claims": [
+        "CIIF-CT-08",
+        "CIIF-CT-13"
+      ]
+    },
+    {
+      "id": "CLCD-DO-09",
+      "title": "comparative_diagnostic_protocol",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "statement": "A frozen before-after study reports trajectories, equilibria, roots, damping, period, overshoot, recovery, delay margin, observability, correction action or work, Delta, residual, and failures.",
+      "source_claims": [
+        "CIIF-CT-13"
+      ]
+    },
+    {
+      "id": "CLCD-DO-10",
+      "title": "immutable_correction_action_receipt",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "statement": "Original and corrective actions retain distinct immutable receipts with provenance, lifecycle, delay, residual, resource or cost, dependency, audit, and applicable appeal references.",
+      "source_claims": [
+        "CIIF-EA-14"
+      ]
+    },
+    {
+      "id": "CLCD-DO-11",
+      "title": "correction_closure",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "statement": "Correction accounts declare typed stock change, boundary transfers, generation, consumption, residual, internal-transfer roll-up, and disjoint or reconciled original/correction process accounts.",
+      "source_claims": [
+        "CIIF-EA-15"
+      ]
+    },
+    {
+      "id": "CLCD-DO-12",
+      "title": "dependency_propagation",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "statement": "Corrections invalidate or recompute reachable dependents through explicit acyclic provenance edges and emit new versions without mutating history.",
+      "source_claims": [
+        "CIIF-EA-16"
+      ]
+    },
+    {
+      "id": "CLCD-HYP-13",
+      "title": "conditional_self_regulation",
+      "status": "INSTITUTIONAL_HYPOTHESIS",
+      "statement": "Bounded residual-triggered correction may improve learning and recovery when gain, delay, closure, privacy, disclosure, and contestability conditions are satisfied.",
+      "source_claims": [
+        "CIIF-HYP-02",
+        "CIIF-HYP-03"
+      ]
+    },
+    {
+      "id": "CLCD-NC-14",
+      "title": "nonclaim_boundary",
+      "status": "NONCLAIM_EXCLUSION",
+      "statement": "The milestone establishes no universal controller, perfect efficiency, universal convergence, physical wave, voltage, causal attribution, fairness, settlement, automatic topology inference, or empirical validity."
+    }
+  ],
+  "protocol_schema": {
+    "schema_id": "CLCD_PROTOCOL_V1",
+    "required_fields": [
+      "protocol_id",
+      "protocol_version",
+      "model_class",
+      "physical_state_schema",
+      "scientific_state_schema",
+      "correction_state_schema",
+      "units_and_signs",
+      "boundary",
+      "clock_and_horizon",
+      "initial_state_domain",
+      "parameter_domain",
+      "uncorrected_dynamics",
+      "corrected_dynamics",
+      "coordinate_contract",
+      "embedding_J",
+      "projection_P",
+      "observation_H",
+      "correction_law",
+      "delay_model",
+      "constraint_and_saturation_model",
+      "numerical_method",
+      "precision_and_tolerance",
+      "required_outputs",
+      "falsifiers",
+      "correction_lifecycle",
+      "closure_contract",
+      "dependency_contract",
+      "claim_status"
+    ],
+    "model_classes": [
+      "CONTINUOUS_LINEAR",
+      "CONTINUOUS_NONLINEAR",
+      "DISCRETE_IMMEDIATE",
+      "DISCRETE_ONE_STEP_DELAY",
+      "DECLARED_EXTENSION"
+    ],
+    "claim_statuses": [
+      "STATIC_CONTROL",
+      "MODEL_EXACT_UNDER_DECLARATION",
+      "PREREGISTERED_HYPOTHESIS",
+      "EMPIRICALLY_SUPPORTED_WITHIN_PROTOCOL",
+      "FALSIFIED_WITHIN_PROTOCOL",
+      "UNRESOLVED"
+    ],
+    "no_hidden_default_rule": "A missing state, matrix, unit, sign, boundary, clock, observation map, delay, saturation, initial condition, tolerance, or falsifier is a formation failure, not an invitation to infer a default."
+  },
+  "acceptance_tests": [
+    {
+      "id": "CLCD-TEST-A",
+      "name": "mobius_validity",
+      "required_identity": "MZ=ZM=I"
+    },
+    {
+      "id": "CLCD-TEST-B",
+      "name": "coordinate_only_equivalence",
+      "required_identities": [
+        "A_I=M A_E Z",
+        "g(iota)=M f(Z iota)",
+        "Dg=M Df Z",
+        "Phi_I^t=M Phi_E^t Z when the unique flow exists"
+      ]
+    },
+    {
+      "id": "CLCD-TEST-C",
+      "name": "spectral_preservation",
+      "required_identity": "det(lambda I-A_I)=det(lambda I-A_E)"
+    },
+    {
+      "id": "CLCD-TEST-D",
+      "name": "feedback_influence",
+      "required_quantities": [
+        "Delta(t)=P exp(Kt) J-exp(At)",
+        "PK^mJ-A^m",
+        "BC",
+        "B D^m C when BC=0"
+      ]
+    },
+    {
+      "id": "CLCD-TEST-E",
+      "name": "memory",
+      "required_quantities": [
+        "B exp(Dt)c(0)",
+        "B exp(Dt) C"
+      ]
+    },
+    {
+      "id": "CLCD-TEST-F",
+      "name": "stability_oscillation_delay_recovery",
+      "required_outputs": [
+        "regime",
+        "roots_or_eigenvalues",
+        "damping",
+        "frequency",
+        "period",
+        "peak_overshoot",
+        "recovery_time",
+        "delay_margin"
+      ]
+    },
+    {
+      "id": "CLCD-TEST-G",
+      "name": "observability",
+      "required_identity": "mode v is directly visible only if H v is nonzero"
+    }
+  ],
+  "comparative_output_order": [
+    "trajectories",
+    "equilibria",
+    "roots_or_eigenvalues",
+    "damping",
+    "frequency",
+    "period",
+    "mode_visibility",
+    "peak_overshoot",
+    "recovery_time",
+    "delay_sensitivity",
+    "accumulated_correction_action_or_work",
+    "Delta_or_nonlinear_counterpart",
+    "correction_receipt_status",
+    "closure_and_residual",
+    "dependency_invalidation",
+    "numerical_errors_and_failed_checks"
+  ],
+  "synthetic_control_ids": [
+    "CLCD-V001",
+    "CLCD-V002",
+    "CLCD-V003",
+    "CLCD-V004",
+    "CLCD-V005",
+    "CLCD-V006",
+    "CLCD-V007",
+    "CLCD-V008",
+    "CLCD-V009",
+    "CLCD-V010",
+    "CLCD-V011",
+    "CLCD-V012",
+    "CLCD-V013",
+    "CLCD-V014",
+    "CLCD-V015",
+    "CLCD-V016",
+    "CLCD-V017",
+    "CLCD-V018",
+    "CLCD-V019",
+    "CLCD-V020",
+    "CLCD-V021",
+    "CLCD-V022",
+    "CLCD-V023",
+    "CLCD-V024",
+    "CLCD-V025",
+    "CLCD-V026",
+    "CLCD-V027",
+    "CLCD-V028"
+  ],
+  "book_owners": [
+    {
+      "chapter": "VI.14",
+      "obligation": "exact interaction coordinates and omitted-order error"
+    },
+    {
+      "chapter": "VI.15",
+      "obligation": "correction locality and fixed-coordinate conjugacy"
+    },
+    {
+      "chapter": "VII.11-VII.12",
+      "obligation": "dependencies, sensitivity, estimation, and noncausal boundary"
+    },
+    {
+      "chapter": "VIII.2",
+      "obligation": "typed correction state"
+    },
+    {
+      "chapter": "VIII.3",
+      "obligation": "correction action, receipt, and closure"
+    },
+    {
+      "chapter": "VIII.10",
+      "obligation": "delay and feedback margin"
+    },
+    {
+      "chapter": "VIII.13",
+      "obligation": "hidden correction memory"
+    },
+    {
+      "chapter": "VIII.15",
+      "obligation": "stability, overshoot, oscillation, and recovery"
+    },
+    {
+      "chapter": "VIII.16",
+      "obligation": "uncorrected-corrected diagnostics"
+    },
+    {
+      "chapter": "IX.18",
+      "obligation": "cooperation hypothesis"
+    },
+    {
+      "chapter": "IX.19",
+      "obligation": "protected disclosure, contestability, and correction institutions"
+    }
+  ],
+  "framework_boundary": {
+    "accepted_prerequisites": [
+      "I-6 sequential-parallel and interaction boundary",
+      "I-7 dynamic state, history, delay, queue, route, and pending-effect declarations",
+      "I-8 immutable artifact correction linkage",
+      "I-9 audit, fidelity, reachability, and durability evidence"
+    ],
+    "not_currently_implemented": [
+      "rich correction state",
+      "physical CorrectionActionReceipt",
+      "scientific feedback controller",
+      "memory or stability diagnostic runtime",
+      "institutional correction policy"
+    ],
+    "accepted_file_modification_by_clcd_a": false
+  },
+  "mandatory_exclusions": [
+    "universal controller",
+    "perfect efficiency",
+    "universal convergence",
+    "automatic topology inference",
+    "automatic causal attribution",
+    "automatic fairness or settlement",
+    "physical wave",
+    "phase or superposition",
+    "physical interference",
+    "electrical voltage",
+    "universal Fibonacci or fractal law",
+    "scientific execution",
+    "production bootstrap"
+  ],
+  "candidate_scope": {
+    "additions": [
+      "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+      "closed_loop_correction_dynamics_milestone_contract.json",
+      "closed_loop_correction_dynamics_milestone_validation_contract.json",
+      "closed_loop_correction_dynamics_milestone_source_manifest.json",
+      "closed_loop_correction_dynamics_milestone_traceability_manifest.json"
+    ],
+    "modifications": [],
+    "deletions": [],
+    "allowed_modes": [
+      "100644"
+    ]
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_CONTRACT_READY"
+}
