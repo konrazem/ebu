@@ -1,0 +1,1384 @@
+{
+  "manifest_id": "EBU-CIIF-BOOK-TRACEABILITY-FINAL",
+  "manifest_version": 1,
+  "status": "PROSPECTIVE_DOCUMENTATION_ONLY",
+  "authority": {
+    "accepted_branch": "framework-v0.1",
+    "accepted_commit": "ffc910329957f61deaa7e9fc09ba77a0e3f51381",
+    "accepted_tree": "3b1cfbdbcc844e0a4944447e012f20981af6998a",
+    "candidate_branch": "research/coupled-interaction-feedback-programme-final",
+    "candidate_head_must_remain": "ffc910329957f61deaa7e9fc09ba77a0e3f51381",
+    "repository_scope": [
+      "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
+      "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "coupled_interaction_inference_feedback_book_traceability_manifest.json"
+    ],
+    "framework_effect": "NONE",
+    "scientific_execution_effect": "NONE",
+    "manuscript_or_pdf_effect": "NONE"
+  },
+  "claim_status_vocabulary": {
+    "EXACT_UNDER_ASSUMPTIONS": "Algebraic identity or theorem proved under the record's explicit assumptions.",
+    "MODEL_EXACT_UNDER_DECLARATION": "Exact result inside the displayed declared model, not a universal physical law.",
+    "PROSPECTIVE_DESIGN_OBLIGATION": "Required future analytical or teaching record; not implemented framework behaviour.",
+    "INSTITUTIONAL_HYPOTHESIS": "Falsifiable institutional proposition; not a physical theorem or universal social effect.",
+    "MANDATORY_NONCLAIM": "Interpretation or programme route explicitly prohibited."
+  },
+  "record_kinds": [
+    "claim",
+    "theorem",
+    "model_result",
+    "design_obligation",
+    "hypothesis",
+    "nonclaim"
+  ],
+  "required_record_fields": [
+    "id",
+    "record_kind",
+    "title",
+    "statement",
+    "status",
+    "source_authority",
+    "assumptions",
+    "proof_placement",
+    "example_placement",
+    "book_destination",
+    "prerequisites",
+    "falsifiers",
+    "exclusions",
+    "replacement_mapping",
+    "limitations"
+  ],
+  "source_authorities": [
+    {
+      "id": "SRC-FINAL-TARGET",
+      "role": "accepted_repository_status",
+      "locator": "git:ffc910329957f61deaa7e9fc09ba77a0e3f51381",
+      "tree": "3b1cfbdbcc844e0a4944447e012f20981af6998a"
+    },
+    {
+      "id": "SRC-ATOMIC",
+      "role": "finite_interaction_authority",
+      "locator": "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md and accepted Atomic mathematical guide"
+    },
+    {
+      "id": "SRC-TOPOLOGY",
+      "role": "canonical_topology_and_invalidation_authority",
+      "locator": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md and accepted review"
+    },
+    {
+      "id": "SRC-OPEN-PROBLEMS",
+      "role": "scope_and_exclusion_authority",
+      "locator": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md"
+    },
+    {
+      "id": "SRC-FRAMEWORK",
+      "role": "framework_stage_authority",
+      "locator": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md and UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md"
+    },
+    {
+      "id": "SRC-I6",
+      "role": "accepted_sequential_parallel_compatibility",
+      "locator": "accepted Framework I-6 authority, implementation, and compatibility evidence"
+    },
+    {
+      "id": "SRC-I7",
+      "role": "accepted_dynamic_state_compatibility",
+      "locator": "accepted Framework I-7 authority, implementation, and compatibility evidence"
+    },
+    {
+      "id": "SRC-I8",
+      "role": "accepted_provenance_recovery_publication_and_correction_boundary",
+      "locator": "accepted Framework I-8 authority, implementation, compatibility, and correction boundary evidence"
+    },
+    {
+      "id": "SRC-I9",
+      "role": "accepted_audit_and_fidelity_boundary",
+      "locator": "accepted Framework I-9 authority, implementation, compatibility, and fidelity evidence"
+    },
+    {
+      "id": "SRC-CIIF-REVIEW",
+      "role": "prospective_programme_proof_and_classification",
+      "locator": "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md"
+    },
+    {
+      "id": "SRC-BOOK-REGISTER",
+      "role": "prospective_book_owner_and_replacement_map",
+      "locator": "EBU_FUTURE_BOOKS_STRUCTURE.md"
+    },
+    {
+      "id": "SRC-ROTA-1964",
+      "role": "incidence_algebra_background_only",
+      "locator": "doi:10.1007/BF00531932"
+    },
+    {
+      "id": "SRC-GILES-PIERCE-2000",
+      "role": "adjoint_background_only",
+      "locator": "doi:10.1023/A:1011430410075"
+    },
+    {
+      "id": "SRC-PENROSE-1955",
+      "role": "generalized_inverse_background_only",
+      "locator": "doi:10.1017/S0305004100030401"
+    },
+    {
+      "id": "SRC-MACKEY-GLASS-1977",
+      "role": "delay_and_oscillation_background_only",
+      "locator": "doi:10.1126/science.267326"
+    },
+    {
+      "id": "SRC-MIDDLETON-1991",
+      "role": "control_tradeoff_background_only",
+      "locator": "doi:10.1016/0005-1098(91)90077-F"
+    },
+    {
+      "id": "SRC-SAGAWA-UEDA-2012",
+      "role": "information_thermodynamic_boundary_background_only",
+      "locator": "doi:10.1103/PhysRevE.85.021104"
+    }
+  ],
+  "contextual_inputs": [
+    {
+      "locator": "/Users/konrad.grzyb/.codex/attachments/8adcb78e-a6bc-4f3f-b875-bcefa7f1e4b5/pasted-text.txt",
+      "authority": "NON_AUTHORITATIVE_STUDY_INPUT"
+    },
+    {
+      "locator": "/Users/konrad.grzyb/.codex/attachments/1885297d-e81c-4c45-92e1-923dc8a9e982/pasted-text.txt",
+      "authority": "NON_AUTHORITATIVE_STUDY_INPUT"
+    },
+    {
+      "locator": "/Users/konrad.grzyb/.codex/attachments/cb1b7895-b7dd-488d-afea-8132e879f213/pasted-text.txt",
+      "authority": "NON_AUTHORITATIVE_STUDY_INPUT"
+    },
+    {
+      "locator": "/Users/konrad.grzyb/.codex/attachments/d63b960e-f8cd-483b-8edc-9da3cffe3452/pasted-text.txt",
+      "authority": "NON_AUTHORITATIVE_STUDY_INPUT"
+    }
+  ],
+  "book_chain_order": [
+    "Part VI",
+    "Part VII",
+    "Part VIII",
+    "Part IX"
+  ],
+  "primary_teaching_owners": [
+    {
+      "obligation": "exact_subset_coordinates_and_omitted_orders",
+      "owner": "VI.14"
+    },
+    {
+      "obligation": "raw_correction_locality_and_coordinate_conjugacy",
+      "owner": "VI.15"
+    },
+    {
+      "obligation": "dependency_provenance_and_propagation",
+      "owner": "VII.11"
+    },
+    {
+      "obligation": "adjoint_estimation_and_noncausal_boundary",
+      "owner": "VII.12"
+    },
+    {
+      "obligation": "typed_product_state",
+      "owner": "VIII.2"
+    },
+    {
+      "obligation": "correction_action_receipt_and_closure",
+      "owner": "VIII.3"
+    },
+    {
+      "obligation": "delay_margin",
+      "owner": "VIII.10"
+    },
+    {
+      "obligation": "hidden_channel_memory",
+      "owner": "VIII.13"
+    },
+    {
+      "obligation": "continuous_feedback_stability",
+      "owner": "VIII.15"
+    },
+    {
+      "obligation": "uncorrected_corrected_diagnostics",
+      "owner": "VIII.16"
+    },
+    {
+      "obligation": "cooperation_incentive_hypothesis",
+      "owner": "IX.18"
+    },
+    {
+      "obligation": "protected_disclosure_and_correction_institution",
+      "owner": "IX.19"
+    }
+  ],
+  "records": [
+    {
+      "id": "CIIF-AM-01",
+      "record_kind": "theorem",
+      "title": "Exact subset synthesis and Möbius inversion",
+      "statement": "For a complete fixed Boolean subset protocol, e = Z iota, iota = M e, and M = Z^-1.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-ROTA-1964",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "finite fixed action set",
+        "all subset outcomes present",
+        "common boundary, units, baseline, clocks, and protocol identity",
+        "consistent subset ordering"
+      ],
+      "proof_placement": "Programme review §5; Part VI.14 proof teaching",
+      "example_placement": "Programme review §5 two-action reconstruction; Part VI.14 nonzero-baseline pump case",
+      "book_destination": {
+        "part": "Part VI",
+        "chapter": "VI.14",
+        "primary": true
+      },
+      "prerequisites": [
+        "accepted Atomic finite-interaction definitions"
+      ],
+      "falsifiers": [
+        "missing arbitrary black-box subset entry",
+        "changed protocol identity",
+        "inconsistent subset ordering"
+      ],
+      "exclusions": [
+        "causal allocation",
+        "automatic compression",
+        "smooth-derivative interpretation"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VI.14:Many-Action Systems and Higher-Order Interaction"
+      ],
+      "limitations": [
+        "requires the complete finite table unless separate structure supplies proved information"
+      ]
+    },
+    {
+      "id": "CIIF-AM-02",
+      "record_kind": "claim",
+      "title": "Mixed finite differences and empty-set separation",
+      "statement": "Every nonempty raw interaction coefficient is the corresponding Boolean mixed finite difference at the empty set; raw and normalized empty coordinates remain distinct.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "CIIF-AM-01 assumptions",
+        "normalization, when used, subtracts the same E(empty) from all outcomes"
+      ],
+      "proof_placement": "Programme review §6; Part VI.14",
+      "example_placement": "Programme review §6 baseline 10 pair example; Part VI.14",
+      "book_destination": {
+        "part": "Part VI",
+        "chapter": "VI.14",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01"
+      ],
+      "falsifiers": [
+        "setting raw I(empty) to zero when E(empty) is nonzero",
+        "mixing normalized and raw synthesis equations"
+      ],
+      "exclusions": [
+        "Hessian identity",
+        "causal effect",
+        "automatic physical derivative"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VI.14:generic higher-order decomposition"
+      ],
+      "limitations": [
+        "Boolean differences are finite protocol contrasts"
+      ]
+    },
+    {
+      "id": "CIIF-AM-03",
+      "record_kind": "theorem",
+      "title": "Exact omitted-interaction accounting error",
+      "statement": "The order-k reconstruction error for E(S) is exactly the sum of coefficients I(T) with T subset S and order greater than k.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "CIIF-AM-01 synthesis",
+        "declared truncation order"
+      ],
+      "proof_placement": "Programme review §7; Part VI.14",
+      "example_placement": "Pure triple with zero singleton and pair coefficients",
+      "book_destination": {
+        "part": "Part VI",
+        "chapter": "VI.14",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01",
+        "CIIF-AM-02"
+      ],
+      "falsifiers": [
+        "pure-triple table reconstructed exactly by a pair-only ledger",
+        "displayed residual differs from the signed omitted sum"
+      ],
+      "exclusions": [
+        "statistical confidence interval",
+        "causal error",
+        "absolute-error bound without additional calculation"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VI.14:unquantified pair-and-higher outline"
+      ],
+      "limitations": [
+        "signed omitted terms can cancel"
+      ]
+    },
+    {
+      "id": "CIIF-AM-04",
+      "record_kind": "theorem",
+      "title": "Raw correction locality",
+      "statement": "Changing one raw E(Q) by delta changes I(S) by (-1)^(|S|-|Q|) delta exactly when Q is a subset of S and by zero otherwise.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-TOPOLOGY",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "one fixed raw subset protocol",
+        "only one raw entry changes",
+        "raw rather than normalized empty convention"
+      ],
+      "proof_placement": "Programme review §8; Part VI.15",
+      "example_placement": "Upward-cone table including Q = empty",
+      "book_destination": {
+        "part": "Part VI",
+        "chapter": "VI.15",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01"
+      ],
+      "falsifiers": [
+        "coefficient outside the upward cone changes under the stated single-entry edit",
+        "empty-set alternating signs fail"
+      ],
+      "exclusions": [
+        "operational descendant traversal",
+        "unchanged evidence certification",
+        "automatic topology inference"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VI.15:duplicated topology correction proof"
+      ],
+      "limitations": [
+        "operational revalidation may be wider than the Boolean cone"
+      ]
+    },
+    {
+      "id": "CIIF-AM-05",
+      "record_kind": "claim",
+      "title": "Exact inversion, adjoint sensitivity, and estimation separation",
+      "statement": "M e, J* r, and a weighted or regularized estimate are different maps with different assumptions and meanings.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-GILES-PIERCE-2000",
+        "SRC-PENROSE-1955",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "each map declares its domain and codomain",
+        "adjoint inner products are explicit",
+        "estimator weights, regularization, and invertibility are explicit"
+      ],
+      "proof_placement": "Programme review §9; Part VII.12",
+      "example_placement": "Weighted adjoint comparison and scalar Tikhonov counterexample",
+      "book_destination": {
+        "part": "Part VII",
+        "chapter": "VII.12",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01",
+        "declared residual map"
+      ],
+      "falsifiers": [
+        "metric change leaves a generally metric-dependent adjoint unchanged without special structure",
+        "regularized scalar estimate equals the unregularized inverse for the displayed counterexample"
+      ],
+      "exclusions": [
+        "generic Moore-Penrose identity",
+        "causality",
+        "blame",
+        "settlement"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VII.12:Joint Effects and O3 Across a Route"
+      ],
+      "limitations": [
+        "sensitivity and estimates inherit model, metric, noise, and identifiability limits"
+      ]
+    },
+    {
+      "id": "CIIF-CT-06",
+      "record_kind": "theorem",
+      "title": "Linear coordinate conjugacy and spectrum",
+      "statement": "For fixed invertible Z, A_I = M A_E Z = Z^-1 A_E Z and A_I has the same spectrum and Jordan structure as A_E.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "e is a genuine shared time-dependent state",
+        "Z is fixed and invertible",
+        "action set, ordering, boundary, and clocks remain fixed"
+      ],
+      "proof_placement": "Programme review §10.1; Part VI.15",
+      "example_placement": "Stable rotation-decay under a Boolean coordinate transform",
+      "book_destination": {
+        "part": "Part VI",
+        "chapter": "VI.15",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01"
+      ],
+      "falsifiers": [
+        "different characteristic polynomials under the stated similarity",
+        "singular or changing Z"
+      ],
+      "exclusions": [
+        "mode creation by coordinate transformation",
+        "incomplete counterfactual table treated as a dynamic state"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VI.15:generic topology benchmark material"
+      ],
+      "limitations": [
+        "filters, projections, clipping, and changing bases are not similarity transformations"
+      ]
+    },
+    {
+      "id": "CIIF-CT-07",
+      "record_kind": "theorem",
+      "title": "Nonlinear Jacobian and flow conjugacy",
+      "statement": "For g(iota) = M f(Z iota), Dg = M Df Z at corresponding states and Phi_I^t = M Phi_E^t Z when the flow exists uniquely.",
+      "status": "EXACT_UNDER_ASSUMPTIONS",
+      "source_authority": [
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "CIIF-CT-06 coordinate assumptions",
+        "f differentiable for the Jacobian result",
+        "existence and uniqueness for the flow result"
+      ],
+      "proof_placement": "Programme review §10.2; Part VI.15",
+      "example_placement": "Corresponding equilibria, periodic orbit, and changing-coordinate refusal case",
+      "book_destination": {
+        "part": "Part VI",
+        "chapter": "VI.15",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-CT-06"
+      ],
+      "falsifiers": [
+        "corresponding flow identity fails under the stated fixed coordinates",
+        "nondifferentiable switch used for a Jacobian claim"
+      ],
+      "exclusions": [
+        "new dynamics from re-expression",
+        "state-dependent coordinate theorem without extra terms"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VI.15:unqualified coordinate-action outline"
+      ],
+      "limitations": [
+        "time-dependent coordinate maps require additional derivative terms"
+      ]
+    },
+    {
+      "id": "CIIF-CT-08",
+      "record_kind": "theorem",
+      "title": "Representation versus feedback mechanism",
+      "statement": "Delta(t) = P exp(Kt) J - exp(At) tests whether an augmented correction channel changes physical dynamics; PK^2J = A^2 + BC identifies the second-order path.",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "source_authority": [
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "declared finite-dimensional linear generators",
+        "matched physical initial state",
+        "embedding J and projection P fixed",
+        "common clock and boundary"
+      ],
+      "proof_placement": "Programme review §11; Part VIII.16",
+      "example_placement": "BC nonzero second-order feedback influence and longer BD^mC path",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.16",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-CT-06",
+        "declared augmented correction system"
+      ],
+      "falsifiers": [
+        "Delta(t) remains zero for all t despite a claimed changed physical trajectory",
+        "unmatched initial states or clocks"
+      ],
+      "exclusions": [
+        "mere coordinate visibility treated as a mechanism",
+        "physical availability or authorization inferred from matrix coupling"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.16:Cooperation, Redundancy, and Conflict"
+      ],
+      "limitations": [
+        "a nonlinear system requires an appropriate nonlinear comparison"
+      ]
+    },
+    {
+      "id": "CIIF-EA-09",
+      "record_kind": "design_obligation",
+      "title": "Typed product state",
+      "statement": "Prospective analysis separates X_physical, X_scientific, and X_correction in a typed Cartesian product.",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "source_authority": [
+        "SRC-I7",
+        "SRC-I8",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "each factor has declared types and ownership",
+        "accepted I-7 state remains unchanged",
+        "prospective fields are not represented as implemented"
+      ],
+      "proof_placement": "Definition in programme review §12; Part VIII.2",
+      "example_placement": "Refrigerator calibration history with separate physical, scientific, and correction records",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.2",
+        "primary": true
+      },
+      "prerequisites": [
+        "accepted I-7 state and history boundary",
+        "accepted I-8 correction boundary"
+      ],
+      "falsifiers": [
+        "one untyped field silently carries incompatible meanings",
+        "product called a direct sum without vector-space declarations"
+      ],
+      "exclusions": [
+        "implemented I-7 or I-8 schema claim",
+        "automatic observability",
+        "state sufficiency for every domain"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.2:Complete State, Histories, and Evaluation Horizons"
+      ],
+      "limitations": [
+        "analytical design discipline only"
+      ]
+    },
+    {
+      "id": "CIIF-CT-10",
+      "record_kind": "model_result",
+      "title": "Hidden correction channel and memory kernel",
+      "statement": "Eliminating c from the declared linear coupled system yields initial forcing B exp(Dt)c(0) and memory kernel K(t) = B exp(Dt) C.",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "source_authority": [
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "finite-dimensional linear time-invariant coupled system",
+        "compatible matrix dimensions",
+        "declared initial correction state"
+      ],
+      "proof_placement": "Programme review §13; Part VIII.13",
+      "example_placement": "Thermostat hidden-state memory",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.13",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-EA-09",
+        "CIIF-CT-08"
+      ],
+      "falsifiers": [
+        "variation-of-constants substitution omits the initial forcing",
+        "block dimensions are incompatible"
+      ],
+      "exclusions": [
+        "universal memory law",
+        "Markov claim for the reduced visible state",
+        "physical-wave interpretation"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.13:Boundary Roll-Up Through Time"
+      ],
+      "limitations": [
+        "nonlinear, stochastic, and time-varying systems require separate derivations"
+      ]
+    },
+    {
+      "id": "CIIF-CT-11",
+      "record_kind": "model_result",
+      "title": "Continuous two-channel feedback regimes",
+      "statement": "For p(lambda) = lambda^2 + (a+d)lambda + (ad+bk), asymptotic stability holds exactly when a+d > 0 and ad+bk > 0, with discriminant separating real and oscillatory regimes.",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "source_authority": [
+        "SRC-MIDDLETON-1991",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "declared real two-channel linear time-invariant model",
+        "continuous time",
+        "named observable and initial condition for overshoot",
+        "declared norm and tolerance for recovery"
+      ],
+      "proof_placement": "Programme review §14; Part VIII.15",
+      "example_placement": "Temperature correction with real decay, damped oscillation, boundary persistence, and instability cases",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.15",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-CT-08"
+      ],
+      "falsifiers": [
+        "characteristic polynomial mismatch",
+        "declared stable case has a root with nonnegative real part",
+        "overshoot claimed without observable and initial condition"
+      ],
+      "exclusions": [
+        "universal controller stability",
+        "perfect efficiency",
+        "oscillation as wave"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.15:Scaling, Saturation, and Regime Change"
+      ],
+      "limitations": [
+        "saturation, switching, noise, and nonlinear coupling require separate analysis"
+      ]
+    },
+    {
+      "id": "CIIF-CT-12",
+      "record_kind": "model_result",
+      "title": "Discrete delay sensitivity",
+      "statement": "The no-delay scalar controller is stable for 0 < kappa < 2; the one-step delayed recurrence is stable for 0 < kappa < 1 and oscillatory with decay for 1/4 < kappa < 1.",
+      "status": "MODEL_EXACT_UNDER_DECLARATION",
+      "source_authority": [
+        "SRC-MACKEY-GLASS-1977",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "declared scalar linear recurrence",
+        "one exact discrete delay for the delayed case",
+        "constant real gain"
+      ],
+      "proof_placement": "Programme review §15; Part VIII.10",
+      "example_placement": "Weekly inventory overcorrection",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.10",
+        "primary": true
+      },
+      "prerequisites": [
+        "declared immediate and delayed comparator"
+      ],
+      "falsifiers": [
+        "characteristic roots violate the stated unit-circle regimes",
+        "longer delay presented as the one-step theorem"
+      ],
+      "exclusions": [
+        "universal delay-causes-oscillation law",
+        "physical phase",
+        "wave or interference"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.10:Delay, Causal Reach, and Observation Age"
+      ],
+      "limitations": [
+        "longer, fractional, distributed, and state-dependent delays need separate analysis"
+      ]
+    },
+    {
+      "id": "CIIF-CT-13",
+      "record_kind": "design_obligation",
+      "title": "Uncorrected-corrected dynamic diagnostic",
+      "statement": "A future frozen comparison reports dynamics, equilibrium, eigenvalues or roots, damping, period, peak overshoot, recovery time, accumulated correction action or work, delay sensitivity, observability, and exact feedback influence.",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "source_authority": [
+        "SRC-CIIF-REVIEW",
+        "SRC-I7",
+        "SRC-I9"
+      ],
+      "assumptions": [
+        "matched initial states, clocks, boundaries, units, and observables",
+        "frozen correction and delay laws",
+        "physical work uses declared conjugate variables, signs, units, and boundary"
+      ],
+      "proof_placement": "Diagnostic definition and exact subresults in programme review §16; Part VIII.16",
+      "example_placement": "Refrigeration controller before-after comparison",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.16",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-CT-08",
+        "CIIF-CT-10",
+        "CIIF-CT-11",
+        "CIIF-CT-12"
+      ],
+      "falsifiers": [
+        "comparison changes more than the declared correction mechanism",
+        "work label lacks physical units and conjugate variables",
+        "recovery lacks norm or tolerance"
+      ],
+      "exclusions": [
+        "implemented diagnostic claim",
+        "scientific result",
+        "fairness inference"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.16:Cooperation, Redundancy, and Conflict"
+      ],
+      "limitations": [
+        "requires separately authorized model and protocol before execution"
+      ]
+    },
+    {
+      "id": "CIIF-EA-14",
+      "record_kind": "design_obligation",
+      "title": "Immutable correction action and receipt lifecycle",
+      "statement": "Original and corrective actions retain distinct immutable receipts with target, provenance, lifecycle, delay, residual, resource or cost, dependency, audit, and appeal references.",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "source_authority": [
+        "SRC-I8",
+        "SRC-I9",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "append-only versioned history",
+        "correction is a later action rather than negation of history",
+        "institutional fields appear only under declared authority"
+      ],
+      "proof_placement": "Lifecycle grammar in programme review §17.1; Part VIII.3",
+      "example_placement": "Laboratory calibration correction",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.3",
+        "primary": true
+      },
+      "prerequisites": [
+        "accepted I-8 immutable artifact correction boundary",
+        "CIIF-EA-09"
+      ],
+      "falsifiers": [
+        "original receipt mutated or erased",
+        "correction represented as negative original action",
+        "prospective role asserted as an implemented I-8 type"
+      ],
+      "exclusions": [
+        "reserved CorrectionActionReceipt class",
+        "automatic settlement",
+        "automatic blame",
+        "infinite receipt-of-receipt recursion"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.3:Actions Through Time",
+        "CROSS_REFERENCE:IX.19:institutional rules only"
+      ],
+      "limitations": [
+        "separate future authority is required for any implementation"
+      ]
+    },
+    {
+      "id": "CIIF-EA-15",
+      "record_kind": "design_obligation",
+      "title": "Correction physical and accounting closure",
+      "statement": "A correction must declare typed stock change, boundary transfer, generation, consumption, residual, internal-transfer roll-up, and disjoint original/correction process accounts.",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "source_authority": [
+        "SRC-I8",
+        "SRC-SAGAWA-UEDA-2012",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "declared physical or accounting boundary",
+        "compatible units",
+        "internal transfers identified",
+        "process-account overlap explicitly reconciled"
+      ],
+      "proof_placement": "Closure grammar in programme review §17.2; Part VIII.3",
+      "example_placement": "Original repair and later recalibration resource accounts",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.3",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-EA-14"
+      ],
+      "falsifiers": [
+        "same transfer counted in child and parent accounts",
+        "unexplained residual forced to zero",
+        "correction inputs or losses omitted"
+      ],
+      "exclusions": [
+        "universal metaphysical closure law",
+        "EBU as conserved substance",
+        "ledger closure as proof of isolation"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VIII.3:generic action-timeline record"
+      ],
+      "limitations": [
+        "closure strength is only that of the declared boundary and observability"
+      ]
+    },
+    {
+      "id": "CIIF-EA-16",
+      "record_kind": "design_obligation",
+      "title": "Explicit dependency propagation",
+      "statement": "A corrected record invalidates or recomputes reachable dependents in a declared acyclic provenance graph; smaller certified structures propagate upward only through explicit edges.",
+      "status": "PROSPECTIVE_DESIGN_OBLIGATION",
+      "source_authority": [
+        "SRC-TOPOLOGY",
+        "SRC-I8",
+        "SRC-I9",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "declared directed acyclic dependency graph",
+        "edge inventory sufficient for unaffected claims",
+        "versioned recomputation protocols",
+        "topological processing order"
+      ],
+      "proof_placement": "Programme review §17.3; Part VII.11",
+      "example_placement": "Cold-chain calibration correction invalidating dependent route and topology summaries",
+      "book_destination": {
+        "part": "Part VII",
+        "chapter": "VII.11",
+        "primary": true
+      },
+      "prerequisites": [
+        "accepted provenance identity",
+        "accepted canonical-topology dependency boundary"
+      ],
+      "falsifiers": [
+        "missing edge leaves stale descendant certified",
+        "cycle prevents topological order",
+        "changed boundary incorrectly treated as same protocol"
+      ],
+      "exclusions": [
+        "automatic best-topology inference",
+        "automatic runtime cache",
+        "equation of provenance DAG with Boolean upward cone"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VII.11:Route Actors and Exact Closure",
+        "CROSS_REFERENCE:VIII.14:recovery case"
+      ],
+      "limitations": [
+        "outside records are unaffected only when dependency completeness is justified"
+      ]
+    },
+    {
+      "id": "CIIF-NC-01",
+      "record_kind": "nonclaim",
+      "title": "Hypergraph and Möbius accounting are noncausal",
+      "statement": "Finite interaction coordinates locate and quantify overlapping interactions but do not prove causality, blame, fairness, entitlement, or settlement.",
+      "status": "MANDATORY_NONCLAIM",
+      "source_authority": [
+        "SRC-ATOMIC",
+        "SRC-TOPOLOGY",
+        "SRC-I6",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "finite interaction hypergraph is used only as an accounting representation"
+      ],
+      "proof_placement": "Meaning boundary in programme review §18; Part VII.12",
+      "example_placement": "Positive shared cold-chain interaction with unresolved individual allocation",
+      "book_destination": {
+        "part": "Part VII",
+        "chapter": "VII.12",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01"
+      ],
+      "falsifiers": [
+        "book text infers causality or settlement from coefficient sign alone"
+      ],
+      "exclusions": [
+        "causality",
+        "blame",
+        "fairness",
+        "entitlement",
+        "settlement",
+        "automatic topology"
+      ],
+      "replacement_mapping": [
+        "REPLACE:VII.12:unqualified joint-effect interpretation"
+      ],
+      "limitations": [
+        "causal and institutional conclusions require separate evidence and rules"
+      ]
+    },
+    {
+      "id": "CIIF-NC-02",
+      "record_kind": "nonclaim",
+      "title": "Temporal feedback oscillation is not a wave",
+      "statement": "Oscillation in a declared feedback trajectory is temporal dynamical behaviour and does not reopen wave, phase, superposition, physical-interference, or voltage programmes.",
+      "status": "MANDATORY_NONCLAIM",
+      "source_authority": [
+        "SRC-OPEN-PROBLEMS",
+        "SRC-TOPOLOGY",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "oscillation is derived from the declared feedback model"
+      ],
+      "proof_placement": "Programme review §§14–15 and §18; Part VIII.15",
+      "example_placement": "Damped thermostat oscillation with no spatial propagation claim",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.15",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-CT-11",
+        "CIIF-CT-12"
+      ],
+      "falsifiers": [
+        "book labels feedback oscillation as wave or interference"
+      ],
+      "exclusions": [
+        "wave",
+        "phase",
+        "superposition",
+        "physical interference",
+        "voltage",
+        "topological wave"
+      ],
+      "replacement_mapping": [
+        "REMOVE:redundant wave and generic feedback outlines"
+      ],
+      "limitations": [
+        "a separate physical wave requires separate domain variables and authority"
+      ]
+    },
+    {
+      "id": "CIIF-NC-03",
+      "record_kind": "nonclaim",
+      "title": "No implemented correction-feedback expansion",
+      "statement": "The programme adds no I-8 or I-9 field, class, API, path, descendant traversal, physical correction receipt, controller, settlement, appeal, or fraud mechanism.",
+      "status": "MANDATORY_NONCLAIM",
+      "source_authority": [
+        "SRC-I8",
+        "SRC-I9",
+        "SRC-FINAL-TARGET",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "accepted target is the controlling framework coordinate"
+      ],
+      "proof_placement": "Programme review §2.2 and §17.1; book register §§2.1 and 16.9",
+      "example_placement": "Accepted artifact correction contrasted with prospective physical correction action",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.3",
+        "primary": true
+      },
+      "prerequisites": [
+        "accepted I-8 correction boundary",
+        "accepted I-9 fidelity boundary"
+      ],
+      "falsifiers": [
+        "candidate changes a framework path",
+        "candidate claims a reserved or implemented CorrectionActionReceipt"
+      ],
+      "exclusions": [
+        "framework scope expansion",
+        "reserved runtime route",
+        "retrofit into accepted I-8 or I-9"
+      ],
+      "replacement_mapping": [
+        "REPLACE:stale prospective-I8/I9 book wording"
+      ],
+      "limitations": [
+        "future implementation requires separate authority"
+      ]
+    },
+    {
+      "id": "CIIF-HYP-01",
+      "record_kind": "hypothesis",
+      "title": "Visible positive interaction may incentivize cooperation",
+      "statement": "Under declared measurement and institutional safeguards, visible positive group interaction may incentivize cooperation and reuse of certified joint structures.",
+      "status": "INSTITUTIONAL_HYPOTHESIS",
+      "source_authority": [
+        "SRC-CIIF-REVIEW",
+        "SRC-BOOK-REGISTER"
+      ],
+      "assumptions": [
+        "frozen comparator and complete burden account",
+        "privacy and consent rules",
+        "declared distributional measures",
+        "no omitted-input explanation",
+        "challenge and audit route"
+      ],
+      "proof_placement": "No physical proof; protocol obligations in programme review §19.1 and Part IX.18",
+      "example_placement": "Neighbourhood reuse of a certified shared cold chain",
+      "book_destination": {
+        "part": "Part IX",
+        "chapter": "IX.18",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-AM-01",
+        "CIIF-NC-01"
+      ],
+      "falsifiers": [
+        "predeclared cooperation or outcome measure worsens under the institutional intervention",
+        "effect disappears under omitted-input control",
+        "harm or benefit concentration breaches the declared threshold"
+      ],
+      "exclusions": [
+        "universal altruism",
+        "equal contribution from positive group value",
+        "automatic fairness",
+        "automatic settlement"
+      ],
+      "replacement_mapping": [
+        "REPLACE:IX.18:Competition, Cooperation, Motivation, and Adaptive Preferences"
+      ],
+      "limitations": [
+        "institution-specific and empirically unresolved"
+      ]
+    },
+    {
+      "id": "CIIF-HYP-02",
+      "record_kind": "hypothesis",
+      "title": "Immutable correction and protected disclosure may improve trust and learning",
+      "statement": "Immutable correction and early disclosure may improve trust, learning, and recovery only under declared privacy, consent, appeal, independent-audit, nonretaliation, noncausal, and fair risk-benefit rules.",
+      "status": "INSTITUTIONAL_HYPOTHESIS",
+      "source_authority": [
+        "SRC-I8",
+        "SRC-CIIF-REVIEW",
+        "SRC-BOOK-REGISTER"
+      ],
+      "assumptions": [
+        "versioned immutable claims",
+        "protected disclosure and nonretaliation",
+        "privacy, consent, and purpose limitation",
+        "notice, appeals, and independent audit",
+        "fair risk and benefit sharing"
+      ],
+      "proof_placement": "No physical proof; protocol obligations in programme review §19.2 and Part IX.19",
+      "example_placement": "Hospital sensor calibration disclosure and correction",
+      "book_destination": {
+        "part": "Part IX",
+        "chapter": "IX.19",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-EA-14",
+        "CIIF-EA-15",
+        "CIIF-NC-03"
+      ],
+      "falsifiers": [
+        "predeclared trust or learning measure worsens",
+        "reporting latency increases",
+        "retaliation or privacy harm exceeds the declared threshold",
+        "correction costs or benefits are unfairly concentrated"
+      ],
+      "exclusions": [
+        "universal trust effect",
+        "causal relabelling",
+        "worker default liability",
+        "automatic settlement"
+      ],
+      "replacement_mapping": [
+        "REPLACE:IX.19:Verification, Gaming, Rebound, Missing Burdens, and Contestability",
+        "CROSS_REFERENCE:IX.10:appeal handoff"
+      ],
+      "limitations": [
+        "institution-specific and empirically unresolved"
+      ]
+    },
+    {
+      "id": "CIIF-HYP-03",
+      "record_kind": "hypothesis",
+      "title": "Conditional self-regulation capability",
+      "statement": "Measured residuals and bounded correction may support self-regulation when the declared feedback law passes stability, delay, observability, resource, and governance tests.",
+      "status": "INSTITUTIONAL_HYPOTHESIS",
+      "source_authority": [
+        "SRC-CIIF-REVIEW",
+        "SRC-BOOK-REGISTER"
+      ],
+      "assumptions": [
+        "correction channel physically available and authorized",
+        "declared controller and measurement",
+        "accepted stability and delay regime",
+        "correction costs and failure states included"
+      ],
+      "proof_placement": "Conditional boundary in programme review §19.3; Part IX.19 cross-reference to Part VIII",
+      "example_placement": "Bounded inventory correction rejected when delay margin fails",
+      "book_destination": {
+        "part": "Part IX",
+        "chapter": "IX.19",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-CT-11",
+        "CIIF-CT-12",
+        "CIIF-CT-13",
+        "CIIF-EA-14"
+      ],
+      "falsifiers": [
+        "declared controller destabilizes the system",
+        "correction cost exceeds declared benefit",
+        "unobserved mode defeats correction"
+      ],
+      "exclusions": [
+        "perfect efficiency",
+        "guaranteed convergence",
+        "zero correction cost",
+        "universal self-regulation"
+      ],
+      "replacement_mapping": [
+        "REPLACE:generic automatic-feedback benefit outline"
+      ],
+      "limitations": [
+        "conditional design capability only"
+      ]
+    },
+    {
+      "id": "CIIF-NC-04",
+      "record_kind": "nonclaim",
+      "title": "Interaction, contribution, responsibility, fairness, and settlement remain separate",
+      "statement": "No numerical identity is presumed among interaction value, estimated individual contribution, causal responsibility, fairness, and entitlement or settlement.",
+      "status": "MANDATORY_NONCLAIM",
+      "source_authority": [
+        "SRC-I6",
+        "SRC-I8",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "each quantity has its own declared evidence and rule"
+      ],
+      "proof_placement": "Programme review §19.4; Part IX.18 and IX.19",
+      "example_placement": "Shared cold-chain benefit with unresolved participant allocation",
+      "book_destination": {
+        "part": "Part IX",
+        "chapter": "IX.18",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-NC-01",
+        "CIIF-AM-05"
+      ],
+      "falsifiers": [
+        "book equates any two quantities without a separate declared rule or identified design"
+      ],
+      "exclusions": [
+        "automatic blame",
+        "automatic fairness",
+        "automatic entitlement",
+        "automatic settlement"
+      ],
+      "replacement_mapping": [
+        "REPLACE:opaque cooperation allocation outline"
+      ],
+      "limitations": [
+        "separate institutional rules may relate quantities but must remain explicit"
+      ]
+    },
+    {
+      "id": "CIIF-NC-05",
+      "record_kind": "nonclaim",
+      "title": "Excluded optional mathematics and physical analogies",
+      "statement": "The programme reserves no Koopman, Hodge, complex susceptibility, wave, phase, superposition, physical-interference, voltage, or universal Fibonacci/fractal route.",
+      "status": "MANDATORY_NONCLAIM",
+      "source_authority": [
+        "SRC-OPEN-PROBLEMS",
+        "SRC-TOPOLOGY",
+        "SRC-CIIF-REVIEW"
+      ],
+      "assumptions": [
+        "no displayed result requires the excluded machinery"
+      ],
+      "proof_placement": "Programme review §§2.3 and 18; book register §§7.2, 9, and 16.9",
+      "example_placement": "Feedback oscillation derived directly from characteristic roots",
+      "book_destination": {
+        "part": "Part VIII",
+        "chapter": "VIII.15",
+        "primary": true
+      },
+      "prerequisites": [
+        "CIIF-NC-02"
+      ],
+      "falsifiers": [
+        "book reopens an excluded route through title, analogy, proof obligation, or framework proposal"
+      ],
+      "exclusions": [
+        "Koopman",
+        "Hodge",
+        "complex susceptibility",
+        "wave",
+        "phase",
+        "superposition",
+        "physical interference",
+        "voltage",
+        "universal Fibonacci",
+        "fractal duplication"
+      ],
+      "replacement_mapping": [
+        "REMOVE:redundant topology, wave, voltage, Fibonacci-fractal, and generic-feedback outlines"
+      ],
+      "limitations": [
+        "a genuinely required future method would need separate authority and proof"
+      ]
+    }
+  ],
+  "replacement_and_supersession_map": [
+    {
+      "source": "VI.14 Many-Action Systems and Higher-Order Interaction",
+      "destination": "VI.14 Exact Interaction Synthesis, Mixed Differences, and Omitted Orders",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "VI.15 Canonical Motifs, Topology Benchmarks, and Recursive Reuse",
+      "destination": "VI.15 Correction Locality, Coordinate Conjugacy, and Certified Recursive Reuse",
+      "mode": "REWRITE_AND_CROSS_REFERENCE_ACCEPTED_TOPOLOGY"
+    },
+    {
+      "source": "VII.11 Route Actors and Exact Closure",
+      "destination": "VII.11 Route Actors, Dependency Provenance, and Exact Closure",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "VII.12 Joint Effects and O3 Across a Route",
+      "destination": "VII.12 Adjoint Sensitivity, Estimation, and the Causal Boundary",
+      "mode": "REPLACE_AND_MOVE_O3_TO_PART_VI_OR_VII_11_CROSS_REFERENCE"
+    },
+    {
+      "source": "VIII.2 Complete State, Histories, and Evaluation Horizons",
+      "destination": "VIII.2 Typed Physical, Scientific, and Correction State",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "VIII.3 Actions Through Time",
+      "destination": "VIII.3 Correction Actions Through Time and Immutable Receipts",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "VIII.10 Delay, Causal Reach, and Observation Age",
+      "destination": "VIII.10 Delay, Observation Age, and Feedback Margin",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "VIII.13 Boundary Roll-Up Through Time",
+      "destination": "VIII.13 Hidden Correction Channels, Memory, and Boundary Roll-Up",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "VIII.14 Resilience, Failure, and Recovery",
+      "destination": "VIII.14 Resilience, Failure, Correction Propagation, and Recovery",
+      "mode": "REWRITE_IN_PLACE_WITH_VII_11_CROSS_REFERENCE"
+    },
+    {
+      "source": "VIII.15 Scaling, Saturation, and Regime Change",
+      "destination": "VIII.15 Feedback Stability, Overshoot, Oscillation, and Instability",
+      "mode": "REPLACE_IN_PLACE"
+    },
+    {
+      "source": "VIII.16 Cooperation, Redundancy, and Conflict",
+      "destination": "VIII.16 Uncorrected–Corrected Dynamic Diagnostics",
+      "mode": "REPLACE_AND_MOVE_INSTITUTIONAL_COOPERATION_TO_IX_18"
+    },
+    {
+      "source": "IX.10 Failure, Deviation, Fraud, Unresolved Outcomes, and Appeals",
+      "destination": "IX.10 Failure, Deviation, Fraud, and Unresolved Outcomes",
+      "mode": "RETAIN_FAILURE_BOUNDARY_AND_MOVE_CORRECTION_APPEALS_TEACHING_TO_IX_19"
+    },
+    {
+      "source": "IX.18 Competition, Cooperation, Motivation, and Adaptive Preferences",
+      "destination": "IX.18 Visible Interaction, Cooperation, and Reusable Joint Structures",
+      "mode": "REWRITE_IN_PLACE"
+    },
+    {
+      "source": "IX.19 Verification, Gaming, Rebound, Missing Burdens, and Contestability",
+      "destination": "IX.19 Immutable Correction, Protected Early Disclosure, and Contestability",
+      "mode": "REWRITE_IN_PLACE_WITH_ADJACENT_RISKS"
+    }
+  ],
+  "mandatory_exclusions": [
+    "no framework import or modification",
+    "no project test",
+    "no model or simulation",
+    "no runner or Gate",
+    "no rendering or PDF",
+    "no manuscript edit",
+    "no scientific execution",
+    "no wave or phase programme",
+    "no superposition or physical-interference programme",
+    "no voltage programme",
+    "no Hodge or Koopman reserved route",
+    "no universal Fibonacci or fractal duplication",
+    "no universal feedback or perfect-efficiency claim",
+    "no automatic causality, blame, fairness, entitlement, or settlement",
+    "no automatic best-topology inference",
+    "no reserved I-8 correction-action schema"
+  ],
+  "validation": {
+    "strict_json_required": true,
+    "duplicate_keys_forbidden": true,
+    "floating_point_numbers_forbidden": true,
+    "nonfinite_numbers_forbidden": true,
+    "trailing_data_forbidden": true,
+    "two_canonical_encoders_required": true,
+    "two_canonical_encoders_agree": true,
+    "exact_rational_or_symbolic_reproduction_required": true,
+    "exact_rational_or_symbolic_reproduction_passed": true,
+    "markdown_structure_and_text_integrity_required": true,
+    "markdown_structure_and_text_integrity_passed": true,
+    "exact_three_path_git_scope_required": true,
+    "exact_three_path_git_scope_passed": true,
+    "framework_or_scientific_execution_forbidden": true
+  },
+  "no_duplicate_teaching_obligation": true,
+  "completion": {
+    "record_count": 24,
+    "theorem_count": 6,
+    "claim_count": 2,
+    "model_result_count": 3,
+    "design_obligation_count": 5,
+    "institutional_hypothesis_count": 3,
+    "mandatory_nonclaim_count": 5,
+    "replacement_mapping_count": 14,
+    "new_future_book_count": 0,
+    "new_future_chapter_count": 0,
+    "framework_path_reserved_count": 0,
+    "programme_review": "CANDIDATE_CREATED",
+    "book_structure": "CANDIDATE_SYNCHRONIZED",
+    "traceability_manifest": "CANDIDATE_CREATED",
+    "authoring_static_validation": "PASS",
+    "independent_audit": "NOT_BEGUN",
+    "integration": "NOT_AUTHORIZED"
+  },
+  "completion_marker": "COUPLED_INTERACTION_INFERENCE_FEEDBACK_TRACEABILITY_MANIFEST_COMPLETE"
+}
