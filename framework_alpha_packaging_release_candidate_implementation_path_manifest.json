@@ -1,0 +1,223 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PROSPECTIVE_UNAUDITED_AUTHORITY_CANDIDATE",
+  "stage": "STAGE_C_ALPHA_PACKAGING_RELEASE_CANDIDATE_IMPLEMENTATION",
+  "required_authority": {
+    "authority_disposition": "INDEPENDENT_PASS_REQUIRED",
+    "authority_files": [
+      "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+      "framework_alpha_packaging_release_candidate_contract.json",
+      "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+      "framework_alpha_packaging_release_candidate_validation_contract.json",
+      "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+    ],
+    "implementation_start_rule": "The accepted authority commit must be an ancestor of the implementation base, and the implementation base must be the exact normally integrated private framework-v0.1 authority target verified live immediately before work."
+  },
+  "modified_paths": [
+    {
+      "path": ".github/workflows/tests.yml",
+      "owner": "STAGE_C_CI_AND_RELEASE_GATE",
+      "permitted_changes": [
+        "replace preview ubuntu-26.04 T1 execution with the frozen ubuntu-24.04 plus immutable Python container environment",
+        "record and fail closed on exact Python, SQLite, OS, container and dependency identities",
+        "run T2 on candidate and target pushes with positive counts and no skips",
+        "add packaging, reproducibility, installed-artifact and isolation jobs using the frozen validator CLI",
+        "preserve all accepted historical-coordinate logic and conventional lanes"
+      ]
+    },
+    {
+      "path": "build_backend/ebu_build_backend.py",
+      "owner": "STAGE_C_PACKAGING_BACKEND_RECONCILIATION",
+      "permitted_changes": [
+        "add exactly atomic.py, conservation.py, interaction.py, correction_protocol.py and correction_diagnostics.py to the closed package allowlist",
+        "require exact equality of discovered and planned package files",
+        "validate accepted project dependency PyNaCl==1.6.2",
+        "emit exact accepted Requires-Dist: PyNaCl==1.6.2 metadata",
+        "make only mechanically necessary formatting changes"
+      ]
+    },
+    {
+      "path": "tests/framework/test_artifact_recovery_publication.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure and root-export assertions to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_atomic_declarations.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure and root-export projections to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_capabilities.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure, root-export and module assertions to the exact accepted prefix",
+        "add exact accepted current module and CLCD suffix assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_i3_integration.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 root-export and import-graph assertions to the exact accepted prefix",
+        "add exact accepted current module and CLCD suffix assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_i3a_declarations.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure projection assertions to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_i3b_declarations.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure projection assertions to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_i3c_declarations.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure projection assertions to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_i3d_declarations.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure projection assertions to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_interaction_declarations.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 failure and root-export projections to the exact accepted prefix",
+        "add exact accepted current CLCD suffix and whole-current uniqueness assertions"
+      ]
+    },
+    {
+      "path": "tests/framework/test_primitives_envelopes.py",
+      "owner": "STAGE_C_ADDITIVE_INVENTORY_COMPATIBILITY",
+      "permitted_changes": [
+        "scope stale whole-I8 module/import assertions to the exact accepted prefix",
+        "add exact accepted current module and CLCD assertions"
+      ]
+    }
+  ],
+  "new_paths": [
+    {
+      "path": "scripts/validate_stage_c_release_candidate.py",
+      "owner": "STAGE_C_RELEASE_CANDIDATE_ORCHESTRATOR",
+      "responsibility": "Standard-library-first validator and orchestrator for strict source snapshots, P1-P12, Stage C archive/reproducibility evidence, clean environments, exact commands, manifests, hashes and nonzero lane summaries. It may invoke only explicitly frozen external packaging frontends and test processes."
+    },
+    {
+      "path": "tests/framework/installed_artifact_probe.py",
+      "owner": "STAGE_C_INSTALLED_ARTIFACT_ISOLATION_PROBE",
+      "responsibility": "Run under isolated Python from an empty external directory and prove exact module origins, 44 modules, 471 root exports, 294 failure codes, 162 accepted signature rows, version and metadata for one installed artifact."
+    },
+    {
+      "path": "tests/framework/test_packaging_release_candidate.py",
+      "owner": "STAGE_C_PACKAGING_CONFORMANCE_TESTS",
+      "responsibility": "Narrow packaging-only tests for exact inventory, missing/unknown fail-closed behavior, metadata, deterministic wheel/sdist contents, RECORD, archive safety, source isolation, hashes and validator refusal paths."
+    }
+  ],
+  "construction_order": [
+    {
+      "id": "SC-I-001",
+      "path": "build_backend/ebu_build_backend.py",
+      "operation": "Reconcile the exact 48-path planned inventory by adding only the five omitted accepted paths."
+    },
+    {
+      "id": "SC-I-002",
+      "path": "build_backend/ebu_build_backend.py",
+      "operation": "Change the missing-set predicate from the historical I-1 subset to the complete planned inventory while preserving unknown-file and path safety precedence."
+    },
+    {
+      "id": "SC-I-003",
+      "path": "build_backend/ebu_build_backend.py",
+      "operation": "Reconcile exact pyproject validation and Core Metadata to the accepted PyNaCl==1.6.2 declaration without changing any other metadata byte rule or backend identity."
+    },
+    {
+      "id": "SC-I-004",
+      "path": "tests/framework/test_artifact_recovery_publication.py, tests/framework/test_atomic_declarations.py, tests/framework/test_capabilities.py, tests/framework/test_i3_integration.py, tests/framework/test_i3a_declarations.py, tests/framework/test_i3b_declarations.py, tests/framework/test_i3c_declarations.py, tests/framework/test_i3d_declarations.py, tests/framework/test_interaction_declarations.py, tests/framework/test_primitives_envelopes.py",
+      "operation": "Apply only additive current-inventory compatibility corrections: preserve exact I8 prefixes, bind exact CLCD suffixes and retain every behavioral assertion."
+    },
+    {
+      "id": "SC-I-005",
+      "path": "tests/framework/test_packaging_release_candidate.py",
+      "operation": "Add packaging-only unit and negative conformance tests with positive completed-check accounting."
+    },
+    {
+      "id": "SC-I-006",
+      "path": "tests/framework/installed_artifact_probe.py",
+      "operation": "Add the isolated installed-artifact surface and origin probe."
+    },
+    {
+      "id": "SC-I-007",
+      "path": "scripts/validate_stage_c_release_candidate.py",
+      "operation": "Add the exact Stage C validation CLI and evidence manifest writer."
+    },
+    {
+      "id": "SC-I-008",
+      "path": ".github/workflows/tests.yml",
+      "operation": "Replace preview T1 execution, activate T2 on push and add frozen packaging and installed-artifact gates while preserving accepted jobs."
+    },
+    {
+      "id": "SC-I-009",
+      "path": "ALL",
+      "operation": "Run full scope, preservation, validation and independent-audit handoff checks; add no path or behavior outside this manifest."
+    }
+  ],
+  "protected_paths": [
+    "pyproject.toml",
+    "requirements-framework.lock",
+    "src/ebu_framework/**",
+    "tests/framework/fixtures/**",
+    "results/**",
+    "figures/**",
+    "*.pdf",
+    "accepted authority and contract history other than the five Stage C authority files"
+  ],
+  "repository_outputs": [],
+  "external_outputs": [
+    "temporary source snapshots",
+    "wheelhouses",
+    "virtual environments",
+    "container runtime evidence",
+    "direct wheels",
+    "sdists",
+    "sdist-derived wheels",
+    "archive and RECORD manifests",
+    "test logs and machine-readable summaries"
+  ],
+  "scope_check": {
+    "primary": "git diff --name-status and git diff --check against the exact authorized base",
+    "repository_scope_utility": "ABSENT_AT_PREDECESSOR",
+    "fallback": "Strict set equality between changed paths and this manifest plus empty index/residue inspection",
+    "untracked_residue": "FORBIDDEN_EXCEPT_THE_THREE_AUTHORIZED_NEW_IMPLEMENTATION_PATHS_BEFORE_COMMIT"
+  },
+  "prohibited": [
+    "authority edit during implementation",
+    "implementation path expansion",
+    "scientific or framework behavior change",
+    "metadata source, dependency lock, public API or version change",
+    "model, simulation, trajectory, runner, Gate or scientific outcome execution",
+    "committed artifact or evidence output",
+    "worktree pruning or unrelated worktree modification",
+    "force push, main merge, tag, upload, release or publication"
+  ],
+  "stop_condition": "Stop fail closed on wrong base or live target, unaccepted authority, protected-byte change, path drift, archive nondeterminism, installed-origin leakage, missing required lane, scientific-execution edge or independent audit failure."
+}

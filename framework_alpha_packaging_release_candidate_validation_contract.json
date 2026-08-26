@@ -1,0 +1,447 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PROSPECTIVE_UNAUDITED_AUTHORITY_CANDIDATE",
+  "stage": "STAGE_C_ALPHA_PACKAGING_RELEASE_CANDIDATE_VALIDATION",
+  "authority": {
+    "required_predecessor_commit": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "required_predecessor_tree": "e5d1fc2746253d73474b60c86c145293fb8ee1ef",
+    "normative_markdown": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "framework_alpha_packaging_release_candidate_contract.json",
+    "predecessor_manifest": "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+    "implementation_path_manifest": "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+  },
+  "global_acceptance": {
+    "positive_discovered_count": true,
+    "tests_run_equals_discovered": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0,
+    "terminated": 0,
+    "process_exit_status": 0,
+    "zero_check_is_pass": false,
+    "missing_lane_is_pass": false,
+    "scientific_execution_count": 0,
+    "model_state_advance_count": 0,
+    "framework_runner_call_count": 0,
+    "gate_call_count": 0
+  },
+  "validator_cli": {
+    "path": "scripts/validate_stage_c_release_candidate.py",
+    "interpreter": "final CPython 3.14.4 in the frozen runtime image",
+    "commands": [
+      {
+        "id": "SCV-STATIC",
+        "argv_shape": [
+          "python",
+          "-I",
+          "scripts/validate_stage_c_release_candidate.py",
+          "static-authority",
+          "--source",
+          "ABSOLUTE_READ_ONLY_SOURCE_SNAPSHOT",
+          "--evidence",
+          "ABSOLUTE_EXTERNAL_EMPTY_EVIDENCE_DIRECTORY"
+        ]
+      },
+      {
+        "id": "SCV-PACKAGING",
+        "argv_shape": [
+          "python",
+          "-I",
+          "scripts/validate_stage_c_release_candidate.py",
+          "packaging",
+          "--source",
+          "ABSOLUTE_READ_ONLY_SOURCE_SNAPSHOT",
+          "--wheelhouse",
+          "ABSOLUTE_READ_ONLY_EXACT_WHEELHOUSE",
+          "--work",
+          "ABSOLUTE_EXTERNAL_EMPTY_WORK_DIRECTORY",
+          "--evidence",
+          "ABSOLUTE_EXTERNAL_EMPTY_EVIDENCE_DIRECTORY"
+        ]
+      },
+      {
+        "id": "SCV-FRAMEWORK",
+        "argv_shape": [
+          "python",
+          "-I",
+          "scripts/validate_stage_c_release_candidate.py",
+          "framework",
+          "--source",
+          "ABSOLUTE_READ_ONLY_SOURCE_SNAPSHOT",
+          "--artifact",
+          "source|direct-wheel|sdist-wheel",
+          "--tier",
+          "t0|t1|t2",
+          "--work",
+          "ABSOLUTE_EXTERNAL_WORK_DIRECTORY",
+          "--evidence",
+          "ABSOLUTE_EXTERNAL_EVIDENCE_DIRECTORY"
+        ]
+      },
+      {
+        "id": "SCV-CONVENTIONAL",
+        "argv_shape": [
+          "python",
+          "-I",
+          "scripts/validate_stage_c_release_candidate.py",
+          "conventional",
+          "--source",
+          "ABSOLUTE_READ_ONLY_SOURCE_SNAPSHOT",
+          "--historical-o14",
+          "4939e1f99935185952f3e1c82a6993a4388839f4",
+          "--work",
+          "ABSOLUTE_EXTERNAL_WORK_DIRECTORY",
+          "--evidence",
+          "ABSOLUTE_EXTERNAL_EVIDENCE_DIRECTORY"
+        ]
+      },
+      {
+        "id": "SCV-MANIFEST",
+        "argv_shape": [
+          "python",
+          "-I",
+          "scripts/validate_stage_c_release_candidate.py",
+          "emit-manifest",
+          "--evidence",
+          "ABSOLUTE_EXTERNAL_COMPLETE_EVIDENCE_DIRECTORY",
+          "--output",
+          "ABSOLUTE_NEW_STAGE_C_MANIFEST_PATH"
+        ]
+      }
+    ],
+    "shell_quoting_is_authority": false,
+    "absolute_path_substitution_only": true
+  },
+  "packaging_relations": [
+    {
+      "id": "P1",
+      "class": "T0",
+      "accept": "Independent lexical and resolved backend path, regular-file, origin and sole backend-path checks pass."
+    },
+    {
+      "id": "P2",
+      "class": "T0",
+      "accept": "Declared and returned build requirements are empty and backend static imports are standard-library only."
+    },
+    {
+      "id": "P3",
+      "class": "T0",
+      "accept": "Prepared, direct-wheel and sdist-derived metadata are byte-identical and match the reconciled exact metadata."
+    },
+    {
+      "id": "P4",
+      "class": "T0",
+      "accept": "Installed package contains every and only the 48 accepted files and package data retain source hashes."
+    },
+    {
+      "id": "P5",
+      "class": "T0",
+      "accept": "At least three perturbed direct builds produce byte-identical wheels."
+    },
+    {
+      "id": "P6",
+      "class": "T0",
+      "accept": "At least three perturbed builds produce byte-identical sdists with exact archive properties."
+    },
+    {
+      "id": "P7",
+      "class": "T0",
+      "accept": "Direct and safely extracted sdist-derived wheels are byte-identical."
+    },
+    {
+      "id": "P8",
+      "class": "T0",
+      "accept": "Independent standard-library parsers verify members, CRC, RECORD, metadata, hashes, sizes and archive safety."
+    },
+    {
+      "id": "P9",
+      "class": "INERT_T1",
+      "accept": "Read-only source succeeds; pre-existing outputs refuse with no source/output mutation or partial accepted artifact."
+    },
+    {
+      "id": "P10",
+      "class": "INERT_T1",
+      "accept": "Exact build 1.5.0 and pip 26.2.1 roles execute offline in distinct isolated environments and produce byte-identical direct/sdist wheels."
+    },
+    {
+      "id": "P11",
+      "class": "T0",
+      "accept": "Final CPython 3.14.4 produces exact tag and metadata; nonconforming interpreter identities refuse."
+    },
+    {
+      "id": "P12",
+      "class": "T0",
+      "accept": "Backend static reachability excludes framework/scientific execution, runners, Gates, results, network and subprocess; packaging frontend execution is network-disabled."
+    }
+  ],
+  "stage_c_relations": [
+    {
+      "id": "SC1_EXACT_INVENTORY",
+      "class": "T0",
+      "accept": "Actual, planned, wheel and sdist package inventories equal the exact 48-path set."
+    },
+    {
+      "id": "SC2_MISSING_REFUSALS",
+      "class": "T0",
+      "accept": "Removal of each of the 48 admitted package paths independently refuses PACKAGE_DATA_MISSING before artifact acceptance."
+    },
+    {
+      "id": "SC3_UNKNOWN_REFUSALS",
+      "class": "T0",
+      "accept": "Representative unknown Python/data/bytecode/cache/dotfile/Unicode/case-collision/link/FIFO/socket inputs all refuse with the exact applicable precedence."
+    },
+    {
+      "id": "SC4_METADATA_RECONCILIATION",
+      "class": "T0",
+      "accept": "Unchanged pyproject and lock hashes match; backend expected project and every metadata role contain exactly PyNaCl==1.6.2 and no other change."
+    },
+    {
+      "id": "SC5_WHEEL_CONTENTS",
+      "class": "T0",
+      "accept": "Wheel has exactly 52 regular files: 48 package files and METADATA, WHEEL, license and RECORD."
+    },
+    {
+      "id": "SC6_SDIST_CONTENTS",
+      "class": "T0",
+      "accept": "Sdist has exactly 52 regular files: 48 package files, pyproject, backend, license and PKG-INFO, with only required directory members."
+    },
+    {
+      "id": "SC7_RECORD",
+      "class": "T0",
+      "accept": "Every non-RECORD member has exact ordered hash and size; RECORD self-row is last and empty-hash/empty-size."
+    },
+    {
+      "id": "SC8_ARCHIVE_SAFETY",
+      "class": "T0",
+      "accept": "ZIP, tar, pax, gzip, path, type, mode, ownership, time, block, terminator and trailing-payload checks all pass independently."
+    },
+    {
+      "id": "SC9_DIRECT_INSTALL",
+      "class": "INERT_T1",
+      "accept": "Direct wheel installs into a new clean environment from outside the checkout and passes isolation and surface probes."
+    },
+    {
+      "id": "SC10_SDIST_WHEEL_INSTALL",
+      "class": "INERT_T1",
+      "accept": "The separately produced sdist-derived wheel installs into a second clean environment and passes isolation and surface probes."
+    },
+    {
+      "id": "SC11_INSTALLED_SURFACE",
+      "class": "T0",
+      "accept": "Each installation exposes 44 modules, 471 unique ordered root exports, 294 unique ordered failure codes, 162 exact accepted public function signatures and version 0.1.0a1."
+    },
+    {
+      "id": "SC12_SOURCE_ISOLATION",
+      "class": "T0",
+      "accept": "Every installed module origin is below the applicable environment and outside checkout, source snapshot and sdist extraction roots; no source path or pth fallback exists."
+    },
+    {
+      "id": "SC13_ARTIFACT_IDENTITIES",
+      "class": "T0",
+      "accept": "Exact filenames, sizes, SHA-256 hashes, build-input manifest, member identities and direct/sdist equality are recorded."
+    },
+    {
+      "id": "SC14_STABLE_RUNTIME",
+      "class": "INERT_T1",
+      "accept": "The exact immutable image, CPython 3.14.4 final, linux/amd64, SQLite 3.46.1 and official 2024-08-13 SQLite source identities pass; ubuntu-26.04 is absent from executable gates."
+    },
+    {
+      "id": "SC15_TEST_COMPATIBILITY_SCOPE",
+      "class": "T0",
+      "accept": "Ten authorized tests preserve every accepted I8 prefix and behavior while asserting the exact current CLCD suffix and whole-current uniqueness; test names and counts do not decrease."
+    },
+    {
+      "id": "SC16_PROTECTED_BYTES",
+      "class": "T0",
+      "accept": "Package source tree, pyproject, dependency lock, fixtures, results, books, PDFs and every other protected path retain predecessor bytes and modes."
+    }
+  ],
+  "frontend_wheelhouse": {
+    "members": [
+      {
+        "filename": "build-1.5.0-py3-none-any.whl",
+        "byte_count": 26018,
+        "raw_sha256": "13f3eecb844759ab66efec90ca17639bbf14dc06cb2fdf37a9010322d9c50a6f"
+      },
+      {
+        "filename": "packaging-26.3-py3-none-any.whl",
+        "byte_count": 129956,
+        "raw_sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad44cb553c87339b23cd1c"
+      },
+      {
+        "filename": "pyproject_hooks-1.2.0-py3-none-any.whl",
+        "byte_count": 10216,
+        "raw_sha256": "9e5c6bfa8dcc30091c74b0cf803c81fdd29d94f01992a7707bc97babb1141913"
+      },
+      {
+        "filename": "pip-26.2.1-py3-none-any.whl",
+        "byte_count": 1816632,
+        "raw_sha256": "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e"
+      }
+    ],
+    "additional_member": "REFUSE",
+    "source_distribution_substitution": "REFUSE"
+  },
+  "framework_tiers": {
+    "t0": {
+      "test_files": [
+        "tests/framework/test_ecj1.py",
+        "tests/framework/test_hash_preimages.py",
+        "tests/framework/test_identity_registry.py",
+        "tests/framework/test_numeric.py",
+        "tests/framework/test_primitives_envelopes.py",
+        "tests/framework/test_i3_integration.py",
+        "tests/framework/test_i3a_declarations.py",
+        "tests/framework/test_i3b_declarations.py",
+        "tests/framework/test_i3c_declarations.py",
+        "tests/framework/test_i3d_declarations.py",
+        "tests/framework/test_atomic_declarations.py",
+        "tests/framework/test_interaction_declarations.py",
+        "tests/framework/test_event_ownership.py",
+        "tests/framework/test_route_guards.py",
+        "tests/framework/test_validation_reachability.py",
+        "tests/framework/test_closed_loop_correction_diagnostics.py",
+        "tests/framework/test_packaging_release_candidate.py"
+      ],
+      "accepted_predecessor_nonpackaging_count": 115,
+      "candidate_rule": "Exactly the accepted predecessor nonpackaging tests plus a positive Stage C packaging-test count; no accepted test method removed.",
+      "artifacts": [
+        "source",
+        "direct-wheel",
+        "sdist-wheel"
+      ]
+    },
+    "t1": {
+      "test_files": [
+        "tests/framework/test_authorization.py",
+        "tests/framework/test_authorization_use.py",
+        "tests/framework/test_capabilities.py",
+        "tests/framework/test_event_ownership.py",
+        "tests/framework/test_inert_durability.py",
+        "tests/framework/test_artifact_recovery_publication.py"
+      ],
+      "accepted_predecessor_count": 299,
+      "candidate_rule": "Exactly 299 tests for source and each installed artifact, with unchanged test names and no skip or filtering.",
+      "artifacts": [
+        "source",
+        "direct-wheel",
+        "sdist-wheel"
+      ],
+      "runtime": "frozen stable runtime image"
+    },
+    "t2": {
+      "test_files": [
+        "tests/framework/test_bridge_exact_fixtures.py",
+        "tests/framework/test_dynamic_static_identities.py"
+      ],
+      "accepted_predecessor_count": 21,
+      "accepted_allowlist_rows": 42,
+      "candidate_rule": "Exactly 21 tests and the exact accepted 42-row allowlist for source and each installed artifact; lane executes on push, pull request and workflow dispatch.",
+      "artifacts": [
+        "source",
+        "direct-wheel",
+        "sdist-wheel"
+      ]
+    }
+  },
+  "conventional_suites": {
+    "current_head_files": [
+      "test_energy_balance.py",
+      "test_v22.py",
+      "test_v23.py",
+      "test_v24.py",
+      "test_v25.py",
+      "test_v26.py",
+      "test_math.py",
+      "test_v28.py",
+      "test_v29.py",
+      "test_v29_behavior.py",
+      "test_v29_p1c.py",
+      "test_v29_d9_d10.py",
+      "test_v29_serialization.py",
+      "test_v30_quote.py",
+      "test_v30_adversary.py",
+      "test_v30_service.py",
+      "test_v30_gate1dc.py"
+    ],
+    "historical_pre_execution": {
+      "commit": "4939e1f99935185952f3e1c82a6993a4388839f4",
+      "tree": "a156097801d9abfd123ef0120d67ca0e52154f3b",
+      "file": "test_v30_o14.py",
+      "expected_completed_checks": 299,
+      "reason": "Current committed official O14 results intentionally invalidate pre-execution absence assertions; the historical pre-execution suite remains valid only at its frozen coordinate."
+    },
+    "scientific_execution": "FORBIDDEN",
+    "committed_result_read_only_validation": "ALLOWED_WHERE_ALREADY_ACCEPTED",
+    "trajectory_regeneration": "FORBIDDEN"
+  },
+  "installed_probe": {
+    "script": "tests/framework/installed_artifact_probe.py",
+    "required_checks": [
+      "empty cwd and isolated interpreter",
+      "no PYTHONPATH or source path",
+      "distribution name ebu-framework",
+      "distribution version 0.1.0a1",
+      "Requires-Python >=3.14,<3.15",
+      "Requires-Dist exactly PyNaCl==1.6.2",
+      "44 exact importable module names",
+      "regular nonsymlink installed origins",
+      "471 ordered unique root exports and exact projection",
+      "294 ordered unique FailureCode names and exact projection",
+      "162 accepted public function signatures",
+      "all accepted callable owners are callable",
+      "no checkout, snapshot or extraction origin",
+      "no pth injection or editable metadata"
+    ]
+  },
+  "ci": {
+    "candidate_branch_push_required": true,
+    "target_branch_push_required": true,
+    "jobs_required": [
+      "test",
+      "framework-t0",
+      "framework-t1",
+      "framework-t2",
+      "packaging-release-candidate"
+    ],
+    "all_jobs_must_conclude": "success",
+    "skipped_job_is_pass": false,
+    "artifact_evidence_retention": "PRIVATE_GITHUB_ACTIONS_ARTIFACT_ALLOWED_NOT_A_RELEASE",
+    "fresh_target_run_after_integration": true
+  },
+  "evidence_manifest": {
+    "format": "strict JSON UTF-8 LF final LF",
+    "required": [
+      "Git coordinates and trees",
+      "authority hashes",
+      "scope and protected-byte results",
+      "source and package inventory",
+      "build-input manifest",
+      "frontend and dependency wheelhouse identities",
+      "runtime and SQLite identities",
+      "exact sanitized environments and argv",
+      "stdout stderr and exit status",
+      "per-relation positive check counts",
+      "per-lane discovered and completed test counts",
+      "wheel and sdist filenames sizes and SHA-256",
+      "all archive member and RECORD identities",
+      "direct versus sdist-derived wheel equality",
+      "installed module origins and public surface projections",
+      "all failures retries deviations and unresolved risks",
+      "scientific execution and model-state advance counts"
+    ]
+  },
+  "prohibited_validation": [
+    "model or trajectory execution",
+    "framework runner or Gate invocation",
+    "scientific callback or outcome inspection",
+    "test deletion filtering skipping or expected-failure conversion",
+    "network during packaging frontend or installed probe execution",
+    "editable install",
+    "checkout source import in installed lanes",
+    "mutable runtime image or preview runner",
+    "artifact upload to package index or public release"
+  ]
+}
