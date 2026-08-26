@@ -115,6 +115,16 @@
         "scope stale whole-I8 module/import assertions to the exact accepted prefix",
         "add exact accepted current module and CLCD assertions"
       ]
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "owner": "STAGE_C_CURRENT_HEAD_SCOPE_COMPATIBILITY",
+      "permitted_changes": [
+        "add an exact authority phase for the five Stage C authority files",
+        "add an exact implementation phase for the thirteen modified and three new Stage C implementation paths, accounting for pre-existing post-I9 overlap once",
+        "preserve immutable I-9 Git/archive reconstruction, coordinates, identities, vectors, failure precedence and every historical assertion",
+        "retain fail-closed rejection of every arbitrary, unknown, missing, renamed, deleted, mode-changed, source, result, book or other unlisted path"
+      ]
     }
   ],
   "new_paths": [
@@ -157,26 +167,31 @@
     },
     {
       "id": "SC-I-005",
+      "path": "tests/framework/test_validation_reachability.py",
+      "operation": "Add only the exact two-phase Stage C current-HEAD scope construction while preserving historical I-9 durability and every unknown-path refusal."
+    },
+    {
+      "id": "SC-I-006",
       "path": "tests/framework/test_packaging_release_candidate.py",
       "operation": "Add packaging-only unit and negative conformance tests with positive completed-check accounting."
     },
     {
-      "id": "SC-I-006",
+      "id": "SC-I-007",
       "path": "tests/framework/installed_artifact_probe.py",
       "operation": "Add the isolated installed-artifact surface and origin probe."
     },
     {
-      "id": "SC-I-007",
+      "id": "SC-I-008",
       "path": "scripts/validate_stage_c_release_candidate.py",
       "operation": "Add the exact Stage C validation CLI and evidence manifest writer."
     },
     {
-      "id": "SC-I-008",
+      "id": "SC-I-009",
       "path": ".github/workflows/tests.yml",
       "operation": "Replace preview T1 execution, activate T2 on push and add frozen packaging and installed-artifact gates while preserving accepted jobs."
     },
     {
-      "id": "SC-I-009",
+      "id": "SC-I-010",
       "path": "ALL",
       "operation": "Run full scope, preservation, validation and independent-audit handoff checks; add no path or behavior outside this manifest."
     }
@@ -214,10 +229,11 @@
     "implementation path expansion",
     "scientific or framework behavior change",
     "metadata source, dependency lock, public API or version change",
-    "model, simulation, trajectory, runner, Gate or scientific outcome execution",
+    "direct model, step, simulation, trajectory, runner, Gate or scientific outcome execution outside the exact accepted bounded regression test entry points",
     "committed artifact or evidence output",
     "worktree pruning or unrelated worktree modification",
     "force push, main merge, tag, upload, release or publication"
   ],
-  "stop_condition": "Stop fail closed on wrong base or live target, unaccepted authority, protected-byte change, path drift, archive nondeterminism, installed-origin leakage, missing required lane, scientific-execution edge or independent audit failure."
+  "bounded_regression_boundary": "The exact conventional and framework tests frozen by the validation contract may execute only their already accepted bounded synthetic, pure-function, short-horizon or preregistered-fixture in-memory deterministic behavior. The Stage C validator may invoke those test entry points but may not itself call a model, step, trajectory, study runner or Gate. Registered/full-horizon campaigns, new official result generation and scientific interpretation remain forbidden.",
+  "stop_condition": "Stop fail closed on wrong base or live target, unaccepted authority, protected-byte change, path drift, archive nondeterminism, installed-origin leakage, missing required lane, unlisted scientific-execution edge or independent audit failure."
 }

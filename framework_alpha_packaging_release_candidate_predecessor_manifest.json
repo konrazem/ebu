@@ -182,5 +182,5 @@
   },
   "preservation_rule": "Every predecessor path except the implementation-path manifest's explicitly named modified paths must retain predecessor bytes and mode throughout Stage C implementation. All src/ebu_framework paths are immutable.",
   "historical_worktree_rule": "No existing unrelated, dirty, stale, historical or prunable worktree or registration may be modified or pruned.",
-  "scientific_execution": "FORBIDDEN"
+  "scientific_execution": "NEW_REGISTERED_OR_FULL_HORIZON_CAMPAIGN_FORBIDDEN; EXACT ACCEPTED BOUNDED REGRESSION TEST BEHAVIOR IS STATIC_OR_SYNTHETIC_IMPLEMENTATION EVIDENCE ONLY"
 }

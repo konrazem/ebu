@@ -50,6 +50,17 @@
       "t0_clcd_completed_tests": 3,
       "t1_completed_tests": 299,
       "t2_disposition": "SKIPPED_NOT_A_PASS"
+    },
+    "rejected_authority_candidate": {
+      "commit": "1267ed8d5b5c0cac567f4e14db31f2123905aaf6",
+      "tree": "466e2813524abf1f50b77a65f314e593f8c702cf",
+      "ci_run_id": 33023757404,
+      "conventional_job": "PASS",
+      "t1_job": "PASS",
+      "t0_job": "FAIL_CURRENT_HEAD_SCOPE_REJECTED_FIVE_STAGE_C_AUTHORITY_PATHS",
+      "t2_job": "SKIPPED_NOT_A_PASS",
+      "clcd_job": "NOT_COMPLETED",
+      "independent_authority_audit": "FAIL"
     }
   },
   "diagnosis": {
@@ -81,6 +92,11 @@
         "id": "SC-CI-002",
         "disposition": "CONFIRMED",
         "description": "T1 uses the public-preview ubuntu-26.04 runner because stable ubuntu-24.04 supplies SQLite below the accepted minimum."
+      },
+      {
+        "id": "SC-CI-003",
+        "disposition": "CONFIRMED",
+        "description": "The first authority candidate's T0 run rejects the five Stage C authority files because the closed current-HEAD reachability scope does not admit this authority layer, and the first implementation scope omitted the reachability test needed for an exact correction."
       }
     ]
   },
@@ -222,15 +238,20 @@
       "sys.implementation.cache_tag",
       "executable hash when available",
       "sqlite3.sqlite_version",
-      "sqlite3.version",
+      "sqlite3.sqlite_version_info",
       "sqlite_source_id()",
       "Debian libsqlite3-0 package identity when available"
+    ],
+    "removed_cpython_3_14_attributes_not_required": [
+      "sqlite3.version",
+      "sqlite3.version_info"
     ],
     "external_provenance_queried_utc_date": "2026-08-26",
     "external_provenance_urls": [
       "https://github.com/actions/runner-images/blob/main/README.md",
       "https://github.com/actions/runner-images/issues/14226",
       "https://github.com/docker-library/python/tree/6cc07b27ad0df3769bbd1a2a1000a842634681d2/3.14/trixie",
+      "https://docs.python.org/3.14/library/sqlite3.html",
       "https://packages.debian.org/trixie/libsqlite3-0",
       "https://www.sqlite.org/releaselog/3_46_1.html"
     ]
@@ -244,7 +265,10 @@
     "zero_test_is_pass": false,
     "direct_and_sdist_derived_wheels_must_be_byte_identical": true,
     "t2_must_run_on_candidate_and_target_push": true,
-    "scientific_execution_authorized": false
+    "bounded_existing_test_regression_execution_authorized": true,
+    "registered_or_full_horizon_scientific_execution_authorized": false,
+    "new_official_result_generation_authorized": false,
+    "scientific_outcome_interpretation_authorized": false
   },
   "implementation_scope": {
     "modified_paths": [
@@ -259,7 +283,8 @@
       "tests/framework/test_i3c_declarations.py",
       "tests/framework/test_i3d_declarations.py",
       "tests/framework/test_interaction_declarations.py",
-      "tests/framework/test_primitives_envelopes.py"
+      "tests/framework/test_primitives_envelopes.py",
+      "tests/framework/test_validation_reachability.py"
     ],
     "new_paths": [
       "scripts/validate_stage_c_release_candidate.py",
@@ -271,8 +296,8 @@
   },
   "evidence_classification": {
     "authority": "INSTITUTIONAL_NORMATIVE_DECLARATION",
-    "packaging_and_installed_tests": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
-    "numerical_verification": "NOT_AUTHORIZED",
+    "packaging_installed_and_bounded_regression_tests": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "new_numerical_verification_claim": "NOT_AUTHORIZED",
     "registered_scientific_simulation": "NOT_AUTHORIZED",
     "empirical_observation": "NOT_CLAIMED",
     "independently_audited_scientific_interpretation": "NOT_CLAIMED"
@@ -294,12 +319,33 @@
       "historical checkout substitution for current source or installed candidate validation"
     ]
   },
+  "current_head_scope_reconciliation": {
+    "path": "tests/framework/test_validation_reachability.py",
+    "authority_phase": "Require exactly the five Stage C authority paths in addition to the accepted two post-I9 paths relative to the immutable I-9 implementation base.",
+    "implementation_phase": "Require exactly the five Stage C authority paths, thirteen modified paths and three new paths in addition to the accepted post-I9 relationship, accounting for overlapping paths once.",
+    "preserve": [
+      "historical I-9 Git object and archive reconstruction",
+      "historical coordinates and raw identities",
+      "accepted vectors, projections and failure precedence",
+      "unknown-path, source-path, deletion, rename, mode and construction refusals"
+    ],
+    "arbitrary_or_unlisted_path": "REFUSE"
+  },
+  "bounded_regression_execution": {
+    "entry_boundary": "Only the exact conventional and framework test files frozen by the validation contract may invoke their already accepted bounded synthetic, pure-function, short-horizon or preregistered-fixture in-memory deterministic model-step, trajectory-loop or test-seam runner behavior.",
+    "stage_c_validator_direct_model_or_runner_call": "FORBIDDEN",
+    "official_result_artifact_write": "FORBIDDEN",
+    "registered_or_full_horizon_campaign": "FORBIDDEN",
+    "scientific_outcome_inspection_or_interpretation": "FORBIDDEN",
+    "evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "record": "Exact test files, test counts, commands, outcomes and this bounded-regression classification."
+  },
   "prohibited": [
     "framework or scientific source edit",
     "accepted API, metadata source, dependency lock or version edit",
     "fixture, result, book or PDF edit",
     "checkout-source import during installed-artifact probes",
-    "scientific model, runner, trajectory, policy, Gate, callback or outcome inspection",
+    "direct model, step, runner, trajectory, policy, Gate, callback or outcome invocation outside the exact accepted bounded regression test entry points",
     "preview runner or mutable runtime image",
     "editable install or unpinned packaging frontend",
     "network during offline packaging or installed-artifact probes",
@@ -318,7 +364,7 @@
   "nonclaims": [
     "No corrected backend or passing artifact exists by virtue of this authority.",
     "No alpha release candidate, tag, release or publication exists.",
-    "No scientific protocol, simulation, trajectory or model state advance is authorized or evidenced.",
+    "No new registered/full-horizon scientific campaign, official result generation or scientific outcome interpretation is authorized or evidenced; exact accepted bounded regression tests remain static/synthetic implementation evidence.",
     "Packaging conformance does not prove mathematics, scientific validity, long-run homeostasis, stability, recovery, fairness or empirical applicability."
   ],
   "terminal_marker": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_READY_FOR_AUDIT"

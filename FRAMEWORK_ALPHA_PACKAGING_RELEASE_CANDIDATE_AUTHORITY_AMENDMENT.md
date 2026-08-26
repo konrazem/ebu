@@ -25,8 +25,9 @@ Ubuntu T1 environment with a stable, immutable environment.
 
 Authority drafting, independent authority audit, authority integration,
 implementation, independent candidate audit, target integration, alpha release
-preparation, main merge, tagging, release, scientific execution, results
-interpretation, book generation, and publication remain separate gates. This
+preparation, main merge, tagging, release, registered or full-horizon scientific
+execution, results interpretation, book generation, and publication remain
+separate gates. This
 document authorizes only the later implementation and validation described
 here after an independent `PASS` and accepted authority coordinate exist. It
 does not itself accept, implement, integrate, release, or publish anything.
@@ -68,6 +69,16 @@ GitHub Actions run `33020110257` is a successful push run for exact head
 Its T2 job was skipped because the accepted workflow restricts T2 to
 `workflow_dispatch`. The skipped job is not a T2 pass and cannot satisfy this
 release-candidate gate.
+
+The first immutable authority candidate, commit
+`1267ed8d5b5c0cac567f4e14db31f2123905aaf6` and tree
+`466e2813524abf1f50b77a65f314e593f8c702cf`, was independently rejected. Its
+push CI run `33023757404` passed the conventional and T1 jobs but failed the
+current I-9 reachability group because the five new authority paths were not
+admitted by `_audit_current_head_scope`; T2 and CLCD did not complete. That
+failure is evidence, not a pass. This corrected candidate adds only the exact
+authority needed to repair that closed current-scope check during the later
+implementation.
 
 ## 3. Packaging diagnosis
 
@@ -119,8 +130,11 @@ separation, and P1-P12 acceptance intent.
 Accepted I-1 through I-9, atomic-generator, interaction, topology/motif, CLCD,
 conservation, durability, trace, recovery, publication-mechanism, and
 dependency authorities remain authoritative. This amendment changes no
-mathematical, scientific, institutional, or empirical claim and grants no
-scientific execution permission.
+mathematical, scientific, institutional, or empirical claim and grants no new
+registered study, full-horizon campaign, official result generation, or
+scientific interpretation permission. Section 11 separately admits the exact
+accepted bounded regression behavior already executed by the mandatory test
+suites and classifies it only as static/synthetic implementation evidence.
 
 ## 5. Exact completed-stage package inventory
 
@@ -271,10 +285,12 @@ recorded separately but may not replace or obscure that source identity.
 Before any T1 or packaging test, the job must record and verify the immutable
 image digest, `/etc/os-release`, `sys.implementation`, `sys.version`,
 `sys.version_info`, ABI/cache tag, executable hash when available,
-`sqlite3.sqlite_version`, `sqlite3.version`, `sqlite_source_id()`, and installed
-Debian `libsqlite3-0` identity when available. A missing field, unexpected
-platform, prerelease Python, different Python patch, or SQLite outside the
-exact accepted identity refuses the lane.
+`sqlite3.sqlite_version`, `sqlite3.sqlite_version_info`, `sqlite_source_id()`,
+and installed Debian `libsqlite3-0` identity when available. The removed
+CPython 3.14 attributes `sqlite3.version` and `sqlite3.version_info` are not
+required and must not be used as runtime gates. A missing required field,
+unexpected platform, prerelease Python, different Python patch, or SQLite
+outside the exact accepted identity refuses the lane.
 
 The image must be pulled by digest while network is available. Packaging
 frontend execution and clean installed-artifact probes must then run with
@@ -294,6 +310,9 @@ External decision evidence, queried during drafting on 2026-08-26 UTC, is:
   `https://github.com/actions/runner-images/issues/14226`;
 - the official Python image source identified by the OCI manifest annotation:
   `https://github.com/docker-library/python/tree/6cc07b27ad0df3769bbd1a2a1000a842634681d2/3.14/trixie`;
+- the official CPython 3.14 `sqlite3` reference, including removal of
+  `version`/`version_info` and the retained runtime SQLite identities:
+  `https://docs.python.org/3.14/library/sqlite3.html`;
 - Debian stable Trixie `libsqlite3-0` package record:
   `https://packages.debian.org/trixie/libsqlite3-0`; and
 - SQLite 3.46.1 release identity:
@@ -320,6 +339,7 @@ tests/framework/test_i3c_declarations.py
 tests/framework/test_i3d_declarations.py
 tests/framework/test_interaction_declarations.py
 tests/framework/test_primitives_envelopes.py
+tests/framework/test_validation_reachability.py
 ```
 
 It may create only:
@@ -333,13 +353,25 @@ tests/framework/test_packaging_release_candidate.py
 No other tracked path may change. In particular, `pyproject.toml`,
 `requirements-framework.lock`, every `src/ebu_framework` file, accepted tests,
 fixtures, contracts, results, books, PDFs, and release notes remain
-byte-identical except for the ten test-only paths named above. Each named
-historical test may change only stale whole-snapshot inventory assertions into
-exact accepted-prefix plus current CLCD-suffix assertions. It must preserve all
+byte-identical except for the eleven test-only paths named above. The ten named
+historical inventory tests may change only stale whole-snapshot assertions into
+exact accepted-prefix plus current CLCD-suffix assertions. They must preserve all
 historical prefix bytes and order, all behavioral checks, all fixtures, all
 call sites, all failure precedence, and every non-inventory assertion. No test
 may be deleted, skipped, filtered, weakened, or moved to a historical checkout
 as a substitute for testing the current source and installed candidate.
+
+`tests/framework/test_validation_reachability.py` may change only its
+current-HEAD scope layer. Relative to its immutable I-9 implementation base, it
+must continue to admit the two accepted post-I9 paths, require the five Stage C
+authority files, and admit exactly the thirteen modified plus three new Stage C
+implementation paths frozen here. The authority-only and completed-
+implementation states must be represented as separate exact phases; neither
+phase may admit an arbitrary, missing, renamed, deleted, symlinked,
+mode-changed, source, result, book, or other unlisted path. Historical I-9 Git
+object and archive reconstruction, identities, vectors, failure precedence,
+and negative cases remain unchanged.
+
 Validation artifacts, wheelhouses, virtual environments,
 source snapshots, extracted sdists, wheels, sdists, manifests, and logs must be
 outside the repository.
@@ -396,6 +428,25 @@ T2 job is a Stage C failure. Every unittest lane must verify a positive
 discovered count, exact run count, zero failures/errors/skips/expected failures/
 unexpected successes, and a successful process status.
 
+The exact conventional and framework test files frozen by the validation
+contract are authorized to execute their already accepted bounded synthetic,
+pure-function, short-horizon, and preregistered-fixture in-memory deterministic
+regression behavior,
+including their existing `p1c_step`, `bounded_step`, bounded trajectory-loop,
+and test-seam runner calls. Those calls may occur only through the frozen test
+entry points, under the frozen inputs and assertions, with their existing test
+counts, and without writing or replacing repository official result artifacts.
+Ephemeral test fixtures may exist only outside the repository. The
+evidence manifest must record the executed test files, counts, commands, and
+this classification. The Stage C validator may orchestrate those exact tests
+but may not directly call a model, step, trajectory, study runner, or Gate.
+
+This narrow regression permission is static/synthetic implementation testing.
+It is not a new numerical-verification claim, registered scientific simulation,
+full-horizon campaign, official study execution, result generation, empirical
+observation, outcome inspection, or scientific interpretation. All such work
+remains separately gated.
+
 Packaging and installed-artifact validation is implementation evidence only.
 It does not prove mathematical theorems, scientific behavior, long-run
 homeostasis, empirical applicability, or institutional outcomes.
@@ -419,9 +470,10 @@ The implementation candidate must provide the independent auditor:
 - Python, SQLite, OS, runner, container, dependency, frontend, and lock
   identities;
 - candidate-branch CI run URL and immutable run/job IDs; and
-- an explicit statement that no simulation, trajectory, model state advance,
-  scientific result, book generation, main merge, tag, upload, publication, or
-  release occurred.
+- an explicit statement that no registered/full-horizon scientific campaign,
+  new official result generation, scientific interpretation, book generation,
+  main merge, tag, upload, publication, or release occurred, together with an
+  exact record of the bounded regression tests that did execute.
 
 The independent auditor must inspect the complete candidate without repairing
 it and issue `PASS` or `FAIL`. Integration into private `framework-v0.1` is
@@ -436,8 +488,10 @@ Stage C implementation and validation must not:
 - edit framework/scientific source, accepted API declarations, metadata source,
   dependency lock, authority history, results, books, or PDFs;
 - import checkout source during installed-artifact probes;
-- invoke a model, simulation, trajectory, policy decision, framework runner,
-  Gate, scientific callback, or scientific outcome inspection;
+- directly invoke a model, step, simulation, trajectory, policy decision,
+  framework runner, Gate, scientific callback, or scientific outcome outside
+  the exact accepted test entry points and bounded regression behavior frozen
+  in Section 11;
 - hide, relabel, or weaken a failure, skip, zero-test lane, nondeterministic
   artifact, archive discrepancy, or source-isolation failure;
 - use a preview runner, mutable runtime image, unpinned build frontend, editable
@@ -448,7 +502,7 @@ Stage C implementation and validation must not:
 
 Stop for an authority disagreement, wrong base/live identity, unauthorized
 path, changed protected source, nondeterministic artifact, missing required
-lane, scientific-execution edge, unresolved installed-origin leak, destructive
+lane, unlisted scientific-execution edge, unresolved installed-origin leak, destructive
 ambiguity, missing external permission, or explicit main/tag/release/publication
 gate. Ordinary implementation, test, audit-helper, environment, or CI defects
 must be diagnosed and corrected within the accepted scope.
@@ -456,8 +510,9 @@ must be diagnosed and corrected within the accepted scope.
 ## 14. Evidence classification and nonclaims
 
 This authority and its static audit are institutional/normative evidence. The
-future packaging tests and artifact probes are static/synthetic implementation
-evidence. They are not numerical verification, registered scientific
+future packaging tests, artifact probes, and exact bounded regression execution
+allowed in Section 11 are static/synthetic implementation evidence. They are
+not a new numerical-verification claim, registered scientific
 simulation, empirical observation, or independently audited scientific
 interpretation.
 

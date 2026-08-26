@@ -22,10 +22,11 @@
     "process_exit_status": 0,
     "zero_check_is_pass": false,
     "missing_lane_is_pass": false,
-    "scientific_execution_count": 0,
-    "model_state_advance_count": 0,
-    "framework_runner_call_count": 0,
-    "gate_call_count": 0
+    "registered_or_full_horizon_scientific_campaign_count": 0,
+    "new_official_result_artifact_count": 0,
+    "scientific_outcome_interpretation_count": 0,
+    "stage_c_validator_direct_model_step_trajectory_runner_or_gate_call_count": 0,
+    "bounded_existing_regression_execution": "REQUIRED_ONLY_THROUGH_FROZEN_TEST_ENTRY_POINTS_AND_RECORDED_BY_FILE_COMMAND_COUNT_AND_OUTCOME"
   },
   "validator_cli": {
     "path": "scripts/validate_stage_c_release_candidate.py",
@@ -245,12 +246,12 @@
     {
       "id": "SC14_STABLE_RUNTIME",
       "class": "INERT_T1",
-      "accept": "The exact immutable image, CPython 3.14.4 final, linux/amd64, SQLite 3.46.1 and official 2024-08-13 SQLite source identities pass; ubuntu-26.04 is absent from executable gates."
+      "accept": "The exact immutable image, CPython 3.14.4 final, linux/amd64, sqlite3.sqlite_version 3.46.1, matching sqlite3.sqlite_version_info and official 2024-08-13 SQLite source identities pass; removed sqlite3.version/version_info attributes are not required; ubuntu-26.04 is absent from executable gates."
     },
     {
       "id": "SC15_TEST_COMPATIBILITY_SCOPE",
       "class": "T0",
-      "accept": "Ten authorized tests preserve every accepted I8 prefix and behavior while asserting the exact current CLCD suffix and whole-current uniqueness; test names and counts do not decrease."
+      "accept": "Ten authorized inventory tests preserve every accepted I8 prefix and behavior while asserting the exact current CLCD suffix and whole-current uniqueness; the separately authorized reachability test adds only exact Stage C authority and implementation phases while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease."
     },
     {
       "id": "SC16_PROTECTED_BYTES",
@@ -268,7 +269,7 @@
       {
         "filename": "packaging-26.3-py3-none-any.whl",
         "byte_count": 129956,
-        "raw_sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad44cb553c87339b23cd1c"
+        "raw_sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
       },
       {
         "filename": "pyproject_hooks-1.2.0-py3-none-any.whl",
@@ -373,9 +374,23 @@
       "expected_completed_checks": 299,
       "reason": "Current committed official O14 results intentionally invalidate pre-execution absence assertions; the historical pre-execution suite remains valid only at its frozen coordinate."
     },
-    "scientific_execution": "FORBIDDEN",
+    "bounded_regression_execution": {
+      "disposition": "AUTHORIZED_ONLY_AS_STATIC_OR_SYNTHETIC_IMPLEMENTATION_TESTING",
+      "scope": "Only the exact listed current-head files and frozen historical O14 suite may execute their already accepted bounded synthetic, pure-function, short-horizon or preregistered-fixture in-memory deterministic behavior, including existing p1c_step, bounded_step, bounded trajectory-loop and test-seam runner calls.",
+      "required_record": [
+        "exact test file and immutable coordinate where applicable",
+        "exact command and sanitized environment",
+        "positive discovered and completed test or check count",
+        "process outcome and all failures, skips and retries",
+        "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST evidence label"
+      ],
+      "validator_direct_model_step_trajectory_runner_or_gate_call": "FORBIDDEN",
+      "official_result_artifact_write": "FORBIDDEN",
+      "registered_or_full_horizon_campaign": "FORBIDDEN",
+      "new_scientific_result_or_interpretation": "FORBIDDEN"
+    },
     "committed_result_read_only_validation": "ALLOWED_WHERE_ALREADY_ACCEPTED",
-    "trajectory_regeneration": "FORBIDDEN"
+    "official_or_full_horizon_trajectory_regeneration": "FORBIDDEN"
   },
   "installed_probe": {
     "script": "tests/framework/installed_artifact_probe.py",
@@ -430,13 +445,14 @@
       "direct versus sdist-derived wheel equality",
       "installed module origins and public surface projections",
       "all failures retries deviations and unresolved risks",
-      "scientific execution and model-state advance counts"
+      "bounded regression test files commands counts outcomes and evidence classification",
+      "zero registered/full-horizon campaign, new official result, scientific interpretation and validator-direct model/runner counts"
     ]
   },
   "prohibited_validation": [
-    "model or trajectory execution",
-    "framework runner or Gate invocation",
-    "scientific callback or outcome inspection",
+    "direct model step or trajectory execution outside the exact frozen bounded regression test entry points",
+    "direct framework runner or Gate invocation by the Stage C validator",
+    "scientific callback or outcome interpretation outside the exact frozen bounded regression assertions",
     "test deletion filtering skipping or expected-failure conversion",
     "network during packaging frontend or installed probe execution",
     "editable install",
