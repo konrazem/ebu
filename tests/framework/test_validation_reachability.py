@@ -176,7 +176,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "03d632f277d5dfa5b9252235009357ccaa9562c6f22c29ac6fc254cf8385faad"
+TEST_SELF_SEAL = "415bf5076a48ea726524daad5d5c09be5c154edc35c9731245a778cfa0d849b8"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -194,6 +194,14 @@ WORKFLOW_T1_COMPATIBILITY_BLOCK = b"""      - name: Provide the historical cross
           fi
           test -d /private/tmp
           test -w /private/tmp
+"""
+WORKFLOW_T1_RUNNER_BLOCK = b"""  framework-t1:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-26.04
+"""
+WORKFLOW_T1_HISTORICAL_RUNNER_BLOCK = b"""  framework-t1:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
 """
 WORKFLOW_CLCD_T0_BLOCK = b"""      - name: Run current-head CLCD diagnostics with a positive test-count gate
         run: |
@@ -457,11 +465,18 @@ def _workflow_without_routing(raw: bytes) -> bytes:
         raise AssertionError("workflow historical/current routing block differs")
     if raw.count(WORKFLOW_T1_COMPATIBILITY_BLOCK) != 1:
         raise AssertionError("workflow T1 compatibility block differs")
+    if raw.count(WORKFLOW_T1_RUNNER_BLOCK) != 1:
+        raise AssertionError("workflow T1 runner block differs")
     if raw.count(WORKFLOW_CLCD_T0_BLOCK) != 1:
         raise AssertionError("workflow CLCD T0 block differs")
-    return raw.replace(WORKFLOW_ROUTING_BLOCK, b"", 1).replace(
-        WORKFLOW_T1_COMPATIBILITY_BLOCK, b"", 1
-    ).replace(WORKFLOW_CLCD_T0_BLOCK, b"", 1)
+    return (
+        raw.replace(
+            WORKFLOW_T1_RUNNER_BLOCK, WORKFLOW_T1_HISTORICAL_RUNNER_BLOCK, 1
+        )
+        .replace(WORKFLOW_ROUTING_BLOCK, b"", 1)
+        .replace(WORKFLOW_T1_COMPATIBILITY_BLOCK, b"", 1)
+        .replace(WORKFLOW_CLCD_T0_BLOCK, b"", 1)
+    )
 
 
 def _literal_assignments(tree: ast.Module) -> dict[str, object]:
@@ -1476,6 +1491,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         self.assertEqual(workflow_raw.count(WORKFLOW_ROUTING_BLOCK), 1)
         self.assertEqual(workflow_raw.count(WORKFLOW_T1_COMPATIBILITY_BLOCK), 1)
+        self.assertEqual(workflow_raw.count(WORKFLOW_T1_RUNNER_BLOCK), 1)
         self.assertEqual(workflow_raw.count(WORKFLOW_CLCD_T0_BLOCK), 1)
         for variable in tuple(COORDINATE_ENV.values()) + (CURRENT_HEAD_ENV,):
             self.assertEqual(workflow.count(f"      {variable}:"), 1, variable)
@@ -1503,6 +1519,8 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertNotIn("/private/tmp", t0)
         self.assertEqual(t1.count("/private/tmp"), 4)
         self.assertNotIn("/private/tmp", t2)
+        self.assertEqual(t1.count("runs-on: ubuntu-26.04"), 1)
+        self.assertNotIn("runs-on: ubuntu-latest", t1)
         pattern = re.compile(r'"(tests/framework/test_[a-z0-9_]+\.py)"')
         self.assertEqual(tuple(pattern.findall(t0)), T0_PATHS)
         for path in CURRENT_T0_PATHS:
