@@ -49,6 +49,15 @@ jobs:
   framework-t0:
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    env:
+      EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
+      EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
+      EBU_I9_AUTHORITY_TARGET: 2e7848dc495c4b2d5fb2ea09d668f2b240d3ec02
+      EBU_I9_IMPLEMENTATION_CANDIDATE: f8623fe5f0d313e16558eb9a4c985940e6baf9dd
+      EBU_I9_IMPLEMENTATION_TARGET: ffc910329957f61deaa7e9fc09ba77a0e3f51381
+      EBU_I9_LATER_DOCUMENTATION_FEATURE: 5674ea9c33b72b94669c86e7e4f1a35c0db5775a
+      EBU_I9_REQUIRED_CURRENT_TARGET: fc20d71e69cf226e6cecd9de7575f1d6249b193f
+      EBU_POST_I9_CURRENT_HEAD: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
