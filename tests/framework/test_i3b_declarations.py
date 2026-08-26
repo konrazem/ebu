@@ -425,6 +425,9 @@ def test_i3b_runtime_and_static_inventory() -> None:
     i7 = _load_contract(
         _REPO_ROOT / "unified_python_research_framework_i7_contract.json"
     )
+    i8 = _load_contract(
+        _REPO_ROOT / "unified_python_research_framework_i8_contract.json"
+    )
     failure_slices = compatibility["current_surface"]["failure_slices"]
     failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
     import hashlib
@@ -451,8 +454,9 @@ def test_i3b_runtime_and_static_inventory() -> None:
         ),
     )
     assert failures[227:232] == tuple(i6["failure_inventory"]["append_order"])
-    assert failures[232:] == tuple(i7["failure_inventory"]["append_order"])
-    assert len(failures) == i7["failure_inventory"]["future_total"] == 256
+    assert failures[232:256] == tuple(i7["failure_inventory"]["append_order"])
+    assert failures[256:] == tuple(i8["failure_inventory"]["future_values"][256:])
+    assert len(failures) == i8["failure_inventory"]["future_total"] == 280
     assert (
         len(("\n".join(failures[:227]) + "\n").encode("utf-8")),
         hashlib.sha256(("\n".join(failures[:227]) + "\n").encode("utf-8")).hexdigest(),
@@ -467,8 +471,8 @@ def test_i3b_runtime_and_static_inventory() -> None:
         "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
     )
     assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
-        i7["failure_inventory"]["future_lf"]["byte_count"],
-        i7["failure_inventory"]["future_lf"]["sha256"],
+        i8["failure_inventory"]["future_lf"]["byte_count"],
+        i8["failure_inventory"]["future_lf"]["sha256"],
     )
 
 

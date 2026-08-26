@@ -754,6 +754,12 @@ def _runtime_and_static_inventory() -> None:
     module_exports["faults"] = _load_contract(
         _REPO_ROOT / "post_i5_legacy_test_compatibility_contract.json"
     )["current_surface"]["module_exports"]["faults"]
+    i8_paths = _load_contract(
+        _REPO_ROOT
+        / "unified_python_research_framework_i8_implementation_path_manifest.json"
+    )
+    for module_name in ("experiment", "artifacts"):
+        module_exports[module_name] = i8_paths["module_exports"][module_name]
     direct_imports = contract["direct_imports"]
     assert type(module_exports) is dict and type(direct_imports) is dict
 
@@ -927,10 +933,13 @@ def _runtime_and_static_inventory() -> None:
     i7 = _load_contract(
         _REPO_ROOT / "unified_python_research_framework_i7_contract.json"
     )
+    i8 = _load_contract(
+        _REPO_ROOT / "unified_python_research_framework_i8_contract.json"
+    )
     failure_slices = compatibility["current_surface"]["failure_slices"]
     failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
     assert (len(failures), tuple(row["stop"] for row in failure_slices)) == (
-        256,
+        280,
         (53, 88, 102, 124, 185),
     )
     assert failures[53:88] == tuple(contract["failure_append_order"])
@@ -968,10 +977,11 @@ def _runtime_and_static_inventory() -> None:
         "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
     )
     assert failures[227:232] == tuple(i6["failure_inventory"]["append_order"])
-    assert failures[232:] == tuple(i7["failure_inventory"]["append_order"])
+    assert failures[232:256] == tuple(i7["failure_inventory"]["append_order"])
+    assert failures[256:] == tuple(i8["failure_inventory"]["future_values"][256:])
     assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
-        i7["failure_inventory"]["future_lf"]["byte_count"],
-        i7["failure_inventory"]["future_lf"]["sha256"],
+        i8["failure_inventory"]["future_lf"]["byte_count"],
+        i8["failure_inventory"]["future_lf"]["sha256"],
     )
     assert "OPERATIONAL_DURABILITY_EVENT" not in FaultClass.__members__
 

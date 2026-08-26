@@ -448,7 +448,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
             and node.target.id == "__all__"
             and isinstance(node.op, ast.Add)
         )
-        self.assertEqual(len(export_suffixes), 3)
+        self.assertEqual(len(export_suffixes), 4)
         current_root_exports = root_exports + tuple(
             name for suffix in export_suffixes for name in suffix
         )
@@ -485,6 +485,15 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 / "unified_python_research_framework_i7_implementation_path_manifest.json"
             ).read_bytes()
         )
+        i8_contract = json.loads(
+            (ROOT / "unified_python_research_framework_i8_contract.json").read_bytes()
+        )
+        i8_paths = json.loads(
+            (
+                ROOT
+                / "unified_python_research_framework_i8_implementation_path_manifest.json"
+            ).read_bytes()
+        )
         self.assertEqual(
             (
                 set(current_root_exports)
@@ -494,7 +503,8 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 current_root_exports[309:391],
                 current_root_exports[:391],
                 current_root_exports[391:407],
-                current_root_exports[407:],
+                current_root_exports[407:419],
+                current_root_exports[419:],
                 len(i5_execution_exports),
                 i5_execution_exports,
             ),
@@ -505,6 +515,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 tuple(post_i5_surface["root_export_order"]),
                 tuple(i6_contract["root_exports"]["append_order"]),
                 tuple(i7_contract["root_exports"]["append_order"]),
+                tuple(i8_contract["root_exports"]["append_order"]),
                 14,
                 frozenset(
                     post_i5_surface["root_import_strategy"]
@@ -577,7 +588,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 )
                 self.assertEqual(
                     experiment_imports,
-                    tuple(current_surface["module_exports"]["experiment"]),
+                    tuple(i8_paths["module_exports"]["experiment"]),
                 )
                 root_relative_modules = tuple(
                     imported
@@ -598,9 +609,9 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                         frozenset(root_relative_module_order),
                     ),
                     (
-                        i7_paths["future_import_graph"]["module_count"],
+                        i8_paths["future_import_graph"]["module_count"],
                         frozenset(
-                            i7_paths["future_import_graph"]["package_module_order"]
+                            i8_paths["future_import_graph"]["package_module_order"]
                         ),
                     ),
                 )
@@ -610,7 +621,9 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                         for export in root_exports
                         if export in frozenset(experiment_imports)
                     ),
-                    experiment_imports,
+                    tuple(
+                        export for export in experiment_imports if export in root_exports
+                    ),
                 )
         envelope_text = (SOURCE / "envelopes.py").read_text().lower()
         self.assertNotIn("encode_ecj1", envelope_text)
