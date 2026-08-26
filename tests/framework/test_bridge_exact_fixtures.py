@@ -1286,21 +1286,32 @@ class BridgeExactFixtureTests(unittest.TestCase):
                 / "unified_python_research_framework_i7_implementation_path_manifest.json"
             ).read_bytes()
         )
+        i8_contract = json.loads(
+            (ROOT / "unified_python_research_framework_i8_contract.json").read_bytes()
+        )
+        i8_paths = json.loads(
+            (
+                ROOT
+                / "unified_python_research_framework_i8_implementation_path_manifest.json"
+            ).read_bytes()
+        )
         failure_order = tuple(item.value for item in errors.FailureCode)
         expected_failures = tuple(
             self.predecessor["current_surface"]["failure_order"]
         ) + tuple(self.contract["failure_inventory"]["append_order"]) + tuple(
             i7_contract["failure_inventory"]["append_order"]
+        ) + tuple(
+            i8_contract["failure_inventory"]["future_values"][256:]
         )
         self.assertEqual(failure_order, expected_failures)
-        self.assertEqual(len(failure_order), 256)
+        self.assertEqual(len(failure_order), 280)
         failure_lf = ("\n".join(failure_order) + "\n").encode("utf-8")
         self.assertEqual(
-            len(failure_lf), i7_contract["failure_inventory"]["future_lf"]["byte_count"]
+            len(failure_lf), i8_contract["failure_inventory"]["future_lf"]["byte_count"]
         )
         self.assertEqual(
             hashlib.sha256(failure_lf).hexdigest(),
-            i7_contract["failure_inventory"]["future_lf"]["sha256"],
+            i8_contract["failure_inventory"]["future_lf"]["sha256"],
         )
 
         root_exports = tuple(ebu_framework.__all__)
@@ -1308,16 +1319,18 @@ class BridgeExactFixtureTests(unittest.TestCase):
             self.predecessor["current_surface"]["root_export_order"]
         ) + tuple(self.contract["root_exports"]["append_order"]) + tuple(
             i7_contract["root_exports"]["append_order"]
+        ) + tuple(
+            i8_contract["root_exports"]["append_order"]
         )
         self.assertEqual(root_exports, expected_root_exports)
-        self.assertEqual(len(root_exports), 419)
+        self.assertEqual(len(root_exports), 444)
         root_lf = ("\n".join(root_exports) + "\n").encode("utf-8")
         self.assertEqual(
-            len(root_lf), i7_contract["root_exports"]["future_lf"]["byte_count"]
+            len(root_lf), i8_contract["root_exports"]["future_lf"]["byte_count"]
         )
         self.assertEqual(
             hashlib.sha256(root_lf).hexdigest(),
-            i7_contract["root_exports"]["future_lf"]["sha256"],
+            i8_contract["root_exports"]["future_lf"]["sha256"],
         )
         self.assertEqual(tuple(bridge.__all__), tuple(self.contract["root_exports"]["bridge_module_exports"]))
 
@@ -1346,7 +1359,7 @@ class BridgeExactFixtureTests(unittest.TestCase):
         package = ROOT / "src/ebu_framework"
         graph: dict[str, list[str]] = {}
         module_names = {path.stem for path in package.glob("*.py") if path.name != "__init__.py"}
-        for module in i7_paths["future_import_graph"]["package_module_order"]:
+        for module in i8_paths["future_import_graph"]["package_module_order"]:
             tree = ast.parse((package / f"{module}.py").read_text(encoding="utf-8"))
             imports: list[str] = []
             for node in ast.walk(tree):
@@ -1358,22 +1371,22 @@ class BridgeExactFixtureTests(unittest.TestCase):
                             alias.name for alias in node.names if alias.name in module_names
                         )
             graph[module] = list(dict.fromkeys(imports))
-        self.assertEqual(graph, i7_paths["future_import_graph"]["direct_imports"])
-        self.assertEqual(len(graph), 36)
-        self.assertEqual(sum(map(len, graph.values())), 221)
+        self.assertEqual(graph, i8_paths["future_import_graph"]["direct_imports"])
+        self.assertEqual(len(graph), 39)
+        self.assertEqual(sum(map(len, graph.values())), 243)
         graph_projection = _canonical_json_lf(
             [
                 [module, graph[module]]
-                for module in i7_paths["future_import_graph"]["package_module_order"]
+                for module in i8_paths["future_import_graph"]["package_module_order"]
             ]
         )
         self.assertEqual(
             len(graph_projection),
-            i7_paths["future_import_graph"]["projection_byte_count"],
+            i8_paths["future_import_graph"]["projection_byte_count"],
         )
         self.assertEqual(
             hashlib.sha256(graph_projection).hexdigest(),
-            i7_paths["future_import_graph"]["projection_sha256"],
+            i8_paths["future_import_graph"]["projection_sha256"],
         )
 
 

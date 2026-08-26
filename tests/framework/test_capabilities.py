@@ -621,6 +621,15 @@ class FrameworkI4ReachabilityTests(unittest.TestCase):
                 / "unified_python_research_framework_i7_implementation_path_manifest.json"
             ).read_bytes()
         )
+        i8_contract = json.loads(
+            (ROOT / "unified_python_research_framework_i8_contract.json").read_bytes()
+        )
+        i8_paths = json.loads(
+            (
+                ROOT
+                / "unified_python_research_framework_i8_implementation_path_manifest.json"
+            ).read_bytes()
+        )
         t2_patch = next(
             row
             for row in i7_paths["exact_construction_patches"]["rows"]
@@ -639,6 +648,10 @@ class FrameworkI4ReachabilityTests(unittest.TestCase):
             ),
             tuple(t2_patch["exact_new_rows"]),
         )
+        self.assertEqual(len(tuple(FailureCode)), i8_contract["failure_inventory"]["future_total"])
+        self.assertEqual(len(tuple(framework.__all__)), i8_contract["root_exports"]["future_count"])
+        self.assertEqual(i8_paths["future_import_graph"]["module_count"], 39)
+        self.assertEqual(i8_paths["future_import_graph"]["direct_edge_count"], 243)
 
 
 if __name__ == "__main__":

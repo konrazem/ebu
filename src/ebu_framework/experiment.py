@@ -10,7 +10,7 @@ from typing import Literal, NoReturn
 from .conservation import ConservationProfileSelection
 from .policy import MemoryMode
 from .faults import FaultScheduleV1
-from .primitives import IntegerV1
+from .primitives import IntegerV1, ResolutionDetail
 from .identity import ExecutionSemanticsHash, ObjectRef
 from .envelopes import CommonObjectEnvelope, parse_ecj1
 from .hashing import compute_execution_semantics_hash, compute_object_content_hash
@@ -52,6 +52,22 @@ def _formation_failure(interface: str) -> NoReturn:
     _failure(FailureCode.I3_RECORD_FORMATION_INVALID, interface)
 
 
+def _i8_failure(code: FailureCode, interface: str, ordinal: int) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I8,
+        interface_ref=_interface(interface),
+        failure_ordinal=ordinal,
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _i8_formation_failure(interface: str) -> NoReturn:
+    _i8_failure(FailureCode.I8_RECORD_FORMATION_INVALID, interface, 1)
+
+
 def _strict_formation(cls: type) -> type:
     generated_init = cls.__init__
 
@@ -59,6 +75,20 @@ def _strict_formation(cls: type) -> type:
         expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
         if args or set(kwargs) != expected_fields:
             _formation_failure(cls.__name__)
+        generated_init(self, **kwargs)
+
+    strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
+    cls.__init__ = strict_init  # type: ignore[method-assign]
+    return cls
+
+
+def _i8_strict_formation(cls: type) -> type:
+    generated_init = cls.__init__
+
+    def strict_init(self: object, *args: object, **kwargs: object) -> None:
+        expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
+        if args or set(kwargs) != expected_fields:
+            _i8_formation_failure(cls.__name__)
         generated_init(self, **kwargs)
 
     strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
@@ -543,6 +573,45 @@ def _validate_binding_acceptance(
     return None
 
 
+def _i8_canonical_refs(value: object) -> bool:
+    if type(value) is not tuple or not all(type(item) is ObjectRef for item in value):
+        return False
+    keys = tuple(_ref_key(item) for item in value)
+    return keys == tuple(sorted(keys)) and len(keys) == len(set(keys))
+
+
+@_i8_strict_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class RuntimeMetadata:
+    execution_identity: ExecutionIdentity
+    run_identity_ref: ObjectRef
+    authorization_use_ref: ObjectRef
+    wall_clock_evidence_ref: ObjectRef | Applicability
+    host_process_evidence_refs: tuple[ObjectRef, ...]
+    storage_evidence_refs: tuple[ObjectRef, ...]
+    diagnostic_evidence_refs: tuple[ObjectRef, ...]
+    completeness: ResolutionDetail
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.execution_identity) is ExecutionIdentity
+            and type(self.run_identity_ref) is ObjectRef
+            and type(self.authorization_use_ref) is ObjectRef
+            and (
+                type(self.wall_clock_evidence_ref) is ObjectRef
+                or self.wall_clock_evidence_ref is Applicability.NOT_APPLICABLE
+            )
+            and _i8_canonical_refs(self.host_process_evidence_refs)
+            and _i8_canonical_refs(self.storage_evidence_refs)
+            and _i8_canonical_refs(self.diagnostic_evidence_refs)
+            and type(self.completeness) is ResolutionDetail
+        ):
+            _i8_formation_failure("RuntimeMetadata")
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {field: _project(getattr(self, field)) for field in self.__dataclass_fields__}
+
+
 __all__ = (
     "ExperimentConfiguration",
     "ExecutionBinding",
@@ -551,4 +620,5 @@ __all__ = (
     "ExecutionIdentity",
     "validate_experiment_configuration",
     "validate_execution_binding",
+    "RuntimeMetadata",
 )

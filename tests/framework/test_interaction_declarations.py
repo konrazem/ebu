@@ -1840,6 +1840,9 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         i7_contract = _load_json(
             _REPO_ROOT / "unified_python_research_framework_i7_contract.json"
         )
+        i8_contract = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i8_contract.json"
+        )
         assert type(compatibility) is dict
         assert type(i5_contract) is dict
         assert type(post_i5_compatibility) is dict
@@ -1864,12 +1867,15 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 tuple(post_i5_surface["failure_order"]),
             ),
         )
-        self.assertEqual(len(failures), 256)
+        self.assertEqual(len(failures), 280)
         self.assertEqual(
             failures[227:232], tuple(i6_contract["failure_inventory"]["append_order"])
         )
         self.assertEqual(
-            failures[232:], tuple(i7_contract["failure_inventory"]["append_order"])
+            failures[232:256], tuple(i7_contract["failure_inventory"]["append_order"])
+        )
+        self.assertEqual(
+            failures[256:], tuple(i8_contract["failure_inventory"]["future_values"][256:])
         )
         failure_prefix_projection = (
             "\n".join(failures[:124]) + "\n"
@@ -1904,8 +1910,8 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
             (
-                i7_contract["failure_inventory"]["future_lf"]["byte_count"],
-                i7_contract["failure_inventory"]["future_lf"]["sha256"],
+                i8_contract["failure_inventory"]["future_lf"]["byte_count"],
+                i8_contract["failure_inventory"]["future_lf"]["sha256"],
             ),
         )
         exports = tuple(ebu_framework.__all__)
@@ -1928,12 +1934,15 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 tuple(post_i5_surface["root_export_order"]),
             ),
         )
-        self.assertEqual(len(exports), 419)
+        self.assertEqual(len(exports), 444)
         self.assertEqual(
             exports[391:407], tuple(i6_contract["root_exports"]["append_order"])
         )
         self.assertEqual(
-            exports[407:], tuple(i7_contract["root_exports"]["append_order"])
+            exports[407:419], tuple(i7_contract["root_exports"]["append_order"])
+        )
+        self.assertEqual(
+            exports[419:], tuple(i8_contract["root_exports"]["append_order"])
         )
         export_prefix_projection = ("\n".join(exports[:261]) + "\n").encode(
             "utf-8"
@@ -1968,8 +1977,8 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
             (
-                i7_contract["root_exports"]["future_lf"]["byte_count"],
-                i7_contract["root_exports"]["future_lf"]["sha256"],
+                i8_contract["root_exports"]["future_lf"]["byte_count"],
+                i8_contract["root_exports"]["future_lf"]["sha256"],
             ),
         )
         self.assertEqual(interaction_module.__all__, tuple(_CONTRACT["proposed_surface"]["d2_root_export_suffix"]))
@@ -1989,6 +1998,9 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         )
         i7_paths = _load_json(
             _REPO_ROOT / "unified_python_research_framework_i7_implementation_path_manifest.json"
+        )
+        i8_paths = _load_json(
+            _REPO_ROOT / "unified_python_research_framework_i8_implementation_path_manifest.json"
         )
         assert type(compatibility) is dict
         assert type(post_i5_compatibility) is dict
@@ -2039,7 +2051,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                             ordered_graph[name].append(alias.name)
         current_ordered_graph: dict[str, list[str]] = {}
         current_module_exports: dict[str, tuple[str, ...]] = {}
-        for name in i7_paths["future_import_graph"]["package_module_order"]:
+        for name in i8_paths["future_import_graph"]["package_module_order"]:
             module_tree = ast.parse(
                 (package_dir / f"{name}.py").read_text(encoding="utf-8")
             )
@@ -2078,7 +2090,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             json.dumps(
                 [
                     [name, current_ordered_graph[name]]
-                    for name in i7_paths["future_import_graph"]["package_module_order"]
+                    for name in i8_paths["future_import_graph"]["package_module_order"]
                 ],
                 sort_keys=True,
                 separators=(",", ":"),
@@ -2103,7 +2115,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             json.dumps(
                 [
                     [name, list(current_module_exports[name])]
-                    for name in i7_paths["future_import_graph"]["package_module_order"]
+                    for name in i8_paths["future_import_graph"]["package_module_order"]
                 ],
                 sort_keys=True,
                 separators=(",", ":"),
@@ -2117,11 +2129,11 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (set(graph), tuple(current_ordered_graph)),
             (
-                set(i7_paths["future_import_graph"]["package_module_order"]),
-                tuple(i7_paths["future_import_graph"]["package_module_order"]),
+                set(i8_paths["future_import_graph"]["package_module_order"]),
+                tuple(i8_paths["future_import_graph"]["package_module_order"]),
             ),
         )
-        self.assertEqual(len(graph), 36)
+        self.assertEqual(len(graph), 39)
         self.assertEqual(
             {name: graph[name] for name in expected_graph}, expected_graph
         )
@@ -2136,15 +2148,15 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 current_module_exports,
             ),
             (
-                i7_paths["future_import_graph"]["direct_edge_count"],
+                i8_paths["future_import_graph"]["direct_edge_count"],
                 (
-                    i7_paths["future_import_graph"]["projection_byte_count"],
-                    i7_paths["future_import_graph"]["projection_sha256"],
+                    i8_paths["future_import_graph"]["projection_byte_count"],
+                    i8_paths["future_import_graph"]["projection_sha256"],
                 ),
-                i7_paths["future_import_graph"]["direct_imports"],
+                i8_paths["future_import_graph"]["direct_imports"],
                 {
                     name: tuple(values)
-                    for name, values in i7_paths["module_exports"].items()
+                    for name, values in i8_paths["module_exports"].items()
                 },
             ),
         )
@@ -2247,7 +2259,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
 
         for name in graph:
             visit(name)
-        self.assertEqual(len(visited), 36)
+        self.assertEqual(len(visited), 39)
         forbidden_imports = {
             "asyncio", "importlib", "multiprocessing", "random", "secrets", "socket", "subprocess", "threading", "urllib"
         }
@@ -2527,11 +2539,14 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             self.assertEqual((len(payload), hashlib.sha256(payload).hexdigest()), (size, digest))
         excluded = {
             "src/ebu_framework/__init__.py",
+            "src/ebu_framework/artifacts.py",
             "src/ebu_framework/capabilities.py",
             "src/ebu_framework/commitments.py",
             "src/ebu_framework/errors.py",
             "src/ebu_framework/execution.py",
+            "src/ebu_framework/experiment.py",
             "src/ebu_framework/network.py",
+            "src/ebu_framework/traces.py",
         }
         for row in _MANIFEST["rows"]:
             if row["path"] in excluded:

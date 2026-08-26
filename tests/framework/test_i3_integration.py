@@ -224,7 +224,7 @@ def _root_imports(tree: ast.Module) -> dict[str, tuple[str, ...]]:
             and node.module in _MODULES
         ):
             if node.module in result:
-                assert node.module in {"hashing", "faults"}
+                assert node.module in {"hashing", "faults", "experiment", "artifacts"}
                 continue
             assert all(alias.name != "*" and alias.asname is None for alias in node.names)
             result[node.module] = tuple(alias.name for alias in node.names)
@@ -519,6 +519,14 @@ class I3IntegrationTests(unittest.TestCase):
             / "unified_python_research_framework_i7_implementation_path_manifest.json",
             dict,
         )
+        _, i8_contract = _strict_load(
+            _REPO_ROOT / "unified_python_research_framework_i8_contract.json", dict
+        )
+        _, i8_paths = _strict_load(
+            _REPO_ROOT
+            / "unified_python_research_framework_i8_implementation_path_manifest.json",
+            dict,
+        )
         post_i5_surface = post_i5_compatibility["current_surface"]
         d2_surface = d2_mechanical["proposed_surface"]
         d1_suffix = root_exports[219:237]
@@ -553,7 +561,10 @@ class I3IntegrationTests(unittest.TestCase):
             root_exports[391:407], tuple(i6_contract["root_exports"]["append_order"])
         )
         self.assertEqual(
-            root_exports[407:], tuple(i7_contract["root_exports"]["append_order"])
+            root_exports[407:419], tuple(i7_contract["root_exports"]["append_order"])
+        )
+        self.assertEqual(
+            root_exports[419:], tuple(i8_contract["root_exports"]["append_order"])
         )
         root_rule = i4_mechanical["root_export_rule"]
         for names, byte_key, digest_key in (
@@ -584,9 +595,9 @@ class I3IntegrationTests(unittest.TestCase):
                 hashlib.sha256(current_root_projection).hexdigest(),
             ),
             (
-                i7_contract["root_exports"]["future_total"],
-                i7_contract["root_exports"]["future_lf"]["byte_count"],
-                i7_contract["root_exports"]["future_lf"]["sha256"],
+                i8_contract["root_exports"]["future_count"],
+                i8_contract["root_exports"]["future_lf"]["byte_count"],
+                i8_contract["root_exports"]["future_lf"]["sha256"],
             ),
         )
         self.assertEqual(len(root_exports), len(set(root_exports)))
@@ -614,6 +625,8 @@ class I3IntegrationTests(unittest.TestCase):
                 names = post_i5_surface["module_exports"]["faults"]
             elif module_name in {"network", "commitments"}:
                 names = i7_paths["module_exports"][module_name]
+            elif module_name in {"experiment", "artifacts"}:
+                names = i8_paths["module_exports"][module_name]
             module = _MODULES[module_name]
             self.assertEqual(tuple(module.__all__), tuple(names))
             for name in names:
@@ -809,8 +822,12 @@ class I3IntegrationTests(unittest.TestCase):
             tuple(i6_contract["failure_inventory"]["append_order"]),
         )
         self.assertEqual(
-            failure_values[232:],
+            failure_values[232:256],
             tuple(i7_contract["failure_inventory"]["append_order"]),
+        )
+        self.assertEqual(
+            failure_values[256:],
+            tuple(i8_contract["failure_inventory"]["future_values"][256:]),
         )
         future_failure_projection = b"".join(
             name.encode("ascii") + b"\n" for name in failure_values
@@ -821,8 +838,8 @@ class I3IntegrationTests(unittest.TestCase):
                 hashlib.sha256(future_failure_projection).hexdigest(),
             ),
             (
-                i7_contract["failure_inventory"]["future_lf"]["byte_count"],
-                i7_contract["failure_inventory"]["future_lf"]["sha256"],
+                i8_contract["failure_inventory"]["future_lf"]["byte_count"],
+                i8_contract["failure_inventory"]["future_lf"]["sha256"],
             ),
         )
         failure_rule = i4_mechanical["failure_rule"]

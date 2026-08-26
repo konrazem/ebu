@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import NoReturn
+from typing import Literal, NoReturn
 
 from .experiment import ExecutionIdentity
 from .ledger import Ledger
@@ -50,6 +50,22 @@ def _formation_failure(interface: str) -> NoReturn:
     _failure(FailureCode.I3_RECORD_FORMATION_INVALID, interface)
 
 
+def _i8_failure(code: FailureCode, interface: str, ordinal: int) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I8,
+        interface_ref=_interface(interface),
+        failure_ordinal=ordinal,
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _i8_formation_failure(interface: str) -> NoReturn:
+    _i8_failure(FailureCode.I8_RECORD_FORMATION_INVALID, interface, 1)
+
+
 def _strict_formation(cls: type) -> type:
     generated_init = cls.__init__
 
@@ -57,6 +73,20 @@ def _strict_formation(cls: type) -> type:
         expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
         if args or set(kwargs) != expected_fields:
             _formation_failure(cls.__name__)
+        generated_init(self, **kwargs)
+
+    strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
+    cls.__init__ = strict_init  # type: ignore[method-assign]
+    return cls
+
+
+def _i8_strict_formation(cls: type) -> type:
+    generated_init = cls.__init__
+
+    def strict_init(self: object, *args: object, **kwargs: object) -> None:
+        expected_fields = set(cls.__dataclass_fields__)  # type: ignore[attr-defined]
+        if args or set(kwargs) != expected_fields:
+            _i8_formation_failure(cls.__name__)
         generated_init(self, **kwargs)
 
     strict_init.__wrapped__ = generated_init  # type: ignore[attr-defined]
@@ -331,6 +361,206 @@ def validate_execution_result_manifest(
     return None
 
 
+def _i8_ref_tuple(value: object, *, canonical: bool = False) -> bool:
+    if type(value) is not tuple or not all(type(item) is ObjectRef for item in value):
+        return False
+    keys = tuple(_ref_key(item) for item in value)
+    return len(keys) == len(set(keys)) and (
+        not canonical or keys == tuple(sorted(keys))
+    )
+
+
+def _i8_artifact_hash_tuple(value: object) -> bool:
+    return type(value) is tuple and all(
+        type(item) is ArtifactByteHash for item in value
+    )
+
+
+def _i8_object_or_not_applicable(value: object) -> bool:
+    return type(value) is ObjectRef or value is Applicability.NOT_APPLICABLE
+
+
+@_i8_strict_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class ResultArtifact:
+    artifact_record: ArtifactRecord
+    scientific_payload_ref: ObjectRef
+    trace_payload_or_prefix_ref: ObjectRef
+    run_envelope_ref: ObjectRef
+    runtime_metadata_ref: ObjectRef
+    derivation_refs: tuple[ObjectRef, ...]
+    scientific_completeness: ResolutionDetail
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.artifact_record) is ArtifactRecord
+            and type(self.scientific_payload_ref) is ObjectRef
+            and type(self.trace_payload_or_prefix_ref) is ObjectRef
+            and type(self.run_envelope_ref) is ObjectRef
+            and type(self.runtime_metadata_ref) is ObjectRef
+            and _i8_ref_tuple(self.derivation_refs, canonical=True)
+            and type(self.scientific_completeness) is ResolutionDetail
+        ):
+            _i8_formation_failure("ResultArtifact")
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {field: _project(getattr(self, field)) for field in self.__dataclass_fields__}
+
+
+@_i8_strict_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class SummaryArtifact:
+    artifact_record: ArtifactRecord
+    ordered_source_result_refs: tuple[ObjectRef, ...]
+    analysis_code_refs: tuple[ObjectRef, ...]
+    derivation_refs: tuple[ObjectRef, ...]
+    completeness: ResolutionDetail
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.artifact_record) is ArtifactRecord
+            and _i8_ref_tuple(self.ordered_source_result_refs)
+            and _i8_ref_tuple(self.analysis_code_refs, canonical=True)
+            and _i8_ref_tuple(self.derivation_refs, canonical=True)
+            and type(self.completeness) is ResolutionDetail
+        ):
+            _i8_formation_failure("SummaryArtifact")
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {field: _project(getattr(self, field)) for field in self.__dataclass_fields__}
+
+
+@_i8_strict_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class FigureArtifact:
+    artifact_record: ArtifactRecord
+    ordered_source_result_or_summary_refs: tuple[ObjectRef, ...]
+    figure_code_refs: tuple[ObjectRef, ...]
+    evidence_label: Literal[
+        "SCHEMATIC",
+        "MATHEMATICALLY_DERIVED",
+        "TESTED_IMPLEMENTATION",
+        "OBSERVED_REGISTERED_RUN",
+        "RESEARCH_HYPOTHESIS",
+        "INSTITUTIONAL_DESIGN_CHOICE",
+    ]
+    completeness: ResolutionDetail
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.artifact_record) is ArtifactRecord
+            and _i8_ref_tuple(self.ordered_source_result_or_summary_refs)
+            and _i8_ref_tuple(self.figure_code_refs, canonical=True)
+            and type(self.evidence_label) is str
+            and self.evidence_label
+            in {
+                "SCHEMATIC",
+                "MATHEMATICALLY_DERIVED",
+                "TESTED_IMPLEMENTATION",
+                "OBSERVED_REGISTERED_RUN",
+                "RESEARCH_HYPOTHESIS",
+                "INSTITUTIONAL_DESIGN_CHOICE",
+            }
+            and type(self.completeness) is ResolutionDetail
+        ):
+            _i8_formation_failure("FigureArtifact")
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {field: _project(getattr(self, field)) for field in self.__dataclass_fields__}
+
+
+@_i8_strict_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class PublicationRecord:
+    envelope: CommonObjectEnvelope
+    manifest_ref: ObjectRef
+    authorization_ref: ObjectRef
+    authorization_validation_ref: ObjectRef
+    authorization_use_ref: ObjectRef
+    ordered_published_artifact_refs: tuple[ObjectRef, ...]
+    ordered_published_artifact_byte_hashes: tuple[ArtifactByteHash, ...]
+    publisher_identity_ref: ObjectRef
+    destination_content_addresses: tuple[str, ...]
+    publication_time_evidence_ref: ObjectRef | Applicability
+    publication_receipt_ref: ObjectRef
+    completeness: ResolutionDetail
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.manifest_ref) is ObjectRef
+            and type(self.authorization_ref) is ObjectRef
+            and type(self.authorization_validation_ref) is ObjectRef
+            and type(self.authorization_use_ref) is ObjectRef
+            and _i8_ref_tuple(self.ordered_published_artifact_refs)
+            and _i8_artifact_hash_tuple(self.ordered_published_artifact_byte_hashes)
+            and type(self.publisher_identity_ref) is ObjectRef
+            and type(self.destination_content_addresses) is tuple
+            and all(
+                type(item) is str and bool(item)
+                for item in self.destination_content_addresses
+            )
+            and _i8_object_or_not_applicable(self.publication_time_evidence_ref)
+            and type(self.publication_receipt_ref) is ObjectRef
+            and type(self.completeness) is ResolutionDetail
+        ):
+            _i8_formation_failure("PublicationRecord")
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
+@_i8_strict_formation
+@dataclass(frozen=True, slots=True, eq=True, order=False, unsafe_hash=False, kw_only=True)
+class CorrectionRecord:
+    envelope: CommonObjectEnvelope
+    original_artifact_or_manifest_ref: ObjectRef
+    replacement_artifact_or_manifest_ref: ObjectRef
+    correction_scope_ref: ObjectRef
+    reason_ref: ObjectRef
+    method_ref: ObjectRef
+    authorization_ref: ObjectRef
+    authorization_validation_ref: ObjectRef
+    authorization_use_ref: ObjectRef
+    scientific_execution_repeated: bool
+    prior_publication_refs: tuple[ObjectRef, ...]
+    new_manifest_ref_or_not_applicable: ObjectRef | Applicability
+    evidence_ledger_relation_ref: ObjectRef
+    completeness: ResolutionDetail
+
+    def __post_init__(self) -> None:
+        if not (
+            type(self.envelope) is CommonObjectEnvelope
+            and type(self.original_artifact_or_manifest_ref) is ObjectRef
+            and type(self.replacement_artifact_or_manifest_ref) is ObjectRef
+            and type(self.correction_scope_ref) is ObjectRef
+            and type(self.reason_ref) is ObjectRef
+            and type(self.method_ref) is ObjectRef
+            and type(self.authorization_ref) is ObjectRef
+            and type(self.authorization_validation_ref) is ObjectRef
+            and type(self.authorization_use_ref) is ObjectRef
+            and type(self.scientific_execution_repeated) is bool
+            and _i8_ref_tuple(self.prior_publication_refs, canonical=True)
+            and _i8_object_or_not_applicable(
+                self.new_manifest_ref_or_not_applicable
+            )
+            and type(self.evidence_ledger_relation_ref) is ObjectRef
+            and type(self.completeness) is ResolutionDetail
+        ):
+            _i8_formation_failure("CorrectionRecord")
+
+    def to_ecj1(self) -> dict[str, object]:
+        return {
+            field: _project(getattr(self, field))
+            for field in self.__dataclass_fields__
+            if field != "envelope"
+        }
+
+
 _DEPENDENCY_SENTINEL = Ledger
 
 
@@ -338,4 +568,9 @@ __all__ = (
     "ArtifactRecord",
     "ExecutionResultManifest",
     "validate_execution_result_manifest",
+    "ResultArtifact",
+    "SummaryArtifact",
+    "FigureArtifact",
+    "PublicationRecord",
+    "CorrectionRecord",
 )

@@ -30,6 +30,7 @@ from .hashing import (
     OwnershipDigest,
     PhaseCommitDigest,
     RunEnvelopeDigest,
+    compute_artifact_byte_hash,
     compute_phase_commit_digest,
     compute_run_envelope_digest,
 )
@@ -62,6 +63,22 @@ def _failure(code: FailureCode, interface: str) -> NoReturn:
 
 def _formation_failure(interface: str) -> NoReturn:
     _failure(FailureCode.I5_RECORD_FORMATION_INVALID, interface)
+
+
+def _i8_failure(code: FailureCode, interface: str, ordinal: int) -> NoReturn:
+    _fail(
+        code,
+        f"{interface} rejected {code.value}",
+        stage=FailureStage.I8,
+        interface_ref=_interface(interface),
+        failure_ordinal=ordinal,
+        scientific_status_effect=ScientificStatusEffect.UNSTARTED_PRESERVED,
+        retry_class=RetryClass.FORBIDDEN,
+    )
+
+
+def _i8_formation_failure(interface: str) -> NoReturn:
+    _i8_failure(FailureCode.I8_RECORD_FORMATION_INVALID, interface, 1)
 
 
 def _strict_formation(cls: type) -> type:
@@ -726,6 +743,96 @@ def build_run_trace_envelope(
     )
 
 
+def _i8_named(value: object, module: str, name: str) -> bool:
+    return type(value).__module__ == module and type(value).__name__ == name
+
+
+def finalize_inert_trace_payload(
+    trace_validation: TraceValidationResult,
+    run_envelope: RunTraceEnvelopeV1,
+    trace_artifact: ArtifactRecord,
+    trace_bytes: bytes,
+    /,
+) -> ArtifactRecord:
+    interface = "finalize_inert_trace_payload"
+    if not (
+        type(trace_validation) is TraceValidationResult
+        and type(run_envelope) is RunTraceEnvelopeV1
+        and type(trace_artifact) is _artifacts.ArtifactRecord
+        and type(trace_bytes) is bytes
+    ):
+        _i8_formation_failure(interface)
+    if not str(trace_artifact.envelope.object_id).startswith(
+        "ebu:validation:i8:"
+    ):
+        _i8_failure(FailureCode.TRACE_FINALIZATION_INVALID, interface, 2)
+    if not (
+        type(trace_artifact.content_ref) is ObjectRef
+        and type(trace_artifact.completeness.present_value_ref) is ObjectRef
+    ):
+        _i8_failure(FailureCode.MISSING_ARTIFACT, interface, 3)
+    if compute_artifact_byte_hash(trace_bytes) != trace_artifact.artifact_byte_hash:
+        _i8_failure(FailureCode.HASH_MISMATCH, interface, 4)
+    if trace_validation.status is TraceValidationStatus.AMBIGUOUS:
+        _i8_failure(FailureCode.AMBIGUOUS_PREFIX, interface, 5)
+    valid_prefix = (
+        trace_validation.status is TraceValidationStatus.VALID_PREFIX
+        and type(trace_validation.confirmed_prefix) is CanonicalTracePrefix
+        and trace_validation.complete_evidence is Applicability.NOT_APPLICABLE
+        and run_envelope.canonical_trace_digest is Applicability.NOT_APPLICABLE
+    )
+    valid_complete = (
+        trace_validation.status is TraceValidationStatus.VALID_COMPLETE
+        and type(trace_validation.confirmed_prefix) is CanonicalTracePrefix
+        and type(trace_validation.complete_evidence) is CompleteTraceEvidence
+        and run_envelope.canonical_trace_digest
+        == trace_validation.complete_evidence.trace_digest
+    )
+    if not (
+        (valid_prefix or valid_complete)
+        and type(run_envelope.execution_binding_ref) is ObjectRef
+        and type(run_envelope.execution_identity) is ExecutionIdentity
+        and trace_artifact.producing_execution_identity
+        == run_envelope.execution_identity
+        and run_envelope.execution_identity.binding_ref
+        == run_envelope.execution_binding_ref
+    ):
+        _i8_failure(FailureCode.RECOVERY_RUN_BINDING_MISMATCH, interface, 6)
+    return trace_artifact
+
+
+def finalize_trace_payload(
+    *,
+    trace_validation: TraceValidationResult,
+    run_envelope: RunTraceEnvelopeV1,
+    trace_artifact: ArtifactRecord,
+    authorization_validation: AuthorizationValidationRecord,
+    authorization_use: AuthorizationUseRecord,
+) -> NoReturn:
+    interface = "finalize_trace_payload"
+    if not (
+        type(trace_validation) is TraceValidationResult
+        and type(run_envelope) is RunTraceEnvelopeV1
+        and type(trace_artifact) is _artifacts.ArtifactRecord
+        and _i8_named(
+            authorization_validation,
+            "ebu_framework.authorization",
+            "AuthorizationValidationRecord",
+        )
+        and _i8_named(
+            authorization_use,
+            "ebu_framework.authorization_use",
+            "AuthorizationUseRecord",
+        )
+    ):
+        _i8_formation_failure(interface)
+    _i8_failure(
+        FailureCode.REAL_FINALIZATION_AUTHORITY_UNAVAILABLE,
+        interface,
+        2,
+    )
+
+
 __all__ = (
     "TraceRowKind",
     "TraceHeader",
@@ -747,4 +854,6 @@ __all__ = (
     "validate_complete_trace_evidence",
     "build_minimum_reconstructable_trace",
     "build_run_trace_envelope",
+    "finalize_inert_trace_payload",
+    "finalize_trace_payload",
 )
