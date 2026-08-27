@@ -44,6 +44,16 @@
         "SD-01 H3 recursive feasibility referred to an undefined next-step H1 menu"
       ],
       "execution_boundary": "no Stage D model, transform, benchmark, trajectory, simulation, outcome, result, figure, or book was executed; the CI failure was only the expected authority-transition reachability refusal"
+    },
+    {
+      "candidate_commit": "1a63d08283064c8d0c6a7f67f6bd9ed305d931ee",
+      "candidate_tree": "4743f3d1f507cf4d4a8b980f671943ea9ccc7319",
+      "ci_run": 33083703291,
+      "disposition": "FAIL",
+      "blocking_classes": [
+        "hard-cap profile selection not bound to the evidence record study and use-site role"
+      ],
+      "execution_boundary": "no Stage D model, transform, benchmark, trajectory, simulation, outcome, result, figure, or book was executed; the CI failure was only the expected authority-transition reachability refusal"
     }
   ],
   "candidate_files": [
@@ -277,6 +287,35 @@
       "CANONICAL-CACHE-01": ["canonical_vertices", "combined_trace_output_bytes_per_case", "compressed_comparison_level", "expanded_oracle_level", "maximum_expanded_occurrences", "maximum_hyperedge_order", "maximum_recursion_depth", "peak_resident_memory_bytes_per_case", "wall_time_seconds_per_case"]
     },
     "normalization_algorithm": "Copy profile_id and each applicable matrix/control hard-cap value exactly; emit every other closed dimension as JSON null; require equality to the matching one of 17 exact constants in hard_caps/v1; canonicalize and hash the complete object. No key renaming, unit conversion, default insertion, omitted null, or value substitution is permitted.",
+    "record_role_profile_binding": {
+      "role_field": "cap_binding_role",
+      "closed_roles": [
+        "STUDY_EXECUTION",
+        "MOBIUS_CONFORMANCE",
+        "DAG_CONFORMANCE",
+        "CACHE_CONFORMANCE"
+      ],
+      "configuration_manifest_rule": "cap_binding_role is exactly STUDY_EXECUTION and hard_caps is exactly the SD-01..SD-14 profile whose profile_id equals study_id",
+      "study_execution_rule": "for computation_record and limit_decision with cap_binding_role STUDY_EXECUTION, the hard-cap profile is exactly the SD-01..SD-14 profile whose profile_id equals study_id",
+      "conformance_roles": {
+        "MOBIUS_CONFORMANCE": {
+          "required_profile_id": "MOBIUS-EXACT-01",
+          "permitted_study_ids": ["SD-05", "SD-06", "SD-07", "SD-11", "SD-14"],
+          "computation_algorithm_evidence_kind": "MOBIUS"
+        },
+        "DAG_CONFORMANCE": {
+          "required_profile_id": "DAG-EXACT-01",
+          "permitted_study_ids": ["SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+          "computation_algorithm_evidence_kind": "DAG"
+        },
+        "CACHE_CONFORMANCE": {
+          "required_profile_id": "CANONICAL-CACHE-01",
+          "permitted_study_ids": ["SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+          "computation_algorithm_evidence_kind": "CACHE"
+        }
+      },
+      "unknown_role_cross_study_or_cross_control_profile_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
+    },
     "omitted_applicable_or_nonnull_inapplicable_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH",
     "unknown_dimension_disposition": "REFUSE_UNKNOWN_HARD_CAP_DIMENSION"
   },

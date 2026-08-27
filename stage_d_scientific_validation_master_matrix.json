@@ -8,6 +8,47 @@
   "shared_numerical_policy": "NUMERICAL-POLICY-01 as frozen in stage_d_scientific_validation_contract.json; SD-02 remains governed only by its preserved Gate 1D-C numerical authority",
   "shared_uncertainty_policy": "REGISTERED-SEED-SUMMARY-01: complete seed values, paired differences, exact median, and closed min/max seed range; resampling, bootstrap/confidence language, analysis draws, and population inference are forbidden",
   "reference_environment": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab linux/amd64 CPython 3.14.4-final",
+  "hard_cap_profile_role_mapping": {
+    "role_field": "cap_binding_role",
+    "configuration_manifest": {
+      "permitted_role": "STUDY_EXECUTION",
+      "profile_rule": "profile_id must equal study_id"
+    },
+    "study_execution_profiles": {
+      "SD-01": "SD-01",
+      "SD-02": "SD-02",
+      "SD-03": "SD-03",
+      "SD-04": "SD-04",
+      "SD-05": "SD-05",
+      "SD-06": "SD-06",
+      "SD-07": "SD-07",
+      "SD-08": "SD-08",
+      "SD-09": "SD-09",
+      "SD-10": "SD-10",
+      "SD-11": "SD-11",
+      "SD-12": "SD-12",
+      "SD-13": "SD-13",
+      "SD-14": "SD-14"
+    },
+    "conformance_profiles": {
+      "MOBIUS_CONFORMANCE": {
+        "profile_id": "MOBIUS-EXACT-01",
+        "study_ids": ["SD-05", "SD-06", "SD-07", "SD-11", "SD-14"],
+        "computation_algorithm_evidence_kind": "MOBIUS"
+      },
+      "DAG_CONFORMANCE": {
+        "profile_id": "DAG-EXACT-01",
+        "study_ids": ["SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+        "computation_algorithm_evidence_kind": "DAG"
+      },
+      "CACHE_CONFORMANCE": {
+        "profile_id": "CANONICAL-CACHE-01",
+        "study_ids": ["SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+        "computation_algorithm_evidence_kind": "CACHE"
+      }
+    },
+    "use_site_rule": "configuration_manifest permits only its matching study profile; computation_record and limit_decision require either that matching study profile or the one exact conformance profile permitted by the declared role and study; every cross-study, cross-control, unknown-role, or role/evidence-kind substitution refuses"
+  },
   "study_order": [
     "SD-01",
     "SD-02",

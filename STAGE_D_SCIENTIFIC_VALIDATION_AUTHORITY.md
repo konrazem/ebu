@@ -20,7 +20,7 @@
 
 **Scope:** one tracked scientific-validation matrix, its mechanical contract, evidence schemas, predecessor locks, and fail-closed validation contract
 
-**Rejected authority candidates:** `cf747d49924fbd2b783431dbb4a9a54f1eb5a9f1` / tree `16132e72a55ae86b9df1156146335f15a67413ad`, exact-head CI `33075994735`; and `96c9391cdd435434cdaa10655667263ea43a0245` / tree `3d80b62ea5fc2b1aa9c67d891f90da128f680307`, exact-head CI `33080431442`; both received independent `FAIL` and remain immutable rejected evidence
+**Rejected authority candidates:** `cf747d49924fbd2b783431dbb4a9a54f1eb5a9f1` / tree `16132e72a55ae86b9df1156146335f15a67413ad`, exact-head CI `33075994735`; `96c9391cdd435434cdaa10655667263ea43a0245` / tree `3d80b62ea5fc2b1aa9c67d891f90da128f680307`, exact-head CI `33080431442`; and `1a63d08283064c8d0c6a7f67f6bd9ed305d931ee` / tree `4743f3d1f507cf4d4a8b980f671943ea9ccc7319`, exact-head CI `33083703291`; all received independent `FAIL` and remain immutable rejected evidence
 
 ---
 
@@ -55,16 +55,16 @@ The machine-readable sources are:
 A disagreement among this document and those JSON files is an integrity
 failure requiring refusal. No source may be selected opportunistically.
 
-The rejected predecessor candidate remains immutable evidence. Its CI passed
+The rejected predecessor candidates remain immutable evidence. Their CI passed
 conventional, T1, and T2 while T0 and packaging refused only at the declared
-Stage D reachability transition. Independent content audit found the six
-authority-binding defects recorded in the mechanical contract: unbound source
-paths, incomplete homeostasis/recovery predicates, nonrepresentable cap and
-limit records, unfrozen uncertainty/numerical rules, evaluation arithmetic
-errors, and an under-specified DAG complexity model. This descendant corrects
-those authority defects without calling the rejected candidate a pass. No
-scientific behavior was executed in producing or auditing either authority
-candidate.
+Stage D reachability transition. Independent content audits first found the six
+authority-binding defect classes recorded in the mechanical contract, then
+found five remaining cap/cache/numerical/stochastic/recursive-feasibility
+classes, and finally proved that an internally valid hard-cap profile could be
+substituted across study use sites. This descendant corrects the remaining
+study/role/profile binding defect without calling any rejected candidate a
+pass. No scientific behavior was executed in producing or auditing any Stage D
+authority candidate.
 
 ## 2. Authority and evidence precedence
 
@@ -311,6 +311,19 @@ limit decision. `PASS`, `FAIL`, `TIMEOUT`, `RESOURCE_EXHAUSTED`, and `REFUSED`
 are conditionally bound to their permitted scientific dispositions; in
 particular a refusal is `NOT_EXECUTED` and a timeout/resource exhaustion is
 `COMPUTATIONALLY_INCONCLUSIVE`, never positive or negative evidence.
+
+Profile validity alone is insufficient. Every configuration, computation, and
+limit-decision record must carry the closed `cap_binding_role`. A configuration
+is always `STUDY_EXECUTION` and its profile ID must equal its `study_id`.
+Computation and limit-decision records may instead use
+`MOBIUS_CONFORMANCE`, `DAG_CONFORMANCE`, or `CACHE_CONFORMANCE` only for the
+exact study sets named in the mechanical contract and only with respectively
+`MOBIUS-EXACT-01`, `DAG-EXACT-01`, or `CANONICAL-CACHE-01`; a computation
+record must also carry the corresponding closed algorithm-evidence kind.
+Whole-profile substitution across studies or roles, including an otherwise
+valid SD-14 profile on SD-01, is a schema refusal. The schema contains static
+non-evidence fixtures and executable negative substitutions at all three use
+sites. No fixture is a run or may enter a scientific traceability chain.
 
 ## 6. Mandatory Möbius/topology controls — verbatim user authority
 

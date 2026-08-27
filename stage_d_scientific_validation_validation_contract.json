@@ -52,9 +52,9 @@
     "canonicalization": "UTF-8 JSON, recursively sorted keys, separators comma and colon without added whitespace, ensure_ascii=false, allow_nan=false, no final LF"
   },
   "expected_counts": {
-    "positive_check_count": 115,
+    "positive_check_count": 121,
     "check_group_count": 10,
-    "negative_case_count": 45,
+    "negative_case_count": 48,
     "predecessor_source_count": 39,
     "study_count": 14,
     "evidence_level_count": 7,
@@ -65,8 +65,8 @@
     "dag_invalid_refusal_case_count": 14,
     "dag_complexity_cell_count": 5,
     "record_schema_definition_count": 12,
-    "helper_schema_definition_count": 8,
-    "total_schema_definition_count": 20,
+    "helper_schema_definition_count": 10,
+    "total_schema_definition_count": 22,
     "stage_d_model_state_advance_count": 0,
     "stage_d_simulation_count": 0,
     "stage_d_benchmark_count": 0,
@@ -227,7 +227,7 @@
       "group_id": "TRACE_ACCOUNTING_INTERPRETATION",
       "expected_count": 6,
       "checks": [
-        "SDV-075 evidence schema defines exactly configuration_manifest, hard_caps, run_manifest, checkpoint_record, trace_row, receipt, computation_record, equivalence_certificate, cache_event, invalidation_receipt, limit_decision, and output_manifest plus the exact eight helper definitions",
+        "SDV-075 evidence schema defines exactly configuration_manifest, hard_caps, run_manifest, checkpoint_record, trace_row, receipt, computation_record, equivalence_certificate, cache_event, invalidation_receipt, limit_decision, and output_manifest plus the exact ten helper definitions",
         "SDV-076 future traces bind oracle/optimized identities, operation counts, complexity, certificates, complete keys, invalidation, hard-limit decisions, and inconclusive disposition",
         "SDV-077 action and correction receipts remain separate and no receipt is overwritten",
         "SDV-078 physical, represented, EBU, causal, correction, and institutional ledgers remain separate with typed residuals and no-double-counting",
@@ -237,7 +237,7 @@
     },
     {
       "group_id": "INDEPENDENT_AUDIT_CORRECTIONS",
-      "expected_count": 35,
+      "expected_count": 41,
       "checks": [
         "SDV-081 every path-shaped dependency/authority reference matches the accepted path pattern, exists at the accepted base, and has exactly one matching predecessor row",
         "SDV-082 the exact path-shaped reference set has 18 unique accepted paths and no alias, nonexistent, merely existing-but-unlocked, or identity-mismatched path",
@@ -249,7 +249,7 @@
         "SDV-088 hard_caps/v1 requires profile_id plus all 25 closed dimensions, additionalProperties=false, and equality to exactly one of 17 complete schema-level constant profiles",
         "SDV-089 every matrix/control hard-cap key and value maps exactly to the matching schema constant; omission, changed value, applicable null, nonnull inapplicable, unknown dimension, or profile/value mismatch refuses",
         "SDV-090 limit_decision/v1 uses oneOf so only WITHIN_CAPS pairs with ELIGIBLE_FOR_REGISTERED_EXECUTION and both refusal/inconclusive decisions pair only with NOT_A_SCIENTIFIC_OUTCOME",
-        "SDV-091 schema negative cases SCHEMA-N01 through SCHEMA-N13 refuse omitted/unknown/wrong/null cap values, invalid limit/run dispositions, empty limit chains, incomplete stochastic cache keys, invalid stochastic counters, and false H3-positive records",
+        "SDV-091 schema negative cases SCHEMA-N01 through SCHEMA-N16 refuse omitted/unknown/wrong/null cap values, invalid limit/run dispositions, empty limit chains, incomplete stochastic cache keys, invalid stochastic counters, false H3-positive records, and complete wrong-profile substitutions at all three cap use sites",
         "SDV-092 configuration, run, checkpoint, and trace schemas bind stochastic, uncertainty, numerical, and counter-state identities; all 14 studies name checkpoint_record/v1",
         "SDV-093 computation_record/v1 requires one closed generic/Mobius/DAG/cache algorithm-specific evidence variant with the registered identities and counters",
         "SDV-094 REGISTERED-SEED-SUMMARY-01 freezes ascending seed pairing, exact even-sample median, closed min/max range, zero analysis streams/draws, and forbids bootstrap/confidence/population claims",
@@ -273,7 +273,13 @@
         "SDV-112 trace_row/v1 mechanically records current/no-shock/adversarial admissible-set digests and sizes, selected action, and six reserve predicates; H3_PASS requires all three sets nonempty and all reserve predicates true",
         "SDV-113 SD-01 exact worst-case evaluation accounting is 39120000 and the H3 per-run primary-evaluation cap is 1200000",
         "SDV-114 schema vectors N11-N13 and validation negatives freeze incomplete stochastic cache-key, attempt-index/ceiling, and false recursive-feasibility refusals",
-        "SDV-115 all schema fixtures are explicitly static non-evidence, Stage D instance/draw/model/benchmark/outcome counts remain zero, and no fixture can enter a scientific traceability chain"
+        "SDV-115 all schema fixtures are explicitly static non-evidence, Stage D instance/draw/model/benchmark/outcome counts remain zero, and no fixture can enter a scientific traceability chain",
+        "SDV-116 the contract and matrix define one closed cap_binding_role field with STUDY_EXECUTION, MOBIUS_CONFORMANCE, DAG_CONFORMANCE, and CACHE_CONFORMANCE only",
+        "SDV-117 configuration_manifest/v1 requires STUDY_EXECUTION and mechanically binds each SD-01..SD-14 study_id to the exact same-named hard-cap constant",
+        "SDV-118 computation_record/v1 and limit_decision/v1 bind STUDY_EXECUTION to the exact same-named study profile and refuse every complete cross-study profile substitution",
+        "SDV-119 the three conformance roles bind only their exact permitted study sets and MOBIUS-EXACT-01, DAG-EXACT-01, or CANONICAL-CACHE-01 respectively; computation records also require the matching MOBIUS, DAG, or CACHE evidence kind",
+        "SDV-120 the three complete static SD-01 fixtures validate prospectively, while executable schema vectors SCHEMA-N14 through SCHEMA-N16 replace their profiles with the complete valid SD-14 profile and must fail",
+        "SDV-121 unknown roles, disallowed role/study combinations, cross-control profiles, and role/evidence-kind substitutions refuse without fallback or scientific disposition"
       ]
     }
   ],
@@ -502,6 +508,21 @@
       "id": "SDV-N45",
       "mutation": "omit or null SD-07's 21474836480-byte total study-output ceiling",
       "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "id": "SDV-N46",
+      "mutation": "use the complete internally valid SD-14 hard-cap profile in an SD-01 configuration manifest",
+      "required_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
+    },
+    {
+      "id": "SDV-N47",
+      "mutation": "use the complete internally valid SD-14 hard-cap profile in an SD-01 limit decision or change its cap_binding_role to a disallowed conformance role",
+      "required_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
+    },
+    {
+      "id": "SDV-N48",
+      "mutation": "use the complete internally valid SD-14 hard-cap profile in an SD-01 computation record, substitute one control profile for another, or mismatch conformance role and algorithm-evidence kind",
+      "required_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
     }
   ],
   "required_audit_handoff_fields": [
