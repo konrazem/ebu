@@ -364,6 +364,19 @@ def _static_authority(args: argparse.Namespace) -> int:
 
 def _verify_runtime() -> dict[str, object]:
     source_id = sqlite3.connect(":memory:").execute("SELECT sqlite_source_id()").fetchone()[0]
+    dpkg_query = Path("/usr/bin/dpkg-query")
+    debian_sqlite_package = None
+    if dpkg_query.is_file():
+        queried = subprocess.run(
+            [str(dpkg_query), "-W", "-f=${binary:Package}=${Version}\\n", "libsqlite3-0"],
+            check=False,
+            capture_output=True,
+            text=True,
+            env={"LANG": "C.UTF-8", "LC_ALL": "C.UTF-8", "PATH": "/usr/bin:/bin"},
+        )
+        if queried.returncode != 0 or not queried.stdout.strip():
+            raise Refusal(f"Debian SQLite package query failed: {queried.stderr.strip()}")
+        debian_sqlite_package = queried.stdout.strip()
     observed = {
         "image_digest": os.environ.get("EBU_STAGE_C_IMAGE_DIGEST"),
         "platform_system": platform.system(),
@@ -377,6 +390,7 @@ def _verify_runtime() -> dict[str, object]:
         "sqlite_version": sqlite3.sqlite_version,
         "sqlite_version_info": tuple(sqlite3.sqlite_version_info),
         "sqlite_source_id": source_id,
+        "debian_libsqlite3_0": debian_sqlite_package,
         "os_release": Path("/etc/os-release").read_text("utf-8") if Path("/etc/os-release").is_file() else None,
     }
     if observed["image_digest"] != IMAGE_DIGEST:
@@ -388,9 +402,15 @@ def _verify_runtime() -> dict[str, object]:
     if sys.implementation.name != "cpython" or sys.version_info[:5] != (3, 14, 4, "final", 0):
         raise Refusal("runtime is not final CPython 3.14.4")
     if sqlite3.sqlite_version != "3.46.1" or tuple(sqlite3.sqlite_version_info) != (3, 46, 1):
-        raise Refusal("SQLite runtime is not exactly 3.46.1")
+        raise Refusal(
+            f"SQLite runtime is not exactly 3.46.1: "
+            f"{sqlite3.sqlite_version!r} {tuple(sqlite3.sqlite_version_info)!r}"
+        )
     if source_id != SQLITE_SOURCE_ID:
-        raise Refusal("SQLite source identity mismatch")
+        raise Refusal(
+            f"SQLite source identity mismatch: observed={source_id!r}; "
+            f"required={SQLITE_SOURCE_ID!r}; Debian={debian_sqlite_package!r}"
+        )
     return observed
 
 
