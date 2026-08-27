@@ -1,0 +1,551 @@
+{
+  "authority_id": "EBU-STAGE-D-SCIENTIFIC-VALIDATION-AUTHORITY",
+  "authority_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_AUTHORITY_CANDIDATE_NO_EXECUTION",
+  "accepted_software_alpha": {
+    "commit": "fb9ae7b6dae14550a702e060600132faec539eca",
+    "tree": "1e3f02e4efc2ce5b0ca3c15fb8a95c3df98c277d",
+    "released_main": "660d6e5a56cb096fe6d1e4d202f592155d982c79",
+    "signed_tag": "framework-v0.1.0-alpha.1",
+    "signed_tag_object": "b140d4a31f60316cd23058305ae17f4698de86bc",
+    "signed_tag_target": "fb9ae7b6dae14550a702e060600132faec539eca",
+    "github_release_id": 377771658,
+    "release_disposition": "STAGE_C_RELEASE_EXECUTION_PASS",
+    "sealed_stage_c_run": 33058079933,
+    "sealed_stage_c_artifact": 9641430424,
+    "sealed_stage_c_artifact_digest": "sha256:f121f23839cbc9ac9bdc772814bacbd64c440ea6ca2adb2119008a0d89879d81"
+  },
+  "candidate_files": [
+    "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
+    "stage_d_scientific_validation_contract.json",
+    "stage_d_scientific_validation_evidence_schema.json",
+    "stage_d_scientific_validation_master_matrix.json",
+    "stage_d_scientific_validation_predecessor_manifest.json",
+    "stage_d_scientific_validation_validation_contract.json"
+  ],
+  "stage_boundary": {
+    "stage_d": {
+      "purpose": "prospective authority, registration design, and static integrity only",
+      "permitted": [
+        "read accepted repository and release records",
+        "derive and record mathematical cost bounds",
+        "write and strictly parse the six candidate authority files",
+        "hash and compare immutable identities",
+        "perform static schema and cross-reference validation"
+      ],
+      "forbidden": [
+        "scientific harness implementation",
+        "project runner import",
+        "model step or state advance",
+        "trajectory or simulation",
+        "Gate execution",
+        "transform execution or benchmark",
+        "candidate scientific outcome inspection",
+        "result, table, figure, or book generation",
+        "scientific interpretation",
+        "publication"
+      ],
+      "counters": {
+        "model_state_advance_count": 0,
+        "trajectory_count": 0,
+        "simulation_count": 0,
+        "gate_execution_count": 0,
+        "transform_execution_count": 0,
+        "benchmark_count": 0,
+        "outcome_inspection_count": 0,
+        "result_count": 0,
+        "figure_count": 0,
+        "book_generation_count": 0
+      }
+    },
+    "stage_e": "separately authorized harness, conformance, numerical, and preregistered performance verification only after independent Stage D PASS",
+    "stage_f": "registered scientific campaigns and scientific outcome inspection only after applicable independently audited Stage E acceptance",
+    "stage_g": "independent reconstruction, result and claim audit, then frozen-output tables and figures",
+    "stage_h": "evidence-synchronized Parts I-IX after Stages D-G, Part IX last"
+  },
+  "evidence_levels": [
+    {
+      "level": 1,
+      "label": "INSTITUTIONAL_NORMATIVE_DECLARATION"
+    },
+    {
+      "level": 2,
+      "label": "MATHEMATICAL_THEOREM_OR_DERIVATION"
+    },
+    {
+      "level": 3,
+      "label": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"
+    },
+    {
+      "level": 4,
+      "label": "NUMERICAL_VERIFICATION"
+    },
+    {
+      "level": 5,
+      "label": "REGISTERED_SCIENTIFIC_SIMULATION"
+    },
+    {
+      "level": 6,
+      "label": "EMPIRICAL_OBSERVATION"
+    },
+    {
+      "level": 7,
+      "label": "INDEPENDENTLY_AUDITED_INTERPRETATION"
+    }
+  ],
+  "evidence_nonpromotion_rule": "No evidence item or disposition may be described as a stronger evidence level than the mechanism that produced it.",
+  "claim_traceability_chain": [
+    "equation",
+    "configuration",
+    "code",
+    "test",
+    "immutable_run_or_trace",
+    "table_or_figure",
+    "claim_disposition"
+  ],
+  "required_visual_labels": [
+    "SCHEMATIC",
+    "MATHEMATICALLY_DERIVED",
+    "TESTED_IMPLEMENTATION",
+    "OBSERVED_IN_REGISTERED_RUN",
+    "RESEARCH_HYPOTHESIS",
+    "INSTITUTIONAL_DESIGN_CHOICE"
+  ],
+  "reference_environment": {
+    "oci_manifest_digest": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+    "architecture": "linux/amd64",
+    "cpython": "3.14.4-final",
+    "cpython_executable_sha256": "353d0275b5ca0447ebfc6ecae7d80a7a7e7a627d4669fdcc3f836f0b8d804c79",
+    "container_lineage": "python:3.14.4-trixie at docker-library/python revision 6cc07b27ad0df3769bbd1a2a1000a842634681d2",
+    "host_runner": "ubuntu-24.04",
+    "sqlite_version": "3.46.1",
+    "sqlite_version_info": [3, 46, 1],
+    "sqlite_runtime_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+    "sqlite_upstream_provenance_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+    "debian_sqlite_package": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
+    "network_during_future_registered_operations": "OFFLINE",
+    "environment_use": "future Stage E/F only; Stage D does not instantiate or benchmark it"
+  },
+  "global_computational_feasibility_gate": {
+    "required_fields": [
+      "algorithmic_cost_class",
+      "exact_problem_size",
+      "horizon",
+      "subset_or_hyperedge_order",
+      "expected_evaluations",
+      "future_measurement_method",
+      "storage_estimate_bytes",
+      "checkpoint_restart_scheme",
+      "parallelization_boundary",
+      "hard_caps",
+      "timeout_or_resource_disposition",
+      "exact_or_approximate_label"
+    ],
+    "global_hard_caps": {
+      "wall_time_seconds_per_run": 14400,
+      "peak_resident_memory_bytes_per_process_tree": 4294967296,
+      "total_immutable_output_bytes_per_study": 21474836480,
+      "trace_bytes_per_run": 5368709120,
+      "primary_evaluations_per_run": 50000000,
+      "recursion_or_dependency_depth": 100000
+    },
+    "future_measurement_method": {
+      "wall_time": "monotonic nanosecond clock around the registered isolated operation",
+      "peak_memory": "maximum resident set size for the complete process tree sampled and reconciled with operating-system final accounting",
+      "storage": "exact byte counts and SHA-256 for every immutable emitted object",
+      "operation_counts": "algorithm-specific deterministic counters defined before Stage E execution"
+    },
+    "oversize_dispositions": [
+      "REFUSED_BEFORE_EXECUTION",
+      "COMPUTATIONALLY_INCONCLUSIVE"
+    ],
+    "oversize_evidence_rule": "Neither oversize disposition is positive or negative scientific evidence.",
+    "silent_fallback_forbidden": true
+  },
+  "prospective_stochastic_rule": {
+    "rule_id": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1",
+    "preimage": "UTF-8 EBU-STAGE-F-RNG-v1|study_id|configuration_id|seed|stream_id|tick|event_index|draw_index with canonical decimal integers and no whitespace",
+    "u64": "first eight SHA-256 digest bytes interpreted as an unsigned big-endian integer in [0,2^64-1]",
+    "bernoulli": "for exact rational p_num/p_den, TRUE iff u64 < floor(p_num*2^64/p_den)",
+    "categorical": "ordered exact-rational cumulative thresholds over the same u64 mapping; last category owns any remainder",
+    "continuous_distribution": "FORBIDDEN_UNLESS_SEPARATELY_PREREGISTERED_WITH_EXACT_TRANSFORM",
+    "mutable_prng_state": "FORBIDDEN",
+    "stream_rule": "every study row names all permitted stream IDs; an unknown stream, draw-order change, or reused preimage refuses",
+    "checkpoint_rule": "the complete next counter tuple per stream is sealed; a restarted suffix must be byte-identical",
+    "stage_d_draw_count": 0
+  },
+  "verbatim_user_mobius_topology_controls": [
+    "Preserve a direct, independently understandable small-case Möbius/topology oracle as the normative correctness reference.",
+    "Any optimized bitmask/fast Möbius transform must reproduce the direct oracle exactly over the complete registered small-case domain and declared randomized/adversarial cross-check domain; a mismatch is a refusal, not a tolerance or approximation case.",
+    "Require measured complexity evidence for the optimized Möbius path against declared `O(n*2^n)` time and `O(2^n)` storage expectations, with registered dimensions, instrumentation, environment, thresholds, and nonclaim boundaries.",
+    "Require dependency-DAG traversal evidence against `O(V+E)` time, including sparse/dense, disconnected, deep-chain, wide-frontier, invalid-cycle, duplicate-edge and ordering controls.",
+    "Permit recursive motif or cache reuse only when equivalence is certified under the controlling canonical/topology authority; cache keys must be complete for every result-affecting input/authority/version/environment dimension; corrections or authority changes must deterministically invalidate affected entries.",
+    "Register positive reuse cases, non-equivalent near-miss negative controls, incomplete-key collision falsifiers, stale-cache/correction-invalidation tests, and provenance/receipt requirements.",
+    "Define explicit hard limits for exact Möbius/topology studies: maximum n/subset count, vertices, edges, memory, wall time, trace/output size and recursion/depth as applicable. Values must be justified before execution and bound to the reference environment.",
+    "If a requested exact study exceeds a hard limit or resource budget, fail closed or classify it `COMPUTATIONALLY_INCONCLUSIVE`. Do not silently approximate, truncate, sample, alter topology, weaken equivalence, or convert the outcome into positive/negative scientific evidence.",
+    "Any separately proposed approximation requires its own preregistered authority, error bounds, controls, evidence class and interpretation rules; it must never be substituted for an exact registered study after outcomes are visible.",
+    "Record the oracle/optimized implementation identities, complexity observations, cache/equivalence certificates, invalidation receipts, limit decisions and inconclusive classifications in the traceability chain through eventual results and books."
+  ],
+  "mobius_controls": {
+    "control_id": "MOBIUS-EXACT-01",
+    "normative_direct_oracle": {
+      "definition": "I_raw(S)=sum_{T subseteq S}(-1)^(|S|-|T|)E(T); I_raw(empty)=E(empty)",
+      "arithmetic": [
+        "exact_integer",
+        "reduced_rational"
+      ],
+      "implementation_requirement": "independently readable direct subset enumeration",
+      "registered_dimensions": {
+        "minimum_n": 0,
+        "maximum_n": 12
+      },
+      "deterministic_adversarial_table_family_definitions": [
+        "ZERO: E(S)=0",
+        "CONSTANT_SEVEN: E(S)=7",
+        "CARDINALITY: E(S)=|S|",
+        "WEIGHTED_ADDITIVE: E(S)=sum_{i in S}(i+1)",
+        "WEIGHTED_PAIRWISE: E(S)=sum_{i<j; i,j in S}(i+1)(j+1)",
+        "FULL_SET_SPIKE: E(S)=1 if S is the full registered set and 0 otherwise",
+        "EMPTY_SET_SPIKE: E(empty)=7 and E(S)=0 otherwise",
+        "SIGNED_CARDINALITY_CUBE: E(S)=(-1)^|S|*(1+|S|^3)"
+      ],
+      "deterministic_adversarial_table_families": 8,
+      "deterministic_cases": 104,
+      "pseudorandom_integer_table_seeds_per_nonzero_dimension": 32,
+      "pseudorandom_seed_values": "exact integers 0..31 for every n=1..12",
+      "pseudorandom_table_rule": "For each (n,seed,mask), SHA-256 of the UTF-8 bytes EBU-SD06-MOBIUS-v1|n|seed|mask is interpreted by its first eight digest bytes as an unsigned big-endian integer; E(mask)=(integer mod 2001)-1000.",
+      "randomized_cases": 384,
+      "total_agreement_cases": 488
+    },
+    "optimized_transform": {
+      "algorithm": "in-place Boolean fast Möbius transform over bitmask order",
+      "declared_arithmetic_cost": "O(n*2^n)",
+      "declared_storage_cost": "O(2^n)",
+      "subset_value_acquisition_cost": "2^n*C_E",
+      "agreement": "bit-exact coefficient and reconstruction equality with the direct oracle over all 488 shared cases",
+      "mismatch_disposition": "REFUSE_OPTIMIZED_IMPLEMENTATION_AND_DEPENDENT_STUDIES",
+      "tolerance": "FORBIDDEN"
+    },
+    "future_stage_e_complexity_cells": {
+      "dimensions": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      "repetitions_per_dimension": 5,
+      "total_cells": 55,
+      "frozen_input_family": "WEIGHTED_PAIRWISE",
+      "frozen_execution_order": "ascending n, then repetition 0..4, with a fresh process per cell",
+      "acceptance_thresholds": {
+        "exact_butterfly_subtraction_count": "n*2^(n-1)",
+        "maximum_live_table_slots": "2^n",
+        "maximum_auxiliary_scalar_slots": "4*n+64",
+        "normalized_wall_time_domain": "median nanoseconds/(n*2^n) for n=14..18",
+        "maximum_normalized_wall_time_ratio": 4,
+        "per_case_wall_time_seconds": 120,
+        "per_case_peak_process_tree_rss_bytes": 536870912,
+        "disposition_on_threshold_failure": "BOUND_NOT_SUPPORTED; dependent optimized studies refuse"
+      },
+      "measured_results_in_stage_d": 0
+    },
+    "hard_caps": {
+      "maximum_n": 18,
+      "maximum_subsets": 262144,
+      "peak_resident_memory_bytes": 536870912,
+      "wall_time_seconds_per_case": 120,
+      "combined_trace_output_bytes_per_case": 268435456
+    },
+    "nonclaim_boundaries": [
+      "no universal scalability claim",
+      "no sub-exponential arbitrary-table query claim",
+      "no claim that a Boolean transform validates a domain topology",
+      "no measured performance claim in Stage D"
+    ],
+    "hard_cap_justification": "n=18 fixes an exact 262144-entry table and 2359296 butterfly subtractions, while the direct normative domain stops at n=12; the prospective 512 MiB, 120-second, and 256 MiB evidence caps are conservative fail-closed ceilings tied to the immutable reference environment, not measured Stage D performance."
+  },
+  "dependency_dag_controls": {
+    "control_id": "DAG-EXACT-01",
+    "normative_direct_oracle": {
+      "algorithm": "explicit simple-path enumeration with canonical-ID result projection",
+      "maximum_vertices": 12,
+      "required_result": "affected vertex set and deterministic lexicographically least ready-node topological order"
+    },
+    "registered_oracle_agreement_domain": {
+      "complete_ordered_dag_domain": "all subsets of forward edges on canonical vertices for n=0..5, crossed with all source subsets",
+      "complete_ordered_dag_case_count": 33867,
+      "adversarial_dimensions": [6, 7, 8, 9, 10, 11, 12],
+      "adversarial_families": [
+        "empty",
+        "complete_acyclic",
+        "deep_chain",
+        "wide_out_frontier",
+        "wide_in_frontier",
+        "disconnected_two_chains",
+        "diamond_ladder",
+        "sparse_skip_chain"
+      ],
+      "source_sets_per_adversarial_or_random_graph": [
+        "empty",
+        "first_vertex",
+        "last_vertex",
+        "even_canonical_ids",
+        "all_vertices"
+      ],
+      "input_edge_orders": [
+        "canonical",
+        "reverse_canonical",
+        "even_then_odd_index",
+        "odd_then_even_index"
+      ],
+      "adversarial_case_count": 1120,
+      "hash_derived_graphs_per_dimension": 32,
+      "hash_derived_seed_values": "exact integers 0..31",
+      "hash_derived_edge_rule": "For each allowed forward edge (i,j), include it iff the first byte of SHA-256 over UTF-8 EBU-SD-DAG-v1|n|seed|i|j is even.",
+      "hash_derived_case_count": 4480,
+      "valid_exact_agreement_case_count": 39467,
+      "invalid_refusal_controls": "one injected directed cycle and one injected duplicate edge for each n=6..12"
+    },
+    "optimized_traversal": {
+      "algorithm": "deterministic queue/topological traversal",
+      "declared_time_cost": "O(V+E)",
+      "declared_representation_storage": "O(V+E)",
+      "exact_oracle_agreement_required": true
+    },
+    "required_controls": [
+      "sparse",
+      "dense",
+      "disconnected",
+      "deep_chain",
+      "wide_frontier",
+      "invalid_cycle",
+      "duplicate_edge",
+      "input_order_permutation"
+    ],
+    "future_stage_e_complexity_cells": [
+      {
+        "vertices": 128,
+        "edges": 256,
+        "class": "sparse"
+      },
+      {
+        "vertices": 1024,
+        "edges": 4096,
+        "class": "sparse"
+      },
+      {
+        "vertices": 10000,
+        "edges": 50000,
+        "class": "sparse"
+      },
+      {
+        "vertices": 100000,
+        "edges": 500000,
+        "class": "sparse"
+      },
+      {
+        "vertices": 512,
+        "edges": 130816,
+        "class": "dense_acyclic"
+      }
+    ],
+    "future_stage_e_acceptance_thresholds": {
+      "maximum_vertex_enqueue_count": "V",
+      "maximum_edge_inspection_count": "E",
+      "maximum_logical_storage_slots": "6*V+2*E",
+      "normalized_wall_time_domain": "median nanoseconds/(V+E) for the four sparse cells",
+      "maximum_normalized_wall_time_ratio": 8,
+      "dense_cell_rule": "record separately and require exact operation/storage bounds and hard caps; do not pool with sparse normalized ratio",
+      "per_case_wall_time_seconds": 120,
+      "per_case_peak_process_tree_rss_bytes": 1073741824,
+      "disposition_on_threshold_failure": "BOUND_NOT_SUPPORTED; dependent optimized studies refuse"
+    },
+    "hard_caps": {
+      "maximum_vertices": 100000,
+      "maximum_edges": 500000,
+      "maximum_depth": 100000,
+      "peak_resident_memory_bytes": 1073741824,
+      "wall_time_seconds_per_case": 120,
+      "combined_trace_output_bytes_per_case": 268435456
+    },
+    "refusals": {
+      "cycle": "REFUSE_BEFORE_AFFECTED_ORDER_CERTIFICATION",
+      "duplicate_edge": "REFUSE",
+      "ordering_mismatch": "REFUSE_OPTIMIZED_TRAVERSAL_AND_DEPENDENT_STUDIES"
+    },
+    "nonclaim_boundary": "reachability and ordering do not establish scientific dependency, physical propagation, or causality",
+    "hard_cap_justification": "The complete normative domain through n=5 plus 5600 declared larger exact cases keeps the direct oracle independently auditable; the optimized cells span four sparse scales and one dense acyclic control while the 100000-vertex, 500000-edge, 1 GiB, 120-second, and 256 MiB caps remain prospective ceilings tied to the immutable environment."
+  },
+  "canonical_motif_cache_controls": {
+    "control_id": "CANONICAL-CACHE-01",
+    "canonical_identity_scope": {
+      "minimum_vertices": 0,
+      "maximum_vertices": 8,
+      "method": "accepted exhaustive canonicalization",
+      "performance_claim": false
+    },
+    "reuse_preconditions": [
+      "accepted canonical A1-A8 conditions",
+      "query-specific boundary-sufficiency certificate",
+      "complete equivalence certificate",
+      "complete cache key",
+      "complete dependency and alias closure",
+      "no unresolved correction or authority invalidation"
+    ],
+    "complete_cache_key_fields": [
+      "canonical_topology_id",
+      "motif_version",
+      "occurrence_version",
+      "composition_version",
+      "boundary_summary_version",
+      "initial_augmented_state_digest",
+      "admissible_history_digest",
+      "query_identity",
+      "horizon",
+      "units_semantics",
+      "boundary_semantics",
+      "removal_semantics",
+      "feasibility_semantics",
+      "numerical_policy_identity",
+      "framework_identity",
+      "authority_identity",
+      "protocol_identity",
+      "configuration_identity",
+      "code_identity",
+      "dependency_identity",
+      "environment_identity",
+      "evidence_identity",
+      "alias_closure_digest",
+      "correction_invalidation_epoch"
+    ],
+    "required_controls": [
+      "positive_equivalent_reuse",
+      "non_equivalent_near_miss",
+      "ordered_child_swap",
+      "boundary_change",
+      "history_change",
+      "incomplete_key_collision",
+      "alias_change",
+      "stale_cache_entry",
+      "corrected_evidence",
+      "authority_version_change",
+      "environment_change",
+      "deterministic_dependency_local_invalidation"
+    ],
+    "invalidation_rule": "A correction or authority change traverses the complete explicit dependency and alias DAG and emits an invalidation receipt before recomputation.",
+    "runtime_cache_authorized": false,
+    "future_stage_e_scope": "isolated research and conformance mechanics only after independent Stage D acceptance",
+    "hard_caps": {
+      "canonical_vertices": 8,
+      "maximum_hyperedge_order": 4,
+      "expanded_oracle_level": 16,
+      "compressed_comparison_level": 32,
+      "maximum_expanded_occurrences": 3524578,
+      "maximum_recursion_depth": 64,
+      "peak_resident_memory_bytes": 1073741824,
+      "wall_time_seconds_per_case": 120,
+      "combined_trace_output_bytes_per_case": 268435456
+    },
+    "fibonacci_boundary": "one exact ordered substitution example only; no universal topology, growth, or performance claim",
+    "hard_cap_justification": "The accepted canonical authority already bounds exhaustive canonical identity at eight vertices; Fibonacci level 16 has 1597 expanded occurrences and level 32 has 3524578 occurrences for compressed comparison, so expanded and compressed domains are separated under the prospective 64-depth, 1 GiB, 120-second, and 256 MiB ceilings."
+  },
+  "approximation_boundary": {
+    "labels": [
+      "EXACT",
+      "MODEL_EXACT_NUMERICAL",
+      "SEPARATE_APPROXIMATION_AUTHORITY_REQUIRED"
+    ],
+    "silent_substitution_forbidden": true,
+    "separate_authority_required_fields": [
+      "mathematical_target",
+      "error_norm",
+      "error_bound",
+      "comparator",
+      "positive_controls",
+      "negative_controls",
+      "calibration_validation_split",
+      "seeds",
+      "resource_limits",
+      "evidence_class",
+      "falsifiers",
+      "interpretation_rules"
+    ],
+    "post_outcome_substitution_forbidden": true
+  },
+  "study_order": [
+    "SD-01",
+    "SD-02",
+    "SD-03",
+    "SD-04",
+    "SD-05",
+    "SD-06",
+    "SD-07",
+    "SD-08",
+    "SD-09",
+    "SD-10",
+    "SD-11",
+    "SD-12",
+    "SD-13",
+    "SD-14"
+  ],
+  "mobius_control_studies": [
+    "SD-05",
+    "SD-06",
+    "SD-07",
+    "SD-11",
+    "SD-14"
+  ],
+  "dag_control_studies": [
+    "SD-07",
+    "SD-08",
+    "SD-09",
+    "SD-10",
+    "SD-11",
+    "SD-12",
+    "SD-13",
+    "SD-14"
+  ],
+  "cache_control_studies": [
+    "SD-07",
+    "SD-08",
+    "SD-09",
+    "SD-10",
+    "SD-11",
+    "SD-12",
+    "SD-13",
+    "SD-14"
+  ],
+  "universal_study_fields": [
+    "study_id",
+    "order",
+    "title",
+    "status",
+    "dependencies",
+    "question",
+    "prospective_claim",
+    "evidence",
+    "owners",
+    "model_domain",
+    "configuration",
+    "computational_feasibility",
+    "falsifiers",
+    "conservation_accounting",
+    "schemas",
+    "acceptance",
+    "inconclusive",
+    "independent_result_audit",
+    "book_destination",
+    "prohibited_interpretations",
+    "mandatory_computational_control_refs"
+  ],
+  "gate_1e_rule": {
+    "status": "AUTHORITY_RECOVERY_REQUIRED",
+    "execution": "FORBIDDEN_UNTIL_SEPARATE_AMENDMENT",
+    "reason": "no complete controlling Gate 1E protocol exists in the accepted software-alpha tree"
+  },
+  "excluded_programmes": [
+    "wave",
+    "phase_interference",
+    "electrical_voltage",
+    "physical_superposition",
+    "topological_wave",
+    "universal_fibonacci_or_fractal",
+    "speculative_credit"
+  ],
+  "completion_marker": "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY_CANDIDATE_COMPLETE"
+}
