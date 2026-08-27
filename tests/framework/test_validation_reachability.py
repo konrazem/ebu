@@ -269,7 +269,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "bbcd5290bb7918b8798c9962ea81de9467fe8c995c8a2f6fa1f1d0371e5e83bc"
+TEST_SELF_SEAL = "451797cd74e7e25788fecc6154970aceed9c064ca7607ce45fb7e781bfc72a59"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1236,8 +1236,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_d_phase = "STAGE_D_AUTHORITY_ONLY"
         else:
             self.fail(
-                "current HEAD is neither an exact Stage C phase nor the exact "
-                f"Stage D authority-only phase: {sorted(changed_paths)!r}"
+                "current HEAD is neither the exact Stage C authority phase nor "
+                "the exact completed implementation or Stage D authority-only "
+                f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
         self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 24)
