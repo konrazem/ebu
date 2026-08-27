@@ -28,14 +28,14 @@ import zlib
 
 
 AUTHORITY_HASHES = {
-    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "c2868aded1c7135b36933915de8abe363bc7a4ffaa3bced186dacb880e321765",
-    "framework_alpha_packaging_release_candidate_contract.json": "835b01ee5f979454f0b57bd8d374f5294a9907e01508413b90c84c888b87b67d",
-    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "d1fb69aa62ae666312e82e406b44906e63b24eaf7e8a32c398c19b2e845058b3",
+    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "ca82b175811dba8260e86898e4770cb3bcd1e77d6ed80c79a5b9153b4211d5e6",
+    "framework_alpha_packaging_release_candidate_contract.json": "9cd96d40af2fefd9388bb4054bccdafc3f61380906cf87107d6980854f37bb7c",
+    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "272ac90df12da0589e8a14dd4d7c9ad2a70271b359738f848b754d805d4e32a2",
     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-    "framework_alpha_packaging_release_candidate_validation_contract.json": "85a7c556cb11ce276129eb04e4a43276f561d9f8e2ca09a24ce872791617af0f",
+    "framework_alpha_packaging_release_candidate_validation_contract.json": "600adb2c4340d9b9584298700276f1f6c277949e9f72b5764575c66e05bc2773",
 }
 SEMANTIC_SCOPE_AST_IDENTITIES = {
-    "artifact_predecessor_function": (40643, "56f0fcdb275b3d402b2ce65b05f4df285e2c0b83ef5e1020bb89e8f69fb4e7db"),
+    "artifact_predecessor_function": (51573, "85e8b34036f3529e7c496ddd04d92419287f9ab554285cb5b658503222964fe9"),
     "atomic_predecessor_method": (32971, "289db10d3223b4d547e5aaa5e788efe67b24abafd59c59b334b3f1ba5fd539e7"),
     "capabilities_reachability_method": (55295, "ff226be2349bc580482d28ad29a2c181a0eb27d725d11f509872b996283cc4b7"),
     "interaction_graph_method": (43399, "c27b4a36b3feaa46cc6e3e9a2d5587fc8f8c5231f683fd066351c71ccdeab8b4"),
@@ -479,7 +479,7 @@ def _static_authority(args: argparse.Namespace) -> int:
         semantic_authority["additional_positive_check_count"],
         semantic_authority["required_positive_check_count"],
         len(semantic_authority["checks"]),
-    ) != (92, 12, 104, 12):
+    ) != (92, 13, 105, 13):
         raise Refusal("semantic-scope authority count mismatch")
     semantic_checks: list[dict[str, object]] = []
     inventory = contract["test_inventory_reconciliation"]  # type: ignore[index]
@@ -1037,6 +1037,217 @@ def _static_authority(args: argparse.Namespace) -> int:
     ):
         raise Refusal("Stage C reachability semantic closure mismatch")
     semantic_checks.append({"id": "SC15-SEM-12", "status": "PASS"})
+
+    dependency_correction = release_correction[
+        "i8s013_dependency_witness_correction"
+    ]
+    exact_dependency_files = (
+        "pyproject.toml",
+        "requirements-framework.lock",
+    )
+    i8_validation = _load_json(
+        source / "unified_python_research_framework_i8_validation_contract.json"
+    )
+    i8s013_vectors = tuple(
+        vector
+        for vector in i8_validation["vectors"]  # type: ignore[index]
+        if vector["vector_id"] == "I8S-013"
+    )
+    if len(i8s013_vectors) != 1:
+        raise Refusal("I8S-013 vector identity is not unique")
+    i8s013_witness = i8s013_vectors[0]["construction"]["static_witness"]
+    pyproject_historical = dependency_correction["pyproject_historical_identity"]
+    pyproject_current = dependency_correction["pyproject_required_current_identity"]
+    lock_identity = dependency_correction["requirements_lock_preserved_identity"]
+    pyproject_i8 = i8_rows["pyproject.toml"]
+    lock_i8 = i8_rows["requirements-framework.lock"]
+    if (
+        i8s013_witness["kind"],
+        tuple(i8s013_witness["files"]),
+        i8s013_witness["disposition"],
+        tuple(dependency_correction["exact_witness_files"]),
+        dependency_correction["only_mutable_logic"],
+        dependency_correction["generic_or_dynamic_exclusion"],
+        dependency_correction["third_witness_path"],
+        dependency_correction["dependency_or_lock_change"],
+        dependency_correction[
+            "vector_test_name_count_projection_call_counters_failure_precedence_and_other_static_branches"
+        ],
+    ) != (
+        "NO_DEPENDENCY_DRIFT",
+        exact_dependency_files,
+        "PRESERVED",
+        exact_dependency_files,
+        "NO_DEPENDENCY_DRIFT_PYPROJECT_IDENTITY_ROUTE",
+        "FORBIDDEN",
+        "FORBIDDEN",
+        "FORBIDDEN",
+        "PRESERVE_EXACTLY",
+    ):
+        raise Refusal("I8S-013 witness authority drift")
+    if not (
+        (
+            pyproject_i8["mode"],
+            pyproject_i8["git_object"],
+            pyproject_i8["byte_count"],
+            pyproject_i8["raw_sha256"],
+        )
+        == (
+            pyproject_historical["mode"],
+            pyproject_historical["git_object"],
+            pyproject_historical["byte_count"],
+            pyproject_historical["sha256"],
+        )
+        == (
+            "100644",
+            "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+            399,
+            "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+        )
+    ):
+        raise Refusal("I8S-013 historical pyproject identity drift")
+    if not (
+        (
+            pyproject_current["mode"],
+            pyproject_current["byte_count"],
+            pyproject_current["sha256"],
+            pyproject_current["authority_binding"],
+        )
+        == (
+            "100644",
+            corrected_pyproject["byte_count"],
+            corrected_pyproject["sha256"],
+            "release_license_and_tag_correction.corrected_pyproject",
+        )
+        == (
+            "100644",
+            434,
+            "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+            "release_license_and_tag_correction.corrected_pyproject",
+        )
+    ):
+        raise Refusal("I8S-013 current pyproject identity drift")
+    if not (
+        (
+            lock_i8["mode"],
+            lock_i8["git_object"],
+            lock_i8["byte_count"],
+            lock_i8["raw_sha256"],
+        )
+        == (
+            lock_identity["mode"],
+            lock_identity["git_object"],
+            lock_identity["byte_count"],
+            lock_identity["sha256"],
+        )
+        == (
+            "100644",
+            "907bdff88be25741f04980ae5e6a769df2a61d4d",
+            2036,
+            "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+        )
+    ) or lock_identity["comparison"] != "DIRECT_I8_PREDECESSOR_BYTE_IDENTITY":
+        raise Refusal("I8S-013 dependency-lock identity drift")
+    pyproject_historical_payload = _git_output(
+        source,
+        ["cat-file", "blob", pyproject_historical["git_object"]],
+    )
+    pyproject_payload = (source / "pyproject.toml").read_bytes()
+    pyproject_head = str(
+        _git_output(source, ["ls-tree", "HEAD", "--", "pyproject.toml"], text=True)
+    ).split()
+    lock_payload = (source / "requirements-framework.lock").read_bytes()
+    lock_head = str(
+        _git_output(
+            source,
+            ["ls-tree", "HEAD", "--", "requirements-framework.lock"],
+            text=True,
+        )
+    ).split()
+    if (
+        len(pyproject_historical_payload),
+        _sha256(pyproject_historical_payload),
+    ) != (
+        pyproject_historical["byte_count"],
+        pyproject_historical["sha256"],
+    ):
+        raise Refusal("I8S-013 historical pyproject object mismatch")
+    if (
+        pyproject_head[0],
+        len(pyproject_payload),
+        _sha256(pyproject_payload),
+    ) != (
+        pyproject_current["mode"],
+        pyproject_current["byte_count"],
+        pyproject_current["sha256"],
+    ):
+        raise Refusal("I8S-013 current pyproject bytes mismatch")
+    if (
+        lock_head[0],
+        lock_head[2],
+        len(lock_payload),
+        _sha256(lock_payload),
+    ) != (
+        lock_identity["mode"],
+        lock_identity["git_object"],
+        lock_identity["byte_count"],
+        lock_identity["sha256"],
+    ):
+        raise Refusal("I8S-013 direct dependency-lock comparison mismatch")
+    dependency_branches = tuple(
+        node
+        for node in ast.walk(artifact_definition)
+        if isinstance(node, ast.If)
+        and isinstance(node.test, ast.Compare)
+        and isinstance(node.test.left, ast.Name)
+        and node.test.left.id == "kind"
+        and len(node.test.ops) == 1
+        and isinstance(node.test.ops[0], ast.Eq)
+        and len(node.test.comparators) == 1
+        and isinstance(node.test.comparators[0], ast.Constant)
+        and node.test.comparators[0].value == "NO_DEPENDENCY_DRIFT"
+    )
+    if len(dependency_branches) != 1:
+        raise Refusal("I8S-013 implementation branch is not unique")
+    dependency_branch = ast.Module(
+        body=dependency_branches[0].body,
+        type_ignores=[],
+    )
+    dependency_constants = string_constants(dependency_branch)
+    dependency_names = {
+        node.id for node in ast.walk(dependency_branch) if isinstance(node, ast.Name)
+    }
+    dependency_subprocess_calls = tuple(
+        node
+        for node in ast.walk(dependency_branch)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == "subprocess"
+        and node.func.attr == "run"
+    )
+    if (
+        literal_string_tuple(artifact_definition, "exact_dependency_files")
+        != exact_dependency_files
+        or len(dependency_subprocess_calls) != 3
+        or not {
+            "i8s013_dependency_witness_correction",
+            "NO_DEPENDENCY_DRIFT_PYPROJECT_IDENTITY_ROUTE",
+            "DIRECT_I8_PREDECESSOR_BYTE_IDENTITY",
+            "release_license_and_tag_correction.corrected_pyproject",
+            "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+            "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+            "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+            "907bdff88be25741f04980ae5e6a769df2a61d4d",
+            "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+        }
+        <= dependency_constants
+        or {"implementation_scope", "later_authorized", "allowed_dependency_paths"}
+        & (dependency_names | dependency_constants)
+        or any(isinstance(node, (ast.For, ast.Try)) for node in ast.walk(dependency_branch))
+    ):
+        raise Refusal("I8S-013 implementation semantic closure mismatch")
+    semantic_checks.append({"id": "SC15-SEM-13", "status": "PASS"})
 
     if validation["global_acceptance"]["registered_or_full_horizon_scientific_campaign_count"] != 0:  # type: ignore[index]
         raise Refusal("scientific boundary drift")

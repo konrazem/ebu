@@ -513,14 +513,14 @@ class StageCPackagingTests(unittest.TestCase):
             assignments,
             {
                 "AUTHORITY_HASHES": {
-                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "c2868aded1c7135b36933915de8abe363bc7a4ffaa3bced186dacb880e321765",
-                    "framework_alpha_packaging_release_candidate_contract.json": "835b01ee5f979454f0b57bd8d374f5294a9907e01508413b90c84c888b87b67d",
-                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "d1fb69aa62ae666312e82e406b44906e63b24eaf7e8a32c398c19b2e845058b3",
+                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "ca82b175811dba8260e86898e4770cb3bcd1e77d6ed80c79a5b9153b4211d5e6",
+                    "framework_alpha_packaging_release_candidate_contract.json": "9cd96d40af2fefd9388bb4054bccdafc3f61380906cf87107d6980854f37bb7c",
+                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "272ac90df12da0589e8a14dd4d7c9ad2a70271b359738f848b754d805d4e32a2",
                     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-                    "framework_alpha_packaging_release_candidate_validation_contract.json": "85a7c556cb11ce276129eb04e4a43276f561d9f8e2ca09a24ce872791617af0f",
+                    "framework_alpha_packaging_release_candidate_validation_contract.json": "600adb2c4340d9b9584298700276f1f6c277949e9f72b5764575c66e05bc2773",
                 },
                 "SEMANTIC_SCOPE_AST_IDENTITIES": {
-                    "artifact_predecessor_function": (40643, "56f0fcdb275b3d402b2ce65b05f4df285e2c0b83ef5e1020bb89e8f69fb4e7db"),
+                    "artifact_predecessor_function": (51573, "85e8b34036f3529e7c496ddd04d92419287f9ab554285cb5b658503222964fe9"),
                     "atomic_predecessor_method": (32971, "289db10d3223b4d547e5aaa5e788efe67b24abafd59c59b334b3f1ba5fd539e7"),
                     "capabilities_reachability_method": (55295, "ff226be2349bc580482d28ad29a2c181a0eb27d725d11f509872b996283cc4b7"),
                     "interaction_graph_method": (43399, "c27b4a36b3feaa46cc6e3e9a2d5587fc8f8c5231f683fd066351c71ccdeab8b4"),
@@ -564,6 +564,50 @@ class StageCPackagingTests(unittest.TestCase):
                 "SQLITE_RUNTIME_SOURCE_ID_REQUIRED": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
                 "DEBIAN_SQLITE_PACKAGE_REQUIRED": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
             },
+        )
+        static_authority = next(
+            node
+            for node in validator_tree.body
+            if isinstance(node, ast.FunctionDef) and node.name == "_static_authority"
+        )
+        semantic_ids = tuple(
+            ast.literal_eval(node.args[0])["id"]
+            for node in ast.walk(static_authority)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "semantic_checks"
+            and node.func.attr == "append"
+        )
+        self.assertEqual(
+            semantic_ids,
+            tuple(f"SC15-SEM-{number:02d}" for number in range(1, 14)),
+        )
+        literal_integer_tuples = {
+            tuple(element.value for element in node.elts)
+            for node in ast.walk(static_authority)
+            if isinstance(node, ast.Tuple)
+            and all(
+                isinstance(element, ast.Constant)
+                and isinstance(element.value, int)
+                for element in node.elts
+            )
+        }
+        self.assertIn((92, 13, 105, 13), literal_integer_tuples)
+        static_strings = {
+            node.value
+            for node in ast.walk(static_authority)
+            if isinstance(node, ast.Constant) and isinstance(node.value, str)
+        }
+        self.assertTrue(
+            {
+                "I8S-013",
+                "NO_DEPENDENCY_DRIFT",
+                "i8s013_dependency_witness_correction",
+                "DIRECT_I8_PREDECESSOR_BYTE_IDENTITY",
+                "SC15-SEM-13",
+            }
+            <= static_strings
         )
         verify_runtime = next(
             node
