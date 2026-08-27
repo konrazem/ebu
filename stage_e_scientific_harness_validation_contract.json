@@ -127,7 +127,7 @@
     },
     {
       "group_id": "SE-P-SCHEMA",
-      "count": 23,
+      "count": 27,
       "checks": [
         "SE-P-SCHEMA-001 evidence schema declares Draft 2020-12",
         "SE-P-SCHEMA-002 schema has exactly 22 named definitions",
@@ -151,7 +151,11 @@
         "SE-P-SCHEMA-020 final manifest requires supported bounds, completed lanes and Stage F authorization false",
         "SE-P-SCHEMA-021 every manifest entry identity status and evidence class equals its underlying record",
         "SE-P-SCHEMA-022 all records and the manifest share the exact head tree and environment",
-        "SE-P-SCHEMA-023 an underlying BOUND_NOT_SUPPORTED or FAIL record makes final PASS impossible"
+        "SE-P-SCHEMA-023 an underlying BOUND_NOT_SUPPORTED or FAIL record makes final PASS impossible",
+        "SE-P-SCHEMA-024 supported schema vocabulary is the exact ordered 27-keyword union",
+        "SE-P-SCHEMA-025 accepted Stage D continuation and Stage E positive fixture counts are exactly 5 3 and 11",
+        "SE-P-SCHEMA-026 frozen Stage D continuation and Stage E negative fixture counts are exactly 16 35 and 24",
+        "SE-P-SCHEMA-027 exactly 21 assertion/applicator mutations make the schema record report 19 accepted and 96 refused instances"
       ]
     },
     {
@@ -293,7 +297,7 @@
       ]
     }
   ],
-  "required_positive_check_count": 189,
+  "required_positive_check_count": 193,
   "negative_cases": [
     "SE-N001 wrong base commit",
     "SE-N002 wrong base tree",
@@ -385,9 +389,11 @@
     "SE-N088 unsuffixed or missing release-action counter substituted for an exact zero count field",
     "SE-N089 final manifest entry identity status or evidence class differs from its underlying record",
     "SE-N090 cross-head cross-tree or cross-environment record admitted to the final manifest",
-    "SE-N091 BOUND_NOT_SUPPORTED or FAIL underlying record relabelled as final PASS"
+    "SE-N091 BOUND_NOT_SUPPORTED or FAIL underlying record relabelled as final PASS",
+    "SE-N092 supported keyword omitted added reordered or silently ignored",
+    "SE-N093 required positive negative or keyword-mutation schema fixture omitted"
   ],
-  "required_negative_case_count": 91,
+  "required_negative_case_count": 93,
   "schema_definition_requirements": {
     "minimum_definition_count": 20,
     "required_names": [
@@ -467,7 +473,7 @@
     "raw and canonical identities",
     "17 predecessor rows",
     "authority and implementation path closure",
-    "189 positive and 91 negative checks",
+    "193 positive and 93 negative checks",
     "zero counters",
     "prohibited actions",
     "stop condition",

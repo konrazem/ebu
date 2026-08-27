@@ -175,6 +175,16 @@ assertion and applicator keyword receives positive and negative conformance.
 An unknown keyword, unresolved local reference, silently ignored assertion,
 permissive fallback, or reliance on an unchecked `format` annotation refuses.
 
+The frozen union is exactly 27 keywords. The base conformance corpus contains
+19 positive fixtures: five from Stage D, three from continuation, and eleven from
+Stage E. It contains 75 frozen negative fixtures: sixteen from Stage D,
+thirty-five from continuation, and twenty-four from Stage E. Exactly 21
+additional mutations each target one supported assertion or applicator
+keyword. Thus the schema record must report exactly 19 accepted and 96 refused
+instances. Annotation-only `title`, `description`, `format`, `$schema`, `$id`
+and `$defs` do not create rejection claims; `format` is never used to decide a
+PASS.
+
 Schema shape is not enough. The validator also enforces the accepted
 cross-record relations:
 

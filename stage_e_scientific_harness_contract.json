@@ -178,6 +178,27 @@
     "accepted_schema": "stage_d_scientific_validation_evidence_schema.json",
     "accepted_continuation_schema": "stage_d_completion_oriented_continuation_evidence_schema.json",
     "validator_scope": "the exact Draft 2020-12 keyword vocabulary actually present in the two accepted schemas plus the Stage E evidence schema",
+    "supported_keywords_in_order": [
+      "$defs", "$id", "$ref", "$schema", "additionalProperties", "allOf", "const", "description",
+      "else", "enum", "format", "if", "items", "maxItems", "maximum", "minItems", "minLength",
+      "minimum", "oneOf", "pattern", "prefixItems", "properties", "required", "then", "title",
+      "type", "uniqueItems"
+    ],
+    "supported_keyword_count": 27,
+    "positive_fixture_counts": {
+      "accepted_stage_d": 5,
+      "accepted_continuation": 3,
+      "stage_e": 11,
+      "total": 19
+    },
+    "frozen_negative_fixture_counts": {
+      "accepted_stage_d": 16,
+      "accepted_continuation": 35,
+      "stage_e": 24,
+      "total": 75
+    },
+    "assertion_and_applicator_keyword_mutation_count": 21,
+    "total_refused_instance_count": 96,
     "unknown_keyword": "REFUSE_VALIDATOR_BUILD",
     "format_reliance": "FORBIDDEN unless an exact local format checker is named and tested",
     "positive_instances": "all accepted Stage D and continuation non-evidence fixtures plus Stage E fixtures",
