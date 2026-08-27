@@ -240,6 +240,23 @@ STAGE_D_AUTHORITY_RAW_SHA256 = {
         "2707d9d645b3fc7ecc4ee61f02d861ba88c5d220d7bf6812ab98ece93ba51227"
     ),
 }
+STAGE_D_AUTHORITY_CANONICAL_SHA256 = {
+    "stage_d_scientific_validation_contract.json": (
+        "321709990be3a270db493050fa7a4a80789c4add5ed63de50c1944d4517a30c1"
+    ),
+    "stage_d_scientific_validation_evidence_schema.json": (
+        "527f6b65ba39b8b8e0485f30116e4f00ada6d0bd6abce207ab88d60d55ffd43e"
+    ),
+    "stage_d_scientific_validation_master_matrix.json": (
+        "e974840f0dabc29ee0ce0841443095b2dc17014d26b6b67ea244f1299dfa9db1"
+    ),
+    "stage_d_scientific_validation_predecessor_manifest.json": (
+        "e1b842e81f11bd10e51a5be881d607a292d2a9d63f3e4b152fbea4a4d101ba15"
+    ),
+    "stage_d_scientific_validation_validation_contract.json": (
+        "d8bc80fecaa7ba7d3f8b687a52880dc049d182ffa8d26a246d923dbed0fafb76"
+    ),
+}
 STAGE_D_AUTHORITY_SCOPE = STAGE_C_IMPLEMENTATION_SCOPE | frozenset(
     STAGE_D_AUTHORITY_PATHS
 )
@@ -252,7 +269,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "138b3fe8604a1dfc1a73c77f0cc7daaebfadf8d14fc39cbd8c8e8bb0fdb32f00"
+TEST_SELF_SEAL = "f90c5c31cb9706dd5185272d52227ee47744091329e336df830fc7518653d88f"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -421,6 +438,35 @@ def _strict_json(path: Path) -> tuple[object, bytes]:
     raw = path.read_bytes()
     document = _strict_json_bytes(raw, str(path))
     return document, raw
+
+
+def _strict_stage_d_json_bytes(raw: bytes, label: str) -> object:
+    if raw.startswith(b"\xef\xbb\xbf") or not raw.endswith(b"\n") or b"\r" in raw:
+        raise AssertionError(f"invalid Stage D authority JSON text encoding: {label}")
+
+    def unique_pairs(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate Stage D JSON key: {key}")
+            result[key] = value
+        return result
+
+    def reject_float(value):
+        raise ValueError(f"floating Stage D JSON number: {value}")
+
+    def reject_constant(value):
+        raise ValueError(f"non-finite Stage D JSON number: {value}")
+
+    document = json.loads(
+        raw.decode("utf-8", "strict"),
+        object_pairs_hook=unique_pairs,
+        parse_float=reject_float,
+        parse_constant=reject_constant,
+    )
+    if type(document) is not dict:
+        raise AssertionError(f"Stage D authority JSON top level is not an object: {label}")
+    return document
 
 
 def _git(*args: str) -> bytes:
@@ -1338,7 +1384,13 @@ class ValidationReachabilityTests(unittest.TestCase):
             self.assertNotIn(b"\r", current_raw, path)
             raw_by_path[path] = current_raw
             if path.endswith(".json"):
-                documents[path] = _strict_json_bytes(current_raw, path)
+                documents[path] = _strict_stage_d_json_bytes(current_raw, path)
+                canonical = _canonical_json_lf(documents[path])[:-1]
+                self.assertEqual(
+                    _sha256(canonical),
+                    STAGE_D_AUTHORITY_CANONICAL_SHA256[path],
+                    path,
+                )
 
         contract = documents["stage_d_scientific_validation_contract.json"]
         schema = documents["stage_d_scientific_validation_evidence_schema.json"]
