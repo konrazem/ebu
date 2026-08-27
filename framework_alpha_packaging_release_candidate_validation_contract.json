@@ -251,7 +251,7 @@
     {
       "id": "SC15_TEST_COMPATIBILITY_SCOPE",
       "class": "T0",
-      "accept": "Ten authorized inventory tests preserve every accepted I8 prefix and behavior while asserting the exact current CLCD suffix and whole-current uniqueness; the separately authorized reachability test adds only exact Stage C authority and implementation phases while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease."
+      "accept": "Eleven authorized inventory tests preserve every accepted I8 prefix and behavior while asserting the exact current CLCD suffix and whole-current uniqueness; the T2 bridge test retains its name/count, 42-row allowlist, fixtures, bridge/I6, signatures/import graph, failure precedence and non-inventory behavior; the separately authorized reachability test adds only exact Stage C authority and implementation phases while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease."
     },
     {
       "id": "SC16_PROTECTED_BYTES",

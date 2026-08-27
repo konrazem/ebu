@@ -76,9 +76,19 @@ The first immutable authority candidate, commit
 push CI run `33023757404` passed the conventional and T1 jobs but failed the
 current I-9 reachability group because the five new authority paths were not
 admitted by `_audit_current_head_scope`; T2 and CLCD did not complete. That
-failure is evidence, not a pass. This corrected candidate adds only the exact
-authority needed to repair that closed current-scope check during the later
-implementation.
+failure is evidence, not a pass.
+
+The first corrected authority candidate, commit
+`28d84c8373d9c0760fe330e448721a2ec0ba5561` and tree
+`0c1266c672fbb078b2f8d4cec1273ff1b020e283`, was also independently rejected.
+Its push CI run `33024871190` repeated the same authority-only reachability
+failure while conventional and T1 passed, historical T0 completed 109 tests,
+T2 was skipped, and CLCD did not complete. Independent inspection additionally
+found that mandatory T2 file `tests/framework/test_bridge_exact_fixtures.py`
+still binds whole-I8 failure and root-export inventories but was absent from
+the closed modification set. This twice-corrected candidate adds only the exact
+authority needed for that inventory reconciliation and the already diagnosed
+current-scope repair during the later implementation.
 
 ## 3. Packaging diagnosis
 
@@ -331,6 +341,7 @@ After independent authority acceptance, Stage C implementation may modify only:
 build_backend/ebu_build_backend.py
 tests/framework/test_artifact_recovery_publication.py
 tests/framework/test_atomic_declarations.py
+tests/framework/test_bridge_exact_fixtures.py
 tests/framework/test_capabilities.py
 tests/framework/test_i3_integration.py
 tests/framework/test_i3a_declarations.py
@@ -353,24 +364,35 @@ tests/framework/test_packaging_release_candidate.py
 No other tracked path may change. In particular, `pyproject.toml`,
 `requirements-framework.lock`, every `src/ebu_framework` file, accepted tests,
 fixtures, contracts, results, books, PDFs, and release notes remain
-byte-identical except for the eleven test-only paths named above. The ten named
-historical inventory tests may change only stale whole-snapshot assertions into
-exact accepted-prefix plus current CLCD-suffix assertions. They must preserve all
-historical prefix bytes and order, all behavioral checks, all fixtures, all
-call sites, all failure precedence, and every non-inventory assertion. No test
+byte-identical except for the twelve test-only paths named above. The eleven
+named historical inventory tests may change only stale whole-snapshot
+assertions into exact accepted-prefix plus current CLCD-suffix assertions. They
+must preserve all historical prefix bytes and order, all behavioral checks, all
+fixtures, all call sites, all failure precedence, and every non-inventory
+assertion. No test
 may be deleted, skipped, filtered, weakened, or moved to a historical checkout
 as a substitute for testing the current source and installed candidate.
 
 `tests/framework/test_validation_reachability.py` may change only its
 current-HEAD scope layer. Relative to its immutable I-9 implementation base, it
 must continue to admit the two accepted post-I9 paths, require the five Stage C
-authority files, and admit exactly the thirteen modified plus three new Stage C
-implementation paths frozen here. The authority-only and completed-
+authority files, and admit exactly the fourteen modified plus three new Stage C
+implementation paths frozen here. After the two pre-existing post-I9 overlaps
+are counted once, the completed delta from the immutable I-9 implementation
+base has exactly 22 unique paths. The authority-only and completed-
 implementation states must be represented as separate exact phases; neither
 phase may admit an arbitrary, missing, renamed, deleted, symlinked,
 mode-changed, source, result, book, or other unlisted path. Historical I-9 Git
 object and archive reconstruction, identities, vectors, failure precedence,
 and negative cases remain unchanged.
+
+Within `tests/framework/test_bridge_exact_fixtures.py`, only
+`test_failure_export_signature_and_import_surfaces` may reconcile its stale
+whole-I8 failure and root-export assertions to the exact preserved I8 prefix,
+exact accepted CLCD suffix, and whole-current uniqueness. Its test name and
+count, 42-row T2 allowlist, fixtures, bridge/I6 assertions, signature and import-
+graph assertions, failure precedence, and every non-inventory behavior remain
+byte-for-byte or semantically unchanged as applicable.
 
 Validation artifacts, wheelhouses, virtual environments,
 source snapshots, extracted sdists, wheels, sdists, manifests, and logs must be

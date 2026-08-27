@@ -61,6 +61,18 @@
       "t2_job": "SKIPPED_NOT_A_PASS",
       "clcd_job": "NOT_COMPLETED",
       "independent_authority_audit": "FAIL"
+    },
+    "rejected_corrected_authority_candidate": {
+      "commit": "28d84c8373d9c0760fe330e448721a2ec0ba5561",
+      "tree": "0c1266c672fbb078b2f8d4cec1273ff1b020e283",
+      "ci_run_id": 33024871190,
+      "conventional_job": "PASS",
+      "t1_job": "PASS_299",
+      "t0_historical": "PASS_109",
+      "t0_reachability": "FAIL_1_OF_3_PASS_ON_FIRST_STAGE_C_AUTHORITY_PATH",
+      "t2_job": "SKIPPED_NOT_A_PASS",
+      "clcd_job": "NOT_COMPLETED",
+      "independent_authority_audit": "FAIL_T2_STALE_INVENTORY_PATH_OMISSION"
     }
   },
   "diagnosis": {
@@ -97,6 +109,11 @@
         "id": "SC-CI-003",
         "disposition": "CONFIRMED",
         "description": "The first authority candidate's T0 run rejects the five Stage C authority files because the closed current-HEAD reachability scope does not admit this authority layer, and the first implementation scope omitted the reachability test needed for an exact correction."
+      },
+      {
+        "id": "SC-T2-001",
+        "disposition": "CONFIRMED",
+        "description": "Mandatory T2 test_bridge_exact_fixtures.py binds the whole-I8 280-failure and 444-root-export snapshots, so the current 294/471 T2 lane cannot pass without a narrowly scoped additive inventory correction."
       }
     ]
   },
@@ -276,6 +293,7 @@
       "build_backend/ebu_build_backend.py",
       "tests/framework/test_artifact_recovery_publication.py",
       "tests/framework/test_atomic_declarations.py",
+      "tests/framework/test_bridge_exact_fixtures.py",
       "tests/framework/test_capabilities.py",
       "tests/framework/test_i3_integration.py",
       "tests/framework/test_i3a_declarations.py",
@@ -303,7 +321,8 @@
     "independently_audited_scientific_interpretation": "NOT_CLAIMED"
   },
   "test_inventory_reconciliation": {
-    "purpose": "Replace only obsolete whole-I8 final-snapshot assumptions with exact accepted I8-prefix plus current accepted CLCD-suffix assertions so current source and installed artifacts can run the complete lanes.",
+    "purpose": "Replace only obsolete whole-I8 final-snapshot assumptions in the eleven authorized inventory tests with exact accepted I8-prefix plus current accepted CLCD-suffix assertions so current source and installed artifacts can run the complete lanes.",
+    "bridge_t2_boundary": "In test_bridge_exact_fixtures.py only test_failure_export_signature_and_import_surfaces may reconcile whole-I8 failure/root assertions; preserve the test name/count, 42-row allowlist, fixtures, bridge/I6 assertions, signatures/import graph, failure precedence and every non-inventory behavior.",
     "preserve": [
       "all historical prefixes and projections",
       "all behavioral tests and test counts",
@@ -322,7 +341,7 @@
   "current_head_scope_reconciliation": {
     "path": "tests/framework/test_validation_reachability.py",
     "authority_phase": "Require exactly the five Stage C authority paths in addition to the accepted two post-I9 paths relative to the immutable I-9 implementation base.",
-    "implementation_phase": "Require exactly the five Stage C authority paths, thirteen modified paths and three new paths in addition to the accepted post-I9 relationship, accounting for overlapping paths once.",
+    "implementation_phase": "Require exactly the five Stage C authority paths, fourteen modified paths and three new paths in addition to the accepted post-I9 relationship, accounting for overlapping paths once; the resulting delta relative to the immutable I-9 implementation base has exactly 22 unique paths.",
     "preserve": [
       "historical I-9 Git object and archive reconstruction",
       "historical coordinates and raw identities",
