@@ -414,6 +414,7 @@ class StageCPackagingTests(unittest.TestCase):
             and isinstance(node.targets[0], ast.Name)
             and node.targets[0].id in {
                 "AUTHORITY_HASHES",
+                "SEMANTIC_SCOPE_AST_IDENTITIES",
                 "CONVENTIONAL_WHEELS",
                 "CONVENTIONAL_COUNTS",
                 "SQLITE_UPSTREAM_SOURCE_ID_REFERENCE",
@@ -425,11 +426,18 @@ class StageCPackagingTests(unittest.TestCase):
             assignments,
             {
                 "AUTHORITY_HASHES": {
-                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "567fa4b8f75cd791856bbc9ce7dcad540d0aeb290e7e14311cfd25c08518e702",
-                    "framework_alpha_packaging_release_candidate_contract.json": "6ddd601013d86d7e14f77823c48c9c022becaef3c0f158cef05632f44a2a34c3",
-                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "f24c704f6ce72201b6b8d339183aa7511be540d0d1500f2a38878fd9c29983fe",
+                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "eb9dc6259cf6fe55e5e77d6c8cacd38f664178b04462f2e24675e4df430f3928",
+                    "framework_alpha_packaging_release_candidate_contract.json": "71696f789bf2c126bb02cd668a9b046eb780fbe0b0994759ac45a05ca5f43a58",
+                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "2f2c35a20e0a6d2fecb90ad4278756ceaaab427d277f9e927b39402065745d9e",
                     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-                    "framework_alpha_packaging_release_candidate_validation_contract.json": "58bb97e83231d272a5d09fc92ecefa9d95ef3fa534b54d260964215f752729a0",
+                    "framework_alpha_packaging_release_candidate_validation_contract.json": "0b4936d71f85f0209d127ef4a56149f374049c7c3c38a582fd76fbd117a4cf31",
+                },
+                "SEMANTIC_SCOPE_AST_IDENTITIES": {
+                    "artifact_predecessor_function": (40575, "fa9143a17b11df05e833475abea9b36b8efe6c2bd4a6d16da57a9dcc8ac4610f"),
+                    "atomic_predecessor_method": (32903, "e948c6fc53892b6710d50f2998d268846a359bb1cd362dd3dee152f6c787be67"),
+                    "capabilities_reachability_method": (55295, "ff226be2349bc580482d28ad29a2c181a0eb27d725d11f509872b996283cc4b7"),
+                    "interaction_graph_method": (43399, "c27b4a36b3feaa46cc6e3e9a2d5587fc8f8c5231f683fd066351c71ccdeab8b4"),
+                    "interaction_predecessor_method": (53280, "d8d4eaabc6f5faf81642d5c0670b4bb6cadf1fbcbce64a1a3094c1f69a62f6bd"),
                 },
                 "CONVENTIONAL_WHEELS": {
                     "charset_normalizer-3.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl": (251240, "15f024313246a4ed976c60f440bb8d257815513a681d212ff74fd46f7d715a90"),

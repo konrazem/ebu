@@ -1390,24 +1390,114 @@ def _run_static_vector(vector: dict[str, Any]) -> None:
             for name in witness["callables"]
         )
     elif kind == "PREDECESSOR_PRESERVATION":
+        import subprocess
+
         stage_c = json.loads(
             (
                 ROOT / "framework_alpha_packaging_release_candidate_contract.json"
             ).read_bytes()
         )
-        later_authorized = set(stage_c["implementation_scope"]["modified_paths"]) | {
+        stage_c_predecessor = json.loads(
+            (
+                ROOT
+                / "framework_alpha_packaging_release_candidate_predecessor_manifest.json"
+            ).read_bytes()
+        )
+        reconciliation = stage_c["test_inventory_reconciliation"][
+            "artifact_predecessor_preservation_reconciliation"
+        ]
+        exact_paths = (
+            ".github/workflows/tests.yml",
             "EBU_FUTURE_BOOKS_STRUCTURE.md",
-            "src/ebu_framework/__init__.py",
-            "src/ebu_framework/errors.py",
-            "src/ebu_framework/validation.py",
+            "build_backend/ebu_build_backend.py",
             "tests/framework/safety.py",
+        )
+        stage_c_modified = (
+            ".github/workflows/tests.yml",
+            "build_backend/ebu_build_backend.py",
+        )
+        current_byte_preserved = (
+            "EBU_FUTURE_BOOKS_STRUCTURE.md",
+            "tests/framework/safety.py",
+        )
+        assert tuple(reconciliation["exact_reconciled_paths"]) == exact_paths
+        assert tuple(reconciliation["stage_c_modified_paths"]) == stage_c_modified
+        assert tuple(reconciliation["current_byte_preserved_paths"]) == current_byte_preserved
+        reconciliation_rows = {
+            row["path"]: row for row in reconciliation["rows"]
+        }
+        assert tuple(reconciliation_rows) == exact_paths
+        stage_c_rows = {
+            row["path"]: row for row in stage_c_predecessor["controlling_paths"]
         }
         for row in PREDECESSOR["rows"]:
             if row["i8_future_disposition"] != "PRESERVED":
                 continue
-            if row["path"] in later_authorized:
+            path = row["path"]
+            if path in reconciliation_rows:
+                frozen = reconciliation_rows[path]
+                assert (
+                    row["mode"],
+                    row["git_object"],
+                    row["byte_count"],
+                    row["raw_sha256"],
+                ) == (
+                    frozen["i8_mode"],
+                    frozen["i8_git_object"],
+                    frozen["i8_byte_count"],
+                    frozen["i8_raw_sha256"],
+                )
+                i8_payload = subprocess.run(
+                    ["git", "cat-file", "blob", row["git_object"]],
+                    cwd=ROOT,
+                    check=True,
+                    capture_output=True,
+                ).stdout
+                assert (len(i8_payload), hashlib.sha256(i8_payload).hexdigest()) == (
+                    row["byte_count"],
+                    row["raw_sha256"],
+                )
+                accepted_base = (
+                    frozen["accepted_stage_c_base_mode"],
+                    frozen["accepted_stage_c_base_git_object"],
+                    frozen["accepted_stage_c_base_byte_count"],
+                    frozen["accepted_stage_c_base_raw_sha256"],
+                )
+                if path in stage_c_modified:
+                    stage_row = stage_c_rows[path]
+                    assert (
+                        stage_row["mode"],
+                        stage_row["git_object"],
+                        stage_row["byte_count"],
+                        stage_row["raw_sha256"],
+                    ) == accepted_base
+                    base_payload = subprocess.run(
+                        ["git", "cat-file", "blob", stage_row["git_object"]],
+                        cwd=ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    assert (
+                        len(base_payload),
+                        hashlib.sha256(base_payload).hexdigest(),
+                    ) == (stage_row["byte_count"], stage_row["raw_sha256"])
+                else:
+                    head_row = subprocess.run(
+                        ["git", "ls-tree", "HEAD", "--", path],
+                        cwd=ROOT,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    ).stdout.split()
+                    payload = (ROOT / path).read_bytes()
+                    assert (
+                        head_row[0],
+                        head_row[2],
+                        len(payload),
+                        hashlib.sha256(payload).hexdigest(),
+                    ) == accepted_base
                 continue
-            payload = (ROOT / row["path"]).read_bytes()
+            payload = (ROOT / path).read_bytes()
             assert len(payload) == row["byte_count"]
             assert hashlib.sha256(payload).hexdigest() == row["raw_sha256"]
     elif kind == "PATH_SCOPE":

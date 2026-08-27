@@ -27,11 +27,18 @@ import zlib
 
 
 AUTHORITY_HASHES = {
-    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "567fa4b8f75cd791856bbc9ce7dcad540d0aeb290e7e14311cfd25c08518e702",
-    "framework_alpha_packaging_release_candidate_contract.json": "6ddd601013d86d7e14f77823c48c9c022becaef3c0f158cef05632f44a2a34c3",
-    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "f24c704f6ce72201b6b8d339183aa7511be540d0d1500f2a38878fd9c29983fe",
+    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "eb9dc6259cf6fe55e5e77d6c8cacd38f664178b04462f2e24675e4df430f3928",
+    "framework_alpha_packaging_release_candidate_contract.json": "71696f789bf2c126bb02cd668a9b046eb780fbe0b0994759ac45a05ca5f43a58",
+    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "2f2c35a20e0a6d2fecb90ad4278756ceaaab427d277f9e927b39402065745d9e",
     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-    "framework_alpha_packaging_release_candidate_validation_contract.json": "58bb97e83231d272a5d09fc92ecefa9d95ef3fa534b54d260964215f752729a0",
+    "framework_alpha_packaging_release_candidate_validation_contract.json": "0b4936d71f85f0209d127ef4a56149f374049c7c3c38a582fd76fbd117a4cf31",
+}
+SEMANTIC_SCOPE_AST_IDENTITIES = {
+    "artifact_predecessor_function": (40575, "fa9143a17b11df05e833475abea9b36b8efe6c2bd4a6d16da57a9dcc8ac4610f"),
+    "atomic_predecessor_method": (32903, "e948c6fc53892b6710d50f2998d268846a359bb1cd362dd3dee152f6c787be67"),
+    "capabilities_reachability_method": (55295, "ff226be2349bc580482d28ad29a2c181a0eb27d725d11f509872b996283cc4b7"),
+    "interaction_graph_method": (43399, "c27b4a36b3feaa46cc6e3e9a2d5587fc8f8c5231f683fd066351c71ccdeab8b4"),
+    "interaction_predecessor_method": (53280, "d8d4eaabc6f5faf81642d5c0670b4bb6cadf1fbcbce64a1a3094c1f69a62f6bd"),
 }
 FRONTEND_WHEELS = {
     "build-1.5.0-py3-none-any.whl": (26018, "13f3eecb844759ab66efec90ca17639bbf14dc06cb2fdf37a9010322d9c50a6f"),
@@ -294,6 +301,125 @@ def _source_input_manifest(source: Path, package_paths: tuple[str, ...]) -> list
     ]
 
 
+def _definition_ast(
+    source: Path,
+    relative_path: str,
+    definition_name: str,
+    *,
+    class_name: str | None = None,
+) -> tuple[ast.FunctionDef, tuple[int, str]]:
+    tree = ast.parse((source / relative_path).read_text("utf-8"), filename=relative_path)
+    body: list[ast.stmt] = tree.body
+    if class_name is not None:
+        owner = next(
+            node
+            for node in body
+            if isinstance(node, ast.ClassDef) and node.name == class_name
+        )
+        body = owner.body
+    definition = next(
+        node
+        for node in body
+        if isinstance(node, ast.FunctionDef) and node.name == definition_name
+    )
+    payload = (
+        ast.dump(definition, annotate_fields=True, include_attributes=False) + "\n"
+    ).encode("utf-8")
+    return definition, (len(payload), _sha256(payload))
+
+
+def _git_output(source: Path, argv: list[str], *, text: bool = False) -> bytes | str:
+    completed = subprocess.run(
+        ["git", *argv],
+        cwd=source,
+        check=False,
+        capture_output=True,
+        text=text,
+    )
+    if completed.returncode != 0:
+        raise Refusal(f"Git semantic-scope reconstruction failed: {' '.join(argv)}")
+    return completed.stdout
+
+
+def _static_current_import_inventory(
+    source: Path,
+    i8_paths: dict[str, object],
+    current: dict[str, object],
+) -> dict[str, object]:
+    package = source / "src/ebu_framework"
+    module_order = tuple(i8_paths["future_import_graph"]["package_module_order"]) + tuple(  # type: ignore[index]
+        current["suffix_module_order"]  # type: ignore[arg-type]
+    )
+    modules = {
+        path.stem for path in package.glob("*.py") if path.name != "__init__.py"
+    }
+    if set(module_order) != modules:
+        raise Refusal("semantic-scope current module set mismatch")
+    graph: dict[str, list[str]] = {}
+    exports: dict[str, tuple[str, ...]] = {}
+    for name in module_order:
+        module_tree = ast.parse(
+            (package / f"{name}.py").read_text("utf-8"), filename=f"{name}.py"
+        )
+        graph[name] = []
+        for node in module_tree.body:
+            if not isinstance(node, ast.ImportFrom) or node.level != 1:
+                continue
+            candidates = (
+                (node.module,)
+                if node.module is not None
+                else tuple(alias.name for alias in node.names)
+            )
+            for dependency in candidates:
+                if dependency in modules and dependency not in graph[name]:
+                    graph[name].append(dependency)
+        module_exports: tuple[str, ...] = ()
+        for node in module_tree.body:
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == "__all__"
+            ):
+                module_exports = tuple(ast.literal_eval(node.value))
+            elif (
+                isinstance(node, ast.AugAssign)
+                and isinstance(node.target, ast.Name)
+                and node.target.id == "__all__"
+                and isinstance(node.op, ast.Add)
+            ):
+                module_exports += tuple(ast.literal_eval(node.value))
+        exports[name] = module_exports
+    order_projection = ("\n".join(module_order) + "\n").encode("utf-8")
+    graph_projection = (
+        json.dumps(
+            [[name, graph[name]] for name in module_order],
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+        + b"\n"
+    )
+    export_projection = (
+        json.dumps(
+            [[name, list(exports[name])] for name in module_order],
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+        + b"\n"
+    )
+    return {
+        "module_order": module_order,
+        "graph": graph,
+        "exports": exports,
+        "direct_edge_count": sum(len(values) for values in graph.values()),
+        "order_identity": (len(order_projection), _sha256(order_projection)),
+        "graph_identity": (len(graph_projection), _sha256(graph_projection)),
+        "export_identity": (len(export_projection), _sha256(export_projection)),
+    }
+
+
 def _static_authority(args: argparse.Namespace) -> int:
     source = _directory(args.source)
     _assert_read_only_source(source)
@@ -339,9 +465,326 @@ def _static_authority(args: argparse.Namespace) -> int:
     if imports & forbidden_imports:
         raise Refusal(f"backend forbidden reachability: {sorted(imports & forbidden_imports)}")
     checks += len(imports)
+    semantic_authority = validation["validator_cli"]["static_authority_semantic_scope"]  # type: ignore[index]
+    if (
+        semantic_authority["prior_positive_check_count"],
+        semantic_authority["additional_positive_check_count"],
+        semantic_authority["required_positive_check_count"],
+        len(semantic_authority["checks"]),
+    ) != (92, 8, 100, 8):
+        raise Refusal("semantic-scope authority count mismatch")
+    semantic_checks: list[dict[str, object]] = []
+    inventory = contract["test_inventory_reconciliation"]  # type: ignore[index]
+    reconciliation = inventory["artifact_predecessor_preservation_reconciliation"]
+    exact_paths = (
+        ".github/workflows/tests.yml",
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "build_backend/ebu_build_backend.py",
+        "tests/framework/safety.py",
+    )
+    stage_c_modified = (
+        ".github/workflows/tests.yml",
+        "build_backend/ebu_build_backend.py",
+    )
+    current_preserved = (
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "tests/framework/safety.py",
+    )
+    predecessor_methods = (
+        "tests/framework/test_atomic_declarations.py::AtomicDeclarationContractTests.test_existing_public_signatures_and_predecessor_bytes_are_preserved",
+        "tests/framework/test_interaction_declarations.py::InteractionDeclarationContractTests.test_predecessor_signatures_and_d1_bytes_are_preserved",
+    )
+    shared_reconciliation = inventory[
+        "atomic_and_interaction_predecessor_preservation_reconciliation"
+    ]
+    if (
+        tuple(reconciliation["exact_reconciled_paths"]),
+        tuple(reconciliation["stage_c_modified_paths"]),
+        tuple(reconciliation["current_byte_preserved_paths"]),
+        tuple(row["path"] for row in reconciliation["rows"]),
+    ) != (exact_paths, stage_c_modified, current_preserved, exact_paths):
+        raise Refusal("artifact predecessor reconciliation path drift")
+    if (
+        tuple(shared_reconciliation["test_methods"]),
+        tuple(shared_reconciliation["exact_reconciled_paths"]),
+        tuple(shared_reconciliation["stage_c_modified_paths"]),
+        tuple(shared_reconciliation["current_byte_preserved_paths"]),
+        shared_reconciliation["identity_rows"],
+        shared_reconciliation["literal_set_equality_required_in_each_method"],
+        shared_reconciliation["dynamic_or_authority_scope_derived_exclusion"],
+        shared_reconciliation["unlisted_fifth_reconciliation_path"],
+    ) != (
+        predecessor_methods,
+        exact_paths,
+        stage_c_modified,
+        current_preserved,
+        "EXACTLY test_inventory_reconciliation.artifact_predecessor_preservation_reconciliation.rows",
+        True,
+        "FORBIDDEN",
+        "FORBIDDEN",
+    ):
+        raise Refusal("atomic/interaction predecessor reconciliation authority drift")
+    i8_predecessor = _load_json(
+        source / "unified_python_research_framework_i8_predecessor_manifest.json"
+    )
+    stage_c_predecessor = _load_json(
+        source / "framework_alpha_packaging_release_candidate_predecessor_manifest.json"
+    )
+    i8_rows = {row["path"]: row for row in i8_predecessor["rows"]}  # type: ignore[index]
+    stage_c_rows = {
+        row["path"]: row for row in stage_c_predecessor["controlling_paths"]  # type: ignore[index]
+    }
+    for frozen in reconciliation["rows"]:
+        path = frozen["path"]
+        i8_row = i8_rows[path]
+        if (
+            i8_row["mode"],
+            i8_row["git_object"],
+            i8_row["byte_count"],
+            i8_row["raw_sha256"],
+        ) != (
+            frozen["i8_mode"],
+            frozen["i8_git_object"],
+            frozen["i8_byte_count"],
+            frozen["i8_raw_sha256"],
+        ):
+            raise Refusal(f"I8 predecessor reconciliation identity drift: {path}")
+        i8_payload = _git_output(source, ["cat-file", "blob", i8_row["git_object"]])
+        if (len(i8_payload), _sha256(i8_payload)) != (
+            i8_row["byte_count"],
+            i8_row["raw_sha256"],
+        ):
+            raise Refusal(f"I8 predecessor object mismatch: {path}")
+        accepted_base = (
+            frozen["accepted_stage_c_base_mode"],
+            frozen["accepted_stage_c_base_git_object"],
+            frozen["accepted_stage_c_base_byte_count"],
+            frozen["accepted_stage_c_base_raw_sha256"],
+        )
+        if path in stage_c_modified:
+            stage_row = stage_c_rows[path]
+            if (
+                stage_row["mode"],
+                stage_row["git_object"],
+                stage_row["byte_count"],
+                stage_row["raw_sha256"],
+            ) != accepted_base:
+                raise Refusal(f"Stage C predecessor identity drift: {path}")
+            base_payload = _git_output(
+                source, ["cat-file", "blob", stage_row["git_object"]]
+            )
+            if (len(base_payload), _sha256(base_payload)) != (
+                stage_row["byte_count"],
+                stage_row["raw_sha256"],
+            ):
+                raise Refusal(f"Stage C predecessor object mismatch: {path}")
+        else:
+            head_row = str(
+                _git_output(source, ["ls-tree", "HEAD", "--", path], text=True)
+            ).split()
+            current_payload = (source / path).read_bytes()
+            if (
+                head_row[0],
+                head_row[2],
+                len(current_payload),
+                _sha256(current_payload),
+            ) != accepted_base:
+                raise Refusal(f"protected current reconciliation mismatch: {path}")
+    semantic_checks.append({"id": "SC15-SEM-01", "status": "PASS"})
+
+    artifact_definition, artifact_identity = _definition_ast(
+        source,
+        "tests/framework/test_artifact_recovery_publication.py",
+        "_run_static_vector",
+    )
+    artifact_constants = {
+        node.value
+        for node in ast.walk(artifact_definition)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)
+    }
+    artifact_names = {
+        node.id for node in ast.walk(artifact_definition) if isinstance(node, ast.Name)
+    }
+    if (
+        artifact_identity != SEMANTIC_SCOPE_AST_IDENTITIES["artifact_predecessor_function"]
+        or "implementation_scope" in artifact_constants
+        or "later_authorized" in artifact_names
+    ):
+        raise Refusal("artifact predecessor semantic AST drift")
+    semantic_checks.append({"id": "SC15-SEM-02", "status": "PASS"})
+
+    atomic_predecessor_definition, atomic_predecessor_identity = _definition_ast(
+        source,
+        "tests/framework/test_atomic_declarations.py",
+        "test_existing_public_signatures_and_predecessor_bytes_are_preserved",
+        class_name="AtomicDeclarationContractTests",
+    )
+
+    def literal_string_tuple(
+        definition: ast.FunctionDef, variable: str
+    ) -> tuple[str, ...] | None:
+        for node in ast.walk(definition):
+            if (
+                isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == variable
+                and isinstance(node.value, ast.Tuple)
+                and all(
+                    isinstance(value, ast.Constant)
+                    and isinstance(value.value, str)
+                    for value in node.value.elts
+                )
+            ):
+                return tuple(value.value for value in node.value.elts)  # type: ignore[union-attr]
+        return None
+
+    def assert_predecessor_reconciliation_method(
+        definition: ast.FunctionDef,
+        identity: tuple[int, str],
+        expected_identity: tuple[int, str],
+        label: str,
+    ) -> None:
+        constants = {
+            node.value
+            for node in ast.walk(definition)
+            if isinstance(node, ast.Constant) and isinstance(node.value, str)
+        }
+        names = {
+            node.id for node in ast.walk(definition) if isinstance(node, ast.Name)
+        }
+        if (
+            identity != expected_identity
+            or literal_string_tuple(definition, "exact_stage_c_paths") != exact_paths
+            or literal_string_tuple(definition, "stage_c_modified_paths")
+            != stage_c_modified
+            or literal_string_tuple(definition, "current_byte_preserved_paths")
+            != current_preserved
+            or not {
+                "atomic_and_interaction_predecessor_preservation_reconciliation",
+                "artifact_predecessor_preservation_reconciliation",
+                "c540d032ff22a4cd3be42f31564ac7023706e32d",
+            } <= constants
+            or "implementation_scope" in constants
+            or "later_authorized" in names
+        ):
+            raise Refusal(f"{label} predecessor reconciliation semantic drift")
+
+    assert_predecessor_reconciliation_method(
+        atomic_predecessor_definition,
+        atomic_predecessor_identity,
+        SEMANTIC_SCOPE_AST_IDENTITIES["atomic_predecessor_method"],
+        "atomic",
+    )
+    semantic_checks.append({"id": "SC15-SEM-03", "status": "PASS"})
+
+    interaction_predecessor_definition, interaction_predecessor_identity = _definition_ast(
+        source,
+        "tests/framework/test_interaction_declarations.py",
+        "test_predecessor_signatures_and_d1_bytes_are_preserved",
+        class_name="InteractionDeclarationContractTests",
+    )
+    assert_predecessor_reconciliation_method(
+        interaction_predecessor_definition,
+        interaction_predecessor_identity,
+        SEMANTIC_SCOPE_AST_IDENTITIES["interaction_predecessor_method"],
+        "interaction",
+    )
+    semantic_checks.append({"id": "SC15-SEM-04", "status": "PASS"})
+
+    capabilities_definition, capabilities_identity = _definition_ast(
+        source,
+        "tests/framework/test_capabilities.py",
+        "test_i4v_118_through_i4v_126_reachability",
+        class_name="FrameworkI4ReachabilityTests",
+    )
+    if capabilities_identity != SEMANTIC_SCOPE_AST_IDENTITIES["capabilities_reachability_method"]:
+        raise Refusal("capabilities semantic AST drift")
+
+    def slice_bounds(variable: str) -> set[tuple[int | None, int | None]]:
+        values: set[tuple[int | None, int | None]] = set()
+        for node in ast.walk(capabilities_definition):
+            if (
+                isinstance(node, ast.Subscript)
+                and isinstance(node.value, ast.Name)
+                and node.value.id == variable
+                and isinstance(node.slice, ast.Slice)
+            ):
+                lower = (
+                    node.slice.lower.value
+                    if isinstance(node.slice.lower, ast.Constant)
+                    and isinstance(node.slice.lower.value, int)
+                    else None
+                )
+                upper = (
+                    node.slice.upper.value
+                    if isinstance(node.slice.upper, ast.Constant)
+                    and isinstance(node.slice.upper.value, int)
+                    else None
+                )
+                values.add((lower, upper))
+        return values
+
+    if not {(None, 280), (280, None)} <= slice_bounds("failures"):
+        raise Refusal("capabilities failure prefix/suffix assertions missing")
+    semantic_checks.append({"id": "SC15-SEM-05", "status": "PASS"})
+    if not {(None, 444), (444, None)} <= slice_bounds("root_exports"):
+        raise Refusal("capabilities root prefix/suffix assertions missing")
+    semantic_checks.append({"id": "SC15-SEM-06", "status": "PASS"})
+
+    i8_paths = _load_json(
+        source / "unified_python_research_framework_i8_implementation_path_manifest.json"
+    )
+    current_inventory = inventory["exact_current_import_inventory"]
+    reconstructed = _static_current_import_inventory(
+        source, i8_paths, current_inventory
+    )
+    suffix_order = tuple(current_inventory["suffix_module_order"])
+    if (
+        len(reconstructed["module_order"]),
+        reconstructed["direct_edge_count"],
+        reconstructed["order_identity"],
+        reconstructed["graph_identity"],
+        reconstructed["export_identity"],
+        {name: reconstructed["graph"][name] for name in suffix_order},
+        {name: len(reconstructed["exports"][name]) for name in suffix_order},
+    ) != (
+        current_inventory["current_module_count"],
+        current_inventory["current_direct_edge_count"],
+        (
+            current_inventory["module_order_lf"]["byte_count"],
+            current_inventory["module_order_lf"]["sha256"],
+        ),
+        (
+            current_inventory["direct_import_projection"]["byte_count"],
+            current_inventory["direct_import_projection"]["sha256"],
+        ),
+        (
+            current_inventory["module_export_projection"]["byte_count"],
+            current_inventory["module_export_projection"]["sha256"],
+        ),
+        current_inventory["suffix_direct_imports"],
+        current_inventory["suffix_module_export_counts"],
+    ):
+        raise Refusal("capabilities current inventory reconstruction mismatch")
+    semantic_checks.append({"id": "SC15-SEM-07", "status": "PASS"})
+
+    _, interaction_graph_identity = _definition_ast(
+        source,
+        "tests/framework/test_interaction_declarations.py",
+        "test_exact_imports_graphs_and_inertness",
+        class_name="InteractionDeclarationContractTests",
+    )
+    if interaction_graph_identity != SEMANTIC_SCOPE_AST_IDENTITIES["interaction_graph_method"]:
+        raise Refusal("interaction graph semantic AST drift")
+    semantic_checks.append({"id": "SC15-SEM-08", "status": "PASS"})
+
     if validation["global_acceptance"]["registered_or_full_horizon_scientific_campaign_count"] != 0:  # type: ignore[index]
         raise Refusal("scientific boundary drift")
     checks += 1
+    checks += len(semantic_checks)
+    if checks != semantic_authority["required_positive_check_count"]:
+        raise Refusal("static-authority total positive-check count mismatch")
     payload = {
         "command": "static-authority",
         "status": "PASS",
@@ -351,7 +794,8 @@ def _static_authority(args: argparse.Namespace) -> int:
         "package_file_count": len(package_paths),
         "modified_path_count": len(modified),
         "new_path_count": len(new),
-        "relations": {"P1": 4, "P2": len(imports), "P12": 1, "SC1": 49, "SC4": 2, "SC15": 14, "SC16": 1},
+        "relations": {"P1": 4, "P2": len(imports), "P12": 1, "SC1": 49, "SC4": 2, "SC15": 22, "SC16": 1},
+        "semantic_scope_checks": semantic_checks,
         "scientific_counts": {
             "registered_or_full_horizon_campaign": 0,
             "new_official_result_artifact": 0,

@@ -1803,20 +1803,155 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             "src/ebu_framework/experiment.py",
             "src/ebu_framework/network.py",
             "src/ebu_framework/traces.py",
+        }
+        stage_c_contract = _load_json(
+            _REPO_ROOT / "framework_alpha_packaging_release_candidate_contract.json"
+        )
+        stage_c_predecessor = _load_json(
+            _REPO_ROOT
+            / "framework_alpha_packaging_release_candidate_predecessor_manifest.json"
+        )
+        stage_c_reconciliation = stage_c_contract["test_inventory_reconciliation"][
+            "atomic_and_interaction_predecessor_preservation_reconciliation"
+        ]
+        artifact_reconciliation = stage_c_contract["test_inventory_reconciliation"][
+            "artifact_predecessor_preservation_reconciliation"
+        ]
+        exact_stage_c_paths = (
+            ".github/workflows/tests.yml",
+            "EBU_FUTURE_BOOKS_STRUCTURE.md",
+            "build_backend/ebu_build_backend.py",
+            "tests/framework/safety.py",
+        )
+        stage_c_modified_paths = (
+            ".github/workflows/tests.yml",
+            "build_backend/ebu_build_backend.py",
+        )
+        current_byte_preserved_paths = (
             "EBU_FUTURE_BOOKS_STRUCTURE.md",
             "tests/framework/safety.py",
-        }
-        excluded.update(
-            _load_json(
-                _REPO_ROOT / "framework_alpha_packaging_release_candidate_contract.json"
-            )["implementation_scope"]["modified_paths"]
         )
+        self.assertEqual(
+            (
+                tuple(stage_c_reconciliation["exact_reconciled_paths"]),
+                tuple(artifact_reconciliation["exact_reconciled_paths"]),
+                tuple(artifact_reconciliation["stage_c_modified_paths"]),
+                tuple(artifact_reconciliation["current_byte_preserved_paths"]),
+                tuple(row["path"] for row in artifact_reconciliation["rows"]),
+            ),
+            (
+                exact_stage_c_paths,
+                exact_stage_c_paths,
+                stage_c_modified_paths,
+                current_byte_preserved_paths,
+                exact_stage_c_paths,
+            ),
+        )
+        accepted_stage_c_base_commit = stage_c_contract["predecessor_evidence"][
+            "predecessor_test_authority_correction"
+        ]["accepted_inventory_scope_integration_commit"]
+        self.assertEqual(
+            accepted_stage_c_base_commit,
+            "c540d032ff22a4cd3be42f31564ac7023706e32d",
+        )
+        stage_c_reconciliation_rows = {
+            row["path"]: row for row in artifact_reconciliation["rows"]
+        }
+        stage_c_predecessor_rows = {
+            row["path"]: row for row in stage_c_predecessor["controlling_paths"]
+        }
         for row in _MANIFEST["rows"]:
             if row["path"] in excluded:
                 continue
             path = _REPO_ROOT / row["path"]
             with self.subTest(path=row["path"]):
                 payload = path.read_bytes()
+                if row["path"] in exact_stage_c_paths:
+                    frozen = stage_c_reconciliation_rows[row["path"]]
+                    historical_payload = subprocess.run(
+                        ["git", "cat-file", "blob", row["git_object"]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    self.assertEqual(
+                        (
+                            len(historical_payload),
+                            hashlib.sha256(historical_payload).hexdigest(),
+                        ),
+                        (row["byte_count"], row["raw_sha256"]),
+                    )
+                    i8_payload = subprocess.run(
+                        ["git", "cat-file", "blob", frozen["i8_git_object"]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    self.assertEqual(
+                        (len(i8_payload), hashlib.sha256(i8_payload).hexdigest()),
+                        (frozen["i8_byte_count"], frozen["i8_raw_sha256"]),
+                    )
+                    accepted_stage_c_base = (
+                        frozen["accepted_stage_c_base_mode"],
+                        frozen["accepted_stage_c_base_git_object"],
+                        frozen["accepted_stage_c_base_byte_count"],
+                        frozen["accepted_stage_c_base_raw_sha256"],
+                    )
+                    if row["path"] in stage_c_modified_paths:
+                        stage_c_row = stage_c_predecessor_rows[row["path"]]
+                        self.assertEqual(
+                            (
+                                stage_c_row["mode"],
+                                stage_c_row["git_object"],
+                                stage_c_row["byte_count"],
+                                stage_c_row["raw_sha256"],
+                            ),
+                            accepted_stage_c_base,
+                        )
+                    base_tree_row = subprocess.run(
+                        [
+                            "git",
+                            "ls-tree",
+                            accepted_stage_c_base_commit,
+                            "--",
+                            row["path"],
+                        ],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    ).stdout.split()
+                    self.assertEqual(
+                        (base_tree_row[0], base_tree_row[2]),
+                        accepted_stage_c_base[:2],
+                    )
+                    base_payload = subprocess.run(
+                        ["git", "cat-file", "blob", base_tree_row[2]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    self.assertEqual(
+                        (len(base_payload), hashlib.sha256(base_payload).hexdigest()),
+                        accepted_stage_c_base[2:],
+                    )
+                    mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
+                    self.assertEqual(
+                        (frozen["i8_mode"], row["mode"], mode),
+                        ("100644", "100644", "100644"),
+                    )
+                    if row["path"] in current_byte_preserved_paths:
+                        self.assertEqual(
+                            (mode, len(payload), hashlib.sha256(payload).hexdigest()),
+                            (
+                                frozen["accepted_stage_c_base_mode"],
+                                frozen["accepted_stage_c_base_byte_count"],
+                                frozen["accepted_stage_c_base_raw_sha256"],
+                            ),
+                        )
+                    else:
+                        self.assertIn(row["path"], stage_c_modified_paths)
+                    continue
                 comparison_payload = payload
                 current_base_payload = None
                 current_row = None
