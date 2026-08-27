@@ -20,9 +20,22 @@
     "accepted_inventory_scope_authority_correction_integration_commit": "c540d032ff22a4cd3be42f31564ac7023706e32d",
     "accepted_inventory_scope_authority_correction_integration_tree": "1614be178dfe37b37c9939ad0881853220717103",
     "predecessor_test_correction_branch": "framework/stage-c-predecessor-test-authority-correction",
+    "release_license_tag_correction_branch": "framework/stage-c-release-license-tag-authority-correction",
     "rejected_implementation_commit": "9bcf0dafd389448df1a854db872932ef6ed86545",
     "rejected_implementation_tree": "7fc9ddbf835aad71c4ca3e3a256223347c5eeb1e",
-    "rejected_implementation_disposition": "INDEPENDENT_FAIL_DO_NOT_INTEGRATE"
+    "rejected_implementation_disposition": "INDEPENDENT_FAIL_DO_NOT_INTEGRATE",
+    "accepted_predecessor_test_authority_correction_candidate_commit": "d737038e77f39ac57d9142eb16f6dbb3f09612d4",
+    "accepted_predecessor_test_authority_correction_candidate_tree": "15de01528adf51972e50bda01f67ded83ebe0ec2",
+    "accepted_predecessor_test_authority_correction_integration_commit": "f736e92d764834abd33fd21d9bf31cbcdbcf5cc2",
+    "accepted_predecessor_test_authority_correction_integration_tree": "15de01528adf51972e50bda01f67ded83ebe0ec2",
+    "accepted_stage_c_implementation_commit": "1c870e2841d739f4670e50b5bb420b2282e36752",
+    "accepted_stage_c_implementation_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_stage_c_implementation_integration_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "accepted_stage_c_implementation_integration_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_stage_c_target_ci_run": 33042629381,
+    "release_candidate_audit_disposition": "FAIL_DO_NOT_RELEASE_OR_TAG",
+    "release_license_tag_correction_base_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "release_license_tag_correction_base_tree": "abad22ae00221db6e3a803993583424d8454fa10"
   },
   "inventory_scope_correction": {
     "authority_modified_paths": [
@@ -85,6 +98,42 @@
     "static_authority_check_total_per_job_before_and_after": 100,
     "implementation_before_independent_pass_and_normal_integration": "FORBIDDEN"
   },
+  "release_license_tag_correction": {
+    "authority_base_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "authority_base_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "rejected_release_candidate_audit": "FAIL",
+    "implementation_delta_modified_paths": [
+      "build_backend/ebu_build_backend.py",
+      "pyproject.toml",
+      "scripts/validate_stage_c_release_candidate.py",
+      "tests/framework/test_artifact_recovery_publication.py",
+      "tests/framework/test_atomic_declarations.py",
+      "tests/framework/test_interaction_declarations.py",
+      "tests/framework/test_packaging_release_candidate.py",
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "implementation_delta_new_paths": [
+      "LICENSE-UNICODE"
+    ],
+    "implementation_delta_count": 9,
+    "cumulative_modified_paths": 15,
+    "cumulative_new_paths": 4,
+    "cumulative_total_paths": 19,
+    "i9_relative_unique_paths": 24,
+    "literal_predecessor_reconciliation_paths": [
+      ".github/workflows/tests.yml",
+      "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "build_backend/ebu_build_backend.py",
+      "pyproject.toml",
+      "tests/framework/safety.py"
+    ],
+    "sole_new_reconciliation_member": "pyproject.toml",
+    "unlisted_sixth_reconciliation_path": "FORBIDDEN",
+    "static_authority_check_total_per_job": 104,
+    "packaging_test_count": 8,
+    "full_stage_c_validation_rerun": "REQUIRED",
+    "implementation_before_independent_pass_and_normal_integration": "FORBIDDEN"
+  },
   "modified_paths": [
     {
       "path": ".github/workflows/tests.yml",
@@ -105,7 +154,21 @@
         "require exact equality of discovered and planned package files",
         "validate accepted project dependency PyNaCl==1.6.2",
         "emit exact accepted Requires-Dist: PyNaCl==1.6.2 metadata",
+        "validate and snapshot exact root LICENSE and LICENSE-UNICODE files",
+        "require exact MIT AND Unicode-3.0 project license expression and two-file license-files declaration",
+        "emit exact aggregate License-Expression and both License-File metadata rows",
+        "include both exact license files in wheel and sdist associated documentation",
         "make only mechanically necessary formatting changes"
+      ]
+    },
+    {
+      "path": "pyproject.toml",
+      "owner": "STAGE_C_RELEASE_LICENSE_METADATA_CORRECTION",
+      "permitted_changes": [
+        "change license from MIT to MIT AND Unicode-3.0",
+        "change license-files from the one exact LICENSE entry to the exact ordered LICENSE and LICENSE-UNICODE entries",
+        "preserve every other byte and metadata value",
+        "produce exactly 434 bytes and SHA-256 25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47"
       ]
     },
     {
@@ -114,10 +177,10 @@
       "permitted_changes": [
         "scope stale whole-I8 failure and root-export assertions to the exact accepted prefix",
         "add exact accepted current CLCD suffix and whole-current uniqueness assertions",
-        "replace only the PREDECESSOR_PRESERVATION branch with the exact literal four-path reconciliation frozen by the mechanical contract",
-        "verify the exact I8 rows and accepted Stage C base rows for the workflow and backend while leaving their candidate-byte authority to the closed Stage C diff",
+        "replace only the PREDECESSOR_PRESERVATION literal reconciliation with the exact five paths frozen by the mechanical contract by adding only pyproject.toml",
+        "verify the exact I8 rows and accepted Stage C base rows for workflow, backend and pyproject while leaving their candidate-byte authority to the closed Stage C diff",
         "verify exact cb07d02d current bytes for EBU_FUTURE_BOOKS_STRUCTURE.md and tests/framework/safety.py and directly verify every other I8 PRESERVED row",
-        "forbid dynamic or authority-scope-derived exclusions and every unlisted fifth reconciliation path"
+        "forbid dynamic or authority-scope-derived exclusions and every unlisted sixth reconciliation path"
       ]
     },
     {
@@ -126,9 +189,9 @@
       "permitted_changes": [
         "scope stale whole-I8 failure and root-export projections to the exact accepted prefix",
         "add exact accepted current CLCD suffix and whole-current uniqueness assertions",
-        "in test_existing_public_signatures_and_predecessor_bytes_are_preserved change only the I8 predecessor-row comparison block to require the exact literal four-path reconciliation frozen by the mechanical contract",
-        "verify exact I8 and accepted Stage C base identities for workflow/backend, exact I8 and c540d032 current identities for books/safety, and every other I8 row directly",
-        "forbid dynamic or authority-scope-derived exclusions, every fifth path, and any signature, historical reconciliation, failure-precedence or other non-inventory change"
+        "in test_existing_public_signatures_and_predecessor_bytes_are_preserved change only the I8 predecessor-row comparison block to advance the literal reconciliation from four paths to five by adding pyproject.toml",
+        "verify exact I8 and accepted Stage C base identities for workflow/backend/pyproject, exact I8 and c540d032 current identities for books/safety, and every other I8 row directly",
+        "forbid dynamic or authority-scope-derived exclusions, every sixth path, and any signature, historical reconciliation, failure-precedence or other non-inventory change"
       ]
     },
     {
@@ -199,9 +262,9 @@
         "add exact accepted current CLCD suffix and whole-current uniqueness assertions",
         "in test_exact_imports_graphs_and_inertness extend only the current whole-package inventory from the exact I8 graph to the frozen I8-plus-validation-plus-CLCD 42-module/257-edge graph and exact projections",
         "preserve every historical graph projection, edge subset, acyclicity, forbidden-import, prohibited-call and inertness assertion",
-        "in test_predecessor_signatures_and_d1_bytes_are_preserved change only the I8 predecessor-row comparison block to require the exact literal four-path reconciliation frozen by the mechanical contract",
-        "verify exact I8 and accepted Stage C base identities for workflow/backend, exact I8 and c540d032 current identities for books/safety, and every other I8 row directly",
-        "forbid dynamic or authority-scope-derived exclusions, every fifth path, and any signature, historical reconciliation, failure-precedence or other non-inventory change"
+        "in test_predecessor_signatures_and_d1_bytes_are_preserved change only the I8 predecessor-row comparison block to advance the literal reconciliation from four paths to five by adding pyproject.toml",
+        "verify exact I8 and accepted Stage C base identities for workflow/backend/pyproject, exact I8 and c540d032 current identities for books/safety, and every other I8 row directly",
+        "forbid dynamic or authority-scope-derived exclusions, every sixth path, and any signature, historical reconciliation, failure-precedence or other non-inventory change"
       ]
     },
     {
@@ -217,7 +280,7 @@
       "owner": "STAGE_C_CURRENT_HEAD_SCOPE_COMPATIBILITY",
       "permitted_changes": [
         "add an exact authority phase for the five Stage C authority files",
-        "add an exact implementation phase for the fourteen modified and three new Stage C implementation paths, producing exactly 22 unique paths relative to the I-9 implementation base after pre-existing post-I9 overlap is accounted once",
+        "advance the exact implementation phase to fifteen modified and four new Stage C implementation paths, producing exactly 24 unique paths relative to the I-9 implementation base after pre-existing post-I9 overlap is accounted once",
         "preserve immutable I-9 Git/archive reconstruction, coordinates, identities, vectors, failure precedence and every historical assertion",
         "retain fail-closed rejection of every arbitrary, unknown, missing, renamed, deleted, mode-changed, source, result, book or other unlisted path"
       ]
@@ -225,9 +288,14 @@
   ],
   "new_paths": [
     {
+      "path": "LICENSE-UNICODE",
+      "owner": "STAGE_C_UNICODE_ASSOCIATED_LICENSE_DOCUMENTATION",
+      "responsibility": "Carry the exact 1,995-byte UTF-8/LF/final-LF UNICODE LICENSE V3 notice from https://www.unicode.org/license.txt with SHA-256 e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96; no paraphrase, header, truncation, encoding change or build-time retrieval."
+    },
+    {
       "path": "scripts/validate_stage_c_release_candidate.py",
       "owner": "STAGE_C_RELEASE_CANDIDATE_ORCHESTRATOR",
-      "responsibility": "Standard-library-first validator and orchestrator for strict source snapshots, P1-P12, Stage C archive/reproducibility evidence, clean environments, exact commands, manifests, hashes and nonzero lane summaries. It may invoke only explicitly frozen external packaging frontends and test processes."
+      "responsibility": "Standard-library-first validator and orchestrator for strict source snapshots, P1-P12, Stage C archive/reproducibility/license evidence, clean environments, exact commands, manifests, hashes and nonzero lane summaries. It must enforce the exact notice, aggregate metadata, 53-file archives and changed authority hashes, and may invoke only explicitly frozen external packaging frontends and test processes."
     },
     {
       "path": "tests/framework/installed_artifact_probe.py",
@@ -237,7 +305,7 @@
     {
       "path": "tests/framework/test_packaging_release_candidate.py",
       "owner": "STAGE_C_PACKAGING_CONFORMANCE_TESTS",
-      "responsibility": "Narrow packaging-only tests for exact inventory, missing/unknown fail-closed behavior, metadata, deterministic wheel/sdist contents, RECORD, archive safety, source isolation, hashes and validator refusal paths."
+      "responsibility": "Narrow packaging-only tests for exact inventory, missing/unknown fail-closed behavior, aggregate MIT AND Unicode-3.0 metadata, both exact license files, deterministic 53-file wheel/sdist contents, RECORD, archive safety, source isolation, hashes and validator refusal paths; preserve the exact eight-test count."
     }
   ],
   "construction_order": [
@@ -259,7 +327,7 @@
     {
       "id": "SC-I-004",
       "path": "tests/framework/test_artifact_recovery_publication.py, tests/framework/test_atomic_declarations.py, tests/framework/test_bridge_exact_fixtures.py, tests/framework/test_capabilities.py, tests/framework/test_i3_integration.py, tests/framework/test_i3a_declarations.py, tests/framework/test_i3b_declarations.py, tests/framework/test_i3c_declarations.py, tests/framework/test_i3d_declarations.py, tests/framework/test_interaction_declarations.py, tests/framework/test_primitives_envelopes.py",
-      "operation": "Apply only the exact additive inventory corrections frozen in the mechanical contract: exact I8 prefixes and CLCD suffixes; exact 42-module/257-edge current graph; the same literal four-path predecessor reconciliation in artifact, atomic and interaction; and no behavioral or non-inventory weakening. Atomic and interaction may change only their I8 predecessor-row comparison blocks and must preserve signatures, historical reconciliations and failure precedence. In the T2 bridge file preserve its allowlist, fixtures, bridge/I6, signatures/import graph and non-inventory behavior."
+      "operation": "Apply only the exact additive inventory corrections frozen in the mechanical contract: exact I8 prefixes and CLCD suffixes; exact 42-module/257-edge current graph; the same literal five-path predecessor reconciliation in artifact, atomic and interaction after adding only pyproject.toml; and no behavioral or non-inventory weakening. Atomic and interaction may change only their I8 predecessor-row comparison blocks and must preserve signatures, historical reconciliations and failure precedence. In the T2 bridge file preserve its allowlist, fixtures, bridge/I6, signatures/import graph and non-inventory behavior."
     },
     {
       "id": "SC-I-005",
@@ -288,12 +356,21 @@
     },
     {
       "id": "SC-I-010",
+      "path": "LICENSE-UNICODE, pyproject.toml, build_backend/ebu_build_backend.py",
+      "operation": "Add the exact Unicode License V3 associated-documentation file, reconcile only the pyproject license expression/license-files values, and make the backend validate and package both exact licenses with aggregate metadata."
+    },
+    {
+      "id": "SC-I-011",
+      "path": "scripts/validate_stage_c_release_candidate.py, tests/framework/test_packaging_release_candidate.py, tests/framework/test_validation_reachability.py",
+      "operation": "Advance only the exact authority hashes, license/metadata/archive checks, 53-file counts and closed fifteen-plus-four reachability phase; preserve eight packaging tests and every other validation rule."
+    },
+    {
+      "id": "SC-I-012",
       "path": "ALL",
-      "operation": "Run full scope, preservation, validation and independent-audit handoff checks; add no path or behavior outside this manifest."
+      "operation": "Run the complete Stage C source, artifact, installed, conventional, T0, T1, T2, reachability and CLCD chain again because artifact bytes change; add no path or behavior outside this manifest."
     }
   ],
   "protected_paths": [
-    "pyproject.toml",
     "requirements-framework.lock",
     "src/ebu_framework/**",
     "tests/framework/fixtures/**",
@@ -318,16 +395,17 @@
     "primary": "git diff --name-status and git diff --check against the exact authorized base",
     "repository_scope_utility": "ABSENT_AT_PREDECESSOR",
     "fallback": "Strict set equality between changed paths and this manifest plus empty index/residue inspection",
-    "untracked_residue": "FORBIDDEN_EXCEPT_THE_THREE_AUTHORIZED_NEW_IMPLEMENTATION_PATHS_BEFORE_COMMIT",
-    "implementation_path_counts_unchanged_by_inventory_scope_correction": {
-      "modified": 14,
-      "new": 3,
-      "total": 17,
-      "i9_relative_unique": 22
+    "untracked_residue": "FORBIDDEN_EXCEPT_THE_FOUR_AUTHORIZED_NEW_IMPLEMENTATION_PATHS_BEFORE_COMMIT",
+    "implementation_path_counts_after_release_license_tag_correction": {
+      "modified": 15,
+      "new": 4,
+      "total": 19,
+      "i9_relative_unique": 24
     },
     "static_authority_semantic_checks": {
-      "additional": 8,
-      "total_per_required_job": 100,
+      "additional": 12,
+      "added_by_release_license_tag_correction": 4,
+      "total_per_required_job": 104,
       "failure": "REFUSE"
     }
   },
@@ -335,7 +413,7 @@
     "authority edit during implementation",
     "implementation path expansion",
     "scientific or framework behavior change",
-    "metadata source, dependency lock, public API or version change",
+    "metadata-source change other than the exact pyproject license and license-files correction, dependency lock, public API or version change",
     "direct model, step, simulation, trajectory, runner, Gate or scientific outcome execution outside the exact accepted bounded regression test entry points",
     "committed artifact or evidence output",
     "worktree pruning or unrelated worktree modification",

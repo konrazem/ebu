@@ -721,9 +721,221 @@ book, tag, release, or publication exists. It does not claim long-run
 homeostasis, invariance, stability, recovery, conservation beyond accepted
 implementation checks, universal benefit, fairness, or empirical validity.
 
-The authority candidate is ready for independent authority audit only when its
-five-file diff passes strict JSON parsing, cross-document consistency,
+An authority candidate is ready for independent authority audit only when its
+closed applicable diff—five original additions or an exact later correction—
+passes strict JSON parsing, cross-document consistency,
 UTF-8/LF/final-LF, trailing-whitespace, protected-predecessor, and exact Git
 scope checks.
+
+## 15. Release-license and alpha-tag authority correction
+
+### 15.1 Trigger and rejected release candidate
+
+Stage C implementation candidate
+`1c870e2841d739f4670e50b5bb420b2282e36752` received an independent
+implementation `PASS` and was normally integrated as
+`edaad455aa195b42a1f25d92725c3181e389c301`, tree
+`abad22ae00221db6e3a803993583424d8454fa10`. Fresh target CI run
+`33042629381` passed all five required jobs and sealed artifact `9635019568`.
+Those implementation and validation facts remain accepted static/synthetic
+software evidence.
+
+The later independent release-candidate audit nevertheless returned `FAIL`.
+The accepted wheel and sdist redistribute the exact Unicode 15.0 data files
+
+- `UnicodeData.txt`: 1,913,704 bytes, SHA-256
+  `806e9aed65037197f1ec85e12be6e8cd870fc5608b4de0fffd990f689f376a73`;
+  and
+- `DerivedNormalizationProps.txt`: 837,688 bytes, SHA-256
+  `d5687a48c95c7d6e1ec59cb29c0f2e8b052018eb069a4371b7368d0561e12a29`.
+
+The rejected artifacts carried only the 1,069-byte project MIT `LICENSE`,
+SHA-256
+`2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907`,
+and declared only `License-Expression: MIT`. They omitted the copyright and
+permission notice required for redistributed Unicode data. The rejected
+wheel, sdist, final manifest, release packet, release note, and materials
+record remain immutable failed evidence. Their bytes and hashes must not be
+rewritten or represented as release authorization.
+
+### 15.2 Exact Unicode notice and aggregate metadata
+
+The correction adds one root associated-documentation file named exactly
+`LICENSE-UNICODE`. Its contents are the exact UTF-8/LF/final-LF bytes retrieved
+on 2026-08-27 from `https://www.unicode.org/license.txt` for
+`UNICODE LICENSE V3`, including
+`Copyright © 1991-2026 Unicode, Inc.`: 1,995 bytes, SHA-256
+`e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96`.
+The SPDX identifier is exactly `Unicode-3.0`. No paraphrase, truncation,
+encoding change, additional header, dynamic retrieval, or network access at
+build time is allowed. The existing project `LICENSE` remains byte-identical.
+
+`pyproject.toml` may change only these two values:
+
+- `license = "MIT AND Unicode-3.0"`; and
+- `license-files = ["LICENSE", "LICENSE-UNICODE"]`.
+
+All other project/build metadata, including name, `0.1.0a1`, description,
+Python range, `PyNaCl==1.6.2`, import name, dynamic-empty rule, backend and
+backend path, remains exact. The corrected `pyproject.toml` is 434 bytes with
+SHA-256
+`25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47`.
+
+Every prepared, wheel, sdist and sdist-derived metadata role must contain, in
+the existing order with only the additive license row:
+
+1. `License-Expression: MIT AND Unicode-3.0`;
+2. `License-File: LICENSE`;
+3. `License-File: LICENSE-UNICODE`.
+
+The wheel contains both exact files as
+`ebu_framework-0.1.0a1.dist-info/licenses/LICENSE` and
+`ebu_framework-0.1.0a1.dist-info/licenses/LICENSE-UNICODE`. The sdist contains
+both as root associated documentation. `PKG-INFO`, prepared metadata and wheel
+`METADATA` are byte-identical. The 48-file package inventory and all 44 module,
+471 root-export, 294 failure-code and 162 signature surfaces remain unchanged.
+The wheel and sdist each contain exactly 53 regular files. `RECORD`, archive
+safety, deterministic ordering and source-isolated installed probes cover the
+second license file without weakening any earlier check.
+
+### 15.3 Closed correction implementation scope
+
+Relative to accepted target `edaad455aa195b42a1f25d92725c3181e389c301`,
+the correction may change exactly nine paths:
+
+- add `LICENSE-UNICODE`;
+- modify `pyproject.toml` only as stated in Section 15.2;
+- modify `build_backend/ebu_build_backend.py` only to validate, snapshot,
+  package and declare the two exact license files and aggregate expression;
+- modify `scripts/validate_stage_c_release_candidate.py` only for the four
+  changed authority hashes, corrected metadata, exact notice identity, 53-file
+  wheel/sdist membership and release-license evidence;
+- modify `tests/framework/test_packaging_release_candidate.py` without
+  changing its eight-test count, adding exact positive/negative license,
+  metadata, archive and unknown/missing notice checks; and
+- modify `tests/framework/test_validation_reachability.py` only to advance the
+  cumulative Stage C implementation phase to the exact closed set;
+- modify `tests/framework/test_artifact_recovery_publication.py` only in its
+  `PREDECESSOR_PRESERVATION` branch to advance the exact literal reconciliation
+  from four paths to five by adding only `pyproject.toml`;
+- modify `tests/framework/test_atomic_declarations.py` only in
+  `test_existing_public_signatures_and_predecessor_bytes_are_preserved` to make
+  that identical one-path additive reconciliation; and
+- modify `tests/framework/test_interaction_declarations.py` only in
+  `test_predecessor_signatures_and_d1_bytes_are_preserved` to make that
+  identical one-path additive reconciliation.
+
+The effective reconciliation set is exactly, in order,
+`.github/workflows/tests.yml`, `EBU_FUTURE_BOOKS_STRUCTURE.md`,
+`build_backend/ebu_build_backend.py`, `pyproject.toml`, and
+`tests/framework/safety.py`. Workflow, backend and pyproject are the exact
+Stage C-modified members; books and safety remain exact current-byte-preserved
+members. The mechanical contract freezes the 399-byte I-9/accepted-base
+pyproject identity as well as the prospective 434-byte identity. Dynamic,
+scope-derived or sixth-path exclusions refuse. Every signature, historical
+reconciliation, failure-precedence and other non-inventory assertion in those
+three tests remains unchanged.
+
+This exact one-member addition prospectively supersedes the earlier four-path
+set and fifth-path refusal only for these three predecessor witnesses. It does
+not convert the set into a dynamic implementation-scope exclusion and does not
+alter the historical evidence that the earlier accepted implementation used
+four paths.
+
+Cumulatively, Stage C has exactly fifteen modified plus four new
+implementation paths, nineteen total. Relative to the immutable I-9
+implementation base, after the two pre-existing post-I9 overlaps are counted
+once, there are exactly 24 unique paths. Every other source, lock, fixture,
+test, authority, result, figure, book and PDF path remains byte/mode identical.
+The predecessor manifest remains byte-identical. The four modified authority
+documents in this correction are the Markdown, mechanical contract,
+implementation-path manifest and validation contract; no fifth authority
+document changes.
+
+Static authority validation adds exactly four positive fail-closed semantic
+checks: exact notice identity; exact pyproject/metadata expression and two-file
+declaration; exact backend/validator/test archive-member closure; and exact
+fifteen-plus-four reachability closure. The required static-authority total is
+104 in every job. The packaging test count remains eight. All conventional,
+T0, T1, T2, CLCD, installed-probe, artifact-replica and evidence-manifest
+requirements remain mandatory and must rerun because artifact bytes change.
+
+### 15.4 Alpha tag supersession
+
+This section prospectively and narrowly supersedes only the sentence in the
+`Branch strategy` paragraph of
+`UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md` Section 18.2 that
+states: `The alpha tag is placed on the accepted I-9 integration commit.` That
+coordinate is
+`ffc910329957f61deaa7e9fc09ba77a0e3f51381`, tree
+`3b1cfbdbcc844e0a4944447e012f20981af6998a`. The historical I-9 coordinate
+remains accepted implementation evidence but is not a releasable alpha source:
+it predates 35 accepted commits and the completed/then-corrected Stage C
+packaging closure.
+
+The tag name remains exactly `framework-v0.1.0-alpha.1` and the package version
+remains exactly `0.1.0a1`. The tag target must be the exact final corrected
+Stage C integration commit that consumes this independently accepted authority,
+receives a fresh independent implementation `PASS`, is normally integrated
+into the freshly verified `framework-v0.1` target, and completes fresh target
+CI and independent release-candidate audit. Its commit and tree do not yet
+exist and therefore cannot be invented here; they must be recorded exactly in
+the later release packet before tag authorization. Neither the historical I-9
+commit nor rejected current target `edaad455...` may receive the alpha tag.
+The tag remains immutable, annotated and cryptographically signed, and tag
+creation/push remains an explicit user gate.
+
+### 15.5 Full main/source-archive disclosure
+
+Any later PR from `framework-v0.1` to `main`, release note, and public source
+archive must disclose that the development lineage contains pre-existing
+historical scientific protocols, runners and result records that Stage C did
+not execute, validate scientifically, reinterpret or publish as new evidence.
+At the rejected coordinate the source lineage contained exactly 21
+`results/v3.0/**` paths; the mechanical contract freezes their exact list,
+together with the exact `V3.0*` authority/protocol documents, v30 runner/audit/
+test sources and seven machine-readable v30 contract/plan files that must be
+enumerated in the
+later release packet. Their inclusion in `main` and public GitHub source
+archives is an explicit informed user choice at the main/release gate. A
+software-only rewritten branch, filtered archive or silent omission is not
+authorized by this correction.
+
+### 15.6 Reproducible security observation and release wording
+
+The later materials record must retain the exact canonical OSV query bytes and
+exact response bytes, not hashes alone. It must bind every response index to
+the ordered `[ecosystem, name, version]` query coordinate and record raw and
+canonical byte counts/SHA-256 identities. The mechanical contract freezes all
+20 ordered coordinates and the exact no-whitespace, no-final-LF canonical
+query: 1,417 bytes, SHA-256
+`1f8e9853d8cd3fe9b5d9ced279d534c8e635ca732c554f3a8d1e6be0885aff34`.
+The request body must equal those canonical bytes. The prior 1,646-byte pretty
+query hash is preserved only as rejected evidence because its bytes were not
+retained in the materials record. Official PyPI version JSON and OSV
+must be refreshed immediately before release; empty responses remain
+point-in-time observations, never security guarantees. A missing byte record,
+index mismatch, new or unresolved advisory, selected-artifact hash mismatch,
+or yanked file refuses release.
+
+Release notes and PR prose must describe the reproducibility evidence exactly
+as: `Three perturbed build replicas produced by the pinned validator were
+byte-identical.` They must not call the replicas independent. They must declare
+the aggregate `MIT AND Unicode-3.0` distribution licensing and name both
+license files. No release-preparation output is committed to the repository.
+
+### 15.7 Gates and nonclaims
+
+Implementation is forbidden until this exact correction candidate receives a
+fresh independent authority `PASS` and is normally integrated after a fresh
+live-target equality check. Because release bytes change, the complete Stage C
+implementation, candidate CI, independent implementation audit, target
+integration, target CI, artifact sealing, materials/security refresh and
+release-candidate audit chain must run again. A prior PASS is evidence but does
+not transfer to new bytes.
+
+No PR, main merge, tag, GitHub Release, package-index upload, scientific
+execution, result interpretation, figure, book or publication is authorized.
+No license correction constitutes legal advice or a universal security claim.
 
 `FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_READY_FOR_AUDIT`
