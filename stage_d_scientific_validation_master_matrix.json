@@ -124,14 +124,16 @@
           "source regimes: logistic g(x)=rho*x*(1-x/20) for rho in {0.3,0.6}; Allee g(x)=rho*x*(1-x/20)*(x/5-1) for rho in {0.3,0.6}",
           "constant requested demand d is ratio in {0.25,0.75,1.0,1.25} times the exact g(15) of that source regime",
           "shock schedules: none; adversarial boundary outflow min(4,max(0,x_t+g(x_t))) immediately after regeneration at ticks 2500,5000,10000,15000",
-        "H0: u=min(d,max(0,x_pre)); H1: u=min(d,max(0,x_pre-5)); H2_eta: u=eta*H1 for eta in {0.5,0.9,1.0}; H3: from menu {0,d/4,d/2,3d/4,d}, choose greatest u that leaves x_next>=5 and a nonempty H1 menu after each next-tick registered shock in {0,min(4,x_next+g(x_next))}",
+        "H0: u=min(d,max(0,x_pre)); H1: u=min(d,max(0,x_pre-5)); H2_eta: u=eta*H1 for eta in {0.5,0.9,1.0}",
+        "define M={0,d/4,d/2,3d/4,d}; for a proposed next state y and registered next shock q define y_pre=y+g(y)-q and the exact reserve-constrained next-step H1 admissible-action set A_H1(y,q)={v in M: y_pre>=5, 0<=v<=d, and 5<=y_pre-v<=20}",
+        "define q_0(y)=0 and q_1(y)=min(4,max(0,y+g(y))); the exact H3 current admissible set is A_H3(x_pre)={u in M: 5<=x_pre-u<=20, A_H1(x_pre-u,q_0(x_pre-u)) is nonempty, and A_H1(x_pre-u,q_1(x_pre-u)) is nonempty}; H3 selects the greatest member of A_H3 and fails recursively feasible at the first tick where A_H3 is empty",
         "NUMERICAL-POLICY-01 governs every binary64 transition, ledger residual, checkpoint, and threshold comparison",
         "model-local viability set V_H0={x:0<=x<=20}; V_H1=V_H2=V_H3={x:5<=x<=20}; invariance means every post-transition x_(t+1) belongs to the selected policy set for all ticks 0..19999",
         "model-local homeostasis predicate: after the final exogenous shock (tick 0 for no-shock cells and tick 15000 otherwise), a trajectory is HOMEOSTATIC_ON_HORIZON iff for 1000 consecutive post-transition ticks ending no later than tick 20000 it stays in its viability set, abs(x_(t+1)-x_t)<=1e-8 stock-unit, and abs(u_(t+1)-u_t)<=1e-8 stock-unit/tick",
         "paired recovery predicate: for each shock at s in {2500,5000,10000,15000}, compare with the exact same source/demand/policy cell under the no-shock schedule; define D_s=min(s+2000,next shock tick minus 1,20000), omitting the next-shock term after the final shock; recovery time is the least r in [s+1,D_s-99] for which abs(x_shock(t)-x_reference(t))<=1e-6 and abs(u_shock(t)-u_reference(t))<=1e-6 for every t=r..r+99; absence is NOT_RECOVERED_ON_HORIZON, not computationally inconclusive",
         "reserve predicate: a reserve-protected claim requires x_t>=5 at every pre- and post-transition state; reserve margin max(0,x-5) is reported but never added as stock",
         "regeneration predicate: for logistic cells g(x_t)>=0 whenever 0<=x_t<=20; for Allee cells g(x_t)>0 only for 5<x_t<20, g(x_t)=0 at x_t in {0,5,20}, and a trajectory starting x_0=4 with no external inflow must not be called regenerative",
-        "recursive-feasibility predicate: H3 must retain at least one menu action at every tick for each of the two registered next-shock branches; a first empty menu is a cell-specific failure",
+        "recursive-feasibility predicate: at every H3 tick A_H3(x_pre) must be nonempty and the selected action's exact A_H1 next-step set must be nonempty under both q_0 and q_1; trace_row/v1 records current_admissible_set_digest/size, no_shock_next_admissible_set_digest/size, adversarial_next_admissible_set_digest/size, selected_action, and the exact current/no-shock/adversarial pre/post reserve predicates; a first empty current or branch set is a cell-specific failure",
         "zero-demand logistic control predicate: from x_0=15, abs(x_t-20)<=1e-6 must first occur by tick 1000 and persist for 100 consecutive ticks under each rho; the paired x_0=4 Allee controls must never be labeled regenerative without a boundary inflow"
         ],
         "comparators": [
@@ -142,13 +144,15 @@
         ],
         "positive_controls": [
         "zero-demand logistic recovery must satisfy the exact x=20 +/-1e-6 entry-by-1000 and 100-tick persistence predicate",
-          "no-shock low-demand cell must remain feasible under the accepted safe policy"
+          "no-shock low-demand cell must remain feasible under the accepted safe policy",
+          "an H3 cell with nonempty A_H3 and nonempty A_H1 sets under both registered next-shock branches records all three exact sets and selects their greatest current admissible action"
         ],
         "negative_controls": [
           "demand above feasible regeneration must not be reported viable",
           "initial stock below the Allee threshold with no inflow must not be reported regenerative",
           "hidden boundary replenishment must violate conservation",
-          "reserve reuse in both stock and service accounts must trigger double-count refusal"
+          "reserve reuse in both stock and service accounts must trigger double-count refusal",
+          "an injected cell with an empty no-shock or adversarial-shock A_H1 branch set must fail recursive feasibility even when the current H3 action leaves x_next>=5"
         ],
         "seeds": "none; all 192 scientific configurations and four registered control trajectories are deterministic",
         "stochastic_rules": "FORBIDDEN in SD-01",
@@ -162,11 +166,11 @@
         ]
       },
       "computational_feasibility": {
-        "algorithmic_cost_class": "O(R*H+R_H3*H*5) for one transition per trajectory/tick and five exact candidate-action checks per H3 tick",
+        "algorithmic_cost_class": "O(R*H+R_H3*H*55) for one transition per trajectory/tick, five exact current H3 candidate checks, and at most five exact next-step H1 action checks under each of two shock branches for every current candidate",
         "exact_problem_size": "4 source regimes * 4 demand ratios * 2 shock schedules * (H0,H1,H3 plus three H2_eta values) = 192 scientific runs, plus two zero-demand logistic controls and two x_0=4 Allee controls = 196 total trajectories",
         "horizon": "20000 ticks",
         "subset_or_hyperedge_order": "not applicable; graph maximum edge arity 2",
-        "expected_evaluations": 7120000,
+        "expected_evaluations": 39120000,
         "storage_estimate_bytes": 12884901888,
         "future_measurement_method": "Stage E monotonic wall-clock, process-tree peak RSS, exact emitted bytes, and one transition counter per tick",
         "checkpoint_restart_scheme": "checkpoint every 1000 ticks; restarted suffix must be byte-identical to uninterrupted suffix",
@@ -176,7 +180,7 @@
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
           "total_output_bytes": 21474836480,
-          "primary_evaluations_per_run": 120000,
+          "primary_evaluations_per_run": 1200000,
           "maximum_depth": 20000
         },
         "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE with immutable partial trace and limit-decision receipt",
@@ -185,7 +189,7 @@
       "falsifiers": [
         "any accepted viable/reserve-protected disposition with x<0, x<5 where reserve protection is claimed, or another declared viability constraint violated",
         "an invariant-set claim whose trajectory exits the exact registered set",
-        "recursive-feasibility claim followed by no admissible registered control",
+        "recursive-feasibility claim with empty A_H3, empty A_H1 under either registered next-shock branch, an unrecorded current/branch set, or a violated pre/post reserve predicate",
         "unreconciled conservation residual",
       "homeostasis or recovery claim outside the exact target, tolerance, deadline, or 100/1000-tick persistence predicates",
         "silent clamp, early truncation, or post-outcome parameter change"
@@ -615,7 +619,7 @@
         ]
       },
       "model_domain": {
-        "model": "eight declared polynomial and analytic fields in dimensions 1,2,4",
+        "model": "eight declared exact rational polynomial fields in dimensions 1,2,4",
         "domain_authority": "registered mathematical case",
         "units": [
           "state-unit",
@@ -641,7 +645,7 @@
           "dimensions {1,2,4}",
           "Taylor orders {1,2,3,4}",
           "step magnitudes {1/2,1/4,1/8,1/16}",
-          "eight response fields: F0=0; F1=sum x_i; F2=sum x_i^2; F3=(sum x_i)^2; F4=sum x_i^3; F5=(1+sum x_i)^4; F6=1/(1-sum x_i/8); F7=exp(sum x_i/8)",
+          "eight exact rational response fields: F0=0; F1=sum x_i; F2=sum x_i^2; F3=(sum x_i)^2; F4=sum x_i^3; F5=(1+sum x_i)^4; F6=1/(1-sum x_i/8); F7=(1+sum x_i/8)^8; every rational is reduced after each written operation and F6 refuses only if its exact denominator is zero",
           "action maps at step h: A_h adds h to x_0; B_h maps x_0 to (1+h)*x_0 when d=1 and adds h*x_0 to x_1 when d>=2",
           "3 composition regimes: B_h(A_h(x)), A_h(B_h(x)), and declared parallel Euler map x+h*(a(x)+b(x)) using the exact A/B increments at the base point"
         ],
@@ -662,7 +666,7 @@
         ],
         "seeds": "none",
         "stochastic_rules": "FORBIDDEN",
-        "uncertainty_rules": "exact rational equality for polynomial cases; directed high-precision interval containing direct value for analytic cases",
+        "uncertainty_rules": "exact reduced-rational equality for all eight fields, coefficients, direct compositions, commutators, and remainders; floating point, interval arithmetic, adaptive precision, tolerance, and refinement are forbidden",
         "horizon": "at most two finite composed actions",
         "stopping_rules": [
           "refuse outside declared field neighborhood",
@@ -675,6 +679,12 @@
         "horizon": "maximum two actions and order four",
         "subset_or_hyperedge_order": "mixed derivative order at most 4",
         "expected_evaluations": 5184,
+        "expected_evaluation_breakdown": {
+          "registered_cases": 1152,
+          "two_ordered_and_one_parallel_direct_values_plus_one_taylor_remainder_reconstruction_per_case": 4608,
+          "six_exact_coefficient_and_control_checks_for_each_dimension_step_field_cell": 576,
+          "total": 5184
+        },
         "storage_estimate_bytes": 536870912,
         "future_measurement_method": "coefficient/direct-composition counters plus Stage E wall/RSS instrumentation",
         "checkpoint_restart_scheme": "case-granular immutable records",
@@ -691,7 +701,7 @@
         "exact_or_approximate_label": "EXACT"
       },
       "falsifiers": [
-        "direct value lies outside the exact expansion plus certified remainder interval",
+        "direct reduced-rational value differs from the exact truncated expansion plus exact reduced-rational remainder",
         "claimed zero commutator is nonzero",
         "action-order identity is lost",
         "mixed or remainder term is hidden"
@@ -722,11 +732,10 @@
         "direct, expansion, mixed, commutator, and remainder accounts reconcile"
       ],
       "inconclusive": [
-        "interval precision cannot certify inclusion",
         "resource cap",
         "domain authority mismatch"
       ],
-      "independent_result_audit": "rederive the polynomial controls and a frozen stratified sample of analytic cases; verify all remainders and order labels",
+      "independent_result_audit": "rederive every field definition and a frozen stratified sample including F6 and degree-eight F7; verify reduced-rational identities, all remainders, the 5184 evaluation accounting, and order labels",
       "book_destination": [
         "Part II finite calculus",
         "Part VI order-sensitive interaction"
@@ -1274,6 +1283,7 @@
           "wall_time_seconds_per_case": 120,
           "peak_resident_memory_bytes_per_case": 1073741824,
           "combined_trace_output_bytes_per_case": 268435456,
+          "total_output_bytes": 21474836480,
           "maximum_dag_vertices": 100000,
           "maximum_dag_edges": 500000
         },
@@ -1646,8 +1656,9 @@
         "negative_controls": [
           "a Stage E synthetic control with the lowest canonical edge never repaired cannot be labeled recovered",
           "reserve cannot be spent twice",
-          "topology-relabel near miss cannot reuse group outcome",
-          "aggregate recovery cannot hide a registered group below its threshold"
+        "topology-relabel near miss cannot reuse group outcome",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "aggregate recovery cannot hide a registered group below its threshold"
         ],
         "seeds": "exact integers 0..15, paired across all comparable policy cells",
         "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with the sole stream ID FAILURE_EDGE; only the fifth failure family draws one Bernoulli(1/1000) value per canonical edge per tick in canonical edge order; failure duration is exactly 50 ticks; all other failure families are deterministic and consume no draw; analysis draws and every other stream are forbidden",
@@ -1848,8 +1859,9 @@
           "delay destabilization control",
           "correction without receipt refuses",
           "cycle/duplicate dependency edge refuses",
-          "stale diagnostic/cache after correction refuses",
-          "Möbius coefficient substituted for conjugacy relation refuses"
+        "stale diagnostic/cache after correction refuses",
+        "the deterministic no-stream/seed-zero/uncertainty identities remain explicit cache dimensions and cannot alias a stochastic or differently summarized run",
+        "Möbius coefficient substituted for conjugacy relation refuses"
         ],
         "seeds": "none",
         "stochastic_rules": "FORBIDDEN",
@@ -2058,8 +2070,9 @@
           "omitted boundary flow",
           "correction gain without input/cost",
           "same joint interaction allocated twice",
-          "cycle/duplicate dependency edge",
-          "stale aggregate after correction"
+        "cycle/duplicate dependency edge",
+        "stale aggregate after correction",
+        "the deterministic no-stream/seed-zero/uncertainty identities remain explicit cache dimensions and cannot alias a stochastic or differently summarized run"
         ],
         "seeds": "none",
         "stochastic_rules": "FORBIDDEN",
@@ -2265,8 +2278,9 @@
           "privacy cost cannot be omitted",
           "retaliation channel must worsen its declared target metric in the adversarial control",
           "false or stale disclosure correction must invalidate affected beliefs/results",
-          "near-equivalent agent topology cannot reuse without certificate",
-          "aggregate cooperation cannot hide a protected group burden"
+        "near-equivalent agent topology cannot reuse without certificate",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "aggregate cooperation cannot hide a protected group burden"
         ],
         "seeds": "exact integers 0..31 paired across comparable institutional cells",
         "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams COOPERATION, DISCLOSURE_TRUTH, RETALIATION, APPEAL in that order per agent/tick; cooperation numerator is clamp(0,1000000,100000+floor(6*trust/10)+floor(disclosure_accuracy/5)-floor(retaliation_risk/5)) over denominator 1000000; protected and none have retaliation probability 0, aggregate 1/100, unprotected exact 1/10; false disclosure probability is 0,1/100,1/200,1/50 by the four regimes; an eligible appeal succeeds with probability 3/4; analysis draws and every other stream are forbidden",
@@ -2471,8 +2485,9 @@
           "reserve overdraw refuses",
           "sensitivity automatically assigned as responsibility refuses",
           "compensation counted as both service and correction benefit refuses",
-          "fraud evidence correction leaves stale downstream decision",
-          "cycle/duplicate governance dependency refuses"
+        "fraud evidence correction leaves stale downstream decision",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "cycle/duplicate governance dependency refuses"
         ],
         "seeds": "exact integers 0..15 paired across comparable governance cells",
         "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams QUOTE_ERROR_EVENT, QUOTE_ERROR_SIGN, FRAUD_DISCOVERY, APPEAL in that order per service event/day; Bernoulli probabilities are exactly those in the selected quote regime; random sign is categorical {negative:1/2,positive:1/2}; fraudulent events are discovered with probability 3/4; an eligible appeal succeeds with probability 3/4; analysis draws and every other stream are forbidden",
@@ -2682,8 +2697,9 @@
           "unowned external inflow or hidden loss fails closure",
           "same cross-domain benefit counted in both domains refuses",
           "near-equivalent motif/cache reuse refuses",
-          "stale correction/authority cache refuses",
-          "institutional optimum inferred from physical optimum refuses",
+        "stale correction/authority cache refuses",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "institutional optimum inferred from physical optimum refuses",
           "failed prerequisite study prevents positive integrated interpretation"
         ],
         "seeds": "exact integers 0..31 paired across comparable coupled/institutional cells",

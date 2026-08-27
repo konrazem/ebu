@@ -30,6 +30,20 @@
         "under-specified DAG ready-set algorithm and complexity counters"
       ],
       "execution_boundary": "no Stage D model, transform, benchmark, trajectory, simulation, outcome, result, figure, or book was executed; the CI failure was only the expected authority-transition reachability refusal"
+    },
+    {
+      "candidate_commit": "96c9391cdd435434cdaa10655667263ea43a0245",
+      "candidate_tree": "3d80b62ea5fc2b1aa9c67d891f90da128f680307",
+      "ci_run": 33080431442,
+      "disposition": "FAIL",
+      "blocking_classes": [
+        "hard-cap profiles and run/limit dispositions not mechanically fail-closed",
+        "stochastic result-affecting cache-key identities incomplete",
+        "SD-04 exact study retained an unfrozen interval oracle",
+        "non-dyadic probabilities mislabeled exact under biased U64 thresholds",
+        "SD-01 H3 recursive feasibility referred to an undefined next-step H1 menu"
+      ],
+      "execution_boundary": "no Stage D model, transform, benchmark, trajectory, simulation, outcome, result, figure, or book was executed; the CI failure was only the expected authority-transition reachability refusal"
     }
   ],
   "candidate_files": [
@@ -214,7 +228,7 @@
     "silent_fallback_forbidden": true
   },
   "evidence_hard_cap_normalization": {
-    "record_shape": "Every hard_caps/v1 record contains profile_id and every closed dimension below. A dimension is a positive integer when applicable and JSON null only when the exact applicable_dimensions_by_profile row declares it NOT_APPLICABLE.",
+    "record_shape": "Every hard_caps/v1 record is one of exactly 17 schema-level constant objects. It contains profile_id and every closed dimension below; applicable dimensions equal the exact frozen matrix/control value and every inapplicable dimension is JSON null. No value, null, omission, extra property, profile alias, or default is permitted.",
     "closed_dimension_names": [
       "wall_time_seconds_per_run",
       "wall_time_seconds_per_case",
@@ -250,7 +264,7 @@
       "SD-04": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
       "SD-05": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
       "SD-06": ["combined_trace_output_bytes_per_case", "maximum_depth", "maximum_hyperedge_order", "maximum_n", "maximum_subsets", "peak_resident_memory_bytes_per_case", "primary_evaluations_per_case", "total_output_bytes", "wall_time_seconds_per_case"],
-      "SD-07": ["combined_trace_output_bytes_per_case", "compressed_comparison_level", "expanded_oracle_level", "maximum_canonical_vertices", "maximum_dag_edges", "maximum_dag_vertices", "maximum_expanded_occurrences", "maximum_hyperedge_order", "maximum_recursion_depth", "peak_resident_memory_bytes_per_case", "primary_evaluations_per_case", "wall_time_seconds_per_case"],
+      "SD-07": ["combined_trace_output_bytes_per_case", "compressed_comparison_level", "expanded_oracle_level", "maximum_canonical_vertices", "maximum_dag_edges", "maximum_dag_vertices", "maximum_expanded_occurrences", "maximum_hyperedge_order", "maximum_recursion_depth", "peak_resident_memory_bytes_per_case", "primary_evaluations_per_case", "total_output_bytes", "wall_time_seconds_per_case"],
       "SD-08": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
       "SD-09": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
       "SD-10": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
@@ -262,20 +276,27 @@
       "DAG-EXACT-01": ["combined_trace_output_bytes_per_case", "maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_case", "wall_time_seconds_per_case"],
       "CANONICAL-CACHE-01": ["canonical_vertices", "combined_trace_output_bytes_per_case", "compressed_comparison_level", "expanded_oracle_level", "maximum_expanded_occurrences", "maximum_hyperedge_order", "maximum_recursion_depth", "peak_resident_memory_bytes_per_case", "wall_time_seconds_per_case"]
     },
-    "normalization_algorithm": "Copy profile_id and each applicable matrix/control hard-cap value exactly; emit every other closed dimension as JSON null; canonicalize and hash the complete object. No key renaming, unit conversion, default insertion, or omitted null is permitted.",
+    "normalization_algorithm": "Copy profile_id and each applicable matrix/control hard-cap value exactly; emit every other closed dimension as JSON null; require equality to the matching one of 17 exact constants in hard_caps/v1; canonicalize and hash the complete object. No key renaming, unit conversion, default insertion, omitted null, or value substitution is permitted.",
     "omitted_applicable_or_nonnull_inapplicable_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH",
     "unknown_dimension_disposition": "REFUSE_UNKNOWN_HARD_CAP_DIMENSION"
   },
   "prospective_stochastic_rule": {
     "rule_id": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1",
-    "preimage": "UTF-8 EBU-STAGE-F-RNG-v1|study_id|configuration_id|seed|stream_id|tick|event_index|draw_index with canonical decimal integers and no whitespace",
+    "preimage": "UTF-8 EBU-STAGE-F-RNG-v1|study_id|configuration_id|seed|stream_id|tick|event_index|draw_index|attempt_index with canonical decimal integers and no whitespace",
     "u64": "first eight SHA-256 digest bytes interpreted as an unsigned big-endian integer in [0,2^64-1]",
-    "bernoulli": "for exact rational p_num/p_den, TRUE iff u64 < floor(p_num*2^64/p_den)",
-    "categorical": "ordered exact-rational cumulative thresholds over the same u64 mapping; last category owns any remainder",
+    "exact_rational_rejection": "Reduce p_num/p_den first. For denominator D, set L=2^64-(2^64 mod D); draw attempt_index=0,1,... until u64<L, map r=u64 mod D, and consume exactly the accepted attempt plus all rejected attempts. The per-draw hard ceiling is 1000000 attempts; reaching it stops the run as COMPUTATIONALLY_INCONCLUSIVE and never chooses an outcome.",
+    "bernoulli": "for exact rational p_num/p_den in lowest terms, use exact_rational_rejection with D=p_den and return TRUE iff r<p_num; the realized probability is exactly p_num/p_den",
+    "categorical": "express all category masses over their exact least common denominator D, use exact_rational_rejection once, and select the unique half-open cumulative-numerator interval containing r; no category receives a rounding remainder",
     "continuous_distribution": "FORBIDDEN_UNLESS_SEPARATELY_PREREGISTERED_WITH_EXACT_TRANSFORM",
     "mutable_prng_state": "FORBIDDEN",
     "stream_rule": "every study row names all permitted stream IDs; an unknown stream, draw-order change, or reused preimage refuses",
-    "checkpoint_rule": "the complete next counter tuple per stream is sealed; a restarted suffix must be byte-identical",
+    "checkpoint_rule": "the complete next counter tuple (stream_id,tick,event_index,draw_index,attempt_index,draw_status) per stream is sealed; a restarted suffix must be byte-identical, including all rejected attempts. READY permits attempt_index 0..999999. Exactly 1000000 rejected attempts seals draw_status TERMINAL_REJECTION_CAP with attempt_index 1000000; that checkpoint is retained but cannot restart or produce an outcome.",
+    "arithmetic_refusals": [
+      "the historical floor(p_num*2^64/p_den) threshold is forbidden for a denominator that does not divide 2^64",
+      "assigning a categorical rounding remainder to the last category is forbidden",
+      "omitting attempt_index from a draw preimage or checkpoint is forbidden",
+      "crossing the 1000000-attempt ceiling and selecting or substituting an outcome is forbidden"
+    ],
     "stage_d_draw_count": 0
   },
   "prospective_uncertainty_policy": {
@@ -567,6 +588,11 @@
       "removal_semantics",
       "feasibility_semantics",
       "numerical_policy_identity",
+      "stochastic_rule_identity",
+      "run_seed",
+      "permitted_stream_ids_digest",
+      "next_counter_tuple_per_stream_digest",
+      "uncertainty_policy_identity",
       "framework_identity",
       "authority_identity",
       "protocol_identity",
@@ -578,6 +604,12 @@
       "alias_closure_digest",
       "correction_invalidation_epoch"
     ],
+    "stochastic_cache_key_semantics": {
+      "run_seed": "the exact registered seed for the lookup",
+      "permitted_stream_ids_digest": "SHA-256 of the canonical ordered complete permitted-stream list, including the explicit empty list for deterministic studies",
+      "next_counter_tuple_per_stream_digest": "SHA-256 of the canonical complete next-to-consume counter tuple for every permitted stream at lookup time, including attempt_index and draw_status; this is an input-state identity, while served_result_identity binds the resulting final counter state",
+      "deterministic_study_rule": "deterministic studies use seed 0, the shared FORBIDDEN stochastic-rule identity, the canonical empty-stream digest, the canonical empty next-counter-state digest, and their exact uncertainty-policy identity; none may be omitted or aliased"
+    },
     "required_controls": [
       "positive_equivalent_reuse",
       "non_equivalent_near_miss",
@@ -590,6 +622,11 @@
       "corrected_evidence",
       "authority_version_change",
       "environment_change",
+      "stochastic_rule_change",
+      "run_seed_change",
+      "permitted_stream_set_change",
+      "next_counter_state_change",
+      "uncertainty_policy_change",
       "deterministic_dependency_local_invalidation"
     ],
     "invalidation_rule": "A correction or authority change traverses the complete explicit dependency and alias DAG and emits an invalidation receipt before recomputation.",

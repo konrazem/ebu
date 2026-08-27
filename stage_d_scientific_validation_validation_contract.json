@@ -52,9 +52,9 @@
     "canonicalization": "UTF-8 JSON, recursively sorted keys, separators comma and colon without added whitespace, ensure_ascii=false, allow_nan=false, no final LF"
   },
   "expected_counts": {
-    "positive_check_count": 100,
+    "positive_check_count": 115,
     "check_group_count": 10,
-    "negative_case_count": 32,
+    "negative_case_count": 45,
     "predecessor_source_count": 39,
     "study_count": 14,
     "evidence_level_count": 7,
@@ -217,8 +217,8 @@
         "SDV-068 DAG complexity cells, indegree/enqueue/dequeue/FIFO/edge/zero-comparison/storage/normalized-time thresholds, and hard caps equal the exact declared five cells, 100000 vertices, 500000 edges, depth 100000, 1073741824 RSS bytes, 120 seconds, and 268435456 trace/output bytes",
         "SDV-069 cycles, duplicate edges, and direct/optimized affected-set or ordering mismatch refuse",
         "SDV-070 canonical identity remains exhaustive only for vertices 0..8 and is not performance",
-        "SDV-071 cache key contains exactly all 24 result-affecting fields in both contract and closed evidence schema, permits no additional field, and no runtime production cache is authorized",
-        "SDV-072 positive reuse, near miss, child swap, boundary/history, incomplete-key, alias, stale, correction, authority, environment, and dependency-local invalidation controls are all present",
+        "SDV-071 cache key contains exactly all 29 result-affecting fields in both contract and closed evidence schema, including stochastic rule, run seed, permitted streams, next counter state, and uncertainty policy; it permits no additional field and no runtime production cache is authorized",
+        "SDV-072 positive reuse, near miss, child swap, boundary/history, incomplete-key, alias, stale, correction, authority, environment, stochastic-rule, seed, stream-set, counter-state, uncertainty-policy, and dependency-local invalidation controls are all present",
         "SDV-073 correction or authority change requires complete dependency/alias DAG traversal and invalidation receipt before recomputation",
         "SDV-074 SD-07 through SD-14 bind DAG/cache controls exactly wherever listed by the mechanical contract"
       ]
@@ -237,7 +237,7 @@
     },
     {
       "group_id": "INDEPENDENT_AUDIT_CORRECTIONS",
-      "expected_count": 20,
+      "expected_count": 35,
       "checks": [
         "SDV-081 every path-shaped dependency/authority reference matches the accepted path pattern, exists at the accepted base, and has exactly one matching predecessor row",
         "SDV-082 the exact path-shaped reference set has 18 unique accepted paths and no alias, nonexistent, merely existing-but-unlocked, or identity-mismatched path",
@@ -246,10 +246,10 @@
         "SDV-085 SD-01 freezes paired no-shock recovery, exact 1e-6 stock/service tolerance, 100-tick persistence, 2000-tick/next-shock/horizon deadline, reserve, regeneration, and recursive-feasibility predicates",
         "SDV-086 SD-09 freezes exact topology/load/queue/route/group state, reserve draw/replenishment equation, allocation orders and tie-breaks",
         "SDV-087 SD-09 freezes paired homeostasis, aggregate/per-group/queue/reserve recovery thresholds, 100-tick persistence, 1000-tick deadline, and distinct reserve-regeneration and non-recovery dispositions",
-        "SDV-088 hard_caps/v1 requires profile_id plus all 25 closed dimensions and additionalProperties=false",
-        "SDV-089 every matrix/control hard-cap key maps exactly to the closed normalized dimensions; an applicable value is positive, and omission, applicable null, nonnull inapplicable, or unknown dimension refuses",
+        "SDV-088 hard_caps/v1 requires profile_id plus all 25 closed dimensions, additionalProperties=false, and equality to exactly one of 17 complete schema-level constant profiles",
+        "SDV-089 every matrix/control hard-cap key and value maps exactly to the matching schema constant; omission, changed value, applicable null, nonnull inapplicable, unknown dimension, or profile/value mismatch refuses",
         "SDV-090 limit_decision/v1 uses oneOf so only WITHIN_CAPS pairs with ELIGIBLE_FOR_REGISTERED_EXECUTION and both refusal/inconclusive decisions pair only with NOT_A_SCIENTIFIC_OUTCOME",
-        "SDV-091 schema negative cases N01-N05 refuse omitted/unknown cap dimensions and all three invalid decision/evidence pairings",
+        "SDV-091 schema negative cases SCHEMA-N01 through SCHEMA-N13 refuse omitted/unknown/wrong/null cap values, invalid limit/run dispositions, empty limit chains, incomplete stochastic cache keys, invalid stochastic counters, and false H3-positive records",
         "SDV-092 configuration, run, checkpoint, and trace schemas bind stochastic, uncertainty, numerical, and counter-state identities; all 14 studies name checkpoint_record/v1",
         "SDV-093 computation_record/v1 requires one closed generic/Mobius/DAG/cache algorithm-specific evidence variant with the registered identities and counters",
         "SDV-094 REGISTERED-SEED-SUMMARY-01 freezes ascending seed pairing, exact even-sample median, closed min/max range, zero analysis streams/draws, and forbids bootstrap/confidence/population claims",
@@ -258,7 +258,22 @@
         "SDV-097 SD-10 freezes exact Routh-Hurwitz classification, RK4 dt=1/100 with 100 substeps and four RHS calls, exact on-horizon discrete predicates, and 57696000 evaluation accounting",
         "SDV-098 SD-07 arithmetic derives 4180 level-0..16 occurrence visits and total 1483694 evaluations from the exact Fibonacci recurrence",
         "SDV-099 SD-06 freezes the exact 12-part Stage E/Stage F acquisition/oracle/butterfly/reconstruction/poset breakdown totaling 78555354 primary visits",
-        "SDV-100 DAG-EXACT-01 freezes dense canonical IDs, canonical-sorted adjacency, ascending initial sources, O(1) FIFO operations, separate stable bottom-up edge mergesort with E*ceil(log2(E)) comparison/E-slot bounds, ready-interleaving controls, exact traversal/canonicalization counters, zero ready-node comparisons, and no lexicographically-least-order claim"
+        "SDV-100 DAG-EXACT-01 freezes dense canonical IDs, canonical-sorted adjacency, ascending initial sources, O(1) FIFO operations, separate stable bottom-up edge mergesort with E*ceil(log2(E)) comparison/E-slot bounds, ready-interleaving controls, exact traversal/canonicalization counters, zero ready-node comparisons, and no lexicographically-least-order claim",
+        "SDV-101 all 17 hard-cap constants contain exactly profile_id plus the 25 closed dimensions and equal normalized matrix/control values byte-for-value, with every inapplicable dimension null",
+        "SDV-102 SD-07 carries the mandatory 21474836480-byte total study-output ceiling in matrix, applicable-dimension map, and exact schema profile",
+        "SDV-103 run_manifest/v1 requires at least one limit-decision identity and conditionally binds PASS/FAIL/TIMEOUT/RESOURCE_EXHAUSTED/REFUSED to only their permitted scientific dispositions; trace_row/v1 also requires at least one limit-decision ID",
+        "SDV-104 executable JSON-Patch schema vectors N06-N10 reject applicable-null, wrong-value, nonnull-inapplicable, empty-limit-chain, and refused-positive instances",
+        "SDV-105 the 29-field cache key explicitly binds stochastic-rule identity, run seed, permitted-stream digest, next-counter-state digest, and uncertainty-policy identity",
+        "SDV-106 cache negative controls independently vary stochastic rule, seed, permitted stream set, next counter state, and uncertainty policy and require collision/refusal rather than reuse",
+        "SDV-107 SD-04 contains exactly eight reduced-rational fields, including rational F6 and degree-eight rational F7, and forbids floating-point, interval, tolerance, adaptive precision, and refinement",
+        "SDV-108 SD-04 derives 1152 cases and exact 4608+576=5184 direct/order/Taylor/control evaluations and uses exact rational remainder equality",
+        "SDV-109 EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 uses denominator rejection with attempt_index and realizes every declared Bernoulli/categorical rational mass exactly",
+        "SDV-110 the stochastic rule freezes L=2^64-(2^64 mod D), half-open cumulative intervals, complete rejected-attempt consumption/checkpointing, READY versus TERMINAL_REJECTION_CAP counter states, a 1000000-attempt inconclusive ceiling, and arithmetic refusals for biased threshold/remainder/fallback rules",
+        "SDV-111 SD-01 defines exact A_H1(y,q), q_0, q_1, A_H3(x_pre), greatest-action selection, pre/post reserve conditions, and first-empty-set failure",
+        "SDV-112 trace_row/v1 mechanically records current/no-shock/adversarial admissible-set digests and sizes, selected action, and six reserve predicates; H3_PASS requires all three sets nonempty and all reserve predicates true",
+        "SDV-113 SD-01 exact worst-case evaluation accounting is 39120000 and the H3 per-run primary-evaluation cap is 1200000",
+        "SDV-114 schema vectors N11-N13 and validation negatives freeze incomplete stochastic cache-key, attempt-index/ceiling, and false recursive-feasibility refusals",
+        "SDV-115 all schema fixtures are explicitly static non-evidence, Stage D instance/draw/model/benchmark/outcome counts remain zero, and no fixture can enter a scientific traceability chain"
       ]
     }
   ],
@@ -345,7 +360,7 @@
     },
     {
       "id": "SDV-N17",
-      "mutation": "remove one of the 24 complete cache-key fields",
+      "mutation": "remove one of the 29 complete cache-key fields",
       "required_disposition": "REFUSE_INCOMPLETE_CACHE_KEY"
     },
     {
@@ -422,6 +437,71 @@
       "id": "SDV-N32",
       "mutation": "claim O(V+E) while using a heap/tree/repeated scan/ready-node comparisons, omit canonicalization identity or traversal counters, or claim lexicographically least dynamic ready-node order",
       "required_disposition": "REFUSE_DAG_COMPLEXITY_MODEL"
+    },
+    {
+      "id": "SDV-N33",
+      "mutation": "change any exact hard-cap profile value while retaining its profile_id",
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "id": "SDV-N34",
+      "mutation": "erase every limit-decision identity from a run or trace row",
+      "required_disposition": "REFUSE_EMPTY_LIMIT_DECISION_CHAIN"
+    },
+    {
+      "id": "SDV-N35",
+      "mutation": "pair REFUSED with a positive/negative/null/inconclusive scientific result or pair TIMEOUT/RESOURCE_EXHAUSTED with positive/negative evidence",
+      "required_disposition": "REFUSE_RUN_DISPOSITION_PAIR"
+    },
+    {
+      "id": "SDV-N36",
+      "mutation": "remove stochastic-rule identity, run seed, permitted-stream digest, next-counter-state digest, or uncertainty-policy identity from the complete cache key",
+      "required_disposition": "REFUSE_INCOMPLETE_RESULT_AFFECTING_CACHE_KEY"
+    },
+    {
+      "id": "SDV-N37",
+      "mutation": "serve one cached result after changing seed, stochastic rule, permitted stream set, next counter state, or uncertainty policy",
+      "required_disposition": "REFUSE_CACHE_KEY_COLLISION_OR_STALE_REUSE"
+    },
+    {
+      "id": "SDV-N38",
+      "mutation": "reintroduce exp, floating point, adaptive precision, an unfrozen interval library, tolerance, or outcome-dependent refinement into SD-04",
+      "required_disposition": "REFUSE_SD04_UNFROZEN_NUMERICAL_ORACLE"
+    },
+    {
+      "id": "SDV-N39",
+      "mutation": "change SD-04's 1152 cases, 4608 direct/order/Taylor evaluations, 576 coefficient/control checks, or 5184 total",
+      "required_disposition": "REFUSE_SD04_EVALUATION_ARITHMETIC"
+    },
+    {
+      "id": "SDV-N40",
+      "mutation": "sample a non-dyadic rational Bernoulli with floor(p*2^64) thresholding",
+      "required_disposition": "REFUSE_BIASED_RATIONAL_SAMPLER"
+    },
+    {
+      "id": "SDV-N41",
+      "mutation": "assign a categorical U64 rounding remainder to the last category",
+      "required_disposition": "REFUSE_BIASED_RATIONAL_SAMPLER"
+    },
+    {
+      "id": "SDV-N42",
+      "mutation": "omit attempt_index/draw_status, pair READY with attempt_index 1000000, pair TERMINAL_REJECTION_CAP with another value, or choose/restart/substitute an outcome after 1000000 rejected attempts",
+      "required_disposition": "REFUSE_STOCHASTIC_COUNTER_OR_CLASSIFY_INCONCLUSIVE"
+    },
+    {
+      "id": "SDV-N43",
+      "mutation": "describe H3 recursive feasibility as a nonempty H1 menu without defining exact A_H1, both registered shock branches, and their reserve constraints",
+      "required_disposition": "REFUSE_SD01_RECURSIVE_FEASIBILITY_GAP"
+    },
+    {
+      "id": "SDV-N44",
+      "mutation": "record H3_PASS with an empty current/no-shock/adversarial set, absent selected action, or false pre/post reserve predicate",
+      "required_disposition": "REFUSE_RECURSIVE_FEASIBILITY_CLAIM"
+    },
+    {
+      "id": "SDV-N45",
+      "mutation": "omit or null SD-07's 21474836480-byte total study-output ceiling",
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
     }
   ],
   "required_audit_handoff_fields": [

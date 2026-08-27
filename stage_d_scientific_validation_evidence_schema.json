@@ -40,8 +40,108 @@
       "mutation": "pair WITHIN_CAPS with NOT_A_SCIENTIFIC_OUTCOME",
       "expected_schema_valid": false,
       "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N06",
+      "target_definition": "hard_caps",
+      "base_instance_json_pointer": "/$defs/hard_caps/oneOf/0/const",
+      "json_patch": [{"op": "replace", "path": "/total_output_bytes", "value": null}],
+      "mutation": "make the applicable SD-01 total_output_bytes null",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N07",
+      "target_definition": "hard_caps",
+      "base_instance_json_pointer": "/$defs/hard_caps/oneOf/0/const",
+      "json_patch": [{"op": "replace", "path": "/total_output_bytes", "value": 21474836479}],
+      "mutation": "change one exact applicable SD-01 cap value",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N08",
+      "target_definition": "hard_caps",
+      "base_instance_json_pointer": "/$defs/hard_caps/oneOf/0/const",
+      "json_patch": [{"op": "replace", "path": "/maximum_n", "value": 18}],
+      "mutation": "make an inapplicable SD-01 dimension nonnull",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N09",
+      "target_definition": "run_manifest",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
+      "json_patch": [{"op": "replace", "path": "/limit_decision_identities", "value": []}],
+      "mutation": "erase the run's limit-decision traceability chain",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_EMPTY_LIMIT_DECISION_CHAIN"
+    },
+    {
+      "case_id": "SCHEMA-N10",
+      "target_definition": "run_manifest",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
+      "json_patch": [
+        {"op": "replace", "path": "/exit_status", "value": "REFUSED"},
+        {"op": "replace", "path": "/scientific_disposition", "value": "POSITIVE_WITHIN_REGISTERED_MODEL"}
+      ],
+      "mutation": "pair a refused run with a positive scientific disposition",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_RUN_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N11",
+      "target_definition": "cache_event",
+      "mutation": "omit stochastic_rule_identity, run_seed, a permitted-stream digest, next-counter-state digest, or uncertainty-policy identity from the complete cache key",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_INCOMPLETE_RESULT_AFFECTING_CACHE_KEY"
+    },
+    {
+      "case_id": "SCHEMA-N12",
+      "target_definition": "checkpoint_record",
+      "mutation": "omit attempt_index/draw_status, pair READY with attempt_index 1000000, pair TERMINAL_REJECTION_CAP with another value, or restart/select an outcome from a terminal tuple",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_STOCHASTIC_COUNTER_OR_CLASSIFY_INCONCLUSIVE"
+    },
+    {
+      "case_id": "SCHEMA-N13",
+      "target_definition": "trace_row",
+      "mutation": "pair H3_PASS with an empty current/no-shock/adversarial admissible set or a false reserve predicate",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_RECURSIVE_FEASIBILITY_CLAIM"
     }
   ],
+  "prospective_non_evidence_schema_fixtures": {
+    "purpose": "Static schema conformance fixture only; it is not a run, outcome, observation, or scientific evidence.",
+    "valid_run_manifest": {
+      "schema": "run_manifest/v1",
+      "run_id": "STATIC-SCHEMA-FIXTURE-NOT-A-RUN",
+      "study_id": "SD-01",
+      "configuration_identity": {"kind": "fixture", "value": "configuration", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "code_identity": {"kind": "fixture", "value": "code", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "environment_identity": {"kind": "fixture", "value": "environment", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "authorization_identity": {"kind": "fixture", "value": "authorization", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "stochastic_rule_identity": {"kind": "fixture", "value": "FORBIDDEN", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "uncertainty_policy_identity": {"kind": "fixture", "value": "deterministic", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "numerical_policy_identity": {"kind": "fixture", "value": "NUMERICAL-POLICY-01", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "final_stream_counter_state_identity": {"kind": "fixture", "value": "no-streams", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "seed": 0,
+      "started_at": "2000-01-01T00:00:00Z",
+      "ended_at": "2000-01-01T00:00:00Z",
+      "exit_status": "PASS",
+      "scientific_disposition": "NULL_OR_UNRESOLVED",
+      "checkpoint_identities": [],
+      "trace_identity": {"kind": "fixture", "value": "trace", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "receipt_identities": [],
+      "computation_record_identities": [],
+      "equivalence_certificate_identities": [],
+      "invalidation_receipt_identities": [],
+      "limit_decision_identities": [{"kind": "fixture", "value": "limit-decision", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"}],
+      "output_identities": [],
+      "claim_traceability_identity": {"kind": "fixture", "value": "claim-chain", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "run_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
   "verbatim_user_mobius_topology_controls": [
         "Preserve a direct, independently understandable small-case Möbius/topology oracle as the normative correctness reference.",
         "Any optimized bitmask/fast Möbius transform must reproduce the direct oracle exactly over the complete registered small-case domain and declared randomized/adversarial cross-check domain; a mismatch is a refusal, not a tolerance or approximation case.",
@@ -427,7 +527,8 @@
             "minimum": 1
           }
         },
-        "description": "Closed normalized cap record. Every dimension is present. The matching authority-contract profile makes applicable dimensions positive integers and every other dimension null; Stage D static validation refuses omission, unknown dimensions, an applicable null, or a nonnull inapplicable value."
+        "oneOf": [{"const":{"profile_id":"SD-01","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1200000,"primary_evaluations_per_case":null,"maximum_depth":20000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-02","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":200,"primary_evaluations_per_case":null,"maximum_depth":200,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-03","wall_time_seconds_per_run":600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":536870912,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":67108864,"combined_trace_output_bytes_per_case":null,"total_output_bytes":1073741824,"primary_evaluations_per_run":7,"primary_evaluations_per_case":null,"maximum_depth":8,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-04","wall_time_seconds_per_run":600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":1073741824,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":134217728,"combined_trace_output_bytes_per_case":null,"total_output_bytes":2147483648,"primary_evaluations_per_run":14,"primary_evaluations_per_case":null,"maximum_depth":4,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-05","wall_time_seconds_per_run":3600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":2147483648,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":536870912,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1000000,"primary_evaluations_per_case":null,"maximum_depth":6,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-06","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":536870912,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":21474836480,"primary_evaluations_per_run":null,"primary_evaluations_per_case":5000000,"maximum_depth":18,"maximum_recursion_depth":null,"maximum_n":18,"maximum_mobius_n":null,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-07","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":1073741824,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":21474836480,"primary_evaluations_per_run":null,"primary_evaluations_per_case":2000000,"maximum_depth":null,"maximum_recursion_depth":64,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":100000,"maximum_dag_edges":500000,"maximum_canonical_vertices":8,"canonical_vertices":null,"expanded_oracle_level":16,"compressed_comparison_level":32,"maximum_expanded_occurrences":3524578,"maximum_agents":null}},{"const":{"profile_id":"SD-08","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-09","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-10","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":500000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-11","wall_time_seconds_per_run":3600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":2147483648,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":1073741824,"combined_trace_output_bytes_per_case":null,"total_output_bytes":10737418240,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-12","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":10000}},{"const":{"profile_id":"SD-13","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-14","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":18,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"MOBIUS-EXACT-01","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":536870912,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":null,"primary_evaluations_per_run":null,"primary_evaluations_per_case":null,"maximum_depth":null,"maximum_recursion_depth":null,"maximum_n":18,"maximum_mobius_n":null,"maximum_subsets":262144,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"DAG-EXACT-01","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":1073741824,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":null,"primary_evaluations_per_run":null,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"CANONICAL-CACHE-01","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":1073741824,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":null,"primary_evaluations_per_run":null,"primary_evaluations_per_case":null,"maximum_depth":null,"maximum_recursion_depth":64,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":8,"expanded_oracle_level":16,"compressed_comparison_level":32,"maximum_expanded_occurrences":3524578,"maximum_agents":null}}],
+        "description": "Closed normalized cap record. Every dimension is present and the complete object must equal exactly one of the 17 frozen profile constants. The schema refuses an applicable null, wrong value, nonnull inapplicable dimension, omission, extra property, or profile/value mismatch."
       },
       "generic_algorithm_evidence": {
         "type": "object",
@@ -677,6 +778,7 @@
           },
           "limit_decision_identities": {
             "type": "array",
+            "minItems": 1,
             "items": {
               "$ref": "#/$defs/identity"
             }
@@ -693,7 +795,25 @@
           "run_manifest_sha256": {
             "$ref": "#/$defs/sha256"
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"exit_status": {"const": "PASS"}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"enum": ["POSITIVE_WITHIN_REGISTERED_MODEL", "NEGATIVE_WITHIN_REGISTERED_MODEL", "NULL_OR_UNRESOLVED"]}}}
+          },
+          {
+            "if": {"properties": {"exit_status": {"const": "FAIL"}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"enum": ["INVALIDATED_BY_FALSIFIER", "NULL_OR_UNRESOLVED"]}}}
+          },
+          {
+            "if": {"properties": {"exit_status": {"enum": ["TIMEOUT", "RESOURCE_EXHAUSTED"]}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"const": "COMPUTATIONALLY_INCONCLUSIVE"}}}
+          },
+          {
+            "if": {"properties": {"exit_status": {"const": "REFUSED"}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"const": "NOT_EXECUTED"}}}
+          }
+        ]
       },
       "checkpoint_record": {
         "type": "object",
@@ -727,13 +847,25 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["stream_id", "tick", "event_index", "draw_index"],
+              "required": ["stream_id", "tick", "event_index", "draw_index", "attempt_index", "draw_status"],
               "properties": {
                 "stream_id": {"$ref": "#/$defs/nonempty_string"},
                 "tick": {"type": "integer", "minimum": 0},
                 "event_index": {"type": "integer", "minimum": 0},
-                "draw_index": {"type": "integer", "minimum": 0}
-              }
+                "draw_index": {"type": "integer", "minimum": 0},
+                "attempt_index": {"type": "integer", "minimum": 0, "maximum": 1000000},
+                "draw_status": {"enum": ["READY", "TERMINAL_REJECTION_CAP"]}
+              },
+              "allOf": [
+                {
+                  "if": {"properties": {"draw_status": {"const": "READY"}}, "required": ["draw_status"]},
+                  "then": {"properties": {"attempt_index": {"maximum": 999999}}}
+                },
+                {
+                  "if": {"properties": {"draw_status": {"const": "TERMINAL_REJECTION_CAP"}}, "required": ["draw_status"]},
+                  "then": {"properties": {"attempt_index": {"const": 1000000}}}
+                }
+              ]
             }
           },
           "stochastic_rule_identity": {"$ref": "#/$defs/identity"},
@@ -762,6 +894,7 @@
           "equivalence_certificate_ids",
           "invalidation_receipt_ids",
           "limit_decision_ids",
+          "recursive_feasibility_evidence",
           "stochastic_counter_state_identity",
           "uncertainty_policy_identity",
           "numerical_policy_identity",
@@ -839,9 +972,75 @@
           },
           "limit_decision_ids": {
             "type": "array",
+            "minItems": 1,
             "items": {
               "$ref": "#/$defs/nonempty_string"
             }
+          },
+          "recursive_feasibility_evidence": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["status"],
+                "properties": {"status": {"const": "NOT_APPLICABLE"}}
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "status",
+                  "current_admissible_set_digest",
+                  "current_admissible_set_size",
+                  "no_shock_next_admissible_set_digest",
+                  "no_shock_next_admissible_set_size",
+                  "adversarial_next_admissible_set_digest",
+                  "adversarial_next_admissible_set_size",
+                  "selected_action",
+                  "current_pre_reserve_satisfied",
+                  "current_post_reserve_satisfied",
+                  "no_shock_pre_reserve_satisfied",
+                  "no_shock_post_reserve_satisfied",
+                  "adversarial_pre_reserve_satisfied",
+                  "adversarial_post_reserve_satisfied"
+                ],
+                "properties": {
+                  "status": {"enum": ["H3_PASS", "H3_FAIL"]},
+                  "current_admissible_set_digest": {"$ref": "#/$defs/sha256"},
+                  "current_admissible_set_size": {"type": "integer", "minimum": 0, "maximum": 5},
+                  "no_shock_next_admissible_set_digest": {"$ref": "#/$defs/sha256"},
+                  "no_shock_next_admissible_set_size": {"type": "integer", "minimum": 0, "maximum": 5},
+                  "adversarial_next_admissible_set_digest": {"$ref": "#/$defs/sha256"},
+                  "adversarial_next_admissible_set_size": {"type": "integer", "minimum": 0, "maximum": 5},
+                  "selected_action": {"oneOf": [{"$ref": "#/$defs/typed_quantity"}, {"type": "null"}]},
+                  "current_pre_reserve_satisfied": {"type": "boolean"},
+                  "current_post_reserve_satisfied": {"type": "boolean"},
+                  "no_shock_pre_reserve_satisfied": {"type": "boolean"},
+                  "no_shock_post_reserve_satisfied": {"type": "boolean"},
+                  "adversarial_pre_reserve_satisfied": {"type": "boolean"},
+                  "adversarial_post_reserve_satisfied": {"type": "boolean"}
+                },
+                "allOf": [
+                  {
+                    "if": {"properties": {"status": {"const": "H3_PASS"}}, "required": ["status"]},
+                    "then": {
+                      "properties": {
+                        "current_admissible_set_size": {"minimum": 1},
+                        "no_shock_next_admissible_set_size": {"minimum": 1},
+                        "adversarial_next_admissible_set_size": {"minimum": 1},
+                        "selected_action": {"$ref": "#/$defs/typed_quantity"},
+                        "current_pre_reserve_satisfied": {"const": true},
+                        "current_post_reserve_satisfied": {"const": true},
+                        "no_shock_pre_reserve_satisfied": {"const": true},
+                        "no_shock_post_reserve_satisfied": {"const": true},
+                        "adversarial_pre_reserve_satisfied": {"const": true},
+                        "adversarial_post_reserve_satisfied": {"const": true}
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
           },
           "stochastic_counter_state_identity": {
             "$ref": "#/$defs/identity"
@@ -1190,6 +1389,11 @@
               "removal_semantics",
               "feasibility_semantics",
               "numerical_policy_identity",
+              "stochastic_rule_identity",
+              "run_seed",
+              "permitted_stream_ids_digest",
+              "next_counter_tuple_per_stream_digest",
+              "uncertainty_policy_identity",
               "framework_identity",
               "authority_identity",
               "protocol_identity",
@@ -1243,6 +1447,23 @@
               },
               "numerical_policy_identity": {
                 "$ref": "#/$defs/nonempty_string"
+              },
+              "stochastic_rule_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "run_seed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "permitted_stream_ids_digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "next_counter_tuple_per_stream_digest": {
+                "$ref": "#/$defs/sha256",
+                "description": "Digest of the complete next-to-consume input counter tuple per permitted stream at cache lookup; the served result separately binds the resulting final counter state."
+              },
+              "uncertainty_policy_identity": {
+                "$ref": "#/$defs/identity"
               },
               "framework_identity": {
                 "$ref": "#/$defs/nonempty_string"

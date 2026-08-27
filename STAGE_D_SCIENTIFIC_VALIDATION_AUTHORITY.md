@@ -20,7 +20,7 @@
 
 **Scope:** one tracked scientific-validation matrix, its mechanical contract, evidence schemas, predecessor locks, and fail-closed validation contract
 
-**Rejected predecessor candidate:** `cf747d49924fbd2b783431dbb4a9a54f1eb5a9f1` / tree `16132e72a55ae86b9df1156146335f15a67413ad`; independent `FAIL`; exact-head CI `33075994735`
+**Rejected authority candidates:** `cf747d49924fbd2b783431dbb4a9a54f1eb5a9f1` / tree `16132e72a55ae86b9df1156146335f15a67413ad`, exact-head CI `33075994735`; and `96c9391cdd435434cdaa10655667263ea43a0245` / tree `3d80b62ea5fc2b1aa9c67d891f90da128f680307`, exact-head CI `33080431442`; both received independent `FAIL` and remain immutable rejected evidence
 
 ---
 
@@ -205,7 +205,14 @@ Failure to recover is a registered
 model outcome; a resource, identity, or trace failure is computationally
 inconclusive. Reserve protection, regeneration, and H3 recursive-feasibility
 have the exact predicates in the matrix and cannot be inferred from a summary
-score.
+score. In particular, with `M={0,d/4,d/2,3d/4,d}`, the next-step H1
+admissible-action set `A_H1(y,q)` contains exactly those `v` in `M` for which
+`y_pre=y+g(y)-q` satisfies the frozen pre-reserve condition and
+`5 <= y_pre-v <= 20`. H3 considers both `q_0=0` and
+`q_1=min(4,max(0,y+g(y)))`; it selects the greatest current menu action only
+when both exact next-step sets are nonempty. The trace carries the current and
+both branch-set digests and sizes, selected action, and all pre/post reserve
+predicates. An empty set is a failure, not a vacuous feasibility claim.
 
 SD-09 similarly freezes its pre-failure homeostasis window, paired no-failure
 reference, 99% aggregate-service and 95% per-group thresholds, queue/reserve
@@ -250,14 +257,21 @@ scientific evidence.
 
 Every stochastic matrix row uses the same frozen counter-hash rule rather
 than mutable library PRNG state. The SHA-256 preimage is exactly
-`EBU-STAGE-F-RNG-v1|study_id|configuration_id|seed|stream_id|tick|event_index|draw_index`
+`EBU-STAGE-F-RNG-v1|study_id|configuration_id|seed|stream_id|tick|event_index|draw_index|attempt_index`
 with canonical decimal integers and no whitespace. The first eight digest
-bytes form an unsigned 64-bit integer. An exact rational Bernoulli draw
-`p_num/p_den` succeeds only below `floor(p_num*2^64/p_den)`; categorical draws
-use frozen cumulative rational thresholds. Each row names its streams and
-probabilities. Unknown streams, draw-order changes, reused preimages, mutable
-PRNG state, and undeclared continuous-distribution transforms refuse. Stage D
-performs zero draws.
+bytes form an unsigned 64-bit integer. For exact denominator `D`, the sampler
+sets `L=2^64-(2^64 mod D)`, rejects values at least `L`, and maps an accepted
+value to `u64 mod D`. Bernoulli and categorical outcomes use exact half-open
+integer intervals, so their declared rational masses are exact; no final
+category receives a rounding remainder. Every rejected attempt is consumed
+and checkpointed. One million rejected attempts for one draw seals a terminal
+counter tuple with `attempt_index=1000000` and
+`draw_status=TERMINAL_REJECTION_CAP`, then stops the run as
+`COMPUTATIONALLY_INCONCLUSIVE` without restart, choice, or substitute outcome.
+Each row names its streams and probabilities. Unknown streams, draw-order or
+attempt-order changes, reused preimages, mutable PRNG state, biased floor
+thresholds, rounding-remainder assignment, fallback outcomes, and undeclared
+continuous-distribution transforms refuse. Stage D performs zero draws.
 
 No bootstrap or analysis RNG is authorized. `REGISTERED-SEED-SUMMARY-01`
 reports every registered seed-level value, every prospectively paired
@@ -278,13 +292,25 @@ four right-hand-side evaluations per substep; its exact Routh-Hurwitz and
 on-horizon discrete predicates are in the mechanical contract. A later method,
 tolerance, or refinement needs a separately audited prospective amendment.
 
+SD-04 uses only eight exact reduced-rational fields. Its former transcendental
+case is replaced prospectively by the degree-eight field
+`F7=(1+sum(x_i)/8)^8`; `F6=1/(1-sum(x_i)/8)` also remains exact rational and
+refuses an exact zero denominator. Floating point, interval arithmetic,
+adaptive precision, tolerance, and outcome-dependent refinement are forbidden
+for this study. Its 1,152 cases require exactly 4,608 direct/order/Taylor
+evaluations plus 576 coefficient/control checks, totaling 5,184.
+
 Every future hard-cap record has a closed profile and all 25 normalized
-dimensions. Applicable values are positive integers and inapplicable values
-are explicit nulls according to the matrix/control profile. Omission, an
-unknown dimension, an applicable null, or a nonnull inapplicable dimension
-refuses. A `WITHIN_CAPS` decision alone may be eligible for registered
-execution; `REFUSED_BEFORE_EXECUTION` and `COMPUTATIONALLY_INCONCLUSIVE` are
-schema-bound to `NOT_A_SCIENTIFIC_OUTCOME`.
+dimensions. The evidence schema contains exactly 17 complete constant profile
+objects: applicable values equal their exact frozen matrix/control values and
+inapplicable values are explicit nulls. Omission, an unknown dimension, a
+changed value, an applicable null, a nonnull inapplicable dimension, or a
+profile/value mismatch refuses. SD-07 carries the global 21,474,836,480-byte
+study-output ceiling explicitly. Every run and trace row binds at least one
+limit decision. `PASS`, `FAIL`, `TIMEOUT`, `RESOURCE_EXHAUSTED`, and `REFUSED`
+are conditionally bound to their permitted scientific dispositions; in
+particular a refusal is `NOT_EXECUTED` and a timeout/resource exhaustion is
+`COMPUTATIONALLY_INCONCLUSIVE`, never positive or negative evidence.
 
 ## 6. Mandatory Möbius/topology controls — verbatim user authority
 
@@ -439,18 +465,27 @@ compressed level evaluations, and 24 cold/reuse evaluations, SD-07 registers
 exactly 1,483,694 evaluations. These counts are prospective arithmetic, not
 observed performance.
 
-The complete future cache key includes canonical topology ID; motif,
+The complete 29-field future cache key includes canonical topology ID; motif,
 occurrence, composition, and boundary-summary versions; complete initial
 augmented-state and admissible-history digest; query and horizon; units,
-boundary, removal and feasibility semantics; numerical policy; framework,
+boundary, removal and feasibility semantics; numerical policy; stochastic
+rule identity; run seed; permitted-stream digest; next-counter-state digest;
+uncertainty-policy identity; framework,
 authority, protocol, configuration, code, dependency, environment, and
 evidence identities; alias closure; and correction/invalidation epoch.
 Leaving out any result-affecting dimension is a collision falsifier.
+The counter digest is specifically the complete next-to-consume input tuple
+for every permitted stream at lookup; the served-result identity separately
+binds the resulting final counter state. Deterministic studies still carry
+seed zero plus explicit forbidden-rule, empty-stream, empty-counter, and exact
+uncertainty-policy identities, so they cannot alias a stochastic run.
 
 Positive reuse cases, non-equivalent near misses, ordered-child swaps,
 boundary changes, history changes, incomplete keys, aliases, stale cache
 entries, corrected evidence, authority-version changes, and environment
-changes are mandatory controls. Corrections traverse the complete explicit
+changes are mandatory controls. Stochastic-rule, run-seed, permitted-stream,
+next-counter-state, and uncertainty-policy changes are separate mandatory
+near-miss/collision controls. Corrections traverse the complete explicit
 dependency/alias DAG and issue invalidation receipts before any recomputation.
 
 No production runtime cache is authorized by Stage D. Stage E may implement
