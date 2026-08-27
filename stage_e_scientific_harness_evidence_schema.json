@@ -1,0 +1,591 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ebu.example/schema/stage-e-scientific-harness-evidence-v1.json",
+  "title": "EBU Stage E scientific harness non-scientific validation evidence",
+  "type": "object",
+  "oneOf": [
+    {"$ref": "#/$defs/authority_record"},
+    {"$ref": "#/$defs/schema_record"},
+    {"$ref": "#/$defs/identity_continuation_record"},
+    {"$ref": "#/$defs/mobius_record"},
+    {"$ref": "#/$defs/dag_cache_record"},
+    {"$ref": "#/$defs/adapter_guard_record"},
+    {"$ref": "#/$defs/installed_isolation_record"},
+    {"$ref": "#/$defs/complexity_record"},
+    {"$ref": "#/$defs/regression_record"},
+    {"$ref": "#/$defs/final_manifest"}
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "git_oid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value", "sha256"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "value": {"$ref": "#/$defs/sha256"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "byte_count", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "byte_count": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "scientific_zero_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registered_configuration_count", "registered_study_run_count", "model_state_advance_count",
+        "trajectory_count", "simulation_count", "gate_execution_count", "registered_transform_count",
+        "scientific_outcome_inspection_count", "scientific_result_count", "figure_count", "book_count"
+      ],
+      "properties": {
+        "registered_configuration_count": {"const": 0},
+        "registered_study_run_count": {"const": 0},
+        "model_state_advance_count": {"const": 0},
+        "trajectory_count": {"const": 0},
+        "simulation_count": {"const": 0},
+        "gate_execution_count": {"const": 0},
+        "registered_transform_count": {"const": 0},
+        "scientific_outcome_inspection_count": {"const": 0},
+        "scientific_result_count": {"const": 0},
+        "figure_count": {"const": 0},
+        "book_count": {"const": 0}
+      }
+    },
+    "release_zero_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["main_merge", "tag", "release", "upload", "package_index", "publication"],
+      "properties": {
+        "main_merge": {"const": 0},
+        "tag": {"const": 0},
+        "release": {"const": 0},
+        "upload": {"const": 0},
+        "package_index": {"const": 0},
+        "publication": {"const": 0}
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "oci_manifest_digest", "architecture", "python_version", "python_executable_sha256",
+        "sqlite_version", "sqlite_version_info", "sqlite_source_id", "debian_sqlite_package", "network"
+      ],
+      "properties": {
+        "oci_manifest_digest": {"const": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"},
+        "architecture": {"const": "linux/amd64"},
+        "python_version": {"const": "3.14.4-final"},
+        "python_executable_sha256": {"const": "353d0275b5ca0447ebfc6ecae7d80a7a7e7a627d4669fdcc3f836f0b8d804c79"},
+        "sqlite_version": {"const": "3.46.1"},
+        "sqlite_version_info": {"const": [3, 46, 1]},
+        "sqlite_source_id": {"const": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1"},
+        "debian_sqlite_package": {"const": "libsqlite3-0:amd64=3.46.1-7+deb13u1"},
+        "network": {"const": "OFFLINE"}
+      }
+    },
+    "common": {
+      "type": "object",
+      "required": [
+        "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+        "environment", "scientific_counters", "release_counters"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "record_type": {"type": "string"},
+        "status": {"enum": ["PASS", "FAIL", "BOUND_NOT_SUPPORTED", "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS"]},
+        "evidence_class": {
+          "enum": [
+            "MATHEMATICAL_THEOREM_OR_DERIVATION_CHECK",
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"
+          ]
+        },
+        "head_commit": {"$ref": "#/$defs/git_oid"},
+        "head_tree": {"$ref": "#/$defs/git_oid"},
+        "environment": {"$ref": "#/$defs/environment"},
+        "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+        "release_counters": {"$ref": "#/$defs/release_zero_counters"}
+      }
+    },
+    "authority_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "authority_files",
+            "predecessor_rows", "positive_checks", "negative_checks", "implementation_paths"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "AUTHORITY"},
+            "status": {"const": "PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "authority_files": {"type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": {"$ref": "#/$defs/file_identity"}},
+            "predecessor_rows": {"const": 17},
+            "positive_checks": {"type": "integer", "minimum": 1},
+            "negative_checks": {"type": "integer", "minimum": 1},
+            "implementation_paths": {"const": 46}
+          }
+        }
+      ]
+    },
+    "schema_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "schema_identities",
+            "supported_keywords", "valid_instances", "refused_instances", "unresolved_local_refs"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "SCHEMA"},
+            "status": {"const": "PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "schema_identities": {"type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/file_identity"}},
+            "supported_keywords": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+            "valid_instances": {"type": "integer", "minimum": 1},
+            "refused_instances": {"type": "integer", "minimum": 1},
+            "unresolved_local_refs": {"const": 0}
+          }
+        }
+      ]
+    },
+    "identity_continuation_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "deterministic_checkpoint_identity",
+            "stochastic_checkpoint_identity", "study_bindings",
+            "slice_counts", "restart_equivalence_checks", "negative_controls", "terminal_rejection_controls"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "IDENTITY_CONTINUATION"},
+            "status": {"const": "PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "deterministic_checkpoint_identity": {"$ref": "#/$defs/identity"},
+            "stochastic_checkpoint_identity": {"$ref": "#/$defs/identity"},
+            "study_bindings": {"const": 14},
+            "slice_counts": {"const": [1, 2, 7]},
+            "restart_equivalence_checks": {"type": "integer", "minimum": 42},
+            "negative_controls": {"type": "integer", "minimum": 16},
+            "terminal_rejection_controls": {"type": "integer", "minimum": 2}
+          }
+        }
+      ]
+    },
+    "complexity_cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "control_id", "cell_id", "repetition", "operation_count", "active_wall_time_nanoseconds",
+        "peak_process_tree_rss_bytes", "logical_storage_slots", "trace_bytes", "status"
+      ],
+      "properties": {
+        "control_id": {"enum": ["MOBIUS-EXACT-01", "DAG-EXACT-01"]},
+        "cell_id": {"type": "string", "minLength": 1},
+        "repetition": {"type": "integer", "minimum": 0, "maximum": 4},
+        "operation_count": {"type": "integer", "minimum": 0},
+        "active_wall_time_nanoseconds": {"type": "integer", "minimum": 1},
+        "peak_process_tree_rss_bytes": {"type": "integer", "minimum": 1},
+        "logical_storage_slots": {"type": "integer", "minimum": 0},
+        "trace_bytes": {"type": "integer", "minimum": 0},
+        "status": {"enum": ["PASS", "BOUND_NOT_SUPPORTED"]}
+      }
+    },
+    "mobius_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "agreement_cases",
+            "coefficient_mismatches", "reconstruction_mismatches", "complexity_cells",
+            "declared_time", "declared_storage"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "MOBIUS"},
+            "status": {"enum": ["PASS", "BOUND_NOT_SUPPORTED"]},
+            "evidence_class": {"const": "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "agreement_cases": {"const": 488},
+            "coefficient_mismatches": {"const": 0},
+            "reconstruction_mismatches": {"const": 0},
+            "complexity_cells": {
+              "type": "array",
+              "minItems": 55,
+              "maxItems": 55,
+              "items": {
+                "allOf": [
+                  {"$ref": "#/$defs/complexity_cell"},
+                  {"type": "object", "required": ["control_id"], "properties": {"control_id": {"const": "MOBIUS-EXACT-01"}}}
+                ]
+              }
+            },
+            "declared_time": {"const": "O(n*2^n)+2^n*C_E"},
+            "declared_storage": {"const": "O(2^n)"}
+          }
+        }
+      ]
+    },
+    "dag_cache_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "dag_valid_cases",
+            "dag_refusals", "dag_mismatches", "dag_complexity_cells", "cache_controls",
+            "cache_key_omission_refusals", "stale_cache_refusals", "invalidation_receipts"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "DAG_CACHE"},
+            "status": {"enum": ["PASS", "BOUND_NOT_SUPPORTED"]},
+            "evidence_class": {"const": "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "dag_valid_cases": {"const": 39467},
+            "dag_refusals": {"const": 14},
+            "dag_mismatches": {"const": 0},
+            "dag_complexity_cells": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "items": {
+                "allOf": [
+                  {"$ref": "#/$defs/complexity_cell"},
+                  {"type": "object", "required": ["control_id", "repetition"], "properties": {"control_id": {"const": "DAG-EXACT-01"}, "repetition": {"const": 0}}}
+                ]
+              }
+            },
+            "cache_controls": {"const": 17},
+            "cache_key_omission_refusals": {"const": 29},
+            "stale_cache_refusals": {"type": "integer", "minimum": 1},
+            "invalidation_receipts": {"type": "integer", "minimum": 1}
+          }
+        }
+      ]
+    },
+    "adapter_guard_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "adapter_count",
+            "dependency_order", "registered_route_refusals", "pre_import_refusals",
+            "forbidden_sd02_routes", "unknown_study_refusals"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "ADAPTER_GUARD"},
+            "status": {"const": "PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "adapter_count": {"const": 14},
+            "dependency_order": {"const": ["SD-01", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"]},
+            "registered_route_refusals": {"type": "integer", "minimum": 14},
+            "pre_import_refusals": {"type": "integer", "minimum": 14},
+            "forbidden_sd02_routes": {"type": "integer", "minimum": 2},
+            "unknown_study_refusals": {"type": "integer", "minimum": 1}
+          }
+        }
+      ]
+    },
+    "installed_surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_kind", "package_modules", "root_exports", "failure_codes", "public_signatures", "version", "origin", "source_checkout_imports"],
+      "properties": {
+        "artifact_kind": {"enum": ["DIRECT_WHEEL", "SDIST_DERIVED_WHEEL"]},
+        "package_modules": {"const": 44},
+        "root_exports": {"const": 471},
+        "failure_codes": {"const": 294},
+        "public_signatures": {"const": 162},
+        "version": {"const": "0.1.0a1"},
+        "origin": {"type": "string", "pattern": "site-packages"},
+        "source_checkout_imports": {"const": 0}
+      }
+    },
+    "installed_isolation_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "harness_zipapp",
+            "replica_hashes", "replicas_identical", "direct_wheel", "sdist_derived_wheel",
+            "sdist", "installed_surfaces", "isolated_mode",
+            "pythonpath_present", "repository_cwd"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "INSTALLED_ISOLATION"},
+            "status": {"const": "PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "harness_zipapp": {"$ref": "#/$defs/file_identity"},
+            "replica_hashes": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/sha256"}},
+            "replicas_identical": {"const": true},
+            "direct_wheel": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "byte_count", "sha256"],
+              "properties": {
+                "path": {"const": "ebu_framework-0.1.0a1-cp314-none-any.whl"},
+                "byte_count": {"const": 4078247},
+                "sha256": {"const": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"}
+              }
+            },
+            "sdist_derived_wheel": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "byte_count", "sha256"],
+              "properties": {
+                "path": {"const": "ebu_framework-0.1.0a1-cp314-none-any.whl"},
+                "byte_count": {"const": 4078247},
+                "sha256": {"const": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"}
+              }
+            },
+            "sdist": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "byte_count", "sha256"],
+              "properties": {
+                "path": {"const": "ebu_framework-0.1.0a1.tar.gz"},
+                "byte_count": {"const": 4139346},
+                "sha256": {"const": "0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41"}
+              }
+            },
+            "installed_surfaces": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "prefixItems": [
+                {"allOf": [{"$ref": "#/$defs/installed_surface"}, {"type": "object", "required": ["artifact_kind"], "properties": {"artifact_kind": {"const": "DIRECT_WHEEL"}}}]},
+                {"allOf": [{"$ref": "#/$defs/installed_surface"}, {"type": "object", "required": ["artifact_kind"], "properties": {"artifact_kind": {"const": "SDIST_DERIVED_WHEEL"}}}]}
+              ],
+              "items": false
+            },
+            "isolated_mode": {"const": true},
+            "pythonpath_present": {"const": false},
+            "repository_cwd": {"const": false}
+          }
+        }
+      ]
+    },
+    "feasibility_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "study_id", "accepted_expected_evaluations", "projected_active_time_nanoseconds",
+        "projected_peak_memory_bytes", "projected_storage_bytes", "projected_attempt_slices",
+        "classification", "scientific_disposition"
+      ],
+      "properties": {
+        "study_id": {"enum": ["SD-01", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"]},
+        "accepted_expected_evaluations": {"type": "integer", "minimum": 1},
+        "projected_active_time_nanoseconds": {"type": "integer", "minimum": 1},
+        "projected_peak_memory_bytes": {"type": "integer", "minimum": 1},
+        "projected_storage_bytes": {"type": "integer", "minimum": 1},
+        "projected_attempt_slices": {"type": "integer", "minimum": 1},
+        "classification": {"enum": ["FEASIBLE_WITHIN_PROPOSED_CAMPAIGN", "REQUIRES_CHECKPOINTED_CONTINUATION", "MATERIAL_INFEASIBILITY_REQUIRES_SEPARATE_AUTHORITY"]},
+        "scientific_disposition": {"const": null}
+      }
+    },
+    "complexity_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "projections",
+            "projection_formula_id", "discarded_repetitions", "warmup_repetitions"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "COMPLEXITY"},
+            "status": {"enum": ["PASS", "BOUND_NOT_SUPPORTED"]},
+            "evidence_class": {"const": "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "projections": {"type": "array", "minItems": 14, "maxItems": 14, "items": {"$ref": "#/$defs/feasibility_projection"}},
+            "projection_formula_id": {"const": "EBU-STAGE-E-CONSERVATIVE-FEASIBILITY-v1"},
+            "discarded_repetitions": {"const": 0},
+            "warmup_repetitions": {"const": 0}
+          }
+        }
+      ]
+    },
+    "regression_record": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "t0", "t1", "t2",
+            "packaging", "installed_probe_checks", "conventional_checks", "historical_o14_checks"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "REGRESSION"},
+            "status": {"const": "PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "t0": {"const": 123},
+            "t1": {"const": 299},
+            "t2": {"const": 21},
+            "packaging": {"const": 8},
+            "installed_probe_checks": {"const": 226},
+            "conventional_checks": {"const": 1800},
+            "historical_o14_checks": {"const": 299}
+          }
+        }
+      ]
+    },
+    "manifest_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "identity", "status", "evidence_class"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "identity": {"$ref": "#/$defs/file_identity"},
+        "status": {"const": "PASS"},
+        "evidence_class": {
+          "enum": [
+            "MATHEMATICAL_THEOREM_OR_DERIVATION_CHECK",
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"
+          ]
+        }
+      }
+    },
+    "final_manifest": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
+            "environment", "scientific_counters", "release_counters", "records", "record_count",
+            "all_required_lanes_completed", "bound_supported", "stage_f_execution_authorized"
+          ],
+          "properties": {
+            "schema_version": {"const": 1},
+            "record_type": {"const": "FINAL_MANIFEST"},
+            "status": {"const": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS"},
+            "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"},
+            "head_commit": {"$ref": "#/$defs/git_oid"},
+            "head_tree": {"$ref": "#/$defs/git_oid"},
+            "environment": {"$ref": "#/$defs/environment"},
+            "scientific_counters": {"$ref": "#/$defs/scientific_zero_counters"},
+            "release_counters": {"$ref": "#/$defs/release_zero_counters"},
+            "records": {
+              "type": "array",
+              "minItems": 9,
+              "maxItems": 9,
+              "uniqueItems": true,
+              "prefixItems": [
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "authority.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "schema.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "identity-continuation.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "mobius.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "dag-cache.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "adapter-guard.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "installed-isolation.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "complexity.json"}}}]},
+                {"allOf": [{"$ref": "#/$defs/manifest_entry"}, {"type": "object", "required": ["name"], "properties": {"name": {"const": "regression.json"}}}]}
+              ],
+              "items": false
+            },
+            "record_count": {"const": 9},
+            "all_required_lanes_completed": {"const": true},
+            "bound_supported": {"const": true},
+            "stage_f_execution_authorized": {"const": false}
+          }
+        }
+      ]
+    }
+  },
+  "stage_e_instance_count": 0,
+  "scientific_execution_count": 0,
+  "completion_marker": "STAGE_E_SCIENTIFIC_HARNESS_EVIDENCE_SCHEMA_COMPLETE"
+}

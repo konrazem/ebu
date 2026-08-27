@@ -1,0 +1,377 @@
+{
+  "authority_id": "EBU-STAGE-E-SCIENTIFIC-HARNESS-AUTHORITY-v1",
+  "authority_version": 1,
+  "status": "PROSPECTIVE_AUTHORITY_CANDIDATE_NO_IMPLEMENTATION_NO_EXECUTION",
+  "accepted_base": {
+    "commit": "d68bfb75fd822d2219c803fb3933ca60b54af4e0",
+    "tree": "15a128783388075978f9faa716bae1c8066361c9",
+    "live_target_ref": "refs/heads/framework-v0.1",
+    "main_at_draft_start": "660d6e5a56cb096fe6d1e4d202f592155d982c79",
+    "released_alpha_tag_object": "b140d4a31f60316cd23058305ae17f4698de86bc",
+    "released_alpha_peeled_commit": "fb9ae7b6dae14550a702e060600132faec539eca"
+  },
+  "accepted_stage_d": {
+    "scientific_validation_authority_candidate": "8936bb437426ee53556f8bcb0590215620e1065c",
+    "scientific_validation_authority_integration": "388ccb864163cddf6bd4a0a83c24f29f6535cc68",
+    "scientific_validation_durability_integration": "d000015cbf3e3238e34f961c4916626c930ba90f",
+    "continuation_authority_candidate": "ce1b52b3084b84e8c8f81bc0625a05ecd15d9331",
+    "continuation_authority_integration": "4a67a7e8bf783e40b4e302bf810d2993f9fd4eee",
+    "continuation_durability_candidate": "0bdcc9c8934ef55abfd662b69123c802ce2957f4",
+    "continuation_durability_integration": "d68bfb75fd822d2219c803fb3933ca60b54af4e0",
+    "continuation_durability_ci_run": 33121882700,
+    "continuation_durability_artifact_id": 9667559575,
+    "continuation_durability_artifact_sha256": "b3e984825c582138619b6bc6c13f44533e4894bb3a1316f226914100d73c6400",
+    "continuation_durability_manifest_sha256": "20e0f3de1563e574b7dbd4f7325d2b83b4b093b63e9bbde62cadcdb91e9a7e36",
+    "independent_disposition": "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_DURABILITY_INTEGRATION_PASS"
+  },
+  "candidate_files": [
+    "STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md",
+    "stage_e_scientific_harness_contract.json",
+    "stage_e_scientific_harness_evidence_schema.json",
+    "stage_e_scientific_harness_implementation_path_manifest.json",
+    "stage_e_scientific_harness_predecessor_manifest.json",
+    "stage_e_scientific_harness_validation_contract.json"
+  ],
+  "candidate_file_count": 6,
+  "authority_inputs": {
+    "stage_d_files": [
+      "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
+      "stage_d_scientific_validation_contract.json",
+      "stage_d_scientific_validation_evidence_schema.json",
+      "stage_d_scientific_validation_master_matrix.json",
+      "stage_d_scientific_validation_predecessor_manifest.json",
+      "stage_d_scientific_validation_validation_contract.json"
+    ],
+    "continuation_files": [
+      "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+      "stage_d_completion_oriented_continuation_contract.json",
+      "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+      "stage_d_completion_oriented_continuation_validation_contract.json"
+    ],
+    "predecessor_binding": "every input is a unique matching row in stage_e_scientific_harness_predecessor_manifest.json and remains byte-identical",
+    "alias_or_prose_substitution": "FORBIDDEN"
+  },
+  "stage_boundary": {
+    "authority_draft": {
+      "permitted": [
+        "read-only Git, CI, artifact and accepted-authority reconstruction",
+        "write and strict-parse exactly the six candidate authority files",
+        "static identity, schema-shape, count and cross-reference validation"
+      ],
+      "forbidden": [
+        "Stage E harness implementation",
+        "framework or project runner import",
+        "model step or state advance",
+        "transform or DAG algorithm execution",
+        "benchmark or performance measurement",
+        "trajectory, simulation or Gate execution",
+        "registered configuration construction",
+        "candidate outcome inspection",
+        "result, figure or book generation",
+        "scientific interpretation",
+        "release or publication action"
+      ]
+    },
+    "stage_e_after_independent_authority_pass_and_integration": {
+      "purpose": "harness implementation plus theorem/static/synthetic/numerical-conformance and preregistered outcome-blind performance verification only",
+      "scientific_campaign_execution": "FORBIDDEN",
+      "registered_study_configuration_execution": "FORBIDDEN",
+      "candidate_scientific_outcome_inspection": "FORBIDDEN"
+    },
+    "stage_f": "all registered scientific execution remains behind one explicit user authorization after complete independently accepted Stage E evidence and campaign packet",
+    "stage_g_h": "results interpretation, figures and books remain forbidden"
+  },
+  "reference_environment": {
+    "oci_manifest_digest": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+    "architecture": "linux/amd64",
+    "cpython": "3.14.4-final",
+    "cpython_executable_sha256": "353d0275b5ca0447ebfc6ecae7d80a7a7e7a627d4669fdcc3f836f0b8d804c79",
+    "sqlite_version": "3.46.1",
+    "sqlite_version_info": [3, 46, 1],
+    "sqlite_runtime_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+    "sqlite_upstream_provenance_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+    "debian_sqlite_package": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
+    "network": "OFFLINE",
+    "fallback_environment": "FORBIDDEN"
+  },
+  "framework_isolation": {
+    "framework_source_changes": "FORBIDDEN",
+    "framework_version_or_metadata_changes": "FORBIDDEN",
+    "root_export_failure_code_or_signature_changes": "FORBIDDEN",
+    "required_installed_surfaces": {
+      "package_modules": 44,
+      "root_exports": 471,
+      "failure_codes": 294,
+      "public_signatures": 162,
+      "version": "0.1.0a1"
+    },
+    "framework_artifacts": [
+      "direct wheel",
+      "sdist-derived wheel"
+    ],
+    "accepted_artifact_identities": {
+      "direct_wheel": {
+        "byte_count": 4078247,
+        "sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"
+      },
+      "sdist_derived_wheel": {
+        "byte_count": 4078247,
+        "sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"
+      },
+      "sdist": {
+        "byte_count": 4139346,
+        "sha256": "0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41"
+      }
+    },
+    "artifact_identity_or_derivation_mismatch": "REFUSE",
+    "execution_rule": "the deterministic harness zip application runs with Python isolated mode outside the repository and imports ebu_framework only from the tested site-packages origin",
+    "checkout_source_import": "REFUSE",
+    "PYTHONPATH": "FORBIDDEN",
+    "network_install": "FORBIDDEN"
+  },
+  "harness_artifact": {
+    "format": "deterministic Python zip application",
+    "source_paths": "exact stage_e_harness paths in the accepted implementation path manifest",
+    "embedded_authority": "byte-exact accepted Stage D, continuation and Stage E authority inputs plus a canonical identity index",
+    "timestamp": "1980-01-01T00:00:00Z for every zip member",
+    "member_order": "ascending UTF-8 path bytes",
+    "permissions": "0644 regular members only",
+    "compression": "ZIP_STORED",
+    "replicas": 3,
+    "replica_claim": "three perturbed builds produced by the same pinned validator must be byte-identical; this is not independent-build evidence",
+    "unknown_extra_symlink_or_unsafe_member": "REFUSE",
+    "standard_library_only": true
+  },
+  "study_registry": {
+    "ordered_study_ids": [
+      "SD-01", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07",
+      "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"
+    ],
+    "study_count": 14,
+    "first_priority": "SD-01",
+    "dependency_order_source": "stage_d_scientific_validation_master_matrix.json",
+    "within_run_checkpoint_continuation": ["SD-01", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+    "conditional_inherited_continuation": ["SD-02"],
+    "between_atomic_case_continuation_only": ["SD-03", "SD-04", "SD-05", "SD-06", "SD-07"],
+    "one_adapter_module_per_study": true,
+    "adapter_stage_e_role": "bind accepted equations/interfaces/schemas/caps and exercise only visibly synthetic non-scientific fixtures",
+    "adapter_stage_f_guard": "registered configuration execution requires an exact sealed Stage F campaign authority identity absent in Stage E",
+    "unknown_or_reordered_study": "REFUSE"
+  },
+  "stage_e_execution_guard": {
+    "guard_id": "EBU-STAGE-E-NO-SCIENCE-v1",
+    "required_absent_authority_kind": "stage_f_campaign_authorization/v1",
+    "registered_configuration_id_prefixes": ["SD-01/", "SD-02/", "SD-03/", "SD-04/", "SD-05/", "SD-06/", "SD-07/", "SD-08/", "SD-09/", "SD-10/", "SD-11/", "SD-12/", "SD-13/", "SD-14/"],
+    "pre_import_refusal": true,
+    "project_runner_module_names": [
+      "exp_v30_gate1dc", "exp_v30_o14", "exp_v30_service", "exp_v30_service_attempt2",
+      "exp_v30_adversary", "gate1dc_v30", "finalize_v30_gate1dc"
+    ],
+    "forbidden_call_classes": [
+      "model step", "state advance", "trajectory", "simulation", "Gate", "official runner", "registered transform", "registered study adapter run"
+    ],
+    "refusal_receipt_required": true,
+    "refusal_evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"
+  },
+  "schema_profile": {
+    "accepted_schema": "stage_d_scientific_validation_evidence_schema.json",
+    "accepted_continuation_schema": "stage_d_completion_oriented_continuation_evidence_schema.json",
+    "validator_scope": "the exact Draft 2020-12 keyword vocabulary actually present in the two accepted schemas plus the Stage E evidence schema",
+    "unknown_keyword": "REFUSE_VALIDATOR_BUILD",
+    "format_reliance": "FORBIDDEN unless an exact local format checker is named and tested",
+    "positive_instances": "all accepted Stage D and continuation non-evidence fixtures plus Stage E fixtures",
+    "negative_instances": "every frozen Stage D/continuation/Stage E schema negative plus mutation coverage for each supported applicator and assertion keyword",
+    "cross_record_semantics": "identity, cap-profile, role/profile, checkpoint/counter, policy-receipt and exit/disposition relations are validated in addition to schema shape",
+    "partial_or_permissive_schema_pass": "FORBIDDEN"
+  },
+  "identity_and_records": {
+    "canonical_json": "UTF-8, recursively lexicographically sorted object keys, comma/colon separators, no insignificant whitespace, UTF-8 strings without ASCII forcing, integer numbers where authority requires integers, and no final LF",
+    "hash": "SHA-256",
+    "identity_value_and_sha256_equal_digest": true,
+    "required_record_schemas": [
+      "configuration_manifest/v1", "run_manifest/v1", "checkpoint_record/v1", "continuation_checkpoint/v2",
+      "attempt_binding/v2", "process_allocation/v2", "run_resource_ledger/v2", "campaign_resource_ledger/v2",
+      "trace_row/v1", "receipt/v1", "computation_record/v1", "limit_decision/v1",
+      "equivalence_certificate/v1", "cache_event/v1", "invalidation_receipt/v1", "output_manifest/v1"
+    ],
+    "round_trip": "encode, hash, decode and validate without byte or semantic drift",
+    "unknown_missing_duplicate_nonfinite_float_or_extra_field": "REFUSE where prohibited by the controlling schema"
+  },
+  "deterministic_rng": {
+    "rule_id": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1",
+    "implementation_stage": "Stage E conformance implementation only",
+    "exact_rational_sampler": "implement the accepted rejection sampler including every rejected attempt and the terminal 1000000-attempt cap",
+    "stage_e_inputs": "frozen non-scientific vectors only; no registered trajectory draw",
+    "checkpoint_restart_equivalence": "bit- and byte-exact counter-state continuation",
+    "terminal_rejection_continuation": "FORBIDDEN",
+    "mutable_prng_or_fallback": "FORBIDDEN"
+  },
+  "checkpoint_and_continuation": {
+    "authority": "accepted Stage D completion-oriented continuation authority",
+    "immutable_campaign_and_run_identity": true,
+    "ordered_attempt_slices": true,
+    "cumulative_accounting_never_resets": true,
+    "campaign_budget_does_not_expand": true,
+    "slice_boundary_changes_scientific_meaning": "FORBIDDEN",
+    "deterministic_empty_checkpoint_fixture": "tests/stage_e/fixtures/deterministic_empty_checkpoint.json",
+    "stochastic_checkpoint_fixture": "tests/stage_e/fixtures/stochastic_checkpoint.json",
+    "required_synthetic_equivalence_slices": [1, 2, 7],
+    "required_failure_controls": [
+      "missing or duplicate ordinal", "forked checkpoint", "changed authority", "changed environment",
+      "changed algorithm", "changed numerical policy", "changed topology", "changed approximation label",
+      "counter tuple mismatch", "dummy deterministic stream", "policy receipt mismatch",
+      "nonmonotone ledger", "lost parallel delta", "post-terminal continuation", "campaign budget enlargement"
+    ]
+  },
+  "mobius_conformance": {
+    "control_id": "MOBIUS-EXACT-01",
+    "direct_oracle": "independently readable exact integer/reduced-rational subset enumeration",
+    "optimized": "in-place bitmask fast Möbius transform",
+    "shared_case_count": 488,
+    "shared_dimensions": {"minimum_n": 0, "maximum_n": 12},
+    "agreement": "bit-exact coefficients and reconstruction over all 488 cases; no tolerance",
+    "complexity_dimensions": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+    "repetitions_per_dimension": 5,
+    "complexity_cell_count": 55,
+    "declared_time": "O(n*2^n) transform arithmetic plus 2^n*C_E subset evaluation",
+    "declared_storage": "O(2^n)",
+    "exact_butterfly_count": "n*2^(n-1)",
+    "maximum_live_table_slots": "2^n",
+    "maximum_normalized_wall_time_ratio": 4,
+    "hard_maximum_n": 18,
+    "hard_maximum_subsets": 262144,
+    "mismatch_or_bound_failure": "REFUSE_OPTIMIZED_IMPLEMENTATION_AND_DEPENDENT_STAGE_F_STUDIES",
+    "universal_scalability_claim": "FORBIDDEN",
+    "silent_approximation_sampling_truncation_or_sparsification": "FORBIDDEN"
+  },
+  "dag_conformance": {
+    "control_id": "DAG-EXACT-01",
+    "direct_oracle": "explicit simple-path enumeration plus canonical projection",
+    "optimized": "canonical dense-index FIFO Kahn traversal after separately accounted canonical edge sort",
+    "valid_exact_case_count": 39467,
+    "invalid_refusal_case_count": 14,
+    "complexity_cells": [
+      {"vertices": 128, "edges": 256, "class": "sparse"},
+      {"vertices": 1024, "edges": 4096, "class": "sparse"},
+      {"vertices": 10000, "edges": 50000, "class": "sparse"},
+      {"vertices": 100000, "edges": 500000, "class": "sparse"},
+      {"vertices": 512, "edges": 130816, "class": "dense_acyclic"}
+    ],
+    "declared_traversal_time": "O(V+E)",
+    "canonicalization_bound": "E*ceil(log2(E)) comparisons and E auxiliary edge slots; not part of traversal claim",
+    "required_exact_counters": [
+      "V indegree initializations", "at most V enqueues", "at most V dequeues",
+      "at most E edge inspections", "at most V queue appends", "at most V head advances",
+      "zero ready-node comparisons"
+    ],
+    "maximum_normalized_sparse_wall_time_ratio": 8,
+    "cycle_duplicate_or_order_mismatch": "REFUSE_OPTIMIZED_TRAVERSAL_AND_DEPENDENT_STAGE_F_STUDIES",
+    "causality_claim": "FORBIDDEN"
+  },
+  "canonical_cache_conformance": {
+    "control_id": "CANONICAL-CACHE-01",
+    "complete_cache_key_field_count": 29,
+    "required_control_count": 17,
+    "runtime_cache_authorized_in_stage_e": false,
+    "cache_mode": "isolated ephemeral conformance store only",
+    "positive_equivalent_reuse": true,
+    "near_miss_incomplete_key_stale_cache_and_correction_invalidation_controls": true,
+    "correction_or_authority_change": "complete dependency and alias DAG invalidation receipt before recomputation",
+    "cache_key_omission_mutations": 29,
+    "uncertified_equivalence_or_reuse": "REFUSE"
+  },
+  "complexity_and_performance_evidence": {
+    "evidence_class": "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY",
+    "scientific_outcome_value": "NONE",
+    "clock": "monotonic nanosecond clock",
+    "memory": "process-tree peak resident memory sampled and reconciled with final operating-system accounting",
+    "operation_counts": "exact deterministic algorithm-specific counters",
+    "fresh_process_per_cell": true,
+    "warmup": "FORBIDDEN",
+    "discarded_repetition": "FORBIDDEN",
+    "execution_order": "frozen by controlling Stage D authority",
+    "record_every_repetition": true,
+    "bound_failure": "BOUND_NOT_SUPPORTED and dependent Stage F route refuses",
+    "performance_result_promotion": "FORBIDDEN"
+  },
+  "study_feasibility_projection": {
+    "required_for_all_studies": true,
+    "study_ids": [
+      "SD-01", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07",
+      "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"
+    ],
+    "inputs": [
+      "accepted mathematical operation count", "accepted exact dimensions and horizon",
+      "all matching Stage E measured operation rates", "measured serialization and hashing rates",
+      "measured peak memory", "accepted trace/output estimates", "checkpoint interval and attempt caps"
+    ],
+    "active_time_formula": "ceil(expected primary operations times the maximum observed nanoseconds per matching operation over every retained repetition) plus measured fixed serialization/checkpoint overhead for the accepted count",
+    "memory_formula": "maximum observed matching process-tree peak RSS plus exact declared table, queue, trace-buffer and schema-object storage bytes",
+    "slice_formula": "ceil(projected active time divided by the stricter of the Stage D per-attempt wall cap and the proposed watchdog slice); never enlarge a per-attempt cap",
+    "storage_formula": "accepted study estimate plus measured manifest, receipt and checkpoint overhead multiplied by the projected exact record count",
+    "classification_values": ["FEASIBLE_WITHIN_PROPOSED_CAMPAIGN", "REQUIRES_CHECKPOINTED_CONTINUATION", "MATERIAL_INFEASIBILITY_REQUIRES_SEPARATE_AUTHORITY"],
+    "scientific_disposition": "NONE",
+    "no_arbitrary_n_promise": true
+  },
+  "validation_lanes": {
+    "SE-AUTH": "static accepted-authority, predecessor, path, schema and zero-counter closure",
+    "SE-SCHEMA": "schema vocabulary, valid records, negative mutations and cross-record semantics",
+    "SE-ID-CONT": "canonical identity, RNG, checkpoint, attempt binding and cumulative-accounting conformance",
+    "SE-MOBIUS": "488 direct/optimized exact cases plus 55 frozen complexity cells",
+    "SE-DAG-CACHE": "39467 valid DAG cases, 14 refusals, five complexity cells, 17 cache controls and 29 omission mutations",
+    "SE-ADAPTER-GUARD": "14 adapter bindings, dependency order and pre-import refusal of every registered route",
+    "SE-INSTALL": "direct-wheel and sdist-wheel installed-framework isolation plus deterministic harness zipapp",
+    "SE-REGRESSION": "all existing Stage C T0/T1/T2/conventional/packaging lanes remain successful",
+    "skipped_zero_or_filtered_lane": "NOT_A_PASS"
+  },
+  "evidence_outputs": {
+    "root": "private CI artifact only during Stage E implementation validation",
+    "record_names": [
+      "authority.json", "schema.json", "identity-continuation.json", "mobius.json",
+      "dag-cache.json", "adapter-guard.json", "installed-isolation.json", "complexity.json",
+      "regression.json", "final-manifest.json"
+    ],
+    "record_count": 10,
+    "final_status": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS",
+    "all_bytes_and_hashes_sealed": true,
+    "immutable_run_head_branch_environment_binding": true,
+    "repository_output_path": "FORBIDDEN",
+    "scientific_results": 0,
+    "figures": 0,
+    "books": 0
+  },
+  "independent_audits": {
+    "authority": "required before normal private authority integration",
+    "durability": "required after the exact one-path reachability implementation and target CI",
+    "harness_implementation": "required before normal private harness integration",
+    "harness_integration": "required after exact-target CI and retained evidence",
+    "self_review_is_independent": false
+  },
+  "stage_f_packet_gate": {
+    "only_after_stage_e_integration_pass": true,
+    "one_packet_for_all_14_studies": true,
+    "required_fields": [
+      "dependency order", "exact study/configuration counts", "measured Stage E throughput",
+      "projected active time and calendar duration", "peak memory", "storage and trace bytes",
+      "checkpoint slice counts", "campaign budgets", "parallelization boundary",
+      "positive controls", "negative controls", "falsifiers",
+      "PASS meaning", "FAIL meaning", "COMPUTATIONALLY_INCONCLUSIVE meaning",
+      "no-silent-approximation rule", "immutable code/artifact/environment identities"
+    ],
+    "required_user_action": "one explicit authorization for the complete Stage F campaign",
+    "before_authorization": "no registered scientific execution"
+  },
+  "prohibited_programmes": [
+    "wave or phase-interference programme",
+    "electrical-voltage programme",
+    "any separately unaudited approximation programme"
+  ],
+  "prospective_durability_implementation": {
+    "path": "tests/framework/test_validation_reachability.py",
+    "path_count": 1,
+    "status": "FORBIDDEN_UNTIL_INDEPENDENT_STAGE_E_AUTHORITY_PASS_AND_NORMAL_AUTHORITY_INTEGRATION",
+    "required_behavior": "add exact Stage E authority and future implementation phases while preserving every historical phase, self-seal, test count/order, workflow routing, failure precedence and unknown-path refusal"
+  },
+  "completion_marker": "STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY_CANDIDATE_COMPLETE"
+}

@@ -1,0 +1,187 @@
+{
+  "manifest_id": "EBU-STAGE-E-SCIENTIFIC-HARNESS-IMPLEMENTATION-PATHS-v1",
+  "manifest_version": 1,
+  "status": "PROSPECTIVE_CLOSED_SCOPE_NO_IMPLEMENTATION",
+  "accepted_base": {
+    "commit": "d68bfb75fd822d2219c803fb3933ca60b54af4e0",
+    "tree": "15a128783388075978f9faa716bae1c8066361c9",
+    "live_target_ref": "refs/heads/framework-v0.1"
+  },
+  "authority_paths": [
+    "STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md",
+    "stage_e_scientific_harness_contract.json",
+    "stage_e_scientific_harness_evidence_schema.json",
+    "stage_e_scientific_harness_implementation_path_manifest.json",
+    "stage_e_scientific_harness_predecessor_manifest.json",
+    "stage_e_scientific_harness_validation_contract.json"
+  ],
+  "authority_path_count": 6,
+  "prospective_durability": {
+    "modified_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "modified_path_count": 1,
+    "new_paths": [],
+    "new_path_count": 0,
+    "required_phase": "STAGE_E_HARNESS_AUTHORITY_ONLY",
+    "implementation_delta_rule": "after normal authority integration the durability candidate changes exactly the one listed path and no other path"
+  },
+  "prospective_harness_implementation": {
+    "modified_paths": [
+      ".github/workflows/tests.yml"
+    ],
+    "modified_path_count": 1,
+    "new_paths": [
+      "scripts/build_stage_e_harness_zipapp.py",
+      "scripts/validate_stage_e_harness.py",
+      "stage_e_harness/__init__.py",
+      "stage_e_harness/__main__.py",
+      "stage_e_harness/accounting.py",
+      "stage_e_harness/cache.py",
+      "stage_e_harness/canonical.py",
+      "stage_e_harness/checkpoint.py",
+      "stage_e_harness/dag.py",
+      "stage_e_harness/environment.py",
+      "stage_e_harness/execution.py",
+      "stage_e_harness/mobius.py",
+      "stage_e_harness/oracles.py",
+      "stage_e_harness/records.py",
+      "stage_e_harness/registry.py",
+      "stage_e_harness/rng.py",
+      "stage_e_harness/schema.py",
+      "stage_e_harness/adapters/__init__.py",
+      "stage_e_harness/adapters/base.py",
+      "stage_e_harness/adapters/sd01.py",
+      "stage_e_harness/adapters/sd02.py",
+      "stage_e_harness/adapters/sd03.py",
+      "stage_e_harness/adapters/sd04.py",
+      "stage_e_harness/adapters/sd05.py",
+      "stage_e_harness/adapters/sd06.py",
+      "stage_e_harness/adapters/sd07.py",
+      "stage_e_harness/adapters/sd08.py",
+      "stage_e_harness/adapters/sd09.py",
+      "stage_e_harness/adapters/sd10.py",
+      "stage_e_harness/adapters/sd11.py",
+      "stage_e_harness/adapters/sd12.py",
+      "stage_e_harness/adapters/sd13.py",
+      "stage_e_harness/adapters/sd14.py",
+      "tests/stage_e/__init__.py",
+      "tests/stage_e/fixtures/deterministic_empty_checkpoint.json",
+      "tests/stage_e/fixtures/schema_negative_cases.json",
+      "tests/stage_e/fixtures/stochastic_checkpoint.json",
+      "tests/stage_e/test_adapters_and_guards.py",
+      "tests/stage_e/test_authority_bindings.py",
+      "tests/stage_e/test_complexity_evidence.py",
+      "tests/stage_e/test_dag_cache.py",
+      "tests/stage_e/test_environment_isolation.py",
+      "tests/stage_e/test_identity_rng_checkpoint.py",
+      "tests/stage_e/test_mobius_oracles.py",
+      "tests/stage_e/test_schema_records.py"
+    ],
+    "new_path_count": 45,
+    "total_path_count": 46
+  },
+  "path_groups": {
+    "workflow": [
+      ".github/workflows/tests.yml"
+    ],
+    "build_and_validation_scripts": [
+      "scripts/build_stage_e_harness_zipapp.py",
+      "scripts/validate_stage_e_harness.py"
+    ],
+    "harness_core": [
+      "stage_e_harness/__init__.py",
+      "stage_e_harness/__main__.py",
+      "stage_e_harness/accounting.py",
+      "stage_e_harness/cache.py",
+      "stage_e_harness/canonical.py",
+      "stage_e_harness/checkpoint.py",
+      "stage_e_harness/dag.py",
+      "stage_e_harness/environment.py",
+      "stage_e_harness/execution.py",
+      "stage_e_harness/mobius.py",
+      "stage_e_harness/oracles.py",
+      "stage_e_harness/records.py",
+      "stage_e_harness/registry.py",
+      "stage_e_harness/rng.py",
+      "stage_e_harness/schema.py"
+    ],
+    "study_adapters": [
+      "stage_e_harness/adapters/__init__.py",
+      "stage_e_harness/adapters/base.py",
+      "stage_e_harness/adapters/sd01.py",
+      "stage_e_harness/adapters/sd02.py",
+      "stage_e_harness/adapters/sd03.py",
+      "stage_e_harness/adapters/sd04.py",
+      "stage_e_harness/adapters/sd05.py",
+      "stage_e_harness/adapters/sd06.py",
+      "stage_e_harness/adapters/sd07.py",
+      "stage_e_harness/adapters/sd08.py",
+      "stage_e_harness/adapters/sd09.py",
+      "stage_e_harness/adapters/sd10.py",
+      "stage_e_harness/adapters/sd11.py",
+      "stage_e_harness/adapters/sd12.py",
+      "stage_e_harness/adapters/sd13.py",
+      "stage_e_harness/adapters/sd14.py"
+    ],
+    "tests_and_non_evidence_fixtures": [
+      "tests/stage_e/__init__.py",
+      "tests/stage_e/fixtures/deterministic_empty_checkpoint.json",
+      "tests/stage_e/fixtures/schema_negative_cases.json",
+      "tests/stage_e/fixtures/stochastic_checkpoint.json",
+      "tests/stage_e/test_adapters_and_guards.py",
+      "tests/stage_e/test_authority_bindings.py",
+      "tests/stage_e/test_complexity_evidence.py",
+      "tests/stage_e/test_dag_cache.py",
+      "tests/stage_e/test_environment_isolation.py",
+      "tests/stage_e/test_identity_rng_checkpoint.py",
+      "tests/stage_e/test_mobius_oracles.py",
+      "tests/stage_e/test_schema_records.py"
+    ]
+  },
+  "path_rules": {
+    ".github/workflows/tests.yml": "add only the exact offline Stage E authority, harness-conformance, oracle, complexity, continuation, adapter-guard, installed-isolation and evidence-retention lanes; preserve every existing Stage C/T0/T1/T2/conventional job and failure behavior",
+    "scripts/build_stage_e_harness_zipapp.py": "build one deterministic standard-library-only harness zip application from the closed harness source set and embedded accepted authority bytes; do not import or execute project scientific code",
+    "scripts/validate_stage_e_harness.py": "orchestrate only accepted Stage E theorem/static/synthetic/numerical-conformance/performance lanes, enforce installed-framework isolation, emit sealed non-scientific evidence, and refuse every registered-study execution route",
+    "stage_e_harness": "standard-library-only harness code; no mutable dependency, network access, source-checkout framework import, scientific result, outcome interpretation or hidden fallback",
+    "stage_e_harness/adapters": "one explicit adapter per SD-01..SD-14 plus a common protocol; structural binding and non-scientific fixture evaluation only in Stage E; registered configurations require the sealed Stage F campaign authorization token and otherwise refuse before model invocation",
+    "tests/stage_e": "exact theorem/static/synthetic/numerical-conformance/performance and fail-closed tests only; fixtures are visibly NON_SCIENTIFIC_SYNTHETIC_FIXTURE and cannot be promoted to a scientific result"
+  },
+  "protected_paths": {
+    "exact_prefixes": [
+      "src/ebu_framework/",
+      "results/",
+      "figures/"
+    ],
+    "exact_paths": [
+      "AGENTS.md",
+      "LICENSE",
+      "LICENSE-UNICODE",
+      "CITATION.cff",
+      "README.md",
+      "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "build_backend/ebu_build_backend.py",
+      "pyproject.toml",
+      "requirements-framework.lock",
+      "requirements.txt",
+      "scripts/validate_stage_c_release_candidate.py",
+      "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
+      "stage_d_scientific_validation_contract.json",
+      "stage_d_scientific_validation_evidence_schema.json",
+      "stage_d_scientific_validation_master_matrix.json",
+      "stage_d_scientific_validation_predecessor_manifest.json",
+      "stage_d_scientific_validation_validation_contract.json",
+      "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+      "stage_d_completion_oriented_continuation_contract.json",
+      "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+      "stage_d_completion_oriented_continuation_validation_contract.json"
+    ],
+    "rule": "every protected path remains byte-identical to the accepted base; no prefix member may be added, deleted, renamed, mode-changed or modified"
+  },
+  "unknown_path_disposition": "REFUSE_STAGE_E_IMPLEMENTATION",
+  "scope_derived_exclusion": "FORBIDDEN",
+  "force_push_or_history_rewrite": "FORBIDDEN",
+  "completion_marker": "STAGE_E_SCIENTIFIC_HARNESS_IMPLEMENTATION_PATH_MANIFEST_COMPLETE"
+}
