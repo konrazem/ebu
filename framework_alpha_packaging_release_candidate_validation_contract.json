@@ -8,7 +8,16 @@
     "normative_markdown": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
     "mechanical_contract": "framework_alpha_packaging_release_candidate_contract.json",
     "predecessor_manifest": "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
-    "implementation_path_manifest": "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+    "implementation_path_manifest": "framework_alpha_packaging_release_candidate_implementation_path_manifest.json",
+    "accepted_stage_c_authority_candidate_commit": "97daec0c3982db546769a9d268332c9b7353daa8",
+    "accepted_stage_c_authority_candidate_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+    "accepted_stage_c_authority_integration_commit": "f88496cfb2cce563db25a259e3ac9a6d1e22268f",
+    "accepted_stage_c_authority_integration_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+    "runtime_authority_correction_ci_runs": [
+      33030540700,
+      33030733344
+    ],
+    "runtime_authority_correction_ci_disposition": "FAIL_CLOSED_BEFORE_BUILD_OR_TEST_NOT_A_PASS"
   },
   "global_acceptance": {
     "positive_discovered_count": true,
@@ -246,7 +255,7 @@
     {
       "id": "SC14_STABLE_RUNTIME",
       "class": "INERT_T1",
-      "accept": "The exact immutable image, CPython 3.14.4 final, linux/amd64, sqlite3.sqlite_version 3.46.1, matching sqlite3.sqlite_version_info and official 2024-08-13 SQLite source identities pass; removed sqlite3.version/version_info attributes are not required; ubuntu-26.04 is absent from executable gates."
+      "accept": "The exact immutable image, CPython 3.14.4 final, linux/amd64, sqlite3.sqlite_version 3.46.1, matching sqlite3.sqlite_version_info, pinned runtime sqlite_source_id() 2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1 and Debian package libsqlite3-0:amd64=3.46.1-7+deb13u1 pass; upstream SQLite 3.46.1 source ID 2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33 is recorded only as provenance and is never compared as the runtime gate; removed sqlite3.version/version_info attributes are not required; ubuntu-26.04 is absent from executable gates."
     },
     {
       "id": "SC15_TEST_COMPATIBILITY_SCOPE",
@@ -435,7 +444,7 @@
       "source and package inventory",
       "build-input manifest",
       "frontend and dependency wheelhouse identities",
-      "runtime and SQLite identities",
+      "runtime image, SQLite upstream provenance reference, exact pinned SQLite runtime source ID and exact Debian package identity",
       "exact sanitized environments and argv",
       "stdout stderr and exit status",
       "per-relation positive check counts",
