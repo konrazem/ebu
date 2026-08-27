@@ -94,6 +94,23 @@ runner, call a transition, model step, trajectory, Gate, experiment,
 simulation, optimizer, benchmark, result writer, renderer, or book generator.
 All execution and outcome counters are exactly zero.
 
+The current accepted reachability test recognizes only the exact Stage C
+authority and completed-implementation phases. Therefore the six-file
+authority-only candidate is expected to refuse in its current-head durability
+lane; that refusal is not a scientific or authority-content failure and is
+not a pass. After an independent authority PASS, one separately audited Stage
+D durability implementation may modify only
+`tests/framework/test_validation_reachability.py`. It must add one literal
+`STAGE_D_AUTHORITY_ONLY` phase equal to the complete Stage C implementation
+scope plus exactly these six new files; statically validate the accepted
+Stage D identities and contracts; preserve every historical I-9 and Stage C
+phase, test name/order/count, workflow route, failure precedence, and
+non-Stage-D assertion; recompute its self-seal; and refuse a seventh authority
+file, a second implementation path, a dynamic/scope-derived exclusion, or any
+unknown path. The authority-only candidate must not be integrated into the
+target before that descendant implementation passes CI and a new independent
+audit.
+
 ### 3.2 Stage E — future harness only after independent PASS and integration
 
 Only a later separately authorized Stage E may implement accepted protocols,
@@ -452,7 +469,8 @@ never be reported as the exact study's disposition.
 ## 16. Independent audits and stop conditions
 
 Before Stage E, an independent auditor must reproduce exact base/release/source
-identities, strict JSON and text integrity, six-path scope, matrix order and
+identities, strict JSON and text integrity, six-path authority-candidate scope,
+the single prospective durability implementation path, matrix order and
 field closure, every cost/limit rule, all 488 Möbius agreement cases as
 prospective declarations only, DAG control closure, cache-key closure,
 schema/ref integrity, exclusions, and zero execution/output state.
@@ -464,14 +482,18 @@ oracle agreement, incomplete cache key, dynamic approximation fallback,
 performance/result value in Stage D, executable Gate 1E configuration,
 scientific code/result/figure/book path, or any model-state advance.
 
-After independent PASS, only normal non-force integration of the exact
-authority candidate may be proposed. Stage E remains separately authorized.
+After independent authority PASS, only the exact prospective reachability
+implementation may begin. It requires successful applicable CI and a new
+independent implementation PASS before normal non-force target integration.
+Stage E remains separately authorized.
 
 ## 17. Completion marker
 
 This candidate is complete for independent Stage D authority audit only when
 all six files strictly validate, the worktree is clean at one immutable commit,
 the feature ref matches that commit, and the audit handoff records exact raw
-and canonical identities. It authorizes no implementation or execution.
+and canonical identities. An independent PASS authorizes only the narrow
+prospective durability implementation described above; it authorizes no
+scientific harness or execution.
 
 `STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY_CANDIDATE_COMPLETE`

@@ -23,6 +23,29 @@
     "stage_d_scientific_validation_predecessor_manifest.json",
     "stage_d_scientific_validation_validation_contract.json"
   ],
+  "prospective_durability_implementation": {
+    "status": "FORBIDDEN_UNTIL_INDEPENDENT_STAGE_D_AUTHORITY_PASS",
+    "modified_path_count": 1,
+    "modified_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "new_path_count": 0,
+    "authority_plus_implementation_unique_path_count": 7,
+    "required_new_phase": "STAGE_D_AUTHORITY_ONLY",
+    "phase_scope": "complete exact Stage C implementation scope plus the six literal Stage D authority candidate files",
+    "required_behavior": [
+      "preserve every historical I-9 and Stage C phase",
+      "preserve test names, order, count, workflow routing, failure precedence, and every non-Stage-D assertion",
+      "strictly parse and validate exact accepted Stage D authority identities and mechanical closure",
+      "recompute the reachability test self-seal",
+      "refuse a seventh authority file",
+      "refuse a second implementation path",
+      "refuse dynamic or scope-derived exclusions",
+      "refuse every unknown path"
+    ],
+    "target_integration_gate": "successful applicable CI plus independent Stage D durability implementation PASS",
+    "scientific_harness_or_execution": "FORBIDDEN"
+  },
   "stage_boundary": {
     "stage_d": {
       "purpose": "prospective authority, registration design, and static integrity only",

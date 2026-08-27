@@ -13,6 +13,11 @@
     "stage_d_scientific_validation_predecessor_manifest.json",
     "stage_d_scientific_validation_validation_contract.json"
   ],
+  "prospective_durability_implementation_path_count": 1,
+  "prospective_durability_implementation_paths": [
+    "tests/framework/test_validation_reachability.py"
+  ],
+  "authority_plus_implementation_unique_path_count": 7,
   "path_rule": {
     "allowed_change": "six new mode-100644 regular files only",
     "modified_predecessor_path_count": 0,
@@ -50,7 +55,7 @@
     "positive_check_count": 80,
     "check_group_count": 9,
     "negative_case_count": 24,
-    "predecessor_source_count": 38,
+    "predecessor_source_count": 39,
     "study_count": 14,
     "evidence_level_count": 7,
     "mandatory_user_control_count": 10,
@@ -108,8 +113,8 @@
         "SDV-006 Stage C sealed run, artifact, digest, wheel, and sdist identities match",
         "SDV-007 candidate diff contains exactly the six candidate paths",
         "SDV-008 every candidate path is a new mode-100644 regular file",
-        "SDV-009 no predecessor file is modified, deleted, renamed, or mode-changed",
-        "SDV-010 no protected prefix or unknown path changes"
+        "SDV-009 no predecessor file is modified, deleted, renamed, or mode-changed in the six-file authority candidate",
+        "SDV-010 after authority PASS only tests/framework/test_validation_reachability.py may change, producing exactly seven authority-plus-implementation paths and refusing every other protected or unknown path"
       ]
     },
     {
@@ -130,10 +135,10 @@
       "group_id": "PREDECESSOR_AUTHORITY",
       "expected_count": 6,
       "checks": [
-        "SDV-019 predecessor source_count is exactly 38 and paths are unique",
+        "SDV-019 predecessor source_count is exactly 39 and paths are unique",
         "SDV-020 every predecessor row matches accepted-base mode and Git object",
         "SDV-021 every predecessor row matches accepted-base byte count and raw SHA-256",
-        "SDV-022 AGENTS, framework, books, conservation, atomic, interaction, canonical, CLCD, Gate, and Stage C authorities are all represented",
+        "SDV-022 AGENTS, framework, books, conservation, atomic, interaction, canonical, CLCD, Gate, Stage C, and current reachability-test authorities are all represented",
         "SDV-023 Gate 1D-C protocol and plan exact identities are present",
         "SDV-024 no absent Gate 1E protocol identity is invented"
       ]
@@ -239,7 +244,7 @@
     },
     {
       "id": "SDV-N02",
-      "mutation": "modify a predecessor or protected source/test/result/book path",
+      "mutation": "modify a predecessor or protected source/test/result/book path in the authority candidate, or any implementation path other than the literal reachability test after PASS",
       "required_disposition": "REFUSE_SCOPE"
     },
     {
@@ -359,6 +364,7 @@
     "worktree",
     "branch and remote ref",
     "exact six-path scope",
+    "single prospective durability implementation path and exact seven-path closure",
     "raw and canonical identities",
     "authority and predecessor locks",
     "static validation command and result",
@@ -371,6 +377,6 @@
     "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY_PASS",
     "FAIL"
   ],
-  "pass_authorization_boundary": "A PASS may authorize only normal non-force integration of the exact authority candidate after a fresh live-target equality check. Stage E remains separately authorized; no scientific execution is authorized.",
+  "pass_authorization_boundary": "An authority PASS may authorize only the exact one-path reachability durability implementation on a descendant candidate. Successful applicable CI and a new independent implementation PASS are required before normal non-force target integration. Stage E remains separately authorized; no scientific execution is authorized.",
   "completion_marker": "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY_CANDIDATE_COMPLETE"
 }

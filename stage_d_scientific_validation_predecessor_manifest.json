@@ -36,7 +36,7 @@
     },
     "scientific_execution_count": 0
   },
-  "source_count": 38,
+  "source_count": 39,
   "source_rows": [
     {
       "path": "AGENTS.md",
@@ -303,6 +303,13 @@
       "git_object": "d1f2ad5724338b60f85c5d3d77407b4c20802497",
       "byte_count": 29301,
       "sha256": "600adb2c4340d9b9584298700276f1f6c277949e9f72b5764575c66e05bc2773"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_object": "855f0dcf4350a6e1f1bd13bbf1327963f702043e",
+      "byte_count": 104071,
+      "sha256": "58944727109a80feb9155d1663d2b4b228ad2cc4f85a9bfa84e844acef500922"
     }
   ],
   "comparison_rule": "Every row must exist at the accepted base with exact mode, Git object, byte count, and raw SHA-256. Any mismatch refuses the authority candidate.",
