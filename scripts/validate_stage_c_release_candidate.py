@@ -27,11 +27,11 @@ import zlib
 
 
 AUTHORITY_HASHES = {
-    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "a138ef06db31f8922caf7e2509696e143163f17922873e76be5b9586325c8d7a",
-    "framework_alpha_packaging_release_candidate_contract.json": "2e33d9e7066a2b486ca63bb9a03637d2ea8c8b0a57fd71c8ec4e57af56400ea9",
+    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "567fa4b8f75cd791856bbc9ce7dcad540d0aeb290e7e14311cfd25c08518e702",
+    "framework_alpha_packaging_release_candidate_contract.json": "6ddd601013d86d7e14f77823c48c9c022becaef3c0f158cef05632f44a2a34c3",
     "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "f24c704f6ce72201b6b8d339183aa7511be540d0d1500f2a38878fd9c29983fe",
     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-    "framework_alpha_packaging_release_candidate_validation_contract.json": "5dd9c345bdbbc28bd54ab6d53a5c3246378bed6875e7af7f002dbb775a95486e",
+    "framework_alpha_packaging_release_candidate_validation_contract.json": "58bb97e83231d272a5d09fc92ecefa9d95ef3fa534b54d260964215f752729a0",
 }
 FRONTEND_WHEELS = {
     "build-1.5.0-py3-none-any.whl": (26018, "13f3eecb844759ab66efec90ca17639bbf14dc06cb2fdf37a9010322d9c50a6f"),
@@ -74,7 +74,9 @@ CONVENTIONAL_COUNTS = {
     "test_v30_gate1dc.py": 456,
 }
 IMAGE_DIGEST = "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"
-SQLITE_SOURCE_ID = "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33"
+SQLITE_UPSTREAM_SOURCE_ID_REFERENCE = "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33"
+SQLITE_RUNTIME_SOURCE_ID_REQUIRED = "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1"
+DEBIAN_SQLITE_PACKAGE_REQUIRED = "libsqlite3-0:amd64=3.46.1-7+deb13u1"
 WHEEL_NAME = "ebu_framework-0.1.0a1-cp314-none-any.whl"
 SDIST_NAME = "ebu_framework-0.1.0a1.tar.gz"
 SDIST_ROOT = "ebu_framework-0.1.0a1"
@@ -365,18 +367,18 @@ def _static_authority(args: argparse.Namespace) -> int:
 def _verify_runtime() -> dict[str, object]:
     source_id = sqlite3.connect(":memory:").execute("SELECT sqlite_source_id()").fetchone()[0]
     dpkg_query = Path("/usr/bin/dpkg-query")
-    debian_sqlite_package = None
-    if dpkg_query.is_file():
-        queried = subprocess.run(
-            [str(dpkg_query), "-W", "-f=${binary:Package}=${Version}\\n", "libsqlite3-0"],
-            check=False,
-            capture_output=True,
-            text=True,
-            env={"LANG": "C.UTF-8", "LC_ALL": "C.UTF-8", "PATH": "/usr/bin:/bin"},
-        )
-        if queried.returncode != 0 or not queried.stdout.strip():
-            raise Refusal(f"Debian SQLite package query failed: {queried.stderr.strip()}")
-        debian_sqlite_package = queried.stdout.strip()
+    if not dpkg_query.is_file():
+        raise Refusal("Debian SQLite package query is unavailable")
+    queried = subprocess.run(
+        [str(dpkg_query), "-W", "-f=${binary:Package}=${Version}\\n", "libsqlite3-0"],
+        check=False,
+        capture_output=True,
+        text=True,
+        env={"LANG": "C.UTF-8", "LC_ALL": "C.UTF-8", "PATH": "/usr/bin:/bin"},
+    )
+    if queried.returncode != 0 or not queried.stdout.strip():
+        raise Refusal(f"Debian SQLite package query failed: {queried.stderr.strip()}")
+    debian_sqlite_package = queried.stdout.strip()
     observed = {
         "image_digest": os.environ.get("EBU_STAGE_C_IMAGE_DIGEST"),
         "platform_system": platform.system(),
@@ -390,7 +392,10 @@ def _verify_runtime() -> dict[str, object]:
         "sqlite_version": sqlite3.sqlite_version,
         "sqlite_version_info": tuple(sqlite3.sqlite_version_info),
         "sqlite_source_id": source_id,
+        "sqlite_upstream_source_id_reference": SQLITE_UPSTREAM_SOURCE_ID_REFERENCE,
+        "sqlite_runtime_source_id_required": SQLITE_RUNTIME_SOURCE_ID_REQUIRED,
         "debian_libsqlite3_0": debian_sqlite_package,
+        "debian_libsqlite3_0_required": DEBIAN_SQLITE_PACKAGE_REQUIRED,
         "os_release": Path("/etc/os-release").read_text("utf-8") if Path("/etc/os-release").is_file() else None,
     }
     if observed["image_digest"] != IMAGE_DIGEST:
@@ -406,10 +411,17 @@ def _verify_runtime() -> dict[str, object]:
             f"SQLite runtime is not exactly 3.46.1: "
             f"{sqlite3.sqlite_version!r} {tuple(sqlite3.sqlite_version_info)!r}"
         )
-    if source_id != SQLITE_SOURCE_ID:
+    if source_id != SQLITE_RUNTIME_SOURCE_ID_REQUIRED:
         raise Refusal(
             f"SQLite source identity mismatch: observed={source_id!r}; "
-            f"required={SQLITE_SOURCE_ID!r}; Debian={debian_sqlite_package!r}"
+            f"required_runtime={SQLITE_RUNTIME_SOURCE_ID_REQUIRED!r}; "
+            f"upstream_provenance={SQLITE_UPSTREAM_SOURCE_ID_REFERENCE!r}; "
+            f"Debian={debian_sqlite_package!r}"
+        )
+    if debian_sqlite_package != DEBIAN_SQLITE_PACKAGE_REQUIRED:
+        raise Refusal(
+            f"Debian SQLite package mismatch: observed={debian_sqlite_package!r}; "
+            f"required={DEBIAN_SQLITE_PACKAGE_REQUIRED!r}"
         )
     return observed
 

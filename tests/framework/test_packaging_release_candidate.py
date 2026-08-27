@@ -375,11 +375,25 @@ class StageCPackagingTests(unittest.TestCase):
             if isinstance(node, ast.Assign)
             and len(node.targets) == 1
             and isinstance(node.targets[0], ast.Name)
-            and node.targets[0].id in {"CONVENTIONAL_WHEELS", "CONVENTIONAL_COUNTS"}
+            and node.targets[0].id in {
+                "AUTHORITY_HASHES",
+                "CONVENTIONAL_WHEELS",
+                "CONVENTIONAL_COUNTS",
+                "SQLITE_UPSTREAM_SOURCE_ID_REFERENCE",
+                "SQLITE_RUNTIME_SOURCE_ID_REQUIRED",
+                "DEBIAN_SQLITE_PACKAGE_REQUIRED",
+            }
         }
         self.assertEqual(
             assignments,
             {
+                "AUTHORITY_HASHES": {
+                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "567fa4b8f75cd791856bbc9ce7dcad540d0aeb290e7e14311cfd25c08518e702",
+                    "framework_alpha_packaging_release_candidate_contract.json": "6ddd601013d86d7e14f77823c48c9c022becaef3c0f158cef05632f44a2a34c3",
+                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "f24c704f6ce72201b6b8d339183aa7511be540d0d1500f2a38878fd9c29983fe",
+                    "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
+                    "framework_alpha_packaging_release_candidate_validation_contract.json": "58bb97e83231d272a5d09fc92ecefa9d95ef3fa534b54d260964215f752729a0",
+                },
                 "CONVENTIONAL_WHEELS": {
                     "charset_normalizer-3.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl": (251240, "15f024313246a4ed976c60f440bb8d257815513a681d212ff74fd46f7d715a90"),
                     "contourpy-1.3.3-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl": (363819, "f64836de09927cba6f79dcd00fdd7d5329f3fccc633468507079c829ca4db4e3"),
@@ -414,6 +428,64 @@ class StageCPackagingTests(unittest.TestCase):
                     "test_v30_service.py": 304,
                     "test_v30_gate1dc.py": 456,
                 },
+                "SQLITE_UPSTREAM_SOURCE_ID_REFERENCE": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+                "SQLITE_RUNTIME_SOURCE_ID_REQUIRED": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+                "DEBIAN_SQLITE_PACKAGE_REQUIRED": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
+            },
+        )
+        verify_runtime = next(
+            node
+            for node in validator_tree.body
+            if isinstance(node, ast.FunctionDef) and node.name == "_verify_runtime"
+        )
+        runtime_comparisons = {
+            ast.unparse(node)
+            for node in ast.walk(verify_runtime)
+            if isinstance(node, ast.Compare)
+        }
+        self.assertIn(
+            "source_id != SQLITE_RUNTIME_SOURCE_ID_REQUIRED", runtime_comparisons
+        )
+        self.assertIn(
+            "debian_sqlite_package != DEBIAN_SQLITE_PACKAGE_REQUIRED",
+            runtime_comparisons,
+        )
+        self.assertFalse(
+            any(
+                "SQLITE_UPSTREAM_SOURCE_ID_REFERENCE" in comparison
+                for comparison in runtime_comparisons
+            )
+        )
+        observed_assignment = next(
+            node
+            for node in verify_runtime.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Name) and target.id == "observed"
+                for target in node.targets
+            )
+        )
+        self.assertIsInstance(observed_assignment.value, ast.Dict)
+        observed_entries = {
+            ast.literal_eval(key): ast.unparse(value)
+            for key, value in zip(
+                observed_assignment.value.keys, observed_assignment.value.values
+            )
+            if key is not None
+        }
+        self.assertEqual(
+            {
+                key: observed_entries[key]
+                for key in (
+                    "sqlite_upstream_source_id_reference",
+                    "sqlite_runtime_source_id_required",
+                    "debian_libsqlite3_0_required",
+                )
+            },
+            {
+                "sqlite_upstream_source_id_reference": "SQLITE_UPSTREAM_SOURCE_ID_REFERENCE",
+                "sqlite_runtime_source_id_required": "SQLITE_RUNTIME_SOURCE_ID_REQUIRED",
+                "debian_libsqlite3_0_required": "DEBIAN_SQLITE_PACKAGE_REQUIRED",
             },
         )
 
