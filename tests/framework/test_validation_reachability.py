@@ -325,7 +325,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "5161befb11a093ee9011b06dd51ed9b707df441264f9e158f7fe13b95b3a3a00"
+TEST_SELF_SEAL = "095b5ba6897059005b3cdc45cffcc9370d2ac29bfd628277f616ad57ce47296b"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1750,8 +1750,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             contract["accepted_stage_d_authority"]["files_preserved_byte_for_byte"]
         )
         self.assertEqual(preserved_stage_d_paths, STAGE_D_AUTHORITY_PATHS)
+        base_archive = _archive_members(STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT)
         for path in STAGE_D_AUTHORITY_PATHS:
-            base_raw = _git("show", f"{STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT}:{path}")
+            _, base_raw = _object_row(path, base_entries, base_archive)
             self.assertEqual(base_raw, (ROOT / path).read_bytes(), path)
             self.assertEqual(_sha256(base_raw), STAGE_D_AUTHORITY_RAW_SHA256[path], path)
 
@@ -1759,7 +1760,6 @@ class ValidationReachabilityTests(unittest.TestCase):
         source_rows = predecessor["source_rows"]
         self.assertEqual(len(source_rows), 9)
         self.assertEqual(len({row["path"] for row in source_rows}), 9)
-        base_archive = _archive_members(STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT)
         for row in source_rows:
             reconstructed, base_raw = _object_row(
                 row["path"], base_entries, base_archive
