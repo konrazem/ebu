@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PROSPECTIVE_UNAUDITED_AUTHORITY_CANDIDATE",
+  "authority_stage": "STAGE_C_ALPHA_PACKAGING_RELEASE_CANDIDATE",
+  "repository": {
+    "local_path": "/Users/konrad.grzyb/code/ebu",
+    "github_repository": "konrazem/ebu",
+    "required_predecessor_commit": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "required_predecessor_tree": "e5d1fc2746253d73474b60c86c145293fb8ee1ef",
+    "package_source_tree": "4de85ed2935d1c35bdcc0f1259f0acb2df569fdd",
+    "verified_live_utc": "2026-08-26T23:21:34Z",
+    "verified_live_framework_v0_1": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "verified_live_main": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
+    "stale_local_framework_v0_1": "4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e"
+  },
+  "accepted_ci": {
+    "run_id": 33020110257,
+    "url": "https://github.com/konrazem/ebu/actions/runs/33020110257",
+    "head_sha": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "conclusion": "success",
+    "completed_counts": {
+      "T0_HISTORICAL": 109,
+      "T0_I9_REACHABILITY": 3,
+      "T0_CLCD_CURRENT_HEAD": 3,
+      "T1_HISTORICAL": 299
+    },
+    "t2": "SKIPPED_NOT_A_PASS"
+  },
+  "controlling_paths": [
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "git_object": "8610e8f07c3f462d6a4a6e2b4b677f56ffd89ae5",
+      "byte_count": 1853,
+      "raw_sha256": "b23e3e26c336fe2db258e735f20e60e291d7f22cf9ee9d5e623d69ba141c002b"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/SKILL.md",
+      "mode": "100644",
+      "git_object": "b978bee8560f39d5e4aeb2f56461f7cfdab669ee",
+      "byte_count": 2977,
+      "raw_sha256": "81ab31ce62d58f9058a38aafd511c8f98d7e1142640967bbd3daccd1068e810c"
+    },
+    {
+      "path": ".agents/skills/ebu-framework/references/profiles.md",
+      "mode": "100644",
+      "git_object": "2aa798bb71f83d0fbc3ac5ba5542326c55e4676b",
+      "byte_count": 9791,
+      "raw_sha256": "ab8e68b4c53630a9fe25367c8e40f0e51a17030e1428aaf38f0fafcda0eb8a5f"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "7860e79bd5606fc0a923ecde3c89a03cf9cd0f53",
+      "byte_count": 45775,
+      "raw_sha256": "a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448"
+    },
+    {
+      "path": "unified_python_research_framework_packaging_contract.json",
+      "mode": "100644",
+      "git_object": "32b1b2cc21023e2ff35171824968af548f0f7be3",
+      "byte_count": 54712,
+      "raw_sha256": "edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "1ec473016fbe5d087996d79a49cc4cf04481ad19",
+      "byte_count": 37767,
+      "raw_sha256": "9414005a6f6fcfc9868c5094c350b43172c28d8510cac390a89c5c3c95b75365"
+    },
+    {
+      "path": "unified_python_research_framework_i4_contract.json",
+      "mode": "100644",
+      "git_object": "10ab1c5a1d643b479b9491d02243220c9aba68cd",
+      "byte_count": 86797,
+      "raw_sha256": "dcd26f45dd33086acb29bc76710d3a9215a5d3b04878c54f9ec52a5970a6574d"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I4_UQ25_DEPENDENCY_DECISION.md",
+      "mode": "100644",
+      "git_object": "0c78cc5467867abe65959cc4cb69ae1972be69c2",
+      "byte_count": 11721,
+      "raw_sha256": "863f0179da8db043ad98f5025cd99a0e09ccf5914f287ff2b45fcfb1730d372f"
+    },
+    {
+      "path": "unified_python_research_framework_i4_uq25_dependency_contract.json",
+      "mode": "100644",
+      "git_object": "cbeffd2b65e7e95cb0d7c4e5d051257cc24cb495",
+      "byte_count": 32485,
+      "raw_sha256": "55b9a146927e0c37488dbf8489fc3d3d9afc05e8fc52bd7c402189fd5d598338"
+    },
+    {
+      "path": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+      "mode": "100644",
+      "git_object": "088ff2c9e418993191127a11959bcd8f43919400",
+      "byte_count": 11038,
+      "raw_sha256": "970e3f6813824a1c4ecb75e414b89285355dc31402c97a22d1c5cf9111698e27"
+    },
+    {
+      "path": "closed_loop_correction_diagnostics_contract.json",
+      "mode": "100644",
+      "git_object": "c4dcaa888c108428dc8f870565e0219a4f93e691",
+      "byte_count": 12240,
+      "raw_sha256": "66aec06cc15bb4d67cc16bc216187f824d8c5da6ad5d48cd3bb562b5f78eeddc"
+    },
+    {
+      "path": "post_i9_ci_durability_correction_contract.json",
+      "mode": "100644",
+      "git_object": "b46bfe4f4334e59b8e7b3336e65519e3599a6232",
+      "byte_count": 65444,
+      "raw_sha256": "da65c29ba4cbab79d811d3652eb7346365584efb116c6ee85c44f1815cf49351"
+    },
+    {
+      "path": "build_backend/ebu_build_backend.py",
+      "mode": "100644",
+      "git_object": "093ad5858f60efcf5ae271615a9138334176fb56",
+      "byte_count": 25097,
+      "raw_sha256": "afaae669d8d1521a8f67f11bdfd8583ad6ad1ad1d32920d2144b87a20f0dc862"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "git_object": "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+      "byte_count": 399,
+      "raw_sha256": "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b"
+    },
+    {
+      "path": "requirements-framework.lock",
+      "mode": "100644",
+      "git_object": "907bdff88be25741f04980ae5e6a769df2a61d4d",
+      "byte_count": 2036,
+      "raw_sha256": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a"
+    },
+    {
+      "path": ".github/workflows/tests.yml",
+      "mode": "100644",
+      "git_object": "26afc98071877cba6dacdd03fac2834b2fe29b83",
+      "byte_count": 15288,
+      "raw_sha256": "34d5582c631ae81856d6fc1a64dd7ac6243547a88a89891225041f2c659442db"
+    },
+    {
+      "path": "src/ebu_framework/__init__.py",
+      "mode": "100644",
+      "git_object": "6574973cc1aeec2ad16a1d96e69b84c6922a0a10",
+      "byte_count": 28506,
+      "raw_sha256": "2a5d8384f27c8efd4c2923a28b163e5fd12519b59294fc2ea5c6c0b083e9da1f"
+    },
+    {
+      "path": "src/ebu_framework/errors.py",
+      "mode": "100644",
+      "git_object": "f1d15e0f862a50c469d51af598567ae94d784198",
+      "byte_count": 48264,
+      "raw_sha256": "c01b7f43c98b7dd000eb8d94067bcfe063f3679c3f2175840fe8eeca32d47b5e"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_object": "0f3f46e4f28b7b8af0ecbaf47d034827c5caee43",
+      "byte_count": 98752,
+      "raw_sha256": "f5febea3364fbd0cd8917dfe37ae58aaac04fd4a9e9674e8a54ac0dca340c59c"
+    },
+    {
+      "path": "tests/framework/test_closed_loop_correction_diagnostics.py",
+      "mode": "100644",
+      "git_object": "72993285fa8dcd6757e8ff20e782fc4d10432eae",
+      "byte_count": 18278,
+      "raw_sha256": "fc9829210fd3f1a4689b0f67dbd8c4c96a1c78226d7d0fd46a0511a511d5a294"
+    }
+  ],
+  "accepted_surface_projections": {
+    "package_file_count": 48,
+    "python_module_file_count": 44,
+    "root_export_count": 471,
+    "root_export_unique_count": 471,
+    "root_export_lf_sha256": "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
+    "failure_code_count": 294,
+    "failure_code_unique_count": 294,
+    "failure_code_lf_sha256": "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
+    "public_function_signature_row_count": 162,
+    "version": "0.1.0a1"
+  },
+  "preservation_rule": "Every predecessor path except the implementation-path manifest's explicitly named modified paths must retain predecessor bytes and mode throughout Stage C implementation. All src/ebu_framework paths are immutable.",
+  "historical_worktree_rule": "No existing unrelated, dirty, stale, historical or prunable worktree or registration may be modified or pruned.",
+  "scientific_execution": "NEW_REGISTERED_OR_FULL_HORIZON_CAMPAIGN_FORBIDDEN; EXACT ACCEPTED BOUNDED REGRESSION TEST BEHAVIOR IS STATIC_OR_SYNTHETIC_IMPLEMENTATION EVIDENCE ONLY"
+}

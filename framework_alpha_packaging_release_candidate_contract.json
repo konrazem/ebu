@@ -1,0 +1,390 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PROSPECTIVE_UNAUDITED_AUTHORITY_CANDIDATE",
+  "authority": {
+    "stage": "STAGE_C_ALPHA_PACKAGING_RELEASE_CANDIDATE",
+    "branch": "framework/stage-c-packaging-release-candidate-authority",
+    "required_predecessor_commit": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "required_predecessor_tree": "e5d1fc2746253d73474b60c86c145293fb8ee1ef",
+    "accepted_target_ref": "refs/heads/framework-v0.1",
+    "accepted_target_live_commit_at_draft": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "main_ref": "refs/heads/main",
+    "main_live_commit_at_draft": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
+    "stale_local_framework_branch_commit": "4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e",
+    "normative_markdown": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "framework_alpha_packaging_release_candidate_contract.json",
+    "predecessor_manifest": "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+    "validation_contract": "framework_alpha_packaging_release_candidate_validation_contract.json",
+    "implementation_path_manifest": "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+  },
+  "precedence": {
+    "narrow_supersession": [
+      "completed-stage package inventory",
+      "required presence of every admitted package file",
+      "backend reconciliation to accepted I-4 PyNaCl runtime dependency metadata",
+      "Stage C artifact and installed-package validation",
+      "stable alpha T1 and packaging runner decision"
+    ],
+    "preserved": [
+      "all other accepted I-1 packaging rules",
+      "accepted I-1 through I-9 framework and validation authority",
+      "accepted atomic-generator and interaction authority",
+      "accepted conservation, durability, trace, recovery and publication-mechanism authority",
+      "accepted topology and motif authority",
+      "accepted CLCD authority and implementation",
+      "accepted framework and scientific behavior, APIs, metadata source, dependency lock and version"
+    ],
+    "conflict_rule": "Any disagreement among the Markdown and four JSON authority files is an integrity failure."
+  },
+  "predecessor_evidence": {
+    "accepted_ci_run": {
+      "repository": "konrazem/ebu",
+      "run_id": 33020110257,
+      "event": "push",
+      "head_branch": "framework-v0.1",
+      "head_sha": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+      "conclusion": "success",
+      "conventional_job": "PASS",
+      "t0_historical_completed_tests": 109,
+      "t0_i9_reachability_completed_tests": 3,
+      "t0_clcd_completed_tests": 3,
+      "t1_completed_tests": 299,
+      "t2_disposition": "SKIPPED_NOT_A_PASS"
+    },
+    "rejected_authority_candidate": {
+      "commit": "1267ed8d5b5c0cac567f4e14db31f2123905aaf6",
+      "tree": "466e2813524abf1f50b77a65f314e593f8c702cf",
+      "ci_run_id": 33023757404,
+      "conventional_job": "PASS",
+      "t1_job": "PASS",
+      "t0_job": "FAIL_CURRENT_HEAD_SCOPE_REJECTED_FIVE_STAGE_C_AUTHORITY_PATHS",
+      "t2_job": "SKIPPED_NOT_A_PASS",
+      "clcd_job": "NOT_COMPLETED",
+      "independent_authority_audit": "FAIL"
+    },
+    "rejected_corrected_authority_candidate": {
+      "commit": "28d84c8373d9c0760fe330e448721a2ec0ba5561",
+      "tree": "0c1266c672fbb078b2f8d4cec1273ff1b020e283",
+      "ci_run_id": 33024871190,
+      "conventional_job": "PASS",
+      "t1_job": "PASS_299",
+      "t0_historical": "PASS_109",
+      "t0_reachability": "FAIL_1_OF_3_PASS_ON_FIRST_STAGE_C_AUTHORITY_PATH",
+      "t2_job": "SKIPPED_NOT_A_PASS",
+      "clcd_job": "NOT_COMPLETED",
+      "independent_authority_audit": "FAIL_T2_STALE_INVENTORY_PATH_OMISSION"
+    }
+  },
+  "diagnosis": {
+    "actual_package_file_count": 48,
+    "actual_python_module_file_count": 44,
+    "backend_admitted_package_file_count": 43,
+    "masked_defects": [
+      {
+        "id": "SC-PKG-001",
+        "disposition": "CONFIRMED",
+        "description": "Five accepted package files are absent from _PLANNED_PACKAGE_FILES and trigger PACKAGE_FILE_SET_MISMATCH."
+      },
+      {
+        "id": "SC-PKG-002",
+        "disposition": "CONFIRMED",
+        "description": "Discovery requires only the historical I-1 subset, so absence of a later admitted path is not itself refused."
+      },
+      {
+        "id": "SC-PKG-003",
+        "disposition": "CONFIRMED",
+        "description": "Backend project validation and emitted metadata still declare the historical empty runtime dependency set although accepted pyproject.toml declares PyNaCl==1.6.2."
+      },
+      {
+        "id": "SC-CI-001",
+        "disposition": "CONFIRMED",
+        "description": "The accepted push CI skips T2 and therefore does not prove the release-candidate T2 lane."
+      },
+      {
+        "id": "SC-CI-002",
+        "disposition": "CONFIRMED",
+        "description": "T1 uses the public-preview ubuntu-26.04 runner because stable ubuntu-24.04 supplies SQLite below the accepted minimum."
+      },
+      {
+        "id": "SC-CI-003",
+        "disposition": "CONFIRMED",
+        "description": "The first authority candidate's T0 run rejects the five Stage C authority files because the closed current-HEAD reachability scope does not admit this authority layer, and the first implementation scope omitted the reachability test needed for an exact correction."
+      },
+      {
+        "id": "SC-T2-001",
+        "disposition": "CONFIRMED",
+        "description": "Mandatory T2 test_bridge_exact_fixtures.py binds the whole-I8 280-failure and 444-root-export snapshots, so the current 294/471 T2 lane cannot pass without a narrowly scoped additive inventory correction."
+      }
+    ]
+  },
+  "package_inventory": {
+    "ordering": "UTF-8 path bytes",
+    "required_exact_set": true,
+    "missing_disposition": "REFUSE",
+    "unknown_disposition": "REFUSE",
+    "source_tree_git_object": "4de85ed2935d1c35bdcc0f1259f0acb2df569fdd",
+    "paths": [
+      "src/ebu_framework/__init__.py",
+      "src/ebu_framework/actions.py",
+      "src/ebu_framework/artifacts.py",
+      "src/ebu_framework/atomic.py",
+      "src/ebu_framework/authorization.py",
+      "src/ebu_framework/authorization_use.py",
+      "src/ebu_framework/bridge.py",
+      "src/ebu_framework/canonical.py",
+      "src/ebu_framework/capabilities.py",
+      "src/ebu_framework/causal.py",
+      "src/ebu_framework/commitments.py",
+      "src/ebu_framework/conservation.py",
+      "src/ebu_framework/correction_diagnostics.py",
+      "src/ebu_framework/correction_protocol.py",
+      "src/ebu_framework/data/__init__.py",
+      "src/ebu_framework/data/core_registry_v1.json",
+      "src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt",
+      "src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt",
+      "src/ebu_framework/distortion.py",
+      "src/ebu_framework/durability.py",
+      "src/ebu_framework/dynamic.py",
+      "src/ebu_framework/envelopes.py",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/events.py",
+      "src/ebu_framework/execution.py",
+      "src/ebu_framework/experiment.py",
+      "src/ebu_framework/faults.py",
+      "src/ebu_framework/hashing.py",
+      "src/ebu_framework/identity.py",
+      "src/ebu_framework/interaction.py",
+      "src/ebu_framework/ledger.py",
+      "src/ebu_framework/network.py",
+      "src/ebu_framework/numeric.py",
+      "src/ebu_framework/observation.py",
+      "src/ebu_framework/ownership.py",
+      "src/ebu_framework/policy.py",
+      "src/ebu_framework/primitives.py",
+      "src/ebu_framework/provenance.py",
+      "src/ebu_framework/publication.py",
+      "src/ebu_framework/py.typed",
+      "src/ebu_framework/recovery.py",
+      "src/ebu_framework/registry.py",
+      "src/ebu_framework/scheduling.py",
+      "src/ebu_framework/settlement.py",
+      "src/ebu_framework/state.py",
+      "src/ebu_framework/traces.py",
+      "src/ebu_framework/trust.py",
+      "src/ebu_framework/validation.py"
+    ],
+    "previously_omitted_paths": [
+      "src/ebu_framework/atomic.py",
+      "src/ebu_framework/conservation.py",
+      "src/ebu_framework/interaction.py",
+      "src/ebu_framework/correction_protocol.py",
+      "src/ebu_framework/correction_diagnostics.py"
+    ]
+  },
+  "backend_correction": {
+    "backend_identity": "ebu-in-tree-pep517-backend/1",
+    "backend_path": "build_backend/ebu_build_backend.py",
+    "planned_package_files_rule": "_PLANNED_PACKAGE_FILES equals package_inventory.paths as a set",
+    "required_package_files_rule": "Discovery refuses unless the actual regular-file set equals _PLANNED_PACKAGE_FILES",
+    "preserved_refusal_code_for_unknown": "PACKAGE_FILE_SET_MISMATCH",
+    "missing_refusal_code": "PACKAGE_DATA_MISSING",
+    "accepted_expected_project_dependencies": [
+      "PyNaCl==1.6.2"
+    ],
+    "metadata_append_after": "Import-Name: ebu_framework",
+    "metadata_appended_field": "Requires-Dist: PyNaCl==1.6.2\n",
+    "metadata_version": "2.5",
+    "project_version": "0.1.0a1",
+    "wheel_filename": "ebu_framework-0.1.0a1-cp314-none-any.whl",
+    "sdist_filename": "ebu_framework-0.1.0a1.tar.gz",
+    "wheel_tag": "cp314-none-any",
+    "wheel_expected_regular_file_count": 52,
+    "sdist_expected_regular_file_count": 52,
+    "immutable_inputs": {
+      "pyproject.toml": "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+      "requirements-framework.lock": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+      "src/ebu_framework": "git-tree:4de85ed2935d1c35bdcc0f1259f0acb2df569fdd"
+    }
+  },
+  "accepted_surface": {
+    "importable_module_count": 44,
+    "root_export_count": 471,
+    "root_export_unique_count": 471,
+    "root_export_lf_sha256": "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
+    "failure_code_count": 294,
+    "failure_code_unique_count": 294,
+    "failure_code_lf_sha256": "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
+    "public_function_signature_row_count": 162,
+    "version": "0.1.0a1",
+    "surface_authority": "accepted predecessor contracts plus the CLCD suffix as reconstructed by tests/framework/test_validation_reachability.py"
+  },
+  "installed_artifact_isolation": {
+    "installations": [
+      "DIRECT_WHEEL_CLEAN_ENV",
+      "SDIST_DERIVED_WHEEL_CLEAN_ENV"
+    ],
+    "isolated_python": true,
+    "empty_current_working_directory": true,
+    "pythonpath": "ABSENT",
+    "editable_install": "FORBIDDEN",
+    "source_path_in_sys_path": "FORBIDDEN",
+    "module_origin_rule": "Every module origin is a regular nonsymlink file below the tested installed package root and outside checkout, source snapshot and sdist extraction roots.",
+    "pth_files": "FORBIDDEN",
+    "source_fallback": "REFUSE"
+  },
+  "runner_decision": {
+    "ubuntu_26_04": "REJECT_AS_ALPHA_REFERENCE_PUBLIC_PREVIEW",
+    "host_runner": "ubuntu-24.04",
+    "runtime_image": "docker.io/library/python@sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+    "runtime_platform": "linux/amd64",
+    "runtime_image_tag_evidence_only": "python:3.14.4-trixie",
+    "docker_library_python_revision": "6cc07b27ad0df3769bbd1a2a1000a842634681d2",
+    "python_required": "CPython 3.14.4 final",
+    "sqlite_required_exact": "3.46.1",
+    "sqlite_source_id_required": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+    "sqlite_accepted_range": ">=3.46.0,<4.0.0",
+    "network_for_pull_and_wheelhouse_preparation": "ALLOWED_BEFORE_OFFLINE_EXECUTION",
+    "network_for_packaging_frontends_and_installed_probes": "PHYSICALLY_DISABLED",
+    "fallback": "FORBIDDEN",
+    "required_runtime_evidence": [
+      "resolved image digest",
+      "/etc/os-release",
+      "sys.implementation",
+      "sys.version",
+      "sys.version_info",
+      "sys.implementation.cache_tag",
+      "executable hash when available",
+      "sqlite3.sqlite_version",
+      "sqlite3.sqlite_version_info",
+      "sqlite_source_id()",
+      "Debian libsqlite3-0 package identity when available"
+    ],
+    "removed_cpython_3_14_attributes_not_required": [
+      "sqlite3.version",
+      "sqlite3.version_info"
+    ],
+    "external_provenance_queried_utc_date": "2026-08-26",
+    "external_provenance_urls": [
+      "https://github.com/actions/runner-images/blob/main/README.md",
+      "https://github.com/actions/runner-images/issues/14226",
+      "https://github.com/docker-library/python/tree/6cc07b27ad0df3769bbd1a2a1000a842634681d2/3.14/trixie",
+      "https://docs.python.org/3.14/library/sqlite3.html",
+      "https://packages.debian.org/trixie/libsqlite3-0",
+      "https://www.sqlite.org/releaselog/3_46_1.html"
+    ]
+  },
+  "validation": {
+    "preserve_i1_p1_through_p12": true,
+    "stage_c_validation_contract": "framework_alpha_packaging_release_candidate_validation_contract.json",
+    "positive_count_required_for_every_relation": true,
+    "skipped_is_pass": false,
+    "expected_failure_is_pass": false,
+    "zero_test_is_pass": false,
+    "direct_and_sdist_derived_wheels_must_be_byte_identical": true,
+    "t2_must_run_on_candidate_and_target_push": true,
+    "bounded_existing_test_regression_execution_authorized": true,
+    "registered_or_full_horizon_scientific_execution_authorized": false,
+    "new_official_result_generation_authorized": false,
+    "scientific_outcome_interpretation_authorized": false
+  },
+  "implementation_scope": {
+    "modified_paths": [
+      ".github/workflows/tests.yml",
+      "build_backend/ebu_build_backend.py",
+      "tests/framework/test_artifact_recovery_publication.py",
+      "tests/framework/test_atomic_declarations.py",
+      "tests/framework/test_bridge_exact_fixtures.py",
+      "tests/framework/test_capabilities.py",
+      "tests/framework/test_i3_integration.py",
+      "tests/framework/test_i3a_declarations.py",
+      "tests/framework/test_i3b_declarations.py",
+      "tests/framework/test_i3c_declarations.py",
+      "tests/framework/test_i3d_declarations.py",
+      "tests/framework/test_interaction_declarations.py",
+      "tests/framework/test_primitives_envelopes.py",
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "new_paths": [
+      "scripts/validate_stage_c_release_candidate.py",
+      "tests/framework/installed_artifact_probe.py",
+      "tests/framework/test_packaging_release_candidate.py"
+    ],
+    "repository_output_paths": [],
+    "external_evidence_only": true
+  },
+  "evidence_classification": {
+    "authority": "INSTITUTIONAL_NORMATIVE_DECLARATION",
+    "packaging_installed_and_bounded_regression_tests": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "new_numerical_verification_claim": "NOT_AUTHORIZED",
+    "registered_scientific_simulation": "NOT_AUTHORIZED",
+    "empirical_observation": "NOT_CLAIMED",
+    "independently_audited_scientific_interpretation": "NOT_CLAIMED"
+  },
+  "test_inventory_reconciliation": {
+    "purpose": "Replace only obsolete whole-I8 final-snapshot assumptions in the eleven authorized inventory tests with exact accepted I8-prefix plus current accepted CLCD-suffix assertions so current source and installed artifacts can run the complete lanes.",
+    "bridge_t2_boundary": "In test_bridge_exact_fixtures.py only test_failure_export_signature_and_import_surfaces may reconcile whole-I8 failure/root assertions; preserve the test name/count, 42-row allowlist, fixtures, bridge/I6 assertions, signatures/import graph, failure precedence and every non-inventory behavior.",
+    "preserve": [
+      "all historical prefixes and projections",
+      "all behavioral tests and test counts",
+      "all fixtures and contracts",
+      "all failure precedence and call sites",
+      "all non-inventory assertions"
+    ],
+    "forbidden": [
+      "test deletion",
+      "skip or expected-failure addition",
+      "test filtering",
+      "assertion weakening",
+      "historical checkout substitution for current source or installed candidate validation"
+    ]
+  },
+  "current_head_scope_reconciliation": {
+    "path": "tests/framework/test_validation_reachability.py",
+    "authority_phase": "Require exactly the five Stage C authority paths in addition to the accepted two post-I9 paths relative to the immutable I-9 implementation base.",
+    "implementation_phase": "Require exactly the five Stage C authority paths, fourteen modified paths and three new paths in addition to the accepted post-I9 relationship, accounting for overlapping paths once; the resulting delta relative to the immutable I-9 implementation base has exactly 22 unique paths.",
+    "preserve": [
+      "historical I-9 Git object and archive reconstruction",
+      "historical coordinates and raw identities",
+      "accepted vectors, projections and failure precedence",
+      "unknown-path, source-path, deletion, rename, mode and construction refusals"
+    ],
+    "arbitrary_or_unlisted_path": "REFUSE"
+  },
+  "bounded_regression_execution": {
+    "entry_boundary": "Only the exact conventional and framework test files frozen by the validation contract may invoke their already accepted bounded synthetic, pure-function, short-horizon or preregistered-fixture in-memory deterministic model-step, trajectory-loop or test-seam runner behavior.",
+    "stage_c_validator_direct_model_or_runner_call": "FORBIDDEN",
+    "official_result_artifact_write": "FORBIDDEN",
+    "registered_or_full_horizon_campaign": "FORBIDDEN",
+    "scientific_outcome_inspection_or_interpretation": "FORBIDDEN",
+    "evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "record": "Exact test files, test counts, commands, outcomes and this bounded-regression classification."
+  },
+  "prohibited": [
+    "framework or scientific source edit",
+    "accepted API, metadata source, dependency lock or version edit",
+    "fixture, result, book or PDF edit",
+    "checkout-source import during installed-artifact probes",
+    "direct model, step, runner, trajectory, policy, Gate, callback or outcome invocation outside the exact accepted bounded regression test entry points",
+    "preview runner or mutable runtime image",
+    "editable install or unpinned packaging frontend",
+    "network during offline packaging or installed-artifact probes",
+    "skipped or zero-test lane represented as pass",
+    "force push or history rewrite",
+    "main merge, tag, package-index upload, release, publication or institutional claim"
+  ],
+  "independent_gates": {
+    "authority_audit_required": true,
+    "implementation_audit_required": true,
+    "self_review_is_independent": false,
+    "authority_implementation_before_pass": "FORBIDDEN",
+    "target_integration_before_candidate_pass": "FORBIDDEN",
+    "main_merge_tag_release_publication": "SEPARATELY_AUTHORIZED_ONLY"
+  },
+  "nonclaims": [
+    "No corrected backend or passing artifact exists by virtue of this authority.",
+    "No alpha release candidate, tag, release or publication exists.",
+    "No new registered/full-horizon scientific campaign, official result generation or scientific outcome interpretation is authorized or evidenced; exact accepted bounded regression tests remain static/synthetic implementation evidence.",
+    "Packaging conformance does not prove mathematics, scientific validity, long-run homeostasis, stability, recovery, fairness or empirical applicability."
+  ],
+  "terminal_marker": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_READY_FOR_AUDIT"
+}
