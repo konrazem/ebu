@@ -1,0 +1,604 @@
+{
+  "authority_id": "EBU-STAGE-D-COMPLETION-ORIENTED-CONTINUATION-v1",
+  "authority_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_ADDITIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "d000015cbf3e3238e34f961c4916626c930ba90f",
+    "tree": "8bff192813649300a8aa8b298c441b851cea26d7",
+    "live_target_ref": "refs/heads/framework-v0.1",
+    "authority_integration_parent": "388ccb864163cddf6bd4a0a83c24f29f6535cc68",
+    "durability_candidate_parent": "f812ba94d9297f90564ef872a380f1332ab68341"
+  },
+  "candidate_files": [
+    "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+    "stage_d_completion_oriented_continuation_contract.json",
+    "stage_d_completion_oriented_continuation_evidence_schema.json",
+    "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+    "stage_d_completion_oriented_continuation_validation_contract.json"
+  ],
+  "candidate_file_count": 5,
+  "accepted_stage_d_authority": {
+    "authority_candidate": "8936bb437426ee53556f8bcb0590215620e1065c",
+    "authority_integration": "388ccb864163cddf6bd4a0a83c24f29f6535cc68",
+    "durability_candidate": "f812ba94d9297f90564ef872a380f1332ab68341",
+    "durability_integration": "d000015cbf3e3238e34f961c4916626c930ba90f",
+    "authority_tree": "773bd9c4cbb35ff96377b61d2f3b29171aadbc5d",
+    "durability_tree": "8bff192813649300a8aa8b298c441b851cea26d7",
+    "authority_disposition": "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY_PASS",
+    "durability_disposition": "STAGE_D_DURABILITY_IMPLEMENTATION_PASS",
+    "integration_disposition": "STAGE_D_DURABILITY_INTEGRATION_PASS",
+    "files_preserved_byte_for_byte": [
+      "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
+      "stage_d_scientific_validation_contract.json",
+      "stage_d_scientific_validation_evidence_schema.json",
+      "stage_d_scientific_validation_master_matrix.json",
+      "stage_d_scientific_validation_predecessor_manifest.json",
+      "stage_d_scientific_validation_validation_contract.json"
+    ]
+  },
+  "accepted_integration_evidence": {
+    "ci_run_id": 33094713851,
+    "ci_head": "d000015cbf3e3238e34f961c4916626c930ba90f",
+    "ci_event": "push",
+    "ci_conclusion": "SUCCESS",
+    "required_job_count": 5,
+    "required_job_conclusions": {
+      "framework-t0": "SUCCESS",
+      "framework-t1": "SUCCESS",
+      "framework-t2": "SUCCESS",
+      "test": "SUCCESS",
+      "packaging-release-candidate": "SUCCESS"
+    },
+    "artifact_id": 9656859745,
+    "artifact_name": "stage-c-alpha-release-candidate-d000015cbf3e3238e34f961c4916626c930ba90f",
+    "artifact_byte_count": 2003002,
+    "artifact_sha256": "2ed2c22998eee262fd5bd284a5a46a64a2be8e0460b3cb548705010aa12def3d",
+    "artifact_expired": false,
+    "evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "scientific_execution_count": 0
+  },
+  "narrow_supersession": {
+    "applies_only_to": "future continuation-enabled campaign_execution_binding/v2 records accepted after this amendment",
+    "historical_v1_records_reinterpreted": false,
+    "unchanged_authority_domains": [
+      "fourteen-study order and dependencies",
+      "questions and prospective claims",
+      "models, domains, units, state, topology, and boundaries",
+      "configurations, controls, negative controls, seeds, and stochastic rules",
+      "numerical and uncertainty policies",
+      "horizons, stopping rules, falsifiers, and acceptance criteria",
+      "conservation and no-double-counting rules",
+      "exact problem dimensions and non-scalability boundaries",
+      "exact-versus-approximate labels",
+      "evidence levels and nonpromotion",
+      "excluded programmes and later-stage prohibitions"
+    ],
+    "superseded_only_for_v2": [
+      "ambiguous per-scientific-run application of wall-time watchdog",
+      "ambiguous per-scientific-run application of process-tree peak-memory watchdog",
+      "ambiguous per-scientific-run application of primary-evaluation watchdog",
+      "v1 inability to encode a nonterminal clean checkpoint slice",
+      "v1 inability to encode campaign-level cumulative continuation accounting"
+    ],
+    "v1_run_manifest_status": "HISTORICAL_AND_NON_CONTINUATION_ONLY",
+    "v1_checkpoint_record_status": "HISTORICAL_AND_NON_CONTINUATION_ONLY"
+  },
+  "study_registry": {
+    "ordered_study_ids": [
+      "SD-01",
+      "SD-02",
+      "SD-03",
+      "SD-04",
+      "SD-05",
+      "SD-06",
+      "SD-07",
+      "SD-08",
+      "SD-09",
+      "SD-10",
+      "SD-11",
+      "SD-12",
+      "SD-13",
+      "SD-14"
+    ],
+    "study_count": 14,
+    "within_run_checkpoint_continuation": [
+      "SD-01",
+      "SD-08",
+      "SD-09",
+      "SD-10",
+      "SD-11",
+      "SD-12",
+      "SD-13",
+      "SD-14"
+    ],
+    "conditional_inherited_continuation": [
+      "SD-02"
+    ],
+    "between_atomic_case_continuation_only": [
+      "SD-03",
+      "SD-04",
+      "SD-05",
+      "SD-06",
+      "SD-07"
+    ],
+    "sd02_rule": "continuation is forbidden unless the exact inherited Gate 1D-C plan or a separately audited amendment permits it",
+    "atomic_case_rule": "an atomic case must finish or become visibly inconclusive; continuation begins only at the next absent case identity"
+  },
+  "identity_hierarchy": {
+    "ordered_levels": [
+      "study_id",
+      "campaign_id",
+      "scientific_run_id",
+      "attempt_id",
+      "checkpoint_id"
+    ],
+    "campaign_identity_preimage_fields": [
+      "study_id",
+      "ordered_configuration_identities",
+      "study_authority_identity",
+      "continuation_authority_identity",
+      "code_commit",
+      "code_tree",
+      "installed_artifact_identity",
+      "environment_identity",
+      "algorithm_identities",
+      "oracle_identities",
+      "numerical_policy_identity",
+      "stochastic_rule_identity",
+      "uncertainty_policy_identity",
+      "seed_set_identity",
+      "permitted_stream_set_identity",
+      "dependency_topology_identity",
+      "cache_key_schema_identity",
+      "invalidation_policy_identity",
+      "exact_or_approximate_label",
+      "horizon_identity",
+      "control_set_identity",
+      "falsifier_set_identity",
+      "checkpoint_policy_identity",
+      "parallelization_boundary_identity",
+      "worker_allocation_policy_identity",
+      "storage_location_identity",
+      "durability_policy_identity",
+      "restart_policy_identity",
+      "campaign_budget_identity"
+    ],
+    "scientific_run_identity_preimage_fields": [
+      "campaign_id",
+      "configuration_identity",
+      "seed",
+      "horizon_identity",
+      "initial_state_identity",
+      "boundary_identity",
+      "topology_identity",
+      "model_identity"
+    ],
+    "attempt_identity_preimage_fields": [
+      "campaign_id",
+      "scientific_run_id",
+      "attempt_ordinal",
+      "incoming_checkpoint_identity",
+      "attempt_binding_identity"
+    ],
+    "result_affecting_change_disposition": "NEW_CAMPAIGN_OR_SCIENTIFIC_RUN_IDENTITY_AND_NEW_PROSPECTIVE_AUTHORITY",
+    "continuation_aliasing_forbidden": true
+  },
+  "execution_binding_policy": {
+    "campaign_policy_identity_fields": [
+      "parallelization_boundary_identity",
+      "worker_allocation_policy_identity",
+      "storage_location_identity",
+      "durability_policy_identity",
+      "restart_policy_identity"
+    ],
+    "campaign_policy_identity_field_count": 5,
+    "attempt_binding_schema": "attempt_binding/v2",
+    "attempt_binding_preimage_fields": [
+      "campaign_id",
+      "scientific_run_id",
+      "campaign_execution_binding_identity",
+      "attempt_ordinal",
+      "incoming_checkpoint_identity",
+      "parallelization_boundary_identity",
+      "worker_allocation_policy_identity",
+      "storage_location_identity",
+      "durability_policy_identity",
+      "restart_policy_identity",
+      "process_allocation_identity",
+      "policy_conformance_receipt_identity"
+    ],
+    "attempt_binding_preimage_field_count": 12,
+    "process_allocation_schema": "process_allocation/v2",
+    "process_allocation_preimage_fields": [
+      "worker_count",
+      "ordered_worker_allocations",
+      "scheduler_allocation_identity",
+      "policy_conformance_receipt_identity"
+    ],
+    "process_allocation_preimage_field_count": 4,
+    "worker_allocation_required_fields": [
+      "worker_ordinal",
+      "worker_identity",
+      "host_identity",
+      "process_identity",
+      "process_index",
+      "thread_count",
+      "cpu_allocation_identity",
+      "accelerator_allocation_identity",
+      "memory_limit_bytes"
+    ],
+    "worker_allocation_required_field_count": 9,
+    "canonical_digest_serialization": "UTF-8 canonical JSON of the declared preimage object with recursively lexicographically sorted object keys, comma/colon separators, no insignificant whitespace, UTF-8 strings without ASCII forcing, integer numbers, and no final LF",
+    "process_allocation_identity_kind": "process_allocation/v2",
+    "process_allocation_identity_value_and_sha256_equal_digest": true,
+    "attempt_binding_identity_kind": "attempt_binding/v2",
+    "attempt_binding_identity_value_and_sha256_equal_digest": true,
+    "worker_ordinal_rule": "unique contiguous integers 0 through worker_count minus one in array order",
+    "process_identity_and_index_uniqueness_required": true,
+    "actual_allocation_must_conform_to_campaign_policies": true,
+    "canonical_digest_reconstruction_required": true,
+    "attempt_manifest_must_embed_attempt_binding": true,
+    "policy_conformance_receipt_equality_rule": "attempt_binding.policy_conformance_receipt_identity must equal attempt_binding.process_allocation.policy_conformance_receipt_identity exactly",
+    "policy_conformance_receipt_role": "one singular receipt certifying the actual process allocation against the frozen campaign parallelization boundary and worker-allocation policy",
+    "missing_changed_out_of_policy_or_digest_mismatch_disposition": "REFUSE_ATTEMPT_EXECUTION_BINDING"
+  },
+  "attempt_watchdog_policy": {
+    "purpose": "bounded safe execution and checkpoint creation; never scientific interpretation",
+    "required_dimensions": [
+      "wall_time_nanoseconds",
+      "process_tree_peak_resident_memory_bytes",
+      "primary_evaluations",
+      "physical_trace_bytes_written",
+      "physical_output_bytes_written",
+      "maximum_depth"
+    ],
+    "applicable_stage_d_profile_is_upper_bound": true,
+    "attempt_slice_may_be_stricter": true,
+    "attempt_slice_may_exceed_stage_d_profile": false,
+    "clean_boundary_must_precede_watchdog": true,
+    "watchdog_firing_is_not_clean_continuation": true,
+    "automatic_retry": "FORBIDDEN",
+    "scientific_evidence_value": "NOT_A_SCIENTIFIC_OUTCOME"
+  },
+  "campaign_budget_policy": {
+    "must_be_sealed_before_stage_f": true,
+    "must_be_informed_only_by_outcome_blind_stage_e_feasibility_evidence": true,
+    "independent_audit_required": true,
+    "required_dimensions": [
+      "maximum_attempt_count",
+      "maximum_cumulative_active_wall_time_nanoseconds",
+      "maximum_cumulative_primary_evaluations",
+      "maximum_cumulative_physical_trace_bytes_written",
+      "maximum_cumulative_physical_output_bytes_written",
+      "maximum_durable_logical_trace_bytes",
+      "maximum_durable_logical_output_bytes",
+      "maximum_process_tree_peak_resident_memory_bytes",
+      "maximum_campaign_calendar_duration_seconds"
+    ],
+    "study_specific_dimensions_required": true,
+    "larger_than_one_attempt_active_wall_evaluation_or_physical_write_budget_permitted": true,
+    "campaign_peak_memory_may_exceed_attempt_profile": false,
+    "durable_logical_trace_or_output_cap_may_expand_by_slicing": false,
+    "problem_dimension_enlargement_permitted": false,
+    "post_start_budget_enlargement": "FORBIDDEN",
+    "post_start_budget_reduction": "FORBIDDEN",
+    "budget_change_disposition": "NEW_CAMPAIGN_IDENTITY_AND_NEW_PROSPECTIVE_AUTHORITY",
+    "exhaustion_disposition": "COMPUTATIONALLY_INCONCLUSIVE",
+    "exhaustion_scientific_evidence_value": "NOT_A_SCIENTIFIC_OUTCOME"
+  },
+  "non_sliceable_dimensions": [
+    "maximum_n",
+    "maximum_mobius_n",
+    "maximum_subsets",
+    "maximum_hyperedge_order",
+    "maximum_vertices",
+    "maximum_edges",
+    "maximum_dag_vertices",
+    "maximum_dag_edges",
+    "maximum_canonical_vertices",
+    "canonical_vertices",
+    "expanded_oracle_level",
+    "compressed_comparison_level",
+    "maximum_expanded_occurrences",
+    "maximum_agents",
+    "maximum_recursion_depth",
+    "complete_case_horizon",
+    "per_case_trace_output_limit"
+  ],
+  "attempt_protocol": {
+    "initial_attempt_ordinal": 0,
+    "next_attempt_ordinal_rule": "previous accepted terminal attempt ordinal plus one",
+    "single_active_attempt_per_scientific_run": true,
+    "incoming_checkpoint_rule": "ordinal zero uses frozen initial state; every later ordinal consumes the previous accepted outgoing checkpoint",
+    "normal_nonterminal_state": "CHECKPOINTED_CONTINUATION_REQUIRED",
+    "normal_nonterminal_scientific_disposition": null,
+    "normal_nonterminal_requires": [
+      "outgoing checkpoint durable before attempt exit",
+      "trace and receipt prefixes durable",
+      "cumulative resource ledger durable",
+      "cache and invalidation epochs sealed",
+      "complete stochastic next-counter state sealed",
+      "continuation receipt sealed",
+      "all identity checks pass"
+    ],
+    "restart_equivalence": "byte-identical suffix to uninterrupted execution over the complete registered conformance domain",
+    "restart_mismatch_disposition": "CONTINUATION_EQUIVALENCE_FAILURE",
+    "skipped_repeated_forked_or_concurrent_ordinal_disposition": "REFUSE_ATTEMPT_CHAIN"
+  },
+  "cumulative_accounting": {
+    "run_ledger_schema": "run_resource_ledger/v2",
+    "campaign_ledger_schema": "campaign_resource_ledger/v2",
+    "never_reset": true,
+    "run_attempt_count": "previous scientific-run attempt_count plus one",
+    "run_cumulative_active_wall_time_nanoseconds": "integer sum of all attempt active monotonic nanoseconds in the scientific run including failed work",
+    "run_cumulative_primary_evaluations": "integer sum of all actual attempt evaluations in the scientific run including discarded and repeated work",
+    "run_cumulative_physical_trace_bytes_written": "integer sum for the scientific run including duplicate and failed-attempt writes",
+    "run_cumulative_physical_output_bytes_written": "integer sum for the scientific run including duplicate and failed-attempt writes",
+    "campaign_attempt_count": "exact count of every terminal attempt manifest across all scientific runs",
+    "campaign_cumulative_active_wall_time_nanoseconds": "canonical sum of every terminal attempt active-wall delta",
+    "campaign_cumulative_primary_evaluations": "canonical sum of every terminal attempt evaluation delta",
+    "campaign_cumulative_physical_trace_bytes_written": "canonical sum of every terminal attempt physical trace-byte delta",
+    "campaign_cumulative_physical_output_bytes_written": "canonical sum of every terminal attempt physical output-byte delta",
+    "durable_logical_trace_bytes": "monotone logical high-water count; duplicated bytes provide no new allowance",
+    "durable_logical_output_bytes": "monotone logical high-water count; duplicated bytes provide no new allowance",
+    "run_peak_process_tree_memory": "maximum of observed attempt peaks in one scientific run",
+    "campaign_peak_process_tree_memory": "maximum of every observed attempt peak in the campaign",
+    "campaign_reconstruction_order": "accepted scientific-run order then attempt ordinal",
+    "parallel_accounting_barrier": "immutable attempt deltas fold in canonical order; completion order, worker, and scheduling are irrelevant",
+    "missing_duplicate_or_lost_parallel_delta_disposition": "REFUSE_CAMPAIGN_ACCOUNTING_BARRIER",
+    "append_only_prefixes": [
+      "checkpoint identities",
+      "trace prefixes",
+      "receipt prefixes",
+      "invalidation receipt prefixes",
+      "cache epochs"
+    ],
+    "queued_or_offline_time": "excluded from active compute time but included in campaign calendar duration",
+    "missing_or_nonmonotone_disposition": "REFUSE_CONTINUATION"
+  },
+  "checkpoint_binding": {
+    "schema": "continuation_checkpoint/v2",
+    "required_identity_fields": [
+      "campaign_id",
+      "scientific_run_id",
+      "campaign_execution_binding_identity",
+      "study_id",
+      "counter_state_mode",
+      "completed_attempt_ordinal",
+      "next_attempt_ordinal",
+      "state_identity",
+      "trace_prefix_identity",
+      "receipt_prefix_identity",
+      "run_resource_ledger_identity",
+      "campaign_resource_ledger_identity",
+      "cache_key_schema_identity",
+      "cache_epoch",
+      "correction_invalidation_epoch",
+      "dependency_closure_identity",
+      "alias_closure_identity",
+      "authority_identity",
+      "code_identity",
+      "installed_artifact_identity",
+      "environment_identity",
+      "algorithm_identity",
+      "numerical_policy_identity",
+      "stochastic_rule_identity",
+      "uncertainty_policy_identity",
+      "permitted_stream_set_identity",
+      "ordered_permitted_stream_ids",
+      "seed",
+      "next_counter_tuple_set_identity",
+      "topology_identity",
+      "exact_or_approximate_label"
+    ],
+    "next_counter_tuple_fields": [
+      "stream_id",
+      "tick",
+      "event_index",
+      "draw_index",
+      "attempt_index",
+      "draw_status"
+    ],
+    "next_counter_tuple_array_rule": "ordered_permitted_stream_ids are unique and ascending by UTF-8 bytes; tuple stream-id projection equals that array exactly; exactly one READY tuple exists for every permitted stream and no other stream exists",
+    "next_counter_tuple_set_identity_kind": "next_counter_tuple_set/v2",
+    "next_counter_tuple_set_identity_preimage_fields": [
+      "permitted_stream_set_identity",
+      "ordered_permitted_stream_ids",
+      "next_counter_tuples"
+    ],
+    "next_counter_tuple_set_identity_derivation": "SHA-256 of UTF-8 canonical JSON with recursively lexicographically sorted object keys, comma/colon separators, no insignificant whitespace, UTF-8 strings without ASCII forcing, integer numbers, and no final LF",
+    "next_counter_tuple_set_value_and_sha256_equal_digest": true,
+    "counter_state_modes": [
+      "DETERMINISTIC_EMPTY",
+      "STOCHASTIC_NONEMPTY"
+    ],
+    "counter_state_mode_selection_rule": "not caller-selectable: exact equality to the accepted campaign/configuration stochastic-rule identity and permitted-stream set selects DETERMINISTIC_EMPTY for FORBIDDEN plus the canonical empty set, otherwise an authorized nonempty stochastic set selects STOCHASTIC_NONEMPTY; every other pairing refuses",
+    "deterministic_empty_branch": {
+      "minimum_required_study_fixture": "SD-01",
+      "stochastic_rule_identity_rule": "exact equality to the accepted campaign/configuration stochastic_rule_identity whose value is FORBIDDEN",
+      "seed": 0,
+      "canonical_empty_array_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "permitted_stream_set_identity": {
+        "kind": "permitted_stream_set/v2",
+        "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "ordered_permitted_stream_ids": [],
+      "next_counter_tuples": [],
+      "next_counter_tuple_set_identity": {
+        "kind": "next_counter_tuple_set/v2",
+        "value": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+        "sha256": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6"
+      },
+      "next_counter_tuple_set_preimage_canonical_json": "{\"next_counter_tuples\":[],\"ordered_permitted_stream_ids\":[],\"permitted_stream_set_identity\":{\"kind\":\"permitted_stream_set/v2\",\"sha256\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"value\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}}",
+      "dummy_stream_permitted": false
+    },
+    "stochastic_nonempty_branch": {
+      "ordered_permitted_stream_ids_minimum_count": 1,
+      "next_counter_tuple_minimum_count": 1,
+      "complete_projection_equality_required": true,
+      "stochastic_rule_and_seed_must_equal_campaign_binding": true
+    },
+    "terminal_rejection_tuple_in_continuation_checkpoint": "FORBIDDEN",
+    "corrupt_missing_stale_or_forked_disposition": "REFUSE_CONTINUATION",
+    "changed_result_affecting_identity_disposition": "NEW_CAMPAIGN_REQUIRED"
+  },
+  "cache_and_invalidation": {
+    "accepted_cache_key_field_count": 29,
+    "complete_key_required": true,
+    "equivalence_certificate_required": true,
+    "dependency_and_alias_dag_required": true,
+    "invalidation_receipts_precede_recomputation": true,
+    "deterministic_invalidation_triggers": [
+      "correction",
+      "authority change",
+      "code or installed-artifact change",
+      "algorithm or oracle change",
+      "environment change",
+      "numerical, stochastic, or uncertainty policy change",
+      "seed, stream-set, or counter-state change",
+      "topology or dependency change",
+      "cache-key schema change",
+      "equivalence-certificate change"
+    ],
+    "negative_controls": [
+      "near-equivalent topology cannot reuse",
+      "incomplete key collision refuses",
+      "stale cache after correction refuses",
+      "missing invalidation receipt refuses",
+      "omitted alias or dependency refuses"
+    ]
+  },
+  "stochastic_terminal_rule": {
+    "rule_id": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1",
+    "checkpoint_next_tuple_fields": [
+      "stream_id",
+      "tick",
+      "event_index",
+      "draw_index",
+      "attempt_index",
+      "draw_status"
+    ],
+    "ready_attempt_index_min": 0,
+    "ready_attempt_index_max": 999999,
+    "terminal_rejection_attempt_index": 1000000,
+    "terminal_draw_status": "TERMINAL_REJECTION_CAP",
+    "terminal_scientific_disposition": "COMPUTATIONALLY_INCONCLUSIVE",
+    "continuation_after_terminal": "FORBIDDEN",
+    "retry_new_stream_or_substitute_outcome": "FORBIDDEN",
+    "attempt_slice_changes_draw_preimage": false
+  },
+  "terminal_states": {
+    "attempt_states": [
+      "CHECKPOINTED_CONTINUATION_REQUIRED",
+      "SCIENTIFIC_RUN_TERMINAL",
+      "ATTEMPT_WATCHDOG_TIMEOUT",
+      "ATTEMPT_RESOURCE_EXHAUSTED",
+      "IMPLEMENTATION_OR_DURABILITY_FAILURE",
+      "IDENTITY_OR_AUTHORITY_REFUSAL",
+      "TERMINAL_REJECTION_CAP",
+      "CAMPAIGN_BUDGET_EXHAUSTED",
+      "CAMPAIGN_CALENDAR_DEADLINE_REACHED",
+      "MATHEMATICAL_OR_MATERIAL_INFEASIBILITY"
+    ],
+    "clean_continuation_is_terminal_science": false,
+    "timeout_or_resource_exhaustion_automatic_retry": false,
+    "failed_attempt_costs_retained": true,
+    "recovery_requires": [
+      "prospectively applicable recovery rule",
+      "transient classification",
+      "proof no post-checkpoint state was accepted",
+      "unchanged code and environment identities",
+      "independent recovery disposition",
+      "failed work retained in cumulative accounting"
+    ],
+    "deterministic_defect_disposition": "SUSPEND_CAMPAIGN_AND_REQUIRE_NEW_CODE_IDENTITY_AND_AUTHORITY",
+    "non_scientific_terminal_states": [
+      "ATTEMPT_WATCHDOG_TIMEOUT",
+      "ATTEMPT_RESOURCE_EXHAUSTED",
+      "IMPLEMENTATION_OR_DURABILITY_FAILURE",
+      "IDENTITY_OR_AUTHORITY_REFUSAL",
+      "TERMINAL_REJECTION_CAP",
+      "CAMPAIGN_BUDGET_EXHAUSTED",
+      "CAMPAIGN_CALENDAR_DEADLINE_REACHED",
+      "MATHEMATICAL_OR_MATERIAL_INFEASIBILITY"
+    ]
+  },
+  "infeasibility_authority": {
+    "schema": "infeasibility_finding/v2",
+    "classifications": [
+      "MATHEMATICAL_INFEASIBILITY",
+      "MATERIAL_INFEASIBILITY"
+    ],
+    "required_evidence": [
+      "campaign and scientific-run identities",
+      "exact problem dimensions",
+      "algorithm and cost derivation identities",
+      "Stage E feasibility evidence identities",
+      "attempt and checkpoint identities",
+      "cumulative resource ledger identity",
+      "frozen environment and available resource identities",
+      "storage, scheduling, and permission constraints",
+      "declared alternatives and authority-preserving rejection reasons"
+    ],
+    "independent_audit_required": true,
+    "scientific_evidence_value": "NOT_A_SCIENTIFIC_OUTCOME",
+    "single_slow_or_failed_attempt_sufficient": false
+  },
+  "finite_computation_boundary": {
+    "arbitrary_n_completion_claim": "FORBIDDEN",
+    "boolean_mobius_time": "O(n*2^n) transform arithmetic plus 2^n*C_E subset-evaluation cost",
+    "boolean_mobius_storage": "O(2^n)",
+    "accepted_problem_dimensions_unchanged": true,
+    "partial_atomic_transform_checkpoint": "FORBIDDEN",
+    "next_absent_atomic_case_continuation": "PERMITTED_WITH_EXACT_IDENTITY",
+    "silent_sampling_truncation_sparsification_or_topology_change": "FORBIDDEN",
+    "approximation": "SEPARATE_PREREGISTERED_AUTHORITY_REQUIRED"
+  },
+  "evidence_boundary": {
+    "authority_candidate_evidence_class": "STATIC_AUTHORITY_INTEGRITY_ONLY",
+    "permitted": [
+      "Git identity and path inspection",
+      "strict UTF-8 and JSON parsing",
+      "canonical JSON hashing",
+      "schema and closed-set inspection",
+      "integer arithmetic and cross-reference checks"
+    ],
+    "forbidden": [
+      "Stage E implementation",
+      "framework or project runner import",
+      "model step or state advance",
+      "trajectory, Gate, transform, benchmark, or simulation",
+      "stochastic draw",
+      "candidate outcome inspection",
+      "result, figure, or book generation",
+      "release, package-index upload, or publication"
+    ],
+    "counters": {
+      "stage_e_implementation_file_count": 0,
+      "model_state_advance_count": 0,
+      "trajectory_count": 0,
+      "simulation_count": 0,
+      "gate_execution_count": 0,
+      "transform_execution_count": 0,
+      "benchmark_count": 0,
+      "stochastic_draw_count": 0,
+      "outcome_inspection_count": 0,
+      "result_count": 0,
+      "figure_count": 0,
+      "book_generation_count": 0,
+      "release_action_count": 0,
+      "publication_action_count": 0
+    }
+  },
+  "future_stage_boundary": {
+    "authority_pass": "may authorize only normal integration if separately permitted",
+    "durability": "separately authorized one-path reachability change after integration",
+    "stage_e": "separately authorized harness and conformance only after accepted continuation authority and durability",
+    "stage_f": "separately authorized registered campaigns only after applicable independently audited Stage E PASS and frozen campaign execution binding",
+    "stage_g": "results and figures remain forbidden",
+    "stage_h": "books remain forbidden",
+    "release_or_publication": "forbidden"
+  },
+  "completion_marker": "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_CANDIDATE_COMPLETE"
+}

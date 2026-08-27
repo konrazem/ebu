@@ -1,0 +1,433 @@
+{
+  "validation_authority_id": "EBU-STAGE-D-COMPLETION-ORIENTED-CONTINUATION-VALIDATION-v1",
+  "validation_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_STATIC_AUTHORITY_VALIDATION_ONLY",
+  "accepted_base": {
+    "commit": "d000015cbf3e3238e34f961c4916626c930ba90f",
+    "tree": "8bff192813649300a8aa8b298c441b851cea26d7",
+    "required_live_target_ref": "refs/heads/framework-v0.1"
+  },
+  "candidate_paths": [
+    "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+    "stage_d_completion_oriented_continuation_contract.json",
+    "stage_d_completion_oriented_continuation_evidence_schema.json",
+    "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+    "stage_d_completion_oriented_continuation_validation_contract.json"
+  ],
+  "candidate_path_count": 5,
+  "required_operation_counts": {
+    "added": 5,
+    "modified": 0,
+    "deleted": 0,
+    "renamed": 0,
+    "mode_changed": 0
+  },
+  "permitted_validation": [
+    "Git identity, ancestry, tree, live-ref, and path inspection",
+    "strict UTF-8, NFC, LF, final-LF, whitespace, duplicate-key, non-finite, and integer-only JSON checks",
+    "raw and canonical SHA-256 reconstruction",
+    "Draft 2020-12 schema structure and prospective fixture evaluation",
+    "closed-set, ordering, equality, cross-reference, and integer-arithmetic checks",
+    "predecessor Git-object and byte reconstruction"
+  ],
+  "forbidden_validation": [
+    "importing or executing the EBU framework",
+    "project runner, model, state transition, trajectory, Gate, transform, benchmark, stochastic draw, or simulation",
+    "candidate scientific outcome inspection",
+    "result, table, figure, book, release, package-index, publication, or external institutional action"
+  ],
+  "positive_checks": [
+    "CONT-P001 candidate HEAD is a descendant with exact merge-base d000015cbf3e3238e34f961c4916626c930ba90f",
+    "CONT-P002 accepted base tree is exactly 8bff192813649300a8aa8b298c441b851cea26d7",
+    "CONT-P003 live framework-v0.1 equals the accepted base at audit start",
+    "CONT-P004 candidate diff contains exactly five additions and no other operation",
+    "CONT-P005 every candidate path is mode 100644 and no symlink or submodule exists",
+    "CONT-P006 git diff --check passes and the candidate worktree is clean",
+    "CONT-P007 all five files are UTF-8, NFC, LF-only, single-final-LF, no BOM, no CR, and no trailing whitespace",
+    "CONT-P008 all four JSON files reject duplicate keys, non-finite numbers, and floating-point numbers",
+    "CONT-P009 all candidate raw byte counts and SHA-256 identities independently reproduce",
+    "CONT-P010 all JSON canonical-no-LF byte counts and SHA-256 identities independently reproduce",
+    "CONT-P011 candidate path order is identical across Markdown, contract, predecessor manifest, and validation contract",
+    "CONT-P012 completion marker is identical and occurs exactly once in each candidate file",
+    "CONT-P013 predecessor manifest has exactly nine unique rows",
+    "CONT-P014 every predecessor row matches accepted-base mode, Git object, byte count, and raw SHA-256",
+    "CONT-P015 every JSON predecessor row matches its canonical byte count and SHA-256",
+    "CONT-P016 the six accepted Stage D authority files are byte-identical in base and candidate",
+    "CONT-P017 the accepted Stage D durability test, workflow, and Stage C static validator are byte-identical in base and candidate",
+    "CONT-P018 the accepted nested 39-row Stage D predecessor manifest remains controlling without reconciliation or exclusion",
+    "CONT-P019 accepted Stage D authority/durability candidate, integration, tree, and dispositions are exact",
+    "CONT-P020 CI run 33094713851 is recorded as exact-head SUCCESS with five required successful jobs",
+    "CONT-P021 artifact 9656859745 name, head, byte count, SHA-256, and unexpired state are exact",
+    "CONT-P022 accepted integration evidence remains level-3 static/synthetic evidence with zero scientific execution",
+    "CONT-P023 narrow supersession applies only to future continuation-enabled v2 bindings",
+    "CONT-P024 historical run_manifest/v1 and checkpoint_record/v1 records are not reinterpreted",
+    "CONT-P025 all accepted questions, models, domains, units, configurations, controls, numerical/stochastic/uncertainty policies, and evidence boundaries remain unchanged",
+    "CONT-P026 exact study order is SD-01 through SD-14 with fourteen unique identifiers",
+    "CONT-P027 within-run continuation set is exactly SD-01 and SD-08 through SD-14",
+    "CONT-P028 SD-02 continuation remains conditional on exact inherited or separate authority",
+    "CONT-P029 SD-03 through SD-07 permit continuation only between complete atomic cases",
+    "CONT-P030 identity hierarchy is exactly study, campaign, scientific run, attempt, checkpoint",
+    "CONT-P031 campaign identity preimage contains every result-affecting authority, code, artifact, environment, algorithm, policy, seed, stream, topology, cache, horizon, control, falsifier, checkpoint, and budget identity",
+    "CONT-P032 scientific-run identity binds campaign, configuration, seed, horizon, initial state, boundary, topology, and model",
+    "CONT-P033 attempt identity binds campaign, scientific run, ordinal, incoming checkpoint, and attempt binding",
+    "CONT-P034 a result-affecting change creates a new campaign or scientific-run identity and cannot alias continuation",
+    "CONT-P035 attempt watchdog dimensions are closed and each applicable accepted Stage D profile is an upper bound",
+    "CONT-P036 a clean checkpoint boundary must occur before a watchdog limit and is not timeout or exhaustion",
+    "CONT-P037 campaign budget contains exact attempt, cumulative compute, byte, memory, calendar, and study-specific dimensions",
+    "CONT-P038 campaign budget is outcome-blind, Stage-E-informed, independently audited, and sealed before Stage F",
+    "CONT-P039 campaign active-wall/evaluation/physical-write envelope may exceed one attempt only prospectively and without enlarging peak memory, durable logical output, or problem dimensions",
+    "CONT-P040 post-start campaign budget enlargement or reduction is forbidden and creates a new identity/authority",
+    "CONT-P041 all non-sliceable dimensions are explicitly closed and remain accepted Stage D limits",
+    "CONT-P042 total study output and final logical trace/output ceilings remain cumulative rather than renewable per slice",
+    "CONT-P043 attempt ordinal zero uses frozen initial state and every later ordinal consumes the prior accepted checkpoint",
+    "CONT-P044 next attempt ordinal is exactly previous terminal ordinal plus one and only one attempt may be active",
+    "CONT-P045 CHECKPOINTED_CONTINUATION_REQUIRED carries null scientific disposition and requires durable checkpoint, ledger, trace, receipts, cache epochs, counters, and continuation receipt",
+    "CONT-P046 restarted suffix must be byte-identical to uninterrupted execution over the complete conformance domain",
+    "CONT-P047 continuation-equivalence mismatch suspends the campaign and is never tolerance or approximation",
+    "CONT-P048 per-run and campaign-wide attempt count, active wall time, evaluations, physical bytes, durable logical bytes, peak memory, and calendar time are fully specified and canonically aggregated",
+    "CONT-P049 failed, repeated, and discarded work remains in cumulative accounting",
+    "CONT-P050 duplicated physical bytes create no extra durable logical-byte allowance",
+    "CONT-P051 checkpoint, trace, receipt, invalidation, and cache-epoch chains are append-only",
+    "CONT-P052 queued/offline time is excluded from active compute but included in calendar duration",
+    "CONT-P053 continuation checkpoint binds the complete authority/code/artifact/environment/algorithm/policy/seed/stream/counter/topology/cache/dependency identity set",
+    "CONT-P054 accepted 29-field cache key and equivalence certificate remain mandatory",
+    "CONT-P055 every correction or authority/result-affecting change deterministically invalidates affected checkpoints and cache entries before recomputation",
+    "CONT-P056 near-equivalence, incomplete-key, stale-cache, missing-receipt, alias, and dependency negative controls are frozen",
+    "CONT-P057 accepted counter-hash preimage and exact rational rejection rule remain unchanged",
+    "CONT-P058 READY permits attempt_index 0 through 999999 only",
+    "CONT-P059 exactly attempt_index 1000000 binds TERMINAL_REJECTION_CAP and COMPUTATIONALLY_INCONCLUSIVE",
+    "CONT-P060 terminal rejection cannot continue, retry, change stream, substitute outcome, or hide in a same-identity campaign",
+    "CONT-P061 closed attempt-terminal-state set contains exactly ten values",
+    "CONT-P062 clean continuation is the only nonterminal continuation-permitted attempt state",
+    "CONT-P063 timeout/exhaustion retains evidence and cost, permits no automatic retry, and is not scientific evidence",
+    "CONT-P064 recovery requires prospective rule, transient classification, unchanged code/environment, no accepted post-checkpoint state, failed-cost retention, and independent disposition",
+    "CONT-P065 deterministic implementation defect suspends the campaign and requires new code identity and authority",
+    "CONT-P066 campaign budget exhaustion and calendar deadline are visibly COMPUTATIONALLY_INCONCLUSIVE and leave the question unresolved",
+    "CONT-P067 mathematical/material infeasibility requires complete bound evidence and independent audit",
+    "CONT-P068 infeasibility is never inferred from one slow/failed attempt and is never scientific evidence",
+    "CONT-P069 arbitrary-N completion and universal Möbius scalability claims remain forbidden",
+    "CONT-P070 Möbius complexity remains O(n*2^n) plus subset-evaluation cost and O(2^n) storage",
+    "CONT-P071 atomic Möbius/poset/canonical/exact cases cannot checkpoint partial internal state",
+    "CONT-P072 silent approximation, sampling, truncation, sparsification, topology change, or post-outcome substitute is forbidden",
+    "CONT-P073 every separately proposed approximation requires its own prospective authority, errors, controls, evidence class, and interpretation rules",
+    "CONT-P074 schema defines exactly campaign binding, attempt, checkpoint, per-run ledger, campaign ledger, continuation receipt, recovery, infeasibility, and campaign terminal record families",
+    "CONT-P075 every schema object is closed with explicit required fields and integer-only counters",
+    "CONT-P076 schema mechanically binds clean continuation to null disposition, durable identities, passed checks, respected watchdogs, and continuation true",
+    "CONT-P077 schema mechanically binds scientific terminal state to accepted scientific dispositions and continuation false",
+    "CONT-P078 schema mechanically binds failure/limit/infeasibility states to non-scientific dispositions and continuation false",
+    "CONT-P079 schema mechanically binds terminal rejection to COMPUTATIONALLY_INCONCLUSIVE, no outgoing checkpoint, and continuation false",
+    "CONT-P080 schema mechanically binds campaign terminal eligibility only to all registered runs terminal",
+    "CONT-P081 schema mechanically requires infeasibility identity for infeasibility terminal state",
+    "CONT-P082 all thirty-five prospective negative validation cases are present in exact order",
+    "CONT-P083 Stage E implementation, model, trajectory, Gate, transform, benchmark, draw, simulation, outcome, result, figure, book, release, and publication counters are zero",
+    "CONT-P084 independent authority PASS cannot authorize integration without a separate user permission",
+    "CONT-P085 durability, Stage E, Stage F, results, figures, books, release, and publication remain separately forbidden",
+    "CONT-P086 campaign binding requires the five distinct parallelization-boundary, worker-allocation-policy, storage-location, durability-policy, and restart-policy identities",
+    "CONT-P087 all five campaign execution-policy identities are in the campaign identity preimage and a change creates a new campaign",
+    "CONT-P088 attempt_binding/v2 is closed and its twelve-field preimage binds campaign, run, exact campaign execution binding, ordinal, incoming checkpoint, five campaign policies, process allocation, and conformance receipt",
+    "CONT-P089 attempt_manifest/v2 embeds the complete attempt binding and its reconstructed digest equals attempt_binding_identity",
+    "CONT-P090 process_allocation/v2 is closed and its canonical digest equals process_allocation_identity",
+    "CONT-P091 ordered worker allocations have exactly nine closed fields, unique contiguous ordinals, unique process identities/indices, and exact worker_count agreement",
+    "CONT-P092 actual process allocation conforms to the frozen parallelization boundary and worker-allocation policy with an exact conformance receipt",
+    "CONT-P093 continuation checkpoint requires the complete ordered permitted-stream array, ordered READY tuple array, and next_counter_tuple_set_identity with exact canonical three-field preimage derivation",
+    "CONT-P094 tuple stream-id projection equals the unique permitted-stream array in ascending UTF-8 order with no missing, extra, duplicate, misordered, or terminal-cap tuple",
+    "CONT-P095 counter_state_mode is not caller-selectable: deterministic continuation binds study and campaign-execution-binding identities, DETERMINISTIC_EMPTY mode, exact campaign FORBIDDEN stochastic-rule identity, seed zero, and both empty arrays",
+    "CONT-P096 canonical empty array digest is 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945 and the exact deterministic three-field tuple-set digest is 8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+    "CONT-P097 evidence schema accepts the complete non-evidence SD-01 deterministic empty-checkpoint fixture and refuses deterministic dummy streams or wrong empty digests",
+    "CONT-P098 stochastic continuation requires both arrays nonempty while one-empty/one-nonempty states refuse",
+    "CONT-P099 attempt-binding and embedded process-allocation policy_conformance_receipt_identity values are exactly equal and a mismatch refuses"
+  ],
+  "required_positive_check_count": 99,
+  "negative_cases": [
+    {
+      "id": "CONT-N01",
+      "mutation": "add, modify, delete, rename, or mode-change a sixth or non-authority path",
+      "required_disposition": "FAIL_SCOPE"
+    },
+    {
+      "id": "CONT-N02",
+      "mutation": "change one byte in any accepted Stage D authority or locked predecessor row",
+      "required_disposition": "FAIL_PREDECESSOR_PRESERVATION"
+    },
+    {
+      "id": "CONT-N03",
+      "mutation": "reinterpret an existing v1 run or checkpoint as a continuation-enabled v2 record",
+      "required_disposition": "REFUSE_RETROACTIVE_REINTERPRETATION"
+    },
+    {
+      "id": "CONT-N04",
+      "mutation": "omit the campaign budget or attempt watchdogs",
+      "required_disposition": "REFUSE_UNBOUND_CONTINUATION_BUDGET"
+    },
+    {
+      "id": "CONT-N05",
+      "mutation": "seal a campaign budget after outcome inspection or allow post-start change",
+      "required_disposition": "REFUSE_RETROSPECTIVE_BUDGET"
+    },
+    {
+      "id": "CONT-N06",
+      "mutation": "renew/reset one watchdog as though cumulative accounting disappeared, enlarge campaign peak memory beyond the attempt profile, or expand durable logical trace/output allowance by slicing",
+      "required_disposition": "REFUSE_CAP_RESET"
+    },
+    {
+      "id": "CONT-N07",
+      "mutation": "decrease, omit, overwrite, or fork a cumulative counter or prefix",
+      "required_disposition": "REFUSE_NONMONOTONE_CUMULATIVE_ACCOUNTING"
+    },
+    {
+      "id": "CONT-N08",
+      "mutation": "give duplicate physical bytes new durable logical-byte allowance",
+      "required_disposition": "REFUSE_DUPLICATE_BYTE_ALLOWANCE"
+    },
+    {
+      "id": "CONT-N09",
+      "mutation": "skip, repeat, fork, or concurrently execute an attempt ordinal",
+      "required_disposition": "REFUSE_ATTEMPT_CHAIN"
+    },
+    {
+      "id": "CONT-N10",
+      "mutation": "continue from a missing, corrupt, stale, non-durable, or wrong-run checkpoint",
+      "required_disposition": "REFUSE_CHECKPOINT_IDENTITY"
+    },
+    {
+      "id": "CONT-N11",
+      "mutation": "change code, artifact, authority, environment, algorithm, oracle, topology, model, numerical/stochastic/uncertainty policy, seed, stream, counter, cache, horizon, control, falsifier, or exactness identity",
+      "required_disposition": "NEW_CAMPAIGN_REQUIRED"
+    },
+    {
+      "id": "CONT-N12",
+      "mutation": "accept a restarted suffix differing from uninterrupted execution",
+      "required_disposition": "CONTINUATION_EQUIVALENCE_FAILURE"
+    },
+    {
+      "id": "CONT-N13",
+      "mutation": "label a clean slice boundary positive, negative, null, inconclusive, or falsified",
+      "required_disposition": "REFUSE_SLICE_AS_SCIENTIFIC_OUTCOME"
+    },
+    {
+      "id": "CONT-N14",
+      "mutation": "automatically retry timeout, exhaustion, implementation failure, or identity refusal",
+      "required_disposition": "REFUSE_UNAUDITED_RECOVERY"
+    },
+    {
+      "id": "CONT-N15",
+      "mutation": "resume after failure without transient classification, unchanged code/environment, prior checkpoint, retained cost, and independent disposition",
+      "required_disposition": "REFUSE_UNAUTHORIZED_RECOVERY"
+    },
+    {
+      "id": "CONT-N16",
+      "mutation": "continue or choose an outcome after stochastic attempt_index 1000000",
+      "required_disposition": "REFUSE_POST_REJECTION_CONTINUATION"
+    },
+    {
+      "id": "CONT-N17",
+      "mutation": "continue after campaign budget exhaustion or calendar deadline",
+      "required_disposition": "REFUSE_POST_BUDGET_CONTINUATION"
+    },
+    {
+      "id": "CONT-N18",
+      "mutation": "present timeout, exhaustion, budget, deadline, failure, refusal, or infeasibility as positive or negative scientific evidence",
+      "required_disposition": "REFUSE_EVIDENCE_PROMOTION"
+    },
+    {
+      "id": "CONT-N19",
+      "mutation": "classify infeasibility from one slow/failed attempt or without complete evidence and independent audit",
+      "required_disposition": "REFUSE_UNAUDITED_INFEASIBILITY"
+    },
+    {
+      "id": "CONT-N20",
+      "mutation": "enlarge maximum n, subsets, hyperedge order, vertices, edges, depth, horizon, canonical level, agent count, or another complete-case dimension",
+      "required_disposition": "REFUSE_PROBLEM_DIMENSION_ENLARGEMENT"
+    },
+    {
+      "id": "CONT-N21",
+      "mutation": "checkpoint or resume a partial atomic Möbius, poset, canonical, or exact case",
+      "required_disposition": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION"
+    },
+    {
+      "id": "CONT-N22",
+      "mutation": "silently approximate, sample, truncate, sparsify, alter topology, weaken equivalence, or substitute a post-outcome method",
+      "required_disposition": "REFUSE_UNAUTHORIZED_APPROXIMATION"
+    },
+    {
+      "id": "CONT-N23",
+      "mutation": "claim arbitrary-N completion, universal scalability, or better than the accepted Möbius complexity boundary",
+      "required_disposition": "REFUSE_SCALABILITY_OVERCLAIM"
+    },
+    {
+      "id": "CONT-N24",
+      "mutation": "reuse a near-equivalent, incomplete-key, stale, uninvalidation-receipted, alias-omitting, or dependency-omitting cache entry",
+      "required_disposition": "REFUSE_CACHE_OR_EQUIVALENCE_BREACH"
+    },
+    {
+      "id": "CONT-N25",
+      "mutation": "make correction or authority change without deterministic checkpoint/cache invalidation before recomputation",
+      "required_disposition": "REFUSE_MISSING_INVALIDATION"
+    },
+    {
+      "id": "CONT-N26",
+      "mutation": "omit any required campaign, run, attempt, checkpoint, ledger, receipt, recovery, infeasibility, or terminal-manifest field",
+      "required_disposition": "REFUSE_SCHEMA_INCOMPLETENESS"
+    },
+    {
+      "id": "CONT-N27",
+      "mutation": "add an unknown field, duplicate key, floating number, non-finite value, malformed digest, BOM, CR, trailing whitespace, or invalid text normalization",
+      "required_disposition": "REFUSE_TEXT_OR_SCHEMA_INTEGRITY"
+    },
+    {
+      "id": "CONT-N28",
+      "mutation": "allow SD-02 continuation without exact inherited or separate authority",
+      "required_disposition": "REFUSE_SD02_AUTHORITY_GAP"
+    },
+    {
+      "id": "CONT-N29",
+      "mutation": "use within-run continuation for SD-03 through SD-07 atomic cases",
+      "required_disposition": "REFUSE_STUDY_CONTINUATION_MODE_MISMATCH"
+    },
+    {
+      "id": "CONT-N30",
+      "mutation": "implement Stage E or execute/import a framework, model, runner, Gate, transform, benchmark, draw, trajectory, simulation, or outcome path",
+      "required_disposition": "FAIL_STAGE_BOUNDARY"
+    },
+    {
+      "id": "CONT-N31",
+      "mutation": "create a result, figure, book, release, upload, publication, or external institutional claim",
+      "required_disposition": "FAIL_LATER_STAGE_BOUNDARY"
+    },
+    {
+      "id": "CONT-N32",
+      "mutation": "omit or alias any campaign parallelization-boundary, worker-allocation-policy, storage-location, durability-policy, or restart-policy identity",
+      "required_disposition": "REFUSE_INCOMPLETE_CAMPAIGN_EXECUTION_POLICY"
+    },
+    {
+      "id": "CONT-N33",
+      "mutation": "change a campaign execution-policy identity without creating a new prospective campaign identity and binding",
+      "required_disposition": "NEW_CAMPAIGN_REQUIRED"
+    },
+    {
+      "id": "CONT-N34",
+      "mutation": "omit the embedded attempt binding or mismatch its campaign, run, ordinal, checkpoint, policy, allocation, receipt, or digest identity",
+      "required_disposition": "REFUSE_ATTEMPT_EXECUTION_BINDING"
+    },
+    {
+      "id": "CONT-N35",
+      "mutation": "omit, digest-mismatch, or provide an out-of-policy process allocation",
+      "required_disposition": "REFUSE_PROCESS_ALLOCATION"
+    },
+    {
+      "id": "CONT-N36",
+      "mutation": "use a missing, duplicate, noncontiguous, or misordered worker ordinal or duplicate a process identity/index",
+      "required_disposition": "REFUSE_PROCESS_ALLOCATION_CLOSURE"
+    },
+    {
+      "id": "CONT-N37",
+      "mutation": "omit next_counter_tuple_set_identity or make its value/sha256 differ from the canonical tuple-set digest",
+      "required_disposition": "REFUSE_CHECKPOINT_COUNTER_DIGEST_MISMATCH"
+    },
+    {
+      "id": "CONT-N38",
+      "mutation": "omit, add, duplicate, or misorder a permitted stream id or tuple, or make the tuple projection differ from the stream array",
+      "required_disposition": "REFUSE_CHECKPOINT_COUNTER_STREAM_CLOSURE"
+    },
+    {
+      "id": "CONT-N39",
+      "mutation": "place TERMINAL_REJECTION_CAP or attempt_index 1000000 in a continuation checkpoint",
+      "required_disposition": "REFUSE_TERMINAL_COUNTER_CHECKPOINT"
+    },
+    {
+      "id": "CONT-N40",
+      "mutation": "change tuple bytes without changing next_counter_tuple_set_identity, or change the identity without changing its canonical preimage",
+      "required_disposition": "REFUSE_CHECKPOINT_COUNTER_DIGEST_MISMATCH"
+    },
+    {
+      "id": "CONT-N41",
+      "mutation": "use a deterministic checkpoint with one empty counter array and one nonempty counter array",
+      "required_disposition": "REFUSE_DETERMINISTIC_COUNTER_SHAPE_MISMATCH"
+    },
+    {
+      "id": "CONT-N42",
+      "mutation": "add a dummy permitted stream or counter tuple to an SD-01 deterministic checkpoint",
+      "required_disposition": "REFUSE_DETERMINISTIC_DUMMY_STREAM"
+    },
+    {
+      "id": "CONT-N43",
+      "mutation": "change the deterministic canonical empty permitted-stream identity or tuple-set identity",
+      "required_disposition": "REFUSE_DETERMINISTIC_EMPTY_DIGEST_MISMATCH"
+    },
+    {
+      "id": "CONT-N44",
+      "mutation": "use DETERMINISTIC_EMPTY with a nonzero seed or a stochastic-rule identity value other than FORBIDDEN",
+      "required_disposition": "REFUSE_DETERMINISTIC_STOCHASTIC_AUTHORITY_MISMATCH"
+    },
+    {
+      "id": "CONT-N45",
+      "mutation": "use STOCHASTIC_NONEMPTY with either permitted-stream or counter-tuple array empty",
+      "required_disposition": "REFUSE_STOCHASTIC_COUNTER_SHAPE_MISMATCH"
+    },
+    {
+      "id": "CONT-N46",
+      "mutation": "make attempt_binding.policy_conformance_receipt_identity differ from its embedded process-allocation receipt identity",
+      "required_disposition": "REFUSE_POLICY_CONFORMANCE_RECEIPT_MISMATCH"
+    }
+  ],
+  "required_negative_case_count": 46,
+  "required_predecessor_row_count": 9,
+  "required_schema_definition_names": [
+    "sha256",
+    "nonempty_string",
+    "nullable_nonempty_string",
+    "study_id",
+    "identity",
+    "identity_array",
+    "positive_integer",
+    "nonnegative_integer",
+    "attempt_watchdogs",
+    "campaign_budget",
+    "campaign_execution_binding",
+    "worker_allocation",
+    "process_allocation",
+    "attempt_binding",
+    "stochastic_counter_tuple",
+    "run_resource_ledger",
+    "campaign_resource_ledger",
+    "continuation_checkpoint",
+    "attempt_manifest",
+    "continuation_receipt",
+    "recovery_disposition",
+    "infeasibility_finding",
+    "campaign_terminal_manifest"
+  ],
+  "required_schema_definition_count": 23,
+  "required_non_evidence_schema_fixture_names": [
+    "sd01_accepted_binding_projection",
+    "valid_sd01_deterministic_empty_checkpoint"
+  ],
+  "required_non_evidence_schema_fixture_count": 2,
+  "global_acceptance": {
+    "all_positive_checks_pass": true,
+    "all_negative_cases_refuse": true,
+    "all_predecessor_rows_match": true,
+    "candidate_scope_exact": true,
+    "accepted_stage_d_files_preserved": true,
+    "stage_e_implementation_file_count": 0,
+    "model_state_advance_count": 0,
+    "trajectory_count": 0,
+    "simulation_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_count": 0,
+    "stochastic_draw_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_generation_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "independent_dispositions": [
+    "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_PASS",
+    "FAIL"
+  ],
+  "pass_boundary": "A PASS establishes only that the five-file additive authority candidate is internally coherent and may be presented for separately authorized normal integration. It does not authorize integration, durability implementation, Stage E, Stage F, outcomes, results, figures, books, release, upload, or publication.",
+  "completion_marker": "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_CANDIDATE_COMPLETE"
+}
