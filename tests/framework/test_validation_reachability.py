@@ -216,7 +216,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "373d9ffa4fb90f9fbd29147c31ac43f9431258d635aab4c7c21ec0edd227f741"
+TEST_SELF_SEAL = "73cf207e9fa902f3c8c8dfdd648547a8be6bbbd209b1d083d7227cf4f74c21ca"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
