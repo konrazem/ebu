@@ -185,6 +185,14 @@ instances. Annotation-only `title`, `description`, `format`, `$schema`, `$id`
 and `$defs` do not create rejection claims; `format` is never used to decide a
 PASS.
 
+Those 27 Draft keywords are distinct from eleven closed authority-metadata
+keys used at the top level of the accepted schemas. The validator consumes and
+checks those metadata keys for authority closure but never treats them as
+instance assertions. The exact per-schema metadata-key sets are frozen in the
+mechanical contract. A missing required metadata key, a changed value, or a
+twelfth/unknown metadata key refuses; silently ignoring authority metadata is
+also forbidden.
+
 Schema shape is not enough. The validator also enforces the accepted
 cross-record relations:
 

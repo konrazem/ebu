@@ -185,6 +185,30 @@
       "type", "uniqueItems"
     ],
     "supported_keyword_count": 27,
+    "recognized_authority_metadata_keys_in_order": [
+      "accepted_stage_d_schema", "completion_marker", "prospective_instance_count",
+      "prospective_negative_schema_cases", "prospective_negative_validation_cases",
+      "prospective_non_evidence_schema_fixtures", "schema_version", "scientific_execution_count",
+      "stage_d_instance_count", "stage_e_instance_count", "verbatim_user_mobius_topology_controls"
+    ],
+    "recognized_authority_metadata_key_count": 11,
+    "authority_metadata_keys_by_schema": {
+      "stage_d_scientific_validation_evidence_schema.json": [
+        "prospective_negative_schema_cases", "prospective_non_evidence_schema_fixtures",
+        "schema_version", "stage_d_instance_count", "verbatim_user_mobius_topology_controls"
+      ],
+      "stage_d_completion_oriented_continuation_evidence_schema.json": [
+        "accepted_stage_d_schema", "completion_marker", "prospective_instance_count",
+        "prospective_negative_validation_cases", "prospective_non_evidence_schema_fixtures",
+        "schema_version"
+      ],
+      "stage_e_scientific_harness_evidence_schema.json": [
+        "completion_marker", "prospective_negative_schema_cases",
+        "prospective_non_evidence_schema_fixtures", "scientific_execution_count",
+        "stage_e_instance_count"
+      ]
+    },
+    "authority_metadata_semantics": "strictly consumed for authority closure and never treated as instance assertions",
     "positive_fixture_counts": {
       "accepted_stage_d": 5,
       "accepted_continuation": 3,
@@ -199,7 +223,7 @@
     },
     "assertion_and_applicator_keyword_mutation_count": 21,
     "total_refused_instance_count": 96,
-    "unknown_keyword": "REFUSE_VALIDATOR_BUILD",
+    "unknown_keyword_or_authority_metadata_key": "REFUSE_VALIDATOR_BUILD",
     "format_reliance": "FORBIDDEN unless an exact local format checker is named and tested",
     "positive_instances": "all accepted Stage D and continuation non-evidence fixtures plus Stage E fixtures",
     "negative_instances": "every frozen Stage D/continuation/Stage E schema negative plus mutation coverage for each supported applicator and assertion keyword",

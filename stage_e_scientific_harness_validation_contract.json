@@ -127,7 +127,7 @@
     },
     {
       "group_id": "SE-P-SCHEMA",
-      "count": 27,
+      "count": 29,
       "checks": [
         "SE-P-SCHEMA-001 evidence schema declares Draft 2020-12",
         "SE-P-SCHEMA-002 schema has exactly 22 named definitions",
@@ -155,7 +155,9 @@
         "SE-P-SCHEMA-024 supported schema vocabulary is the exact ordered 27-keyword union",
         "SE-P-SCHEMA-025 accepted Stage D continuation and Stage E positive fixture counts are exactly 5 3 and 11",
         "SE-P-SCHEMA-026 frozen Stage D continuation and Stage E negative fixture counts are exactly 16 35 and 24",
-        "SE-P-SCHEMA-027 exactly 21 assertion/applicator mutations make the schema record report 19 accepted and 96 refused instances"
+        "SE-P-SCHEMA-027 exactly 21 assertion/applicator mutations make the schema record report 19 accepted and 96 refused instances",
+        "SE-P-SCHEMA-028 exactly eleven recognized authority-metadata keys are frozen separately from Draft keywords",
+        "SE-P-SCHEMA-029 each accepted schema has the exact frozen metadata-key set and every value is consumed for authority closure"
       ]
     },
     {
@@ -297,7 +299,7 @@
       ]
     }
   ],
-  "required_positive_check_count": 193,
+  "required_positive_check_count": 195,
   "negative_cases": [
     "SE-N001 wrong base commit",
     "SE-N002 wrong base tree",
@@ -391,9 +393,10 @@
     "SE-N090 cross-head cross-tree or cross-environment record admitted to the final manifest",
     "SE-N091 BOUND_NOT_SUPPORTED or FAIL underlying record relabelled as final PASS",
     "SE-N092 supported keyword omitted added reordered or silently ignored",
-    "SE-N093 required positive negative or keyword-mutation schema fixture omitted"
+    "SE-N093 required positive negative or keyword-mutation schema fixture omitted",
+    "SE-N094 authority-metadata key omitted changed added or silently ignored"
   ],
-  "required_negative_case_count": 93,
+  "required_negative_case_count": 94,
   "schema_definition_requirements": {
     "minimum_definition_count": 20,
     "required_names": [
@@ -473,7 +476,7 @@
     "raw and canonical identities",
     "17 predecessor rows",
     "authority and implementation path closure",
-    "193 positive and 93 negative checks",
+    "195 positive and 94 negative checks",
     "zero counters",
     "prohibited actions",
     "stop condition",

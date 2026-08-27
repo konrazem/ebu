@@ -200,7 +200,8 @@
           "required": [
             "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
             "environment", "scientific_counters", "release_counters", "schema_identities",
-            "supported_keywords", "valid_instances", "refused_instances", "unresolved_local_refs"
+            "supported_keywords", "recognized_authority_metadata_keys", "valid_instances",
+            "refused_instances", "unresolved_local_refs"
           ],
           "properties": {
             "schema_version": {"const": 1},
@@ -214,6 +215,7 @@
             "release_counters": {"$ref": "#/$defs/release_zero_counters"},
             "schema_identities": {"type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/file_identity"}},
             "supported_keywords": {"const": ["$defs", "$id", "$ref", "$schema", "additionalProperties", "allOf", "const", "description", "else", "enum", "format", "if", "items", "maxItems", "maximum", "minItems", "minLength", "minimum", "oneOf", "pattern", "prefixItems", "properties", "required", "then", "title", "type", "uniqueItems"]},
+            "recognized_authority_metadata_keys": {"const": ["accepted_stage_d_schema", "completion_marker", "prospective_instance_count", "prospective_negative_schema_cases", "prospective_negative_validation_cases", "prospective_non_evidence_schema_fixtures", "schema_version", "scientific_execution_count", "stage_d_instance_count", "stage_e_instance_count", "verbatim_user_mobius_topology_controls"]},
             "valid_instances": {"const": 19},
             "refused_instances": {"const": 96},
             "unresolved_local_refs": {"const": 0}
