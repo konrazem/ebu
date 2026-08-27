@@ -13,6 +13,16 @@
     "accepted_stage_c_authority_candidate_tree": "36422147de3efbad69bd21550b9c8f142a965481",
     "accepted_stage_c_authority_integration_commit": "f88496cfb2cce563db25a259e3ac9a6d1e22268f",
     "accepted_stage_c_authority_integration_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+    "accepted_sqlite_runtime_authority_correction_candidate_commit": "e48a17a8051d0948b0a734fbc80a770e8b1cdb94",
+    "accepted_sqlite_runtime_authority_correction_candidate_tree": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
+    "accepted_sqlite_runtime_authority_correction_integration_commit": "cb07d02d00e3ed6ed80324ae43cad8ca42f6716d",
+    "accepted_sqlite_runtime_authority_correction_integration_tree": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
+    "inventory_scope_correction_base_commit": "cb07d02d00e3ed6ed80324ae43cad8ca42f6716d",
+    "inventory_scope_correction_base_tree": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
+    "rejected_implementation_candidate_commit": "9bcf0dafd389448df1a854db872932ef6ed86545",
+    "rejected_implementation_candidate_tree": "7fc9ddbf835aad71c4ca3e3a256223347c5eeb1e",
+    "rejected_implementation_candidate_ci_run": 33033862855,
+    "rejected_implementation_candidate_disposition": "INDEPENDENT_FAIL_AUTHORITY_SCOPE_NOT_A_PASS",
     "runtime_authority_correction_ci_runs": [
       33030540700,
       33030733344
@@ -121,6 +131,22 @@
         ]
       }
     ],
+    "static_authority_semantic_scope": {
+      "prior_positive_check_count": 92,
+      "additional_positive_check_count": 8,
+      "required_positive_check_count": 100,
+      "checks": [
+        "artifact predecessor reconciliation uses exactly the four literal authorized paths and exact I8/current-base identities",
+        "artifact predecessor reconciliation verifies every other I8 PRESERVED row directly and contains no dynamic scope-derived exclusion",
+        "atomic predecessor-preservation exclusion literals and non-inventory logic equal cb07d02d",
+        "interaction predecessor-preservation exclusion literals and non-inventory logic equal cb07d02d",
+        "capabilities failure inventory equals exact 280-entry I8 prefix plus exact 14-entry CLCD suffix and is uniquely 294",
+        "capabilities root inventory equals exact 444-entry I8 prefix plus exact 27-entry CLCD suffix and is uniquely 471",
+        "capabilities current module inventory equals exact I8 order plus validation/correction_protocol/correction_diagnostics with 42 modules and 257 edges",
+        "interaction current graph and module-export projections equal the exact frozen 42-module/257-edge identities while all historical graph and inertness assertions remain"
+      ],
+      "missing_failed_or_zero_check": "REFUSE"
+    },
     "shell_quoting_is_authority": false,
     "absolute_path_substitution_only": true
   },
@@ -260,7 +286,7 @@
     {
       "id": "SC15_TEST_COMPATIBILITY_SCOPE",
       "class": "T0",
-      "accept": "Eleven authorized inventory tests preserve every accepted I8 prefix and behavior while asserting the exact current CLCD suffix and whole-current uniqueness; the T2 bridge test retains its name/count, 42-row allowlist, fixtures, bridge/I6, signatures/import graph, failure precedence and non-inventory behavior; the separately authorized reachability test adds only exact Stage C authority and implementation phases while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease."
+      "accept": "Eleven authorized inventory tests preserve every accepted I8 prefix and behavior while asserting exact current suffixes and uniqueness. Capabilities asserts the full 280-failure and 444-root I8 prefixes, exact 14/27 CLCD suffixes, 294/471 uniqueness, and exact current I8-plus-three module order with 42 modules and 257 edges. Interaction may update only its whole-current graph inventory to the frozen 429-byte module-order, 3522-byte import-graph and 12138-byte module-export projections while preserving every historical graph and inertness assertion. Artifact predecessor preservation uses exactly four literal reconciled paths with exact historical/current-base identities and directly verifies every other I8 PRESERVED row; atomic and interaction predecessor exclusion logic remains exactly cb07d02d with no dynamic scope-derived exclusion. The T2 bridge test retains its name/count, 42-row allowlist, fixtures, bridge/I6, signatures/import graph, failure precedence and non-inventory behavior. Reachability adds only exact Stage C phases while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease; all eight semantic static-authority checks pass for exactly 100 total checks per job."
     },
     {
       "id": "SC16_PROTECTED_BYTES",
@@ -453,6 +479,7 @@
       "all archive member and RECORD identities",
       "direct versus sdist-derived wheel equality",
       "installed module origins and public surface projections",
+      "exact four-path predecessor reconciliation, exact capabilities prefixes/current module inventory, exact interaction current graph projections and eight semantic-scope check dispositions",
       "all failures retries deviations and unresolved risks",
       "bounded regression test files commands counts outcomes and evidence classification",
       "zero registered/full-horizon campaign, new official result, scientific interpretation and validator-direct model/runner counts"
@@ -463,6 +490,7 @@
     "direct framework runner or Gate invocation by the Stage C validator",
     "scientific callback or outcome interpretation outside the exact frozen bounded regression assertions",
     "test deletion filtering skipping or expected-failure conversion",
+    "dynamic or authority-scope-derived predecessor exclusion, unlisted reconciliation path, omitted I8 prefix, or unfrozen current import graph",
     "network during packaging frontend or installed probe execution",
     "editable install",
     "checkout source import in installed lanes",
