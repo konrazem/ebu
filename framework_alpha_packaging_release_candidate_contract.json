@@ -8,6 +8,7 @@
     "inventory_scope_correction_branch": "framework/stage-c-inventory-scope-authority-correction",
     "predecessor_test_correction_branch": "framework/stage-c-predecessor-test-authority-correction",
     "release_license_tag_correction_branch": "framework/stage-c-release-license-tag-authority-correction",
+    "dependency_witness_correction_branch": "framework/stage-c-dependency-witness-authority-correction",
     "required_predecessor_commit": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
     "required_predecessor_tree": "e5d1fc2746253d73474b60c86c145293fb8ee1ef",
     "accepted_target_ref": "refs/heads/framework-v0.1",
@@ -18,6 +19,8 @@
     "accepted_target_live_tree_at_predecessor_test_correction_draft": "1614be178dfe37b37c9939ad0881853220717103",
     "accepted_target_live_commit_at_release_license_tag_correction_draft": "edaad455aa195b42a1f25d92725c3181e389c301",
     "accepted_target_live_tree_at_release_license_tag_correction_draft": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_target_live_commit_at_dependency_witness_correction_draft": "dcdbac6518518215f509688cd257a67032b1ec98",
+    "accepted_target_live_tree_at_dependency_witness_correction_draft": "d358fa8a6b182e8949443dd01c09209ed2c5e382",
     "main_ref": "refs/heads/main",
     "main_live_commit_at_draft": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
     "stale_local_framework_branch_commit": "4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e",
@@ -37,7 +40,8 @@
       "aggregate redistribution license metadata and associated documentation",
       "alpha tag target after corrected Stage C release-candidate validation",
       "full main and source-archive historical-material disclosure",
-      "reproducible indexed OSV observation records and exact build-replica wording"
+      "reproducible indexed OSV observation records and exact build-replica wording",
+      "I8S-013 dependency-witness reconciliation for the exact accepted license-only pyproject change"
     ],
     "preserved": [
       "all other accepted I-1 packaging rules",
@@ -580,6 +584,66 @@
       "dynamic_scope_derived_or_sixth_path": "REFUSE",
       "all_other_assertions": "PRESERVE_EXACTLY"
     },
+    "i8s013_dependency_witness_correction": {
+      "accepted_authority_target_commit": "dcdbac6518518215f509688cd257a67032b1ec98",
+      "accepted_authority_target_tree": "d358fa8a6b182e8949443dd01c09209ed2c5e382",
+      "rejected_implementation_candidate_commit": "94ca0ab1b075dde19b4421aaae0af4c37021596d",
+      "rejected_implementation_candidate_tree": "56a2b6193757e21639758df5b23d1c893cd4bcbc",
+      "rejected_ci_run": 33051127041,
+      "rejected_ci_final_disposition": {
+        "overall": "FAILURE_NOT_A_PASS",
+        "conventional": "SUCCESS",
+        "framework_t0": "SUCCESS",
+        "framework_t1": "FAILURE_SOURCE_299_RUN_1_FAILURE_I8S_013_INSTALLED_LANES_NOT_RUN",
+        "framework_t2": "SUCCESS",
+        "packaging_release_candidate": "FAILURE_AFTER_BUILD_AND_SOURCE_T0_AT_SOURCE_T1_I8S_013_NO_FINAL_MANIFEST_OR_ARTIFACT_RETENTION",
+        "static_authority_checks_per_job": 104,
+        "prospective_required_static_authority_checks_per_job": 105,
+        "rejected_wheel": {
+          "byte_count": 4078093,
+          "sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"
+        },
+        "rejected_sdist": {
+          "byte_count": 4138025,
+          "sha256": "0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41"
+        },
+        "artifact_disposition": "FAILED_DIAGNOSTIC_EVIDENCE_NOT_RELEASE_AUTHORIZATION"
+      },
+      "evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+      "test_path": "tests/framework/test_artifact_recovery_publication.py",
+      "test_class": "FrameworkI8ExactVectors",
+      "test_name": "test_I8S_013",
+      "vector_id": "I8S-013",
+      "branch": "NO_DEPENDENCY_DRIFT",
+      "exact_witness_files": [
+        "pyproject.toml",
+        "requirements-framework.lock"
+      ],
+      "pyproject_historical_identity": {
+        "mode": "100644",
+        "git_object": "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+        "byte_count": 399,
+        "sha256": "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b"
+      },
+      "pyproject_required_current_identity": {
+        "mode": "100644",
+        "byte_count": 434,
+        "sha256": "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+        "authority_binding": "release_license_and_tag_correction.corrected_pyproject"
+      },
+      "requirements_lock_preserved_identity": {
+        "mode": "100644",
+        "git_object": "907bdff88be25741f04980ae5e6a769df2a61d4d",
+        "byte_count": 2036,
+        "sha256": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+        "comparison": "DIRECT_I8_PREDECESSOR_BYTE_IDENTITY"
+      },
+      "only_mutable_logic": "NO_DEPENDENCY_DRIFT_PYPROJECT_IDENTITY_ROUTE",
+      "generic_or_dynamic_exclusion": "FORBIDDEN",
+      "third_witness_path": "FORBIDDEN",
+      "dependency_or_lock_change": "FORBIDDEN",
+      "vector_test_name_count_projection_call_counters_failure_precedence_and_other_static_branches": "PRESERVE_EXACTLY"
+    },
     "required_build_replica_wording": "Three perturbed build replicas produced by the pinned validator were byte-identical."
   },
   "accepted_surface": {
@@ -892,9 +956,10 @@
     "interaction_predecessor_test_rule": "Only the I8 predecessor-row comparison block may advance to the exact literal five-path reconciliation by adding pyproject.toml; preserve every signature, historical reconciliation, failure-precedence and other non-inventory assertion.",
     "interaction_import_graph_rule": "Only the current whole-package portion of test_exact_imports_graphs_and_inertness may advance from the exact I8 graph to exact current 42-module/257-edge projections; all historical graphs, edge subsets, acyclicity, forbidden imports, prohibited calls and inertness assertions remain unchanged.",
     "semantic_static_authority_checks": {
-      "additional_positive_checks": 12,
+      "additional_positive_checks": 13,
       "release_license_tag_additional_positive_checks": 4,
-      "total_positive_checks_per_job": 104,
+      "i8s013_dependency_witness_additional_positive_checks": 1,
+      "total_positive_checks_per_job": 105,
       "missing_or_failed_check": "REFUSE"
     },
     "preserve": [

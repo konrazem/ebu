@@ -21,6 +21,7 @@
     "accepted_inventory_scope_authority_correction_integration_tree": "1614be178dfe37b37c9939ad0881853220717103",
     "predecessor_test_correction_branch": "framework/stage-c-predecessor-test-authority-correction",
     "release_license_tag_correction_branch": "framework/stage-c-release-license-tag-authority-correction",
+    "dependency_witness_correction_branch": "framework/stage-c-dependency-witness-authority-correction",
     "rejected_implementation_commit": "9bcf0dafd389448df1a854db872932ef6ed86545",
     "rejected_implementation_tree": "7fc9ddbf835aad71c4ca3e3a256223347c5eeb1e",
     "rejected_implementation_disposition": "INDEPENDENT_FAIL_DO_NOT_INTEGRATE",
@@ -35,7 +36,15 @@
     "accepted_stage_c_target_ci_run": 33042629381,
     "release_candidate_audit_disposition": "FAIL_DO_NOT_RELEASE_OR_TAG",
     "release_license_tag_correction_base_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
-    "release_license_tag_correction_base_tree": "abad22ae00221db6e3a803993583424d8454fa10"
+    "release_license_tag_correction_base_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_release_license_tag_correction_candidate_commit": "2cb271f14efef638be202f8ef37b36deb4b634eb",
+    "accepted_release_license_tag_correction_candidate_tree": "d358fa8a6b182e8949443dd01c09209ed2c5e382",
+    "accepted_release_license_tag_correction_integration_commit": "dcdbac6518518215f509688cd257a67032b1ec98",
+    "accepted_release_license_tag_correction_integration_tree": "d358fa8a6b182e8949443dd01c09209ed2c5e382",
+    "rejected_dependency_witness_implementation_commit": "94ca0ab1b075dde19b4421aaae0af4c37021596d",
+    "rejected_dependency_witness_implementation_tree": "56a2b6193757e21639758df5b23d1c893cd4bcbc",
+    "rejected_dependency_witness_implementation_ci_run": 33051127041,
+    "rejected_dependency_witness_implementation_disposition": "FAIL_DO_NOT_INTEGRATE"
   },
   "inventory_scope_correction": {
     "authority_modified_paths": [
@@ -129,7 +138,19 @@
     ],
     "sole_new_reconciliation_member": "pyproject.toml",
     "unlisted_sixth_reconciliation_path": "FORBIDDEN",
-    "static_authority_check_total_per_job": 104,
+    "static_authority_check_total_per_job": 105,
+    "i8s013_dependency_witness_correction": {
+      "test_path": "tests/framework/test_artifact_recovery_publication.py",
+      "vector_id": "I8S-013",
+      "branch": "NO_DEPENDENCY_DRIFT",
+      "witness_files": [
+        "pyproject.toml",
+        "requirements-framework.lock"
+      ],
+      "only_new_logic": "EXACT_PYPROJECT_HISTORICAL_TO_CORRECTED_IDENTITY_ROUTE",
+      "requirements_lock_direct_i8_comparison": "PRESERVE_EXACTLY",
+      "all_other_vector_and_static_branch_behavior": "PRESERVE_EXACTLY"
+    },
     "packaging_test_count": 8,
     "full_stage_c_validation_rerun": "REQUIRED",
     "implementation_before_independent_pass_and_normal_integration": "FORBIDDEN"
@@ -180,7 +201,9 @@
         "replace only the PREDECESSOR_PRESERVATION literal reconciliation with the exact five paths frozen by the mechanical contract by adding only pyproject.toml",
         "verify the exact I8 rows and accepted Stage C base rows for workflow, backend and pyproject while leaving their candidate-byte authority to the closed Stage C diff",
         "verify exact cb07d02d current bytes for EBU_FUTURE_BOOKS_STRUCTURE.md and tests/framework/safety.py and directly verify every other I8 PRESERVED row",
-        "forbid dynamic or authority-scope-derived exclusions and every unlisted sixth reconciliation path"
+        "forbid dynamic or authority-scope-derived exclusions and every unlisted sixth reconciliation path",
+        "in the NO_DEPENDENCY_DRIFT branch preserve the exact pyproject.toml plus requirements-framework.lock witness order, route only pyproject.toml from its exact 399-byte I8 identity to the exact accepted 434-byte corrected identity, and leave the lock under its direct I8 byte comparison",
+        "preserve vector I8S-013, its test name/count, static outcome, projection, call counters and failure precedence, and every other _run_static_vector branch"
       ]
     },
     {
@@ -403,9 +426,10 @@
       "i9_relative_unique": 24
     },
     "static_authority_semantic_checks": {
-      "additional": 12,
+      "additional": 13,
       "added_by_release_license_tag_correction": 4,
-      "total_per_required_job": 104,
+      "added_by_i8s013_dependency_witness_correction": 1,
+      "total_per_required_job": 105,
       "failure": "REFUSE"
     }
   },
