@@ -135,6 +135,13 @@ only numbers. `process_allocation_identity` has kind
 reconstructed 64-lowercase-hex digest. The embedded record's `allocation_sha256`
 or `binding_sha256` must equal that same digest.
 
+There is one policy-conformance receipt, not two roles. The literal equality
+`attempt_binding.policy_conformance_receipt_identity ==
+attempt_binding.process_allocation.policy_conformance_receipt_identity` is
+mandatory and is checked before either the process-allocation or attempt-binding
+digest is accepted. A mismatch refuses the attempt even if both nested objects
+are otherwise schema-valid.
+
 Stage E feasibility measurements may inform this binding, but the complete
 binding must be sealed and independently audited before any Stage F outcome is
 visible. It may not be enlarged after execution begins. A later enlargement
@@ -278,6 +285,32 @@ forcing, and all numbers are integers. Its identity kind is exactly
 mismatch, missing/extra/duplicate/misordered stream, or terminal tuple in a
 continuation checkpoint refuses continuation.
 
+Deterministic studies are a closed branch, not a dummy-stream special case.
+`counter_state_mode` is `DETERMINISTIC_EMPTY`; `study_id` and the exact
+campaign/configuration binding select the accepted deterministic study;
+`stochastic_rule_identity` equals that binding's shared identity whose value is
+`FORBIDDEN`; and `seed` is `0`. Both `ordered_permitted_stream_ids` and
+`next_counter_tuples` are the canonical empty array. SHA-256 of canonical `[]`
+is `4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945`;
+this is the kind `permitted_stream_set/v2` identity's value and digest. The
+canonical three-field empty tuple-set preimage hashes to
+`8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6`,
+which is both value and digest of the kind `next_counter_tuple_set/v2`
+identity. The evidence schema carries a non-evidence positive SD-01 fixture.
+
+`counter_state_mode` is never caller-selectable. Exact equality to the accepted
+campaign/configuration stochastic-rule identity and permitted-stream set selects
+`DETERMINISTIC_EMPTY` for `FORBIDDEN` plus the canonical empty set; an accepted
+nonempty stochastic set selects `STOCHASTIC_NONEMPTY`. Relabelling the same
+deterministic campaign as stochastic and adding a matching dummy stream is a
+semantic refusal even if the isolated structural branch would otherwise parse.
+
+For `STOCHASTIC_NONEMPTY`, both arrays have at least one member and retain the
+complete projection/equality rules above. One-empty/one-nonempty states,
+nonempty tuples under the empty set, dummy-stream substitution, a nonzero
+deterministic seed, a non-`FORBIDDEN` deterministic rule, or either wrong empty
+digest refuses continuation.
+
 `READY` permits draw attempt indices `0..999999`. Exactly 1,000,000 rejected
 draw attempts seals `TERMINAL_REJECTION_CAP`. That state is terminal
 `COMPUTATIONALLY_INCONCLUSIVE` for the scientific run. It cannot be continued,
@@ -403,6 +436,11 @@ The mechanical contract and evidence schema must refuse at least:
     arbitrary-`N` completion claim;
 19. an unaudited infeasibility finding;
 20. a result, figure, book, release, or publication permission.
+
+The refusal set also includes a mismatch between the two locations carrying the
+single policy-conformance receipt and every deterministic empty-state violation:
+one empty array paired with one nonempty array, a dummy stream, a nonzero seed,
+a non-`FORBIDDEN` rule identity, or a wrong canonical empty digest.
 
 ## 14. Candidate evidence boundary
 

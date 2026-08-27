@@ -214,8 +214,189 @@
       "mutation": "include TERMINAL_REJECTION_CAP or attempt_index 1000000 in a continuation checkpoint",
       "expected_schema_or_semantic_valid": false,
       "required_disposition": "REFUSE_TERMINAL_COUNTER_CHECKPOINT"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N30",
+      "target_definition": "continuation_checkpoint",
+      "mutation": "use DETERMINISTIC_EMPTY with one empty counter array and one nonempty counter array",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_DETERMINISTIC_COUNTER_SHAPE_MISMATCH"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N31",
+      "target_definition": "continuation_checkpoint",
+      "mutation": "place a nonempty tuple under the canonical deterministic empty permitted-stream set",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_DETERMINISTIC_DUMMY_STREAM"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N32",
+      "target_definition": "continuation_checkpoint",
+      "mutation": "substitute a dummy permitted stream and matching tuple into an SD-01 deterministic checkpoint",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_DETERMINISTIC_DUMMY_STREAM"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N33",
+      "target_definition": "continuation_checkpoint",
+      "mutation": "change the deterministic canonical empty permitted-stream digest or empty tuple-set digest",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_DETERMINISTIC_EMPTY_DIGEST_MISMATCH"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N34",
+      "target_definition": "continuation_checkpoint",
+      "mutation": "use DETERMINISTIC_EMPTY with seed other than 0 or stochastic-rule identity value other than FORBIDDEN",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_DETERMINISTIC_STOCHASTIC_AUTHORITY_MISMATCH"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N35",
+      "target_definition": "attempt_binding",
+      "mutation": "make attempt_binding.policy_conformance_receipt_identity differ from process_allocation.policy_conformance_receipt_identity",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_POLICY_CONFORMANCE_RECEIPT_MISMATCH"
     }
   ],
+  "prospective_non_evidence_schema_fixtures": {
+    "purpose": "Static schema-conformance fixtures only; they are not campaigns, attempts, checkpoints, draws, outcomes, observations, or scientific evidence.",
+    "sd01_accepted_binding_projection": {
+      "campaign_execution_binding_identity": {
+        "kind": "fixture",
+        "value": "campaign-binding",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "study_id": "SD-01",
+      "stochastic_rule_identity": {
+        "kind": "fixture",
+        "value": "FORBIDDEN",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "seed": 0,
+      "permitted_stream_set_identity": {
+        "kind": "permitted_stream_set/v2",
+        "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    "valid_sd01_deterministic_empty_checkpoint": {
+      "schema": "continuation_checkpoint/v2",
+      "campaign_id": "STATIC-FIXTURE-NOT-A-CAMPAIGN",
+      "scientific_run_id": "STATIC-FIXTURE-NOT-A-RUN",
+      "campaign_execution_binding_identity": {
+        "kind": "fixture",
+        "value": "campaign-binding",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "study_id": "SD-01",
+      "counter_state_mode": "DETERMINISTIC_EMPTY",
+      "completed_attempt_ordinal": 0,
+      "next_attempt_ordinal": 1,
+      "state_identity": {
+        "kind": "fixture",
+        "value": "state",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "trace_prefix_identity": {
+        "kind": "fixture",
+        "value": "trace",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "receipt_prefix_identity": {
+        "kind": "fixture",
+        "value": "receipt",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "run_resource_ledger_identity": {
+        "kind": "fixture",
+        "value": "run-ledger",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "campaign_resource_ledger_identity": {
+        "kind": "fixture",
+        "value": "campaign-ledger",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "cache_key_schema_identity": {
+        "kind": "fixture",
+        "value": "cache-key",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "cache_epoch": 0,
+      "correction_invalidation_epoch": 0,
+      "dependency_closure_identity": {
+        "kind": "fixture",
+        "value": "dependency",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "alias_closure_identity": {
+        "kind": "fixture",
+        "value": "alias",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "authority_identity": {
+        "kind": "fixture",
+        "value": "authority",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "code_identity": {
+        "kind": "fixture",
+        "value": "code",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "installed_artifact_identity": {
+        "kind": "fixture",
+        "value": "artifact",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "environment_identity": {
+        "kind": "fixture",
+        "value": "environment",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "algorithm_identity": {
+        "kind": "fixture",
+        "value": "algorithm",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "numerical_policy_identity": {
+        "kind": "fixture",
+        "value": "numerical",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "stochastic_rule_identity": {
+        "kind": "fixture",
+        "value": "FORBIDDEN",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "uncertainty_policy_identity": {
+        "kind": "fixture",
+        "value": "deterministic",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "permitted_stream_set_identity": {
+        "kind": "permitted_stream_set/v2",
+        "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "ordered_permitted_stream_ids": [],
+      "seed": 0,
+      "next_counter_tuples": [],
+      "next_counter_tuple_set_identity": {
+        "kind": "next_counter_tuple_set/v2",
+        "value": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+        "sha256": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6"
+      },
+      "topology_identity": {
+        "kind": "fixture",
+        "value": "topology",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "exact_or_approximate_label": "EXACT",
+      "durable": true,
+      "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
   "$defs": {
     "sha256": {
       "type": "string",
@@ -1093,6 +1274,9 @@
         "schema",
         "campaign_id",
         "scientific_run_id",
+        "campaign_execution_binding_identity",
+        "study_id",
+        "counter_state_mode",
         "completed_attempt_ordinal",
         "next_attempt_ordinal",
         "state_identity",
@@ -1132,6 +1316,18 @@
         },
         "scientific_run_id": {
           "$ref": "#/$defs/nonempty_string"
+        },
+        "campaign_execution_binding_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "study_id": {
+          "$ref": "#/$defs/study_id"
+        },
+        "counter_state_mode": {
+          "enum": [
+            "DETERMINISTIC_EMPTY",
+            "STOCHASTIC_NONEMPTY"
+          ]
         },
         "completed_attempt_ordinal": {
           "$ref": "#/$defs/nonnegative_integer"
@@ -1198,7 +1394,6 @@
         },
         "ordered_permitted_stream_ids": {
           "type": "array",
-          "minItems": 1,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/nonempty_string"
@@ -1209,7 +1404,6 @@
         },
         "next_counter_tuples": {
           "type": "array",
-          "minItems": 1,
           "uniqueItems": true,
           "items": {
             "allOf": [
@@ -1267,7 +1461,74 @@
         "checkpoint_sha256": {
           "$ref": "#/$defs/sha256"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "counter_state_mode": {
+                "const": "DETERMINISTIC_EMPTY"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "stochastic_rule_identity": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/identity"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "const": "FORBIDDEN"
+                      }
+                    }
+                  }
+                ]
+              },
+              "permitted_stream_set_identity": {
+                "const": {
+                  "kind": "permitted_stream_set/v2",
+                  "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                  "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+                }
+              },
+              "ordered_permitted_stream_ids": {
+                "type": "array",
+                "maxItems": 0
+              },
+              "seed": {
+                "const": 0
+              },
+              "next_counter_tuples": {
+                "type": "array",
+                "maxItems": 0
+              },
+              "next_counter_tuple_set_identity": {
+                "const": {
+                  "kind": "next_counter_tuple_set/v2",
+                  "value": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+                  "sha256": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6"
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "ordered_permitted_stream_ids": {
+                "type": "array",
+                "minItems": 1
+              },
+              "next_counter_tuples": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
     },
     "attempt_manifest": {
       "type": "object",

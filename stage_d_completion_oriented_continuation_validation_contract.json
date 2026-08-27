@@ -118,7 +118,7 @@
     "CONT-P079 schema mechanically binds terminal rejection to COMPUTATIONALLY_INCONCLUSIVE, no outgoing checkpoint, and continuation false",
     "CONT-P080 schema mechanically binds campaign terminal eligibility only to all registered runs terminal",
     "CONT-P081 schema mechanically requires infeasibility identity for infeasibility terminal state",
-    "CONT-P082 all twenty-nine prospective negative validation cases are present in exact order",
+    "CONT-P082 all thirty-five prospective negative validation cases are present in exact order",
     "CONT-P083 Stage E implementation, model, trajectory, Gate, transform, benchmark, draw, simulation, outcome, result, figure, book, release, and publication counters are zero",
     "CONT-P084 independent authority PASS cannot authorize integration without a separate user permission",
     "CONT-P085 durability, Stage E, Stage F, results, figures, books, release, and publication remain separately forbidden",
@@ -130,9 +130,14 @@
     "CONT-P091 ordered worker allocations have exactly nine closed fields, unique contiguous ordinals, unique process identities/indices, and exact worker_count agreement",
     "CONT-P092 actual process allocation conforms to the frozen parallelization boundary and worker-allocation policy with an exact conformance receipt",
     "CONT-P093 continuation checkpoint requires the complete ordered permitted-stream array, ordered READY tuple array, and next_counter_tuple_set_identity with exact canonical three-field preimage derivation",
-    "CONT-P094 tuple stream-id projection equals the unique permitted-stream array in ascending UTF-8 order with no missing, extra, duplicate, misordered, or terminal-cap tuple"
+    "CONT-P094 tuple stream-id projection equals the unique permitted-stream array in ascending UTF-8 order with no missing, extra, duplicate, misordered, or terminal-cap tuple",
+    "CONT-P095 counter_state_mode is not caller-selectable: deterministic continuation binds study and campaign-execution-binding identities, DETERMINISTIC_EMPTY mode, exact campaign FORBIDDEN stochastic-rule identity, seed zero, and both empty arrays",
+    "CONT-P096 canonical empty array digest is 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945 and the exact deterministic three-field tuple-set digest is 8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+    "CONT-P097 evidence schema accepts the complete non-evidence SD-01 deterministic empty-checkpoint fixture and refuses deterministic dummy streams or wrong empty digests",
+    "CONT-P098 stochastic continuation requires both arrays nonempty while one-empty/one-nonempty states refuse",
+    "CONT-P099 attempt-binding and embedded process-allocation policy_conformance_receipt_identity values are exactly equal and a mismatch refuses"
   ],
-  "required_positive_check_count": 94,
+  "required_positive_check_count": 99,
   "negative_cases": [
     {
       "id": "CONT-N01",
@@ -333,9 +338,39 @@
       "id": "CONT-N40",
       "mutation": "change tuple bytes without changing next_counter_tuple_set_identity, or change the identity without changing its canonical preimage",
       "required_disposition": "REFUSE_CHECKPOINT_COUNTER_DIGEST_MISMATCH"
+    },
+    {
+      "id": "CONT-N41",
+      "mutation": "use a deterministic checkpoint with one empty counter array and one nonempty counter array",
+      "required_disposition": "REFUSE_DETERMINISTIC_COUNTER_SHAPE_MISMATCH"
+    },
+    {
+      "id": "CONT-N42",
+      "mutation": "add a dummy permitted stream or counter tuple to an SD-01 deterministic checkpoint",
+      "required_disposition": "REFUSE_DETERMINISTIC_DUMMY_STREAM"
+    },
+    {
+      "id": "CONT-N43",
+      "mutation": "change the deterministic canonical empty permitted-stream identity or tuple-set identity",
+      "required_disposition": "REFUSE_DETERMINISTIC_EMPTY_DIGEST_MISMATCH"
+    },
+    {
+      "id": "CONT-N44",
+      "mutation": "use DETERMINISTIC_EMPTY with a nonzero seed or a stochastic-rule identity value other than FORBIDDEN",
+      "required_disposition": "REFUSE_DETERMINISTIC_STOCHASTIC_AUTHORITY_MISMATCH"
+    },
+    {
+      "id": "CONT-N45",
+      "mutation": "use STOCHASTIC_NONEMPTY with either permitted-stream or counter-tuple array empty",
+      "required_disposition": "REFUSE_STOCHASTIC_COUNTER_SHAPE_MISMATCH"
+    },
+    {
+      "id": "CONT-N46",
+      "mutation": "make attempt_binding.policy_conformance_receipt_identity differ from its embedded process-allocation receipt identity",
+      "required_disposition": "REFUSE_POLICY_CONFORMANCE_RECEIPT_MISMATCH"
     }
   ],
-  "required_negative_case_count": 40,
+  "required_negative_case_count": 46,
   "required_predecessor_row_count": 9,
   "required_schema_definition_names": [
     "sha256",
@@ -363,6 +398,11 @@
     "campaign_terminal_manifest"
   ],
   "required_schema_definition_count": 23,
+  "required_non_evidence_schema_fixture_names": [
+    "sd01_accepted_binding_projection",
+    "valid_sd01_deterministic_empty_checkpoint"
+  ],
+  "required_non_evidence_schema_fixture_count": 2,
   "global_acceptance": {
     "all_positive_checks_pass": true,
     "all_negative_cases_refuse": true,

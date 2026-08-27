@@ -238,6 +238,8 @@
     "actual_allocation_must_conform_to_campaign_policies": true,
     "canonical_digest_reconstruction_required": true,
     "attempt_manifest_must_embed_attempt_binding": true,
+    "policy_conformance_receipt_equality_rule": "attempt_binding.policy_conformance_receipt_identity must equal attempt_binding.process_allocation.policy_conformance_receipt_identity exactly",
+    "policy_conformance_receipt_role": "one singular receipt certifying the actual process allocation against the frozen campaign parallelization boundary and worker-allocation policy",
     "missing_changed_out_of_policy_or_digest_mismatch_disposition": "REFUSE_ATTEMPT_EXECUTION_BINDING"
   },
   "attempt_watchdog_policy": {
@@ -359,6 +361,9 @@
     "required_identity_fields": [
       "campaign_id",
       "scientific_run_id",
+      "campaign_execution_binding_identity",
+      "study_id",
+      "counter_state_mode",
       "completed_attempt_ordinal",
       "next_attempt_ordinal",
       "state_identity",
@@ -403,6 +408,37 @@
     ],
     "next_counter_tuple_set_identity_derivation": "SHA-256 of UTF-8 canonical JSON with recursively lexicographically sorted object keys, comma/colon separators, no insignificant whitespace, UTF-8 strings without ASCII forcing, integer numbers, and no final LF",
     "next_counter_tuple_set_value_and_sha256_equal_digest": true,
+    "counter_state_modes": [
+      "DETERMINISTIC_EMPTY",
+      "STOCHASTIC_NONEMPTY"
+    ],
+    "counter_state_mode_selection_rule": "not caller-selectable: exact equality to the accepted campaign/configuration stochastic-rule identity and permitted-stream set selects DETERMINISTIC_EMPTY for FORBIDDEN plus the canonical empty set, otherwise an authorized nonempty stochastic set selects STOCHASTIC_NONEMPTY; every other pairing refuses",
+    "deterministic_empty_branch": {
+      "minimum_required_study_fixture": "SD-01",
+      "stochastic_rule_identity_rule": "exact equality to the accepted campaign/configuration stochastic_rule_identity whose value is FORBIDDEN",
+      "seed": 0,
+      "canonical_empty_array_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "permitted_stream_set_identity": {
+        "kind": "permitted_stream_set/v2",
+        "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      "ordered_permitted_stream_ids": [],
+      "next_counter_tuples": [],
+      "next_counter_tuple_set_identity": {
+        "kind": "next_counter_tuple_set/v2",
+        "value": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+        "sha256": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6"
+      },
+      "next_counter_tuple_set_preimage_canonical_json": "{\"next_counter_tuples\":[],\"ordered_permitted_stream_ids\":[],\"permitted_stream_set_identity\":{\"kind\":\"permitted_stream_set/v2\",\"sha256\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\",\"value\":\"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945\"}}",
+      "dummy_stream_permitted": false
+    },
+    "stochastic_nonempty_branch": {
+      "ordered_permitted_stream_ids_minimum_count": 1,
+      "next_counter_tuple_minimum_count": 1,
+      "complete_projection_equality_required": true,
+      "stochastic_rule_and_seed_must_equal_campaign_binding": true
+    },
     "terminal_rejection_tuple_in_continuation_checkpoint": "FORBIDDEN",
     "corrupt_missing_stale_or_forked_disposition": "REFUSE_CONTINUATION",
     "changed_result_affecting_identity_disposition": "NEW_CAMPAIGN_REQUIRED"
