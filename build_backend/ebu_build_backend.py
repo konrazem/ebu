@@ -35,8 +35,9 @@ _METADATA = (
     "Version: 0.1.0a1\n"
     "Summary: Pre-alpha typed and reproducible research-framework infrastructure for EBU\n"
     "Requires-Python: >=3.14,<3.15\n"
-    "License-Expression: MIT\n"
+    "License-Expression: MIT AND Unicode-3.0\n"
     "License-File: LICENSE\n"
+    "License-File: LICENSE-UNICODE\n"
     "Import-Name: ebu_framework\n"
     "Requires-Dist: PyNaCl==1.6.2\n"
     "\n"
@@ -49,6 +50,17 @@ _WHEEL = (
     "Tag: cp314-none-any\n"
     "\n"
 ).encode("utf-8")
+
+_LICENSE_INPUT_IDENTITIES = {
+    "LICENSE": (
+        1069,
+        "2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907",
+    ),
+    "LICENSE-UNICODE": (
+        1995,
+        "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+    ),
+}
 
 _I1_REQUIRED_PACKAGE_FILES = frozenset(
     {
@@ -338,8 +350,8 @@ def _validate_pyproject(data: bytes) -> None:
         "requires-python": ">=3.14,<3.15",
         "dependencies": ["PyNaCl==1.6.2"],
         "dynamic": [],
-        "license": "MIT",
-        "license-files": ["LICENSE"],
+        "license": "MIT AND Unicode-3.0",
+        "license-files": ["LICENSE", "LICENSE-UNICODE"],
         "import-names": ["ebu_framework"],
     }
     if project != expected_project:
@@ -353,6 +365,7 @@ def _source_snapshot() -> tuple[Path, dict[str, bytes], tuple[str, ...]]:
         "pyproject.toml",
         "build_backend/ebu_build_backend.py",
         "LICENSE",
+        "LICENSE-UNICODE",
         *package_files_before,
     )
     if backend != (source_root / "build_backend" / "ebu_build_backend.py").resolve(
@@ -360,6 +373,10 @@ def _source_snapshot() -> tuple[Path, dict[str, bytes], tuple[str, ...]]:
     ):
         _refuse("BACKEND_ORIGIN_MISMATCH", "backend is not source-root member")
     snapshot = {relative: _read_stable_regular(source_root, relative) for relative in selected}
+    for relative, expected in _LICENSE_INPUT_IDENTITIES.items():
+        payload = snapshot[relative]
+        if (len(payload), hashlib.sha256(payload).hexdigest()) != expected:
+            _refuse("LICENSE_FILE_MISMATCH", f"license identity mismatch: {relative}")
     package_files_after = _discover_package_files(source_root)
     if package_files_after != package_files_before:
         _refuse("SOURCE_CHANGED_DURING_BUILD", "selected package file set changed")
@@ -379,6 +396,7 @@ def _metadata_payloads(snapshot: Mapping[str, bytes]) -> dict[str, bytes]:
         "METADATA": _METADATA,
         "WHEEL": _WHEEL,
         "licenses/LICENSE": snapshot["LICENSE"],
+        "licenses/LICENSE-UNICODE": snapshot["LICENSE-UNICODE"],
     }
 
 
@@ -467,6 +485,10 @@ def _wheel_bytes(
         (f"{_DIST_INFO}/METADATA", metadata["METADATA"]),
         (f"{_DIST_INFO}/WHEEL", metadata["WHEEL"]),
         (f"{_DIST_INFO}/licenses/LICENSE", metadata["licenses/LICENSE"]),
+        (
+            f"{_DIST_INFO}/licenses/LICENSE-UNICODE",
+            metadata["licenses/LICENSE-UNICODE"],
+        ),
     ]
     record = _record_bytes(members)
     complete_members = members + [(f"{_DIST_INFO}/RECORD", record)]
@@ -552,6 +574,7 @@ def _tar_bytes(snapshot: Mapping[str, bytes], package_files: tuple[str, ...]) ->
             "build_backend/ebu_build_backend.py"
         ],
         f"{_SDIST_ROOT}/LICENSE": snapshot["LICENSE"],
+        f"{_SDIST_ROOT}/LICENSE-UNICODE": snapshot["LICENSE-UNICODE"],
         f"{_SDIST_ROOT}/PKG-INFO": _METADATA,
     }
     for relative in package_files:
@@ -649,6 +672,9 @@ def prepare_metadata_for_build_wheel(metadata_directory, config_settings=None):
         _write_new_file(target / "METADATA", expected["METADATA"])
         _write_new_file(target / "WHEEL", expected["WHEEL"])
         _write_new_file(licenses / "LICENSE", expected["licenses/LICENSE"])
+        _write_new_file(
+            licenses / "LICENSE-UNICODE", expected["licenses/LICENSE-UNICODE"]
+        )
     except BaseException:
         if created:
             shutil.rmtree(target, ignore_errors=True)

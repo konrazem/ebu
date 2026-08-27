@@ -178,6 +178,7 @@ STAGE_C_AUTHORITY_PATHS = (
 STAGE_C_MODIFIED_PATHS = (
     ".github/workflows/tests.yml",
     "build_backend/ebu_build_backend.py",
+    "pyproject.toml",
     "tests/framework/test_artifact_recovery_publication.py",
     "tests/framework/test_atomic_declarations.py",
     "tests/framework/test_bridge_exact_fixtures.py",
@@ -192,6 +193,7 @@ STAGE_C_MODIFIED_PATHS = (
     "tests/framework/test_validation_reachability.py",
 )
 STAGE_C_NEW_PATHS = (
+    "LICENSE-UNICODE",
     "scripts/validate_stage_c_release_candidate.py",
     "tests/framework/installed_artifact_probe.py",
     "tests/framework/test_packaging_release_candidate.py",
@@ -1149,7 +1151,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 f"the exact completed implementation phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
-        self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 22)
+        self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 24)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)

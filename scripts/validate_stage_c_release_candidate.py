@@ -22,23 +22,24 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import tomllib
 import zipfile
 import zlib
 
 
 AUTHORITY_HASHES = {
-    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "eb9dc6259cf6fe55e5e77d6c8cacd38f664178b04462f2e24675e4df430f3928",
-    "framework_alpha_packaging_release_candidate_contract.json": "71696f789bf2c126bb02cd668a9b046eb780fbe0b0994759ac45a05ca5f43a58",
-    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "2f2c35a20e0a6d2fecb90ad4278756ceaaab427d277f9e927b39402065745d9e",
+    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "c2868aded1c7135b36933915de8abe363bc7a4ffaa3bced186dacb880e321765",
+    "framework_alpha_packaging_release_candidate_contract.json": "835b01ee5f979454f0b57bd8d374f5294a9907e01508413b90c84c888b87b67d",
+    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "d1fb69aa62ae666312e82e406b44906e63b24eaf7e8a32c398c19b2e845058b3",
     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-    "framework_alpha_packaging_release_candidate_validation_contract.json": "0b4936d71f85f0209d127ef4a56149f374049c7c3c38a582fd76fbd117a4cf31",
+    "framework_alpha_packaging_release_candidate_validation_contract.json": "85a7c556cb11ce276129eb04e4a43276f561d9f8e2ca09a24ce872791617af0f",
 }
 SEMANTIC_SCOPE_AST_IDENTITIES = {
-    "artifact_predecessor_function": (40575, "fa9143a17b11df05e833475abea9b36b8efe6c2bd4a6d16da57a9dcc8ac4610f"),
-    "atomic_predecessor_method": (32903, "e948c6fc53892b6710d50f2998d268846a359bb1cd362dd3dee152f6c787be67"),
+    "artifact_predecessor_function": (40643, "56f0fcdb275b3d402b2ce65b05f4df285e2c0b83ef5e1020bb89e8f69fb4e7db"),
+    "atomic_predecessor_method": (32971, "289db10d3223b4d547e5aaa5e788efe67b24abafd59c59b334b3f1ba5fd539e7"),
     "capabilities_reachability_method": (55295, "ff226be2349bc580482d28ad29a2c181a0eb27d725d11f509872b996283cc4b7"),
     "interaction_graph_method": (43399, "c27b4a36b3feaa46cc6e3e9a2d5587fc8f8c5231f683fd066351c71ccdeab8b4"),
-    "interaction_predecessor_method": (53280, "d8d4eaabc6f5faf81642d5c0670b4bb6cadf1fbcbce64a1a3094c1f69a62f6bd"),
+    "interaction_predecessor_method": (53348, "9ccef25ed0cdd8f9048f08b44b1c1b6c2d64f044f289c742b245da6a54664cd7"),
 }
 FRONTEND_WHEELS = {
     "build-1.5.0-py3-none-any.whl": (26018, "13f3eecb844759ab66efec90ca17639bbf14dc06cb2fdf37a9010322d9c50a6f"),
@@ -94,8 +95,9 @@ METADATA = (
     "Version: 0.1.0a1\n"
     "Summary: Pre-alpha typed and reproducible research-framework infrastructure for EBU\n"
     "Requires-Python: >=3.14,<3.15\n"
-    "License-Expression: MIT\n"
+    "License-Expression: MIT AND Unicode-3.0\n"
     "License-File: LICENSE\n"
+    "License-File: LICENSE-UNICODE\n"
     "Import-Name: ebu_framework\n"
     "Requires-Dist: PyNaCl==1.6.2\n"
     "\n"
@@ -290,7 +292,13 @@ def _actual_package_paths(source: Path) -> tuple[str, ...]:
 
 
 def _source_input_manifest(source: Path, package_paths: tuple[str, ...]) -> list[dict[str, object]]:
-    paths = ("pyproject.toml", "build_backend/ebu_build_backend.py", "LICENSE", *package_paths)
+    paths = (
+        "pyproject.toml",
+        "build_backend/ebu_build_backend.py",
+        "LICENSE",
+        "LICENSE-UNICODE",
+        *package_paths,
+    )
     return [
         {
             "path": value,
@@ -445,7 +453,7 @@ def _static_authority(args: argparse.Namespace) -> int:
         raise Refusal("modified-path authority mismatch")
     if new != tuple(contract["implementation_scope"]["new_paths"]):  # type: ignore[index]
         raise Refusal("new-path authority mismatch")
-    if (len(modified), len(new), len(set(modified) | set(new))) != (14, 3, 17):
+    if (len(modified), len(new), len(set(modified) | set(new))) != (15, 4, 19):
         raise Refusal("implementation path cardinality mismatch")
     if any(not (source / path).is_file() for path in (*modified, *new)):
         raise Refusal("authorized implementation path missing")
@@ -471,7 +479,7 @@ def _static_authority(args: argparse.Namespace) -> int:
         semantic_authority["additional_positive_check_count"],
         semantic_authority["required_positive_check_count"],
         len(semantic_authority["checks"]),
-    ) != (92, 8, 100, 8):
+    ) != (92, 12, 104, 12):
         raise Refusal("semantic-scope authority count mismatch")
     semantic_checks: list[dict[str, object]] = []
     inventory = contract["test_inventory_reconciliation"]  # type: ignore[index]
@@ -480,11 +488,13 @@ def _static_authority(args: argparse.Namespace) -> int:
         ".github/workflows/tests.yml",
         "EBU_FUTURE_BOOKS_STRUCTURE.md",
         "build_backend/ebu_build_backend.py",
+        "pyproject.toml",
         "tests/framework/safety.py",
     )
     stage_c_modified = (
         ".github/workflows/tests.yml",
         "build_backend/ebu_build_backend.py",
+        "pyproject.toml",
     )
     current_preserved = (
         "EBU_FUTURE_BOOKS_STRUCTURE.md",
@@ -512,7 +522,7 @@ def _static_authority(args: argparse.Namespace) -> int:
         shared_reconciliation["identity_rows"],
         shared_reconciliation["literal_set_equality_required_in_each_method"],
         shared_reconciliation["dynamic_or_authority_scope_derived_exclusion"],
-        shared_reconciliation["unlisted_fifth_reconciliation_path"],
+        shared_reconciliation["unlisted_sixth_reconciliation_path"],
     ) != (
         predecessor_methods,
         exact_paths,
@@ -779,6 +789,255 @@ def _static_authority(args: argparse.Namespace) -> int:
         raise Refusal("interaction graph semantic AST drift")
     semantic_checks.append({"id": "SC15-SEM-08", "status": "PASS"})
 
+    release_correction = contract["release_license_and_tag_correction"]  # type: ignore[index]
+    license_rows = (
+        release_correction["existing_project_license"],
+        release_correction["unicode_notice"],
+    )
+    license_identities = {
+        row["path"]: (row["byte_count"], row["sha256"]) for row in license_rows
+    }
+    if tuple(license_identities) != ("LICENSE", "LICENSE-UNICODE"):
+        raise Refusal("license authority path/order drift")
+    for relative, expected in license_identities.items():
+        payload = (source / relative).read_bytes()
+        if (len(payload), _sha256(payload)) != expected:
+            raise Refusal(f"license authority identity mismatch: {relative}")
+    unicode_payload = (source / "LICENSE-UNICODE").read_bytes()
+    if not (
+        unicode_payload.startswith(b"UNICODE LICENSE V3\n\n")
+        and "Copyright © 1991-2026 Unicode, Inc.".encode("utf-8")
+        in unicode_payload
+        and unicode_payload.endswith(b"authorization of the copyright holder.\n")
+    ):
+        raise Refusal("Unicode license notice text mismatch")
+    semantic_checks.append({"id": "SC15-SEM-09", "status": "PASS"})
+
+    pyproject_raw = (source / "pyproject.toml").read_bytes()
+    corrected_pyproject = release_correction["corrected_pyproject"]
+    parsed_pyproject = tomllib.loads(pyproject_raw.decode("utf-8", "strict"))
+    expected_project = {
+        "name": "ebu-framework",
+        "version": "0.1.0a1",
+        "description": "Pre-alpha typed and reproducible research-framework infrastructure for EBU",
+        "requires-python": ">=3.14,<3.15",
+        "dependencies": ["PyNaCl==1.6.2"],
+        "dynamic": [],
+        "license": "MIT AND Unicode-3.0",
+        "license-files": ["LICENSE", "LICENSE-UNICODE"],
+        "import-names": ["ebu_framework"],
+    }
+    if (
+        len(pyproject_raw),
+        _sha256(pyproject_raw),
+        parsed_pyproject,
+    ) != (
+        corrected_pyproject["byte_count"],
+        corrected_pyproject["sha256"],
+        {
+            "build-system": {
+                "requires": [],
+                "build-backend": "ebu_build_backend",
+                "backend-path": ["build_backend"],
+            },
+            "project": expected_project,
+        },
+    ):
+        raise Refusal("corrected pyproject identity or fields mismatch")
+
+    def encoded_assignment(relative_path: str, name: str) -> bytes:
+        tree = ast.parse((source / relative_path).read_text("utf-8"))
+        assignment = next(
+            node
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == name
+        )
+        value = assignment.value
+        if not (
+            isinstance(value, ast.Call)
+            and isinstance(value.func, ast.Attribute)
+            and value.func.attr == "encode"
+        ):
+            raise Refusal(f"encoded assignment shape mismatch: {relative_path}:{name}")
+        return ast.literal_eval(value.func.value).encode("utf-8")
+
+    backend_metadata = encoded_assignment(
+        "build_backend/ebu_build_backend.py", "_METADATA"
+    )
+    test_metadata = encoded_assignment(
+        "tests/framework/test_packaging_release_candidate.py", "METADATA"
+    )
+    metadata_license_rows = tuple(contract["backend_correction"]["metadata_license_rows"])  # type: ignore[index]
+    metadata_lines = tuple(METADATA.decode("utf-8").splitlines())
+    positions = tuple(metadata_lines.index(row) for row in metadata_license_rows)
+    if (
+        backend_metadata != METADATA
+        or test_metadata != METADATA
+        or metadata_license_rows
+        != (
+            "License-Expression: MIT AND Unicode-3.0",
+            "License-File: LICENSE",
+            "License-File: LICENSE-UNICODE",
+        )
+        or positions != tuple(range(positions[0], positions[0] + 3))
+    ):
+        raise Refusal("license metadata role/order mismatch")
+    semantic_checks.append({"id": "SC15-SEM-10", "status": "PASS"})
+
+    backend_tree = ast.parse(
+        (source / "build_backend/ebu_build_backend.py").read_text("utf-8")
+    )
+    backend_assignments = {
+        node.targets[0].id: ast.literal_eval(node.value)
+        for node in backend_tree.body
+        if isinstance(node, ast.Assign)
+        and len(node.targets) == 1
+        and isinstance(node.targets[0], ast.Name)
+        and node.targets[0].id == "_LICENSE_INPUT_IDENTITIES"
+    }
+    backend_functions = {
+        node.name: node for node in backend_tree.body if isinstance(node, ast.FunctionDef)
+    }
+    packaging_tree = ast.parse(
+        (source / "tests/framework/test_packaging_release_candidate.py").read_text(
+            "utf-8"
+        )
+    )
+    packaging_class = next(
+        node
+        for node in packaging_tree.body
+        if isinstance(node, ast.ClassDef) and node.name == "StageCPackagingTests"
+    )
+    packaging_methods = {
+        node.name: node
+        for node in packaging_class.body
+        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
+    }
+
+    def string_constants(node: ast.AST) -> set[str]:
+        return {
+            child.value
+            for child in ast.walk(node)
+            if isinstance(child, ast.Constant) and isinstance(child.value, str)
+        }
+
+    source_snapshot_constants = string_constants(backend_functions["_source_snapshot"])
+    metadata_payload_constants = string_constants(backend_functions["_metadata_payloads"])
+    wheel_constants = string_constants(backend_functions["_wheel_bytes"])
+    tar_constants = string_constants(backend_functions["_tar_bytes"])
+    prepared_constants = string_constants(
+        backend_functions["prepare_metadata_for_build_wheel"]
+    )
+    missing_constants = string_constants(
+        packaging_methods["test_each_missing_package_file_refuses"]
+    )
+    unknown_constants = string_constants(
+        packaging_methods["test_unknown_and_unsafe_inputs_refuse_fail_closed"]
+    )
+    wheel_test_constants = string_constants(
+        packaging_methods["test_wheel_metadata_record_and_archive_are_exact"]
+    )
+    sdist_test_constants = string_constants(
+        packaging_methods["test_sdist_contents_safety_and_metadata_are_exact"]
+    )
+    exact_test_names = (
+        "test_exact_source_and_backend_inventory",
+        "test_each_missing_package_file_refuses",
+        "test_unknown_and_unsafe_inputs_refuse_fail_closed",
+        "test_wheel_metadata_record_and_archive_are_exact",
+        "test_sdist_contents_safety_and_metadata_are_exact",
+        "test_direct_and_sdist_derived_wheels_are_reproducible",
+        "test_preexisting_output_refuses_without_partial_replacement",
+        "test_backend_static_reachability_is_packaging_only",
+    )
+    if (
+        tuple(packaging_methods) != exact_test_names
+        or backend_assignments.get("_LICENSE_INPUT_IDENTITIES")
+        != license_identities
+        or not {"LICENSE", "LICENSE-UNICODE", "LICENSE_FILE_MISMATCH"}
+        <= source_snapshot_constants
+        or not {"licenses/LICENSE", "licenses/LICENSE-UNICODE"}
+        <= metadata_payload_constants
+        or not {"licenses/LICENSE", "licenses/LICENSE-UNICODE"} <= wheel_constants
+        or "LICENSE-UNICODE" not in tar_constants
+        or not {"LICENSE-UNICODE", "licenses/LICENSE-UNICODE"}
+        <= prepared_constants
+        or not {"LICENSE", "LICENSE-UNICODE", "LICENSE_FILE_MISMATCH"}
+        <= missing_constants
+        or not {
+            '["LICENSE-UNICODE", "LICENSE"]',
+            '["LICENSE", "LICENSE-UNICODE", "LICENSE-UNKNOWN"]',
+            "DYNAMIC_METADATA_FORBIDDEN",
+        }
+        <= unknown_constants
+        or not {"licenses/LICENSE-UNICODE", "/RECORD"}
+        <= wheel_test_constants
+        or "LICENSE-UNICODE" not in sdist_test_constants
+        or 53
+        not in {
+            child.value
+            for method in (packaging_methods.values())
+            for child in ast.walk(method)
+            if isinstance(child, ast.Constant) and isinstance(child.value, int)
+        }
+    ):
+        raise Refusal("two-license backend/test semantic closure mismatch")
+    semantic_checks.append({"id": "SC15-SEM-11", "status": "PASS"})
+
+    reachability_tree = ast.parse(
+        (source / "tests/framework/test_validation_reachability.py").read_text("utf-8")
+    )
+    reachability_assignments = {
+        node.targets[0].id: tuple(ast.literal_eval(node.value))
+        for node in reachability_tree.body
+        if isinstance(node, ast.Assign)
+        and len(node.targets) == 1
+        and isinstance(node.targets[0], ast.Name)
+        and node.targets[0].id
+        in {"POST_I9_AUTHORIZED_PATHS", "STAGE_C_AUTHORITY_PATHS", "STAGE_C_MODIFIED_PATHS", "STAGE_C_NEW_PATHS"}
+    }
+    reachability_method = next(
+        node
+        for owner in reachability_tree.body
+        if isinstance(owner, ast.ClassDef) and owner.name == "ValidationReachabilityTests"
+        for node in owner.body
+        if isinstance(node, ast.FunctionDef) and node.name == "_audit_current_head_scope"
+    )
+    reachability_constants = string_constants(reachability_method)
+    reachability_names = {
+        node.id for node in ast.walk(reachability_method) if isinstance(node, ast.Name)
+    }
+    reconstructed_scope = frozenset(
+        reachability_assignments["POST_I9_AUTHORIZED_PATHS"]
+        + reachability_assignments["STAGE_C_AUTHORITY_PATHS"]
+        + reachability_assignments["STAGE_C_MODIFIED_PATHS"]
+        + reachability_assignments["STAGE_C_NEW_PATHS"]
+    )
+    if (
+        reachability_assignments["STAGE_C_AUTHORITY_PATHS"]
+        != tuple(AUTHORITY_HASHES)
+        or reachability_assignments["STAGE_C_MODIFIED_PATHS"] != modified
+        or reachability_assignments["STAGE_C_NEW_PATHS"] != new
+        or len(reconstructed_scope) != 24
+        or "STAGE_C_AUTHORITY_SCOPE" not in reachability_names
+        or "STAGE_C_IMPLEMENTATION_SCOPE" not in reachability_names
+        or not any(
+            "neither the exact Stage C authority phase" in value
+            for value in reachability_constants
+        )
+        or 24
+        not in {
+            node.value
+            for node in ast.walk(reachability_method)
+            if isinstance(node, ast.Constant) and isinstance(node.value, int)
+        }
+    ):
+        raise Refusal("Stage C reachability semantic closure mismatch")
+    semantic_checks.append({"id": "SC15-SEM-12", "status": "PASS"})
+
     if validation["global_acceptance"]["registered_or_full_horizon_scientific_campaign_count"] != 0:  # type: ignore[index]
         raise Refusal("scientific boundary drift")
     checks += 1
@@ -794,7 +1053,7 @@ def _static_authority(args: argparse.Namespace) -> int:
         "package_file_count": len(package_paths),
         "modified_path_count": len(modified),
         "new_path_count": len(new),
-        "relations": {"P1": 4, "P2": len(imports), "P12": 1, "SC1": 49, "SC4": 2, "SC15": 22, "SC16": 1},
+        "relations": {"P1": 4, "P2": len(imports), "P12": 1, "SC1": 49, "SC4": 2, "SC15": 24, "SC16": 1},
         "semantic_scope_checks": semantic_checks,
         "scientific_counts": {
             "registered_or_full_horizon_campaign": 0,
@@ -924,7 +1183,7 @@ def _verify_dependency_wheelhouse(source: Path, wheelhouse: Path) -> list[dict[s
 
 def _copy_build_source(source: Path, destination: Path) -> Path:
     destination.mkdir(mode=0o755)
-    for relative in ("pyproject.toml", "LICENSE"):
+    for relative in ("pyproject.toml", "LICENSE", "LICENSE-UNICODE"):
         shutil.copy2(source / relative, destination / relative)
     shutil.copytree(source / "build_backend", destination / "build_backend", ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     shutil.copytree(source / "src", destination / "src", ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
@@ -987,12 +1246,18 @@ def _safe_extract(archive_path: Path, destination: Path) -> Path:
 
 def _inspect_wheel(path: Path, package_paths: tuple[str, ...], source: Path) -> dict[str, object]:
     expected_package = tuple(sorted((PurePosixPath(value).relative_to("src").as_posix() for value in package_paths), key=lambda value: value.encode("utf-8")))
-    expected = expected_package + (f"{DIST_INFO}/METADATA", f"{DIST_INFO}/WHEEL", f"{DIST_INFO}/licenses/LICENSE", f"{DIST_INFO}/RECORD")
+    expected = expected_package + (
+        f"{DIST_INFO}/METADATA",
+        f"{DIST_INFO}/WHEEL",
+        f"{DIST_INFO}/licenses/LICENSE",
+        f"{DIST_INFO}/licenses/LICENSE-UNICODE",
+        f"{DIST_INFO}/RECORD",
+    )
     rows = []
     with zipfile.ZipFile(path) as archive:
         infos = archive.infolist()
         names = tuple(info.filename for info in infos)
-        if (names, len(names), len(set(names))) != (expected, 52, 52):
+        if (names, len(names), len(set(names))) != (expected, 53, 53):
             raise Refusal("wheel member inventory mismatch")
         if archive.comment:
             raise Refusal("wheel archive comment forbidden")
@@ -1017,6 +1282,10 @@ def _inspect_wheel(path: Path, package_paths: tuple[str, ...], source: Path) -> 
             raise Refusal("wheel WHEEL metadata mismatch")
         if archive.read(f"{DIST_INFO}/licenses/LICENSE") != (source / "LICENSE").read_bytes():
             raise Refusal("wheel license mismatch")
+        if archive.read(f"{DIST_INFO}/licenses/LICENSE-UNICODE") != (
+            source / "LICENSE-UNICODE"
+        ).read_bytes():
+            raise Refusal("wheel Unicode license mismatch")
         record = list(csv.reader(io.StringIO(archive.read(f"{DIST_INFO}/RECORD").decode("utf-8"))))
         if tuple(row[0] for row in record) != names or record[-1] != [f"{DIST_INFO}/RECORD", "", ""]:
             raise Refusal("wheel RECORD order/self-row mismatch")
@@ -1041,7 +1310,19 @@ def _inspect_sdist(path: Path, package_paths: tuple[str, ...], source: Path) -> 
         or tar_bytes[-1024:] != b"\0" * 1024
     ):
         raise Refusal("sdist gzip trailer or tar terminator mismatch")
-    expected_files = tuple(sorted((f"{SDIST_ROOT}/pyproject.toml", f"{SDIST_ROOT}/build_backend/ebu_build_backend.py", f"{SDIST_ROOT}/LICENSE", f"{SDIST_ROOT}/PKG-INFO", *(f"{SDIST_ROOT}/{value}" for value in package_paths)), key=lambda value: value.encode("utf-8")))
+    expected_files = tuple(
+        sorted(
+            (
+                f"{SDIST_ROOT}/pyproject.toml",
+                f"{SDIST_ROOT}/build_backend/ebu_build_backend.py",
+                f"{SDIST_ROOT}/LICENSE",
+                f"{SDIST_ROOT}/LICENSE-UNICODE",
+                f"{SDIST_ROOT}/PKG-INFO",
+                *(f"{SDIST_ROOT}/{value}" for value in package_paths),
+            ),
+            key=lambda value: value.encode("utf-8"),
+        )
+    )
     expected_directories = tuple(
         sorted(
             {
@@ -1067,7 +1348,7 @@ def _inspect_sdist(path: Path, package_paths: tuple[str, ...], source: Path) -> 
         if (
             tuple(member.name for member in members) != expected_members
             or tuple(member.name for member in files) != expected_files
-            or len(files) != 52
+            or len(files) != 53
         ):
             raise Refusal("sdist member inventory mismatch")
         if len({member.name for member in members}) != len(members):
@@ -1094,6 +1375,7 @@ def _inspect_sdist(path: Path, package_paths: tuple[str, ...], source: Path) -> 
     expected_payloads = {
         f"{SDIST_ROOT}/PKG-INFO": METADATA,
         f"{SDIST_ROOT}/LICENSE": (source / "LICENSE").read_bytes(),
+        f"{SDIST_ROOT}/LICENSE-UNICODE": (source / "LICENSE-UNICODE").read_bytes(),
         f"{SDIST_ROOT}/pyproject.toml": (source / "pyproject.toml").read_bytes(),
         f"{SDIST_ROOT}/build_backend/ebu_build_backend.py": (source / "build_backend/ebu_build_backend.py").read_bytes(),
         **{f"{SDIST_ROOT}/{value}": (source / value).read_bytes() for value in package_paths},
@@ -1247,6 +1529,16 @@ def _packaging(args: argparse.Namespace) -> int:
         "sdist": sdist_inspection,
         "sdist_derived_wheel": derived_inspection,
         "direct_equals_sdist_derived": True,
+        "licenses": {
+            "project": _identity(source / "LICENSE"),
+            "unicode": _identity(source / "LICENSE-UNICODE"),
+            "metadata_rows": [
+                "License-Expression: MIT AND Unicode-3.0",
+                "License-File: LICENSE",
+                "License-File: LICENSE-UNICODE",
+            ],
+            "metadata_sha256": _sha256(METADATA),
+        },
         "installed_probes": probe_rows,
         "packaging_test_counts": packaging_counts,
         "commands": records,

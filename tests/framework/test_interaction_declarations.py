@@ -2613,11 +2613,13 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             ".github/workflows/tests.yml",
             "EBU_FUTURE_BOOKS_STRUCTURE.md",
             "build_backend/ebu_build_backend.py",
+            "pyproject.toml",
             "tests/framework/safety.py",
         )
         stage_c_modified_paths = (
             ".github/workflows/tests.yml",
             "build_backend/ebu_build_backend.py",
+            "pyproject.toml",
         )
         current_byte_preserved_paths = (
             "EBU_FUTURE_BOOKS_STRUCTURE.md",

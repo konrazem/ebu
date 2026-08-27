@@ -42,8 +42,9 @@ METADATA = (
     "Version: 0.1.0a1\n"
     "Summary: Pre-alpha typed and reproducible research-framework infrastructure for EBU\n"
     "Requires-Python: >=3.14,<3.15\n"
-    "License-Expression: MIT\n"
+    "License-Expression: MIT AND Unicode-3.0\n"
     "License-File: LICENSE\n"
+    "License-File: LICENSE-UNICODE\n"
     "Import-Name: ebu_framework\n"
     "Requires-Dist: PyNaCl==1.6.2\n"
     "\n"
@@ -54,6 +55,7 @@ def _copy_source(destination: Path) -> Path:
     destination.mkdir()
     shutil.copy2(ROOT / "pyproject.toml", destination / "pyproject.toml")
     shutil.copy2(ROOT / "LICENSE", destination / "LICENSE")
+    shutil.copy2(ROOT / "LICENSE-UNICODE", destination / "LICENSE-UNICODE")
     shutil.copytree(ROOT / "build_backend", destination / "build_backend")
     shutil.copytree(ROOT / "src", destination / "src")
     for path in destination.rglob("*"):
@@ -137,12 +139,26 @@ class StageCPackagingTests(unittest.TestCase):
         self.assertEqual(backend._discover_package_files(ROOT), PACKAGE_PATHS)
         self.assertEqual(
             hashlib.sha256((ROOT / "pyproject.toml").read_bytes()).hexdigest(),
-            "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+            "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
         )
         self.assertEqual(
             hashlib.sha256((ROOT / "requirements-framework.lock").read_bytes()).hexdigest(),
             "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
         )
+        license_identities = {
+            "LICENSE": (
+                1069,
+                "2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907",
+            ),
+            "LICENSE-UNICODE": (
+                1995,
+                "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+            ),
+        }
+        self.assertEqual(backend._LICENSE_INPUT_IDENTITIES, license_identities)
+        for relative, expected in license_identities.items():
+            payload = (ROOT / relative).read_bytes()
+            self.assertEqual((len(payload), hashlib.sha256(payload).hexdigest()), expected)
 
     def test_each_missing_package_file_refuses(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ebu-stage-c-missing-") as temporary:
@@ -156,6 +172,24 @@ class StageCPackagingTests(unittest.TestCase):
                     with self.assertRaises(backend.BackendRefusal) as caught:
                         backend._discover_package_files(source)
                     self.assertEqual(caught.exception.code, "PACKAGE_DATA_MISSING")
+                    path.write_bytes(saved)
+                    path.chmod(0o644)
+            for relative in ("LICENSE", "LICENSE-UNICODE"):
+                with self.subTest(missing_license=relative):
+                    path = source / relative
+                    saved = path.read_bytes()
+                    path.unlink()
+                    with self.assertRaises(backend.BackendRefusal) as caught:
+                        backend._source_snapshot()
+                    self.assertEqual(caught.exception.code, "UNSAFE_SOURCE_PATH")
+                    path.write_bytes(saved)
+                    path.chmod(0o644)
+                with self.subTest(changed_license=relative):
+                    saved = path.read_bytes()
+                    path.write_bytes(saved + b"changed\n")
+                    with self.assertRaises(backend.BackendRefusal) as caught:
+                        backend._source_snapshot()
+                    self.assertEqual(caught.exception.code, "LICENSE_FILE_MISMATCH")
                     path.write_bytes(saved)
                     path.chmod(0o644)
 
@@ -219,12 +253,55 @@ class StageCPackagingTests(unittest.TestCase):
                         with self.assertRaises(backend.BackendRefusal) as caught:
                             backend._discover_package_files(source)
                         self.assertEqual(caught.exception.code, expected)
+            for index, license_files in enumerate(
+                (
+                    '["LICENSE-UNICODE", "LICENSE"]',
+                    '["LICENSE", "LICENSE-UNICODE", "LICENSE-UNKNOWN"]',
+                )
+            ):
+                with self.subTest(license_files=license_files):
+                    source = _copy_source(base / f"license-metadata-{index}")
+                    pyproject = source / "pyproject.toml"
+                    pyproject.write_text(
+                        pyproject.read_text("utf-8").replace(
+                            '["LICENSE", "LICENSE-UNICODE"]', license_files
+                        ),
+                        encoding="utf-8",
+                    )
+                    backend = _load_backend(source, f"license_metadata_{index}")
+                    with self.assertRaises(backend.BackendRefusal) as caught:
+                        backend._source_snapshot()
+                    self.assertEqual(caught.exception.code, "DYNAMIC_METADATA_FORBIDDEN")
 
     def test_wheel_metadata_record_and_archive_are_exact(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ebu-stage-c-wheel-") as temporary:
             base = Path(temporary)
             source = _copy_source(base / "source")
-            wheel, _ = _build(source, base / "output", "wheel")
+            backend = _load_backend(source, "wheel")
+            metadata_parent = base / "prepared"
+            metadata_parent.mkdir()
+            prepared = metadata_parent / backend.prepare_metadata_for_build_wheel(
+                str(metadata_parent)
+            )
+            prepared_files = {
+                path.relative_to(prepared).as_posix(): path.read_bytes()
+                for path in prepared.rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual(
+                prepared_files,
+                {
+                    "METADATA": METADATA,
+                    "WHEEL": backend._WHEEL,
+                    "licenses/LICENSE": (ROOT / "LICENSE").read_bytes(),
+                    "licenses/LICENSE-UNICODE": (ROOT / "LICENSE-UNICODE").read_bytes(),
+                },
+            )
+            wheel_dir = base / "output"
+            wheel_dir.mkdir()
+            wheel = wheel_dir / backend.build_wheel(
+                str(wheel_dir), metadata_directory=str(prepared)
+            )
             self.assertEqual(wheel.name, WHEEL_NAME)
             with zipfile.ZipFile(wheel) as archive:
                 self.assertEqual(archive.comment, b"")
@@ -234,9 +311,10 @@ class StageCPackagingTests(unittest.TestCase):
                     f"{DIST_INFO}/METADATA",
                     f"{DIST_INFO}/WHEEL",
                     f"{DIST_INFO}/licenses/LICENSE",
+                    f"{DIST_INFO}/licenses/LICENSE-UNICODE",
                     f"{DIST_INFO}/RECORD",
                 )
-                self.assertEqual((names, len(names), len(set(names))), (expected, 52, 52))
+                self.assertEqual((names, len(names), len(set(names))), (expected, 53, 53))
                 for info in infos:
                     pure = PurePosixPath(info.filename)
                     self.assertFalse(pure.is_absolute())
@@ -252,6 +330,10 @@ class StageCPackagingTests(unittest.TestCase):
                     self.assertEqual(info.file_size, len(payload))
                 self.assertEqual(archive.read(f"{DIST_INFO}/METADATA"), METADATA)
                 self.assertEqual(archive.read(f"{DIST_INFO}/licenses/LICENSE"), (ROOT / "LICENSE").read_bytes())
+                self.assertEqual(
+                    archive.read(f"{DIST_INFO}/licenses/LICENSE-UNICODE"),
+                    (ROOT / "LICENSE-UNICODE").read_bytes(),
+                )
                 rows = _record_rows(archive.read(f"{DIST_INFO}/RECORD"))
                 self.assertEqual(tuple(row[0] for row in rows), names)
                 for row, name in zip(rows[:-1], names[:-1], strict=True):
@@ -278,13 +360,14 @@ class StageCPackagingTests(unittest.TestCase):
                             f"{SDIST_ROOT}/pyproject.toml",
                             f"{SDIST_ROOT}/build_backend/ebu_build_backend.py",
                             f"{SDIST_ROOT}/LICENSE",
+                            f"{SDIST_ROOT}/LICENSE-UNICODE",
                             f"{SDIST_ROOT}/PKG-INFO",
                             *(f"{SDIST_ROOT}/{path}" for path in PACKAGE_PATHS),
                         ),
                         key=lambda value: value.encode("utf-8"),
                     )
                 )
-                self.assertEqual((tuple(member.name for member in files), len(files)), (expected_files, 52))
+                self.assertEqual((tuple(member.name for member in files), len(files)), (expected_files, 53))
                 self.assertGreater(len(directories), 0)
                 self.assertEqual(len({member.name for member in members}), len(members))
                 for member in members:
@@ -297,6 +380,10 @@ class StageCPackagingTests(unittest.TestCase):
                 pkg_info = archive.extractfile(f"{SDIST_ROOT}/PKG-INFO")
                 self.assertIsNotNone(pkg_info)
                 self.assertEqual(pkg_info.read(), METADATA)
+                for relative in ("LICENSE", "LICENSE-UNICODE"):
+                    license_file = archive.extractfile(f"{SDIST_ROOT}/{relative}")
+                    self.assertIsNotNone(license_file)
+                    self.assertEqual(license_file.read(), (ROOT / relative).read_bytes())
 
     def test_direct_and_sdist_derived_wheels_are_reproducible(self) -> None:
         with tempfile.TemporaryDirectory(prefix="ebu-stage-c-repro-") as temporary:
@@ -426,18 +513,18 @@ class StageCPackagingTests(unittest.TestCase):
             assignments,
             {
                 "AUTHORITY_HASHES": {
-                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "eb9dc6259cf6fe55e5e77d6c8cacd38f664178b04462f2e24675e4df430f3928",
-                    "framework_alpha_packaging_release_candidate_contract.json": "71696f789bf2c126bb02cd668a9b046eb780fbe0b0994759ac45a05ca5f43a58",
-                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "2f2c35a20e0a6d2fecb90ad4278756ceaaab427d277f9e927b39402065745d9e",
+                    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md": "c2868aded1c7135b36933915de8abe363bc7a4ffaa3bced186dacb880e321765",
+                    "framework_alpha_packaging_release_candidate_contract.json": "835b01ee5f979454f0b57bd8d374f5294a9907e01508413b90c84c888b87b67d",
+                    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json": "d1fb69aa62ae666312e82e406b44906e63b24eaf7e8a32c398c19b2e845058b3",
                     "framework_alpha_packaging_release_candidate_predecessor_manifest.json": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
-                    "framework_alpha_packaging_release_candidate_validation_contract.json": "0b4936d71f85f0209d127ef4a56149f374049c7c3c38a582fd76fbd117a4cf31",
+                    "framework_alpha_packaging_release_candidate_validation_contract.json": "85a7c556cb11ce276129eb04e4a43276f561d9f8e2ca09a24ce872791617af0f",
                 },
                 "SEMANTIC_SCOPE_AST_IDENTITIES": {
-                    "artifact_predecessor_function": (40575, "fa9143a17b11df05e833475abea9b36b8efe6c2bd4a6d16da57a9dcc8ac4610f"),
-                    "atomic_predecessor_method": (32903, "e948c6fc53892b6710d50f2998d268846a359bb1cd362dd3dee152f6c787be67"),
+                    "artifact_predecessor_function": (40643, "56f0fcdb275b3d402b2ce65b05f4df285e2c0b83ef5e1020bb89e8f69fb4e7db"),
+                    "atomic_predecessor_method": (32971, "289db10d3223b4d547e5aaa5e788efe67b24abafd59c59b334b3f1ba5fd539e7"),
                     "capabilities_reachability_method": (55295, "ff226be2349bc580482d28ad29a2c181a0eb27d725d11f509872b996283cc4b7"),
                     "interaction_graph_method": (43399, "c27b4a36b3feaa46cc6e3e9a2d5587fc8f8c5231f683fd066351c71ccdeab8b4"),
-                    "interaction_predecessor_method": (53280, "d8d4eaabc6f5faf81642d5c0670b4bb6cadf1fbcbce64a1a3094c1f69a62f6bd"),
+                    "interaction_predecessor_method": (53348, "9ccef25ed0cdd8f9048f08b44b1c1b6c2d64f044f289c742b245da6a54664cd7"),
                 },
                 "CONVENTIONAL_WHEELS": {
                     "charset_normalizer-3.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl": (251240, "15f024313246a4ed976c60f440bb8d257815513a681d212ff74fd46f7d715a90"),
