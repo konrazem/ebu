@@ -378,9 +378,10 @@
     "SE-N084 direct or sdist-derived wheel byte identity mismatch",
     "SE-N085 sdist byte identity or wheel-derivation mismatch",
     "SE-N086 intra-atomic-case checkpoint accepted for SD-03 through SD-07",
-    "SE-N087 SD-02 inherited continuation accepted when its controlling condition is false"
+    "SE-N087 SD-02 inherited continuation accepted when its controlling condition is false",
+    "SE-N088 unsuffixed or missing release-action counter substituted for an exact zero count field"
   ],
-  "required_negative_case_count": 87,
+  "required_negative_case_count": 88,
   "schema_definition_requirements": {
     "minimum_definition_count": 20,
     "required_names": [
@@ -460,7 +461,7 @@
     "raw and canonical identities",
     "17 predecessor rows",
     "authority and implementation path closure",
-    "186 positive and 87 negative checks",
+    "186 positive and 88 negative checks",
     "zero counters",
     "prohibited actions",
     "stop condition",

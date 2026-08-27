@@ -69,14 +69,14 @@
     "release_zero_counters": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["main_merge", "tag", "release", "upload", "package_index", "publication"],
+      "required": ["main_merge_count", "tag_count", "release_count", "upload_count", "package_index_count", "publication_count"],
       "properties": {
-        "main_merge": {"const": 0},
-        "tag": {"const": 0},
-        "release": {"const": 0},
-        "upload": {"const": 0},
-        "package_index": {"const": 0},
-        "publication": {"const": 0}
+        "main_merge_count": {"const": 0},
+        "tag_count": {"const": 0},
+        "release_count": {"const": 0},
+        "upload_count": {"const": 0},
+        "package_index_count": {"const": 0},
+        "publication_count": {"const": 0}
       }
     },
     "environment": {
