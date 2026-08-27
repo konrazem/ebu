@@ -33,7 +33,20 @@
       33030540700,
       33030733344
     ],
-    "runtime_authority_correction_ci_disposition": "FAIL_CLOSED_BEFORE_BUILD_OR_TEST_NOT_A_PASS"
+    "runtime_authority_correction_ci_disposition": "FAIL_CLOSED_BEFORE_BUILD_OR_TEST_NOT_A_PASS",
+    "accepted_predecessor_test_authority_correction_candidate_commit": "d737038e77f39ac57d9142eb16f6dbb3f09612d4",
+    "accepted_predecessor_test_authority_correction_candidate_tree": "15de01528adf51972e50bda01f67ded83ebe0ec2",
+    "accepted_predecessor_test_authority_correction_integration_commit": "f736e92d764834abd33fd21d9bf31cbcdbcf5cc2",
+    "accepted_predecessor_test_authority_correction_integration_tree": "15de01528adf51972e50bda01f67ded83ebe0ec2",
+    "accepted_stage_c_implementation_candidate_commit": "1c870e2841d739f4670e50b5bb420b2282e36752",
+    "accepted_stage_c_implementation_candidate_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_stage_c_implementation_integration_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "accepted_stage_c_implementation_integration_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_stage_c_target_ci_run": 33042629381,
+    "rejected_release_candidate_artifact_id": 9635019568,
+    "rejected_release_candidate_audit": "FAIL_DO_NOT_RELEASE_OR_TAG",
+    "release_license_tag_correction_base_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "release_license_tag_correction_base_tree": "abad22ae00221db6e3a803993583424d8454fa10"
   },
   "global_acceptance": {
     "positive_discovered_count": true,
@@ -139,17 +152,22 @@
     ],
     "static_authority_semantic_scope": {
       "prior_positive_check_count": 92,
-      "additional_positive_check_count": 8,
-      "required_positive_check_count": 100,
+      "additional_positive_check_count": 12,
+      "release_license_tag_additional_check_count": 4,
+      "required_positive_check_count": 104,
       "checks": [
-        "artifact predecessor reconciliation uses exactly the four literal authorized paths and exact I8/current-base identities",
+        "artifact predecessor reconciliation uses exactly the five literal authorized paths after adding only pyproject.toml and verifies exact I8/current-base identities",
         "artifact predecessor reconciliation verifies every other I8 PRESERVED row directly and contains no dynamic scope-derived exclusion",
-        "atomic predecessor preservation uses exactly the literal four-path reconciliation and exact frozen identities while preserving every other comparison and non-inventory assertion",
-        "interaction predecessor preservation uses exactly the literal four-path reconciliation and exact frozen identities while preserving every other comparison and non-inventory assertion",
+        "atomic predecessor preservation uses exactly the literal five-path reconciliation and exact frozen identities while preserving every other comparison and non-inventory assertion",
+        "interaction predecessor preservation uses exactly the literal five-path reconciliation and exact frozen identities while preserving every other comparison and non-inventory assertion",
         "capabilities failure inventory equals exact 280-entry I8 prefix plus exact 14-entry CLCD suffix and is uniquely 294",
         "capabilities root inventory equals exact 444-entry I8 prefix plus exact 27-entry CLCD suffix and is uniquely 471",
         "capabilities current module inventory equals exact I8 order plus validation/correction_protocol/correction_diagnostics with 42 modules and 257 edges",
-        "interaction current graph and module-export projections equal the exact frozen 42-module/257-edge identities while all historical graph and inertness assertions remain"
+        "interaction current graph and module-export projections equal the exact frozen 42-module/257-edge identities while all historical graph and inertness assertions remain",
+        "LICENSE-UNICODE equals the exact 1995-byte Unicode License V3 notice and the project LICENSE retains its exact accepted identity",
+        "pyproject and every metadata role use exactly MIT AND Unicode-3.0 with ordered LICENSE and LICENSE-UNICODE rows while every other metadata value remains",
+        "backend validator and packaging test statically close exact two-license snapshot/member/RECORD/missing/changed/unknown behavior and 53-file archives",
+        "reachability equals exactly fifteen modified plus four new implementation paths and 24 unique I9-relative paths with arbitrary path refusal preserved"
       ],
       "missing_failed_or_zero_check": "REFUSE"
     },
@@ -170,7 +188,7 @@
     {
       "id": "P3",
       "class": "T0",
-      "accept": "Prepared, direct-wheel and sdist-derived metadata are byte-identical and match the reconciled exact metadata."
+      "accept": "Prepared, direct-wheel and sdist-derived metadata are byte-identical and match the reconciled exact metadata, including License-Expression: MIT AND Unicode-3.0 followed by exact License-File rows for LICENSE and LICENSE-UNICODE."
     },
     {
       "id": "P4",
@@ -237,17 +255,17 @@
     {
       "id": "SC4_METADATA_RECONCILIATION",
       "class": "T0",
-      "accept": "Unchanged pyproject and lock hashes match; backend expected project and every metadata role contain exactly PyNaCl==1.6.2 and no other change."
+      "accept": "The corrected 434-byte pyproject hash, unchanged lock hash and exact project fields match; backend expected project and every metadata role contain PyNaCl==1.6.2, MIT AND Unicode-3.0 and the exact ordered LICENSE plus LICENSE-UNICODE declaration, with no other metadata change."
     },
     {
       "id": "SC5_WHEEL_CONTENTS",
       "class": "T0",
-      "accept": "Wheel has exactly 52 regular files: 48 package files and METADATA, WHEEL, license and RECORD."
+      "accept": "Wheel has exactly 53 regular files: 48 package files plus METADATA, WHEEL, exact project LICENSE, exact LICENSE-UNICODE and RECORD."
     },
     {
       "id": "SC6_SDIST_CONTENTS",
       "class": "T0",
-      "accept": "Sdist has exactly 52 regular files: 48 package files, pyproject, backend, license and PKG-INFO, with only required directory members."
+      "accept": "Sdist has exactly 53 regular files: 48 package files plus corrected pyproject, backend, exact project LICENSE, exact LICENSE-UNICODE and PKG-INFO, with only required directory members."
     },
     {
       "id": "SC7_RECORD",
@@ -292,12 +310,17 @@
     {
       "id": "SC15_TEST_COMPATIBILITY_SCOPE",
       "class": "T0",
-      "accept": "Eleven authorized inventory tests preserve every accepted I8 prefix and behavior while asserting exact current suffixes and uniqueness. Capabilities asserts the full 280-failure and 444-root I8 prefixes, exact 14/27 CLCD suffixes, 294/471 uniqueness, and exact current I8-plus-three module order with 42 modules and 257 edges. Interaction may update only its whole-current graph inventory to the frozen 429-byte module-order, 3522-byte import-graph and 12138-byte module-export projections while preserving every historical graph and inertness assertion. Artifact, atomic and interaction predecessor preservation each use exactly the same four literal reconciled paths with exact historical/current-base identities and directly verify every other I8 PRESERVED row; dynamic or scope-derived exclusions and any fifth path refuse. Atomic and interaction changes are limited to their I8 predecessor-row comparison blocks, preserving signatures, historical reconciliations, failure precedence and every other non-inventory assertion. The T2 bridge test retains its name/count, 42-row allowlist, fixtures, bridge/I6, signatures/import graph, failure precedence and non-inventory behavior. Reachability adds only exact Stage C phases while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease; all eight semantic static-authority checks pass for exactly 100 total checks per job."
+      "accept": "Eleven authorized inventory tests preserve every accepted I8 prefix and behavior while asserting exact current suffixes and uniqueness. Capabilities asserts the full 280-failure and 444-root I8 prefixes, exact 14/27 CLCD suffixes, 294/471 uniqueness, and exact current I8-plus-three module order with 42 modules and 257 edges. Interaction may update only its whole-current graph inventory to the frozen 429-byte module-order, 3522-byte import-graph and 12138-byte module-export projections while preserving every historical graph and inertness assertion. Artifact, atomic and interaction predecessor preservation each use exactly the same five literal reconciled paths after adding only pyproject.toml, with exact historical/current-base identities, and directly verify every other I8 PRESERVED row; dynamic or scope-derived exclusions and any sixth path refuse. Atomic and interaction changes are limited to their I8 predecessor-row comparison blocks, preserving signatures, historical reconciliations, failure precedence and every other non-inventory assertion. The T2 bridge test retains its name/count, 42-row allowlist, fixtures, bridge/I6, signatures/import graph, failure precedence and non-inventory behavior. Reachability advances only to the exact fifteen-modified plus four-new Stage C phase and 24 I9-relative paths while preserving historical I-9 durability and unknown-path refusal; test names and counts do not decrease; all twelve semantic static-authority checks pass for exactly 104 total checks per job."
     },
     {
       "id": "SC16_PROTECTED_BYTES",
       "class": "T0",
-      "accept": "Package source tree, pyproject, dependency lock, fixtures, results, books, PDFs and every other protected path retain predecessor bytes and modes."
+      "accept": "Package source tree, dependency lock, fixtures, results, books, PDFs and every other protected path retain predecessor bytes and modes; pyproject differs only by the exact license expression/license-files correction."
+    },
+    {
+      "id": "SC17_RELEASE_LICENSE_CLOSURE",
+      "class": "T0",
+      "accept": "Exact 1,069-byte project LICENSE and exact 1,995-byte Unicode License V3 notice are validated before build, carried in both wheel and sdist associated documentation, declared by aggregate SPDX metadata, hashed in RECORD/member manifests and covered by missing, changed, unknown, order and metadata fail-closed tests without changing the eight-test packaging count."
     }
   ],
   "frontend_wheelhouse": {
@@ -485,7 +508,11 @@
       "all archive member and RECORD identities",
       "direct versus sdist-derived wheel equality",
       "installed module origins and public surface projections",
-      "exact four-path predecessor reconciliation, exact capabilities prefixes/current module inventory, exact interaction current graph projections and eight semantic-scope check dispositions",
+      "exact five-path predecessor reconciliation with sole pyproject addition, exact capabilities prefixes/current module inventory, exact interaction current graph projections and the eight preserved semantic-scope check dispositions",
+      "exact project and Unicode license byte identities, corrected pyproject identity, aggregate metadata rows, both archive member identities and all twelve semantic-scope check dispositions",
+      "exact 21 historical results paths, 11 V3.0 documents, 18 v30 source paths and seven v30 contract/plan paths disclosed without scientific reinterpretation",
+      "exact 1417-byte canonical OSV query with SHA-256 1f8e9853d8cd3fe9b5d9ced279d534c8e635ca732c554f3a8d1e6be0885aff34, exact 20-coordinate order, identical request bytes, exact raw/canonical response bytes, ordered index binding and all byte-count/SHA-256 identities",
+      "exact release wording that three perturbed build replicas produced by the pinned validator were byte-identical",
       "all failures retries deviations and unresolved risks",
       "bounded regression test files commands counts outcomes and evidence classification",
       "zero registered/full-horizon campaign, new official result, scientific interpretation and validator-direct model/runner counts"
