@@ -385,6 +385,13 @@ sealed by exact byte count and SHA-256. The artifact binds the exact head,
 tree, branch, installed artifacts, harness artifact, environment and lane
 commands. Repository output paths are forbidden.
 
+For each of the nine entries, the final manifest name, file identity, status,
+evidence class, head, tree and environment must reproduce the underlying
+record exactly. All nine records must share the manifest head, tree and
+environment. A missing record, substituted bytes, cross-head record,
+cross-environment record, evidence-class relabel, or conversion of
+`BOUND_NOT_SUPPORTED` or `FAIL` into a PASS entry refuses the final manifest.
+
 The final status is `STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS`. It requires
 all optimized bounds supported and every scientific and release counter zero.
 It explicitly records `stage_f_execution_authorized=false`.

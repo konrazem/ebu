@@ -196,6 +196,9 @@
       "equivalence_certificate/v1", "cache_event/v1", "invalidation_receipt/v1", "output_manifest/v1"
     ],
     "round_trip": "encode, hash, decode and validate without byte or semantic drift",
+    "manifest_entry_binding": "each final-manifest entry name, byte identity, status and evidence class exactly equals its underlying record",
+    "cross_record_coordinate_binding": "all nine records and the final manifest have identical head commit, head tree and environment",
+    "nonpass_relabeling": "BOUND_NOT_SUPPORTED or FAIL in an underlying record makes STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS impossible",
     "unknown_missing_duplicate_nonfinite_float_or_extra_field": "REFUSE where prohibited by the controlling schema"
   },
   "deterministic_rng": {
@@ -346,6 +349,8 @@
     "record_count": 10,
     "final_status": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS",
     "all_bytes_and_hashes_sealed": true,
+    "manifest_entry_identity_status_evidence_class_equality": true,
+    "all_record_head_tree_environment_equality": true,
     "immutable_run_head_branch_environment_binding": true,
     "repository_output_path": "FORBIDDEN",
     "scientific_results": 0,

@@ -127,7 +127,7 @@
     },
     {
       "group_id": "SE-P-SCHEMA",
-      "count": 20,
+      "count": 23,
       "checks": [
         "SE-P-SCHEMA-001 evidence schema declares Draft 2020-12",
         "SE-P-SCHEMA-002 schema has exactly 22 named definitions",
@@ -148,7 +148,10 @@
         "SE-P-SCHEMA-017 complexity record requires exactly 14 projections and zero discarded warmups",
         "SE-P-SCHEMA-018 regression record freezes T0 T1 T2 packaging probe conventional and O14 counts",
         "SE-P-SCHEMA-019 final manifest contains the exact ordered nine record names and PASS entries",
-        "SE-P-SCHEMA-020 final manifest requires supported bounds, completed lanes and Stage F authorization false"
+        "SE-P-SCHEMA-020 final manifest requires supported bounds, completed lanes and Stage F authorization false",
+        "SE-P-SCHEMA-021 every manifest entry identity status and evidence class equals its underlying record",
+        "SE-P-SCHEMA-022 all records and the manifest share the exact head tree and environment",
+        "SE-P-SCHEMA-023 an underlying BOUND_NOT_SUPPORTED or FAIL record makes final PASS impossible"
       ]
     },
     {
@@ -290,7 +293,7 @@
       ]
     }
   ],
-  "required_positive_check_count": 186,
+  "required_positive_check_count": 189,
   "negative_cases": [
     "SE-N001 wrong base commit",
     "SE-N002 wrong base tree",
@@ -379,9 +382,12 @@
     "SE-N085 sdist byte identity or wheel-derivation mismatch",
     "SE-N086 intra-atomic-case checkpoint accepted for SD-03 through SD-07",
     "SE-N087 SD-02 inherited continuation accepted when its controlling condition is false",
-    "SE-N088 unsuffixed or missing release-action counter substituted for an exact zero count field"
+    "SE-N088 unsuffixed or missing release-action counter substituted for an exact zero count field",
+    "SE-N089 final manifest entry identity status or evidence class differs from its underlying record",
+    "SE-N090 cross-head cross-tree or cross-environment record admitted to the final manifest",
+    "SE-N091 BOUND_NOT_SUPPORTED or FAIL underlying record relabelled as final PASS"
   ],
-  "required_negative_case_count": 88,
+  "required_negative_case_count": 91,
   "schema_definition_requirements": {
     "minimum_definition_count": 20,
     "required_names": [
@@ -461,7 +467,7 @@
     "raw and canonical identities",
     "17 predecessor rows",
     "authority and implementation path closure",
-    "186 positive and 88 negative checks",
+    "189 positive and 91 negative checks",
     "zero counters",
     "prohibited actions",
     "stop condition",
