@@ -152,6 +152,43 @@ It adds no implementation path and changes no framework, backend, workflow,
 runtime, packaging, API, metadata, version, scientific, result, figure, book,
 or publication authority. The predecessor manifest remains byte-identical.
 
+The inventory-scope authority correction, commit
+`e58d18e1827af39529beb598791ae79396749992` and tree
+`1614be178dfe37b37c9939ad0881853220717103`, received an independent authority
+`PASS`. It was normally integrated without history rewriting as commit
+`c540d032ff22a4cd3be42f31564ac7023706e32d`, preserving the same tree. Fresh
+live verification showed that exact commit at `refs/heads/framework-v0.1` and
+main remained `e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0` when this predecessor-test
+correction was drafted. Authority-only target run `33037714051` is a failure,
+not a Stage C validation pass: the conventional and historical T1 jobs passed,
+the historical-workflow T0 job failed before CLCD completion, T2 was skipped,
+and no Stage C packaging job existed in that workflow.
+
+Implementation replay then exposed a narrower mechanical contradiction in the
+accepted inventory-scope text. With `PYTHONPATH=src:.`, the exact frozen atomic
+and interaction predecessor-preservation test methods each failed on exactly
+`.github/workflows/tests.yml`, `EBU_FUTURE_BOOKS_STRUCTURE.md`,
+`build_backend/ebu_build_backend.py`, and `tests/framework/safety.py`; the two
+methods produced eight failing subtests and no other failing path. The raw
+13,471-byte diagnostic transcript has SHA-256
+`09ea784a5d3351250dc34a74932c73afa5fb57cb697d6e98005c1f3e1e47de92`.
+This is static/synthetic implementation evidence from an uncommitted, rejected-
+candidate descendant worktree, not a validation pass and not scientific
+evidence. The already accepted authority requires those two methods to remain
+byte-for-byte at `cb07d02d`, even though it also requires them to pass against
+the current Stage C implementation. That combination is impossible: the four
+historical I8 rows intentionally differ from current or Stage C candidate
+bytes.
+
+This further descendant correction therefore changes only this Markdown file
+and the same three JSON authority files changed by the inventory-scope
+correction. It adds no path and changes no package, framework, workflow,
+runtime, API, metadata, version, scientific, result, figure, book, release, or
+publication authority. It replaces only the contradictory atomic and
+interaction predecessor-method prohibition with the same closed literal four-
+path reconciliation already required for artifact predecessor preservation.
+The predecessor manifest remains byte-identical.
+
 ## 3. Packaging diagnosis
 
 The predecessor has exactly 48 regular files below `src/ebu_framework`, of
@@ -462,13 +499,20 @@ other interpretation is permitted:
    directly against the current file. The four-path set must be asserted by
    literal equality; deriving exclusions from an authority modification set,
    adding any fifth path, or silently skipping a row is forbidden.
-2. The exclusion literals and all other logic in
+2. Only the I8 predecessor-row comparison block in
    `test_atomic_declarations.py::test_existing_public_signatures_and_predecessor_bytes_are_preserved`
    and
    `test_interaction_declarations.py::test_predecessor_signatures_and_d1_bytes_are_preserved`
-   must remain exactly as at `cb07d02d`; neither test may load Stage C scope or
-   add `EBU_FUTURE_BOOKS_STRUCTURE.md`, `tests/framework/safety.py`, or any
-   dynamically derived exclusion.
+   may receive the same literal four-path reconciliation required in item 1.
+   Each method must spell the four paths literally and assert literal equality
+   with that exact set. For the workflow and backend it must verify the exact I8
+   row and exact accepted Stage C base row while leaving candidate bytes to the
+   closed Stage C diff. For books structure and safety it must verify the exact
+   I8 row and exact current `c540d032` bytes and modes. Every other I8 row must
+   still be compared directly with the current file. Loading a Stage C modified
+   path set, deriving an exclusion, adding a fifth path, skipping a row, or
+   changing any signature, historical reconciliation, failure precedence, or
+   other non-inventory logic is forbidden.
 3. `test_capabilities.py` must assert failure values `[:280]` equal the exact I8
    future inventory and `[280:]` equal the exact 14-entry CLCD suffix; root
    exports `[:444]` equal the exact I8 future inventory and `[444:]` equal the
@@ -498,8 +542,11 @@ The three suffix modules have ordered direct imports respectively
 and 7.
 
 The validator's static-authority phase must add eight positive fail-closed
-semantic-scope checks covering the four numbered requirements above. The
-corrected total is exactly 100 checks per required job. A source-form shortcut,
+semantic-scope checks covering the four numbered requirements above. The third
+and fourth checks must verify the exact literal four-path atomic and interaction
+reconciliations rather than AST identity with `cb07d02d`; the other six checks
+are unchanged. The corrected total is exactly 100 checks per required job. A
+source-form shortcut,
 missing check, zero count, dynamic exclusion, nonliteral extra path, wrong
 prefix, wrong suffix, wrong graph, or wrong projection is a refusal.
 
