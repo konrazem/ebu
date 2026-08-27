@@ -852,11 +852,12 @@ documents in this correction are the Markdown, mechanical contract,
 implementation-path manifest and validation contract; no fifth authority
 document changes.
 
-Static authority validation adds exactly four positive fail-closed semantic
+The release-license/tag correction adds four positive fail-closed semantic
 checks: exact notice identity; exact pyproject/metadata expression and two-file
 declaration; exact backend/validator/test archive-member closure; and exact
-fifteen-plus-four reachability closure. The required static-authority total is
-104 in every job. The packaging test count remains eight. All conventional,
+fifteen-plus-four reachability closure. Section 16 adds one further exact
+I8S-013 dependency-witness check. The final required static-authority total is
+105 in every job. The packaging test count remains eight. All conventional,
 T0, T1, T2, CLCD, installed-probe, artifact-replica and evidence-manifest
 requirements remain mandatory and must rerun because artifact bytes change.
 
@@ -937,5 +938,93 @@ not transfer to new bytes.
 No PR, main merge, tag, GitHub Release, package-index upload, scientific
 execution, result interpretation, figure, book or publication is authorized.
 No license correction constitutes legal advice or a universal security claim.
+
+## 16. I8S-013 dependency-witness authority correction
+
+### 16.1 Observed authority conflict
+
+The accepted release-license/tag authority was normally integrated at
+`dcdbac6518518215f509688cd257a67032b1ec98`, tree
+`d358fa8a6b182e8949443dd01c09209ed2c5e382`. Rejected implementation candidate
+`94ca0ab1b075dde19b4421aaae0af4c37021596d`, tree
+`56a2b6193757e21639758df5b23d1c893cd4bcbc`, implements the exact nine-path
+license correction but cannot pass its mandatory T1 lane. GitHub Actions run
+`33051127041` and a local source-lane reproduction both reach
+`FrameworkI8ExactVectors.test_I8S_013` and fail in the
+`NO_DEPENDENCY_DRIFT` branch because that historical I-8 static witness compares
+the complete current `pyproject.toml` byte hash to its 399-byte I-8 predecessor
+identity. Section 15.2 simultaneously requires the exact 434-byte prospective
+license-only pyproject identity. These predicates cannot both hold.
+
+This is a static/synthetic pre-execution compatibility defect. It is not a
+package, framework, model, trajectory, registered simulation, empirical,
+scientific-result or release observation. Candidate `94ca0ab...` and run
+`33051127041` remain failed evidence and are not authorized for integration.
+The completed run is overall `FAILURE`: conventional, T0 and T2 jobs are
+`SUCCESS`; T1 runs exactly 299 source tests with one failure at `I8S-013`
+before its installed lanes; the packaging job builds and validates the new
+53-member wheel/sdist successfully, then fails at the same source-T1 witness
+before final manifest/artifact retention. The observed rejected wheel is
+4,078,093 bytes with SHA-256
+`3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2`;
+the rejected sdist is 4,138,025 bytes with SHA-256
+`0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41`.
+Those bytes are diagnostic failed evidence only. Every job reached the prior
+104-check static-authority PASS; none establishes the prospective 105th check.
+
+### 16.2 Exact one-branch correction
+
+The existing implementation path set does not expand. In
+`tests/framework/test_artifact_recovery_publication.py`, only the
+`NO_DEPENDENCY_DRIFT` branch of `_run_static_vector` gains one exact
+reconciliation. The witness file order remains exactly `pyproject.toml`, then
+`requirements-framework.lock`.
+
+For `pyproject.toml`, the test must:
+
+1. verify the exact I-8/pre-Stage-C identity: mode `100644`, Git blob
+   `21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6`, 399 bytes, SHA-256
+   `98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b`;
+2. verify the exact current corrected identity: mode `100644`, 434 bytes,
+   SHA-256
+   `25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47`;
+3. bind that current identity to the accepted mechanical contract's
+   `corrected_pyproject` row, whose only changes are the exact license
+   expression and ordered license-files declaration.
+
+For `requirements-framework.lock`, the existing direct I-8 comparison remains
+unchanged: mode `100644`, Git blob
+`907bdff88be25741f04980ae5e6a769df2a61d4d`, 2,036 bytes, SHA-256
+`8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a`.
+No dynamic implementation-scope exclusion, generic metadata exception, third
+witness file, dependency change, lock change, skip or assertion weakening is
+allowed. Vector `I8S-013`, its installed/source execution, test name/count,
+static outcome, result projection, call counters, failure precedence and every
+other `_run_static_vector` branch remain exact.
+
+### 16.3 Validator, evidence and gates
+
+The validator must update the four current authority raw hashes and the exact
+prospective AST identity for `_run_static_vector`, and add one positive
+fail-closed semantic check that reconstructs the two-file witness, exact
+historical/current identities and absence of a generic exclusion. The prior 92
+checks plus 13 semantic checks yield exactly 105 static-authority checks per
+job. `tests/framework/test_packaging_release_candidate.py` may update only its
+existing validator-conformance assertions; its test count remains eight.
+
+The implementation delta relative to the accepted target remains exactly eight
+modified plus one new path, and the cumulative Stage C closure remains fifteen
+modified plus four new paths, 24 unique paths relative to the I-9 implementation
+base. No workflow, backend inventory, dependency, API, version, framework
+source, result, figure, book or other path is added by this correction.
+
+Implementation is frozen until this exact authority correction receives an
+independent PASS and is normally integrated after a fresh live-target check.
+After integration, the rejected feature branch must be advanced normally, not
+rewritten, and all five CI jobs must rerun at one exact head with 105 authority
+checks and no skipped lane before a new independent implementation audit.
+Target integration, main merge, tag, release, scientific execution,
+interpretation, figures, books, publication, force-push and history rewrite
+remain forbidden.
 
 `FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_READY_FOR_AUDIT`
