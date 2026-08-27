@@ -13,6 +13,9 @@ Required predecessor tree:
 Proposed authority branch:
 `framework/stage-c-packaging-release-candidate-authority`
 
+Runtime-identity correction branch:
+`framework/stage-c-sqlite-runtime-authority-correction`
+
 ## 1. Purpose and boundary
 
 This amendment prospectively authorizes one narrow implementation stage: make
@@ -89,6 +92,35 @@ still binds whole-I8 failure and root-export inventories but was absent from
 the closed modification set. This twice-corrected candidate adds only the exact
 authority needed for that inventory reconciliation and the already diagnosed
 current-scope repair during the later implementation.
+
+The final Stage C authority candidate, commit
+`97daec0c3982db546769a9d268332c9b7353daa8` and tree
+`36422147de3efbad69bd21550b9c8f142a965481`, received an independent authority
+`PASS`. It was normally integrated without history rewriting as commit
+`f88496cfb2cce563db25a259e3ac9a6d1e22268f`, preserving the same tree, and was
+the freshly verified live `refs/heads/framework-v0.1` coordinate when this
+runtime correction was drafted.
+
+Implementation then produced fail-closed runtime evidence that the accepted
+source-ID rule was mechanically unsatisfiable for the exact pinned image. Push
+run `33030540700` at implementation commit
+`361e1541dcd383a6f13fbe0664597e0066c41c6d` / tree
+`d7819c6ff06cda3db5cd749fe286c65618e1aa9f` and diagnostic run `33030733344`
+at commit `1d4d2f8e53973c07fe7156d4ff3d710609648d76` / tree
+`e270314bd23559ca9bc7989eb6ae7c6dd67ac38e` each passed all 92 static-authority
+checks in all five required jobs, then refused before any build or test because
+the pinned runtime returned SQLite source ID
+`2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1`
+from Debian package `libsqlite3-0:amd64=3.46.1-7+deb13u1`, rather than the
+upstream release reference ending in `1e33`. Neither run is a validation pass.
+The refusals establish only runtime-identity correction evidence; they do not
+establish packaging, framework, scientific, release, result, or book evidence.
+This descendant correction changes only this Markdown file,
+`framework_alpha_packaging_release_candidate_contract.json`, and
+`framework_alpha_packaging_release_candidate_validation_contract.json`.
+`framework_alpha_packaging_release_candidate_implementation_path_manifest.json`
+and `framework_alpha_packaging_release_candidate_predecessor_manifest.json`
+remain byte-identical to the independently accepted authority.
 
 ## 3. Packaging diagnosis
 
@@ -287,20 +319,30 @@ The Stage C T1 and packaging reference environment is:
 - required SQLite: exactly `3.46.1`, still satisfying
   `3.46.0 <= sqlite3.sqlite_version < 4.0.0`.
 
-The required `sqlite_source_id()` is exactly
-`2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33`,
-the official SQLite 3.46.1 release identity. A distribution suffix may be
-recorded separately but may not replace or obscure that source identity.
+Two distinct SQLite source identities are frozen and must not be conflated:
+
+- the upstream SQLite 3.46.1 release provenance reference is
+  `2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33`;
+  it must be recorded but must never be compared as the pinned runtime gate;
+- the exact required `sqlite_source_id()` returned by the pinned Debian
+  runtime is
+  `2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1`.
+
+The exact required Debian runtime package identity is
+`libsqlite3-0:amd64=3.46.1-7+deb13u1`. The `alt1` runtime identity records the
+distribution-modified SQLite source in that immutable image; it is not an
+upstream release identity and may not be replaced by the upstream reference.
 
 Before any T1 or packaging test, the job must record and verify the immutable
 image digest, `/etc/os-release`, `sys.implementation`, `sys.version`,
 `sys.version_info`, ABI/cache tag, executable hash when available,
 `sqlite3.sqlite_version`, `sqlite3.sqlite_version_info`, `sqlite_source_id()`,
-and installed Debian `libsqlite3-0` identity when available. The removed
+and the exact installed Debian `libsqlite3-0` identity. The removed
 CPython 3.14 attributes `sqlite3.version` and `sqlite3.version_info` are not
 required and must not be used as runtime gates. A missing required field,
 unexpected platform, prerelease Python, different Python patch, or SQLite
-outside the exact accepted identity refuses the lane.
+outside the exact accepted version, pinned runtime source identity, or Debian
+package identity refuses the lane.
 
 The image must be pulled by digest while network is available. Packaging
 frontend execution and clean installed-artifact probes must then run with
@@ -329,8 +371,9 @@ External decision evidence, queried during drafting on 2026-08-26 UTC, is:
   `https://www.sqlite.org/releaselog/3_46_1.html`.
 
 Those mutable pages are provenance evidence, not executable inputs. The OCI
-platform manifest digest and fail-closed runtime observations are the execution
-identity.
+platform manifest digest, exact runtime source ID, and exact Debian package are
+the execution identity; the upstream SQLite source ID remains a separately
+recorded provenance reference only.
 
 ## 9. Closed implementation path authority
 

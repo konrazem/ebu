@@ -73,6 +73,43 @@
       "t2_job": "SKIPPED_NOT_A_PASS",
       "clcd_job": "NOT_COMPLETED",
       "independent_authority_audit": "FAIL_T2_STALE_INVENTORY_PATH_OMISSION"
+    },
+    "accepted_stage_c_authority": {
+      "candidate_commit": "97daec0c3982db546769a9d268332c9b7353daa8",
+      "candidate_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+      "independent_authority_audit": "PASS",
+      "integration_commit": "f88496cfb2cce563db25a259e3ac9a6d1e22268f",
+      "integration_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+      "target_ref": "refs/heads/framework-v0.1",
+      "integration_method": "NORMAL_NON_FORCE"
+    },
+    "runtime_authority_correction": {
+      "disposition": "MECHANICALLY_UNSATISFIABLE_UPSTREAM_SOURCE_ID_RUNTIME_GATE",
+      "correction_base_commit": "f88496cfb2cce563db25a259e3ac9a6d1e22268f",
+      "correction_base_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+      "initial_implementation_commit": "361e1541dcd383a6f13fbe0664597e0066c41c6d",
+      "initial_implementation_tree": "d7819c6ff06cda3db5cd749fe286c65618e1aa9f",
+      "initial_ci_run_id": 33030540700,
+      "diagnostic_implementation_commit": "1d4d2f8e53973c07fe7156d4ff3d710609648d76",
+      "diagnostic_implementation_tree": "e270314bd23559ca9bc7989eb6ae7c6dd67ac38e",
+      "diagnostic_ci_run_id": 33030733344,
+      "modified_authority_paths": [
+        "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+        "framework_alpha_packaging_release_candidate_contract.json",
+        "framework_alpha_packaging_release_candidate_validation_contract.json"
+      ],
+      "preserved_implementation_path_manifest_raw_sha256": "f24c704f6ce72201b6b8d339183aa7511be540d0d1500f2a38878fd9c29983fe",
+      "preserved_implementation_path_manifest_canonical_sha256": "7d1648f854ee2d2f91f55f31400196a4003537b98c9b8094b3f471f059b830f5",
+      "preserved_predecessor_manifest_raw_sha256": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
+      "preserved_predecessor_manifest_canonical_sha256": "fb24a8c1be487d19008a6ec6123e6426ff4622eebf3e1029d044ca6ace9cd207",
+      "required_jobs_observed": 5,
+      "static_authority_checks_per_job": 92,
+      "static_authority_disposition": "PASS_IN_ALL_FIVE_JOBS",
+      "post_static_disposition": "FAIL_CLOSED_BEFORE_BUILD_OR_TEST",
+      "upstream_release_source_id_reference": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+      "observed_pinned_runtime_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+      "observed_debian_package": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
+      "ci_runs_are_validation_passes": false
     }
   },
   "diagnosis": {
@@ -241,7 +278,10 @@
     "docker_library_python_revision": "6cc07b27ad0df3769bbd1a2a1000a842634681d2",
     "python_required": "CPython 3.14.4 final",
     "sqlite_required_exact": "3.46.1",
-    "sqlite_source_id_required": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+    "sqlite_upstream_release_source_id_reference": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+    "sqlite_upstream_reference_runtime_comparison": "FORBIDDEN",
+    "sqlite_runtime_source_id_required": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+    "debian_libsqlite3_0_package_required": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
     "sqlite_accepted_range": ">=3.46.0,<4.0.0",
     "network_for_pull_and_wheelhouse_preparation": "ALLOWED_BEFORE_OFFLINE_EXECUTION",
     "network_for_packaging_frontends_and_installed_probes": "PHYSICALLY_DISABLED",
@@ -257,7 +297,7 @@
       "sqlite3.sqlite_version",
       "sqlite3.sqlite_version_info",
       "sqlite_source_id()",
-      "Debian libsqlite3-0 package identity when available"
+      "exact Debian libsqlite3-0 package identity"
     ],
     "removed_cpython_3_14_attributes_not_required": [
       "sqlite3.version",
