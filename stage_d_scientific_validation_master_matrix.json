@@ -1,0 +1,2858 @@
+{
+  "matrix_id": "EBU-STAGE-D-MASTER-SCIENTIFIC-VALIDATION-MATRIX",
+  "matrix_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_NO_EXECUTION_NO_OUTCOMES",
+  "authority_contract": "stage_d_scientific_validation_contract.json",
+  "evidence_schema": "stage_d_scientific_validation_evidence_schema.json",
+  "predecessor_authority_reference_binding": "Every path-shaped studies[].dependencies[] or studies[].owners.authority_sources[] value is an exact accepted-base path and a matching unique 39-row predecessor-manifest identity; unknown, merely existing-but-unlocked, aliased, or mismatched paths refuse.",
+  "shared_numerical_policy": "NUMERICAL-POLICY-01 as frozen in stage_d_scientific_validation_contract.json; SD-02 remains governed only by its preserved Gate 1D-C numerical authority",
+  "shared_uncertainty_policy": "REGISTERED-SEED-SUMMARY-01: complete seed values, paired differences, exact median, and closed min/max seed range; resampling, bootstrap/confidence language, analysis draws, and population inference are forbidden",
+  "reference_environment": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab linux/amd64 CPython 3.14.4-final",
+  "hard_cap_profile_role_mapping": {
+    "role_field": "cap_binding_role",
+    "configuration_manifest": {
+      "permitted_role": "STUDY_EXECUTION",
+      "profile_rule": "profile_id must equal study_id"
+    },
+    "study_execution_profiles": {
+      "SD-01": "SD-01",
+      "SD-02": "SD-02",
+      "SD-03": "SD-03",
+      "SD-04": "SD-04",
+      "SD-05": "SD-05",
+      "SD-06": "SD-06",
+      "SD-07": "SD-07",
+      "SD-08": "SD-08",
+      "SD-09": "SD-09",
+      "SD-10": "SD-10",
+      "SD-11": "SD-11",
+      "SD-12": "SD-12",
+      "SD-13": "SD-13",
+      "SD-14": "SD-14"
+    },
+    "conformance_profiles": {
+      "MOBIUS_CONFORMANCE": {
+        "profile_id": "MOBIUS-EXACT-01",
+        "study_ids": ["SD-05", "SD-06", "SD-07", "SD-11", "SD-14"],
+        "computation_algorithm_evidence_kind": "MOBIUS"
+      },
+      "DAG_CONFORMANCE": {
+        "profile_id": "DAG-EXACT-01",
+        "study_ids": ["SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+        "computation_algorithm_evidence_kind": "DAG"
+      },
+      "CACHE_CONFORMANCE": {
+        "profile_id": "CANONICAL-CACHE-01",
+        "study_ids": ["SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+        "computation_algorithm_evidence_kind": "CACHE"
+      }
+    },
+    "use_site_rule": "configuration_manifest permits only its matching study profile; computation_record and limit_decision require either that matching study profile or the one exact conformance profile permitted by the declared role and study; every cross-study, cross-control, unknown-role, or role/evidence-kind substitution refuses"
+  },
+  "study_order": [
+    "SD-01",
+    "SD-02",
+    "SD-03",
+    "SD-04",
+    "SD-05",
+    "SD-06",
+    "SD-07",
+    "SD-08",
+    "SD-09",
+    "SD-10",
+    "SD-11",
+    "SD-12",
+    "SD-13",
+    "SD-14"
+  ],
+  "stage_d_observations": {
+    "configured_run_count": 0,
+    "executed_run_count": 0,
+    "measured_performance_cell_count": 0,
+    "inspected_outcome_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0
+  },
+  "mandatory_controls_text": [
+    "Preserve a direct, independently understandable small-case Möbius/topology oracle as the normative correctness reference.",
+    "Any optimized bitmask/fast Möbius transform must reproduce the direct oracle exactly over the complete registered small-case domain and declared randomized/adversarial cross-check domain; a mismatch is a refusal, not a tolerance or approximation case.",
+    "Require measured complexity evidence for the optimized Möbius path against declared `O(n*2^n)` time and `O(2^n)` storage expectations, with registered dimensions, instrumentation, environment, thresholds, and nonclaim boundaries.",
+    "Require dependency-DAG traversal evidence against `O(V+E)` time, including sparse/dense, disconnected, deep-chain, wide-frontier, invalid-cycle, duplicate-edge and ordering controls.",
+    "Permit recursive motif or cache reuse only when equivalence is certified under the controlling canonical/topology authority; cache keys must be complete for every result-affecting input/authority/version/environment dimension; corrections or authority changes must deterministically invalidate affected entries.",
+    "Register positive reuse cases, non-equivalent near-miss negative controls, incomplete-key collision falsifiers, stale-cache/correction-invalidation tests, and provenance/receipt requirements.",
+    "Define explicit hard limits for exact Möbius/topology studies: maximum n/subset count, vertices, edges, memory, wall time, trace/output size and recursion/depth as applicable. Values must be justified before execution and bound to the reference environment.",
+    "If a requested exact study exceeds a hard limit or resource budget, fail closed or classify it `COMPUTATIONALLY_INCONCLUSIVE`. Do not silently approximate, truncate, sample, alter topology, weaken equivalence, or convert the outcome into positive/negative scientific evidence.",
+    "Any separately proposed approximation requires its own preregistered authority, error bounds, controls, evidence class and interpretation rules; it must never be substituted for an exact registered study after outcomes are visible.",
+    "Record the oracle/optimized implementation identities, complexity observations, cache/equivalence certificates, invalidation receipts, limit decisions and inconclusive classifications in the traceability chain through eventual results and books."
+  ],
+  "studies": [
+    {
+      "study_id": "SD-01",
+      "order": 1,
+      "title": "Long-run homeostasis and viability",
+      "status": "PROSPECTIVE_STAGE_F_AFTER_STAGE_D_AND_E_PASS",
+      "dependencies": [
+        "accepted viability and constrained-control equations",
+        "accepted unit, boundary, and conservation authority",
+        "future independently accepted Stage E long-run harness"
+      ],
+      "question": "Under the declared regenerative-source and demand families, which registered policies preserve viability, invariance, recursive feasibility, reserves, recovery, and regeneration over the complete horizon, including adversarial schedules and Allee thresholds?",
+      "prospective_claim": {
+        "text": "A policy may be described as viable only for the exact registered model, parameter cell, controls, horizon, and uncertainty rule in which all acceptance predicates pass.",
+        "strongest_permitted_disposition": "REGISTERED_SCIENTIFIC_SIMULATION_WITH_MODEL_BOUNDED_INTERPRETATION",
+        "nonclaims": [
+          "no universal stability theorem",
+          "no empirical ecological or economic claim",
+          "no extrapolation outside registered parameter cells"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "level-2 derivation checks",
+          "level-3 harness conformance",
+          "level-4 numerical verification",
+          "independent Stage E PASS"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "viability kernel and admissible control set",
+          "ordered stock balance x_pre=x_t+g(x_t)-shock_t, served u_t selected by the registered H policy, x_(t+1)=x_pre-u_t",
+          "robust one-step feasibility and reserve constraints",
+          "Allee regeneration g(x)=rho*x*(1-x/K)*(x/A-1) for the declared Allee family"
+        ],
+        "authority_sources": [
+          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
+        ],
+        "implementation_interfaces": [
+          "future Stage E registered viability model adapter",
+          "future immutable trajectory and checkpoint writer",
+          "future model-local H0/H1/H2/H3 policy adapter; no historical P1C interface or semantics"
+        ]
+      },
+      "model_domain": {
+        "model": "one-stock regenerative resource with explicit demand, loss, reserve, shock, and policy ledgers",
+        "domain_authority": "the registered SD-01 configuration, not generic framework topology",
+        "units": [
+          "stock-unit",
+          "stock-unit/tick",
+          "tick",
+          "dimensionless policy ratio"
+        ],
+        "state": [
+          "available stock",
+          "protected reserve floor and derived reserve margin max(0,x-5)",
+          "cumulative served demand",
+          "cumulative unmet demand",
+          "cumulative loss",
+          "recovery and viability flags"
+        ],
+        "dependency_topology_authority": "single registered stock-flow graph with source, demand, loss, reserve, and boundary nodes",
+        "boundary": "open control volume; every declared shock and external replenishment is a boundary exchange"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "x_0=15 stock-unit",
+          "protected reserve floor R=5 stock-unit; reserve margin is derived and is not a second physical stock",
+          "all cumulative accounts zero"
+        ],
+      "parameters": [
+          "source regimes: logistic g(x)=rho*x*(1-x/20) for rho in {0.3,0.6}; Allee g(x)=rho*x*(1-x/20)*(x/5-1) for rho in {0.3,0.6}",
+          "constant requested demand d is ratio in {0.25,0.75,1.0,1.25} times the exact g(15) of that source regime",
+          "shock schedules: none; adversarial boundary outflow min(4,max(0,x_t+g(x_t))) immediately after regeneration at ticks 2500,5000,10000,15000",
+        "H0: u=min(d,max(0,x_pre)); H1: u=min(d,max(0,x_pre-5)); H2_eta: u=eta*H1 for eta in {0.5,0.9,1.0}",
+        "define M={0,d/4,d/2,3d/4,d}; for a proposed next state y and registered next shock q define y_pre=y+g(y)-q and the exact reserve-constrained next-step H1 admissible-action set A_H1(y,q)={v in M: y_pre>=5, 0<=v<=d, and 5<=y_pre-v<=20}",
+        "define q_0(y)=0 and q_1(y)=min(4,max(0,y+g(y))); the exact H3 current admissible set is A_H3(x_pre)={u in M: 5<=x_pre-u<=20, A_H1(x_pre-u,q_0(x_pre-u)) is nonempty, and A_H1(x_pre-u,q_1(x_pre-u)) is nonempty}; H3 selects the greatest member of A_H3 and fails recursively feasible at the first tick where A_H3 is empty",
+        "NUMERICAL-POLICY-01 governs every binary64 transition, ledger residual, checkpoint, and threshold comparison",
+        "model-local viability set V_H0={x:0<=x<=20}; V_H1=V_H2=V_H3={x:5<=x<=20}; invariance means every post-transition x_(t+1) belongs to the selected policy set for all ticks 0..19999",
+        "model-local homeostasis predicate: after the final exogenous shock (tick 0 for no-shock cells and tick 15000 otherwise), a trajectory is HOMEOSTATIC_ON_HORIZON iff for 1000 consecutive post-transition ticks ending no later than tick 20000 it stays in its viability set, abs(x_(t+1)-x_t)<=1e-8 stock-unit, and abs(u_(t+1)-u_t)<=1e-8 stock-unit/tick",
+        "paired recovery predicate: for each shock at s in {2500,5000,10000,15000}, compare with the exact same source/demand/policy cell under the no-shock schedule; define D_s=min(s+2000,next shock tick minus 1,20000), omitting the next-shock term after the final shock; recovery time is the least r in [s+1,D_s-99] for which abs(x_shock(t)-x_reference(t))<=1e-6 and abs(u_shock(t)-u_reference(t))<=1e-6 for every t=r..r+99; absence is NOT_RECOVERED_ON_HORIZON, not computationally inconclusive",
+        "reserve predicate: a reserve-protected claim requires x_t>=5 at every pre- and post-transition state; reserve margin max(0,x-5) is reported but never added as stock",
+        "regeneration predicate: for logistic cells g(x_t)>=0 whenever 0<=x_t<=20; for Allee cells g(x_t)>0 only for 5<x_t<20, g(x_t)=0 at x_t in {0,5,20}, and a trajectory starting x_0=4 with no external inflow must not be called regenerative",
+        "recursive-feasibility predicate: at every H3 tick A_H3(x_pre) must be nonempty and the selected action's exact A_H1 next-step set must be nonempty under both q_0 and q_1; trace_row/v1 records current_admissible_set_digest/size, no_shock_next_admissible_set_digest/size, adversarial_next_admissible_set_digest/size, selected_action, and the exact current/no-shock/adversarial pre/post reserve predicates; a first empty current or branch set is a cell-specific failure",
+        "zero-demand logistic control predicate: from x_0=15, abs(x_t-20)<=1e-6 must first occur by tick 1000 and persist for 100 consecutive ticks under each rho; the paired x_0=4 Allee controls must never be labeled regenerative without a boundary inflow"
+        ],
+        "comparators": [
+          "H0 unconstrained model-local baseline",
+          "H1 one-step reserve-floor comparator",
+          "H2_eta soft reserve-floor comparators",
+          "H3 finite-menu two-step registered-shock recursive-feasibility comparator"
+        ],
+        "positive_controls": [
+        "zero-demand logistic recovery must satisfy the exact x=20 +/-1e-6 entry-by-1000 and 100-tick persistence predicate",
+          "no-shock low-demand cell must remain feasible under the accepted safe policy",
+          "an H3 cell with nonempty A_H3 and nonempty A_H1 sets under both registered next-shock branches records all three exact sets and selects their greatest current admissible action"
+        ],
+        "negative_controls": [
+          "demand above feasible regeneration must not be reported viable",
+          "initial stock below the Allee threshold with no inflow must not be reported regenerative",
+          "hidden boundary replenishment must violate conservation",
+          "reserve reuse in both stock and service accounts must trigger double-count refusal",
+          "an injected cell with an empty no-shock or adversarial-shock A_H1 branch set must fail recursive feasibility even when the current H3 action leaves x_next>=5"
+        ],
+        "seeds": "none; all 192 scientific configurations and four registered control trajectories are deterministic",
+        "stochastic_rules": "FORBIDDEN in SD-01",
+      "uncertainty_rules": "NUMERICAL-POLICY-01 and complete deterministic cell reporting; no pooled interval; H-policy comparisons are paired by identical source/demand/shock and H2_eta comparisons remain within H2; homeostasis and recovery use only the frozen thresholds/windows above",
+        "horizon": "20000 ticks per run",
+        "stopping_rules": [
+          "stop and retain run on non-finite state",
+          "stop and retain run on conservation or unit failure",
+      "continue through policy infeasibility while recording it unless state evolution becomes undefined",
+      "complete exactly 20000 ticks otherwise"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H+R_H3*H*55) for one transition per trajectory/tick, five exact current H3 candidate checks, and at most five exact next-step H1 action checks under each of two shock branches for every current candidate",
+        "exact_problem_size": "4 source regimes * 4 demand ratios * 2 shock schedules * (H0,H1,H3 plus three H2_eta values) = 192 scientific runs, plus two zero-demand logistic controls and two x_0=4 Allee controls = 196 total trajectories",
+        "horizon": "20000 ticks",
+        "subset_or_hyperedge_order": "not applicable; graph maximum edge arity 2",
+        "expected_evaluations": 39120000,
+        "storage_estimate_bytes": 12884901888,
+        "future_measurement_method": "Stage E monotonic wall-clock, process-tree peak RSS, exact emitted bytes, and one transition counter per tick",
+        "checkpoint_restart_scheme": "checkpoint every 1000 ticks; restarted suffix must be byte-identical to uninterrupted suffix",
+        "parallelization_boundary": "independent configuration runs may be parallel; a single run and its accounting sequence are serial",
+        "hard_caps": {
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480,
+          "primary_evaluations_per_run": 1200000,
+          "maximum_depth": 20000
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE with immutable partial trace and limit-decision receipt",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "any accepted viable/reserve-protected disposition with x<0, x<5 where reserve protection is claimed, or another declared viability constraint violated",
+        "an invariant-set claim whose trajectory exits the exact registered set",
+        "recursive-feasibility claim with empty A_H3, empty A_H1 under either registered next-shock branch, an unrecorded current/branch set, or a violated pre/post reserve predicate",
+        "unreconciled conservation residual",
+      "homeostasis or recovery claim outside the exact target, tolerance, deadline, or 100/1000-tick persistence predicates",
+        "silent clamp, early truncation, or post-outcome parameter change"
+      ],
+      "conservation_accounting": {
+        "class": "OPEN_CONTROL_VOLUME",
+        "ledgers": [
+          "physical stock",
+          "derived reserve margin x-5, explicitly not a second physical stock",
+          "service and unmet demand",
+          "loss",
+          "boundary exchange",
+          "EBU benefit/burden/cost"
+        ],
+        "no_double_count_rule": "the derived reserve margin is never added to physical stock; each service, loss, and external exchange has one owning receipt and every internal transfer cancels once"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all registered cells have a visible disposition",
+        "positive controls pass and negative controls fail in the registered direction",
+      "all viability, invariance, homeostasis, recovery, reserve, regeneration, and accounting claims use the exact frozen model-local predicates and remain cell-specific",
+        "all falsifiers remain false for a positive disposition"
+      ],
+      "inconclusive": [
+        "timeout or resource cap",
+        "environment or identity mismatch",
+        "numerical non-finiteness not already a scientific falsifier",
+        "incomplete trace or failed checkpoint equivalence"
+      ],
+      "independent_result_audit": "reconstruct every trajectory summary from raw traces; verify cell coverage, paired comparators, persistence, conservation, controls, cap receipts, and no hidden reruns before interpretation",
+      "book_destination": [
+        "Part V long-run viability, reserves, recovery, and regeneration",
+        "Part IV methods cross-reference only after audited results"
+      ],
+      "prohibited_interpretations": [
+        "model viability as empirical sustainability",
+        "one policy as universally optimal",
+        "Allee example as universal ecology"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE"
+      ]
+    },
+    {
+      "study_id": "SD-02",
+      "order": 2,
+      "title": "Gate 1D-C, robust-P1C, and Gate 1E authority recovery",
+      "status": "GATE_1D_C_REGISTERED_PRESERVED; ROBUST_P1C_AND_GATE_1E_AUTHORITY_RECOVERY_REQUIRED",
+      "dependencies": [
+        "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+        "v30_gate1dc_outcome_discrimination_plan.json",
+        "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+        "separate future robust-P1C and Gate 1E authority amendment"
+      ],
+      "question": "Does the exact inherited Gate 1D-C protocol preserve its registered capability distinctions, and can robust-P1C and Gate 1E later be specified without inventing missing authority?",
+      "prospective_claim": {
+        "text": "Only the preserved Gate 1D-C protocol is executable after future gates; robust-P1C and Gate 1E remain authority-recovery questions with no executable scientific claim.",
+        "strongest_permitted_disposition": "GATE_1D_C_REGISTERED_SIMULATION_ONLY; GATE_1E_NOT_EXECUTABLE",
+        "nonclaims": [
+          "no Gate 1E outcome",
+          "no robust uncertainty-coverage claim",
+          "no reinterpretation of historical runs"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "exact protocol reconstruction",
+          "independent Stage E harness PASS",
+          "future separate authority for robust-P1C or Gate 1E"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "inherited Gate 1D-C protocol equations only",
+          "robust margin and coverage equations FORBIDDEN_UNTIL_SEPARATE_AMENDMENT",
+          "Gate 1E equations FORBIDDEN_UNTIL_SEPARATE_AMENDMENT"
+        ],
+        "authority_sources": [
+          "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+          "v30_gate1dc_outcome_discrimination_plan.json",
+          "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md"
+        ],
+        "implementation_interfaces": [
+          "inherited Gate 1D-C official runner after future authorization",
+          "robust-P1C interface FORBIDDEN_UNTIL_SEPARATE_AMENDMENT",
+          "Gate 1E interface FORBIDDEN_UNTIL_SEPARATE_AMENDMENT"
+        ]
+      },
+      "model_domain": {
+        "model": "three inherited Gate 1D-C worlds and five executable arms",
+        "domain_authority": "inherited Gate 1D-C protocol only",
+        "units": [
+          "as frozen by Gate 1D-C protocol"
+        ],
+        "state": [
+          "as frozen by Gate 1D-C protocol"
+        ],
+        "dependency_topology_authority": "as frozen by Gate 1D-C protocol",
+        "boundary": "as frozen by Gate 1D-C protocol"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "exact inherited Gate 1D-C initial conditions"
+        ],
+        "parameters": [
+          "3 worlds",
+          "5 executable arms",
+          "2 timestep values",
+          "200 ticks",
+          "50 burn-in ticks",
+          "20 persistence ticks"
+        ],
+        "comparators": [
+          "the five inherited arms paired within world and timestep"
+        ],
+        "positive_controls": [
+          "exact inherited positive controls"
+        ],
+        "negative_controls": [
+          "exact inherited negative controls",
+          "any attempted robust-P1C or Gate 1E execution without amendment must refuse"
+        ],
+        "seeds": "exact inherited deterministic rule; no new seeds",
+        "stochastic_rules": "no new stochastic rule",
+        "uncertainty_rules": "inherited Gate 1D-C rules only; robust-P1C requires separate observation, delay, uncertainty, margin, coverage, and calibration authority",
+        "horizon": "Gate 1D-C exactly 200 ticks; Gate 1E FORBIDDEN_UNTIL_SEPARATE_AMENDMENT",
+        "stopping_rules": [
+          "exact inherited Gate 1D-C stopping rules",
+          "refuse before robust-P1C or Gate 1E execution"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H) for preserved Gate 1D-C trajectories",
+        "exact_problem_size": "3 worlds * 5 executable arms * 2 timestep values = 30 Gate 1D-C runs; zero robust-P1C and zero Gate 1E runs authorized",
+        "horizon": "200 ticks per Gate 1D-C run",
+        "subset_or_hyperedge_order": "inherited protocol; no new topology inference",
+        "expected_evaluations": 6000,
+        "storage_estimate_bytes": 1073741824,
+        "future_measurement_method": "future Stage E instrumentation around the unchanged inherited protocol",
+        "checkpoint_restart_scheme": "inherit exact execution plan; any change requires amendment",
+        "parallelization_boundary": "only independent inherited run cells may be parallel",
+        "hard_caps": {
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480,
+          "primary_evaluations_per_run": 200,
+          "maximum_depth": 200
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; never replace the inherited cell",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "protocol, arm, world, timestep, horizon, burn-in, or persistence drift",
+        "skipped or substituted cell",
+        "robust-P1C or Gate 1E execution before separate accepted authority",
+        "historical output presented as a new registered run"
+      ],
+      "conservation_accounting": {
+        "class": "INHERITED_GATE_1D_C_ACCOUNTING",
+        "ledgers": [
+          "exact inherited protocol ledgers"
+        ],
+        "no_double_count_rule": "preserve inherited accounting and reject any added aggregation without authority"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 30 inherited Gate 1D-C cells complete under exact authority",
+        "no robust-P1C or Gate 1E cell executes",
+        "all inherited controls and falsifiers are reconstructed"
+      ],
+      "inconclusive": [
+        "missing historical authority",
+        "environment mismatch",
+        "timeout, resource exhaustion, or incomplete inherited trace"
+      ],
+      "independent_result_audit": "compare every Gate 1D-C configuration and output to the accepted protocol and confirm zero robust-P1C/Gate 1E execution",
+      "book_destination": [
+        "Part IV registered-method history",
+        "Part V only if an applicable independently audited outcome exists"
+      ],
+      "prohibited_interpretations": [
+        "Gate 1D-C as Gate 1E",
+        "missing authority as a negative scientific result",
+        "robustness without frozen uncertainty and coverage"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "GATE-1E-AUTHORITY-RECOVERY-REFUSAL"
+      ]
+    },
+    {
+      "study_id": "SD-03",
+      "order": 3,
+      "title": "Atomic generator and finite EBU chain",
+      "status": "PROSPECTIVE_STAGE_E_THEOREM_NUMERICAL_THEN_STAGE_F_REGISTERED_STATIC_STUDY",
+      "dependencies": [
+        "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+        "atomic_generator_foundation_contract.json",
+        "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+        "atomic_interaction_declaration_contract.json",
+        "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
+      ],
+      "question": "For declared finite actions, does the complete chain V -> mu=grad V -> f_e -> Psi_e -> J_e -> G_T -> finite EBU preserve units, boundaries, derivatives, generator semantics, and accounting without treating any intermediate as the final score?",
+      "prospective_claim": {
+        "text": "The finite chain may be verified for the exact declared potentials and actions; no intermediate quantity is promoted to a universal EBU law.",
+        "strongest_permitted_disposition": "MATHEMATICAL_DERIVATION_PLUS_NUMERICAL_VERIFICATION; REGISTERED_STATIC_STUDY_IF_NEEDED",
+        "nonclaims": [
+          "mu is not voltage",
+          "J_e is not automatically conserved",
+          "finite EBU is not inferred from gradient alone"
+        ]
+      },
+      "evidence": {
+        "target_level": 4,
+        "prerequisites": [
+          "level-2 exact derivations",
+          "level-3 interface conformance"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "V",
+          "mu=grad V",
+          "f_e",
+          "Psi_e",
+          "J_e",
+          "G_T",
+          "finite EBU"
+        ],
+        "authority_sources": [
+          "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
+        ],
+        "implementation_interfaces": [
+          "accepted atomic declarations and generator call surfaces",
+          "future Stage E exact-rational oracle adapter"
+        ]
+      },
+      "model_domain": {
+        "model": "finite differentiable declared potentials and finite action paths",
+        "domain_authority": "per-case declared mathematical model",
+        "units": [
+          "declared state units",
+          "potential-unit",
+          "potential-unit/state-unit",
+          "action-extent-unit",
+          "EBU-unit"
+        ],
+        "state": [
+          "initial state",
+          "finite action path",
+          "intermediate chain values",
+          "final finite EBU ledger"
+        ],
+        "dependency_topology_authority": "declared finite chain, not inferred",
+        "boundary": "closed mathematical case or explicit boundary term per case"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "for dimension d in {1,2,4,8}, x_i=(i+1)/10 for canonical index i=0..d-1"
+        ],
+        "parameters": [
+          "six exact potentials: V0=0; V1=sum(i+1)*x_i; V2=sum(i+1)*x_i^2; V3=sum_{i<j}(i+1)(j+1)*x_i*x_j; V4=sum(i+1)*x_i^3; V5=(1+sum x_i)^4",
+          "four action extents h in {-1,-1/2,1/2,1} with displacement Delta x_i=h*(-1)^i/(i+1)",
+          "two boundary modes: CLOSED with boundary contribution 0; OPEN with explicit contribution h/10 potential-unit included once",
+          "dimensions d in {1,2,4,8} with canonical zero-based indices"
+        ],
+        "comparators": [
+          "direct finite potential difference",
+          "integrated generator chain",
+          "explicit boundary-accounting form"
+        ],
+        "positive_controls": [
+          "constant potential produces zero gradient contribution",
+          "linear potential reproduces its exact finite difference"
+        ],
+        "negative_controls": [
+          "unit mismatch refuses",
+          "sign reversal is detected",
+          "omitted boundary term leaves an explicit residual",
+          "J_e substituted for finite EBU fails"
+        ],
+        "seeds": "none",
+        "stochastic_rules": "FORBIDDEN",
+        "uncertainty_rules": "all registered values and comparisons are reduced-rational exact; tolerance and floating substitution are forbidden",
+        "horizon": "one declared finite action per case",
+        "stopping_rules": [
+          "refuse on domain or unit mismatch",
+          "complete all seven chain projections otherwise"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(C*d) for C cases and state dimension d, excluding declared symbolic derivative cost",
+        "exact_problem_size": "4 dimensions * 6 potential families * 4 action extents * 2 boundary modes = 192 cases",
+        "horizon": "one finite action with seven declared chain projections",
+        "subset_or_hyperedge_order": "not applicable",
+        "expected_evaluations": 1344,
+        "storage_estimate_bytes": 134217728,
+        "future_measurement_method": "exact projection counters and Stage E wall/RSS instrumentation",
+        "checkpoint_restart_scheme": "case-granular immutable records; restart only at the next unexecuted case",
+        "parallelization_boundary": "cases may be independent; projections within a case remain ordered",
+        "hard_caps": {
+          "wall_time_seconds_per_run": 600,
+          "peak_resident_memory_bytes_per_run": 536870912,
+          "trace_bytes_per_run": 67108864,
+          "total_output_bytes": 1073741824,
+          "primary_evaluations_per_run": 7,
+          "maximum_depth": 8
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE for that case",
+        "exact_or_approximate_label": "EXACT"
+      },
+      "falsifiers": [
+        "chain value differs from its independent definition",
+        "unit or boundary mismatch",
+        "unexplained residual",
+        "an intermediate is reported as the final finite EBU"
+      ],
+      "conservation_accounting": {
+        "class": "CASE_DECLARED",
+        "ledgers": [
+          "physical",
+          "represented stock",
+          "boundary exchange",
+          "EBU benefit/burden/cost"
+        ],
+        "no_double_count_rule": "each chain term has one semantic owner and is included once in the final finite ledger"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 192 cases complete",
+        "exact cases agree exactly and declared numerical cases meet the prospective numerical policy",
+        "units, boundaries, and accounting reconcile"
+      ],
+      "inconclusive": [
+        "unavailable derivative authority",
+        "resource cap",
+        "non-finite result outside a declared falsifier"
+      ],
+      "independent_result_audit": "rederive selected and adversarial cases from equations, verify code identities and all chain/account identities, and reject cherry-picked case reporting",
+      "book_destination": [
+        "Part I conceptual correction",
+        "Part II mathematical derivation",
+        "Part VI finite interaction bridge"
+      ],
+      "prohibited_interpretations": [
+        "gradient as electrical voltage",
+        "generator as conservation proof",
+        "finite case as universal physics"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE"
+      ]
+    },
+    {
+      "study_id": "SD-04",
+      "order": 4,
+      "title": "Finite Taylor expansion and order effects",
+      "status": "PROSPECTIVE_STAGE_E_DERIVATION_AND_NUMERICAL_VERIFICATION",
+      "dependencies": [
+        "SD-03",
+        "accepted Atomic Generator and Interaction authorities"
+      ],
+      "question": "For the registered smooth finite cases, when do truncated Taylor terms, mixed marginals, commutators, and action order reproduce or fail to reproduce direct finite effects?",
+      "prospective_claim": {
+        "text": "Taylor and commutator statements are local finite-order statements with explicit remainder and order semantics for the registered cases.",
+        "strongest_permitted_disposition": "MATHEMATICAL_DERIVATION_AND_NUMERICAL_VERIFICATION",
+        "nonclaims": [
+          "no zero-remainder claim outside polynomial order",
+          "no commutativity from small observed commutator",
+          "no continuum limit from four step sizes"
+        ]
+      },
+      "evidence": {
+        "target_level": 4,
+        "prerequisites": [
+          "SD-03 accepted chain",
+          "Stage E exact coefficient oracle"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "finite Taylor expansion through orders 1..4 with explicit remainder",
+          "mixed partial/marginal terms",
+          "commutator [A,B] and ordered finite composition"
+        ],
+        "authority_sources": [
+          "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md"
+        ],
+        "implementation_interfaces": [
+          "future independent symbolic/exact coefficient oracle",
+          "accepted finite action composition interfaces"
+        ]
+      },
+      "model_domain": {
+        "model": "eight declared exact rational polynomial fields in dimensions 1,2,4",
+        "domain_authority": "registered mathematical case",
+        "units": [
+          "state-unit",
+          "action-extent-unit",
+          "field-output-unit",
+          "remainder-unit"
+        ],
+        "state": [
+          "base point",
+          "ordered increments",
+          "Taylor coefficients",
+          "direct result",
+          "remainder"
+        ],
+        "dependency_topology_authority": "declared ordered action composition",
+        "boundary": "finite registered neighborhood only"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "for dimension d in {1,2,4}, base point x_i=(i+1)/(16*d) at canonical zero-based index i"
+        ],
+        "parameters": [
+          "dimensions {1,2,4}",
+          "Taylor orders {1,2,3,4}",
+          "step magnitudes {1/2,1/4,1/8,1/16}",
+          "eight exact rational response fields: F0=0; F1=sum x_i; F2=sum x_i^2; F3=(sum x_i)^2; F4=sum x_i^3; F5=(1+sum x_i)^4; F6=1/(1-sum x_i/8); F7=(1+sum x_i/8)^8; every rational is reduced after each written operation and F6 refuses only if its exact denominator is zero",
+          "action maps at step h: A_h adds h to x_0; B_h maps x_0 to (1+h)*x_0 when d=1 and adds h*x_0 to x_1 when d>=2",
+          "3 composition regimes: B_h(A_h(x)), A_h(B_h(x)), and declared parallel Euler map x+h*(a(x)+b(x)) using the exact A/B increments at the base point"
+        ],
+        "comparators": [
+          "direct finite evaluation",
+          "exact truncated expansion plus explicit remainder",
+          "reversed order",
+          "declared parallel composition"
+        ],
+        "positive_controls": [
+          "degree-k polynomial has zero remainder at order at least k",
+          "separable linear actions commute exactly"
+        ],
+        "negative_controls": [
+          "noncommuting action pair has nonzero registered commutator",
+          "omitting mixed term fails its exact comparator",
+          "wrong unit power refuses"
+        ],
+        "seeds": "none",
+        "stochastic_rules": "FORBIDDEN",
+        "uncertainty_rules": "exact reduced-rational equality for all eight fields, coefficients, direct compositions, commutators, and remainders; floating point, interval arithmetic, adaptive precision, tolerance, and refinement are forbidden",
+        "horizon": "at most two finite composed actions",
+        "stopping_rules": [
+          "refuse outside declared field neighborhood",
+          "record explicit remainder for every truncation"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(C*k*d^k) under the declared dense coefficient oracle",
+        "exact_problem_size": "3 dimensions * 4 orders * 4 step sizes * 8 fields * 3 composition regimes = 1152 cases",
+        "horizon": "maximum two actions and order four",
+        "subset_or_hyperedge_order": "mixed derivative order at most 4",
+        "expected_evaluations": 5184,
+        "expected_evaluation_breakdown": {
+          "registered_cases": 1152,
+          "two_ordered_and_one_parallel_direct_values_plus_one_taylor_remainder_reconstruction_per_case": 4608,
+          "six_exact_coefficient_and_control_checks_for_each_dimension_step_field_cell": 576,
+          "total": 5184
+        },
+        "storage_estimate_bytes": 536870912,
+        "future_measurement_method": "coefficient/direct-composition counters plus Stage E wall/RSS instrumentation",
+        "checkpoint_restart_scheme": "case-granular immutable records",
+        "parallelization_boundary": "cases may be parallel; coefficient accumulation within each case uses frozen canonical order",
+        "hard_caps": {
+          "wall_time_seconds_per_run": 600,
+          "peak_resident_memory_bytes_per_run": 1073741824,
+          "trace_bytes_per_run": 134217728,
+          "total_output_bytes": 2147483648,
+          "primary_evaluations_per_run": 14,
+          "maximum_depth": 4
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE",
+        "exact_or_approximate_label": "EXACT"
+      },
+      "falsifiers": [
+        "direct reduced-rational value differs from the exact truncated expansion plus exact reduced-rational remainder",
+        "claimed zero commutator is nonzero",
+        "action-order identity is lost",
+        "mixed or remainder term is hidden"
+      ],
+      "conservation_accounting": {
+        "class": "MATHEMATICAL_DECOMPOSITION_NOT_PHYSICAL_CONSERVATION",
+        "ledgers": [
+          "direct effect",
+          "ordered marginal terms",
+          "mixed terms",
+          "remainder"
+        ],
+        "no_double_count_rule": "direct effect equals exactly one decomposition plus one remainder; mixed terms are not also assigned to marginal ledgers"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 1152 cases complete",
+        "positive and negative controls resolve as registered",
+        "direct, expansion, mixed, commutator, and remainder accounts reconcile"
+      ],
+      "inconclusive": [
+        "resource cap",
+        "domain authority mismatch"
+      ],
+      "independent_result_audit": "rederive every field definition and a frozen stratified sample including F6 and degree-eight F7; verify reduced-rational identities, all remainders, the 5184 evaluation accounting, and order labels",
+      "book_destination": [
+        "Part II finite calculus",
+        "Part VI order-sensitive interaction"
+      ],
+      "prohibited_interpretations": [
+        "Taylor truncation as exact without remainder",
+        "small-step numerical behavior as universal limit",
+        "commutator as causal responsibility"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE"
+      ]
+    },
+    {
+      "study_id": "SD-05",
+      "order": 5,
+      "title": "Sequential, parallel, pairwise, and higher-order interaction",
+      "status": "PROSPECTIVE_STAGE_E_CONFORMANCE_THEN_STAGE_F_REGISTERED_FINITE_STUDY",
+      "dependencies": [
+        "SD-03",
+        "SD-04",
+        "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+        "SEQUENTIAL_PARALLEL_BRIDGE.md"
+      ],
+      "question": "How do quantity-fixed, rule-replayed, sequential, parallel, pairwise, and higher-order finite actions differ under the registered baselines and order semantics?",
+      "prospective_claim": {
+        "text": "Interaction coefficients and order effects may be reported only for the exact declared finite action set, baseline, replay semantics, and topology.",
+        "strongest_permitted_disposition": "NUMERICAL_VERIFICATION_OR_REGISTERED_FINITE_SIMULATION",
+        "nonclaims": [
+          "interaction is not causality",
+          "pairwise closure is not assumed",
+          "parallel and sequential execution are not interchangeable"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "SD-03 and SD-04 accepted",
+          "Stage E direct finite-composition oracle",
+          "MOBIUS-EXACT-01 agreement for higher-order projections"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "quantity-fixed and rule-replayed subset values E(S)",
+          "ordered finite composition",
+          "pairwise and higher-order raw interaction projections"
+        ],
+        "authority_sources": [
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+          "SEQUENTIAL_PARALLEL_BRIDGE.md"
+        ],
+        "implementation_interfaces": [
+          "accepted finite action and interaction declarations",
+          "future direct permutation oracle",
+          "future accepted Möbius oracle/transform pair"
+        ]
+      },
+      "model_domain": {
+        "model": "declared finite action families with n in 3..6",
+        "domain_authority": "per-family action, feasibility, replay, and topology declarations",
+        "units": [
+          "action-specific quantity units",
+          "state units",
+          "finite EBU units"
+        ],
+        "state": [
+          "augmented initial state",
+          "admissible history",
+          "ordered action sequence",
+          "subset values",
+          "interaction coefficients"
+        ],
+        "dependency_topology_authority": "declared by each model/domain authority",
+        "boundary": "explicit per action family; no inferred closure"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "for family f=0..15, scalar augmented state x_0=(f+1)/17 and empty-history baseline E(empty)=(f-8)/10"
+        ],
+        "parameters": [
+          "n in {3,4,5,6}",
+          "for action i=0..n-1 in family f, q_i(x)=(i+1)/10+(f+1)*x/100 in exact rational arithmetic",
+          "quantity-fixed semantics apply x'=x+q_i(x_0); rule-replayed semantics apply x'=x+q_i(x_current); finite EBU is E(empty)+(x_final-x_0)",
+          "all permutations",
+          "two semantics: quantity-fixed and rule-replayed",
+          "nine accepted bridge exact-fixture cases"
+        ],
+        "comparators": [
+          "direct permutation enumeration",
+          "declared parallel composition",
+          "pairwise-only reconstruction",
+          "complete higher-order reconstruction"
+        ],
+        "positive_controls": [
+          "independent additive actions have zero higher-order interaction",
+          "nine accepted bridge fixtures reproduce exactly"
+        ],
+        "negative_controls": [
+          "noncommuting pair changes with order",
+          "pairwise reconstruction fails when a declared third-order term is nonzero",
+          "quantity-fixed and rule-replayed semantics remain distinct",
+          "undeclared infeasible subset refuses"
+        ],
+        "seeds": "none",
+        "stochastic_rules": "FORBIDDEN",
+        "uncertainty_rules": "exact integer/rational equality; floating substitution and tolerance are forbidden for every registered family",
+        "horizon": "at most 6 finite actions",
+        "stopping_rules": [
+          "refuse an undeclared or infeasible action/subset",
+          "retain every order result without outcome-selected filtering"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(F*sum(n!)) sequence evaluations plus complete subset-evaluation and Möbius costs where registered",
+        "exact_problem_size": "16 families * two semantics * sum(n! for n=3..6)=27840 complete sequence cases, plus 9 bridge fixtures",
+        "horizon": "maximum 6 actions",
+        "subset_or_hyperedge_order": "complete order through n<=6",
+        "expected_evaluations": 27849,
+        "storage_estimate_bytes": 4294967296,
+        "future_measurement_method": "sequence, subset-value, and coefficient counters plus wall/RSS/emitted-byte instrumentation",
+        "checkpoint_restart_scheme": "family/n/semantics/permutation record is atomic; restart at next absent identity",
+        "parallelization_boundary": "independent family/permutation cases may be parallel; actions in a sequence and coefficient canonical order remain serial",
+        "hard_caps": {
+          "wall_time_seconds_per_run": 3600,
+          "peak_resident_memory_bytes_per_run": 2147483648,
+          "trace_bytes_per_run": 536870912,
+          "total_output_bytes": 21474836480,
+          "primary_evaluations_per_run": 1000000,
+          "maximum_depth": 6
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; no permutation sampling substitute",
+        "exact_or_approximate_label": "EXACT"
+      },
+      "falsifiers": [
+        "missing permutation or subset",
+        "baseline or replay semantics drift",
+        "pairwise-only claim with nonzero higher-order residual",
+        "Möbius oracle/optimized mismatch",
+        "order erasure or double-counted interaction"
+      ],
+      "conservation_accounting": {
+        "class": "ACTION_FAMILY_DECLARED",
+        "ledgers": [
+          "marginal action",
+          "pairwise interaction",
+          "higher-order interaction",
+          "boundary and feasibility residual",
+          "finite EBU"
+        ],
+        "no_double_count_rule": "complete Möbius reconstruction owns each subset term once; sequential receipts remain distinct from interaction attribution"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 27849 cases present",
+        "all complete subset reconstructions exact",
+        "positive and negative interaction controls pass",
+        "order, replay, units, topology, and boundary labels remain bound"
+      ],
+      "inconclusive": [
+        "resource cap",
+        "undeclared domain semantics",
+        "failed oracle agreement"
+      ],
+      "independent_result_audit": "reconstruct all bridge fixtures, stratified complete families, subset projections, order coverage, and no-double-counting before interaction interpretation",
+      "book_destination": [
+        "Part VI finite interaction and order"
+      ],
+      "prohibited_interpretations": [
+        "interaction as causal responsibility",
+        "pairwise closure as universal",
+        "parallel result as sequential result"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-01",
+        "USER-MT-02",
+        "USER-MT-03",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "MOBIUS-EXACT-01"
+      ]
+    },
+    {
+      "study_id": "SD-06",
+      "order": 6,
+      "title": "Möbius decomposition, nonzero empty baseline, hypergraphs, and feasible posets",
+      "status": "PROSPECTIVE_STAGE_E_ORACLE_AND_COMPLEXITY_THEN_STAGE_F_REGISTERED_EXACT_STUDY",
+      "dependencies": [
+        "SD-05",
+        "MOBIUS-EXACT-01",
+        "accepted Atomic Interaction authority"
+      ],
+      "question": "Does exact Möbius inversion reconstruct every registered subset table including nonzero E(empty), and how do declared Boolean, hypergraph, and feasible-poset domains change the valid decomposition?",
+      "prospective_claim": {
+        "text": "Exact inversion may be claimed only on the frozen finite incidence domain; nonzero E(empty), omitted orders, infeasible subsets, and poset choice remain explicit.",
+        "strongest_permitted_disposition": "MATHEMATICAL_DERIVATION_NUMERICAL_VERIFICATION_AND_REGISTERED_FINITE_STUDY",
+        "nonclaims": [
+          "no universal scalable subset solution",
+          "no invented Boolean values for infeasible subsets",
+          "no omitted-order closure without a residual"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "488-case bit-exact Stage E oracle agreement",
+          "Stage E complexity evidence",
+          "independent harness PASS"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "I_raw(S)=sum_{T subseteq S}(-1)^(|S|-|T|)E(T)",
+          "I_raw(empty)=E(empty)",
+          "E(S)=sum_{T subseteq S}I_raw(T)",
+          "finite-poset zeta and Möbius inversion"
+        ],
+        "authority_sources": [
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+          "atomic_interaction_declaration_contract.json",
+          "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md"
+        ],
+        "implementation_interfaces": [
+          "future independently readable direct subset oracle",
+          "future bitmask fast Möbius transform",
+          "future finite-poset incidence oracle"
+        ]
+      },
+      "model_domain": {
+        "model": "exact finite Boolean tables, declared hypergraphs, and declared feasible posets",
+        "domain_authority": "per-study subset/hyperedge/poset declaration",
+        "units": [
+          "declared EBU output unit per table"
+        ],
+        "state": [
+          "subset or poset-element value table",
+          "empty baseline",
+          "Möbius coefficients",
+          "reconstruction and omitted-order residual"
+        ],
+        "dependency_topology_authority": "domain/model authority selects Boolean lattice, declared hypergraph, or finite feasible poset",
+        "boundary": "the complete declared finite incidence domain"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "complete exact input tables sealed before execution"
+        ],
+        "parameters": [
+          "488 shared oracle-agreement tables at n<=12",
+          "16 exact scientific Boolean tables at n=16: for f=0..15, c_f(empty)=f-8; c_f(T)=(-1)^(|T|+sum(T)+f)*(((f+1)*product(i+1 for i in T)) mod 101-50) for 1<=|T|<=4; c_f(T)=0 above order 4; E_f(S)=sum_{T subseteq S}c_f(T)",
+          "32 declared feasible-poset families: divisibility posets on {1..m} for m=4..19, and inclusion posets of subsets of {0..m-1} with cardinality <=2 for m=4..19",
+          "maximum declared hyperedge order 4",
+          "55 future Stage E complexity cells n=8..18 with five repetitions"
+        ],
+        "comparators": [
+          "direct subset oracle",
+          "optimized bitmask transform",
+          "direct zeta reconstruction",
+          "finite-poset direct incidence inversion"
+        ],
+        "positive_controls": [
+          "constant additive table has only declared baseline and singleton coefficients",
+          "single declared k-order interaction reconstructs exactly",
+          "nonzero E(empty) remains the empty coefficient"
+        ],
+        "negative_controls": [
+          "zeroing nonzero E(empty) fails reconstruction",
+          "dropping a nonzero higher-order coefficient leaves explicit residual",
+          "Boolean completion of an infeasible subset refuses",
+          "oracle/optimized single-bit mismatch refuses",
+          "post-outcome sparse substitution refuses"
+        ],
+        "seeds": "oracle randomized/adversarial seeds are exact integers 0..31 for every n=1..12; scientific tables are deterministic",
+        "stochastic_rules": "For each (n,seed,mask), derive E(mask) from the first eight bytes of SHA-256 over UTF-8 EBU-SD06-MOBIUS-v1|n|seed|mask, interpreted unsigned big-endian and mapped by (integer mod 2001)-1000; no library PRNG is permitted",
+        "uncertainty_rules": "exact integer or reduced-rational equality; tolerance forbidden",
+        "horizon": "one complete inversion/reconstruction per table",
+        "stopping_rules": [
+          "first oracle mismatch refuses optimized transform and dependent work",
+          "hard-limit excess refuses or is COMPUTATIONALLY_INCONCLUSIVE",
+          "no partial table disposition"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "direct oracle O(3^n) aggregate subset enumeration; optimized transform O(n*2^n) arithmetic and O(2^n) storage plus 2^n*C_E subset-evaluation cost; finite-poset cost declared per incidence matrix",
+        "exact_problem_size": "488 shared agreement tables through n=12; 16 scientific tables at n=16; 32 finite feasible posets; Stage E complexity dimensions n=8..18",
+        "horizon": "one complete exact transform and reconstruction",
+        "subset_or_hyperedge_order": "Boolean order through n=18 hard cap; scientific hyperedge order <=4 only where declared as the exact domain",
+        "expected_evaluations": 78555354,
+        "expected_evaluation_breakdown": {
+          "stage_e_shared_table_acquisitions": 327608,
+          "stage_e_direct_subset_visits": 31886408,
+          "stage_e_shared_transform_butterfly_subtractions": 1802280,
+          "stage_e_shared_reconstruction_additions": 1802280,
+          "stage_e_complexity_table_acquisitions": 2620160,
+          "stage_e_complexity_butterfly_subtractions": 22278400,
+          "stage_f_scientific_table_acquisitions": 1048576,
+          "stage_f_scientific_butterfly_subtractions": 8388608,
+          "stage_f_scientific_reconstruction_additions": 8388608,
+          "stage_f_poset_element_acquisitions": 1520,
+          "stage_f_poset_inversion_incidence_visits": 5453,
+          "stage_f_poset_reconstruction_incidence_visits": 5453,
+          "all_declared_primary_visits": 78555354
+        },
+        "storage_estimate_bytes": 4294967296,
+        "future_measurement_method": "Stage E operation counters for butterflies, table acquisitions, direct subset visits, bytes, monotonic wall time, and process-tree peak RSS",
+        "checkpoint_restart_scheme": "a table transform is atomic; resume at the next absent table identity, never from a partial coefficient array",
+        "parallelization_boundary": "independent tables/repetitions may be parallel; one transform uses frozen serial bit/dimension order for the normative result",
+        "hard_caps": {
+          "maximum_n": 18,
+          "maximum_subsets": 262144,
+          "maximum_hyperedge_order": 4,
+          "primary_evaluations_per_case": 5000000,
+          "wall_time_seconds_per_case": 120,
+          "peak_resident_memory_bytes_per_case": 536870912,
+          "combined_trace_output_bytes_per_case": 268435456,
+          "total_output_bytes": 21474836480,
+          "maximum_depth": 18
+        },
+        "timeout_or_resource_disposition": "REFUSED_BEFORE_EXECUTION or COMPUTATIONALLY_INCONCLUSIVE; never sample, truncate, sparsify, change poset, or approximate",
+        "exact_or_approximate_label": "EXACT"
+      },
+      "falsifiers": [
+        "any of 488 coefficient or reconstruction mismatches",
+        "measured Stage E complexity outside prospectively accepted threshold once that threshold is independently authorized",
+        "lost E(empty)",
+        "invented infeasible subset value",
+        "unrecorded omitted-order residual",
+        "resource fallback or approximation substitution"
+      ],
+      "conservation_accounting": {
+        "class": "ALGEBRAIC_RECONSTRUCTION_NOT_PHYSICAL_CONSERVATION",
+        "ledgers": [
+          "empty baseline",
+          "singleton",
+          "pairwise",
+          "higher-order",
+          "omitted-order residual"
+        ],
+        "no_double_count_rule": "every exact coefficient appears once in reconstruction and no infeasible or omitted coefficient is silently reassigned"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 488 Stage E shared cases bit-exact",
+        "all registered Stage F tables and posets complete or visibly inconclusive",
+        "E(empty), all orders, feasibility, and residuals reconcile",
+        "complexity evidence stays within its evidence/nonclaim boundary"
+      ],
+      "inconclusive": [
+        "hard-limit excess",
+        "timeout or resource exhaustion",
+        "unavailable exact domain value",
+        "oracle disagreement blocks optimized execution"
+      ],
+      "independent_result_audit": "rerun the direct oracle on the complete shared domain, independently reconstruct every scientific table/poset output and limit receipt, and verify no approximation substitution",
+      "book_destination": [
+        "Part VI interaction decomposition",
+        "proofs appendix"
+      ],
+      "prohibited_interpretations": [
+        "universal scalability",
+        "Boolean lattice as universal scientific topology",
+        "zero empty baseline by convention when nonzero",
+        "sparse low-order result as full-order evidence"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-01",
+        "USER-MT-02",
+        "USER-MT-03",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "MOBIUS-EXACT-01"
+      ]
+    },
+    {
+      "study_id": "SD-07",
+      "order": 7,
+      "title": "Canonical equivalence, recursive motifs, and conditional certified reuse",
+      "status": "PROSPECTIVE_STAGE_E_CANONICAL_ORACLE_CACHE_CONFORMANCE_THEN_STAGE_F_MODEL_STUDY",
+      "dependencies": [
+        "SD-06",
+        "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+        "canonical_topology_motif_programme_contract.json",
+        "canonical_topology_motif_programme_validation_contract.json",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ],
+      "question": "When do declared topologies or recursive motif occurrences satisfy accepted canonical equivalence and A1-A8 reuse conditions, and do corrections invalidate exactly the affected certified entries?",
+      "prospective_claim": {
+        "text": "Canonical identity and reuse may be reported only under the accepted finite schema, a complete equivalence/boundary certificate, complete key, and deterministic invalidation receipts; Fibonacci is one conditional recurrence example.",
+        "strongest_permitted_disposition": "STATIC_SYNTHETIC_AND_REGISTERED_MODEL_EVIDENCE",
+        "nonclaims": [
+          "canonical identity is not performance",
+          "Fibonacci is not universal",
+          "reuse is not authorized without a certificate",
+          "runtime production cache is not authorized"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "Stage E direct topology oracle",
+          "exact DAG oracle agreement",
+          "complete cache/equivalence conformance",
+          "independent Stage E PASS"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "accepted canonical labeling and A1-A8 conditions",
+          "declared ordered Fibonacci substitution family occurrence recurrence",
+          "dependency-local correction invalidation",
+          "query-specific boundary sufficiency"
+        ],
+        "authority_sources": [
+          "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+          "canonical_topology_motif_programme_contract.json",
+          "canonical_topology_motif_programme_validation_contract.json"
+        ],
+        "implementation_interfaces": [
+          "accepted canonical topology declarations",
+          "future independent small-graph oracle",
+          "future isolated research cache and invalidation harness"
+        ]
+      },
+      "model_domain": {
+        "model": "finite labeled directed dependency topologies and declared recursive motif families",
+        "domain_authority": "accepted canonical/topology authority plus per-query model declaration",
+        "units": [
+          "structural identity has no physical unit",
+          "query outputs retain their original declared units"
+        ],
+        "state": [
+          "canonical topology declaration",
+          "motif occurrence tree/DAG",
+          "augmented state/history digest",
+          "equivalence certificate",
+          "complete cache key",
+          "invalidation epoch and receipts"
+        ],
+        "dependency_topology_authority": "explicit domain/model declaration; framework never infers scientific meaning",
+        "boundary": "query-specific motif boundary summary certified sufficient before reuse"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "one empty topology plus 32 declarations for each n=1..8; declaration seed s=0..31 includes forward edge (i,j) iff the first byte of SHA-256 over UTF-8 EBU-SD07-CANONICAL-v1|n|s|i|j is even, then presents labels rotated by s mod n",
+          "declared Fibonacci substitution levels 0..32; direct expanded oracle only through level 16"
+        ],
+        "parameters": [
+          "canonical vertices <=8",
+          "hyperedge order <=4",
+          "expanded oracle level <=16",
+          "compressed comparison level <=32",
+          "recursion depth <=64",
+          "DAG-EXACT-01 uses the sealed canonical adjacency representation and canonical-stable FIFO Kahn order; lexicographically least dynamic ready-node selection is not claimed"
+        ],
+        "comparators": [
+          "direct permutation canonical oracle",
+          "accepted canonicalizer",
+          "expanded motif oracle",
+          "certified compressed evaluation",
+          "cold computation versus certified cache hit",
+          "direct invalidation reachability/order versus the exact O(V+E) canonical-stable FIFO Kahn traversal, with canonicalization cost recorded separately"
+        ],
+        "positive_controls": [
+          "isomorphic relabelings have one canonical ID",
+          "certified equivalent motif queries reproduce cold computation exactly",
+          "declared Fibonacci occurrence counts match the exact recurrence"
+        ],
+        "negative_controls": [
+          "non-equivalent near miss",
+          "ordered-child swap",
+          "boundary-summary change",
+          "history change",
+          "incomplete-key collision",
+          "alias change",
+          "stale cache entry",
+          "corrected evidence",
+          "authority-version change",
+          "environment change",
+          "cycle and duplicate dependency edge"
+        ],
+        "seeds": "canonical/motif scientific cases have no seeds; shared DAG conformance uses exact integers 0..31 at each n=6..12",
+        "stochastic_rules": "DAG conformance includes forward edge (i,j) iff the first byte of SHA-256 over UTF-8 EBU-SD-DAG-v1|n|seed|i|j is even; no library PRNG or scientific random-topology extension is permitted",
+        "uncertainty_rules": "exact identity/equality only",
+        "horizon": "canonical n<=8; motif level 32; invalidation to complete affected closure",
+        "stopping_rules": [
+          "refuse on failed A1-A8 or boundary certificate",
+          "refuse incomplete key or unresolved invalidation",
+          "refuse cycle/duplicate edge",
+          "limit excess refuses or becomes COMPUTATIONALLY_INCONCLUSIVE"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "direct canonical oracle O(n!) candidates for n<=8; expanded Fibonacci occurrence O(F_(level+1)); DAG invalidation O(V+E); certified compressed evaluation is query-specific and makes no universal bound claim",
+        "exact_problem_size": "257 canonical declarations: empty plus 32 at each n=1..8; 1479457 direct canonical candidate evaluations; exact expanded levels 0..16 total 4180 occurrence visits because sum(F_1..F_17)=F_19-1=4180; 33 compressed level evaluations; 12 cache controls with cold/reuse pairs totaling 24 evaluations",
+        "horizon": "motif level 32 and invalidation depth 64",
+        "subset_or_hyperedge_order": "canonical vertices <=8 and hyperedge order <=4",
+        "expected_evaluations": 1483694,
+        "expected_evaluation_breakdown": {
+          "direct_canonical_candidate_evaluations": 1479457,
+          "expanded_fibonacci_occurrence_visits_levels_0_through_16": 4180,
+          "compressed_level_evaluations_levels_0_through_32": 33,
+          "cache_cold_and_reuse_evaluations": 24,
+          "total": 1483694
+        },
+        "storage_estimate_bytes": 4294967296,
+        "future_measurement_method": "canonical candidate, motif occurrence, DAG vertex/edge, hit/miss/invalidation counters plus wall/RSS/byte instrumentation",
+        "checkpoint_restart_scheme": "canonical cases and motif levels are atomic; invalidation receipt must complete before recomputation; restart creates a new operation identity",
+        "parallelization_boundary": "independent topology declarations may be parallel; canonical candidate order and each invalidation traversal remain deterministic",
+        "hard_caps": {
+          "maximum_canonical_vertices": 8,
+          "maximum_hyperedge_order": 4,
+          "expanded_oracle_level": 16,
+          "compressed_comparison_level": 32,
+          "maximum_expanded_occurrences": 3524578,
+          "maximum_recursion_depth": 64,
+          "primary_evaluations_per_case": 2000000,
+          "wall_time_seconds_per_case": 120,
+          "peak_resident_memory_bytes_per_case": 1073741824,
+          "combined_trace_output_bytes_per_case": 268435456,
+          "total_output_bytes": 21474836480,
+          "maximum_dag_vertices": 100000,
+          "maximum_dag_edges": 500000
+        },
+        "timeout_or_resource_disposition": "REFUSED_BEFORE_EXECUTION or COMPUTATIONALLY_INCONCLUSIVE; no weakened equivalence or altered topology",
+        "exact_or_approximate_label": "EXACT"
+      },
+      "falsifiers": [
+        "canonical mismatch with direct oracle",
+        "reuse without all A1-A8 and boundary certificate",
+        "different cold and reused result",
+        "incomplete key that aliases different result-affecting inputs",
+        "stale hit after correction or authority change",
+        "invalidation affected-set/order mismatch with direct oracle",
+        "universal Fibonacci, performance, or runtime-cache claim"
+      ],
+      "conservation_accounting": {
+        "class": "STRUCTURAL_REUSE_WITH_ORIGINAL_QUERY_ACCOUNTING",
+        "ledgers": [
+          "structural identity",
+          "query result",
+          "reuse provenance",
+          "correction and invalidation"
+        ],
+        "no_double_count_rule": "a reused result retains one original scientific receipt and a separate reuse receipt; aliases do not create additional benefit or stock"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all canonical declarations match the direct oracle",
+        "all positive reuse and near-miss/collision/stale controls resolve exactly",
+        "DAG affected sets and ordering match the direct oracle",
+        "all corrections/authority changes have deterministic invalidation receipts",
+        "no production runtime cache is created"
+      ],
+      "inconclusive": [
+        "failed equivalence or boundary sufficiency",
+        "hard-limit excess",
+        "timeout or resource exhaustion",
+        "unresolved dependency or alias closure"
+      ],
+      "independent_result_audit": "independently canonicalize the complete domain, reconstruct certificates and complete keys, replay direct and optimized invalidation, and compare cold/reused outputs before any reuse claim",
+      "book_destination": [
+        "Part VI canonical topology and recursive motifs",
+        "Part VIII brief correction-propagation cross-reference"
+      ],
+      "prohibited_interpretations": [
+        "canonical identity as performance",
+        "Fibonacci as universal structure",
+        "cache hit as scientific evidence",
+        "topological reachability as causality"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-01",
+        "USER-MT-02",
+        "USER-MT-03",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "MOBIUS-EXACT-01",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-08",
+      "order": 8,
+      "title": "Routes, queues, congestion, delays, provenance, and dependency traversal",
+      "status": "PROSPECTIVE_STAGE_E_DAG_CONFORMANCE_THEN_STAGE_F_REGISTERED_NETWORK_STUDY",
+      "dependencies": [
+        "SD-07",
+        "DAG-EXACT-01",
+        "accepted topology and conservation authorities"
+      ],
+      "question": "For the declared transport/service networks, how do route, queue, congestion, delay, and failure schedules affect delivered service and provenance without confusing graph reachability with physical causality?",
+      "prospective_claim": {
+        "text": "Network performance statements are conditional on the exact domain-selected topology, queue discipline, demand/load cell, boundary, and horizon.",
+        "strongest_permitted_disposition": "REGISTERED_SCIENTIFIC_SIMULATION_WITH_MODEL_BOUNDED_INTERPRETATION",
+        "nonclaims": [
+          "reachability is not causality",
+          "one routing rule is not universally optimal",
+          "queue delay is not an interaction coefficient"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "DAG direct/optimized exact agreement",
+          "queue and conservation Stage E conformance",
+          "independent Stage E PASS"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "flow balance at each network node",
+          "queue recurrence q_(t+1)=max(0,q_t+arrivals_t-service_t)",
+          "route travel/service delay",
+          "provenance composition over declared dependency edges"
+        ],
+        "authority_sources": [
+          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+          "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
+        ],
+        "implementation_interfaces": [
+          "future registered network model adapter",
+          "future direct/optimized DAG traversal pair",
+          "future queue and provenance trace adapter"
+        ]
+      },
+      "model_domain": {
+        "model": "finite directed service networks with capacities, queues, routes, failures, and explicit boundaries",
+        "domain_authority": "each network declaration selects its scientific dependency and topology",
+        "units": [
+          "service-unit",
+          "service-unit/tick",
+          "queue-unit",
+          "tick",
+          "distance-unit"
+        ],
+        "state": [
+          "node queues",
+          "edge capacities and delays",
+          "in-transit service",
+          "delivered/unmet service",
+          "route and provenance receipts"
+        ],
+        "dependency_topology_authority": "sealed per-network declaration; generic framework inference forbidden",
+        "boundary": "open network with explicit external arrivals, sinks, failures, and losses"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "zero queues and transit unless explicitly declared in the sealed topology cell"
+        ],
+        "parameters": [
+          "8 sealed acyclic topologies with canonical IDs: path V=32/E=31; out-star V=32/E=31; in-star V=32/E=31; binary tree V=63/E=62; forward 8x8 grid V=64/E=112; two disconnected forward 4x8 grids V=64/E=104; four 16-vertex layers with complete adjacent-layer edges V=64/E=768; and V=128 with the first 256 forward edges ranked by SHA-256 over UTF-8 EBU-SD08-EDGE-v1|i|j",
+          "network sources are indegree-zero vertices, sinks are outdegree-zero vertices, unit edge capacity/delay is one unless the topology declaration says otherwise, and arrivals split in canonical source order",
+          "4 load ratios {0.25,0.75,1.0,1.25} multiplying each source's exact total outgoing unit capacity, with fractional service carried as reduced rationals",
+          "4 failure schedules: none; lowest canonical edge unavailable ticks 2500..2999; lowest canonical edge unavailable ticks 2500..7499; first four canonical edges unavailable for 100 ticks at 2500,5000,7500",
+          "3 queue disciplines {FIFO,priority-with-bound,round-robin}",
+          "dependency traversal uses DAG-EXACT-01: dense canonical IDs, sealed canonical-sorted adjacency, ascending initial sources, O(1) FIFO append/head advance, one indegree initialization per vertex, one edge inspection per edge, no ready-node comparison; input permutation canonicalization is stable bottom-up mergesort on (source ID,target ID,edge-label SHA-256), bounded by E*ceil(log2(E)) comparisons and E auxiliary edge slots, and recorded separately"
+        ],
+        "comparators": [
+          "shortest feasible route",
+          "capacity-aware route",
+          "static route",
+          "no-reroute baseline"
+        ],
+        "positive_controls": [
+          "zero-arrival network keeps queues zero",
+          "single acyclic path reproduces direct flow and delay accounting",
+          "optimized affected set/order equals direct DAG oracle"
+        ],
+        "negative_controls": [
+          "cycle and duplicate dependency edge refuse",
+          "disconnected sink receives no service",
+          "capacity exceedance must create queue/unmet service, not phantom delivery",
+          "input edge permutation cannot change canonical ordering",
+          "wide-frontier ready-set interleavings with simultaneous and later-ready vertices cannot change canonical-stable FIFO order",
+          "stale route/cache after correction refuses"
+        ],
+        "seeds": "none; all 384 cells deterministic",
+        "stochastic_rules": "FORBIDDEN",
+        "uncertainty_rules": "NUMERICAL-POLICY-01, complete cell reporting, and paired route comparisons; no resampling or inferred population interval",
+        "horizon": "10000 ticks per run",
+        "stopping_rules": [
+          "stop and retain on non-finite queue or conservation failure",
+          "refuse invalid topology before execution",
+          "complete 10000 ticks otherwise"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(H*(V+E)) network updates plus registered queue operations; dependency traversal O(V+E)",
+        "exact_problem_size": "8 topologies * 4 loads * 4 failure schedules * 3 queue disciplines = 384 runs",
+        "horizon": "10000 ticks",
+        "subset_or_hyperedge_order": "edge arity 2; declared service hyperedges, if any, order <=4",
+        "expected_evaluations": 3840000,
+        "storage_estimate_bytes": 17179869184,
+        "future_measurement_method": "transition and queue counters plus DAG indegree initializations, enqueues, dequeues, FIFO appends/head advances, edge inspections, zero ready-node comparisons, separately recorded stable-mergesort tuple comparisons/auxiliary edge slots, emitted bytes, wall time, and process-tree RSS",
+        "checkpoint_restart_scheme": "checkpoint every 500 ticks; restarted suffix must match uninterrupted suffix exactly",
+        "parallelization_boundary": "independent network cells may be parallel; each tick and queue discipline remain deterministic serial order",
+        "hard_caps": {
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "maximum_depth": 100000,
+          "primary_evaluations_per_run": 50000000,
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; no topology reduction or tick sampling",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "delivered service exceeds sourced minus loss plus boundary inflow",
+        "negative queue or transit",
+        "DAG affected-set/order mismatch",
+        "route provenance omits or duplicates an edge",
+        "congestion hidden by dropped arrivals",
+        "cache reuse without certificate or after invalidation"
+      ],
+      "conservation_accounting": {
+        "class": "OPEN_NETWORK_CONTROL_VOLUME",
+        "ledgers": [
+          "external arrival",
+          "queue",
+          "in transit",
+          "delivered service",
+          "unmet service",
+          "loss and failure",
+          "route provenance"
+        ],
+        "no_double_count_rule": "a service unit has one mutually exclusive location/account at each tick and one delivery receipt"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 384 cells visible",
+        "DAG controls and queue controls pass",
+        "flow, queue, delay, provenance, and boundary accounts reconcile",
+        "claims remain topology/load/failure/discipline-specific"
+      ],
+      "inconclusive": [
+        "hard-limit excess",
+        "invalid or unowned topology",
+        "timeout/resource exhaustion",
+        "failed checkpoint equivalence"
+      ],
+      "independent_result_audit": "reconstruct flows and queues from raw receipts, compare direct/optimized affected sets, verify all cells and failures, and audit provenance without cached summaries",
+      "book_destination": [
+        "Part VII routes, queues, congestion, delay, and provenance"
+      ],
+      "prohibited_interpretations": [
+        "reachability as causality",
+        "simulated congestion as empirical infrastructure data",
+        "route efficiency as fairness"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-09",
+      "order": 9,
+      "title": "Resilience, recovery, fairness, and adaptive infrastructure",
+      "status": "PROSPECTIVE_STAGE_F_AFTER_SD_08_AND_STAGE_E_PASS",
+      "dependencies": [
+        "SD-08",
+        "DAG-EXACT-01",
+        "future explicit institutional fairness authority"
+      ],
+      "question": "Under declared infrastructure failures and reserve regimes, which policies restore service and how are burdens and access distributed across registered groups?",
+      "prospective_claim": {
+        "text": "Resilience, recovery time, and distributional metrics may be reported separately for the registered model; no physical optimum selects a fairness rule.",
+        "strongest_permitted_disposition": "REGISTERED_SCIENTIFIC_SIMULATION_PLUS_INSTITUTIONAL_DESIGN_COMPARISON",
+        "nonclaims": [
+          "no universal fairness theorem",
+          "no empirical social claim",
+          "no collapse of resilience and equity into one score"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "SD-08 audited result basis",
+          "fairness metric registered as institutional design",
+          "independent Stage E PASS"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "service recovery time and persistence",
+          "reserve drawdown/replenishment",
+          "group access, burden, and unmet-service vectors",
+          "declared fairness metrics kept separate"
+        ],
+        "authority_sources": [
+          "EBU_FUTURE_BOOKS_STRUCTURE.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md"
+        ],
+        "implementation_interfaces": [
+          "future SD-08 network adapter",
+          "future group-ledger and institutional-metric adapter",
+          "future DAG invalidation adapter"
+        ]
+      },
+      "model_domain": {
+        "model": "declared service networks with failure, reserve, recovery, and group-access layers",
+        "domain_authority": "network model selects topology; institutional authority selects fairness metric",
+        "units": [
+          "service-unit",
+          "reserve-unit",
+          "tick",
+          "group burden-unit",
+          "dimensionless registered metric"
+        ],
+        "state": [
+          "network service state",
+          "reserve state",
+          "failure/recovery state",
+          "group deliveries, unmet service, and burdens"
+        ],
+        "dependency_topology_authority": "sealed network and group-access topology",
+        "boundary": "open control volume with explicit emergency inflows and external repair"
+      },
+      "configuration": {
+      "initial_conditions": [
+          "the first six canonical SD-08 topologies at load ratio 3/4, FIFO, capacity-aware routing, zero queue/transit, and four sink groups G0..G3 assigned by canonical sink ID modulo 4",
+          "the paired no-failure reference begins from the identical topology, group assignment, reserve, fairness rule, and seed"
+      ],
+      "parameters": [
+          "6 failure families applied respectively to the first six canonical SD-08 topologies: no failure; lowest canonical edge unavailable ticks 1000..1499; first two canonical edges unavailable ticks 1000..1499; lowest canonical edge unavailable for 100 ticks at 1000,2000,3000,4000; counter-hash per-edge failures with probability 1/1000 and fixed 50-tick duration; first two canonical edges unavailable for 100 ticks at 1000,2000,3000,4000",
+          "4 reserve regimes: let D be the exact total requested service per tick in the paired no-failure cell; opening reserve and reserve capacity are q*D for q in {0,1/10,1/4,1/2}; after physical network delivery p_t, reserve draw is min(r_t,max(0,D-p_t)); while no declared failure is active, external boundary replenishment is exactly D/100 per tick, otherwise zero; r_(t+1)=min(q*D,r_t-draw_t+replenishment_t)",
+          "4 institutional fairness rules over G0..G3: physical-throughput preserves canonical sink delivery; equal-access uses round-robin one reduced-rational service quantum in G0,G1,G2,G3 order; need-priority uses fixed order G3,G2,G1,G0; max-min capped repeatedly allocates one reduced-rational quantum to the currently least-served-demand-ratio group with canonical group ID tie-break; a quantum is 1/1000 of D and a final smaller remainder is permitted",
+          "homeostasis reference predicate: in the no-failure paired cell, aggregate delivered service is at least 99/100 of D, every group receives at least 19/20 of its registered demand, total queue is at most D, and reserve is nonnegative for each of ticks 900..999",
+          "service-recovery predicate: for a maximal failure episode ending at tick e, define D_e=min(e+1000,next failure-episode start minus 1,5000), omitting the next-episode term if none; recovery time is the least r in [e+1,D_e-99] such that for all t=r..r+99 aggregate delivered service is at least 99/100 of the paired no-failure value, every group delivery is at least 19/20 of its paired value, total queue is no more than paired queue plus D, and reserve is nonnegative",
+          "reserve-regeneration predicate: after an episode, reserve regeneration time is the least r in [e+1,D_e-99] for which r_t>=99/100 of opening reserve for every t=r..r+99; q=0 is reported NOT_APPLICABLE, never recovered",
+          "non-recovery by the exact deadline is NOT_RECOVERED_ON_HORIZON; a timeout, memory, identity, or trace cap is instead COMPUTATIONALLY_INCONCLUSIVE",
+          "16 fixed stochastic seeds and NUMERICAL-POLICY-01"
+        ],
+        "comparators": [
+          "no-reserve baseline",
+          "physical-throughput policy",
+          "equal-access rule",
+          "registered need-priority rule"
+        ],
+        "positive_controls": [
+          "no-failure cell is byte-identical to its paired reference and satisfies the exact ticks-900..999 homeostasis predicate",
+          "identical groups receive identical outcome under symmetric rule/topology"
+        ],
+        "negative_controls": [
+          "a Stage E synthetic control with the lowest canonical edge never repaired cannot be labeled recovered",
+          "reserve cannot be spent twice",
+        "topology-relabel near miss cannot reuse group outcome",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "aggregate recovery cannot hide a registered group below its threshold"
+        ],
+        "seeds": "exact integers 0..15, paired across all comparable policy cells",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with the sole stream ID FAILURE_EDGE; only the fifth failure family draws one Bernoulli(1/1000) value per canonical edge per tick in canonical edge order; failure duration is exactly 50 ticks; all other failure families are deterministic and consume no draw; analysis draws and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: report every seed and paired difference in ascending seed order, the exact even-sample median, and closed min/max registered-seed range; bootstrap, confidence/population intervals, resampling, and population generalization are forbidden",
+        "horizon": "5000 ticks per run",
+        "stopping_rules": [
+          "stop/retain on invalid accounting",
+          "record non-recovery through horizon as a scientific registered outcome",
+          "resource caps remain inconclusive, not non-recovery"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H*(V+E)) for registered network updates and group ledgers",
+        "exact_problem_size": "6 failure families * 4 reserve regimes * 4 fairness rules * 16 seeds = 1536 runs",
+        "horizon": "5000 ticks",
+        "subset_or_hyperedge_order": "declared network/group edges; hyperedge order <=4 if present",
+        "expected_evaluations": 7680000,
+        "storage_estimate_bytes": 21474836480,
+        "future_measurement_method": "transition, repair, reserve, group, DAG, wall/RSS, and byte counters",
+        "checkpoint_restart_scheme": "checkpoint every 500 ticks with exact RNG state; restarted suffix must match exactly",
+        "parallelization_boundary": "runs/seeds may be parallel with counter-based independent streams; a run remains deterministic",
+        "hard_caps": {
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "primary_evaluations_per_run": 50000000,
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480,
+          "maximum_depth": 100000
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE with partial trace; never impute recovery or fairness",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "homeostasis, service-recovery, or reserve-regeneration claim outside the exact paired thresholds, 100-tick persistence, or 1000-tick deadline",
+        "reserve double spend or magical gain",
+        "group ledger does not sum to physical/service totals",
+        "seed mismatch across comparators",
+        "DAG or cache invalidation mismatch",
+        "fairness interpretation selected after outcomes"
+      ],
+      "conservation_accounting": {
+        "class": "OPEN_NETWORK_PLUS_SEPARATE_INSTITUTIONAL_LEDGER",
+        "ledgers": [
+          "physical/service",
+          "reserve",
+          "repair and boundary",
+          "group access and burden",
+          "institutional metric"
+        ],
+        "no_double_count_rule": "group allocations partition registered service/burden; reserves, repair inputs, and external aid each have one receipt"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 1536 cells visible",
+        "paired seeds and registered uncertainty complete",
+        "homeostasis, service recovery, reserve regeneration, resilience, group, and fairness metrics remain separate and use the exact frozen predicates",
+        "controls, accounting, and falsifiers pass"
+      ],
+      "inconclusive": [
+        "resource/timeout cap",
+        "failed RNG or checkpoint identity",
+        "unowned fairness metric",
+        "invalid topology or cache certificate"
+      ],
+      "independent_result_audit": "reconstruct seed-level recovery and group ledgers, verify paired random streams and uncertainty, test aggregate-versus-group masking, and audit institutional labels",
+      "book_destination": [
+        "Part VII resilience and adaptive infrastructure",
+        "Part VIII limited coordination/fairness cross-reference"
+      ],
+      "prohibited_interpretations": [
+        "physical optimum as fair institution",
+        "aggregate recovery as universal group recovery",
+        "simulation as empirical justice evidence"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-10",
+      "order": 10,
+      "title": "CLCD inference, correction, feedback, memory, delay, stability, error cost, closure, diagnostics, and propagation",
+      "status": "PROSPECTIVE_STAGE_E_CONFORMANCE_STABILITY_CHECKS_THEN_STAGE_F_REGISTERED_STUDY",
+      "dependencies": [
+        "SD-06",
+        "SD-07",
+        "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
+        "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+        "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+        "DAG-EXACT-01"
+      ],
+      "question": "Across the registered continuous and discrete CLCD models, when do inference, correction, feedback, memory, and delay yield bounded/stable error, and what costs, closure failures, diagnostics, and propagation follow?",
+      "prospective_claim": {
+        "text": "CLCD stability and correction claims are conditional on the exact model, sign convention, gain/delay/memory cell, diagnostic, correction receipt, and dependency topology.",
+        "strongest_permitted_disposition": "THEOREM_OR_NUMERICAL_VERIFICATION_PLUS_REGISTERED_MODEL_SIMULATION",
+        "nonclaims": [
+          "no universal stability from one linearization",
+          "diagnostic sensitivity is not responsibility",
+          "correction is not magical gain",
+          "Möbius decomposition is not conjugacy inference"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "accepted CLCD authority",
+          "Stage E theorem/static/numerical separation",
+          "DAG exact agreement and correction-receipt conformance"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "continuous two-state generator L=[[-a,1],[-k,-d]] with k=bk and characteristic polynomial lambda^2+(a+d)lambda+(ad+bk)",
+          "discrete delayed feedback recurrence r_(t+1)=r_t-kappa*r_(t-delay) with frozen initial history",
+          "inference residual and correction operator",
+          "error, correction cost, delay, memory, closure, and dependency propagation"
+        ],
+        "authority_sources": [
+          "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
+          "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md"
+        ],
+        "implementation_interfaces": [
+          "accepted correction_protocol and correction_diagnostics surfaces",
+          "future registered continuous/discrete CLCD adapters",
+          "future direct/optimized dependency propagation pair"
+        ]
+      },
+      "model_domain": {
+        "model": "declared scalar continuous linear and discrete delayed CLCD examples plus accepted diagnostic/correction event model",
+        "domain_authority": "CLCD authority and per-case correction dependency declaration",
+        "units": [
+          "error-unit",
+          "correction-unit",
+          "cost-unit",
+          "time-unit or tick",
+          "dimensionless gain"
+        ],
+        "state": [
+          "observed and inferred state",
+          "error and memory window",
+          "correction state",
+          "delay queue",
+          "cost/closure ledgers",
+          "dependency propagation state"
+        ],
+        "dependency_topology_authority": "explicit correction/dependency DAG selected by model authority",
+        "boundary": "explicit observation, intervention, and external information channels"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "continuous initial vectors {(1,0),(0,1),(1,1),(1,-1)}",
+          "discrete initial histories through lag 4: all +1; all -1; alternating +1/-1 ending +1 at tick 0; and impulse with r_0=1 and prior entries 0"
+        ],
+        "parameters": [
+          "continuous a,d in {0.25,1,2}, b=1, feedback product k=bk in {-2,-0.25,0.25,2}, and four initial vectors: 144 cells; exact theorem classification is by a+d and ad+k under NUMERICAL-POLICY-01",
+          "continuous numerical trajectory uses classical explicit RK4 with fixed step 1/100, exactly 100 substeps between integer samples 0..1000 and four written-order right-hand-side evaluations per substep; adaptive refinement and alternate integrators are forbidden",
+          "discrete kappa in {-1,-0.25,0,0.5,0.9,1,1.5,2.5}, delay in {0,1,4}, and four exact initial histories: 96 cells; NUMERICALLY_DECAYED_ON_HORIZON, NUMERICALLY_BOUNDED_ON_HORIZON, DIVERGED_ON_HORIZON, and NULL_OR_UNRESOLVED use the exact NUMERICAL-POLICY-01 predicates"
+        ],
+        "comparators": [
+          "no-correction baseline",
+          "instant correction",
+          "delayed correction",
+          "memory-free versus registered memory",
+          "theorem-predicted versus numerical stability classification"
+        ],
+        "positive_controls": [
+          "declared stable continuous cell decays under its exact solution",
+          "zero residual yields zero correction action/cost",
+          "direct and optimized affected sets/orders agree"
+        ],
+        "negative_controls": [
+          "wrong feedback sign diverges in declared unstable cell",
+          "delay destabilization control",
+          "correction without receipt refuses",
+          "cycle/duplicate dependency edge refuses",
+        "stale diagnostic/cache after correction refuses",
+        "the deterministic no-stream/seed-zero/uncertainty identities remain explicit cache dimensions and cannot alias a stochastic or differently summarized run",
+        "Möbius coefficient substituted for conjugacy relation refuses"
+        ],
+        "seeds": "none",
+        "stochastic_rules": "FORBIDDEN",
+        "uncertainty_rules": "NUMERICAL-POLICY-01 exactly: exact-rational theorem classification; fixed-step RK4 with no adaptive refinement for continuous numerical cells; exact frozen on-horizon discrete classifications; no tolerance, convergence, or method choice remains for Stage E",
+        "horizon": "1000 time/tick samples per registered cell",
+        "stopping_rules": [
+          "retain threshold crossing/divergence as registered outcome",
+          "stop/retain on non-finite state or accounting failure",
+          "resource cap is inconclusive"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H) scalar CLCD evolution plus O(V+E) correction-dependency propagation",
+        "exact_problem_size": "3 a values * 3 d values * 4 k values * 4 continuous initial vectors = 144 continuous cells; 8 kappa values * 3 delays * 4 histories = 96 discrete cells; total 240",
+        "horizon": "1000 samples per cell",
+        "subset_or_hyperedge_order": "correction dependency edges; any interaction hyperedge order <=4 where explicitly declared",
+        "expected_evaluations": 57696000,
+        "expected_evaluation_breakdown": {
+          "continuous_rk4_right_hand_side_evaluations": 57600000,
+          "discrete_recurrence_updates": 96000,
+          "total": 57696000
+        },
+        "storage_estimate_bytes": 4294967296,
+        "future_measurement_method": "state-step, correction, diagnostic, DAG edge/vertex, wall/RSS, and byte counters",
+        "checkpoint_restart_scheme": "checkpoint every 100 samples with complete delay/memory/RNG-free state; exact suffix equality",
+        "parallelization_boundary": "independent parameter cells may be parallel; each feedback trajectory and correction propagation order remain deterministic",
+        "hard_caps": {
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "maximum_depth": 100000,
+          "primary_evaluations_per_run": 500000,
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; no horizon shortening or delay removal",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "theorem and numerical classification disagree without explicit unresolved disposition",
+        "stability claim under an unregistered sign convention",
+        "correction action lacks separate burden/cost/receipt",
+        "closure residual hidden or reassigned",
+        "DAG affected-set/order or invalidation mismatch",
+        "memory/delay state omitted from checkpoint/cache key"
+      ],
+      "conservation_accounting": {
+        "class": "CLCD_SEPARATE_PHYSICAL_INFORMATION_CORRECTION_INSTITUTIONAL_LEDGERS",
+        "ledgers": [
+          "physical/represented state",
+          "inference error",
+          "information and observation",
+          "correction input/output/loss",
+          "correction burden/cost",
+          "dependency propagation",
+          "institutional responsibility"
+        ],
+        "no_double_count_rule": "original action and correction retain separate receipts; information/error reduction is not physical stock creation; propagated effects are counted once at their owner"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 240 cells visible",
+        "theorem/static/numerical/simulation evidence remains separately labeled",
+        "diagnostic, correction, delay, memory, closure, cost, and propagation accounts complete",
+        "DAG/cache controls pass"
+      ],
+      "inconclusive": [
+        "unresolved theorem/numerical discrepancy",
+        "resource/timeout cap",
+        "failed checkpoint or dependency identity",
+        "missing correction receipt"
+      ],
+      "independent_result_audit": "independently solve analytic cells, reconstruct numerical trajectories and receipts, verify diagnostics and dependency closure, and separate outcome from responsibility interpretation",
+      "book_destination": [
+        "Part VIII CLCD, correction, diagnostics, stability, and propagation"
+      ],
+      "prohibited_interpretations": [
+        "numerical stability as universal theorem",
+        "sensitivity as responsibility",
+        "correction as free energy/service",
+        "Möbius interaction as conjugacy inference"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-11",
+      "order": 11,
+      "title": "Correction receipts, closure, conservation, and no-magical-gain accounting",
+      "status": "PROSPECTIVE_STAGE_E_ACCOUNTING_ORACLE_THEN_STAGE_F_REGISTERED_EVENT_STUDY",
+      "dependencies": [
+        "SD-10",
+        "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+        "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+        "MOBIUS-EXACT-01",
+        "DAG-EXACT-01"
+      ],
+      "question": "Do action, correction, propagation, and settlement receipts preserve all declared physical, represented, EBU, causal, and institutional ledgers without magical gain or double-counting?",
+      "prospective_claim": {
+        "text": "Accounting closure may be claimed only ledger by ledger with typed residuals; correction never erases the original receipt or creates unowned benefit.",
+        "strongest_permitted_disposition": "STATIC_SYNTHETIC_AND_REGISTERED_EVENT_SEQUENCE_EVIDENCE",
+        "nonclaims": [
+          "accounting closure is not causality",
+          "represented closure is not physical isolation",
+          "settlement is not scientific truth"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "Stage E exact ledger oracle",
+          "receipt and correction lifecycle conformance",
+          "Möbius/DAG exact controls where aggregation or propagation applies"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "typed conservation residual",
+          "represented-stock closure",
+          "benefit-burden-cost reconciliation",
+          "original plus correction receipt lifecycle",
+          "dependency-local propagation"
+        ],
+        "authority_sources": [
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md"
+        ],
+        "implementation_interfaces": [
+          "accepted conservation and correction receipt surfaces",
+          "future independent exact ledger oracle",
+          "future dependency traversal oracle"
+        ]
+      },
+      "model_domain": {
+        "model": "finite typed lifecycle/event ledgers with action, correction, propagation, and settlement",
+        "domain_authority": "per-case declared accounting boundary and dependency topology",
+        "units": [
+          "physical quantity units",
+          "represented stock units",
+          "benefit/burden/cost units",
+          "time/tick"
+        ],
+        "state": [
+          "original receipts",
+          "correction receipts",
+          "physical and represented stocks",
+          "boundary flows",
+          "interaction/propagation allocations",
+          "institutional settlement"
+        ],
+        "dependency_topology_authority": "explicit event/dependency DAG",
+        "boundary": "one of reduced represented-stock, open control-volume, or isolated boundary-complete, declared per case"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "64 lifecycle/accounting cases from 4 boundary fixtures * 4 correction patterns * 4 interaction patterns, each with zeroed derived ledgers and declared opening stocks"
+        ],
+        "parameters": [
+          "boundary fixtures: reduced represented-stock; open balanced control-volume; isolated boundary-complete; open control-volume with one deliberately omitted boundary receipt negative control",
+          "correction patterns: none; exact reversal with cost; partial correction with residual; cost-bearing overcorrection negative control",
+          "interaction patterns: additive; exact pairwise; exact third-order; exact fourth-order, all under MOBIUS-EXACT-01",
+          "256 events per case",
+          "8 explicit correction dependency-DAG families: empty, path, binary tree, wide frontier, disconnected two chains, diamond ladder, sparse skip chain, and complete acyclic graph, each with canonical IDs and no duplicate edges",
+          "action, correction, propagation, and settlement event types"
+        ],
+        "comparators": [
+          "direct exact ledger fold",
+          "accepted receipt reducer",
+          "direct versus O(V+E) affected closure",
+          "complete versus deliberately omitted receipt"
+        ],
+        "positive_controls": [
+          "balanced isolated ledger closes exactly",
+          "open boundary residual equals explicit exchange",
+          "correction preserves original receipt and adds its own exact ledger"
+        ],
+        "negative_controls": [
+          "phantom output",
+          "hidden loss",
+          "duplicate internal transfer",
+          "omitted boundary flow",
+          "correction gain without input/cost",
+          "same joint interaction allocated twice",
+        "cycle/duplicate dependency edge",
+        "stale aggregate after correction",
+        "the deterministic no-stream/seed-zero/uncertainty identities remain explicit cache dimensions and cannot alias a stochastic or differently summarized run"
+        ],
+        "seeds": "none",
+        "stochastic_rules": "FORBIDDEN",
+        "uncertainty_rules": "exact integer/reduced-rational equality",
+        "horizon": "256 ordered events per case",
+        "stopping_rules": [
+          "retain explicit residual and fail the case",
+          "never auto-balance or rewrite an original receipt",
+          "refuse invalid dependency topology"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(C*H+V+E) ledger folding and correction propagation; complete interaction allocation follows MOBIUS-EXACT-01 when present",
+        "exact_problem_size": "64 cases * 256 events = 16384 event evaluations across 8 DAG families",
+        "horizon": "256 events",
+        "subset_or_hyperedge_order": "maximum interaction/hyperedge order 4 where declared",
+        "expected_evaluations": 16384,
+        "storage_estimate_bytes": 2147483648,
+        "future_measurement_method": "event, ledger, receipt, residual, DAG, and subset counters plus wall/RSS/byte instrumentation",
+        "checkpoint_restart_scheme": "checkpoint every 32 receipts; prefix hash and all ledger values must reproduce exactly",
+        "parallelization_boundary": "independent cases may be parallel; event order and DAG traversal order remain deterministic",
+        "hard_caps": {
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "maximum_hyperedge_order": 4,
+          "primary_evaluations_per_run": 50000000,
+          "wall_time_seconds_per_run": 3600,
+          "peak_resident_memory_bytes_per_run": 2147483648,
+          "trace_bytes_per_run": 1073741824,
+          "total_output_bytes": 10737418240,
+          "maximum_depth": 100000
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; never drop receipts or aggregate approximately",
+        "exact_or_approximate_label": "EXACT"
+      },
+      "falsifiers": [
+        "unexplained nonzero residual",
+        "original receipt overwritten by correction",
+        "correction output without declared input/loss/burden/cost",
+        "internal roll-up transfer counted more than once",
+        "interaction or propagation allocation duplicated",
+        "DAG or cache invalidation mismatch",
+        "physical and institutional ledgers conflated"
+      ],
+      "conservation_accounting": {
+        "class": "MULTI_LEDGER_EXACT",
+        "ledgers": [
+          "physical conservation",
+          "represented stock",
+          "EBU benefit/burden/cost",
+          "causal attribution",
+          "correction lifecycle",
+          "institutional settlement"
+        ],
+        "no_double_count_rule": "each event/flow/interaction has one owner in each applicable ledger; internal transfers cancel once; ledgers are reconciled but never collapsed"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 64 cases and 16384 events visible",
+        "all exact ledgers and residuals reconstruct",
+        "all negative accounting controls refuse",
+        "Möbius/DAG/cache controls pass wherever applicable"
+      ],
+      "inconclusive": [
+        "missing authority or unit semantics",
+        "hard-limit excess",
+        "incomplete receipt prefix",
+        "oracle disagreement"
+      ],
+      "independent_result_audit": "fold all receipts independently, verify every residual and dependency allocation, compare correction prefixes, and confirm no source record was overwritten",
+      "book_destination": [
+        "Part VIII correction closure",
+        "Part IX accounting, settlement, and no-magical-gain"
+      ],
+      "prohibited_interpretations": [
+        "bookkeeping closure as physical isolation",
+        "correction as free gain",
+        "settlement as causal truth",
+        "interaction allocation as responsibility"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-01",
+        "USER-MT-02",
+        "USER-MT-03",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "MOBIUS-EXACT-01",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-12",
+      "order": 12,
+      "title": "Cooperation, protected disclosure, contestability, privacy, retaliation, trust, and learning hypotheses",
+      "status": "PROSPECTIVE_STAGE_F_MODEL_STUDY_AFTER_INSTITUTIONAL_AUTHORITY_AND_STAGE_E_PASS",
+      "dependencies": [
+        "SD-09",
+        "SD-10",
+        "SD-11",
+        "future explicit cooperation/disclosure institutional authority",
+        "DAG-EXACT-01"
+      ],
+      "question": "Within declared agent models, how do protected disclosure and contestable coordination rules alter cooperation, service, burden, retaliation risk, privacy loss, and learning under complete accounting?",
+      "prospective_claim": {
+        "text": "Only model-conditional cooperation and disclosure outcomes may be reported; institutional rules remain design choices and simulated agents are not empirical humans.",
+        "strongest_permitted_disposition": "REGISTERED_MODEL_SIMULATION_PLUS_INSTITUTIONAL_DESIGN_COMPARISON",
+        "nonclaims": [
+          "no empirical human-behavior claim",
+          "no universal cooperation law",
+          "no claim that disclosure is costless or always beneficial"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "explicit institutional authority",
+          "Stage E deterministic/stochastic conformance",
+          "SD-11 accounting acceptance",
+          "DAG/correction invalidation conformance"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "declared repeated cooperation payoff/service model",
+          "protected disclosure signal and privacy-cost model",
+          "retaliation and contestability transitions",
+          "trust/learning update rule"
+        ],
+        "authority_sources": [
+          "EBU_FUTURE_BOOKS_STRUCTURE.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md"
+        ],
+        "implementation_interfaces": [
+          "future registered agent-model adapter",
+          "future disclosure/privacy receipt adapter",
+          "future dependency/correction traversal adapter"
+        ]
+      },
+      "model_domain": {
+        "model": "finite synthetic agents with declared cooperation, disclosure, privacy, retaliation, contestability, and learning rules",
+        "domain_authority": "future accepted institutional model authority selects dependencies and topology",
+        "units": [
+          "service-unit",
+          "benefit-unit",
+          "burden-unit",
+          "privacy-cost-unit",
+          "tick",
+          "dimensionless trust state"
+        ],
+        "state": [
+          "agent resources and service",
+          "disclosure and protected information state",
+          "trust/learning state",
+          "retaliation/appeal state",
+          "benefit, burden, cost, and privacy ledgers"
+        ],
+        "dependency_topology_authority": "explicit per-model information/action/correction DAG",
+        "boundary": "open institutional model with explicit external enforcement and information channels"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "sealed symmetric and asymmetric resource/trust initial states"
+        ],
+        "parameters": [
+          "64 agents; trust is integer 0..1000000 and starts at 500000; cooperation adds 25000 to counterpart trust and defection subtracts 50000 with clamping",
+          "6 governance rules: no coordination, voluntary disclosure, reciprocal disclosure, protected-contestable disclosure, centralized allocation, and documented adaptive allocation",
+          "4 disclosure regimes: none (accuracy 0, retaliation risk 0, privacy cost 0); aggregate-only (accuracy 500000, risk 100000, cost 1); protected exact (accuracy 950000, risk 0, cost 2); unprotected exact (accuracy 950000, risk 500000, cost 8)",
+          "4 benefit-distribution regimes: equal, proportional-to-declared-contribution, need-priority with frozen agent order, and max-min capped",
+          "32 fixed seeds"
+        ],
+        "comparators": [
+          "no-disclosure baseline",
+          "unprotected disclosure",
+          "protected disclosure",
+          "protected disclosure with contestable appeal"
+        ],
+        "positive_controls": [
+          "identical deterministic agents under symmetric rule remain exchangeable",
+          "zero information channel produces no disclosure-derived update"
+        ],
+        "negative_controls": [
+          "privacy cost cannot be omitted",
+          "retaliation channel must worsen its declared target metric in the adversarial control",
+          "false or stale disclosure correction must invalidate affected beliefs/results",
+        "near-equivalent agent topology cannot reuse without certificate",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "aggregate cooperation cannot hide a protected group burden"
+        ],
+        "seeds": "exact integers 0..31 paired across comparable institutional cells",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams COOPERATION, DISCLOSURE_TRUTH, RETALIATION, APPEAL in that order per agent/tick; cooperation numerator is clamp(0,1000000,100000+floor(6*trust/10)+floor(disclosure_accuracy/5)-floor(retaliation_risk/5)) over denominator 1000000; protected and none have retaliation probability 0, aggregate 1/100, unprotected exact 1/10; false disclosure probability is 0,1/100,1/200,1/50 by the four regimes; an eligible appeal succeeds with probability 3/4; analysis draws and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: every seed and paired difference in ascending seed order, exact even-sample median, and closed min/max registered-seed range; bootstrap, confidence/population intervals, resampling, and population inference are forbidden",
+        "horizon": "1000 ticks per run",
+        "stopping_rules": [
+          "retain collapse, retaliation, or non-cooperation as registered model outcomes",
+          "stop/retain on non-finite state or ledger failure",
+          "resource/identity failure is inconclusive"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H*(A+E)) for A=64 agents, declared interaction edges E, and registered runs R",
+        "exact_problem_size": "64 agents; 6 governance * 4 disclosure * 4 distribution * 32 seeds = 3072 runs",
+        "horizon": "1000 ticks",
+        "subset_or_hyperedge_order": "declared agent interaction hyperedges <=4; no complete Boolean enumeration unless separately registered",
+        "expected_evaluations": 196608000,
+        "storage_estimate_bytes": 21474836480,
+        "future_measurement_method": "agent-transition, disclosure, privacy, correction, DAG, wall/RSS, and emitted-byte counters",
+        "checkpoint_restart_scheme": "checkpoint every 100 ticks with exact per-agent stochastic state and information history",
+        "parallelization_boundary": "runs/seeds may be parallel using fixed independent streams; within-run event order is canonical and serial",
+        "hard_caps": {
+          "maximum_agents": 10000,
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "maximum_hyperedge_order": 4,
+          "primary_evaluations_per_run": 50000000,
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480,
+          "maximum_depth": 100000
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; no agent sampling, topology truncation, or substituted approximation",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "unregistered institutional rule or post-outcome rule choice",
+        "unaccounted privacy, retaliation, enforcement, or appeal cost",
+        "seed/pairing mismatch",
+        "dependency or invalidation mismatch",
+        "model output presented as empirical human behavior",
+        "aggregate benefit counted again as individual benefit"
+      ],
+      "conservation_accounting": {
+        "class": "OPEN_MODEL_PLUS_SEPARATE_INSTITUTIONAL_INFORMATION_LEDGERS",
+        "ledgers": [
+          "physical/service resource",
+          "benefit and burden",
+          "information/disclosure",
+          "privacy and retaliation cost",
+          "correction and appeal",
+          "institutional rule"
+        ],
+        "no_double_count_rule": "shared service is allocated once; information is not physical stock; privacy, retaliation, correction, and enforcement each have their own receipts"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 3072 cells and seeds visible",
+        "institutional and scientific labels remain distinct",
+        "privacy, retaliation, contestability, learning, service, benefit, and burden ledgers reconcile",
+        "negative controls and dependency invalidations pass"
+      ],
+      "inconclusive": [
+        "missing institutional authority",
+        "resource/timeout cap",
+        "failed seed/checkpoint identity",
+        "unresolved disclosure or dependency provenance"
+      ],
+      "independent_result_audit": "reconstruct all seed-level ledgers and disclosure/correction histories, verify paired rules and protected-group distributions, and audit every empirical/nonclaim boundary",
+      "book_destination": [
+        "Part IX cooperation, disclosure, trust, privacy, and contestability"
+      ],
+      "prohibited_interpretations": [
+        "simulated agents as empirical people",
+        "cooperation as universal law",
+        "disclosure as costless",
+        "institutional rule as physical optimum"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-13",
+      "order": 13,
+      "title": "Quote, settlement, reserves, access, governance, appeals, fraud, responsibility, and compensation",
+      "status": "PROSPECTIVE_STAGE_F_MODEL_STUDY_AFTER_SD_11_SD_12_AND_INSTITUTIONAL_AUTHORITY",
+      "dependencies": [
+        "SD-11",
+        "SD-12",
+        "future explicit settlement/governance authority",
+        "DAG-EXACT-01"
+      ],
+      "question": "For declared quote-error and institutional regimes, how do settlement, reserves, access, fraud controls, appeals, responsibility decisions, and compensation remain reconciled without rewriting history or conflating sensitivity with responsibility?",
+      "prospective_claim": {
+        "text": "Settlement/governance outcomes may be compared only as model and institutional-design evidence under separate physical, evidentiary, responsibility, and compensation ledgers.",
+        "strongest_permitted_disposition": "REGISTERED_MODEL_SIMULATION_PLUS_INSTITUTIONAL_DESIGN_COMPARISON",
+        "nonclaims": [
+          "no legal or moral authority",
+          "no causal responsibility from sensitivity alone",
+          "no retrospective quote rewrite"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "SD-11 receipt/accounting acceptance",
+          "explicit settlement/governance institutional authority",
+          "Stage E fraud/appeal/settlement conformance",
+          "DAG exact agreement"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "prospective quote and realized residual",
+          "reserve and settlement balance",
+          "appeal/correction lifecycle",
+          "separate sensitivity, causality, responsibility, and compensation maps"
+        ],
+        "authority_sources": [
+          "EBU_FUTURE_BOOKS_STRUCTURE.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md"
+        ],
+        "implementation_interfaces": [
+          "future quote/settlement model adapter",
+          "accepted correction receipt surfaces",
+          "future fraud/appeal/governance adapter",
+          "future dependency traversal adapter"
+        ]
+      },
+      "model_domain": {
+        "model": "finite synthetic quote, service, residual, reserve, settlement, appeal, fraud, and compensation lifecycle",
+        "domain_authority": "future accepted institutional model authority",
+        "units": [
+          "service-unit",
+          "quote-unit",
+          "residual-unit",
+          "reserve-unit",
+          "compensation-unit",
+          "day"
+        ],
+        "state": [
+          "prospective quote",
+          "realized service and residual",
+          "reserve and settlement",
+          "evidence/correction/appeal history",
+          "fraud flags",
+          "responsibility and compensation decisions"
+        ],
+        "dependency_topology_authority": "explicit service/evidence/correction/governance DAG",
+        "boundary": "open institution with declared external funding, review, and enforcement"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "sealed opening reserves, access groups, and empty prospective receipt history"
+        ],
+        "parameters": [
+          "128 prospective service events per day",
+          "8 quote-error regimes in quote-unit: exact zero; deterministic +1/10; deterministic -1/10; alternating +/-1/10 by event index; Bernoulli(1/20) signed 1/2; Bernoulli(1/10) signed 1; Bernoulli(1/20) fraudulent +2; and declared adversarial +2 on every 16th event",
+          "5 settlement rules: none, prospective-only, residual-aware, residual-aware-with-appeal, and residual-aware-with-fraud-control",
+          "4 reserve/access rules: no reserve/equal access, 1/10 reserve/equal access, 1/4 reserve/need-priority, and 1/2 reserve/max-min capped access",
+          "16 fixed seeds"
+        ],
+        "comparators": [
+          "no settlement",
+          "prospective-only settlement",
+          "residual-aware settlement",
+          "appealable residual-aware settlement",
+          "fraud-control variant"
+        ],
+        "positive_controls": [
+          "perfect quote produces zero declared quote residual",
+          "successful appeal adds a correction receipt without altering original receipt",
+          "balanced settlement conserves reserve plus external funding"
+        ],
+        "negative_controls": [
+          "quote rewritten after realization refuses",
+          "reserve overdraw refuses",
+          "sensitivity automatically assigned as responsibility refuses",
+          "compensation counted as both service and correction benefit refuses",
+        "fraud evidence correction leaves stale downstream decision",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "cycle/duplicate governance dependency refuses"
+        ],
+        "seeds": "exact integers 0..15 paired across comparable governance cells",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams QUOTE_ERROR_EVENT, QUOTE_ERROR_SIGN, FRAUD_DISCOVERY, APPEAL in that order per service event/day; Bernoulli probabilities are exactly those in the selected quote regime; random sign is categorical {negative:1/2,positive:1/2}; fraudulent events are discovered with probability 3/4; an eligible appeal succeeds with probability 3/4; analysis draws and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: every seed and paired difference in ascending seed order, exact even-sample median, and closed min/max registered-seed range; institutional metrics remain separate; bootstrap, confidence/population intervals, resampling, and population inference are forbidden",
+        "horizon": "365 daily ticks per run",
+        "stopping_rules": [
+          "retain insolvency, denial, fraud, and unresolved appeal as model outcomes",
+          "stop/retain on accounting or provenance failure",
+          "resource/identity failure is inconclusive"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H*(Q+V+E)) for Q=128 prospective service events per day plus correction/governance propagation",
+        "exact_problem_size": "128 service events/day * 365 days; 8 quote-error * 5 settlement * 4 reserve/access * 16 seeds = 2560 runs",
+        "horizon": "365 ticks",
+        "subset_or_hyperedge_order": "declared governance dependency edges; hyperedge order <=4 if present",
+        "expected_evaluations": 119603200,
+        "storage_estimate_bytes": 17179869184,
+        "future_measurement_method": "quote, receipt, reserve, appeal, fraud, DAG, wall/RSS, and byte counters",
+        "checkpoint_restart_scheme": "checkpoint every 30 ticks with complete receipt/provenance and stochastic state",
+        "parallelization_boundary": "runs/seeds parallel under fixed streams; receipt and governance event order serial within a run",
+        "hard_caps": {
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "primary_evaluations_per_run": 50000000,
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480,
+          "maximum_depth": 100000
+        },
+        "timeout_or_resource_disposition": "COMPUTATIONALLY_INCONCLUSIVE; no horizon truncation or case substitution",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "retrospective quote mutation",
+        "reserve/settlement/compensation imbalance",
+        "original receipt overwritten",
+        "sensitivity or inference promoted to responsibility",
+        "unproven fraud promoted to fact",
+        "failed appeal/correction invalidation",
+        "institutional outcome presented as legal or moral conclusion"
+      ],
+      "conservation_accounting": {
+        "class": "SEPARATE_PHYSICAL_PROSPECTIVE_EVIDENTIARY_RESPONSIBILITY_SETTLEMENT_LEDGERS",
+        "ledgers": [
+          "service and physical",
+          "prospective quote",
+          "realized residual",
+          "reserve and settlement",
+          "evidence and correction",
+          "responsibility decision",
+          "compensation"
+        ],
+        "no_double_count_rule": "settlement transfers and compensation cancel once across counterparties; original service and corrective compensation are distinct receipts"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 2560 cells and seeds visible",
+        "quotes remain prospective and original receipts immutable",
+        "reserve, settlement, appeal, fraud, responsibility, and compensation ledgers reconcile separately",
+        "negative controls and invalidation pass"
+      ],
+      "inconclusive": [
+        "missing institutional authority",
+        "resource/timeout cap",
+        "unresolved provenance or evidence",
+        "failed checkpoint/DAG identity"
+      ],
+      "independent_result_audit": "reconstruct every prospective/realized receipt chain, reserve and transfer balance, correction/appeal invalidation, and separate evidentiary from institutional dispositions",
+      "book_destination": [
+        "Part IX settlement, governance, responsibility, and compensation"
+      ],
+      "prohibited_interpretations": [
+        "model rule as legal advice",
+        "sensitivity as responsibility",
+        "settlement as scientific truth",
+        "correction as historical erasure"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    },
+    {
+      "study_id": "SD-14",
+      "order": 14,
+      "title": "Complete-economy scenarios",
+      "status": "PROSPECTIVE_FINAL_STAGE_F_MODEL_STUDY_AFTER_SD_01_TO_SD_13",
+      "dependencies": [
+        "SD-01",
+        "SD-03",
+        "SD-05",
+        "SD-06",
+        "SD-07",
+        "SD-08",
+        "SD-09",
+        "SD-10",
+        "SD-11",
+        "SD-12",
+        "SD-13",
+        "future complete-economy model and institutional authority"
+      ],
+      "question": "Can a declared multi-domain model connect household, hospital, enterprise, infrastructure, and ecology scenarios while preserving all physical, service, interaction, correction, provenance, fairness, settlement, and institutional boundaries?",
+      "prospective_claim": {
+        "text": "A complete-economy scenario can test integration and accounting consistency within the frozen model; it cannot establish a real complete economy or select institutions.",
+        "strongest_permitted_disposition": "REGISTERED_INTEGRATED_MODEL_SIMULATION",
+        "nonclaims": [
+          "no empirical economy claim",
+          "no universal policy prescription",
+          "no replacement for domain evidence",
+          "no positive interpretation if any prerequisite ledger or control fails"
+        ]
+      },
+      "evidence": {
+        "target_level": 5,
+        "prerequisites": [
+          "applicable accepted dispositions from SD-01 through SD-13",
+          "separate complete-economy model/institutional authority",
+          "independent integrated Stage E harness PASS",
+          "all applicable Möbius/DAG/cache controls"
+        ],
+        "interpretation_requires_level": 7
+      },
+      "owners": {
+        "equations": [
+          "declared household, hospital, enterprise, infrastructure, and ecology submodel equations",
+          "typed inter-domain exchange and boundary equations",
+          "finite interaction and correction decomposition",
+          "separate service, burden, cost, provenance, settlement, and institutional ledgers"
+        ],
+        "authority_sources": [
+          "EBU_FUTURE_BOOKS_STRUCTURE.md",
+          "all independently accepted SD-01 through SD-13 authorities/results applicable to the integrated model",
+          "future complete-economy authority"
+        ],
+        "implementation_interfaces": [
+          "future independently accepted integrated model adapters",
+          "future domain boundary and exchange adapters",
+          "future accepted oracle, DAG, cache, receipt, and checkpoint harnesses"
+        ]
+      },
+      "model_domain": {
+        "model": "five declared coupled synthetic domains with explicit exchange, dependency, and institutional layers",
+        "domain_authority": "each domain owns its dynamics/topology; separate integrated authority owns cross-domain exchange and institutional rules",
+        "units": [
+          "domain-specific physical units",
+          "service-unit",
+          "benefit/burden/cost units",
+          "time/day",
+          "institution-specific settlement units"
+        ],
+        "state": [
+          "complete typed state of all five domains",
+          "cross-domain flows and boundaries",
+          "queues/reserves",
+          "interaction and correction state",
+          "provenance/fairness/settlement/institutional ledgers"
+        ],
+        "dependency_topology_authority": "composite of exact domain-owned topologies plus separately authorized typed cross-domain edges",
+        "boundary": "open complete-model control volume; every external flow, information source, intervention, and institution is explicit"
+      },
+      "configuration": {
+        "initial_conditions": [
+          "one sealed, unit-checked initial state per scenario/institution cell derived prospectively from accepted component domains"
+        ],
+        "parameters": [
+          "5 coupled domain components per run: 64 household agents, 16 hospital units, 32 enterprise agents, 64 infrastructure vertices with 128 edges, and 32 ecology stocks",
+          "5 scenario stress families while all domains remain present: household demand +1/4 on days 90..119; hospital demand +1/2 on days 90..119; enterprise capacity -1/4 on days 90..119; first four canonical infrastructure edges unavailable days 90..119; ecology regeneration rho -1/4 on days 90..119",
+          "6 institutional configurations: throughput/no institutional feedback; reserve-first; equal-access; need-priority; protected-disclosure-with-appeal; integrated correction-and-settlement",
+          "12 typed cross-domain exchange edges evaluated once per day in canonical order: household labor->enterprise; enterprise goods->household; household demand->infrastructure; infrastructure service->household; household demand->hospital; hospital service->household; enterprise supply->hospital; hospital recovery->household labor; ecology resource->enterprise; ecology resource->infrastructure; infrastructure service->hospital; enterprise maintenance->infrastructure",
+          "32 fixed seeds",
+          "all cross-domain parameters frozen before any run"
+        ],
+        "comparators": [
+          "domain-isolated baselines",
+          "coupled physical/service model without institutional feedback",
+          "coupled model with each registered institutional configuration"
+        ],
+        "positive_controls": [
+          "zero cross-domain exchange reproduces independent domain totals",
+          "balanced internal exchange cancels once at composite level",
+          "certified repeated motif/canonical component reproduces cold computation exactly"
+        ],
+        "negative_controls": [
+          "unit-incompatible cross-domain edge refuses",
+          "unowned external inflow or hidden loss fails closure",
+          "same cross-domain benefit counted in both domains refuses",
+          "near-equivalent motif/cache reuse refuses",
+        "stale correction/authority cache refuses",
+        "changing stochastic-rule identity, run seed, permitted stream set, next counter state, or uncertainty policy with every other cache dimension fixed must produce a distinct key and refuse the old result",
+        "institutional optimum inferred from physical optimum refuses",
+          "failed prerequisite study prevents positive integrated interpretation"
+        ],
+        "seeds": "exact integers 0..31 paired across comparable coupled/institutional cells",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1; streams are HOUSEHOLD_EVENT, HOSPITAL_EVENT, ENTERPRISE_EVENT, INFRASTRUCTURE_EVENT, ECOLOGY_EVENT, CROSS_DOMAIN_EVENT in that canonical order; each domain uses the exact already-frozen rule of its prospectively selected predecessor configuration, selected by fixed configuration label rather than outcome; analysis draws, outcome-dependent resampling, and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: every seed and paired difference in ascending seed order, exact even-sample median, and separate domain/integrated closed min/max registered-seed ranges; bootstrap, confidence/population intervals, resampling, and empirical/population inference are forbidden",
+        "horizon": "365 daily ticks per run",
+        "stopping_rules": [
+          "stop/retain on unit, topology, conservation, receipt, or provenance failure",
+          "retain modeled collapse or institutional failure as registered outcome",
+          "resource cap is inconclusive",
+          "do not run if any required predecessor disposition/authority identity is absent"
+        ]
+      },
+      "computational_feasibility": {
+        "algorithmic_cost_class": "O(R*H*(sum domain update costs+V+E)) plus exact registered interaction costs; no universal integrated complexity claim",
+        "exact_problem_size": "five domain updates and 12 cross-domain exchange evaluations per day; 5 scenario families * 6 institutional configurations * 32 seeds = 960 runs",
+        "horizon": "365 ticks",
+        "subset_or_hyperedge_order": "declared cross-domain hyperedges <=4; any exact Boolean decomposition obeys n<=18 and MOBIUS-EXACT-01",
+        "expected_evaluations": 5956800,
+        "storage_estimate_bytes": 21474836480,
+        "future_measurement_method": "per-domain transition, exchange, DAG, subset, receipt, cache, wall/RSS, trace, and output counters",
+        "checkpoint_restart_scheme": "checkpoint every 30 ticks with complete domain, stochastic, delay/memory, receipt, cache epoch, and provenance state; exact suffix equality",
+        "parallelization_boundary": "runs/seeds may be parallel with fixed streams; within-run domain order and cross-domain settlement order are canonical",
+        "hard_caps": {
+          "maximum_vertices": 100000,
+          "maximum_edges": 500000,
+          "maximum_mobius_n": 18,
+          "maximum_subsets": 262144,
+          "maximum_hyperedge_order": 4,
+          "maximum_depth": 100000,
+          "primary_evaluations_per_run": 50000000,
+          "wall_time_seconds_per_run": 14400,
+          "peak_resident_memory_bytes_per_run": 4294967296,
+          "trace_bytes_per_run": 5368709120,
+          "total_output_bytes": 21474836480
+        },
+        "timeout_or_resource_disposition": "REFUSED_BEFORE_EXECUTION or COMPUTATIONALLY_INCONCLUSIVE; no domain removal, topology alteration, truncation, sampling, or approximation substitution",
+        "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
+      },
+      "falsifiers": [
+        "any missing or failed required predecessor authority/control",
+        "unit-incompatible or unowned cross-domain flow",
+        "nonzero unexplained physical/service/receipt residual",
+        "interaction, correction, cache, or settlement double count",
+        "Möbius/DAG/cache exact-control failure",
+        "outcome-dependent parameter or institutional selection",
+        "model result promoted to empirical or universal claim"
+      ],
+      "conservation_accounting": {
+        "class": "COMPOSITE_OPEN_CONTROL_VOLUME_WITH_SEPARATE_DOMAIN_AND_INSTITUTIONAL_LEDGERS",
+        "ledgers": [
+          "each domain physical and represented state",
+          "typed cross-domain exchange",
+          "service/queue/reserve",
+          "interaction and correction",
+          "provenance and fairness",
+          "settlement and compensation",
+          "institutional design"
+        ],
+        "no_double_count_rule": "each internal cross-domain flow cancels once at composite level, every joint effect has one declared allocation, and institutional transfers never create physical stock"
+      },
+      "schemas": [
+        "configuration_manifest/v1",
+        "run_manifest/v1",
+        "checkpoint_record/v1",
+        "trace_row/v1",
+        "receipt/v1",
+        "computation_record/v1",
+        "equivalence_certificate/v1",
+        "cache_event/v1",
+        "invalidation_receipt/v1",
+        "limit_decision/v1",
+        "output_manifest/v1"
+      ],
+      "acceptance": [
+        "all 960 cells and seeds visible",
+        "all predecessor identities and exact controls pass",
+        "all domain and composite ledgers reconcile without double count",
+        "claims stay model-, scenario-, institution-, horizon-, and evidence-specific"
+      ],
+      "inconclusive": [
+        "any missing prerequisite authority/disposition",
+        "resource/timeout cap",
+        "failed checkpoint, provenance, oracle, DAG, or cache identity",
+        "unresolved cross-domain boundary or unit semantics"
+      ],
+      "independent_result_audit": "reconstruct every domain and composite ledger from immutable traces, verify paired seeds and all exact controls/certificates/receipts, compare isolated/coupled baselines, and audit every claim boundary before Part IX",
+      "book_destination": [
+        "Part IX last: complete-economy scenarios and bounded institutional interpretation"
+      ],
+      "prohibited_interpretations": [
+        "synthetic complete economy as empirical economy",
+        "integrated model as universal theory",
+        "physical optimum as institutional choice",
+        "failed/inconclusive prerequisite hidden by aggregate outcome"
+      ],
+      "mandatory_computational_control_refs": [
+        "GLOBAL-COMPUTATIONAL-FEASIBILITY-GATE",
+        "USER-MT-01",
+        "USER-MT-02",
+        "USER-MT-03",
+        "USER-MT-04",
+        "USER-MT-05",
+        "USER-MT-06",
+        "USER-MT-07",
+        "USER-MT-08",
+        "USER-MT-09",
+        "USER-MT-10",
+        "MOBIUS-EXACT-01",
+        "DAG-EXACT-01",
+        "CANONICAL-CACHE-01"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1913 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ebu:stage-d:scientific-validation-evidence-schema:1.0.0-candidate",
+  "title": "EBU Stage D prospective immutable scientific-evidence records",
+  "description": "Schema authority only. No instances, measurements, runs, outcomes, results, or figures are created in Stage D.",
+  "schema_version": "1.0.0-candidate",
+  "stage_d_instance_count": 0,
+  "prospective_negative_schema_cases": [
+    {
+      "case_id": "SCHEMA-N01",
+      "target_definition": "hard_caps",
+      "mutation": "omit maximum_n from a MOBIUS-EXACT-01 normalized cap record",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N02",
+      "target_definition": "hard_caps",
+      "mutation": "add an unknown algorithm-specific cap dimension",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_UNKNOWN_HARD_CAP_DIMENSION"
+    },
+    {
+      "case_id": "SCHEMA-N03",
+      "target_definition": "limit_decision",
+      "mutation": "pair REFUSED_BEFORE_EXECUTION with ELIGIBLE_FOR_REGISTERED_EXECUTION",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N04",
+      "target_definition": "limit_decision",
+      "mutation": "pair COMPUTATIONALLY_INCONCLUSIVE with ELIGIBLE_FOR_REGISTERED_EXECUTION",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N05",
+      "target_definition": "limit_decision",
+      "mutation": "pair WITHIN_CAPS with NOT_A_SCIENTIFIC_OUTCOME",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N06",
+      "target_definition": "hard_caps",
+      "base_instance_json_pointer": "/$defs/hard_caps/oneOf/0/const",
+      "json_patch": [{"op": "replace", "path": "/total_output_bytes", "value": null}],
+      "mutation": "make the applicable SD-01 total_output_bytes null",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N07",
+      "target_definition": "hard_caps",
+      "base_instance_json_pointer": "/$defs/hard_caps/oneOf/0/const",
+      "json_patch": [{"op": "replace", "path": "/total_output_bytes", "value": 21474836479}],
+      "mutation": "change one exact applicable SD-01 cap value",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N08",
+      "target_definition": "hard_caps",
+      "base_instance_json_pointer": "/$defs/hard_caps/oneOf/0/const",
+      "json_patch": [{"op": "replace", "path": "/maximum_n", "value": 18}],
+      "mutation": "make an inapplicable SD-01 dimension nonnull",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N09",
+      "target_definition": "run_manifest",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
+      "json_patch": [{"op": "replace", "path": "/limit_decision_identities", "value": []}],
+      "mutation": "erase the run's limit-decision traceability chain",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_EMPTY_LIMIT_DECISION_CHAIN"
+    },
+    {
+      "case_id": "SCHEMA-N10",
+      "target_definition": "run_manifest",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
+      "json_patch": [
+        {"op": "replace", "path": "/exit_status", "value": "REFUSED"},
+        {"op": "replace", "path": "/scientific_disposition", "value": "POSITIVE_WITHIN_REGISTERED_MODEL"}
+      ],
+      "mutation": "pair a refused run with a positive scientific disposition",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_RUN_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N11",
+      "target_definition": "cache_event",
+      "mutation": "omit stochastic_rule_identity, run_seed, a permitted-stream digest, next-counter-state digest, or uncertainty-policy identity from the complete cache key",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_INCOMPLETE_RESULT_AFFECTING_CACHE_KEY"
+    },
+    {
+      "case_id": "SCHEMA-N12",
+      "target_definition": "checkpoint_record",
+      "mutation": "omit attempt_index/draw_status, pair READY with attempt_index 1000000, pair TERMINAL_REJECTION_CAP with another value, or restart/select an outcome from a terminal tuple",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_STOCHASTIC_COUNTER_OR_CLASSIFY_INCONCLUSIVE"
+    },
+    {
+      "case_id": "SCHEMA-N13",
+      "target_definition": "trace_row",
+      "mutation": "pair H3_PASS with an empty current/no-shock/adversarial admissible set or a false reserve predicate",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_RECURSIVE_FEASIBILITY_CLAIM"
+    },
+    {
+      "case_id": "SCHEMA-N14",
+      "target_definition": "configuration_manifest",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_configuration_manifest",
+      "json_patch": [{"op":"replace","path":"/hard_caps","value":{"profile_id":"SD-14","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":18,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}}],
+      "mutation": "replace SD-01's exact profile with the complete internally valid SD-14 profile at the configuration use site",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N15",
+      "target_definition": "limit_decision",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_limit_decision",
+      "json_patch": [{"op":"replace","path":"/registered_hard_caps","value":{"profile_id":"SD-14","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":18,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}}],
+      "mutation": "replace SD-01's exact profile with the complete internally valid SD-14 profile at the limit-decision use site",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N16",
+      "target_definition": "computation_record",
+      "base_instance_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_computation_record",
+      "json_patch": [{"op":"replace","path":"/hard_caps","value":{"profile_id":"SD-14","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":18,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}}],
+      "mutation": "replace SD-01's exact profile with the complete internally valid SD-14 profile at the computation-record use site",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_STUDY_ROLE_PROFILE_MISMATCH"
+    }
+  ],
+  "prospective_non_evidence_schema_fixtures": {
+    "purpose": "Static schema conformance fixture only; it is not a run, outcome, observation, or scientific evidence.",
+    "valid_configuration_manifest": {
+      "schema":"configuration_manifest/v1",
+      "study_id":"SD-01",
+      "cap_binding_role":"STUDY_EXECUTION",
+      "configuration_id":"STATIC-SCHEMA-FIXTURE-NOT-A-CONFIGURATION",
+      "authority_identities":[{"kind":"fixture","value":"authority","sha256":"0000000000000000000000000000000000000000000000000000000000000000"}],
+      "code_identity":{"kind":"fixture","value":"code","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "environment_identity":{"kind":"fixture","value":"environment","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "model_domain_identity":{"kind":"fixture","value":"model-domain","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "dependency_topology_identity":{"kind":"fixture","value":"topology","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "units":["dimensionless"],
+      "boundary":"static fixture boundary",
+      "initial_state":[{"name":"x","value":0,"unit":"dimensionless","semantic_type":"fixture"}],
+      "parameters":[],
+      "controls":["static fixture control"],
+      "negative_controls":["static fixture negative control"],
+      "seed_rule":"FORBIDDEN",
+      "permitted_stochastic_stream_ids":[],
+      "stochastic_rule_identity":{"kind":"fixture","value":"FORBIDDEN","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "uncertainty_rule":"deterministic fixture",
+      "uncertainty_policy_identity":{"kind":"fixture","value":"deterministic","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "numerical_policy_identity":{"kind":"fixture","value":"NUMERICAL-POLICY-01","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "horizon":"static fixture",
+      "stopping_rules":["static fixture stop"],
+      "falsifiers":["static fixture falsifier"],
+      "hard_caps":{"profile_id":"SD-01","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1200000,"primary_evaluations_per_case":null,"maximum_depth":20000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null},
+      "exact_or_approximate_label":"EXACT",
+      "dependency_closure_digest":"0000000000000000000000000000000000000000000000000000000000000000",
+      "sealed_before_outcome_inspection":true,
+      "manifest_sha256":"0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "valid_limit_decision": {
+      "schema":"limit_decision/v1",
+      "study_id":"SD-01",
+      "cap_binding_role":"STUDY_EXECUTION",
+      "requested_dimensions":"static fixture",
+      "registered_hard_caps":{"profile_id":"SD-01","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1200000,"primary_evaluations_per_case":null,"maximum_depth":20000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null},
+      "projection_method":"static fixture",
+      "projected_resources":"static fixture",
+      "decision":"WITHIN_CAPS",
+      "scientific_evidence_value":"ELIGIBLE_FOR_REGISTERED_EXECUTION",
+      "silent_fallback_performed":false,
+      "decision_sha256":"0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "valid_computation_record": {
+      "schema":"computation_record/v1",
+      "study_id":"SD-01",
+      "cap_binding_role":"STUDY_EXECUTION",
+      "algorithm_identity":{"kind":"fixture","value":"algorithm","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "oracle_identity":{"kind":"fixture","value":"oracle","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "optimized_identity":{"kind":"fixture","value":"optimized","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "algorithmic_cost_class":"static fixture",
+      "exact_problem_size":"static fixture",
+      "horizon":"static fixture",
+      "subset_hyperedge_order":"static fixture",
+      "expected_evaluations":0,
+      "actual_operation_counts":{"fixture":0},
+      "algorithm_specific_evidence":{"kind":"GENERIC","details":"static fixture"},
+      "measured_wall_time_ns":0,
+      "measured_peak_resident_memory_bytes":0,
+      "storage_bytes":0,
+      "checkpoint_restart_identity":{"kind":"fixture","value":"checkpoint","sha256":"0000000000000000000000000000000000000000000000000000000000000000"},
+      "parallelization_boundary":"static fixture",
+      "hard_caps":{"profile_id":"SD-01","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1200000,"primary_evaluations_per_case":null,"maximum_depth":20000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null},
+      "exact_or_approximate_label":"EXACT",
+      "oracle_agreement":"NOT_APPLICABLE",
+      "complexity_disposition":"WITHIN_REGISTERED_BOUND",
+      "nonclaim_boundaries":["static non-evidence fixture"],
+      "record_sha256":"0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "valid_run_manifest": {
+      "schema": "run_manifest/v1",
+      "run_id": "STATIC-SCHEMA-FIXTURE-NOT-A-RUN",
+      "study_id": "SD-01",
+      "configuration_identity": {"kind": "fixture", "value": "configuration", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "code_identity": {"kind": "fixture", "value": "code", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "environment_identity": {"kind": "fixture", "value": "environment", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "authorization_identity": {"kind": "fixture", "value": "authorization", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "stochastic_rule_identity": {"kind": "fixture", "value": "FORBIDDEN", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "uncertainty_policy_identity": {"kind": "fixture", "value": "deterministic", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "numerical_policy_identity": {"kind": "fixture", "value": "NUMERICAL-POLICY-01", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "final_stream_counter_state_identity": {"kind": "fixture", "value": "no-streams", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "seed": 0,
+      "started_at": "2000-01-01T00:00:00Z",
+      "ended_at": "2000-01-01T00:00:00Z",
+      "exit_status": "PASS",
+      "scientific_disposition": "NULL_OR_UNRESOLVED",
+      "checkpoint_identities": [],
+      "trace_identity": {"kind": "fixture", "value": "trace", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "receipt_identities": [],
+      "computation_record_identities": [],
+      "equivalence_certificate_identities": [],
+      "invalidation_receipt_identities": [],
+      "limit_decision_identities": [{"kind": "fixture", "value": "limit-decision", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"}],
+      "output_identities": [],
+      "claim_traceability_identity": {"kind": "fixture", "value": "claim-chain", "sha256": "0000000000000000000000000000000000000000000000000000000000000000"},
+      "run_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "verbatim_user_mobius_topology_controls": [
+        "Preserve a direct, independently understandable small-case Möbius/topology oracle as the normative correctness reference.",
+        "Any optimized bitmask/fast Möbius transform must reproduce the direct oracle exactly over the complete registered small-case domain and declared randomized/adversarial cross-check domain; a mismatch is a refusal, not a tolerance or approximation case.",
+        "Require measured complexity evidence for the optimized Möbius path against declared `O(n*2^n)` time and `O(2^n)` storage expectations, with registered dimensions, instrumentation, environment, thresholds, and nonclaim boundaries.",
+        "Require dependency-DAG traversal evidence against `O(V+E)` time, including sparse/dense, disconnected, deep-chain, wide-frontier, invalid-cycle, duplicate-edge and ordering controls.",
+        "Permit recursive motif or cache reuse only when equivalence is certified under the controlling canonical/topology authority; cache keys must be complete for every result-affecting input/authority/version/environment dimension; corrections or authority changes must deterministically invalidate affected entries.",
+        "Register positive reuse cases, non-equivalent near-miss negative controls, incomplete-key collision falsifiers, stale-cache/correction-invalidation tests, and provenance/receipt requirements.",
+        "Define explicit hard limits for exact Möbius/topology studies: maximum n/subset count, vertices, edges, memory, wall time, trace/output size and recursion/depth as applicable. Values must be justified before execution and bound to the reference environment.",
+        "If a requested exact study exceeds a hard limit or resource budget, fail closed or classify it `COMPUTATIONALLY_INCONCLUSIVE`. Do not silently approximate, truncate, sample, alter topology, weaken equivalence, or convert the outcome into positive/negative scientific evidence.",
+        "Any separately proposed approximation requires its own preregistered authority, error bounds, controls, evidence class and interpretation rules; it must never be substituted for an exact registered study after outcomes are visible.",
+        "Record the oracle/optimized implementation identities, complexity observations, cache/equivalence certificates, invalidation receipts, limit decisions and inconclusive classifications in the traceability chain through eventual results and books."
+  ],
+  "$defs": {
+      "sha256": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "nonempty_string": {
+        "type": "string",
+        "minLength": 1
+      },
+      "identity": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "value",
+          "sha256"
+        ],
+        "properties": {
+          "kind": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "value": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "typed_quantity": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "value",
+          "unit",
+          "semantic_type"
+        ],
+        "properties": {
+          "name": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "integer",
+              "string",
+              "boolean"
+            ]
+          },
+          "unit": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "semantic_type": {
+            "$ref": "#/$defs/nonempty_string"
+          }
+        }
+      },
+      "configuration_manifest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "study_id",
+          "cap_binding_role",
+          "configuration_id",
+          "authority_identities",
+          "code_identity",
+          "environment_identity",
+          "model_domain_identity",
+          "dependency_topology_identity",
+          "units",
+          "boundary",
+          "initial_state",
+          "parameters",
+          "controls",
+          "negative_controls",
+          "seed_rule",
+          "permitted_stochastic_stream_ids",
+          "stochastic_rule_identity",
+          "uncertainty_rule",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
+          "horizon",
+          "stopping_rules",
+          "falsifiers",
+          "hard_caps",
+          "exact_or_approximate_label",
+          "dependency_closure_digest",
+          "sealed_before_outcome_inspection",
+          "manifest_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "configuration_manifest/v1"
+          },
+          "study_id": {
+            "pattern": "^SD-(0[1-9]|1[0-4])$",
+            "type": "string"
+          },
+          "cap_binding_role": {
+            "const": "STUDY_EXECUTION"
+          },
+          "configuration_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "authority_identities": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "code_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "environment_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "model_domain_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "dependency_topology_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "units": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "uniqueItems": true
+          },
+          "boundary": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "initial_state": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "controls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "negative_controls": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "seed_rule": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "permitted_stochastic_stream_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "uniqueItems": true
+          },
+          "stochastic_rule_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "uncertainty_rule": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "uncertainty_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "numerical_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "horizon": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "stopping_rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "falsifiers": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "hard_caps": {
+            "$ref": "#/$defs/hard_caps"
+          },
+          "exact_or_approximate_label": {
+            "enum": [
+              "EXACT",
+              "MODEL_EXACT_NUMERICAL",
+              "SEPARATE_APPROXIMATION_AUTHORITY_REQUIRED"
+            ]
+          },
+          "dependency_closure_digest": {
+            "$ref": "#/$defs/sha256"
+          },
+          "sealed_before_outcome_inspection": {
+            "const": true
+          },
+          "manifest_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "allOf": [
+          {"$ref": "#/$defs/study_hard_cap_binding"}
+        ]
+      },
+      "hard_caps": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile_id",
+          "wall_time_seconds_per_run",
+          "wall_time_seconds_per_case",
+          "peak_resident_memory_bytes_per_run",
+          "peak_resident_memory_bytes_per_case",
+          "trace_bytes_per_run",
+          "combined_trace_output_bytes_per_case",
+          "total_output_bytes",
+          "primary_evaluations_per_run",
+          "primary_evaluations_per_case",
+          "maximum_depth",
+          "maximum_recursion_depth",
+          "maximum_n",
+          "maximum_mobius_n",
+          "maximum_subsets",
+          "maximum_hyperedge_order",
+          "maximum_vertices",
+          "maximum_edges",
+          "maximum_dag_vertices",
+          "maximum_dag_edges",
+          "maximum_canonical_vertices",
+          "canonical_vertices",
+          "expanded_oracle_level",
+          "compressed_comparison_level",
+          "maximum_expanded_occurrences",
+          "maximum_agents"
+        ],
+        "properties": {
+          "profile_id": {
+            "enum": [
+              "SD-01",
+              "SD-02",
+              "SD-03",
+              "SD-04",
+              "SD-05",
+              "SD-06",
+              "SD-07",
+              "SD-08",
+              "SD-09",
+              "SD-10",
+              "SD-11",
+              "SD-12",
+              "SD-13",
+              "SD-14",
+              "MOBIUS-EXACT-01",
+              "DAG-EXACT-01",
+              "CANONICAL-CACHE-01"
+            ]
+          },
+          "wall_time_seconds_per_run": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "wall_time_seconds_per_case": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "peak_resident_memory_bytes_per_run": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "peak_resident_memory_bytes_per_case": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "trace_bytes_per_run": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "combined_trace_output_bytes_per_case": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "total_output_bytes": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "primary_evaluations_per_run": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "primary_evaluations_per_case": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_depth": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_recursion_depth": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_n": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_mobius_n": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_subsets": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_hyperedge_order": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_edges": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_dag_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_dag_edges": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_canonical_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "canonical_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "expanded_oracle_level": {
+            "type": ["integer", "null"],
+            "minimum": 0
+          },
+          "compressed_comparison_level": {
+            "type": ["integer", "null"],
+            "minimum": 0
+          },
+          "maximum_expanded_occurrences": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_agents": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          }
+        },
+        "oneOf": [{"const":{"profile_id":"SD-01","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1200000,"primary_evaluations_per_case":null,"maximum_depth":20000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-02","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":200,"primary_evaluations_per_case":null,"maximum_depth":200,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-03","wall_time_seconds_per_run":600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":536870912,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":67108864,"combined_trace_output_bytes_per_case":null,"total_output_bytes":1073741824,"primary_evaluations_per_run":7,"primary_evaluations_per_case":null,"maximum_depth":8,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-04","wall_time_seconds_per_run":600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":1073741824,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":134217728,"combined_trace_output_bytes_per_case":null,"total_output_bytes":2147483648,"primary_evaluations_per_run":14,"primary_evaluations_per_case":null,"maximum_depth":4,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-05","wall_time_seconds_per_run":3600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":2147483648,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":536870912,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":1000000,"primary_evaluations_per_case":null,"maximum_depth":6,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-06","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":536870912,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":21474836480,"primary_evaluations_per_run":null,"primary_evaluations_per_case":5000000,"maximum_depth":18,"maximum_recursion_depth":null,"maximum_n":18,"maximum_mobius_n":null,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-07","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":1073741824,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":21474836480,"primary_evaluations_per_run":null,"primary_evaluations_per_case":2000000,"maximum_depth":null,"maximum_recursion_depth":64,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":100000,"maximum_dag_edges":500000,"maximum_canonical_vertices":8,"canonical_vertices":null,"expanded_oracle_level":16,"compressed_comparison_level":32,"maximum_expanded_occurrences":3524578,"maximum_agents":null}},{"const":{"profile_id":"SD-08","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-09","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-10","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":500000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-11","wall_time_seconds_per_run":3600,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":2147483648,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":1073741824,"combined_trace_output_bytes_per_case":null,"total_output_bytes":10737418240,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-12","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":10000}},{"const":{"profile_id":"SD-13","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"SD-14","wall_time_seconds_per_run":14400,"wall_time_seconds_per_case":null,"peak_resident_memory_bytes_per_run":4294967296,"peak_resident_memory_bytes_per_case":null,"trace_bytes_per_run":5368709120,"combined_trace_output_bytes_per_case":null,"total_output_bytes":21474836480,"primary_evaluations_per_run":50000000,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":18,"maximum_subsets":262144,"maximum_hyperedge_order":4,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"MOBIUS-EXACT-01","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":536870912,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":null,"primary_evaluations_per_run":null,"primary_evaluations_per_case":null,"maximum_depth":null,"maximum_recursion_depth":null,"maximum_n":18,"maximum_mobius_n":null,"maximum_subsets":262144,"maximum_hyperedge_order":null,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"DAG-EXACT-01","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":1073741824,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":null,"primary_evaluations_per_run":null,"primary_evaluations_per_case":null,"maximum_depth":100000,"maximum_recursion_depth":null,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":null,"maximum_vertices":100000,"maximum_edges":500000,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":null,"expanded_oracle_level":null,"compressed_comparison_level":null,"maximum_expanded_occurrences":null,"maximum_agents":null}},{"const":{"profile_id":"CANONICAL-CACHE-01","wall_time_seconds_per_run":null,"wall_time_seconds_per_case":120,"peak_resident_memory_bytes_per_run":null,"peak_resident_memory_bytes_per_case":1073741824,"trace_bytes_per_run":null,"combined_trace_output_bytes_per_case":268435456,"total_output_bytes":null,"primary_evaluations_per_run":null,"primary_evaluations_per_case":null,"maximum_depth":null,"maximum_recursion_depth":64,"maximum_n":null,"maximum_mobius_n":null,"maximum_subsets":null,"maximum_hyperedge_order":4,"maximum_vertices":null,"maximum_edges":null,"maximum_dag_vertices":null,"maximum_dag_edges":null,"maximum_canonical_vertices":null,"canonical_vertices":8,"expanded_oracle_level":16,"compressed_comparison_level":32,"maximum_expanded_occurrences":3524578,"maximum_agents":null}}],
+        "description": "Closed normalized cap record. Every dimension is present and the complete object must equal exactly one of the 17 frozen profile constants. The schema refuses an applicable null, wrong value, nonnull inapplicable dimension, omission, extra property, or profile/value mismatch."
+      },
+      "study_hard_cap_binding": {
+        "description": "Bind an SD-01..SD-14 study record to the exact same-named hard-cap profile at either the hard_caps or registered_hard_caps use site.",
+        "oneOf": [
+          {"properties":{"study_id":{"const":"SD-01"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/0"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/0"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-02"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/1"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/1"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-03"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/2"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/2"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-04"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/3"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/3"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-05"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/4"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/4"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-06"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/5"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/5"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-07"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/6"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/6"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-08"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/7"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/7"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-09"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/8"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/8"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-10"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/9"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/9"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-11"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/10"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/10"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-12"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/11"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/11"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-13"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/12"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/12"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"study_id":{"const":"SD-14"}},"required":["study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/13"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/13"}},"required":["registered_hard_caps"]}]}
+        ]
+      },
+      "conformance_hard_cap_binding": {
+        "description": "Bind each permitted conformance role and study to its sole control hard-cap profile at either evidence use-site field.",
+        "oneOf": [
+          {"properties":{"cap_binding_role":{"const":"MOBIUS_CONFORMANCE"},"study_id":{"enum":["SD-05","SD-06","SD-07","SD-11","SD-14"]}},"required":["cap_binding_role","study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/14"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/14"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"cap_binding_role":{"const":"DAG_CONFORMANCE"},"study_id":{"enum":["SD-07","SD-08","SD-09","SD-10","SD-11","SD-12","SD-13","SD-14"]}},"required":["cap_binding_role","study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/15"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/15"}},"required":["registered_hard_caps"]}]},
+          {"properties":{"cap_binding_role":{"const":"CACHE_CONFORMANCE"},"study_id":{"enum":["SD-07","SD-08","SD-09","SD-10","SD-11","SD-12","SD-13","SD-14"]}},"required":["cap_binding_role","study_id"],"oneOf":[{"properties":{"hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/16"}},"required":["hard_caps"]},{"properties":{"registered_hard_caps":{"$ref":"#/$defs/hard_caps/oneOf/16"}},"required":["registered_hard_caps"]}]}
+        ]
+      },
+      "generic_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "details"],
+        "properties": {
+          "kind": {"const": "GENERIC"},
+          "details": {"$ref": "#/$defs/nonempty_string"}
+        }
+      },
+      "mobius_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "n",
+          "subset_count",
+          "arithmetic_kind",
+          "subset_value_acquisitions",
+          "direct_subset_visits",
+          "butterfly_subtractions",
+          "reconstruction_additions",
+          "coefficient_digest",
+          "reconstruction_digest",
+          "oracle_agreement"
+        ],
+        "properties": {
+          "kind": {"const": "MOBIUS"},
+          "n": {"type": "integer", "minimum": 0, "maximum": 18},
+          "subset_count": {"type": "integer", "minimum": 1, "maximum": 262144},
+          "arithmetic_kind": {"enum": ["EXACT_INTEGER", "REDUCED_RATIONAL"]},
+          "subset_value_acquisitions": {"type": "integer", "minimum": 0},
+          "direct_subset_visits": {"type": "integer", "minimum": 0},
+          "butterfly_subtractions": {"type": "integer", "minimum": 0},
+          "reconstruction_additions": {"type": "integer", "minimum": 0},
+          "coefficient_digest": {"$ref": "#/$defs/sha256"},
+          "reconstruction_digest": {"$ref": "#/$defs/sha256"},
+          "oracle_agreement": {"enum": ["BIT_EXACT_PASS", "MISMATCH_REFUSAL", "NOT_IN_SHARED_DOMAIN"]}
+        }
+      },
+      "dag_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "vertices",
+          "edges",
+          "representation_identity",
+          "input_canonicalization_identity",
+          "input_canonicalization_tuple_comparisons",
+          "input_canonicalization_auxiliary_edge_slots",
+          "ready_set_algorithm",
+          "indegree_initializations",
+          "vertex_enqueues",
+          "vertex_dequeues",
+          "edge_inspections",
+          "ready_queue_appends",
+          "ready_queue_head_advances",
+          "ready_node_comparisons",
+          "affected_set_digest",
+          "canonical_stable_fifo_order_digest",
+          "oracle_agreement"
+        ],
+        "properties": {
+          "kind": {"const": "DAG"},
+          "vertices": {"type": "integer", "minimum": 0, "maximum": 100000},
+          "edges": {"type": "integer", "minimum": 0, "maximum": 500000},
+          "representation_identity": {"$ref": "#/$defs/identity"},
+          "input_canonicalization_identity": {"$ref": "#/$defs/identity"},
+          "input_canonicalization_tuple_comparisons": {"type": "integer", "minimum": 0},
+          "input_canonicalization_auxiliary_edge_slots": {"type": "integer", "minimum": 0},
+          "ready_set_algorithm": {"const": "CANONICAL_STABLE_FIFO_KAHN_V1"},
+          "indegree_initializations": {"type": "integer", "minimum": 0},
+          "vertex_enqueues": {"type": "integer", "minimum": 0},
+          "vertex_dequeues": {"type": "integer", "minimum": 0},
+          "edge_inspections": {"type": "integer", "minimum": 0},
+          "ready_queue_appends": {"type": "integer", "minimum": 0},
+          "ready_queue_head_advances": {"type": "integer", "minimum": 0},
+          "ready_node_comparisons": {"const": 0},
+          "affected_set_digest": {"$ref": "#/$defs/sha256"},
+          "canonical_stable_fifo_order_digest": {"$ref": "#/$defs/sha256"},
+          "oracle_agreement": {"enum": ["EXACT_PASS", "MISMATCH_REFUSAL", "INVALID_GRAPH_REFUSAL"]}
+        }
+      },
+      "cache_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "cache_key_digest",
+          "cache_key_fields_digest",
+          "equivalence_certificate_identity",
+          "cold_result_identity",
+          "served_result_identity",
+          "cache_disposition",
+          "correction_invalidation_epoch",
+          "dependency_closure_digest",
+          "alias_closure_digest",
+          "invalidation_receipt_identities"
+        ],
+        "properties": {
+          "kind": {"const": "CACHE"},
+          "cache_key_digest": {"$ref": "#/$defs/sha256"},
+          "cache_key_fields_digest": {"$ref": "#/$defs/sha256"},
+          "equivalence_certificate_identity": {"$ref": "#/$defs/identity"},
+          "cold_result_identity": {"$ref": "#/$defs/identity"},
+          "served_result_identity": {"$ref": "#/$defs/identity"},
+          "cache_disposition": {"enum": ["COLD", "CERTIFIED_HIT", "REFUSED_INCOMPLETE_KEY", "REFUSED_STALE", "INVALIDATED"]},
+          "correction_invalidation_epoch": {"type": "integer", "minimum": 0},
+          "dependency_closure_digest": {"$ref": "#/$defs/sha256"},
+          "alias_closure_digest": {"$ref": "#/$defs/sha256"},
+          "invalidation_receipt_identities": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/identity"}
+          }
+        }
+      },
+      "run_manifest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "run_id",
+          "study_id",
+          "configuration_identity",
+          "code_identity",
+          "environment_identity",
+          "authorization_identity",
+          "stochastic_rule_identity",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
+          "final_stream_counter_state_identity",
+          "seed",
+          "started_at",
+          "ended_at",
+          "exit_status",
+          "scientific_disposition",
+          "checkpoint_identities",
+          "trace_identity",
+          "receipt_identities",
+          "computation_record_identities",
+          "equivalence_certificate_identities",
+          "invalidation_receipt_identities",
+          "limit_decision_identities",
+          "output_identities",
+          "claim_traceability_identity",
+          "run_manifest_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "run_manifest/v1"
+          },
+          "run_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "study_id": {
+            "pattern": "^SD-(0[1-9]|1[0-4])$",
+            "type": "string"
+          },
+          "configuration_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "code_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "environment_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "authorization_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "stochastic_rule_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "uncertainty_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "numerical_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "final_stream_counter_state_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "exit_status": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "TIMEOUT",
+              "RESOURCE_EXHAUSTED",
+              "REFUSED"
+            ]
+          },
+          "scientific_disposition": {
+            "enum": [
+              "POSITIVE_WITHIN_REGISTERED_MODEL",
+              "NEGATIVE_WITHIN_REGISTERED_MODEL",
+              "NULL_OR_UNRESOLVED",
+              "COMPUTATIONALLY_INCONCLUSIVE",
+              "INVALIDATED_BY_FALSIFIER",
+              "NOT_EXECUTED"
+            ]
+          },
+          "checkpoint_identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "trace_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "receipt_identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "computation_record_identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "equivalence_certificate_identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "invalidation_receipt_identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "limit_decision_identities": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "output_identities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "claim_traceability_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "run_manifest_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"exit_status": {"const": "PASS"}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"enum": ["POSITIVE_WITHIN_REGISTERED_MODEL", "NEGATIVE_WITHIN_REGISTERED_MODEL", "NULL_OR_UNRESOLVED"]}}}
+          },
+          {
+            "if": {"properties": {"exit_status": {"const": "FAIL"}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"enum": ["INVALIDATED_BY_FALSIFIER", "NULL_OR_UNRESOLVED"]}}}
+          },
+          {
+            "if": {"properties": {"exit_status": {"enum": ["TIMEOUT", "RESOURCE_EXHAUSTED"]}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"const": "COMPUTATIONALLY_INCONCLUSIVE"}}}
+          },
+          {
+            "if": {"properties": {"exit_status": {"const": "REFUSED"}}, "required": ["exit_status"]},
+            "then": {"properties": {"scientific_disposition": {"const": "NOT_EXECUTED"}}}
+          }
+        ]
+      },
+      "checkpoint_record": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "run_id",
+          "sequence",
+          "simulated_time",
+          "state_identity",
+          "receipt_prefix_identity",
+          "trace_prefix_identity",
+          "cache_epoch",
+          "next_counter_tuple_per_stream",
+          "stochastic_rule_identity",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
+          "checkpoint_sha256"
+        ],
+        "properties": {
+          "schema": {"const": "checkpoint_record/v1"},
+          "run_id": {"$ref": "#/$defs/nonempty_string"},
+          "sequence": {"type": "integer", "minimum": 0},
+          "simulated_time": {"$ref": "#/$defs/typed_quantity"},
+          "state_identity": {"$ref": "#/$defs/identity"},
+          "receipt_prefix_identity": {"$ref": "#/$defs/identity"},
+          "trace_prefix_identity": {"$ref": "#/$defs/identity"},
+          "cache_epoch": {"type": "integer", "minimum": 0},
+          "next_counter_tuple_per_stream": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["stream_id", "tick", "event_index", "draw_index", "attempt_index", "draw_status"],
+              "properties": {
+                "stream_id": {"$ref": "#/$defs/nonempty_string"},
+                "tick": {"type": "integer", "minimum": 0},
+                "event_index": {"type": "integer", "minimum": 0},
+                "draw_index": {"type": "integer", "minimum": 0},
+                "attempt_index": {"type": "integer", "minimum": 0, "maximum": 1000000},
+                "draw_status": {"enum": ["READY", "TERMINAL_REJECTION_CAP"]}
+              },
+              "allOf": [
+                {
+                  "if": {"properties": {"draw_status": {"const": "READY"}}, "required": ["draw_status"]},
+                  "then": {"properties": {"attempt_index": {"maximum": 999999}}}
+                },
+                {
+                  "if": {"properties": {"draw_status": {"const": "TERMINAL_REJECTION_CAP"}}, "required": ["draw_status"]},
+                  "then": {"properties": {"attempt_index": {"const": 1000000}}}
+                }
+              ]
+            }
+          },
+          "stochastic_rule_identity": {"$ref": "#/$defs/identity"},
+          "uncertainty_policy_identity": {"$ref": "#/$defs/identity"},
+          "numerical_policy_identity": {"$ref": "#/$defs/identity"},
+          "checkpoint_sha256": {"$ref": "#/$defs/sha256"}
+        }
+      },
+      "trace_row": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "run_id",
+          "sequence",
+          "simulated_time",
+          "state",
+          "inputs",
+          "outputs",
+          "topology_identity",
+          "dependency_identity",
+          "subset_hyperedge_identity",
+          "correction_events",
+          "cache_events",
+          "computation_record_identity",
+          "equivalence_certificate_ids",
+          "invalidation_receipt_ids",
+          "limit_decision_ids",
+          "recursive_feasibility_evidence",
+          "stochastic_counter_state_identity",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
+          "conservation_residuals",
+          "receipt_ids",
+          "prefix_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "trace_row/v1"
+          },
+          "run_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "simulated_time": {
+            "$ref": "#/$defs/typed_quantity"
+          },
+          "state": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "topology_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "dependency_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "subset_hyperedge_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "correction_events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "cache_events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/cache_event"
+            }
+          },
+          "computation_record_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "equivalence_certificate_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "invalidation_receipt_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "limit_decision_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "recursive_feasibility_evidence": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["status"],
+                "properties": {"status": {"const": "NOT_APPLICABLE"}}
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "status",
+                  "current_admissible_set_digest",
+                  "current_admissible_set_size",
+                  "no_shock_next_admissible_set_digest",
+                  "no_shock_next_admissible_set_size",
+                  "adversarial_next_admissible_set_digest",
+                  "adversarial_next_admissible_set_size",
+                  "selected_action",
+                  "current_pre_reserve_satisfied",
+                  "current_post_reserve_satisfied",
+                  "no_shock_pre_reserve_satisfied",
+                  "no_shock_post_reserve_satisfied",
+                  "adversarial_pre_reserve_satisfied",
+                  "adversarial_post_reserve_satisfied"
+                ],
+                "properties": {
+                  "status": {"enum": ["H3_PASS", "H3_FAIL"]},
+                  "current_admissible_set_digest": {"$ref": "#/$defs/sha256"},
+                  "current_admissible_set_size": {"type": "integer", "minimum": 0, "maximum": 5},
+                  "no_shock_next_admissible_set_digest": {"$ref": "#/$defs/sha256"},
+                  "no_shock_next_admissible_set_size": {"type": "integer", "minimum": 0, "maximum": 5},
+                  "adversarial_next_admissible_set_digest": {"$ref": "#/$defs/sha256"},
+                  "adversarial_next_admissible_set_size": {"type": "integer", "minimum": 0, "maximum": 5},
+                  "selected_action": {"oneOf": [{"$ref": "#/$defs/typed_quantity"}, {"type": "null"}]},
+                  "current_pre_reserve_satisfied": {"type": "boolean"},
+                  "current_post_reserve_satisfied": {"type": "boolean"},
+                  "no_shock_pre_reserve_satisfied": {"type": "boolean"},
+                  "no_shock_post_reserve_satisfied": {"type": "boolean"},
+                  "adversarial_pre_reserve_satisfied": {"type": "boolean"},
+                  "adversarial_post_reserve_satisfied": {"type": "boolean"}
+                },
+                "allOf": [
+                  {
+                    "if": {"properties": {"status": {"const": "H3_PASS"}}, "required": ["status"]},
+                    "then": {
+                      "properties": {
+                        "current_admissible_set_size": {"minimum": 1},
+                        "no_shock_next_admissible_set_size": {"minimum": 1},
+                        "adversarial_next_admissible_set_size": {"minimum": 1},
+                        "selected_action": {"$ref": "#/$defs/typed_quantity"},
+                        "current_pre_reserve_satisfied": {"const": true},
+                        "current_post_reserve_satisfied": {"const": true},
+                        "no_shock_pre_reserve_satisfied": {"const": true},
+                        "no_shock_post_reserve_satisfied": {"const": true},
+                        "adversarial_pre_reserve_satisfied": {"const": true},
+                        "adversarial_post_reserve_satisfied": {"const": true}
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "stochastic_counter_state_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "uncertainty_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "numerical_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "conservation_residuals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "receipt_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "prefix_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "receipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "receipt_id",
+          "run_id",
+          "sequence",
+          "kind",
+          "action_identity",
+          "inputs",
+          "outputs",
+          "loss",
+          "burden",
+          "cost",
+          "boundary_exchange",
+          "conservation_residual",
+          "supersedes_receipt_id",
+          "receipt_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "receipt/v1"
+          },
+          "receipt_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "run_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "kind": {
+            "enum": [
+              "ACTION",
+              "CORRECTION",
+              "SETTLEMENT",
+              "INVALIDATION"
+            ]
+          },
+          "action_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/typed_quantity"
+            }
+          },
+          "loss": {
+            "$ref": "#/$defs/typed_quantity"
+          },
+          "burden": {
+            "$ref": "#/$defs/typed_quantity"
+          },
+          "cost": {
+            "$ref": "#/$defs/typed_quantity"
+          },
+          "boundary_exchange": {
+            "$ref": "#/$defs/typed_quantity"
+          },
+          "conservation_residual": {
+            "$ref": "#/$defs/typed_quantity"
+          },
+          "supersedes_receipt_id": {
+            "type": "string"
+          },
+          "receipt_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "computation_record": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "study_id",
+          "cap_binding_role",
+          "algorithm_identity",
+          "oracle_identity",
+          "optimized_identity",
+          "algorithmic_cost_class",
+          "exact_problem_size",
+          "horizon",
+          "subset_hyperedge_order",
+          "expected_evaluations",
+          "actual_operation_counts",
+          "algorithm_specific_evidence",
+          "measured_wall_time_ns",
+          "measured_peak_resident_memory_bytes",
+          "storage_bytes",
+          "checkpoint_restart_identity",
+          "parallelization_boundary",
+          "hard_caps",
+          "exact_or_approximate_label",
+          "oracle_agreement",
+          "complexity_disposition",
+          "nonclaim_boundaries",
+          "record_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "computation_record/v1"
+          },
+          "study_id": {
+            "pattern": "^SD-(0[1-9]|1[0-4])$",
+            "type": "string"
+          },
+          "cap_binding_role": {
+            "enum": ["STUDY_EXECUTION", "MOBIUS_CONFORMANCE", "DAG_CONFORMANCE", "CACHE_CONFORMANCE"]
+          },
+          "algorithm_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "oracle_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "optimized_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "algorithmic_cost_class": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "exact_problem_size": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "horizon": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "subset_hyperedge_order": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "expected_evaluations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "actual_operation_counts": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "algorithm_specific_evidence": {
+            "oneOf": [
+              {"$ref": "#/$defs/generic_algorithm_evidence"},
+              {"$ref": "#/$defs/mobius_algorithm_evidence"},
+              {"$ref": "#/$defs/dag_algorithm_evidence"},
+              {"$ref": "#/$defs/cache_algorithm_evidence"}
+            ]
+          },
+          "measured_wall_time_ns": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "measured_peak_resident_memory_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "storage_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "checkpoint_restart_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "parallelization_boundary": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "hard_caps": {
+            "$ref": "#/$defs/hard_caps"
+          },
+          "exact_or_approximate_label": {
+            "enum": [
+              "EXACT",
+              "MODEL_EXACT_NUMERICAL",
+              "APPROXIMATE_UNDER_SEPARATE_AUTHORITY"
+            ]
+          },
+          "oracle_agreement": {
+            "enum": [
+              "BIT_EXACT_PASS",
+              "MISMATCH_REFUSAL",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "complexity_disposition": {
+            "enum": [
+              "WITHIN_REGISTERED_BOUND",
+              "BOUND_NOT_SUPPORTED",
+              "COMPUTATIONALLY_INCONCLUSIVE",
+              "REFUSED_BEFORE_EXECUTION"
+            ]
+          },
+          "nonclaim_boundaries": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "record_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties":{"cap_binding_role":{"const":"STUDY_EXECUTION"}},"required":["cap_binding_role"]},
+            "then": {"$ref":"#/$defs/study_hard_cap_binding"}
+          },
+          {
+            "if": {"properties":{"cap_binding_role":{"enum":["MOBIUS_CONFORMANCE","DAG_CONFORMANCE","CACHE_CONFORMANCE"]}},"required":["cap_binding_role"]},
+            "then": {"$ref":"#/$defs/conformance_hard_cap_binding"}
+          },
+          {
+            "if": {"properties":{"cap_binding_role":{"const":"MOBIUS_CONFORMANCE"}},"required":["cap_binding_role"]},
+            "then": {"properties":{"algorithm_specific_evidence":{"$ref":"#/$defs/mobius_algorithm_evidence"}}}
+          },
+          {
+            "if": {"properties":{"cap_binding_role":{"const":"DAG_CONFORMANCE"}},"required":["cap_binding_role"]},
+            "then": {"properties":{"algorithm_specific_evidence":{"$ref":"#/$defs/dag_algorithm_evidence"}}}
+          },
+          {
+            "if": {"properties":{"cap_binding_role":{"const":"CACHE_CONFORMANCE"}},"required":["cap_binding_role"]},
+            "then": {"properties":{"algorithm_specific_evidence":{"$ref":"#/$defs/cache_algorithm_evidence"}}}
+          }
+        ]
+      },
+      "equivalence_certificate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "certificate_id",
+          "canonical_authority_identity",
+          "canonical_topology_id",
+          "a1_a8_results",
+          "query_identity",
+          "boundary_sufficiency_statement",
+          "complete_result_affecting_inputs_digest",
+          "dependency_closure_digest",
+          "alias_closure_digest",
+          "valid_from_epoch",
+          "certificate_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "equivalence_certificate/v1"
+          },
+          "certificate_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "canonical_authority_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "canonical_topology_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "a1_a8_results": {
+            "type": "array",
+            "minItems": 8,
+            "maxItems": 8,
+            "items": {
+              "enum": [
+                "PASS",
+                "FAIL"
+              ]
+            }
+          },
+          "query_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "boundary_sufficiency_statement": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "complete_result_affecting_inputs_digest": {
+            "$ref": "#/$defs/sha256"
+          },
+          "dependency_closure_digest": {
+            "$ref": "#/$defs/sha256"
+          },
+          "alias_closure_digest": {
+            "$ref": "#/$defs/sha256"
+          },
+          "valid_from_epoch": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "certificate_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "cache_event": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "event",
+          "cache_key_fields",
+          "cache_key_sha256",
+          "equivalence_certificate_id",
+          "correction_invalidation_epoch",
+          "source_receipt_id",
+          "event_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "cache_event/v1"
+          },
+          "event": {
+            "enum": [
+              "MISS",
+              "CERTIFIED_HIT",
+              "COLLISION_REFUSAL",
+              "STALE_REFUSAL",
+              "INVALIDATED"
+            ]
+          },
+          "cache_key_fields": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "canonical_topology_id",
+              "motif_version",
+              "occurrence_version",
+              "composition_version",
+              "boundary_summary_version",
+              "initial_augmented_state_digest",
+              "admissible_history_digest",
+              "query_identity",
+              "horizon",
+              "units_semantics",
+              "boundary_semantics",
+              "removal_semantics",
+              "feasibility_semantics",
+              "numerical_policy_identity",
+              "stochastic_rule_identity",
+              "run_seed",
+              "permitted_stream_ids_digest",
+              "next_counter_tuple_per_stream_digest",
+              "uncertainty_policy_identity",
+              "framework_identity",
+              "authority_identity",
+              "protocol_identity",
+              "configuration_identity",
+              "code_identity",
+              "dependency_identity",
+              "environment_identity",
+              "evidence_identity",
+              "alias_closure_digest",
+              "correction_invalidation_epoch"
+            ],
+            "properties": {
+              "canonical_topology_id": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "motif_version": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "occurrence_version": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "composition_version": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "boundary_summary_version": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "initial_augmented_state_digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "admissible_history_digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "query_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "horizon": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "units_semantics": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "boundary_semantics": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "removal_semantics": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "feasibility_semantics": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "numerical_policy_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "stochastic_rule_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "run_seed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "permitted_stream_ids_digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "next_counter_tuple_per_stream_digest": {
+                "$ref": "#/$defs/sha256",
+                "description": "Digest of the complete next-to-consume input counter tuple per permitted stream at cache lookup; the served result separately binds the resulting final counter state."
+              },
+              "uncertainty_policy_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "framework_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "authority_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "protocol_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "configuration_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "code_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "dependency_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "environment_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "evidence_identity": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "alias_closure_digest": {
+                "$ref": "#/$defs/sha256"
+              },
+              "correction_invalidation_epoch": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "cache_key_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "equivalence_certificate_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "correction_invalidation_epoch": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_receipt_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "event_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "invalidation_receipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "receipt_id",
+          "trigger_kind",
+          "trigger_identity",
+          "prior_epoch",
+          "new_epoch",
+          "dependency_dag_identity",
+          "alias_dag_identity",
+          "visited_keys",
+          "invalidated_keys",
+          "unaffected_keys",
+          "traversal_computation_identity",
+          "receipt_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "invalidation_receipt/v1"
+          },
+          "receipt_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "trigger_kind": {
+            "enum": [
+              "CORRECTION",
+              "AUTHORITY_CHANGE",
+              "CODE_CHANGE",
+              "ENVIRONMENT_CHANGE",
+              "ALIAS_CHANGE"
+            ]
+          },
+          "trigger_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "prior_epoch": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "new_epoch": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "dependency_dag_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "alias_dag_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "visited_keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/sha256"
+            }
+          },
+          "invalidated_keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/sha256"
+            }
+          },
+          "unaffected_keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/sha256"
+            }
+          },
+          "traversal_computation_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "receipt_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "limit_decision": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "study_id",
+          "cap_binding_role",
+          "requested_dimensions",
+          "registered_hard_caps",
+          "projection_method",
+          "projected_resources",
+          "decision",
+          "scientific_evidence_value",
+          "silent_fallback_performed",
+          "decision_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "limit_decision/v1"
+          },
+          "study_id": {
+            "pattern": "^SD-(0[1-9]|1[0-4])$",
+            "type": "string"
+          },
+          "cap_binding_role": {
+            "enum": ["STUDY_EXECUTION", "MOBIUS_CONFORMANCE", "DAG_CONFORMANCE", "CACHE_CONFORMANCE"]
+          },
+          "requested_dimensions": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "registered_hard_caps": {
+            "$ref": "#/$defs/hard_caps"
+          },
+          "projection_method": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "projected_resources": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "decision": {
+            "enum": [
+              "WITHIN_CAPS",
+              "REFUSED_BEFORE_EXECUTION",
+              "COMPUTATIONALLY_INCONCLUSIVE"
+            ]
+          },
+          "scientific_evidence_value": {
+            "enum": [
+              "NOT_A_SCIENTIFIC_OUTCOME",
+              "ELIGIBLE_FOR_REGISTERED_EXECUTION"
+            ]
+          },
+          "silent_fallback_performed": {
+            "const": false
+          },
+          "decision_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties":{"cap_binding_role":{"const":"STUDY_EXECUTION"}},"required":["cap_binding_role"]},
+            "then": {"$ref":"#/$defs/study_hard_cap_binding"}
+          },
+          {
+            "if": {"properties":{"cap_binding_role":{"enum":["MOBIUS_CONFORMANCE","DAG_CONFORMANCE","CACHE_CONFORMANCE"]}},"required":["cap_binding_role"]},
+            "then": {"$ref":"#/$defs/conformance_hard_cap_binding"}
+          }
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "decision": {"const": "WITHIN_CAPS"},
+              "scientific_evidence_value": {"const": "ELIGIBLE_FOR_REGISTERED_EXECUTION"}
+            }
+          },
+          {
+            "properties": {
+              "decision": {
+                "enum": ["REFUSED_BEFORE_EXECUTION", "COMPUTATIONALLY_INCONCLUSIVE"]
+              },
+              "scientific_evidence_value": {"const": "NOT_A_SCIENTIFIC_OUTCOME"}
+            }
+          }
+        ]
+      },
+      "output_manifest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "study_id",
+          "run_id",
+          "source_identities",
+          "units",
+          "uncertainty_identity",
+          "evidence_label",
+          "claim_owner",
+          "table_figure_destination",
+          "source_data_sha256",
+          "objects",
+          "output_manifest_sha256"
+        ],
+        "properties": {
+          "schema": {
+            "const": "output_manifest/v1"
+          },
+          "study_id": {
+            "pattern": "^SD-(0[1-9]|1[0-4])$",
+            "type": "string"
+          },
+          "run_id": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "source_identities": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "units": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            }
+          },
+          "uncertainty_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "evidence_label": {
+            "enum": [
+              "MATHEMATICALLY_DERIVED",
+              "TESTED_IMPLEMENTATION",
+              "OBSERVED_IN_REGISTERED_RUN"
+            ]
+          },
+          "claim_owner": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "table_figure_destination": {
+            "$ref": "#/$defs/nonempty_string"
+          },
+          "source_data_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "objects": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/identity"
+            }
+          },
+          "output_manifest_sha256": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      }
+  }
+}

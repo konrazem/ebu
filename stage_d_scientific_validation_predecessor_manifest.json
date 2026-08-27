@@ -1,0 +1,317 @@
+{
+  "manifest_id": "EBU-STAGE-D-SCIENTIFIC-VALIDATION-PREDECESSOR-MANIFEST",
+  "manifest_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_EXACT_SOURCE_LOCKS",
+  "accepted_base": {
+    "commit": "fb9ae7b6dae14550a702e060600132faec539eca",
+    "tree": "1e3f02e4efc2ce5b0ca3c15fb8a95c3df98c277d",
+    "remote_ref": "refs/remotes/origin/framework-v0.1"
+  },
+  "released_coordinate": {
+    "main_commit": "660d6e5a56cb096fe6d1e4d202f592155d982c79",
+    "tag_name": "framework-v0.1.0-alpha.1",
+    "tag_object": "b140d4a31f60316cd23058305ae17f4698de86bc",
+    "peeled_target": "fb9ae7b6dae14550a702e060600132faec539eca",
+    "github_release_id": 377771658,
+    "prerelease": true,
+    "draft": false,
+    "release_asset_count": 8,
+    "package_index_publication": false
+  },
+  "sealed_stage_c_evidence": {
+    "disposition": "STAGE_C_RELEASE_EXECUTION_PASS",
+    "accepted_candidate_run": 33058079933,
+    "accepted_candidate_artifact": 9641430424,
+    "accepted_candidate_artifact_byte_count": 2002989,
+    "accepted_candidate_artifact_digest": "sha256:f121f23839cbc9ac9bdc772814bacbd64c440ea6ca2adb2119008a0d89879d81",
+    "public_wheel": {
+      "filename": "ebu_framework-0.1.0a1-cp314-none-any.whl",
+      "byte_count": 4078247,
+      "sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"
+    },
+    "public_sdist": {
+      "filename": "ebu_framework-0.1.0a1.tar.gz",
+      "byte_count": 4139346,
+      "sha256": "0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41"
+    },
+    "scientific_execution_count": 0
+  },
+  "source_count": 39,
+  "source_rows": [
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "git_object": "8610e8f07c3f462d6a4a6e2b4b677f56ffd89ae5",
+      "byte_count": 1853,
+      "sha256": "b23e3e26c336fe2db258e735f20e60e291d7f22cf9ee9d5e623d69ba141c002b"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+      "mode": "100644",
+      "git_object": "fbcceb0ce05f6d98f345658cf4cd6a86f1789334",
+      "byte_count": 429850,
+      "sha256": "2978e8b1de79c0e403841675cbdecab1e250e7ef3538216761028b34f7594460"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "mode": "100644",
+      "git_object": "3fcd230a9daaba3ff885fb9438d1273f71264ed6",
+      "byte_count": 257943,
+      "sha256": "a9532ca3e4be11566cca67da368756221c8e5b88e09a69e9187af67fdf5a32b0"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "mode": "100644",
+      "git_object": "af33c79b89372a8a1a9dc1939ca5f66974c23e56",
+      "byte_count": 150664,
+      "sha256": "f85c3e0c636f3afcd9d961673b16a0a642045a13b32d3c878e27a8d982567b59"
+    },
+    {
+      "path": "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+      "mode": "100644",
+      "git_object": "09c97b66502bd252470ca40081207bf209b68608",
+      "byte_count": 40027,
+      "sha256": "b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a"
+    },
+    {
+      "path": "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "82b82d3d6824adcfe071a19bc0b530417f592eab",
+      "byte_count": 41359,
+      "sha256": "eb559a68163571d80bbe564d68a57a915e128090b1dbb26bfd9d1c4ec4a7b8d3"
+    },
+    {
+      "path": "atomic_generator_foundation_contract.json",
+      "mode": "100644",
+      "git_object": "af244330dc0da36e0e56600cc6b731a9a7455348",
+      "byte_count": 42855,
+      "sha256": "b204f06bd11e7c605acc8afadbf82021fe5e3c1030e1f3f4c3659e71afd5d8a4"
+    },
+    {
+      "path": "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "875f069b189c07af458ec7816289dad27eed3744",
+      "byte_count": 115771,
+      "sha256": "80d83942d20745b9edeb3c5c8c05d052a616ef97ac9edb1af494d568acf68669"
+    },
+    {
+      "path": "atomic_interaction_declaration_contract.json",
+      "mode": "100644",
+      "git_object": "3343c149367334018864a0c8522148097a455f7f",
+      "byte_count": 256881,
+      "sha256": "565cc3947d9a3abc99ece694ec823ad0f945dbb1c7634586bcf43f2e36c2549a"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "mode": "100644",
+      "git_object": "e4c5dbec7e025dba102f5fa5b26843f891ad881b",
+      "byte_count": 53003,
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10"
+    },
+    {
+      "path": "DYNAMIC_COORDINATION_FOUNDATION.md",
+      "mode": "100644",
+      "git_object": "55c926b8d192272bddf2a2caba6f1a306691ca02",
+      "byte_count": 71170,
+      "sha256": "6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95"
+    },
+    {
+      "path": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+      "mode": "100644",
+      "git_object": "7c90cfc10aba9c44d07a5bd2c86b20dfaf562339",
+      "byte_count": 29970,
+      "sha256": "3820015fa540e86b191199a65c5740459f8fd5989ec2756564859bfb45507812"
+    },
+    {
+      "path": "canonical_topology_motif_programme_contract.json",
+      "mode": "100644",
+      "git_object": "46e3aac28e10f0fb87318236d95e1ad154383311",
+      "byte_count": 35884,
+      "sha256": "76833a3f58fa1dd68d4d6940bf8f8639464a298047b15d89e909c249a330b56d"
+    },
+    {
+      "path": "canonical_topology_motif_programme_validation_contract.json",
+      "mode": "100644",
+      "git_object": "8f1bbe026af892c139752b2e6d665627f782c914",
+      "byte_count": 39181,
+      "sha256": "2cbb9044a2607d8bb27619440be69755a9f30d35cfc00297d89955e8ae4288ba"
+    },
+    {
+      "path": "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
+      "mode": "100644",
+      "git_object": "637f192832bd76f767a078508ecde13be481ec7e",
+      "byte_count": 36083,
+      "sha256": "9174951adad518a7ec57439c58d0750d4947173d35fb928f3f9b137ad99500f0"
+    },
+    {
+      "path": "coupled_interaction_inference_feedback_book_traceability_manifest.json",
+      "mode": "100644",
+      "git_object": "554fae763e81c83bd8de0e455c895042a45b4363",
+      "byte_count": 49748,
+      "sha256": "66ef4d29a28b9c7c1bccd39f7f9de73ab121c987b9092a1cb3a0c0505eb966aa"
+    },
+    {
+      "path": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+      "mode": "100644",
+      "git_object": "8dad2f834185359eeec025508d5e2ed0b3f4406a",
+      "byte_count": 16164,
+      "sha256": "e2d59c3602e577edc04dd20234dd125a30c854e57088eb4c590a901686dfbc87"
+    },
+    {
+      "path": "closed_loop_correction_dynamics_milestone_contract.json",
+      "mode": "100644",
+      "git_object": "764043f85d965f10944d3bfd39fa1c5be855cde1",
+      "byte_count": 14827,
+      "sha256": "08e2a0054669fbebf20389992d02d03224ddfb23b55a87bdefe83ade7d0b0736"
+    },
+    {
+      "path": "closed_loop_correction_dynamics_milestone_validation_contract.json",
+      "mode": "100644",
+      "git_object": "1f5f7909c87df3379c40d4ed379dd0041e99135d",
+      "byte_count": 22109,
+      "sha256": "fe1c0d4f29d8383cc340658f22550a7512a9aa5f1cdcd5b3449ea65cae7fa0e2"
+    },
+    {
+      "path": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+      "mode": "100644",
+      "git_object": "088ff2c9e418993191127a11959bcd8f43919400",
+      "byte_count": 11038,
+      "sha256": "970e3f6813824a1c4ecb75e414b89285355dc31402c97a22d1c5cf9111698e27"
+    },
+    {
+      "path": "closed_loop_correction_diagnostics_contract.json",
+      "mode": "100644",
+      "git_object": "c4dcaa888c108428dc8f870565e0219a4f93e691",
+      "byte_count": 12240,
+      "sha256": "66aec06cc15bb4d67cc16bc216187f824d8c5da6ad5d48cd3bb562b5f78eeddc"
+    },
+    {
+      "path": "closed_loop_correction_diagnostics_validation_contract.json",
+      "mode": "100644",
+      "git_object": "63b1680a5aa56092526a4c90d22ad9c8d22c5f38",
+      "byte_count": 16523,
+      "sha256": "d7798006e79073c7176bbb497d4bc54d41a147ec1e517f9c13f7510c1e92a0e4"
+    },
+    {
+      "path": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+      "mode": "100644",
+      "git_object": "42ac0203543d57d773ea53f54c8a42aae66e8f85",
+      "byte_count": 32173,
+      "sha256": "957206891476ce360760ab23dac541ae6df5b5de8473bc6cf23c9c4b7ae631a5"
+    },
+    {
+      "path": "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+      "mode": "100644",
+      "git_object": "d87d1faba580d9776f7c8a429d905ee3064984a7",
+      "byte_count": 31624,
+      "sha256": "3122aa673f47290bbee866feb56d16afc4540f552ed7c7b458f097ef4e44d04f"
+    },
+    {
+      "path": "v30_gate1dc_outcome_discrimination_plan.json",
+      "mode": "100644",
+      "git_object": "682e1ac8d0dfac635da3d45a5b8dbcee34e01862",
+      "byte_count": 44057,
+      "sha256": "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe"
+    },
+    {
+      "path": "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+      "mode": "100644",
+      "git_object": "2830ddf825c83f9ddb5d1f528e02fb9ae6572faa",
+      "byte_count": 47986,
+      "sha256": "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1"
+    },
+    {
+      "path": "v30_gate1dc_execution_finalization_contract.json",
+      "mode": "100644",
+      "git_object": "437daaecb8a102172e1b70adb7a5ba4798c730c3",
+      "byte_count": 66706,
+      "sha256": "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155"
+    },
+    {
+      "path": "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+      "mode": "100644",
+      "git_object": "93e334e755f1e4b5856d18f9a01c88188e286a08",
+      "byte_count": 13592,
+      "sha256": "2e439afad6ba7532aae83631ef4fb7ea6648980be035674f8e2d13faeecd9b51"
+    },
+    {
+      "path": "v30_gate1dc_macos_environment_compatibility_contract.json",
+      "mode": "100644",
+      "git_object": "b512dec0512fc0a3b5997004fb7b6323d2efbd3e",
+      "byte_count": 15760,
+      "sha256": "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b"
+    },
+    {
+      "path": "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md",
+      "mode": "100644",
+      "git_object": "21d04941134e693b97fc84544ee4e39a5cdadbc9",
+      "byte_count": 14057,
+      "sha256": "d81afc5d77e1d2c7ccd9ceaae44d96ce33ddbb85ddc35fe0a0a0e1141394e8c3"
+    },
+    {
+      "path": "v30_gate1dc_macos_python_launcher_compatibility_contract.json",
+      "mode": "100644",
+      "git_object": "0620394a805f2885e8bab215fd63c947bc56c3b5",
+      "byte_count": 13040,
+      "sha256": "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82"
+    },
+    {
+      "path": "V3.0_POST_O14_SCIENTIFIC_DISPOSITION.md",
+      "mode": "100644",
+      "git_object": "c988c431a36ae9119ceff2131c9a3e706384474a",
+      "byte_count": 29513,
+      "sha256": "66aee6264b8d89234691b9f7a3446e3cd78429df13c8bc0258caae027138084c"
+    },
+    {
+      "path": "v29_d9_d10_plan.json",
+      "mode": "100644",
+      "git_object": "4fdf232749fc597f204953db50a723c29338740a",
+      "byte_count": 25859,
+      "sha256": "a931bc09e2a7cbb86f12c3c805fbb851aae84e09e240558c8cc2176183dff5bd"
+    },
+    {
+      "path": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "fe39f1f36d1455f8a37fdaa88e077bc338cff2e9",
+      "byte_count": 54315,
+      "sha256": "ca82b175811dba8260e86898e4770cb3bcd1e77d6ed80c79a5b9153b4211d5e6"
+    },
+    {
+      "path": "framework_alpha_packaging_release_candidate_contract.json",
+      "mode": "100644",
+      "git_object": "0973f931988947e27598c92838c3eaacdf16f73c",
+      "byte_count": 54896,
+      "sha256": "9cd96d40af2fefd9388bb4054bccdafc3f61380906cf87107d6980854f37bb7c"
+    },
+    {
+      "path": "framework_alpha_packaging_release_candidate_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "9aa4b30e917365cdb3e24777276d0ae6e59e26da",
+      "byte_count": 27954,
+      "sha256": "272ac90df12da0589e8a14dd4d7c9ad2a70271b359738f848b754d805d4e32a2"
+    },
+    {
+      "path": "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+      "mode": "100644",
+      "git_object": "abb54a84245ba12a9c188599126e48a112ac609f",
+      "byte_count": 7796,
+      "sha256": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918"
+    },
+    {
+      "path": "framework_alpha_packaging_release_candidate_validation_contract.json",
+      "mode": "100644",
+      "git_object": "d1f2ad5724338b60f85c5d3d77407b4c20802497",
+      "byte_count": 29301,
+      "sha256": "600adb2c4340d9b9584298700276f1f6c277949e9f72b5764575c66e05bc2773"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_object": "855f0dcf4350a6e1f1bd13bbf1327963f702043e",
+      "byte_count": 104071,
+      "sha256": "58944727109a80feb9155d1663d2b4b228ad2cc4f85a9bfa84e844acef500922"
+    }
+  ],
+  "comparison_rule": "Every row must exist at the accepted base with exact mode, Git object, byte count, and raw SHA-256. Any mismatch refuses the authority candidate.",
+  "scientific_execution_performed_to_create_manifest": false
+}
