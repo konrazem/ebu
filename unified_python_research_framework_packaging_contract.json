@@ -1,0 +1,1091 @@
+{
+  "contract_id": "ebu-framework-i1-packaging/1",
+  "contract_version": "1.1.1",
+  "status": "PROSPECTIVE_FULLY_SPECIFICATION_READY_UNIMPLEMENTED",
+  "effective_scope": "I-1 Python packaging only",
+  "authority": {
+    "repository_branch": "v3.0-local-ebu-foundation",
+    "prospective_base_head": "b76c99d7e8ce05b8ddceba63f82ad12067802a7c",
+    "framework_specification": {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+      "version": "0.1.1",
+      "raw_sha256": "a52b0232595719afd554d842aefb16d6dba0e039ced75c4aed05b358964c6de1"
+    },
+    "implementation_plan": {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "version": "0.2.1",
+      "raw_sha256": "d89fe92ac6cafd8990588e72d294bcf547cbb478d4b43b638a380e38116ba42e"
+    },
+    "normative_human_rendering": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md",
+    "mechanical_contract": "unified_python_research_framework_packaging_contract.json",
+    "self_raw_sha256": "RECORDED_EXTERNALLY",
+    "precedence": {
+      "supersedes_only": [
+        "the I-1 PEP 517 versus initially-stdlib-only blocker",
+        "the I-1 exact frontend-identity acceptance blocker",
+        "the packaging rows and closed-file-manifest mechanics needed to add the in-tree backend",
+        "the I-1 packaging inputs, acceptance criteria, refusals, and readiness status"
+      ],
+      "does_not_change": [
+        "scientific definitions or authority",
+        "ECJ-1 or any scientific hash preimage",
+        "T0 through T3 capability classifications",
+        "I-2 through I-10 scientific or operational semantics",
+        "Gate 1D-C state, evidence, invocation count, or authority",
+        "the foundation-v0.1.0 tag object, target, or historical hashes",
+        "the foundation-v0.1.1 tag object, target, or historical amendment and contract hashes"
+      ],
+      "conflict_rule": "FAIL_CLOSED"
+    },
+    "foundation_v0_1_0_immutable_evidence": {
+      "tag_object": "90646d3c7e1ff2201eab4739e894598b80782b79",
+      "tag_target": "fa08920a56485962b368bfa032fa284f455413eb",
+      "original_specification_raw_sha256": "4c2b3bc65628d37fefb874ab577f8b9ce173554ae2399c788e2d7d301abead38",
+      "original_plan_raw_sha256": "a1cebfa63528e49d9bada3c6564c7d40616369a45afd97640ff937ae07389674",
+      "interpretation": "HISTORICAL_ONLY_UNCHANGED"
+    },
+    "foundation_v0_1_1_immutable_evidence": {
+      "tag_object": "29060d72ce2fac10ab85e52330c1a375c1d5cb5b",
+      "tag_target": "fae76042746e55b9fe5ec5c62de0f47fbc5ccb47",
+      "amendment_version": "1.1.0",
+      "amendment_raw_sha256": "694120118a604926cd1c431b29c6d839d24d8d164023d0b5204c7e81e23cc9de",
+      "mechanical_contract_version": "1.1.0",
+      "mechanical_contract_raw_sha256": "89f54bd55802c99d292851619439bf96b9e391ef111fb4223adb37e738aa0e28",
+      "interpretation": "HISTORICAL_ONLY_UNCHANGED; VERSION_1_1_1_IS_A_LATER_PROSPECTIVE_CORRECTION_AND_DOES_NOT_MOVE_OR_REINTERPRET_THE_TAG"
+    }
+  },
+  "standards_snapshot": {
+    "verified_on": "2026-08-13",
+    "primary_sources": [
+      {
+        "name": "pyproject.toml specification",
+        "url": "https://packaging.python.org/en/latest/specifications/pyproject-toml/"
+      },
+      {
+        "name": "PEP 517 build-system interface and in-tree backends",
+        "url": "https://peps.python.org/pep-0517/"
+      },
+      {
+        "name": "PEP 660 editable installs",
+        "url": "https://peps.python.org/pep-0660/"
+      },
+      {
+        "name": "Source distribution format",
+        "url": "https://packaging.python.org/en/latest/specifications/source-distribution-format/"
+      },
+      {
+        "name": "Binary distribution format",
+        "url": "https://packaging.python.org/en/latest/specifications/binary-distribution-format/"
+      },
+      {
+        "name": "Core metadata 2.6",
+        "url": "https://packaging.python.org/en/latest/specifications/core-metadata/"
+      },
+      {
+        "name": "build-details.json v1.0",
+        "url": "https://packaging.python.org/en/latest/specifications/build-details/"
+      },
+      {
+        "name": "PyPA build 1.5.0 release record",
+        "url": "https://pypi.org/project/build/1.5.0/"
+      },
+      {
+        "name": "PyPA build frontend documentation",
+        "url": "https://build.pypa.io/en/stable/"
+      },
+      {
+        "name": "pip 26.2.1 release record",
+        "url": "https://pypi.org/project/pip/26.2.1/"
+      },
+      {
+        "name": "pip wheel documentation",
+        "url": "https://pip.pypa.io/en/stable/cli/pip_wheel/"
+      },
+      {
+        "name": "pip build-system interface",
+        "url": "https://pip.pypa.io/en/stable/reference/build-system/"
+      }
+    ],
+    "verified_requirements": [
+      "build-system.requires is mandatory when build-system is present and is a list of dependency specifiers",
+      "the standards schema imposes no nonempty minimum on build-system.requires",
+      "build-backend explicitly selects the PEP 517 backend",
+      "backend-path entries are source-root-relative, resolve inside the source tree, and must contain the loaded backend",
+      "build_wheel and build_sdist are the mandatory PEP 517 hooks",
+      "build frontends provide declared build requirements and should isolate builds by default",
+      "a backend may assume only the standard library and explicitly declared build requirements",
+      "standard sdists are name-version.tar.gz archives with one top-level directory, pyproject.toml, PKG-INFO metadata version at least 2.2, and POSIX.1-2001 pax tar format",
+      "wheels are ZIP archives containing METADATA, WHEEL, and RECORD, with every member except RECORD covered by a sha256-or-better RECORD hash",
+      "PEP 660 editable hooks are optional",
+      "current Core Metadata is 2.6 and a backend may emit the lowest metadata version containing all fields it uses",
+      "PyPA build provides isolated metadata API, wheel, and sdist frontend operations",
+      "pip wheel uses the PEP 517 build-system interface, creates an isolated build environment by default, prepares metadata, and builds a wheel"
+    ]
+  },
+  "decision": {
+    "selected_option": "IN_TREE_STDLIB_ONLY_PEP517_BACKEND",
+    "selection_reason": [
+      "preserves an empty external build-requirement closure",
+      "keeps build and scientific-runtime dependencies distinct",
+      "allows a strict project-specific allowlist instead of generic recursive package discovery",
+      "can make wheel and sdist bytes independent of source mtimes, umask, locale, time zone, path, VCS, network, and compression-library variation",
+      "adds one bounded implementation file whose complete behavior is covered by the closed manifest and I-1 validation"
+    ],
+    "rejection_if_contract_expands": "If I-1 review cannot implement this complete contract in one maintainable stdlib-only backend file, I-1 must stop and a new prospective amendment must select an audited third-party backend. Requirements may not be weakened to preserve this choice.",
+    "alternatives": [
+      {
+        "id": "EXTERNAL_FLIT_CORE_3_12_0",
+        "identity": "flit_core==3.12.0; build backend flit_core.buildapi",
+        "wheel_raw_sha256": "e7a0304069ea895172e3c7bb703292e992c5d1555dd1233ab7b5621b5b69e62c",
+        "sdist_raw_sha256": "18f63100d6f94385c6ed57a72073443e1a71a4acb4339491615d0f16d6ff01b2",
+        "audit_scope": "PyPI artifact identity, provenance, file inventory, metadata, license inventory, import closure, PEP 517 hook surface, package-discovery behavior, and published reproducibility contract",
+        "benefits": [
+          "mature PyPA backend",
+          "PEP 660 editable support",
+          "published reproducible-build behavior",
+          "separates build dependency from wheel runtime dependencies"
+        ],
+        "costs": [
+          "nonempty external build dependency",
+          "3534-line installed Python source footprint in the audited wheel, including bundled tomli 1.2.3 and two license families",
+          "generic package-content discovery rather than this contract's fail-closed project allowlist",
+          "SOURCE_DATE_EPOCH and backend-version behavior enter reproducibility",
+          "requires a new build-dependency lock and recurring security/license audit",
+          "its Requires-Python metadata admits Python 3.14, but framework-specific CPython 3.14 acceptance evidence would still be required"
+        ],
+        "disposition": "NOT_SELECTED"
+      },
+      {
+        "id": "VENDORED_THIRD_PARTY_BACKEND",
+        "identity": "audited third-party backend source copied under backend-path with requires=[]",
+        "benefits": [
+          "standards-compliant in-tree loading",
+          "offline isolated build"
+        ],
+        "costs": [
+          "vendored third-party code is not a standard-library-only backend",
+          "materially enlarges the closed manifest, license surface, and audit burden",
+          "creates a local fork and update obligation"
+        ],
+        "disposition": "NOT_SELECTED"
+      },
+      {
+        "id": "LEGACY_OR_PREINSTALLED_BACKEND",
+        "identity": "omit build-backend or rely on an undeclared preinstalled backend",
+        "benefits": [],
+        "costs": [
+          "fails the explicit-backend requirement",
+          "violates the PEP 517 declared-build-requirement environment contract",
+          "is not hermetic or fail closed"
+        ],
+        "disposition": "NONCONFORMING_REJECTED"
+      }
+    ]
+  },
+  "closed_manifest_amendment": {
+    "add": [
+      {
+        "path": "build_backend/ebu_build_backend.py",
+        "state": "NEW_IN_I_1",
+        "owner": "I-1",
+        "responsibility": "The sole in-tree stdlib-only PEP 517 backend implementing this contract; never installed in the wheel."
+      }
+    ],
+    "clarify": [
+      {
+        "path": "pyproject.toml",
+        "owner": "I-1; only the already-authorized I-4 runtime dependency metadata update may later modify dependencies",
+        "responsibility": "Exact build-system selection, static project metadata, CPython 3.14 boundary, and no scientific entry point."
+      },
+      {
+        "path": "requirements-framework.lock",
+        "owner": "I-1; exact cryptographic runtime closure extension/finalization in I-4",
+        "responsibility": "Framework/scientific-runtime dependency closure only; initially empty. It is not a build-frontend or build-backend lock."
+      }
+    ],
+    "new_build_dependency_lock": "NONE_BECAUSE_BUILD_SYSTEM_REQUIRES_IS_EMPTY",
+    "unchanged_manifest_paths": "ALL_OTHER_PLAN_SECTION_9_PATHS"
+  },
+  "pyproject_contract": {
+    "build_system": {
+      "requires": [],
+      "build_backend": "ebu_build_backend",
+      "backend_path": [
+        "build_backend"
+      ]
+    },
+    "project_i1_static_metadata": {
+      "name": "ebu-framework",
+      "version": "0.1.0a1",
+      "description": "Pre-alpha typed and reproducible research-framework infrastructure for EBU",
+      "requires_python": ">=3.14,<3.15",
+      "dependencies": [],
+      "dynamic": [],
+      "license": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "import_names": [
+        "ebu_framework"
+      ],
+      "scripts": {},
+      "gui_scripts": {},
+      "entry_points": {}
+    },
+    "prohibited": [
+      "dynamic metadata",
+      "setup.py",
+      "setup.cfg",
+      "scientific or framework command entry points",
+      "direct URL dependencies",
+      "undeclared build dependencies",
+      "backend-path entries other than build_backend"
+    ]
+  },
+  "backend_contract": {
+    "contract_identity": "ebu-in-tree-pep517-backend/1",
+    "module": "ebu_build_backend",
+    "source_path": "build_backend/ebu_build_backend.py",
+    "installed_in_distribution": false,
+    "language_boundary": "CPython 3.14.x final only",
+    "imports": "PYTHON_3_14_STANDARD_LIBRARY_ONLY",
+    "external_dependencies": [],
+    "network_access": "FORBIDDEN",
+    "subprocesses": "FORBIDDEN",
+    "vcs_access": "FORBIDDEN",
+    "source_tree_writes": "FORBIDDEN",
+    "config_settings": {
+      "accepted": [
+        null,
+        {}
+      ],
+      "all_other_values": "REFUSE_UNSUPPORTED_CONFIGURATION"
+    },
+    "supported_hooks": {
+      "get_requires_for_build_wheel": "return []",
+      "get_requires_for_build_sdist": "return []",
+      "prepare_metadata_for_build_wheel": "create and return the exact dist-info directory described by metadata_contract",
+      "build_wheel": "create and return the exact wheel basename described by wheel_contract",
+      "build_sdist": "create and return the exact sdist basename described by sdist_contract"
+    },
+    "unsupported_operations": [
+      "build_editable",
+      "get_requires_for_build_editable",
+      "prepare_metadata_for_build_editable",
+      "legacy setup.py operations",
+      "binary extension builds",
+      "platform wheels",
+      "wheel build tags",
+      "arbitrary config_settings",
+      "generated source",
+      "network or VCS file discovery"
+    ],
+    "optional_hook_absence_rule": "Unsupported PEP 660 hooks are not exported as backend attributes.",
+    "output_collision_rule": "Refuse if the exact destination file or metadata directory already exists; never overwrite.",
+    "backend_path_identity_rule": {
+      "lexical_source_root": "Compute Path(__file__).absolute().parent.parent before resolving the build_backend directory or backend file; this lexical parent is the source-root identity and is not replaced by a symlink target.",
+      "lexical_build_backend_directory": "lexical_source_root/build_backend with the exact basename build_backend",
+      "lexical_backend_file": "lexical_source_root/build_backend/ebu_build_backend.py with the exact basename ebu_build_backend.py",
+      "ordered_checks": [
+        "Before any build input or output is processed, lstat the lexical build_backend directory and require a real non-symlink directory; otherwise refuse BACKEND_PATH_ESCAPE.",
+        "Before any build input or output is processed, lstat the lexical backend file and require a real non-symlink regular file; otherwise refuse BACKEND_PATH_ESCAPE.",
+        "Resolve the lexical source root, build_backend directory, and backend file strictly; require the resolved build_backend parent to equal the resolved lexical source root and the resolved backend parent to equal the resolved build_backend directory; otherwise refuse BACKEND_PATH_ESCAPE.",
+        "Resolve the loaded module spec origin strictly and require exact equality with the resolved backend file; otherwise refuse BACKEND_ORIGIN_MISMATCH.",
+        "Require pyproject.toml to contain exactly the sole backend-path entry build_backend and the sole backend module ebu_build_backend; unchanged exact pyproject build-system validation refuses an alternate or second backend path."
+      ],
+      "explicit_refusals": [
+        "symlinked lexical build_backend directory",
+        "symlinked lexical backend file",
+        "resolved path escape",
+        "alternate backend filename",
+        "alternate backend location",
+        "module-origin mismatch",
+        "second backend-path entry"
+      ]
+    },
+    "source_snapshot_rule": "Read every selected input into one immutable byte snapshot, record pre-read and post-read lstat identity, and refuse a symlink, nonregular file, size/identity change, content change, or selected-set change. Build only from that byte snapshot."
+  },
+  "metadata_contract": {
+    "core_metadata_version": "2.5",
+    "current_available_core_metadata_version_at_freeze": "2.6",
+    "selection_reason": "2.5 is the lowest current version supporting Import-Name; no 2.6 Dynamic extension is used.",
+    "encoding": "UTF-8",
+    "line_ending": "LF",
+    "terminal_blank_line": true,
+    "header_order": [
+      "Metadata-Version",
+      "Name",
+      "Version",
+      "Summary",
+      "Requires-Python",
+      "License-Expression",
+      "License-File",
+      "Import-Name",
+      "Requires-Dist in pyproject declaration order when later authorized"
+    ],
+    "i1_values": {
+      "Metadata-Version": "2.5",
+      "Name": "ebu-framework",
+      "Version": "0.1.0a1",
+      "Summary": "Pre-alpha typed and reproducible research-framework infrastructure for EBU",
+      "Requires-Python": ">=3.14,<3.15",
+      "License-Expression": "MIT",
+      "License-File": "LICENSE",
+      "Import-Name": "ebu_framework",
+      "Requires-Dist": []
+    },
+    "dist_info_basename": "ebu_framework-0.1.0a1.dist-info",
+    "prepared_metadata_members": [
+      "METADATA",
+      "WHEEL",
+      "licenses/LICENSE"
+    ],
+    "prepared_metadata_excludes": [
+      "RECORD",
+      "signatures",
+      "backend-private state"
+    ],
+    "prepared_metadata_directory_mode": "0755",
+    "prepared_metadata_regular_file_mode": "0644",
+    "metadata_directory_rule": "When build_wheel receives metadata_directory, it must validate the exact basename, member set, paths, modes, and bytes against freshly generated expected metadata and then copy those exact bytes. Missing, additional, or different metadata refuses the build."
+  },
+  "package_file_contract": {
+    "wheel_source_root": "src",
+    "installed_root": "ebu_framework",
+    "include": [
+      "every regular non-symlink src/ebu_framework/**/*.py file whose path is present in the accepted closed implementation manifest for the current completed stage",
+      "src/ebu_framework/py.typed",
+      "src/ebu_framework/data/core_registry_v1.json when its owning I-1 work is present",
+      "src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt",
+      "src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt"
+    ],
+    "required_at_i1_acceptance": [
+      "src/ebu_framework/__init__.py",
+      "src/ebu_framework/py.typed",
+      "src/ebu_framework/data/__init__.py",
+      "src/ebu_framework/data/core_registry_v1.json",
+      "src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt",
+      "src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/canonical.py",
+      "src/ebu_framework/identity.py",
+      "src/ebu_framework/hashing.py",
+      "src/ebu_framework/registry.py"
+    ],
+    "exclude": [
+      "build_backend",
+      "tests",
+      "authority documents",
+      "results",
+      "legacy modules",
+      "__pycache__",
+      "*.pyc",
+      "dotfiles",
+      "temporary files",
+      "VCS data",
+      "all files not selected by include"
+    ],
+    "unknown_under_package_root": "REFUSE",
+    "path_rules": [
+      "ASCII only",
+      "POSIX separators only in archives",
+      "no empty, dot, dot-dot, absolute, backslash, control-character, or duplicate path component",
+      "no Unicode-normalization or case-fold collisions",
+      "regular files only; no symlinks, hardlinks, devices, FIFOs, or sockets"
+    ]
+  },
+  "wheel_contract": {
+    "filename": "ebu_framework-0.1.0a1-cp314-none-any.whl",
+    "format": "ZIP",
+    "compression": "ZIP_STORED",
+    "member_order": [
+      "installed package files sorted by UTF-8 path bytes",
+      "ebu_framework-0.1.0a1.dist-info/METADATA",
+      "ebu_framework-0.1.0a1.dist-info/WHEEL",
+      "ebu_framework-0.1.0a1.dist-info/licenses/LICENSE",
+      "ebu_framework-0.1.0a1.dist-info/RECORD"
+    ],
+    "directory_entries": "OMITTED",
+    "timestamp": "1980-01-01T00:00:00 with the ZIP DOS fields set explicitly",
+    "regular_file_mode": "0644",
+    "zip_create_system": 3,
+    "zip_create_version": 20,
+    "zip_extract_version": 20,
+    "zip_internal_attributes": 0,
+    "zip_external_attributes": "(stat.S_IFREG | 0o644) << 16",
+    "zip_flag_bits": 0,
+    "zip_extra": "EMPTY",
+    "archive_comment": "EMPTY",
+    "wheel_metadata_bytes": "Wheel-Version: 1.0\nGenerator: ebu-in-tree-pep517-backend/1\nRoot-Is-Purelib: true\nTag: cp314-none-any\n\n",
+    "record": {
+      "format": "CSV with comma delimiter, quotechar double-quote, lineterminator LF, and minimal quoting",
+      "row_order": "wheel member order",
+      "hash_algorithm": "sha256",
+      "hash_encoding": "urlsafe base64 without padding",
+      "size": "base-10 byte length",
+      "record_self_row": "empty hash and empty size"
+    },
+    "forbidden_members": [
+      ".pyc",
+      "setup.py",
+      "setup.cfg",
+      "RECORD.jws",
+      "RECORD.p7s",
+      "entry_points.txt",
+      "any .data directory"
+    ]
+  },
+  "sdist_contract": {
+    "filename": "ebu_framework-0.1.0a1.tar.gz",
+    "top_level_directory": "ebu_framework-0.1.0a1",
+    "source_members": [
+      "pyproject.toml",
+      "build_backend/ebu_build_backend.py",
+      "LICENSE",
+      "the exact selected src/ebu_framework source paths from package_file_contract"
+    ],
+    "generated_member": "PKG-INFO with metadata_contract bytes",
+    "member_order": "all required directory and regular-file member paths sorted lexicographically by UTF-8 path bytes, with directory paths ending in slash",
+    "tar_format": "POSIX.1-2001 pax via Python 3.14 tarfile.PAX_FORMAT with the sole ordered global pax header comment=ebu-sdist-v1",
+    "tar_block_size": 512,
+    "tar_end_marker": "exactly two zero blocks",
+    "tar_record_padding": "OMITTED_AFTER_THE_TWO_ZERO_END_BLOCKS",
+    "directory_mode": "0755",
+    "regular_file_mode": "0644",
+    "uid": 0,
+    "gid": 0,
+    "uname": "",
+    "gname": "",
+    "mtime": 0,
+    "linkname": "",
+    "effective_member_types": [
+      "directory",
+      "regular file"
+    ],
+    "extension_records": "the required global pax header only",
+    "gzip": {
+      "header_hex": "1f8b08000000000000ff",
+      "deflate_profile": "RFC 1951 stored blocks in source order with every nonfinal block exactly 65535 bytes, the last nonempty block marked final, and one empty final block only for empty input; no compressor library",
+      "trailer": "little-endian CRC32 of tar bytes followed by little-endian tar length modulo 2^32",
+      "filename": "OMITTED",
+      "comment": "OMITTED",
+      "extra": "OMITTED"
+    },
+    "required_properties": [
+      "readable by Python 3.14 tarfile.open mode r:gz",
+      "safe under tarfile data_filter",
+      "exactly one effective top-level directory",
+      "name and version match PKG-INFO",
+      "wheel built from an extracted sdist is byte-identical to the wheel built directly from the same source snapshot"
+    ]
+  },
+  "hash_contract": {
+    "algorithm": "SHA-256",
+    "build_input_manifest": {
+      "domain_line": "ebu-build-input-manifest-v1",
+      "entry_line": "sha256=<64 lowercase hex> size=<base-10 bytes> path=<ASCII POSIX relative path>",
+      "ordering": "path UTF-8 byte order",
+      "line_ending": "LF including final line",
+      "digest": "raw SHA-256 of the complete UTF-8 manifest bytes",
+      "members": "pyproject.toml, backend source, LICENSE, and all selected package source files; generated metadata and outputs excluded"
+    },
+    "prepared_metadata_tree_manifest": {
+      "domain_line": "ebu-prepared-metadata-tree-manifest-v1",
+      "path_root": "the returned ebu_framework-0.1.0a1.dist-info directory; the root basename is not part of any manifest path",
+      "included_regular_files": [
+        "METADATA",
+        "WHEEL",
+        "licenses/LICENSE"
+      ],
+      "directory_entries": "EXCLUDED, including the returned .dist-info root and its licenses directory",
+      "file_types": "Each included path denotes one real non-symlink regular file; no other file type or path is permitted.",
+      "filesystem_metadata": "EXCLUDED; directory modes, regular-file modes, ownership, timestamps, inode/device identities, and every other filesystem attribute contribute no manifest bytes",
+      "path_spelling": "exact case-sensitive ASCII POSIX relative paths from included_regular_files, with slash separators and no leading ./ or trailing slash",
+      "entry_line": "sha256=<64 lowercase hex> size=<minimal unsigned base-10 byte length> path=<exact path spelling>",
+      "entry_digest": "raw SHA-256 of the exact regular-file bytes",
+      "entry_size": "exact byte length of the regular-file bytes, written as minimal unsigned base-10 digits with zero written as 0",
+      "encoding": "UTF-8",
+      "ordering": "one entry per included regular file, sorted lexicographically by the UTF-8 bytes of the exact path spelling",
+      "line_structure": "the exact domain_line is first, followed immediately by the ordered entry lines, with no blank or additional lines",
+      "line_ending": "LF (0x0a) terminates every line, including the final entry line",
+      "digest": "raw SHA-256 of the complete serialized UTF-8 manifest bytes, from the first domain-line byte through the final LF",
+      "byte_length": "the exact length in bytes of those complete serialized manifest bytes",
+      "persistence": "EVIDENCE_ONLY; the manifest is not written into the wheel, sdist, prepared metadata directory, or source tree"
+    },
+    "required_output_digests": [
+      "raw SHA-256 and byte length of METADATA",
+      "raw SHA-256 and byte length of WHEEL",
+      "raw SHA-256 and byte length of prepared metadata tree manifest",
+      "raw SHA-256 and byte length of wheel",
+      "raw SHA-256 and byte length of sdist",
+      "every wheel RECORD sha256 digest and size",
+      "raw SHA-256 and size of every effective sdist regular file"
+    ],
+    "backend_identity_at_i1_acceptance": "raw SHA-256 and byte length of build_backend/ebu_build_backend.py, bound to the accepted I-1 source commit and implementation-validation evidence",
+    "non_substitution_rule": "Packaging raw SHA-256 values are labelled packaging/source artifact hashes and never substitute for ObjectContentHash, ArtifactByteHash, or another scientific hash domain."
+  },
+  "frontend_interoperability_contract": {
+    "status": "CLOSED_PROSPECTIVELY_NO_I1_FRONTEND_IDENTITY_BLOCKER",
+    "role_model": [
+      {
+        "id": "F1_SOURCE_DISTRIBUTION_PRODUCER",
+        "frontend_project": "build",
+        "responsibility": "Operate on the accepted source-tree snapshot; invoke isolated prepare_metadata_for_build_wheel, build the direct wheel, and build the sdist."
+      },
+      {
+        "id": "F2_SDIST_WHEEL_CONSUMER",
+        "frontend_project": "pip",
+        "responsibility": "Accept only F1's exact sdist; invoke isolated metadata preparation and build_wheel from the safely extracted sdist; do not create an sdist or install the resulting wheel."
+      }
+    ],
+    "role_separation_reason": "The roles are intentionally asymmetric: one general distribution frontend proves source-tree metadata, wheel, and sdist production; one installation-oriented frontend independently proves isolated metadata and wheel consumption of that sdist.",
+    "artifacts": [
+      {
+        "project": "build",
+        "version": "1.5.0",
+        "uses": [
+          "F1_FRONTEND"
+        ],
+        "distribution_filename": "build-1.5.0-py3-none-any.whl",
+        "raw_sha256": "13f3eecb844759ab66efec90ca17639bbf14dc06cb2fdf37a9010322d9c50a6f",
+        "byte_length": 26018,
+        "authoritative_file_url": "https://files.pythonhosted.org/packages/0d/fe/6bea5c9162869c5beba5d9c8abbed835ec85bf1ec1fba05a3822325c45f3/build-1.5.0-py3-none-any.whl",
+        "authoritative_release_record": "https://pypi.org/project/build/1.5.0/",
+        "yanked": false,
+        "requires_python": ">=3.10",
+        "python_3_14_compatibility_evidence": [
+          "universal py3-none-any wheel",
+          "Requires-Python admits CPython 3.14",
+          "Programming Language :: Python :: 3.14 classifier",
+          "Programming Language :: Python :: Implementation :: CPython classifier"
+        ],
+        "license_identity": "MIT",
+        "license_member": "build-1.5.0.dist-info/licenses/LICENSE",
+        "declared_requires_dist_active_on_cpython_3_14_posix_without_extras": [
+          "packaging>=24.0",
+          "pyproject_hooks"
+        ],
+        "declared_requires_dist_inactive": [
+          "colorama; os_name == 'nt'",
+          "importlib-metadata>=4.6; python_full_version < '3.10.2'",
+          "tomli>=1.1.0; python_version < '3.11'",
+          "keyring; extra == 'keyring'",
+          "uv>=0.1.18; extra == 'uv'",
+          "virtualenv>=20.17; extra == 'virtualenv' and python_version >= '3.10' and python_version < '3.14'",
+          "virtualenv>=20.31; extra == 'virtualenv' and python_version >= '3.14'"
+        ]
+      },
+      {
+        "project": "packaging",
+        "version": "26.3",
+        "uses": [
+          "F1_DECLARED_RUNTIME_DEPENDENCY"
+        ],
+        "distribution_filename": "packaging-26.3-py3-none-any.whl",
+        "raw_sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+        "byte_length": 129956,
+        "authoritative_file_url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+        "authoritative_release_record": "https://pypi.org/project/packaging/26.3/",
+        "yanked": false,
+        "requires_python": ">=3.9",
+        "python_3_14_compatibility_evidence": [
+          "universal py3-none-any wheel",
+          "Requires-Python admits CPython 3.14",
+          "Programming Language :: Python :: 3.14 classifier",
+          "Programming Language :: Python :: Implementation :: CPython classifier"
+        ],
+        "license_identity": "Apache-2.0 OR BSD-2-Clause",
+        "license_members": [
+          "packaging-26.3.dist-info/licenses/LICENSE",
+          "packaging-26.3.dist-info/licenses/LICENSE.APACHE",
+          "packaging-26.3.dist-info/licenses/LICENSE.BSD"
+        ],
+        "declared_requires_dist_active_on_cpython_3_14_posix_without_extras": []
+      },
+      {
+        "project": "pyproject_hooks",
+        "version": "1.2.0",
+        "uses": [
+          "F1_DECLARED_RUNTIME_DEPENDENCY"
+        ],
+        "distribution_filename": "pyproject_hooks-1.2.0-py3-none-any.whl",
+        "raw_sha256": "9e5c6bfa8dcc30091c74b0cf803c81fdd29d94f01992a7707bc97babb1141913",
+        "byte_length": 10216,
+        "authoritative_file_url": "https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl",
+        "authoritative_release_record": "https://pypi.org/project/pyproject-hooks/1.2.0/",
+        "yanked": false,
+        "requires_python": ">=3.7",
+        "python_3_14_compatibility_evidence": [
+          "universal py3-none-any wheel",
+          "Requires-Python admits CPython 3.14"
+        ],
+        "license_identity": "MIT",
+        "license_member": "pyproject_hooks-1.2.0.dist-info/LICENSE",
+        "declared_requires_dist_active_on_cpython_3_14_posix_without_extras": []
+      },
+      {
+        "project": "pip",
+        "version": "26.2.1",
+        "uses": [
+          "F2_FRONTEND",
+          "F1_ISOLATION_INSTALLER"
+        ],
+        "distribution_filename": "pip-26.2.1-py3-none-any.whl",
+        "raw_sha256": "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e",
+        "byte_length": 1816632,
+        "authoritative_file_url": "https://files.pythonhosted.org/packages/f3/6e/1736e5b4ae2b778ef2f81c47d797de9f891d4d8acb047a24ca37a60294dd/pip-26.2.1-py3-none-any.whl",
+        "authoritative_release_record": "https://pypi.org/project/pip/26.2.1/",
+        "yanked": false,
+        "requires_python": ">=3.10",
+        "python_3_14_compatibility_evidence": [
+          "universal py3-none-any wheel",
+          "Requires-Python admits CPython 3.14",
+          "Programming Language :: Python :: 3.14 classifier",
+          "Programming Language :: Python :: Implementation :: CPython classifier"
+        ],
+        "license_identity": "MIT with the complete bundled third-party license inventory retained in the exact wheel",
+        "license_members_rule": "Every license file under pip-26.2.1.dist-info/licenses and every vendored package license member is retained and covered by the exact wheel hash.",
+        "declared_requires_dist_active_on_cpython_3_14_posix_without_extras": [],
+        "vendored_inventory": [
+          "CacheControl==0.14.4",
+          "distlib==0.4.2",
+          "distro==1.9.0",
+          "msgpack==1.1.2",
+          "packaging==26.2",
+          "platformdirs==4.10.0",
+          "pyproject-hooks==1.2.0",
+          "requests==2.34.2",
+          "certifi==2026.6.17",
+          "idna==3.18",
+          "urllib3==2.7.0",
+          "rich==14.2.0",
+          "pygments==2.20.0",
+          "resolvelib==1.2.1",
+          "setuptools==70.3.0",
+          "tomli==2.4.1",
+          "tomli-w==1.2.0",
+          "truststore==0.10.4"
+        ],
+        "vendored_closure_rule": "pip's private vendored libraries are internal wheel contents, not external distribution dependencies; their complete identity is bound by the exact pip wheel hash and license inventory."
+      }
+    ],
+    "dependency_closure": {
+      "platform": "POSIX with os.name == 'posix'",
+      "interpreter": "final CPython >=3.14.0,<3.15.0",
+      "extras": [],
+      "exact_wheelhouse_order": [
+        "build-1.5.0-py3-none-any.whl",
+        "packaging-26.3-py3-none-any.whl",
+        "pyproject_hooks-1.2.0-py3-none-any.whl",
+        "pip-26.2.1-py3-none-any.whl"
+      ],
+      "additional_members": "REFUSE",
+      "sdist_substitution": "REFUSE",
+      "resolver_substitution": "REFUSE",
+      "f1_active_declared_runtime_closure": [
+        "build==1.5.0",
+        "packaging==26.3",
+        "pyproject_hooks==1.2.0"
+      ],
+      "f1_operational_isolation_installer": "pip==26.2.1; not a build Requires-Dist dependency",
+      "f2_external_runtime_closure": [
+        "pip==26.2.1"
+      ],
+      "backend_build_requirement_closure": [],
+      "scientific_runtime_dependency_closure_at_i1": []
+    },
+    "path_contract": {
+      "I1_VALIDATION_ROOT": "new absolute temporary root outside the repository",
+      "I1_WHEELHOUSE": "read-only directory under I1_VALIDATION_ROOT containing exactly dependency_closure.exact_wheelhouse_order",
+      "I1_F1_ENV": "new temporary venv under I1_VALIDATION_ROOT containing exactly build, packaging, pyproject_hooks, and pip artifacts frozen here",
+      "I1_F2_ENV": "distinct new temporary venv under I1_VALIDATION_ROOT containing exactly the pip artifact frozen here",
+      "I1_SOURCE_SNAPSHOT": "accepted read-only source snapshot outside the repository",
+      "I1_EVIDENCE": "new empty evidence directory under I1_VALIDATION_ROOT",
+      "I1_BUILD_METADATA_OUT": "new empty directory under I1_VALIDATION_ROOT",
+      "I1_BUILD_DIRECT_OUT": "new empty directory under I1_VALIDATION_ROOT",
+      "I1_BUILD_SDIST_OUT": "new empty directory under I1_VALIDATION_ROOT",
+      "I1_PIP_OUT": "new empty directory under I1_VALIDATION_ROOT",
+      "I1_EMPTY_CWD": "new empty working directory under I1_VALIDATION_ROOT",
+      "repository_descendant": "REFUSE_FOR_EVERY_PATH"
+    },
+    "environment_creation": {
+      "precondition": "Recompute and match every artifact raw_sha256 and byte_length; refuse an additional wheelhouse member.",
+      "network": "PHYSICALLY_DISABLED_FOR_ALL_CREATION_COMMANDS",
+      "working_directory": "I1_EMPTY_CWD",
+      "venv_process_environment": {
+        "construction": "env -i",
+        "environment_keys": {
+          "PATH": "/usr/bin:/bin",
+          "TMPDIR": "I1_VALIDATION_ROOT/tmp/<f1-or-f2-venv>; distinct new empty directory",
+          "LC_ALL": "C",
+          "LANG": "C",
+          "TZ": "UTC",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        }
+      },
+      "install_process_environment": "official_process_environment for the applicable F1 or F2 role",
+      "f1_venv_argv": [
+        "I1_CPYTHON314_ABSOLUTE_PATH",
+        "-I",
+        "-m",
+        "venv",
+        "I1_F1_ENV"
+      ],
+      "f1_install_argv": [
+        "I1_F1_ENV/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--isolated",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "--disable-pip-version-check",
+        "--no-input",
+        "--no-color",
+        "--force-reinstall",
+        "I1_WHEELHOUSE/pip-26.2.1-py3-none-any.whl",
+        "I1_WHEELHOUSE/packaging-26.3-py3-none-any.whl",
+        "I1_WHEELHOUSE/pyproject_hooks-1.2.0-py3-none-any.whl",
+        "I1_WHEELHOUSE/build-1.5.0-py3-none-any.whl"
+      ],
+      "f2_venv_argv": [
+        "I1_CPYTHON314_ABSOLUTE_PATH",
+        "-I",
+        "-m",
+        "venv",
+        "I1_F2_ENV"
+      ],
+      "f2_install_argv": [
+        "I1_F2_ENV/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--isolated",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "--disable-pip-version-check",
+        "--no-input",
+        "--no-color",
+        "--force-reinstall",
+        "I1_WHEELHOUSE/pip-26.2.1-py3-none-any.whl"
+      ],
+      "postcondition": "Before any backend hook, importlib.metadata must prove exact versions, active Requires-Dist marker evaluation, and license metadata: F1 contains exactly build, packaging, pyproject_hooks, and pip; F2 contains exactly pip; no other installed distribution may remain in either environment."
+    },
+    "official_process_environment": {
+      "construction": "env -i",
+      "environment_keys": {
+        "PATH_BY_ROLE": {
+          "F1_SOURCE_DISTRIBUTION_PRODUCER": "I1_F1_ENV/bin:/usr/bin:/bin",
+          "F2_SDIST_WHEEL_CONSUMER": "I1_F2_ENV/bin:/usr/bin:/bin"
+        },
+        "TMPDIR": "I1_VALIDATION_ROOT/tmp/<command-id>; distinct new empty directory for each official command",
+        "LC_ALL": "C",
+        "LANG": "C",
+        "TZ": "UTC",
+        "PYTHONHASHSEED": "0",
+        "PYTHONNOUSERSITE": "1",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PIP_CONFIG_FILE": "/dev/null",
+        "PIP_DISABLE_PIP_VERSION_CHECK": "1",
+        "PIP_NO_INDEX": "1"
+      },
+      "working_directory": "I1_EMPTY_CWD",
+      "network": "PHYSICALLY_DISABLED",
+      "unset_by_env_i": [
+        "PYTHONPATH",
+        "PIP_INDEX_URL",
+        "PIP_EXTRA_INDEX_URL",
+        "PIP_FIND_LINKS",
+        "credentials",
+        "proxy variables",
+        "user-site inputs",
+        "all other inherited variables"
+      ]
+    },
+    "commands": [
+      {
+        "id": "F1_METADATA",
+        "frontend_role": "F1_SOURCE_DISTRIBUTION_PRODUCER",
+        "python_source": "import pathlib\nimport sys\nfrom build import ProjectBuilder\nfrom build.env import DefaultIsolatedEnv\n\nwith DefaultIsolatedEnv(installer=\"pip\") as isolated_env:\n    builder = ProjectBuilder.from_isolated_env(\n        isolated_env, sys.argv[1]\n    )\n    if builder.build_system_requires:\n        raise SystemExit(\"nonempty declared build requirements\")\n    if builder.get_requires_for_build(\"wheel\"):\n        raise SystemExit(\"nonempty hook-returned wheel requirements\")\n    prepared = builder.prepare(\"wheel\", sys.argv[2])\n    if prepared is None:\n        raise SystemExit(\"prepare_metadata_for_build_wheel missing\")\n    metadata_path = pathlib.Path(prepared)\n    print(metadata_path.name)\n",
+        "argv": [
+          "I1_F1_ENV/bin/python",
+          "-I",
+          "-c",
+          "frontend_interoperability_contract.commands[id=F1_METADATA].python_source",
+          "I1_SOURCE_SNAPSHOT",
+          "I1_BUILD_METADATA_OUT"
+        ],
+        "stdout": "I1_EVIDENCE/f1-metadata.stdout",
+        "stderr": "I1_EVIDENCE/f1-metadata.stderr"
+      },
+      {
+        "id": "F1_DIRECT_WHEEL",
+        "frontend_role": "F1_SOURCE_DISTRIBUTION_PRODUCER",
+        "argv": [
+          "I1_F1_ENV/bin/python",
+          "-I",
+          "-m",
+          "build",
+          "--installer",
+          "pip",
+          "--wheel",
+          "--outdir",
+          "I1_BUILD_DIRECT_OUT",
+          "I1_SOURCE_SNAPSHOT"
+        ],
+        "stdout": "I1_EVIDENCE/f1-direct-wheel.stdout",
+        "stderr": "I1_EVIDENCE/f1-direct-wheel.stderr"
+      },
+      {
+        "id": "F1_SDIST",
+        "frontend_role": "F1_SOURCE_DISTRIBUTION_PRODUCER",
+        "argv": [
+          "I1_F1_ENV/bin/python",
+          "-I",
+          "-m",
+          "build",
+          "--installer",
+          "pip",
+          "--sdist",
+          "--outdir",
+          "I1_BUILD_SDIST_OUT",
+          "I1_SOURCE_SNAPSHOT"
+        ],
+        "stdout": "I1_EVIDENCE/f1-sdist.stdout",
+        "stderr": "I1_EVIDENCE/f1-sdist.stderr"
+      },
+      {
+        "id": "F2_SDIST_WHEEL",
+        "frontend_role": "F2_SDIST_WHEEL_CONSUMER",
+        "argv": [
+          "I1_F2_ENV/bin/python",
+          "-I",
+          "-m",
+          "pip",
+          "--isolated",
+          "--disable-pip-version-check",
+          "--no-color",
+          "--no-cache-dir",
+          "--verbose",
+          "wheel",
+          "--use-pep517",
+          "--check-build-dependencies",
+          "--no-deps",
+          "--no-index",
+          "--no-input",
+          "--wheel-dir",
+          "I1_PIP_OUT",
+          "I1_BUILD_SDIST_OUT/ebu_framework-0.1.0a1.tar.gz"
+        ],
+        "stdout": "I1_EVIDENCE/f2-sdist-wheel.stdout",
+        "stderr": "I1_EVIDENCE/f2-sdist-wheel.stderr"
+      }
+    ],
+    "command_rule": "Every commands argv is exact and runs under official_process_environment from I1_EMPTY_CWD. No omitted option, config setting, requirement, constraint, environment variable, or cwd input is permitted.",
+    "build_isolation_behavior": {
+      "F1": "build 1.5.0 creates a fresh isolated venv for each operation and uses exact pip 26.2.1 as installer; empty declared and hook-returned requirements cause no backend dependency installation.",
+      "F2": "pip 26.2.1 default PEP 517 isolation remains enabled, prepares metadata, and builds the wheel from the exact local sdist; --no-build-isolation is forbidden.",
+      "frontend_environment_visibility": "F1 and F2 use separate exact-closure frontend environments. Their distributions and dependencies are not made importable to the backend merely because they exist in the applicable frontend environment.",
+      "network": "Both roles run physically offline and with index access disabled."
+    },
+    "required_evidence": [
+      "the four artifact filenames, byte lengths, recomputed raw SHA-256 values, and authoritative PyPI URLs",
+      "installed project versions, active dependency marker evaluation, license identities, and retained license-member audit",
+      "CPython identity, complete sanitized environment, exact argv, exit status, and captured stdout/stderr for every command",
+      "F1 metadata invocation of prepare_metadata_for_build_wheel and exact metadata_contract result",
+      "F1 direct wheel and sdist names, bytes, hashes, and empty declared and hook-returned build requirements",
+      "F2 consumption of the exact F1 sdist, isolated metadata preparation, build_wheel invocation, and absence of wheel installation or source-tree write",
+      "byte identity of the F1 direct wheel and F2 sdist-derived wheel",
+      "proof that network access and undeclared dependency lookup did not succeed",
+      "proof that frontend environments, caches, outputs, and evidence stayed outside the repository"
+    ],
+    "classification": "All four distributions are external I-1 validation tooling only. They are not backend build requirements, backend helpers, package data, framework dependencies, or scientific-runtime dependencies.",
+    "forbidden_locations": [
+      "build-system.requires",
+      "project.dependencies",
+      "ebu-framework wheel Requires-Dist",
+      "requirements-framework.lock",
+      "closed implementation file manifest",
+      "ebu-framework wheel",
+      "ebu-framework sdist",
+      "repository environment"
+    ],
+    "change_rule": "Changing a frontend project, version, artifact hash, active dependency, role, command, or isolation behavior requires a prospective validation-tool amendment and never silently converts frontend tooling into a package dependency."
+  },
+  "build_isolation_and_dependency_boundary": {
+    "build_system_requires": [],
+    "hook_reported_requirements": [],
+    "isolated_backend_environment": "CPython 3.14 standard library plus frontend hook-transport machinery only; backend imports from stdlib and backend-path only",
+    "build_frontend": "Exactly frontend_interoperability_contract. All members are external operator/validation tooling, not backend requirements or scientific-runtime dependencies, and frontend identity may not change backend outputs.",
+    "initial_framework_runtime_dependencies": [],
+    "backend_installed_at_runtime": false,
+    "later_i4_dependency_rule": "Only the separately authorized audited Ed25519 provider may be added to project dependencies and requirements-framework.lock in I-4; it is not a build-backend dependency.",
+    "future_backend_dependency_rule": "Any external backend or backend helper requires a new prospective amendment and a separate exact build-dependency lock path added to the closed manifest before implementation."
+  },
+  "python_3_14_contract": {
+    "build_interpreter": "CPython >=3.14.0,<3.15.0 with releaselevel final",
+    "wheel_tag": "cp314-none-any",
+    "requires_python": ">=3.14,<3.15",
+    "stdlib_toml_parser": "tomllib",
+    "build_identity_evidence": "Record sys.implementation, sys.version, sys.version_info, sys.executable raw hash where permitted, SOABI/cache tag, and build-details.json v1.0 bytes/hash when present.",
+    "refuse": [
+      "non-CPython",
+      "Python before 3.14",
+      "Python 3.15 or later",
+      "non-final Python release",
+      "metadata or wheel tag inconsistent with CPython 3.14"
+    ]
+  },
+  "validation_vectors": [
+    {
+      "id": "P1_BACKEND_PATH",
+      "class": "T0",
+      "accept": "the independently determined lexical source root contains an exact real non-symlink build_backend directory and exact real non-symlink ebu_build_backend.py regular file; their strict resolutions retain source-root containment; the resolved module origin equals the resolved selected backend file; pyproject declares only that backend path and module",
+      "refuse": "symlinked build_backend directory, symlinked backend file, path escape, alternate backend filename or location, second backend path, or module-origin mismatch"
+    },
+    {
+      "id": "P2_EMPTY_REQUIREMENTS",
+      "class": "T0",
+      "accept": "pyproject requires=[], both get_requires hooks return [], and isolated offline hooks import no non-stdlib package",
+      "refuse": "any declared, returned, imported, downloaded, or subprocess-provided backend dependency"
+    },
+    {
+      "id": "P3_STATIC_METADATA",
+      "class": "T0",
+      "accept": "prepared metadata, direct wheel metadata, and sdist-to-wheel metadata are byte-identical and equal metadata_contract",
+      "refuse": "dynamic field, metadata drift, additional file, wrong order, wrong line ending, or wrong version"
+    },
+    {
+      "id": "P4_PACKAGE_DATA",
+      "class": "T0",
+      "accept": "wheel installed tree contains every and only selected package file; Unicode assets and core registry retain source raw hashes; LICENSE occupies only dist-info/licenses",
+      "refuse": "missing required data, unknown package-root file, excluded file, symlink, case collision, or hash mismatch"
+    },
+    {
+      "id": "P5_REPRODUCIBLE_WHEEL",
+      "class": "T0",
+      "accept": "at least three direct builds from byte-identical trees with different absolute paths, mtimes, umasks, locale, TZ, PYTHONHASHSEED, and irrelevant environment yield identical wheel bytes and hashes",
+      "refuse": "any byte difference or undeclared environment read"
+    },
+    {
+      "id": "P6_REPRODUCIBLE_SDIST",
+      "class": "T0",
+      "accept": "the same perturbations yield identical sdist bytes and hashes; archive has exact pax, mode, owner, time, path, member, and gzip properties",
+      "refuse": "any byte difference, unsafe archive feature, or undeclared member"
+    },
+    {
+      "id": "P7_SDIST_WHEEL_EQUIVALENCE",
+      "class": "T0",
+      "accept": "direct wheel equals byte-for-byte a wheel built in isolation from the safely extracted sdist",
+      "refuse": "member, metadata, RECORD, ordering, timestamp, permission, or byte difference"
+    },
+    {
+      "id": "P8_RECORD_AND_ARCHIVE",
+      "class": "T0",
+      "accept": "independent stdlib parsers verify every member, CRC, RECORD digest/size, sdist file hash/size, filename, top-level name, and metadata name/version",
+      "refuse": "duplicate name, unhashed wheel member other than RECORD, bad CSV, wrong CRC, traversal, link, device, or trailing archive payload"
+    },
+    {
+      "id": "P9_READ_ONLY_AND_COLLISION",
+      "class": "T1_INERT_PACKAGING",
+      "accept": "build succeeds from a read-only synthetic source copy into a separate empty output directory and refuses pre-existing outputs without modification",
+      "refuse": "source write, cache-dependent output, overwrite, or partial accepted artifact"
+    },
+    {
+      "id": "P10_FRONTEND_INTEROPERABILITY",
+      "class": "T1_INERT_PACKAGING",
+      "accept": "The exact build==1.5.0 F1 closure and pip==26.2.1 F2 closure execute their role-specific frontend_interoperability_contract commands under isolation; F1 direct and F2 sdist-derived wheels are byte-identical; all required frontend evidence is complete.",
+      "refuse": "frontend or dependency identity mismatch, extra closure member, wrong role or command, frontend-specific bytes, isolation bypass, network access, undeclared package access, repository-local tooling artifact, incomplete evidence, or hook protocol mismatch"
+    },
+    {
+      "id": "P11_PYTHON_BOUNDARY",
+      "class": "T0",
+      "accept": "CPython 3.14 final produces cp314-none-any with Requires-Python >=3.14,<3.15",
+      "refuse": "3.13, 3.15, alternate implementation, prerelease, or mismatched tag/metadata"
+    },
+    {
+      "id": "P12_NO_SCIENCE",
+      "class": "T0",
+      "accept": "Static reachability proves the backend cannot import historical runners, framework execution, scientific adapters, Gate 1D-C, results, network clients, or subprocess entry points. External frontends may handle source bytes only as inert packaging inputs, cannot import or execute them, cannot access prohibited repository paths, and are physically network-disabled under frontend_interoperability_contract.",
+      "refuse": "backend prohibited reachability, frontend framework/scientific import or execution, frontend access to prohibited repository paths, frontend network availability, or any model-state advance"
+    }
+  ],
+  "acceptance_criteria": [
+    "The backend implementation is one reviewed file and satisfies every backend_contract clause.",
+    "P1 through P12 complete with nonzero checks and no skipped or terminated vector.",
+    "The exact accepted backend source hash, build-input-manifest hash, wheel hash, sdist hash, member hashes, interpreter identity, frontend identities, frontend closures, commands, environments, and role-specific evidence are recorded.",
+    "The initial build requirement closure and framework runtime dependency closure are both empty and independently verified.",
+    "The wheel and sdist conform to current PyPA specifications and the stricter deterministic properties in this contract.",
+    "The direct and sdist-derived wheels are byte-identical.",
+    "The closed implementation file manifest contains no unapproved path.",
+    "No framework/scientific code, model step, runner, trajectory, Gate 1D-C action, result, commit, push, tag, release, or publication occurs."
+  ],
+  "refusal_codes": [
+    "PACKAGING_AUTHORITY_HASH_MISMATCH",
+    "PACKAGING_CONTRACT_MISMATCH",
+    "UNSUPPORTED_BUILD_INTERPRETER",
+    "BACKEND_PATH_ESCAPE",
+    "BACKEND_ORIGIN_MISMATCH",
+    "UNDECLARED_BUILD_DEPENDENCY",
+    "UNSUPPORTED_CONFIG_SETTINGS",
+    "DYNAMIC_METADATA_FORBIDDEN",
+    "PACKAGE_FILE_SET_MISMATCH",
+    "PACKAGE_DATA_MISSING",
+    "UNSAFE_SOURCE_PATH",
+    "SOURCE_CHANGED_DURING_BUILD",
+    "OUTPUT_ALREADY_EXISTS",
+    "METADATA_DIRECTORY_MISMATCH",
+    "WHEEL_CONTRACT_MISMATCH",
+    "SDIST_CONTRACT_MISMATCH",
+    "RECORD_HASH_MISMATCH",
+    "NONDETERMINISTIC_BUILD",
+    "SDIST_WHEEL_DIVERGENCE",
+    "EDITABLE_BUILD_UNSUPPORTED",
+    "SCIENTIFIC_REACHABILITY_VIOLATION",
+    "FRONTEND_ARTIFACT_IDENTITY_MISMATCH",
+    "FRONTEND_DEPENDENCY_CLOSURE_MISMATCH",
+    "FRONTEND_ROLE_OR_COMMAND_MISMATCH",
+    "FRONTEND_ISOLATION_OR_NETWORK_VIOLATION",
+    "FRONTEND_EVIDENCE_INCOMPLETE",
+    "FRONTEND_REPOSITORY_CONTAMINATION"
+  ],
+  "stage_consequences": {
+    "i1_status_after_amendment": "FULLY_SPECIFICATION_READY_UNIMPLEMENTED",
+    "i1_implementation_authorized": false,
+    "i1_new_input": "this Markdown amendment and matching JSON contract at exact accepted raw hashes",
+    "i1_work_addition": "implement build_backend/ebu_build_backend.py and exact packaging metadata under the existing I-1 authorization boundary when separately authorized",
+    "i1_validation_addition": "P1 through P12, including the exact closed F1/F2 frontend interoperability contract; no frontend identity remains unresolved",
+    "i4": "retains sole later authority to add the audited Ed25519 runtime provider to project dependencies and requirements-framework.lock; build-system.requires remains empty",
+    "i9": "must audit backend source, packaging file set, raw artifact hashes, current PyPA conformance, exact frontend artifacts and active closures, role separation and isolation, direct/sdist wheel equality, and build/runtime dependency separation",
+    "release": "No package version, wheel, sdist, alpha tag, upload, or release exists or is authorized by this contract."
+  },
+  "remaining_open_questions": [
+    {
+      "id": "PKG-OQ-02",
+      "question": "Which exact CPython 3.14 patch/build identity is the release-build reference environment?",
+      "blocking": "distribution release only; all conforming CPython 3.14 final builds must already be byte-identical",
+      "owner": "future release checklist"
+    },
+    {
+      "id": "PKG-OQ-03",
+      "question": "Will a future stable framework release broaden Python support beyond CPython 3.14?",
+      "blocking": "future compatibility expansion only",
+      "owner": "prospective framework compatibility amendment"
+    },
+    {
+      "id": "PKG-OQ-04",
+      "question": "Will editable installation ever be supported?",
+      "blocking": "editable installs only; I-1 wheel and sdist are unaffected",
+      "owner": "prospective PEP 660 amendment"
+    },
+    {
+      "id": "PKG-OQ-05",
+      "question": "Which future package version and publication destination follow 0.1.0a1?",
+      "blocking": "release/publication only",
+      "owner": "future separately authorized release plan"
+    }
+  ],
+  "open_question_effect": "No remaining open question blocks I-1 implementation or acceptance. PKG-OQ-02 and PKG-OQ-05 are release-stage questions; PKG-OQ-03 and PKG-OQ-04 require prospective amendments only if their future features are requested."
+}

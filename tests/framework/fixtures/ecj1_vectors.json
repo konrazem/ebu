@@ -1,0 +1,54 @@
+{
+  "valid": [
+    {
+      "id": "nested-object",
+      "value": {"b": [true, false, null], "a": 1},
+      "canonical_hex": "7b2261223a312c2262223a5b747275652c66616c73652c6e756c6c5d7d"
+    },
+    {
+      "id": "nfc-composition",
+      "value": "é",
+      "canonical_hex": "22c3a922"
+    },
+    {
+      "id": "unicode-scalar-key-order",
+      "value": {"𐀀": 1, "": 0},
+      "canonical_hex": "7b22ee8080223a302c22f0908080223a317d"
+    },
+    {
+      "id": "required-escapes",
+      "value": "\b\t\n\f\r\u0000\"\\/",
+      "canonical_hex": "225c625c745c6e5c665c725c75303030305c225c5c2f22"
+    },
+    {
+      "id": "arbitrary-precision-integer",
+      "value": -123456789012345678901234567890,
+      "canonical_hex": "2d313233343536373839303132333435363738393031323334353637383930"
+    },
+    {
+      "id": "unicode-15-extension-h-upper-bound",
+      "value": "𲎯",
+      "canonical_hex": "22f0b28eaf22"
+    }
+  ],
+  "invalid_parse": [
+    {"id": "leading-whitespace", "input_hex": "206e756c6c", "failure_code": "NONCANONICAL_ECJ1"},
+    {"id": "raw-fraction", "input_hex": "312e30", "failure_code": "INVALID_ECJ1"},
+    {"id": "raw-exponent", "input_hex": "316531", "failure_code": "INVALID_ECJ1"},
+    {"id": "negative-zero", "input_hex": "2d30", "failure_code": "NONCANONICAL_ECJ1"},
+    {"id": "leading-zero", "input_hex": "3031", "failure_code": "INVALID_ECJ1"},
+    {"id": "duplicate-name", "input_hex": "7b2261223a312c2261223a327d", "failure_code": "DUPLICATE_OBJECT_NAME"},
+    {"id": "nfc-duplicate-name", "input_hex": "7b22c3a9223a312c22655c7530333031223a327d", "failure_code": "DUPLICATE_OBJECT_NAME"},
+    {"id": "later-assigned-u2ebf0", "input_hex": "22f0aebfb022", "failure_code": "UNASSIGNED_UNICODE_SCALAR"},
+    {"id": "isolated-surrogate", "input_hex": "225c756438303022", "failure_code": "INVALID_UNICODE_SCALAR"},
+    {"id": "escaped-ordinary-scalar", "input_hex": "225c753030363122", "failure_code": "NONCANONICAL_ECJ1"},
+    {"id": "escaped-solidus", "input_hex": "225c2f22", "failure_code": "NONCANONICAL_ECJ1"}
+  ],
+  "invalid_encode": [
+    {"id": "float", "failure_code": "FLOAT_FORBIDDEN"},
+    {"id": "tuple", "failure_code": "ECJ1_TYPE_UNSUPPORTED"},
+    {"id": "bytes", "failure_code": "ECJ1_TYPE_UNSUPPORTED"},
+    {"id": "cycle", "failure_code": "CYCLIC_OBJECT_GRAPH"},
+    {"id": "nfc-duplicate-name", "failure_code": "DUPLICATE_OBJECT_NAME"}
+  ]
+}

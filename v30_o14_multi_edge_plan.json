@@ -1,0 +1,791 @@
+{
+  "actor_economy_pause": {
+    "forbidden_in_gate_1d_b": [
+      "actors",
+      "wallets",
+      "health",
+      "needs",
+      "death",
+      "prices",
+      "personal debt",
+      "transfers",
+      "markets",
+      "learning"
+    ],
+    "reason": "no outcome of this study authorizes actors, wallets, health, needs, death, prices, transfers, markets or learning; a separate authorization gate is required",
+    "status": "Gate 2 remains PAUSED"
+  },
+  "aggregate_quote_diagnostics": {
+    "expected_sign": "naive sum >= group quote on the credit side (foundation Prop 10.2); a violation falsifies the recorded convexity argument (F9)",
+    "group_quote": "for every arm-A tick, record the exact aggregate local quote Delta e_group(q_vec) = V_loc(z) - V_loc(z + dt * sum_e S_e q_e_acc) - sum_e C_e(q_e_acc) over the source and its destinations, AND the naive sum of independently frozen per-edge quotes; their difference is the measured double-count",
+    "no_settlement": "these are recorded functionals of frozen tick data; nothing is settled, credited or attributed; O3 remains open"
+  },
+  "arms": {
+    "A_full_multi_edge_p1c": "capability-SUPERSET benchmark, not the primary comparator: all locally generated outgoing requests accepted and proportionally scaled by the aggregate source budget (released p1c_step on the full world); bounded service; no EBU input; carries no EBU",
+    "B_restricted_matched_non_ebu": "PRIMARY comparator: one outgoing action per source per micro-step; the identical menu, quantity cap, request shaping, conflict rule and timestep as D; selection by the released loss-aware force f_e (largest f, tie by larger q_acc, then lower edge index); no EBU, no global service score, no rollout",
+    "C_restricted_observational_quote": "byte-identical physics to B (same selection); the executed action is quoted and settled observationally; the full candidate-menu schedules are recorded as diagnostics; quotes CANNOT affect action",
+    "D_restricted_exact_total_quote_greedy": "the actor under test: same menu/caps/timestep as B/C; selects per the registered heuristic; rests when no strictly positive exact quote exists; never ranks per unit",
+    "E_aggregate_source_group_quote": "NOT REGISTERED FOR EXECUTION (O3 open): no settling aggregate arm exists in this study; see aggregate_quote_diagnostics",
+    "S_restricted_local_service_priority": "REGISTERED strictly-local service comparator: same menu; score = eta_e * q_acc * 1[declared demand rate of destination > 0], ties by lower edge index then lower quantity-menu index (volume maximizer toward a demanding destination); reads ONLY the menu and the adjacent destination's declared demand rate; justification: separates quote-specific service loss (D vs S) from restriction-generic loss shared by B; declared limitation: ignores destination stock buffers",
+    "forbidden_comparison": "using unmatched arm A as the alignment comparator; labelling capability-caused service reduction as quote misalignment",
+    "primary_comparison": "D versus B"
+  },
+  "baseline": {
+    "branch": "v3.0-local-ebu-foundation",
+    "equation_version": "v3.0-gate0.1",
+    "gate1_plan_canonical_hash": "a1916e8ecf366cee93a5284a0d8fcb68a3e1a429f49ce62b9f5914df87f94061",
+    "gate1_plan_raw_sha256": "5f01a1fd554bfb2f5e684dc318a805f2887d51274e456c98d1a1d5788d1a6f4f",
+    "gate1d_a_correction_commit": "86853b0b6adff0fe024fcd696694973f56bb63fb",
+    "gate1d_a_results_commit": "4f89b1f0bf80a3da33c2be1fe0e28504bf0cf333",
+    "gate1d_plan_canonical_hash": "71c706021d738330d5382fec5056ea5228abac61aba0738b00a9a8e75edc1020",
+    "gate1d_plan_raw_sha256": "7a5676e2013d3baa4f18d48443fe448f1d6d0973be79b5c1ca8634a95bfa4f7c",
+    "gate1d_results_unchanged": true,
+    "p1c_unchanged": true,
+    "physics_unchanged": true,
+    "quote_equation_unchanged": true,
+    "released_baseline_commit": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
+    "released_baseline_tag": "v2.9.0"
+  },
+  "bounded_service_semantics": {
+    "domain": "non-negative states; no clipping that creates phantom stock",
+    "reserve_diagnostic_tolerance": "Gate 1D-A corrected scale-aware rule: materially_below_reserve(x, R_eff) iff x < R_eff - 1e-9 * (1 + |R_eff|); crossings = not-below -> below transitions (service_v30.reserve_crossing)",
+    "reuse": "Gate 1D bounded service semantics verbatim (registered 10-step order; service <= available and <= demand; unmet = demand - service exactly; explicit non-negativity corrections; exact ledger closure with named losses; demand in the saturating service step, not the drive)",
+    "theorem_scope": "the bounded wrapper remains OUTSIDE the V2.8 D0 theorem (O13); passing checks are numerical validation, never proof"
+  },
+  "command_order": [
+    "1. implement o14_v30.py + test_v30_o14.py (separate authorization); commit and push BEFORE any run",
+    "2. python3 test_v30_o14.py   (pre-execution suite; must be all-pass; proves no 200-tick study runs inside it)",
+    "3. commit and push the passing pre-execution state",
+    "4. python3 exp_v30_o14.py > results/v3.0/gate1db/v30_o14_stdout.txt   (SINGLE authorized execution; refuses to run on plan-hash mismatch or existing summary)",
+    "5. validate, write MANIFEST.md, commit and push results"
+  ],
+  "comparisons": {
+    "A_vs_B": "capability cost of the one-action restriction (C1)",
+    "B_vs_C": "byte-identical observational check (F1)",
+    "B_vs_D": "PRIMARY quote-choice alignment under matched capability (C3)",
+    "S_vs_B_and_S_vs_D": "registered secondary attribution: separates quote-specific from restriction-generic service loss; informational, no new predicate",
+    "timestep_sensitivity": "conservative vs near-certificate per world"
+  },
+  "created": "2026-07-29",
+  "experiment_size": {
+    "arms": 5,
+    "burn_in_ticks": 50,
+    "composition": "6 worlds x 5 arms (A, B, C, D, S) x 2 timesteps",
+    "determinism": "fully deterministic: no random seed anywhere; run identifiers are '<world>|<arm>|<dt_label>'",
+    "no_exploratory_parameter_selection": true,
+    "persistence_window_ticks": 20,
+    "run_length_ticks": 200,
+    "stochastic_study": false,
+    "timesteps": 2,
+    "total_runs": 60,
+    "worlds": 6
+  },
+  "falsifier_policy": "all falsifiers remain reportable; none may be tuned away; a fired falsifier is reported, never absorbed",
+  "falsifiers": {
+    "F1": "C changes any physical value relative to B",
+    "F10": "a stale quote or a quote outside [0, q_e_max] is evaluated",
+    "F11": "any run uses r_dt > 1",
+    "F12": "B-versus-D differences are explained by capability rather than ranking (identity of menus/budgets is asserted per tick; any assertion failure fires this)",
+    "F13": "all worlds are non-discriminating",
+    "F14": "parameters or predicates are adjusted after outcome inspection",
+    "F15": "migration or dynamic topology enters this gate",
+    "F2": "B and D have different candidate menus, quantities, budgets or timesteps at any tick",
+    "F3": "no registered world has two simultaneously active outgoing choices (per-tick active-edge counts prove non-vacuity)",
+    "F4": "the one-action restriction never binds anywhere, repeating Gate 1D's limitation",
+    "F5": "D earns positive EBU while producing a persistent service deficit relative to matched B under the registered predicate",
+    "F6": "D crosses a protected reserve (corrected tolerance) or causes physical overuse while theorem assumptions are reported satisfied",
+    "F7": "any actor reads global V, whole-world service, future trajectories, classifications, experiment results, wallets, health or prices (AST + runtime poison)",
+    "F8": "the production heuristic ranks by EBU per unit",
+    "F9": "independent per-edge settlement issues more than the exact aggregate local transformation (no settlement exists here; the recorded diagnostic violating Prop 10.2 also fires this)"
+  },
+  "gate": "V3.0 Gate 1D-B / O14 - preregistered multi-out-edge capability study (DESIGN ONLY; no execution authorized by this plan alone)",
+  "harness_requirements": [
+    "recompute and enforce the canonical plan hash; fail closed on mismatch",
+    "recompute every world certificate and both dts; fail closed on mismatch with this plan",
+    "no command-line options; no scientific override",
+    "refuse to overwrite a completed study",
+    "strict JSON (allow_nan=False); every registered run recorded exactly once",
+    "assert per tick: B/C/D/S menus, budgets and timesteps identical (F2/F12)",
+    "assert per tick: executed q_acc equals selected menu q_acc (request shaping identity)"
+  ],
+  "heuristic": {
+    "act_condition": "execute e* only if Delta e_(e*)(q_(e*)*) > 0 strictly; otherwise rest (voluntary rest is recorded)",
+    "boundary_optimality_lemma": "registered analytic finding: with the source penalty-inactive at the frozen state and one destination deficit branch, the exact schedule is strictly increasing on the feasible menu for every r_dt <= 1 world here, so q_e* = q_e_max; an interior menu optimum observed in the study is therefore itself a reportable surprise, not noise",
+    "continuous_diagnostic": "the closed-form continuous vertex q_cont* of the piecewise-quadratic schedule is RECORDED per candidate as a diagnostic (menu-discretization gap); it never selects actions",
+    "edge_selection": "e* = argmax_e Delta e_e(q_e*)",
+    "name": "exact-total-quote greedy (candidate heuristic, NOT a theorem)",
+    "per_edge_quantity": "q_e* = argmax over the REGISTERED FINITE MENU {frac * J_e : frac in quantity_menu, capped at the authoritative P1C budget} of the exact committed schedule Delta e_e(q); exact enumeration, deterministic, never evaluated outside [0, q_e_max]",
+    "q_zero_branch": "q = 0 is the exact rest branch: schedule(0) = 0 with c0 = 0; rest settles nothing",
+    "ranking_quantity": "exact TOTAL quote Delta e_e(q). EBU per unit is FORBIDDEN as a ranking key (falsifier F8); per-unit values are recorded as diagnostics only",
+    "settlement_form": "exact finite-difference quote (foundation eq 6.1) via ebu_quote_v30.build_quote/exact; the linear diagnostic dt*q*(mu_i - eta*mu_j) - C(q) is NEVER used for settlement or ranking",
+    "tie_rule": "exact-quote ties break by (lower edge index, then lower quantity-menu index): deterministic identifiers only, no hidden physical objective"
+  },
+  "hypotheses": {
+    "H1": "observational quotes leave B and C byte-identical",
+    "H10": "a multi-edge aggregate quote cannot be replaced by a naive sum of independently frozen edge quotes without proof (diagnostic: naive sum - group quote >= 0 on credit side, strictly > 0 whenever two accepted actions share the source and convexity is strict)",
+    "H2": "at least one primary world makes the one-action restriction genuinely bind (O14_W4 by construction: sigma_A < 1 at both dts)",
+    "H3": "A vs B quantifies a nonzero capability cost somewhere",
+    "H4": "D preserves P1C reserves and produces no physical overuse",
+    "H5": "exact-total-quote choice adapts when local destination conditions reverse (O14_W5 selected-edge series switches)",
+    "H6": "quote per unit and exact total quote can rank candidates differently (checked over all recorded candidate pairs)",
+    "H7": "in feasible worlds, D does not persistently under-serve relative to B under the registered predicate",
+    "H8": "in infeasible worlds, P1C exposes scarcity through explicit unmet demand (O14_W6)",
+    "H9": "no-action / all-negative-quote states remain reportable"
+  },
+  "identifies_separately": {
+    "C1": "cost of one outgoing action per source per micro-step (A vs B)",
+    "C2": "incomplete quote coverage or attribution (coverage forced to 1.0 in restricted arms; aggregate attribution deferred to O3 and measured only as a settlement-free diagnostic)",
+    "C3": "genuine choice misalignment under identical capability (B vs D; O14_W2 gives a provable t0 divergence)",
+    "O14": "multi-out-edge worlds - every registered world gives the source 2-4 simultaneously available out-edges",
+    "O3": "aggregate multi-edge quote/allocation - REMAINS OPEN; no settling aggregate arm is registered"
+  },
+  "information_boundary": {
+    "enforcement": "future test_v30_o14.py must include (i) an AST scan of the decision path for forbidden identifiers and imports, (ii) runtime poison probes (objects that raise on any global/forbidden attribute access) passed through the selection code, (iii) the V_total-never-on-decision-path check, mirroring Gate 1B Q18 and Gate 1D G8",
+    "may_not_read": [
+      "global V",
+      "global viability",
+      "whole-world service or unmet demand",
+      "future states or rollouts",
+      "phase-map position",
+      "experiment classifications",
+      "result files",
+      "wallets, health, personal debt, prices or markets",
+      "migration destinations beyond the permitted local neighbourhood"
+    ],
+    "may_read": [
+      "the source's frozen local stock and declared parameters",
+      "the authoritative P1C source classification and remaining aggregate budget",
+      "adjacent destination LocalViews",
+      "local edge efficiency, threshold, mobility and declared process cost",
+      "candidate requested/accepted quantities",
+      "the complete exact committed quote schedule",
+      "deterministic local identifiers needed for tie handling"
+    ]
+  },
+  "metrics_per_run": [
+    "per-tick source and destination stocks",
+    "per-tick active outgoing edges (J_e > 0 count and identity)",
+    "per-tick candidate menu: edge, fraction, q_req, q_e_max, q_acc",
+    "per-tick exact quote for EVERY candidate (full schedule value at its q)",
+    "per-tick per-unit quote per candidate (diagnostic only)",
+    "per-tick continuous vertex q_cont* per candidate (diagnostic only)",
+    "selected edge and selected quantity (q_e*), executed q_acc",
+    "accepted and delivered quantities per edge",
+    "aggregate safe-budget utilization Q_acc/Q_max and sigma",
+    "service and unmet demand BY DESTINATION and totals",
+    "persistent service deficit fields (Gate 1D operationalization)",
+    "burden and viability (corroborating only)",
+    "reserve crossings (corrected tolerance) and Allee crossings",
+    "dead sources; physical overuse; transport loss",
+    "action counts; voluntary rests; p1c rejections",
+    "positive, zero and negative exact-quote candidate counts",
+    "quote coverage (quoted actions / accepted actions)",
+    "arm-A group quote and naive independent sum (settlement-free)",
+    "domain status and negative-state corrections",
+    "timestep certificate, binding kind and r_dt",
+    "ledger residual and recomputation residuals",
+    "EBU totals (evaluation variable only): total, positive, negative"
+  ],
+  "migration_future_note": "FUTURE RESEARCH DIRECTION ONLY, explicitly outside this gate and assigned NO theorem: actor/stock relocation over the graph could be studied as a diffusion (gradient-driven spreading), drift/convection (advected flow along declared fields), or hybrid process, with its own certificates, information boundary and preservation constraints; nothing here designs, implements or authorizes it",
+  "non_claims": [
+    "passing numerical tests will not prove alignment, safety, security or any theorem",
+    "the exact-total-quote greedy rule is a candidate heuristic, not a theorem",
+    "no latency or robustness claim (tau = 0; Gate 1E untouched)",
+    "cumulative signed EBU is an evaluation variable, not a wallet",
+    "no aggregate multi-edge settlement is validated by this study (O3 open)",
+    "the boundary-optimality lemma is registered analysis, not a proved theorem for all parameter corners"
+  ],
+  "outcome_classes": {
+    "reserve_inputs": "corrected Gate 1D-A tolerance predicates only",
+    "reuse": "Gate 1D locked precedence verbatim: numerical_or_domain_failure > systemic_collapse > destructive_service > physical_impossibility > distributive_or_policy_under_service > safe_rationing_physical_scarcity > preserve_but_under_serve > preserve_and_serve > unclassified"
+  },
+  "plan_id": "v3.0-gate1d-b-o14-multi-edge",
+  "plan_version": "1.0.0",
+  "planned_future_files_not_created": {
+    "artifacts": [
+      "MANIFEST.md",
+      "v30_o14_summary.json",
+      "v30_o14_trace.jsonl.gz",
+      "v30_o14_stdout.txt"
+    ],
+    "implementation": "o14_v30.py",
+    "results_dir": "results/v3.0/gate1db/",
+    "runner": "exp_v30_o14.py",
+    "tests": "test_v30_o14.py"
+  },
+  "prohibitions": [
+    "no behavioral trajectory in this gate (design/preregistration only)",
+    "no modification of d0_v29.py, p1c_v29.py, ebu_quote_v30.py, service_v30.py or any released artifact",
+    "no EBU-per-unit ranking anywhere on the decision path",
+    "no aggregate-quote settlement (O3 open)",
+    "no post-outcome parameter or predicate change (F14)",
+    "no migration/diffusion/convection/dynamic topology (F15)",
+    "no Gate 1E latency/uncertainty work; no Gate 2 actor economy"
+  ],
+  "quantity_menu": {
+    "cap": "min(frac * J_e, authoritative per-source P1C budget); the menu NEVER exceeds q_e_max",
+    "fractions": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "identical_for_arms": [
+      "B",
+      "C",
+      "D",
+      "S"
+    ],
+    "of": "the D0 raw loss-aware flux J_e of the candidate edge",
+    "provenance": "registered fresh for this gate (the locked Gate-1 QUANTS=[0.5,1.0] is a Gate-1C/1D convention, not a law); four levels give the quantity-choice question a non-vacuous resolution and make the boundary-optimality lemma falsifiable"
+  },
+  "question": "When one source has several simultaneously available outgoing choices, does maximizing the exact local total EBU quote select actions that preserve the source and provide useful service, or can it prefer a locally profitable but service-inferior destination or quantity?",
+  "request_shaping": {
+    "arm_A": "full world unmodified: all raw fluxes requested, sigma-scaled",
+    "identity": "q_acc(executed) = min(frac * J_e, Q_max) = menu q_acc; asserted per tick in the future test suite",
+    "reason": "Gate 1D executed the full flux of the selected edge regardless of the ranked fraction (requests are regenerated inside p1c_step); O14 requires the SELECTED quantity to be the EXECUTED quantity, otherwise quantity choice is cosmetic",
+    "rule": "the selected candidate (edge e, fraction frac) is executed by presenting p1c_v29.p1c_step with an active world whose single edge is e with mobility M_sel = frac * M_e; the released allocator then generates the request frac * J_e itself and applies its own authoritative budget and sigma scaling; p1c_v29 is NOT modified"
+  },
+  "service_alignment_predicate": {
+    "baseline": "arm B (matched), never arm A",
+    "prohibitions": [
+      "capacity-caused service reduction must never be labelled quote misalignment",
+      "no threshold may change after outcome inspection",
+      "positive EBU is never called useful service without physical service"
+    ],
+    "reuse": "Gate 1D predicate VERBATIM (no mathematical contradiction was found): fires iff EBU > 1.0 AND (service deficit >= 5% relative AND >= 1.0 absolute on post-burn-in cumulatives with per-tick persistence over the final 20 ticks, OR the unmet-demand mirror) AND NOT preservation-justified (delta_R = 0.5 rule); tolerance 1e-9 * (1 + |value|)"
+  },
+  "status": "PREREGISTERED, NOT IMPLEMENTED, NOT EXECUTED. Implementation, pre-execution tests and the single official execution each require separate authorization.",
+  "timestep": {
+    "derivation": "released d0_v29.one_edge_dt_certificate (V2.8 Thm 5.1) and d0_v29.gershgorin_dt_certificate (V2.8 Rmk 5.4); binding = min; multi-out-edge worlds bind on the Gershgorin bound because out-edge columns overlap at the shared source",
+    "observation_model": "exact observations, tau = 0, eps_x = eps_u = 0; latency, stale observations, measurement uncertainty, robust margins and interval quotes belong to Gate 1E and are untouched",
+    "per_world": {
+      "O14_W1_eta_split": {
+        "binding_certificate": 0.34453057708871665,
+        "binding_kind": "gershgorin",
+        "gershgorin_certificate": 0.34453057708871665,
+        "lv_exact": 4.0,
+        "one_edge_certificate": 0.5256241787122208,
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.17226528854435832,
+        "registered_near_certificate_dt": 0.310077519379845
+      },
+      "O14_W2_severity_split": {
+        "binding_certificate": 0.09489916963226572,
+        "binding_kind": "gershgorin",
+        "gershgorin_certificate": 0.09489916963226572,
+        "lv_exact": 5.0,
+        "one_edge_certificate": 0.14732965009208102,
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.04744958481613286,
+        "registered_near_certificate_dt": 0.08540925266903915
+      },
+      "O14_W3_volume_split": {
+        "binding_certificate": 0.08896797153024912,
+        "binding_kind": "gershgorin",
+        "gershgorin_certificate": 0.08896797153024912,
+        "lv_exact": 4.0,
+        "one_edge_certificate": 0.13812154696132597,
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.04448398576512456,
+        "registered_near_certificate_dt": 0.0800711743772242
+      },
+      "O14_W4_budget_bind": {
+        "binding_certificate": 0.20790020790020788,
+        "binding_kind": "gershgorin",
+        "gershgorin_certificate": 0.20790020790020788,
+        "lv_exact": 4.0,
+        "one_edge_certificate": 0.5524861878453039,
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.10395010395010394,
+        "registered_near_certificate_dt": 0.1871101871101871
+      },
+      "O14_W5_reversal": {
+        "binding_certificate": 0.35587188612099646,
+        "binding_kind": "gershgorin",
+        "gershgorin_certificate": 0.35587188612099646,
+        "lv_exact": 4.0,
+        "one_edge_certificate": 0.5524861878453039,
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.17793594306049823,
+        "registered_near_certificate_dt": 0.3202846975088968
+      },
+      "O14_W6_infeasible": {
+        "binding_certificate": 0.26246719160104987,
+        "binding_kind": "gershgorin",
+        "gershgorin_certificate": 0.26246719160104987,
+        "lv_exact": 4.0,
+        "one_edge_certificate": 0.5524861878453039,
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.13123359580052493,
+        "registered_near_certificate_dt": 0.23622047244094488
+      }
+    },
+    "post_hoc_change_forbidden": true,
+    "rule": "one shared certified timestep for ALL arms at each paired world; r_dt <= 1 in every confirmatory run; per-world conservative (0.5 x binding certificate) and near-certificate (0.9 x binding certificate) values, frozen below at full float precision; the future harness recomputes each certificate with the released d0_v29 functions and refuses to run on any mismatch"
+  },
+  "world_conventions": {
+    "defaults": "cells: alpha=1.0, beta=0.5, chi=0.0, L=5.0, U=15.0, R=0.0, K=20.0; sources: logistic rho=0.6, chi=1.0, R=8.0 (= P1C R_eff) unless noted; edges: M=0.5, theta=0.05 unless noted",
+    "no_exploratory_simulation": "every parameter above was chosen by static algebra (certificates, penalty/flux/budget/schedule evaluations at declared frozen states); no behavioral trajectory was executed in this gate",
+    "process_cost": "C_a(q) = c0 + c1*q with c0 = 0.0, c1 = 0.1 * dt * (1 - eta) (lam_L = 0.1), category unrepresented_action_process_burden - the Gate-1 convention, unchanged",
+    "static_graph": "the graph is FIXED; migration, diffusion, convection, actor relocation, dynamic topology and map search are explicitly deferred (see migration_future_note)"
+  },
+  "worlds": {
+    "O14_W1_eta_split": {
+      "cells": [
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 8.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "rho": 0.6,
+          "source": "logistic"
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        }
+      ],
+      "demand": [
+        0.0,
+        1.0,
+        1.0
+      ],
+      "discriminates": "A vs B capability cost (second destination unserved under restriction); eta sensitivity of both rules",
+      "edges": [
+        {
+          "M": 0.5,
+          "eta": 0.95,
+          "i": 0,
+          "j": 1,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.6,
+          "i": 0,
+          "j": 2,
+          "theta": 0.05
+        }
+      ],
+      "family": "equal destinations, unequal efficiency",
+      "feasible": true,
+      "note": "identical destinations in equal deficit (D=3.0); edges differ only in eta (0.95 vs 0.60). Isolates transport-loss sensitivity; A-vs-B measures the cost of serving one destination instead of two. Analytic initial fluxes J=(2.825, 1.775), both > 0; B and D expected to agree (higher eta dominates force AND quote).",
+      "types": {
+        "0": "regenerative"
+      },
+      "x0": [
+        15.0,
+        2.0,
+        2.0
+      ]
+    },
+    "O14_W2_severity_split": {
+      "cells": [
+        {
+          "K": 20.0,
+          "L": 12.0,
+          "R": 8.0,
+          "U": 15.0,
+          "alpha": 1.5,
+          "beta": 0.5,
+          "chi": 1.0,
+          "rho": 0.6,
+          "source": "logistic"
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 2.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 10.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 0.3,
+          "beta": 0.5,
+          "chi": 0.0
+        }
+      ],
+      "demand": [
+        0.0,
+        0.4,
+        1.5
+      ],
+      "discriminates": "C3 destination choice under identical capability: B and D provably select different edges at t0",
+      "edges": [
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 1,
+          "theta": 0.05
+        },
+        {
+          "M": 1.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 2,
+          "theta": 0.05
+        }
+      ],
+      "family": "severe small deficit vs mild large deficit",
+      "feasible": true,
+      "note": "dst1 severe-small (alpha=2, D=1.0); dst2 mild-large (alpha=0.3, D=6.0, request 2.5x via M=1.5). Analytic at x0, both registered dts: force ranks edge0 first (f=2.100 > 1.740) so B picks the severe-small deficit; the exact TOTAL quote ranks edge1 first (e.g. near dt +0.45554 > +0.22484) so D moves more material to the mild-large deficit. B != D at t0 at BOTH timesteps.",
+      "types": {
+        "0": "regenerative"
+      },
+      "x0": [
+        11.5,
+        4.0,
+        4.0
+      ]
+    },
+    "O14_W3_volume_split": {
+      "cells": [
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 8.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "rho": 0.6,
+          "source": "logistic"
+        },
+        {
+          "K": 20.0,
+          "L": 14.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 0.1,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 2.0,
+          "beta": 0.5,
+          "chi": 0.0
+        }
+      ],
+      "demand": [
+        0.0,
+        2.0,
+        0.25
+      ],
+      "discriminates": "S vs B/D attribution; total-quote prefers less material for more EBU relative to the volume alternative",
+      "edges": [
+        {
+          "M": 2.0,
+          "eta": 0.9,
+          "i": 0,
+          "j": 1,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 2,
+          "theta": 0.05
+        }
+      ],
+      "family": "high-volume low-quote vs low-volume high-quote",
+      "feasible": true,
+      "note": "dst1: deep low-weight deficit with high demand 2.0 (high volume, low burden weight alpha=0.1); dst2: steep small deficit, demand 0.25. Force AND total quote both prefer the low-volume high-severity dst2 (f=7.2 vs 2.16; quote e.g. near +1.94165 vs +0.73347); the service-priority arm S prefers the high-volume dst1. Separates quote-specific from restriction-generic service loss; also the registered example of MORE EBU from LESS material moved (chosen q=3.575 < alternative q=4.220 with ~2.6x the quote).",
+      "types": {
+        "0": "regenerative"
+      },
+      "x0": [
+        15.0,
+        2.0,
+        3.0
+      ]
+    },
+    "O14_W4_budget_bind": {
+      "cells": [
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 8.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "rho": 0.6,
+          "source": "logistic"
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        }
+      ],
+      "demand": [
+        0.0,
+        0.6,
+        0.6,
+        0.6,
+        0.6
+      ],
+      "discriminates": "H2/H3: nonzero A-vs-B capability cost; F4 cannot fire vacuously here",
+      "edges": [
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 1,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 2,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 3,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 4,
+          "theta": 0.05
+        }
+      ],
+      "family": "binding source budget, four competing destinations",
+      "feasible": true,
+      "note": "source starts 0.6 above R_eff=8 so the aggregate robust budget binds in arm A at BOTH dts: sum J = 10.700 vs Q_max = 8.713 (cons, sigma=0.814) and 6.148 (near, sigma=0.575). Four identical destinations in deficit; total demand 2.4 < eta*g_max = 2.7 keeps the world feasible. The one-action restriction is structurally binding: A spreads the budget over 4 destinations, B/C/D/S reach one per micro-step.",
+      "types": {
+        "0": "regenerative"
+      },
+      "x0": [
+        8.6,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ]
+    },
+    "O14_W5_reversal": {
+      "cells": [
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 8.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "rho": 0.6,
+          "source": "logistic"
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 2.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 10.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 0.8,
+          "beta": 0.5,
+          "chi": 0.0
+        }
+      ],
+      "demand": [
+        0.0,
+        0.1,
+        1.2
+      ],
+      "discriminates": "H5 adaptation: selected-edge series must switch; a frozen-choice policy cannot track the reversal",
+      "edges": [
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 1,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 2,
+          "theta": 0.05
+        }
+      ],
+      "family": "ranking reversal without global planning",
+      "feasible": true,
+      "note": "initially edge0 dominates for both rules (f=7.920 vs 6.480; quote e.g. near +7.65558 vs +6.23484). dst1 has low demand 0.1 so deliveries shrink its deficit D1 while dst2's demand 1.2 deepens D2; the local force boundary 3.6*D1 = 1.44*D2 and the corresponding total-quote boundary are crossed in finite time (analytic: D1 contracts at rate ~1.62*D1 per unit time while D2 grows at 1.2), so the preferred destination must switch using local data only.",
+      "types": {
+        "0": "regenerative"
+      },
+      "x0": [
+        15.0,
+        2.8,
+        5.5
+      ]
+    },
+    "O14_W6_infeasible": {
+      "cells": [
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 8.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 1.0,
+          "rho": 0.6,
+          "source": "logistic"
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        },
+        {
+          "K": 20.0,
+          "L": 5.0,
+          "R": 0.0,
+          "U": 15.0,
+          "alpha": 1.0,
+          "beta": 0.5,
+          "chi": 0.0
+        }
+      ],
+      "demand": [
+        0.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "discriminates": "H8/F6: preservation under scarcity with explicit unmet demand; multi-edge analogue of Gate 1D W2",
+      "edges": [
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 1,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 2,
+          "theta": 0.05
+        },
+        {
+          "M": 0.5,
+          "eta": 0.9,
+          "i": 0,
+          "j": 3,
+          "theta": 0.05
+        }
+      ],
+      "family": "honest infeasibility, three destinations",
+      "feasible": false,
+      "note": "total essential demand 6.0 > eta*g_max = 0.9*3.0 = 2.7: no policy can serve it preservation-safely. P1C must ration; bounded service must expose explicit unmet demand, never phantom service; expected class physical_impossibility with zero material reserve crossings under the corrected scale-aware tolerance.",
+      "types": {
+        "0": "regenerative"
+      },
+      "x0": [
+        15.0,
+        2.5,
+        2.5,
+        2.5
+      ]
+    }
+  }
+}

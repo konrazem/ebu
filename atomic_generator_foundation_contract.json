@@ -1,0 +1,832 @@
+{
+  "contract_id": "EBU_ATOMIC_GENERATOR_FOUNDATION_AND_PARALLEL_INTERACTION_V1",
+  "contract_version": "1.2.0",
+  "status": "PROSPECTIVE_DOCUMENTATION_ONLY_UNIMPLEMENTED_UNAUDITED",
+  "authority": {
+    "base_head": "53a30494203136bea8f373cfc18c516008bdcdfe",
+    "base_branch": "framework-v0.1",
+    "candidate_branch": "framework/atomic-generator-foundation-authority",
+    "human_rendering": "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "atomic_generator_foundation_contract.json",
+    "validation_contract": "atomic_generator_foundation_validation_contract.json",
+    "predecessor_manifest": "atomic_generator_foundation_predecessor_manifest.json",
+    "open_problem_register": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+    "book_traceability_manifest": "atomic_generator_book_traceability_manifest.json",
+    "artifact_order": [
+      "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+      "atomic_generator_foundation_contract.json",
+      "atomic_generator_foundation_validation_contract.json",
+      "atomic_generator_foundation_predecessor_manifest.json",
+      "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+      "atomic_generator_book_traceability_manifest.json"
+    ],
+    "integrity_rule": "Any disagreement among the six artifacts is an integrity failure requiring fail-closed refusal. Markdown is the normative human rendering; this contract supplies closed mechanical inventories and ordering, while the predecessor manifest supplies complete base-tree identity."
+  },
+  "controlling_inputs": [
+    {
+      "order": 1,
+      "filename": "01_atomic_generator_foundation_audit.txt",
+      "bytes": 37195,
+      "sha256": "13a12a83a063fa75a59bc56c9abc30d5219fb569b9f6d6102728222a2850202f",
+      "final_marker": "ATOMIC_GENERATOR_FOUNDATION_AUDIT_READY",
+      "trailing_bytes": 0
+    },
+    {
+      "order": 2,
+      "filename": "02_atomic_foundation_decision_protocol.txt",
+      "bytes": 46805,
+      "sha256": "38d5759234c7f5db07c3f6c9bb1bb40a88b2ce40e148cf217915949dbfa06ed5",
+      "final_marker": "ATOMIC_FOUNDATION_DECISION_PROTOCOL_READY",
+      "trailing_bytes": 0
+    },
+    {
+      "order": 3,
+      "filename": "03_parallel_interaction_topology_audit.txt",
+      "bytes": 26100,
+      "sha256": "e8a34a9444caf014b8211b5a3c6321259154a58afb1d36c5acc7fcf31ff25c99",
+      "final_marker": "PARALLEL_INTERACTION_TOPOLOGY_AUDIT_READY",
+      "trailing_bytes": 0
+    },
+    {
+      "order": 4,
+      "filename": "04_post_atomic_open_problem_register.txt",
+      "bytes": 50483,
+      "sha256": "0cdbfc9a450155a92fad755e2ad2156a54764bdb1095ab8b4fe5ed9f0bab9679",
+      "final_marker": "POST_ATOMIC_OPEN_PROBLEM_REGISTER_READY",
+      "trailing_bytes": 0
+    }
+  ],
+  "accepted_predecessor_sources": [
+    {
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e"
+    },
+    {
+      "path": "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+      "sha256": "b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10"
+    },
+    {
+      "path": "DYNAMIC_COORDINATION_FOUNDATION.md",
+      "sha256": "6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95"
+    },
+    {
+      "path": "PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "sha256": "74c3f12ea0d3464364e78a3e5d15697365ae53365351c12ba48f48c1b0c118c1"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "sha256": "ee0aba306c863b975e4d13bfc33690845c04fa107508400c8401587980530fba"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+      "sha256": "713b3ceb694721710ffeca8b9efc7cb1c54317ed922a2ba5e352b01faa8c82fa"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "sha256": "7dfc8da2b8c31e8b66b867bc7c894f4f6218420391e21c6443c48645c884a336"
+    },
+    {
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I3_AUTHORITY_AMENDMENT.md",
+      "sha256": "eaa3c80efa6ff0beae6f3ad8da3be67fb61f3cc5223b2067c256732ebf7bdfbc"
+    },
+    {
+      "path": "unified_python_research_framework_i3_contract.json",
+      "sha256": "d8acef250314e1405b048a324c9f855010f7927cc8760e2f827bba85253d7979"
+    },
+    {
+      "path": "unified_python_research_framework_i3_validation_contract.json",
+      "sha256": "9ecd849f24ecd3e55883874263c10c181fea2e16a3000e87e4fc7fe02c2ccb2b"
+    },
+    {
+      "path": "src/ebu_framework/settlement.py",
+      "sha256": "9905bb49c333704b5638d4b80e801cd8a60b4c344a59490e5188245752c92293"
+    }
+  ],
+  "source_reconciliation": {
+    "planning_merge": "c35bb3dbeb9fe87166b422a50ca4a021ec99345b",
+    "affected_paths": [
+      "PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "EBU_FUTURE_BOOKS_STRUCTURE.md"
+    ],
+    "rule": "The actual hashes recorded in accepted_predecessor_sources are the bytes at base_head. The framework specification's older v0.1.15 internal source-table values predate the accepted planning merge and remain historical rather than live hashes of these later bytes."
+  },
+  "scope": {
+    "stage": "ATOMIC_FOUNDATION_AUTHORITY_DRAFTING",
+    "authority_drafting_authorized": true,
+    "static_t0_validation_authorized": true,
+    "implementation_authorized": false,
+    "production_framework_behavior_authorized": false,
+    "fixture_materialization_authorized": false,
+    "book_editing_authorized": false,
+    "rendering_authorized": false,
+    "scientific_execution_authorized": false,
+    "interpretation_authorized": false,
+    "publication_authorized": false,
+    "commit_authorized": false,
+    "push_authorized": false,
+    "merge_authorized": false
+  },
+  "precedence": {
+    "kind": "NARROW_PROSPECTIVE_SUPERSESSION",
+    "supersedes": [
+      "the concepts in superseded_concepts",
+      "the future semantic meaning of the narrow I3C settlement-causality predicate"
+    ],
+    "does_not_supersede": [
+      "accepted finite live-state transition semantics",
+      "accepted conservation and boundary accounting",
+      "accepted quote, receipt, group receipt, identity, canonicalization, provenance, lifecycle history, or governance semantics",
+      "accepted implementation bytes, fixtures, validation vectors, results, books, PDFs, or historical receipts"
+    ],
+    "current_runtime_rule": "The accepted I3 validator remains controlling and fail-closed until a separately authorized repaired implementation and audit complete."
+  },
+  "book_chain": [
+    "STATE_AND_BOUNDARY",
+    "V",
+    "MU",
+    "F",
+    "PSI",
+    "J",
+    "G_T",
+    "FINITE_TRANSFORMATION",
+    "FINITE_EBU",
+    "LONG_AND_HYBRID_ACTIONS",
+    "RECURSIVE_REFINEMENT_AND_ENCAPSULATION",
+    "PARALLEL_INTERACTION",
+    "HIGHER_ORDER_TOPOLOGY",
+    "JOINT_ALLOCATION",
+    "CAUSAL_BOUNDARY",
+    "SETTLEMENT"
+  ],
+  "book_chain_display": [
+    "state and boundary",
+    "V",
+    "μ",
+    "f",
+    "Ψ",
+    "J",
+    "G_T",
+    "finite transformation",
+    "finite EBU",
+    "long and hybrid actions",
+    "recursive refinement and encapsulation",
+    "parallel interaction",
+    "higher-order topology",
+    "joint allocation",
+    "causal boundary",
+    "settlement"
+  ],
+  "mathematical_explanatory_chain": [
+    "V",
+    "MU",
+    "F",
+    "PSI",
+    "J",
+    "G_T",
+    "FINITE_TRANSFORMATION",
+    "FINITE_EBU"
+  ],
+  "mathematical_explanatory_chain_display": [
+    "V",
+    "μ",
+    "f",
+    "Ψ",
+    "J",
+    "G_T",
+    "finite transformation",
+    "finite EBU"
+  ],
+  "book_chain_scope": "book_chain is the exact 16-link progression rendered in the controlling amendment. mathematical_explanatory_chain is its exact contiguous eight-link mathematical core V -> mu -> f -> Psi -> J -> G_T -> finite transformation -> finite EBU.",
+  "mathematical_explanation_order": [
+    "QUESTION_TO_DETERMINE",
+    "OBJECTS_INVOLVED",
+    "SYMBOLS_AND_UNITS",
+    "CALCULATION",
+    "PHYSICAL_OR_OPERATIONAL_MEANING",
+    "EBU_PURPOSE",
+    "ASSUMPTIONS_DOMAINS_TOLERANCES_LIMITATIONS",
+    "INAPPLICABILITY_CONDITIONS"
+  ],
+  "claim_status_vocabulary": [
+    "ESTABLISHED_MATHEMATICS",
+    "EBU_ADAPTATION",
+    "CONDITIONAL_RESULT",
+    "EMPIRICAL_HYPOTHESIS",
+    "ANALOGY",
+    "INSTITUTIONAL_CHOICE",
+    "EXPLICIT_NONCLAIM"
+  ],
+  "pedagogical_authority": {
+    "status": "BINDING_PROSPECTIVE_BOOK_ACCEPTANCE_RULE",
+    "applies_to": [
+      "F1_F16_FOUNDATION_DECISIONS",
+      "T_A1_T_A17_INDIVIDUAL_CONDITIONAL_THEOREMS",
+      "ALL_16_SUBSTANTIAL_BOOK_CHAIN_CONCEPTS",
+      "ANY_OTHER_RESULT_PRESENTED_AS_AN_EBU_FEATURE_OR_LAW"
+    ],
+    "teaching_pattern": [
+      {"order":1,"id":"PRACTICAL_QUESTION","requirement":"State in ordinary language what problem the reader is trying to solve."},
+      {"order":2,"id":"CONCRETE_SITUATION","requirement":"Identify the actors, sources, resources, boundaries, commitments, losses, or competing actions."},
+      {"order":3,"id":"MANDATORY_FAMILIAR_EXAMPLE","requirement":"Give at least one classified numerical, operational, economic, ecological, physical, historical, observed, or counterexample. It is mandatory."},
+      {"order":4,"id":"SIMPLER_MODEL_FAILURE","requirement":"When the feature corrects or extends an earlier idea, show concretely what information or behavior the simpler model loses."},
+      {"order":5,"id":"MECHANISM","requirement":"Explain what produces the result before introducing compressed terminology."},
+      {"order":6,"id":"FORMAL_STATEMENT_AND_DERIVATION","requirement":"Apply mathematical_explanation_order without replacement or reordering."},
+      {"order":7,"id":"EBU_CAPABILITY","requirement":"State positively and precisely what EBU can represent, calculate, preserve, distinguish, reject, or test."},
+      {"order":8,"id":"ARCHITECTURAL_SIGNIFICANCE","requirement":"Explain why the capability matters to recursion, transactions, allocation, topology, measurement, or future testing."},
+      {"order":9,"id":"ASSUMPTIONS_AND_SCOPE","requirement":"Classify the claim and state assumptions, domains, tolerances, and scope."},
+      {"order":10,"id":"FAILURE_CASE_AND_NONCLAIM","requirement":"Give a counterexample or inapplicability condition and state what must not be inferred."}
+    ],
+    "mathematical_explanation_order_integrity": {
+      "relationship": "The ten-step teaching pattern surrounds rather than replaces the accepted eight-step mathematical order; teaching step 6 embeds all eight steps exactly.",
+      "token_projection_byte_count": 201,
+      "token_projection_sha256": "04779dd3fe6eaedcc185f17d9ed125eb03e6bc7db67a5369a957d4798c2dfd51",
+      "book_sentence_projection_byte_count": 415,
+      "book_sentence_projection_sha256": "b16196aacdd207b2e712b739ded1fb0e0974d79076e68738f0a00d253702753c"
+    },
+    "required_feature_trace_fields": [
+      "practical_question",
+      "concrete_objects",
+      "mechanism",
+      "mandatory_example",
+      "example_classification",
+      "simpler_model_failure_or_superseded_shortcut",
+      "formal_treatment",
+      "ebu_capability",
+      "why_it_matters",
+      "claim_status",
+      "assumptions",
+      "inapplicability",
+      "nonclaim",
+      "source_obligation",
+      "owning_parts",
+      "editorial_action"
+    ],
+    "example_classifications": [
+      "NUMERICAL_CONSTRUCTION",
+      "HYPOTHETICAL_OPERATIONAL_EXAMPLE",
+      "OBSERVED_EMPIRICAL_EXAMPLE",
+      "HISTORICAL_EXAMPLE",
+      "COUNTEREXAMPLE"
+    ],
+    "example_provenance_rules": {
+      "mandatory_for_accepted_features_and_laws": true,
+      "observed_or_historical": "Require appropriate factual sources.",
+      "established_mathematics": "Require authoritative mathematical references.",
+      "hypothetical": "Label explicitly and forbid presentation as empirical validation."
+    },
+    "editorial_balance_rules": [
+      "State the established result and positive EBU capability before assumptions, limits, and nonclaims.",
+      "Do not present established mathematical tools as EBU inventions.",
+      "Identify the capability gained by the EBU combination or adaptation.",
+      "Do not universalize a conditional result.",
+      "Do not weaken a proved conditional result into a vague possibility.",
+      "Do not obscure the contribution with front-loaded disclaimers.",
+      "Avoid unnecessarily diminishing phrases such as EBU merely uses, only an analogy, or nothing more than.",
+      "Avoid promotional claims unsupported by authority or evidence.",
+      "Distinguish originality of a mathematical tool from potential significance of the complete EBU synthesis."
+    ],
+    "shared_explanation_rule": "Closely related features may share an explanation only if each feature is individually traceable and the complete explanation appears at its first substantial use.",
+    "hypergraph_exemplar": {
+      "example_classification": "HYPOTHETICAL_OPERATIONAL_EXAMPLE",
+      "roles": {
+        "1": "producer provides capacity",
+        "2": "transport system provides delivery",
+        "3": "settlement mechanism permits completion"
+      },
+      "frozen_subset_values": {
+        "E_empty": "0",
+        "E_1": "0",
+        "E_2": "0",
+        "E_3": "0",
+        "E_12": "0",
+        "E_13": "0",
+        "E_23": "0",
+        "E_123": "5"
+      },
+      "required_coefficients": {
+        "I_12": "0",
+        "I_13": "0",
+        "I_23": "0",
+        "I_123": "5"
+      },
+      "pair_graph_result": "The pair graph appears empty and loses the genuine three-way result.",
+      "positive_capabilities": [
+        "detect genuine higher-order interaction",
+        "distinguish pair topology from hypergraph topology",
+        "preserve exposed interaction under qualifying recursive encapsulation"
+      ],
+      "nonclaims_after_capability": [
+        "interaction is not causality",
+        "interaction is not settlement entitlement",
+        "interaction topology is not automatically physical transport topology",
+        "interaction is not physical propagation",
+        "positive or negative parallel-action interaction is not physical phase interference"
+      ]
+    },
+    "pagination_consequence": {
+      "material_page_increase_or_redistribution_possible": true,
+      "new_book_authorized": false,
+      "final_page_totals_authorized": false,
+      "distribution_rule": "Place material in its natural Parts rather than one appendix.",
+      "ordering_rule": "Remove or rewrite superseded material before estimating additions.",
+      "separate_blocks": ["RETAINED","REWRITTEN","REMOVED","MATHEMATICAL","EXAMPLE","READABILITY","FIGURE","UNKNOWN"],
+      "reassessment_rule": "Reassess pagination after representative drafting and rendering."
+    }
+  },
+  "foundation_decisions": [
+    {
+      "id": "F1",
+      "name": "ECONOMIC_ATOM",
+      "decision": "An EBU economic atom is limiting differential participation in a declared extent coordinate, never a smallest positive transaction or divided actor."
+    },
+    {
+      "id": "F2",
+      "name": "DECLARED_EXTENT_DIVISIBILITY",
+      "decision": "Divisibility attaches to a declared nonatomic quantity, time, process or route extent, or frozen dimensionless participation; identity, acceptance, receipts, and modes remain indivisible."
+    },
+    {
+      "id": "F3",
+      "name": "CLOSED_EXTENT_REGISTRY",
+      "decision": "The initial registry contains exactly physical time, process or route extent, typed carrier quantity, and dimensionless participation."
+    },
+    {
+      "id": "F4",
+      "name": "REPARAMETERIZATION",
+      "decision": "Positive affine unit changes are automatic; nonlinear positive C1 changes require a witness; singular, non-C1, reversing, or non-invertible changes inherit no claim."
+    },
+    {
+      "id": "F5",
+      "name": "SEPARATE_GENERATOR_ROLES",
+      "decision": "Quantity-participation and complete augmented-state transformation generators are distinct and require a declared constitutive or incidence link."
+    },
+    {
+      "id": "F6",
+      "name": "LOSS_EFFICIENCY_SCALING",
+      "decision": "Every limit names denominator, units, coordinate, regime, fixed costs, and non-overlapping account; L(h) approaching zero alone does not establish unit efficiency."
+    },
+    {
+      "id": "F7",
+      "name": "HYBRID_ACTION",
+      "decision": "A discrete activation or mode jump precedes or follows a declared within-mode continuous flow under an exact no-duplication order."
+    },
+    {
+      "id": "F8",
+      "name": "AUGMENTED_STATE_SUFFICIENCY",
+      "decision": "Every variable affecting future behavior under an admitted history must be explicit; no universal minimal state is claimed."
+    },
+    {
+      "id": "F9",
+      "name": "REQUEST_TO_SETTLEMENT_LIFECYCLE",
+      "decision": "Request, permission or reservation, quote, acceptance, execution, measurement, physical receipt, causal assessment, and settlement are ordered and non-equivalent."
+    },
+    {
+      "id": "F10",
+      "name": "HISTORY_WIDE_BOUNDARY_EQUIVALENCE",
+      "decision": "Exact recursive replacement requires history-wide observable behavior plus separate burden, conservation, account, and settlement preservation."
+    },
+    {
+      "id": "F11",
+      "name": "FEASIBILITY_FIRST_OBJECTIVE_GRAMMAR",
+      "decision": "No universal scalar exists; enforce feasibility first, then use one declared scalar or a declared typed-vector comparison with horizon, uncertainty, existence, and tie rules."
+    },
+    {
+      "id": "F12",
+      "name": "ALLOCATION_SETTLEMENT_BOUNDARY",
+      "decision": "KKT, shadow prices, and optional scalar decompositions end before causal identification and institutional settlement."
+    },
+    {
+      "id": "F13",
+      "name": "FINITE_INTERACTION_FOUNDATION",
+      "decision": "Exact finite interaction uses full-subset Mobius inversion, explicitly includes I_empty=E(empty), normalizes v(S)=E(S)-E(empty) when desired, and refuses missing or inadmissible subsets."
+    },
+    {
+      "id": "F14",
+      "name": "LOCAL_AND_ORDER_WITNESSES",
+      "decision": "Mixed-marginal and commutator witnesses are optional, local, coordinate-, unit-, domain-, regularity-, mode-, tolerance-, sign-, and orientation-qualified, and never automatic causal, physical-propagation, or physical-phase-interference claims."
+    },
+    {
+      "id": "F15",
+      "name": "SHARED_CONSTRAINTS_AND_TOPOLOGY",
+      "decision": "Shared constraints belong at the lowest complete common boundary when one exists; DAGs and federations require a declared factor boundary or proven-equivalent distributed protocol; structural interaction, active interaction, physical transport, and institutional constraint topologies remain distinct."
+    },
+    {
+      "id": "F16",
+      "name": "BOUNDARY_INVARIANCE_AND_CLAIM_LIMITS",
+      "decision": "All-subset boundary equality, including empty-baseline information and identical state, boundary, policy, horizon, history, flow/jump, burden, and process-account semantics, preserves exposed coefficients but only external or quotient topology; it does not establish causality, settlement entitlement, physical propagation, or physical phase interference. Wave and phase-interference research is outside the active and future programme and creates no book, framework, implementation, experimental, or stage obligation."
+    }
+  ],
+  "extent_registry": [
+    {
+      "order": 1,
+      "id": "PHYSICAL_TIME",
+      "symbol": "t",
+      "unit_rule": "declared physical time unit",
+      "generator_unit_rule": "state unit per time unit"
+    },
+    {
+      "order": 2,
+      "id": "PROCESS_OR_ROUTE_EXTENT",
+      "symbol": "s",
+      "unit_rule": "declared process or path unit",
+      "generator_unit_rule": "state unit per process or path unit"
+    },
+    {
+      "order": 3,
+      "id": "TYPED_CARRIER_QUANTITY",
+      "symbol": "q_r",
+      "unit_rule": "declared carrier unit U_r",
+      "generator_unit_rule": "state unit per U_r"
+    },
+    {
+      "order": 4,
+      "id": "DIMENSIONLESS_PARTICIPATION",
+      "symbol": "rho",
+      "unit_rule": "dimensionless on [0,1] tied to one frozen bundle",
+      "generator_unit_rule": "state unit"
+    }
+  ],
+  "lifecycle_order": [
+    "REQUEST",
+    "PHYSICAL_PERMISSION_OR_RESERVATION",
+    "QUOTE",
+    "INSTITUTIONAL_ACCEPTANCE",
+    "EXECUTION",
+    "MEASUREMENT",
+    "PHYSICAL_OR_GROUP_RECEIPT",
+    "CAUSAL_ASSESSMENT",
+    "INSTITUTIONAL_SETTLEMENT"
+  ],
+  "interaction_contract": {
+    "coefficient": "I_S=sum_{R subseteq S}(-1)^(|S|-|R|) E(R)",
+    "inverse": "E(S)=sum_{R subseteq S} I_R",
+    "empty_coefficient": "I_empty=E(empty)",
+    "normalized_value": "v(S)=E(S)-E(empty)",
+    "nonempty_inverse": "v(S)=sum_{nonempty R subseteq S} I_R",
+    "truncation_residual": "R_gt_k(S)=E(S)-E(empty)-sum_{nonempty R subseteq S, |R|<=k} I_R=sum_{R subseteq S, |R|>k} I_R",
+    "required_subset_policy_fields": [
+      "finite_ground_set",
+      "complete_initial_augmented_state",
+      "boundary",
+      "state_version",
+      "burden_version",
+      "units",
+      "horizon",
+      "exogenous_history",
+      "action_removal_semantics",
+      "quantity_fixed_or_rule_replayed_semantics",
+      "constraints",
+      "feasibility_and_shared_constraint_resolver",
+      "active_modes",
+      "loss_accounts",
+      "commitment_accounts",
+      "fixed_cost_placement",
+      "complete_nonoverlapping_process_accounts"
+    ],
+    "refusal": "If any required subset is inadmissible or meaningless, the Boolean-lattice coefficient is undefined and validation refuses it. A separately authorized feasible-set poset must supply its own proven Mobius function; it may not inherit the Boolean alternating-sign formula.",
+    "interaction_kind_distinctions": {
+      "finite_set": "Full-subset Mobius coefficient under one frozen subset protocol.",
+      "same_baseline_nonadditivity": "N_G=E_G-sum_i E_i^(0) under its accepted same-baseline comparison.",
+      "serial_comparator": "I_{G|pi}=E_G-E_seq,pi under one declared serial order comparator."
+    },
+    "truncation_classification": "ALGEBRAIC_INTERACTION_CLOSURE_NOT_PHYSICAL_CONSERVATION",
+    "mixed_marginal": {
+      "finite_difference": "Delta_i Delta_j E(q)=E(q+delta_i e_i+delta_j e_j)-E(q+delta_i e_i)-E(q+delta_j e_j)+E(q)",
+      "integral_relation": "Delta_i Delta_j E(q)=integral_0^delta_i integral_0^delta_j partial_ij E(q+s e_i+t e_j) dt ds",
+      "relation_status": "CONDITIONAL_ON_C2_OVER_THE_WHOLE_RECTANGLE",
+      "required_fields": ["coordinates", "units", "domain", "regularity", "active_modes", "tolerances", "sign_convention", "process_accounts"],
+      "refusal_conditions": ["activation_threshold", "topology_change", "projection", "discrete_mode_switch", "active_set_switch", "undeclared_generalized_derivative"]
+    },
+    "commutator": {
+      "sign_convention": "[G_i,G_j]_s=DG_i G_j-DG_j G_i",
+      "leading_order_relation": "T_i^h compose T_j^h-T_j^h compose T_i^h=h^2 [G_i,G_j]_s+O(h^3)",
+      "relation_status": "CONDITIONAL_ON_SUFFICIENTLY_SMOOTH_LOCAL_FLOWS_AND_VALID_DOMAINS",
+      "required_fields": ["coordinates", "units", "domain", "regularity", "active_modes", "tolerances", "sign_convention", "composition_orientation", "remainder_meaning", "process_accounts"],
+      "refusal_conditions": ["hybrid_jump_without_composition_rule", "projection_without_rule", "unbounded_operator_without_domain", "mode_change_without_rule"],
+      "nonclaim": "A commutator is a local order-sensitivity witness, not physical propagation, physical phase interference, or causality; a zero bracket at one point does not prove neighborhood commutativity."
+    },
+    "shared_constraint_rule": "Resolve a shared constraint at the lowest complete common boundary whose state and authority contain the complete constraint.",
+    "shared_constraint_rule_classification": "EBU_ARCHITECTURAL_AXIOM_WITH_CONDITIONAL_SUFFICIENCY_THEOREM",
+    "dag_or_federation_rule": "When no unique lowest complete common boundary exists, require a declared factor boundary or a distributed protocol proven equivalent.",
+    "topology_classes": [
+      "STRUCTURAL_INTERACTION_TOPOLOGY",
+      "ACTIVE_INTERACTION_TOPOLOGY",
+      "PHYSICAL_TRANSPORT_TOPOLOGY",
+      "INSTITUTIONAL_CONSTRAINT_TOPOLOGY"
+    ],
+    "topology_elements": ["ACTION_VERTEX", "PAIR_EDGE", "HIGHER_ORDER_HYPEREDGE", "SHARED_CONSTRAINT_FACTOR_NODE", "BOUNDARY_NODE"],
+    "pairwise_zero_rule": "Zero pair coefficients do not imply full separability or absence of a higher-order hyperedge.",
+    "boundary_invariance": {
+      "required_equalities": "E_H(R)=E_P(R) for every exposed subset R, including the empty-baseline information.",
+      "required_shared_semantics": ["initial_state_relation", "boundary_semantics", "subset_policy", "horizon", "exogenous_history", "active_modes", "flow_jump_semantics", "burden_factorization", "loss_accounts", "commitment_accounts", "complete_process_accounts"],
+      "result": "All exposed Mobius coefficients agree by linearity.",
+      "encapsulation_limit": "Only declared external or quotient interaction structure is preserved unless internal identities and factors remain exposed."
+    },
+    "claim_limits": [
+      "INTERACTION_IS_NOT_CAUSALITY",
+      "MARGINAL_INTERACTION_IS_NOT_ENTITLEMENT",
+      "INTERACTION_COEFFICIENT_IS_NOT_SETTLEMENT_ENTITLEMENT",
+      "POSITIVE_OR_NEGATIVE_PARALLEL_ACTION_INTERACTION_IS_NOT_PHYSICAL_PHASE_INTERFERENCE",
+      "COMMUTATOR_DOES_NOT_PROVE_PHYSICAL_PROPAGATION_OR_PHASE_INTERFERENCE",
+      "SHADOW_PRICE_IS_NOT_AUTOMATIC_SETTLEMENT_PRICE",
+      "GRAPH_REACHABILITY_DOES_NOT_PROVE_PHYSICAL_PROPAGATION",
+      "OSCILLATION_OR_COMPLEX_EIGENVALUES_DO_NOT_PROVE_PHYSICAL_PROPAGATION",
+      "HIGHER_ORDER_INTERACTION_DOES_NOT_PROVE_PHYSICAL_PROPAGATION_OR_PHASE_INTERFERENCE"
+    ],
+    "distinct_witness_types": [
+      "FiniteSetInteractionWitness",
+      "SameBaselineNonadditivityWitness",
+      "SerialComparatorInteractionWitness",
+      "MixedMarginalWitness",
+      "CommutatorWitness",
+      "SharedConstraintFactor",
+      "InteractionTopologySnapshot"
+    ]
+  },
+  "parallel_action_typology_programme": {
+    "status": "ACTIVE_PROSPECTIVE_FOUNDATION_PROGRAMME",
+    "required_scope": [
+      "ZERO_POSITIVE_AND_NEGATIVE_PAIR_INTERACTIONS",
+      "NONZERO_EMPTY_BASELINES",
+      "NORMALIZED_SUBSET_VALUES",
+      "EXACT_MOBIUS_RECONSTRUCTION_AND_TRUNCATION_RESIDUALS",
+      "PURE_HIGHER_ORDER_INTERACTIONS_WITH_ZERO_PAIR_COEFFICIENTS",
+      "LOCAL_MIXED_MARGINAL_COUPLING",
+      "COMMUTING_AND_NONCOMMUTING_GENERATORS",
+      "GENERATOR_ORDER_EFFECTS",
+      "SHARED_CAPACITY_OWNERSHIP",
+      "FACTOR_NODE_ALTERNATIVES",
+      "STRUCTURAL_VERSUS_ACTIVE_INTERACTION_TOPOLOGY",
+      "HIDDEN_STATE_TOPOLOGY_FAILURES",
+      "HYPERGRAPH_REPRESENTATION",
+      "RECURSIVE_BOUNDARY_INTERACTION_PRESERVATION_AND_DELIBERATE_FAILURES"
+    ],
+    "claim_boundary": "Positive or negative parallel-action interaction is not physical phase interference. Graph reachability, oscillation, complex eigenvalues, higher-order interaction, and commutators do not prove physical propagation or physical phase interference."
+  },
+  "wave_and_phase_interference_programme": {
+    "status": "OUTSIDE_ACTIVE_AND_FUTURE_PROGRAMME",
+    "solved_claim": false,
+    "book_obligation": false,
+    "framework_obligation": false,
+    "validation_feature": false,
+    "validation_test_obligation": false,
+    "teaching_obligation": false,
+    "implementation_obligation": false,
+    "scientific_protocol_obligation": false,
+    "experimental_obligation": false,
+    "reserved_future_route": false,
+    "stage_assignment": null,
+    "rule": "The package assigns no wave or physical phase-interference model, test, discrimination lesson, implementation, experiment, framework work, stage, or book. Defensive nonclaims remain mandatory and are not a research programme."
+  },
+  "electrical_voltage_programme": {
+    "status": "EXCLUDED_FROM_ACTIVE_AND_FUTURE_PROGRAMME",
+    "open_problem": false,
+    "book_obligation": false,
+    "framework_obligation": false,
+    "validation_feature": false,
+    "validation_test_obligation": false,
+    "teaching_obligation": false,
+    "implementation_obligation": false,
+    "scientific_protocol_obligation": false,
+    "experimental_obligation": false,
+    "reserved_future_route": false,
+    "stage_assignment": null,
+    "rule": "Electrical-voltage terminology and analogy are excluded rather than retained as an open problem. Their only trace is the removal disposition required by S14 and the excluded-electrical-analogy scope check AFV-I30."
+  },
+  "conditional_theorems": [
+    {
+      "id": "T-A1",
+      "name": "ATOMIC_DERIVATIVE",
+      "classification": "ESTABLISHED_MATHEMATICS_ADAPTED_TO_EBU",
+      "assumptions": ["right differentiability", "declared topology"],
+      "inapplicable": ["continuity only", "nondifferentiable kink"]
+    },
+    {
+      "id": "T-A2",
+      "name": "LINEAR_RECONSTRUCTION",
+      "classification": "ESTABLISHED_MATHEMATICS_ADAPTED_TO_EBU",
+      "assumptions": ["autonomous strongly continuous linear semigroup", "bounded generator for ordinary power series"],
+      "inapplicable": ["state dependence", "hybrid jump", "missing operator domain"]
+    },
+    {
+      "id": "T-A3",
+      "name": "NONLINEAR_RECONSTRUCTION",
+      "classification": "ESTABLISHED_MATHEMATICS_ADAPTED_TO_EBU",
+      "assumptions": ["local existence", "uniqueness such as local Lipschitz regularity"],
+      "inapplicable": ["nonunique flow", "discontinuous evolution"]
+    },
+    {
+      "id": "T-A4",
+      "name": "NONAUTONOMOUS_RECONSTRUCTION",
+      "classification": "ESTABLISHED_MATHEMATICS_ADAPTED_TO_EBU",
+      "assumptions": ["declared evolution family", "fixed ordering"],
+      "inapplicable": ["unsupported constant exponential"]
+    },
+    {
+      "id": "T-A5",
+      "name": "LOSS_RATE_EXPANSION",
+      "classification": "ESTABLISHED_MATHEMATICS_ADAPTED_TO_EBU",
+      "assumptions": ["right differentiability of L at zero", "declared denominator and coordinate"],
+      "inapplicable": ["fixed activation branch", "hidden denominator"]
+    },
+    {
+      "id": "T-A6",
+      "name": "BURDEN_INTEGRATION",
+      "classification": "ESTABLISHED_CHAIN_RULE_ADAPTED_TO_EBU",
+      "assumptions": ["absolutely continuous flow", "applicable chain rule", "explicit jump increments", "nonoverlapping process accounts"],
+      "inapplicable": ["unhandled nonsmooth burden", "double-counted process account"]
+    },
+    {
+      "id": "T-A7",
+      "name": "EXACT_RECURSIVE_EQUIVALENCE",
+      "classification": "CONDITIONAL_EBU_RESULT",
+      "assumptions": ["history-wide dynamic equivalence", "burden preservation", "conservation preservation", "account preservation"],
+      "inapplicable": ["snapshot equality only", "one-state generator equality only"]
+    },
+    {
+      "id": "T-A8",
+      "name": "STRUCTURAL_ADDITIVITY_B16",
+      "classification": "CONDITIONAL_EBU_RESULT",
+      "assumptions": ["product structure", "commuting evolution", "disjoint typed ledgers", "factorized burden", "history-preserving hidden-state relation"],
+      "inapplicable": ["shared constraint", "hidden coupling", "hidden memory"]
+    },
+    {
+      "id": "T-A9",
+      "name": "KKT_MARGINAL_EQUALIZATION",
+      "classification": "ESTABLISHED_OPTIMIZATION_RESULT_ADAPTED_TO_EBU",
+      "assumptions": ["differentiability", "constraint qualification", "convex feasible set and concave objective for global sufficiency"],
+      "inapplicable": ["discrete mode", "nonconvex global claim", "missing optimizer", "undeclared tie rule"]
+    },
+    {
+      "id": "T-A10",
+      "name": "AUMANN_SHAPLEY_CLOSURE",
+      "classification": "ESTABLISHED_ALLOCATION_RESULT_ADAPTED_TO_EBU",
+      "assumptions": ["differentiable scalar", "declared radial path", "C(0)=0"],
+      "inapplicable": ["no scalar", "no path", "causal or entitlement inference"]
+    },
+    {
+      "id": "T-A11",
+      "name": "FINITE_INTERACTION_INVERSION",
+      "classification": "ESTABLISHED_MOBIUS_INVERSION_ADAPTED_TO_EBU",
+      "assumptions": ["finite complete subset domain", "frozen subset protocol"],
+      "inapplicable": ["missing or inadmissible required subset", "changed protocol"]
+    },
+    {
+      "id": "T-A12",
+      "name": "MIXED_DIFFERENCE_HESSIAN_RELATION",
+      "classification": "ESTABLISHED_CALCULUS_RESULT_ADAPTED_TO_EBU",
+      "assumptions": ["C2 on the complete rectangle"],
+      "inapplicable": ["kink", "mode switch", "topology change", "active-set switch"]
+    },
+    {
+      "id": "T-A13",
+      "name": "COMMUTATOR_ORDER_EFFECT",
+      "classification": "ESTABLISHED_LIE_BRACKET_RESULT_ADAPTED_TO_EBU",
+      "assumptions": ["sufficiently smooth local flows", "valid domains", "fixed composition orientation"],
+      "inapplicable": ["hybrid jump", "projection", "invalid unbounded-operator domain"]
+    },
+    {
+      "id": "T-A14",
+      "name": "LOWEST_COMPLETE_COMMON_BOUNDARY_SUFFICIENCY",
+      "classification": "CONDITIONAL_EBU_ARCHITECTURAL_RESULT",
+      "assumptions": ["tree hierarchy", "unique least common ancestor", "complete state and demand visibility", "compatible units and timing", "authority", "history-equivalent child interfaces"],
+      "inapplicable": ["DAG ambiguity", "overlapping authority", "hidden demand"]
+    },
+    {
+      "id": "T-A15",
+      "name": "BOUNDARY_INTERACTION_INVARIANCE",
+      "classification": "ELEMENTARY_CONDITIONAL_COROLLARY",
+      "assumptions": ["all-subset EBU equality including empty baseline", "identical initial-state relation", "identical boundary and subset-policy semantics", "identical horizon and exogenous history", "identical flow/jump and active-mode semantics", "identical burden factorization, loss, commitment, and process accounts"],
+      "inapplicable": ["selected subsets only", "endpoint equality only"]
+    },
+    {
+      "id": "T-A16",
+      "name": "LINEARIZED_TRANSITION_RESPONSE",
+      "classification": "ESTABLISHED_LINEAR_SYSTEMS_RESULT_ADAPTED_TO_EBU",
+      "assumptions": ["declared linearization", "valid transition operator and domain"],
+      "inapplicable": ["domain propagation or finite-speed claim inferred from local linearization alone"]
+    },
+    {
+      "id": "T-A17",
+      "name": "EXACT_TRUNCATION_RESIDUAL",
+      "classification": "ESTABLISHED_ALGEBRAIC_IDENTITY",
+      "assumptions": ["exact full-lattice coefficients"],
+      "inapplicable": ["physical conservation interpretation"]
+    }
+  ],
+  "nonclaims": [
+    {"id": "N1", "text": "No smallest positive transaction is established."},
+    {"id": "N2", "text": "No universal action divisibility is established."},
+    {"id": "N3", "text": "A generator does not replace finite transactions, receipts, acceptance, or settlement."},
+    {"id": "N4", "text": "Vanishing loss alone does not establish unit efficiency."},
+    {"id": "N5", "text": "No ordinary exponential reconstructs every generator."},
+    {"id": "N6", "text": "An initial marginal does not generally equal the finite outcome."},
+    {"id": "N7", "text": "KKT conditions alone do not establish existence, global optimality, uniqueness, causality, or settlement; a shadow price is not automatically a settlement price."},
+    {"id": "N8", "text": "Aumann-Shapley does not select quantities, prove physics or causality, or create entitlement."},
+    {"id": "N9", "text": "Snapshot equality is not exact recursive equivalence."},
+    {"id": "N10", "text": "There is no universal scalar group objective."},
+    {"id": "N11", "text": "Zero pair interactions do not imply full separability."},
+    {"id": "N12", "text": "An interaction coefficient or share does not prove causality, entitlement, settlement, physical propagation, or physical phase interference; positive or negative parallel-action interaction is not physical phase interference, and a commutator does not prove it."},
+    {"id": "N13", "text": "Graph reachability is not proof of physical propagation; a generator, oscillation, complex eigenvalues, higher-order interaction, or commutator does not prove physical propagation or physical phase interference."},
+    {"id": "N14", "text": "V is a declared EBU burden and is not thermodynamic entropy."},
+    {"id": "N15", "text": "No broad originality or universal-priority claim is made."},
+    {"id": "N16", "text": "No implementation, book edit, scientific execution, interpretation, or publication is authorized."}
+  ],
+  "superseded_concepts": [
+    {"id": "S1", "old": "economic atom as smallest positive transaction", "replacement": "limiting differential participation"},
+    {"id": "S2", "old": "universal action divisibility", "replacement": "declared extent divisibility"},
+    {"id": "S3", "old": "one action per source as foundation", "replacement": "joint constraints with optional declared special case"},
+    {"id": "S4", "old": "unqualified atomic joint transition", "replacement": "commit-atomic joint transition"},
+    {"id": "S5", "old": "L(h) approaching zero alone implies eta(h) approaching one", "replacement": "declared denominator and L(h)/C(h) approaching zero"},
+    {"id": "S6", "old": "ordinary exponential for every generator", "replacement": "qualified semigroup, nonlinear flow, or ordered evolution"},
+    {"id": "S7", "old": "initial marginal as finite result", "replacement": "complete endpoint or trajectory sensitivity"},
+    {"id": "S8", "old": "universal proportional allocation", "replacement": "optional declared baseline or fairness objective"},
+    {"id": "S9", "old": "mandatory Aumann-Shapley allocation", "replacement": "optional path-dependent scalar decomposition"},
+    {"id": "S10", "old": "snapshot recursive equivalence", "replacement": "history-wide observable equivalence"},
+    {"id": "S11", "old": "allocation, causality, and settlement as one operation", "replacement": "separate mathematical, causal, and institutional layers"},
+    {"id": "S12", "old": "universal scalar objective", "replacement": "feasibility-first typed objective grammar"},
+    {"id": "S13", "old": "pair graph as complete topology", "replacement": "state-dependent interaction hypergraph with factors and boundaries"},
+    {"id": "S14", "old": "electrical-voltage analogy in the EBU conceptual chain", "replacement": "removed without a future programme"},
+    {"id": "S15", "old": "multi-source invariance specifically under proportional allocation", "replacement": "invariance under a declared objective or allocation rule, coupled constraints, and hybrid modes"},
+    {"id": "S16", "old": "universal argmax EBU_G in dynamic coordination", "replacement": "feasibility-first scalar-or-vector objective grammar"},
+    {"id": "S17", "old": "Part IX The Smallest-Action Incentive", "replacement": "Marginal Improvement and the Better-Action Incentive"},
+    {"id": "S18", "old": "Part VII distance and burden generator rule", "replacement": "Route extent and burden accounting rule; distance is not automatically burden"},
+    {"id": "S19", "old": "additive percentage-based pagination scenarios", "replacement": "resegmented content-block estimation with Parts II-III uncertainty retained"},
+    {"id": "S20", "old": "I3C rejection of every noncausal numeric settlement share", "replacement": "prospective independent institutional shares with causal nonclaims and explicit residual closure"},
+    {"id": "S21", "old": "nonempty-only finite interaction reconstruction without E(empty)", "replacement": "full Mobius inverse with I_empty=E(empty) or normalized v"}
+  ],
+  "i3c_settlement_causality_repair": {
+    "status": "PROSPECTIVE_SEMANTIC_REPAIR_UNIMPLEMENTED",
+    "conflict": "Framework specification section 13.5 permits institutional numeric shares under UNIDENTIFIED causality, while current I3 authority, mechanical predicate, validation vectors, and settlement validator reject them.",
+    "corrected_rules": [
+      "Non-IDENTIFIED causality forbids numeric causal-contribution claims.",
+      "Non-IDENTIFIED causality does not forbid independently authorized institutional settlement shares.",
+      "Each settlement share references an institutional rule and must not be labeled causal evidence unless causality is IDENTIFIED.",
+      "Child causal contribution remains unresolved or not applicable under non-identified causality.",
+      "Child settlement share links, numeric institutional shares, and present arithmetic closure may exist independently.",
+      "Measured total equals share total plus explicit residual under accepted units and arithmetic.",
+      "CAUSAL_ATTRIBUTION_UNRESOLVED fires for prohibited causal claims or causal relabeling, not solely for institutional shares or present settlement closure."
+    ],
+    "preserved": [
+      "current implementation bytes",
+      "current I3 contract bytes",
+      "current 544-vector corpus bytes",
+      "current failure-code order and validator precedence until later implementation authority"
+    ],
+    "fail_closed_until_implemented": true,
+    "bypass_forbidden": true
+  },
+  "prospective_declaration_names": [
+    "ExtentDefinition",
+    "AtomicRefinementDeclaration",
+    "QuantityParticipationGeneratorDeclaration",
+    "StateTransformationGeneratorDeclaration",
+    "ConstitutiveGeneratorLink",
+    "RegularityAndReparameterizationWitness",
+    "HybridActivationDeclaration",
+    "FiniteReconstructionWitness",
+    "BoundaryHistoryEquivalenceWitness",
+    "JointObjectiveDeclaration",
+    "FiniteSetInteractionWitness",
+    "SameBaselineNonadditivityWitness",
+    "SerialComparatorInteractionWitness",
+    "MixedMarginalWitness",
+    "CommutatorWitness",
+    "SharedConstraintFactor",
+    "InteractionTopologySnapshot",
+    "AllocationOptimalityWitness",
+    "ScalarDecompositionWitness",
+    "InstitutionalAcceptanceRule",
+    "InstitutionalSettlementRule"
+  ],
+  "validation": {
+    "classes": ["T0_STATIC_ONLY"],
+    "case_order_source": "atomic_generator_foundation_validation_contract.json",
+    "total_vector_count": 60,
+    "f1_f12_vector_count": 12,
+    "f13_f16_interaction_vector_count": 30,
+    "package_integrity_vector_count": 8,
+    "pedagogical_authority_vector_count": 10,
+    "f1_f12_supporting_subvector_count": 2,
+    "book_chain_link_count": 16,
+    "mathematical_explanatory_chain_link_count": 8,
+    "pedagogical_feature_record_count": 49,
+    "open_problem_unique_disposition_count": 154,
+    "open_problem_book_trace_unique_disposition_count": 149,
+    "outside_programme_disposition_count": 4,
+    "excluded_concept_disposition_count": 1,
+    "open_problem_membership_count": 158,
+    "open_problem_allowed_overlap_count": 9,
+    "removed_or_reclassified_join_count": 29,
+    "scientific_or_framework_behavior_forbidden": true
+  },
+  "completion": {
+    "candidate_self_accepts": false,
+    "next_possible_stage": "INDEPENDENT_AUTHORITY_AUDIT",
+    "next_stage_begun": false,
+    "completion_marker": "ATOMIC_GENERATOR_FOUNDATION_CONTRACT_READY"
+  }
+}

@@ -1,0 +1,418 @@
+{
+  "plan_id": "v30_gate1dc_outcome_discrimination",
+  "plan_version": "1.0.0",
+  "created": "2026-08-10",
+  "gate": "V3.0 Gate 1D-C - deterministic outcome-discrimination study (design and preregistration only)",
+  "status": "DESIGN-AND-PREREGISTRATION ONLY. This plan freezes the study. Implementation, pre-execution testing and the single official execution each require separate authorization. Passing future numerical tests will not prove alignment, safety, or any theorem.",
+  "targets_open_problems": {
+    "O11": "quote-greedy under-service: first test with an outcome instrument of certified ex-ante sensitivity; the D-versus-B verdict remains an open empirical outcome",
+    "O10": "serving-baseline predicate and per-destination detection channel: first registered fire-positive validation regime (positive controls are analytically guaranteed to produce detectable under-service). Because physical_impossibility precedes distributive under-service in the unchanged whole-run classification, PC1/PC2 validate the detector, not a distributive final class, in DC1/DC3"
+  },
+  "relation_to_O14": "Gate 1D-C is a NEW sequential study informed by O14's falsifier F13 and the committed post-O14 disposition. It is never a correction, extension or rerun of the completed O14 execution; every O14 artifact, plan and result remains final and untouched.",
+  "question": "When destination buffers no longer make bounded service flat across deficit-seeking policies, can exact-total-local-EBU selection produce persistent service under-performance relative to the matched non-EBU baseline?",
+  "equation_version_expected": "v3.0-gate0.1",
+  "semantics_change": "NONE. The bounded service semantics is service_v30.bounded_step VERBATIM (registered 10-step Gate 1D order, Gate 1D-A corrected scale-aware reserve tolerance). No perishable stock, no flow-only service rule, no new service semantic. Outcome sensitivity is obtained entirely through world construction: a demand-dominant (flow-revealing) destination, capacity below multiplexed demand, and a registered per-tick demand schedule - all inputs to the unchanged semantics.",
+  "world_conventions": {
+    "process_cost": "C_a(q) = c0 + c1*q with c0 = 0.0, c1 = 0.1 * dt * (1 - eta) (Gate-1 convention, unchanged)",
+    "theta": 0.05,
+    "source_family": "logistic rho = 0.6, K = 20, R_eff = 8, chi = 1, alpha = 1, beta = 0.5, L = 5, U = 25; x0 = 12",
+    "source_flat_band": "L = 5 < R_eff = 8 <= x_s <= K = 20 < U = 25, so mu_src = 0 EXACTLY on the whole P1C-protected reachable domain: every force and every quote is a function of the target destination's stock alone (up to the registered 1e-9-scale reserve tolerance)",
+    "destination_family": "beta = 0.5, chi = 0, R = 0, U = 15, K = 20; alpha and L per world",
+    "demand_semantics": "demand enters ONLY the saturating service step of service_v30.bounded_step as the per-tick demand_rate input; drive and all decision quantities are demand-stripped (drive_no_demand), so forces and quotes never read demand; arm S reads only the CURRENT tick's declared demand rate of adjacent destinations"
+  },
+  "worlds": {
+    "DC1_flux_lock": {
+      "family": "flow-revealing destination plus buffered severe destination",
+      "note": "dst1 is demand-dominant (d1 = 3.0 > eta1*J1 = 2.2554 max delivery rate) with x0 = 0, so x_dst1(t) = 0 for every tick by induction and service_dst1(t) = dt*eta1*q1(t) EXACTLY: the outcome functional is linear in the delivery schedule on dst1 (anti-plateau by construction, unchanged semantics). dst2 is a buffered severe destination that the force rule provably keeps fully served while the stock-blind volume rule provably starves it.",
+      "discriminates": "guaranteed A-vs-B capability cost (PC3); guaranteed S-vs-B dst2 starvation detected by the registered per-destination channel (PC1), while the unchanged whole-run precedence assigns physical_impossibility because dst1 is structurally infeasible; D-vs-B open with linear sensitivity on dst1",
+      "feasible": false,
+      "partial_infeasibility_by_design": "dst1's demand exceeds every arm's maximum delivery rate; ALL arms record honest unmet demand on dst1 every tick (W6-style explicit scarcity, never phantom service)",
+      "cells": [
+        {"alpha": 1.0, "beta": 0.5, "chi": 1.0, "L": 5.0, "U": 25.0, "R": 8.0, "K": 20.0, "source": "logistic", "rho": 0.6},
+        {"alpha": 1.0, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0},
+        {"alpha": 2.5, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0}
+      ],
+      "edges": [
+        {"i": 0, "j": 1, "M": 0.28, "theta": 0.05, "eta": 0.9},
+        {"i": 0, "j": 2, "M": 0.08, "theta": 0.05, "eta": 0.9}
+      ],
+      "x0": [12.0, 0.0, 3.5],
+      "demand": [0.0, 3.0, 0.5],
+      "demand_schedule": {"type": "constant"},
+      "types": {"0": "regenerative"}
+    },
+    "DC2_capacity_split": {
+      "family": "single-edge capacity below multiplexed demand, three asymmetric destinations",
+      "note": "every single out-edge's maximum service rate (eta*M*(f_max - theta) <= 1.1008) is below the total demand rate 1.9, so NO one-action-per-tick policy can cover total demand by temporal multiplexing, while arm A provably serves all three destinations fully (sigma = 1 regime, sum J_op = 2.2799 <= g(R_eff) = 2.88). Which destinations the restricted rules starve, and by how much, is the open scarce-allocation question.",
+      "discriminates": "guaranteed A-vs-restricted window gap (PC4); registered provable t0 choice divergence (B picks edge a by force 9.5, D picks edge c by exact total quote at both timesteps); D-vs-B totals and per-destination distribution OPEN",
+      "feasible": true,
+      "restricted_infeasibility_by_design": "feasible for arm A; structurally infeasible for every one-action-per-tick arm (cap_max < sum demand)",
+      "cells": [
+        {"alpha": 1.0, "beta": 0.5, "chi": 1.0, "L": 5.0, "U": 25.0, "R": 8.0, "K": 20.0, "source": "logistic", "rho": 0.6},
+        {"alpha": 2.5, "beta": 0.5, "chi": 0.0, "L": 4.0, "U": 15.0, "R": 0.0, "K": 20.0},
+        {"alpha": 0.55, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0},
+        {"alpha": 1.2, "beta": 0.5, "chi": 0.0, "L": 6.0, "U": 15.0, "R": 0.0, "K": 20.0}
+      ],
+      "edges": [
+        {"i": 0, "j": 1, "M": 0.06, "theta": 0.05, "eta": 0.95},
+        {"i": 0, "j": 2, "M": 0.28, "theta": 0.05, "eta": 0.85},
+        {"i": 0, "j": 3, "M": 0.13, "theta": 0.05, "eta": 0.75}
+      ],
+      "x0": [12.0, 2.0, 0.5, 1.8],
+      "demand": [0.0, 0.4, 0.9, 0.6],
+      "demand_schedule": {"type": "constant"},
+      "types": {"0": "regenerative"}
+    },
+    "DC3_demand_pulse": {
+      "family": "DC1 topology with registered pulsed demand at the buffered destination",
+      "note": "identical cells and edges to DC1_flux_lock; dst2's demand arrives as registered pulses of amount P = 1.0 at fixed tick indices. Deficit-driven rules (B, D) can pre-position stock because their thresholds exceed P; the stock-blind rule S provably cannot (its score indicator reads the CURRENT tick's demand rate, which is 0 off-pulse, and the DC1 score lock holds at pulse ticks), so S's pulse unmet is guaranteed.",
+      "discriminates": "guaranteed S-vs-B pulse starvation of dst2 detected by the registered per-destination channel (PC2), while the unchanged whole-run precedence assigns physical_impossibility because dst1 is structurally infeasible; B/D banking behavior and D-vs-B differences on the linear dst1 channel OPEN",
+      "feasible": false,
+      "partial_infeasibility_by_design": "dst1 demand-dominant exactly as in DC1_flux_lock",
+      "cells": [
+        {"alpha": 1.0, "beta": 0.5, "chi": 1.0, "L": 5.0, "U": 25.0, "R": 8.0, "K": 20.0, "source": "logistic", "rho": 0.6},
+        {"alpha": 1.0, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0},
+        {"alpha": 2.5, "beta": 0.5, "chi": 0.0, "L": 5.0, "U": 15.0, "R": 0.0, "K": 20.0}
+      ],
+      "edges": [
+        {"i": 0, "j": 1, "M": 0.28, "theta": 0.05, "eta": 0.9},
+        {"i": 0, "j": 2, "M": 0.08, "theta": 0.05, "eta": 0.9}
+      ],
+      "x0": [12.0, 0.0, 0.5],
+      "demand": [0.0, 3.0, 0.0],
+      "demand_schedule": {
+        "type": "pulse_amount",
+        "pulse_destination": 2,
+        "pulse_amount_P": 1.0,
+        "pulse_ticks": [10, 35, 60, 85, 110, 135, 160, 185],
+        "rule": "d_2(t) = P / dt at each registered pulse tick and 0.0 at every other tick, where dt is the run's registered timestep, so the demanded AMOUNT dt * d_2(t) = P exactly at both timesteps; every other cell's demand rate is the constant registered in 'demand'. The schedule is a per-tick INPUT to the unchanged bounded_step; no cell parameter changes over time.",
+        "window_pulses": 6
+      },
+      "types": {"0": "regenerative"}
+    }
+  },
+  "timestep": {
+    "rule": "one shared certified timestep per paired world across all five arms; conservative r_dt = 0.5 and near-certificate r_dt = 0.9 of the binding certificate; r_dt <= 1 in every confirmatory run; the harness recomputes every certificate with the released d0_v29 functions and fails closed on any mismatch; post-hoc timestep change forbidden",
+    "observation_model": "exact deterministic local observations; tau = 0; eps_x = eps_u = 0 (Gate 1E untouched)",
+    "post_hoc_change_forbidden": true,
+    "per_world": {
+      "DC1_flux_lock": {
+        "lv_exact": 5.0,
+        "one_edge_certificate": 0.7892659826361483,
+        "gershgorin_certificate": 0.5083884087442806,
+        "binding_certificate": 0.5083884087442806,
+        "binding_kind": "gershgorin",
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.2541942043721403,
+        "registered_near_certificate_dt": 0.45754956786985257
+      },
+      "DC2_capacity_split": {
+        "lv_exact": 5.0,
+        "one_edge_certificate": 0.8293593199253576,
+        "gershgorin_certificate": 0.3837666698647222,
+        "binding_certificate": 0.3837666698647222,
+        "binding_kind": "gershgorin",
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.1918833349323611,
+        "registered_near_certificate_dt": 0.34539000287825
+      },
+      "DC3_demand_pulse": {
+        "lv_exact": 5.0,
+        "one_edge_certificate": 0.7892659826361483,
+        "gershgorin_certificate": 0.5083884087442806,
+        "binding_certificate": 0.5083884087442806,
+        "binding_kind": "gershgorin",
+        "r_dt_conservative": 0.5,
+        "r_dt_near": 0.9,
+        "registered_conservative_dt": 0.2541942043721403,
+        "registered_near_certificate_dt": 0.45754956786985257
+      }
+    }
+  },
+  "arms": {
+    "A_full_multi_edge_p1c": "full multi-edge P1C capability: all raw out-edge requests, proportional sigma-scaling by the aggregate robust budget (released p1c_step on the full world); bounded service; NO EBU settlement or allocation of any kind (capability-superset benchmark; never the alignment comparator)",
+    "B_restricted_matched_non_ebu": "PRIMARY comparator: one action per source per micro-step from the shared menu; released loss-aware force rule (largest f_e, tie larger q_acc, then lower edge index, then lower quantity-menu index); no EBU input",
+    "C_restricted_observational_quote": "identical selection to B (select_arm_B verbatim); executed action quoted and settled observationally strictly AFTER the selection is fixed; physics must be byte-identical to B (F1)",
+    "D_restricted_exact_total_quote_greedy": "restricted exact-total-quote greedy: largest STRICTLY POSITIVE exact total quote over the shared menu (ties lower edge index, then lower quantity-menu index); rests on the exact q = 0 branch when no exact quote is strictly positive; NEVER ranks by EBU per unit (F9); evaluation variable",
+    "S_restricted_local_service_priority": "registered stock-blind positive-control comparator: score = eta_e * q_acc * 1[declared CURRENT-tick demand rate of destination > 0]; ties lower edge index, then lower quantity-menu index; reads only the menu plus the adjacent destination's current declared demand rate; its declared limitation (destination stock-buffer blindness) is the lever of positive controls PC1 and PC2",
+    "E_aggregate_source_group_quote": "NOT REGISTERED FOR EXECUTION (O3 remains open; no aggregate settlement exists in this gate)",
+    "primary_comparison": "D versus B",
+    "primary_baseline": "B_restricted_matched_non_ebu",
+    "forbidden_baseline": "A_full_multi_edge_p1c",
+    "capability_matching": "B, C, D and S consume the SAME registered menu function (fractions x raw loss-aware flux on the mobility-scaled edge, capped by the same authoritative P1C budget), the same conflict rule and the same per-world timestep, asserted PER TICK by the future harness (F2); B and D differ only in the ranking heuristic; P1C removes unsafe actions before any ranking (budget computed first; empty menu when budget <= 0; every candidate q_acc <= budget)"
+  },
+  "quantity_menu": {
+    "fractions": [0.25, 0.5, 0.75, 1.0],
+    "identical_for_arms": ["B", "C", "D", "S"],
+    "cap": "authoritative source-local P1C budget (p1c_v29.robust_budget for State-P regenerative sources; zero for R/I)",
+    "registered_boundary_note": "at the registered timesteps every candidate schedule is strictly increasing across the menu (continuous vertex q_cont* far beyond J_e on both DC1/DC3 edges and all DC2 edges at the frozen operating band), so frac = 1.0 candidates dominate; any interior menu pick observed in the study is itself a reportable surprise"
+  },
+  "request_shaping": {
+    "identity": "the selected quantity IS the executed quantity: the restricted arms present p1c_step with an active world whose single edge carries mobility M_sel = frac * M_e; the released allocator regenerates frac * J_e itself and applies its own authoritative budget; q_acc(executed) = min(frac*J_e, Q_max) = menu q_acc asserted per tick (violation raises before any record exists)"
+  },
+  "bounded_service_semantics": {
+    "reuse": "service_v30.bounded_step VERBATIM: registered 10-step order; service <= available, service <= demand; unmet = demand - service exactly; non-negativity corrections explicit; exact ledger closure; no clipping that creates phantom stock; Gate 1D-A corrected scale-aware reserve tolerance (tol = 1e-9*(1+|R_eff|))",
+    "demand_input": "demand_rate is a per-tick input vector constructed by the future runner from the registered 'demand' vector and 'demand_schedule' of the world; the service semantics itself is UNCHANGED and shared bit-identically by all arms"
+  },
+  "information_boundary": {
+    "may_read": [
+      "the source's frozen local stock and declared parameters",
+      "the authoritative P1C source classification and remaining aggregate budget",
+      "adjacent destination LocalViews",
+      "local edge efficiency, threshold, mobility and declared process cost",
+      "candidate requested/accepted quantities",
+      "the complete exact committed quote schedule",
+      "the adjacent destination's declared demand rate FOR THE CURRENT TICK ONLY (arm S's indicator)",
+      "deterministic local identifiers for tie handling"
+    ],
+    "may_not_read": [
+      "global V; global viability; whole-world service or unmet demand",
+      "future states or rollouts; phase-map position",
+      "the demand schedule at ANY tick other than the current one (no future demand, no pulse-tick lookahead)",
+      "experiment classifications; result files",
+      "wallets, health, personal debt, prices or markets",
+      "migration destinations beyond the permitted local neighbourhood"
+    ],
+    "enforcement": "AST scan of the decision path for forbidden identifiers/imports, runtime poison probes, and the V_total-never-on-the-decision-path check, mirroring the committed O14 test discipline"
+  },
+  "instrument_sensitivity_certificate": {
+    "running_buffer_identity": "for destination j with per-tick delivered amount delta_j(t) = dt*eta*q_j(t) and demanded amount dem_j(t): service_j(t) = min(dem_j(t), x_j(t) + delta_j(t)) and x_j(t+1) = x_j(t) + delta_j(t) - service_j(t); cumulative service is flat over delivery schedules ONLY while x_j(t) + delta_j(t) >= dem_j(t) at every window tick. Each world below breaks that flatness by static construction; every number is derived from closed forms, released pure functions at frozen states, and root calculations - no trajectory of any length was executed.",
+    "DC1_flux_lock": {
+      "item1_not_constant": "on dst1, x_dst1(t) = 0 for all t by induction (x0 = 0; dt*d1 > dt*eta1*J1 with ratio 1.330 at both timesteps), hence service_dst1(t) = dt*eta1*q1(t) EXACTLY: the window service functional is LINEAR (never flat) in the dst1 delivery schedule",
+      "item2_two_schedules": "the always-serve-dst1 schedule and the B-band schedule (top up dst2 whenever x2 < 3.0) are both menu- and budget-admissible and differ in window dst2 service by the full window dst2 demand (19.064565327910522 conservative / 34.31621759023894 near-certificate) minus at most the 3.5 initial buffer",
+      "item3_margins": "certified lower bounds: S-vs-B dst2 unmet >= 15.564565327910522 / 30.816217590238942; A-vs-B cost >= 18.427051868293074 / 28.012116339140597 (reserve-dust-robust pairing bound, see item5) - each > 1e6 times the frozen numerical tolerance 1e-9*(1+|v|) and >= 15x / 18x the Gate 1D absolute predicate threshold 1.0",
+      "item4_window_not_saturated": "dst1 is availability-limited (service < demand) at EVERY tick of EVERY arm - the measurement window can never begin or remain inside a saturated plateau on dst1",
+      "item5_multiplexing_cannot_erase": "the A-vs-B bound already grants B its best case (temporal multiplexing permitted and accounted): B must spend at least 108.39650945604072 (conservative) / 103.38078790672951 (near) top-up ticks in the real-valued stock balance; after the registered one-tick allowance this gives N = 107.66719939300044 / 102.68491598735132 dst1-flow ticks lost while dst1 banks nothing. The bound is additionally ROBUST TO FLOAT RESERVE DUST: arm A's aggregate draw can hold its source at the reserve boundary, where a one-ULP float landing below R_eff makes the next tick State R (zero budget, zero delivery). Such zero-budget ticks are provably ISOLATED: the R tick regenerates 0.7320793085917641 / 1.3177427554651753, and the following budget is 5.83177131360896 / 5.866035751568388, above the maximal aggregate request 4.302, hence the successor has sigma = 1. Because a W = 150 measurement window may end on State R, the endpoint-safe lower bound on the sum of A's sigma factors is 74 + sigma_lb = 74.6694560669456, not W/2 = 75. Combining that bound with the B-band balance gives rigorous A-vs-B gaps 18.538915283264444 / 28.22854380179723; the frozen PC3 floors 18.427051868293074 / 28.012116339140597 are smaller by 0.111863 / 0.216427 and therefore remain valid. A's dst2 full service also survives the worst alternation (two-tick delivery covers two-tick demand at the alternation equilibrium x2 = 1.9024691358024688, whose floor exceeds one tick of demand at both dts)",
+      "item6_feasibility_and_reserve": "restricted single requests are never budget-capped (J1 = 2.506 <= Q_max lower bound g(R_eff) = 2.88 for all reachable source states); P1C keeps x_src >= R_eff = 8 within the corrected tolerance; dst1's structural unmet demand is exposed honestly every tick (never phantom-served)",
+      "registered_thresholds": {
+        "F1MAX": 9.0, "J1": 2.5060000000000002, "eta1J1": 2.2554000000000003,
+        "J2_at_zero_stock": 1.796, "eta2J2max": 1.6164,
+        "S_lock_ratio": 1.3953229398663698, "xbar_B": 3.0,
+        "B_serve_rate_at_xbar_B": 0.6444,
+        "xbar_D_conservative": 1.2960131676417608,
+        "xbar_D_near_certificate": 1.3237603299475418,
+        "quote1_constant_conservative": 5.398042071402336,
+        "quote1_constant_near_certificate": 9.243170902090904,
+        "Q_max_lower_bound": 2.88,
+        "A_sigma_global_lb": 0.6694560669456066
+      }
+    },
+    "DC2_capacity_split": {
+      "item1_not_constant": "aggregate delivery of any one-action-per-tick policy is capped at cap_max = 1.1007500000000003 per unit time while total demand is 1.9: the window service functional cannot be constant because restricted totals are capacity-limited and A's totals are demand-limited",
+      "item2_two_schedules": "the all-flux-to-dst_a and all-flux-to-dst_b constant schedules are admissible; after burn-in their selected destinations are fully served and the nonselected initial buffers are exhausted, so their window total service differs by exactly W*dt*(0.9-0.4) = 14.391250119927083 (conservative) / 25.90425021586875 (near-certificate)",
+      "item3_margins": "certified A-vs-restricted window gap >= 7.476597260519597 (conservative, 13.7% of A's window service) / 25.384451045418373 (near, 25.8%) - > 1e6 times numerical tolerance, >= 7x / 25x the absolute predicate threshold, and >= 2.7x / 5.2x the 5% relative threshold",
+      "item4_window_not_saturated": "the window cannot be demand-saturated for any restricted arm: window restricted service <= W*dt*cap_max + x_T0_upper_bound (15.527816056183838 / 16.02349292464781) < window demand W*dt*1.9 (54.686750455722915 / 98.43615082030125)",
+      "item5_multiplexing_cannot_erase": "the cap bound is per-tick and schedule-independent: EVERY temporal multiplexing pattern of one action per tick delivers at most dt*cap_max per tick; destination stocks cannot exceed x_dead_j + one delivery quantum (3.9894736842105263 / 4.946524064171123 / 5.972222222222222 plus dt*cap), bounding banked service",
+      "item6_feasibility_and_reserve": "arm A is fully feasible: at x0 every destination's delivery exceeds its demand (0.539 > 0.4, 0.990 > 0.9, 0.732 > 0.6), stocks rise monotonically toward operating points x_op (2.512096029547553, 0.9021255561047958, 2.5534188034188037), fluxes fall, sum J stays <= 2.71 < Q_max lower bound 2.88, sigma = 1 throughout; sustained draw sum J_op = 2.279876160990712 has a stable source equilibrium at x_src = 14.90 > R_eff + 2",
+      "registered_t0_divergence": {
+        "f": {"a": 9.5, "b": 4.2075000000000005, "c": 7.5600000000000005},
+        "J": {"a": 0.567, "b": 1.1641000000000004, "c": 0.9763000000000002},
+        "quotes_conservative": {"a": 1.0063284254670817, "b": 0.9166576160006611, "c": 1.387885600197703},
+        "quotes_near_certificate": {"a": 1.7729328426369138, "b": 1.6214329189583259, "c": 2.4640820665056498},
+        "statement": "B provably selects edge a at t0 (force margin 1.257x) and D provably selects edge c at t0 (quote margin 1.379x conservative / 1.390x near): registered choice divergence at both timesteps"
+      },
+      "caps": {"a": 1.08015, "b": 1.1007500000000003, "c": 1.048125},
+      "sum_demand": 1.9,
+      "sum_J_op": 2.279876160990712
+    },
+    "DC3_demand_pulse": {
+      "item1_not_constant": "dst1 linearity as in DC1 (identical construction); on dst2 the pulse schedule makes window service depend on PRE-POSITIONED stock: service at a pulse tick = min(P, x2 + one delivery), so policies that bank differ from policies that cannot",
+      "item2_two_schedules": "a banking schedule (deliver dst2 off-pulse up to any level >= P) serves every pulse fully; the never-deliver-to-dst2 schedule serves at most the initial 0.5 buffer across ALL 8 pulses: window difference >= 5.5",
+      "item3_margins": "certified S-vs-B window pulse unmet >= 5.5 of 6.0 demanded (both timesteps) - > 1e6 times numerical tolerance and >= 5x the absolute predicate threshold",
+      "item4_window_not_saturated": "dst1 unsaturated every tick (DC1 argument); dst2 is intentionally unsaturated under S at every window pulse",
+      "item5_multiplexing_cannot_erase": "S's failure is informational, not schedulable: its score indicator reads the CURRENT tick's demand rate (0 off-pulse - S never banks) and the DC1 score lock (eta1*J1 = 2.2554 > eta2*J2max = 1.6164) holds at pulse ticks - so S cannot serve dst2 at ANY tick; no multiplexing pattern is available to it, while B provably banks >= min(3.0, 1.9742247076766648) before the first pulse and >= xbar_B = 3.0 > 2*P between window pulses (refill needs <= 6.104903786468032 conservative / 3.3916132147044626 near of the 24 strictly off-pulse ticks between consecutive pulses; pulse spacing 25)",
+      "item6_feasibility_and_reserve": "as DC1; the pulse amount P = 1.0 is below both banking thresholds (xbar_B = 3.0; xbar_D = 1.2960131676417626 conservative / 1.323760329947541 near, agreeing with the DC1 roots to < 2e-14), so full pulse service is REACHABLE by deficit-driven policies and scarcity is attributable to policy, not physics",
+      "registered_values": {
+        "quote2_at_initial_x2_conservative": 7.972448046555659,
+        "quote2_at_initial_x2_near_certificate": 13.858365224475314,
+        "naming_note": "quote2_at_initial_x2 is the exact quote at the registered initial dst2 stock x2(0) = 0.5 (NOT at zero stock); DC1's J2_at_zero_stock is the flux at x2 = 0",
+        "B_bank_before_first_pulse_conservative": 1.9742247076766648,
+        "B_bank_before_first_pulse_near_certificate": 3.0,
+        "pulse_demand_rate_conservative": 3.934,
+        "pulse_demand_rate_near_certificate": 2.1855555555555557
+      }
+    },
+    "declared_safety_margin_rule": "every certified discrimination lower bound must exceed 1e6 times the frozen numerical tolerance 1e-9*(1+|value|) AND at least 5 times the Gate 1D absolute predicate threshold 1.0; all registered bounds satisfy both at both timesteps"
+  },
+  "positive_control": {
+    "PC1_DC1_S_starves_dst2": {
+      "statement": "arm S never selects edge 1 in DC1 (score lock ratio 1.3953229398663698 for every reachable dst2 stock, budget never capping), so its window dst2 service is at most the 3.5 initial buffer while arm B's dst2 unmet is exactly 0 (threshold floor invariant)",
+      "certified_lower_bound": {"conservative": 15.564565327910522, "near_certificate": 30.816217590238942},
+      "measured_as": "post-burn-in cumulative dst2 unmet of S minus post-burn-in cumulative dst2 unmet of B"
+    },
+    "PC2_DC3_S_misses_pulses": {
+      "statement": "arm S delivers nothing to dst2 at any tick of DC3 (zero score indicator off-pulse; DC1 score lock at pulse ticks), so at most the 0.5 initial buffer serves the 6 window pulses, while arm B provably banks above P before every window pulse",
+      "certified_lower_bound": {"conservative": 5.5, "near_certificate": 5.5},
+      "measured_as": "window pulse-tick cumulative dst2 unmet of S minus window pulse-tick cumulative dst2 unmet of B"
+    },
+    "PC3_DC1_A_vs_B_capability_cost": {
+      "statement": "arm B's invariant band forces a real-valued minimum of 108.39650945604072 / 103.38078790672951 top-up ticks; after the registered one-tick allowance, N = 107.66719939300044 / 102.68491598735132 dst1-flow ticks are lost while dst1 banks nothing. Arm A's reserve-dust states are isolated and each has a sigma-1 successor, but a 150-tick window may end on the zero-budget state; the endpoint-safe sum of A sigma factors is therefore 74 + sigma_lb = 74.6694560669456. This proves gaps 18.538915283264444 / 28.22854380179723, so the smaller frozen floors remain valid; A's dst2 remains fully served even under worst-case alternation",
+      "certified_lower_bound": {"conservative": 18.427051868293074, "near_certificate": 28.012116339140597},
+      "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+    },
+    "PC4_DC2_A_vs_B_capacity_gap": {
+      "statement": "arm A serves all destinations fully (sigma = 1 regime; its source never approaches the reserve boundary since sum J <= 2.71 < g(R_eff) = 2.88 throughout) while every one-action-per-tick arm is capped at cap_max = 1.1007500000000003 per unit time against total demand 1.9, with banked stock bounded by the x_dead + quantum bounds",
+      "certified_lower_bound": {"conservative": 7.476597260519597, "near_certificate": 25.384451045418373},
+      "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B",
+      "note": "the same certified bound applies to C, D and S versus A; B is the registered control channel"
+    },
+    "rule": "the instrument-failure threshold IS the certified lower bound: falsifier F4 fires iff an executed positive-control value falls below its certified_lower_bound minus the frozen numerical tolerance 1e-9*(1+|bound|). There is no separate slack floor and therefore no interval in which the analysis could fail silently, and no tuning space. F4 is a reported outcome; it never authorizes tuning, re-execution or reinterpretation."
+  },
+  "comparisons": {
+    "A_vs_B_capability_cost": "post-burn-in cumulative total service difference and per-destination differences; PC3/PC4 certified bounds apply in DC1/DC2 (F4 thresholds)",
+    "B_vs_C_observational_identity": "byte-identity of every physical value at every tick (F1)",
+    "B_vs_D_primary_alignment": "Gate 1D service-alignment predicate VERBATIM on totals (thresholds untouched) PLUS the registered per-destination channel: post-burn-in cumulative service and unmet per destination; two-sided reporting (D above or below B are both reportable outcomes; neither is assumed)",
+    "S_vs_B_and_D_secondary": "registered attribution comparisons; PC1/PC2 certified bounds apply in DC1/DC3 (F4 thresholds); totals AND per-destination values reported (in DC1 the totals direction is expected S > B by the lock analysis while dst2 starves - the per-destination channel is the control's primary readout)",
+    "timestep_sensitivity": "every verdict and every positive-control check evaluated at both registered timesteps; consistency reported (H7)"
+  },
+  "service_alignment_predicate": {
+    "reuse": "Gate 1D predicate VERBATIM (no mathematical contradiction found): fires iff cumulative signed EBU > 1.0 AND (post-burn-in service deficit vs arm B >= 5% relative AND >= 1.0 absolute, with per-tick persistence over the final 20 ticks, OR the unmet-demand mirror) AND NOT preservation-justified (delta_R = 0.5 rule); tolerance 1e-9*(1+|value|); baseline arm B",
+    "per_destination_channel": "the same 5% relative / 1.0 absolute / 20-tick persistence structure applied to each destination's post-burn-in cumulative unmet difference (D minus B), reported per destination; REGISTERED before execution as discriminator channel iii",
+    "prohibitions": [
+      "capacity-caused service reduction must never be labelled quote misalignment",
+      "no threshold may change after outcome inspection",
+      "positive EBU is never called useful service without physical service"
+    ]
+  },
+  "discriminator_v2": {
+    "channels": {
+      "i": "A-vs-B post-burn-in capability cost (absolute) > tolerance",
+      "ii": "|D/B post-burn-in total service ratio - 1| > tolerance",
+      "iii": "max over destinations of |post-burn-in cumulative unmet_D - unmet_B| > tolerance"
+    },
+    "tolerance": "1e-9 * (1 + |value|)",
+    "world_discriminating": "a world-timestep pair is discriminating iff ANY channel exceeds tolerance",
+    "F3_fires_iff": "NO world-timestep pair is discriminating on ANY channel (the F13-symmetric falsifier; unreachable if the certified bounds hold, so its firing indicts the analysis, never the reporting)"
+  },
+  "outcome_classes": {
+    "reuse": "Gate 1D outcome classes and deterministic precedence VERBATIM with corrected-tolerance reserve inputs",
+    "registered_expectations": "DC1/DC3 runs deterministically satisfy the physical_impossibility condition whenever their registered structural dst1 unmet is present; because that class precedes distributive under-service in the unchanged classifier, PC1/PC2 validate the fire-positive per-destination detector but do not produce a distributive final class. DC2 arm-A runs are expected preserve_and_serve while restricted arms expose capacity scarcity; expectations beyond the deterministic precedence consequence are registered predictions, not requirements - any surprise is reported"
+  },
+  "hypotheses": {
+    "H1": "B and C are physically byte-identical at every tick of every paired run",
+    "H2": "instrument sensitivity: discriminator_v2's primary channels are certified in DC1/DC2 at both timesteps by PC3/PC4; DC3 sensitivity is independently certified by the secondary per-destination PC2 channel. PC2 is not silently relabelled as a primary D-vs-B discriminator channel",
+    "H3": "every positive control (PC1-PC4) meets or exceeds its certified lower bound (the F4 threshold)",
+    "H4": "the one-action restriction binds where intended: arm A executes >= 2 simultaneous positive deliveries in every world, and the certified A-vs-B costs appear in DC1 and DC2",
+    "H5": "OPEN OUTCOME (never analytically forced): whether D's post-burn-in service equals, exceeds or falls below B's - on totals and per destination - in each world; the registered threshold analysis predicts directions in DC1/DC3 but those predictions are themselves falsifiable in-run and their failure is a reportable finding, not a defect",
+    "H6": "D preserves P1C reserves with zero material crossings and zero physical overuse",
+    "H7": "every verdict is consistent across the conservative and near-certificate timesteps",
+    "H8": "B and D select different candidates somewhere: at t0 in DC2 (registered provable divergence) and in the threshold region x2 in (xbar_D, xbar_B) of DC1/DC3",
+    "H9": "all unmet demand is exposed explicitly (DC1/DC3 dst1 structural unmet; DC2 restricted-capacity shortfall); no phantom service, no hidden deficit",
+    "H10": "the flow-revealing pinning invariant holds: x_dst1(t) = 0 at every tick of every DC1/DC3 run (registered analytic invariant, falsifiable in-run)"
+  },
+  "falsifiers": {
+    "F1": "arm C changes any physical value versus arm B at any tick",
+    "F2": "B/C/D/S menus, candidate quantities, budgets or timesteps differ at any tick (per-tick capability-identity assertion)",
+    "F3": "F13-SYMMETRIC: all primary worlds are non-discriminating - no world-timestep pair exceeds tolerance on any discriminator_v2 channel",
+    "F4": "INSTRUMENT FAILURE: any positive-control executed value falls below its certified lower bound minus the frozen numerical tolerance (the static sensitivity analysis was wrong)",
+    "F5": "PLATEAU: every destination is demand-saturated (service = demand) for every executed arm at every measurement-window tick of an anti-plateau world (DC1/DC3)",
+    "F6": "CAPABILITY: arm A never executes >= 2 simultaneous positive deliveries in any primary world (the intended restriction never binds)",
+    "F7": "CHOICE: the selected-candidate series of B and D are identical at every tick of every run (intended divergence never occurs)",
+    "F8": "a protected reserve is materially crossed (corrected Gate 1D-A tolerance) or physical overuse occurs while the theorem assumptions are reported satisfied, or any Allee crossing occurs",
+    "F9": "any production arm ranks candidates by EBU per unit",
+    "F10": "the decision path reads forbidden information, including ANY demand-schedule value for a tick other than the current one",
+    "F11": "any run uses r_dt > 1 (uncertified timestep)",
+    "F12": "any parameter, threshold or predicate changes after outcome inspection (post-result adjustment)",
+    "F13": "any trajectory, step-function call, runner invocation or outcome-inspecting parameter search is found to have produced this preregistration (audit falsifier over the repository history and the registered derivations)",
+    "F14": "REPORTED ALIGNMENT OUTCOME: D earns cumulative EBU > 1.0 while persistently under-serving B under the verbatim Gate 1D predicate (this is hypothesis H5's negative branch - a scientific finding to report, never to suppress)",
+    "F15": "a stale quote or a quote outside [0, q_e_max] is evaluated",
+    "F16": "migration or dynamic topology enters this gate (static graphs only)"
+  },
+  "falsifier_policy": "every falsifier is reported, never tuned away; a fired falsifier never authorizes re-execution, parameter adjustment, world modification, subsetting, or reinterpretation of any completed run; the single-execution rule is absolute",
+  "metrics_per_run": [
+    "per-tick source and destination stocks (banked-stock series; pinning check x_dst1 = 0 in DC1/DC3)",
+    "per-tick active outgoing edges (J_e > 0 count and identity)",
+    "per-tick candidate menu: edge, fraction, q_req, q_e_max, q_acc",
+    "per-tick exact quote for EVERY candidate (full schedule value at its q_acc)",
+    "per-tick per-unit quote per candidate (diagnostic only)",
+    "per-tick continuous vertex q_cont* per candidate (diagnostic only)",
+    "selected edge and selected quantity, executed q_acc, request-shaping identity",
+    "accepted and delivered quantities per edge",
+    "aggregate safe-budget utilization Q_acc/Q_max and sigma",
+    "service and unmet demand BY DESTINATION per tick and post-burn-in cumulatives per destination (discriminator channel iii)",
+    "per-tick demanded amounts (including the DC3 pulse schedule as executed)",
+    "pulse-tick service and unmet records (DC3)",
+    "selected-edge series with switch counts and threshold-crossing diagnostics",
+    "persistent service deficit fields (Gate 1D operationalization)",
+    "burden and viability (corroborating only)",
+    "reserve crossings (corrected tolerance) and Allee crossings",
+    "dead sources; physical overuse; transport loss",
+    "action counts; voluntary rests; p1c rejections",
+    "positive, zero and negative exact-quote candidate counts; quote coverage",
+    "arm-A group quote and naive independent sum (settlement-free O3 diagnostic; nothing settled or allocated)",
+    "domain status and negative-state corrections",
+    "timestep certificate, binding kind and r_dt",
+    "ledger residual and recomputation residuals",
+    "EBU totals (evaluation variable only): total, positive, negative"
+  ],
+  "experiment_size": {
+    "worlds": 3,
+    "arms": 5,
+    "timesteps": 2,
+    "total_runs": 30,
+    "run_length_ticks": 200,
+    "burn_in_ticks": 50,
+    "persistence_window_ticks": 20,
+    "stochastic_study": false,
+    "frozen_order": "sorted world names x dt labels (conservative, near_certificate) x executable arms (A, B, C, D, S)"
+  },
+  "registered_analysis_predictions": {
+    "status": "REGISTERED FALSIFIABLE ANALYSIS, not guarantees and not part of any positive-control bound; their failure is a reportable scientific finding",
+    "DC1_DC3_threshold_model": "B tops up dst2 on the region x2 < xbar_B = 3.0 and D on x2 < xbar_D (1.2960131676417608 / 1.3237603299475418); if the model holds, D tops up later with larger deliveries and fewer top-up ticks, predicting D total service ABOVE B (through the linear dst1 channel) while both fully serve dst2 at different standing buffers; the alignment predicate's under-service branch is then predicted NOT to fire in DC1/DC3 - the study measures whether this idealized model describes the executed behavior",
+    "DC2_no_prediction": "no threshold model is registered for DC2's scarce-allocation dynamics; the D-versus-B verdict there is analytically unconstrained in both directions",
+    "provenance": "all parameters were fixed by the S-lock, pinning, threshold-floor, capacity-cap and banking inequalities FIRST; the D-side threshold roots are computed consequences, not design targets; no parameter was chosen by inspecting any candidate outcome"
+  },
+  "o3_diagnostic": {
+    "registered": "the settlement-free arm-A group-quote versus naive-independent-sum diagnostic of O14 is carried verbatim (per arm-A tick); nothing is settled or allocated; O3 remains open; restricted primary comparisons remain O3-clean (exactly one configured source per world, distinct destinations, no shared endpoints)"
+  },
+  "planned_future_files_not_created": [
+    "gate1dc_v30.py (implementation library)",
+    "test_v30_gate1dc.py (pre-execution suite: AST information-boundary scan, runtime poison probes, plan-hash fail-closed checks, certificate recomputation, per-tick identity assertions)",
+    "exp_v30_gate1dc.py (single-execution official runner, fail-closed preflight)",
+    "results/v3.0/gate1dc/MANIFEST.md",
+    "results/v3.0/gate1dc/v30_gate1dc_summary.json",
+    "results/v3.0/gate1dc/v30_gate1dc_trace.jsonl.gz",
+    "results/v3.0/gate1dc/v30_gate1dc_stdout.txt"
+  ],
+  "command_order": [
+    "1. implement gate1dc_v30.py + test_v30_gate1dc.py; commit and push BEFORE any run",
+    "2. python3 test_v30_gate1dc.py (pre-execution suite, all-pass; AST-proven to drive no registered-horizon trajectory)",
+    "3. commit and push the passing pre-execution state",
+    "4. mkdir -p results/v3.0/gate1dc; set -o noclobber; python3 exp_v30_gate1dc.py > results/v3.0/gate1dc/v30_gate1dc_stdout.txt (SINGLE official execution)",
+    "5. validate, write MANIFEST.md, commit and push results"
+  ],
+  "harness_requirements": [
+    "recompute and enforce the canonical plan hash at start; refuse to execute on any mismatch (fail closed)",
+    "recompute every certificate with the released d0_v29 functions and fail closed on any mismatch with timestep.per_world",
+    "take no command-line options; refuse to overwrite a completed study",
+    "strict JSON everywhere (allow_nan = false); every numeric field finite",
+    "assert the per-tick capability-identity and request-shaping invariants (F2)",
+    "construct the per-tick demand_rate vector exactly from the registered demand and demand_schedule fields; pass it to the unchanged bounded_step and to arm S's current-tick indicator only",
+    "record every registered metric; no rerun, retry, filtering or omitted result"
+  ],
+  "prohibitions": [
+    "no post-result tuning of any parameter, threshold, predicate or world (F12)",
+    "no trajectory, simulation, step-function call, runner or outcome-inspecting parameter search during preregistration (F13)",
+    "no modification of any O14 or earlier artifact, plan, protocol or result",
+    "no arm E; no aggregate settlement (O3 open)",
+    "no migration, diffusion, convection, dynamic topology, mobile actors, wallets, markets, prices, health, learning or actor economy",
+    "no stochastic layouts; no seed; fully deterministic",
+    "no latency, noise or measurement uncertainty (Gate 1E untouched)",
+    "a fired falsifier never authorizes tuning or re-execution"
+  ],
+  "non_claims": [
+    "numerical results will not prove alignment, safety, security or any theorem",
+    "the exact-total-quote greedy rule remains a candidate heuristic, not a theorem",
+    "the bounded service wrapper remains outside the V2.8 D0 theorem (O12/O13 theorem-less)",
+    "O3 (aggregate multi-edge settlement) remains open; nothing here settles it",
+    "Gate 1E (latency/uncertainty/robust quotes) remains registered and untouched",
+    "Gate 2 (actor economy) remains paused; no outcome authorizes it",
+    "cumulative signed EBU remains an evaluation variable, not a wallet",
+    "the registered analysis predictions are falsifiable analysis, not guarantees"
+  ],
+  "actor_economy_pause": "Gate 2 remains paused and untouched; nothing in this gate implements or authorizes health, needs, wallets, death, personal debt, prices, markets, learning or transfers",
+  "migration_future_note": "relocation of stock or actors remains future research outside this gate; the graphs of this gate are static (F16)",
+  "stop_condition_record": "the gate's stop condition - abort without preregistration if no world family with analytically demonstrated instrument sensitivity could be constructed by static algebra alone - was NOT triggered: every certified bound above was derived from closed-form inequalities, released pure functions evaluated at frozen individual states, root calculations and timestep certificates, with no trajectory-based selection; had any certified bound required trajectory tuning, this plan would not exist and Gate 1E would have been recommended with O11 explicitly open"
+}

@@ -1,0 +1,1031 @@
+{
+  "schema_version": "1.0.0",
+  "status": "PROSPECTIVE_UNAUDITED_AUTHORITY_CANDIDATE",
+  "authority": {
+    "stage": "STAGE_C_ALPHA_PACKAGING_RELEASE_CANDIDATE",
+    "branch": "framework/stage-c-packaging-release-candidate-authority",
+    "runtime_identity_correction_branch": "framework/stage-c-sqlite-runtime-authority-correction",
+    "inventory_scope_correction_branch": "framework/stage-c-inventory-scope-authority-correction",
+    "predecessor_test_correction_branch": "framework/stage-c-predecessor-test-authority-correction",
+    "release_license_tag_correction_branch": "framework/stage-c-release-license-tag-authority-correction",
+    "dependency_witness_correction_branch": "framework/stage-c-dependency-witness-authority-correction",
+    "required_predecessor_commit": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "required_predecessor_tree": "e5d1fc2746253d73474b60c86c145293fb8ee1ef",
+    "accepted_target_ref": "refs/heads/framework-v0.1",
+    "accepted_target_live_commit_at_draft": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "accepted_target_live_commit_at_inventory_scope_correction_draft": "cb07d02d00e3ed6ed80324ae43cad8ca42f6716d",
+    "accepted_target_live_tree_at_inventory_scope_correction_draft": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
+    "accepted_target_live_commit_at_predecessor_test_correction_draft": "c540d032ff22a4cd3be42f31564ac7023706e32d",
+    "accepted_target_live_tree_at_predecessor_test_correction_draft": "1614be178dfe37b37c9939ad0881853220717103",
+    "accepted_target_live_commit_at_release_license_tag_correction_draft": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "accepted_target_live_tree_at_release_license_tag_correction_draft": "abad22ae00221db6e3a803993583424d8454fa10",
+    "accepted_target_live_commit_at_dependency_witness_correction_draft": "dcdbac6518518215f509688cd257a67032b1ec98",
+    "accepted_target_live_tree_at_dependency_witness_correction_draft": "d358fa8a6b182e8949443dd01c09209ed2c5e382",
+    "main_ref": "refs/heads/main",
+    "main_live_commit_at_draft": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
+    "stale_local_framework_branch_commit": "4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e",
+    "normative_markdown": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+    "mechanical_contract": "framework_alpha_packaging_release_candidate_contract.json",
+    "predecessor_manifest": "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+    "validation_contract": "framework_alpha_packaging_release_candidate_validation_contract.json",
+    "implementation_path_manifest": "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+  },
+  "precedence": {
+    "narrow_supersession": [
+      "completed-stage package inventory",
+      "required presence of every admitted package file",
+      "backend reconciliation to accepted I-4 PyNaCl runtime dependency metadata",
+      "Stage C artifact and installed-package validation",
+      "stable alpha T1 and packaging runner decision",
+      "aggregate redistribution license metadata and associated documentation",
+      "alpha tag target after corrected Stage C release-candidate validation",
+      "full main and source-archive historical-material disclosure",
+      "reproducible indexed OSV observation records and exact build-replica wording",
+      "I8S-013 dependency-witness reconciliation for the exact accepted license-only pyproject change"
+    ],
+    "preserved": [
+      "all other accepted I-1 packaging rules",
+      "accepted I-1 through I-9 framework and validation authority",
+      "accepted atomic-generator and interaction authority",
+      "accepted conservation, durability, trace, recovery and publication-mechanism authority",
+      "accepted topology and motif authority",
+      "accepted CLCD authority and implementation",
+      "accepted framework and scientific behavior, APIs, metadata source, dependency lock and version"
+    ],
+    "conflict_rule": "Any disagreement among the Markdown and four JSON authority files is an integrity failure."
+  },
+  "predecessor_evidence": {
+    "accepted_ci_run": {
+      "repository": "konrazem/ebu",
+      "run_id": 33020110257,
+      "event": "push",
+      "head_branch": "framework-v0.1",
+      "head_sha": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+      "conclusion": "success",
+      "conventional_job": "PASS",
+      "t0_historical_completed_tests": 109,
+      "t0_i9_reachability_completed_tests": 3,
+      "t0_clcd_completed_tests": 3,
+      "t1_completed_tests": 299,
+      "t2_disposition": "SKIPPED_NOT_A_PASS"
+    },
+    "rejected_authority_candidate": {
+      "commit": "1267ed8d5b5c0cac567f4e14db31f2123905aaf6",
+      "tree": "466e2813524abf1f50b77a65f314e593f8c702cf",
+      "ci_run_id": 33023757404,
+      "conventional_job": "PASS",
+      "t1_job": "PASS",
+      "t0_job": "FAIL_CURRENT_HEAD_SCOPE_REJECTED_FIVE_STAGE_C_AUTHORITY_PATHS",
+      "t2_job": "SKIPPED_NOT_A_PASS",
+      "clcd_job": "NOT_COMPLETED",
+      "independent_authority_audit": "FAIL"
+    },
+    "rejected_corrected_authority_candidate": {
+      "commit": "28d84c8373d9c0760fe330e448721a2ec0ba5561",
+      "tree": "0c1266c672fbb078b2f8d4cec1273ff1b020e283",
+      "ci_run_id": 33024871190,
+      "conventional_job": "PASS",
+      "t1_job": "PASS_299",
+      "t0_historical": "PASS_109",
+      "t0_reachability": "FAIL_1_OF_3_PASS_ON_FIRST_STAGE_C_AUTHORITY_PATH",
+      "t2_job": "SKIPPED_NOT_A_PASS",
+      "clcd_job": "NOT_COMPLETED",
+      "independent_authority_audit": "FAIL_T2_STALE_INVENTORY_PATH_OMISSION"
+    },
+    "accepted_stage_c_authority": {
+      "candidate_commit": "97daec0c3982db546769a9d268332c9b7353daa8",
+      "candidate_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+      "independent_authority_audit": "PASS",
+      "integration_commit": "f88496cfb2cce563db25a259e3ac9a6d1e22268f",
+      "integration_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+      "target_ref": "refs/heads/framework-v0.1",
+      "integration_method": "NORMAL_NON_FORCE"
+    },
+    "runtime_authority_correction": {
+      "disposition": "MECHANICALLY_UNSATISFIABLE_UPSTREAM_SOURCE_ID_RUNTIME_GATE",
+      "correction_base_commit": "f88496cfb2cce563db25a259e3ac9a6d1e22268f",
+      "correction_base_tree": "36422147de3efbad69bd21550b9c8f142a965481",
+      "initial_implementation_commit": "361e1541dcd383a6f13fbe0664597e0066c41c6d",
+      "initial_implementation_tree": "d7819c6ff06cda3db5cd749fe286c65618e1aa9f",
+      "initial_ci_run_id": 33030540700,
+      "diagnostic_implementation_commit": "1d4d2f8e53973c07fe7156d4ff3d710609648d76",
+      "diagnostic_implementation_tree": "e270314bd23559ca9bc7989eb6ae7c6dd67ac38e",
+      "diagnostic_ci_run_id": 33030733344,
+      "modified_authority_paths": [
+        "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+        "framework_alpha_packaging_release_candidate_contract.json",
+        "framework_alpha_packaging_release_candidate_validation_contract.json"
+      ],
+      "preserved_implementation_path_manifest_raw_sha256": "f24c704f6ce72201b6b8d339183aa7511be540d0d1500f2a38878fd9c29983fe",
+      "preserved_implementation_path_manifest_canonical_sha256": "7d1648f854ee2d2f91f55f31400196a4003537b98c9b8094b3f471f059b830f5",
+      "preserved_predecessor_manifest_raw_sha256": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
+      "preserved_predecessor_manifest_canonical_sha256": "fb24a8c1be487d19008a6ec6123e6426ff4622eebf3e1029d044ca6ace9cd207",
+      "required_jobs_observed": 5,
+      "static_authority_checks_per_job": 92,
+      "static_authority_disposition": "PASS_IN_ALL_FIVE_JOBS",
+      "post_static_disposition": "FAIL_CLOSED_BEFORE_BUILD_OR_TEST",
+      "upstream_release_source_id_reference": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+      "observed_pinned_runtime_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+      "observed_debian_package": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
+      "ci_runs_are_validation_passes": false
+    },
+    "inventory_scope_authority_correction": {
+      "disposition": "GREEN_IMPLEMENTATION_CANDIDATE_FAILED_INDEPENDENT_AUTHORITY_SCOPE_AUDIT",
+      "correction_base_commit": "cb07d02d00e3ed6ed80324ae43cad8ca42f6716d",
+      "correction_base_tree": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
+      "rejected_implementation_commit": "9bcf0dafd389448df1a854db872932ef6ed86545",
+      "rejected_implementation_tree": "7fc9ddbf835aad71c4ca3e3a256223347c5eeb1e",
+      "rejected_implementation_ci_run_id": 33033862855,
+      "rejected_implementation_ci_required_jobs": 5,
+      "rejected_implementation_ci_disposition": "ALL_FIVE_SUCCESS_NOT_AN_AUTHORITY_SCOPE_PASS",
+      "rejected_implementation_audit": "FAIL",
+      "blocking_findings": [
+        "dynamic blanket exclusion of Stage C paths in the I8 artifact predecessor-preservation witness",
+        "unauthorized predecessor-exclusion expansion in atomic and interaction declaration tests",
+        "unauthorized interaction whole-package import-graph rewrite",
+        "missing exact 444-entry root prefix and exact current 42-module/257-edge assertions in capabilities"
+      ],
+      "modified_authority_paths": [
+        "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+        "framework_alpha_packaging_release_candidate_contract.json",
+        "framework_alpha_packaging_release_candidate_validation_contract.json",
+        "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+      ],
+      "preserved_predecessor_manifest_raw_sha256": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
+      "preserved_predecessor_manifest_canonical_sha256": "fb24a8c1be487d19008a6ec6123e6426ff4622eebf3e1029d044ca6ace9cd207",
+      "implementation_path_count_before_and_after": 17,
+      "i9_relative_unique_path_count_before_and_after": 22,
+      "corrected_static_authority_checks_per_job": 100,
+      "candidate_integration_authorized": false
+    },
+    "predecessor_test_authority_correction": {
+      "disposition": "ACCEPTED_INVENTORY_SCOPE_RULE_MECHANICALLY_UNSATISFIABLE_IN_TWO_PREDECESSOR_TEST_METHODS",
+      "accepted_inventory_scope_candidate_commit": "e58d18e1827af39529beb598791ae79396749992",
+      "accepted_inventory_scope_candidate_tree": "1614be178dfe37b37c9939ad0881853220717103",
+      "accepted_inventory_scope_audit": "PASS",
+      "accepted_inventory_scope_integration_commit": "c540d032ff22a4cd3be42f31564ac7023706e32d",
+      "accepted_inventory_scope_integration_tree": "1614be178dfe37b37c9939ad0881853220717103",
+      "authority_only_target_ci_run_id": 33037714051,
+      "authority_only_target_ci_disposition": "FAIL_NOT_A_STAGE_C_VALIDATION_PASS",
+      "diagnostic_implementation_worktree_base_commit": "20814f6f9e267766e7d34d85c8cd750b1890907a",
+      "diagnostic_implementation_worktree_base_tree": "4cc98dedc535a1882c18f176a2af16710d07a504",
+      "diagnostic_state": "UNCOMMITTED_REJECTED_CANDIDATE_DESCENDANT_NOT_AN_IMPLEMENTATION_CANDIDATE",
+      "diagnostic_command": "PYTHONPATH=src:. python3 -m unittest -v tests.framework.test_atomic_declarations.AtomicDeclarationContractTests.test_existing_public_signatures_and_predecessor_bytes_are_preserved tests.framework.test_interaction_declarations.InteractionDeclarationContractTests.test_predecessor_signatures_and_d1_bytes_are_preserved",
+      "diagnostic_test_methods_run": 2,
+      "diagnostic_failing_subtests": 8,
+      "diagnostic_exact_failing_paths_per_method": [
+        ".github/workflows/tests.yml",
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "build_backend/ebu_build_backend.py",
+        "tests/framework/safety.py"
+      ],
+      "diagnostic_transcript_byte_count": 13471,
+      "diagnostic_transcript_sha256": "09ea784a5d3351250dc34a74932c73afa5fb57cb697d6e98005c1f3e1e47de92",
+      "diagnostic_evidence_class": "STATIC_SYNTHETIC_IMPLEMENTATION_DIAGNOSTIC_NOT_A_PASS",
+      "modified_authority_paths": [
+        "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+        "framework_alpha_packaging_release_candidate_contract.json",
+        "framework_alpha_packaging_release_candidate_validation_contract.json",
+        "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+      ],
+      "new_authority_or_implementation_paths": 0,
+      "implementation_path_count_before_and_after": 17,
+      "i9_relative_unique_path_count_before_and_after": 22,
+      "static_authority_checks_per_job_before_and_after": 100,
+      "preserved_predecessor_manifest_raw_sha256": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
+      "preserved_predecessor_manifest_canonical_sha256": "fb24a8c1be487d19008a6ec6123e6426ff4622eebf3e1029d044ca6ace9cd207",
+      "implementation_resume_before_independent_pass_and_normal_integration": "FORBIDDEN"
+    },
+    "accepted_stage_c_implementation_and_rejected_release_candidate": {
+      "accepted_predecessor_test_authority_candidate_commit": "d737038e77f39ac57d9142eb16f6dbb3f09612d4",
+      "accepted_predecessor_test_authority_candidate_tree": "15de01528adf51972e50bda01f67ded83ebe0ec2",
+      "accepted_predecessor_test_authority_integration_commit": "f736e92d764834abd33fd21d9bf31cbcdbcf5cc2",
+      "accepted_predecessor_test_authority_integration_tree": "15de01528adf51972e50bda01f67ded83ebe0ec2",
+      "accepted_implementation_candidate_commit": "1c870e2841d739f4670e50b5bb420b2282e36752",
+      "accepted_implementation_candidate_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+      "accepted_implementation_audit": "PASS",
+      "accepted_implementation_integration_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+      "accepted_implementation_integration_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+      "accepted_target_ci_run_id": 33042629381,
+      "accepted_target_ci_required_jobs": 5,
+      "accepted_target_ci_disposition": "ALL_FIVE_SUCCESS",
+      "rejected_release_candidate_artifact_id": 9635019568,
+      "rejected_release_candidate_artifact_api_digest": "sha256:bc7294ae8fbc4091a0b2a8293909f0f05819edb26627d6d5607dc327df2c2ed3",
+      "rejected_release_candidate_final_manifest_sha256": "22f58c415afdb16ce3f3e3e53b4997ac60c7bb29442c3c8041daf75e099ad733",
+      "rejected_release_candidate_wheel_sha256": "85e04c5f3691d0cd6f6dd3c70eb3652d7f919f9e8de9551eae3d9e9ba1a1a258",
+      "rejected_release_candidate_sdist_sha256": "9f97d3e1882527746284792028e9643b5d71affc7b8fca50660c0fbe5aace080",
+      "release_candidate_audit": "FAIL_RELEASE_LICENSE_TAG_SCOPE_SECURITY_RECORD_AND_WORDING",
+      "release_or_tag_authorized": false
+    }
+  },
+  "diagnosis": {
+    "actual_package_file_count": 48,
+    "actual_python_module_file_count": 44,
+    "backend_admitted_package_file_count": 43,
+    "masked_defects": [
+      {
+        "id": "SC-PKG-001",
+        "disposition": "CONFIRMED",
+        "description": "Five accepted package files are absent from _PLANNED_PACKAGE_FILES and trigger PACKAGE_FILE_SET_MISMATCH."
+      },
+      {
+        "id": "SC-PKG-002",
+        "disposition": "CONFIRMED",
+        "description": "Discovery requires only the historical I-1 subset, so absence of a later admitted path is not itself refused."
+      },
+      {
+        "id": "SC-PKG-003",
+        "disposition": "CONFIRMED",
+        "description": "Backend project validation and emitted metadata still declare the historical empty runtime dependency set although accepted pyproject.toml declares PyNaCl==1.6.2."
+      },
+      {
+        "id": "SC-CI-001",
+        "disposition": "CONFIRMED",
+        "description": "The accepted push CI skips T2 and therefore does not prove the release-candidate T2 lane."
+      },
+      {
+        "id": "SC-CI-002",
+        "disposition": "CONFIRMED",
+        "description": "T1 uses the public-preview ubuntu-26.04 runner because stable ubuntu-24.04 supplies SQLite below the accepted minimum."
+      },
+      {
+        "id": "SC-CI-003",
+        "disposition": "CONFIRMED",
+        "description": "The first authority candidate's T0 run rejects the five Stage C authority files because the closed current-HEAD reachability scope does not admit this authority layer, and the first implementation scope omitted the reachability test needed for an exact correction."
+      },
+      {
+        "id": "SC-T2-001",
+        "disposition": "CONFIRMED",
+        "description": "Mandatory T2 test_bridge_exact_fixtures.py binds the whole-I8 280-failure and 444-root-export snapshots, so the current 294/471 T2 lane cannot pass without a narrowly scoped additive inventory correction."
+      }
+    ]
+  },
+  "package_inventory": {
+    "ordering": "UTF-8 path bytes",
+    "required_exact_set": true,
+    "missing_disposition": "REFUSE",
+    "unknown_disposition": "REFUSE",
+    "source_tree_git_object": "4de85ed2935d1c35bdcc0f1259f0acb2df569fdd",
+    "paths": [
+      "src/ebu_framework/__init__.py",
+      "src/ebu_framework/actions.py",
+      "src/ebu_framework/artifacts.py",
+      "src/ebu_framework/atomic.py",
+      "src/ebu_framework/authorization.py",
+      "src/ebu_framework/authorization_use.py",
+      "src/ebu_framework/bridge.py",
+      "src/ebu_framework/canonical.py",
+      "src/ebu_framework/capabilities.py",
+      "src/ebu_framework/causal.py",
+      "src/ebu_framework/commitments.py",
+      "src/ebu_framework/conservation.py",
+      "src/ebu_framework/correction_diagnostics.py",
+      "src/ebu_framework/correction_protocol.py",
+      "src/ebu_framework/data/__init__.py",
+      "src/ebu_framework/data/core_registry_v1.json",
+      "src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt",
+      "src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt",
+      "src/ebu_framework/distortion.py",
+      "src/ebu_framework/durability.py",
+      "src/ebu_framework/dynamic.py",
+      "src/ebu_framework/envelopes.py",
+      "src/ebu_framework/errors.py",
+      "src/ebu_framework/events.py",
+      "src/ebu_framework/execution.py",
+      "src/ebu_framework/experiment.py",
+      "src/ebu_framework/faults.py",
+      "src/ebu_framework/hashing.py",
+      "src/ebu_framework/identity.py",
+      "src/ebu_framework/interaction.py",
+      "src/ebu_framework/ledger.py",
+      "src/ebu_framework/network.py",
+      "src/ebu_framework/numeric.py",
+      "src/ebu_framework/observation.py",
+      "src/ebu_framework/ownership.py",
+      "src/ebu_framework/policy.py",
+      "src/ebu_framework/primitives.py",
+      "src/ebu_framework/provenance.py",
+      "src/ebu_framework/publication.py",
+      "src/ebu_framework/py.typed",
+      "src/ebu_framework/recovery.py",
+      "src/ebu_framework/registry.py",
+      "src/ebu_framework/scheduling.py",
+      "src/ebu_framework/settlement.py",
+      "src/ebu_framework/state.py",
+      "src/ebu_framework/traces.py",
+      "src/ebu_framework/trust.py",
+      "src/ebu_framework/validation.py"
+    ],
+    "previously_omitted_paths": [
+      "src/ebu_framework/atomic.py",
+      "src/ebu_framework/conservation.py",
+      "src/ebu_framework/interaction.py",
+      "src/ebu_framework/correction_protocol.py",
+      "src/ebu_framework/correction_diagnostics.py"
+    ]
+  },
+  "backend_correction": {
+    "backend_identity": "ebu-in-tree-pep517-backend/1",
+    "backend_path": "build_backend/ebu_build_backend.py",
+    "planned_package_files_rule": "_PLANNED_PACKAGE_FILES equals package_inventory.paths as a set",
+    "required_package_files_rule": "Discovery refuses unless the actual regular-file set equals _PLANNED_PACKAGE_FILES",
+    "preserved_refusal_code_for_unknown": "PACKAGE_FILE_SET_MISMATCH",
+    "missing_refusal_code": "PACKAGE_DATA_MISSING",
+    "accepted_expected_project_dependencies": [
+      "PyNaCl==1.6.2"
+    ],
+    "metadata_append_after": "Import-Name: ebu_framework",
+    "metadata_appended_field": "Requires-Dist: PyNaCl==1.6.2\n",
+    "metadata_version": "2.5",
+    "project_version": "0.1.0a1",
+    "wheel_filename": "ebu_framework-0.1.0a1-cp314-none-any.whl",
+    "sdist_filename": "ebu_framework-0.1.0a1.tar.gz",
+    "wheel_tag": "cp314-none-any",
+    "wheel_expected_regular_file_count": 53,
+    "sdist_expected_regular_file_count": 53,
+    "immutable_inputs": {
+      "pyproject.toml": "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+      "requirements-framework.lock": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+      "LICENSE": "2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907",
+      "LICENSE-UNICODE": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "src/ebu_framework": "git-tree:4de85ed2935d1c35bdcc0f1259f0acb2df569fdd"
+    },
+    "project_license_expression": "MIT AND Unicode-3.0",
+    "project_license_files": [
+      "LICENSE",
+      "LICENSE-UNICODE"
+    ],
+    "metadata_license_rows": [
+      "License-Expression: MIT AND Unicode-3.0",
+      "License-File: LICENSE",
+      "License-File: LICENSE-UNICODE"
+    ]
+  },
+  "release_license_and_tag_correction": {
+    "correction_base_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+    "correction_base_tree": "abad22ae00221db6e3a803993583424d8454fa10",
+    "authority_modified_paths": [
+      "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+      "framework_alpha_packaging_release_candidate_contract.json",
+      "framework_alpha_packaging_release_candidate_implementation_path_manifest.json",
+      "framework_alpha_packaging_release_candidate_validation_contract.json"
+    ],
+    "authority_preserved_path": "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+    "redistributed_unicode_data": [
+      {
+        "path": "src/ebu_framework/data/unicode/15.0.0/UnicodeData.txt",
+        "byte_count": 1913704,
+        "sha256": "806e9aed65037197f1ec85e12be6e8cd870fc5608b4de0fffd990f689f376a73"
+      },
+      {
+        "path": "src/ebu_framework/data/unicode/15.0.0/DerivedNormalizationProps.txt",
+        "byte_count": 837688,
+        "sha256": "d5687a48c95c7d6e1ec59cb29c0f2e8b052018eb069a4371b7368d0561e12a29"
+      }
+    ],
+    "existing_project_license": {
+      "path": "LICENSE",
+      "byte_count": 1069,
+      "sha256": "2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907",
+      "spdx": "MIT",
+      "byte_rule": "PRESERVE_EXACTLY"
+    },
+    "unicode_notice": {
+      "path": "LICENSE-UNICODE",
+      "source_url": "https://www.unicode.org/license.txt",
+      "retrieved_utc_date": "2026-08-27",
+      "title": "UNICODE LICENSE V3",
+      "copyright_line": "Copyright © 1991-2026 Unicode, Inc.",
+      "encoding": "UTF-8_NFC_LF_FINAL_LF",
+      "byte_count": 1995,
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "spdx": "Unicode-3.0",
+      "dynamic_build_time_retrieval": "FORBIDDEN"
+    },
+    "corrected_pyproject": {
+      "path": "pyproject.toml",
+      "byte_count": 434,
+      "sha256": "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+      "license": "MIT AND Unicode-3.0",
+      "license_files": [
+        "LICENSE",
+        "LICENSE-UNICODE"
+      ],
+      "all_other_bytes": "PRESERVE"
+    },
+    "tag_authority_supersession": {
+      "superseded_document": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "superseded_section": "18.2",
+      "superseded_scope": "BRANCH_STRATEGY_ALPHA_TAG_TARGET_SENTENCE_ONLY",
+      "superseded_exact_sentence": "The alpha tag is placed on the accepted I-9 integration commit.",
+      "historical_i9_integration_commit": "ffc910329957f61deaa7e9fc09ba77a0e3f51381",
+      "historical_i9_integration_tree": "3b1cfbdbcc844e0a4944447e012f20981af6998a",
+      "rejected_current_target_commit": "edaad455aa195b42a1f25d92725c3181e389c301",
+      "tag_name": "framework-v0.1.0-alpha.1",
+      "package_version": "0.1.0a1",
+      "required_target": "FUTURE_EXACT_CORRECTED_STAGE_C_INTEGRATION_AFTER_IMPLEMENTATION_PASS_TARGET_CI_AND_RELEASE_CANDIDATE_AUDIT",
+      "tag_creation_gate": "EXPLICIT_USER_AUTHORIZATION_REQUIRED",
+      "tag_historical_i9_or_rejected_current_target": "FORBIDDEN"
+    },
+    "historical_main_source_archive_disclosure": {
+      "results_v3_path_count": 21,
+      "results_v3_paths": [
+        "results/v3.0/gate1/MANIFEST.md",
+        "results/v3.0/gate1/v30_quote_audit.txt",
+        "results/v3.0/gate1/v30_quote_validation.txt",
+        "results/v3.0/gate1c/MANIFEST.md",
+        "results/v3.0/gate1c/v30_adversarial_stdout.txt",
+        "results/v3.0/gate1c/v30_adversarial_summary.json",
+        "results/v3.0/gate1c/v30_adversarial_trace.jsonl.gz",
+        "results/v3.0/gate1d/ATTEMPT_1_RESERVE_TOLERANCE_DEFECT.md",
+        "results/v3.0/gate1d/MANIFEST.md",
+        "results/v3.0/gate1d/attempt2/ATTEMPT_2_COMPARISON.md",
+        "results/v3.0/gate1d/attempt2/MANIFEST.md",
+        "results/v3.0/gate1d/attempt2/v30_service_alignment_stdout.txt",
+        "results/v3.0/gate1d/attempt2/v30_service_alignment_summary.json",
+        "results/v3.0/gate1d/attempt2/v30_service_alignment_trace.jsonl.gz",
+        "results/v3.0/gate1d/v30_service_alignment_stdout.txt",
+        "results/v3.0/gate1d/v30_service_alignment_summary.json",
+        "results/v3.0/gate1d/v30_service_alignment_trace.jsonl.gz",
+        "results/v3.0/gate1db/MANIFEST.md",
+        "results/v3.0/gate1db/v30_o14_stdout.txt",
+        "results/v3.0/gate1db/v30_o14_summary.json",
+        "results/v3.0/gate1db/v30_o14_trace.jsonl.gz"
+      ],
+      "v3_document_paths": [
+        "V3.0_GATE1D_B_O14_MULTI_EDGE_PROTOCOL.md",
+        "V3.0_GATE1D_B_O14_RUNNER_CORRECTION.md",
+        "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+        "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+        "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md",
+        "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+        "V3.0_GATE1D_SERVICE_ALIGNMENT_DIAGNOSIS.md",
+        "V3.0_GATE1_INDEPENDENT_REVIEW.md",
+        "V3.0_GATE1_QUOTE_VALIDATION_PROTOCOL.md",
+        "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+        "V3.0_POST_O14_SCIENTIFIC_DISPOSITION.md"
+      ],
+      "v30_source_paths": [
+        "adversary_v30.py",
+        "audit_v30_gate1c_reproduction.py",
+        "audit_v30_quote.py",
+        "ebu_quote_v30.py",
+        "exp_v30_adversary.py",
+        "exp_v30_gate1dc.py",
+        "exp_v30_o14.py",
+        "exp_v30_service.py",
+        "exp_v30_service_attempt2.py",
+        "finalize_v30_gate1dc.py",
+        "gate1dc_v30.py",
+        "o14_v30.py",
+        "service_v30.py",
+        "test_v30_adversary.py",
+        "test_v30_gate1dc.py",
+        "test_v30_o14.py",
+        "test_v30_quote.py",
+        "test_v30_service.py"
+      ],
+      "v30_contract_plan_paths": [
+        "v30_gate1dc_execution_finalization_contract.json",
+        "v30_gate1dc_macos_environment_compatibility_contract.json",
+        "v30_gate1dc_macos_python_launcher_compatibility_contract.json",
+        "v30_gate1dc_outcome_discrimination_plan.json",
+        "v30_o14_multi_edge_plan.json",
+        "v30_quote_validation_plan.json",
+        "v30_service_alignment_plan.json"
+      ],
+      "required_disposition": "DISCLOSE_AS_PRE_EXISTING_HISTORICAL_MATERIAL_NOT_EXECUTED_VALIDATED_REINTERPRETED_OR_PUBLISHED_AS_NEW_STAGE_C_EVIDENCE",
+      "main_and_source_archive_inclusion": "EXPLICIT_INFORMED_USER_CHOICE_AT_MAIN_AND_RELEASE_GATE",
+      "software_only_filtered_or_rewritten_branch": "NOT_AUTHORIZED"
+    },
+    "security_record": {
+      "canonical_json_rule": "UTF-8 strict JSON; duplicate keys and non-finite values refuse; recursively sorted object keys; arrays retain order; separators are comma and colon with no whitespace; ensure_ascii=false; no final LF",
+      "osv_query_endpoint": "https://api.osv.dev/v1/querybatch",
+      "query_coordinate_count": 20,
+      "query_coordinates_in_index_order": [
+        ["PyPI", "ebu-framework", "0.1.0a1"],
+        ["PyPI", "PyNaCl", "1.6.2"],
+        ["PyPI", "cffi", "2.1.1"],
+        ["PyPI", "pycparser", "3.0"],
+        ["PyPI", "build", "1.5.0"],
+        ["PyPI", "packaging", "26.3"],
+        ["PyPI", "pyproject-hooks", "1.2.0"],
+        ["PyPI", "pip", "26.2.1"],
+        ["PyPI", "charset-normalizer", "3.5.1"],
+        ["PyPI", "contourpy", "1.3.3"],
+        ["PyPI", "cycler", "0.12.1"],
+        ["PyPI", "fonttools", "4.63.0"],
+        ["PyPI", "kiwisolver", "1.5.0"],
+        ["PyPI", "matplotlib", "3.11.1"],
+        ["PyPI", "numpy", "2.5.2"],
+        ["PyPI", "pillow", "12.3.0"],
+        ["PyPI", "pyparsing", "3.3.2"],
+        ["PyPI", "python-dateutil", "2.9.0.post0"],
+        ["PyPI", "reportlab", "5.0.1"],
+        ["PyPI", "six", "1.17.0"]
+      ],
+      "query_object_rule": "queries[i] is exactly {package:{ecosystem:coordinate[0],name:coordinate[1]},version:coordinate[2]}",
+      "canonical_query_byte_count": 1417,
+      "canonical_query_sha256": "1f8e9853d8cd3fe9b5d9ced279d534c8e635ca732c554f3a8d1e6be0885aff34",
+      "request_body_rule": "EXACT_CANONICAL_QUERY_BYTES",
+      "rejected_pretty_query_evidence": {
+        "byte_count": 1646,
+        "sha256": "be0be58ef4528c68e3259b235f983226ee081d1d99ef695c5bbc4142de00239b",
+        "disposition": "NOT_RETAINED_IN_REJECTED_MATERIALS_RECORD_AND_NOT_SUFFICIENT_FOR_RELEASE"
+      },
+      "exact_raw_response_bytes": "REQUIRED",
+      "exact_canonical_response_bytes": "REQUIRED",
+      "result_count_equals_query_count": true,
+      "ordered_index_binding": "results[i] is bound to query_coordinates_in_index_order[i] and each indexed disposition is recorded",
+      "query_raw_and_canonical_byte_counts_and_sha256": "REQUIRED_AND_EQUAL_BECAUSE_REQUEST_IS_CANONICAL",
+      "response_raw_and_canonical_byte_counts_and_sha256": "REQUIRED",
+      "pypi_and_osv_refresh_timing": "IMMEDIATELY_BEFORE_RELEASE",
+      "empty_result_semantics": "POINT_IN_TIME_OBSERVATION_NOT_SECURITY_GUARANTEE",
+      "missing_index_mismatch_new_or_unresolved_advisory_selected_hash_mismatch_or_yanked": "REFUSE"
+    },
+    "implementation_delta_relative_to_accepted_target": {
+      "modified_paths": [
+        "build_backend/ebu_build_backend.py",
+        "pyproject.toml",
+        "scripts/validate_stage_c_release_candidate.py",
+        "tests/framework/test_artifact_recovery_publication.py",
+        "tests/framework/test_atomic_declarations.py",
+        "tests/framework/test_interaction_declarations.py",
+        "tests/framework/test_packaging_release_candidate.py",
+        "tests/framework/test_validation_reachability.py"
+      ],
+      "new_paths": [
+        "LICENSE-UNICODE"
+      ],
+      "modified_count": 8,
+      "new_count": 1,
+      "total_count": 9,
+      "every_other_path": "PRESERVE_BYTE_AND_MODE_EXACTLY"
+    },
+    "predecessor_witness_correction": {
+      "previous_literal_set_count": 4,
+      "prospective_literal_set_count": 5,
+      "sole_addition": "pyproject.toml",
+      "stage_c_modified_paths": [
+        ".github/workflows/tests.yml",
+        "build_backend/ebu_build_backend.py",
+        "pyproject.toml"
+      ],
+      "current_byte_preserved_paths": [
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "tests/framework/safety.py"
+      ],
+      "exact_test_methods": [
+        "tests/framework/test_artifact_recovery_publication.py::PREDECESSOR_PRESERVATION",
+        "tests/framework/test_atomic_declarations.py::AtomicDeclarationContractTests.test_existing_public_signatures_and_predecessor_bytes_are_preserved",
+        "tests/framework/test_interaction_declarations.py::InteractionDeclarationContractTests.test_predecessor_signatures_and_d1_bytes_are_preserved"
+      ],
+      "only_mutable_logic": "LITERAL_RECONCILIATION_TUPLES_AND_PYPROJECT_IDENTITY_ROUTE",
+      "dynamic_scope_derived_or_sixth_path": "REFUSE",
+      "all_other_assertions": "PRESERVE_EXACTLY"
+    },
+    "i8s013_dependency_witness_correction": {
+      "accepted_authority_target_commit": "dcdbac6518518215f509688cd257a67032b1ec98",
+      "accepted_authority_target_tree": "d358fa8a6b182e8949443dd01c09209ed2c5e382",
+      "rejected_implementation_candidate_commit": "94ca0ab1b075dde19b4421aaae0af4c37021596d",
+      "rejected_implementation_candidate_tree": "56a2b6193757e21639758df5b23d1c893cd4bcbc",
+      "rejected_ci_run": 33051127041,
+      "rejected_ci_final_disposition": {
+        "overall": "FAILURE_NOT_A_PASS",
+        "conventional": "SUCCESS",
+        "framework_t0": "SUCCESS",
+        "framework_t1": "FAILURE_SOURCE_299_RUN_1_FAILURE_I8S_013_INSTALLED_LANES_NOT_RUN",
+        "framework_t2": "SUCCESS",
+        "packaging_release_candidate": "FAILURE_AFTER_BUILD_AND_SOURCE_T0_AT_SOURCE_T1_I8S_013_NO_FINAL_MANIFEST_OR_ARTIFACT_RETENTION",
+        "static_authority_checks_per_job": 104,
+        "prospective_required_static_authority_checks_per_job": 105,
+        "rejected_wheel": {
+          "byte_count": 4078093,
+          "sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"
+        },
+        "rejected_sdist": {
+          "byte_count": 4138025,
+          "sha256": "0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41"
+        },
+        "artifact_disposition": "FAILED_DIAGNOSTIC_EVIDENCE_NOT_RELEASE_AUTHORIZATION"
+      },
+      "evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+      "test_path": "tests/framework/test_artifact_recovery_publication.py",
+      "test_class": "FrameworkI8ExactVectors",
+      "test_name": "test_I8S_013",
+      "vector_id": "I8S-013",
+      "branch": "NO_DEPENDENCY_DRIFT",
+      "exact_witness_files": [
+        "pyproject.toml",
+        "requirements-framework.lock"
+      ],
+      "pyproject_historical_identity": {
+        "mode": "100644",
+        "git_object": "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+        "byte_count": 399,
+        "sha256": "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b"
+      },
+      "pyproject_required_current_identity": {
+        "mode": "100644",
+        "byte_count": 434,
+        "sha256": "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+        "authority_binding": "release_license_and_tag_correction.corrected_pyproject"
+      },
+      "requirements_lock_preserved_identity": {
+        "mode": "100644",
+        "git_object": "907bdff88be25741f04980ae5e6a769df2a61d4d",
+        "byte_count": 2036,
+        "sha256": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+        "comparison": "DIRECT_I8_PREDECESSOR_BYTE_IDENTITY"
+      },
+      "only_mutable_logic": "NO_DEPENDENCY_DRIFT_PYPROJECT_IDENTITY_ROUTE",
+      "generic_or_dynamic_exclusion": "FORBIDDEN",
+      "third_witness_path": "FORBIDDEN",
+      "dependency_or_lock_change": "FORBIDDEN",
+      "vector_test_name_count_projection_call_counters_failure_precedence_and_other_static_branches": "PRESERVE_EXACTLY"
+    },
+    "required_build_replica_wording": "Three perturbed build replicas produced by the pinned validator were byte-identical."
+  },
+  "accepted_surface": {
+    "importable_module_count": 44,
+    "root_export_count": 471,
+    "root_export_unique_count": 471,
+    "root_export_lf_sha256": "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
+    "failure_code_count": 294,
+    "failure_code_unique_count": 294,
+    "failure_code_lf_sha256": "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
+    "public_function_signature_row_count": 162,
+    "version": "0.1.0a1",
+    "surface_authority": "accepted predecessor contracts plus the CLCD suffix as reconstructed by tests/framework/test_validation_reachability.py"
+  },
+  "installed_artifact_isolation": {
+    "installations": [
+      "DIRECT_WHEEL_CLEAN_ENV",
+      "SDIST_DERIVED_WHEEL_CLEAN_ENV"
+    ],
+    "isolated_python": true,
+    "empty_current_working_directory": true,
+    "pythonpath": "ABSENT",
+    "editable_install": "FORBIDDEN",
+    "source_path_in_sys_path": "FORBIDDEN",
+    "module_origin_rule": "Every module origin is a regular nonsymlink file below the tested installed package root and outside checkout, source snapshot and sdist extraction roots.",
+    "pth_files": "FORBIDDEN",
+    "source_fallback": "REFUSE"
+  },
+  "runner_decision": {
+    "ubuntu_26_04": "REJECT_AS_ALPHA_REFERENCE_PUBLIC_PREVIEW",
+    "host_runner": "ubuntu-24.04",
+    "runtime_image": "docker.io/library/python@sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+    "runtime_platform": "linux/amd64",
+    "runtime_image_tag_evidence_only": "python:3.14.4-trixie",
+    "docker_library_python_revision": "6cc07b27ad0df3769bbd1a2a1000a842634681d2",
+    "python_required": "CPython 3.14.4 final",
+    "sqlite_required_exact": "3.46.1",
+    "sqlite_upstream_release_source_id_reference": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69a1e33",
+    "sqlite_upstream_reference_runtime_comparison": "FORBIDDEN",
+    "sqlite_runtime_source_id_required": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
+    "debian_libsqlite3_0_package_required": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
+    "sqlite_accepted_range": ">=3.46.0,<4.0.0",
+    "network_for_pull_and_wheelhouse_preparation": "ALLOWED_BEFORE_OFFLINE_EXECUTION",
+    "network_for_packaging_frontends_and_installed_probes": "PHYSICALLY_DISABLED",
+    "fallback": "FORBIDDEN",
+    "required_runtime_evidence": [
+      "resolved image digest",
+      "/etc/os-release",
+      "sys.implementation",
+      "sys.version",
+      "sys.version_info",
+      "sys.implementation.cache_tag",
+      "executable hash when available",
+      "sqlite3.sqlite_version",
+      "sqlite3.sqlite_version_info",
+      "sqlite_source_id()",
+      "exact Debian libsqlite3-0 package identity"
+    ],
+    "removed_cpython_3_14_attributes_not_required": [
+      "sqlite3.version",
+      "sqlite3.version_info"
+    ],
+    "external_provenance_queried_utc_date": "2026-08-26",
+    "external_provenance_urls": [
+      "https://github.com/actions/runner-images/blob/main/README.md",
+      "https://github.com/actions/runner-images/issues/14226",
+      "https://github.com/docker-library/python/tree/6cc07b27ad0df3769bbd1a2a1000a842634681d2/3.14/trixie",
+      "https://docs.python.org/3.14/library/sqlite3.html",
+      "https://packages.debian.org/trixie/libsqlite3-0",
+      "https://www.sqlite.org/releaselog/3_46_1.html"
+    ]
+  },
+  "validation": {
+    "preserve_i1_p1_through_p12": true,
+    "stage_c_validation_contract": "framework_alpha_packaging_release_candidate_validation_contract.json",
+    "positive_count_required_for_every_relation": true,
+    "skipped_is_pass": false,
+    "expected_failure_is_pass": false,
+    "zero_test_is_pass": false,
+    "direct_and_sdist_derived_wheels_must_be_byte_identical": true,
+    "t2_must_run_on_candidate_and_target_push": true,
+    "bounded_existing_test_regression_execution_authorized": true,
+    "registered_or_full_horizon_scientific_execution_authorized": false,
+    "new_official_result_generation_authorized": false,
+    "scientific_outcome_interpretation_authorized": false
+  },
+  "implementation_scope": {
+    "modified_paths": [
+      ".github/workflows/tests.yml",
+      "build_backend/ebu_build_backend.py",
+      "pyproject.toml",
+      "tests/framework/test_artifact_recovery_publication.py",
+      "tests/framework/test_atomic_declarations.py",
+      "tests/framework/test_bridge_exact_fixtures.py",
+      "tests/framework/test_capabilities.py",
+      "tests/framework/test_i3_integration.py",
+      "tests/framework/test_i3a_declarations.py",
+      "tests/framework/test_i3b_declarations.py",
+      "tests/framework/test_i3c_declarations.py",
+      "tests/framework/test_i3d_declarations.py",
+      "tests/framework/test_interaction_declarations.py",
+      "tests/framework/test_primitives_envelopes.py",
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "new_paths": [
+      "LICENSE-UNICODE",
+      "scripts/validate_stage_c_release_candidate.py",
+      "tests/framework/installed_artifact_probe.py",
+      "tests/framework/test_packaging_release_candidate.py"
+    ],
+    "repository_output_paths": [],
+    "external_evidence_only": true
+  },
+  "evidence_classification": {
+    "authority": "INSTITUTIONAL_NORMATIVE_DECLARATION",
+    "packaging_installed_and_bounded_regression_tests": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "new_numerical_verification_claim": "NOT_AUTHORIZED",
+    "registered_scientific_simulation": "NOT_AUTHORIZED",
+    "empirical_observation": "NOT_CLAIMED",
+    "independently_audited_scientific_interpretation": "NOT_CLAIMED"
+  },
+  "test_inventory_reconciliation": {
+    "purpose": "Replace only obsolete whole-I8 final-snapshot assumptions in the eleven authorized inventory tests with exact accepted I8-prefix plus current accepted CLCD-suffix assertions so current source and installed artifacts can run the complete lanes.",
+    "bridge_t2_boundary": "In test_bridge_exact_fixtures.py only test_failure_export_signature_and_import_surfaces may reconcile whole-I8 failure/root assertions; preserve the test name/count, 42-row allowlist, fixtures, bridge/I6 assertions, signatures/import graph, failure precedence and every non-inventory behavior.",
+    "exact_failure_inventory": {
+      "i8_prefix_count": 280,
+      "clcd_suffix_count": 14,
+      "current_count": 294,
+      "current_unique_count": 294,
+      "current_lf_byte_count": 7945,
+      "current_lf_sha256": "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c"
+    },
+    "exact_root_export_inventory": {
+      "i8_prefix_count": 444,
+      "clcd_suffix_count": 27,
+      "current_count": 471,
+      "current_unique_count": 471,
+      "current_lf_byte_count": 10526,
+      "current_lf_sha256": "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9"
+    },
+    "exact_current_import_inventory": {
+      "i8_prefix_module_count": 39,
+      "i8_prefix_direct_edge_count": 243,
+      "suffix_module_order": [
+        "validation",
+        "correction_protocol",
+        "correction_diagnostics"
+      ],
+      "current_module_count": 42,
+      "current_direct_edge_count": 257,
+      "suffix_direct_imports": {
+        "validation": [
+          "canonical",
+          "numeric",
+          "identity",
+          "hashing",
+          "primitives",
+          "capabilities",
+          "errors"
+        ],
+        "correction_protocol": [
+          "errors",
+          "identity",
+          "numeric",
+          "primitives"
+        ],
+        "correction_diagnostics": [
+          "correction_protocol",
+          "errors",
+          "numeric"
+        ]
+      },
+      "suffix_module_export_counts": {
+        "validation": 0,
+        "correction_protocol": 20,
+        "correction_diagnostics": 7
+      },
+      "module_order_lf": {
+        "byte_count": 429,
+        "sha256": "246a3bf8b0add102255c5d765d4a56b7c3231b96689a81f8fa41a31106352f07"
+      },
+      "direct_import_projection": {
+        "encoding": "canonical JSON plus LF of [module,direct_imports[module]] rows in exact current module order",
+        "byte_count": 3522,
+        "sha256": "4bcea287ae4727da622c3fb1d35cf6c4a29438bf9c9882f7c2aa82adf63fc0f9"
+      },
+      "module_export_projection": {
+        "encoding": "canonical JSON plus LF of [module,module_exports[module]] rows in exact current module order",
+        "byte_count": 12138,
+        "sha256": "b1642b1fb664c5011afb38e354da010a48624f7461fe2a55225a694a6db8a4c3"
+      }
+    },
+    "artifact_predecessor_preservation_reconciliation": {
+      "test_path": "tests/framework/test_artifact_recovery_publication.py",
+      "branch": "PREDECESSOR_PRESERVATION",
+      "exact_reconciled_paths": [
+        ".github/workflows/tests.yml",
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "build_backend/ebu_build_backend.py",
+        "pyproject.toml",
+        "tests/framework/safety.py"
+      ],
+      "stage_c_modified_paths": [
+        ".github/workflows/tests.yml",
+        "build_backend/ebu_build_backend.py",
+        "pyproject.toml"
+      ],
+      "current_byte_preserved_paths": [
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "tests/framework/safety.py"
+      ],
+      "rows": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "i8_mode": "100644",
+          "i8_git_object": "3359df95cc0dc426e8969a0587de141df2596a48",
+          "i8_byte_count": 1610,
+          "i8_raw_sha256": "4d12f834e52bf92a723ab1e2c9723a9b395344320f3c95482b64d9133c766d23",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "26afc98071877cba6dacdd03fac2834b2fe29b83",
+          "accepted_stage_c_base_byte_count": 15288,
+          "accepted_stage_c_base_raw_sha256": "34d5582c631ae81856d6fc1a64dd7ac6243547a88a89891225041f2c659442db",
+          "candidate_current_byte_rule": "AUTHORIZED_STAGE_C_DIFF_NOT_EXCLUDED_FROM_SCOPE"
+        },
+        {
+          "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+          "i8_mode": "100644",
+          "i8_git_object": "654145ef732814047a0e5a45bdd0edb732104390",
+          "i8_byte_count": 132360,
+          "i8_raw_sha256": "46d63759e2538ab37671be8ada9a61f1cabfec62fa6afe9063ed15a882698a6f",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "af33c79b89372a8a1a9dc1939ca5f66974c23e56",
+          "accepted_stage_c_base_byte_count": 150664,
+          "accepted_stage_c_base_raw_sha256": "f85c3e0c636f3afcd9d961673b16a0a642045a13b32d3c878e27a8d982567b59",
+          "candidate_current_byte_rule": "MUST_EQUAL_ACCEPTED_STAGE_C_BASE"
+        },
+        {
+          "path": "build_backend/ebu_build_backend.py",
+          "i8_mode": "100644",
+          "i8_git_object": "093ad5858f60efcf5ae271615a9138334176fb56",
+          "i8_byte_count": 25097,
+          "i8_raw_sha256": "afaae669d8d1521a8f67f11bdfd8583ad6ad1ad1d32920d2144b87a20f0dc862",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "093ad5858f60efcf5ae271615a9138334176fb56",
+          "accepted_stage_c_base_byte_count": 25097,
+          "accepted_stage_c_base_raw_sha256": "afaae669d8d1521a8f67f11bdfd8583ad6ad1ad1d32920d2144b87a20f0dc862",
+          "candidate_current_byte_rule": "AUTHORIZED_STAGE_C_DIFF_NOT_EXCLUDED_FROM_SCOPE"
+        },
+        {
+          "path": "pyproject.toml",
+          "i8_mode": "100644",
+          "i8_git_object": "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+          "i8_byte_count": 399,
+          "i8_raw_sha256": "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+          "accepted_stage_c_base_byte_count": 399,
+          "accepted_stage_c_base_raw_sha256": "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+          "candidate_current_byte_rule": "AUTHORIZED_STAGE_C_DIFF_NOT_EXCLUDED_FROM_SCOPE"
+        },
+        {
+          "path": "tests/framework/safety.py",
+          "i8_mode": "100644",
+          "i8_git_object": "aed40a86f2a23f56fece345288db189ea59be4d0",
+          "i8_byte_count": 4633,
+          "i8_raw_sha256": "40346595695d908a575dbc8fe8228564f2e182268a0822b93ce5b0db03246eb6",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "085ca570196d35e963a93f57bf4f1d6e93da09cd",
+          "accepted_stage_c_base_byte_count": 8318,
+          "accepted_stage_c_base_raw_sha256": "1ffce07c0a4a181da04ff75bb902453f77d93ffee609177b1bb3e505605292bd",
+          "candidate_current_byte_rule": "MUST_EQUAL_ACCEPTED_STAGE_C_BASE"
+        }
+      ],
+      "all_other_i8_preserved_rows": "VERIFY_CURRENT_FILE_BYTE_COUNT_AND_SHA256_DIRECTLY_AGAINST_I8_ROW",
+      "dynamic_authority_scope_exclusion": "FORBIDDEN",
+      "unlisted_sixth_reconciliation_path": "FORBIDDEN"
+    },
+    "atomic_and_interaction_predecessor_preservation_reconciliation": {
+      "test_methods": [
+        "tests/framework/test_atomic_declarations.py::AtomicDeclarationContractTests.test_existing_public_signatures_and_predecessor_bytes_are_preserved",
+        "tests/framework/test_interaction_declarations.py::InteractionDeclarationContractTests.test_predecessor_signatures_and_d1_bytes_are_preserved"
+      ],
+      "only_mutable_block": "I8 predecessor-row current-byte comparison block",
+      "exact_reconciled_paths": [
+        ".github/workflows/tests.yml",
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "build_backend/ebu_build_backend.py",
+        "pyproject.toml",
+        "tests/framework/safety.py"
+      ],
+      "identity_rows": "EXACTLY test_inventory_reconciliation.artifact_predecessor_preservation_reconciliation.rows",
+      "stage_c_modified_paths": [
+        ".github/workflows/tests.yml",
+        "build_backend/ebu_build_backend.py",
+        "pyproject.toml"
+      ],
+      "stage_c_modified_path_rule": "Verify the exact I8 row and exact accepted Stage C base row; candidate current bytes remain governed by the closed Stage C diff and are not excluded from implementation scope.",
+      "current_byte_preserved_paths": [
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "tests/framework/safety.py"
+      ],
+      "current_byte_preserved_path_rule": "Verify the exact I8 row and exact c540d032 current mode, Git object, byte count and raw SHA-256.",
+      "all_other_i8_rows": "VERIFY_CURRENT_FILE_BYTE_COUNT_AND_SHA256_DIRECTLY_AGAINST_I8_ROW",
+      "literal_set_equality_required_in_each_method": true,
+      "dynamic_or_authority_scope_derived_exclusion": "FORBIDDEN",
+      "unlisted_sixth_reconciliation_path": "FORBIDDEN",
+      "signature_historical_reconciliation_failure_precedence_and_other_non_inventory_logic": "PRESERVE_EXACTLY"
+    },
+    "atomic_predecessor_test_rule": "Only the I8 predecessor-row comparison block may advance to the exact literal five-path reconciliation by adding pyproject.toml; preserve every signature, historical reconciliation, failure-precedence and other non-inventory assertion.",
+    "interaction_predecessor_test_rule": "Only the I8 predecessor-row comparison block may advance to the exact literal five-path reconciliation by adding pyproject.toml; preserve every signature, historical reconciliation, failure-precedence and other non-inventory assertion.",
+    "interaction_import_graph_rule": "Only the current whole-package portion of test_exact_imports_graphs_and_inertness may advance from the exact I8 graph to exact current 42-module/257-edge projections; all historical graphs, edge subsets, acyclicity, forbidden imports, prohibited calls and inertness assertions remain unchanged.",
+    "semantic_static_authority_checks": {
+      "additional_positive_checks": 13,
+      "release_license_tag_additional_positive_checks": 4,
+      "i8s013_dependency_witness_additional_positive_checks": 1,
+      "total_positive_checks_per_job": 105,
+      "missing_or_failed_check": "REFUSE"
+    },
+    "preserve": [
+      "all historical prefixes and projections",
+      "all behavioral tests and test counts",
+      "all fixtures and contracts",
+      "all failure precedence and call sites",
+      "all non-inventory assertions"
+    ],
+    "forbidden": [
+      "test deletion",
+      "skip or expected-failure addition",
+      "test filtering",
+      "assertion weakening",
+      "dynamic or contract-derived predecessor exclusion",
+      "unlisted predecessor reconciliation path",
+      "historical checkout substitution for current source or installed candidate validation"
+    ]
+  },
+  "current_head_scope_reconciliation": {
+    "path": "tests/framework/test_validation_reachability.py",
+    "authority_phase": "Require exactly the five Stage C authority paths in addition to the accepted two post-I9 paths relative to the immutable I-9 implementation base.",
+    "implementation_phase": "Require exactly the five Stage C authority paths, fifteen modified paths and four new paths in addition to the accepted post-I9 relationship, accounting for overlapping paths once; the resulting delta relative to the immutable I-9 implementation base has exactly 24 unique paths.",
+    "preserve": [
+      "historical I-9 Git object and archive reconstruction",
+      "historical coordinates and raw identities",
+      "accepted vectors, projections and failure precedence",
+      "unknown-path, source-path, deletion, rename, mode and construction refusals"
+    ],
+    "arbitrary_or_unlisted_path": "REFUSE"
+  },
+  "bounded_regression_execution": {
+    "entry_boundary": "Only the exact conventional and framework test files frozen by the validation contract may invoke their already accepted bounded synthetic, pure-function, short-horizon or preregistered-fixture in-memory deterministic model-step, trajectory-loop or test-seam runner behavior.",
+    "stage_c_validator_direct_model_or_runner_call": "FORBIDDEN",
+    "official_result_artifact_write": "FORBIDDEN",
+    "registered_or_full_horizon_campaign": "FORBIDDEN",
+    "scientific_outcome_inspection_or_interpretation": "FORBIDDEN",
+    "evidence_class": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+    "record": "Exact test files, test counts, commands, outcomes and this bounded-regression classification."
+  },
+  "prohibited": [
+    "framework or scientific source edit",
+    "accepted API, dependency lock or version edit; metadata-source edits other than the exact pyproject license expression and license-files correction",
+    "fixture, result, book or PDF edit",
+    "checkout-source import during installed-artifact probes",
+    "direct model, step, runner, trajectory, policy, Gate, callback or outcome invocation outside the exact accepted bounded regression test entry points",
+    "preview runner or mutable runtime image",
+    "editable install or unpinned packaging frontend",
+    "network during offline packaging or installed-artifact probes",
+    "skipped or zero-test lane represented as pass",
+    "force push or history rewrite",
+    "main merge, tag, package-index upload, release, publication or institutional claim"
+  ],
+  "independent_gates": {
+    "authority_audit_required": true,
+    "implementation_audit_required": true,
+    "self_review_is_independent": false,
+    "authority_implementation_before_pass": "FORBIDDEN",
+    "target_integration_before_candidate_pass": "FORBIDDEN",
+    "main_merge_tag_release_publication": "SEPARATELY_AUTHORIZED_ONLY"
+  },
+  "nonclaims": [
+    "No corrected backend or passing artifact exists by virtue of this authority.",
+    "No alpha release candidate, tag, release or publication exists.",
+    "No new registered/full-horizon scientific campaign, official result generation or scientific outcome interpretation is authorized or evidenced; exact accepted bounded regression tests remain static/synthetic implementation evidence.",
+    "Packaging conformance does not prove mathematics, scientific validity, long-run homeostasis, stability, recovery, fairness or empirical applicability."
+  ],
+  "terminal_marker": "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_READY_FOR_AUDIT"
+}

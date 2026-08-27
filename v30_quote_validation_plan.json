@@ -1,0 +1,342 @@
+{
+  "baseline": {
+    "branch": "v3.0-local-ebu-foundation",
+    "foundation_commit": "9eff5efdfa8257dc0337059be7eccf3ff8f178a4",
+    "independent_review_file": "V3.0_GATE1_INDEPENDENT_REVIEW.md",
+    "independent_review_verdict": "PASS WITH CORRECTIONS (narrow wording/scope only)",
+    "released_baseline_commit": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
+    "released_baseline_tag": "v2.9.0"
+  },
+  "created": "2026-07-28",
+  "falsifier_policy": "all failures are reported, never tuned away; a triggered falsifier is a result",
+  "falsifiers": {
+    "F1": "a quote requires global state or future rollout",
+    "F10": "the V2.6 adversary earns positive EBU while producing persistent physical harm under P1C within the declared search space",
+    "F11": "a wallet, actor health value, price, or global metric enters the quote",
+    "F12": "a test passes only because every action is zero or every edge is inactive",
+    "F2": "natural regeneration produces actor credit",
+    "F3": "a closed undriven damage-repair cycle earns positive net EBU",
+    "F4": "splitting produces more total EBU than the equivalent aggregate action within the declared first-model scope",
+    "F5": "a positive quote bypasses P1C",
+    "F6": "adding the observational quote changes the physical trajectory",
+    "F7": "a partial execution is valued using an after-the-fact rule not contained in the committed schedule",
+    "F8": "unauthorized overexecution receives positive credit",
+    "F9": "a represented physical burden is counted again in C_a"
+  },
+  "fixture_conventions": {
+    "cost_model": "C(q) = c0*(1 if q>0 else 0) + lam_L*dt*(1-eta)*q",
+    "default_cell": {
+      "L": 4.0,
+      "R": 0.0,
+      "U": 16.0,
+      "alpha": 1.0,
+      "beta": 1.0,
+      "chi": 0.0
+    },
+    "default_cost": {
+      "c0": 0.0,
+      "lam_L": 0.1
+    },
+    "default_dt": 1.0,
+    "penalty": "v(x) = alpha*max(0,L-x)^2 + beta*max(0,x-U)^2 + chi*max(0,R-x)^2"
+  },
+  "gate": "V3.0 Gate 1 (quote-layer implementation and validation)",
+  "groups": {
+    "Q1": {
+      "cases": "all analytic fixtures + 50 random",
+      "spec": "q=0 with C(0)=0 quotes exactly 0.0 for every fixture and every drive",
+      "title": "zero action"
+    },
+    "Q10": {
+      "cases": "50 random sequences, length <= 8 (seed 30001)",
+      "spec": "sequences of sequential overlapping actions, fixed parameters, u=0: sum(de) = V(x0) - V(xN) - sum(C) exactly; closed cycles net -sum(C) <= 0",
+      "title": "undriven telescoping"
+    },
+    "Q11": {
+      "cases": "50 random driven sequences (seed 30001) + 1 negative control",
+      "spec": "sum(de) = V(x0) - V(xN) + sum(delta_n) - sum(C) with the explicit drive residual; MUST FAIL if the undriven theorem is applied to a driven sequence without the residual term (negative control)",
+      "title": "driven identity"
+    },
+    "Q12": {
+      "cases": "10 fixtures",
+      "spec": "the same quote/event identifier must not settle twice; second settlement attempt is rejected and recorded",
+      "title": "duplicate settlement"
+    },
+    "Q13": {
+      "cases": "SPLIT + 20 random shared-source variants (seed 30001)",
+      "spec": "independent frozen quotes on a shared source must reproduce the registered over-issuance: 16+16=32 claimed vs 20 actual, phantom 12 (the WRONG construction must be detected)",
+      "title": "split-action negative control"
+    },
+    "Q14": {
+      "cases": "rule-enforcement fixtures",
+      "spec": "one action per source per micro-step for overlapping local support: verify the production path cannot express the Q13 ambiguity",
+      "title": "restricted single-source production rule"
+    },
+    "Q15": {
+      "cases": "6 fixtures across P/R/I states",
+      "spec": "action with positive raw quote whose request exceeds the P1C safe quantity: only q_acc is quoted/executable; no schedule domain beyond q_acc exists; State R/I sources yield no positive-domain schedule",
+      "title": "P1C positive-but-forbidden"
+    },
+    "Q16": {
+      "cases": "3 fixtures",
+      "spec": "a State-P permitted action quoted negative (E2-type): physical permission does not imply positive EBU",
+      "title": "P1C permitted-but-negative"
+    },
+    "Q17": {
+      "cases": "3 multi-tick worlds x with/without quote layer",
+      "spec": "adding the observational quote layer leaves the P1C physical trajectory byte-identical (exact float tuple equality, V2.5 observational-identity convention)",
+      "title": "P1C non-binding observational identity"
+    },
+    "Q18": {
+      "cases": "AST scan + 9 poison probes",
+      "spec": "AST inspection + runtime poison objects: the quote function must not read global V, full world state, viability, future states, results, wallets, health, prices, or global debt; poisoned access raises",
+      "title": "information boundary"
+    },
+    "Q19": {
+      "cases": "1 wrong-construction fixture + detection assertion",
+      "spec": "fixture in which a state-carried burden (destination shortfall from eta<1) is ALSO placed in C_a; the audit reference must detect the same physical quantity priced twice (review section E condition is normative)",
+      "title": "cost double-count negative control"
+    },
+    "Q2": {
+      "cases": "E1",
+      "spec": "reproduce E1 exact = +7.94 within tolerance",
+      "title": "beneficial action"
+    },
+    "Q20": {
+      "cases": "4 epoch fixtures",
+      "spec": "if an accepted participant rejects and allocation is recomputed, all old-epoch quotes for the source group become invalid; reallocation requires a new epoch with new q_acc and new committed schedules; settlement under a stale epoch is rejected",
+      "title": "quote-epoch invalidation"
+    },
+    "Q21": {
+      "cases": "recompute-twice over all analytic fixtures + 50 random",
+      "spec": "same local inputs + equation version produce identical schedule, quote, and event-identifier inputs across repeated evaluation; all diagnostics JSON-safe (allow_nan=false; non-finite value in any quote/schedule/settlement field is a hard error, serialization_v29 convention)",
+      "title": "determinism and serialization"
+    },
+    "Q22": {
+      "cases": "12 layouts x 3 arms, executed only in a later authorized gate",
+      "spec": "replay the V2.6 red-team machinery (frozen constants DEPTH=10, WIDTH=40, TAIL=20, QUANTS=[0.5,1.0], COALITION=[0,1], layouts random_allee_world seeds 0..11 including the known seed-0 harmful layout) against three arms: (a) P1C alone; (b) P1C + observational exact quote; (c) an adversary maximizing exact quoted EBU. Falsification search, never a proof of security. Layout seeds 0..11 are the registered V2.6 study layouts and are permitted HERE ONLY; they are not conformance seeds.",
+      "title": "V2.6 adversarial replay protocol (preregistered, NOT run in Gate 1A)"
+    },
+    "Q3": {
+      "cases": "E2 + settlement-source assertion",
+      "spec": "reproduce E2 exact = -5.52 and linear diagnostic = -0.08; MUST FAIL if the linear form is used for settlement",
+      "title": "damaging action"
+    },
+    "Q4": {
+      "cases": "E3",
+      "spec": "reproduce E3: state returns exactly to start; net = -0.10 = -sum(C)",
+      "title": "closed damage-repair cycle"
+    },
+    "Q5": {
+      "cases": "REGEN + naive control",
+      "spec": "REGEN fixture: nonzero local regeneration with q=0 gives zero actor quote; deliberately naive pre-tick baseline must be shown to mis-credit by exactly delta_loc (negative control)",
+      "title": "natural regeneration exclusion"
+    },
+    "Q6": {
+      "cases": "16 deterministic branch fixtures + 200 random (seed 30001)",
+      "spec": "de(q) <= de_lin(q) on every case; deterministic fixtures across deficit, viable-band, excess, and reserve branches, then random sweep",
+      "title": "exact-versus-linear inequality"
+    },
+    "Q7": {
+      "cases": "100 random schedules (seed 30001) + 1 labelled c0 case",
+      "spec": "midpoint concavity on [0,q_acc] for convex C with C(0)=0; the c0>0 activation case tested separately as non-convex-at-zero: concave on (0,q_acc], downward jump at 0+, q=0 point carried separately",
+      "title": "schedule concavity"
+    },
+    "Q8": {
+      "cases": "100 schedules x 5 points (seed 30001)",
+      "spec": "for schedules committed before execution, settle q_meas in {0, 0.25*q_acc, 0.5*q_acc, q_acc-epsilon, q_acc} at the exact precommitted value",
+      "title": "committed schedule and partial execution"
+    },
+    "Q9": {
+      "cases": "20 overexecution fixtures",
+      "spec": "q_meas > q_acc: settlement credit must be <= 0 in all cases AND a protocol-violation record must be emitted; the test must not invent settlement semantics beyond the frozen envelope (O8 remains open)",
+      "title": "unauthorized overexecution"
+    }
+  },
+  "implementation_target": {
+    "planned_files_must_not_exist_before_this_plan_is_pushed": true,
+    "planned_future_files": [
+      "ebu_quote_v30.py",
+      "test_v30_quote.py",
+      "audit_v30_quote.py",
+      "results/v3.0/gate1/"
+    ],
+    "purity_requirements": [
+      "no mutation of physical state",
+      "no wallet mutation",
+      "no actor-health logic",
+      "no global evaluation",
+      "no future rollout",
+      "no P1C replacement",
+      "no EBU exchange"
+    ]
+  },
+  "plan_id": "v30_quote_validation",
+  "plan_version": 1,
+  "prohibitions": [
+    "no behavioral trajectory may run in Gate 1A or during conformance",
+    "no actor, wallet, health, market, exchange, or price implementation",
+    "no modification of the foundation draft, released code, tests, results, README, CI, CITATION, PDFs, or manifests",
+    "no test or implementation file may exist before this plan commit is pushed",
+    "confirmatory conformance runs execute exactly once per plan version; the harness must recompute and verify this plan's canonical hash and refuse to overwrite completed results"
+  ],
+  "quote_law": {
+    "baseline_state": "z = x + dt*u(x); frozen per-cell algebra, never a rollout",
+    "cost_rule": "C_a(q) >= 0, C_a(0) = 0, declared and committed pre-execution; no-double-count condition of Gate-1A review section E is normative (C_a prices the action process only, never a state-carried burden; monetary/labour and audit penalties excluded)",
+    "epoch_rule": "first model: no intra-tick reallocation after a rejection; any reallocation opens a new quote epoch invalidating all affected committed schedules (Gate-1A review section I)",
+    "equation": "de(q) = V_loc(z) - V_loc(z + dt*S_e*q) - C_a(q)",
+    "linear_diagnostic": "de_lin(q) = dt*q*(mu_i(z_i) - eta*mu_j(z_j)) - C_a(q); diagnostic only, never settlement",
+    "one_edge_form": "de(q) = v_i(z_i) + v_j(z_j) - v_i(z_i - dt*q) - v_j(z_j + dt*eta*q) - C_a(q)",
+    "overexecution_envelope": "q_meas > q_acc: never positive credit; mandatory protocol-violation record; physical overdraw reported to the physical layer; any debit schedule must itself be precommitted; full semantics OPEN (O8)",
+    "schedule_domain": "[0, q_acc] with q_acc from P1C allocation",
+    "settlement": "exact finite-difference value at the measured point of the schedule committed before execution; no post-outcome valuation rule",
+    "version": "v3.0-gate0.1"
+  },
+  "random_checks": {
+    "conformance_seed": 30001,
+    "non_vacuous_rule": "at least 50 percent of generated random cases per group must have q > 0 AND a nonzero exact quote magnitude > 1e-6; a group failing this is vacuous and FAILS (F12 guard)",
+    "prohibited_seeds_during_conformance": {
+      "behavioral_confirmatory_range": [
+        100,
+        139
+      ],
+      "behavioral_exploratory": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "note": "V2.6 layout seeds 0..11 appear ONLY inside the Q22 replay protocol, which is not conformance and runs only in a later authorized gate"
+    },
+    "ranges": {
+      "R": [
+        0.0,
+        8.0
+      ],
+      "alpha_beta": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "c0": [
+        0.0,
+        0.05
+      ],
+      "chi": [
+        0.0,
+        1.0
+      ],
+      "dt": [
+        0.2,
+        1.0
+      ],
+      "eta": [
+        0.5,
+        0.7,
+        0.9,
+        1.0
+      ],
+      "lam_L": [
+        0.0,
+        0.1
+      ],
+      "q": "uniform in [0, q_acc] with q_acc from declared feasibility caps",
+      "x": [
+        0.0,
+        24.0
+      ]
+    },
+    "status": "random checks are numerical validation only, never proof"
+  },
+  "tolerances": {
+    "analytic_fixtures_abs": "1e-9 * (1 + abs(expected))",
+    "byte_identity": "exact float tuple equality for Q17 (no rounding)",
+    "identities_abs": "1e-9 * (1 + abs(V))",
+    "json_safety": "allow_nan=false everywhere; non-finite in any quote, schedule, settlement, or violation field is a hard error",
+    "ledger_style_abs": "1e-12 * scale"
+  },
+  "worked_examples": {
+    "E1_beneficial": {
+      "expected_exact": 7.94,
+      "expected_linear": 15.18,
+      "inputs": {
+        "c0": 0.0,
+        "dt": 1.0,
+        "eta": 0.9,
+        "lam_L": 0.1,
+        "q": 2.0,
+        "z_i": 18.0,
+        "z_j": 2.0
+      }
+    },
+    "E2_damaging": {
+      "expected_exact": -5.52,
+      "expected_linear": -0.08,
+      "inputs": {
+        "c0": 0.0,
+        "dt": 1.0,
+        "eta": 0.9,
+        "lam_L": 0.1,
+        "q": 8.0,
+        "z_i": 10.0,
+        "z_j": 10.0
+      }
+    },
+    "E3_cycle": {
+      "expected_de1": -8.05,
+      "expected_de2": 7.95,
+      "expected_final_state": [
+        10.0,
+        10.0
+      ],
+      "expected_net": -0.1,
+      "inputs": {
+        "c0": 0.05,
+        "dt": 1.0,
+        "eta": 1.0,
+        "lam_L": 0.0,
+        "q": 8.0,
+        "u": "zero",
+        "x0": [
+          10.0,
+          10.0
+        ]
+      }
+    },
+    "REGEN_exclusion": {
+      "expected_g": 2.0,
+      "expected_quote": 0.0,
+      "expected_z_i": 12.0,
+      "inputs": {
+        "K": 20.0,
+        "dt": 1.0,
+        "q": 0.0,
+        "rho": 0.4,
+        "source": "logistic",
+        "x_i": 10.0
+      },
+      "naive_baseline_must_differ_by": "delta_loc = V_loc(z) - V_loc(x)"
+    },
+    "SPLIT_counterexample": {
+      "expected_independent_each": 16.0,
+      "expected_independent_sum": 32.0,
+      "expected_joint_actual": 20.0,
+      "expected_phantom": 12.0,
+      "inputs": {
+        "C": 0.0,
+        "actors": 2,
+        "dt": 1.0,
+        "eta": 1.0,
+        "q_each": 2.0,
+        "z_i": 18.0,
+        "z_j": 0.0
+      }
+    }
+  }
+}

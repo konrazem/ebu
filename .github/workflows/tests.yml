@@ -3,44 +3,182 @@ name: tests
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+env:
+  EBU_STAGE_C_IMAGE: docker.io/library/python@sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab
+  EBU_STAGE_C_IMAGE_DIGEST: sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      # Core + physics tests are stdlib-only; test_v23/test_v24 import matplotlib via exp_v23.
-      - name: Install figure/PDF dependencies
-        run: pip install -r requirements.txt
-      - name: Run prior test suites (48 tests)
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage C inputs
         run: |
-          python test_energy_balance.py
-          python test_v22.py
-          python test_v23.py
-          python test_v24.py
-          python test_v25.py
-          python test_v26.py
-      - name: Run V2.7 mathematical regression validation (8 groups, 34 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/conventional-wheelhouse" "$stage_root/evidence" "$stage_root/work"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/conventional-wheelhouse" charset-normalizer==3.5.1 contourpy==1.3.3 cycler==0.12.1 fonttools==4.63.0 kiwisolver==1.5.0 matplotlib==3.11.1 numpy==2.5.2 packaging==26.3 pillow==12.3.0 pyparsing==3.3.2 python-dateutil==2.9.0.post0 reportlab==5.0.1 six==1.17.0
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Run conventional suites in the frozen runtime
         run: |
-          python test_math.py
-      - name: Run V2.8 numerical validation of the discrete D0 foundation (11 groups, 132 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-c" -v "$stage_root/source:/stage-c/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-c/source --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-c/source --wheelhouse /stage-c/frontend-wheelhouse --work /stage-c/work --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py conventional --source /stage-c/source --historical-o14 4939e1f99935185952f3e1c82a6993a4388839f4 --work /stage-c/work --evidence /stage-c/evidence
+
+  framework-t0:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage C inputs
         run: |
-          python test_v28.py
-      - name: Run V2.9 D0 conformance validation (15 groups, 141 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/evidence" "$stage_root/work"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Run source and installed T0 lanes
         run: |
-          python test_v29.py
-      - name: Run V2.9 deterministic behavior validation, D1-D8 (9 groups, 108 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-c" -v "$stage_root/source:/stage-c/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-c/source --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-c/source --wheelhouse /stage-c/frontend-wheelhouse --work /stage-c/work --evidence /stage-c/evidence
+          for artifact in source direct-wheel sdist-wheel; do
+            "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py framework --source /stage-c/source --artifact "$artifact" --tier t0 --work /stage-c/work --evidence /stage-c/evidence
+          done
+
+  framework-t1:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage C inputs
         run: |
-          python test_v29_behavior.py
-      - name: Run V2.9 P1C preservation conformance validation (12 groups, 83 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/evidence" "$stage_root/work"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Run source and installed T1 lanes
         run: |
-          python test_v29_p1c.py
-      - name: Run V2.9 D9/D10 harness validation - no trajectory regeneration (20 groups, 114 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-c" -v "$stage_root/source:/stage-c/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-c/source --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-c/source --wheelhouse /stage-c/frontend-wheelhouse --work /stage-c/work --evidence /stage-c/evidence
+          for artifact in source direct-wheel sdist-wheel; do
+            "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py framework --source /stage-c/source --artifact "$artifact" --tier t1 --work /stage-c/work --evidence /stage-c/evidence
+          done
+
+  framework-t2:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage C inputs
         run: |
-          python test_v29_d9_d10.py
-      - name: Run V2.9 serialization audit - validates committed results (6 groups, 46 checks)
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/evidence" "$stage_root/work"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Run source and installed T2 lanes
         run: |
-          python test_v29_serialization.py
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-c" -v "$stage_root/source:/stage-c/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-c/source --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-c/source --wheelhouse /stage-c/frontend-wheelhouse --work /stage-c/work --evidence /stage-c/evidence
+          for artifact in source direct-wheel sdist-wheel; do
+            "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py framework --source /stage-c/source --artifact "$artifact" --tier t2 --work /stage-c/work --evidence /stage-c/evidence
+          done
+
+  packaging-release-candidate:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage C inputs
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/conventional-wheelhouse" "$stage_root/evidence" "$stage_root/work" "$stage_root/final"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/conventional-wheelhouse" charset-normalizer==3.5.1 contourpy==1.3.3 cycler==0.12.1 fonttools==4.63.0 kiwisolver==1.5.0 matplotlib==3.11.1 numpy==2.5.2 packaging==26.3 pillow==12.3.0 pyparsing==3.3.2 python-dateutil==2.9.0.post0 reportlab==5.0.1 six==1.17.0
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Build and validate the complete alpha candidate
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-c-${GITHUB_JOB}"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-c" -v "$stage_root/source:/stage-c/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-c/source --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-c/source --wheelhouse /stage-c/frontend-wheelhouse --work /stage-c/work --evidence /stage-c/evidence
+          for tier in t0 t1 t2; do
+            for artifact in source direct-wheel sdist-wheel; do
+              "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py framework --source /stage-c/source --artifact "$artifact" --tier "$tier" --work /stage-c/work --evidence /stage-c/evidence
+            done
+          done
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py conventional --source /stage-c/source --historical-o14 4939e1f99935185952f3e1c82a6993a4388839f4 --work /stage-c/work --evidence /stage-c/evidence
+          "${container[@]}" python -I /stage-c/source/scripts/validate_stage_c_release_candidate.py emit-manifest --evidence /stage-c/evidence --output /stage-c/final/stage-c-validation-manifest.json
+      - name: Retain private candidate evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-c-alpha-release-candidate-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/stage-c-packaging-release-candidate/evidence
+            ${{ runner.temp }}/stage-c-packaging-release-candidate/final
+            ${{ runner.temp }}/stage-c-packaging-release-candidate/work/artifacts
+          if-no-files-found: error
+          retention-days: 30

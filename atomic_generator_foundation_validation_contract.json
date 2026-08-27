@@ -1,0 +1,1814 @@
+{
+  "contract_id": "EBU_ATOMIC_GENERATOR_FOUNDATION_STATIC_VALIDATION_V2",
+  "contract_version": "2.2.0",
+  "status": "PROSPECTIVE_STATIC_T0_ONLY_UNIMPLEMENTED",
+  "authority": {
+    "base_head": "53a30494203136bea8f373cfc18c516008bdcdfe",
+    "mechanical_contract": "atomic_generator_foundation_contract.json",
+    "human_rendering": "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+    "predecessor_manifest": "atomic_generator_foundation_predecessor_manifest.json",
+    "open_problem_register": "POST_ATOMIC_OPEN_PROBLEM_REGISTER.md",
+    "book_traceability_manifest": "atomic_generator_book_traceability_manifest.json"
+  },
+  "safety": {
+    "permitted_class": "T0_STATIC_ONLY",
+    "permitted_methods": [
+      "raw byte length and SHA-256",
+      "literal final-byte marker comparison",
+      "strict duplicate-key-rejecting JSON parsing",
+      "two independent canonical JSON encodings",
+      "closed inventory, order, and cross-reference checks",
+      "dimensional algebra",
+      "exact integer, rational, and symbolic arithmetic",
+      "isolated pure calculations on declared synthetic individual states",
+      "complete Git tree, object, path, mode, status, and diff inspection",
+      "Markdown structural inspection"
+    ],
+    "forbidden_methods": [
+      "importing or invoking production ebu_framework behavior",
+      "calling a transition, step, policy, runner, simulation, or trajectory",
+      "advancing model state even for one tick",
+      "inspecting candidate scientific outcomes",
+      "parameter search or optimization over scientific outcomes",
+      "executing a Gate",
+      "editing implementation, tests, fixtures, results, books, or PDFs",
+      "installing dependencies",
+      "rendering documents",
+      "committing, pushing, merging, or publishing"
+    ]
+  },
+  "exact_arithmetic_rule": "Every numeric mathematical example is evaluated as an integer, exact rational, or exact symbolic expression. Binary floating-point approximation is neither required nor accepted as the equality oracle.",
+  "coverage": {
+    "f1_f12_vector_ids": [
+      "AFV-F01",
+      "AFV-F02",
+      "AFV-F03",
+      "AFV-F04",
+      "AFV-F05",
+      "AFV-F06",
+      "AFV-F07",
+      "AFV-F08",
+      "AFV-F09",
+      "AFV-F10",
+      "AFV-F11",
+      "AFV-F12"
+    ],
+    "f13_f16_interaction_vector_ids": [
+      "AFV-I01",
+      "AFV-I02",
+      "AFV-I03",
+      "AFV-I04",
+      "AFV-I05",
+      "AFV-I06",
+      "AFV-I07",
+      "AFV-I08",
+      "AFV-I09",
+      "AFV-I10",
+      "AFV-I11",
+      "AFV-I12",
+      "AFV-I13",
+      "AFV-I14",
+      "AFV-I15",
+      "AFV-I16",
+      "AFV-I17",
+      "AFV-I18",
+      "AFV-I19",
+      "AFV-I20",
+      "AFV-I21",
+      "AFV-I22",
+      "AFV-I23",
+      "AFV-I24",
+      "AFV-I25",
+      "AFV-I26",
+      "AFV-I27",
+      "AFV-I28",
+      "AFV-I29",
+      "AFV-I30"
+    ],
+    "package_integrity_vector_ids": [
+      "AFV-X01",
+      "AFV-X02",
+      "AFV-X03",
+      "AFV-X04",
+      "AFV-X05",
+      "AFV-X06",
+      "AFV-X07",
+      "AFV-X08"
+    ],
+    "f1_f12_supporting_subvector_ids": [
+      "AFV-F01-R",
+      "AFV-F11-T"
+    ],
+    "interaction_objective_order": [
+      "ZERO_PAIR",
+      "POSITIVE_PAIR",
+      "NEGATIVE_PAIR",
+      "PURE_THREE_WAY_ZERO_PAIR",
+      "NONZERO_EMPTY_BASELINE",
+      "NORMALIZED_VALUE_FUNCTION",
+      "INFEASIBLE_SUBSET_REFUSAL",
+      "QUANTITY_FIXED_VERSUS_RULE_REPLAYED",
+      "EXACT_FINITE_RECONSTRUCTION",
+      "EXACT_TRUNCATION_RESIDUAL",
+      "INCOMPLETE_PROCESS_ACCOUNT_REJECTION",
+      "SMOOTH_MIXED_APPROXIMATION",
+      "NONSMOOTH_KINK",
+      "COMMUTING_GENERATORS",
+      "NONCOMMUTING_GENERATORS",
+      "ONE_POINT_BRACKET_VERSUS_NEIGHBORHOOD",
+      "SHARED_CAPACITY_OWNERSHIP",
+      "MISSING_BOUNDARY_VISIBILITY",
+      "DAG_WITHOUT_UNIQUE_LOWEST_BOUNDARY",
+      "FACTOR_NODE_ALTERNATIVE",
+      "PAIR_GRAPH_MISSES_PURE_HYPEREDGE",
+      "STRUCTURAL_VERSUS_ACTIVE_TOPOLOGY",
+      "HIDDEN_STATE_TOPOLOGY_FAILURE",
+      "VALID_BOUNDARY_INTERACTION_PRESERVATION",
+      "DELIBERATE_BOUNDARY_PRESERVATION_FAILURE",
+      "GRAPH_REACHABILITY_WITHOUT_PROPAGATION_CLAIM",
+      "OSCILLATION_WITHOUT_PROPAGATION_CLAIM",
+      "INTERACTION_SHARE_NOT_CAUSAL",
+      "COEFFICIENT_NOT_SETTLEMENT_ENTITLEMENT",
+      "EXCLUDED_ELECTRICAL_ANALOGY"
+    ],
+    "parallel_action_typology_case_projection": [
+      {"scope":"ZERO_POSITIVE_AND_NEGATIVE_PAIR_INTERACTIONS","case_ids":["AFV-I01","AFV-I02","AFV-I03"]},
+      {"scope":"NONZERO_EMPTY_BASELINES","case_ids":["AFV-I05"]},
+      {"scope":"NORMALIZED_SUBSET_VALUES","case_ids":["AFV-I06"]},
+      {"scope":"EXACT_MOBIUS_RECONSTRUCTION_AND_TRUNCATION_RESIDUALS","case_ids":["AFV-I09","AFV-I10"]},
+      {"scope":"PURE_HIGHER_ORDER_INTERACTIONS_WITH_ZERO_PAIR_COEFFICIENTS","case_ids":["AFV-I04","AFV-I21"]},
+      {"scope":"LOCAL_MIXED_MARGINAL_COUPLING","case_ids":["AFV-I12","AFV-I13"]},
+      {"scope":"COMMUTING_AND_NONCOMMUTING_GENERATORS","case_ids":["AFV-I14","AFV-I15"]},
+      {"scope":"GENERATOR_ORDER_EFFECTS","case_ids":["AFV-I15","AFV-I16"]},
+      {"scope":"SHARED_CAPACITY_OWNERSHIP","case_ids":["AFV-I17","AFV-I18"]},
+      {"scope":"FACTOR_NODE_ALTERNATIVES","case_ids":["AFV-I19","AFV-I20"]},
+      {"scope":"STRUCTURAL_VERSUS_ACTIVE_INTERACTION_TOPOLOGY","case_ids":["AFV-I22"]},
+      {"scope":"HIDDEN_STATE_TOPOLOGY_FAILURES","case_ids":["AFV-I23"]},
+      {"scope":"HYPERGRAPH_REPRESENTATION","case_ids":["AFV-I04","AFV-I21"]},
+      {"scope":"RECURSIVE_BOUNDARY_INTERACTION_PRESERVATION_AND_DELIBERATE_FAILURES","case_ids":["AFV-I24","AFV-I25"]}
+    ],
+    "pedagogical_authority_vector_ids": [
+      "AFV-P01",
+      "AFV-P02",
+      "AFV-P03",
+      "AFV-P04",
+      "AFV-P05",
+      "AFV-P06",
+      "AFV-P07",
+      "AFV-P08",
+      "AFV-P09",
+      "AFV-P10"
+    ]
+  },
+  "case_count": 60,
+  "case_order": [
+    "AFV-F01",
+    "AFV-F02",
+    "AFV-F03",
+    "AFV-F04",
+    "AFV-F05",
+    "AFV-F06",
+    "AFV-F07",
+    "AFV-F08",
+    "AFV-F09",
+    "AFV-F10",
+    "AFV-F11",
+    "AFV-F12",
+    "AFV-I01",
+    "AFV-I02",
+    "AFV-I03",
+    "AFV-I04",
+    "AFV-I05",
+    "AFV-I06",
+    "AFV-I07",
+    "AFV-I08",
+    "AFV-I09",
+    "AFV-I10",
+    "AFV-I11",
+    "AFV-I12",
+    "AFV-I13",
+    "AFV-I14",
+    "AFV-I15",
+    "AFV-I16",
+    "AFV-I17",
+    "AFV-I18",
+    "AFV-I19",
+    "AFV-I20",
+    "AFV-I21",
+    "AFV-I22",
+    "AFV-I23",
+    "AFV-I24",
+    "AFV-I25",
+    "AFV-I26",
+    "AFV-I27",
+    "AFV-I28",
+    "AFV-I29",
+    "AFV-I30",
+    "AFV-X01",
+    "AFV-X02",
+    "AFV-X03",
+    "AFV-X04",
+    "AFV-X05",
+    "AFV-X06",
+    "AFV-X07",
+    "AFV-X08",
+    "AFV-P01",
+    "AFV-P02",
+    "AFV-P03",
+    "AFV-P04",
+    "AFV-P05",
+    "AFV-P06",
+    "AFV-P07",
+    "AFV-P08",
+    "AFV-P09",
+    "AFV-P10"
+  ],
+  "cases": [
+    {
+      "id": "AFV-F01",
+      "foundation_decisions": [
+        "F1"
+      ],
+      "name": "ECONOMIC_ATOM_AND_GENERATOR_EXISTENCE",
+      "objective": "Reconstruct the economic atom as limiting differential participation in a declared extent, including the cases in which no generator exists.",
+      "method": "Evaluate only the declared symbolic difference quotients; do not invoke framework behavior.",
+      "subvectors": [
+        {
+          "id": "AFV-F01-R",
+          "name": "FINITE_RECONSTRUCTION_CONDITIONS",
+          "inputs": [
+            {
+              "model": "bounded autonomous linear generator A",
+              "required_reconstruction": "strongly continuous semigroup; ordinary exponential series only when its operator assumptions hold"
+            },
+            {
+              "model": "state-dependent locally Lipschitz G(z)",
+              "required_reconstruction": "unique local nonlinear flow; no substitution of a constant ordinary exponential"
+            },
+            {
+              "model": "time-dependent G(z,t)",
+              "required_reconstruction": "declared ordered evolution family"
+            },
+            {
+              "model": "hybrid activation plus flow",
+              "required_reconstruction": "ordered jump/flow composition; refuse a continuous exponential across the jump"
+            }
+          ],
+          "expected": "Each finite-reconstruction claim is conditional on existence, uniqueness where needed, domain, regularity, and ordering."
+        }
+      ],
+      "inputs": [
+        {
+          "family": "T_h(z)=z+h*a",
+          "extent": "h>0",
+          "expected_limit": "G_T(z)=a",
+          "atom_claim": "ADMISSIBLE_AFTER_DECLARATIONS"
+        },
+        {
+          "family": "T_h(z)=z+h*sin(1/h)",
+          "extent": "h>0",
+          "expected_limit": "DOES_NOT_EXIST",
+          "continuity_at_zero": true,
+          "atom_claim": "REFUSE"
+        },
+        {
+          "family": "T_h(z)=z+a for h>0",
+          "extent": "h>0",
+          "right_continuity_at_zero": false,
+          "atom_claim": "REFUSE"
+        }
+      ],
+      "expected": "No smallest-positive-transaction or divided-actor interpretation is admitted."
+    },
+    {
+      "id": "AFV-F02",
+      "foundation_decisions": [
+        "F2"
+      ],
+      "name": "DECLARED_DIVISIBILITY_BOUNDARY",
+      "objective": "Separate divisible extent or carrier participation from indivisible identity, acceptance, receipt, and mode facts.",
+      "method": "Classify a frozen declaration table by declared ontology and reject inheritance across types.",
+      "inputs": [
+        {
+          "object": "typed carrier quantity 3/2 kWh",
+          "declared_divisible": true,
+          "expected": "DIVISIBLE_PARTICIPATION_ADMISSIBLE"
+        },
+        {
+          "object": "physical time interval 1/4 h",
+          "declared_divisible": true,
+          "expected": "DIVISIBLE_EXTENT_ADMISSIBLE"
+        },
+        {
+          "object": "institutional acceptance event",
+          "declared_divisible": false,
+          "expected": "INDIVISIBLE"
+        },
+        {
+          "object": "signed receipt identity",
+          "declared_divisible": false,
+          "expected": "INDIVISIBLE"
+        },
+        {
+          "object": "operating mode transition",
+          "declared_divisible": false,
+          "expected": "INDIVISIBLE"
+        }
+      ],
+      "expected": "Divisibility is declaration-specific and cannot be inferred merely because a surrounding quantity is divisible."
+    },
+    {
+      "id": "AFV-F03",
+      "foundation_decisions": [
+        "F3"
+      ],
+      "name": "CLOSED_EXTENT_REGISTRY",
+      "objective": "Reconstruct the initial closed extent registry, coordinate roles, and refusal of undeclared coordinates.",
+      "method": "Project extent_registry in contract order, verify dimensional metadata and orientation rules, and reject duplicates or additions.",
+      "expected": {
+        "ordered_ids": [
+          "PHYSICAL_TIME",
+          "PROCESS_OR_ROUTE_EXTENT",
+          "TYPED_CARRIER_QUANTITY",
+          "DIMENSIONLESS_PARTICIPATION"
+        ],
+        "count": 4,
+        "rows": [
+          {
+            "id": "PHYSICAL_TIME",
+            "symbol": "t",
+            "extent_unit": "[T]",
+            "generator_unit": "state unit per [T]",
+            "orientation_rule": "declared clock and event order"
+          },
+          {
+            "id": "PROCESS_OR_ROUTE_EXTENT",
+            "symbol": "s",
+            "extent_unit": "declared process/path unit",
+            "generator_unit": "state unit per s",
+            "orientation_rule": "coordinate and orientation declared; distance is not automatically burden"
+          },
+          {
+            "id": "TYPED_CARRIER_QUANTITY",
+            "symbol": "q_r",
+            "extent_unit": "[U_r]",
+            "generator_unit": "state unit per [U_r]",
+            "orientation_rule": "nonatomic carrier and differentiable family"
+          },
+          {
+            "id": "DIMENSIONLESS_PARTICIPATION",
+            "symbol": "rho",
+            "extent_unit": "1 on [0,1]",
+            "generator_unit": "state unit",
+            "orientation_rule": "one immutable finite bundle or process specification"
+          }
+        ],
+        "undeclared_coordinate_status": "REFUSE"
+      }
+    },
+    {
+      "id": "AFV-F04",
+      "foundation_decisions": [
+        "F4"
+      ],
+      "name": "REPARAMETERIZATION_WITNESS",
+      "objective": "Reconstruct automatic, witnessed, and refused reparameterizations with the generator transformation rule.",
+      "method": "Apply G_tilde=G_h*(dh/dtilde_h) to exact static scalar examples.",
+      "inputs": [
+        {
+          "kind": "positive affine",
+          "relation": "tilde_h=2*h",
+          "G_h": "6",
+          "dh_dtilde_h": "1/2",
+          "expected_G_tilde": "3",
+          "expected_status": "ACCEPT_AUTOMATIC_UNIT_CHANGE"
+        },
+        {
+          "kind": "positive nonlinear C1",
+          "relation": "tilde_h=h^2",
+          "domain": "h>0",
+          "dh_dtilde_h": "1/(2*h)",
+          "expected_status": "REQUIRE_EXPLICIT_NONAUTONOMOUS_WITNESS"
+        },
+        {
+          "kind": "singular inverse",
+          "relation": "tilde_h=h^2",
+          "domain": "h>=0 at h=0",
+          "expected_status": "REFUSE_INHERITED_GENERATOR_CLAIM"
+        },
+        {
+          "kind": "orientation reversal",
+          "relation": "tilde_h=-h",
+          "expected_status": "REFUSE"
+        }
+      ],
+      "expected": "Only positive affine unit changes inherit automatically."
+    },
+    {
+      "id": "AFV-F05",
+      "foundation_decisions": [
+        "F5"
+      ],
+      "name": "SEPARATE_GENERATOR_ROLES",
+      "objective": "Reconstruct quantity-participation and complete augmented-state transformation generators as distinct typed objects.",
+      "method": "Type-check a frozen declaration graph without importing implementation.",
+      "inputs": [
+        {
+          "quantity_generator": "g_q=dq/dh",
+          "state_generator": "G_T=dz/dh",
+          "constitutive_link": "dz/dh=A(z)*dq/dh",
+          "expected": "ADMISSIBLE_TYPED_LINK"
+        },
+        {
+          "quantity_generator": "g_q=dq/dh",
+          "state_generator": null,
+          "constitutive_link": null,
+          "requested_claim": "complete state evolution",
+          "expected": "REFUSE"
+        },
+        {
+          "quantity_generator": null,
+          "state_generator": "G_T=dz/dh",
+          "requested_claim": "carrier participation rate",
+          "expected": "REFUSE"
+        }
+      ],
+      "expected": "Neither generator role substitutes for the other without a declared constitutive or incidence link."
+    },
+    {
+      "id": "AFV-F06",
+      "foundation_decisions": [
+        "F6"
+      ],
+      "name": "LOSS_EFFICIENCY_SCALING",
+      "objective": "Reconstruct denominator-, unit-, coordinate-, regime-, fixed-cost-, and account-qualified loss limits.",
+      "method": "Use exact rational leading-order relations.",
+      "inputs": [
+        {
+          "carrier": "C0=100",
+          "loss": "L(h)=2*h",
+          "efficiency": "1-L(h)/C0",
+          "expected_limit": "1"
+        },
+        {
+          "carrier": "C(h)=h",
+          "loss": "L(h)=h/5",
+          "efficiency": "1-L(h)/h",
+          "expected_limit": "4/5"
+        },
+        {
+          "carrier": "C(h)=h",
+          "loss": "L(h)=h^2",
+          "efficiency": "1-L(h)/h",
+          "expected_limit": "1"
+        },
+        {
+          "loss": "K+ell*h with K>0 across activation",
+          "expected": "REFUSE_CONTINUOUS_ZERO_EXTENT_GENERATOR_ACROSS_JUMP"
+        }
+      ],
+      "expected": "L(h)->0 alone proves no unit-efficiency result."
+    },
+    {
+      "id": "AFV-F07",
+      "foundation_decisions": [
+        "F7"
+      ],
+      "name": "HYBRID_ACTIVATION_NO_DUPLICATION",
+      "objective": "Reconstruct discrete activation plus within-mode flow in declared order with fixed-cost nonduplication.",
+      "method": "Compare exact event-ledger totals for one activation followed by four flow refinements.",
+      "input": {
+        "activation_cost": "5",
+        "flow_segment_cost": "1/2",
+        "segment_count": 4,
+        "quantity_domain": "{0} union [2,10]",
+        "attempted_quantity_below_minimum": "1",
+        "declared_order": "ACTIVATION_THEN_FLOW"
+      },
+      "expected": {
+        "activation_then_flow_total": "7",
+        "invalid_activation_per_segment_total": "22",
+        "below_minimum_status": "REFUSE",
+        "valid_status": "ACCEPT",
+        "invalid_status": "REFUSE_DUPLICATED_FIXED_ACCOUNT"
+      }
+    },
+    {
+      "id": "AFV-F08",
+      "foundation_decisions": [
+        "F8"
+      ],
+      "name": "AUGMENTED_STATE_SUFFICIENCY",
+      "objective": "Reconstruct the admitted-history sufficiency test without claiming a universal minimal state.",
+      "method": "Use a static transition table with equal visible snapshots and different hidden pending payloads.",
+      "input": {
+        "visible_state_history_A": "10",
+        "visible_state_history_B": "10",
+        "hidden_pending_A": "3",
+        "hidden_pending_B": "0",
+        "next_common_input": "0"
+      },
+      "expected": {
+        "next_visible_A": "13",
+        "next_visible_B": "10",
+        "visible_snapshot_sufficient": false,
+        "required_action": "AUGMENT_STATE_OR_REFUSE_MARKOV_CLAIM",
+        "universal_minimal_state_claim": false
+      }
+    },
+    {
+      "id": "AFV-F09",
+      "foundation_decisions": [
+        "F9"
+      ],
+      "name": "REQUEST_TO_SETTLEMENT_LIFECYCLE",
+      "objective": "Reconstruct the exact ordered lifecycle and the non-equivalence of its stages.",
+      "method": "Compare lifecycle_order in both authority renderings and test prohibited stage collapse.",
+      "expected": {
+        "order": [
+          "REQUEST",
+          "PHYSICAL_PERMISSION_OR_RESERVATION",
+          "QUOTE",
+          "INSTITUTIONAL_ACCEPTANCE",
+          "EXECUTION",
+          "MEASUREMENT",
+          "PHYSICAL_OR_GROUP_RECEIPT",
+          "CAUSAL_ASSESSMENT",
+          "INSTITUTIONAL_SETTLEMENT"
+        ],
+        "count": 9,
+        "quote_equals_acceptance": false,
+        "receipt_equals_causality": false,
+        "causality_equals_settlement": false
+      }
+    },
+    {
+      "id": "AFV-F10",
+      "foundation_decisions": [
+        "F10"
+      ],
+      "name": "HISTORY_WIDE_BOUNDARY_EQUIVALENCE",
+      "objective": "Reconstruct exact recursive replacement as history-wide boundary behavior plus separate burden, conservation, account, and settlement preservation.",
+      "method": "Compare two frozen transducers with an equal endpoint at t0 but different latent history response.",
+      "input": {
+        "boundary_endpoint_A": "10",
+        "boundary_endpoint_B": "10",
+        "next_common_input": "0",
+        "next_output_A": "13",
+        "next_output_B": "10"
+      },
+      "expected": {
+        "endpoint_equality_sufficient": false,
+        "history_wide_observable_equivalence": false,
+        "replacement_status": "REFUSE",
+        "separately_required_accounts": [
+          "BURDEN",
+          "CONSERVATION",
+          "ACCOUNT",
+          "SETTLEMENT"
+        ]
+      }
+    },
+    {
+      "id": "AFV-F11",
+      "foundation_decisions": [
+        "F11"
+      ],
+      "name": "FEASIBILITY_FIRST_OBJECTIVE_GRAMMAR",
+      "objective": "Reconstruct feasibility-first allocation, a declared objective, exact optimum, horizon and uncertainty declarations, existence, and deterministic tie handling.",
+      "method": "Solve the frozen concave two-actor example with exact rationals and validate required declaration fields.",
+      "input": {
+        "objective": "maximize 10*q1-q1^2/2 + 8*q2-q2^2/4",
+        "constraints": [
+          "q1>=0",
+          "q2>=0",
+          "q1+q2<=10"
+        ],
+        "horizon": "ONE_DECLARED_ALLOCATION_INTERVAL",
+        "uncertainty": "NONE_IN_STATIC_EXAMPLE",
+        "tie_rule": "LEXICOGRAPHIC_ACTOR_ID_IF_NEEDED"
+      },
+      "expected": {
+        "q1": "14/3",
+        "q2": "16/3",
+        "lambda": "16/3",
+        "objective_value": "214/3",
+        "constraint_binding": true,
+        "marginals_equal": true,
+        "feasible_first": true
+      },
+      "tie_subvector": {
+        "id": "AFV-F11-T",
+        "objective": "maximize 0 subject to q1+q2=1 and q1,q2>=0",
+        "declared_tie_rule": "LEXICOGRAPHIC_ACTOR_ID",
+        "expected": {
+          "q1": "1",
+          "q2": "0",
+          "deterministic": true
+        }
+      }
+    },
+    {
+      "id": "AFV-F12",
+      "foundation_decisions": [
+        "F12"
+      ],
+      "name": "ALLOCATION_CAUSALITY_SETTLEMENT_BOUNDARY",
+      "objective": "Reconstruct the boundary after optimal allocation and the prospective I3C repair separating causal attribution from institutional settlement.",
+      "method": "Apply only the prospective semantic truth table; do not import settlement.py.",
+      "inputs": [
+        {
+          "causal_status": "UNIDENTIFIED",
+          "causal_contribution_ref": "UNRESOLVED",
+          "institutional_shares": [
+            "5",
+            "6"
+          ],
+          "measured_total": "12",
+          "residual": "1",
+          "share_rule": "INSTITUTIONAL",
+          "expected": "PROSPECTIVELY_VALID_BUT_CURRENT_RUNTIME_UNAVAILABLE"
+        },
+        {
+          "causal_status": "UNIDENTIFIED",
+          "causal_contribution_ref": "5",
+          "institutional_shares": [
+            "5",
+            "6"
+          ],
+          "measured_total": "12",
+          "residual": "1",
+          "expected": "CAUSAL_ATTRIBUTION_UNRESOLVED"
+        },
+        {
+          "causal_status": "UNIDENTIFIED",
+          "causal_contribution_ref": "UNRESOLVED",
+          "institutional_shares": [
+            "5",
+            "6"
+          ],
+          "measured_total": "12",
+          "residual": "0",
+          "expected": "SETTLEMENT_CLOSURE_FAILURE"
+        }
+      ],
+      "expected": "KKT multipliers, scalar allocations, and interaction coefficients do not cross automatically into causal or settlement entitlement."
+    },
+    {
+      "id": "AFV-I01",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "ZERO_PAIR",
+      "objective": "Unique zero pair-interaction vector.",
+      "method": "Exact Mobius coefficient I12=E12-E1-E2+Eempty.",
+      "input": {
+        "E_empty": "0",
+        "E_1": "3",
+        "E_2": "5",
+        "E_12": "8"
+      },
+      "expected": {
+        "I_12": "0"
+      }
+    },
+    {
+      "id": "AFV-I02",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "POSITIVE_PAIR",
+      "objective": "Unique positive pair-interaction vector.",
+      "method": "Exact Mobius coefficient I12=E12-E1-E2+Eempty.",
+      "input": {
+        "E_empty": "0",
+        "E_1": "3",
+        "E_2": "5",
+        "E_12": "10"
+      },
+      "expected": {
+        "I_12": "2",
+        "sign": "POSITIVE",
+        "physical_phase_interference_claim_permitted": false
+      }
+    },
+    {
+      "id": "AFV-I03",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "NEGATIVE_PAIR",
+      "objective": "Unique negative pair-interaction vector.",
+      "method": "Exact Mobius coefficient I12=E12-E1-E2+Eempty.",
+      "input": {
+        "E_empty": "0",
+        "E_1": "3",
+        "E_2": "5",
+        "E_12": "6"
+      },
+      "expected": {
+        "I_12": "-2",
+        "sign": "NEGATIVE",
+        "physical_phase_interference_claim_permitted": false
+      }
+    },
+    {
+      "id": "AFV-I04",
+      "foundation_decisions": [
+        "F13",
+        "F15"
+      ],
+      "name": "PURE_THREE_WAY_ZERO_PAIR",
+      "objective": "Unique pure three-way vector with all pair coefficients zero.",
+      "method": "Exact full-lattice Mobius inversion.",
+      "input": {
+        "E_empty": "0",
+        "E_1": "2",
+        "E_2": "3",
+        "E_3": "4",
+        "E_12": "5",
+        "E_13": "6",
+        "E_23": "7",
+        "E_123": "14"
+      },
+      "expected": {
+        "I_12": "0",
+        "I_13": "0",
+        "I_23": "0",
+        "I_123": "5",
+        "physical_propagation_claim_permitted": false,
+        "physical_phase_interference_claim_permitted": false
+      }
+    },
+    {
+      "id": "AFV-I05",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "NONZERO_EMPTY_BASELINE",
+      "objective": "Unique nonzero E(empty) vector.",
+      "method": "Exact Mobius inversion including I_empty=E_empty.",
+      "input": {
+        "E_empty": "2",
+        "E_1": "5",
+        "E_2": "7",
+        "E_12": "12"
+      },
+      "expected": {
+        "I_empty": "2",
+        "I_1": "3",
+        "I_2": "5",
+        "I_12": "2",
+        "reconstructed_E_12": "12"
+      }
+    },
+    {
+      "id": "AFV-I06",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "NORMALIZED_VALUE_FUNCTION",
+      "objective": "Unique v(S)=E(S)-E(empty) normalization vector.",
+      "method": "Normalize first, then perform exact nonempty Mobius inversion.",
+      "input": {
+        "E_empty": "7",
+        "E_1": "10",
+        "E_2": "12",
+        "E_12": "18"
+      },
+      "expected": {
+        "v_empty": "0",
+        "v_1": "3",
+        "v_2": "5",
+        "v_12": "11",
+        "I_1": "3",
+        "I_2": "5",
+        "I_12": "3"
+      }
+    },
+    {
+      "id": "AFV-I07",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "INFEASIBLE_SUBSET_REFUSAL",
+      "objective": "Unique infeasible-subset refusal vector.",
+      "method": "Declare a minimum bundle requiring actions 1 and 2 together, then request E({1}) in the full Boolean lattice.",
+      "input": {
+        "ground_set": [
+          "1",
+          "2"
+        ],
+        "admissible_subsets": [
+          "empty",
+          "{1,2}"
+        ],
+        "requested_subset": "{1}"
+      },
+      "expected": {
+        "mobius_status": "UNDEFINED",
+        "action": "REFUSE_BOOLEAN_LATTICE_INTERACTION"
+      }
+    },
+    {
+      "id": "AFV-I08",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "QUANTITY_FIXED_VERSUS_RULE_REPLAYED",
+      "objective": "Unique protocol-disambiguation vector for two different set functions.",
+      "method": "Evaluate both protocols exactly and forbid cross-comparison as if they were one E.",
+      "input": {
+        "quantity_fixed": {
+          "rule": "q_i=1 for included i; E=(sum q_i)^2",
+          "E_empty": "0",
+          "E_1": "1",
+          "E_2": "1",
+          "E_12": "4"
+        },
+        "rule_replayed": {
+          "rule": "included actors split unit capacity equally; E=sum q_i^2",
+          "E_empty": "0",
+          "E_1": "1",
+          "E_2": "1",
+          "E_12": "1/2"
+        }
+      },
+      "expected": {
+        "quantity_fixed_I_12": "2",
+        "rule_replayed_I_12": "-3/2",
+        "interchangeable": false
+      }
+    },
+    {
+      "id": "AFV-I09",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "EXACT_FINITE_RECONSTRUCTION",
+      "objective": "Unique exact reconstruction vector for every subset.",
+      "method": "Invert and reconstruct E(S)=sum_{A subseteq S} I(A) using exact integers.",
+      "input": {
+        "E_empty": "0",
+        "E_1": "2",
+        "E_2": "3",
+        "E_3": "4",
+        "E_12": "5",
+        "E_13": "6",
+        "E_23": "7",
+        "E_123": "14"
+      },
+      "expected": {
+        "I_empty": "0",
+        "I_1": "2",
+        "I_2": "3",
+        "I_3": "4",
+        "I_12": "0",
+        "I_13": "0",
+        "I_23": "0",
+        "I_123": "5",
+        "reconstruction": "EXACT_FOR_ALL_8_SUBSETS"
+      }
+    },
+    {
+      "id": "AFV-I10",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "EXACT_TRUNCATION_RESIDUAL",
+      "objective": "Unique order-two truncation-residual vector.",
+      "method": "Use AFV-I04 and compute R_gt_2(123)=E(123)-sum_{A subseteq 123, |A|<=2}I(A).",
+      "input": {
+        "source_vector": "AFV-I04",
+        "truncation_order": "2"
+      },
+      "expected": {
+        "R_gt_2_123": "5",
+        "equals_sum_higher_coefficients": true,
+        "physical_conservation_claim": false
+      }
+    },
+    {
+      "id": "AFV-I11",
+      "foundation_decisions": [
+        "F13"
+      ],
+      "name": "INCOMPLETE_PROCESS_ACCOUNT_REJECTION",
+      "objective": "Unique rejection vector for an endpoint score lacking a complete process account.",
+      "method": "Compare equal endpoints with different declared internal burden ledgers.",
+      "input": {
+        "E_empty": "0",
+        "E_1_endpoint": "10",
+        "E_2_endpoint": "10",
+        "E_12_endpoint": "20",
+        "process_account_1": "complete",
+        "process_account_2": "missing internal loss ledger"
+      },
+      "expected": {
+        "interaction_claim": "REFUSE",
+        "reason": "INCOMPLETE_PROCESS_ACCOUNT"
+      }
+    },
+    {
+      "id": "AFV-I12",
+      "foundation_decisions": [
+        "F13",
+        "F14"
+      ],
+      "name": "SMOOTH_MIXED_APPROXIMATION",
+      "objective": "Unique smooth mixed-marginal vector.",
+      "method": "For E(q1,q2)=q1*q2+q1^2, use base (1/3,2/3), delta1=1/4, delta2=1/5 and exact rectangular differencing.",
+      "input": {
+        "E": "q1*q2+q1^2",
+        "base": [
+          "1/3",
+          "2/3"
+        ],
+        "delta": [
+          "1/4",
+          "1/5"
+        ]
+      },
+      "expected": {
+        "rectangular_mixed_difference": "1/20",
+        "normalized_mixed_difference": "1",
+        "H_12": "1",
+        "approximation_error_for_this_polynomial": "0"
+      }
+    },
+    {
+      "id": "AFV-I13",
+      "foundation_decisions": [
+        "F14"
+      ],
+      "name": "NONSMOOTH_KINK",
+      "objective": "Unique nonsmooth-kink vector.",
+      "method": "For E(q1,q2)=abs(q1-q2), evaluate the unit rectangle from (0,0) and distinguish finite difference from Hessian witness.",
+      "input": {
+        "corners": {
+          "E_00": "0",
+          "E_10": "1",
+          "E_01": "1",
+          "E_11": "0"
+        }
+      },
+      "expected": {
+        "rectangular_mixed_difference": "-2",
+        "finite_coefficient_available": true,
+        "C2_Hessian_witness": "REFUSE"
+      }
+    },
+    {
+      "id": "AFV-I14",
+      "foundation_decisions": [
+        "F14"
+      ],
+      "name": "COMMUTING_GENERATORS",
+      "objective": "Unique commuting-order vector.",
+      "method": "Differentiate G1=(1,0), G2=(0,1) under [G1,G2]=DG1*G2-DG2*G1.",
+      "input": {
+        "G1": "(1,0)",
+        "G2": "(0,1)"
+      },
+      "expected": {
+        "bracket": "(0,0)",
+        "exact_serial_order_difference": "(0,0)",
+        "causal_claim": false,
+        "physical_propagation_claim": false,
+        "physical_phase_interference_claim": false
+      }
+    },
+    {
+      "id": "AFV-I15",
+      "foundation_decisions": [
+        "F14"
+      ],
+      "name": "NONCOMMUTING_GENERATORS",
+      "objective": "Unique noncommuting-order vector.",
+      "method": "Differentiate G1=(1,0), G2=(0,x) and compare exact h-flows under the declared convention.",
+      "input": {
+        "G1": "(1,0)",
+        "G2": "(0,x)",
+        "convention": "[G1,G2]=DG1*G2-DG2*G1"
+      },
+      "expected": {
+        "bracket": "(0,-1)",
+        "T1_compose_T2_minus_T2_compose_T1": "(0,-h^2)",
+        "order_sensitive": true,
+        "causal_claim": false,
+        "physical_propagation_claim": false,
+        "physical_phase_interference_claim": false
+      }
+    },
+    {
+      "id": "AFV-I16",
+      "foundation_decisions": [
+        "F14"
+      ],
+      "name": "ONE_POINT_BRACKET_VERSUS_NEIGHBORHOOD",
+      "objective": "Unique point-versus-neighborhood commutator vector.",
+      "method": "Differentiate G1=(1,0), G2=(0,x^2) and inspect two exact points.",
+      "input": {
+        "G1": "(1,0)",
+        "G2": "(0,x^2)",
+        "points": [
+          "x=0",
+          "x=1/2"
+        ]
+      },
+      "expected": {
+        "bracket_formula": "(0,-2*x)",
+        "bracket_at_0": "(0,0)",
+        "bracket_at_half": "(0,-1)",
+        "neighborhood_commutation_inferred": false
+      }
+    },
+    {
+      "id": "AFV-I17",
+      "foundation_decisions": [
+        "F15"
+      ],
+      "name": "SHARED_CAPACITY_OWNERSHIP",
+      "objective": "Unique shared-capacity ownership vector.",
+      "method": "Perform exact static capacity arithmetic.",
+      "input": {
+        "child_1_accepts": "8",
+        "child_2_accepts": "8",
+        "true_shared_capacity": "10"
+      },
+      "expected": {
+        "independent_local_acceptance_invalid": true,
+        "overage": "6",
+        "required_owner": "LOWEST_COMPLETE_COMMON_BOUNDARY_OR_PROVED_EQUIVALENT_FACTOR"
+      }
+    },
+    {
+      "id": "AFV-I18",
+      "foundation_decisions": [
+        "F15",
+        "F16"
+      ],
+      "name": "MISSING_BOUNDARY_VISIBILITY",
+      "objective": "Unique missing-visibility vector.",
+      "method": "Compare child-visible declarations with a parent-only shared constraint.",
+      "input": {
+        "child_1_visible_capacity": "8",
+        "child_2_visible_capacity": "8",
+        "parent_shared_capacity": "10",
+        "parent_visibility_at_children": false
+      },
+      "expected": {
+        "child_topology_complete": false,
+        "allocation_claim": "REFUSE",
+        "required_action": "EXPOSE_BOUNDARY_OR_FACTOR"
+      }
+    },
+    {
+      "id": "AFV-I19",
+      "foundation_decisions": [
+        "F15"
+      ],
+      "name": "DAG_WITHOUT_UNIQUE_LOWEST_BOUNDARY",
+      "objective": "Unique non-tree boundary ownership vector.",
+      "method": "Construct two actors jointly contained by incomparable complete boundaries B1 and B2.",
+      "input": {
+        "actors": [
+          "a",
+          "b"
+        ],
+        "complete_common_boundaries": [
+          "B1",
+          "B2"
+        ],
+        "order_relations_between_B1_B2": []
+      },
+      "expected": {
+        "unique_lowest_boundary": false,
+        "automatic_owner": "NONE",
+        "required_action": "DECLARED_RESOLUTION_OR_SHARED_FACTOR"
+      }
+    },
+    {
+      "id": "AFV-I20",
+      "foundation_decisions": [
+        "F15"
+      ],
+      "name": "FACTOR_NODE_ALTERNATIVE",
+      "objective": "Unique factor-graph alternative vector.",
+      "method": "Replace ambiguous boundary ownership with a declared shared-capacity factor node.",
+      "input": {
+        "actors": [
+          "a",
+          "b"
+        ],
+        "factor": "C_ab",
+        "constraint": "q_a+q_b<=10"
+      },
+      "expected": {
+        "factor_edges": [
+          [
+            "a",
+            "C_ab"
+          ],
+          [
+            "b",
+            "C_ab"
+          ]
+        ],
+        "constraint_owner": "C_ab",
+        "pairwise_actor_edge_required": false
+      }
+    },
+    {
+      "id": "AFV-I21",
+      "foundation_decisions": [
+        "F13",
+        "F15"
+      ],
+      "name": "PAIR_GRAPH_MISSES_PURE_HYPEREDGE",
+      "objective": "Unique pair-projection incompleteness vector.",
+      "method": "Project AFV-I04 coefficients into pair graph and hypergraph.",
+      "input": {
+        "source_vector": "AFV-I04"
+      },
+      "expected": {
+        "nonzero_pair_edges": "0",
+        "nonzero_three_action_hyperedges": "1",
+        "pair_graph_complete": false
+      }
+    },
+    {
+      "id": "AFV-I22",
+      "foundation_decisions": [
+        "F15"
+      ],
+      "name": "STRUCTURAL_VERSUS_ACTIVE_TOPOLOGY",
+      "objective": "Unique structural/active distinction vector.",
+      "method": "Hold a declared structural hyperedge fixed while changing its state-indexed coefficient.",
+      "input": {
+        "structural_hyperedge": "{1,2}",
+        "coefficient_at_z0": "0",
+        "coefficient_at_z1": "3"
+      },
+      "expected": {
+        "structural_at_z0": true,
+        "active_at_z0": false,
+        "structural_at_z1": true,
+        "active_at_z1": true
+      }
+    },
+    {
+      "id": "AFV-I23",
+      "foundation_decisions": [
+        "F8",
+        "F15"
+      ],
+      "name": "HIDDEN_STATE_TOPOLOGY_FAILURE",
+      "objective": "Unique hidden-state topology failure vector.",
+      "method": "Use equal visible snapshots with hidden mode selecting different active hyperedges.",
+      "input": {
+        "visible_z_A": "10",
+        "visible_z_B": "10",
+        "hidden_mode_A": "OFF",
+        "hidden_mode_B": "ON",
+        "I_12_A": "0",
+        "I_12_B": "2"
+      },
+      "expected": {
+        "visible_state_determines_active_topology": false,
+        "required_action": "AUGMENT_STATE_OR_REFUSE_TOPOLOGY_CLAIM"
+      }
+    },
+    {
+      "id": "AFV-I24",
+      "foundation_decisions": [
+        "F10",
+        "F16"
+      ],
+      "name": "VALID_BOUNDARY_INTERACTION_PRESERVATION",
+      "objective": "Unique valid all-subset preservation vector.",
+      "method": "Compare detailed and replacement exposed subset tables before exact Mobius inversion.",
+      "input": {
+        "detailed": {
+          "E_empty": "1",
+          "E_1": "3",
+          "E_2": "4",
+          "E_12": "8"
+        },
+        "replacement": {
+          "E_empty": "1",
+          "E_1": "3",
+          "E_2": "4",
+          "E_12": "8"
+        }
+      },
+      "expected": {
+        "all_exposed_subsets_equal": true,
+        "detailed_I_12": "2",
+        "replacement_I_12": "2",
+        "interaction_preserved": true
+      }
+    },
+    {
+      "id": "AFV-I25",
+      "foundation_decisions": [
+        "F10",
+        "F16"
+      ],
+      "name": "DELIBERATE_BOUNDARY_PRESERVATION_FAILURE",
+      "objective": "Unique deliberate preservation-failure vector.",
+      "method": "Change one exposed subset while holding the aggregate endpoint equal.",
+      "input": {
+        "detailed": {
+          "E_empty": "1",
+          "E_1": "3",
+          "E_2": "4",
+          "E_12": "8"
+        },
+        "replacement": {
+          "E_empty": "1",
+          "E_1": "3",
+          "E_2": "5",
+          "E_12": "8"
+        }
+      },
+      "expected": {
+        "endpoint_E_12_equal": true,
+        "all_exposed_subsets_equal": false,
+        "detailed_I_12": "2",
+        "replacement_I_12": "1",
+        "preservation_claim": "REFUSE"
+      }
+    },
+    {
+      "id": "AFV-I26",
+      "foundation_decisions": [
+        "F16"
+      ],
+      "name": "GRAPH_REACHABILITY_WITHOUT_PROPAGATION_CLAIM",
+      "objective": "Unique graph-reachability-without-physical-propagation-claim vector.",
+      "method": "Inspect a connected graph declaration without any physical transport, arrival, or propagation evidence.",
+      "input": {
+        "connected": true,
+        "physical_transport_evidence": "ABSENT",
+        "time_resolved_arrival_evidence": "ABSENT",
+        "physical_propagation_mechanism": "ABSENT"
+      },
+      "expected": {
+        "reachability": true,
+        "physical_propagation_claim_permitted": false,
+        "physical_phase_interference_claim_permitted": false,
+        "wave_or_phase_research_obligation_created": false
+      }
+    },
+    {
+      "id": "AFV-I27",
+      "foundation_decisions": [
+        "F16"
+      ],
+      "name": "OSCILLATION_WITHOUT_PROPAGATION_CLAIM",
+      "objective": "Unique local-oscillation-without-physical-propagation-claim vector.",
+      "method": "Inspect the exact local oscillator dx/dt=-y, dy/dt=x with no spatial coordinate or coupling.",
+      "input": {
+        "generator_matrix": "[[0,-1],[1,0]]",
+        "spatial_metric": "ABSENT",
+        "inter_node_coupling": "ABSENT"
+      },
+      "expected": {
+        "eigenvalues": [
+          "i",
+          "-i"
+        ],
+        "oscillation": true,
+        "physical_propagation_claim": false,
+        "physical_phase_interference_claim": false,
+        "wave_or_phase_research_obligation_created": false
+      }
+    },
+    {
+      "id": "AFV-I28",
+      "foundation_decisions": [
+        "F12",
+        "F16"
+      ],
+      "name": "INTERACTION_SHARE_NOT_CAUSAL",
+      "objective": "Unique interaction-share noncausality vector.",
+      "method": "Normalize a nonzero interaction coefficient and test prohibited relabeling.",
+      "input": {
+        "I_12": "2",
+        "sum_absolute_nonempty_I": "8",
+        "interaction_share": "1/4",
+        "causal_status": "UNIDENTIFIED"
+      },
+      "expected": {
+        "arithmetic_valid": true,
+        "causal_contribution": "UNRESOLVED",
+        "causal_relabeling": "REFUSE"
+      }
+    },
+    {
+      "id": "AFV-I29",
+      "foundation_decisions": [
+        "F12",
+        "F16"
+      ],
+      "name": "COEFFICIENT_NOT_SETTLEMENT_ENTITLEMENT",
+      "objective": "Unique coefficient/entitlement separation vector.",
+      "method": "Compare a computed coefficient with absence of an institutional rule.",
+      "input": {
+        "I_12": "2",
+        "institutional_settlement_rule": "ABSENT",
+        "proposed_payment": "2"
+      },
+      "expected": {
+        "coefficient_valid_as_decomposition": true,
+        "settlement_entitlement": "NOT_ESTABLISHED",
+        "payment_authorized": false
+      }
+    },
+    {
+      "id": "AFV-I30",
+      "foundation_decisions": [
+        "F16"
+      ],
+      "name": "EXCLUDED_ELECTRICAL_ANALOGY",
+      "objective": "Unique excluded-electrical-analogy authority-scope vector.",
+      "method": "Inspect the prospective package for the S14 removal disposition and require electrical-voltage terminology and analogy to have no active or future programme, open-problem, book, framework, validation-feature, implementation, protocol, experiment, or reserved-route obligation.",
+      "input": {
+        "superseded_concept_id": "S14",
+        "former_open_problem_id": "VOLTAGE",
+        "excluded_concept_id": "ELECTRICAL_VOLTAGE_TERMINOLOGY_AND_ANALOGY"
+      },
+      "expected": {
+        "status": "EXCLUDED_FROM_ACTIVE_AND_FUTURE_PROGRAMME",
+        "open_problem": false,
+        "book_treatment": false,
+        "framework_obligation": false,
+        "validation_feature": false,
+        "implementation_obligation": false,
+        "scientific_protocol_obligation": false,
+        "experimental_obligation": false,
+        "reserved_future_route": false
+      }
+    },
+    {
+      "id": "AFV-X01",
+      "foundation_decisions": [],
+      "name": "CONTROLLING_INPUT_RAW_IDENTITY",
+      "objective": "Verify the four complete controlling reports as raw immutable inputs.",
+      "method": "Recompute byte count, SHA-256, literal final-byte marker, last occurrence position, and trailing-byte count.",
+      "expected": "All four rows equal atomic_generator_foundation_contract.json.controlling_inputs exactly; each marker is the literal final bytes and trailing_bytes is zero."
+    },
+    {
+      "id": "AFV-X02",
+      "foundation_decisions": [],
+      "name": "SIX_ARTIFACT_FAMILY_AND_SCOPE",
+      "objective": "Verify exact candidate path scope.",
+      "method": "Compare the untracked path set and authority order with the mechanical contract.",
+      "expected": {
+        "candidate_additions": 6,
+        "tracked_changes": 0,
+        "staged_changes": 0,
+        "unauthorized_untracked": 0
+      }
+    },
+    {
+      "id": "AFV-X03",
+      "foundation_decisions": [],
+      "name": "FULL_PREDECESSOR_TREE_RECONSTRUCTION",
+      "objective": "Independently reconstruct the complete accepted predecessor tree.",
+      "method": "Use atomic_generator_foundation_predecessor_manifest.json.projection_profile twice with independent implementations; enumerate without path filters and compare every row.",
+      "expected": {
+        "base_commit": "53a30494203136bea8f373cfc18c516008bdcdfe",
+        "base_tree": "b85045471b1ea0db6f6ad4363bd89d1130ef0351",
+        "path_count": 239,
+        "mode_counts": {
+          "100644": 237,
+          "100755": 2
+        },
+        "object_type_counts": {
+          "blob": 239
+        },
+        "projection_byte_count": 56594,
+        "projection_sha256": "b82afc37cad906792bc56c73dc7da3f7975d3240acaa35feef15b312fae8b81a",
+        "row_mismatches": 0
+      }
+    },
+    {
+      "id": "AFV-X04",
+      "foundation_decisions": [],
+      "name": "BOOK_TRACEABILITY_COVERAGE",
+      "objective": "Verify prospective book ownership and treatment with no orphaned authority item.",
+      "method": "Require all 16 full book-chain links and the exact contiguous eight-link mathematical explanatory core, F1-F16, T-A1..T-A17, N1..N16, S1..S21, every active synchronized open-problem ID through exact direct or group membership, the four wave/phase IDs through the outside-programme no-obligation projection, and electrical-voltage terminology and analogy through the excluded-concept no-obligation projection.",
+      "required_fields": [
+        "owning_parts",
+        "editorial_action",
+        "plain_language",
+        "formal_treatment",
+        "example_or_counterexample",
+        "assumptions",
+        "inapplicability"
+      ],
+      "expected": {
+        "result": "COMPLETE_NO_ORPHANS_NO_UNAUTHORIZED_DUPLICATES",
+        "chain_links": 16,
+        "mathematical_explanatory_chain_links": 8,
+        "foundation_decisions": 16,
+        "conditional_theorems": 17,
+        "nonclaims": 16,
+        "superseded_concepts": 21,
+        "open_problem_unique_dispositions": 154,
+        "open_problem_book_trace_unique_dispositions": 149,
+        "outside_programme_dispositions": 4,
+        "excluded_concept_dispositions": 1,
+        "open_problem_memberships": 158,
+        "allowed_interaction_overlaps": 9,
+        "owning_parts_overrides": 45,
+        "removed_or_reclassified_joins": 29
+      }
+    },
+    {
+      "id": "AFV-X05",
+      "foundation_decisions": [],
+      "name": "OPEN_REGISTER_SYNCHRONIZATION",
+      "objective": "Verify accepted dispositions and unresolved families against the controlling open-problem register.",
+      "method": "Compare foundation decisions, conditional results, superseded formulations, unresolved groups, and overlap exceptions.",
+      "expected": "F1_F16_PROSPECTIVELY_RESOLVED_IF_ACCEPTED; B16_AND_UQ09_CONDITIONAL_RESULTS; WAVES_PROPAGATION_INTERFERENCE_INT10_DC16_OUTSIDE_ACTIVE_AND_FUTURE_PROGRAMME_WITH_NO_OBLIGATIONS; ELECTRICAL_VOLTAGE_TERMINOLOGY_AND_ANALOGY_EXCLUDED_NOT_OPEN_WITH_NO_OBLIGATIONS_OR_RESERVED_ROUTE; ALL_OTHER_LISTED_REMAINDERS_VISIBLE"
+    },
+    {
+      "id": "AFV-X06",
+      "foundation_decisions": [],
+      "name": "CROSS_FILE_CONSTANTS_REFERENCES_AND_MARKERS",
+      "objective": "Verify names, counts, orders, identifiers, references, and completion markers across all six artifacts.",
+      "method": "Strictly project each closed inventory and compare; require every referenced package path to exist and every completion marker to occupy the declared terminal position.",
+      "expected": {
+        "artifact_count": 6,
+        "foundation_decisions": 16,
+        "conditional_theorems": 17,
+        "nonclaims": 16,
+        "superseded_concepts": 21,
+        "chain_links": 16,
+        "mathematical_explanatory_chain_links": 8,
+        "interaction_vectors": 30,
+        "predecessor_paths": 239,
+        "open_problem_unique_dispositions": 154,
+        "outside_programme_dispositions": 4,
+        "excluded_concept_dispositions": 1,
+        "removed_or_reclassified_joins": 29
+      }
+    },
+    {
+      "id": "AFV-X07",
+      "foundation_decisions": [],
+      "name": "ENCODING_JSON_AND_MARKDOWN_STRUCTURE",
+      "objective": "Verify transport-stable text and structural validity.",
+      "method": "Require strict duplicate-key-rejecting JSON parse, two independent canonical JSON encodings, UTF-8 without BOM, LF only, exactly one final LF, no trailing whitespace, valid Markdown heading progression, balanced fences and math delimiters, and git diff --check.",
+      "expected": {
+        "json_files": 4,
+        "markdown_files": 2,
+        "duplicate_keys": 0,
+        "encoding_failures": 0,
+        "structural_failures": 0
+      }
+    },
+    {
+      "id": "AFV-X08",
+      "foundation_decisions": [],
+      "name": "AUTHORIZATION_AND_RESIDUE_SCOPE",
+      "objective": "Verify that the candidate remains documentation-only and leaves no execution or tool residue.",
+      "method": "Inspect Git, authority booleans, normative prose, candidate paths, and worktree residue without invoking production behavior.",
+      "expected": {
+        "implementation_changes": 0,
+        "test_or_fixture_changes": 0,
+        "book_or_pdf_changes": 0,
+        "result_changes": 0,
+        "model_state_advances": 0,
+        "scientific_experiments": 0,
+        "scientific_execution_authorized": false,
+        "commit_or_push_authorized": false,
+        "temporary_or_cache_residue": 0,
+        "original_checkout_unchanged": true
+      }
+    },
+    {
+      "id": "AFV-P01",
+      "foundation_decisions": [
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6",
+        "F7",
+        "F8",
+        "F9",
+        "F10",
+        "F11",
+        "F12",
+        "F13",
+        "F14",
+        "F15",
+        "F16"
+      ],
+      "name": "INDIVIDUAL_FOUNDATION_TEACHING_COVERAGE",
+      "objective": "Prove that every F1-F16 decision carries the complete mandatory teaching record.",
+      "method": "Project atomic_generator_book_traceability_manifest.json.foundation_decision_trace by id; reject grouped substitution, duplicate ids, missing fields, empty fields, or out-of-vocabulary values.",
+      "required_fields": [
+        "practical_question",
+        "concrete_objects",
+        "mechanism",
+        "mandatory_example",
+        "example_classification",
+        "simpler_model_failure_or_superseded_shortcut",
+        "formal_treatment",
+        "ebu_capability",
+        "why_it_matters",
+        "claim_status",
+        "assumptions",
+        "inapplicability",
+        "nonclaim",
+        "source_obligation",
+        "owning_parts",
+        "editorial_action"
+      ],
+      "expected": {
+        "ordered_ids": [
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6",
+          "F7",
+          "F8",
+          "F9",
+          "F10",
+          "F11",
+          "F12",
+          "F13",
+          "F14",
+          "F15",
+          "F16"
+        ],
+        "individual_records": 16,
+        "records_with_all_required_fields": 16
+      }
+    },
+    {
+      "id": "AFV-P02",
+      "foundation_decisions": [],
+      "name": "INDIVIDUAL_THEOREM_TEACHING_COVERAGE",
+      "objective": "Prove that T-A1 through T-A17 are individually taught rather than hidden by navigation groups.",
+      "method": "Project conditional_theorem_individual_trace and compare each row with the mechanical theorem id, name, assumptions, and inapplicability inventory.",
+      "required_fields": [
+        "practical_question",
+        "concrete_objects",
+        "mechanism",
+        "mandatory_example",
+        "example_classification",
+        "simpler_model_failure_or_superseded_shortcut",
+        "formal_treatment",
+        "ebu_capability",
+        "why_it_matters",
+        "claim_status",
+        "assumptions",
+        "inapplicability",
+        "nonclaim",
+        "source_obligation",
+        "owning_parts",
+        "editorial_action"
+      ],
+      "expected": {
+        "ordered_ids": [
+          "T-A1",
+          "T-A2",
+          "T-A3",
+          "T-A4",
+          "T-A5",
+          "T-A6",
+          "T-A7",
+          "T-A8",
+          "T-A9",
+          "T-A10",
+          "T-A11",
+          "T-A12",
+          "T-A13",
+          "T-A14",
+          "T-A15",
+          "T-A16",
+          "T-A17"
+        ],
+        "individual_records": 17,
+        "navigation_groups_retained": 7,
+        "records_with_all_required_fields": 17
+      }
+    },
+    {
+      "id": "AFV-P03",
+      "foundation_decisions": [],
+      "name": "CHAIN_FEATURE_TEACHING_COVERAGE",
+      "objective": "Prove that every concept in the exact accepted 16-link book progression retains complete feature teaching in order and that its eight-link mathematical explanatory core remains exact and contiguous.",
+      "method": "Require chain_trace ids to equal the 16-link chain_order and book_chain, require the mathematical_explanatory_chain to equal the exact contiguous V-through-FINITE_EBU core, and require every chain row to satisfy the feature-teaching schema.",
+      "required_fields": [
+        "practical_question",
+        "concrete_objects",
+        "mechanism",
+        "mandatory_example",
+        "example_classification",
+        "simpler_model_failure_or_superseded_shortcut",
+        "formal_treatment",
+        "ebu_capability",
+        "why_it_matters",
+        "claim_status",
+        "assumptions",
+        "inapplicability",
+        "nonclaim",
+        "source_obligation",
+        "owning_parts",
+        "editorial_action"
+      ],
+      "expected": {
+        "chain_links": 16,
+        "mathematical_explanatory_chain_links": 8,
+        "records_with_all_required_fields": 16,
+        "order_unchanged": true
+      }
+    },
+    {
+      "id": "AFV-P04",
+      "foundation_decisions": [],
+      "name": "EIGHT_STEP_ORDER_BYTE_IDENTITY",
+      "objective": "Prove that the accepted eight-step mathematical-explanation checklist is neither replaced nor reordered.",
+      "method": "Canonicalize each exact array alone as compact UTF-8 JSON plus LF and compare byte count and SHA-256 with the frozen projections.",
+      "expected": {
+        "mechanical_token_projection": {
+          "byte_count": 201,
+          "sha256": "04779dd3fe6eaedcc185f17d9ed125eb03e6bc7db67a5369a957d4798c2dfd51"
+        },
+        "book_sentence_projection": {
+        "byte_count": 415,
+        "sha256": "b16196aacdd207b2e712b739ded1fb0e0974d79076e68738f0a00d253702753c"
+      },
+      "authority_markdown_matches_book_sentence_projection": true,
+      "surrounding_pattern_replaces_eight_step_order": false
+      }
+    },
+    {
+      "id": "AFV-P05",
+      "foundation_decisions": [],
+      "name": "MANDATORY_FEATURE_EXAMPLES",
+      "objective": "Prove that accepted features and laws have examples unconditionally.",
+      "method": "Require nonempty mandatory_example on all 49 feature-teaching records and reject conditional wording such as when appropriate in the accepted-feature example rule.",
+      "expected": {
+        "feature_records": 49,
+        "mandatory_examples": 49,
+        "missing_examples": 0,
+        "conditional_example_rules": 0
+      }
+    },
+    {
+      "id": "AFV-P06",
+      "foundation_decisions": [],
+      "name": "EXAMPLE_PROVENANCE_CLASSIFICATION",
+      "objective": "Prove that every declared future example record has an allowed provenance classification.",
+      "method": "Check mandatory examples and every legacy example_or_counterexample field against example_classification_vocabulary; count the 49 mandatory feature exemplars separately.",
+      "expected": {
+        "allowed": [
+          "NUMERICAL_CONSTRUCTION",
+          "HYPOTHETICAL_OPERATIONAL_EXAMPLE",
+          "OBSERVED_EMPIRICAL_EXAMPLE",
+          "HISTORICAL_EXAMPLE",
+          "COUNTEREXAMPLE"
+        ],
+        "mandatory_feature_counts": {
+          "NUMERICAL_CONSTRUCTION": 33,
+          "HYPOTHETICAL_OPERATIONAL_EXAMPLE": 7,
+          "OBSERVED_EMPIRICAL_EXAMPLE": 0,
+          "HISTORICAL_EXAMPLE": 0,
+        "COUNTEREXAMPLE": 9
+      },
+      "all_example_records": 77,
+      "all_example_record_counts": {
+        "NUMERICAL_CONSTRUCTION": 37,
+        "HYPOTHETICAL_OPERATIONAL_EXAMPLE": 12,
+        "OBSERVED_EMPIRICAL_EXAMPLE": 0,
+        "HISTORICAL_EXAMPLE": 0,
+        "COUNTEREXAMPLE": 28
+      },
+      "unclassified_example_records": 0
+      }
+    },
+    {
+      "id": "AFV-P07",
+      "foundation_decisions": [],
+      "name": "CAPABILITY_SIGNIFICANCE_AND_SCOPE",
+      "objective": "Prove that every feature states its positive EBU capability and why it matters before retaining explicit limitations.",
+      "method": "Require nonempty ebu_capability, why_it_matters, assumptions, inapplicability, and nonclaim fields on all 49 records; require ebu_capability and why_it_matters to precede assumptions, inapplicability, and nonclaim in each serialized record; inspect the frozen editorial balance booleans.",
+      "expected": {
+        "feature_records": 49,
+        "capability_fields": 49,
+        "significance_fields": 49,
+        "scope_limitations": 49,
+        "capability_before_limitations": true
+      }
+    },
+    {
+      "id": "AFV-P08",
+      "foundation_decisions": [
+        "F13",
+        "F15",
+        "F16"
+      ],
+      "name": "HYPERGRAPH_PEDAGOGICAL_EXEMPLAR",
+      "objective": "Prove that the producer/transport/settlement example exposes a genuine three-way interaction missed by a pair graph.",
+      "method": "Use exact Möbius arithmetic on the frozen exemplar and inspect its capability-first topology explanation and later nonclaims.",
+      "expected": {
+        "roles": [
+          "producer provides capacity",
+          "transport system provides delivery",
+          "settlement mechanism permits completion"
+        ],
+        "I_12": "0",
+        "I_13": "0",
+        "I_23": "0",
+        "I_123": "5",
+        "pair_graph_appears_empty": true,
+        "three_way_hyperedge_required": true,
+        "positive_capabilities": 3,
+        "later_nonclaims": 5
+      }
+    },
+    {
+      "id": "AFV-P09",
+      "foundation_decisions": [],
+      "name": "CLAIM_CLASS_DISTINCTION",
+      "objective": "Prove that pedagogical reinforcement preserves scientific claim classes.",
+      "method": "Require every claim_status value to belong to the seven-value vocabulary and require explicit feature coverage of the four mandatory classes used by the 49 feature records. The causal-boundary empirical-hypothesis classification creates no wave, phase-interference, or electrical-voltage programme or teaching obligation.",
+      "expected": {
+        "required_present": [
+          "ESTABLISHED_MATHEMATICS",
+          "EBU_ADAPTATION",
+          "EMPIRICAL_HYPOTHESIS",
+          "INSTITUTIONAL_CHOICE"
+        ],
+        "empirical_hypothesis_remains_available_without_wave_programme": true,
+        "electrical_voltage_analogy_excluded": true,
+        "explicit_nonclaim_remains_available": true,
+        "invalid_statuses": 0
+      }
+    },
+    {
+      "id": "AFV-P10",
+      "foundation_decisions": [],
+      "name": "PEDAGOGICAL_AUTHORITY_FINAL_PACKAGE_BOUNDARY",
+      "objective": "Prove that the final prospective authority package contains the pedagogical obligations while adding no book, manuscript, PDF, implementation, test, or scientific-result path.",
+      "method": "Resolve the accepted base commit 53a30494203136bea8f373cfc18c516008bdcdfe and enumerate every path and mode in its complete base tree. Obtain the candidate path sequence by requiring equality between the mechanical contract's authority.artifact_order and the predecessor manifest's candidate_additions.ordered_paths; read those six final files and form the prospective resulting tree in memory. Require all 239 base paths and modes to be preserved with no removal or modification. Classify every addition from its package role and the candidate files' own scope and prohibition declarations; require all six additions to be authority, validation, predecessor, register, or book-traceability documents and require no other candidate path. Within the six final files, require the binding pedagogical-authority declaration, accepted mathematical-explanation order, and all 49 feature-teaching records. Require zero added or modified book, manuscript, PDF, generator, template, implementation, test, fixture, scientific-result, simulation, or runtime paths, and require that the package grants no authority for book editing, PDF generation, implementation, execution, simulation, wave or phase-interference research, electrical-voltage research or analogy, or scientific claims. Use no historical untracked candidate baseline.",
+      "expected": {
+        "base_commit": "53a30494203136bea8f373cfc18c516008bdcdfe",
+        "base_tree_paths": 239,
+        "candidate_additions": 6,
+        "authorized_authority_package_paths": 6,
+        "preserved_base_paths": 239,
+        "removed_base_paths": 0,
+        "modified_base_paths": 0,
+        "mode_changed_base_paths": 0,
+        "unauthorized_candidate_paths": 0,
+        "book_manuscript_pdf_paths_added_or_modified": 0,
+        "implementation_test_fixture_result_paths_added_or_modified": 0,
+        "execution_or_book_authority_granted": false,
+        "historical_untracked_candidate_baseline_required": false
+      }
+    }
+  ],
+  "cross_file_checks": [
+    "The exact six filenames and order equal atomic_generator_foundation_contract.json.authority.artifact_order and predecessor_manifest.candidate_additions.ordered_paths.",
+    "F1-F16 occur exactly once and in order in the mechanical contract, and every F1-F12 decision has its dedicated AFV-F vector.",
+    "The 30 ordered interaction objectives equal AFV-I01 through AFV-I30 names one-for-one.",
+    "The 14-entry parallel-action typology case projection equals the mechanical and traceability required scopes exactly and every mapped case exists in AFV-I01 through AFV-I25.",
+    "The exact 16-link book progression is identical in the contract and traceability manifest, and its contiguous mathematical explanatory core is exactly V, MU, F, PSI, J, G_T, FINITE_TRANSFORMATION, FINITE_EBU.",
+    "Every T-A1..T-A17, N1..N16, and S1..S21 identifier is traceable.",
+    "Every active synchronized open-problem row is represented directly or through exact group membership, subject only to declared overlap exceptions; WAVES-PROPAGATION, INTERFERENCE, INT-10, and DC-16 occur only in the outside-programme no-obligation projection; electrical-voltage terminology and analogy occur only in the S14 removal and excluded-concept no-obligation projections.",
+    "The I3C repair truth table agrees with the normative Markdown and does not claim current implementation availability.",
+    "The predecessor manifest enumerates every base-tree path and proves no predecessor removal, rename, blob change, mode change, or type change.",
+    "No package file grants implementation, book editing, framework behavior, scientific execution, interpretation, publication, commit, push, or merge authority.",
+    "Each Markdown completion marker is its literal last non-LF bytes; each JSON completion_marker is its last member and last scalar token before structural closure.",
+    "Every F1-F16, individual T-A1-T-A17, and 16-link book-chain record satisfies pedagogical_authority.required_feature_trace_fields.",
+    "The eight-step mathematical arrays retain their frozen projection byte counts and SHA-256 identities; the surrounding feature-teaching pattern and 16-link book progression do not replace them.",
+    "Every feature record has a mandatory classified example, positive EBU capability, architectural significance, assumptions, inapplicability, nonclaim, and source obligation.",
+    "The hypergraph teaching exemplar has zero pair coefficients, nonzero I_123, three named roles, capability-first explanation, and later claim limits.",
+    "Positive and negative parallel-action interaction remain explicitly testable and are never classified as physical phase interference.",
+    "Graph reachability, oscillation, complex eigenvalues, higher-order interaction, and commutators remain defensive nonproof cases for physical propagation and physical phase interference without creating a wave research programme.",
+    "Every companion document is validated from the final six-file prospective package and its recomputed raw and canonical identity; no acceptance assertion depends on an unspecified pre-reinforcement or untracked historical candidate."
+  ],
+  "acceptance": {
+    "required_completed_cases": 60,
+    "allowed_failures": 0,
+    "skipped_cases_are_passes": false,
+    "both_independent_canonical_encodings_required": true,
+    "both_independent_predecessor_reconstructions_required": true,
+    "independent_authority_audit_required": true,
+    "candidate_self_accepts": false,
+    "pedagogical_authority_case_count": 10
+  },
+  "completion_marker": "ATOMIC_GENERATOR_FOUNDATION_VALIDATION_CONTRACT_READY"
+}

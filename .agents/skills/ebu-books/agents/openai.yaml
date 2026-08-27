@@ -1,0 +1,7 @@
+interface:
+  display_name: "EBU Books"
+  short_description: "Run authority-scoped EBU book workflows"
+  default_prompt: "Use $ebu-books to handle the authorized EBU book stage."
+
+policy:
+  allow_implicit_invocation: false

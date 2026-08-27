@@ -1,0 +1,119 @@
+{
+  "manifest_id": "ebu.closed-loop-correction-diagnostics-predecessor",
+  "manifest_version": "1.0.0",
+  "status": "COMPLETE_PROJECTION_LOCK_WITH_GOVERNING_SOURCE_ROWS",
+  "accepted_coordinate": {
+    "branch": "framework-v0.1",
+    "commit": "cb13514f14260aa1d1deada03ca13845afb9289c",
+    "tree": "bb445e18cb5bde39127b1a682d9bfc17f8b102fb",
+    "subject": "Integrate EBU closed-loop correction dynamics milestone authority",
+    "ordered_parents": [
+      "79883ad85d6c61bd32c1493cd7cc14a7062cb256",
+      "7adadfb9d01aaa325ddf2b0e006fdcb62e4788f1"
+    ]
+  },
+  "complete_tree_projection": {
+    "path_count": 340,
+    "payload_bytes": 127213962,
+    "path_projection_profile": "Canonical JSON array of path strings in Git tree order, sorted object keys, compact separators, UTF-8, one final LF.",
+    "path_projection_bytes": 13978,
+    "path_projection_sha256": "b66b8d46201472cddcac67487a8328d774a697994269969766ec4c33c494df33",
+    "row_projection_profile": "Canonical JSON array in Git tree order; every row contains bytes, git_blob, mode, path, and sha256; sorted object keys, compact separators, UTF-8, one final LF.",
+    "row_projection_bytes": 71422,
+    "row_projection_sha256": "55dab4a24d15ad87685ba9caf546ded3dd7bb6f258a61c27aa8a5283395f4a33",
+    "route_1": "git ls-tree plus git cat-file for every accepted blob",
+    "route_2": "independent git archive reconstruction",
+    "required_agreement": "Every path, mode, blob, byte count, raw SHA-256, projection, and total agrees."
+  },
+  "accepted_surfaces": {
+    "failure_count": 280,
+    "failure_lf_projection_bytes": 7526,
+    "failure_lf_projection_sha256": "9aa15f16ff9607f295aaee48757d72d2859ddf28fe43fe1c0755be78ba441a3b",
+    "root_export_count": 444,
+    "root_export_lf_projection_bytes": 9815,
+    "root_export_lf_projection_sha256": "22f612494fdf170b261f4690c4382188a806aa1149f417081ffe616612c25ec7",
+    "module_count": 41,
+    "internal_import_edge_count": 289,
+    "cycles": 0
+  },
+  "governing_source_rows": [
+    {
+      "path": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+      "mode": "100644",
+      "git_blob": "8dad2f834185359eeec025508d5e2ed0b3f4406a",
+      "raw_bytes": 16164,
+      "raw_sha256": "e2d59c3602e577edc04dd20234dd125a30c854e57088eb4c590a901686dfbc87"
+    },
+    {
+      "path": "closed_loop_correction_dynamics_milestone_contract.json",
+      "mode": "100644",
+      "git_blob": "764043f85d965f10944d3bfd39fa1c5be855cde1",
+      "raw_bytes": 14827,
+      "raw_sha256": "08e2a0054669fbebf20389992d02d03224ddfb23b55a87bdefe83ade7d0b0736"
+    },
+    {
+      "path": "closed_loop_correction_dynamics_milestone_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "1f5f7909c87df3379c40d4ed379dd0041e99135d",
+      "raw_bytes": 22109,
+      "raw_sha256": "fe1c0d4f29d8383cc340658f22550a7512a9aa5f1cdcd5b3449ea65cae7fa0e2"
+    },
+    {
+      "path": "closed_loop_correction_dynamics_milestone_source_manifest.json",
+      "mode": "100644",
+      "git_blob": "492a6fbcf925346ce1f623c6dcd3037f04e66b63",
+      "raw_bytes": 7589,
+      "raw_sha256": "186f3fb37b763a191a7eaf6780651af9841a8a4e565bd1c8bef7497e01206206"
+    },
+    {
+      "path": "closed_loop_correction_dynamics_milestone_traceability_manifest.json",
+      "mode": "100644",
+      "git_blob": "8a3ad8eb6dc27640f682e9ab1f16362980c1ab1d",
+      "raw_bytes": 13556,
+      "raw_sha256": "3bbbb0ee54f08577061143166d966554d1df6284dbe2afccda01c2c4a89737f5"
+    },
+    {
+      "path": "src/ebu_framework/errors.py",
+      "mode": "100644",
+      "git_blob": "caef612b76ea7ffb7c201d27f614c2581ff26b9c",
+      "raw_bytes": 47314,
+      "raw_sha256": "267da2da18dfeef360bce78ebce1b989c21c7c7b2c5d16a3e647b460768c2ac1"
+    },
+    {
+      "path": "src/ebu_framework/__init__.py",
+      "mode": "100644",
+      "git_blob": "e45ca09a94f320d702e410d71b5aa73739b933b3",
+      "raw_bytes": 26666,
+      "raw_sha256": "9fa1209a9eb696dd13f45003a08ebb066b5bc8c5ab926d1d94eaec8ed26f7f42"
+    },
+    {
+      "path": "src/ebu_framework/numeric.py",
+      "mode": "100644",
+      "git_blob": "9599cf300e2842adead842ade7a1f44423b82f9e",
+      "raw_bytes": 38657,
+      "raw_sha256": "99c4a431f6d0c102d81ab9a4c901b15669d237607db209a202e1c5ed7d7785ad"
+    },
+    {
+      "path": "src/ebu_framework/identity.py",
+      "mode": "100644",
+      "git_blob": "b2670d71d5e5c35e5c66fa8d6337fb6ba43c88cd",
+      "raw_bytes": 8470,
+      "raw_sha256": "16e282d38e737ae0434f016c661f3b988a9f8a0359a2b2faf1d85403ef88e29b"
+    },
+    {
+      "path": "src/ebu_framework/primitives.py",
+      "mode": "100644",
+      "git_blob": "eb84a511e683275e340245921dea8a0f27af7d69",
+      "raw_bytes": 54229,
+      "raw_sha256": "fe44606d1a78cf583477ef44256a3f5ca446e2a2654440517404fd1f18328d50"
+    }
+  ],
+  "preservation": {
+    "accepted_path_modification_by_authority": 0,
+    "accepted_I6_to_I9_semantics_changed": false,
+    "scientific_execution_authorized": false,
+    "current_book_or_pdf_change_authorized": false,
+    "production_operation_authorized": false
+  },
+  "completion_marker": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_PREDECESSOR_READY"
+}
