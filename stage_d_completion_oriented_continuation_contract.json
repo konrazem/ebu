@@ -156,6 +156,11 @@
       "control_set_identity",
       "falsifier_set_identity",
       "checkpoint_policy_identity",
+      "parallelization_boundary_identity",
+      "worker_allocation_policy_identity",
+      "storage_location_identity",
+      "durability_policy_identity",
+      "restart_policy_identity",
       "campaign_budget_identity"
     ],
     "scientific_run_identity_preimage_fields": [
@@ -177,6 +182,63 @@
     ],
     "result_affecting_change_disposition": "NEW_CAMPAIGN_OR_SCIENTIFIC_RUN_IDENTITY_AND_NEW_PROSPECTIVE_AUTHORITY",
     "continuation_aliasing_forbidden": true
+  },
+  "execution_binding_policy": {
+    "campaign_policy_identity_fields": [
+      "parallelization_boundary_identity",
+      "worker_allocation_policy_identity",
+      "storage_location_identity",
+      "durability_policy_identity",
+      "restart_policy_identity"
+    ],
+    "campaign_policy_identity_field_count": 5,
+    "attempt_binding_schema": "attempt_binding/v2",
+    "attempt_binding_preimage_fields": [
+      "campaign_id",
+      "scientific_run_id",
+      "campaign_execution_binding_identity",
+      "attempt_ordinal",
+      "incoming_checkpoint_identity",
+      "parallelization_boundary_identity",
+      "worker_allocation_policy_identity",
+      "storage_location_identity",
+      "durability_policy_identity",
+      "restart_policy_identity",
+      "process_allocation_identity",
+      "policy_conformance_receipt_identity"
+    ],
+    "attempt_binding_preimage_field_count": 12,
+    "process_allocation_schema": "process_allocation/v2",
+    "process_allocation_preimage_fields": [
+      "worker_count",
+      "ordered_worker_allocations",
+      "scheduler_allocation_identity",
+      "policy_conformance_receipt_identity"
+    ],
+    "process_allocation_preimage_field_count": 4,
+    "worker_allocation_required_fields": [
+      "worker_ordinal",
+      "worker_identity",
+      "host_identity",
+      "process_identity",
+      "process_index",
+      "thread_count",
+      "cpu_allocation_identity",
+      "accelerator_allocation_identity",
+      "memory_limit_bytes"
+    ],
+    "worker_allocation_required_field_count": 9,
+    "canonical_digest_serialization": "UTF-8 canonical JSON of the declared preimage object with recursively lexicographically sorted object keys, comma/colon separators, no insignificant whitespace, UTF-8 strings without ASCII forcing, integer numbers, and no final LF",
+    "process_allocation_identity_kind": "process_allocation/v2",
+    "process_allocation_identity_value_and_sha256_equal_digest": true,
+    "attempt_binding_identity_kind": "attempt_binding/v2",
+    "attempt_binding_identity_value_and_sha256_equal_digest": true,
+    "worker_ordinal_rule": "unique contiguous integers 0 through worker_count minus one in array order",
+    "process_identity_and_index_uniqueness_required": true,
+    "actual_allocation_must_conform_to_campaign_policies": true,
+    "canonical_digest_reconstruction_required": true,
+    "attempt_manifest_must_embed_attempt_binding": true,
+    "missing_changed_out_of_policy_or_digest_mismatch_disposition": "REFUSE_ATTEMPT_EXECUTION_BINDING"
   },
   "attempt_watchdog_policy": {
     "purpose": "bounded safe execution and checkpoint creation; never scientific interpretation",
@@ -318,11 +380,30 @@
       "stochastic_rule_identity",
       "uncertainty_policy_identity",
       "permitted_stream_set_identity",
+      "ordered_permitted_stream_ids",
       "seed",
       "next_counter_tuple_set_identity",
       "topology_identity",
       "exact_or_approximate_label"
     ],
+    "next_counter_tuple_fields": [
+      "stream_id",
+      "tick",
+      "event_index",
+      "draw_index",
+      "attempt_index",
+      "draw_status"
+    ],
+    "next_counter_tuple_array_rule": "ordered_permitted_stream_ids are unique and ascending by UTF-8 bytes; tuple stream-id projection equals that array exactly; exactly one READY tuple exists for every permitted stream and no other stream exists",
+    "next_counter_tuple_set_identity_kind": "next_counter_tuple_set/v2",
+    "next_counter_tuple_set_identity_preimage_fields": [
+      "permitted_stream_set_identity",
+      "ordered_permitted_stream_ids",
+      "next_counter_tuples"
+    ],
+    "next_counter_tuple_set_identity_derivation": "SHA-256 of UTF-8 canonical JSON with recursively lexicographically sorted object keys, comma/colon separators, no insignificant whitespace, UTF-8 strings without ASCII forcing, integer numbers, and no final LF",
+    "next_counter_tuple_set_value_and_sha256_equal_digest": true,
+    "terminal_rejection_tuple_in_continuation_checkpoint": "FORBIDDEN",
     "corrupt_missing_stale_or_forked_disposition": "REFUSE_CONTINUATION",
     "changed_result_affecting_identity_disposition": "NEW_CAMPAIGN_REQUIRED"
   },

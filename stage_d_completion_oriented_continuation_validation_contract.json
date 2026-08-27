@@ -118,12 +118,21 @@
     "CONT-P079 schema mechanically binds terminal rejection to COMPUTATIONALLY_INCONCLUSIVE, no outgoing checkpoint, and continuation false",
     "CONT-P080 schema mechanically binds campaign terminal eligibility only to all registered runs terminal",
     "CONT-P081 schema mechanically requires infeasibility identity for infeasibility terminal state",
-    "CONT-P082 all nineteen prospective negative validation cases are present in exact order",
+    "CONT-P082 all twenty-nine prospective negative validation cases are present in exact order",
     "CONT-P083 Stage E implementation, model, trajectory, Gate, transform, benchmark, draw, simulation, outcome, result, figure, book, release, and publication counters are zero",
     "CONT-P084 independent authority PASS cannot authorize integration without a separate user permission",
-    "CONT-P085 durability, Stage E, Stage F, results, figures, books, release, and publication remain separately forbidden"
+    "CONT-P085 durability, Stage E, Stage F, results, figures, books, release, and publication remain separately forbidden",
+    "CONT-P086 campaign binding requires the five distinct parallelization-boundary, worker-allocation-policy, storage-location, durability-policy, and restart-policy identities",
+    "CONT-P087 all five campaign execution-policy identities are in the campaign identity preimage and a change creates a new campaign",
+    "CONT-P088 attempt_binding/v2 is closed and its twelve-field preimage binds campaign, run, exact campaign execution binding, ordinal, incoming checkpoint, five campaign policies, process allocation, and conformance receipt",
+    "CONT-P089 attempt_manifest/v2 embeds the complete attempt binding and its reconstructed digest equals attempt_binding_identity",
+    "CONT-P090 process_allocation/v2 is closed and its canonical digest equals process_allocation_identity",
+    "CONT-P091 ordered worker allocations have exactly nine closed fields, unique contiguous ordinals, unique process identities/indices, and exact worker_count agreement",
+    "CONT-P092 actual process allocation conforms to the frozen parallelization boundary and worker-allocation policy with an exact conformance receipt",
+    "CONT-P093 continuation checkpoint requires the complete ordered permitted-stream array, ordered READY tuple array, and next_counter_tuple_set_identity with exact canonical three-field preimage derivation",
+    "CONT-P094 tuple stream-id projection equals the unique permitted-stream array in ascending UTF-8 order with no missing, extra, duplicate, misordered, or terminal-cap tuple"
   ],
-  "required_positive_check_count": 85,
+  "required_positive_check_count": 94,
   "negative_cases": [
     {
       "id": "CONT-N01",
@@ -279,9 +288,54 @@
       "id": "CONT-N31",
       "mutation": "create a result, figure, book, release, upload, publication, or external institutional claim",
       "required_disposition": "FAIL_LATER_STAGE_BOUNDARY"
+    },
+    {
+      "id": "CONT-N32",
+      "mutation": "omit or alias any campaign parallelization-boundary, worker-allocation-policy, storage-location, durability-policy, or restart-policy identity",
+      "required_disposition": "REFUSE_INCOMPLETE_CAMPAIGN_EXECUTION_POLICY"
+    },
+    {
+      "id": "CONT-N33",
+      "mutation": "change a campaign execution-policy identity without creating a new prospective campaign identity and binding",
+      "required_disposition": "NEW_CAMPAIGN_REQUIRED"
+    },
+    {
+      "id": "CONT-N34",
+      "mutation": "omit the embedded attempt binding or mismatch its campaign, run, ordinal, checkpoint, policy, allocation, receipt, or digest identity",
+      "required_disposition": "REFUSE_ATTEMPT_EXECUTION_BINDING"
+    },
+    {
+      "id": "CONT-N35",
+      "mutation": "omit, digest-mismatch, or provide an out-of-policy process allocation",
+      "required_disposition": "REFUSE_PROCESS_ALLOCATION"
+    },
+    {
+      "id": "CONT-N36",
+      "mutation": "use a missing, duplicate, noncontiguous, or misordered worker ordinal or duplicate a process identity/index",
+      "required_disposition": "REFUSE_PROCESS_ALLOCATION_CLOSURE"
+    },
+    {
+      "id": "CONT-N37",
+      "mutation": "omit next_counter_tuple_set_identity or make its value/sha256 differ from the canonical tuple-set digest",
+      "required_disposition": "REFUSE_CHECKPOINT_COUNTER_DIGEST_MISMATCH"
+    },
+    {
+      "id": "CONT-N38",
+      "mutation": "omit, add, duplicate, or misorder a permitted stream id or tuple, or make the tuple projection differ from the stream array",
+      "required_disposition": "REFUSE_CHECKPOINT_COUNTER_STREAM_CLOSURE"
+    },
+    {
+      "id": "CONT-N39",
+      "mutation": "place TERMINAL_REJECTION_CAP or attempt_index 1000000 in a continuation checkpoint",
+      "required_disposition": "REFUSE_TERMINAL_COUNTER_CHECKPOINT"
+    },
+    {
+      "id": "CONT-N40",
+      "mutation": "change tuple bytes without changing next_counter_tuple_set_identity, or change the identity without changing its canonical preimage",
+      "required_disposition": "REFUSE_CHECKPOINT_COUNTER_DIGEST_MISMATCH"
     }
   ],
-  "required_negative_case_count": 31,
+  "required_negative_case_count": 40,
   "required_predecessor_row_count": 9,
   "required_schema_definition_names": [
     "sha256",
@@ -295,6 +349,9 @@
     "attempt_watchdogs",
     "campaign_budget",
     "campaign_execution_binding",
+    "worker_allocation",
+    "process_allocation",
+    "attempt_binding",
     "stochastic_counter_tuple",
     "run_resource_ledger",
     "campaign_resource_ledger",
@@ -305,7 +362,7 @@
     "infeasibility_finding",
     "campaign_terminal_manifest"
   ],
-  "required_schema_definition_count": 20,
+  "required_schema_definition_count": 23,
   "global_acceptance": {
     "all_positive_checks_pass": true,
     "all_negative_cases_refuse": true,

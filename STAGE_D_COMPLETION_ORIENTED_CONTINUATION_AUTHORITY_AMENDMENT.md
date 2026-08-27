@@ -76,6 +76,15 @@ the attempt ordinal, start timestamp, or process allocation within the frozen
 parallel boundary does not change scientific identity, but it remains recorded
 in the attempt manifest and cumulative ledger.
 
+`attempt_binding_identity` is not opaque. It is the canonical digest of one
+closed `attempt_binding/v2` record. That record binds the campaign, scientific
+run, exact campaign execution-binding identity, attempt ordinal, incoming
+checkpoint, all five frozen campaign execution-policy identities, the complete
+actual process allocation, its allocation identity, and the policy-conformance
+receipt. The attempt manifest embeds that record and repeats its digest identity
+so an auditor can reconstruct both the binding and `attempt_id` without an
+external convention.
+
 ## 4. Attempt binding and frozen campaign envelope
 
 Before Stage F execution, every campaign must carry an independently audited,
@@ -96,6 +105,35 @@ outcome-blind `campaign_execution_binding/v2`. It freezes:
 - exact parallelization boundary, worker allocation policy, storage location,
   durability and restart rules;
 - exact terminal and infeasibility rules.
+
+Those five execution policies are carried as the distinct required identities
+`parallelization_boundary_identity`, `worker_allocation_policy_identity`,
+`storage_location_identity`, `durability_policy_identity`, and
+`restart_policy_identity`. All five are part of the campaign identity preimage.
+An omitted, changed, aliased, or post-start policy identity creates a different
+campaign and cannot validate as continuation.
+
+Each attempt embeds a closed `process_allocation/v2` record containing the
+ordered worker allocations. Every worker row records its ordinal, worker and
+host identities, process identity and index, thread count, CPU allocation,
+nullable accelerator allocation, and memory limit. The allocation also binds
+the scheduler allocation and the exact policy-conformance receipt. Worker
+ordinals are unique, contiguous from zero, and agree with `worker_count`;
+process identities and indices cannot be duplicated. The allocation digest is
+recomputed canonically and must equal both `process_allocation_identity` in the
+attempt binding and the embedded allocation's digest. Actual allocation must
+conform to the frozen parallelization boundary and worker-allocation policy;
+out-of-policy, missing, or digest-mismatched allocation refuses the attempt.
+
+For both execution-binding digests, the declared preimage fields are assembled
+as one closed object and serialized using the same canonical JSON rule used for
+the counter tuple set: recursively sorted keys, comma/colon separators, no
+insignificant whitespace or final LF, UTF-8 without ASCII forcing, and integer-
+only numbers. `process_allocation_identity` has kind
+`process_allocation/v2`; `attempt_binding_identity` has kind
+`attempt_binding/v2`. In each identity both `value` and `sha256` equal the
+reconstructed 64-lowercase-hex digest. The embedded record's `allocation_sha256`
+or `binding_sha256` must equal that same digest.
 
 Stage E feasibility measurements may inform this binding, but the complete
 binding must be sealed and independently audited before any Stage F outcome is
@@ -220,6 +258,26 @@ attempt_index, draw_status)`. Attempt slicing does not alter a draw preimage or
 consume a new scientific draw merely because an operating-system attempt
 changed.
 
+The checkpoint repeats the closed `ordered_permitted_stream_ids` array bound by
+`permitted_stream_set_identity`. The tuple array is complete and canonical: it
+contains exactly one tuple for every listed permitted stream, contains no other
+stream, has no duplicate `stream_id`, and is ordered by ascending UTF-8 bytes of
+`stream_id`; its stream-id projection equals that array exactly. A continuation
+checkpoint may contain only `READY` tuples with
+`attempt_index` in `0..999999`. The required
+`next_counter_tuple_set_identity` is SHA-256 over the UTF-8 canonical JSON
+serialization, without a final LF, of the closed object
+`{"permitted_stream_set_identity": <the complete identity object>,
+"ordered_permitted_stream_ids": <the ordered unique string array>,
+"next_counter_tuples": <the ordered tuple array>}`; keys at every object level
+are lexicographically sorted, separators are exactly comma and colon with no
+insignificant whitespace, strings are emitted as UTF-8 JSON without ASCII
+forcing, and all numbers are integers. Its identity kind is exactly
+`next_counter_tuple_set/v2`, and both its `value` and `sha256` equal the
+64-lowercase-hex digest. Omission, stream-set mismatch, tuple-set digest
+mismatch, missing/extra/duplicate/misordered stream, or terminal tuple in a
+continuation checkpoint refuses continuation.
+
 `READY` permits draw attempt indices `0..999999`. Exactly 1,000,000 rejected
 draw attempts seals `TERMINAL_REJECTION_CAP`. That state is terminal
 `COMPUTATIONALLY_INCONCLUSIVE` for the scientific run. It cannot be continued,
@@ -320,24 +378,31 @@ Wave/phase-interference and electrical-voltage programmes remain excluded.
 The mechanical contract and evidence schema must refuse at least:
 
 1. an attempt without the exact campaign/run/binding/checkpoint identities;
-2. a skipped, repeated, forked, or concurrently active attempt ordinal;
-3. a reset/decrease/omission in any cumulative counter;
-4. replacing cumulative accounting with per-slice-only accounting;
-5. exceeding a slice watchdog without the recorded terminal state;
-6. exceeding a campaign budget and continuing;
-7. enlarging a campaign envelope after execution begins;
-8. changing code, artifact, authority, environment, algorithm, topology,
+2. an omitted or changed campaign parallelization, worker-allocation, storage,
+   durability, or restart-policy identity;
+3. a missing, digest-mismatched, duplicated, or out-of-policy actual process
+   allocation or policy-conformance receipt;
+4. a skipped, repeated, forked, or concurrently active attempt ordinal;
+5. a reset/decrease/omission in any cumulative counter;
+6. replacing cumulative accounting with per-slice-only accounting;
+7. exceeding a slice watchdog without the recorded terminal state;
+8. exceeding a campaign budget and continuing;
+9. enlarging a campaign envelope after execution begins;
+10. changing code, artifact, authority, environment, algorithm, topology,
    numerical/stochastic/uncertainty policy, seed, stream set, cache key,
    invalidation epoch, exactness label, model, horizon, or scientific meaning;
-9. continuing from a missing, corrupt, stale, forked, or non-durable checkpoint;
-10. a restarted suffix that differs from uninterrupted execution;
-11. using a clean slice boundary as scientific evidence;
-12. retrying or continuing after `TERMINAL_REJECTION_CAP`;
-13. partial continuation of a declared atomic exact case;
-14. silent approximation, truncation, sampling, topology alteration, or
+11. continuing from a missing, corrupt, stale, forked, or non-durable checkpoint;
+12. omitting or mismatching the canonical next-counter tuple-set identity;
+13. a missing, extra, duplicate, misordered, or terminal-cap tuple in a
+    continuation checkpoint;
+14. a restarted suffix that differs from uninterrupted execution;
+15. using a clean slice boundary as scientific evidence;
+16. retrying or continuing after `TERMINAL_REJECTION_CAP`;
+17. partial continuation of a declared atomic exact case;
+18. silent approximation, truncation, sampling, topology alteration, or
     arbitrary-`N` completion claim;
-15. an unaudited infeasibility finding;
-16. a result, figure, book, release, or publication permission.
+19. an unaudited infeasibility finding;
+20. a result, figure, book, release, or publication permission.
 
 ## 14. Candidate evidence boundary
 
