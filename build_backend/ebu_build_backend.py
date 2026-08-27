@@ -38,6 +38,7 @@ _METADATA = (
     "License-Expression: MIT\n"
     "License-File: LICENSE\n"
     "Import-Name: ebu_framework\n"
+    "Requires-Dist: PyNaCl==1.6.2\n"
     "\n"
 ).encode("utf-8")
 
@@ -70,12 +71,16 @@ _PLANNED_PACKAGE_FILES = frozenset(
     | {
         "src/ebu_framework/actions.py",
         "src/ebu_framework/artifacts.py",
+        "src/ebu_framework/atomic.py",
         "src/ebu_framework/authorization.py",
         "src/ebu_framework/authorization_use.py",
         "src/ebu_framework/bridge.py",
         "src/ebu_framework/capabilities.py",
         "src/ebu_framework/causal.py",
         "src/ebu_framework/commitments.py",
+        "src/ebu_framework/conservation.py",
+        "src/ebu_framework/correction_diagnostics.py",
+        "src/ebu_framework/correction_protocol.py",
         "src/ebu_framework/distortion.py",
         "src/ebu_framework/durability.py",
         "src/ebu_framework/dynamic.py",
@@ -84,6 +89,7 @@ _PLANNED_PACKAGE_FILES = frozenset(
         "src/ebu_framework/execution.py",
         "src/ebu_framework/experiment.py",
         "src/ebu_framework/faults.py",
+        "src/ebu_framework/interaction.py",
         "src/ebu_framework/ledger.py",
         "src/ebu_framework/network.py",
         "src/ebu_framework/numeric.py",
@@ -226,7 +232,11 @@ def _discover_package_files(source_root: Path) -> tuple[str, ...]:
             relative = file_path.relative_to(source_root).as_posix()
             _safe_relative_path(relative)
             file_stat = file_path.lstat()
-            if not stat.S_ISREG(file_stat.st_mode) or file_path.is_symlink():
+            if (
+                not stat.S_ISREG(file_stat.st_mode)
+                or file_path.is_symlink()
+                or file_stat.st_nlink != 1
+            ):
                 _refuse("UNSAFE_SOURCE_PATH", f"nonregular source: {relative}")
             if relative not in _PLANNED_PACKAGE_FILES:
                 _refuse("PACKAGE_FILE_SET_MISMATCH", f"unknown package file: {relative}")
@@ -240,11 +250,11 @@ def _discover_package_files(source_root: Path) -> tuple[str, ...]:
             seen_casefold[folded] = relative
             discovered.append(relative)
     result = tuple(sorted(discovered, key=lambda item: item.encode("utf-8")))
-    missing = _I1_REQUIRED_PACKAGE_FILES.difference(result)
+    missing = _PLANNED_PACKAGE_FILES.difference(result)
     if missing:
         _refuse(
             "PACKAGE_DATA_MISSING",
-            "missing I-1 package files: " + ", ".join(sorted(missing)),
+            "missing planned package files: " + ", ".join(sorted(missing)),
         )
     return result
 
@@ -264,7 +274,11 @@ def _read_stable_regular(source_root: Path, relative: str) -> bytes:
     path = source_root.joinpath(*PurePosixPath(relative).parts)
     try:
         before = path.lstat()
-        if not stat.S_ISREG(before.st_mode) or path.is_symlink():
+        if (
+            not stat.S_ISREG(before.st_mode)
+            or path.is_symlink()
+            or before.st_nlink != 1
+        ):
             _refuse("UNSAFE_SOURCE_PATH", f"selected input is not regular: {relative}")
         flags = os.O_RDONLY
         if hasattr(os, "O_NOFOLLOW"):
@@ -322,7 +336,7 @@ def _validate_pyproject(data: bytes) -> None:
         "version": "0.1.0a1",
         "description": "Pre-alpha typed and reproducible research-framework infrastructure for EBU",
         "requires-python": ">=3.14,<3.15",
-        "dependencies": [],
+        "dependencies": ["PyNaCl==1.6.2"],
         "dynamic": [],
         "license": "MIT",
         "license-files": ["LICENSE"],

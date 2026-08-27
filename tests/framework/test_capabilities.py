@@ -648,10 +648,107 @@ class FrameworkI4ReachabilityTests(unittest.TestCase):
             ),
             tuple(t2_patch["exact_new_rows"]),
         )
-        self.assertEqual(len(tuple(FailureCode)), i8_contract["failure_inventory"]["future_total"])
-        self.assertEqual(len(tuple(framework.__all__)), i8_contract["root_exports"]["future_count"])
-        self.assertEqual(i8_paths["future_import_graph"]["module_count"], 39)
-        self.assertEqual(i8_paths["future_import_graph"]["direct_edge_count"], 243)
+        clcd_contract = json.loads(
+            (ROOT / "closed_loop_correction_diagnostics_contract.json").read_bytes()
+        )
+        stage_c_contract = json.loads(
+            (
+                ROOT / "framework_alpha_packaging_release_candidate_contract.json"
+            ).read_bytes()
+        )
+        failures = tuple(code.value for code in FailureCode)
+        root_exports = tuple(framework.__all__)
+        self.assertEqual(failures[:280], tuple(i8_contract["failure_inventory"]["future_values"]))
+        self.assertEqual(failures[280:], tuple(clcd_contract["failure_suffix"]))
+        self.assertEqual((len(failures), len(set(failures))), (294, 294))
+        self.assertEqual(root_exports[:444], tuple(i8_contract["root_exports"]["future_values"]))
+        self.assertEqual(root_exports[444:], tuple(clcd_contract["root_export_suffix"]))
+        self.assertEqual((len(root_exports), len(set(root_exports))), (471, 471))
+        current_inventory = stage_c_contract["test_inventory_reconciliation"][
+            "exact_current_import_inventory"
+        ]
+        current_order = tuple(
+            i8_paths["future_import_graph"]["package_module_order"]
+        ) + tuple(current_inventory["suffix_module_order"])
+        modules = {
+            path.stem for path in SOURCE.glob("*.py") if path.name != "__init__.py"
+        }
+        self.assertEqual((len(current_order), set(current_order)), (42, modules))
+        current_graph: dict[str, list[str]] = {}
+        current_exports: dict[str, tuple[str, ...]] = {}
+        for name in current_order:
+            module_tree = ast.parse(
+                (SOURCE / f"{name}.py").read_text(encoding="utf-8")
+            )
+            current_graph[name] = []
+            for node in module_tree.body:
+                if not isinstance(node, ast.ImportFrom) or node.level != 1:
+                    continue
+                candidates = (
+                    (node.module,)
+                    if node.module is not None
+                    else tuple(alias.name for alias in node.names)
+                )
+                for dependency in candidates:
+                    if dependency in modules and dependency not in current_graph[name]:
+                        current_graph[name].append(dependency)
+            module_exports: tuple[str, ...] = ()
+            for node in module_tree.body:
+                if (
+                    isinstance(node, ast.Assign)
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                    and node.targets[0].id == "__all__"
+                ):
+                    module_exports = tuple(ast.literal_eval(node.value))
+                elif (
+                    isinstance(node, ast.AugAssign)
+                    and isinstance(node.target, ast.Name)
+                    and node.target.id == "__all__"
+                    and isinstance(node.op, ast.Add)
+                ):
+                    module_exports += tuple(ast.literal_eval(node.value))
+            current_exports[name] = module_exports
+        module_order_projection = ("\n".join(current_order) + "\n").encode("utf-8")
+        graph_projection = (
+            json.dumps(
+                [[name, current_graph[name]] for name in current_order],
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        export_projection = (
+            json.dumps(
+                [[name, list(current_exports[name])] for name in current_order],
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        self.assertEqual(
+            sum(len(values) for values in current_graph.values()),
+            current_inventory["current_direct_edge_count"],
+        )
+        self.assertEqual(
+            {name: current_graph[name] for name in current_inventory["suffix_module_order"]},
+            current_inventory["suffix_direct_imports"],
+        )
+        self.assertEqual(
+            {name: len(current_exports[name]) for name in current_inventory["suffix_module_order"]},
+            current_inventory["suffix_module_export_counts"],
+        )
+        for projection, identity in (
+            (module_order_projection, current_inventory["module_order_lf"]),
+            (graph_projection, current_inventory["direct_import_projection"]),
+            (export_projection, current_inventory["module_export_projection"]),
+        ):
+            self.assertEqual(
+                (len(projection), hashlib.sha256(projection).hexdigest()),
+                (identity["byte_count"], identity["sha256"]),
+            )
 
 
 if __name__ == "__main__":

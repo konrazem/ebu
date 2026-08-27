@@ -443,6 +443,9 @@ def test_i3a_runtime_and_static_inventory() -> None:
     i8 = _load_contract(
         _REPO_ROOT / "unified_python_research_framework_i8_contract.json"
     )
+    clcd = _load_contract(
+        _REPO_ROOT / "closed_loop_correction_diagnostics_contract.json"
+    )
     failure_slices = compatibility["current_surface"]["failure_slices"]
     failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
     import hashlib
@@ -466,8 +469,9 @@ def test_i3a_runtime_and_static_inventory() -> None:
     )
     assert failures[227:232] == tuple(i6["failure_inventory"]["append_order"])
     assert failures[232:256] == tuple(i7["failure_inventory"]["append_order"])
-    assert failures[256:] == tuple(i8["failure_inventory"]["future_values"][256:])
-    assert len(failures) == i8["failure_inventory"]["future_total"] == 280
+    assert failures[256:280] == tuple(i8["failure_inventory"]["future_values"][256:])
+    assert failures[280:] == tuple(clcd["failure_suffix"])
+    assert (len(failures), len(set(failures))) == (294, 294)
     assert tuple(
         failures[row["start"] : row["stop"]] for row in failure_slices
     ) == tuple(tuple(row["values"]) for row in failure_slices)
@@ -487,8 +491,8 @@ def test_i3a_runtime_and_static_inventory() -> None:
         "b70fccfca86d4b7118bf80593794b40a2ad8f3848dbe4ff0963741e4e56f3681",
     )
     assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
-        i8["failure_inventory"]["future_lf"]["byte_count"],
-        i8["failure_inventory"]["future_lf"]["sha256"],
+        7945,
+        "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
     )
 
     contamination = contract["state_projection_contamination_ownership"]

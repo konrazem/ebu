@@ -89,6 +89,7 @@ _CONTRACT = _load_json(_CONTRACT_PATH)
 _VALIDATION = _load_json(_VALIDATION_PATH)
 _MANIFEST = _load_json(_MANIFEST_PATH)
 _FIXTURE = _load_json(_FIXTURE_PATH)
+_CLCD = _load_json(_REPO_ROOT / "closed_loop_correction_diagnostics_contract.json")
 assert type(_CONTRACT) is dict
 assert type(_VALIDATION) is dict
 assert type(_MANIFEST) is dict
@@ -1867,7 +1868,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 tuple(post_i5_surface["failure_order"]),
             ),
         )
-        self.assertEqual(len(failures), 280)
+        self.assertEqual((len(failures), len(set(failures))), (294, 294))
         self.assertEqual(
             failures[227:232], tuple(i6_contract["failure_inventory"]["append_order"])
         )
@@ -1875,8 +1876,9 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             failures[232:256], tuple(i7_contract["failure_inventory"]["append_order"])
         )
         self.assertEqual(
-            failures[256:], tuple(i8_contract["failure_inventory"]["future_values"][256:])
+            failures[256:280], tuple(i8_contract["failure_inventory"]["future_values"][256:])
         )
+        self.assertEqual(failures[280:], tuple(_CLCD["failure_suffix"]))
         failure_prefix_projection = (
             "\n".join(failures[:124]) + "\n"
         ).encode("utf-8")
@@ -1910,8 +1912,8 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
             (
-                i8_contract["failure_inventory"]["future_lf"]["byte_count"],
-                i8_contract["failure_inventory"]["future_lf"]["sha256"],
+                7945,
+                "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
             ),
         )
         exports = tuple(ebu_framework.__all__)
@@ -1934,7 +1936,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 tuple(post_i5_surface["root_export_order"]),
             ),
         )
-        self.assertEqual(len(exports), 444)
+        self.assertEqual((len(exports), len(set(exports))), (471, 471))
         self.assertEqual(
             exports[391:407], tuple(i6_contract["root_exports"]["append_order"])
         )
@@ -1942,8 +1944,9 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             exports[407:419], tuple(i7_contract["root_exports"]["append_order"])
         )
         self.assertEqual(
-            exports[419:], tuple(i8_contract["root_exports"]["append_order"])
+            exports[419:444], tuple(i8_contract["root_exports"]["append_order"])
         )
+        self.assertEqual(exports[444:], tuple(_CLCD["root_export_suffix"]))
         export_prefix_projection = ("\n".join(exports[:261]) + "\n").encode(
             "utf-8"
         )
@@ -1977,8 +1980,8 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
             (
-                i8_contract["root_exports"]["future_lf"]["byte_count"],
-                i8_contract["root_exports"]["future_lf"]["sha256"],
+                10526,
+                "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
             ),
         )
         self.assertEqual(interaction_module.__all__, tuple(_CONTRACT["proposed_surface"]["d2_root_export_suffix"]))
@@ -2001,6 +2004,12 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         )
         i8_paths = _load_json(
             _REPO_ROOT / "unified_python_research_framework_i8_implementation_path_manifest.json"
+        )
+        i9_contract = _load_json(
+            _REPO_ROOT / "post_i9_ci_durability_correction_contract.json"
+        )
+        stage_c_contract = _load_json(
+            _REPO_ROOT / "framework_alpha_packaging_release_candidate_contract.json"
         )
         assert type(compatibility) is dict
         assert type(post_i5_compatibility) is dict
@@ -2049,9 +2058,15 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                             and alias.name not in ordered_graph[name]
                         ):
                             ordered_graph[name].append(alias.name)
+        current_inventory = stage_c_contract["test_inventory_reconciliation"][
+            "exact_current_import_inventory"
+        ]
+        current_module_order = tuple(
+            i8_paths["future_import_graph"]["package_module_order"]
+        ) + tuple(current_inventory["suffix_module_order"])
         current_ordered_graph: dict[str, list[str]] = {}
         current_module_exports: dict[str, tuple[str, ...]] = {}
-        for name in i8_paths["future_import_graph"]["package_module_order"]:
+        for name in current_module_order:
             module_tree = ast.parse(
                 (package_dir / f"{name}.py").read_text(encoding="utf-8")
             )
@@ -2086,11 +2101,14 @@ class InteractionDeclarationContractTests(unittest.TestCase):
                 ):
                     module_exports += tuple(ast.literal_eval(node.value))
             current_module_exports[name] = module_exports
+        current_module_order_projection = (
+            "\n".join(current_module_order) + "\n"
+        ).encode("utf-8")
         current_package_projection = (
             json.dumps(
                 [
                     [name, current_ordered_graph[name]]
-                    for name in i8_paths["future_import_graph"]["package_module_order"]
+                    for name in current_module_order
                 ],
                 sort_keys=True,
                 separators=(",", ":"),
@@ -2115,7 +2133,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             json.dumps(
                 [
                     [name, list(current_module_exports[name])]
-                    for name in i8_paths["future_import_graph"]["package_module_order"]
+                    for name in current_module_order
                 ],
                 sort_keys=True,
                 separators=(",", ":"),
@@ -2128,38 +2146,68 @@ class InteractionDeclarationContractTests(unittest.TestCase):
         )
         self.assertEqual(
             (set(graph), tuple(current_ordered_graph)),
-            (
-                set(i8_paths["future_import_graph"]["package_module_order"]),
-                tuple(i8_paths["future_import_graph"]["package_module_order"]),
-            ),
+            (set(current_module_order), current_module_order),
         )
-        self.assertEqual(len(graph), 39)
+        self.assertEqual(len(graph), current_inventory["current_module_count"])
         self.assertEqual(
             {name: graph[name] for name in expected_graph}, expected_graph
         )
-        self.assertEqual(
-            (
-                sum(len(values) for values in current_ordered_graph.values()),
-                (
-                    len(current_package_projection),
-                    hashlib.sha256(current_package_projection).hexdigest(),
-                ),
-                current_ordered_graph,
-                current_module_exports,
-            ),
-            (
-                i8_paths["future_import_graph"]["direct_edge_count"],
-                (
-                    i8_paths["future_import_graph"]["projection_byte_count"],
-                    i8_paths["future_import_graph"]["projection_sha256"],
-                ),
-                i8_paths["future_import_graph"]["direct_imports"],
-                {
-                    name: tuple(values)
-                    for name, values in i8_paths["module_exports"].items()
-                },
-            ),
+        expected_current_graph = {
+            name: list(values)
+            for name, values in i8_paths["future_import_graph"]["direct_imports"].items()
+        }
+        expected_current_graph["validation"] = list(
+            i9_contract["accepted_i9_frozen_inventory"]["graph"]["validation_direct_imports"]
         )
+        expected_current_graph["correction_protocol"] = list(
+            current_inventory["suffix_direct_imports"]["correction_protocol"]
+        )
+        expected_current_graph["correction_diagnostics"] = list(
+            current_inventory["suffix_direct_imports"]["correction_diagnostics"]
+        )
+        self.assertEqual(
+            expected_current_graph["validation"],
+            current_inventory["suffix_direct_imports"]["validation"],
+        )
+        self.assertEqual(
+            set(expected_current_graph["correction_protocol"]),
+            set(_CLCD["import_boundary"]["correction_protocol"]),
+        )
+        self.assertEqual(
+            set(expected_current_graph["correction_diagnostics"]),
+            set(_CLCD["import_boundary"]["correction_diagnostics"]),
+        )
+        expected_current_exports = {
+            name: tuple(values) for name, values in i8_paths["module_exports"].items()
+        }
+        expected_current_exports["validation"] = ()
+        expected_current_exports["correction_protocol"] = tuple(_CLCD["root_export_suffix"][:20])
+        expected_current_exports["correction_diagnostics"] = tuple(_CLCD["root_export_suffix"][20:])
+        self.assertEqual(
+            sum(len(values) for values in current_ordered_graph.values()),
+            current_inventory["current_direct_edge_count"],
+        )
+        self.assertEqual(current_ordered_graph, expected_current_graph)
+        self.assertEqual(current_module_exports, expected_current_exports)
+        self.assertEqual(
+            {
+                name: len(current_module_exports[name])
+                for name in current_inventory["suffix_module_order"]
+            },
+            current_inventory["suffix_module_export_counts"],
+        )
+        for projection, identity in (
+            (current_module_order_projection, current_inventory["module_order_lf"]),
+            (current_package_projection, current_inventory["direct_import_projection"]),
+            (
+                current_module_export_projection,
+                current_inventory["module_export_projection"],
+            ),
+        ):
+            self.assertEqual(
+                (len(projection), hashlib.sha256(projection).hexdigest()),
+                (identity["byte_count"], identity["sha256"]),
+            )
         self.assertEqual(sum(len(values) for values in ordered_graph.values()), 152)
         self.assertEqual(sum(len(values) for values in expected_graph.values()), 124)
         self.assertEqual(
@@ -2259,7 +2307,7 @@ class InteractionDeclarationContractTests(unittest.TestCase):
 
         for name in graph:
             visit(name)
-        self.assertEqual(len(visited), 39)
+        self.assertEqual(len(visited), 42)
         forbidden_imports = {
             "asyncio", "importlib", "multiprocessing", "random", "secrets", "socket", "subprocess", "threading", "urllib"
         }
@@ -2548,12 +2596,154 @@ class InteractionDeclarationContractTests(unittest.TestCase):
             "src/ebu_framework/network.py",
             "src/ebu_framework/traces.py",
         }
+        stage_c_contract = _load_json(
+            _REPO_ROOT / "framework_alpha_packaging_release_candidate_contract.json"
+        )
+        stage_c_predecessor = _load_json(
+            _REPO_ROOT
+            / "framework_alpha_packaging_release_candidate_predecessor_manifest.json"
+        )
+        stage_c_reconciliation = stage_c_contract["test_inventory_reconciliation"][
+            "atomic_and_interaction_predecessor_preservation_reconciliation"
+        ]
+        artifact_reconciliation = stage_c_contract["test_inventory_reconciliation"][
+            "artifact_predecessor_preservation_reconciliation"
+        ]
+        exact_stage_c_paths = (
+            ".github/workflows/tests.yml",
+            "EBU_FUTURE_BOOKS_STRUCTURE.md",
+            "build_backend/ebu_build_backend.py",
+            "tests/framework/safety.py",
+        )
+        stage_c_modified_paths = (
+            ".github/workflows/tests.yml",
+            "build_backend/ebu_build_backend.py",
+        )
+        current_byte_preserved_paths = (
+            "EBU_FUTURE_BOOKS_STRUCTURE.md",
+            "tests/framework/safety.py",
+        )
+        self.assertEqual(
+            (
+                tuple(stage_c_reconciliation["exact_reconciled_paths"]),
+                tuple(artifact_reconciliation["exact_reconciled_paths"]),
+                tuple(artifact_reconciliation["stage_c_modified_paths"]),
+                tuple(artifact_reconciliation["current_byte_preserved_paths"]),
+                tuple(row["path"] for row in artifact_reconciliation["rows"]),
+            ),
+            (
+                exact_stage_c_paths,
+                exact_stage_c_paths,
+                stage_c_modified_paths,
+                current_byte_preserved_paths,
+                exact_stage_c_paths,
+            ),
+        )
+        accepted_stage_c_base_commit = stage_c_contract["predecessor_evidence"][
+            "predecessor_test_authority_correction"
+        ]["accepted_inventory_scope_integration_commit"]
+        self.assertEqual(
+            accepted_stage_c_base_commit,
+            "c540d032ff22a4cd3be42f31564ac7023706e32d",
+        )
+        stage_c_reconciliation_rows = {
+            row["path"]: row for row in artifact_reconciliation["rows"]
+        }
+        stage_c_predecessor_rows = {
+            row["path"]: row for row in stage_c_predecessor["controlling_paths"]
+        }
         for row in _MANIFEST["rows"]:
             if row["path"] in excluded:
                 continue
             path = _REPO_ROOT / row["path"]
             with self.subTest(path=row["path"]):
                 payload = path.read_bytes()
+                if row["path"] in exact_stage_c_paths:
+                    frozen = stage_c_reconciliation_rows[row["path"]]
+                    historical_payload = subprocess.run(
+                        ["git", "cat-file", "blob", row["git_object"]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    self.assertEqual(
+                        (
+                            len(historical_payload),
+                            hashlib.sha256(historical_payload).hexdigest(),
+                        ),
+                        (row["byte_count"], row["raw_sha256"]),
+                    )
+                    i8_payload = subprocess.run(
+                        ["git", "cat-file", "blob", frozen["i8_git_object"]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    self.assertEqual(
+                        (len(i8_payload), hashlib.sha256(i8_payload).hexdigest()),
+                        (frozen["i8_byte_count"], frozen["i8_raw_sha256"]),
+                    )
+                    accepted_stage_c_base = (
+                        frozen["accepted_stage_c_base_mode"],
+                        frozen["accepted_stage_c_base_git_object"],
+                        frozen["accepted_stage_c_base_byte_count"],
+                        frozen["accepted_stage_c_base_raw_sha256"],
+                    )
+                    if row["path"] in stage_c_modified_paths:
+                        stage_c_row = stage_c_predecessor_rows[row["path"]]
+                        self.assertEqual(
+                            (
+                                stage_c_row["mode"],
+                                stage_c_row["git_object"],
+                                stage_c_row["byte_count"],
+                                stage_c_row["raw_sha256"],
+                            ),
+                            accepted_stage_c_base,
+                        )
+                    base_tree_row = subprocess.run(
+                        [
+                            "git",
+                            "ls-tree",
+                            accepted_stage_c_base_commit,
+                            "--",
+                            row["path"],
+                        ],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    ).stdout.split()
+                    self.assertEqual(
+                        (base_tree_row[0], base_tree_row[2]),
+                        accepted_stage_c_base[:2],
+                    )
+                    base_payload = subprocess.run(
+                        ["git", "cat-file", "blob", base_tree_row[2]],
+                        cwd=_REPO_ROOT,
+                        check=True,
+                        capture_output=True,
+                    ).stdout
+                    self.assertEqual(
+                        (len(base_payload), hashlib.sha256(base_payload).hexdigest()),
+                        accepted_stage_c_base[2:],
+                    )
+                    mode = "100755" if path.stat().st_mode & stat.S_IXUSR else "100644"
+                    self.assertEqual(
+                        (frozen["i8_mode"], row["mode"], mode),
+                        ("100644", "100644", "100644"),
+                    )
+                    if row["path"] in current_byte_preserved_paths:
+                        self.assertEqual(
+                            (mode, len(payload), hashlib.sha256(payload).hexdigest()),
+                            (
+                                frozen["accepted_stage_c_base_mode"],
+                                frozen["accepted_stage_c_base_byte_count"],
+                                frozen["accepted_stage_c_base_raw_sha256"],
+                            ),
+                        )
+                    else:
+                        self.assertIn(row["path"], stage_c_modified_paths)
+                    continue
                 comparison_payload = payload
                 current_base_payload = None
                 current_row = None
