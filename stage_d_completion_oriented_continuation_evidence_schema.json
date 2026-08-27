@@ -1,0 +1,1693 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ebu:stage-d:completion-oriented-continuation-evidence-schema:1.0.0-candidate",
+  "title": "EBU Stage D prospective completion-oriented continuation records",
+  "description": "Authority schema only. No campaign, attempt, checkpoint, measurement, scientific outcome, result, or figure is created in this candidate.",
+  "schema_version": "1.0.0-candidate",
+  "prospective_instance_count": 0,
+  "accepted_stage_d_schema": {
+    "path": "stage_d_scientific_validation_evidence_schema.json",
+    "raw_sha256": "956ff0fd38dce4cd72208dc029de15d092ea9e477151522306f9763dc3d621b3",
+    "canonical_sha256": "527f6b65ba39b8b8e0485f30116e4f00ada6d0bd6abce207ab88d60d55ffd43e",
+    "v1_records_reinterpreted": false
+  },
+  "prospective_negative_validation_cases": [
+    {
+      "case_id": "CONT-SCHEMA-N01",
+      "target_definition": "campaign_execution_binding",
+      "mutation": "omit campaign_budget or attempt_watchdogs",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_UNBOUND_CONTINUATION_BUDGET"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N02",
+      "target_definition": "campaign_execution_binding",
+      "mutation": "set sealed_before_stage_f false or outcome_inspected_before_seal true",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_RETROSPECTIVE_BUDGET"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N03",
+      "target_definition": "attempt_manifest",
+      "mutation": "use attempt ordinal 2 when predecessor ordinal is 0",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_SKIPPED_ATTEMPT_ORDINAL"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N04",
+      "target_definition": "attempt_manifest",
+      "mutation": "pair CHECKPOINTED_CONTINUATION_REQUIRED with a scientific disposition",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_SLICE_AS_SCIENTIFIC_OUTCOME"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N05",
+      "target_definition": "attempt_manifest",
+      "mutation": "pair TERMINAL_REJECTION_CAP with continuation_permitted true",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_POST_REJECTION_CONTINUATION"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N06",
+      "target_definition": "attempt_manifest",
+      "mutation": "pair CAMPAIGN_BUDGET_EXHAUSTED with a positive or negative scientific disposition",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_LIMIT_AS_SCIENTIFIC_OUTCOME"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N07",
+      "target_definition": "attempt_manifest",
+      "mutation": "set continuation_permitted true for timeout, exhaustion, implementation failure, refusal, deadline, or infeasibility",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_UNAUDITED_RECOVERY"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N08",
+      "target_definition": "continuation_checkpoint",
+      "mutation": "omit cumulative ledger, stochastic next-counter set, cache epoch, invalidation epoch, authority, code, environment, topology, or exactness identity",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_INCOMPLETE_CHECKPOINT"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N09",
+      "target_definition": "stochastic_counter_tuple",
+      "mutation": "use READY with attempt_index 1000000 or TERMINAL_REJECTION_CAP with another attempt_index",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_STOCHASTIC_TERMINAL_RULE_DRIFT"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N10",
+      "target_definition": "run_resource_ledger",
+      "mutation": "decrease a cumulative counter, reset attempt_count, or omit the predecessor ledger identity",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_NONMONOTONE_CUMULATIVE_ACCOUNTING"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N11",
+      "target_definition": "run_resource_ledger",
+      "mutation": "count repeated physical bytes as new durable logical allowance",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_DUPLICATE_BYTE_ALLOWANCE"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N12",
+      "target_definition": "continuation_receipt",
+      "mutation": "change any result-affecting identity or use suffix_equivalence_verified false",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_CONTINUATION_IDENTITY_OR_EQUIVALENCE_MISMATCH"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N13",
+      "target_definition": "recovery_disposition",
+      "mutation": "resume without transient classification, unchanged code/environment, proof of no accepted post-checkpoint state, or independent audit",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_UNAUTHORIZED_RECOVERY"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N14",
+      "target_definition": "infeasibility_finding",
+      "mutation": "mark infeasibility as scientific evidence or omit independent audit",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_INFEASIBILITY_AS_SCIENTIFIC_OUTCOME"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N15",
+      "target_definition": "campaign_terminal_manifest",
+      "mutation": "terminalize while an attempt is active or omit the final campaign resource ledger",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_INCOMPLETE_CAMPAIGN_TERMINALIZATION"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N16",
+      "target_definition": "campaign_execution_binding",
+      "mutation": "enlarge maximum n, subsets, hyperedge order, vertices, edges, depth, horizon, or another non-sliceable problem dimension",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_PROBLEM_DIMENSION_ENLARGEMENT"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N17",
+      "target_definition": "attempt_manifest",
+      "mutation": "continue a partial atomic Möbius, poset, canonical, or exact-case operation",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N18",
+      "target_definition": "campaign_execution_binding",
+      "mutation": "permit silent approximation, truncation, sampling, topology alteration, or arbitrary-N completion",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_UNAUTHORIZED_APPROXIMATION_OR_SCALABILITY_CLAIM"
+    },
+    {
+      "case_id": "CONT-SCHEMA-N19",
+      "target_definition": "campaign_resource_ledger",
+      "mutation": "omit, duplicate, or lose a terminal attempt delta; omit a latest run ledger; or make completion order affect the campaign aggregate",
+      "expected_schema_or_semantic_valid": false,
+      "required_disposition": "REFUSE_CAMPAIGN_ACCOUNTING_BARRIER"
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nonempty_string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nullable_nonempty_string": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "study_id": {
+      "type": "string",
+      "pattern": "^SD-(0[1-9]|1[0-4])$"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value",
+        "sha256"
+      ],
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "value": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "identity_array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/identity"
+      }
+    },
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nonnegative_integer": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attempt_watchdogs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "wall_time_nanoseconds",
+        "process_tree_peak_resident_memory_bytes",
+        "primary_evaluations",
+        "physical_trace_bytes_written",
+        "physical_output_bytes_written",
+        "maximum_depth",
+        "applicable_stage_d_hard_cap_profile_identity",
+        "within_accepted_stage_d_profile"
+      ],
+      "properties": {
+        "wall_time_nanoseconds": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "process_tree_peak_resident_memory_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "primary_evaluations": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "physical_trace_bytes_written": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "physical_output_bytes_written": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_depth": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "applicable_stage_d_hard_cap_profile_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "within_accepted_stage_d_profile": {
+          "const": true
+        }
+      }
+    },
+    "campaign_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_attempt_count",
+        "maximum_cumulative_active_wall_time_nanoseconds",
+        "maximum_cumulative_primary_evaluations",
+        "maximum_cumulative_physical_trace_bytes_written",
+        "maximum_cumulative_physical_output_bytes_written",
+        "maximum_durable_logical_trace_bytes",
+        "maximum_durable_logical_output_bytes",
+        "maximum_process_tree_peak_resident_memory_bytes",
+        "maximum_campaign_calendar_duration_seconds",
+        "study_specific_dimensions",
+        "stage_e_feasibility_evidence_identities",
+        "independent_audit_identity",
+        "post_start_change_permitted"
+      ],
+      "properties": {
+        "maximum_attempt_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_cumulative_active_wall_time_nanoseconds": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_cumulative_primary_evaluations": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_cumulative_physical_trace_bytes_written": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_cumulative_physical_output_bytes_written": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_durable_logical_trace_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_durable_logical_output_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_process_tree_peak_resident_memory_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "maximum_campaign_calendar_duration_seconds": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "study_specific_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "value",
+              "unit",
+              "non_sliceable"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "value": {
+                "$ref": "#/$defs/nonnegative_integer"
+              },
+              "unit": {
+                "$ref": "#/$defs/nonempty_string"
+              },
+              "non_sliceable": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "stage_e_feasibility_evidence_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "independent_audit_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "post_start_change_permitted": {
+          "const": false
+        }
+      }
+    },
+    "campaign_execution_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "study_id",
+        "ordered_scientific_run_identities",
+        "authority_identity",
+        "continuation_authority_identity",
+        "code_identity",
+        "installed_artifact_identity",
+        "environment_identity",
+        "configuration_set_identity",
+        "algorithm_set_identity",
+        "oracle_set_identity",
+        "numerical_policy_identity",
+        "stochastic_rule_identity",
+        "uncertainty_policy_identity",
+        "seed_set_identity",
+        "permitted_stream_set_identity",
+        "dependency_topology_identity",
+        "cache_key_schema_identity",
+        "invalidation_policy_identity",
+        "exact_or_approximate_label",
+        "horizon_identity",
+        "control_set_identity",
+        "falsifier_set_identity",
+        "checkpoint_policy_identity",
+        "continuation_mode",
+        "attempt_watchdogs",
+        "campaign_budget",
+        "atomic_case_identity_rule",
+        "silent_approximation_permitted",
+        "arbitrary_n_completion_claim",
+        "sealed_before_stage_f",
+        "outcome_inspected_before_seal",
+        "binding_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "campaign_execution_binding/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "study_id": {
+          "$ref": "#/$defs/study_id"
+        },
+        "ordered_scientific_run_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "continuation_authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "code_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "installed_artifact_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "configuration_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "algorithm_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "oracle_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "numerical_policy_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "stochastic_rule_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "uncertainty_policy_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "seed_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "permitted_stream_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "dependency_topology_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "cache_key_schema_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "invalidation_policy_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "exact_or_approximate_label": {
+          "enum": [
+            "EXACT",
+            "MODEL_EXACT_NUMERICAL"
+          ]
+        },
+        "horizon_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "control_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "falsifier_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "checkpoint_policy_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "continuation_mode": {
+          "enum": [
+            "WITHIN_RUN_CHECKPOINT_CONTINUATION",
+            "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "INHERITED_AUTHORITY_REQUIRED"
+          ]
+        },
+        "attempt_watchdogs": {
+          "$ref": "#/$defs/attempt_watchdogs"
+        },
+        "campaign_budget": {
+          "$ref": "#/$defs/campaign_budget"
+        },
+        "atomic_case_identity_rule": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "silent_approximation_permitted": {
+          "const": false
+        },
+        "arbitrary_n_completion_claim": {
+          "const": false
+        },
+        "sealed_before_stage_f": {
+          "const": true
+        },
+        "outcome_inspected_before_seal": {
+          "const": false
+        },
+        "binding_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "stochastic_counter_tuple": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stream_id",
+        "tick",
+        "event_index",
+        "draw_index",
+        "attempt_index",
+        "draw_status"
+      ],
+      "properties": {
+        "stream_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "tick": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "event_index": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "draw_index": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "attempt_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "draw_status": {
+          "enum": [
+            "READY",
+            "TERMINAL_REJECTION_CAP"
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "draw_status": {
+              "const": "READY"
+            },
+            "attempt_index": {
+              "maximum": 999999
+            }
+          }
+        },
+        {
+          "properties": {
+            "draw_status": {
+              "const": "TERMINAL_REJECTION_CAP"
+            },
+            "attempt_index": {
+              "const": 1000000
+            }
+          }
+        }
+      ]
+    },
+    "run_resource_ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "scientific_run_id",
+        "completed_attempt_ordinal",
+        "attempt_count",
+        "predecessor_ledger_identity",
+        "attempt_manifest_identity",
+        "cumulative_active_wall_time_nanoseconds",
+        "cumulative_primary_evaluations",
+        "cumulative_physical_trace_bytes_written",
+        "cumulative_physical_output_bytes_written",
+        "durable_logical_trace_bytes",
+        "durable_logical_output_bytes",
+        "run_peak_process_tree_resident_memory_bytes",
+        "campaign_calendar_elapsed_seconds",
+        "checkpoint_prefix_identity",
+        "trace_prefix_identity",
+        "receipt_prefix_identity",
+        "invalidation_receipt_prefix_identity",
+        "cache_epoch",
+        "within_campaign_budget",
+        "duplicate_physical_bytes_grant_logical_allowance",
+        "ledger_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "run_resource_ledger/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "scientific_run_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "completed_attempt_ordinal": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "attempt_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "predecessor_ledger_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attempt_manifest_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "cumulative_active_wall_time_nanoseconds": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "cumulative_primary_evaluations": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "cumulative_physical_trace_bytes_written": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "cumulative_physical_output_bytes_written": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "durable_logical_trace_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "durable_logical_output_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "run_peak_process_tree_resident_memory_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_calendar_elapsed_seconds": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "checkpoint_prefix_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "trace_prefix_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "receipt_prefix_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "invalidation_receipt_prefix_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "cache_epoch": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "within_campaign_budget": {
+          "type": "boolean"
+        },
+        "duplicate_physical_bytes_grant_logical_allowance": {
+          "const": false
+        },
+        "ledger_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "completed_attempt_ordinal": {
+                "const": 0
+              }
+            },
+            "required": [
+              "completed_attempt_ordinal"
+            ]
+          },
+          "then": {
+            "properties": {
+              "attempt_count": {
+                "const": 1
+              },
+              "predecessor_ledger_identity": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "predecessor_ledger_identity": {
+                "$ref": "#/$defs/identity"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "campaign_resource_ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "accounting_barrier_sequence",
+        "ordered_terminal_attempt_identities",
+        "ordered_latest_run_ledger_identities",
+        "campaign_attempt_count",
+        "campaign_cumulative_active_wall_time_nanoseconds",
+        "campaign_cumulative_primary_evaluations",
+        "campaign_cumulative_physical_trace_bytes_written",
+        "campaign_cumulative_physical_output_bytes_written",
+        "durable_logical_trace_bytes",
+        "durable_logical_output_bytes",
+        "campaign_peak_process_tree_resident_memory_bytes",
+        "campaign_calendar_elapsed_seconds",
+        "active_attempt_count",
+        "canonical_reconstruction_order",
+        "all_terminal_attempt_deltas_present_once",
+        "completion_order_affects_ledger",
+        "within_campaign_budget",
+        "predecessor_campaign_ledger_identity",
+        "campaign_ledger_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "campaign_resource_ledger/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "accounting_barrier_sequence": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "ordered_terminal_attempt_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "ordered_latest_run_ledger_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "campaign_attempt_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_cumulative_active_wall_time_nanoseconds": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_cumulative_primary_evaluations": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_cumulative_physical_trace_bytes_written": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_cumulative_physical_output_bytes_written": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "durable_logical_trace_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "durable_logical_output_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_peak_process_tree_resident_memory_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "campaign_calendar_elapsed_seconds": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "active_attempt_count": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "canonical_reconstruction_order": {
+          "const": "ACCEPTED_SCIENTIFIC_RUN_ORDER_THEN_ATTEMPT_ORDINAL"
+        },
+        "all_terminal_attempt_deltas_present_once": {
+          "const": true
+        },
+        "completion_order_affects_ledger": {
+          "const": false
+        },
+        "within_campaign_budget": {
+          "type": "boolean"
+        },
+        "predecessor_campaign_ledger_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "campaign_ledger_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accounting_barrier_sequence": {
+                "const": 0
+              }
+            },
+            "required": [
+              "accounting_barrier_sequence"
+            ]
+          },
+          "then": {
+            "properties": {
+              "predecessor_campaign_ledger_identity": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "predecessor_campaign_ledger_identity": {
+                "$ref": "#/$defs/identity"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "continuation_checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "scientific_run_id",
+        "completed_attempt_ordinal",
+        "next_attempt_ordinal",
+        "state_identity",
+        "trace_prefix_identity",
+        "receipt_prefix_identity",
+        "run_resource_ledger_identity",
+        "campaign_resource_ledger_identity",
+        "cache_key_schema_identity",
+        "cache_epoch",
+        "correction_invalidation_epoch",
+        "dependency_closure_identity",
+        "alias_closure_identity",
+        "authority_identity",
+        "code_identity",
+        "installed_artifact_identity",
+        "environment_identity",
+        "algorithm_identity",
+        "numerical_policy_identity",
+        "stochastic_rule_identity",
+        "uncertainty_policy_identity",
+        "permitted_stream_set_identity",
+        "seed",
+        "next_counter_tuples",
+        "topology_identity",
+        "exact_or_approximate_label",
+        "durable",
+        "checkpoint_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "continuation_checkpoint/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "scientific_run_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "completed_attempt_ordinal": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "next_attempt_ordinal": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "state_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "trace_prefix_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "receipt_prefix_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "run_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "campaign_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "cache_key_schema_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "cache_epoch": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "correction_invalidation_epoch": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "dependency_closure_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "alias_closure_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "code_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "installed_artifact_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "algorithm_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "numerical_policy_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "stochastic_rule_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "uncertainty_policy_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "permitted_stream_set_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "seed": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "next_counter_tuples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stochastic_counter_tuple"
+          }
+        },
+        "topology_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "exact_or_approximate_label": {
+          "enum": [
+            "EXACT",
+            "MODEL_EXACT_NUMERICAL"
+          ]
+        },
+        "durable": {
+          "const": true
+        },
+        "checkpoint_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "attempt_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "scientific_run_id",
+        "attempt_id",
+        "attempt_ordinal",
+        "predecessor_attempt_identity",
+        "attempt_binding_identity",
+        "incoming_checkpoint_identity",
+        "outgoing_checkpoint_identity",
+        "attempt_started_at",
+        "attempt_ended_at",
+        "attempt_terminal_state",
+        "scientific_disposition",
+        "continuation_permitted",
+        "atomic_case_complete",
+        "active_wall_time_nanoseconds",
+        "primary_evaluations",
+        "physical_trace_bytes_written",
+        "physical_output_bytes_written",
+        "process_tree_peak_resident_memory_bytes",
+        "maximum_depth_observed",
+        "run_resource_ledger_identity",
+        "campaign_resource_ledger_identity",
+        "continuation_receipt_identity",
+        "recovery_disposition_identity",
+        "identity_checks_passed",
+        "watchdogs_respected",
+        "manifest_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "attempt_manifest/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "scientific_run_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "attempt_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "attempt_ordinal": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "predecessor_attempt_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attempt_binding_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "incoming_checkpoint_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outgoing_checkpoint_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attempt_started_at": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "attempt_ended_at": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "attempt_terminal_state": {
+          "enum": [
+            "CHECKPOINTED_CONTINUATION_REQUIRED",
+            "SCIENTIFIC_RUN_TERMINAL",
+            "ATTEMPT_WATCHDOG_TIMEOUT",
+            "ATTEMPT_RESOURCE_EXHAUSTED",
+            "IMPLEMENTATION_OR_DURABILITY_FAILURE",
+            "IDENTITY_OR_AUTHORITY_REFUSAL",
+            "TERMINAL_REJECTION_CAP",
+            "CAMPAIGN_BUDGET_EXHAUSTED",
+            "CAMPAIGN_CALENDAR_DEADLINE_REACHED",
+            "MATHEMATICAL_OR_MATERIAL_INFEASIBILITY"
+          ]
+        },
+        "scientific_disposition": {
+          "enum": [
+            "POSITIVE_WITHIN_REGISTERED_MODEL",
+            "NEGATIVE_WITHIN_REGISTERED_MODEL",
+            "NULL_OR_UNRESOLVED",
+            "COMPUTATIONALLY_INCONCLUSIVE",
+            "INVALIDATED_BY_FALSIFIER",
+            "NOT_A_SCIENTIFIC_OUTCOME",
+            null
+          ]
+        },
+        "continuation_permitted": {
+          "type": "boolean"
+        },
+        "atomic_case_complete": {
+          "type": "boolean"
+        },
+        "active_wall_time_nanoseconds": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "primary_evaluations": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "physical_trace_bytes_written": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "physical_output_bytes_written": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "process_tree_peak_resident_memory_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "maximum_depth_observed": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "run_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "campaign_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "continuation_receipt_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recovery_disposition_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identity_checks_passed": {
+          "type": "boolean"
+        },
+        "watchdogs_respected": {
+          "type": "boolean"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "attempt_ordinal": {
+                "const": 0
+              }
+            },
+            "required": [
+              "attempt_ordinal"
+            ]
+          },
+          "then": {
+            "properties": {
+              "predecessor_attempt_identity": {
+                "type": "null"
+              },
+              "incoming_checkpoint_identity": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "predecessor_attempt_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "incoming_checkpoint_identity": {
+                "$ref": "#/$defs/identity"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "attempt_terminal_state": {
+                "const": "CHECKPOINTED_CONTINUATION_REQUIRED"
+              }
+            },
+            "required": [
+              "attempt_terminal_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scientific_disposition": {
+                "type": "null"
+              },
+              "continuation_permitted": {
+                "const": true
+              },
+              "outgoing_checkpoint_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "continuation_receipt_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "identity_checks_passed": {
+                "const": true
+              },
+              "watchdogs_respected": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "attempt_terminal_state": {
+                "const": "SCIENTIFIC_RUN_TERMINAL"
+              }
+            },
+            "required": [
+              "attempt_terminal_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scientific_disposition": {
+                "enum": [
+                  "POSITIVE_WITHIN_REGISTERED_MODEL",
+                  "NEGATIVE_WITHIN_REGISTERED_MODEL",
+                  "NULL_OR_UNRESOLVED",
+                  "INVALIDATED_BY_FALSIFIER"
+                ]
+              },
+              "continuation_permitted": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "attempt_terminal_state": {
+                "enum": [
+                  "ATTEMPT_WATCHDOG_TIMEOUT",
+                  "ATTEMPT_RESOURCE_EXHAUSTED",
+                  "IMPLEMENTATION_OR_DURABILITY_FAILURE",
+                  "IDENTITY_OR_AUTHORITY_REFUSAL",
+                  "CAMPAIGN_BUDGET_EXHAUSTED",
+                  "CAMPAIGN_CALENDAR_DEADLINE_REACHED",
+                  "MATHEMATICAL_OR_MATERIAL_INFEASIBILITY"
+                ]
+              }
+            },
+            "required": [
+              "attempt_terminal_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scientific_disposition": {
+                "enum": [
+                  "COMPUTATIONALLY_INCONCLUSIVE",
+                  "NOT_A_SCIENTIFIC_OUTCOME"
+                ]
+              },
+              "continuation_permitted": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "attempt_terminal_state": {
+                "const": "TERMINAL_REJECTION_CAP"
+              }
+            },
+            "required": [
+              "attempt_terminal_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scientific_disposition": {
+                "const": "COMPUTATIONALLY_INCONCLUSIVE"
+              },
+              "continuation_permitted": {
+                "const": false
+              },
+              "outgoing_checkpoint_identity": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "continuation_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "scientific_run_id",
+        "completed_attempt_identity",
+        "outgoing_checkpoint_identity",
+        "next_attempt_ordinal",
+        "run_resource_ledger_identity",
+        "campaign_resource_ledger_identity",
+        "unchanged_result_affecting_identity_digest",
+        "suffix_equivalence_verified",
+        "cache_and_invalidation_verified",
+        "stochastic_counter_state_verified",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "continuation_receipt/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "scientific_run_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "completed_attempt_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "outgoing_checkpoint_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "next_attempt_ordinal": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "run_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "campaign_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "unchanged_result_affecting_identity_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "suffix_equivalence_verified": {
+          "const": true
+        },
+        "cache_and_invalidation_verified": {
+          "const": true
+        },
+        "stochastic_counter_state_verified": {
+          "const": true
+        },
+        "receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "recovery_disposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "scientific_run_id",
+        "failed_attempt_identity",
+        "recovery_checkpoint_identity",
+        "failure_classification",
+        "transient_failure",
+        "no_post_checkpoint_state_accepted",
+        "code_identity_unchanged",
+        "environment_identity_unchanged",
+        "failed_costs_retained",
+        "independent_audit_identity",
+        "resume_permitted",
+        "disposition_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "recovery_disposition/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "scientific_run_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "failed_attempt_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "recovery_checkpoint_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "failure_classification": {
+          "enum": [
+            "TRANSIENT_EXTERNAL_FAILURE",
+            "DETERMINISTIC_IMPLEMENTATION_DEFECT",
+            "DURABILITY_OR_IDENTITY_FAILURE",
+            "UNRESOLVED_FAILURE"
+          ]
+        },
+        "transient_failure": {
+          "type": "boolean"
+        },
+        "no_post_checkpoint_state_accepted": {
+          "const": true
+        },
+        "code_identity_unchanged": {
+          "const": true
+        },
+        "environment_identity_unchanged": {
+          "const": true
+        },
+        "failed_costs_retained": {
+          "const": true
+        },
+        "independent_audit_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "resume_permitted": {
+          "type": "boolean"
+        },
+        "disposition_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resume_permitted": {
+                "const": true
+              }
+            },
+            "required": [
+              "resume_permitted"
+            ]
+          },
+          "then": {
+            "properties": {
+              "failure_classification": {
+                "const": "TRANSIENT_EXTERNAL_FAILURE"
+              },
+              "transient_failure": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "transient_failure": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "infeasibility_finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "classification",
+        "scientific_run_identities",
+        "problem_dimension_identity",
+        "algorithm_and_cost_derivation_identities",
+        "stage_e_feasibility_evidence_identities",
+        "attempt_identities",
+        "checkpoint_identities",
+        "campaign_resource_ledger_identity",
+        "environment_and_resource_identities",
+        "constraint_identities",
+        "alternative_assessments",
+        "single_attempt_basis_only",
+        "scientific_evidence_value",
+        "independent_audit_identity",
+        "finding_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "infeasibility_finding/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "classification": {
+          "enum": [
+            "MATHEMATICAL_INFEASIBILITY",
+            "MATERIAL_INFEASIBILITY"
+          ]
+        },
+        "scientific_run_identities": {
+          "$ref": "#/$defs/identity_array"
+        },
+        "problem_dimension_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "algorithm_and_cost_derivation_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "stage_e_feasibility_evidence_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "attempt_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "checkpoint_identities": {
+          "$ref": "#/$defs/identity_array"
+        },
+        "campaign_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_and_resource_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "constraint_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "alternative_assessments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "alternative_identity",
+              "authority_preserving",
+              "completion_feasible",
+              "disposition"
+            ],
+            "properties": {
+              "alternative_identity": {
+                "$ref": "#/$defs/identity"
+              },
+              "authority_preserving": {
+                "type": "boolean"
+              },
+              "completion_feasible": {
+                "type": "boolean"
+              },
+              "disposition": {
+                "$ref": "#/$defs/nonempty_string"
+              }
+            }
+          }
+        },
+        "single_attempt_basis_only": {
+          "const": false
+        },
+        "scientific_evidence_value": {
+          "const": "NOT_A_SCIENTIFIC_OUTCOME"
+        },
+        "independent_audit_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "finding_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "campaign_terminal_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "campaign_id",
+        "study_id",
+        "campaign_binding_identity",
+        "ordered_attempt_identities",
+        "ordered_scientific_run_terminal_identities",
+        "final_campaign_resource_ledger_identity",
+        "active_attempt_count",
+        "terminal_state",
+        "scientific_evidence_value",
+        "infeasibility_finding_identity",
+        "manifest_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "campaign_terminal_manifest/v2"
+        },
+        "campaign_id": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "study_id": {
+          "$ref": "#/$defs/study_id"
+        },
+        "campaign_binding_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "ordered_attempt_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        },
+        "ordered_scientific_run_terminal_identities": {
+          "$ref": "#/$defs/identity_array"
+        },
+        "final_campaign_resource_ledger_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "active_attempt_count": {
+          "const": 0
+        },
+        "terminal_state": {
+          "enum": [
+            "ALL_REGISTERED_RUNS_TERMINAL",
+            "COMPUTATIONALLY_INCONCLUSIVE",
+            "MATHEMATICAL_OR_MATERIAL_INFEASIBILITY",
+            "INVALIDATED_BY_IMPLEMENTATION_OR_DURABILITY_FAILURE",
+            "IDENTITY_OR_AUTHORITY_REFUSAL"
+          ]
+        },
+        "scientific_evidence_value": {
+          "enum": [
+            "ELIGIBLE_FOR_INDEPENDENT_STAGE_G_RECONSTRUCTION",
+            "NOT_A_SCIENTIFIC_OUTCOME"
+          ]
+        },
+        "infeasibility_finding_identity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "terminal_state": {
+                "const": "ALL_REGISTERED_RUNS_TERMINAL"
+              }
+            },
+            "required": [
+              "terminal_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "scientific_evidence_value": {
+                "const": "ELIGIBLE_FOR_INDEPENDENT_STAGE_G_RECONSTRUCTION"
+              },
+              "infeasibility_finding_identity": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "scientific_evidence_value": {
+                "const": "NOT_A_SCIENTIFIC_OUTCOME"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "terminal_state": {
+                "const": "MATHEMATICAL_OR_MATERIAL_INFEASIBILITY"
+              }
+            },
+            "required": [
+              "terminal_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "infeasibility_finding_identity": {
+                "$ref": "#/$defs/identity"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "completion_marker": "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_CANDIDATE_COMPLETE"
+}

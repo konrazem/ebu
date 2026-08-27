@@ -1,0 +1,137 @@
+{
+  "manifest_id": "EBU-STAGE-D-COMPLETION-ORIENTED-CONTINUATION-PREDECESSOR-v1",
+  "manifest_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_STATIC_LOCK_ONLY",
+  "accepted_base": {
+    "commit": "d000015cbf3e3238e34f961c4916626c930ba90f",
+    "tree": "8bff192813649300a8aa8b298c441b851cea26d7",
+    "live_target_ref": "refs/heads/framework-v0.1"
+  },
+  "candidate_scope": {
+    "operation": "ADD_ONLY",
+    "new_path_count": 5,
+    "modified_path_count": 0,
+    "deleted_path_count": 0,
+    "renamed_path_count": 0,
+    "mode_changed_path_count": 0,
+    "exact_new_paths": [
+      "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+      "stage_d_completion_oriented_continuation_contract.json",
+      "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+      "stage_d_completion_oriented_continuation_validation_contract.json"
+    ],
+    "required_mode": "100644"
+  },
+  "source_count": 9,
+  "source_rows": [
+    {
+      "path": "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
+      "role": "ACCEPTED_STAGE_D_NORMATIVE_AUTHORITY",
+      "mode": "100644",
+      "git_object": "6970a453c1408471b204b3168444eebe8d792923",
+      "byte_count": 39939,
+      "raw_sha256": "f755c38aff690fe317b29550f0f1ef7d627c75902c0f555d9f8ca594499dba16",
+      "canonical_byte_count": null,
+      "canonical_sha256": null,
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "stage_d_scientific_validation_contract.json",
+      "role": "ACCEPTED_STAGE_D_MECHANICAL_CONTRACT",
+      "mode": "100644",
+      "git_object": "ac1be73b81c31fc65e4e3ebcbaf45b74526ea7c4",
+      "byte_count": 44051,
+      "raw_sha256": "1b12c97f51d99720979700f048ac527cb0d97c1323f051fe53e0fda3ac743089",
+      "canonical_byte_count": 38538,
+      "canonical_sha256": "321709990be3a270db493050fa7a4a80789c4add5ed63de50c1944d4517a30c1",
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "stage_d_scientific_validation_evidence_schema.json",
+      "role": "ACCEPTED_STAGE_D_V1_EVIDENCE_SCHEMA",
+      "mode": "100644",
+      "git_object": "bbb33509f92f2c55b670e4c0b5d8fd45215aaaef",
+      "byte_count": 92769,
+      "raw_sha256": "956ff0fd38dce4cd72208dc029de15d092ea9e477151522306f9763dc3d621b3",
+      "canonical_byte_count": 69511,
+      "canonical_sha256": "527f6b65ba39b8b8e0485f30116e4f00ada6d0bd6abce207ab88d60d55ffd43e",
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "stage_d_scientific_validation_master_matrix.json",
+      "role": "ACCEPTED_STAGE_D_FOURTEEN_STUDY_MATRIX",
+      "mode": "100644",
+      "git_object": "e6cd44f8b9e2e125403cb1359d819fc08afd2cb7",
+      "byte_count": 148183,
+      "raw_sha256": "081f2e994c23051514aef19a0516d1996d9c4b86cd528dfc05bf9d17658bdb81",
+      "canonical_byte_count": 121158,
+      "canonical_sha256": "e974840f0dabc29ee0ce0841443095b2dc17014d26b6b67ea244f1299dfa9db1",
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "stage_d_scientific_validation_predecessor_manifest.json",
+      "role": "ACCEPTED_STAGE_D_THIRTY_NINE_ROW_PREDECESSOR_LOCK",
+      "mode": "100644",
+      "git_object": "e15c8b130097120fff562397cfa17c31bb66510c",
+      "byte_count": 12753,
+      "raw_sha256": "d3216726c1759ee6dad86ce8e5bba40ee9318c1e4cea52f12db0ec19b746adee",
+      "canonical_byte_count": 10571,
+      "canonical_sha256": "e1b842e81f11bd10e51a5be881d607a292d2a9d63f3e4b152fbea4a4d101ba15",
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "stage_d_scientific_validation_validation_contract.json",
+      "role": "ACCEPTED_STAGE_D_VALIDATION_AUTHORITY",
+      "mode": "100644",
+      "git_object": "a3aacfb377786ce2bddf91ceea0e2d58bcda9d01",
+      "byte_count": 37012,
+      "raw_sha256": "2707d9d645b3fc7ecc4ee61f02d861ba88c5d220d7bf6812ab98ece93ba51227",
+      "canonical_byte_count": 33228,
+      "canonical_sha256": "d8bc80fecaa7ba7d3f8b687a52880dc049d182ffa8d26a246d923dbed0fafb76",
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "role": "ACCEPTED_STAGE_D_DURABILITY_IMPLEMENTATION",
+      "mode": "100644",
+      "git_object": "497adbeb82833327713d10fe4bc2458d3d53f292",
+      "byte_count": 118212,
+      "raw_sha256": "08c412400c1bdf0d1e6d84f1b6330b7c376869a42769f4d80f0fb8c0795662d3",
+      "canonical_byte_count": null,
+      "canonical_sha256": null,
+      "normalized_self_seal_sha256": "451797cd74e7e25788fecc6154970aceed9c064ca7607ce45fb7e781bfc72a59",
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": ".github/workflows/tests.yml",
+      "role": "ACCEPTED_FIVE_JOB_VALIDATION_WORKFLOW",
+      "mode": "100644",
+      "git_object": "fc35712939bc393a8b69173552385118a30a3d95",
+      "byte_count": 13830,
+      "raw_sha256": "43807da6aba6a55bdf9880f6e4407bf9ab7ba6dc4ee535c162824c1453e7a7aa",
+      "canonical_byte_count": null,
+      "canonical_sha256": null,
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    },
+    {
+      "path": "scripts/validate_stage_c_release_candidate.py",
+      "role": "ACCEPTED_ZERO_SCIENCE_STATIC_VALIDATOR",
+      "mode": "100644",
+      "git_object": "ac6b47778fcd26815f7b6b206c6ac0b907920b7a",
+      "byte_count": 90665,
+      "raw_sha256": "2246975766f1d0e2c55d31581969bda45a1b1966e4da721398d217f558a228a8",
+      "canonical_byte_count": null,
+      "canonical_sha256": null,
+      "candidate_disposition": "PRESERVED_BYTE_FOR_BYTE"
+    }
+  ],
+  "accepted_stage_d_nested_predecessor_lock": {
+    "path": "stage_d_scientific_validation_predecessor_manifest.json",
+    "source_count": 39,
+    "all_rows_remain_controlling": true,
+    "candidate_may_reconcile_or_exclude_nested_row": false
+  },
+  "preservation_rule": "Every source row must reconstruct from the accepted base tree and the candidate worktree must retain identical bytes. No dynamic, path-derived, fifth-party, or future-stage exclusion is permitted.",
+  "completion_marker": "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_CANDIDATE_COMPLETE"
+}
