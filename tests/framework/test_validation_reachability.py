@@ -269,7 +269,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "f90c5c31cb9706dd5185272d52227ee47744091329e336df830fc7518653d88f"
+TEST_SELF_SEAL = "bbcd5290bb7918b8798c9962ea81de9467fe8c995c8a2f6fa1f1d0371e5e83bc"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1424,7 +1424,18 @@ class ValidationReachabilityTests(unittest.TestCase):
             reconstructed, _ = _object_row(
                 row["path"], base_entries, predecessor_archive
             )
-            self.assertEqual(reconstructed, row, row["path"])
+            self.assertEqual(reconstructed["object_type"], "blob", row["path"])
+            self.assertEqual(
+                {
+                    "path": reconstructed["path"],
+                    "mode": reconstructed["mode"],
+                    "git_object": reconstructed["git_object"],
+                    "byte_count": reconstructed["byte_count"],
+                    "sha256": reconstructed["raw_sha256"],
+                },
+                row,
+                row["path"],
+            )
 
         study_order = tuple(f"SD-{index:02d}" for index in range(1, 15))
         universal_fields = tuple(contract["universal_study_fields"])
