@@ -56,6 +56,11 @@ def _copy_source(destination: Path) -> Path:
     shutil.copy2(ROOT / "LICENSE", destination / "LICENSE")
     shutil.copytree(ROOT / "build_backend", destination / "build_backend")
     shutil.copytree(ROOT / "src", destination / "src")
+    for path in destination.rglob("*"):
+        if path.is_dir():
+            path.chmod(0o755)
+        elif path.is_file():
+            path.chmod(0o644)
     return destination
 
 
