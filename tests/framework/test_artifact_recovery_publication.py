@@ -1410,11 +1410,13 @@ def _run_static_vector(vector: dict[str, Any]) -> None:
             ".github/workflows/tests.yml",
             "EBU_FUTURE_BOOKS_STRUCTURE.md",
             "build_backend/ebu_build_backend.py",
+            "pyproject.toml",
             "tests/framework/safety.py",
         )
         stage_c_modified = (
             ".github/workflows/tests.yml",
             "build_backend/ebu_build_backend.py",
+            "pyproject.toml",
         )
         current_byte_preserved = (
             "EBU_FUTURE_BOOKS_STRUCTURE.md",
@@ -1507,10 +1509,144 @@ def _run_static_vector(vector: dict[str, Any]) -> None:
         assert operations.count("MODIFIED") == witness["modified"]
         assert operations.count("COMPATIBILITY_ONLY_MODIFIED") == witness["compatibility_only"]
     elif kind == "NO_DEPENDENCY_DRIFT":
+        import subprocess
+
+        exact_dependency_files = (
+            "pyproject.toml",
+            "requirements-framework.lock",
+        )
+        assert tuple(witness["files"]) == exact_dependency_files
+        stage_c = json.loads(
+            (
+                ROOT / "framework_alpha_packaging_release_candidate_contract.json"
+            ).read_bytes()
+        )
+        correction = stage_c["release_license_and_tag_correction"][
+            "i8s013_dependency_witness_correction"
+        ]
+        assert tuple(correction["exact_witness_files"]) == exact_dependency_files
+        assert (
+            correction["only_mutable_logic"],
+            correction["generic_or_dynamic_exclusion"],
+            correction["third_witness_path"],
+            correction["dependency_or_lock_change"],
+            correction[
+                "vector_test_name_count_projection_call_counters_failure_precedence_and_other_static_branches"
+            ],
+        ) == (
+            "NO_DEPENDENCY_DRIFT_PYPROJECT_IDENTITY_ROUTE",
+            "FORBIDDEN",
+            "FORBIDDEN",
+            "FORBIDDEN",
+            "PRESERVE_EXACTLY",
+        )
         predecessor_rows = {row["path"]: row for row in PREDECESSOR["rows"]}
-        for path in witness["files"]:
-            payload = (ROOT / path).read_bytes()
-            assert hashlib.sha256(payload).hexdigest() == predecessor_rows[path]["raw_sha256"]
+        pyproject_row = predecessor_rows["pyproject.toml"]
+        pyproject_historical = correction["pyproject_historical_identity"]
+        assert (
+            pyproject_row["mode"],
+            pyproject_row["git_object"],
+            pyproject_row["byte_count"],
+            pyproject_row["raw_sha256"],
+        ) == (
+            pyproject_historical["mode"],
+            pyproject_historical["git_object"],
+            pyproject_historical["byte_count"],
+            pyproject_historical["sha256"],
+        ) == (
+            "100644",
+            "21bfad4d94f4a32f7ea3ebcb2fb9f46861ad16c6",
+            399,
+            "98c7112d08a2d0b4251d2b79bcf583bef8ce4560be55dcdddec6b3a6fdffbb4b",
+        )
+        pyproject_historical_payload = subprocess.run(
+            ["git", "cat-file", "blob", pyproject_historical["git_object"]],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
+        assert (
+            len(pyproject_historical_payload),
+            hashlib.sha256(pyproject_historical_payload).hexdigest(),
+        ) == (
+            pyproject_historical["byte_count"],
+            pyproject_historical["sha256"],
+        )
+        pyproject_current = correction["pyproject_required_current_identity"]
+        corrected_pyproject = stage_c["release_license_and_tag_correction"][
+            "corrected_pyproject"
+        ]
+        assert pyproject_current["authority_binding"] == (
+            "release_license_and_tag_correction.corrected_pyproject"
+        )
+        assert (
+            pyproject_current["mode"],
+            pyproject_current["byte_count"],
+            pyproject_current["sha256"],
+        ) == (
+            "100644",
+            corrected_pyproject["byte_count"],
+            corrected_pyproject["sha256"],
+        ) == (
+            "100644",
+            434,
+            "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+        )
+        pyproject_payload = (ROOT / "pyproject.toml").read_bytes()
+        pyproject_head = subprocess.run(
+            ["git", "ls-tree", "HEAD", "--", "pyproject.toml"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.split()
+        assert (
+            pyproject_head[0],
+            len(pyproject_payload),
+            hashlib.sha256(pyproject_payload).hexdigest(),
+        ) == (
+            pyproject_current["mode"],
+            pyproject_current["byte_count"],
+            pyproject_current["sha256"],
+        )
+        lock_row = predecessor_rows["requirements-framework.lock"]
+        lock_identity = correction["requirements_lock_preserved_identity"]
+        assert lock_identity["comparison"] == "DIRECT_I8_PREDECESSOR_BYTE_IDENTITY"
+        assert (
+            lock_row["mode"],
+            lock_row["git_object"],
+            lock_row["byte_count"],
+            lock_row["raw_sha256"],
+        ) == (
+            lock_identity["mode"],
+            lock_identity["git_object"],
+            lock_identity["byte_count"],
+            lock_identity["sha256"],
+        ) == (
+            "100644",
+            "907bdff88be25741f04980ae5e6a769df2a61d4d",
+            2036,
+            "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+        )
+        lock_payload = (ROOT / "requirements-framework.lock").read_bytes()
+        lock_head = subprocess.run(
+            ["git", "ls-tree", "HEAD", "--", "requirements-framework.lock"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.split()
+        assert (
+            lock_head[0],
+            lock_head[2],
+            len(lock_payload),
+            hashlib.sha256(lock_payload).hexdigest(),
+        ) == (
+            lock_identity["mode"],
+            lock_identity["git_object"],
+            lock_identity["byte_count"],
+            lock_identity["sha256"],
+        )
     elif kind in {"NO_I9_CI", "NO_MANUSCRIPT_OUTPUT"}:
         assert not any(
             path.startswith(("books/", "results/", "figures/", ".github/"))

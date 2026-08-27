@@ -178,6 +178,7 @@ STAGE_C_AUTHORITY_PATHS = (
 STAGE_C_MODIFIED_PATHS = (
     ".github/workflows/tests.yml",
     "build_backend/ebu_build_backend.py",
+    "pyproject.toml",
     "tests/framework/test_artifact_recovery_publication.py",
     "tests/framework/test_atomic_declarations.py",
     "tests/framework/test_bridge_exact_fixtures.py",
@@ -192,6 +193,7 @@ STAGE_C_MODIFIED_PATHS = (
     "tests/framework/test_validation_reachability.py",
 )
 STAGE_C_NEW_PATHS = (
+    "LICENSE-UNICODE",
     "scripts/validate_stage_c_release_candidate.py",
     "tests/framework/installed_artifact_probe.py",
     "tests/framework/test_packaging_release_candidate.py",
@@ -214,7 +216,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "373d9ffa4fb90f9fbd29147c31ac43f9431258d635aab4c7c21ec0edd227f741"
+TEST_SELF_SEAL = "73cf207e9fa902f3c8c8dfdd648547a8be6bbbd209b1d083d7227cf4f74c21ca"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1149,7 +1151,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 f"the exact completed implementation phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
-        self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 22)
+        self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 24)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)

@@ -10,6 +10,6 @@ description = "Pre-alpha typed and reproducible research-framework infrastructur
 requires-python = ">=3.14,<3.15"
 dependencies = ["PyNaCl==1.6.2"]
 dynamic = []
-license = "MIT"
-license-files = ["LICENSE"]
+license = "MIT AND Unicode-3.0"
+license-files = ["LICENSE", "LICENSE-UNICODE"]
 import-names = ["ebu_framework"]
