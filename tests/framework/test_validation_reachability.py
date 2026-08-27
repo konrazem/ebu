@@ -260,6 +260,62 @@ STAGE_D_AUTHORITY_CANONICAL_SHA256 = {
 STAGE_D_AUTHORITY_SCOPE = STAGE_C_IMPLEMENTATION_SCOPE | frozenset(
     STAGE_D_AUTHORITY_PATHS
 )
+STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT = (
+    "d000015cbf3e3238e34f961c4916626c930ba90f"
+)
+STAGE_D_CONTINUATION_ACCEPTED_BASE_TREE = (
+    "8bff192813649300a8aa8b298c441b851cea26d7"
+)
+STAGE_D_CONTINUATION_AUTHORITY_CANDIDATE = (
+    "ce1b52b3084b84e8c8f81bc0625a05ecd15d9331"
+)
+STAGE_D_CONTINUATION_AUTHORITY_TARGET = (
+    "4a67a7e8bf783e40b4e302bf810d2993f9fd4eee"
+)
+STAGE_D_CONTINUATION_AUTHORITY_TREE = (
+    "da342b70b812225e570e5380c4c066a783cb5ad2"
+)
+STAGE_D_CONTINUATION_AUTHORITY_PATHS = (
+    "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+    "stage_d_completion_oriented_continuation_contract.json",
+    "stage_d_completion_oriented_continuation_evidence_schema.json",
+    "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+    "stage_d_completion_oriented_continuation_validation_contract.json",
+)
+STAGE_D_CONTINUATION_AUTHORITY_RAW_SHA256 = {
+    "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md": (
+        "8e92550fd444c39516f35f1bd9d4d69f22018edc51b23b28aaf1c8e83fd98276"
+    ),
+    "stage_d_completion_oriented_continuation_contract.json": (
+        "9c668e43e2fd06e6260296ca9608fc94ad5b6d806e317ff8f168eb0858802577"
+    ),
+    "stage_d_completion_oriented_continuation_evidence_schema.json": (
+        "66ef7d3189e692404d0d8ef773bd15b7d70eb4172e44ca6b1b6f3a4a4da16f88"
+    ),
+    "stage_d_completion_oriented_continuation_predecessor_manifest.json": (
+        "b49c3318e3aa2f8367b3909c0a0dfa1fa62f2a90915d5e8728f5a331dff1725c"
+    ),
+    "stage_d_completion_oriented_continuation_validation_contract.json": (
+        "73a27fee64f0b035150a57f9eb10568ea1cfc9559c4bccbcd0ef44402735baa3"
+    ),
+}
+STAGE_D_CONTINUATION_AUTHORITY_CANONICAL_SHA256 = {
+    "stage_d_completion_oriented_continuation_contract.json": (
+        "64201850cac7a4384f55511a1f21d019ad165993874d521f5f4299410bd88a59"
+    ),
+    "stage_d_completion_oriented_continuation_evidence_schema.json": (
+        "05da12e24c7971cda7a59a05564c7d828572cd2e432e577be7fc4fdb245ec442"
+    ),
+    "stage_d_completion_oriented_continuation_predecessor_manifest.json": (
+        "83e403f9de49e15e5c975e986243da1a30874ee76df80ac0c89051d0a9bb77a6"
+    ),
+    "stage_d_completion_oriented_continuation_validation_contract.json": (
+        "e6933d1b05f82e70768e3ddcec51919ac573bdff24e7ad73e81f0454556f21de"
+    ),
+}
+STAGE_D_CONTINUATION_AUTHORITY_SCOPE = STAGE_D_AUTHORITY_SCOPE | frozenset(
+    STAGE_D_CONTINUATION_AUTHORITY_PATHS
+)
 CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS = (
     "src/ebu_framework/__init__.py",
     "src/ebu_framework/errors.py",
@@ -269,7 +325,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "451797cd74e7e25788fecc6154970aceed9c064ca7607ce45fb7e781bfc72a59"
+TEST_SELF_SEAL = "5161befb11a093ee9011b06dd51ed9b707df441264f9e158f7fe13b95b3a3a00"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1179,8 +1235,13 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
 
         current_scope = self._audit_current_head_scope(correction, historical)
-        if current_scope["stage_d_phase"] == "STAGE_D_AUTHORITY_ONLY":
+        if current_scope["stage_d_phase"] in (
+            "STAGE_D_AUTHORITY_ONLY",
+            "STAGE_D_CONTINUATION_AUTHORITY_ONLY",
+        ):
             self._audit_stage_d_authority(current_scope)
+        if current_scope["stage_d_phase"] == "STAGE_D_CONTINUATION_AUTHORITY_ONLY":
+            self._audit_stage_d_continuation_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -1234,15 +1295,20 @@ class ValidationReachabilityTests(unittest.TestCase):
         elif changed_paths == STAGE_D_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_AUTHORITY_ONLY"
+        elif changed_paths == STAGE_D_CONTINUATION_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
-                "the exact completed implementation or Stage D authority-only "
+                "the exact completed implementation, Stage D authority-only, "
+                "or Stage D continuation-authority-only "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
         self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 24)
         self.assertEqual(len(STAGE_D_AUTHORITY_SCOPE), 30)
+        self.assertEqual(len(STAGE_D_CONTINUATION_AUTHORITY_SCOPE), 35)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -1362,9 +1428,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             for path in set(target_entries) | set(current_entries)
             if target_entries.get(path) != current_entries.get(path)
         )
+        expected_implementation_delta = {
+            "tests/framework/test_validation_reachability.py"
+        }
+        if current_scope["stage_d_phase"] == "STAGE_D_CONTINUATION_AUTHORITY_ONLY":
+            expected_implementation_delta.update(STAGE_D_CONTINUATION_AUTHORITY_PATHS)
         self.assertEqual(
             implementation_delta,
-            frozenset(("tests/framework/test_validation_reachability.py",)),
+            frozenset(expected_implementation_delta),
         )
 
         candidate_archive = _archive_members(STAGE_D_AUTHORITY_CANDIDATE)
@@ -1529,6 +1600,394 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "test_current_head_durability",
                 "test_post_i9_authority_cases",
             ),
+        )
+
+    def _audit_stage_d_continuation_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                "--verify",
+                f"{STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT}^{{commit}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_D_CONTINUATION_AUTHORITY_CANDIDATE}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_D_CONTINUATION_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_D_CONTINUATION_AUTHORITY_TARGET}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_D_CONTINUATION_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_D_CONTINUATION_AUTHORITY_TARGET}^1")
+            .decode()
+            .strip(),
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_D_CONTINUATION_AUTHORITY_TARGET}^2")
+            .decode()
+            .strip(),
+            STAGE_D_CONTINUATION_AUTHORITY_CANDIDATE,
+        )
+        base_entries = _tree_entries(STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(STAGE_D_CONTINUATION_AUTHORITY_CANDIDATE)
+        target_entries = _tree_entries(STAGE_D_CONTINUATION_AUTHORITY_TARGET)
+        current_entries = _tree_entries(current_scope["actual_head"])
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(STAGE_D_CONTINUATION_AUTHORITY_PATHS)
+        )
+        self.assertEqual(candidate_entries, target_entries)
+        implementation_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        self.assertEqual(
+            implementation_delta,
+            frozenset(("tests/framework/test_validation_reachability.py",)),
+        )
+
+        candidate_archive = _archive_members(STAGE_D_CONTINUATION_AUTHORITY_CANDIDATE)
+        target_archive = _archive_members(STAGE_D_CONTINUATION_AUTHORITY_TARGET)
+        documents = {}
+        raw_by_path = {}
+        for path in STAGE_D_CONTINUATION_AUTHORITY_PATHS:
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(path, target_entries, target_archive)
+            self.assertEqual(candidate_row, target_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            current_raw = (ROOT / path).read_bytes()
+            self.assertEqual(current_raw, candidate_raw, path)
+            self.assertEqual(
+                _sha256(current_raw),
+                STAGE_D_CONTINUATION_AUTHORITY_RAW_SHA256[path],
+                path,
+            )
+            self.assertTrue(
+                current_raw.endswith(b"\n") and not current_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", current_raw, path)
+            raw_by_path[path] = current_raw
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(current_raw, path)
+                canonical = _canonical_json_lf(documents[path])[:-1]
+                self.assertEqual(
+                    _sha256(canonical),
+                    STAGE_D_CONTINUATION_AUTHORITY_CANONICAL_SHA256[path],
+                    path,
+                )
+
+        contract = documents[
+            "stage_d_completion_oriented_continuation_contract.json"
+        ]
+        schema = documents[
+            "stage_d_completion_oriented_continuation_evidence_schema.json"
+        ]
+        predecessor = documents[
+            "stage_d_completion_oriented_continuation_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_d_completion_oriented_continuation_validation_contract.json"
+        ]
+        self.assertEqual(
+            tuple(contract["candidate_files"]),
+            STAGE_D_CONTINUATION_AUTHORITY_PATHS,
+        )
+        self.assertEqual(contract["candidate_file_count"], 5)
+        self.assertEqual(
+            tuple(validation["candidate_paths"]),
+            STAGE_D_CONTINUATION_AUTHORITY_PATHS,
+        )
+        self.assertEqual(validation["candidate_path_count"], 5)
+        self.assertEqual(
+            contract["accepted_base"]["commit"],
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            contract["accepted_base"]["tree"],
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(
+            predecessor["accepted_base"]["commit"],
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            predecessor["accepted_base"]["tree"],
+            STAGE_D_CONTINUATION_ACCEPTED_BASE_TREE,
+        )
+
+        preserved_stage_d_paths = tuple(
+            contract["accepted_stage_d_authority"]["files_preserved_byte_for_byte"]
+        )
+        self.assertEqual(preserved_stage_d_paths, STAGE_D_AUTHORITY_PATHS)
+        for path in STAGE_D_AUTHORITY_PATHS:
+            base_raw = _git("show", f"{STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT}:{path}")
+            self.assertEqual(base_raw, (ROOT / path).read_bytes(), path)
+            self.assertEqual(_sha256(base_raw), STAGE_D_AUTHORITY_RAW_SHA256[path], path)
+
+        self.assertEqual(predecessor["source_count"], 9)
+        source_rows = predecessor["source_rows"]
+        self.assertEqual(len(source_rows), 9)
+        self.assertEqual(len({row["path"] for row in source_rows}), 9)
+        base_archive = _archive_members(STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT)
+        for row in source_rows:
+            reconstructed, base_raw = _object_row(
+                row["path"], base_entries, base_archive
+            )
+            self.assertEqual(
+                {
+                    "path": reconstructed["path"],
+                    "mode": reconstructed["mode"],
+                    "git_object": reconstructed["git_object"],
+                    "byte_count": reconstructed["byte_count"],
+                    "raw_sha256": reconstructed["raw_sha256"],
+                },
+                {
+                    key: row[key]
+                    for key in (
+                        "path",
+                        "mode",
+                        "git_object",
+                        "byte_count",
+                        "raw_sha256",
+                    )
+                },
+                row["path"],
+            )
+            self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+            if row["path"].endswith(".json"):
+                document = _strict_stage_d_json_bytes(base_raw, row["path"])
+                canonical = _canonical_json_lf(document)[:-1]
+                self.assertEqual(row["canonical_byte_count"], len(canonical), row["path"])
+                self.assertEqual(row["canonical_sha256"], _sha256(canonical), row["path"])
+            else:
+                self.assertIsNone(row["canonical_byte_count"], row["path"])
+                self.assertIsNone(row["canonical_sha256"], row["path"])
+            self.assertEqual(row["candidate_disposition"], "PRESERVED_BYTE_FOR_BYTE")
+
+        nested_lock = predecessor["accepted_stage_d_nested_predecessor_lock"]
+        self.assertEqual(
+            nested_lock,
+            {
+                "path": "stage_d_scientific_validation_predecessor_manifest.json",
+                "source_count": 39,
+                "all_rows_remain_controlling": True,
+                "candidate_may_reconcile_or_exclude_nested_row": False,
+            },
+        )
+        accepted_evidence = contract["accepted_integration_evidence"]
+        self.assertEqual(accepted_evidence["ci_run_id"], 33094713851)
+        self.assertEqual(
+            accepted_evidence["ci_head"], STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT
+        )
+        self.assertEqual(accepted_evidence["ci_conclusion"], "SUCCESS")
+        self.assertEqual(accepted_evidence["required_job_count"], 5)
+        self.assertEqual(set(accepted_evidence["required_job_conclusions"].values()), {"SUCCESS"})
+        self.assertEqual(accepted_evidence["artifact_id"], 9656859745)
+        self.assertEqual(accepted_evidence["scientific_execution_count"], 0)
+
+        study_order = tuple(f"SD-{index:02d}" for index in range(1, 15))
+        registry = contract["study_registry"]
+        self.assertEqual(tuple(registry["ordered_study_ids"]), study_order)
+        self.assertEqual(registry["study_count"], 14)
+        continuation_partition = (
+            set(registry["within_run_checkpoint_continuation"])
+            | set(registry["conditional_inherited_continuation"])
+            | set(registry["between_atomic_case_continuation_only"])
+        )
+        self.assertEqual(continuation_partition, set(study_order))
+        self.assertEqual(
+            sum(
+                len(registry[key])
+                for key in (
+                    "within_run_checkpoint_continuation",
+                    "conditional_inherited_continuation",
+                    "between_atomic_case_continuation_only",
+                )
+            ),
+            14,
+        )
+        hierarchy = contract["identity_hierarchy"]
+        self.assertEqual(
+            tuple(hierarchy["ordered_levels"]),
+            ("study_id", "campaign_id", "scientific_run_id", "attempt_id", "checkpoint_id"),
+        )
+        self.assertEqual(len(hierarchy["campaign_identity_preimage_fields"]), 29)
+        self.assertEqual(len(hierarchy["scientific_run_identity_preimage_fields"]), 8)
+        self.assertEqual(len(hierarchy["attempt_identity_preimage_fields"]), 5)
+        execution_binding = contract["execution_binding_policy"]
+        self.assertEqual(execution_binding["campaign_policy_identity_field_count"], 5)
+        self.assertEqual(execution_binding["attempt_binding_preimage_field_count"], 12)
+        self.assertEqual(execution_binding["process_allocation_preimage_field_count"], 4)
+        self.assertEqual(execution_binding["worker_allocation_required_field_count"], 9)
+        self.assertIn(
+            "must equal",
+            execution_binding["policy_conformance_receipt_equality_rule"],
+        )
+        self.assertEqual(
+            contract["cache_and_invalidation"]["accepted_cache_key_field_count"], 29
+        )
+        self.assertEqual(len(contract["terminal_states"]["attempt_states"]), 10)
+        self.assertTrue(contract["cumulative_accounting"]["never_reset"])
+        self.assertEqual(
+            contract["finite_computation_boundary"]["boolean_mobius_time"],
+            "O(n*2^n) transform arithmetic plus 2^n*C_E subset-evaluation cost",
+        )
+        self.assertEqual(
+            contract["finite_computation_boundary"]["boolean_mobius_storage"],
+            "O(2^n)",
+        )
+        self.assertEqual(
+            contract["finite_computation_boundary"]["approximation"],
+            "SEPARATE_PREREGISTERED_AUTHORITY_REQUIRED",
+        )
+
+        checkpoint = contract["checkpoint_binding"]
+        deterministic = checkpoint["deterministic_empty_branch"]
+        self.assertEqual(deterministic["seed"], 0)
+        self.assertEqual(deterministic["ordered_permitted_stream_ids"], [])
+        self.assertEqual(deterministic["next_counter_tuples"], [])
+        empty_digest = _sha256(_canonical_json_lf([])[:-1])
+        self.assertEqual(
+            deterministic["canonical_empty_array_sha256"], empty_digest
+        )
+        tuple_preimage = json.loads(
+            deterministic["next_counter_tuple_set_preimage_canonical_json"]
+        )
+        tuple_digest = _sha256(_canonical_json_lf(tuple_preimage)[:-1])
+        self.assertEqual(
+            deterministic["next_counter_tuple_set_identity"]["value"], tuple_digest
+        )
+        self.assertEqual(
+            deterministic["next_counter_tuple_set_identity"]["sha256"], tuple_digest
+        )
+        self.assertFalse(deterministic["dummy_stream_permitted"])
+        self.assertEqual(
+            contract["stochastic_terminal_rule"]["terminal_rejection_attempt_index"],
+            1_000_000,
+        )
+        self.assertEqual(
+            contract["stochastic_terminal_rule"]["continuation_after_terminal"],
+            "FORBIDDEN",
+        )
+
+        required_definitions = tuple(validation["required_schema_definition_names"])
+        self.assertEqual(validation["required_schema_definition_count"], 23)
+        self.assertEqual(len(schema["$defs"]), 23)
+        self.assertEqual(set(schema["$defs"]), set(required_definitions))
+        refs = []
+
+        def collect_refs(value: object) -> None:
+            if type(value) is dict:
+                for key, item in value.items():
+                    if key == "$ref":
+                        refs.append(item)
+                    collect_refs(item)
+            elif type(value) is list:
+                for item in value:
+                    collect_refs(item)
+
+        collect_refs(schema)
+        local_refs = tuple(ref for ref in refs if ref.startswith("#/$defs/"))
+        self.assertEqual(len(local_refs), 227)
+        self.assertEqual(len(set(local_refs)), 13)
+        for ref in local_refs:
+            self.assertIn(ref.removeprefix("#/$defs/"), schema["$defs"])
+        self.assertEqual(schema["prospective_instance_count"], 0)
+        self.assertEqual(
+            tuple(row["case_id"] for row in schema["prospective_negative_validation_cases"]),
+            tuple(f"CONT-SCHEMA-N{index:02d}" for index in range(1, 36)),
+        )
+        fixtures = schema["prospective_non_evidence_schema_fixtures"]
+        fixture_names = tuple(validation["required_non_evidence_schema_fixture_names"])
+        self.assertEqual(set(fixtures) - {"purpose"}, set(fixture_names))
+        deterministic_fixture = fixtures["valid_sd01_deterministic_empty_checkpoint"]
+        self.assertEqual(deterministic_fixture["study_id"], "SD-01")
+        self.assertEqual(deterministic_fixture["counter_state_mode"], "DETERMINISTIC_EMPTY")
+        self.assertEqual(deterministic_fixture["stochastic_rule_identity"]["value"], "FORBIDDEN")
+        self.assertEqual(deterministic_fixture["seed"], 0)
+        self.assertEqual(deterministic_fixture["ordered_permitted_stream_ids"], [])
+        self.assertEqual(deterministic_fixture["next_counter_tuples"], [])
+        self.assertEqual(
+            deterministic_fixture["next_counter_tuple_set_identity"]["sha256"],
+            tuple_digest,
+        )
+
+        self.assertEqual(validation["required_positive_check_count"], 99)
+        self.assertEqual(validation["required_negative_case_count"], 46)
+        self.assertEqual(validation["required_predecessor_row_count"], 9)
+        self.assertEqual(
+            tuple(check.split()[0] for check in validation["positive_checks"]),
+            tuple(f"CONT-P{index:03d}" for index in range(1, 100)),
+        )
+        self.assertEqual(
+            tuple(row["id"] for row in validation["negative_cases"]),
+            tuple(f"CONT-N{index:02d}" for index in range(1, 47)),
+        )
+        self.assertIn(
+            "policy_conformance_receipt_identity values are exactly equal",
+            validation["positive_checks"][-1],
+        )
+        self.assertEqual(
+            schema["prospective_negative_validation_cases"][-1]["required_disposition"],
+            "REFUSE_POLICY_CONFORMANCE_RECEIPT_MISMATCH",
+        )
+        self.assertEqual(
+            validation["negative_cases"][-1]["required_disposition"],
+            "REFUSE_POLICY_CONFORMANCE_RECEIPT_MISMATCH",
+        )
+        self.assertEqual(
+            validation["required_operation_counts"],
+            {"added": 5, "modified": 0, "deleted": 0, "renamed": 0, "mode_changed": 0},
+        )
+        self.assertEqual(set(contract["evidence_boundary"]["counters"].values()), {0})
+        for key, value in validation["global_acceptance"].items():
+            if key.endswith("_count"):
+                self.assertEqual(value, 0, key)
+
+        marker = contract["completion_marker"]
+        self.assertEqual(marker, schema["completion_marker"])
+        self.assertEqual(marker, predecessor["completion_marker"])
+        self.assertEqual(marker, validation["completion_marker"])
+        for path, raw in raw_by_path.items():
+            self.assertEqual(raw.count(marker.encode("utf-8")), 1, path)
+        self.assertEqual(
+            contract["future_stage_boundary"]["durability"],
+            "separately authorized one-path reachability change after integration",
+        )
+        self.assertEqual(
+            contract["future_stage_boundary"]["stage_e"],
+            "separately authorized harness and conformance only after accepted continuation authority and durability",
         )
 
     def _audit_validation_ast(self, contract, manifest) -> None:
