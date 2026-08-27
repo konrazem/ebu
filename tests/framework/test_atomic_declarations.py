@@ -96,6 +96,7 @@ _CONTRACT = _load_json(_CONTRACT_PATH)
 _VALIDATION = _load_json(_VALIDATION_PATH)
 _MANIFEST = _load_json(_MANIFEST_PATH)
 _FIXTURE = _load_json(_FIXTURE_PATH)
+_CLCD = _load_json(_REPO_ROOT / "closed_loop_correction_diagnostics_contract.json")
 assert type(_CONTRACT) is dict
 assert type(_VALIDATION) is dict
 assert type(_MANIFEST) is dict
@@ -1580,7 +1581,8 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         failure_slices = current_surface["failure_slices"]
         export_slices = current_surface["root_export_slices"]
         failures = tuple(code.value for code in FailureCode)
-        self.assertEqual(len(failures), 280)
+        self.assertEqual(len(failures), 294)
+        self.assertEqual(len(set(failures)), 294)
         self.assertEqual(failures[:88], tuple(_CONTRACT["current_surface"]["failure_order"]))
         self.assertEqual(failures[88:102], tuple(failure_slices[2]["values"]))
         self.assertEqual(
@@ -1603,8 +1605,9 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             failures[232:256], tuple(i7_contract["failure_inventory"]["append_order"])
         )
         self.assertEqual(
-            failures[256:], tuple(i8_contract["failure_inventory"]["future_values"][256:])
+            failures[256:280], tuple(i8_contract["failure_inventory"]["future_values"][256:])
         )
+        self.assertEqual(failures[280:], tuple(_CLCD["failure_suffix"]))
         failure_projection = ("\n".join(failures) + "\n").encode()
         failure_prefix_projection = ("\n".join(failures[:102]) + "\n").encode()
         self.assertEqual(
@@ -1636,12 +1639,13 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()),
             (
-                i8_contract["failure_inventory"]["future_lf"]["byte_count"],
-                i8_contract["failure_inventory"]["future_lf"]["sha256"],
+                7945,
+                "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
             ),
         )
         exports = tuple(ebu_framework.__all__)
-        self.assertEqual(len(exports), 444)
+        self.assertEqual(len(exports), 471)
+        self.assertEqual(len(set(exports)), 471)
         self.assertEqual(
             exports[:219], tuple(_CONTRACT["current_surface"]["root_export_order"])
         )
@@ -1668,8 +1672,9 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             exports[407:419], tuple(i7_contract["root_exports"]["append_order"])
         )
         self.assertEqual(
-            exports[419:], tuple(i8_contract["root_exports"]["append_order"])
+            exports[419:444], tuple(i8_contract["root_exports"]["append_order"])
         )
+        self.assertEqual(exports[444:], tuple(_CLCD["root_export_suffix"]))
         export_projection = ("\n".join(exports) + "\n").encode()
         export_prefix_projection = ("\n".join(exports[:237]) + "\n").encode()
         self.assertEqual(
@@ -1701,8 +1706,8 @@ class AtomicDeclarationContractTests(unittest.TestCase):
         self.assertEqual(
             (len(export_projection), hashlib.sha256(export_projection).hexdigest()),
             (
-                i8_contract["root_exports"]["future_lf"]["byte_count"],
-                i8_contract["root_exports"]["future_lf"]["sha256"],
+                10526,
+                "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
             ),
         )
 
@@ -1798,7 +1803,14 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             "src/ebu_framework/experiment.py",
             "src/ebu_framework/network.py",
             "src/ebu_framework/traces.py",
+            "EBU_FUTURE_BOOKS_STRUCTURE.md",
+            "tests/framework/safety.py",
         }
+        excluded.update(
+            _load_json(
+                _REPO_ROOT / "framework_alpha_packaging_release_candidate_contract.json"
+            )["implementation_scope"]["modified_paths"]
+        )
         for row in _MANIFEST["rows"]:
             if row["path"] in excluded:
                 continue
@@ -1980,8 +1992,9 @@ class AtomicDeclarationContractTests(unittest.TestCase):
             root_exports[407:419], tuple(i7_contract["root_exports"]["append_order"])
         )
         self.assertEqual(
-            root_exports[419:], tuple(i8_contract["root_exports"]["append_order"])
+            root_exports[419:444], tuple(i8_contract["root_exports"]["append_order"])
         )
+        self.assertEqual(root_exports[444:], tuple(_CLCD["root_export_suffix"]))
         interaction_payload = (
             _REPO_ROOT / "src/ebu_framework/interaction.py"
         ).read_bytes()

@@ -936,10 +936,13 @@ def _runtime_and_static_inventory() -> None:
     i8 = _load_contract(
         _REPO_ROOT / "unified_python_research_framework_i8_contract.json"
     )
+    clcd = _load_contract(
+        _REPO_ROOT / "closed_loop_correction_diagnostics_contract.json"
+    )
     failure_slices = compatibility["current_surface"]["failure_slices"]
     failure_projection = ("\n".join(failures) + "\n").encode("utf-8")
     assert (len(failures), tuple(row["stop"] for row in failure_slices)) == (
-        280,
+        294,
         (53, 88, 102, 124, 185),
     )
     assert failures[53:88] == tuple(contract["failure_append_order"])
@@ -978,10 +981,12 @@ def _runtime_and_static_inventory() -> None:
     )
     assert failures[227:232] == tuple(i6["failure_inventory"]["append_order"])
     assert failures[232:256] == tuple(i7["failure_inventory"]["append_order"])
-    assert failures[256:] == tuple(i8["failure_inventory"]["future_values"][256:])
+    assert failures[256:280] == tuple(i8["failure_inventory"]["future_values"][256:])
+    assert failures[280:] == tuple(clcd["failure_suffix"])
+    assert len(set(failures)) == 294
     assert (len(failure_projection), hashlib.sha256(failure_projection).hexdigest()) == (
-        i8["failure_inventory"]["future_lf"]["byte_count"],
-        i8["failure_inventory"]["future_lf"]["sha256"],
+        7945,
+        "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
     )
     assert "OPERATIONAL_DURABILITY_EVENT" not in FaultClass.__members__
 

@@ -648,8 +648,16 @@ class FrameworkI4ReachabilityTests(unittest.TestCase):
             ),
             tuple(t2_patch["exact_new_rows"]),
         )
-        self.assertEqual(len(tuple(FailureCode)), i8_contract["failure_inventory"]["future_total"])
-        self.assertEqual(len(tuple(framework.__all__)), i8_contract["root_exports"]["future_count"])
+        clcd_contract = json.loads(
+            (ROOT / "closed_loop_correction_diagnostics_contract.json").read_bytes()
+        )
+        failures = tuple(code.value for code in FailureCode)
+        root_exports = tuple(framework.__all__)
+        self.assertEqual(failures[:280], tuple(i8_contract["failure_inventory"]["future_values"]))
+        self.assertEqual(failures[280:], tuple(clcd_contract["failure_suffix"]))
+        self.assertEqual((len(failures), len(set(failures))), (294, 294))
+        self.assertEqual(root_exports[444:], tuple(clcd_contract["root_export_suffix"]))
+        self.assertEqual((len(root_exports), len(set(root_exports))), (471, 471))
         self.assertEqual(i8_paths["future_import_graph"]["module_count"], 39)
         self.assertEqual(i8_paths["future_import_graph"]["direct_edge_count"], 243)
 

@@ -1295,6 +1295,9 @@ class BridgeExactFixtureTests(unittest.TestCase):
                 / "unified_python_research_framework_i8_implementation_path_manifest.json"
             ).read_bytes()
         )
+        clcd_contract = json.loads(
+            (ROOT / "closed_loop_correction_diagnostics_contract.json").read_bytes()
+        )
         failure_order = tuple(item.value for item in errors.FailureCode)
         expected_failures = tuple(
             self.predecessor["current_surface"]["failure_order"]
@@ -1303,15 +1306,14 @@ class BridgeExactFixtureTests(unittest.TestCase):
         ) + tuple(
             i8_contract["failure_inventory"]["future_values"][256:]
         )
-        self.assertEqual(failure_order, expected_failures)
-        self.assertEqual(len(failure_order), 280)
+        self.assertEqual(failure_order[:280], expected_failures)
+        self.assertEqual(failure_order[280:], tuple(clcd_contract["failure_suffix"]))
+        self.assertEqual((len(failure_order), len(set(failure_order))), (294, 294))
         failure_lf = ("\n".join(failure_order) + "\n").encode("utf-8")
-        self.assertEqual(
-            len(failure_lf), i8_contract["failure_inventory"]["future_lf"]["byte_count"]
-        )
+        self.assertEqual(len(failure_lf), 7945)
         self.assertEqual(
             hashlib.sha256(failure_lf).hexdigest(),
-            i8_contract["failure_inventory"]["future_lf"]["sha256"],
+            "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c",
         )
 
         root_exports = tuple(ebu_framework.__all__)
@@ -1322,15 +1324,14 @@ class BridgeExactFixtureTests(unittest.TestCase):
         ) + tuple(
             i8_contract["root_exports"]["append_order"]
         )
-        self.assertEqual(root_exports, expected_root_exports)
-        self.assertEqual(len(root_exports), 444)
+        self.assertEqual(root_exports[:444], expected_root_exports)
+        self.assertEqual(root_exports[444:], tuple(clcd_contract["root_export_suffix"]))
+        self.assertEqual((len(root_exports), len(set(root_exports))), (471, 471))
         root_lf = ("\n".join(root_exports) + "\n").encode("utf-8")
-        self.assertEqual(
-            len(root_lf), i8_contract["root_exports"]["future_lf"]["byte_count"]
-        )
+        self.assertEqual(len(root_lf), 10526)
         self.assertEqual(
             hashlib.sha256(root_lf).hexdigest(),
-            i8_contract["root_exports"]["future_lf"]["sha256"],
+            "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
         )
         self.assertEqual(tuple(bridge.__all__), tuple(self.contract["root_exports"]["bridge_module_exports"]))
 

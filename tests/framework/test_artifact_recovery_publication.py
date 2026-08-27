@@ -109,6 +109,7 @@ CONTRACT = json.loads(CONTRACT_PATH.read_bytes())
 MECHANICAL = json.loads(MECHANICAL_PATH.read_bytes())
 PATHS = json.loads(PATHS_PATH.read_bytes())
 PREDECESSOR = json.loads(PREDECESSOR_PATH.read_bytes())
+CLCD = json.loads((ROOT / "closed_loop_correction_diagnostics_contract.json").read_bytes())
 VECTORS = tuple(CONTRACT["vectors"])
 VERSION = SemanticVersion("1.0.0")
 
@@ -1389,8 +1390,22 @@ def _run_static_vector(vector: dict[str, Any]) -> None:
             for name in witness["callables"]
         )
     elif kind == "PREDECESSOR_PRESERVATION":
+        stage_c = json.loads(
+            (
+                ROOT / "framework_alpha_packaging_release_candidate_contract.json"
+            ).read_bytes()
+        )
+        later_authorized = set(stage_c["implementation_scope"]["modified_paths"]) | {
+            "EBU_FUTURE_BOOKS_STRUCTURE.md",
+            "src/ebu_framework/__init__.py",
+            "src/ebu_framework/errors.py",
+            "src/ebu_framework/validation.py",
+            "tests/framework/safety.py",
+        }
         for row in PREDECESSOR["rows"]:
             if row["i8_future_disposition"] != "PRESERVED":
+                continue
+            if row["path"] in later_authorized:
                 continue
             payload = (ROOT / row["path"]).read_bytes()
             assert len(payload) == row["byte_count"]
@@ -1544,13 +1559,19 @@ class FrameworkI8AggregateContract(unittest.TestCase):
         self.assertEqual(len(set(coordinates.values())), 54)
 
     def test_exact_public_inventory_signatures_and_canonical_authority(self) -> None:
-        self.assertEqual(len(framework.__all__), 444)
-        self.assertEqual(len(tuple(FailureCode)), 280)
-        self.assertEqual(tuple(framework.__all__[-25:]), tuple(MECHANICAL["root_exports"]["append_order"]))
+        root_exports = tuple(framework.__all__)
+        failure_codes = tuple(code.value for code in FailureCode)
+        self.assertEqual(len(root_exports), 471)
+        self.assertEqual(len(set(root_exports)), 471)
+        self.assertEqual(len(failure_codes), 294)
+        self.assertEqual(len(set(failure_codes)), 294)
+        self.assertEqual(root_exports[419:444], tuple(MECHANICAL["root_exports"]["append_order"]))
+        self.assertEqual(root_exports[444:], tuple(CLCD["root_export_suffix"]))
         self.assertEqual(
-            tuple(code.value for code in FailureCode)[-24:],
+            failure_codes[256:280],
             tuple(row["name"] for row in MECHANICAL["failure_inventory"]["append_rows"]),
         )
+        self.assertEqual(failure_codes[280:], tuple(CLCD["failure_suffix"]))
         self.assertEqual(len(MECHANICAL["public_types"]), 14)
         self.assertEqual(len(MECHANICAL["public_callables"]), 11)
         self.assertEqual(len(MECHANICAL["private_types"]), 1)

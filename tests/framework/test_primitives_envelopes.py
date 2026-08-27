@@ -448,7 +448,7 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
             and node.target.id == "__all__"
             and isinstance(node.op, ast.Add)
         )
-        self.assertEqual(len(export_suffixes), 4)
+        self.assertEqual(len(export_suffixes), 5)
         current_root_exports = root_exports + tuple(
             name for suffix in export_suffixes for name in suffix
         )
@@ -494,6 +494,9 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 / "unified_python_research_framework_i8_implementation_path_manifest.json"
             ).read_bytes()
         )
+        clcd_contract = json.loads(
+            (ROOT / "closed_loop_correction_diagnostics_contract.json").read_bytes()
+        )
         self.assertEqual(
             (
                 set(current_root_exports)
@@ -504,7 +507,8 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 current_root_exports[:391],
                 current_root_exports[391:407],
                 current_root_exports[407:419],
-                current_root_exports[419:],
+                current_root_exports[419:444],
+                current_root_exports[444:],
                 len(i5_execution_exports),
                 i5_execution_exports,
             ),
@@ -516,11 +520,29 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                 tuple(i6_contract["root_exports"]["append_order"]),
                 tuple(i7_contract["root_exports"]["append_order"]),
                 tuple(i8_contract["root_exports"]["append_order"]),
+                tuple(clcd_contract["root_export_suffix"]),
                 14,
                 frozenset(
                     post_i5_surface["root_import_strategy"]
                     ["i5_lazy_execution_exports_in_module_order"]
                 ),
+            ),
+        )
+        current_root_projection = (
+            "\n".join(current_root_exports) + "\n"
+        ).encode("utf-8")
+        self.assertEqual(
+            (
+                len(current_root_exports),
+                len(set(current_root_exports)),
+                len(current_root_projection),
+                hashlib.sha256(current_root_projection).hexdigest(),
+            ),
+            (
+                471,
+                471,
+                10526,
+                "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9",
             ),
         )
         self.assertEqual(_literal_assignment(trees["__init__"], "__version__"), "0.1.0a1")
@@ -609,10 +631,10 @@ class FrameworkI2SourceAuditTests(unittest.TestCase):
                         frozenset(root_relative_module_order),
                     ),
                     (
-                        i8_paths["future_import_graph"]["module_count"],
+                        i8_paths["future_import_graph"]["module_count"] + 2,
                         frozenset(
                             i8_paths["future_import_graph"]["package_module_order"]
-                        ),
+                        ) | {"correction_protocol", "correction_diagnostics"},
                     ),
                 )
                 self.assertEqual(

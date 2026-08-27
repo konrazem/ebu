@@ -162,10 +162,48 @@ COORDINATE_ENV = {
 }
 IMPLEMENTATION_BASE_COMMIT = "5de9f64db189f0e1db4da72efc2f2049e16ab4be"
 IMPLEMENTATION_BASE_TREE = "c3dd8b47194e85679eb19e197080676771d3826f"
+STAGE_C_PREDECESSOR_COMMIT = "3c0b8939b9902e05584501e31d74e2bcb57c302a"
 CURRENT_HEAD_ENV = "EBU_POST_I9_CURRENT_HEAD"
 POST_I9_AUTHORIZED_PATHS = (
     ".github/workflows/tests.yml",
     "tests/framework/test_validation_reachability.py",
+)
+STAGE_C_AUTHORITY_PATHS = (
+    "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+    "framework_alpha_packaging_release_candidate_contract.json",
+    "framework_alpha_packaging_release_candidate_implementation_path_manifest.json",
+    "framework_alpha_packaging_release_candidate_predecessor_manifest.json",
+    "framework_alpha_packaging_release_candidate_validation_contract.json",
+)
+STAGE_C_MODIFIED_PATHS = (
+    ".github/workflows/tests.yml",
+    "build_backend/ebu_build_backend.py",
+    "tests/framework/test_artifact_recovery_publication.py",
+    "tests/framework/test_atomic_declarations.py",
+    "tests/framework/test_bridge_exact_fixtures.py",
+    "tests/framework/test_capabilities.py",
+    "tests/framework/test_i3_integration.py",
+    "tests/framework/test_i3a_declarations.py",
+    "tests/framework/test_i3b_declarations.py",
+    "tests/framework/test_i3c_declarations.py",
+    "tests/framework/test_i3d_declarations.py",
+    "tests/framework/test_interaction_declarations.py",
+    "tests/framework/test_primitives_envelopes.py",
+    "tests/framework/test_validation_reachability.py",
+)
+STAGE_C_NEW_PATHS = (
+    "scripts/validate_stage_c_release_candidate.py",
+    "tests/framework/installed_artifact_probe.py",
+    "tests/framework/test_packaging_release_candidate.py",
+)
+STAGE_C_AUTHORITY_SCOPE = frozenset(
+    POST_I9_AUTHORIZED_PATHS + STAGE_C_AUTHORITY_PATHS
+)
+STAGE_C_IMPLEMENTATION_SCOPE = frozenset(
+    POST_I9_AUTHORIZED_PATHS
+    + STAGE_C_AUTHORITY_PATHS
+    + STAGE_C_MODIFIED_PATHS
+    + STAGE_C_NEW_PATHS
 )
 CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS = (
     "src/ebu_framework/__init__.py",
@@ -176,7 +214,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "415bf5076a48ea726524daad5d5c09be5c154edc35c9731245a778cfa0d849b8"
+TEST_SELF_SEAL = "373d9ffa4fb90f9fbd29147c31ac43f9431258d635aab4c7c21ec0edd227f741"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -354,6 +392,11 @@ def _git(*args: str) -> bytes:
         or args[:4] == ("ls-tree", "-rz", "-r", "--full-tree")
         or args[:2] == ("cat-file", "blob")
         or args[:2] == ("archive", "--format=tar")
+        or args
+        == (
+            "show",
+            f"{STAGE_C_PREDECESSOR_COMMIT}:.github/workflows/tests.yml",
+        )
     )
     if not allowed:
         raise AssertionError(f"forbidden Git-object command: {args!r}")
@@ -566,8 +609,7 @@ def _direct_imports(tree: ast.Module, package_modules: tuple[str, ...]) -> tuple
     return tuple(result)
 
 
-def _base_candidate_bytes(path: str) -> bytes:
-    raw = (ROOT / path).read_bytes()
+def _base_candidate_projection(path: str, raw: bytes) -> bytes:
     if path == "tests/framework/safety.py":
         prefix, separator, _ = raw.partition(b"\n\n_I9_FORBIDDEN_T3_INTERFACES = (")
         if not separator:
@@ -582,6 +624,10 @@ def _base_candidate_bytes(path: str) -> bytes:
             raise AssertionError("workflow dispatch restoration was ambiguous")
         return restored
     return raw
+
+
+def _base_candidate_bytes(path: str) -> bytes:
+    return _base_candidate_projection(path, (ROOT / path).read_bytes())
 
 
 def _blob_id(raw: bytes) -> str:
@@ -1058,7 +1104,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         self._audit_public_surface(contract, manifest, clcd_contract)
         self._audit_import_graph(manifest, clcd_contract)
         self._audit_tables(contract)
-        self._audit_safety_and_ci(manifest)
+        self._audit_safety_and_ci(manifest, current_scope["stage_c_phase"])
         self._audit_text_and_markdown(contract)
         self._audit_static_vectors(validation_contract)
         self._audit_cross_document(contract, validation_contract, predecessor, manifest)
@@ -1088,11 +1134,23 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         base_entries = _tree_entries(IMPLEMENTATION_BASE_COMMIT)
         head_entries = _tree_entries(actual_head)
-        for path in sorted(set(base_entries) | set(head_entries)):
-            if path in POST_I9_AUTHORIZED_PATHS:
-                continue
-            self.assertEqual(head_entries.get(path), base_entries.get(path), path)
-        for path in POST_I9_AUTHORIZED_PATHS:
+        changed_paths = frozenset(
+            path
+            for path in set(base_entries) | set(head_entries)
+            if head_entries.get(path) != base_entries.get(path)
+        )
+        if changed_paths == STAGE_C_AUTHORITY_SCOPE:
+            stage_c_phase = "AUTHORITY_ONLY"
+        elif changed_paths == STAGE_C_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+        else:
+            self.fail(
+                "current HEAD is neither the exact Stage C authority phase nor "
+                f"the exact completed implementation phase: {sorted(changed_paths)!r}"
+            )
+        self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
+        self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 22)
+        for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
             self.assertEqual(head_entries[path]["object_type"], "blob", path)
@@ -1128,7 +1186,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             self.assertTrue(candidate.is_file(), path)
             actual_mode = "100755" if candidate.stat().st_mode & 0o111 else "100644"
             self.assertEqual(actual_mode, row["mode"], path)
-            if path in POST_I9_AUTHORIZED_PATHS or path in CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS:
+            if path in changed_paths or path in CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS:
                 continue
             raw = candidate.read_bytes()
             self.assertEqual(len(raw), row["byte_count"], path)
@@ -1138,10 +1196,11 @@ class ValidationReachabilityTests(unittest.TestCase):
         current_path_bytes = {
             path: (ROOT / path).read_bytes() for path in IMPLEMENTATION_PATHS
         }
-        self.assertEqual(
-            _workflow_without_routing(current_path_bytes[".github/workflows/tests.yml"]),
-            historical["implementation_raw"][".github/workflows/tests.yml"],
-        )
+        if stage_c_phase == "AUTHORITY_ONLY":
+            self.assertEqual(
+                _workflow_without_routing(current_path_bytes[".github/workflows/tests.yml"]),
+                historical["implementation_raw"][".github/workflows/tests.yml"],
+            )
         self.assertNotEqual(TEST_SELF_SEAL, "0" * 64)
         self.assertEqual(
             _sha256(
@@ -1161,7 +1220,11 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(current_book["byte_count"], 150664)
         self.assertEqual(current_book["git_object"], "af33c79b89372a8a1a9dc1939ca5f66974c23e56")
         self.assertNotEqual(current_book["raw_sha256"], historical["historical_book"]["raw_sha256"])
-        return {"actual_head": actual_head, "current_path_bytes": current_path_bytes}
+        return {
+            "actual_head": actual_head,
+            "current_path_bytes": current_path_bytes,
+            "stage_c_phase": stage_c_phase,
+        }
 
     def _audit_validation_ast(self, contract, manifest) -> None:
         path = SOURCE / "validation.py"
@@ -1458,7 +1521,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             contract["audit_register"]["combined_projection"],
         )
 
-    def _audit_safety_and_ci(self, manifest) -> None:
+    def _audit_safety_and_ci(self, manifest, stage_c_phase: str) -> None:
         safety_path = ROOT / "tests/framework/safety.py"
         safety_raw = safety_path.read_bytes()
         self.assertEqual(
@@ -1482,11 +1545,16 @@ class ValidationReachabilityTests(unittest.TestCase):
         }
         self.assertFalse(safety_imports & {"ebu_framework", "subprocess", "socket", "requests"})
 
-        workflow_path = ROOT / ".github/workflows/tests.yml"
-        workflow = workflow_path.read_text(encoding="utf-8")
-        workflow_raw = workflow.encode("utf-8")
+        current_workflow_raw = (ROOT / ".github/workflows/tests.yml").read_bytes()
+        if stage_c_phase == "COMPLETED_IMPLEMENTATION":
+            workflow_raw = _git(
+                "show", f"{STAGE_C_PREDECESSOR_COMMIT}:.github/workflows/tests.yml"
+            )
+        else:
+            workflow_raw = current_workflow_raw
+        workflow = workflow_raw.decode("utf-8")
         self.assertEqual(
-            _sha256(_base_candidate_bytes(".github/workflows/tests.yml")),
+            _sha256(_base_candidate_projection(".github/workflows/tests.yml", workflow_raw)),
             "4d12f834e52bf92a723ab1e2c9723a9b395344320f3c95482b64d9133c766d23",
         )
         self.assertEqual(workflow_raw.count(WORKFLOW_ROUTING_BLOCK), 1)
@@ -1605,6 +1673,62 @@ class ValidationReachabilityTests(unittest.TestCase):
         )[0]
         self.assertNotIn("from ebu_framework", historical_region)
         self.assertNotIn("import ebu_framework", historical_region)
+        if stage_c_phase == "COMPLETED_IMPLEMENTATION":
+            self._audit_stage_c_ci(current_workflow_raw.decode("utf-8"))
+
+    def _audit_stage_c_ci(self, workflow: str) -> None:
+        self.assertNotIn("ubuntu-26.04", workflow)
+        self.assertEqual(workflow.count("runs-on: ubuntu-24.04"), 5)
+        for job in (
+            "test",
+            "framework-t0",
+            "framework-t1",
+            "framework-t2",
+            "packaging-release-candidate",
+        ):
+            self.assertEqual(workflow.count(f"  {job}:\n"), 1, job)
+        self.assertEqual(workflow.count("--network none"), 5)
+        self.assertEqual(workflow.count("--platform linux/amd64"), 5)
+        self.assertEqual(workflow.count("--read-only"), 5)
+        self.assertGreaterEqual(workflow.count(IMAGE_DIGEST := "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"), 2)
+        self.assertIn("docker.io/library/python@" + IMAGE_DIGEST, workflow)
+        self.assertIn(
+            "framework-t2:\n    if: github.event_name == 'push' || "
+            "github.event_name == 'pull_request' || "
+            "github.event_name == 'workflow_dispatch'",
+            workflow,
+        )
+        self.assertEqual(
+            workflow.count("validate_stage_c_release_candidate.py packaging"), 5
+        )
+        self.assertEqual(
+            workflow.count("validate_stage_c_release_candidate.py static-authority"),
+            5,
+        )
+        self.assertIn("for tier in t0 t1 t2", workflow)
+        self.assertIn("for artifact in source direct-wheel sdist-wheel", workflow)
+        self.assertIn("validate_stage_c_release_candidate.py emit-manifest", workflow)
+        self.assertIn("actions/upload-artifact@v4", workflow)
+        self.assertEqual(workflow.count("--require-hashes"), 5)
+        self.assertEqual(
+            workflow.count("--dest \"$stage_root/conventional-wheelhouse\""), 2
+        )
+        for requirement in (
+            "charset-normalizer==3.5.1",
+            "contourpy==1.3.3",
+            "cycler==0.12.1",
+            "fonttools==4.63.0",
+            "kiwisolver==1.5.0",
+            "matplotlib==3.11.1",
+            "numpy==2.5.2",
+            "pillow==12.3.0",
+            "pyparsing==3.3.2",
+            "python-dateutil==2.9.0.post0",
+            "reportlab==5.0.1",
+            "six==1.17.0",
+        ):
+            self.assertEqual(workflow.count(requirement), 2, requirement)
+        self.assertEqual(workflow.count("packaging==26.3"), 7)
 
     def _audit_text_and_markdown(self, contract) -> None:
         for path in (
