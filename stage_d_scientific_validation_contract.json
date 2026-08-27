@@ -15,6 +15,23 @@
     "sealed_stage_c_artifact": 9641430424,
     "sealed_stage_c_artifact_digest": "sha256:f121f23839cbc9ac9bdc772814bacbd64c440ea6ca2adb2119008a0d89879d81"
   },
+  "authority_audit_history": [
+    {
+      "candidate_commit": "cf747d49924fbd2b783431dbb4a9a54f1eb5a9f1",
+      "candidate_tree": "16132e72a55ae86b9df1156146335f15a67413ad",
+      "ci_run": 33075994735,
+      "disposition": "FAIL",
+      "blocking_classes": [
+        "unbound path-shaped predecessor authority references",
+        "unfrozen SD-01 and SD-09 homeostasis/recovery predicates",
+        "unrepresentable hard caps and invalid limit/evidence pairings",
+        "unfrozen bootstrap and numerical policies",
+        "incorrect SD-07 and incomplete SD-06 evaluation arithmetic",
+        "under-specified DAG ready-set algorithm and complexity counters"
+      ],
+      "execution_boundary": "no Stage D model, transform, benchmark, trajectory, simulation, outcome, result, figure, or book was executed; the CI failure was only the expected authority-transition reachability refusal"
+    }
+  ],
   "candidate_files": [
     "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
     "stage_d_scientific_validation_contract.json",
@@ -126,6 +143,17 @@
     "table_or_figure",
     "claim_disposition"
   ],
+  "predecessor_authority_reference_binding": {
+    "scanned_matrix_locations": [
+      "studies[].dependencies[]",
+      "studies[].owners.authority_sources[]"
+    ],
+    "path_shaped_reference_pattern": "^[A-Za-z0-9_./-]+\\.(md|json|py|yml)$",
+    "required_rule": "Every path-shaped reference must exist as a mode-100644 blob at accepted commit fb9ae7b6dae14550a702e060600132faec539eca and must have one unique row in stage_d_scientific_validation_predecessor_manifest.json whose mode, Git object, byte count, and SHA-256 match that blob exactly.",
+    "prose_or_future_authority_rule": "A non-path prose dependency may describe a future authority, but it is not an accepted authority identity and cannot make a study executable.",
+    "unknown_existing_or_unlocked_path_disposition": "REFUSE_UNBOUND_AUTHORITY_REFERENCE",
+    "identity_mismatch_disposition": "REFUSE_PREDECESSOR_MISMATCH"
+  },
   "required_visual_labels": [
     "SCHEMATIC",
     "MATHEMATICALLY_DERIVED",
@@ -185,6 +213,59 @@
     "oversize_evidence_rule": "Neither oversize disposition is positive or negative scientific evidence.",
     "silent_fallback_forbidden": true
   },
+  "evidence_hard_cap_normalization": {
+    "record_shape": "Every hard_caps/v1 record contains profile_id and every closed dimension below. A dimension is a positive integer when applicable and JSON null only when the exact applicable_dimensions_by_profile row declares it NOT_APPLICABLE.",
+    "closed_dimension_names": [
+      "wall_time_seconds_per_run",
+      "wall_time_seconds_per_case",
+      "peak_resident_memory_bytes_per_run",
+      "peak_resident_memory_bytes_per_case",
+      "trace_bytes_per_run",
+      "combined_trace_output_bytes_per_case",
+      "total_output_bytes",
+      "primary_evaluations_per_run",
+      "primary_evaluations_per_case",
+      "maximum_depth",
+      "maximum_recursion_depth",
+      "maximum_n",
+      "maximum_mobius_n",
+      "maximum_subsets",
+      "maximum_hyperedge_order",
+      "maximum_vertices",
+      "maximum_edges",
+      "maximum_dag_vertices",
+      "maximum_dag_edges",
+      "maximum_canonical_vertices",
+      "canonical_vertices",
+      "expanded_oracle_level",
+      "compressed_comparison_level",
+      "maximum_expanded_occurrences",
+      "maximum_agents"
+    ],
+    "applicable_dimensions_source": "the exact computational_feasibility.hard_caps keys of the matching SD-01..SD-14 matrix row; MOBIUS-EXACT-01, DAG-EXACT-01, and CANONICAL-CACHE-01 use their exact mechanical-contract hard_caps keys",
+    "applicable_dimensions_by_profile": {
+      "SD-01": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-02": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-03": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-04": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-05": ["maximum_depth", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-06": ["combined_trace_output_bytes_per_case", "maximum_depth", "maximum_hyperedge_order", "maximum_n", "maximum_subsets", "peak_resident_memory_bytes_per_case", "primary_evaluations_per_case", "total_output_bytes", "wall_time_seconds_per_case"],
+      "SD-07": ["combined_trace_output_bytes_per_case", "compressed_comparison_level", "expanded_oracle_level", "maximum_canonical_vertices", "maximum_dag_edges", "maximum_dag_vertices", "maximum_expanded_occurrences", "maximum_hyperedge_order", "maximum_recursion_depth", "peak_resident_memory_bytes_per_case", "primary_evaluations_per_case", "wall_time_seconds_per_case"],
+      "SD-08": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-09": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-10": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-11": ["maximum_depth", "maximum_edges", "maximum_hyperedge_order", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-12": ["maximum_agents", "maximum_depth", "maximum_edges", "maximum_hyperedge_order", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-13": ["maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "SD-14": ["maximum_depth", "maximum_edges", "maximum_hyperedge_order", "maximum_mobius_n", "maximum_subsets", "maximum_vertices", "peak_resident_memory_bytes_per_run", "primary_evaluations_per_run", "total_output_bytes", "trace_bytes_per_run", "wall_time_seconds_per_run"],
+      "MOBIUS-EXACT-01": ["combined_trace_output_bytes_per_case", "maximum_n", "maximum_subsets", "peak_resident_memory_bytes_per_case", "wall_time_seconds_per_case"],
+      "DAG-EXACT-01": ["combined_trace_output_bytes_per_case", "maximum_depth", "maximum_edges", "maximum_vertices", "peak_resident_memory_bytes_per_case", "wall_time_seconds_per_case"],
+      "CANONICAL-CACHE-01": ["canonical_vertices", "combined_trace_output_bytes_per_case", "compressed_comparison_level", "expanded_oracle_level", "maximum_expanded_occurrences", "maximum_hyperedge_order", "maximum_recursion_depth", "peak_resident_memory_bytes_per_case", "wall_time_seconds_per_case"]
+    },
+    "normalization_algorithm": "Copy profile_id and each applicable matrix/control hard-cap value exactly; emit every other closed dimension as JSON null; canonicalize and hash the complete object. No key renaming, unit conversion, default insertion, or omitted null is permitted.",
+    "omitted_applicable_or_nonnull_inapplicable_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH",
+    "unknown_dimension_disposition": "REFUSE_UNKNOWN_HARD_CAP_DIMENSION"
+  },
   "prospective_stochastic_rule": {
     "rule_id": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1",
     "preimage": "UTF-8 EBU-STAGE-F-RNG-v1|study_id|configuration_id|seed|stream_id|tick|event_index|draw_index with canonical decimal integers and no whitespace",
@@ -196,6 +277,40 @@
     "stream_rule": "every study row names all permitted stream IDs; an unknown stream, draw-order change, or reused preimage refuses",
     "checkpoint_rule": "the complete next counter tuple per stream is sealed; a restarted suffix must be byte-identical",
     "stage_d_draw_count": 0
+  },
+  "prospective_uncertainty_policy": {
+    "policy_id": "REGISTERED-SEED-SUMMARY-01",
+    "scope": [
+      "SD-09",
+      "SD-12",
+      "SD-13",
+      "SD-14"
+    ],
+    "input_order": "ascending registered seed, with paired differences formed before ordering and only between the exact prospectively named comparator cells",
+    "reported_values": "every seed-level value, every paired seed difference, the exact median, and the closed registered-seed range [minimum,maximum]",
+    "even_sample_median": "sort ascending by IEEE-754 totalOrder for MODEL_EXACT_NUMERICAL values or ordinary exact order for integers/rationals; for even S use the arithmetic mean of zero-based positions S/2-1 and S/2 under NUMERICAL-POLICY-01",
+    "interval_rule": "The closed minimum/maximum seed range is a descriptive interval over the complete registered seed set. It is not a confidence interval, bootstrap interval, population interval, or uncertainty estimate beyond those seeds.",
+    "resampling": "FORBIDDEN",
+    "analysis_stochastic_streams": [],
+    "analysis_draw_count": 0,
+    "unknown_stream_or_post_outcome_interval_disposition": "REFUSE"
+  },
+  "prospective_numerical_policy": {
+    "policy_id": "NUMERICAL-POLICY-01",
+    "scope": "all newly registered MODEL_EXACT_NUMERICAL Stage D studies except SD-02, whose preserved Gate 1D-C numerical rules remain controlling and may not be overridden",
+    "representation": "IEEE-754 binary64, roundTiesToEven, gradual underflow enabled, signed zero preserved",
+    "parameter_conversion": "each declared terminating decimal or rational parameter is parsed first as an exact integer ratio and converted once to binary64 using roundTiesToEven; no repeated text conversion",
+    "operation_order": "the exact written equation order; no reassociation, fused multiply-add, fast-math, extended-precision register retention, or outcome-dependent refinement",
+    "nonfinite_disposition": "stop and retain trace; scientific disposition INVALIDATED_BY_FALSIFIER when the registered model predicts finite state, otherwise NULL_OR_UNRESOLVED only where the row explicitly permits it",
+    "checkpoint_equality": "bit-exact binary64 state, ledger, delay, memory, and counter tuple equality",
+    "ledger_tolerance": "absolute residual <= 1e-12*max(1,sum of absolute owning ledger terms) for a declared MODEL_EXACT_NUMERICAL ledger; exact-integer/rational ledgers require exact zero",
+    "general_comparison_tolerance": "abs(observed-reference) <= 1e-12 + 1e-10*abs(reference) only for a row that explicitly names a numerical reference comparison; every scientific threshold is otherwise the exact declared inequality",
+    "adaptive_refinement": "FORBIDDEN_UNTIL_SEPARATE_INDEPENDENTLY_AUDITED_AMENDMENT",
+    "sd10_continuous_method": "classical explicit RK4 with fixed step 1/100 time-unit, exactly 100 substeps between integer samples 0..1000, four right-hand-side evaluations per substep, and the written L matrix evaluated in row-major operation order",
+    "sd10_continuous_classification": "the exact-rational Routh-Hurwitz classification of lambda^2+(a+d)lambda+(ad+k) is STABLE iff a+d>0 and ad+k>0, UNSTABLE iff either is negative, and MARGINAL_OR_UNRESOLVED iff either is zero; numerical trajectory evidence never upgrades this theorem classification",
+    "sd10_continuous_numerical_agreement": "for theorem-STABLE cells require finite RK4 state and Euclidean norm at t=1000 <= 1e-8*max(1,norm at t=0); disagreement is THEOREM_NUMERICAL_DISAGREEMENT and blocks a positive stability disposition",
+    "sd10_discrete_classification": "using samples r_0..r_1000, NUMERICALLY_DECAYED_ON_HORIZON iff max(abs(r_t),t=901..1000)<=1e-8; NUMERICALLY_BOUNDED_ON_HORIZON iff all samples are finite, max(abs(r_t))<=1e6, and tail maximum t=901..1000 <= (1+1e-10) times tail maximum t=801..900; DIVERGED_ON_HORIZON iff a finite sample first exceeds 1e6; otherwise NULL_OR_UNRESOLVED",
+    "stage_d_numerical_evaluation_count": 0
   },
   "verbatim_user_mobius_topology_controls": [
     "Preserve a direct, independently understandable small-case Möbius/topology oracle as the normative correctness reference.",
@@ -267,10 +382,26 @@
       },
       "measured_results_in_stage_d": 0
     },
+    "frozen_evaluation_accounting": {
+      "stage_e_shared_table_acquisitions": 327608,
+      "stage_e_direct_subset_visits": 31886408,
+      "stage_e_shared_transform_butterfly_subtractions": 1802280,
+      "stage_e_shared_reconstruction_additions": 1802280,
+      "stage_e_complexity_table_acquisitions": 2620160,
+      "stage_e_complexity_butterfly_subtractions": 22278400,
+      "stage_f_scientific_table_acquisitions": 1048576,
+      "stage_f_scientific_butterfly_subtractions": 8388608,
+      "stage_f_scientific_reconstruction_additions": 8388608,
+      "stage_f_poset_element_acquisitions": 1520,
+      "stage_f_poset_inversion_incidence_visits": 5453,
+      "stage_f_poset_reconstruction_incidence_visits": 5453,
+      "all_declared_primary_visits": 78555354,
+      "derivation": "direct subset visits use sum 3^n per complete table; acquisition uses 2^n; Boolean transform and reconstruction each use n*2^(n-1); the 32 finite-poset families have 1520 elements and 5453 comparable pairs"
+    },
     "hard_caps": {
       "maximum_n": 18,
       "maximum_subsets": 262144,
-      "peak_resident_memory_bytes": 536870912,
+      "peak_resident_memory_bytes_per_case": 536870912,
       "wall_time_seconds_per_case": 120,
       "combined_trace_output_bytes_per_case": 268435456
     },
@@ -287,7 +418,7 @@
     "normative_direct_oracle": {
       "algorithm": "explicit simple-path enumeration with canonical-ID result projection",
       "maximum_vertices": 12,
-      "required_result": "affected vertex set and deterministic lexicographically least ready-node topological order"
+      "required_result": "affected vertex set and deterministic canonical-stable FIFO Kahn order over the sealed canonical adjacency representation"
     },
     "registered_oracle_agreement_domain": {
       "complete_ordered_dag_domain": "all subsets of forward edges on canonical vertices for n=0..5, crossed with all source subsets",
@@ -325,10 +456,13 @@
       "invalid_refusal_controls": "one injected directed cycle and one injected duplicate edge for each n=6..12"
     },
     "optimized_traversal": {
-      "algorithm": "deterministic queue/topological traversal",
+      "algorithm": "Kahn traversal over a sealed dense canonical vertex index 0..V-1: initialize indegrees by one canonical adjacency scan, seed a FIFO queue with zero-indegree vertices in ascending canonical ID, inspect each vertex's already canonical-sorted adjacency list once, and append a successor to the FIFO exactly when its indegree first reaches zero",
+      "ready_set_algorithm": "array-backed FIFO with head index; enqueue and dequeue are O(1); no heap, tree, repeated scan, ready-node comparison, or lexicographically least dynamic selection is performed",
+      "representation_precondition": "The DAG identity owns dense canonical vertex indices and canonical-sorted adjacency lists. Arbitrary input edge order is canonicalized before traversal by stable bottom-up mergesort on (source canonical ID,target canonical ID,edge-label SHA-256), with at most E*ceil(log2(E)) tuple comparisons, E auxiliary edge slots, and a separate computation identity. That work is excluded from the traversal bound and may not be described as O(V+E).",
       "declared_time_cost": "O(V+E)",
       "declared_representation_storage": "O(V+E)",
-      "exact_oracle_agreement_required": true
+      "exact_oracle_agreement_required": true,
+      "ordering_nonclaim": "canonical-stable FIFO order is deterministic but is not claimed to be the lexicographically least topological order"
     },
     "required_controls": [
       "sparse",
@@ -338,7 +472,8 @@
       "wide_frontier",
       "invalid_cycle",
       "duplicate_edge",
-      "input_order_permutation"
+      "input_order_permutation",
+      "ready_set_interleaving"
     ],
     "future_stage_e_complexity_cells": [
       {
@@ -368,9 +503,16 @@
       }
     ],
     "future_stage_e_acceptance_thresholds": {
+      "exact_indegree_initialization_count": "V",
       "maximum_vertex_enqueue_count": "V",
+      "maximum_vertex_dequeue_count": "V",
       "maximum_edge_inspection_count": "E",
-      "maximum_logical_storage_slots": "6*V+2*E",
+      "maximum_ready_queue_append_count": "V",
+      "maximum_ready_queue_head_advance_count": "V",
+      "ready_node_comparison_count": 0,
+      "maximum_logical_storage_slots": "7*V+2*E",
+      "separate_input_canonicalization_comparison_bound": "E*ceil(log2(E)); zero when E<=1",
+      "separate_input_canonicalization_auxiliary_edge_slots": "E",
       "normalized_wall_time_domain": "median nanoseconds/(V+E) for the four sparse cells",
       "maximum_normalized_wall_time_ratio": 8,
       "dense_cell_rule": "record separately and require exact operation/storage bounds and hard caps; do not pool with sparse normalized ratio",
@@ -382,7 +524,7 @@
       "maximum_vertices": 100000,
       "maximum_edges": 500000,
       "maximum_depth": 100000,
-      "peak_resident_memory_bytes": 1073741824,
+      "peak_resident_memory_bytes_per_case": 1073741824,
       "wall_time_seconds_per_case": 120,
       "combined_trace_output_bytes_per_case": 268435456
     },
@@ -460,7 +602,7 @@
       "compressed_comparison_level": 32,
       "maximum_expanded_occurrences": 3524578,
       "maximum_recursion_depth": 64,
-      "peak_resident_memory_bytes": 1073741824,
+      "peak_resident_memory_bytes_per_case": 1073741824,
       "wall_time_seconds_per_case": 120,
       "combined_trace_output_bytes_per_case": 268435456
     },

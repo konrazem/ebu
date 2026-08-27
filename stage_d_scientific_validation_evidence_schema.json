@@ -5,6 +5,43 @@
   "description": "Schema authority only. No instances, measurements, runs, outcomes, results, or figures are created in Stage D.",
   "schema_version": "1.0.0-candidate",
   "stage_d_instance_count": 0,
+  "prospective_negative_schema_cases": [
+    {
+      "case_id": "SCHEMA-N01",
+      "target_definition": "hard_caps",
+      "mutation": "omit maximum_n from a MOBIUS-EXACT-01 normalized cap record",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "case_id": "SCHEMA-N02",
+      "target_definition": "hard_caps",
+      "mutation": "add an unknown algorithm-specific cap dimension",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_UNKNOWN_HARD_CAP_DIMENSION"
+    },
+    {
+      "case_id": "SCHEMA-N03",
+      "target_definition": "limit_decision",
+      "mutation": "pair REFUSED_BEFORE_EXECUTION with ELIGIBLE_FOR_REGISTERED_EXECUTION",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N04",
+      "target_definition": "limit_decision",
+      "mutation": "pair COMPUTATIONALLY_INCONCLUSIVE with ELIGIBLE_FOR_REGISTERED_EXECUTION",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "case_id": "SCHEMA-N05",
+      "target_definition": "limit_decision",
+      "mutation": "pair WITHIN_CAPS with NOT_A_SCIENTIFIC_OUTCOME",
+      "expected_schema_valid": false,
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    }
+  ],
   "verbatim_user_mobius_topology_controls": [
         "Preserve a direct, independently understandable small-case Möbius/topology oracle as the normative correctness reference.",
         "Any optimized bitmask/fast Möbius transform must reproduce the direct oracle exactly over the complete registered small-case domain and declared randomized/adversarial cross-check domain; a mismatch is a refusal, not a tolerance or approximation case.",
@@ -94,7 +131,11 @@
           "controls",
           "negative_controls",
           "seed_rule",
+          "permitted_stochastic_stream_ids",
+          "stochastic_rule_identity",
           "uncertainty_rule",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
           "horizon",
           "stopping_rules",
           "falsifiers",
@@ -175,8 +216,24 @@
           "seed_rule": {
             "$ref": "#/$defs/nonempty_string"
           },
+          "permitted_stochastic_stream_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/nonempty_string"
+            },
+            "uniqueItems": true
+          },
+          "stochastic_rule_identity": {
+            "$ref": "#/$defs/identity"
+          },
           "uncertainty_rule": {
             "$ref": "#/$defs/nonempty_string"
+          },
+          "uncertainty_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "numerical_policy_identity": {
+            "$ref": "#/$defs/identity"
           },
           "horizon": {
             "$ref": "#/$defs/nonempty_string"
@@ -220,37 +277,271 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "wall_time_seconds",
-          "peak_resident_memory_bytes",
-          "trace_bytes",
-          "output_bytes",
-          "primary_evaluations",
-          "maximum_depth"
+          "profile_id",
+          "wall_time_seconds_per_run",
+          "wall_time_seconds_per_case",
+          "peak_resident_memory_bytes_per_run",
+          "peak_resident_memory_bytes_per_case",
+          "trace_bytes_per_run",
+          "combined_trace_output_bytes_per_case",
+          "total_output_bytes",
+          "primary_evaluations_per_run",
+          "primary_evaluations_per_case",
+          "maximum_depth",
+          "maximum_recursion_depth",
+          "maximum_n",
+          "maximum_mobius_n",
+          "maximum_subsets",
+          "maximum_hyperedge_order",
+          "maximum_vertices",
+          "maximum_edges",
+          "maximum_dag_vertices",
+          "maximum_dag_edges",
+          "maximum_canonical_vertices",
+          "canonical_vertices",
+          "expanded_oracle_level",
+          "compressed_comparison_level",
+          "maximum_expanded_occurrences",
+          "maximum_agents"
         ],
         "properties": {
-          "wall_time_seconds": {
-            "type": "integer",
+          "profile_id": {
+            "enum": [
+              "SD-01",
+              "SD-02",
+              "SD-03",
+              "SD-04",
+              "SD-05",
+              "SD-06",
+              "SD-07",
+              "SD-08",
+              "SD-09",
+              "SD-10",
+              "SD-11",
+              "SD-12",
+              "SD-13",
+              "SD-14",
+              "MOBIUS-EXACT-01",
+              "DAG-EXACT-01",
+              "CANONICAL-CACHE-01"
+            ]
+          },
+          "wall_time_seconds_per_run": {
+            "type": ["integer", "null"],
             "minimum": 1
           },
-          "peak_resident_memory_bytes": {
-            "type": "integer",
+          "wall_time_seconds_per_case": {
+            "type": ["integer", "null"],
             "minimum": 1
           },
-          "trace_bytes": {
-            "type": "integer",
+          "peak_resident_memory_bytes_per_run": {
+            "type": ["integer", "null"],
             "minimum": 1
           },
-          "output_bytes": {
-            "type": "integer",
+          "peak_resident_memory_bytes_per_case": {
+            "type": ["integer", "null"],
             "minimum": 1
           },
-          "primary_evaluations": {
-            "type": "integer",
+          "trace_bytes_per_run": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "combined_trace_output_bytes_per_case": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "total_output_bytes": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "primary_evaluations_per_run": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "primary_evaluations_per_case": {
+            "type": ["integer", "null"],
             "minimum": 1
           },
           "maximum_depth": {
-            "type": "integer",
+            "type": ["integer", "null"],
             "minimum": 1
+          },
+          "maximum_recursion_depth": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_n": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_mobius_n": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_subsets": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_hyperedge_order": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_edges": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_dag_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_dag_edges": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_canonical_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "canonical_vertices": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "expanded_oracle_level": {
+            "type": ["integer", "null"],
+            "minimum": 0
+          },
+          "compressed_comparison_level": {
+            "type": ["integer", "null"],
+            "minimum": 0
+          },
+          "maximum_expanded_occurrences": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          },
+          "maximum_agents": {
+            "type": ["integer", "null"],
+            "minimum": 1
+          }
+        },
+        "description": "Closed normalized cap record. Every dimension is present. The matching authority-contract profile makes applicable dimensions positive integers and every other dimension null; Stage D static validation refuses omission, unknown dimensions, an applicable null, or a nonnull inapplicable value."
+      },
+      "generic_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "details"],
+        "properties": {
+          "kind": {"const": "GENERIC"},
+          "details": {"$ref": "#/$defs/nonempty_string"}
+        }
+      },
+      "mobius_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "n",
+          "subset_count",
+          "arithmetic_kind",
+          "subset_value_acquisitions",
+          "direct_subset_visits",
+          "butterfly_subtractions",
+          "reconstruction_additions",
+          "coefficient_digest",
+          "reconstruction_digest",
+          "oracle_agreement"
+        ],
+        "properties": {
+          "kind": {"const": "MOBIUS"},
+          "n": {"type": "integer", "minimum": 0, "maximum": 18},
+          "subset_count": {"type": "integer", "minimum": 1, "maximum": 262144},
+          "arithmetic_kind": {"enum": ["EXACT_INTEGER", "REDUCED_RATIONAL"]},
+          "subset_value_acquisitions": {"type": "integer", "minimum": 0},
+          "direct_subset_visits": {"type": "integer", "minimum": 0},
+          "butterfly_subtractions": {"type": "integer", "minimum": 0},
+          "reconstruction_additions": {"type": "integer", "minimum": 0},
+          "coefficient_digest": {"$ref": "#/$defs/sha256"},
+          "reconstruction_digest": {"$ref": "#/$defs/sha256"},
+          "oracle_agreement": {"enum": ["BIT_EXACT_PASS", "MISMATCH_REFUSAL", "NOT_IN_SHARED_DOMAIN"]}
+        }
+      },
+      "dag_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "vertices",
+          "edges",
+          "representation_identity",
+          "input_canonicalization_identity",
+          "input_canonicalization_tuple_comparisons",
+          "input_canonicalization_auxiliary_edge_slots",
+          "ready_set_algorithm",
+          "indegree_initializations",
+          "vertex_enqueues",
+          "vertex_dequeues",
+          "edge_inspections",
+          "ready_queue_appends",
+          "ready_queue_head_advances",
+          "ready_node_comparisons",
+          "affected_set_digest",
+          "canonical_stable_fifo_order_digest",
+          "oracle_agreement"
+        ],
+        "properties": {
+          "kind": {"const": "DAG"},
+          "vertices": {"type": "integer", "minimum": 0, "maximum": 100000},
+          "edges": {"type": "integer", "minimum": 0, "maximum": 500000},
+          "representation_identity": {"$ref": "#/$defs/identity"},
+          "input_canonicalization_identity": {"$ref": "#/$defs/identity"},
+          "input_canonicalization_tuple_comparisons": {"type": "integer", "minimum": 0},
+          "input_canonicalization_auxiliary_edge_slots": {"type": "integer", "minimum": 0},
+          "ready_set_algorithm": {"const": "CANONICAL_STABLE_FIFO_KAHN_V1"},
+          "indegree_initializations": {"type": "integer", "minimum": 0},
+          "vertex_enqueues": {"type": "integer", "minimum": 0},
+          "vertex_dequeues": {"type": "integer", "minimum": 0},
+          "edge_inspections": {"type": "integer", "minimum": 0},
+          "ready_queue_appends": {"type": "integer", "minimum": 0},
+          "ready_queue_head_advances": {"type": "integer", "minimum": 0},
+          "ready_node_comparisons": {"const": 0},
+          "affected_set_digest": {"$ref": "#/$defs/sha256"},
+          "canonical_stable_fifo_order_digest": {"$ref": "#/$defs/sha256"},
+          "oracle_agreement": {"enum": ["EXACT_PASS", "MISMATCH_REFUSAL", "INVALID_GRAPH_REFUSAL"]}
+        }
+      },
+      "cache_algorithm_evidence": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "cache_key_digest",
+          "cache_key_fields_digest",
+          "equivalence_certificate_identity",
+          "cold_result_identity",
+          "served_result_identity",
+          "cache_disposition",
+          "correction_invalidation_epoch",
+          "dependency_closure_digest",
+          "alias_closure_digest",
+          "invalidation_receipt_identities"
+        ],
+        "properties": {
+          "kind": {"const": "CACHE"},
+          "cache_key_digest": {"$ref": "#/$defs/sha256"},
+          "cache_key_fields_digest": {"$ref": "#/$defs/sha256"},
+          "equivalence_certificate_identity": {"$ref": "#/$defs/identity"},
+          "cold_result_identity": {"$ref": "#/$defs/identity"},
+          "served_result_identity": {"$ref": "#/$defs/identity"},
+          "cache_disposition": {"enum": ["COLD", "CERTIFIED_HIT", "REFUSED_INCOMPLETE_KEY", "REFUSED_STALE", "INVALIDATED"]},
+          "correction_invalidation_epoch": {"type": "integer", "minimum": 0},
+          "dependency_closure_digest": {"$ref": "#/$defs/sha256"},
+          "alias_closure_digest": {"$ref": "#/$defs/sha256"},
+          "invalidation_receipt_identities": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/identity"}
           }
         }
       },
@@ -265,6 +556,10 @@
           "code_identity",
           "environment_identity",
           "authorization_identity",
+          "stochastic_rule_identity",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
+          "final_stream_counter_state_identity",
           "seed",
           "started_at",
           "ended_at",
@@ -302,6 +597,18 @@
             "$ref": "#/$defs/identity"
           },
           "authorization_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "stochastic_rule_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "uncertainty_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "numerical_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "final_stream_counter_state_identity": {
             "$ref": "#/$defs/identity"
           },
           "seed": {
@@ -388,6 +695,53 @@
           }
         }
       },
+      "checkpoint_record": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema",
+          "run_id",
+          "sequence",
+          "simulated_time",
+          "state_identity",
+          "receipt_prefix_identity",
+          "trace_prefix_identity",
+          "cache_epoch",
+          "next_counter_tuple_per_stream",
+          "stochastic_rule_identity",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
+          "checkpoint_sha256"
+        ],
+        "properties": {
+          "schema": {"const": "checkpoint_record/v1"},
+          "run_id": {"$ref": "#/$defs/nonempty_string"},
+          "sequence": {"type": "integer", "minimum": 0},
+          "simulated_time": {"$ref": "#/$defs/typed_quantity"},
+          "state_identity": {"$ref": "#/$defs/identity"},
+          "receipt_prefix_identity": {"$ref": "#/$defs/identity"},
+          "trace_prefix_identity": {"$ref": "#/$defs/identity"},
+          "cache_epoch": {"type": "integer", "minimum": 0},
+          "next_counter_tuple_per_stream": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["stream_id", "tick", "event_index", "draw_index"],
+              "properties": {
+                "stream_id": {"$ref": "#/$defs/nonempty_string"},
+                "tick": {"type": "integer", "minimum": 0},
+                "event_index": {"type": "integer", "minimum": 0},
+                "draw_index": {"type": "integer", "minimum": 0}
+              }
+            }
+          },
+          "stochastic_rule_identity": {"$ref": "#/$defs/identity"},
+          "uncertainty_policy_identity": {"$ref": "#/$defs/identity"},
+          "numerical_policy_identity": {"$ref": "#/$defs/identity"},
+          "checkpoint_sha256": {"$ref": "#/$defs/sha256"}
+        }
+      },
       "trace_row": {
         "type": "object",
         "additionalProperties": false,
@@ -408,6 +762,9 @@
           "equivalence_certificate_ids",
           "invalidation_receipt_ids",
           "limit_decision_ids",
+          "stochastic_counter_state_identity",
+          "uncertainty_policy_identity",
+          "numerical_policy_identity",
           "conservation_residuals",
           "receipt_ids",
           "prefix_sha256"
@@ -485,6 +842,15 @@
             "items": {
               "$ref": "#/$defs/nonempty_string"
             }
+          },
+          "stochastic_counter_state_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "uncertainty_policy_identity": {
+            "$ref": "#/$defs/identity"
+          },
+          "numerical_policy_identity": {
+            "$ref": "#/$defs/identity"
           },
           "conservation_residuals": {
             "type": "array",
@@ -598,6 +964,7 @@
           "subset_hyperedge_order",
           "expected_evaluations",
           "actual_operation_counts",
+          "algorithm_specific_evidence",
           "measured_wall_time_ns",
           "measured_peak_resident_memory_bytes",
           "storage_bytes",
@@ -650,6 +1017,14 @@
               "type": "integer",
               "minimum": 0
             }
+          },
+          "algorithm_specific_evidence": {
+            "oneOf": [
+              {"$ref": "#/$defs/generic_algorithm_evidence"},
+              {"$ref": "#/$defs/mobius_algorithm_evidence"},
+              {"$ref": "#/$defs/dag_algorithm_evidence"},
+              {"$ref": "#/$defs/cache_algorithm_evidence"}
+            ]
           },
           "measured_wall_time_ns": {
             "type": "integer",
@@ -1051,7 +1426,23 @@
           "decision_sha256": {
             "$ref": "#/$defs/sha256"
           }
-        }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "decision": {"const": "WITHIN_CAPS"},
+              "scientific_evidence_value": {"const": "ELIGIBLE_FOR_REGISTERED_EXECUTION"}
+            }
+          },
+          {
+            "properties": {
+              "decision": {
+                "enum": ["REFUSED_BEFORE_EXECUTION", "COMPUTATIONALLY_INCONCLUSIVE"]
+              },
+              "scientific_evidence_value": {"const": "NOT_A_SCIENTIFIC_OUTCOME"}
+            }
+          }
+        ]
       },
       "output_manifest": {
         "type": "object",

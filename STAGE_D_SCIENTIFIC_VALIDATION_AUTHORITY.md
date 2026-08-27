@@ -20,6 +20,8 @@
 
 **Scope:** one tracked scientific-validation matrix, its mechanical contract, evidence schemas, predecessor locks, and fail-closed validation contract
 
+**Rejected predecessor candidate:** `cf747d49924fbd2b783431dbb4a9a54f1eb5a9f1` / tree `16132e72a55ae86b9df1156146335f15a67413ad`; independent `FAIL`; exact-head CI `33075994735`
+
 ---
 
 ## 1. Decision
@@ -52,6 +54,17 @@ The machine-readable sources are:
 
 A disagreement among this document and those JSON files is an integrity
 failure requiring refusal. No source may be selected opportunistically.
+
+The rejected predecessor candidate remains immutable evidence. Its CI passed
+conventional, T1, and T2 while T0 and packaging refused only at the declared
+Stage D reachability transition. Independent content audit found the six
+authority-binding defects recorded in the mechanical contract: unbound source
+paths, incomplete homeostasis/recovery predicates, nonrepresentable cap and
+limit records, unfrozen uncertainty/numerical rules, evaluation arithmetic
+errors, and an under-specified DAG complexity model. This descendant corrects
+those authority defects without calling the rejected candidate a pass. No
+scientific behavior was executed in producing or auditing either authority
+candidate.
 
 ## 2. Authority and evidence precedence
 
@@ -153,7 +166,7 @@ Every matrix row contains, without omission:
   `COMPUTATIONALLY_INCONCLUSIVE` criteria;
 - conservation, physical closure, represented-stock closure, EBU accounting,
   causal, and institutional no-double-counting rules;
-- immutable configuration, run, trace, receipt, computation, and output
+- immutable configuration, run, checkpoint, trace, receipt, computation, and output
   schemas;
 - provenance, recovery, checkpoint/restart, and independent result-audit
   obligations; and
@@ -164,6 +177,43 @@ content refuses execution. The sole exception is the Gate 1E recovery row:
 because no controlling Gate 1E protocol exists in the accepted tree, that row
 is explicitly `AUTHORITY_RECOVERY_REQUIRED` and executable fields are frozen
 to `FORBIDDEN_UNTIL_SEPARATE_AMENDMENT`, not guessed from memory.
+
+Every path-shaped value in `studies[].dependencies[]` or
+`studies[].owners.authority_sources[]` is an exact path at accepted commit
+`fb9ae7b6dae14550a702e060600132faec539eca`. It must also have one unique
+matching row among the 39 locked predecessor sources, including exact mode,
+Git object, byte count, and SHA-256. A prose description of a future authority
+does not acquire repository identity. An alias, nonexistent path,
+existing-but-unlocked path, or identity mismatch refuses the authority chain.
+
+### 4.1 Frozen homeostasis and recovery predicates
+
+SD-01 defines its viability sets explicitly: `0 <= x <= 20` for H0 and
+`5 <= x <= 20` for H1, H2, and H3. Invariance means every pre/post-transition
+state remains in the applicable set. Model-local homeostasis requires 1,000
+consecutive post-transition ticks, ending by tick 20,000 and after the final
+shock, with `abs(x_(t+1)-x_t) <= 1e-8`,
+`abs(u_(t+1)-u_t) <= 1e-8`, and viability throughout. The zero-demand logistic
+control must enter `abs(x-20) <= 1e-6` by tick 1,000 and remain there for 100
+ticks.
+
+For every SD-01 shock, recovery is paired to the otherwise identical no-shock
+cell. It is the first tick whose complete 100-tick persistence window ends
+within the exact 2,000-tick/next-shock/horizon deadline and throughout which
+stock and service differ from the paired reference by no more than `1e-6`.
+Failure to recover is a registered
+model outcome; a resource, identity, or trace failure is computationally
+inconclusive. Reserve protection, regeneration, and H3 recursive-feasibility
+have the exact predicates in the matrix and cannot be inferred from a summary
+score.
+
+SD-09 similarly freezes its pre-failure homeostasis window, paired no-failure
+reference, 99% aggregate-service and 95% per-group thresholds, queue/reserve
+conditions, 100-tick persistence, 1,000-tick deadline, and separate reserve
+regeneration predicate. Its reserve draw and boundary-replenishment equations,
+four groups, allocation order, and tie-breaks are explicit. Aggregate recovery
+never substitutes for group recovery, and non-recovery is distinct from a
+computationally inconclusive run.
 
 ## 5. Computational-feasibility gate
 
@@ -209,6 +259,33 @@ probabilities. Unknown streams, draw-order changes, reused preimages, mutable
 PRNG state, and undeclared continuous-distribution transforms refuse. Stage D
 performs zero draws.
 
+No bootstrap or analysis RNG is authorized. `REGISTERED-SEED-SUMMARY-01`
+reports every registered seed-level value, every prospectively paired
+difference, the exact median, and the closed minimum/maximum seed range. For
+an even seed count, the median is the arithmetic mean of the two central
+ordered values under `NUMERICAL-POLICY-01`. The range is descriptive only: it
+is not a bootstrap, confidence, population, or empirical interval. Resampling,
+an analysis stream, and post-outcome interval selection refuse.
+
+`NUMERICAL-POLICY-01` freezes IEEE-754 binary64, round-to-nearest ties-to-even,
+single exact-rational-to-binary64 parameter conversion, written operation
+order, no reassociation/FMA/fast-math/extended-register variation, bit-exact
+checkpoint state, and the matrix's exact scientific inequalities. Model ledger
+residuals use the frozen scaled `1e-12` rule; exact integer/rational ledgers
+require exact zero. No adaptive refinement remains for Stage E. SD-10 uses
+fixed-step classical RK4 at `dt=1/100`, 100 substeps per integer sample and
+four right-hand-side evaluations per substep; its exact Routh-Hurwitz and
+on-horizon discrete predicates are in the mechanical contract. A later method,
+tolerance, or refinement needs a separately audited prospective amendment.
+
+Every future hard-cap record has a closed profile and all 25 normalized
+dimensions. Applicable values are positive integers and inapplicable values
+are explicit nulls according to the matrix/control profile. Omission, an
+unknown dimension, an applicable null, or a nonnull inapplicable dimension
+refuses. A `WITHIN_CAPS` decision alone may be eligible for registered
+execution; `REFUSED_BEFORE_EXECUTION` and `COMPUTATIONALLY_INCONCLUSIVE` are
+schema-bound to `NOT_A_SCIENTIFIC_OUTCOME`.
+
 ## 6. Mandatory Möbius/topology controls — verbatim user authority
 
 The following text is retained verbatim and is mechanically represented in
@@ -253,6 +330,17 @@ dimension `n=0..12`, plus 32 declared pseudorandom integer-table seeds at each
 `n=1..12`. Every coefficient and reconstruction must agree bit-for-bit. One
 mismatch refuses the optimized implementation and every dependent study.
 
+Evaluation accounting is partitioned rather than collapsed into the 16
+scientific table acquisitions. Stage E owns 327,608 shared table acquisitions,
+31,886,408 direct subset visits, 1,802,280 shared transform subtractions,
+1,802,280 shared reconstruction additions, 2,620,160 complexity-table
+acquisitions, and 22,278,400 complexity-cell subtractions. Stage F owns
+1,048,576 scientific table acquisitions, 8,388,608 scientific transform
+subtractions, 8,388,608 reconstruction additions, 1,520 finite-poset element
+acquisitions, and 5,453 incidence visits each for inversion and reconstruction.
+The resulting declared primary-visit total is 78,555,354; it is an arithmetic
+registration, not a Stage D execution or performance measurement.
+
 The eight families are frozen as zero, constant seven, cardinality, weighted
 additive, weighted pairwise, full-set spike, empty-set spike, and signed
 cardinality cube, with their exact formulas in the mechanical contract. The
@@ -286,19 +374,31 @@ they are an approximation requiring separate authority.
 ## 8. Dependency-DAG boundary
 
 The normative direct affected-record oracle enumerates explicit paths for
-small graphs with at most 12 vertices. The future optimized traversal is a
-deterministic queue/topological algorithm with declared `O(V+E)` time and
-`O(V+E)` representation storage. It must return exactly the same affected
-vertex set and deterministic topological order as the direct oracle on every
-registered small case.
+small graphs with at most 12 vertices. The future optimized traversal uses a
+sealed dense canonical vertex index and canonical-sorted adjacency lists. It
+initializes indegrees once, seeds an array-backed FIFO with zero-indegree
+vertices in ascending canonical ID, scans each dequeued vertex's adjacency
+once, and appends a successor exactly when its indegree first becomes zero.
+FIFO append and head advance are constant-time; no heap, tree, repeated ready
+scan, or ready-node comparison is permitted. This traversal has declared
+`O(V+E)` time and `O(V+E)` representation storage and must reproduce the direct
+oracle's affected set and canonical-stable FIFO Kahn order exactly.
+
+Input permutations must first produce the same sealed canonical
+representation using stable bottom-up mergesort on `(source canonical ID,
+target canonical ID, edge-label SHA-256)`. It has a separate identity, at most
+`E*ceil(log2(E))` tuple comparisons (zero for `E<=1`), and `E` auxiliary edge
+slots. That work is outside the traversal bound and may not be called
+`O(V+E)`. The registered traversal ordering is deterministic but is not a
+claim of the lexicographically least topological order.
 
 The Stage E cells include sparse, dense, disconnected, deep-chain,
 wide-frontier, invalid-cycle, duplicate-edge, and input-order-permutation
-controls. Optimized dimensions are sparse graphs at `(V,E)=(128,256)`,
+controls, including simultaneous and later-ready interleavings. Optimized dimensions are sparse graphs at `(V,E)=(128,256)`,
 `(1024,4096)`, `(10000,50000)`, and `(100000,500000)`, plus a dense acyclic
 case `(512,130816)`. Duplicate edges refuse; cycles refuse before an affected
 order is certified; disconnected nodes remain unaffected; ordering is the
-lexicographically least ready-node order over canonical IDs.
+canonical-stable FIFO Kahn order over the sealed representation.
 
 The hard limits are 100,000 vertices, 500,000 edges, depth 100,000,
 1,073,741,824 bytes peak resident memory, 120 seconds wall time, and
@@ -314,8 +414,10 @@ graphs are crossed with five source sets and four input-edge orders, adding
 included exactly when the first digest byte is even. One cycle and one
 duplicate-edge refusal control are injected for each `n=6..12`.
 
-Stage E must observe no more than `V` vertex enqueues, `E` edge inspections,
-and `6*V+2*E` logical storage slots. Across the four sparse complexity cells,
+Stage E must observe exactly `V` indegree initializations, no more than `V`
+enqueues, dequeues, FIFO appends, and FIFO head advances, exactly one inspection
+per registered edge, zero ready-node comparisons, and no more than
+`7*V+2*E` logical storage slots. Across the four sparse complexity cells,
 the largest median `wall_nanoseconds/(V+E)` may be no more than eight times
 the smallest. The dense cell is recorded separately and must satisfy the
 exact operation/storage and hard caps. Threshold failure is
@@ -329,6 +431,13 @@ Canonical identity remains exhaustive only for the accepted
 Recursive motif reuse requires all A1–A8 conditions and a query-specific
 boundary-sufficiency certificate. The Fibonacci recurrence is one exact
 ordered substitution example only.
+
+For that one example, `N(M_n)=F_(n+1)` with `F_1=F_2=1`. Expanded levels
+0 through 16 therefore contain `sum(F_1..F_17)=F_19-1=4,180` occurrence
+visits. Together with 1,479,457 direct canonical candidate evaluations, 33
+compressed level evaluations, and 24 cold/reuse evaluations, SD-07 registers
+exactly 1,483,694 evaluations. These counts are prospective arithmetic, not
+observed performance.
 
 The complete future cache key includes canonical topology ID; motif,
 occurrence, composition, and boundary-summary versions; complete initial

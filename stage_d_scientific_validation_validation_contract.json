@@ -52,9 +52,9 @@
     "canonicalization": "UTF-8 JSON, recursively sorted keys, separators comma and colon without added whitespace, ensure_ascii=false, allow_nan=false, no final LF"
   },
   "expected_counts": {
-    "positive_check_count": 80,
-    "check_group_count": 9,
-    "negative_case_count": 24,
+    "positive_check_count": 100,
+    "check_group_count": 10,
+    "negative_case_count": 32,
     "predecessor_source_count": 39,
     "study_count": 14,
     "evidence_level_count": 7,
@@ -64,9 +64,9 @@
     "dag_oracle_agreement_case_count": 39467,
     "dag_invalid_refusal_case_count": 14,
     "dag_complexity_cell_count": 5,
-    "record_schema_definition_count": 11,
-    "helper_schema_definition_count": 4,
-    "total_schema_definition_count": 15,
+    "record_schema_definition_count": 12,
+    "helper_schema_definition_count": 8,
+    "total_schema_definition_count": 20,
     "stage_d_model_state_advance_count": 0,
     "stage_d_simulation_count": 0,
     "stage_d_benchmark_count": 0,
@@ -211,10 +211,10 @@
       "group_id": "DAG_CANONICAL_CACHE_CONTROLS",
       "expected_count": 10,
       "checks": [
-        "SDV-065 direct DAG oracle maximum is 12 vertices, owns affected set plus lexicographically least ready-node order, and binds exactly 39467 valid agreement plus 14 invalid refusal cases",
-        "SDV-066 optimized DAG traversal declares O(V+E) time and O(V+E) representation storage",
+        "SDV-065 direct DAG oracle maximum is 12 vertices, owns affected set plus canonical-stable FIFO Kahn order, and binds exactly 39467 valid agreement plus 14 invalid refusal cases",
+        "SDV-066 optimized DAG traversal declares O(V+E) time and O(V+E) representation storage only over the sealed dense-ID/canonical-adjacency representation, while input canonicalization is separately identified and counted",
         "SDV-067 complete n=0..5 ordered DAG/source cases, eight adversarial families, 32 SHA-256-derived graphs per n=6..12, five source sets, four input orders, and sparse/dense/disconnected/deep-chain/wide-frontier/cycle/duplicate controls are exact",
-        "SDV-068 DAG complexity cells, operation/storage/normalized-time thresholds, and hard caps equal the exact declared five cells, 100000 vertices, 500000 edges, depth 100000, 1073741824 RSS bytes, 120 seconds, and 268435456 trace/output bytes",
+        "SDV-068 DAG complexity cells, indegree/enqueue/dequeue/FIFO/edge/zero-comparison/storage/normalized-time thresholds, and hard caps equal the exact declared five cells, 100000 vertices, 500000 edges, depth 100000, 1073741824 RSS bytes, 120 seconds, and 268435456 trace/output bytes",
         "SDV-069 cycles, duplicate edges, and direct/optimized affected-set or ordering mismatch refuse",
         "SDV-070 canonical identity remains exhaustive only for vertices 0..8 and is not performance",
         "SDV-071 cache key contains exactly all 24 result-affecting fields in both contract and closed evidence schema, permits no additional field, and no runtime production cache is authorized",
@@ -227,12 +227,38 @@
       "group_id": "TRACE_ACCOUNTING_INTERPRETATION",
       "expected_count": 6,
       "checks": [
-        "SDV-075 evidence schema defines exactly configuration_manifest, hard_caps, run_manifest, trace_row, receipt, computation_record, equivalence_certificate, cache_event, invalidation_receipt, limit_decision, and output_manifest",
+        "SDV-075 evidence schema defines exactly configuration_manifest, hard_caps, run_manifest, checkpoint_record, trace_row, receipt, computation_record, equivalence_certificate, cache_event, invalidation_receipt, limit_decision, and output_manifest plus the exact eight helper definitions",
         "SDV-076 future traces bind oracle/optimized identities, operation counts, complexity, certificates, complete keys, invalidation, hard-limit decisions, and inconclusive disposition",
         "SDV-077 action and correction receipts remain separate and no receipt is overwritten",
         "SDV-078 physical, represented, EBU, causal, correction, and institutional ledgers remain separate with typed residuals and no-double-counting",
         "SDV-079 eventual visuals require one exact evidence label plus run/code/configuration/units/uncertainty/source digest where applicable",
         "SDV-080 the completion marker appears exactly once in the Markdown and contract and authorizes independent Stage D authority audit only"
+      ]
+    },
+    {
+      "group_id": "INDEPENDENT_AUDIT_CORRECTIONS",
+      "expected_count": 20,
+      "checks": [
+        "SDV-081 every path-shaped dependency/authority reference matches the accepted path pattern, exists at the accepted base, and has exactly one matching predecessor row",
+        "SDV-082 the exact path-shaped reference set has 18 unique accepted paths and no alias, nonexistent, merely existing-but-unlocked, or identity-mismatched path",
+        "SDV-083 SD-01 freezes exact model-local viability and invariance sets for H0/H1/H2/H3",
+        "SDV-084 SD-01 freezes 1000-tick homeostasis persistence, 1e-8 state/action thresholds, final-shock boundary, and the x=20 +/-1e-6 zero-demand positive-control target",
+        "SDV-085 SD-01 freezes paired no-shock recovery, exact 1e-6 stock/service tolerance, 100-tick persistence, 2000-tick/next-shock/horizon deadline, reserve, regeneration, and recursive-feasibility predicates",
+        "SDV-086 SD-09 freezes exact topology/load/queue/route/group state, reserve draw/replenishment equation, allocation orders and tie-breaks",
+        "SDV-087 SD-09 freezes paired homeostasis, aggregate/per-group/queue/reserve recovery thresholds, 100-tick persistence, 1000-tick deadline, and distinct reserve-regeneration and non-recovery dispositions",
+        "SDV-088 hard_caps/v1 requires profile_id plus all 25 closed dimensions and additionalProperties=false",
+        "SDV-089 every matrix/control hard-cap key maps exactly to the closed normalized dimensions; an applicable value is positive, and omission, applicable null, nonnull inapplicable, or unknown dimension refuses",
+        "SDV-090 limit_decision/v1 uses oneOf so only WITHIN_CAPS pairs with ELIGIBLE_FOR_REGISTERED_EXECUTION and both refusal/inconclusive decisions pair only with NOT_A_SCIENTIFIC_OUTCOME",
+        "SDV-091 schema negative cases N01-N05 refuse omitted/unknown cap dimensions and all three invalid decision/evidence pairings",
+        "SDV-092 configuration, run, checkpoint, and trace schemas bind stochastic, uncertainty, numerical, and counter-state identities; all 14 studies name checkpoint_record/v1",
+        "SDV-093 computation_record/v1 requires one closed generic/Mobius/DAG/cache algorithm-specific evidence variant with the registered identities and counters",
+        "SDV-094 REGISTERED-SEED-SUMMARY-01 freezes ascending seed pairing, exact even-sample median, closed min/max range, zero analysis streams/draws, and forbids bootstrap/confidence/population claims",
+        "SDV-095 SD-09, SD-12, SD-13, and SD-14 bind REGISTERED-SEED-SUMMARY-01, NUMERICAL-POLICY-01, exact permitted model streams, no analysis streams, and no bootstrap/resampling",
+        "SDV-096 NUMERICAL-POLICY-01 freezes binary64 representation/rounding/conversion/order, nonfinite/checkpoint/ledger/comparison rules, and forbids adaptive refinement",
+        "SDV-097 SD-10 freezes exact Routh-Hurwitz classification, RK4 dt=1/100 with 100 substeps and four RHS calls, exact on-horizon discrete predicates, and 57696000 evaluation accounting",
+        "SDV-098 SD-07 arithmetic derives 4180 level-0..16 occurrence visits and total 1483694 evaluations from the exact Fibonacci recurrence",
+        "SDV-099 SD-06 freezes the exact 12-part Stage E/Stage F acquisition/oracle/butterfly/reconstruction/poset breakdown totaling 78555354 primary visits",
+        "SDV-100 DAG-EXACT-01 freezes dense canonical IDs, canonical-sorted adjacency, ascending initial sources, O(1) FIFO operations, separate stable bottom-up edge mergesort with E*ceil(log2(E)) comparison/E-slot bounds, ready-interleaving controls, exact traversal/canonicalization counters, zero ready-node comparisons, and no lexicographically-least-order claim"
       ]
     }
   ],
@@ -356,6 +382,46 @@
       "id": "SDV-N24",
       "mutation": "include wave, phase-interference, electrical-voltage, physical-superposition, topological-wave, or universal-Fibonacci/fractal programme",
       "required_disposition": "REFUSE_EXCLUDED_PROGRAMME"
+    },
+    {
+      "id": "SDV-N25",
+      "mutation": "use a nonexistent, aliased, merely existing-but-unlocked, or predecessor-identity-mismatched path-shaped authority/dependency reference",
+      "required_disposition": "REFUSE_UNBOUND_AUTHORITY_REFERENCE"
+    },
+    {
+      "id": "SDV-N26",
+      "mutation": "omit or defer any SD-01 viability, invariance, homeostasis target/tolerance/window/persistence, paired recovery deadline, reserve, regeneration, or recursive-feasibility predicate",
+      "required_disposition": "REFUSE_SD01_OUTCOME_PREDICATE_GAP"
+    },
+    {
+      "id": "SDV-N27",
+      "mutation": "omit or defer any SD-09 reserve/replenishment equation, group rule/tie-break, paired homeostasis/recovery/regeneration threshold, persistence, or deadline",
+      "required_disposition": "REFUSE_SD09_OUTCOME_PREDICATE_GAP"
+    },
+    {
+      "id": "SDV-N28",
+      "mutation": "omit an algorithm-specific hard-cap dimension, set an applicable limit null, set an inapplicable limit nonnull, or add an unknown dimension",
+      "required_disposition": "REFUSE_HARD_CAP_SCHEMA_OR_PROFILE_MISMATCH"
+    },
+    {
+      "id": "SDV-N29",
+      "mutation": "pair refusal or COMPUTATIONALLY_INCONCLUSIVE with execution eligibility, or pair WITHIN_CAPS with NOT_A_SCIENTIFIC_OUTCOME",
+      "required_disposition": "REFUSE_LIMIT_DISPOSITION_PAIR"
+    },
+    {
+      "id": "SDV-N30",
+      "mutation": "use bootstrap/resampling, an undeclared analysis stream, a confidence/population interval, or defer a result-affecting numerical method/tolerance/refinement to Stage E",
+      "required_disposition": "REFUSE_UNFROZEN_UNCERTAINTY_OR_NUMERICS"
+    },
+    {
+      "id": "SDV-N31",
+      "mutation": "change the SD-07 4180/1483694 recurrence arithmetic or omit/change any SD-06 Stage E/Stage F evaluation-accounting component or 78555354 total",
+      "required_disposition": "REFUSE_EVALUATION_ARITHMETIC"
+    },
+    {
+      "id": "SDV-N32",
+      "mutation": "claim O(V+E) while using a heap/tree/repeated scan/ready-node comparisons, omit canonicalization identity or traversal counters, or claim lexicographically least dynamic ready-node order",
+      "required_disposition": "REFUSE_DAG_COMPLEXITY_MODEL"
     }
   ],
   "required_audit_handoff_fields": [

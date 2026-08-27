@@ -4,6 +4,9 @@
   "status": "PROSPECTIVE_NO_EXECUTION_NO_OUTCOMES",
   "authority_contract": "stage_d_scientific_validation_contract.json",
   "evidence_schema": "stage_d_scientific_validation_evidence_schema.json",
+  "predecessor_authority_reference_binding": "Every path-shaped studies[].dependencies[] or studies[].owners.authority_sources[] value is an exact accepted-base path and a matching unique 39-row predecessor-manifest identity; unknown, merely existing-but-unlocked, aliased, or mismatched paths refuse.",
+  "shared_numerical_policy": "NUMERICAL-POLICY-01 as frozen in stage_d_scientific_validation_contract.json; SD-02 remains governed only by its preserved Gate 1D-C numerical authority",
+  "shared_uncertainty_policy": "REGISTERED-SEED-SUMMARY-01: complete seed values, paired differences, exact median, and closed min/max seed range; resampling, bootstrap/confidence language, analysis draws, and population inference are forbidden",
   "reference_environment": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab linux/amd64 CPython 3.14.4-final",
   "study_order": [
     "SD-01",
@@ -81,9 +84,9 @@
           "Allee regeneration g(x)=rho*x*(1-x/K)*(x/A-1) for the declared Allee family"
         ],
         "authority_sources": [
-          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPEC.md",
+          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
           "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md"
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
         ],
         "implementation_interfaces": [
           "future Stage E registered viability model adapter",
@@ -117,11 +120,19 @@
           "protected reserve floor R=5 stock-unit; reserve margin is derived and is not a second physical stock",
           "all cumulative accounts zero"
         ],
-        "parameters": [
+      "parameters": [
           "source regimes: logistic g(x)=rho*x*(1-x/20) for rho in {0.3,0.6}; Allee g(x)=rho*x*(1-x/20)*(x/5-1) for rho in {0.3,0.6}",
           "constant requested demand d is ratio in {0.25,0.75,1.0,1.25} times the exact g(15) of that source regime",
           "shock schedules: none; adversarial boundary outflow min(4,max(0,x_t+g(x_t))) immediately after regeneration at ticks 2500,5000,10000,15000",
-          "H0: u=min(d,max(0,x_pre)); H1: u=min(d,max(0,x_pre-5)); H2_eta: u=eta*H1 for eta in {0.5,0.9,1.0}; H3: from menu {0,d/4,d/2,3d/4,d}, choose greatest u that leaves x_next>=5 and a nonempty H1 menu after each next-tick registered shock in {0,min(4,x_next+g(x_next))}"
+        "H0: u=min(d,max(0,x_pre)); H1: u=min(d,max(0,x_pre-5)); H2_eta: u=eta*H1 for eta in {0.5,0.9,1.0}; H3: from menu {0,d/4,d/2,3d/4,d}, choose greatest u that leaves x_next>=5 and a nonempty H1 menu after each next-tick registered shock in {0,min(4,x_next+g(x_next))}",
+        "NUMERICAL-POLICY-01 governs every binary64 transition, ledger residual, checkpoint, and threshold comparison",
+        "model-local viability set V_H0={x:0<=x<=20}; V_H1=V_H2=V_H3={x:5<=x<=20}; invariance means every post-transition x_(t+1) belongs to the selected policy set for all ticks 0..19999",
+        "model-local homeostasis predicate: after the final exogenous shock (tick 0 for no-shock cells and tick 15000 otherwise), a trajectory is HOMEOSTATIC_ON_HORIZON iff for 1000 consecutive post-transition ticks ending no later than tick 20000 it stays in its viability set, abs(x_(t+1)-x_t)<=1e-8 stock-unit, and abs(u_(t+1)-u_t)<=1e-8 stock-unit/tick",
+        "paired recovery predicate: for each shock at s in {2500,5000,10000,15000}, compare with the exact same source/demand/policy cell under the no-shock schedule; define D_s=min(s+2000,next shock tick minus 1,20000), omitting the next-shock term after the final shock; recovery time is the least r in [s+1,D_s-99] for which abs(x_shock(t)-x_reference(t))<=1e-6 and abs(u_shock(t)-u_reference(t))<=1e-6 for every t=r..r+99; absence is NOT_RECOVERED_ON_HORIZON, not computationally inconclusive",
+        "reserve predicate: a reserve-protected claim requires x_t>=5 at every pre- and post-transition state; reserve margin max(0,x-5) is reported but never added as stock",
+        "regeneration predicate: for logistic cells g(x_t)>=0 whenever 0<=x_t<=20; for Allee cells g(x_t)>0 only for 5<x_t<20, g(x_t)=0 at x_t in {0,5,20}, and a trajectory starting x_0=4 with no external inflow must not be called regenerative",
+        "recursive-feasibility predicate: H3 must retain at least one menu action at every tick for each of the two registered next-shock branches; a first empty menu is a cell-specific failure",
+        "zero-demand logistic control predicate: from x_0=15, abs(x_t-20)<=1e-6 must first occur by tick 1000 and persist for 100 consecutive ticks under each rho; the paired x_0=4 Allee controls must never be labeled regenerative without a boundary inflow"
         ],
         "comparators": [
           "H0 unconstrained model-local baseline",
@@ -130,7 +141,7 @@
           "H3 finite-menu two-step registered-shock recursive-feasibility comparator"
         ],
         "positive_controls": [
-          "zero-demand logistic recovery must preserve nonnegative stock and approach its declared fixed-point neighborhood",
+        "zero-demand logistic recovery must satisfy the exact x=20 +/-1e-6 entry-by-1000 and 100-tick persistence predicate",
           "no-shock low-demand cell must remain feasible under the accepted safe policy"
         ],
         "negative_controls": [
@@ -141,13 +152,13 @@
         ],
         "seeds": "none; all 192 scientific configurations and four registered control trajectories are deterministic",
         "stochastic_rules": "FORBIDDEN in SD-01",
-        "uncertainty_rules": "complete deterministic cell reporting; no pooled confidence interval; H-policy comparisons are paired by identical source/demand/shock and H2_eta comparisons remain within H2",
+      "uncertainty_rules": "NUMERICAL-POLICY-01 and complete deterministic cell reporting; no pooled interval; H-policy comparisons are paired by identical source/demand/shock and H2_eta comparisons remain within H2; homeostasis and recovery use only the frozen thresholds/windows above",
         "horizon": "20000 ticks per run",
         "stopping_rules": [
           "stop and retain run on non-finite state",
           "stop and retain run on conservation or unit failure",
-          "continue through policy infeasibility while recording it unless state evolution becomes undefined",
-          "complete exactly 20000 ticks otherwise"
+      "continue through policy infeasibility while recording it unless state evolution becomes undefined",
+      "complete exactly 20000 ticks otherwise"
         ]
       },
       "computational_feasibility": {
@@ -176,7 +187,7 @@
         "an invariant-set claim whose trajectory exits the exact registered set",
         "recursive-feasibility claim followed by no admissible registered control",
         "unreconciled conservation residual",
-        "recovery claim without the frozen persistence duration",
+      "homeostasis or recovery claim outside the exact target, tolerance, deadline, or 100/1000-tick persistence predicates",
         "silent clamp, early truncation, or post-outcome parameter change"
       ],
       "conservation_accounting": {
@@ -194,6 +205,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -203,7 +215,7 @@
       "acceptance": [
         "all registered cells have a visible disposition",
         "positive controls pass and negative controls fail in the registered direction",
-        "all viability, invariance, recovery, reserve, regeneration, and accounting claims are cell-specific",
+      "all viability, invariance, homeostasis, recovery, reserve, regeneration, and accounting claims use the exact frozen model-local predicates and remain cell-specific",
         "all falsifiers remain false for a positive disposition"
       ],
       "inconclusive": [
@@ -232,9 +244,9 @@
       "title": "Gate 1D-C, robust-P1C, and Gate 1E authority recovery",
       "status": "GATE_1D_C_REGISTERED_PRESERVED; ROBUST_P1C_AND_GATE_1E_AUTHORITY_RECOVERY_REQUIRED",
       "dependencies": [
-        "GATE_1D_C_ABI_CAPABILITY_PROTOCOL.md",
-        "gate_1d_c_execution_plan.json",
-        "FRAMEWORK_EXPERIMENT_EXECUTION_AUTHORITY_ADDENDUM.md",
+        "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+        "v30_gate1dc_outcome_discrimination_plan.json",
+        "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
         "separate future robust-P1C and Gate 1E authority amendment"
       ],
       "question": "Does the exact inherited Gate 1D-C protocol preserve its registered capability distinctions, and can robust-P1C and Gate 1E later be specified without inventing missing authority?",
@@ -263,9 +275,9 @@
           "Gate 1E equations FORBIDDEN_UNTIL_SEPARATE_AMENDMENT"
         ],
         "authority_sources": [
-          "GATE_1D_C_ABI_CAPABILITY_PROTOCOL.md",
-          "gate_1d_c_execution_plan.json",
-          "FRAMEWORK_EXPERIMENT_EXECUTION_AUTHORITY_ADDENDUM.md"
+          "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+          "v30_gate1dc_outcome_discrimination_plan.json",
+          "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md"
         ],
         "implementation_interfaces": [
           "inherited Gate 1D-C official runner after future authorization",
@@ -353,6 +365,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -390,11 +403,11 @@
       "title": "Atomic generator and finite EBU chain",
       "status": "PROSPECTIVE_STAGE_E_THEOREM_NUMERICAL_THEN_STAGE_F_REGISTERED_STATIC_STUDY",
       "dependencies": [
-        "ATOMIC_GENERATOR_PROGRAMME_FOUNDATION.md",
-        "atomic_generator_programme_contract.json",
-        "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md",
-        "atomic_interaction_programme_contract.json",
-        "CONSERVATION_ACCOUNTING_AUTHORITIES.md"
+        "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+        "atomic_generator_foundation_contract.json",
+        "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+        "atomic_interaction_declaration_contract.json",
+        "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
       ],
       "question": "For declared finite actions, does the complete chain V -> mu=grad V -> f_e -> Psi_e -> J_e -> G_T -> finite EBU preserve units, boundaries, derivatives, generator semantics, and accounting without treating any intermediate as the final score?",
       "prospective_claim": {
@@ -425,9 +438,9 @@
           "finite EBU"
         ],
         "authority_sources": [
-          "ATOMIC_GENERATOR_PROGRAMME_FOUNDATION.md",
-          "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md",
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md"
+          "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
         ],
         "implementation_interfaces": [
           "accepted atomic declarations and generator call surfaces",
@@ -527,6 +540,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -592,8 +606,8 @@
           "commutator [A,B] and ordered finite composition"
         ],
         "authority_sources": [
-          "ATOMIC_GENERATOR_PROGRAMME_FOUNDATION.md",
-          "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md"
+          "ATOMIC_GENERATOR_FOUNDATION_AUTHORITY_AMENDMENT.md",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md"
         ],
         "implementation_interfaces": [
           "future independent symbolic/exact coefficient oracle",
@@ -695,6 +709,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -733,8 +748,8 @@
       "dependencies": [
         "SD-03",
         "SD-04",
-        "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md",
-        "FRAMEWORK_SPEC_ATOMIC_INTERACTION_BRIDGE.md"
+        "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+        "SEQUENTIAL_PARALLEL_BRIDGE.md"
       ],
       "question": "How do quantity-fixed, rule-replayed, sequential, parallel, pairwise, and higher-order finite actions differ under the registered baselines and order semantics?",
       "prospective_claim": {
@@ -762,8 +777,8 @@
           "pairwise and higher-order raw interaction projections"
         ],
         "authority_sources": [
-          "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md",
-          "FRAMEWORK_SPEC_ATOMIC_INTERACTION_BRIDGE.md"
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+          "SEQUENTIAL_PARALLEL_BRIDGE.md"
         ],
         "implementation_interfaces": [
           "accepted finite action and interaction declarations",
@@ -819,7 +834,7 @@
         ],
         "seeds": "none",
         "stochastic_rules": "FORBIDDEN",
-        "uncertainty_rules": "exact integer/rational equality or frozen numerical policy per family",
+        "uncertainty_rules": "exact integer/rational equality; floating substitution and tolerance are forbidden for every registered family",
         "horizon": "at most 6 finite actions",
         "stopping_rules": [
           "refuse an undeclared or infeasible action/subset",
@@ -868,6 +883,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -943,8 +959,8 @@
           "finite-poset zeta and Möbius inversion"
         ],
         "authority_sources": [
-          "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md",
-          "atomic_interaction_programme_contract.json",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md",
+          "atomic_interaction_declaration_contract.json",
           "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md"
         ],
         "implementation_interfaces": [
@@ -1012,7 +1028,22 @@
         "exact_problem_size": "488 shared agreement tables through n=12; 16 scientific tables at n=16; 32 finite feasible posets; Stage E complexity dimensions n=8..18",
         "horizon": "one complete exact transform and reconstruction",
         "subset_or_hyperedge_order": "Boolean order through n=18 hard cap; scientific hyperedge order <=4 only where declared as the exact domain",
-        "expected_evaluations": 1048576,
+        "expected_evaluations": 78555354,
+        "expected_evaluation_breakdown": {
+          "stage_e_shared_table_acquisitions": 327608,
+          "stage_e_direct_subset_visits": 31886408,
+          "stage_e_shared_transform_butterfly_subtractions": 1802280,
+          "stage_e_shared_reconstruction_additions": 1802280,
+          "stage_e_complexity_table_acquisitions": 2620160,
+          "stage_e_complexity_butterfly_subtractions": 22278400,
+          "stage_f_scientific_table_acquisitions": 1048576,
+          "stage_f_scientific_butterfly_subtractions": 8388608,
+          "stage_f_scientific_reconstruction_additions": 8388608,
+          "stage_f_poset_element_acquisitions": 1520,
+          "stage_f_poset_inversion_incidence_visits": 5453,
+          "stage_f_poset_reconstruction_incidence_visits": 5453,
+          "all_declared_primary_visits": 78555354
+        },
         "storage_estimate_bytes": 4294967296,
         "future_measurement_method": "Stage E operation counters for butterflies, table acquisitions, direct subset visits, bytes, monotonic wall time, and process-tree peak RSS",
         "checkpoint_restart_scheme": "a table transform is atomic; resume at the next absent table identity, never from a partial coefficient array",
@@ -1021,6 +1052,7 @@
           "maximum_n": 18,
           "maximum_subsets": 262144,
           "maximum_hyperedge_order": 4,
+          "primary_evaluations_per_case": 5000000,
           "wall_time_seconds_per_case": 120,
           "peak_resident_memory_bytes_per_case": 536870912,
           "combined_trace_output_bytes_per_case": 268435456,
@@ -1052,6 +1084,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -1102,7 +1135,7 @@
         "SD-06",
         "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
         "canonical_topology_motif_programme_contract.json",
-        "canonical_topology_motif_validation_contract.json",
+        "canonical_topology_motif_programme_validation_contract.json",
         "DAG-EXACT-01",
         "CANONICAL-CACHE-01"
       ],
@@ -1137,7 +1170,7 @@
         "authority_sources": [
           "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
           "canonical_topology_motif_programme_contract.json",
-          "canonical_topology_motif_validation_contract.json"
+          "canonical_topology_motif_programme_validation_contract.json"
         ],
         "implementation_interfaces": [
           "accepted canonical topology declarations",
@@ -1173,7 +1206,8 @@
           "hyperedge order <=4",
           "expanded oracle level <=16",
           "compressed comparison level <=32",
-          "recursion depth <=64"
+          "recursion depth <=64",
+          "DAG-EXACT-01 uses the sealed canonical adjacency representation and canonical-stable FIFO Kahn order; lexicographically least dynamic ready-node selection is not claimed"
         ],
         "comparators": [
           "direct permutation canonical oracle",
@@ -1181,7 +1215,7 @@
           "expanded motif oracle",
           "certified compressed evaluation",
           "cold computation versus certified cache hit",
-          "direct invalidation reachability versus O(V+E) traversal"
+          "direct invalidation reachability/order versus the exact O(V+E) canonical-stable FIFO Kahn traversal, with canonicalization cost recorded separately"
         ],
         "positive_controls": [
           "isomorphic relabelings have one canonical ID",
@@ -1214,10 +1248,17 @@
       },
       "computational_feasibility": {
         "algorithmic_cost_class": "direct canonical oracle O(n!) candidates for n<=8; expanded Fibonacci occurrence O(F_(level+1)); DAG invalidation O(V+E); certified compressed evaluation is query-specific and makes no universal bound claim",
-        "exact_problem_size": "257 canonical declarations: empty plus 32 at each n=1..8; 1479457 direct canonical candidate evaluations; exact expanded levels 0..16 total 2583 occurrence visits; 33 compressed level evaluations; 12 cache controls with cold/reuse pairs totaling 24 evaluations",
+        "exact_problem_size": "257 canonical declarations: empty plus 32 at each n=1..8; 1479457 direct canonical candidate evaluations; exact expanded levels 0..16 total 4180 occurrence visits because sum(F_1..F_17)=F_19-1=4180; 33 compressed level evaluations; 12 cache controls with cold/reuse pairs totaling 24 evaluations",
         "horizon": "motif level 32 and invalidation depth 64",
         "subset_or_hyperedge_order": "canonical vertices <=8 and hyperedge order <=4",
-        "expected_evaluations": 1482097,
+        "expected_evaluations": 1483694,
+        "expected_evaluation_breakdown": {
+          "direct_canonical_candidate_evaluations": 1479457,
+          "expanded_fibonacci_occurrence_visits_levels_0_through_16": 4180,
+          "compressed_level_evaluations_levels_0_through_32": 33,
+          "cache_cold_and_reuse_evaluations": 24,
+          "total": 1483694
+        },
         "storage_estimate_bytes": 4294967296,
         "future_measurement_method": "canonical candidate, motif occurrence, DAG vertex/edge, hit/miss/invalidation counters plus wall/RSS/byte instrumentation",
         "checkpoint_restart_scheme": "canonical cases and motif levels are atomic; invalidation receipt must complete before recomputation; restart creates a new operation identity",
@@ -1229,6 +1270,7 @@
           "compressed_comparison_level": 32,
           "maximum_expanded_occurrences": 3524578,
           "maximum_recursion_depth": 64,
+          "primary_evaluations_per_case": 2000000,
           "wall_time_seconds_per_case": 120,
           "peak_resident_memory_bytes_per_case": 1073741824,
           "combined_trace_output_bytes_per_case": 268435456,
@@ -1260,6 +1302,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -1347,9 +1390,9 @@
           "provenance composition over declared dependency edges"
         ],
         "authority_sources": [
-          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPEC.md",
+          "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
           "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md"
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md"
         ],
         "implementation_interfaces": [
           "future registered network model adapter",
@@ -1386,7 +1429,8 @@
           "network sources are indegree-zero vertices, sinks are outdegree-zero vertices, unit edge capacity/delay is one unless the topology declaration says otherwise, and arrivals split in canonical source order",
           "4 load ratios {0.25,0.75,1.0,1.25} multiplying each source's exact total outgoing unit capacity, with fractional service carried as reduced rationals",
           "4 failure schedules: none; lowest canonical edge unavailable ticks 2500..2999; lowest canonical edge unavailable ticks 2500..7499; first four canonical edges unavailable for 100 ticks at 2500,5000,7500",
-          "3 queue disciplines {FIFO,priority-with-bound,round-robin}"
+          "3 queue disciplines {FIFO,priority-with-bound,round-robin}",
+          "dependency traversal uses DAG-EXACT-01: dense canonical IDs, sealed canonical-sorted adjacency, ascending initial sources, O(1) FIFO append/head advance, one indegree initialization per vertex, one edge inspection per edge, no ready-node comparison; input permutation canonicalization is stable bottom-up mergesort on (source ID,target ID,edge-label SHA-256), bounded by E*ceil(log2(E)) comparisons and E auxiliary edge slots, and recorded separately"
         ],
         "comparators": [
           "shortest feasible route",
@@ -1404,11 +1448,12 @@
           "disconnected sink receives no service",
           "capacity exceedance must create queue/unmet service, not phantom delivery",
           "input edge permutation cannot change canonical ordering",
+          "wide-frontier ready-set interleavings with simultaneous and later-ready vertices cannot change canonical-stable FIFO order",
           "stale route/cache after correction refuses"
         ],
         "seeds": "none; all 384 cells deterministic",
         "stochastic_rules": "FORBIDDEN",
-        "uncertainty_rules": "complete cell reporting and paired route comparisons",
+        "uncertainty_rules": "NUMERICAL-POLICY-01, complete cell reporting, and paired route comparisons; no resampling or inferred population interval",
         "horizon": "10000 ticks per run",
         "stopping_rules": [
           "stop and retain on non-finite queue or conservation failure",
@@ -1423,13 +1468,14 @@
         "subset_or_hyperedge_order": "edge arity 2; declared service hyperedges, if any, order <=4",
         "expected_evaluations": 3840000,
         "storage_estimate_bytes": 17179869184,
-        "future_measurement_method": "transition, queue, edge, traversal, and emitted-byte counters plus wall/RSS instrumentation",
+        "future_measurement_method": "transition and queue counters plus DAG indegree initializations, enqueues, dequeues, FIFO appends/head advances, edge inspections, zero ready-node comparisons, separately recorded stable-mergesort tuple comparisons/auxiliary edge slots, emitted bytes, wall time, and process-tree RSS",
         "checkpoint_restart_scheme": "checkpoint every 500 ticks; restarted suffix must match uninterrupted suffix exactly",
         "parallelization_boundary": "independent network cells may be parallel; each tick and queue discipline remain deterministic serial order",
         "hard_caps": {
           "maximum_vertices": 100000,
           "maximum_edges": 500000,
           "maximum_depth": 100000,
+          "primary_evaluations_per_run": 50000000,
           "wall_time_seconds_per_run": 14400,
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
@@ -1462,6 +1508,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -1543,7 +1590,7 @@
         ],
         "authority_sources": [
           "EBU_FUTURE_BOOKS_STRUCTURE.md",
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md",
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
           "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md"
         ],
         "implementation_interfaces": [
@@ -1572,14 +1619,19 @@
         "boundary": "open control volume with explicit emergency inflows and external repair"
       },
       "configuration": {
-        "initial_conditions": [
-          "steady registered pre-failure state and declared group allocations"
-        ],
-        "parameters": [
+      "initial_conditions": [
+          "the first six canonical SD-08 topologies at load ratio 3/4, FIFO, capacity-aware routing, zero queue/transit, and four sink groups G0..G3 assigned by canonical sink ID modulo 4",
+          "the paired no-failure reference begins from the identical topology, group assignment, reserve, fairness rule, and seed"
+      ],
+      "parameters": [
           "6 failure families applied respectively to the first six canonical SD-08 topologies: no failure; lowest canonical edge unavailable ticks 1000..1499; first two canonical edges unavailable ticks 1000..1499; lowest canonical edge unavailable for 100 ticks at 1000,2000,3000,4000; counter-hash per-edge failures with probability 1/1000 and fixed 50-tick duration; first two canonical edges unavailable for 100 ticks at 1000,2000,3000,4000",
-          "4 reserve regimes: opening reserve equal to {0,1/10,1/4,1/2} of one horizon of registered reference demand, with the same replenishment rule",
-          "4 institutional fairness rules: physical-throughput, equal-access, need-priority with frozen group order, and max-min capped allocation",
-          "16 fixed stochastic seeds"
+          "4 reserve regimes: let D be the exact total requested service per tick in the paired no-failure cell; opening reserve and reserve capacity are q*D for q in {0,1/10,1/4,1/2}; after physical network delivery p_t, reserve draw is min(r_t,max(0,D-p_t)); while no declared failure is active, external boundary replenishment is exactly D/100 per tick, otherwise zero; r_(t+1)=min(q*D,r_t-draw_t+replenishment_t)",
+          "4 institutional fairness rules over G0..G3: physical-throughput preserves canonical sink delivery; equal-access uses round-robin one reduced-rational service quantum in G0,G1,G2,G3 order; need-priority uses fixed order G3,G2,G1,G0; max-min capped repeatedly allocates one reduced-rational quantum to the currently least-served-demand-ratio group with canonical group ID tie-break; a quantum is 1/1000 of D and a final smaller remainder is permitted",
+          "homeostasis reference predicate: in the no-failure paired cell, aggregate delivered service is at least 99/100 of D, every group receives at least 19/20 of its registered demand, total queue is at most D, and reserve is nonnegative for each of ticks 900..999",
+          "service-recovery predicate: for a maximal failure episode ending at tick e, define D_e=min(e+1000,next failure-episode start minus 1,5000), omitting the next-episode term if none; recovery time is the least r in [e+1,D_e-99] such that for all t=r..r+99 aggregate delivered service is at least 99/100 of the paired no-failure value, every group delivery is at least 19/20 of its paired value, total queue is no more than paired queue plus D, and reserve is nonnegative",
+          "reserve-regeneration predicate: after an episode, reserve regeneration time is the least r in [e+1,D_e-99] for which r_t>=99/100 of opening reserve for every t=r..r+99; q=0 is reported NOT_APPLICABLE, never recovered",
+          "non-recovery by the exact deadline is NOT_RECOVERED_ON_HORIZON; a timeout, memory, identity, or trace cap is instead COMPUTATIONALLY_INCONCLUSIVE",
+          "16 fixed stochastic seeds and NUMERICAL-POLICY-01"
         ],
         "comparators": [
           "no-reserve baseline",
@@ -1588,18 +1640,18 @@
           "registered need-priority rule"
         ],
         "positive_controls": [
-          "no-failure cell returns baseline service",
+          "no-failure cell is byte-identical to its paired reference and satisfies the exact ticks-900..999 homeostasis predicate",
           "identical groups receive identical outcome under symmetric rule/topology"
         ],
         "negative_controls": [
-          "failure without repair cannot be labeled recovered",
+          "a Stage E synthetic control with the lowest canonical edge never repaired cannot be labeled recovered",
           "reserve cannot be spent twice",
           "topology-relabel near miss cannot reuse group outcome",
           "aggregate recovery cannot hide a registered group below its threshold"
         ],
         "seeds": "exact integers 0..15, paired across all comparable policy cells",
-        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with the sole stream ID FAILURE_EDGE; only the fifth failure family draws one Bernoulli(1/1000) value per canonical edge per tick in canonical edge order; failure duration is exactly 50 ticks; all other failure families are deterministic and consume no draw",
-        "uncertainty_rules": "report all seeds; paired seed differences; median and two-sided 95% bootstrap interval across the 16 registered seeds; no distributional generalization beyond generator",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with the sole stream ID FAILURE_EDGE; only the fifth failure family draws one Bernoulli(1/1000) value per canonical edge per tick in canonical edge order; failure duration is exactly 50 ticks; all other failure families are deterministic and consume no draw; analysis draws and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: report every seed and paired difference in ascending seed order, the exact even-sample median, and closed min/max registered-seed range; bootstrap, confidence/population intervals, resampling, and population generalization are forbidden",
         "horizon": "5000 ticks per run",
         "stopping_rules": [
           "stop/retain on invalid accounting",
@@ -1620,6 +1672,7 @@
         "hard_caps": {
           "maximum_vertices": 100000,
           "maximum_edges": 500000,
+          "primary_evaluations_per_run": 50000000,
           "wall_time_seconds_per_run": 14400,
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
@@ -1630,7 +1683,7 @@
         "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL"
       },
       "falsifiers": [
-        "recovery claim without threshold and persistence",
+        "homeostasis, service-recovery, or reserve-regeneration claim outside the exact paired thresholds, 100-tick persistence, or 1000-tick deadline",
         "reserve double spend or magical gain",
         "group ledger does not sum to physical/service totals",
         "seed mismatch across comparators",
@@ -1651,6 +1704,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -1663,7 +1717,7 @@
       "acceptance": [
         "all 1536 cells visible",
         "paired seeds and registered uncertainty complete",
-        "recovery, resilience, reserve, group, and fairness metrics remain separate",
+        "homeostasis, service recovery, reserve regeneration, resilience, group, and fairness metrics remain separate and use the exact frozen predicates",
         "controls, accounting, and falsifiers pass"
       ],
       "inconclusive": [
@@ -1704,8 +1758,8 @@
         "SD-06",
         "SD-07",
         "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
-        "FRAMEWORK_I9_CLCD_AUTHORITY_AND_FEASIBILITY_MILESTONE.md",
-        "FRAMEWORK_I9_CORRECTION_DIAGNOSTICS_AUTHORITY.md",
+        "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+        "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
         "DAG-EXACT-01"
       ],
       "question": "Across the registered continuous and discrete CLCD models, when do inference, correction, feedback, memory, and delay yield bounded/stable error, and what costs, closure failures, diagnostics, and propagation follow?",
@@ -1737,8 +1791,8 @@
         ],
         "authority_sources": [
           "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
-          "FRAMEWORK_I9_CLCD_AUTHORITY_AND_FEASIBILITY_MILESTONE.md",
-          "FRAMEWORK_I9_CORRECTION_DIAGNOSTICS_AUTHORITY.md"
+          "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md"
         ],
         "implementation_interfaces": [
           "accepted correction_protocol and correction_diagnostics surfaces",
@@ -1773,8 +1827,9 @@
           "discrete initial histories through lag 4: all +1; all -1; alternating +1/-1 ending +1 at tick 0; and impulse with r_0=1 and prior entries 0"
         ],
         "parameters": [
-          "continuous a,d in {0.25,1,2}, b=1, k=bk in {-2,-0.25,0.25,2}, and four initial vectors: 144 cells",
-          "discrete kappa in {-1,-0.25,0,0.5,0.9,1,1.5,2.5}, delay in {0,1,4}, and four exact initial histories: 96 cells"
+          "continuous a,d in {0.25,1,2}, b=1, feedback product k=bk in {-2,-0.25,0.25,2}, and four initial vectors: 144 cells; exact theorem classification is by a+d and ad+k under NUMERICAL-POLICY-01",
+          "continuous numerical trajectory uses classical explicit RK4 with fixed step 1/100, exactly 100 substeps between integer samples 0..1000 and four written-order right-hand-side evaluations per substep; adaptive refinement and alternate integrators are forbidden",
+          "discrete kappa in {-1,-0.25,0,0.5,0.9,1,1.5,2.5}, delay in {0,1,4}, and four exact initial histories: 96 cells; NUMERICALLY_DECAYED_ON_HORIZON, NUMERICALLY_BOUNDED_ON_HORIZON, DIVERGED_ON_HORIZON, and NULL_OR_UNRESOLVED use the exact NUMERICAL-POLICY-01 predicates"
         ],
         "comparators": [
           "no-correction baseline",
@@ -1798,7 +1853,7 @@
         ],
         "seeds": "none",
         "stochastic_rules": "FORBIDDEN",
-        "uncertainty_rules": "exact analytic classification where available; frozen numerical tolerance and convergence refinement in Stage E for numerical cells",
+        "uncertainty_rules": "NUMERICAL-POLICY-01 exactly: exact-rational theorem classification; fixed-step RK4 with no adaptive refinement for continuous numerical cells; exact frozen on-horizon discrete classifications; no tolerance, convergence, or method choice remains for Stage E",
         "horizon": "1000 time/tick samples per registered cell",
         "stopping_rules": [
           "retain threshold crossing/divergence as registered outcome",
@@ -1811,7 +1866,12 @@
         "exact_problem_size": "3 a values * 3 d values * 4 k values * 4 continuous initial vectors = 144 continuous cells; 8 kappa values * 3 delays * 4 histories = 96 discrete cells; total 240",
         "horizon": "1000 samples per cell",
         "subset_or_hyperedge_order": "correction dependency edges; any interaction hyperedge order <=4 where explicitly declared",
-        "expected_evaluations": 240000,
+        "expected_evaluations": 57696000,
+        "expected_evaluation_breakdown": {
+          "continuous_rk4_right_hand_side_evaluations": 57600000,
+          "discrete_recurrence_updates": 96000,
+          "total": 57696000
+        },
         "storage_estimate_bytes": 4294967296,
         "future_measurement_method": "state-step, correction, diagnostic, DAG edge/vertex, wall/RSS, and byte counters",
         "checkpoint_restart_scheme": "checkpoint every 100 samples with complete delay/memory/RNG-free state; exact suffix equality",
@@ -1820,6 +1880,7 @@
           "maximum_vertices": 100000,
           "maximum_edges": 500000,
           "maximum_depth": 100000,
+          "primary_evaluations_per_run": 500000,
           "wall_time_seconds_per_run": 14400,
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
@@ -1852,6 +1913,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -1903,8 +1965,8 @@
       "status": "PROSPECTIVE_STAGE_E_ACCOUNTING_ORACLE_THEN_STAGE_F_REGISTERED_EVENT_STUDY",
       "dependencies": [
         "SD-10",
-        "CONSERVATION_ACCOUNTING_AUTHORITIES.md",
-        "FRAMEWORK_I9_CORRECTION_DIAGNOSTICS_AUTHORITY.md",
+        "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+        "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
         "MOBIUS-EXACT-01",
         "DAG-EXACT-01"
       ],
@@ -1936,9 +1998,9 @@
           "dependency-local propagation"
         ],
         "authority_sources": [
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md",
-          "FRAMEWORK_I9_CORRECTION_DIAGNOSTICS_AUTHORITY.md",
-          "ATOMIC_INTERACTION_PROGRAMME_AUTHORITY.md"
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+          "ATOMIC_INTERACTION_DECLARATION_AUTHORITY_AMENDMENT.md"
         ],
         "implementation_interfaces": [
           "accepted conservation and correction receipt surfaces",
@@ -2023,6 +2085,7 @@
           "maximum_vertices": 100000,
           "maximum_edges": 500000,
           "maximum_hyperedge_order": 4,
+          "primary_evaluations_per_run": 50000000,
           "wall_time_seconds_per_run": 3600,
           "peak_resident_memory_bytes_per_run": 2147483648,
           "trace_bytes_per_run": 1073741824,
@@ -2056,6 +2119,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -2146,8 +2210,8 @@
         ],
         "authority_sources": [
           "EBU_FUTURE_BOOKS_STRUCTURE.md",
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md",
-          "FRAMEWORK_I9_CORRECTION_DIAGNOSTICS_AUTHORITY.md"
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md"
         ],
         "implementation_interfaces": [
           "future registered agent-model adapter",
@@ -2205,8 +2269,8 @@
           "aggregate cooperation cannot hide a protected group burden"
         ],
         "seeds": "exact integers 0..31 paired across comparable institutional cells",
-        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams COOPERATION, DISCLOSURE_TRUTH, RETALIATION, APPEAL in that order per agent/tick; cooperation numerator is clamp(0,1000000,100000+floor(6*trust/10)+floor(disclosure_accuracy/5)-floor(retaliation_risk/5)) over denominator 1000000; protected and none have retaliation probability 0, aggregate 1/100, unprotected exact 1/10; false disclosure probability is 0,1/100,1/200,1/50 by the four regimes; an eligible appeal succeeds with probability 3/4",
-        "uncertainty_rules": "report all seeds, paired differences, median, and two-sided 95% bootstrap interval; no population inference",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams COOPERATION, DISCLOSURE_TRUTH, RETALIATION, APPEAL in that order per agent/tick; cooperation numerator is clamp(0,1000000,100000+floor(6*trust/10)+floor(disclosure_accuracy/5)-floor(retaliation_risk/5)) over denominator 1000000; protected and none have retaliation probability 0, aggregate 1/100, unprotected exact 1/10; false disclosure probability is 0,1/100,1/200,1/50 by the four regimes; an eligible appeal succeeds with probability 3/4; analysis draws and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: every seed and paired difference in ascending seed order, exact even-sample median, and closed min/max registered-seed range; bootstrap, confidence/population intervals, resampling, and population inference are forbidden",
         "horizon": "1000 ticks per run",
         "stopping_rules": [
           "retain collapse, retaliation, or non-cooperation as registered model outcomes",
@@ -2229,6 +2293,7 @@
           "maximum_vertices": 100000,
           "maximum_edges": 500000,
           "maximum_hyperedge_order": 4,
+          "primary_evaluations_per_run": 50000000,
           "wall_time_seconds_per_run": 14400,
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
@@ -2261,6 +2326,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -2345,8 +2411,8 @@
         ],
         "authority_sources": [
           "EBU_FUTURE_BOOKS_STRUCTURE.md",
-          "CONSERVATION_ACCOUNTING_AUTHORITIES.md",
-          "FRAMEWORK_I9_CORRECTION_DIAGNOSTICS_AUTHORITY.md"
+          "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+          "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md"
         ],
         "implementation_interfaces": [
           "future quote/settlement model adapter",
@@ -2409,8 +2475,8 @@
           "cycle/duplicate governance dependency refuses"
         ],
         "seeds": "exact integers 0..15 paired across comparable governance cells",
-        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams QUOTE_ERROR_EVENT, QUOTE_ERROR_SIGN, FRAUD_DISCOVERY, APPEAL in that order per service event/day; Bernoulli probabilities are exactly those in the selected quote regime; random sign is categorical {negative:1/2,positive:1/2}; fraudulent events are discovered with probability 3/4; an eligible appeal succeeds with probability 3/4",
-        "uncertainty_rules": "all seeds, paired differences, median, and two-sided 95% bootstrap interval; institutional metrics reported separately",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1 with streams QUOTE_ERROR_EVENT, QUOTE_ERROR_SIGN, FRAUD_DISCOVERY, APPEAL in that order per service event/day; Bernoulli probabilities are exactly those in the selected quote regime; random sign is categorical {negative:1/2,positive:1/2}; fraudulent events are discovered with probability 3/4; an eligible appeal succeeds with probability 3/4; analysis draws and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: every seed and paired difference in ascending seed order, exact even-sample median, and closed min/max registered-seed range; institutional metrics remain separate; bootstrap, confidence/population intervals, resampling, and population inference are forbidden",
         "horizon": "365 daily ticks per run",
         "stopping_rules": [
           "retain insolvency, denial, fraud, and unresolved appeal as model outcomes",
@@ -2431,6 +2497,7 @@
         "hard_caps": {
           "maximum_vertices": 100000,
           "maximum_edges": 500000,
+          "primary_evaluations_per_run": 50000000,
           "wall_time_seconds_per_run": 14400,
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
@@ -2465,6 +2532,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
@@ -2619,8 +2687,8 @@
           "failed prerequisite study prevents positive integrated interpretation"
         ],
         "seeds": "exact integers 0..31 paired across comparable coupled/institutional cells",
-        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1; streams are HOUSEHOLD_EVENT, HOSPITAL_EVENT, ENTERPRISE_EVENT, INFRASTRUCTURE_EVENT, ECOLOGY_EVENT, CROSS_DOMAIN_EVENT in that canonical order; each domain uses the exact already-frozen rule of its prospectively selected predecessor configuration, selected by fixed configuration label rather than outcome; no outcome-dependent resampling",
-        "uncertainty_rules": "all seeds; paired differences; domain and integrated medians and two-sided 95% bootstrap intervals; no empirical/population inference",
+        "stochastic_rules": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1; streams are HOUSEHOLD_EVENT, HOSPITAL_EVENT, ENTERPRISE_EVENT, INFRASTRUCTURE_EVENT, ECOLOGY_EVENT, CROSS_DOMAIN_EVENT in that canonical order; each domain uses the exact already-frozen rule of its prospectively selected predecessor configuration, selected by fixed configuration label rather than outcome; analysis draws, outcome-dependent resampling, and every other stream are forbidden",
+        "uncertainty_rules": "REGISTERED-SEED-SUMMARY-01 and NUMERICAL-POLICY-01: every seed and paired difference in ascending seed order, exact even-sample median, and separate domain/integrated closed min/max registered-seed ranges; bootstrap, confidence/population intervals, resampling, and empirical/population inference are forbidden",
         "horizon": "365 daily ticks per run",
         "stopping_rules": [
           "stop/retain on unit, topology, conservation, receipt, or provenance failure",
@@ -2646,6 +2714,7 @@
           "maximum_subsets": 262144,
           "maximum_hyperedge_order": 4,
           "maximum_depth": 100000,
+          "primary_evaluations_per_run": 50000000,
           "wall_time_seconds_per_run": 14400,
           "peak_resident_memory_bytes_per_run": 4294967296,
           "trace_bytes_per_run": 5368709120,
@@ -2679,6 +2748,7 @@
       "schemas": [
         "configuration_manifest/v1",
         "run_manifest/v1",
+        "checkpoint_record/v1",
         "trace_row/v1",
         "receipt/v1",
         "computation_record/v1",
