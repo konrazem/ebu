@@ -819,6 +819,7 @@ source = pathlib.Path(sys.argv[1]).resolve()
 artifact = sys.argv[2]
 patterns = sys.argv[3:]
 test_root = source / "tests/framework"
+sys.path.insert(0, str(source))
 sys.path.insert(0, str(test_root))
 if artifact == "source":
     sys.path.insert(0, str(source / "src"))

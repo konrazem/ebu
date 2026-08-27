@@ -374,6 +374,38 @@ class StageCPackagingTests(unittest.TestCase):
                 encoding="utf-8"
             )
         )
+        runner_source = next(
+            ast.literal_eval(node.value)
+            for node in validator_tree.body
+            if isinstance(node, ast.Assign)
+            and len(node.targets) == 1
+            and isinstance(node.targets[0], ast.Name)
+            and node.targets[0].id == "RUNNER_SOURCE"
+        )
+        runner_tree = ast.parse(runner_source)
+        path_insertions = tuple(
+            ast.unparse(node)
+            for node in ast.walk(runner_tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Attribute)
+            and isinstance(node.func.value.value, ast.Name)
+            and node.func.value.value.id == "sys"
+            and node.func.value.attr == "path"
+            and node.func.attr == "insert"
+        )
+        self.assertEqual(
+            path_insertions,
+            (
+                "sys.path.insert(0, str(source))",
+                "sys.path.insert(0, str(test_root))",
+                "sys.path.insert(0, str(source / 'src'))",
+            ),
+        )
+        self.assertIn(
+            "if artifact != \"source\" and origin.is_relative_to(source):",
+            runner_source,
+        )
         assignments = {
             node.targets[0].id: ast.literal_eval(node.value)
             for node in validator_tree.body
