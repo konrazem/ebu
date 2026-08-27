@@ -191,8 +191,10 @@
           "required": [
             "schema_version", "record_type", "status", "evidence_class", "head_commit", "head_tree",
             "environment", "scientific_counters", "release_counters", "deterministic_checkpoint_identity",
-            "stochastic_checkpoint_identity", "study_bindings",
-            "slice_counts", "restart_equivalence_checks", "negative_controls", "terminal_rejection_controls"
+            "stochastic_checkpoint_identity", "study_bindings", "within_run_study_bindings",
+            "conditional_inherited_study_bindings", "between_atomic_case_study_bindings",
+            "slice_counts", "restart_equivalence_checks", "intra_atomic_case_checkpoint_refusals",
+            "conditional_false_branch_refusals", "negative_controls", "terminal_rejection_controls"
           ],
           "properties": {
             "schema_version": {"const": 1},
@@ -207,9 +209,14 @@
             "deterministic_checkpoint_identity": {"$ref": "#/$defs/identity"},
             "stochastic_checkpoint_identity": {"$ref": "#/$defs/identity"},
             "study_bindings": {"const": 14},
+            "within_run_study_bindings": {"const": 8},
+            "conditional_inherited_study_bindings": {"const": 1},
+            "between_atomic_case_study_bindings": {"const": 5},
             "slice_counts": {"const": [1, 2, 7]},
             "restart_equivalence_checks": {"type": "integer", "minimum": 42},
-            "negative_controls": {"type": "integer", "minimum": 16},
+            "intra_atomic_case_checkpoint_refusals": {"const": 5},
+            "conditional_false_branch_refusals": {"const": 1},
+            "negative_controls": {"type": "integer", "minimum": 18},
             "terminal_rejection_controls": {"type": "integer", "minimum": 2}
           }
         }

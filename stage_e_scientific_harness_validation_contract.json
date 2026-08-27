@@ -171,7 +171,7 @@
     },
     {
       "group_id": "SE-P-CONTINUATION",
-      "count": 18,
+      "count": 22,
       "checks": [
         "SE-P-CONTINUATION-001 canonical JSON identity reconstruction is exact",
         "SE-P-CONTINUATION-002 campaign run attempt checkpoint and receipt identities form one closed chain",
@@ -190,7 +190,11 @@
         "SE-P-CONTINUATION-015 uninterrupted and seven-slice final bytes agree exactly",
         "SE-P-CONTINUATION-016 cumulative time evaluation storage trace and output ledgers never reset",
         "SE-P-CONTINUATION-017 parallel worker deltas reconcile exactly with campaign ledgers",
-        "SE-P-CONTINUATION-018 post-start input algorithm authority environment policy topology approximation or budget change refuses"
+        "SE-P-CONTINUATION-018 post-start input algorithm authority environment policy topology approximation or budget change refuses",
+        "SE-P-CONTINUATION-019 within-run checkpoint tests bind exactly the eight accepted within-run studies",
+        "SE-P-CONTINUATION-020 SD-02 inherited continuation succeeds only on the accepted true predicate branch and refuses on false",
+        "SE-P-CONTINUATION-021 SD-03 through SD-07 slice only between complete indivisible atomic cases",
+        "SE-P-CONTINUATION-022 one intra-atomic-case checkpoint attempt for each SD-03 through SD-07 refuses"
       ]
     },
     {
@@ -286,7 +290,7 @@
       ]
     }
   ],
-  "required_positive_check_count": 182,
+  "required_positive_check_count": 186,
   "negative_cases": [
     "SE-N001 wrong base commit",
     "SE-N002 wrong base tree",
@@ -372,9 +376,11 @@
     "SE-N082 duplicate direct-wheel installed surface substituted for the sdist-derived surface",
     "SE-N083 final-manifest evidence records reordered or renamed",
     "SE-N084 direct or sdist-derived wheel byte identity mismatch",
-    "SE-N085 sdist byte identity or wheel-derivation mismatch"
+    "SE-N085 sdist byte identity or wheel-derivation mismatch",
+    "SE-N086 intra-atomic-case checkpoint accepted for SD-03 through SD-07",
+    "SE-N087 SD-02 inherited continuation accepted when its controlling condition is false"
   ],
-  "required_negative_case_count": 85,
+  "required_negative_case_count": 87,
   "schema_definition_requirements": {
     "minimum_definition_count": 20,
     "required_names": [
@@ -454,7 +460,7 @@
     "raw and canonical identities",
     "17 predecessor rows",
     "authority and implementation path closure",
-    "180 positive and 83 negative checks",
+    "186 positive and 87 negative checks",
     "zero counters",
     "prohibited actions",
     "stop condition",

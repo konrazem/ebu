@@ -221,9 +221,17 @@ may be retained as failure evidence but may not continue or produce an
 outcome.
 
 Synthetic uninterrupted execution and exact checkpointed execution are
-compared at one, two, and seven slices for all fourteen study bindings. State,
-trace prefix, receipt prefix, ledgers, cache epoch, invalidation epoch, identity
-preimages, RNG counters and final bytes must agree exactly.
+compared at one, two, and seven slices for all fourteen study bindings, but a
+slice means exactly what the accepted continuation class permits. For the
+eight within-run studies, the synthetic state machine may stop only at its
+declared within-run checkpoint boundary. For `SD-02`, inherited continuation
+is exercised only when the accepted conditional predicate is true; the false
+branch must refuse inherited continuation. For `SD-03` through `SD-07`, each
+synthetic atomic case is indivisible and slices may occur only between complete
+atomic cases. Five explicit negative controls attempt an intra-case boundary
+and must refuse. State, trace prefix, receipt prefix, ledgers, cache epoch,
+invalidation epoch, identity preimages, RNG counters and final bytes must agree
+exactly.
 
 Attempt ordinals are unique and contiguous. A fork, skip, replay, lost
 parallel delta, changed input, changed algorithm, changed authority, changed

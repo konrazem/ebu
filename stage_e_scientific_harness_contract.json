@@ -217,11 +217,22 @@
     "deterministic_empty_checkpoint_fixture": "tests/stage_e/fixtures/deterministic_empty_checkpoint.json",
     "stochastic_checkpoint_fixture": "tests/stage_e/fixtures/stochastic_checkpoint.json",
     "required_synthetic_equivalence_slices": [1, 2, 7],
+    "slice_semantics_by_continuation_class": {
+      "within_run_checkpoint_continuation": "the eight accepted studies may stop only at their declared synthetic within-run checkpoint boundary",
+      "conditional_inherited_continuation": "SD-02 inherited continuation is exercised only on the accepted true predicate branch; the false branch refuses",
+      "between_atomic_case_continuation_only": "SD-03 through SD-07 synthetic atomic cases are indivisible and a slice boundary is permitted only between completed atomic cases"
+    },
+    "within_run_study_binding_count": 8,
+    "conditional_inherited_study_binding_count": 1,
+    "between_atomic_case_study_binding_count": 5,
+    "intra_atomic_case_checkpoint_refusal_count": 5,
     "required_failure_controls": [
       "missing or duplicate ordinal", "forked checkpoint", "changed authority", "changed environment",
       "changed algorithm", "changed numerical policy", "changed topology", "changed approximation label",
       "counter tuple mismatch", "dummy deterministic stream", "policy receipt mismatch",
-      "nonmonotone ledger", "lost parallel delta", "post-terminal continuation", "campaign budget enlargement"
+      "nonmonotone ledger", "lost parallel delta", "post-terminal continuation", "campaign budget enlargement",
+      "intra-atomic-case checkpoint for SD-03 through SD-07",
+      "SD-02 inherited continuation when its accepted condition is false"
     ]
   },
   "mobius_conformance": {
