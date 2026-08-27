@@ -16,6 +16,9 @@ Proposed authority branch:
 Runtime-identity correction branch:
 `framework/stage-c-sqlite-runtime-authority-correction`
 
+Inventory-scope correction branch:
+`framework/stage-c-inventory-scope-authority-correction`
+
 ## 1. Purpose and boundary
 
 This amendment prospectively authorizes one narrow implementation stage: make
@@ -121,6 +124,33 @@ This descendant correction changes only this Markdown file,
 `framework_alpha_packaging_release_candidate_implementation_path_manifest.json`
 and `framework_alpha_packaging_release_candidate_predecessor_manifest.json`
 remain byte-identical to the independently accepted authority.
+
+The SQLite-corrected authority candidate, commit
+`e48a17a8051d0948b0a734fbc80a770e8b1cdb94` and tree
+`7bdabfc1dcc407eca5526a16250b41753cc6a97f`, received an independent
+authority `PASS`. It was normally integrated without history rewriting as
+commit `cb07d02d00e3ed6ed80324ae43cad8ca42f6716d`, preserving the same tree, and
+was the freshly verified live `refs/heads/framework-v0.1` coordinate when this
+inventory-scope correction was drafted.
+
+Implementation candidate `9bcf0dafd389448df1a854db872932ef6ed86545` /
+tree `7fc9ddbf835aad71c4ca3e3a256223347c5eeb1e` completed all five required
+jobs successfully in run `33033862855`, but its independent implementation
+audit disposition is `FAIL`, not a Stage C implementation pass. It weakened
+three predecessor-preservation assertions with dynamically derived exclusion
+sets, changed an interaction import-graph assertion outside its then-current
+per-path permission, and failed to assert the exact 444-entry root prefix and
+exact current 42-module/257-edge inventory in `test_capabilities.py`. Green CI
+and sealed artifact evidence do not cure those authority-scope defects. The
+candidate must not be integrated.
+
+This descendant correction changes only this Markdown file,
+`framework_alpha_packaging_release_candidate_contract.json`,
+`framework_alpha_packaging_release_candidate_validation_contract.json`, and
+`framework_alpha_packaging_release_candidate_implementation_path_manifest.json`.
+It adds no implementation path and changes no framework, backend, workflow,
+runtime, packaging, API, metadata, version, scientific, result, figure, book,
+or publication authority. The predecessor manifest remains byte-identical.
 
 ## 3. Packaging diagnosis
 
@@ -415,6 +445,63 @@ fixtures, all call sites, all failure precedence, and every non-inventory
 assertion. No test
 may be deleted, skipped, filtered, weakened, or moved to a historical checkout
 as a substitute for testing the current source and installed candidate.
+
+This general rule is narrowed by the following complete reconciliation; no
+other interpretation is permitted:
+
+1. `tests/framework/test_artifact_recovery_publication.py` may replace only the
+   `PREDECESSOR_PRESERVATION` branch with a literal four-path reconciliation.
+   It must preserve and verify the exact I8 predecessor rows for
+   `.github/workflows/tests.yml`, `build_backend/ebu_build_backend.py`,
+   `EBU_FUTURE_BOOKS_STRUCTURE.md`, and `tests/framework/safety.py`. For the
+   workflow and backend, it must additionally verify the exact accepted Stage C
+   base rows from the Stage C predecessor manifest; their candidate bytes are
+   governed by the closed Stage C diff. For the books-structure and safety
+   paths, which Stage C may not modify, it must verify their exact current
+   `cb07d02d` bytes and modes. It must verify every other I8 `PRESERVED` row
+   directly against the current file. The four-path set must be asserted by
+   literal equality; deriving exclusions from an authority modification set,
+   adding any fifth path, or silently skipping a row is forbidden.
+2. The exclusion literals and all other logic in
+   `test_atomic_declarations.py::test_existing_public_signatures_and_predecessor_bytes_are_preserved`
+   and
+   `test_interaction_declarations.py::test_predecessor_signatures_and_d1_bytes_are_preserved`
+   must remain exactly as at `cb07d02d`; neither test may load Stage C scope or
+   add `EBU_FUTURE_BOOKS_STRUCTURE.md`, `tests/framework/safety.py`, or any
+   dynamically derived exclusion.
+3. `test_capabilities.py` must assert failure values `[:280]` equal the exact I8
+   future inventory and `[280:]` equal the exact 14-entry CLCD suffix; root
+   exports `[:444]` equal the exact I8 future inventory and `[444:]` equal the
+   exact 27-entry CLCD suffix; both whole inventories are unique and exactly
+   294 and 471 entries. It must also assert the exact current package module
+   order is the I8 39-module order followed by `validation`,
+   `correction_protocol`, and `correction_diagnostics`, with exactly 42 modules
+   and 257 direct edges.
+4. `test_interaction_declarations.py::test_exact_imports_graphs_and_inertness`
+   may extend only its current whole-package inventory assertions from the I8
+   graph to that same exact 42-module/257-edge graph. All earlier historical
+   graph projections, edge subsets, acyclicity, forbidden-import and
+   prohibited-call checks remain unchanged.
+
+The exact current package-module-order LF projection is 429 bytes with SHA-256
+`246a3bf8b0add102255c5d765d4a56b7c3231b96689a81f8fa41a31106352f07`.
+The canonical `[module,direct-import-list]` JSON-plus-LF projection is 3,522
+bytes with SHA-256
+`4bcea287ae4727da622c3fb1d35cf6c4a29438bf9c9882f7c2aa82adf63fc0f9`.
+The corresponding canonical module-export projection is 12,138 bytes with
+SHA-256
+`b1642b1fb664c5011afb38e354da010a48624f7461fe2a55225a694a6db8a4c3`.
+The three suffix modules have ordered direct imports respectively
+`canonical,numeric,identity,hashing,primitives,capabilities,errors`;
+`errors,identity,numeric,primitives`; and
+`correction_protocol,errors,numeric`. Their module-export counts are 0, 20,
+and 7.
+
+The validator's static-authority phase must add eight positive fail-closed
+semantic-scope checks covering the four numbered requirements above. The
+corrected total is exactly 100 checks per required job. A source-form shortcut,
+missing check, zero count, dynamic exclusion, nonliteral extra path, wrong
+prefix, wrong suffix, wrong graph, or wrong projection is a refusal.
 
 `tests/framework/test_validation_reachability.py` may change only its
 current-HEAD scope layer. Relative to its immutable I-9 implementation base, it

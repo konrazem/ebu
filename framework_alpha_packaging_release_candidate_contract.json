@@ -4,10 +4,14 @@
   "authority": {
     "stage": "STAGE_C_ALPHA_PACKAGING_RELEASE_CANDIDATE",
     "branch": "framework/stage-c-packaging-release-candidate-authority",
+    "runtime_identity_correction_branch": "framework/stage-c-sqlite-runtime-authority-correction",
+    "inventory_scope_correction_branch": "framework/stage-c-inventory-scope-authority-correction",
     "required_predecessor_commit": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
     "required_predecessor_tree": "e5d1fc2746253d73474b60c86c145293fb8ee1ef",
     "accepted_target_ref": "refs/heads/framework-v0.1",
     "accepted_target_live_commit_at_draft": "3c0b8939b9902e05584501e31d74e2bcb57c302a",
+    "accepted_target_live_commit_at_inventory_scope_correction_draft": "cb07d02d00e3ed6ed80324ae43cad8ca42f6716d",
+    "accepted_target_live_tree_at_inventory_scope_correction_draft": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
     "main_ref": "refs/heads/main",
     "main_live_commit_at_draft": "e1c6000f7b050e56e6fd0aa4b23e56c5d9e641d0",
     "stale_local_framework_branch_commit": "4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e",
@@ -110,6 +114,35 @@
       "observed_pinned_runtime_source_id": "2024-08-13 09:16:08 c9c2ab54ba1f5f46360f1b4f35d849cd3f080e6fc2b6c60e91b16c63f69aalt1",
       "observed_debian_package": "libsqlite3-0:amd64=3.46.1-7+deb13u1",
       "ci_runs_are_validation_passes": false
+    },
+    "inventory_scope_authority_correction": {
+      "disposition": "GREEN_IMPLEMENTATION_CANDIDATE_FAILED_INDEPENDENT_AUTHORITY_SCOPE_AUDIT",
+      "correction_base_commit": "cb07d02d00e3ed6ed80324ae43cad8ca42f6716d",
+      "correction_base_tree": "7bdabfc1dcc407eca5526a16250b41753cc6a97f",
+      "rejected_implementation_commit": "9bcf0dafd389448df1a854db872932ef6ed86545",
+      "rejected_implementation_tree": "7fc9ddbf835aad71c4ca3e3a256223347c5eeb1e",
+      "rejected_implementation_ci_run_id": 33033862855,
+      "rejected_implementation_ci_required_jobs": 5,
+      "rejected_implementation_ci_disposition": "ALL_FIVE_SUCCESS_NOT_AN_AUTHORITY_SCOPE_PASS",
+      "rejected_implementation_audit": "FAIL",
+      "blocking_findings": [
+        "dynamic blanket exclusion of Stage C paths in the I8 artifact predecessor-preservation witness",
+        "unauthorized predecessor-exclusion expansion in atomic and interaction declaration tests",
+        "unauthorized interaction whole-package import-graph rewrite",
+        "missing exact 444-entry root prefix and exact current 42-module/257-edge assertions in capabilities"
+      ],
+      "modified_authority_paths": [
+        "FRAMEWORK_ALPHA_PACKAGING_RELEASE_CANDIDATE_AUTHORITY_AMENDMENT.md",
+        "framework_alpha_packaging_release_candidate_contract.json",
+        "framework_alpha_packaging_release_candidate_validation_contract.json",
+        "framework_alpha_packaging_release_candidate_implementation_path_manifest.json"
+      ],
+      "preserved_predecessor_manifest_raw_sha256": "a79c43b9a2f09744438320cdc8ef6a2b536b4ed065854b9ff675138f165c9918",
+      "preserved_predecessor_manifest_canonical_sha256": "fb24a8c1be487d19008a6ec6123e6426ff4622eebf3e1029d044ca6ace9cd207",
+      "implementation_path_count_before_and_after": 17,
+      "i9_relative_unique_path_count_before_and_after": 22,
+      "corrected_static_authority_checks_per_job": 100,
+      "candidate_integration_authorized": false
     }
   },
   "diagnosis": {
@@ -363,6 +396,153 @@
   "test_inventory_reconciliation": {
     "purpose": "Replace only obsolete whole-I8 final-snapshot assumptions in the eleven authorized inventory tests with exact accepted I8-prefix plus current accepted CLCD-suffix assertions so current source and installed artifacts can run the complete lanes.",
     "bridge_t2_boundary": "In test_bridge_exact_fixtures.py only test_failure_export_signature_and_import_surfaces may reconcile whole-I8 failure/root assertions; preserve the test name/count, 42-row allowlist, fixtures, bridge/I6 assertions, signatures/import graph, failure precedence and every non-inventory behavior.",
+    "exact_failure_inventory": {
+      "i8_prefix_count": 280,
+      "clcd_suffix_count": 14,
+      "current_count": 294,
+      "current_unique_count": 294,
+      "current_lf_byte_count": 7945,
+      "current_lf_sha256": "bde7371b5d4fd34a537e1d7137ca98c79b5e22d4b1e6678b295da6f321179a2c"
+    },
+    "exact_root_export_inventory": {
+      "i8_prefix_count": 444,
+      "clcd_suffix_count": 27,
+      "current_count": 471,
+      "current_unique_count": 471,
+      "current_lf_byte_count": 10526,
+      "current_lf_sha256": "804ff437fc0adfdb8980e976c099814c2ece2142d4e40ade3a577b3e14fc1bc9"
+    },
+    "exact_current_import_inventory": {
+      "i8_prefix_module_count": 39,
+      "i8_prefix_direct_edge_count": 243,
+      "suffix_module_order": [
+        "validation",
+        "correction_protocol",
+        "correction_diagnostics"
+      ],
+      "current_module_count": 42,
+      "current_direct_edge_count": 257,
+      "suffix_direct_imports": {
+        "validation": [
+          "canonical",
+          "numeric",
+          "identity",
+          "hashing",
+          "primitives",
+          "capabilities",
+          "errors"
+        ],
+        "correction_protocol": [
+          "errors",
+          "identity",
+          "numeric",
+          "primitives"
+        ],
+        "correction_diagnostics": [
+          "correction_protocol",
+          "errors",
+          "numeric"
+        ]
+      },
+      "suffix_module_export_counts": {
+        "validation": 0,
+        "correction_protocol": 20,
+        "correction_diagnostics": 7
+      },
+      "module_order_lf": {
+        "byte_count": 429,
+        "sha256": "246a3bf8b0add102255c5d765d4a56b7c3231b96689a81f8fa41a31106352f07"
+      },
+      "direct_import_projection": {
+        "encoding": "canonical JSON plus LF of [module,direct_imports[module]] rows in exact current module order",
+        "byte_count": 3522,
+        "sha256": "4bcea287ae4727da622c3fb1d35cf6c4a29438bf9c9882f7c2aa82adf63fc0f9"
+      },
+      "module_export_projection": {
+        "encoding": "canonical JSON plus LF of [module,module_exports[module]] rows in exact current module order",
+        "byte_count": 12138,
+        "sha256": "b1642b1fb664c5011afb38e354da010a48624f7461fe2a55225a694a6db8a4c3"
+      }
+    },
+    "artifact_predecessor_preservation_reconciliation": {
+      "test_path": "tests/framework/test_artifact_recovery_publication.py",
+      "branch": "PREDECESSOR_PRESERVATION",
+      "exact_reconciled_paths": [
+        ".github/workflows/tests.yml",
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "build_backend/ebu_build_backend.py",
+        "tests/framework/safety.py"
+      ],
+      "stage_c_modified_paths": [
+        ".github/workflows/tests.yml",
+        "build_backend/ebu_build_backend.py"
+      ],
+      "current_byte_preserved_paths": [
+        "EBU_FUTURE_BOOKS_STRUCTURE.md",
+        "tests/framework/safety.py"
+      ],
+      "rows": [
+        {
+          "path": ".github/workflows/tests.yml",
+          "i8_mode": "100644",
+          "i8_git_object": "3359df95cc0dc426e8969a0587de141df2596a48",
+          "i8_byte_count": 1610,
+          "i8_raw_sha256": "4d12f834e52bf92a723ab1e2c9723a9b395344320f3c95482b64d9133c766d23",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "26afc98071877cba6dacdd03fac2834b2fe29b83",
+          "accepted_stage_c_base_byte_count": 15288,
+          "accepted_stage_c_base_raw_sha256": "34d5582c631ae81856d6fc1a64dd7ac6243547a88a89891225041f2c659442db",
+          "candidate_current_byte_rule": "AUTHORIZED_STAGE_C_DIFF_NOT_EXCLUDED_FROM_SCOPE"
+        },
+        {
+          "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+          "i8_mode": "100644",
+          "i8_git_object": "654145ef732814047a0e5a45bdd0edb732104390",
+          "i8_byte_count": 132360,
+          "i8_raw_sha256": "46d63759e2538ab37671be8ada9a61f1cabfec62fa6afe9063ed15a882698a6f",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "af33c79b89372a8a1a9dc1939ca5f66974c23e56",
+          "accepted_stage_c_base_byte_count": 150664,
+          "accepted_stage_c_base_raw_sha256": "f85c3e0c636f3afcd9d961673b16a0a642045a13b32d3c878e27a8d982567b59",
+          "candidate_current_byte_rule": "MUST_EQUAL_ACCEPTED_STAGE_C_BASE"
+        },
+        {
+          "path": "build_backend/ebu_build_backend.py",
+          "i8_mode": "100644",
+          "i8_git_object": "093ad5858f60efcf5ae271615a9138334176fb56",
+          "i8_byte_count": 25097,
+          "i8_raw_sha256": "afaae669d8d1521a8f67f11bdfd8583ad6ad1ad1d32920d2144b87a20f0dc862",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "093ad5858f60efcf5ae271615a9138334176fb56",
+          "accepted_stage_c_base_byte_count": 25097,
+          "accepted_stage_c_base_raw_sha256": "afaae669d8d1521a8f67f11bdfd8583ad6ad1ad1d32920d2144b87a20f0dc862",
+          "candidate_current_byte_rule": "AUTHORIZED_STAGE_C_DIFF_NOT_EXCLUDED_FROM_SCOPE"
+        },
+        {
+          "path": "tests/framework/safety.py",
+          "i8_mode": "100644",
+          "i8_git_object": "aed40a86f2a23f56fece345288db189ea59be4d0",
+          "i8_byte_count": 4633,
+          "i8_raw_sha256": "40346595695d908a575dbc8fe8228564f2e182268a0822b93ce5b0db03246eb6",
+          "accepted_stage_c_base_mode": "100644",
+          "accepted_stage_c_base_git_object": "085ca570196d35e963a93f57bf4f1d6e93da09cd",
+          "accepted_stage_c_base_byte_count": 8318,
+          "accepted_stage_c_base_raw_sha256": "1ffce07c0a4a181da04ff75bb902453f77d93ffee609177b1bb3e505605292bd",
+          "candidate_current_byte_rule": "MUST_EQUAL_ACCEPTED_STAGE_C_BASE"
+        }
+      ],
+      "all_other_i8_preserved_rows": "VERIFY_CURRENT_FILE_BYTE_COUNT_AND_SHA256_DIRECTLY_AGAINST_I8_ROW",
+      "dynamic_authority_scope_exclusion": "FORBIDDEN",
+      "unlisted_fifth_reconciliation_path": "FORBIDDEN"
+    },
+    "atomic_predecessor_test_rule": "test_existing_public_signatures_and_predecessor_bytes_are_preserved retains its cb07d02d exclusion literals and all non-inventory logic exactly; no Stage C scope load, excluded.update, books-structure path or safety path addition.",
+    "interaction_predecessor_test_rule": "test_predecessor_signatures_and_d1_bytes_are_preserved retains its cb07d02d exclusion literals and all non-inventory logic exactly; no Stage C scope load, excluded.update, books-structure path or safety path addition.",
+    "interaction_import_graph_rule": "Only the current whole-package portion of test_exact_imports_graphs_and_inertness may advance from the exact I8 graph to exact current 42-module/257-edge projections; all historical graphs, edge subsets, acyclicity, forbidden imports, prohibited calls and inertness assertions remain unchanged.",
+    "semantic_static_authority_checks": {
+      "additional_positive_checks": 8,
+      "total_positive_checks_per_job": 100,
+      "missing_or_failed_check": "REFUSE"
+    },
     "preserve": [
       "all historical prefixes and projections",
       "all behavioral tests and test counts",
@@ -375,6 +555,8 @@
       "skip or expected-failure addition",
       "test filtering",
       "assertion weakening",
+      "dynamic or contract-derived predecessor exclusion",
+      "unlisted predecessor reconciliation path",
       "historical checkout substitution for current source or installed candidate validation"
     ]
   },
