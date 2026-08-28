@@ -63,7 +63,10 @@ The registered question is:
 > recomputation under declared locality, canonical-equivalence, and boundary-
 > invariance conditions, and how do viability, service, reserves, recovery,
 > collapse, conservation, and correction accounting behave while population,
-> resource capacity, demand, and structure expand?
+> resource capacity, demand, and structure expand? Under separately declared
+> capacity-conversion and demographic-response semantics, can fully receipted
+> net topology-generated usable capacity permit, rather than guarantee, a
+> demographic response, and how do the three registered causal arms differ?
 
 The strongest permitted positive statement is limited to the exact registered
 model, topology family, demand process, policy, seed, horizon, numerical
@@ -328,9 +331,9 @@ storage, and keeps `n<=18`, subset count `<=262144`, and hyperedge order `<=4`.
 No approximation may replace the exact registered study.
 
 The dynamic-growth domain is capped at 64 vertices, 1,024 edges/hyperedges,
-hyperedge order four, dependency/propagation depth 64, horizon 8,192, 336 valid
-runs, 56 wrong-equivalence plus 150 misscaling refusal fixtures (206 total),
-112 strategy triplets, 720 coefficient-transport oracle arithmetic/preflight
+hyperedge order four, dependency/propagation depth 64, horizon 8,192, 396 valid
+runs, 76 wrong-equivalence plus 150 misscaling refusal fixtures (226 total),
+132 strategy triplets, 720 coefficient-transport oracle arithmetic/preflight
 operations, 20 GiB total logical output, 5 GiB trace per run, 4 GiB
 process-tree peak memory per attempt, 14,400 active seconds per attempt, and
 1,200,000 primary evaluations per attempt/run. Transport-oracle and misscaling
@@ -341,8 +344,10 @@ The worst registered full-rebuild topology performs at most 1,550 coefficient
 evaluations: 1,415 across tick 0 and the 16 expansion boundaries, including
 the broad epoch, plus 135 at the separate tick-5120 correction. An unprotected
 run has at most `8192+1550=9742` primary evaluations. A robust run has at most
-`56*8192+1550=460302`. Across the 168 unprotected and 168 robust runs, the
-declared upper estimate is `168*(9742+460302)=78967392` primary evaluations.
+`56*8192+1550=460302`. Across the 168 unprotected and 168 robust demand-driven
+runs, the declared upper estimate is `168*(9742+460302)=78967392` primary
+evaluations. The 60 capacity-population runs are capped at 10,000 each, adding
+600,000; the complete estimate is 79,567,392.
 Operation classes remain
 separate: transition/menu checks, coefficient evaluations, canonicalization,
 DAG traversal, cache lookup, invalidation, receipt serialization, and output
@@ -360,8 +365,8 @@ every 256 ticks after a complete model/topology/cache/receipt boundary. One
 scientific identity spans ordered attempt slices. Attempt counters and campaign
 counters never reset. No slice may change input, algorithm, authority,
 environment, numerical policy, topology, approximation status, cache key, or
-scientific meaning. The prospective campaign envelope is capped at 2,688
-attempts, 2,592,000 cumulative active seconds, 403,200,000 cumulative primary
+scientific meaning. The prospective campaign envelope is capped at 3,168
+attempts, 2,592,000 cumulative active seconds, 475,200,000 cumulative primary
 evaluations, 80 GiB cumulative physical writes, 20 GiB logical output, 180
 calendar days, and 4 GiB maximum process-tree peak memory. These are terminal
 integrity budgets, not scientific answers.
@@ -581,17 +586,94 @@ controls. Direct coefficients and scaled predictions must agree exactly where
 `K=0`; where `K!=0`, direct target value must equal scaled prediction plus the
 visible residual. Any other relation refuses evidence promotion.
 
+### 11.2 Three causal arms and the conditional capacity-population bridge
+
+The central conditional synthesis is:
+
+> Recursive topology may generate net interaction benefits that expand usable
+> carrying capacity. Where demographic behaviour responds positively to that
+> capacity, the benefit can enable population growth. EBU tests this connection
+> rather than presuming it universally.
+
+Stage F must keep three causal arms separate and execute them in this order:
+
+1. `ARM-1-DEMAND-DRIVES-TOPOLOGY` is the existing 336-run matrix: registered
+   population and demand drive the 16 logical expansion events, and capacity
+   never feeds back into population;
+2. `ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY` has ten registered capacity-
+   population scenarios under all three reconstruction strategies, exactly 30
+   runs: topology levels are exogenous, capacity may enter the declared
+   demographic response, and population may not change expansion; and
+3. `ARM-3-BIDIRECTIONAL-FEEDBACK` repeats the same ten scenarios and three
+   strategies, exactly 30 runs: capacity may enter the demographic response,
+   and the receipted population-derived required-capacity projection may request
+   the next declared topology level.
+
+Together the programme contains 396 scientific runs and 132 matched strategy
+triplets. The three arms are interventions in registered models, not evidence
+that any direction is universal in real populations.
+
+For Arms 2 and 3, use levels `0..16`, base capacities `C_0=2,C_1=3`, and the
+exact capacity-compatible recurrence
+
+`C_(n+1)=C_n+C_(n-1)+J^C_n-X_(n+1)`.
+
+`J^C_n` is the residual that the declared capacity model and typed conversion
+receipt permit to enter usable capacity. An arbitrary positive EBU or Möbius
+coefficient is not carrying capacity. The complete expansion burden is
+
+`X_(n+1)=construction+maintenance+resource+correction+delay+loss`,
+
+with exact components `1/16`, `(n+1)/256`, `1/32`, `1/64` at levels 10 and
+16 otherwise zero, baseline `1/64` plus `1/16` in the delay control, and
+baseline `1/64` plus a level-8 shock of `2`, respectively. Every component has
+one typed owner receipt; `X` is their exact reduced-rational sum. These are
+synthetic registered capacity-account units, not empirical physical costs or
+evidence that construction completed.
+
+The exact population bookkeeping is separately receipted as
+`P_(n+1)=P_n+B_n-D^death_n+M_n`. The positive-compatible, zero, negative,
+positive-nonconvertible-after-conversion, and capacity-shock controls freeze
+`P_n=rho*C_n` with constant `rho=4` over the compared levels. Under those
+premises,
+
+`P_(n+1)=P_n+P_(n-1)+rho*(J^C_n-X_(n+1))`.
+
+This is a testable conditional projection, never a universal demographic law.
+It does not guarantee growth, authorize demographic control, or infer births,
+deaths, migration, behaviour, health, institutions, or causality from a
+coefficient.
+
+Each of Arms 2 and 3 freezes ten exact scenarios: positive capacity-compatible
+residual; zero residual; negative residual; positive but non-capacity-
+convertible residual; capacity allocated to reserve; capacity allocated to
+quality; demographic transition with `rho=4` through level 8 and `rho=2`
+afterward; one-level demographic-response delay; an exact level-8 capacity
+shock; and a direct hashed nonrecursive topology. Reserve and quality allocations
+are excluded from demographic-response capacity. The nonrecursive case has no
+recursive projection. Arm 3 records
+`required_capacity_n=P_n/rho_effective+1/16`; only a typed request receipt and
+`required_capacity_n>C_n` may request the next level before level 16.
+
+Every scenario runs full rebuild, incremental without reuse, and certified
+motif reuse; their scientific projections must match exactly. Capacity,
+residual conversion, every burden component, population, births, deaths,
+migration, demand, reserve/quality allocation, service, viability,
+homeostasis, recovery/collapse, corrections, limits, and conservation are all
+trace- and receipt-bound. Zero/negative results and benefits allocated away
+from demographic response remain visible rather than being reclassified.
+
 Stage F must compare certified incremental reconstruction with full expanded/
 full-rebuild calculation for exact scientific-output equality and measured
 work, while measuring viability and homeostasis separately. Structural or
 topological compression alone is never sufficient evidence of homeostasis.
 
-## 11.2 External conceptual input and future-book-only nature reference
+## 11.3 External conceptual input and future-book-only nature reference
 
 The user-approved external conceptual bridge
 `EBU_RECURSIVE_MOBIUS_GROWTH_THEOREM_AND_STUDY_BRIDGE.md` is recorded as
-21,524 bytes with SHA-256
-`26a4581d9270cdcb1414bfdfe8cc5b3ced632cbc78b214d6fe72df955ccab002`.
+25,305 bytes with SHA-256
+`7f2a236a6ab2be50d5841bc309b38eedf558911d876c46624b14798cd73eb668`.
 It is conceptual input, not accepted repository authority, a predecessor lock,
 or scientific evidence.
 
@@ -618,6 +700,9 @@ The amendment defines closed prospective records:
 - `coefficient_scaling_refusal_fixture/v1`;
 - `feasible_poset_mobius_oracle/v1`;
 - `growth_capacity_benchmark/v1`;
+- `capacity_population_configuration/v1`;
+- `capacity_population_level_record/v1`;
+- `capacity_population_campaign_summary/v1`;
 - `growth_campaign_summary/v1`; and
 - `wrong_equivalence_fixture/v1`.
 
@@ -628,13 +713,14 @@ coefficients, service/reserve/recovery/collapse predicates, operation counters,
 cache events, certificates, corrections, invalidations, conservation receipts,
 limits, environment, and output digests.
 
-Prospective schema validation must first validate seven complete records:
+Prospective schema validation must first validate ten complete records:
 dynamic configuration, scalar transport, non-scalable direct transport,
 misscaling refusal, complete campaign summary, scalar cache binding, and
-non-scalable cache binding. Each frozen schema-negative case then applies only
-its named mutation to a complete valid instance of its named target and must
-refuse. Validating `{}` or any generic, unrelated malformed instance does not
-establish the frozen negative case.
+non-scalable cache binding, plus a capacity-population configuration, level
+record, and complete capacity-population campaign summary. Each frozen
+schema-negative case then applies only its named mutation to a complete valid
+instance of its named target and must refuse. Validating `{}` or any generic,
+unrelated malformed instance does not establish the frozen negative case.
 
 The chain is:
 
@@ -643,18 +729,24 @@ The chain is:
 -> independent reconstruction -> table/figure -> bounded claim disposition`.
 
 An independent result audit must reconstruct every scientific output from raw
-traces without cached summaries; compare all 112 strategy triplets; verify all
-56 wrong-equivalence refusals, 105 direct coefficient-transport rows, 180
+traces without cached summaries; compare all 132 strategy triplets; verify all
+76 wrong-equivalence refusals, 105 direct coefficient-transport rows, 180
 transport-correction cases, and 150 misscaling refusals; replay topology construction, canonical
 certificates, invalidation closures, corrections, ledgers, checkpoints, and
 resource counts; and separate computational performance from scientific
 viability before any interpretation.
 
-Intended destinations are Part V for growing-system viability, Part VI for
-recursive surplus, coefficient transport, scaling residuals, and conditional
-motif reuse, Part VII for expansion/reconfiguration, and a short Part IX
-cross-reference only after independent results audit. No book work is authorized
-here.
+The future book must not add a disconnected or repetitive chapter. Part V owns
+the growing-population/capacity causal arms, viability, and homeostasis bridge;
+Part VI and the mathematical appendix own recursive Möbius surplus,
+Fibonacci/Lucas projections, coefficient scaling, residuals, and proofs. The
+relevant chapter culmination may use one light synthesis: a successful system
+could help create conditions in which future generations have meaningful
+resources available. It may not promise resources, control demography, or
+claim universal causation. Results and diagrams remain forbidden until Stage F
+execution and Stage G independent audit. Part VII may cross-reference expansion
+and reconfiguration, and Part IX may contain only a short later cross-reference.
+No book work is authorized here.
 
 ## 13. Falsifiers and stop conditions
 
@@ -681,6 +773,17 @@ The campaign refuses or falsifies, as applicable, on any of the following:
   units/query equivalence, wrong scaling class or degree, hidden residual,
   scaled non-scalable coordinate, wrong correction reconstruction, or scaling
   input omitted from the cache dependency/invalidation projection;
+- an arbitrary positive EBU or Möbius coefficient relabeled carrying capacity,
+  any omitted construction/maintenance/resource/correction/delay/loss burden
+  or receipt, or a mismatched capacity-conversion identity;
+- the conditional population recurrence used without the exact capacity law,
+  constant `rho`, `P_n=rho*C_n`, common units, boundary, protocol, and receipt
+  premises;
+- a capacity benefit presented as guaranteed population growth, demographic
+  control, universal causation, or evidence that future resources are assured;
+- one causal arm substituted for another, or zero/negative/nonconvertible,
+  reserve/quality, demographic-transition, delay, shock, or nonrecursive
+  controls hidden or reclassified;
 - an `O(log N)` claim for physical construction, storage, data collection,
   coefficient acquisition, boundary certification, or arbitrary all-subset
   reconstruction;

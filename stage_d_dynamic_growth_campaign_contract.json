@@ -29,15 +29,15 @@
     "scientific_outcome_dependencies": [],
     "authority_and_conformance_dependencies": ["SD-01","SD-06","SD-07","SD-08","SD-09","MOBIUS-EXACT-01","DAG-EXACT-01","CANONICAL-CACHE-01","accepted completion-oriented continuation authority"]
   },
-  "registered_question": "For the exact finite growing-system domain, do incremental structural expansion and certified canonical-motif reuse reproduce the complete accepted scientific output of full reconstruction while reducing recomputation under declared locality, canonical-equivalence, and boundary-invariance conditions, and how do viability, service, reserves, recovery, collapse, conservation, and correction accounting behave while population, resource capacity, demand, and structure expand?",
+  "registered_question": "For the exact finite growing-system domain, do incremental structural expansion and certified canonical-motif reuse reproduce the complete accepted scientific output of full reconstruction while reducing recomputation under declared locality, canonical-equivalence, and boundary-invariance conditions; how do viability, service, reserves, recovery, collapse, conservation, and correction accounting behave while population, resource capacity, demand, and structure expand; and under separately declared capacity-conversion and demographic-response semantics, can fully receipted net topology-generated capacity permit rather than guarantee a demographic response?",
   "evidence_boundary": {
     "target_level": 5,
     "stage_e_classes": ["MATHEMATICAL_DERIVATION_CHECK","STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST","NUMERICAL_VERIFICATION"],
     "stage_f_class": "REGISTERED_SCIENTIFIC_SIMULATION",
     "interpretation_level": 7,
-    "nonclaims": ["constant computation","universal scalability","universal topology","universal Fibonacci law","empirical population or ecology","physical construction or activation completion","optimality","institutional prescription"]
+    "nonclaims": ["constant computation","universal scalability","universal topology","universal Fibonacci law","universal demographic causation or control","empirical population or ecology","physical construction or activation completion","optimality","institutional prescription"]
   },
-  "user_requirement_ids": ["DG-USER-01","DG-USER-02","DG-USER-03","DG-USER-04","DG-USER-05","DG-USER-06","DG-USER-07","DG-USER-08","DG-USER-09","DG-USER-10","DG-USER-11","DG-USER-12","DG-USER-13"],
+  "user_requirement_ids": ["DG-USER-01","DG-USER-02","DG-USER-03","DG-USER-04","DG-USER-05","DG-USER-06","DG-USER-07","DG-USER-08","DG-USER-09","DG-USER-10","DG-USER-11","DG-USER-12","DG-USER-13","DG-USER-14"],
   "user_requirements": {
     "DG-USER-01": "couple population, resource, and demand trajectories",
     "DG-USER-02": "incrementally expand the declared dependency hypergraph and feasible poset",
@@ -51,9 +51,10 @@
     "DG-USER-10": "claim reduced recomputation only conditionally with exact full-rebuild scientific-output agreement; never claim constant computation",
     "DG-USER-11": "propagate invalidation across certified boundaries or changed external interactions and never reuse stale values",
     "DG-USER-12": "treat Fibonacci-like growth as one conditional benchmark and phyllotaxis only as motivation, compared with non-Fibonacci recursive and random or adversarial structures",
-    "DG-USER-13": "transport an exposed recursive coefficient only through a role-preserving map and typed authority-supplied or derived scaling operator; keep the exact residual visible, bind map rule factor units query residual dependency and invalidation identities, and directly recompute every non-scalable coordinate"
+    "DG-USER-13": "transport an exposed recursive coefficient only through a role-preserving map and typed authority-supplied or derived scaling operator; keep the exact residual visible, bind map rule factor units query residual dependency and invalidation identities, and directly recompute every non-scalable coordinate",
+    "DG-USER-14": "separately register demand-to-topology topology-capacity-to-demography and bidirectional causal arms; use only capacity-compatible fully receipted net surplus after construction maintenance resource correction delay and loss burdens; never relabel arbitrary positive EBU interaction as capacity or claim universal demographic causation"
   },
-  "mathematical_control_ids": ["DG-MATH-01","DG-MATH-02","DG-MATH-03","DG-MATH-04","DG-MATH-05","DG-MATH-06","DG-MATH-07","DG-MATH-08","DG-MATH-09"],
+  "mathematical_control_ids": ["DG-MATH-01","DG-MATH-02","DG-MATH-03","DG-MATH-04","DG-MATH-05","DG-MATH-06","DG-MATH-07","DG-MATH-08","DG-MATH-09","DG-MATH-10"],
   "mathematical_controls": {
     "DG-MATH-01": "raw two-child Boolean Möbius surplus identity I_n({x,y})=J_n under one frozen protocol and nonzero E(empty) support",
     "DG-MATH-02": "inverse reconstruction R_(n+1)=R_n+R_(n-1)+J_n and forced Fibonacci-kernel projection",
@@ -63,12 +64,14 @@
     "DG-MATH-06": "conditional Fibonacci-capacity level benchmark separated from population law and homeostasis",
     "DG-MATH-07": "conditional O(log N) recursive-summary corollary separated from physical construction, storage, data collection, coefficient acquisition, boundary certification, and exponential primitive all-subset reconstruction",
     "DG-MATH-08": "incremental topology-extension theorem preserves an old coefficient exactly only when every old subset value in its defining domain is unchanged, with complete upward-cone and dependency-alias invalidation otherwise",
-    "DG-MATH-09": "role-preserving recursive coefficient transport satisfies K_(n+1)(iota_n S)=I_(n+1)(iota_n S)-lambda_(n,S)I_n(S) and delta I_(n+1)=lambda delta I_n+delta K; zero and nonzero residuals remain explicit and no factor is inferred automatically"
+    "DG-MATH-09": "role-preserving recursive coefficient transport satisfies K_(n+1)(iota_n S)=I_(n+1)(iota_n S)-lambda_(n,S)I_n(S) and delta I_(n+1)=lambda delta I_n+delta K; zero and nonzero residuals remain explicit and no factor is inferred automatically",
+    "DG-MATH-10": "if C_(n+1)=C_n+C_(n-1)+J^C_n-X_(n+1) and separately declared P_n=rho*C_n then P_(n+1)=P_n+P_(n-1)+rho*(J^C_n-X_(n+1)); this is a conditional projection only"
   },
+  "central_conditional_synthesis": "Recursive topology may generate net interaction benefits that expand usable carrying capacity. Where demographic behaviour responds positively to that capacity, the benefit can enable population growth. EBU tests this connection rather than presuming it universally.",
   "external_conceptual_input": {
     "name": "EBU_RECURSIVE_MOBIUS_GROWTH_THEOREM_AND_STUDY_BRIDGE.md",
-    "bytes": 21524,
-    "sha256": "26a4581d9270cdcb1414bfdfe8cc5b3ced632cbc78b214d6fe72df955ccab002",
+    "bytes": 25305,
+    "sha256": "7f2a236a6ab2be50d5841bc309b38eedf558911d876c46624b14798cd73eb668",
     "status": "EXTERNAL_CONCEPTUAL_INPUT_NOT_ACCEPTED_REPOSITORY_AUTHORITY_OR_SCIENTIFIC_EVIDENCE",
     "repository_predecessor_row": false
   },
@@ -159,9 +162,14 @@
     "topology_instances": 7,
     "policies": 2,
     "valid_strategies": 3,
-    "scientific_runs": 336,
-    "matched_strategy_triplets": 112,
-    "wrong_equivalence_refusal_fixtures": 56,
+    "demand_driven_scientific_runs": 336,
+    "topology_capacity_response_scientific_runs": 30,
+    "bidirectional_feedback_scientific_runs": 30,
+    "scientific_runs": 396,
+    "demand_driven_matched_strategy_triplets": 112,
+    "capacity_population_matched_strategy_triplets": 20,
+    "matched_strategy_triplets": 132,
+    "wrong_equivalence_refusal_fixtures": 76,
     "wrong_equivalence_trajectories": 0,
     "valid_scalar_transport_rows": 90,
     "non_scalable_direct_rows": 15,
@@ -211,7 +219,10 @@
     "full_rebuild_coefficient_evaluation_upper_bound_per_run": 1550,
     "unprotected_primary_evaluation_upper_bound_per_run": 9742,
     "robust_primary_evaluation_upper_bound_per_run": 460302,
-    "campaign_primary_evaluation_estimate_upper_bound": 78967392,
+    "demand_driven_campaign_primary_evaluation_estimate_upper_bound": 78967392,
+    "capacity_population_primary_evaluation_upper_bound_per_run": 10000,
+    "capacity_population_campaign_primary_evaluation_estimate_upper_bound": 600000,
+    "campaign_primary_evaluation_estimate_upper_bound": 79567392,
     "transport_direct_value_acquisitions": 210,
     "transport_scaled_predictions": 90,
     "transport_residual_reconstructions": 90,
@@ -219,8 +230,8 @@
     "transport_refusal_preflights": 150,
     "transport_oracle_arithmetic_and_preflight_total": 720,
     "measurement_fields": ["active_wall_nanoseconds","process_tree_peak_rss_bytes","transition_evaluations","menu_evaluations","coefficient_evaluations","subset_evaluations","hyperedge_evaluations","canonical_candidates","vertices_inspected","edges_inspected","recomputed_coefficients","reused_coefficients","cache_hits","cache_misses","stale_hits","invalidation_radius","propagation_depth","storage_bytes","trace_bytes","output_bytes","checkpoint_write_nanoseconds","restart_read_nanoseconds"],
-    "hard_limits": {"vertices":64,"edges_and_hyperedges":1024,"hyperedge_order":4,"dependency_depth":64,"horizon_ticks":8192,"scientific_runs":336,"wrong_equivalence_refusal_fixtures":56,"misscaling_refusal_fixtures":150,"total_refusal_fixtures":206,"transport_oracle_arithmetic_and_preflight_total":720,"wall_seconds_per_attempt":14400,"peak_rss_bytes_per_attempt":4294967296,"primary_evaluations_per_attempt_and_run":1200000,"trace_bytes_per_run":5368709120,"logical_output_bytes_per_study":21474836480},
-    "continuation_campaign_envelope": {"maximum_attempts":2688,"cumulative_active_seconds":2592000,"cumulative_primary_evaluations":403200000,"cumulative_physical_write_bytes":85899345920,"logical_output_bytes":21474836480,"maximum_calendar_days":180,"maximum_peak_rss_bytes":4294967296},
+    "hard_limits": {"vertices":64,"edges_and_hyperedges":1024,"hyperedge_order":4,"dependency_depth":64,"horizon_ticks":8192,"capacity_population_levels":17,"scientific_runs":396,"wrong_equivalence_refusal_fixtures":76,"misscaling_refusal_fixtures":150,"total_refusal_fixtures":226,"transport_oracle_arithmetic_and_preflight_total":720,"wall_seconds_per_attempt":14400,"peak_rss_bytes_per_attempt":4294967296,"primary_evaluations_per_attempt_and_run":1200000,"trace_bytes_per_run":5368709120,"logical_output_bytes_per_study":21474836480},
+    "continuation_campaign_envelope": {"maximum_attempts":3168,"cumulative_active_seconds":2592000,"cumulative_primary_evaluations":475200000,"cumulative_physical_write_bytes":85899345920,"logical_output_bytes":21474836480,"maximum_calendar_days":180,"maximum_peak_rss_bytes":4294967296},
     "checkpoint_cadence_ticks": 256,
     "resource_excess_disposition": "REFUSED_BEFORE_EXECUTION_OR_COMPUTATIONALLY_INCONCLUSIVE_NOT_A_SCIENTIFIC_OUTCOME",
     "silent_fallbacks": "FORBIDDEN",
@@ -329,6 +340,46 @@
     "required_stage_f_controls": ["invariant","occurrence extensive Fibonacci","occurrence extensive Lucas","boundary scaled","degree homogeneous","nonzero residual","deliberately misscaled","non-scalable direct recomputation"],
     "evidence_boundary": "Stage E oracle checks are theorem or numerical conformance only; Stage F registered controls do not authorize a universal scaling claim"
   },
+  "capacity_population_causal_arm_registry": {
+    "arm_order": ["ARM-1-DEMAND-DRIVES-TOPOLOGY","ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY","ARM-3-BIDIRECTIONAL-FEEDBACK"],
+    "ARM-1-DEMAND-DRIVES-TOPOLOGY": {"binding":"the existing 336-run time-indexed dynamic-growth matrix","population_and_demand":"exogenous registered drivers","topology_response":"the frozen 16 logical expansion events","capacity_to_population_feedback":"FORBIDDEN","scientific_runs":336,"matched_strategy_triplets":112},
+    "ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY": {"binding":"ten capacity-population scenarios times three reconstruction strategies","topology_expansion_driver":"EXOGENOUS_REGISTERED_LEVEL_SEQUENCE","demographic_response_may_observe_capacity":true,"demographic_state_may_change_expansion":"FORBIDDEN","scientific_runs":30,"matched_strategy_triplets":10},
+    "ARM-3-BIDIRECTIONAL-FEEDBACK": {"binding":"the same ten capacity-population scenarios times three reconstruction strategies","topology_expansion_driver":"population-derived required-capacity receipt then next declared expansion level","demographic_response_may_observe_capacity":true,"demographic_state_may_change_expansion":true,"scientific_runs":30,"matched_strategy_triplets":10},
+    "strategy_order": ["FULL-REBUILD-v1","INCREMENTAL-NO-REUSE-v1","CERTIFIED-MOTIF-REUSE-v1"],
+    "scenario_order": ["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK","CP-NONRECURSIVE"],
+    "capacity_levels": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+    "base_capacity": {"C_0":"2","C_1":"3","units":"usable-capacity-unit"},
+    "recursive_capacity_law": "C_(n+1)=C_n+C_(n-1)+J^C_n-X_(n+1)",
+    "complete_expansion_burden": {
+      "definition":"X_(n+1)=construction+maintenance+resource+correction+delay+loss",
+      "construction":"1/16",
+      "maintenance":"(n+1)/256",
+      "resource":"1/32",
+      "correction":"1/64 at n in {10,16}; zero otherwise",
+      "delay":"1/64 baseline; CP-RESPONSE-DELAY adds 1/16",
+      "loss":"1/64 baseline; CP-CAPACITY-SHOCK adds 2 at n=8",
+      "receipt_rule":"each component has one typed owner receipt and X is their exact reduced-rational sum",
+      "physical_nonclaim":"synthetic registered capacity accounting; not empirical construction cost or physical completion evidence"
+    },
+    "scenario_rules": [
+      {"id":"CP-POSITIVE-COMPATIBLE","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"3/8","allocation":"USABLE_CAPACITY","demographic_response":"P_n=4*C_n","exact_projection_eligible":true},
+      {"id":"CP-ZERO-RESIDUAL","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"0","capacity_compatible_residual":"0","allocation":"NONE","demographic_response":"P_n=4*C_n","exact_projection_eligible":true},
+      {"id":"CP-NEGATIVE-RESIDUAL","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"-3/8","capacity_compatible_residual":"-3/8","allocation":"USABLE_CAPACITY","demographic_response":"P_n=4*C_n","exact_projection_eligible":true},
+      {"id":"CP-POSITIVE-NONCONVERTIBLE","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"0","allocation":"NON_CAPACITY_BENEFIT","demographic_response":"P_n=4*C_n","exact_projection_eligible":true},
+      {"id":"CP-RESERVE-ALLOCATION","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"3/8","allocation":"RESERVE_3_8_EXCLUDED_FROM_DEMOGRAPHIC_RESPONSE_CAPACITY","demographic_response":"P_n=4*A_n where A_n=C_n-cumulative_reserved_capacity","exact_projection_eligible":false},
+      {"id":"CP-QUALITY-ALLOCATION","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"3/8","allocation":"QUALITY_3_8_EXCLUDED_FROM_DEMOGRAPHIC_RESPONSE_CAPACITY","demographic_response":"P_n=4*A_n where A_n=C_n-cumulative_quality_capacity","exact_projection_eligible":false},
+      {"id":"CP-DEMOGRAPHIC-TRANSITION","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"3/8","allocation":"USABLE_CAPACITY","demographic_response":"P_n=rho_n*C_n; rho_n=4 for n<=8 and rho_n=2 for n>=9","exact_projection_eligible":false},
+      {"id":"CP-RESPONSE-DELAY","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"3/8","allocation":"USABLE_CAPACITY","demographic_response":"P_(n+1)=4*C_n with P_0=8","exact_projection_eligible":false},
+      {"id":"CP-CAPACITY-SHOCK","topology":"FIBONACCI-CONDITIONAL-v1","raw_residual":"3/8","capacity_compatible_residual":"3/8","allocation":"USABLE_CAPACITY","demographic_response":"P_n=4*C_n after the exact shock-adjusted capacity ledger","exact_projection_eligible":true},
+      {"id":"CP-NONRECURSIVE","topology":"HASHED-NONRECURSIVE-v1 seed 0","raw_residual":"NOT_APPLICABLE","capacity_compatible_residual":"NOT_APPLICABLE","allocation":"DIRECT_CAPACITY","demographic_response":"P_n=4*C_n","direct_capacity_rule":"C_n=2+(first_SHA256_byte(UTF-8 EBU-SD01-GROWTH-NONRECURSIVE-CAPACITY-v1|n) mod 33)/16","exact_projection_eligible":false}
+    ],
+    "demographic_bookkeeping": "P_(n+1)=P_n+B_n-D^death_n+M_n with every birth death and migration term separately receipted; scenario response equations are exact constraints on the resulting P projection rather than unreceipted creation",
+    "exact_conditional_projection": {"premises":["recursive capacity law exact","P_n=rho*C_n under one separately declared response","rho constant over compared levels","same units boundary protocol and receipts"],"rho":"4","conclusion":"P_(n+1)=P_n+P_(n-1)+rho*(J^C_n-X_(n+1))","interpretation":"TESTABLE_CONDITIONAL_PROJECTION_NOT_UNIVERSAL_DEMOGRAPHIC_LAW"},
+    "bidirectional_expansion_rule": "after each Arm-3 population response, required_capacity_n=P_n/rho_effective+1/16; a typed request receipt authorizes the next declared level iff required_capacity_n>C_n and n<16; no level change is inferred without the receipt",
+    "scientific_measurements": ["usable capacity","raw and capacity-compatible residual","complete burden X","population","births","deaths","migration","demand","reserve allocation","quality allocation","service","viability","homeostasis","recovery or collapse","conservation and correction receipts"],
+    "scientific_nonclaims": ["arbitrary positive EBU coefficient is carrying capacity","capacity guarantees population growth","population should be controlled","Fibonacci is a demographic law","successful topology guarantees future resources","causal direction inferred outside the registered arms"],
+    "reader_facing_bounded_meaning": "a successful system could help create conditions in which future generations have meaningful resources available; no guarantee demographic control or universal causation"
+  },
   "feasible_poset_oracle": {
     "transform": "I(x)=sum_(y<=x) mu_P(y,x)E(y)",
     "inverse": "E(x)=sum_(y<=x)I(y)",
@@ -374,10 +425,10 @@
     "reopen_action": "complete declared Mobius upward cone and dependency-alias invalidation before recomputation or recertification",
     "cache_nonclaim": "the theorem alone does not authorize reuse without complete A1-A8 and cache-key evidence"
   },
-  "required_records": ["dynamic_growth_configuration/v1","growth_epoch_manifest/v1","growth_trace_row/v1","growth_reconstruction_comparison/v1","growth_invalidation_receipt/v1","recursive_mobius_surplus_oracle/v1","recursive_coefficient_transport_oracle/v1","coefficient_scaling_refusal_fixture/v1","feasible_poset_mobius_oracle/v1","growth_capacity_benchmark/v1","growth_campaign_summary/v1","wrong_equivalence_fixture/v1","cache_event/v1"],
+  "required_records": ["dynamic_growth_configuration/v1","growth_epoch_manifest/v1","growth_trace_row/v1","growth_reconstruction_comparison/v1","growth_invalidation_receipt/v1","recursive_mobius_surplus_oracle/v1","recursive_coefficient_transport_oracle/v1","coefficient_scaling_refusal_fixture/v1","feasible_poset_mobius_oracle/v1","growth_capacity_benchmark/v1","capacity_population_configuration/v1","capacity_population_level_record/v1","capacity_population_campaign_summary/v1","growth_campaign_summary/v1","wrong_equivalence_fixture/v1","cache_event/v1"],
   "required_inherited_continuation_records": ["campaign_execution_binding/v2","attempt_binding/v2","attempt_manifest/v2","continuation_checkpoint/v2","run_resource_ledger/v2","campaign_resource_ledger/v2","continuation_receipt/v2"],
-  "falsifiers": ["valid strategy scientific-output mismatch","wrong equivalence accepted","stale hit","incomplete cache key","missing A1-A8 or boundary certificate","invalidation closure omission","broad change treated as local","unreconciled stock/service/coefficient/correction/receipt","resource created by growth or reuse","positive efficiency without strict eligible reduction","constant computation or universal Fibonacci claim","logistic treated as population law","phyllotaxis treated as evidence","raw pair coefficient differs from J","inverse or forced projection mismatch","Lucas label on incompatible bases","wrong omitted-interaction error or correction multiplier","infeasible Boolean value invented for a poset","missing or role-changing coefficient transport map","missing authority-derived scaling rule factor units or query equivalence","wrong scaling class or homogeneous degree","nonzero scaling residual hidden","non-scalable coefficient reused by scaling","wrong scaled correction reconstruction","scaling input change omitted from cache dependency or invalidation","O(log N) extended to excluded physical or primitive-all-subset work","topological compression treated as homeostasis","silent approximation sampling truncation or topology alteration","changed identity or post-outcome protocol","missing immutable evidence"],
-  "book_destinations_after_audited_results": ["Part V growing-system viability","Part VI recursive surplus coefficient transport scaling residuals and conditional motif reuse","Part VII expansion and reconfiguration","Part IX short cross-reference"],
+  "falsifiers": ["valid strategy scientific-output mismatch","wrong equivalence accepted","stale hit","incomplete cache key","missing A1-A8 or boundary certificate","invalidation closure omission","broad change treated as local","unreconciled stock/service/coefficient/correction/receipt","resource created by growth or reuse","positive efficiency without strict eligible reduction","constant computation or universal Fibonacci claim","logistic treated as population law","phyllotaxis treated as evidence","raw pair coefficient differs from J","inverse or forced projection mismatch","Lucas label on incompatible bases","wrong omitted-interaction error or correction multiplier","infeasible Boolean value invented for a poset","missing or role-changing coefficient transport map","missing authority-derived scaling rule factor units or query equivalence","wrong scaling class or homogeneous degree","nonzero scaling residual hidden","non-scalable coefficient reused by scaling","wrong scaled correction reconstruction","scaling input change omitted from cache dependency or invalidation","arbitrary positive EBU or Mobius coefficient relabeled carrying capacity","capacity burden omits construction maintenance resource correction delay loss or a typed receipt","capacity-compatible residual differs from its declared conversion rule","conditional population recurrence asserted without P_n=rho*C_n and constant-rho premises","capacity benefit claimed to guarantee population growth or demographic control","one causal arm substituted for another or feedback inferred from an unregistered arm","reserve quality demographic-transition delay shock or nonrecursive control omitted","O(log N) extended to excluded physical or primitive-all-subset work","topological compression treated as homeostasis","silent approximation sampling truncation or topology alteration","changed identity or post-outcome protocol","missing immutable evidence"],
+  "book_destinations_after_audited_results": ["Part V growing-population capacity causal arms viability homeostasis and bounded synthesis","Part VI recursive surplus Fibonacci Lucas coefficient transport scaling residuals and conditional motif reuse","Mathematical appendix exact conditional capacity-population projection","Part VII expansion and reconfiguration","Part IX short cross-reference"],
   "future_stage_boundary": {
     "stage_e_authority_reconciliation_required": true,
     "stage_e_implementation_authorized": false,
