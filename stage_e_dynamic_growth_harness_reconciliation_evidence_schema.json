@@ -89,6 +89,93 @@
       },
       "additionalProperties": false
     },
+    "accepted_binding_projection": {
+      "$comment": "Exact closed validation target for the accepted continuation fixture that is metadata in its source document rather than a source-schema root or definition.",
+      "const": {
+        "campaign_execution_binding_identity": {
+          "kind": "fixture",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "campaign-binding"
+        },
+        "permitted_stream_set_identity": {
+          "kind": "permitted_stream_set/v2",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "seed": 0,
+        "stochastic_rule_identity": {
+          "kind": "fixture",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "FORBIDDEN"
+        },
+        "study_id": "SD-01"
+      }
+    },
+    "keyword_conformance_pair": {
+      "$comment": "Closed carrier target for the 22 exact assertion/applicator schema-instance controls. The embedded schema is evaluated separately under the frozen 29-keyword interpreter.",
+      "type": "object",
+      "required": [
+        "schema",
+        "instance"
+      ],
+      "properties": {
+        "schema": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "instance": {}
+      },
+      "additionalProperties": false
+    },
+    "comment_nonreliance_pair": {
+      "$comment": "Closed annotation-nonreliance control. All three embedded schemas must validate the same integer; comment presence or text must not affect validity.",
+      "type": "object",
+      "required": [
+        "case_id",
+        "instance",
+        "schema_with_comment",
+        "schema_without_comment",
+        "schema_with_changed_comment",
+        "expected_validity_with_comment",
+        "expected_validity_without_comment",
+        "expected_validity_with_changed_comment"
+      ],
+      "properties": {
+        "case_id": {
+          "const": "SE-KEYWORD-N23-$comment"
+        },
+        "instance": {
+          "const": 1
+        },
+        "schema_with_comment": {
+          "const": {
+            "$comment": "This annotation must never alter validity.",
+            "type": "integer"
+          }
+        },
+        "schema_without_comment": {
+          "const": {
+            "type": "integer"
+          }
+        },
+        "schema_with_changed_comment": {
+          "const": {
+            "$comment": "Changed annotation text must never alter validity.",
+            "type": "integer"
+          }
+        },
+        "expected_validity_with_comment": {
+          "const": true
+        },
+        "expected_validity_without_comment": {
+          "const": true
+        },
+        "expected_validity_with_changed_comment": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
     "fixture_ledger_row": {
       "type": "object",
       "required": [
@@ -96,6 +183,7 @@
         "fixture_id",
         "source_path",
         "source_json_pointer",
+        "target_schema_path",
         "target_definition_or_root",
         "canonical_instance",
         "canonical_identity",
@@ -118,6 +206,10 @@
         "source_json_pointer": {
           "type": "string",
           "pattern": "^/"
+        },
+        "target_schema_path": {
+          "type": "string",
+          "minLength": 1
         },
         "target_definition_or_root": {
           "type": "string",
@@ -144,6 +236,7 @@
         "source_case_pointer",
         "base_fixture_id",
         "base_fixture_identity",
+        "target_schema_path",
         "target_definition",
         "mutation_representation",
         "rfc6902_patch_or_full_instance",
@@ -174,6 +267,10 @@
         },
         "base_fixture_identity": {
           "$ref": "#/$defs/identity"
+        },
+        "target_schema_path": {
+          "type": "string",
+          "minLength": 1
         },
         "target_definition": {
           "type": "string",

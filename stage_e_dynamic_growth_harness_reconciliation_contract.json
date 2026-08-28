@@ -110,6 +110,21 @@
       "id": "SE-RC-DEFECT-05",
       "problem": "dependency-local cache invalidation was claimed after an empty-edge call",
       "required_correction": "exercise and receipt declared nonempty dependency and alias edge traversals and exact affected closure"
+    },
+    {
+      "id": "SE-RC-DEFECT-06",
+      "problem": "one positive fixture and the keyword controls named non-resolvable logical targets",
+      "required_correction": "resolve them to three explicit closed reconciliation-schema definitions and refuse a missing or ambiguous target"
+    },
+    {
+      "id": "SE-RC-DEFECT-07",
+      "problem": "eleven continuation mutations were assigned false structural-versus-semantic layers",
+      "required_correction": "bind the exact thirty-one JSON-schema and four structurally-valid semantic cases and execute each at its truthful layer"
+    },
+    {
+      "id": "SE-RC-DEFECT-08",
+      "problem": "the comment non-reliance control failed ordinary type validation before annotation equivalence was tested",
+      "required_correction": "validate one integer under with-comment, without-comment and changed-comment schemas and require three identical true outcomes"
     }
   ],
   "schema_replay": {
@@ -180,6 +195,7 @@
       "fixture_id",
       "source_path",
       "source_json_pointer",
+      "target_schema_path",
       "target_definition_or_root",
       "canonical_byte_count",
       "canonical_sha256"
@@ -192,6 +208,7 @@
       "base_fixture_id",
       "base_fixture_identity",
       "base_fixture_sha256",
+      "target_schema_path",
       "target_definition",
       "mutation_representation",
       "rfc6902_patch_or_full_instance",
@@ -205,7 +222,7 @@
       "required_disposition"
     ],
     "reconciliation_evidence_schema_profile": {
-      "definition_count": 22,
+      "definition_count": 25,
       "root_count": 7,
       "local_ref_occurrence_count": 83,
       "unique_local_ref_target_count": 22,
@@ -215,7 +232,50 @@
     "raw_json_parse_cases_are_utf8_text_with_raw_byte_identity": true,
     "representative_subset": "FORBIDDEN",
     "count_only_pass": "FORBIDDEN",
-    "semantic_case_structural_rejection_substitution": "FORBIDDEN"
+    "semantic_case_structural_rejection_substitution": "FORBIDDEN",
+    "comment_annotation_nonreliance_control": {
+      "case_id": "SE-KEYWORD-N23-$comment",
+      "expected_validity_with_changed_comment": true,
+      "expected_validity_with_comment": true,
+      "expected_validity_without_comment": true,
+      "failure_disposition": "REFUSED",
+      "instance": 1,
+      "required_relation": "all three validity outcomes are identical and true; annotation text is never consulted",
+      "target": "comment_nonreliance_pair"
+    },
+    "continuation_refusal_layer_partition": {
+      "json_schema_case_count": 31,
+      "json_schema_case_ids_corrected_from_prior_semantic_labels": [
+        "CONT-SCHEMA-N03",
+        "CONT-SCHEMA-N10",
+        "CONT-SCHEMA-N11",
+        "CONT-SCHEMA-N12",
+        "CONT-SCHEMA-N13",
+        "CONT-SCHEMA-N19",
+        "CONT-SCHEMA-N22",
+        "CONT-SCHEMA-N24",
+        "CONT-SCHEMA-N27",
+        "CONT-SCHEMA-N28"
+      ],
+      "rule": "each JSON_SCHEMA case must fail the accepted continuation schema and each SEMANTIC_RELATION case must pass that schema then fail exactly its named relation",
+      "semantic_relation_case_count": 4,
+      "structurally_valid_semantic_case_ids": [
+        "CONT-SCHEMA-N17",
+        "CONT-SCHEMA-N21",
+        "CONT-SCHEMA-N25",
+        "CONT-SCHEMA-N35"
+      ]
+    },
+    "positive_target_resolution": {
+      "default_rule": "resolve the named root or $defs target in the source schema",
+      "explicit_reconciliation_targets": {
+        "accepted_binding_projection": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json#/$defs/accepted_binding_projection",
+        "comment_nonreliance_pair": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json#/$defs/comment_nonreliance_pair",
+        "keyword_conformance_pair": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json#/$defs/keyword_conformance_pair"
+      },
+      "missing_or_ambiguous_target": "REFUSE",
+      "row_binding": "every positive and refusal registry row carries target_schema_path plus its exact target name; the target must exist in that schema and no inferred or synthetic target is permitted"
+    }
   },
   "accepted_stage_e_core_conformance": {
     "mobius_direct_optimized_agreement_cases": 488,
@@ -401,11 +461,31 @@
       "canonicalization_auxiliary_edge_slots"
     ],
     "exact_cells": [
-      {"cell_id": "DAG-128-256", "vertices": 128, "edges": 256},
-      {"cell_id": "DAG-1024-4096", "vertices": 1024, "edges": 4096},
-      {"cell_id": "DAG-10000-50000", "vertices": 10000, "edges": 50000},
-      {"cell_id": "DAG-100000-500000", "vertices": 100000, "edges": 500000},
-      {"cell_id": "DAG-512-130816", "vertices": 512, "edges": 130816}
+      {
+        "cell_id": "DAG-128-256",
+        "vertices": 128,
+        "edges": 256
+      },
+      {
+        "cell_id": "DAG-1024-4096",
+        "vertices": 1024,
+        "edges": 4096
+      },
+      {
+        "cell_id": "DAG-10000-50000",
+        "vertices": 10000,
+        "edges": 50000
+      },
+      {
+        "cell_id": "DAG-100000-500000",
+        "vertices": 100000,
+        "edges": 500000
+      },
+      {
+        "cell_id": "DAG-512-130816",
+        "vertices": 512,
+        "edges": 130816
+      }
     ],
     "cell_ids_unique_and_exact": true,
     "canonicalization_input_edges_equal_traversal_edges": true,

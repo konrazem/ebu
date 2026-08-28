@@ -284,9 +284,19 @@
     },
     {
       "case_id": "SE-KEYWORD-N23-$comment",
-      "instance": "not-an-integer",
-      "schema": {
+      "expected_validity_with_changed_comment": true,
+      "expected_validity_with_comment": true,
+      "expected_validity_without_comment": true,
+      "instance": 1,
+      "schema_with_changed_comment": {
+        "$comment": "Changed annotation text must never alter validity.",
+        "type": "integer"
+      },
+      "schema_with_comment": {
         "$comment": "This annotation must never alter validity.",
+        "type": "integer"
+      },
+      "schema_without_comment": {
         "type": "integer"
       }
     }
@@ -311,7 +321,7 @@
     "dynamic_growth_registered_ticks_per_run": 8192,
     "dynamic_growth_schema_refusals": 116,
     "dynamic_growth_semantic_refusals": 34,
-    "evidence_schema_definition_count": 22,
+    "evidence_schema_definition_count": 25,
     "evidence_schema_local_ref_occurrences": 83,
     "evidence_schema_root_count": 7,
     "evidence_schema_unique_ref_targets": 22,
@@ -386,10 +396,10 @@
     "SE-RC-N043 representative fixture subset",
     "SE-RC-N044 generic empty-object continuation substitution",
     "SE-RC-N045 exact patch applied to wrong base fixture",
-    "SE-RC-N046 semantic mutation fails only structurally",
+    "SE-RC-N046 semantic mutation fails structurally or JSON_SCHEMA mutation remains structurally valid",
     "SE-RC-N047 named semantic relation not executed",
     "SE-RC-N048 Stage D fixture omitted",
-    "SE-RC-N049 continuation fixture omitted",
+    "SE-RC-N049 continuation fixture omitted or its named validation target is missing or ambiguous",
     "SE-RC-N050 Stage E fixture omitted",
     "SE-RC-N051 dynamic fixture omitted",
     "SE-RC-N052 assertion applicator mutation omitted",
@@ -466,7 +476,7 @@
     "SE-RC-N123 authority-only CI failure represented pass",
     "SE-RC-N124 skipped or zero-test lane represented pass",
     "SE-RC-N125 purpose metadata treated as schema fixture",
-    "SE-RC-N126 comment annotation changes instance validity",
+    "SE-RC-N126 comment annotation changes instance validity or lacks the exact with without and changed-comment comparison",
     "SE-RC-N127 complete wrong DAG cell substituted",
     "SE-RC-N128 DAG edge inspection undercount",
     "SE-RC-N129 canonicalization input edge mismatch",
@@ -485,7 +495,7 @@
     "SE-RC-SR-003 positive ledger ordinals are exactly 0 through 60 without gap or duplicate",
     "SE-RC-SR-004 refusal ledger ordinals are exactly 0 through 247 without gap or duplicate",
     "SE-RC-SR-005 ledger coverage by source and validation layer equals the frozen partitions",
-    "SE-RC-SR-006 every ledger fixture identity is recomputed from the exact complete source fixture or exact patched instance",
+    "SE-RC-SR-006 every ledger fixture identity is recomputed from the exact complete source fixture or exact patched instance and every target resolves under the frozen source-or-overlay rule",
     "SE-RC-SR-007 DAG indegree initializations equal V",
     "SE-RC-SR-008 DAG enqueues dequeues queue appends and head advances are each at most V",
     "SE-RC-SR-009 every DAG cell has indegree_initializations equal V, edge_inspections exactly E, and all other exact traversal bounds",
@@ -514,7 +524,7 @@
     "SE-RC-SR-032 v2 PASS requires all five entries PASS; the non-PASS manifest retains the same five exact ordered names, requires at least one BOUND_NOT_SUPPORTED entry, binds bound_record_names exactly to those entries, and refuses Stage F",
     "SE-RC-SR-033 recursive poset transport and correction case ordinals canonical operands outputs relations and identities reconstruct exactly",
     "SE-RC-SR-034 the guard route list is exactly fifteen ordered IDs and every route has one preimport refusal",
-    "SE-RC-SR-035 all 61 positive and 248 refusal registry rows reconstruct their committed canonical identities",
+    "SE-RC-SR-035 all 61 positive and 248 refusal rows reconstruct their committed identities, exact validation layers and structural outcomes; the comment pair is valid with absent original and changed annotation text",
     "SE-RC-SR-036 the byte-preserved implementation manifest's provisional 63/247 literals are non-operative and superseded only by exact executable 61/248 registries while every other path and no-substitution rule remains binding"
   ],
   "pass_boundary": "A PASS authorizes only normal private authority integration, then the separately frozen one-path reachability durability lifecycle. Harness implementation remains frozen until durability integration PASS. Stage F remains separately user-gated.",
@@ -567,7 +577,7 @@
     "SE-RC-P046 five additive paths occur exactly once",
     "SE-RC-P047 protected paths exact and closed",
     "SE-RC-P048 durability path exact one",
-    "SE-RC-P049 22 reconciliation schema definitions",
+    "SE-RC-P049 25 reconciliation schema definitions including three explicit fixture and annotation-control targets",
     "SE-RC-P050 seven reconciliation schema roots",
     "SE-RC-P051 83 local ref occurrences",
     "SE-RC-P052 22 unique local ref targets",
@@ -580,11 +590,11 @@
     "SE-RC-P059 schema replay refusal array exact 248",
     "SE-RC-P060 positive partition exact 4 2 11 44",
     "SE-RC-P061 refusal partition exact 16 35 24 116 34 22 1",
-    "SE-RC-P062 all 61 fixtures loaded and validated",
+    "SE-RC-P062 all 61 fixtures loaded and validated against an existing source target or one of the three exact closed reconciliation targets",
     "SE-RC-P063 all 61 fixture canonical identities retained",
     "SE-RC-P064 all 248 mutations loaded or derived exactly",
-    "SE-RC-P065 all 248 named refusal layers executed",
-    "SE-RC-P066 every semantic mutation first passes structure",
+    "SE-RC-P065 all 248 named refusal layers executed with the exact 31 JSON-schema and four semantic continuation partition",
+    "SE-RC-P066 every semantic mutation first passes structure, every JSON_SCHEMA mutation fails structure, and the comment control has three identical true outcomes",
     "SE-RC-P067 no generic empty-object substitution",
     "SE-RC-P068 no representative-subset acceptance",
     "SE-RC-P069 no count-only acceptance",
@@ -669,8 +679,8 @@
     "SE-RC-P148 result figure and book generation forbidden",
     "SE-RC-P149 authority audit independent",
     "SE-RC-P150 implementation audit independent",
-    "SE-RC-P151 exact 61-row positive fixture registry with committed canonical identities",
-    "SE-RC-P152 exact 248-row refusal registry with base patch mutated and layer identities",
+    "SE-RC-P151 exact 61-row positive fixture registry with committed canonical identities and resolvable closed targets",
+    "SE-RC-P152 exact 248-row refusal registry with base patch mutated layer and truthful structural-validity identities",
     "SE-RC-P153 accepted v1 records and final manifest preserved separately from six v2 outputs",
     "SE-RC-P154 exact 29-keyword derived union includes comment annotation",
     "SE-RC-P155 exact five DAG cells and exact edge inspections",
@@ -687,7 +697,8 @@
       "ordinal": 0,
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_configuration_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition_or_root": "configuration_manifest"
+      "target_definition_or_root": "configuration_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1227,
@@ -696,7 +707,8 @@
       "ordinal": 1,
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_limit_decision",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition_or_root": "limit_decision"
+      "target_definition_or_root": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2123,
@@ -705,7 +717,8 @@
       "ordinal": 2,
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_computation_record",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition_or_root": "computation_record"
+      "target_definition_or_root": "computation_record",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2088,
@@ -714,7 +727,8 @@
       "ordinal": 3,
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition_or_root": "run_manifest"
+      "target_definition_or_root": "run_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "canonical_byte_count": 549,
@@ -723,7 +737,8 @@
       "ordinal": 4,
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/sd01_accepted_binding_projection",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
-      "target_definition_or_root": "accepted_binding_projection"
+      "target_definition_or_root": "accepted_binding_projection",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "canonical_byte_count": 3487,
@@ -732,7 +747,8 @@
       "ordinal": 5,
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_sd01_deterministic_empty_checkpoint",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
-      "target_definition_or_root": "continuation_checkpoint"
+      "target_definition_or_root": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1937,
@@ -741,7 +757,8 @@
       "ordinal": 6,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/0/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "authority_record"
+      "target_definition_or_root": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2278,
@@ -750,7 +767,8 @@
       "ordinal": 7,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/1/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "schema_record"
+      "target_definition_or_root": "schema_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1929,
@@ -759,7 +777,8 @@
       "ordinal": 8,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/2/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "identity_continuation_record"
+      "target_definition_or_root": "identity_continuation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 12971,
@@ -768,7 +787,8 @@
       "ordinal": 9,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/3/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "mobius_record"
+      "target_definition_or_root": "mobius_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 12986,
@@ -777,7 +797,8 @@
       "ordinal": 10,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/4/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "mobius_record"
+      "target_definition_or_root": "mobius_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2414,
@@ -786,7 +807,8 @@
       "ordinal": 11,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/5/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "dag_cache_record"
+      "target_definition_or_root": "dag_cache_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1465,
@@ -795,7 +817,8 @@
       "ordinal": 12,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/6/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "adapter_guard_record"
+      "target_definition_or_root": "adapter_guard_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2542,
@@ -804,7 +827,8 @@
       "ordinal": 13,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/7/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "installed_isolation_record"
+      "target_definition_or_root": "installed_isolation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 5077,
@@ -813,7 +837,8 @@
       "ordinal": 14,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/8/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "complexity_record"
+      "target_definition_or_root": "complexity_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1325,
@@ -822,7 +847,8 @@
       "ordinal": 15,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/9/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "regression_record"
+      "target_definition_or_root": "regression_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 3351,
@@ -831,7 +857,8 @@
       "ordinal": 16,
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/10/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition_or_root": "final_manifest"
+      "target_definition_or_root": "final_manifest",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "canonical_byte_count": 18,
@@ -840,7 +867,8 @@
       "ordinal": 17,
       "source_json_pointer": "/schema_fixtures/0/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "binary64_bits"
+      "target_definition_or_root": "binary64_bits",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2662,
@@ -849,7 +877,8 @@
       "ordinal": 18,
       "source_json_pointer": "/schema_fixtures/1/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "scaling_cache_binding"
+      "target_definition_or_root": "scaling_cache_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2842,
@@ -858,7 +887,8 @@
       "ordinal": 19,
       "source_json_pointer": "/schema_fixtures/2/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "scaling_cache_binding"
+      "target_definition_or_root": "scaling_cache_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1319,
@@ -867,7 +897,8 @@
       "ordinal": 20,
       "source_json_pointer": "/schema_fixtures/3/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "growth_capacity_benchmark"
+      "target_definition_or_root": "growth_capacity_benchmark",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 973,
@@ -876,7 +907,8 @@
       "ordinal": 21,
       "source_json_pointer": "/schema_fixtures/4/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_predicate_oracle"
+      "target_definition_or_root": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 3734,
@@ -885,7 +917,8 @@
       "ordinal": 22,
       "source_json_pointer": "/schema_fixtures/5/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_reconstruction_comparison"
+      "target_definition_or_root": "capacity_population_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1648,
@@ -894,7 +927,8 @@
       "ordinal": 23,
       "source_json_pointer": "/schema_fixtures/6/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_computation_record"
+      "target_definition_or_root": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 3884,
@@ -903,7 +937,8 @@
       "ordinal": 24,
       "source_json_pointer": "/schema_fixtures/7/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_configuration"
+      "target_definition_or_root": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 3871,
@@ -912,7 +947,8 @@
       "ordinal": 25,
       "source_json_pointer": "/schema_fixtures/8/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_configuration"
+      "target_definition_or_root": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 276,
@@ -921,7 +957,8 @@
       "ordinal": 26,
       "source_json_pointer": "/schema_fixtures/9/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_hard_limits"
+      "target_definition_or_root": "capacity_population_hard_limits",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6041,
@@ -930,7 +967,8 @@
       "ordinal": 27,
       "source_json_pointer": "/schema_fixtures/10/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6188,
@@ -939,7 +977,8 @@
       "ordinal": 28,
       "source_json_pointer": "/schema_fixtures/11/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6297,
@@ -948,7 +987,8 @@
       "ordinal": 29,
       "source_json_pointer": "/schema_fixtures/12/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 5911,
@@ -957,7 +997,8 @@
       "ordinal": 30,
       "source_json_pointer": "/schema_fixtures/13/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 5900,
@@ -966,7 +1007,8 @@
       "ordinal": 31,
       "source_json_pointer": "/schema_fixtures/14/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6009,
@@ -975,7 +1017,8 @@
       "ordinal": 32,
       "source_json_pointer": "/schema_fixtures/15/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6009,
@@ -984,7 +1027,8 @@
       "ordinal": 33,
       "source_json_pointer": "/schema_fixtures/16/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6245,
@@ -993,7 +1037,8 @@
       "ordinal": 34,
       "source_json_pointer": "/schema_fixtures/17/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6265,
@@ -1002,7 +1047,8 @@
       "ordinal": 35,
       "source_json_pointer": "/schema_fixtures/18/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6290,
@@ -1011,7 +1057,8 @@
       "ordinal": 36,
       "source_json_pointer": "/schema_fixtures/19/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_level_record"
+      "target_definition_or_root": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1029,
@@ -1020,7 +1067,8 @@
       "ordinal": 37,
       "source_json_pointer": "/schema_fixtures/20/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_limit_decision"
+      "target_definition_or_root": "capacity_population_limit_decision",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1096,
@@ -1029,7 +1077,8 @@
       "ordinal": 38,
       "source_json_pointer": "/schema_fixtures/21/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_predicate_oracle"
+      "target_definition_or_root": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 945,
@@ -1038,7 +1087,8 @@
       "ordinal": 39,
       "source_json_pointer": "/schema_fixtures/22/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_run_evidence_binding"
+      "target_definition_or_root": "capacity_population_run_evidence_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1350,
@@ -1047,7 +1097,8 @@
       "ordinal": 40,
       "source_json_pointer": "/schema_fixtures/23/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_stall_record"
+      "target_definition_or_root": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 71562,
@@ -1056,7 +1107,8 @@
       "ordinal": 41,
       "source_json_pointer": "/schema_fixtures/24/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_campaign_summary"
+      "target_definition_or_root": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1286,
@@ -1065,7 +1117,8 @@
       "ordinal": 42,
       "source_json_pointer": "/schema_fixtures/25/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "capacity_population_predicate_oracle"
+      "target_definition_or_root": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 360,
@@ -1074,7 +1127,8 @@
       "ordinal": 43,
       "source_json_pointer": "/schema_fixtures/26/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "inherited_continuation_counter_projection"
+      "target_definition_or_root": "inherited_continuation_counter_projection",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 4543,
@@ -1083,7 +1137,8 @@
       "ordinal": 44,
       "source_json_pointer": "/schema_fixtures/27/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "dynamic_growth_configuration"
+      "target_definition_or_root": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2137,
@@ -1092,7 +1147,8 @@
       "ordinal": 45,
       "source_json_pointer": "/schema_fixtures/28/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "growth_epoch_manifest"
+      "target_definition_or_root": "growth_epoch_manifest",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 3980,
@@ -1101,7 +1157,8 @@
       "ordinal": 46,
       "source_json_pointer": "/schema_fixtures/29/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "growth_reconstruction_comparison"
+      "target_definition_or_root": "growth_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2175,
@@ -1110,7 +1167,8 @@
       "ordinal": 47,
       "source_json_pointer": "/schema_fixtures/30/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "growth_campaign_summary"
+      "target_definition_or_root": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 518,
@@ -1119,7 +1177,8 @@
       "ordinal": 48,
       "source_json_pointer": "/schema_fixtures/31/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "hard_limits"
+      "target_definition_or_root": "hard_limits",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 91,
@@ -1128,7 +1187,8 @@
       "ordinal": 49,
       "source_json_pointer": "/schema_fixtures/32/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "identity"
+      "target_definition_or_root": "identity",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2892,
@@ -1137,7 +1197,8 @@
       "ordinal": 50,
       "source_json_pointer": "/schema_fixtures/33/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "growth_invalidation_receipt"
+      "target_definition_or_root": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 528,
@@ -1146,7 +1207,8 @@
       "ordinal": 51,
       "source_json_pointer": "/schema_fixtures/34/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "operation_counts"
+      "target_definition_or_root": "operation_counts",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1557,
@@ -1155,7 +1217,8 @@
       "ordinal": 52,
       "source_json_pointer": "/schema_fixtures/35/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "feasible_poset_mobius_oracle"
+      "target_definition_or_root": "feasible_poset_mobius_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 35,
@@ -1164,7 +1227,8 @@
       "ordinal": 53,
       "source_json_pointer": "/schema_fixtures/36/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "reduced_rational"
+      "target_definition_or_root": "reduced_rational",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 673,
@@ -1173,7 +1237,8 @@
       "ordinal": 54,
       "source_json_pointer": "/schema_fixtures/37/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "coefficient_scaling_refusal_fixture"
+      "target_definition_or_root": "coefficient_scaling_refusal_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 1578,
@@ -1182,7 +1247,8 @@
       "ordinal": 55,
       "source_json_pointer": "/schema_fixtures/38/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "recursive_mobius_surplus_oracle"
+      "target_definition_or_root": "recursive_mobius_surplus_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 2468,
@@ -1191,7 +1257,8 @@
       "ordinal": 56,
       "source_json_pointer": "/schema_fixtures/39/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "growth_trace_row"
+      "target_definition_or_root": "growth_trace_row",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 5505,
@@ -1200,7 +1267,8 @@
       "ordinal": 57,
       "source_json_pointer": "/schema_fixtures/40/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "recursive_coefficient_transport_oracle"
+      "target_definition_or_root": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 6492,
@@ -1209,7 +1277,8 @@
       "ordinal": 58,
       "source_json_pointer": "/schema_fixtures/41/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "recursive_coefficient_transport_oracle"
+      "target_definition_or_root": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 885,
@@ -1218,7 +1287,8 @@
       "ordinal": 59,
       "source_json_pointer": "/schema_fixtures/42/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "wrong_equivalence_fixture"
+      "target_definition_or_root": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "canonical_byte_count": 944,
@@ -1227,7 +1297,8 @@
       "ordinal": 60,
       "source_json_pointer": "/schema_fixtures/43/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition_or_root": "wrong_equivalence_fixture"
+      "target_definition_or_root": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     }
   ],
   "predecessor_row_count": 24,
@@ -3650,7 +3721,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_configuration_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "configuration_manifest"
+      "target_definition": "configuration_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-valid_limit_decision",
@@ -3700,7 +3772,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_limit_decision",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "limit_decision"
+      "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-valid_computation_record",
@@ -3786,7 +3859,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_computation_record",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "computation_record"
+      "target_definition": "computation_record",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-valid_run_manifest",
@@ -3870,7 +3944,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "run_manifest"
+      "target_definition": "run_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-sd01_accepted_binding_projection",
@@ -3899,7 +3974,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/sd01_accepted_binding_projection",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
-      "target_definition": "accepted_binding_projection"
+      "target_definition": "accepted_binding_projection",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-valid_sd01_deterministic_empty_checkpoint",
@@ -4026,7 +4102,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_sd01_deterministic_empty_checkpoint",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
-      "target_definition": "continuation_checkpoint"
+      "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P01",
@@ -4116,7 +4193,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/0/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "authority_record"
+      "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P02",
@@ -4233,7 +4311,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/1/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "schema_record"
+      "target_definition": "schema_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P03",
@@ -4311,7 +4390,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/2/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "identity_continuation_record"
+      "target_definition": "identity_continuation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P04",
@@ -4977,7 +5057,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/3/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "mobius_record"
+      "target_definition": "mobius_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P05",
@@ -5643,7 +5724,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/4/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "mobius_record"
+      "target_definition": "mobius_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P06",
@@ -5761,7 +5843,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/5/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "dag_cache_record"
+      "target_definition": "dag_cache_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P07",
@@ -5836,7 +5919,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/6/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "adapter_guard_record"
+      "target_definition": "adapter_guard_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P08",
@@ -5941,7 +6025,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/7/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "installed_isolation_record"
+      "target_definition": "installed_isolation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P09",
@@ -6140,7 +6225,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/8/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "complexity_record"
+      "target_definition": "complexity_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P10",
@@ -6201,7 +6287,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/9/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "regression_record"
+      "target_definition": "regression_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "SE-SCHEMA-P11",
@@ -6351,7 +6438,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/10/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "final_manifest"
+      "target_definition": "final_manifest",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-binary64",
@@ -6362,7 +6450,8 @@
       "instance": "0000000000000000",
       "source_json_pointer": "/schema_fixtures/0/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "binary64_bits"
+      "target_definition": "binary64_bits",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-cache-nonscalable",
@@ -6446,7 +6535,8 @@
       },
       "source_json_pointer": "/schema_fixtures/1/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "scaling_cache_binding"
+      "target_definition": "scaling_cache_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-cache-scalar",
@@ -6536,7 +6626,8 @@
       },
       "source_json_pointer": "/schema_fixtures/2/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "scaling_cache_binding"
+      "target_definition": "scaling_cache_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-benchmark",
@@ -6591,7 +6682,8 @@
       },
       "source_json_pointer": "/schema_fixtures/3/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "growth_capacity_benchmark"
+      "target_definition": "growth_capacity_benchmark",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-collapse-oracle",
@@ -6646,7 +6738,8 @@
       },
       "source_json_pointer": "/schema_fixtures/4/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_predicate_oracle"
+      "target_definition": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-comparison",
@@ -6806,7 +6899,8 @@
       },
       "source_json_pointer": "/schema_fixtures/5/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_reconstruction_comparison"
+      "target_definition": "capacity_population_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-computation",
@@ -6869,7 +6963,8 @@
       },
       "source_json_pointer": "/schema_fixtures/6/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_computation_record"
+      "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-configuration",
@@ -7066,7 +7161,8 @@
       },
       "source_json_pointer": "/schema_fixtures/7/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_configuration"
+      "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-configuration-nonrecursive",
@@ -7263,7 +7359,8 @@
       },
       "source_json_pointer": "/schema_fixtures/8/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_configuration"
+      "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-hard-limits",
@@ -7282,7 +7379,8 @@
       },
       "source_json_pointer": "/schema_fixtures/9/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_hard_limits"
+      "target_definition": "capacity_population_hard_limits",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level",
@@ -7540,7 +7638,8 @@
       },
       "source_json_pointer": "/schema_fixtures/10/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-arm3",
@@ -7807,7 +7906,8 @@
       },
       "source_json_pointer": "/schema_fixtures/11/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-correction-target-10",
@@ -8075,7 +8175,8 @@
       },
       "source_json_pointer": "/schema_fixtures/12/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-nonrecursive",
@@ -8324,7 +8425,8 @@
       },
       "source_json_pointer": "/schema_fixtures/13/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-nonrecursive-target-3",
@@ -8573,7 +8675,8 @@
       },
       "source_json_pointer": "/schema_fixtures/14/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-quality-allocation",
@@ -8828,7 +8931,8 @@
       },
       "source_json_pointer": "/schema_fixtures/15/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-reserve-allocation",
@@ -9083,7 +9187,8 @@
       },
       "source_json_pointer": "/schema_fixtures/16/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-response-delay",
@@ -9348,7 +9453,8 @@
       },
       "source_json_pointer": "/schema_fixtures/17/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-shock-target-8",
@@ -9616,7 +9722,8 @@
       },
       "source_json_pointer": "/schema_fixtures/18/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-level-terminal-target-16",
@@ -9884,7 +9991,8 @@
       },
       "source_json_pointer": "/schema_fixtures/19/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_level_record"
+      "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-limit",
@@ -9928,7 +10036,8 @@
       },
       "source_json_pointer": "/schema_fixtures/20/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_limit_decision"
+      "target_definition": "capacity_population_limit_decision",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-recovery-oracle",
@@ -9995,7 +10104,8 @@
       },
       "source_json_pointer": "/schema_fixtures/21/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_predicate_oracle"
+      "target_definition": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-run-evidence-binding",
@@ -10034,7 +10144,8 @@
       },
       "source_json_pointer": "/schema_fixtures/22/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_run_evidence_binding"
+      "target_definition": "capacity_population_run_evidence_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-stall-visible",
@@ -10096,7 +10207,8 @@
       },
       "source_json_pointer": "/schema_fixtures/23/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_stall_record"
+      "target_definition": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-summary",
@@ -12411,7 +12523,8 @@
       },
       "source_json_pointer": "/schema_fixtures/24/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_campaign_summary"
+      "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-capacity-terminal-homeostasis-oracle",
@@ -12490,7 +12603,8 @@
       },
       "source_json_pointer": "/schema_fixtures/25/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "capacity_population_predicate_oracle"
+      "target_definition": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-continuation-counter-projection",
@@ -12512,7 +12626,8 @@
       },
       "source_json_pointer": "/schema_fixtures/26/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "inherited_continuation_counter_projection"
+      "target_definition": "inherited_continuation_counter_projection",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-dynamic-configuration",
@@ -12760,7 +12875,8 @@
       },
       "source_json_pointer": "/schema_fixtures/27/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "dynamic_growth_configuration"
+      "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-epoch-manifest",
@@ -12841,7 +12957,8 @@
       },
       "source_json_pointer": "/schema_fixtures/28/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "growth_epoch_manifest"
+      "target_definition": "growth_epoch_manifest",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-growth-comparison",
@@ -12995,7 +13112,8 @@
       },
       "source_json_pointer": "/schema_fixtures/29/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "growth_reconstruction_comparison"
+      "target_definition": "growth_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-growth-summary",
@@ -13072,7 +13190,8 @@
       },
       "source_json_pointer": "/schema_fixtures/30/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "growth_campaign_summary"
+      "target_definition": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-hard-limits",
@@ -13100,7 +13219,8 @@
       },
       "source_json_pointer": "/schema_fixtures/31/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "hard_limits"
+      "target_definition": "hard_limits",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-identity",
@@ -13114,7 +13234,8 @@
       },
       "source_json_pointer": "/schema_fixtures/32/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "identity"
+      "target_definition": "identity",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-invalidation-receipt",
@@ -13232,7 +13353,8 @@
       },
       "source_json_pointer": "/schema_fixtures/33/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "growth_invalidation_receipt"
+      "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-operation-counts",
@@ -13266,7 +13388,8 @@
       },
       "source_json_pointer": "/schema_fixtures/34/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "operation_counts"
+      "target_definition": "operation_counts",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-poset-oracle",
@@ -13328,7 +13451,8 @@
       },
       "source_json_pointer": "/schema_fixtures/35/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "feasible_poset_mobius_oracle"
+      "target_definition": "feasible_poset_mobius_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-rational",
@@ -13342,7 +13466,8 @@
       },
       "source_json_pointer": "/schema_fixtures/36/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "reduced_rational"
+      "target_definition": "reduced_rational",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-scaling-refusal",
@@ -13376,7 +13501,8 @@
       },
       "source_json_pointer": "/schema_fixtures/37/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "coefficient_scaling_refusal_fixture"
+      "target_definition": "coefficient_scaling_refusal_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-surplus-oracle",
@@ -13444,7 +13570,8 @@
       },
       "source_json_pointer": "/schema_fixtures/38/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "recursive_mobius_surplus_oracle"
+      "target_definition": "recursive_mobius_surplus_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-trace-row",
@@ -13534,7 +13661,8 @@
       },
       "source_json_pointer": "/schema_fixtures/39/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "growth_trace_row"
+      "target_definition": "growth_trace_row",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-transport-nonscalable",
@@ -13705,7 +13833,8 @@
       },
       "source_json_pointer": "/schema_fixtures/40/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "recursive_coefficient_transport_oracle"
+      "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-transport-scalar",
@@ -13936,7 +14065,8 @@
       },
       "source_json_pointer": "/schema_fixtures/41/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "recursive_coefficient_transport_oracle"
+      "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-wrong-equivalence-arm1",
@@ -13974,7 +14104,8 @@
       },
       "source_json_pointer": "/schema_fixtures/42/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "wrong_equivalence_fixture"
+      "target_definition": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "dynamic-wrong-equivalence-capacity",
@@ -14012,7 +14143,8 @@
       },
       "source_json_pointer": "/schema_fixtures/43/instance",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
-      "target_definition": "wrong_equivalence_fixture"
+      "target_definition": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-mobius-hard-cap-base",
@@ -14050,7 +14182,8 @@
       },
       "source_json_pointer": "/$defs/hard_caps/oneOf/14/const",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "hard_caps"
+      "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-valid-limit-decision",
@@ -14100,7 +14233,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_limit_decision",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "limit_decision"
+      "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N06-base",
@@ -14138,7 +14272,8 @@
       },
       "source_json_pointer": "/$defs/hard_caps/oneOf/0/const",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "hard_caps"
+      "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N07-base",
@@ -14176,7 +14311,8 @@
       },
       "source_json_pointer": "/$defs/hard_caps/oneOf/0/const",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "hard_caps"
+      "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N08-base",
@@ -14214,7 +14350,8 @@
       },
       "source_json_pointer": "/$defs/hard_caps/oneOf/0/const",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "hard_caps"
+      "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N09-base",
@@ -14298,7 +14435,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "run_manifest"
+      "target_definition": "run_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N10-base",
@@ -14382,7 +14520,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_run_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "run_manifest"
+      "target_definition": "run_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-generated-cache_event",
@@ -14440,7 +14579,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/68",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "cache_event"
+      "target_definition": "cache_event",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-generated-checkpoint_record",
@@ -14494,7 +14634,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/69",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "checkpoint_record"
+      "target_definition": "checkpoint_record",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-generated-trace_row",
@@ -14566,7 +14707,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/70",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "trace_row"
+      "target_definition": "trace_row",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N14-base",
@@ -14685,7 +14827,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_configuration_manifest",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "configuration_manifest"
+      "target_definition": "configuration_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N15-base",
@@ -14735,7 +14878,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_limit_decision",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "limit_decision"
+      "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-d-negative-SCHEMA-N16-base",
@@ -14821,7 +14965,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_computation_record",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
-      "target_definition": "computation_record"
+      "target_definition": "computation_record",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-campaign_execution_binding",
@@ -15022,7 +15167,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/74",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "campaign_execution_binding"
+      "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-attempt_manifest",
@@ -15186,7 +15332,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/75",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "attempt_manifest"
+      "target_definition": "attempt_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-valid-deterministic-checkpoint",
@@ -15313,7 +15460,8 @@
       },
       "source_json_pointer": "/prospective_non_evidence_schema_fixtures/valid_sd01_deterministic_empty_checkpoint",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
-      "target_definition": "continuation_checkpoint"
+      "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-stochastic_counter_tuple",
@@ -15331,7 +15479,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/77",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "stochastic_counter_tuple"
+      "target_definition": "stochastic_counter_tuple",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-run_resource_ledger",
@@ -15386,7 +15535,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/78",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "run_resource_ledger"
+      "target_definition": "run_resource_ledger",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-continuation_receipt",
@@ -15427,7 +15577,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/79",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "continuation_receipt"
+      "target_definition": "continuation_receipt",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-recovery_disposition",
@@ -15465,7 +15616,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/80",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "recovery_disposition"
+      "target_definition": "recovery_disposition",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-infeasibility_finding",
@@ -15547,7 +15699,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/81",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "infeasibility_finding"
+      "target_definition": "infeasibility_finding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-campaign_terminal_manifest",
@@ -15585,7 +15738,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/82",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "campaign_terminal_manifest"
+      "target_definition": "campaign_terminal_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-campaign_resource_ledger",
@@ -15618,7 +15772,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/83",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "campaign_resource_ledger"
+      "target_definition": "campaign_resource_ledger",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-attempt_binding",
@@ -15728,7 +15883,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/84",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "attempt_binding"
+      "target_definition": "attempt_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "continuation-generated-process_allocation",
@@ -15786,7 +15942,8 @@
       },
       "source_json_pointer": "/refusal_base_fixtures/85",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "process_allocation"
+      "target_definition": "process_allocation",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P01",
@@ -15876,7 +16033,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/0/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "authority_record"
+      "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P02",
@@ -15993,7 +16151,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/1/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "schema_record"
+      "target_definition": "schema_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P03",
@@ -16071,7 +16230,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/2/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "identity_continuation_record"
+      "target_definition": "identity_continuation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P04",
@@ -16737,7 +16897,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/3/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "mobius_record"
+      "target_definition": "mobius_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P06",
@@ -16855,7 +17016,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/5/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "dag_cache_record"
+      "target_definition": "dag_cache_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P08",
@@ -16960,7 +17122,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/7/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "installed_isolation_record"
+      "target_definition": "installed_isolation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P09",
@@ -17159,7 +17322,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/8/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "complexity_record"
+      "target_definition": "complexity_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P10",
@@ -17220,7 +17384,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/9/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "regression_record"
+      "target_definition": "regression_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "stage-e-SE-SCHEMA-P11",
@@ -17370,7 +17535,8 @@
       },
       "source_json_pointer": "/reconciliation_owned_stage_e_v1_complete_fixtures/10/instance",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "final_manifest"
+      "target_definition": "final_manifest",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-$ref-base",
@@ -17391,7 +17557,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/0",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-additionalProperties-base",
@@ -17411,7 +17578,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/1",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-allOf-base",
@@ -17434,7 +17602,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/2",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-const-base",
@@ -17450,7 +17619,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/3",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-else-base",
@@ -17474,7 +17644,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/4",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-enum-base",
@@ -17493,7 +17664,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/5",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-if-base",
@@ -17514,7 +17686,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/6",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-items-base",
@@ -17535,7 +17708,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/7",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-maxItems-base",
@@ -17555,7 +17729,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/8",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-maximum-base",
@@ -17572,7 +17747,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/9",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-minItems-base",
@@ -17589,7 +17765,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/10",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-minLength-base",
@@ -17606,7 +17783,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/11",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-minProperties-base",
@@ -17623,7 +17801,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/12",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-minimum-base",
@@ -17640,7 +17819,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/13",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-oneOf-base",
@@ -17663,7 +17843,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/14",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-pattern-base",
@@ -17680,7 +17861,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/15",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-prefixItems-base",
@@ -17703,7 +17885,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/16",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-properties-base",
@@ -17726,7 +17909,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/17",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-required-base",
@@ -17745,7 +17929,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/18",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-then-base",
@@ -17766,7 +17951,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/19",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-type-base",
@@ -17782,7 +17968,8 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/20",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-uniqueItems-base",
@@ -17802,24 +17989,37 @@
       },
       "source_json_pointer": "/keyword_conformance_cases/21",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     },
     {
       "base_fixture_id": "keyword-$comment-base",
       "canonical_identity": {
-        "byte_count": 113,
-        "sha256": "75ebad8ed1ad4186d74bec5bd8e1886ba3c5428262d14845440291b5175268f5"
+        "byte_count": 429,
+        "sha256": "4b5ea44dfb6c05ec13a6605870de35acab803e5a3a476b094fdb44e11ebc0deb"
       },
       "instance": {
-        "instance": "not-an-integer",
-        "schema": {
+        "case_id": "SE-KEYWORD-N23-$comment",
+        "expected_validity_with_changed_comment": true,
+        "expected_validity_with_comment": true,
+        "expected_validity_without_comment": true,
+        "instance": 1,
+        "schema_with_changed_comment": {
+          "$comment": "Changed annotation text must never alter validity.",
+          "type": "integer"
+        },
+        "schema_with_comment": {
           "$comment": "This annotation must never alter validity.",
+          "type": "integer"
+        },
+        "schema_without_comment": {
           "type": "integer"
         }
       },
       "source_json_pointer": "/keyword_conformance_cases/22",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair"
+      "target_definition": "comment_nonreliance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     }
   ],
   "refusal_registry": [
@@ -17860,6 +18060,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/0",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -17901,6 +18102,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/1",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -17952,6 +18154,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/2",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18003,6 +18206,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/3",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18054,6 +18258,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/4",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18095,6 +18300,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/5",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18136,6 +18342,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/6",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18177,6 +18384,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/7",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "hard_caps",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18218,6 +18426,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/8",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "run_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18269,6 +18478,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/9",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "run_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18308,6 +18518,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/10",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "cache_event",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18347,6 +18558,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/11",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "checkpoint_record",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18386,6 +18598,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/12",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "trace_row",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18481,6 +18694,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/13",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "configuration_manifest",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18576,6 +18790,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/14",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "limit_decision",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18671,6 +18886,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/15",
       "source_path": "stage_d_scientific_validation_evidence_schema.json",
       "target_definition": "computation_record",
+      "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18710,6 +18926,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/0",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18751,6 +18968,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/1",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18761,7 +18979,7 @@
       },
       "base_fixture_sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3",
       "case_id": "CONT-SCHEMA-N03",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 4234,
         "sha256": "c214f0de275293566efedf6324f73a38e105143bee8f2268cbb2f0822674f8f5"
@@ -18788,11 +19006,12 @@
           "value": 2
         }
       ],
-      "semantic_rule_id": "REFUSE_SKIPPED_ATTEMPT_ORDINAL",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/2",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-attempt_manifest",
@@ -18843,6 +19062,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/3",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18894,6 +19114,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/4",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18945,6 +19166,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/5",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -18996,6 +19218,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/6",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19035,6 +19258,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/7",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19086,6 +19310,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/8",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "stochastic_counter_tuple",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19096,7 +19321,7 @@
       },
       "base_fixture_sha256": "0319b4d62e37e7d927ddbb3f6f74c5d21f8d74a3d89dea97469af00da115f646",
       "case_id": "CONT-SCHEMA-N10",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 1317,
         "sha256": "e00f6ef19973cb4fb7de63e3e598c71810dc569dd290591372ffd82d85983096"
@@ -19123,11 +19348,12 @@
           "value": 0
         }
       ],
-      "semantic_rule_id": "REFUSE_NONMONOTONE_CUMULATIVE_ACCOUNTING",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/9",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "run_resource_ledger",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-run_resource_ledger",
@@ -19137,7 +19363,7 @@
       },
       "base_fixture_sha256": "0319b4d62e37e7d927ddbb3f6f74c5d21f8d74a3d89dea97469af00da115f646",
       "case_id": "CONT-SCHEMA-N11",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 1316,
         "sha256": "9055db116c249e32d13b9c4de5de6fcfd0b9a9b01e48922ec23dfa792123e111"
@@ -19164,11 +19390,12 @@
           "value": true
         }
       ],
-      "semantic_rule_id": "REFUSE_DUPLICATE_BYTE_ALLOWANCE",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/10",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "run_resource_ledger",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-continuation_receipt",
@@ -19178,7 +19405,7 @@
       },
       "base_fixture_sha256": "474ed1edccea6bbcd40350b17f81a8f4f55e443fb10d99a5ba99c2a810625284",
       "case_id": "CONT-SCHEMA-N12",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 946,
         "sha256": "a2601e03222eefa5186b0b8ea2c89a0c9560db824a625add0f4ea3813c4a23a0"
@@ -19205,11 +19432,12 @@
           "value": false
         }
       ],
-      "semantic_rule_id": "REFUSE_CONTINUATION_IDENTITY_OR_EQUIVALENCE_MISMATCH",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/11",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_receipt",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-recovery_disposition",
@@ -19219,7 +19447,7 @@
       },
       "base_fixture_sha256": "703c419708be224b269a5dc97ca079984dfe84e1111fb93e5997a342ddfd4368",
       "case_id": "CONT-SCHEMA-N13",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 702,
         "sha256": "39b137c78995c82d7634549e61bd217aba2db97b171f69e74a06814a5e94e801"
@@ -19256,11 +19484,12 @@
           "value": null
         }
       ],
-      "semantic_rule_id": "REFUSE_UNAUTHORIZED_RECOVERY",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/12",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "recovery_disposition",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-infeasibility_finding",
@@ -19301,6 +19530,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/13",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "infeasibility_finding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19342,6 +19572,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/14",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_terminal_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19383,6 +19614,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/15",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19393,7 +19625,7 @@
       },
       "base_fixture_sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3",
       "case_id": "CONT-SCHEMA-N17",
-      "expected_structural_validity": false,
+      "expected_structural_validity": true,
       "mutated_instance_identity": {
         "byte_count": 4234,
         "sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3"
@@ -19430,11 +19662,12 @@
           "value": true
         }
       ],
-      "semantic_rule_id": null,
+      "semantic_rule_id": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
       "source_case_pointer": "/prospective_negative_validation_cases/16",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
-      "validation_layer": "JSON_SCHEMA"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "SEMANTIC_RELATION"
     },
     {
       "base_fixture_id": "continuation-generated-campaign_execution_binding",
@@ -19475,6 +19708,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/17",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19485,7 +19719,7 @@
       },
       "base_fixture_sha256": "64216f888776093675b5c0b4d4e861d6159be8454d6cb218ffa06147d73b84f5",
       "case_id": "CONT-SCHEMA-N19",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 927,
         "sha256": "b6d39e56e738663d023f683e1126b54d5c1af469287027c67d9ab736b36c7d9c"
@@ -19512,11 +19746,12 @@
           "value": false
         }
       ],
-      "semantic_rule_id": "REFUSE_CAMPAIGN_ACCOUNTING_BARRIER",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/18",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_resource_ledger",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-campaign_execution_binding",
@@ -19555,6 +19790,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/19",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19596,6 +19832,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/20",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "campaign_execution_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -19606,7 +19843,7 @@
       },
       "base_fixture_sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3",
       "case_id": "CONT-SCHEMA-N22",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 4193,
         "sha256": "0b696bc7424ed7ffd56b8442f82386ae6163c1f746f1b5aa254ce02e0c4c5c42"
@@ -19633,11 +19870,12 @@
           "value": "binding-digest-mismatch"
         }
       ],
-      "semantic_rule_id": "REFUSE_ATTEMPT_BINDING_DIGEST_MISMATCH",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/21",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_manifest",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-attempt_binding",
@@ -19676,6 +19914,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/22",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19686,7 +19925,7 @@
       },
       "base_fixture_sha256": "6a7bdec62d3bf74da0f1ee014d051b7f5f3ea4023a4e57ef58425956b2ed945e",
       "case_id": "CONT-SCHEMA-N24",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 2583,
         "sha256": "21b25bf390ae77df05103753293c2a71b3ca67b4aae1c84089133dffe21ab7d0"
@@ -19713,11 +19952,12 @@
           "value": "allocation-digest-mismatch"
         }
       ],
-      "semantic_rule_id": "REFUSE_PROCESS_ALLOCATION_DIGEST_MISMATCH",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/23",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_binding",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-generated-process_allocation",
@@ -19758,6 +19998,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/24",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "process_allocation",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -19797,6 +20038,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/25",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19807,7 +20049,7 @@
       },
       "base_fixture_sha256": "8a3b6518ce18f2af10268679b0740ec9bb4ad0e134c9b706e9808413f2f66e49",
       "case_id": "CONT-SCHEMA-N27",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 3446,
         "sha256": "e401476ebf2b60d25fb5a16694f55aeebb92ed1ee79f43b211bb7b95053c302d"
@@ -19834,11 +20076,12 @@
           "value": "counter-digest-mismatch"
         }
       ],
-      "semantic_rule_id": "REFUSE_CHECKPOINT_COUNTER_DIGEST_MISMATCH",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/26",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-valid-deterministic-checkpoint",
@@ -19848,7 +20091,7 @@
       },
       "base_fixture_sha256": "8a3b6518ce18f2af10268679b0740ec9bb4ad0e134c9b706e9808413f2f66e49",
       "case_id": "CONT-SCHEMA-N28",
-      "expected_structural_validity": true,
+      "expected_structural_validity": false,
       "mutated_instance_identity": {
         "byte_count": 3501,
         "sha256": "134414217f0c973fa890610677f3337de46af2b600ef9b168f0b23e17aee3efa"
@@ -19875,11 +20118,12 @@
           "value": "dummy-stream"
         }
       ],
-      "semantic_rule_id": "REFUSE_CHECKPOINT_COUNTER_STREAM_CLOSURE",
+      "semantic_rule_id": null,
       "source_case_pointer": "/prospective_negative_validation_cases/27",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
-      "validation_layer": "SEMANTIC_RELATION"
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "continuation-valid-deterministic-checkpoint",
@@ -19934,6 +20178,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/28",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -19975,6 +20220,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/29",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20030,6 +20276,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/30",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20095,6 +20342,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/31",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20136,6 +20384,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/32",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20177,6 +20426,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/33",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "continuation_checkpoint",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20218,6 +20468,7 @@
       "source_case_pointer": "/prospective_negative_validation_cases/34",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "target_definition": "attempt_binding",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -20259,6 +20510,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/0",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20298,6 +20550,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/1",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20339,6 +20592,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/2",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20380,6 +20634,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/3",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20421,6 +20676,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/4",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20462,6 +20718,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/5",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20501,6 +20758,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/6",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20542,6 +20800,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/7",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20581,6 +20840,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/8",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20620,6 +20880,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/9",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "schema_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20661,6 +20922,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/10",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "schema_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20702,6 +20964,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/11",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "identity_continuation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20743,6 +21006,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/12",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "identity_continuation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20784,6 +21048,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/13",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "identity_continuation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20825,6 +21090,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/14",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "mobius_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20866,6 +21132,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/15",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "dag_cache_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20907,6 +21174,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/16",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "installed_isolation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20948,6 +21216,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/17",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "installed_isolation_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -20987,6 +21256,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/18",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "complexity_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21028,6 +21298,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/19",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "regression_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21069,6 +21340,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/20",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "final_manifest",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21110,6 +21382,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/21",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "final_manifest",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21151,6 +21424,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/22",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "final_manifest",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21180,6 +21454,7 @@
       "source_case_pointer": "/prospective_negative_schema_cases/23",
       "source_path": "stage_e_scientific_harness_evidence_schema.json",
       "target_definition": "authority_record",
+      "target_schema_path": "stage_e_scientific_harness_evidence_schema.json",
       "validation_layer": "JSON_PARSE"
     },
     {
@@ -21221,6 +21496,7 @@
       "source_case_pointer": "/schema_negative_cases/0",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21262,6 +21538,7 @@
       "source_case_pointer": "/schema_negative_cases/1",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21303,6 +21580,7 @@
       "source_case_pointer": "/schema_negative_cases/2",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21344,6 +21622,7 @@
       "source_case_pointer": "/schema_negative_cases/3",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21385,6 +21664,7 @@
       "source_case_pointer": "/schema_negative_cases/4",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21426,6 +21706,7 @@
       "source_case_pointer": "/schema_negative_cases/5",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21465,6 +21746,7 @@
       "source_case_pointer": "/schema_negative_cases/6",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21506,6 +21788,7 @@
       "source_case_pointer": "/schema_negative_cases/7",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_epoch_manifest",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21547,6 +21830,7 @@
       "source_case_pointer": "/schema_negative_cases/8",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_epoch_manifest",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21588,6 +21872,7 @@
       "source_case_pointer": "/schema_negative_cases/9",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_trace_row",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21629,6 +21914,7 @@
       "source_case_pointer": "/schema_negative_cases/10",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_trace_row",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21670,6 +21956,7 @@
       "source_case_pointer": "/schema_negative_cases/11",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_trace_row",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21711,6 +21998,7 @@
       "source_case_pointer": "/schema_negative_cases/12",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "operation_counts",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21750,6 +22038,7 @@
       "source_case_pointer": "/schema_negative_cases/13",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "operation_counts",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21791,6 +22080,7 @@
       "source_case_pointer": "/schema_negative_cases/14",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "operation_counts",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21838,6 +22128,7 @@
       "source_case_pointer": "/schema_negative_cases/15",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21879,6 +22170,7 @@
       "source_case_pointer": "/schema_negative_cases/16",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21920,6 +22212,7 @@
       "source_case_pointer": "/schema_negative_cases/17",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -21971,6 +22264,7 @@
       "source_case_pointer": "/schema_negative_cases/18",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_mobius_surplus_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22012,6 +22306,7 @@
       "source_case_pointer": "/schema_negative_cases/19",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_mobius_surplus_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22053,6 +22348,7 @@
       "source_case_pointer": "/schema_negative_cases/20",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "feasible_poset_mobius_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22094,6 +22390,7 @@
       "source_case_pointer": "/schema_negative_cases/21",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "feasible_poset_mobius_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22135,6 +22432,7 @@
       "source_case_pointer": "/schema_negative_cases/22",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_capacity_benchmark",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22176,6 +22474,7 @@
       "source_case_pointer": "/schema_negative_cases/23",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_capacity_benchmark",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22217,6 +22516,7 @@
       "source_case_pointer": "/schema_negative_cases/24",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_capacity_benchmark",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22258,6 +22558,7 @@
       "source_case_pointer": "/schema_negative_cases/25",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22299,6 +22600,7 @@
       "source_case_pointer": "/schema_negative_cases/26",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22338,6 +22640,7 @@
       "source_case_pointer": "/schema_negative_cases/27",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22379,6 +22682,7 @@
       "source_case_pointer": "/schema_negative_cases/28",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22420,6 +22724,7 @@
       "source_case_pointer": "/schema_negative_cases/29",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22461,6 +22766,7 @@
       "source_case_pointer": "/schema_negative_cases/30",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22502,6 +22808,7 @@
       "source_case_pointer": "/schema_negative_cases/31",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22543,6 +22850,7 @@
       "source_case_pointer": "/schema_negative_cases/32",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22582,6 +22890,7 @@
       "source_case_pointer": "/schema_negative_cases/33",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22623,6 +22932,7 @@
       "source_case_pointer": "/schema_negative_cases/34",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22664,6 +22974,7 @@
       "source_case_pointer": "/schema_negative_cases/35",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_invalidation_receipt",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22705,6 +23016,7 @@
       "source_case_pointer": "/schema_negative_cases/36",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22746,6 +23058,7 @@
       "source_case_pointer": "/schema_negative_cases/37",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22787,6 +23100,7 @@
       "source_case_pointer": "/schema_negative_cases/38",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22828,6 +23142,7 @@
       "source_case_pointer": "/schema_negative_cases/39",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22869,6 +23184,7 @@
       "source_case_pointer": "/schema_negative_cases/40",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22910,6 +23226,7 @@
       "source_case_pointer": "/schema_negative_cases/41",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22951,6 +23268,7 @@
       "source_case_pointer": "/schema_negative_cases/42",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -22998,6 +23316,7 @@
       "source_case_pointer": "/schema_negative_cases/43",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23037,6 +23356,7 @@
       "source_case_pointer": "/schema_negative_cases/44",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23114,6 +23434,7 @@
       "source_case_pointer": "/schema_negative_cases/45",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23161,6 +23482,7 @@
       "source_case_pointer": "/schema_negative_cases/46",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23284,6 +23606,7 @@
       "source_case_pointer": "/schema_negative_cases/47",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23325,6 +23648,7 @@
       "source_case_pointer": "/schema_negative_cases/48",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23366,6 +23690,7 @@
       "source_case_pointer": "/schema_negative_cases/49",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23405,6 +23730,7 @@
       "source_case_pointer": "/schema_negative_cases/50",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23446,6 +23772,7 @@
       "source_case_pointer": "/schema_negative_cases/51",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "coefficient_scaling_refusal_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23487,6 +23814,7 @@
       "source_case_pointer": "/schema_negative_cases/52",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "coefficient_scaling_refusal_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23528,6 +23856,7 @@
       "source_case_pointer": "/schema_negative_cases/53",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23569,6 +23898,7 @@
       "source_case_pointer": "/schema_negative_cases/54",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "growth_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23616,6 +23946,7 @@
       "source_case_pointer": "/schema_negative_cases/55",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "scaling_cache_binding",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23657,6 +23988,7 @@
       "source_case_pointer": "/schema_negative_cases/56",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23698,6 +24030,7 @@
       "source_case_pointer": "/schema_negative_cases/57",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23745,6 +24078,7 @@
       "source_case_pointer": "/schema_negative_cases/58",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "recursive_coefficient_transport_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23786,6 +24120,7 @@
       "source_case_pointer": "/schema_negative_cases/59",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23827,6 +24162,7 @@
       "source_case_pointer": "/schema_negative_cases/60",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23888,6 +24224,7 @@
       "source_case_pointer": "/schema_negative_cases/61",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23929,6 +24266,7 @@
       "source_case_pointer": "/schema_negative_cases/62",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -23970,6 +24308,7 @@
       "source_case_pointer": "/schema_negative_cases/63",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24009,6 +24348,7 @@
       "source_case_pointer": "/schema_negative_cases/64",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24066,6 +24406,7 @@
       "source_case_pointer": "/schema_negative_cases/65",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24107,6 +24448,7 @@
       "source_case_pointer": "/schema_negative_cases/66",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24154,6 +24496,7 @@
       "source_case_pointer": "/schema_negative_cases/67",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24201,6 +24544,7 @@
       "source_case_pointer": "/schema_negative_cases/68",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24242,6 +24586,7 @@
       "source_case_pointer": "/schema_negative_cases/69",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24283,6 +24628,7 @@
       "source_case_pointer": "/schema_negative_cases/70",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24324,6 +24670,7 @@
       "source_case_pointer": "/schema_negative_cases/71",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24371,6 +24718,7 @@
       "source_case_pointer": "/schema_negative_cases/72",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24410,6 +24758,7 @@
       "source_case_pointer": "/schema_negative_cases/73",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24449,6 +24798,7 @@
       "source_case_pointer": "/schema_negative_cases/74",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24490,6 +24840,7 @@
       "source_case_pointer": "/schema_negative_cases/75",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24531,6 +24882,7 @@
       "source_case_pointer": "/schema_negative_cases/76",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24582,6 +24934,7 @@
       "source_case_pointer": "/schema_negative_cases/77",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "dynamic_growth_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24621,6 +24974,7 @@
       "source_case_pointer": "/schema_negative_cases/78",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24662,6 +25016,7 @@
       "source_case_pointer": "/schema_negative_cases/79",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24837,6 +25192,7 @@
       "source_case_pointer": "/schema_negative_cases/80",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -24878,6 +25234,7 @@
       "source_case_pointer": "/schema_negative_cases/81",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -24929,6 +25286,7 @@
       "source_case_pointer": "/schema_negative_cases/82",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -24980,6 +25338,7 @@
       "source_case_pointer": "/schema_negative_cases/83",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25021,6 +25380,7 @@
       "source_case_pointer": "/schema_negative_cases/84",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25062,6 +25422,7 @@
       "source_case_pointer": "/schema_negative_cases/85",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25113,6 +25474,7 @@
       "source_case_pointer": "/schema_negative_cases/86",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25164,6 +25526,7 @@
       "source_case_pointer": "/schema_negative_cases/87",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25205,6 +25568,7 @@
       "source_case_pointer": "/schema_negative_cases/88",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25256,6 +25620,7 @@
       "source_case_pointer": "/schema_negative_cases/89",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25297,6 +25662,7 @@
       "source_case_pointer": "/schema_negative_cases/90",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25338,6 +25704,7 @@
       "source_case_pointer": "/schema_negative_cases/91",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25379,6 +25746,7 @@
       "source_case_pointer": "/schema_negative_cases/92",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25420,6 +25788,7 @@
       "source_case_pointer": "/schema_negative_cases/93",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25481,6 +25850,7 @@
       "source_case_pointer": "/schema_negative_cases/94",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25520,6 +25890,7 @@
       "source_case_pointer": "/schema_negative_cases/95",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25561,6 +25932,7 @@
       "source_case_pointer": "/schema_negative_cases/96",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25602,6 +25974,7 @@
       "source_case_pointer": "/schema_negative_cases/97",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25641,6 +26014,7 @@
       "source_case_pointer": "/schema_negative_cases/98",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25692,6 +26066,7 @@
       "source_case_pointer": "/schema_negative_cases/99",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_reconstruction_comparison",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -25733,6 +26108,7 @@
       "source_case_pointer": "/schema_negative_cases/100",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25774,6 +26150,7 @@
       "source_case_pointer": "/schema_negative_cases/101",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "wrong_equivalence_fixture",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25815,6 +26192,7 @@
       "source_case_pointer": "/schema_negative_cases/102",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25856,6 +26234,7 @@
       "source_case_pointer": "/schema_negative_cases/103",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25897,6 +26276,7 @@
       "source_case_pointer": "/schema_negative_cases/104",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -25938,6 +26318,7 @@
       "source_case_pointer": "/schema_negative_cases/105",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_limit_decision",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26113,6 +26494,7 @@
       "source_case_pointer": "/schema_negative_cases/106",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_limit_decision",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26152,6 +26534,7 @@
       "source_case_pointer": "/schema_negative_cases/107",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26193,6 +26576,7 @@
       "source_case_pointer": "/schema_negative_cases/108",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26234,6 +26618,7 @@
       "source_case_pointer": "/schema_negative_cases/109",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26275,6 +26660,7 @@
       "source_case_pointer": "/schema_negative_cases/110",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26316,6 +26702,7 @@
       "source_case_pointer": "/schema_negative_cases/111",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26357,6 +26744,7 @@
       "source_case_pointer": "/schema_negative_cases/112",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26408,6 +26796,7 @@
       "source_case_pointer": "/schema_negative_cases/113",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_configuration",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26449,6 +26838,7 @@
       "source_case_pointer": "/schema_negative_cases/114",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26490,6 +26880,7 @@
       "source_case_pointer": "/schema_negative_cases/115",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26537,6 +26928,7 @@
       "source_case_pointer": "/schema_negative_cases/116",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26588,6 +26980,7 @@
       "source_case_pointer": "/schema_negative_cases/117",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -26639,6 +27032,7 @@
       "source_case_pointer": "/schema_negative_cases/118",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -26680,6 +27074,7 @@
       "source_case_pointer": "/schema_negative_cases/119",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26721,6 +27116,7 @@
       "source_case_pointer": "/schema_negative_cases/120",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26760,6 +27156,7 @@
       "source_case_pointer": "/schema_negative_cases/121",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -26801,6 +27198,7 @@
       "source_case_pointer": "/schema_negative_cases/122",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -26842,6 +27240,7 @@
       "source_case_pointer": "/schema_negative_cases/123",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_stall_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -26883,6 +27282,7 @@
       "source_case_pointer": "/schema_negative_cases/124",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -26924,6 +27324,7 @@
       "source_case_pointer": "/schema_negative_cases/125",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -26975,6 +27376,7 @@
       "source_case_pointer": "/schema_negative_cases/126",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_predicate_oracle",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -27016,6 +27418,7 @@
       "source_case_pointer": "/schema_negative_cases/127",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -27067,6 +27470,7 @@
       "source_case_pointer": "/schema_negative_cases/128",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -27108,6 +27512,7 @@
       "source_case_pointer": "/schema_negative_cases/129",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -27159,6 +27564,7 @@
       "source_case_pointer": "/schema_negative_cases/130",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -27210,6 +27616,7 @@
       "source_case_pointer": "/schema_negative_cases/131",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -27251,6 +27658,7 @@
       "source_case_pointer": "/schema_negative_cases/132",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_level_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -27292,6 +27700,7 @@
       "source_case_pointer": "/schema_negative_cases/133",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -27795,6 +28204,7 @@
       "source_case_pointer": "/schema_negative_cases/134",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -27836,6 +28246,7 @@
       "source_case_pointer": "/schema_negative_cases/135",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -27875,6 +28286,7 @@
       "source_case_pointer": "/schema_negative_cases/136",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -27916,6 +28328,7 @@
       "source_case_pointer": "/schema_negative_cases/137",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28107,6 +28520,7 @@
       "source_case_pointer": "/schema_negative_cases/138",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28148,6 +28562,7 @@
       "source_case_pointer": "/schema_negative_cases/139",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28189,6 +28604,7 @@
       "source_case_pointer": "/schema_negative_cases/140",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_campaign_summary",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28228,6 +28644,7 @@
       "source_case_pointer": "/schema_negative_cases/141",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28279,6 +28696,7 @@
       "source_case_pointer": "/schema_negative_cases/142",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28330,6 +28748,7 @@
       "source_case_pointer": "/schema_negative_cases/143",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28371,6 +28790,7 @@
       "source_case_pointer": "/schema_negative_cases/144",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28412,6 +28832,7 @@
       "source_case_pointer": "/schema_negative_cases/145",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "capacity_population_computation_record",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28453,6 +28874,7 @@
       "source_case_pointer": "/schema_negative_cases/146",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "reduced_rational",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "SEMANTIC_RELATION"
     },
     {
@@ -28504,6 +28926,7 @@
       "source_case_pointer": "/schema_negative_cases/147",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "reduced_rational",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28545,6 +28968,7 @@
       "source_case_pointer": "/schema_negative_cases/148",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "reduced_rational",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28586,6 +29010,7 @@
       "source_case_pointer": "/schema_negative_cases/149",
       "source_path": "stage_d_dynamic_growth_campaign_validation_contract.json",
       "target_definition": "reduced_rational",
+      "target_schema_path": "stage_d_dynamic_growth_campaign_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28625,6 +29050,7 @@
       "source_case_pointer": "/keyword_conformance_cases/0",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28663,6 +29089,7 @@
       "source_case_pointer": "/keyword_conformance_cases/1",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28704,6 +29131,7 @@
       "source_case_pointer": "/keyword_conformance_cases/2",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28738,6 +29166,7 @@
       "source_case_pointer": "/keyword_conformance_cases/3",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28780,6 +29209,7 @@
       "source_case_pointer": "/keyword_conformance_cases/4",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28817,6 +29247,7 @@
       "source_case_pointer": "/keyword_conformance_cases/5",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28856,6 +29287,7 @@
       "source_case_pointer": "/keyword_conformance_cases/6",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28895,6 +29327,7 @@
       "source_case_pointer": "/keyword_conformance_cases/7",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28933,6 +29366,7 @@
       "source_case_pointer": "/keyword_conformance_cases/8",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -28968,6 +29402,7 @@
       "source_case_pointer": "/keyword_conformance_cases/9",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29003,6 +29438,7 @@
       "source_case_pointer": "/keyword_conformance_cases/10",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29038,6 +29474,7 @@
       "source_case_pointer": "/keyword_conformance_cases/11",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29073,6 +29510,7 @@
       "source_case_pointer": "/keyword_conformance_cases/12",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29108,6 +29546,7 @@
       "source_case_pointer": "/keyword_conformance_cases/13",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29149,6 +29588,7 @@
       "source_case_pointer": "/keyword_conformance_cases/14",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29184,6 +29624,7 @@
       "source_case_pointer": "/keyword_conformance_cases/15",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29225,6 +29666,7 @@
       "source_case_pointer": "/keyword_conformance_cases/16",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29266,6 +29708,7 @@
       "source_case_pointer": "/keyword_conformance_cases/17",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29303,6 +29746,7 @@
       "source_case_pointer": "/keyword_conformance_cases/18",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29342,6 +29786,7 @@
       "source_case_pointer": "/keyword_conformance_cases/19",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29376,6 +29821,7 @@
       "source_case_pointer": "/keyword_conformance_cases/20",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
@@ -29414,41 +29860,54 @@
       "source_case_pointer": "/keyword_conformance_cases/21",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "keyword_conformance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "JSON_SCHEMA"
     },
     {
       "base_fixture_id": "keyword-$comment-base",
       "base_fixture_identity": {
-        "byte_count": 113,
-        "sha256": "75ebad8ed1ad4186d74bec5bd8e1886ba3c5428262d14845440291b5175268f5"
+        "byte_count": 429,
+        "sha256": "4b5ea44dfb6c05ec13a6605870de35acab803e5a3a476b094fdb44e11ebc0deb"
       },
-      "base_fixture_sha256": "75ebad8ed1ad4186d74bec5bd8e1886ba3c5428262d14845440291b5175268f5",
+      "base_fixture_sha256": "4b5ea44dfb6c05ec13a6605870de35acab803e5a3a476b094fdb44e11ebc0deb",
       "case_id": "SE-KEYWORD-N23-$comment",
       "expected_structural_validity": true,
       "mutated_instance_identity": {
-        "byte_count": 113,
-        "sha256": "75ebad8ed1ad4186d74bec5bd8e1886ba3c5428262d14845440291b5175268f5"
+        "byte_count": 429,
+        "sha256": "4b5ea44dfb6c05ec13a6605870de35acab803e5a3a476b094fdb44e11ebc0deb"
       },
-      "mutated_instance_sha256": "75ebad8ed1ad4186d74bec5bd8e1886ba3c5428262d14845440291b5175268f5",
+      "mutated_instance_sha256": "4b5ea44dfb6c05ec13a6605870de35acab803e5a3a476b094fdb44e11ebc0deb",
       "mutation_representation": "FULL_MUTATED_INSTANCE",
       "ordinal": 247,
       "patch_identity": {
-        "byte_count": 113,
-        "sha256": "75ebad8ed1ad4186d74bec5bd8e1886ba3c5428262d14845440291b5175268f5"
+        "byte_count": 429,
+        "sha256": "4b5ea44dfb6c05ec13a6605870de35acab803e5a3a476b094fdb44e11ebc0deb"
       },
       "required_disposition": "REFUSED",
       "rfc6902_patch": [],
       "rfc6902_patch_or_full_instance": {
-        "instance": "not-an-integer",
-        "schema": {
+        "case_id": "SE-KEYWORD-N23-$comment",
+        "expected_validity_with_changed_comment": true,
+        "expected_validity_with_comment": true,
+        "expected_validity_without_comment": true,
+        "instance": 1,
+        "schema_with_changed_comment": {
+          "$comment": "Changed annotation text must never alter validity.",
+          "type": "integer"
+        },
+        "schema_with_comment": {
           "$comment": "This annotation must never alter validity.",
+          "type": "integer"
+        },
+        "schema_without_comment": {
           "type": "integer"
         }
       },
       "semantic_rule_id": "COMMENT_MUST_NOT_CHANGE_VALIDITY",
       "source_case_pointer": "/keyword_conformance_cases/22",
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
-      "target_definition": "keyword_conformance_pair",
+      "target_definition": "comment_nonreliance_pair",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "ANNOTATION_NON_RELIANCE"
     }
   ],
@@ -29475,7 +29934,7 @@
   "required_negative_case_count": 137,
   "required_positive_check_count": 159,
   "schema_profile": {
-    "definition_count": 22,
+    "definition_count": 25,
     "format_is_annotation_only": true,
     "local_ref_occurrence_count": 83,
     "material_semantic_relations_are_separate_and_mandatory": true,
@@ -29521,6 +29980,39 @@
     "annotation_non_reliance_case_count": 1,
     "arithmetic_only_count": "FORBIDDEN",
     "assertion_applicator_mutations": 22,
+    "comment_annotation_nonreliance_control": {
+      "case_id": "SE-KEYWORD-N23-$comment",
+      "expected_validity_with_changed_comment": true,
+      "expected_validity_with_comment": true,
+      "expected_validity_without_comment": true,
+      "failure_disposition": "REFUSED",
+      "instance": 1,
+      "required_relation": "all three validity outcomes are identical and true; annotation text is never consulted",
+      "target": "comment_nonreliance_pair"
+    },
+    "continuation_refusal_layer_partition": {
+      "json_schema_case_count": 31,
+      "json_schema_case_ids_corrected_from_prior_semantic_labels": [
+        "CONT-SCHEMA-N03",
+        "CONT-SCHEMA-N10",
+        "CONT-SCHEMA-N11",
+        "CONT-SCHEMA-N12",
+        "CONT-SCHEMA-N13",
+        "CONT-SCHEMA-N19",
+        "CONT-SCHEMA-N22",
+        "CONT-SCHEMA-N24",
+        "CONT-SCHEMA-N27",
+        "CONT-SCHEMA-N28"
+      ],
+      "rule": "each JSON_SCHEMA case must fail the accepted continuation schema and each SEMANTIC_RELATION case must pass that schema then fail exactly its named relation",
+      "semantic_relation_case_count": 4,
+      "structurally_valid_semantic_case_ids": [
+        "CONT-SCHEMA-N17",
+        "CONT-SCHEMA-N21",
+        "CONT-SCHEMA-N25",
+        "CONT-SCHEMA-N35"
+      ]
+    },
     "each_designated_semantic_case_must_pass_structure_then_fail_its_named_relation": true,
     "every_exact_patch_applied_to_its_named_complete_base_fixture": true,
     "every_fixture_canonical_identity_recorded": true,
@@ -29530,6 +30022,16 @@
     "one_missing_or_duplicate_ledger_row": "REFUSE",
     "positive_order": "four Stage D objects, two continuation objects, eleven reconciliation-owned Stage E v1 fixtures, then forty-four dynamic-growth fixtures",
     "positive_registry_required": true,
+    "positive_target_resolution": {
+      "default_rule": "resolve the named root or $defs target in the source schema",
+      "explicit_reconciliation_targets": {
+        "accepted_binding_projection": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json#/$defs/accepted_binding_projection",
+        "comment_nonreliance_pair": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json#/$defs/comment_nonreliance_pair",
+        "keyword_conformance_pair": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json#/$defs/keyword_conformance_pair"
+      },
+      "missing_or_ambiguous_target": "REFUSE",
+      "row_binding": "every positive and refusal registry row carries target_schema_path plus its exact target name; the target must exist in that schema and no inferred or synthetic target is permitted"
+    },
     "positive_total": 61,
     "purpose_metadata_keys_excluded": 2,
     "refusal_registry_required": true,

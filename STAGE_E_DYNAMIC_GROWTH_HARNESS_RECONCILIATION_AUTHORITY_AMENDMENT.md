@@ -107,6 +107,15 @@ ordinal. Every fixture is loaded or materialized from those committed bytes,
 hashed, validated against its named root or definition, and recorded with one
 ledger identity. A count derived without those 61 ledger rows is not a pass.
 
+Target resolution is closed. A named root or `$defs` entry resolves in the
+fixture's source schema by default. The accepted continuation
+`sd01_accepted_binding_projection` metadata fixture instead resolves to the
+exact closed `accepted_binding_projection` definition in this reconciliation
+evidence schema. The assertion/applicator carrier resolves to the closed
+`keyword_conformance_pair` definition, and the annotation control resolves to
+the closed `comment_nonreliance_pair` definition in that same schema. A
+missing, ambiguous, synthetic, or implementation-invented target refuses.
+
 The refusal ledger contains exactly 248 applied cases:
 
 - sixteen accepted Stage D negatives;
@@ -126,6 +135,22 @@ identities, executes the named structural or semantic layer, and records the
 exact refusal. A generic empty object, a different mutation, a count-only
 claim, a skip, or an expected failure without executing the mutation is
 `NOT_A_PASS`.
+
+The thirty-five continuation controls have one exact truthful layer
+partition. `CONT-SCHEMA-N03`, `N10`, `N11`, `N12`, `N13`, `N19`, `N22`,
+`N24`, `N27`, and `N28`, together with the other twenty-one accepted
+structural cases, are the exact thirty-one `JSON_SCHEMA` refusals and must
+fail the accepted continuation schema. `CONT-SCHEMA-N17`, `N21`, `N25`, and
+`N35` are the exact four `SEMANTIC_RELATION` refusals: each must first pass
+that schema and then fail only its named relation. Relabelling either class or
+substituting a different layer is a refusal.
+
+`SE-KEYWORD-N23-$comment` is a paired annotation-nonreliance control, not an
+ordinary type error. The same integer `1` is validated under the exact schema
+with the frozen comment, the same schema without `$comment`, and the same
+schema with changed comment text. All three outcomes must be `true` and
+identical. Consulting annotation text, omitting any member of the triple, or
+using an already-invalid instance refuses.
 
 An inherited negative whose purpose is to refuse a floating JSON token is
 stored as exact UTF-8 raw JSON text plus its raw byte identity, never as a
@@ -285,7 +310,7 @@ manifest retains the same five exact ordered record names, permits each entry
 to state PASS or `BOUND_NOT_SUPPORTED`, requires at least one bound entry, and
 requires `bound_record_names` to equal exactly the names of the bound entries.
 
-The closed reconciliation evidence schema contains exactly 22 definitions,
+The closed reconciliation evidence schema contains exactly 25 definitions,
 seven top-level roots, and 83 local `$ref` occurrences resolving to exactly 22
 unique local targets with zero unresolved reference. The same exact profile is
 frozen in the mechanical and validation contracts; a missing, extra, renamed,
