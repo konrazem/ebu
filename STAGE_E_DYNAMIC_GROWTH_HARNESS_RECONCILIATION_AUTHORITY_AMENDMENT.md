@@ -125,7 +125,8 @@ The refusal ledger contains exactly 248 applied cases:
 - twenty-two accepted assertion/applicator keyword mutations;
 - one `$comment` annotation/non-reliance mutation.
 
-For each case the validator must use the committed 248-row refusal registry.
+For each case the validator must use the committed 248-row refusal registry
+and its exact 119 complete base fixtures, including the dedicated N17 base.
 Each row freezes case ID, source case pointer, named complete base fixture,
 target definition, exact RFC-6902 patch or complete mutated instance, patch
 identity, mutated-instance identity, structural-validity expectation,
@@ -144,6 +145,20 @@ fail the accepted continuation schema. `CONT-SCHEMA-N17`, `N21`, `N25`, and
 `N35` are the exact four `SEMANTIC_RELATION` refusals: each must first pass
 that schema and then fail only its named relation. Relabelling either class or
 substituting a different layer is a refusal.
+
+`CONT-SCHEMA-N17` uses its own complete, admissible non-evidence base. The
+base is an `SD-06` `BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY` boundary after
+complete direct Boolean Möbius oracle case
+`SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000`, with the next absent case fixed as
+`SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001`, `atomic_case_complete=true`, and
+continuation requested. Its sole RFC-6902 operation replaces
+`/atomic_case_complete` with `false`. The base and mutated canonical
+identities must differ; the base must pass the accepted schema and the named
+atomic-boundary relation, while the mutated record must remain structurally
+valid and fail `REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION`. Reusing an already
+partial base, applying a no-op, changing the operation or route, or omitting
+the completed/next-absent case identities is a refusal. This is a fixture-only
+semantic transition and carries no scientific or outcome evidence.
 
 `SE-KEYWORD-N23-$comment` is a paired annotation-nonreliance control, not an
 ordinary type error. The same integer `1` is validated under the exact schema

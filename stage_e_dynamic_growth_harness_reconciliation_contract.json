@@ -190,6 +190,7 @@
     },
     "positive_ledger_row_count": 61,
     "refusal_ledger_row_count": 248,
+    "refusal_base_fixture_count": 119,
     "positive_fixture_registry_fields": [
       "ordinal",
       "fixture_id",
@@ -219,6 +220,7 @@
       "validation_layer",
       "expected_structural_validity",
       "semantic_rule_id",
+      "atomic_case_continuation_context when and only when case_id is CONT-SCHEMA-N17",
       "required_disposition"
     ],
     "reconciliation_evidence_schema_profile": {
@@ -264,7 +266,29 @@
         "CONT-SCHEMA-N21",
         "CONT-SCHEMA-N25",
         "CONT-SCHEMA-N35"
-      ]
+      ],
+      "n17_executable_transition": {
+        "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
+        "study_id": "SD-06",
+        "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+        "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+        "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+        "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+        "base_atomic_case_complete": true,
+        "continuation_requested": true,
+        "exact_patch": [
+          {
+            "op": "replace",
+            "path": "/atomic_case_complete",
+            "value": false
+          }
+        ],
+        "mutation_sets_atomic_case_complete": false,
+        "base_and_mutated_canonical_identities_must_differ": true,
+        "base_must_pass_schema_and_named_semantic_relation": true,
+        "mutated_must_pass_schema_then_fail_only_named_semantic_relation": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
+        "scientific_or_outcome_evidence": "NONE_NON_EVIDENCE_FIXTURE_ONLY"
+      }
     },
     "positive_target_resolution": {
       "default_rule": "resolve the named root or $defs target in the source schema",

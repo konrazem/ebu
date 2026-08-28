@@ -332,6 +332,7 @@
     "guarded_route_count": 15,
     "mobius_complexity_cells": 55,
     "mobius_direct_optimized_cases": 488,
+    "refusal_base_fixtures": 119,
     "nested_growth_campaigns": 1,
     "poset_base_transforms": 32,
     "poset_correction_cases": 224,
@@ -495,7 +496,7 @@
     "SE-RC-SR-003 positive ledger ordinals are exactly 0 through 60 without gap or duplicate",
     "SE-RC-SR-004 refusal ledger ordinals are exactly 0 through 247 without gap or duplicate",
     "SE-RC-SR-005 ledger coverage by source and validation layer equals the frozen partitions",
-    "SE-RC-SR-006 every ledger fixture identity is recomputed from the exact complete source fixture or exact patched instance and every target resolves under the frozen source-or-overlay rule",
+    "SE-RC-SR-006 every ledger fixture identity is recomputed from the exact complete source fixture or exact patched instance, every target resolves under the frozen source-or-overlay rule, and CONT-SCHEMA-N17 binds the SD-06 between-atomic-case context to a complete base whose one-field patch changes its canonical identity before the named semantic refusal",
     "SE-RC-SR-007 DAG indegree initializations equal V",
     "SE-RC-SR-008 DAG enqueues dequeues queue appends and head advances are each at most V",
     "SE-RC-SR-009 every DAG cell has indegree_initializations equal V, edge_inspections exactly E, and all other exact traversal bounds",
@@ -593,7 +594,7 @@
     "SE-RC-P062 all 61 fixtures loaded and validated against an existing source target or one of the three exact closed reconciliation targets",
     "SE-RC-P063 all 61 fixture canonical identities retained",
     "SE-RC-P064 all 248 mutations loaded or derived exactly",
-    "SE-RC-P065 all 248 named refusal layers executed with the exact 31 JSON-schema and four semantic continuation partition",
+    "SE-RC-P065 all 248 named refusal layers executed with the exact 31 JSON-schema and four semantic continuation partition, including the non-no-op CONT-SCHEMA-N17 complete-to-partial transition",
     "SE-RC-P066 every semantic mutation first passes structure, every JSON_SCHEMA mutation fails structure, and the comment control has three identical true outcomes",
     "SE-RC-P067 no generic empty-object substitution",
     "SE-RC-P068 no representative-subset acceptance",
@@ -680,7 +681,7 @@
     "SE-RC-P149 authority audit independent",
     "SE-RC-P150 implementation audit independent",
     "SE-RC-P151 exact 61-row positive fixture registry with committed canonical identities and resolvable closed targets",
-    "SE-RC-P152 exact 248-row refusal registry with base patch mutated layer and truthful structural-validity identities",
+    "SE-RC-P152 exact 248-row refusal registry with base patch mutated layer and truthful structural-validity identities, with a dedicated complete atomic-case base and distinct mutated identity for CONT-SCHEMA-N17",
     "SE-RC-P153 accepted v1 records and final manifest preserved separately from six v2 outputs",
     "SE-RC-P154 exact 29-keyword derived union includes comment annotation",
     "SE-RC-P155 exact five DAG cells and exact edge inspections",
@@ -18020,6 +18021,181 @@
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "comment_nonreliance_pair",
       "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
+    },
+    {
+      "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
+      "canonical_identity": {
+        "byte_count": 4233,
+        "sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e"
+      },
+      "atomic_case_continuation_context": {
+        "study_id": "SD-06",
+        "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+        "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+        "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+        "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+        "continuation_requested": true,
+        "base_atomic_case_complete": true,
+        "mutation_sets_atomic_case_complete": false
+      },
+      "instance": {
+        "active_wall_time_nanoseconds": 0,
+        "atomic_case_complete": true,
+        "attempt_binding": {
+          "attempt_ordinal": 0,
+          "binding_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "campaign_execution_binding_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "campaign_id": "x",
+          "durability_policy_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "incoming_checkpoint_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "parallelization_boundary_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "policy_conformance_receipt_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "process_allocation": {
+            "allocation_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "ordered_worker_allocations": [
+              {
+                "accelerator_allocation_identity": {
+                  "kind": "x",
+                  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                  "value": "x"
+                },
+                "cpu_allocation_identity": {
+                  "kind": "x",
+                  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                  "value": "x"
+                },
+                "host_identity": {
+                  "kind": "x",
+                  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                  "value": "x"
+                },
+                "memory_limit_bytes": 1,
+                "process_identity": {
+                  "kind": "x",
+                  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                  "value": "x"
+                },
+                "process_index": 0,
+                "thread_count": 1,
+                "worker_identity": {
+                  "kind": "x",
+                  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                  "value": "x"
+                },
+                "worker_ordinal": 0
+              }
+            ],
+            "policy_conformance_receipt_identity": {
+              "kind": "x",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "value": "x"
+            },
+            "scheduler_allocation_identity": {
+              "kind": "x",
+              "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+              "value": "x"
+            },
+            "schema": "process_allocation/v2",
+            "worker_count": 1
+          },
+          "process_allocation_identity": {
+            "kind": "process_allocation/v2",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "0000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "restart_policy_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "schema": "attempt_binding/v2",
+          "scientific_run_id": "x",
+          "storage_location_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          },
+          "worker_allocation_policy_identity": {
+            "kind": "x",
+            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "value": "x"
+          }
+        },
+        "attempt_binding_identity": {
+          "kind": "attempt_binding/v2",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "attempt_ended_at": "x",
+        "attempt_id": "x",
+        "attempt_ordinal": 0,
+        "attempt_started_at": "x",
+        "attempt_terminal_state": "CHECKPOINTED_CONTINUATION_REQUIRED",
+        "campaign_id": "x",
+        "campaign_resource_ledger_identity": {
+          "kind": "x",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "x"
+        },
+        "continuation_permitted": true,
+        "continuation_receipt_identity": {
+          "kind": "x",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "x"
+        },
+        "identity_checks_passed": true,
+        "incoming_checkpoint_identity": null,
+        "manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "maximum_depth_observed": 0,
+        "outgoing_checkpoint_identity": {
+          "kind": "x",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "x"
+        },
+        "physical_output_bytes_written": 0,
+        "physical_trace_bytes_written": 0,
+        "predecessor_attempt_identity": null,
+        "primary_evaluations": 0,
+        "process_tree_peak_resident_memory_bytes": 0,
+        "recovery_disposition_identity": {
+          "kind": "x",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "x"
+        },
+        "run_resource_ledger_identity": {
+          "kind": "x",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "x"
+        },
+        "schema": "attempt_manifest/v2",
+        "scientific_disposition": null,
+        "scientific_run_id": "x",
+        "watchdogs_respected": true
+      },
+      "source_json_pointer": "/refusal_base_fixtures/118",
+      "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
+      "target_definition": "attempt_manifest",
+      "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
     }
   ],
   "refusal_registry": [
@@ -19618,12 +19794,12 @@
       "validation_layer": "JSON_SCHEMA"
     },
     {
-      "base_fixture_id": "continuation-generated-attempt_manifest",
+      "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
       "base_fixture_identity": {
-        "byte_count": 4234,
-        "sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3"
+        "byte_count": 4233,
+        "sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e"
       },
-      "base_fixture_sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3",
+      "base_fixture_sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e",
       "case_id": "CONT-SCHEMA-N17",
       "expected_structural_validity": true,
       "mutated_instance_identity": {
@@ -19634,8 +19810,8 @@
       "mutation_representation": "RFC6902_PATCH",
       "ordinal": 32,
       "patch_identity": {
-        "byte_count": 126,
-        "sha256": "a6820c766b0f4415d139a1d4f0ecd7c7c89ef31d935ab2992d9b8fafe058fe35"
+        "byte_count": 63,
+        "sha256": "eccce0f57ae53e7c0d3c3a4d68320a364c2eecd429deef8456f796bc920c1fe5"
       },
       "required_disposition": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
       "rfc6902_patch": [
@@ -19643,11 +19819,6 @@
           "op": "replace",
           "path": "/atomic_case_complete",
           "value": false
-        },
-        {
-          "op": "replace",
-          "path": "/continuation_permitted",
-          "value": true
         }
       ],
       "rfc6902_patch_or_full_instance": [
@@ -19655,13 +19826,18 @@
           "op": "replace",
           "path": "/atomic_case_complete",
           "value": false
-        },
-        {
-          "op": "replace",
-          "path": "/continuation_permitted",
-          "value": true
         }
       ],
+      "atomic_case_continuation_context": {
+        "study_id": "SD-06",
+        "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+        "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+        "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+        "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+        "continuation_requested": true,
+        "base_atomic_case_complete": true,
+        "mutation_sets_atomic_case_complete": false
+      },
       "semantic_rule_id": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
       "source_case_pointer": "/prospective_negative_validation_cases/16",
       "source_path": "stage_d_completion_oriented_continuation_evidence_schema.json",
@@ -30011,7 +30187,40 @@
         "CONT-SCHEMA-N21",
         "CONT-SCHEMA-N25",
         "CONT-SCHEMA-N35"
-      ]
+      ],
+      "n17_executable_transition": {
+        "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
+        "base_fixture_source_pointer": "/refusal_base_fixtures/118",
+        "base_canonical_identity": {
+          "byte_count": 4233,
+          "sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e"
+        },
+        "mutated_canonical_identity": {
+          "byte_count": 4234,
+          "sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3"
+        },
+        "patch_identity": {
+          "byte_count": 63,
+          "sha256": "eccce0f57ae53e7c0d3c3a4d68320a364c2eecd429deef8456f796bc920c1fe5"
+        },
+        "study_id": "SD-06",
+        "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+        "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+        "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+        "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+        "continuation_requested": true,
+        "base_atomic_case_complete": true,
+        "exact_patch": [
+          {
+            "op": "replace",
+            "path": "/atomic_case_complete",
+            "value": false
+          }
+        ],
+        "required_semantic_refusal": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
+        "no_op_patch": "FORBIDDEN",
+        "base_and_mutated_identity_equality": "REFUSE"
+      }
     },
     "each_designated_semantic_case_must_pass_structure_then_fail_its_named_relation": true,
     "every_exact_patch_applied_to_its_named_complete_base_fixture": true,
@@ -30034,6 +30243,7 @@
     },
     "positive_total": 61,
     "purpose_metadata_keys_excluded": 2,
+    "refusal_base_fixture_total": 119,
     "refusal_registry_required": true,
     "refusal_total": 248,
     "representative_subset": "FORBIDDEN"

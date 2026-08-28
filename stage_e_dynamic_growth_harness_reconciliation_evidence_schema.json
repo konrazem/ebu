@@ -313,11 +313,56 @@
             "null"
           ]
         },
+        "atomic_case_continuation_context": {
+          "const": {
+            "study_id": "SD-06",
+            "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+            "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+            "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+            "continuation_requested": true,
+            "base_atomic_case_complete": true,
+            "mutation_sets_atomic_case_complete": false
+          }
+        },
         "required_disposition": {
           "const": "REFUSED"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "case_id": {
+                "const": "CONT-SCHEMA-N17"
+              }
+            },
+            "required": [
+              "case_id"
+            ]
+          },
+          "then": {
+            "required": [
+              "atomic_case_continuation_context"
+            ],
+            "properties": {
+              "base_fixture_id": {
+                "const": "continuation-n17-complete-atomic-case-boundary"
+              },
+              "validation_layer": {
+                "const": "SEMANTIC_RELATION"
+              },
+              "expected_structural_validity": {
+                "const": true
+              },
+              "semantic_rule_id": {
+                "const": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION"
+              }
+            }
+          }
+        }
+      ]
     },
     "schema_replay_record": {
       "type": "object",
