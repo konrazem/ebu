@@ -429,6 +429,61 @@ STAGE_E_AUTHORITY_SCOPE = STAGE_D_CONTINUATION_AUTHORITY_SCOPE | frozenset(
 STAGE_E_HARNESS_IMPLEMENTATION_SCOPE = STAGE_E_AUTHORITY_SCOPE | frozenset(
     STAGE_E_HARNESS_IMPLEMENTATION_PATHS
 )
+STAGE_E_WORKFLOW_APPEND_BLOCK = br"""
+  stage-e-scientific-harness:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    needs: [test, framework-t0, framework-t1, framework-t2, packaging-release-candidate]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage E inputs
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-e-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/stage-c-evidence" "$stage_root/stage-c-work"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Run complete outcome-blind Stage E validation
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-e-${GITHUB_JOB}"
+          head_tree="$(git -C "$stage_root/source" rev-parse "${GITHUB_SHA}^{tree}")"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-e" -v "$stage_root/source:/stage-e/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-e/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-e/source --evidence /stage-e/stage-c-evidence
+          "${container[@]}" python -I /stage-e/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-e/source --wheelhouse /stage-e/frontend-wheelhouse --work /stage-e/stage-c-work --evidence /stage-e/stage-c-evidence
+          "${container[@]}" python -I -c 'import sys,unittest; sys.path.insert(0,"/stage-e/source"); suite=unittest.defaultTestLoader.discover("/stage-e/source/tests/stage_e",top_level_dir="/stage-e/source"); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() else 1)'
+          "${container[@]}" python -I /stage-e/source/scripts/validate_stage_e_harness.py \
+            --source /stage-e/source \
+            --output /stage-e/stage-e-evidence \
+            --work /stage-e/harness-work \
+            --head-commit "$GITHUB_SHA" \
+            --head-tree "$head_tree" \
+            --direct-wheel /stage-e/stage-c-work/artifacts/direct/ebu_framework-0.1.0a1-cp314-none-any.whl \
+            --sdist-wheel /stage-e/stage-c-work/artifacts/sdist-wheel/ebu_framework-0.1.0a1-cp314-none-any.whl \
+            --sdist /stage-e/stage-c-work/artifacts/sdist/ebu_framework-0.1.0a1.tar.gz \
+            --direct-python /stage-e/stage-c-work/direct-env/bin/python \
+            --sdist-python /stage-e/stage-c-work/sdist-env/bin/python \
+            --debian-identity libsqlite3-0:amd64=3.46.1-7+deb13u1 \
+            --image-digest "$EBU_STAGE_C_IMAGE_DIGEST"
+      - name: Retain private Stage E harness evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-e-scientific-harness-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/stage-e-stage-e-scientific-harness/stage-e-evidence
+            ${{ runner.temp }}/stage-e-stage-e-scientific-harness/harness-work/stage-e-harness-*.pyz
+          if-no-files-found: error
+          retention-days: 30
+"""
 CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS = (
     "src/ebu_framework/__init__.py",
     "src/ebu_framework/errors.py",
@@ -438,7 +493,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "3fdcdf2d50ebd5dcaf31f26852257b79cf442d9109a3bbda437b8790905e93c9"
+TEST_SELF_SEAL = "8d027912ce85d6bc8844e26d34566d8d2181f533bf6cffcef9f7f76f5f64cee1"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1942,7 +1997,15 @@ class ValidationReachabilityTests(unittest.TestCase):
                 },
                 row["path"],
             )
-            if row["path"] != "tests/framework/test_validation_reachability.py":
+            stage_e_workflow_change = (
+                row["path"] == ".github/workflows/tests.yml"
+                and current_scope["stage_e_phase"]
+                == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            )
+            if (
+                row["path"] != "tests/framework/test_validation_reachability.py"
+                and not stage_e_workflow_change
+            ):
                 self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
             if row["path"].endswith(".json"):
                 document = _strict_stage_d_json_bytes(base_raw, row["path"])
@@ -2331,7 +2394,15 @@ class ValidationReachabilityTests(unittest.TestCase):
                 },
                 row["path"],
             )
-            if row["path"] != "tests/framework/test_validation_reachability.py":
+            stage_e_workflow_change = (
+                row["path"] == ".github/workflows/tests.yml"
+                and current_scope["stage_e_phase"]
+                == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            )
+            if (
+                row["path"] != "tests/framework/test_validation_reachability.py"
+                and not stage_e_workflow_change
+            ):
                 self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
             if row["path"].endswith(".json"):
                 canonical = _canonical_json_lf(
@@ -2374,6 +2445,36 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(implementation["unknown_path_disposition"], "REFUSE_STAGE_E_IMPLEMENTATION")
         self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
         self.assertEqual(implementation["force_push_or_history_rewrite"], "FORBIDDEN")
+        if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
+            workflow_row = next(
+                row
+                for row in source_rows
+                if row["path"] == ".github/workflows/tests.yml"
+            )
+            _, accepted_workflow_raw = _object_row(
+                workflow_row["path"], base_entries, base_archive
+            )
+            current_workflow_raw = (ROOT / workflow_row["path"]).read_bytes()
+            self.assertEqual(
+                current_workflow_raw,
+                accepted_workflow_raw + STAGE_E_WORKFLOW_APPEND_BLOCK,
+                "Stage E workflow must be the exact accepted workflow plus the frozen additive job",
+            )
+            self.assertEqual(
+                current_workflow_raw.count(b"  stage-e-scientific-harness:\n"),
+                1,
+            )
+            self.assertEqual(
+                current_workflow_raw.count(
+                    b"    needs: [test, framework-t0, framework-t1, framework-t2, packaging-release-candidate]\n"
+                ),
+                1,
+            )
+            self.assertEqual(current_workflow_raw.count(b"--network none"), 6)
+            self.assertEqual(current_workflow_raw.count(b"--read-only"), 6)
+            self.assertEqual(
+                current_workflow_raw.count(b"--platform linux/amd64"), 6
+            )
 
         study_order = tuple(f"SD-{index:02d}" for index in range(1, 15))
         registry = contract["study_registry"]
