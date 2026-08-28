@@ -1,0 +1,72 @@
+{
+  "manifest_id": "EBU-STAGE-D-DYNAMIC-GROWTH-CAMPAIGN-PREDECESSOR-MANIFEST-v1",
+  "manifest_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_ADDITIVE_AUTHORITY_ONLY",
+  "completion_marker": "STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_COMPLETE",
+  "accepted_base": {
+    "commit": "5a66c674a3a9a23861ac11b986754b2022e277dc",
+    "tree": "ee38ece14a945ddc8d4108f54ff2b813360c8c58",
+    "live_target_ref": "refs/heads/framework-v0.1"
+  },
+  "candidate_scope": {
+    "operation": "ADD_ONLY",
+    "mode": "100644",
+    "paths": [
+      "STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_AMENDMENT.md",
+      "stage_d_dynamic_growth_campaign_contract.json",
+      "stage_d_dynamic_growth_campaign_evidence_schema.json",
+      "stage_d_dynamic_growth_campaign_predecessor_manifest.json",
+      "stage_d_dynamic_growth_campaign_validation_contract.json"
+    ],
+    "path_count": 5,
+    "unknown_or_modified_predecessor_disposition": "REFUSE"
+  },
+  "source_count": 19,
+  "source_rows": [
+    {"path":"STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md","mode":"100644","git_object":"6970a453c1408471b204b3168444eebe8d792923","bytes":39939,"sha256":"f755c38aff690fe317b29550f0f1ef7d627c75902c0f555d9f8ca594499dba16"},
+    {"path":"stage_d_scientific_validation_contract.json","mode":"100644","git_object":"ac1be73b81c31fc65e4e3ebcbaf45b74526ea7c4","bytes":44051,"sha256":"1b12c97f51d99720979700f048ac527cb0d97c1323f051fe53e0fda3ac743089"},
+    {"path":"stage_d_scientific_validation_evidence_schema.json","mode":"100644","git_object":"bbb33509f92f2c55b670e4c0b5d8fd45215aaaef","bytes":92769,"sha256":"956ff0fd38dce4cd72208dc029de15d092ea9e477151522306f9763dc3d621b3"},
+    {"path":"stage_d_scientific_validation_master_matrix.json","mode":"100644","git_object":"e6cd44f8b9e2e125403cb1359d819fc08afd2cb7","bytes":148183,"sha256":"081f2e994c23051514aef19a0516d1996d9c4b86cd528dfc05bf9d17658bdb81"},
+    {"path":"stage_d_scientific_validation_predecessor_manifest.json","mode":"100644","git_object":"e15c8b130097120fff562397cfa17c31bb66510c","bytes":12753,"sha256":"d3216726c1759ee6dad86ce8e5bba40ee9318c1e4cea52f12db0ec19b746adee"},
+    {"path":"stage_d_scientific_validation_validation_contract.json","mode":"100644","git_object":"a3aacfb377786ce2bddf91ceea0e2d58bcda9d01","bytes":37012,"sha256":"2707d9d645b3fc7ecc4ee61f02d861ba88c5d220d7bf6812ab98ece93ba51227"},
+    {"path":"STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md","mode":"100644","git_object":"20fa88c3e9cff1071a4730f6dbb80e6a114a9467","bytes":26730,"sha256":"8e92550fd444c39516f35f1bd9d4d69f22018edc51b23b28aaf1c8e83fd98276"},
+    {"path":"stage_d_completion_oriented_continuation_contract.json","mode":"100644","git_object":"45f869e9012fdb8f7bf1f660fbb82edb0f5ef184","bytes":26727,"sha256":"9c668e43e2fd06e6260296ca9608fc94ad5b6d806e317ff8f168eb0858802577"},
+    {"path":"stage_d_completion_oriented_continuation_evidence_schema.json","mode":"100644","git_object":"223fd60385ad727fc8dc1b362fa7060e72afa19d","bytes":71047,"sha256":"66ef7d3189e692404d0d8ef773bd15b7d70eb4172e44ca6b1b6f3a4a4da16f88"},
+    {"path":"stage_d_completion_oriented_continuation_predecessor_manifest.json","mode":"100644","git_object":"c7bae1f109706dc37d8f4b461d0dd6fa554b9e3d","bytes":6169,"sha256":"b49c3318e3aa2f8367b3909c0a0dfa1fa62f2a90915d5e8728f5a331dff1725c"},
+    {"path":"stage_d_completion_oriented_continuation_validation_contract.json","mode":"100644","git_object":"99e443bb9f8ca84741b0eb0c52eb37b9a1915244","bytes":26778,"sha256":"73a27fee64f0b035150a57f9eb10568ea1cfc9559c4bccbcd0ef44402735baa3"},
+    {"path":"STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md","mode":"100644","git_object":"6ed928c0003d44c0f5b8ed6656f55759234d532d","bytes":24001,"sha256":"997fc4d864b8c08f85adba8f4c481ed1f6eaeefe4a8c353b9df253ed221c3da8"},
+    {"path":"stage_e_scientific_harness_contract.json","mode":"100644","git_object":"b29edfe0299bfb7989cadc355e82e183438b8a12","bytes":25962,"sha256":"4abbb2e79bb7261a862ec6ab08902adcd43d9a7a0b6dce9141b05f007621f989"},
+    {"path":"stage_e_scientific_harness_evidence_schema.json","mode":"100644","git_object":"35f5feaaff54694024954834444a096c2fa55cc9","bytes":31272,"sha256":"f473e445416cfb2d5d6f596a85b90c5cd3fdc5dda06e05a2f45d095ccf114aae"},
+    {"path":"stage_e_scientific_harness_implementation_path_manifest.json","mode":"100644","git_object":"d362466cba2006b2463ec1f2fff88f980959012b","bytes":8643,"sha256":"b2b0e9bd5473815e3222cfc2d319649562a4723430cba0943e3e970c4835bb38"},
+    {"path":"stage_e_scientific_harness_predecessor_manifest.json","mode":"100644","git_object":"0cd54db396976dce39479c6dbfd055d809800121","bytes":7780,"sha256":"c065a1270dd36d9e7972ec84ffae917002f9eb0765be4d9812a54876601973a7"},
+    {"path":"stage_e_scientific_harness_validation_contract.json","mode":"100644","git_object":"fc282dc73e432690d8d67dd53143911c555de701","bytes":29296,"sha256":"7c8017bfe3af6235654d1f1103b53c195512002f534e85e79a99d2811c4e929d"},
+    {"path":"tests/framework/test_validation_reachability.py","mode":"100644","git_object":"e4c9dbd4833870fc3857a4840f196ef4f1f37aa1","bytes":171959,"sha256":"86be2982de15fcfa78c04647a15366ebbe24a294f4d3f0674c827591477bbc0e"},
+    {"path":".github/workflows/tests.yml","mode":"100644","git_object":"fc35712939bc393a8b69173552385118a30a3d95","bytes":13830,"sha256":"43807da6aba6a55bdf9880f6e4407bf9ab7ba6dc4ee535c162824c1453e7a7aa"}
+  ],
+  "nested_authority_locks": {
+    "stage_d_predecessor_manifest_path": "stage_d_scientific_validation_predecessor_manifest.json",
+    "stage_d_nested_row_count": 39,
+    "continuation_predecessor_manifest_path": "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+    "continuation_direct_row_count": 9,
+    "stage_e_predecessor_manifest_path": "stage_e_scientific_harness_predecessor_manifest.json",
+    "stage_e_direct_row_count": 17,
+    "rule": "each nested row is independently reconstructed at its own accepted coordinate; no manifest is trusted as a hash list only"
+  },
+  "preservation_rule": "All 19 direct sources and every other accepted-base path remain byte-identical. The five additions do not supersede, rewrite, or mutate prior evidence.",
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_execution_count": 0,
+    "gate_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  }
+}
