@@ -643,7 +643,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "506a2425a7e93b39cea2e113dc873ae6839d0295356f330207c962d9f6282299"
+TEST_SELF_SEAL = "220671a7874cd8d4622b8e3b0aa77ab6e7a8a7bc9a5245da5cd5f9ad314de7c2"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3780,9 +3780,23 @@ class ValidationReachabilityTests(unittest.TestCase):
                     "bytes": reconstructed["byte_count"],
                     "sha256": reconstructed["raw_sha256"],
                 },
-                row,
+                {
+                    key: row[key]
+                    for key in ("path", "mode", "git_object", "bytes", "sha256")
+                },
                 row["path"],
             )
+            if row["path"].endswith(".json"):
+                canonical = _canonical_json_bytes(
+                    _strict_stage_d_json_bytes(base_raw, row["path"])
+                )
+                self.assertEqual(row["canonical_no_lf_bytes"], len(canonical))
+                self.assertEqual(
+                    row["canonical_no_lf_sha256"], _sha256(canonical), row["path"]
+                )
+            else:
+                self.assertNotIn("canonical_no_lf_bytes", row)
+                self.assertNotIn("canonical_no_lf_sha256", row)
             changed_workflow = (
                 row["path"] == ".github/workflows/tests.yml"
                 and current_scope["stage_e_reconciliation_phase"]
