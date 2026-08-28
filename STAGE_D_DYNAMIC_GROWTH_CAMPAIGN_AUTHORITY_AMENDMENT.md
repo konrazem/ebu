@@ -94,8 +94,9 @@ cannot stand for physical feasibility or homeostasis.
 ### 4.1 Time, population, resource, and expansion
 
 Each valid scientific run has exactly 8,192 ticks numbered `0..8191`.
-Expansion epochs occur before the model transition at ticks
-`256,512,...,4096`. Define
+Expansion epochs are indexed exactly by `e=0..15`; epoch `e` activates at
+tick `256*(e+1)`, before that tick's model transition. Thus the exact ticks
+are `256,512,...,4096`. Define
 `e(t)=min(16,floor(t/256))`, population `P_t=16+3*e(t)`, resource carrying
 capacity `K_t=4*P_t`, protected reserve `R_t=P_t`, and initial resource stock
 `x_0=48` resource-units. Population growth is therefore the exact registered
@@ -197,15 +198,38 @@ Exactly seven topology instances are registered:
    and therefore requires complete affected-closure recomputation before any
    later recertification.
 
-At tick 2560, all families apply the registered local correction to the third
+At tick 2560, which is epoch `e=9` and the tenth expansion, all families apply
+the registered local correction to the second
 occurrence of motif `B`: its order-3 coefficient changes from `1/2048` to
 `3/4096`, with an exact correction receipt. At tick 5120, the newest occurrence
 receives a label-version correction without a coefficient change. Both events
 must invalidate the complete upward dependency and alias closure. The broad
-family's epoch-8 boundary change is intentionally nonlocal and must record a
+family’s epoch-8 boundary change is intentionally nonlocal and must record a
 broad invalidation. A local label or coefficient change that crosses a
 certified boundary or changes external interactions is also nonlocal for that
 query and must propagate upward; stale reuse is always forbidden.
+
+The seed/tick witness is frozen rather than inferred: hashed seed 1 has the
+16-symbol schedule `BAAAABAAAAABBAAA`, with its first two `B` occurrences at
+epochs 0 and 5, both active before tick 2560. Every other registered topology
+also has at least two `B` occurrences by epoch 9. A missing second occurrence,
+a different epoch numbering, or a different hash preimage refuses before any
+state transition.
+
+At every tick, and identically for all three reconstruction strategies, the
+same-tick order is exact: (1) load the prior committed state/checkpoint;
+(2) activate the scheduled epoch topology and emit its topology receipt;
+(3) apply every scheduled coefficient, label, or boundary correction in the
+declared event-ID order; (4) traverse and invalidate the complete dependency
+and alias closure, then reconstruct and recertify all affected coefficients,
+boundaries, cache entries, and delivery capacity; (5) evaluate population,
+resource-capacity, reserve, and demand drivers; (6) evaluate regeneration and
+the external boundary exchange and form `x_pre`; (7) select service/action and
+advance the resource state; (8) reconcile conservation, correction, service,
+viability, recovery, and collapse receipts; (9) serialize the trace and output
+prefixes; and (10) if this is a checkpoint tick, seal the checkpoint only after
+all preceding receipts are durable. Reordering, strategy-dependent ordering,
+or checkpointing an intermediate same-tick state refuses.
 
 ## 6. Reconstruction strategies and controls
 
@@ -347,7 +371,17 @@ run has at most `8192+1550=9742` primary evaluations. A robust run has at most
 `56*8192+1550=460302`. Across the 168 unprotected and 168 robust demand-driven
 runs, the declared upper estimate is `168*(9742+460302)=78967392` primary
 evaluations. The 60 capacity-population runs are capped at 10,000 each, adding
-600,000; the complete estimate is 79,567,392.
+600,000; the complete estimate is 79,567,392. These are not prose-only
+subcaps: every capacity-population configuration, local computation record,
+local limit decision, and campaign summary must carry the exact closed
+`CAPACITY-POPULATION-v1` profile with per-run primary evaluations `10000`,
+study cumulative primary evaluations `600000`, per-attempt wall seconds
+`14400`, process-tree peak RSS `4294967296`, trace bytes per run `5368709120`,
+and logical study output `21474836480`. The local computation and decision
+records bind the corresponding inherited Stage D/continuation computation and
+limit-decision identities. A missing, substituted, reset, or larger profile,
+or a cumulative count above 600,000, refuses or is computationally
+inconclusive and is never a scientific result.
 Operation classes remain
 separate: transition/menu checks, coefficient evaluations, canonicalization,
 DAG traversal, cache lookup, invalidation, receipt serialization, and output
@@ -622,17 +656,24 @@ exact capacity-compatible recurrence
 receipt permit to enter usable capacity. An arbitrary positive EBU or Möbius
 coefficient is not carrying capacity. The complete expansion burden is
 
-`X_(n+1)=construction+maintenance+resource+correction+delay+loss`,
-
-with exact components `1/16`, `(n+1)/256`, `1/32`, `1/64` at levels 10 and
-16 otherwise zero, baseline `1/64` plus `1/16` in the delay control, and
-baseline `1/64` plus a level-8 shock of `2`, respectively. Every component has
+`X_m=construction+maintenance+resource+correction+delay+loss`, where every
+transition row has source `n in 1..15` and target `m=n+1 in 2..16`.
+All burden predicates use the target index `m`, never the source index: the
+exact components are construction `1/16`, maintenance `m/256`, resource
+`1/32`, correction `1/64` iff `m in {10,16}` and zero otherwise, delay
+`1/64` plus `1/16` only in the response-delay control, and loss `1/64` plus
+`2` only when `m=8` in the capacity-shock control. Every component has
 one typed owner receipt; `X` is their exact reduced-rational sum. These are
 synthetic registered capacity-account units, not empirical physical costs or
 evidence that construction completed.
 
 The exact population bookkeeping is separately receipted as
-`P_(n+1)=P_n+B_n-D^death_n+M_n`. The positive-compatible, zero, negative,
+`P_m=P_(m-1)+B_m-D^death_m+M_m`. Once the scenario equation has produced its
+exact target `P_m`, the unique canonical ledger is
+`Delta_m=P_m-P_(m-1)`, `B_m=max(Delta_m,0)`,
+`D^death_m=max(-Delta_m,0)`, and `M_m=0`. Births, deaths, and migration are
+therefore nonnegative reduced rationals and cannot be chosen as an arbitrary
+signed decomposition. The positive-compatible, zero, negative,
 positive-nonconvertible-after-conversion, and capacity-shock controls freeze
 `P_n=rho*C_n` with constant `rho=4` over the compared levels. Under those
 premises,
@@ -652,8 +693,51 @@ afterward; one-level demographic-response delay; an exact level-8 capacity
 shock; and a direct hashed nonrecursive topology. Reserve and quality allocations
 are excluded from demographic-response capacity. The nonrecursive case has no
 recursive projection. Arm 3 records
-`required_capacity_n=P_n/rho_effective+1/16`; only a typed request receipt and
-`required_capacity_n>C_n` may request the next level before level 16.
+`expansion_rho_effective_n=P_n/C_n`, which is a required positive reduced
+rational and is distinct from any scenario's demographic-response factor.
+Thus `required_capacity_n=P_n/expansion_rho_effective_n+1/16=C_n+1/16`.
+For every source level `n=1..15`, only that exact strict inequality plus one
+typed request receipt authorizes target level `n+1`; all 15 requests must be
+present. At level 16 the exact terminal disposition is
+`COMPLETED_LEVEL_16_NO_FURTHER_REQUEST`. A null, zero, negative, arbitrary, or
+scenario-response-substituted expansion ratio refuses; a missing request
+stalls visibly and forbids fabrication of later level rows.
+
+The capacity-population scenarios use one exact registered service-demand
+process, `CP-FIXED-SERVICE-v1`, at every level: `D_n=P_n/64`. Initial
+population is `P_0=8`; `P_1=12` except the response-delay scenario, where
+`P_1=8`. Reserve and quality accumulators are exact: `Q^R_0=Q^R_1=0` and
+`Q^Q_0=Q^Q_1=0`; at every target `m=2..16`, the reserve scenario adds `3/8`
+only to `Q^R_m`, the quality scenario adds `3/8` only to `Q^Q_m`, and every
+other increment is zero. The demographic-response capacity is
+`A_m=C_m-Q^R_m-Q^Q_m`, must be nonnegative, and is the only capacity allowed
+to serve demand or enter the reserve/quality demographic equations.
+
+Resource/service state is separate from carrying capacity. Freeze
+`S_0=2,S_1=3`. For target `m=n+1`, regeneration is
+`G_m=max(0,(A_m-S_n)/4)`, boundary exchange is exactly zero,
+`S^pre_m=min(A_m,S_n+G_m)`, served demand is
+`U_m=min(D_m,A_m,max(0,S^pre_m))`, unmet demand is `D_m-U_m`, and
+`S_m=S^pre_m-U_m`. Increasing `C`, `A`, topology, population, or a reused
+coefficient never adds resource stock; only the separately receipted `G_m`
+does so. The service fraction is `1` when `D_m=0`, otherwise `U_m/D_m`, and
+the service-reserve margin is `A_m-D_m`.
+
+For these 15 target-level rows, resource viability is
+`0<=S^pre_m<=A_m` and `0<=S_m<=A_m`. A four-level homeostasis window ending
+at `m=5..16` passes iff at least three of its four target levels are viable,
+at least three have service fraction at least `19/20`, and every one has
+nonnegative service-reserve margin; the terminal homeostasis predicate also
+requires levels `13..16` all viable with service fraction at least `19/20`.
+Recovery events are the level-8 shock burden, the level-10 correction burden,
+the level-16 correction burden, and each response-delay activation. Recovery
+is the first target within the next three levels followed by two consecutive
+viable levels with service fraction at least `19/20` and nonnegative reserve
+margin; insufficient remaining horizon is exactly `NOT_RECOVERED_ON_HORIZON`.
+Collapse is the first target-level viability exit or the first of two
+consecutive target levels with service fraction below `1/2`. These predicates,
+event identities, first-event levels, and receipts are recorded per run and
+reconciled in the capacity-population campaign summary.
 
 Every scenario runs full rebuild, incremental without reuse, and certified
 motif reuse; their scientific projections must match exactly. Capacity,
@@ -667,6 +751,16 @@ Stage F must compare certified incremental reconstruction with full expanded/
 full-rebuild calculation for exact scientific-output equality and measured
 work, while measuring viability and homeostasis separately. Structural or
 topological compression alone is never sufficient evidence of homeostasis.
+
+Every one of the 20 capacity-population strategy triplets emits one closed
+comparison record binding the causal arm, scenario, three run identities,
+three projection identities, three operation/output records, every relevant
+invalidation receipt, exact projection equality, and the preregistered
+recomputation-efficiency disposition. The 20 additional wrong-equivalence
+preflights are keyed by the two causal arms and ten scenarios, use the
+certified-reuse strategy, and refuse before a level transition. Together with
+the 56 demand-driven fixtures this preserves exactly 76 representable refusal
+fixtures.
 
 ## 11.3 External conceptual input and future-book-only nature reference
 
@@ -702,6 +796,9 @@ The amendment defines closed prospective records:
 - `growth_capacity_benchmark/v1`;
 - `capacity_population_configuration/v1`;
 - `capacity_population_level_record/v1`;
+- `capacity_population_reconstruction_comparison/v1`;
+- `capacity_population_computation_record/v1`;
+- `capacity_population_limit_decision/v1`;
 - `capacity_population_campaign_summary/v1`;
 - `growth_campaign_summary/v1`; and
 - `wrong_equivalence_fixture/v1`.
@@ -713,14 +810,24 @@ coefficients, service/reserve/recovery/collapse predicates, operation counters,
 cache events, certificates, corrections, invalidations, conservation receipts,
 limits, environment, and output digests.
 
-Prospective schema validation must first validate ten complete records:
-dynamic configuration, scalar transport, non-scalable direct transport,
-misscaling refusal, complete campaign summary, scalar cache binding, and
-non-scalable cache binding, plus a capacity-population configuration, level
-record, and complete capacity-population campaign summary. Each frozen
+Prospective schema validation must first validate all 29 complete fixtures,
+covering every one of the 25 closed schema definitions and both valid branches
+where a definition has materially distinct scalable/non-scalable,
+Arm-2/Arm-3, or Arm-1/capacity-population forms. This includes dynamic and
+capacity-population configurations, rows, comparisons, computations, limit
+decisions, summaries, scalar and non-scalable transport/cache records, and
+both wrong-equivalence domains. The immutable fixture objects
+and exact RFC-6902-style single patch operation for every negative live inside
+the repository validation contract; a checker must reconstruct the target
+fixture, apply only that patch, and require refusal. Each frozen
 schema-negative case then applies only its named mutation to a complete valid
 instance of its named target and must refuse. Validating `{}` or any generic,
 unrelated malformed instance does not establish the frozen negative case.
+
+Every reduced rational is canonical: denominator is strictly positive; the
+numerator and denominator are in lowest terms; zero is exactly `0/1`; and a
+negative-zero spelling is forbidden. Values such as `2/2`, `-0/1`, `0/2`, or
+a negative denominator refuse before identity construction.
 
 The chain is:
 
