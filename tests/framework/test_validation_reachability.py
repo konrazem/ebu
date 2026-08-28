@@ -429,6 +429,68 @@ STAGE_E_AUTHORITY_SCOPE = STAGE_D_CONTINUATION_AUTHORITY_SCOPE | frozenset(
 STAGE_E_HARNESS_IMPLEMENTATION_SCOPE = STAGE_E_AUTHORITY_SCOPE | frozenset(
     STAGE_E_HARNESS_IMPLEMENTATION_PATHS
 )
+STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT = (
+    "5a66c674a3a9a23861ac11b986754b2022e277dc"
+)
+STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_TREE = (
+    "ee38ece14a945ddc8d4108f54ff2b813360c8c58"
+)
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE = (
+    "295e4a75b5d4e8eacfd203d7dc75b2e49f728964"
+)
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TARGET = (
+    "8739e29f8d3762dd755008759d266c7773f4f182"
+)
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TREE = (
+    "e0d73434ec16b9142d77ebf4e4459f4ca281eb70"
+)
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CHAIN = (
+    "de1269da8cc33d7ca34f51fb7194bc11a1d2da60",
+    "78bc26b7ac938b570af0b6f32eaab07b116abd6b",
+    "c53ebc4614115e00b72365b0a650becb5dc474b2",
+    STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE,
+)
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS = (
+    "STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_AMENDMENT.md",
+    "stage_d_dynamic_growth_campaign_contract.json",
+    "stage_d_dynamic_growth_campaign_evidence_schema.json",
+    "stage_d_dynamic_growth_campaign_predecessor_manifest.json",
+    "stage_d_dynamic_growth_campaign_validation_contract.json",
+)
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_RAW_SHA256 = {
+    "STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_AMENDMENT.md": (
+        "5e55617ee5c1f107567685e81377f1a697a4b7d49ce0e844ee1b3dbf72aec0eb"
+    ),
+    "stage_d_dynamic_growth_campaign_contract.json": (
+        "7d9ce96dba89f46771a08747c7c5db7762e94f2072bb83fdf8bcc1e68e6e3c22"
+    ),
+    "stage_d_dynamic_growth_campaign_evidence_schema.json": (
+        "be93bb6ad0abbc8605e293d3bb7f7ec1634cf55e71dff57372b7078810afe8e9"
+    ),
+    "stage_d_dynamic_growth_campaign_predecessor_manifest.json": (
+        "c729fa3b038ba479b6a7651a24e620a36b0bfea6f901a72b7b8c19b1c0b9c312"
+    ),
+    "stage_d_dynamic_growth_campaign_validation_contract.json": (
+        "4c85d28f822558fbabee47cb2b294cf1f9ad85936b4fe388e06243e4d83fa0d2"
+    ),
+}
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANONICAL_SHA256 = {
+    "stage_d_dynamic_growth_campaign_contract.json": (
+        "3b634d78956d7dbff485fe75bca35aa6f79f61fb14523421b29ba30991f066df"
+    ),
+    "stage_d_dynamic_growth_campaign_evidence_schema.json": (
+        "f1bde9a46f8ddafb9a539e011814bb83e3a41d12dba9b0305037b960eefc698d"
+    ),
+    "stage_d_dynamic_growth_campaign_predecessor_manifest.json": (
+        "1ea6cd84eabb987966f4910bce9b6a20b03eeff0dc4d9cab7181d84c9be1f8a7"
+    ),
+    "stage_d_dynamic_growth_campaign_validation_contract.json": (
+        "04d84cfad9bf7c14d1b7940c87300dc22491871669952f5acd2586f33fbb3634"
+    ),
+}
+STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE = STAGE_E_AUTHORITY_SCOPE | frozenset(
+    STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+)
 STAGE_E_WORKFLOW_APPEND_BLOCK = br"""
   stage-e-scientific-harness:
     if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
@@ -493,7 +555,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "5a0a4fc4d43bb6473e151286d76104bc21513e162d323e6348884b79da48d5d9"
+TEST_SELF_SEAL = "25257f5c9f95ac8e5c7409f01953fd033629dbe3543c66c6dcb9f4814f6a1fd9"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -712,6 +774,19 @@ def _git(*args: str) -> bytes:
             "--reverse",
             "--parents",
             f"{STAGE_E_ACCEPTED_BASE_COMMIT}..{STAGE_E_AUTHORITY_CANDIDATE}",
+        )
+        or args
+        == (
+            "merge-base",
+            STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE,
+        )
+        or args
+        == (
+            "rev-list",
+            "--reverse",
+            "--parents",
+            f"{STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT}..{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE}",
         )
         or args
         == (
@@ -1428,6 +1503,11 @@ class ValidationReachabilityTests(unittest.TestCase):
             "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION",
         ):
             self._audit_stage_e_authority(current_scope)
+        if (
+            current_scope["stage_d_dynamic_growth_phase"]
+            == "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+        ):
+            self._audit_stage_d_dynamic_growth_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -1480,32 +1560,44 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_c_phase = "AUTHORITY_ONLY"
             stage_d_phase = None
             stage_e_phase = None
+            stage_d_dynamic_growth_phase = None
         elif changed_paths == STAGE_C_IMPLEMENTATION_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = None
             stage_e_phase = None
+            stage_d_dynamic_growth_phase = None
         elif changed_paths == STAGE_D_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_AUTHORITY_ONLY"
             stage_e_phase = None
+            stage_d_dynamic_growth_phase = None
         elif changed_paths == STAGE_D_CONTINUATION_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = None
+            stage_d_dynamic_growth_phase = None
         elif changed_paths == STAGE_E_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = "STAGE_E_HARNESS_AUTHORITY_ONLY"
+            stage_d_dynamic_growth_phase = None
         elif changed_paths == STAGE_E_HARNESS_IMPLEMENTATION_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = None
+        elif changed_paths == STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_AUTHORITY_ONLY"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
                 "the exact completed implementation, Stage D authority-only, "
                 "Stage D continuation-authority-only, Stage E harness "
-                "authority-only, or Stage E harness completed-implementation "
+                "authority-only, Stage E harness completed-implementation, "
+                "or Stage D dynamic-growth authority-only "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -1514,6 +1606,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(len(STAGE_D_CONTINUATION_AUTHORITY_SCOPE), 35)
         self.assertEqual(len(STAGE_E_AUTHORITY_SCOPE), 41)
         self.assertEqual(len(STAGE_E_HARNESS_IMPLEMENTATION_SCOPE), 86)
+        self.assertEqual(len(STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE), 46)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -1590,6 +1683,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             "stage_c_phase": stage_c_phase,
             "stage_d_phase": stage_d_phase,
             "stage_e_phase": stage_e_phase,
+            "stage_d_dynamic_growth_phase": stage_d_dynamic_growth_phase,
         }
 
     def _audit_stage_d_authority(self, current_scope: dict[str, object]) -> None:
@@ -1643,6 +1737,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(STAGE_E_AUTHORITY_PATHS)
         if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
             expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+        if current_scope["stage_d_dynamic_growth_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+            )
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -1886,6 +1984,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(STAGE_E_AUTHORITY_PATHS)
         if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
             expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+        if current_scope["stage_d_dynamic_growth_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+            )
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -2294,6 +2396,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         }
         if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
             expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+        if current_scope["stage_d_dynamic_growth_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+            )
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -2654,6 +2760,407 @@ class ValidationReachabilityTests(unittest.TestCase):
             "stage_e_scientific_harness_validation_contract.json": validation["completion_marker"],
         }
         for path, marker in markers.items():
+            self.assertEqual(raw_by_path[path].count(marker.encode("utf-8")), 1, path)
+        self.assertEqual(
+            tuple(
+                name
+                for name, value in self.__class__.__dict__.items()
+                if name.startswith("test_") and callable(value)
+            ),
+            (
+                "test_historical_i9_reconstruction",
+                "test_current_head_durability",
+                "test_post_i9_authority_cases",
+            ),
+        )
+
+    def _audit_stage_d_dynamic_growth_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertEqual(
+            current_scope["stage_d_dynamic_growth_phase"],
+            "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY",
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                "--verify",
+                f"{STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT}^{{commit}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TARGET}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TARGET}^1")
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TARGET}^2")
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,
+                STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,
+        )
+        history_rows = tuple(
+            tuple(line.split())
+            for line in _git(
+                "rev-list",
+                "--reverse",
+                "--parents",
+                f"{STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT}..{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE}",
+            )
+            .decode()
+            .splitlines()
+        )
+        self.assertEqual(
+            tuple(row[0] for row in history_rows),
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CHAIN,
+        )
+        self.assertEqual(
+            history_rows[0][1:],
+            (STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,),
+        )
+        for previous, row in zip(
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CHAIN, history_rows[1:]
+        ):
+            self.assertEqual(row[1:], (previous,))
+
+        base_entries = _tree_entries(STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE)
+        target_entries = _tree_entries(STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TARGET)
+        current_entries = _tree_entries(current_scope["actual_head"])
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS)
+        )
+        self.assertEqual(candidate_entries, target_entries)
+        for path in STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS:
+            self.assertNotIn(path, base_entries)
+            self.assertEqual(candidate_entries[path]["mode"], "100644", path)
+            self.assertEqual(candidate_entries[path]["object_type"], "blob", path)
+        implementation_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        self.assertEqual(
+            implementation_delta,
+            frozenset(("tests/framework/test_validation_reachability.py",)),
+        )
+
+        candidate_archive = _archive_members(
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE
+        )
+        target_archive = _archive_members(STAGE_D_DYNAMIC_GROWTH_AUTHORITY_TARGET)
+        documents = {}
+        raw_by_path = {}
+        for path in STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS:
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(
+                path, target_entries, target_archive
+            )
+            self.assertEqual(candidate_row, target_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            current_raw = (ROOT / path).read_bytes()
+            self.assertEqual(current_raw, candidate_raw, path)
+            self.assertEqual(
+                _sha256(current_raw),
+                STAGE_D_DYNAMIC_GROWTH_AUTHORITY_RAW_SHA256[path],
+                path,
+            )
+            self.assertTrue(
+                current_raw.endswith(b"\n") and not current_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", current_raw, path)
+            raw_by_path[path] = current_raw
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(current_raw, path)
+                canonical = _canonical_json_lf(documents[path])[:-1]
+                self.assertEqual(
+                    _sha256(canonical),
+                    STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANONICAL_SHA256[path],
+                    path,
+                )
+
+        contract = documents["stage_d_dynamic_growth_campaign_contract.json"]
+        schema = documents[
+            "stage_d_dynamic_growth_campaign_evidence_schema.json"
+        ]
+        predecessor = documents[
+            "stage_d_dynamic_growth_campaign_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_d_dynamic_growth_campaign_validation_contract.json"
+        ]
+        self.assertEqual(
+            tuple(contract["candidate_files"]),
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS,
+        )
+        self.assertEqual(contract["candidate_file_count"], 5)
+        self.assertEqual(
+            tuple(validation["candidate_paths"]),
+            STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS,
+        )
+        self.assertEqual(validation["candidate_path_count"], 5)
+        for document in (contract, predecessor, validation):
+            self.assertEqual(
+                document["accepted_base"]["commit"],
+                STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT,
+            )
+            self.assertEqual(
+                document["accepted_base"]["tree"],
+                STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_TREE,
+            )
+
+        self.assertEqual(predecessor["source_count"], 19)
+        source_rows = predecessor["source_rows"]
+        self.assertEqual(len(source_rows), 19)
+        self.assertEqual(len({row["path"] for row in source_rows}), 19)
+        base_archive = _archive_members(STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT)
+        for row in source_rows:
+            reconstructed, base_raw = _object_row(
+                row["path"], base_entries, base_archive
+            )
+            self.assertEqual(
+                {
+                    "path": reconstructed["path"],
+                    "mode": reconstructed["mode"],
+                    "git_object": reconstructed["git_object"],
+                    "bytes": reconstructed["byte_count"],
+                    "sha256": reconstructed["raw_sha256"],
+                },
+                row,
+                row["path"],
+            )
+            if row["path"] != "tests/framework/test_validation_reachability.py":
+                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+
+        nested = predecessor["nested_authority_locks"]
+        self.assertEqual(nested["stage_d_nested_row_count"], 39)
+        self.assertEqual(nested["continuation_direct_row_count"], 9)
+        self.assertEqual(nested["stage_e_direct_row_count"], 17)
+        self.assertEqual(
+            nested["stage_d_predecessor_manifest_path"],
+            "stage_d_scientific_validation_predecessor_manifest.json",
+        )
+        self.assertEqual(
+            nested["continuation_predecessor_manifest_path"],
+            "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+        )
+        self.assertEqual(
+            nested["stage_e_predecessor_manifest_path"],
+            "stage_e_scientific_harness_predecessor_manifest.json",
+        )
+
+        study = contract["study_registry_binding"]
+        study_order = tuple(f"SD-{index:02d}" for index in range(1, 15))
+        self.assertEqual(study["accepted_study_count"], 14)
+        self.assertEqual(tuple(study["accepted_order"]), study_order)
+        self.assertEqual(study["nested_campaign_id"], "SD-01-GROWTH-v1")
+        self.assertEqual(study["parent_study_id"], "SD-01")
+        self.assertIn("before SD-02", study["execution_position"])
+        self.assertEqual(study["scientific_outcome_dependencies"], [])
+        self.assertEqual(
+            tuple(contract["user_requirement_ids"]),
+            tuple(f"DG-USER-{index:02d}" for index in range(1, 15)),
+        )
+        self.assertEqual(
+            tuple(contract["mathematical_control_ids"]),
+            tuple(f"DG-MATH-{index:02d}" for index in range(1, 11)),
+        )
+
+        registered = contract["registered_counts"]
+        self.assertEqual(registered["demand_driven_scientific_runs"], 336)
+        self.assertEqual(registered["topology_capacity_response_scientific_runs"], 30)
+        self.assertEqual(registered["bidirectional_feedback_scientific_runs"], 30)
+        self.assertEqual(registered["scientific_runs"], 396)
+        self.assertEqual(registered["matched_strategy_triplets"], 132)
+        self.assertEqual(registered["wrong_equivalence_refusal_fixtures"], 76)
+        self.assertEqual(registered["valid_scalar_transport_rows"], 90)
+        self.assertEqual(registered["non_scalable_direct_rows"], 15)
+        self.assertEqual(registered["transport_correction_cases"], 180)
+        self.assertEqual(registered["misscaling_refusal_fixtures"], 150)
+        self.assertEqual(registered["misscaled_reuse_trajectories"], 0)
+
+        causal = contract["capacity_population_causal_arm_registry"]
+        self.assertEqual(
+            tuple(causal["arm_order"]),
+            (
+                "ARM-1-DEMAND-DRIVES-TOPOLOGY",
+                "ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY",
+                "ARM-3-BIDIRECTIONAL-FEEDBACK",
+            ),
+        )
+        self.assertEqual(len(causal["scenario_order"]), 10)
+        self.assertEqual(len(causal["strategy_order"]), 3)
+        self.assertEqual(causal["capacity_levels"], list(range(17)))
+        self.assertEqual(causal["base_capacity"], {
+            "C_0": "2", "C_1": "3", "units": "usable-capacity-unit"
+        })
+        branches = causal["capacity_reconstruction_branches"]
+        self.assertIn("targets m=2..16", branches["DIRECT_HASHED_TARGET_CAPACITY"])
+        self.assertIn("preserves C_0=2 and C_1=3", branches["DIRECT_HASHED_TARGET_CAPACITY"])
+        self.assertIn("null residuals", branches["DIRECT_HASHED_TARGET_CAPACITY"])
+        self.assertIn("exactly one branch", branches["mutual_exclusion"])
+        progression = causal["progression_counts"]
+        self.assertEqual(progression["total_level_rows"], 900)
+        self.assertEqual(progression["arm3_request_receipts"], 450)
+        self.assertEqual(progression["completed_campaign_stall_records"], 0)
+        self.assertEqual(progression["recovery_event_identities"], 216)
+        self.assertIn("60 ordered", causal["capacity_population_run_evidence_rule"])
+
+        time_growth = contract["time_and_growth"]
+        self.assertEqual(time_growth["horizon_ticks"], 8192)
+        self.assertEqual(time_growth["expansion_epoch_count"], 16)
+        self.assertEqual(time_growth["expansion_epoch_index_range"], [0, 15])
+        self.assertEqual(
+            time_growth["expansion_ticks"],
+            [256 * index for index in range(1, 17)],
+        )
+        self.assertIn("256*(e+1)", time_growth["expansion_epoch_tick_rule"])
+        corrections = contract["scheduled_corrections"]
+        self.assertEqual(corrections[0]["tick"], 2560)
+        self.assertEqual(corrections[0]["epoch"], 9)
+        self.assertEqual(corrections[0]["target"], "second B occurrence order-3 coefficient")
+        self.assertEqual(corrections[0]["seed_1_witness"], "BAAAABAAAAABBAAA; first two B epochs 0 and 5")
+        self.assertEqual(len(contract["same_tick_event_order"]), 10)
+        self.assertEqual(
+            contract["same_tick_event_order"][-1],
+            "SEAL_CHECKPOINT_AFTER_ALL_RECEIPTS_ARE_DURABLE",
+        )
+
+        schema_profile = validation["schema_profile"]
+        self.assertEqual(schema_profile["definition_count"], 29)
+        self.assertEqual(len(schema["$defs"]), 29)
+        self.assertEqual(set(schema_profile["definition_names"]), set(schema["$defs"]))
+        self.assertEqual(schema_profile["root_record_count"], 20)
+        self.assertEqual(len(schema["oneOf"]), 20)
+        refs = []
+
+        def collect_refs(value: object) -> None:
+            if type(value) is dict:
+                for key, item in value.items():
+                    if key == "$ref":
+                        refs.append(item)
+                    collect_refs(item)
+            elif type(value) is list:
+                for item in value:
+                    collect_refs(item)
+
+        collect_refs(schema)
+        self.assertEqual(len(refs), 340)
+        self.assertEqual(len(set(refs)), 29)
+        for ref in refs:
+            self.assertTrue(ref.startswith("#/$defs/"), ref)
+            self.assertIn(ref.removeprefix("#/$defs/"), schema["$defs"])
+        self.assertEqual(schema_profile["local_ref_occurrence_count"], 340)
+        self.assertEqual(schema_profile["local_ref_unique_target_count"], 29)
+        self.assertEqual(schema_profile["supported_keyword_count"], 24)
+        self.assertEqual(len(schema_profile["supported_keywords"]), 24)
+        self.assertEqual(schema_profile["unknown_keyword_disposition"], "REFUSE_VALIDATOR_BUILD")
+        self.assertTrue(schema_profile["all_local_refs_must_resolve"])
+        self.assertTrue(schema_profile["all_records_closed"])
+
+        fixtures = validation["schema_fixtures"]
+        fixture_rule = validation["schema_fixture_rule"]
+        self.assertEqual(len(fixtures), 44)
+        self.assertEqual(fixture_rule["required_complete_valid_fixture_count"], 44)
+        self.assertEqual(
+            {row["fixture_id"] for row in fixtures},
+            set(fixture_rule["required_fixture_ids"]),
+        )
+        schema_negatives = validation["schema_negative_cases"]
+        self.assertEqual(len(schema_negatives), 150)
+        self.assertEqual(
+            tuple(row["id"] for row in schema_negatives),
+            tuple(f"DG-SN{index:02d}" for index in range(1, 151)),
+        )
+        self.assertEqual(
+            sum(row["validation_layer"] == "JSON_SCHEMA" for row in schema_negatives),
+            116,
+        )
+        self.assertEqual(
+            sum(row["validation_layer"] == "SEMANTIC_RELATION" for row in schema_negatives),
+            34,
+        )
+        self.assertTrue(all(row["patch"] for row in schema_negatives))
+        self.assertTrue(
+            all(row["required_disposition"] == "REFUSE" for row in schema_negatives)
+        )
+        self.assertEqual(
+            tuple(check.split()[0] for check in validation["positive_checks"]),
+            tuple(f"DG-P{index:03d}" for index in range(1, 269)),
+        )
+        self.assertEqual(
+            tuple(row["id"] for row in validation["negative_cases"]),
+            tuple(f"DG-N{index:03d}" for index in range(1, 142)),
+        )
+        self.assertEqual(validation["required_positive_check_count"], 268)
+        self.assertEqual(validation["required_negative_case_count"], 141)
+        self.assertEqual(validation["required_schema_negative_case_count"], 150)
+        self.assertEqual(validation["required_predecessor_row_count"], 19)
+        relations = validation["cross_record_semantic_relations"]
+        self.assertEqual(len(relations), 44)
+        self.assertTrue(any("216 events" in relation for relation in relations))
+        self.assertTrue(
+            any("DG-SEM-STALL-TERMINAL" in relation for relation in relations)
+        )
+        self.assertTrue(any("attempt_primary_evaluations <=" in relation for relation in relations))
+
+        zero_counters = contract["required_operation_counts"]
+        self.assertEqual(set(zero_counters.values()), {0})
+        self.assertEqual(predecessor["required_operation_counts"], zero_counters)
+        self.assertEqual(validation["required_operation_counts"], zero_counters)
+        self.assertEqual(len(zero_counters), 14)
+        marker = contract["completion_marker"]
+        self.assertEqual(marker, predecessor["completion_marker"])
+        self.assertEqual(marker, validation["completion_marker"])
+        for path in STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS:
             self.assertEqual(raw_by_path[path].count(marker.encode("utf-8")), 1, path)
         self.assertEqual(
             tuple(
