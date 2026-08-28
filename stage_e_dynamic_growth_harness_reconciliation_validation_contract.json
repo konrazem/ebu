@@ -332,7 +332,7 @@
     "guarded_route_count": 15,
     "mobius_complexity_cells": 55,
     "mobius_direct_optimized_cases": 488,
-    "refusal_base_fixtures": 119,
+    "refusal_base_fixtures": 120,
     "nested_growth_campaigns": 1,
     "poset_base_transforms": 32,
     "poset_correction_cases": 224,
@@ -340,7 +340,7 @@
     "recursive_sequence_instances": 18,
     "registered_studies": 14,
     "schema_fixture_count": 61,
-    "schema_refusal_count": 248,
+    "schema_refusal_count": 249,
     "stage_e_assertion_applicator_mutations": 22,
     "stage_e_evidence_records_before_manifest": 9,
     "stage_e_evidence_records_with_manifest": 10,
@@ -390,7 +390,7 @@
     "SE-RC-N036 schema definition or root count mismatch",
     "SE-RC-N037 positive ledger has 62 rows",
     "SE-RC-N038 positive ledger duplicate ordinal",
-    "SE-RC-N039 refusal ledger has 247 rows",
+    "SE-RC-N039 refusal ledger has 248 rows",
     "SE-RC-N040 refusal ledger duplicate ordinal",
     "SE-RC-N041 fixture source identity mismatch",
     "SE-RC-N042 fixture accepted by count without validation",
@@ -488,15 +488,16 @@
     "SE-RC-N134 accepted v1 filename reused for v2 shape",
     "SE-RC-N135 recursive case operand omitted from canonical identity",
     "SE-RC-N136 guarded route omitted duplicated or reordered",
-    "SE-RC-N137 preserved implementation-manifest provisional 63/247 literals treated as operative or any other manifest meaning changed"
+    "SE-RC-N137 preserved implementation-manifest provisional 63/247 literals treated as operative or any other manifest meaning changed",
+    "SE-RC-N138 atomic_case_continuation_context present on any refusal-ledger row other than CONT-SCHEMA-N17"
   ],
   "new_schema_semantic_relations": [
     "SE-RC-SR-001 common head commit and tree equal the exact implementation candidate",
     "SE-RC-SR-002 every common authority identity equals the canonical reconciliation contract identity",
     "SE-RC-SR-003 positive ledger ordinals are exactly 0 through 60 without gap or duplicate",
-    "SE-RC-SR-004 refusal ledger ordinals are exactly 0 through 247 without gap or duplicate",
+    "SE-RC-SR-004 refusal ledger ordinals are exactly 0 through 248 without gap or duplicate",
     "SE-RC-SR-005 ledger coverage by source and validation layer equals the frozen partitions",
-    "SE-RC-SR-006 every ledger fixture identity is recomputed from the exact complete source fixture or exact patched instance, every target resolves under the frozen source-or-overlay rule, and CONT-SCHEMA-N17 binds the SD-06 between-atomic-case context to a complete base whose one-field patch changes its canonical identity before the named semantic refusal",
+    "SE-RC-SR-006 every ledger fixture identity is recomputed from the exact complete source fixture or exact patched instance, every target resolves under the frozen source-or-overlay rule, and CONT-SCHEMA-N17 binds the SD-06 between-atomic-case context to a complete inherited-semantics-valid base whose one-field patch changes its canonical identity before the named semantic refusal",
     "SE-RC-SR-007 DAG indegree initializations equal V",
     "SE-RC-SR-008 DAG enqueues dequeues queue appends and head advances are each at most V",
     "SE-RC-SR-009 every DAG cell has indegree_initializations equal V, edge_inspections exactly E, and all other exact traversal bounds",
@@ -525,8 +526,10 @@
     "SE-RC-SR-032 v2 PASS requires all five entries PASS; the non-PASS manifest retains the same five exact ordered names, requires at least one BOUND_NOT_SUPPORTED entry, binds bound_record_names exactly to those entries, and refuses Stage F",
     "SE-RC-SR-033 recursive poset transport and correction case ordinals canonical operands outputs relations and identities reconstruct exactly",
     "SE-RC-SR-034 the guard route list is exactly fifteen ordered IDs and every route has one preimport refusal",
-    "SE-RC-SR-035 all 61 positive and 248 refusal rows reconstruct their committed identities, exact validation layers and structural outcomes; the comment pair is valid with absent original and changed annotation text",
-    "SE-RC-SR-036 the byte-preserved implementation manifest's provisional 63/247 literals are non-operative and superseded only by exact executable 61/248 registries while every other path and no-substitution rule remains binding"
+    "SE-RC-SR-035 all 61 positive and 249 refusal rows reconstruct their committed identities, exact validation layers and structural outcomes; the comment pair is valid with absent original and changed annotation text",
+    "SE-RC-SR-036 the byte-preserved implementation manifest's provisional 63/247 literals are non-operative and superseded only by exact executable 61/249 registries while every other path and no-substitution rule remains binding",
+    "SE-RC-SR-037 CONT-SCHEMA-N17 reconstructs its exact four-field process-allocation digest, twelve-field attempt-binding digest and five-field attempt identity; its base passes every inherited continuation relation and its one-field mutation fails exactly REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
+    "SE-RC-SR-038 atomic_case_continuation_context is required exactly for CONT-SCHEMA-N17 and structurally refused for every non-N17 refusal-ledger row, including exact case SE-RC-CONTEXT-N01"
   ],
   "pass_boundary": "A PASS authorizes only normal private authority integration, then the separately frozen one-path reachability durability lifecycle. Harness implementation remains frozen until durability integration PASS. Stage F remains separately user-gated.",
   "positive_checks": [
@@ -588,13 +591,13 @@
     "SE-RC-P056 every root and definition closed",
     "SE-RC-P057 common scientific counters closed and zero",
     "SE-RC-P058 schema replay positive array exact 61",
-    "SE-RC-P059 schema replay refusal array exact 248",
+    "SE-RC-P059 schema replay refusal array exact 249",
     "SE-RC-P060 positive partition exact 4 2 11 44",
-    "SE-RC-P061 refusal partition exact 16 35 24 116 34 22 1",
+    "SE-RC-P061 refusal partition exact 16 35 24 116 34 22 1 1",
     "SE-RC-P062 all 61 fixtures loaded and validated against an existing source target or one of the three exact closed reconciliation targets",
     "SE-RC-P063 all 61 fixture canonical identities retained",
-    "SE-RC-P064 all 248 mutations loaded or derived exactly",
-    "SE-RC-P065 all 248 named refusal layers executed with the exact 31 JSON-schema and four semantic continuation partition, including the non-no-op CONT-SCHEMA-N17 complete-to-partial transition",
+    "SE-RC-P064 all 249 mutations loaded or derived exactly",
+    "SE-RC-P065 all 249 named refusal layers executed with the exact 31 JSON-schema and four semantic continuation partition, including the non-no-op CONT-SCHEMA-N17 complete-to-partial transition and the reconciliation-owned non-N17 context prohibition",
     "SE-RC-P066 every semantic mutation first passes structure, every JSON_SCHEMA mutation fails structure, and the comment control has three identical true outcomes",
     "SE-RC-P067 no generic empty-object substitution",
     "SE-RC-P068 no representative-subset acceptance",
@@ -681,14 +684,16 @@
     "SE-RC-P149 authority audit independent",
     "SE-RC-P150 implementation audit independent",
     "SE-RC-P151 exact 61-row positive fixture registry with committed canonical identities and resolvable closed targets",
-    "SE-RC-P152 exact 248-row refusal registry with base patch mutated layer and truthful structural-validity identities, with a dedicated complete atomic-case base and distinct mutated identity for CONT-SCHEMA-N17",
+    "SE-RC-P152 exact 249-row refusal registry with base patch mutated layer and truthful structural-validity identities, with a dedicated inherited-semantics-valid atomic-case base and distinct mutated identity for CONT-SCHEMA-N17",
     "SE-RC-P153 accepted v1 records and final manifest preserved separately from six v2 outputs",
     "SE-RC-P154 exact 29-keyword derived union includes comment annotation",
     "SE-RC-P155 exact five DAG cells and exact edge inspections",
     "SE-RC-P156 typed cache closure identity arrays and disjoint reuse",
     "SE-RC-P157 ordered recursive poset and transport case identities",
     "SE-RC-P158 exact fifteen-route preimport guard coverage",
-    "SE-RC-P159 byte-preserved implementation manifest has exactly the known provisional 63/247 literals and the narrow 61/248 supersession is mechanically bound"
+    "SE-RC-P159 byte-preserved implementation manifest has exactly the known provisional 63/247 literals and the narrow 61/249 supersession is mechanically bound",
+    "SE-RC-P160 CONT-SCHEMA-N17 exact process allocation binding and attempt identity preimages reproduce a3497dd1 0ea5f567 and cc255ec0 respectively and its base passes all inherited continuation relations",
+    "SE-RC-P161 non-N17 atomic-case continuation context is structurally refused by exact reconciliation case SE-RC-CONTEXT-N01"
   ],
   "positive_fixture_registry": [
     {
@@ -18025,8 +18030,8 @@
     {
       "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
       "canonical_identity": {
-        "byte_count": 4233,
-        "sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e"
+        "byte_count": 4200,
+        "sha256": "76fa23b16d61db7b35c9eba13be86f8b243da86de09e669752f4b7e9157a8484"
       },
       "atomic_case_continuation_context": {
         "study_id": "SD-06",
@@ -18043,7 +18048,7 @@
         "atomic_case_complete": true,
         "attempt_binding": {
           "attempt_ordinal": 0,
-          "binding_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "binding_sha256": "0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec",
           "campaign_execution_binding_identity": {
             "kind": "x",
             "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -18055,11 +18060,7 @@
             "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
             "value": "x"
           },
-          "incoming_checkpoint_identity": {
-            "kind": "x",
-            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-            "value": "x"
-          },
+          "incoming_checkpoint_identity": null,
           "parallelization_boundary_identity": {
             "kind": "x",
             "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
@@ -18071,7 +18072,7 @@
             "value": "x"
           },
           "process_allocation": {
-            "allocation_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+            "allocation_sha256": "a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a",
             "ordered_worker_allocations": [
               {
                 "accelerator_allocation_identity": {
@@ -18120,8 +18121,8 @@
           },
           "process_allocation_identity": {
             "kind": "process_allocation/v2",
-            "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-            "value": "0000000000000000000000000000000000000000000000000000000000000000"
+            "sha256": "a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a",
+            "value": "a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a"
           },
           "restart_policy_identity": {
             "kind": "x",
@@ -18143,11 +18144,11 @@
         },
         "attempt_binding_identity": {
           "kind": "attempt_binding/v2",
-          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
-          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+          "sha256": "0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec",
+          "value": "0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec"
         },
         "attempt_ended_at": "x",
-        "attempt_id": "x",
+        "attempt_id": "cc255ec085c6be703dd48c59a5d7ed0ef80aad5ea7d09900347b8d372d5371b9",
         "attempt_ordinal": 0,
         "attempt_started_at": "x",
         "attempt_terminal_state": "CHECKPOINTED_CONTINUATION_REQUIRED",
@@ -18196,6 +18197,48 @@
       "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
       "target_definition": "attempt_manifest",
       "target_schema_path": "stage_d_completion_oriented_continuation_evidence_schema.json"
+    },
+    {
+      "base_fixture_id": "reconciliation-non-n17-refusal-ledger-row",
+      "canonical_identity": {
+        "byte_count": 864,
+        "sha256": "b45d7c5b75e7ddd6c57b41a478de032b2a31990e5903b6212088af39eda8604e"
+      },
+      "instance": {
+        "ordinal": 0,
+        "case_id": "SE-RC-CONTEXT-BASE",
+        "source_case_pointer": "/schema_replay_rule/non_n17_context_prohibition",
+        "base_fixture_id": "stage-d-mobius-hard-cap-base",
+        "base_fixture_identity": {
+          "byte_count": 788,
+          "sha256": "1be17534bd2b164f0d8b2a47f33feae30c711fcdbf28da16d80e4dcf398e15fc"
+        },
+        "target_schema_path": "stage_d_scientific_validation_evidence_schema.json",
+        "target_definition": "hard_caps",
+        "mutation_representation": "RFC6902_PATCH",
+        "rfc6902_patch_or_full_instance": [
+          {
+            "op": "remove",
+            "path": "/maximum_n"
+          }
+        ],
+        "patch_identity": {
+          "byte_count": 37,
+          "sha256": "de94d612fdac9c1369ed37c017e762dc2b7078ebc181e55d0ab93b38ba224d8e"
+        },
+        "mutated_instance_identity": {
+          "byte_count": 773,
+          "sha256": "ad1a714d3535b4bb8e05d29a6eebf22cf686f792fb03fc2d747c79c9b89008bc"
+        },
+        "validation_layer": "JSON_SCHEMA",
+        "expected_structural_validity": false,
+        "semantic_rule_id": null,
+        "required_disposition": "REFUSED"
+      },
+      "source_json_pointer": "/refusal_base_fixtures/119",
+      "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
+      "target_definition": "refusal_ledger_row",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
     }
   ],
   "refusal_registry": [
@@ -19796,17 +19839,17 @@
     {
       "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
       "base_fixture_identity": {
-        "byte_count": 4233,
-        "sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e"
+        "byte_count": 4200,
+        "sha256": "76fa23b16d61db7b35c9eba13be86f8b243da86de09e669752f4b7e9157a8484"
       },
-      "base_fixture_sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e",
+      "base_fixture_sha256": "76fa23b16d61db7b35c9eba13be86f8b243da86de09e669752f4b7e9157a8484",
       "case_id": "CONT-SCHEMA-N17",
       "expected_structural_validity": true,
       "mutated_instance_identity": {
-        "byte_count": 4234,
-        "sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3"
+        "byte_count": 4201,
+        "sha256": "4501c1e3766455af6a53abf42753a2bfb3ec3394a6d2cfcb383475ff8560c284"
       },
-      "mutated_instance_sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3",
+      "mutated_instance_sha256": "4501c1e3766455af6a53abf42753a2bfb3ec3394a6d2cfcb383475ff8560c284",
       "mutation_representation": "RFC6902_PATCH",
       "ordinal": 32,
       "patch_identity": {
@@ -30085,6 +30128,66 @@
       "target_definition": "comment_nonreliance_pair",
       "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
       "validation_layer": "ANNOTATION_NON_RELIANCE"
+    },
+    {
+      "base_fixture_id": "reconciliation-non-n17-refusal-ledger-row",
+      "base_fixture_identity": {
+        "byte_count": 864,
+        "sha256": "b45d7c5b75e7ddd6c57b41a478de032b2a31990e5903b6212088af39eda8604e"
+      },
+      "base_fixture_sha256": "b45d7c5b75e7ddd6c57b41a478de032b2a31990e5903b6212088af39eda8604e",
+      "case_id": "SE-RC-CONTEXT-N01",
+      "expected_structural_validity": false,
+      "mutated_instance_identity": {
+        "byte_count": 1286,
+        "sha256": "04f5c245fbeef0ff100f6ae674349642f7097f5e4d7396f1d6ec83c281aa359d"
+      },
+      "mutated_instance_sha256": "04f5c245fbeef0ff100f6ae674349642f7097f5e4d7396f1d6ec83c281aa359d",
+      "mutation_representation": "RFC6902_PATCH",
+      "ordinal": 248,
+      "patch_identity": {
+        "byte_count": 452,
+        "sha256": "257dc0c92f6c15c62924c8729a09571300a3fcfbb8fb2e3aa3c6155d2c627b70"
+      },
+      "required_disposition": "REFUSE_NON_N17_ATOMIC_CASE_CONTINUATION_CONTEXT",
+      "rfc6902_patch": [
+        {
+          "op": "add",
+          "path": "/atomic_case_continuation_context",
+          "value": {
+            "study_id": "SD-06",
+            "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+            "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+            "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+            "continuation_requested": true,
+            "base_atomic_case_complete": true,
+            "mutation_sets_atomic_case_complete": false
+          }
+        }
+      ],
+      "rfc6902_patch_or_full_instance": [
+        {
+          "op": "add",
+          "path": "/atomic_case_continuation_context",
+          "value": {
+            "study_id": "SD-06",
+            "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+            "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+            "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+            "continuation_requested": true,
+            "base_atomic_case_complete": true,
+            "mutation_sets_atomic_case_complete": false
+          }
+        }
+      ],
+      "semantic_rule_id": null,
+      "source_case_pointer": "/schema_replay_rule/non_n17_context_prohibition",
+      "source_path": "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
+      "target_definition": "refusal_ledger_row",
+      "target_schema_path": "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
+      "validation_layer": "JSON_SCHEMA"
     }
   ],
   "required_authority_operation_counts": {
@@ -30107,8 +30210,8 @@
     "trajectory_execution_count": 0,
     "transform_execution_count": 0
   },
-  "required_negative_case_count": 137,
-  "required_positive_check_count": 159,
+  "required_negative_case_count": 138,
+  "required_positive_check_count": 161,
   "schema_profile": {
     "definition_count": 25,
     "format_is_annotation_only": true,
@@ -30192,12 +30295,12 @@
         "base_fixture_id": "continuation-n17-complete-atomic-case-boundary",
         "base_fixture_source_pointer": "/refusal_base_fixtures/118",
         "base_canonical_identity": {
-          "byte_count": 4233,
-          "sha256": "2778c9b29480c9ade3f62909eb2d43fc4b6d539e698a93e24b9d24bbb4397d8e"
+          "byte_count": 4200,
+          "sha256": "76fa23b16d61db7b35c9eba13be86f8b243da86de09e669752f4b7e9157a8484"
         },
         "mutated_canonical_identity": {
-          "byte_count": 4234,
-          "sha256": "9da878a09cda865808c7266f593793eee0fafb8a268f4b66e76bbee883f4c9e3"
+          "byte_count": 4201,
+          "sha256": "4501c1e3766455af6a53abf42753a2bfb3ec3394a6d2cfcb383475ff8560c284"
         },
         "patch_identity": {
           "byte_count": 63,
@@ -30210,6 +30313,15 @@
         "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
         "continuation_requested": true,
         "base_atomic_case_complete": true,
+        "process_allocation_preimage_field_count": 4,
+        "process_allocation_digest": "a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a",
+        "attempt_binding_preimage_field_count": 12,
+        "attempt_binding_digest": "0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec",
+        "attempt_identity_preimage_field_count": 5,
+        "attempt_id": "cc255ec085c6be703dd48c59a5d7ed0ef80aad5ea7d09900347b8d372d5371b9",
+        "ordinal_zero_incoming_checkpoint_identity": null,
+        "base_passes_every_inherited_continuation_relation": true,
+        "mutated_passes_every_inherited_continuation_relation": true,
         "exact_patch": [
           {
             "op": "replace",
@@ -30222,12 +30334,48 @@
         "base_and_mutated_identity_equality": "REFUSE"
       }
     },
+    "non_n17_context_prohibition": {
+      "negative_case_id": "SE-RC-CONTEXT-N01",
+      "ordinal": 248,
+      "base_fixture_id": "reconciliation-non-n17-refusal-ledger-row",
+      "base_fixture_source_pointer": "/refusal_base_fixtures/119",
+      "base_canonical_identity": {
+        "byte_count": 864,
+        "sha256": "b45d7c5b75e7ddd6c57b41a478de032b2a31990e5903b6212088af39eda8604e"
+      },
+      "exact_patch": [
+        {
+          "op": "add",
+          "path": "/atomic_case_continuation_context",
+          "value": {
+            "study_id": "SD-06",
+            "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+            "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+            "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+            "continuation_requested": true,
+            "base_atomic_case_complete": true,
+            "mutation_sets_atomic_case_complete": false
+          }
+        }
+      ],
+      "patch_identity": {
+        "byte_count": 452,
+        "sha256": "257dc0c92f6c15c62924c8729a09571300a3fcfbb8fb2e3aa3c6155d2c627b70"
+      },
+      "mutated_canonical_identity": {
+        "byte_count": 1286,
+        "sha256": "04f5c245fbeef0ff100f6ae674349642f7097f5e4d7396f1d6ec83c281aa359d"
+      },
+      "schema_rule": "atomic_case_continuation_context is required for CONT-SCHEMA-N17 and its non-null closed object is structurally incompatible with the else branch for every other case_id",
+      "required_structural_disposition": "REFUSE_NON_N17_ATOMIC_CASE_CONTINUATION_CONTEXT"
+    },
     "each_designated_semantic_case_must_pass_structure_then_fail_its_named_relation": true,
     "every_exact_patch_applied_to_its_named_complete_base_fixture": true,
     "every_fixture_canonical_identity_recorded": true,
     "every_fixture_loaded_from_committed_bytes": true,
     "generic_empty_object_substitution": "FORBIDDEN",
-    "negative_order": "sixteen Stage D, thirty-five continuation, twenty-four Stage E, one hundred fifty dynamic-growth exact patches, twenty-two assertion/applicator cases, then one comment annotation non-reliance case",
+    "negative_order": "sixteen Stage D, thirty-five continuation, twenty-four Stage E, one hundred fifty dynamic-growth exact patches, twenty-two assertion/applicator cases, one comment annotation non-reliance case, then one reconciliation-owned non-N17 context-prohibition case",
     "one_missing_or_duplicate_ledger_row": "REFUSE",
     "positive_order": "four Stage D objects, two continuation objects, eleven reconciliation-owned Stage E v1 fixtures, then forty-four dynamic-growth fixtures",
     "positive_registry_required": true,
@@ -30243,9 +30391,9 @@
     },
     "positive_total": 61,
     "purpose_metadata_keys_excluded": 2,
-    "refusal_base_fixture_total": 119,
+    "refusal_base_fixture_total": 120,
     "refusal_registry_required": true,
-    "refusal_total": 248,
+    "refusal_total": 249,
     "representative_subset": "FORBIDDEN"
   },
   "schema_replay_sources": [

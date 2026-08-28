@@ -251,7 +251,7 @@
         "ordinal": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 247
+          "maximum": 248
         },
         "case_id": {
           "type": "string",
@@ -358,6 +358,13 @@
               },
               "semantic_rule_id": {
                 "const": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "atomic_case_continuation_context": {
+                "type": "null"
               }
             }
           }
@@ -524,14 +531,14 @@
           "items": {
             "$ref": "#/$defs/refusal_ledger_row"
           },
-          "minItems": 248,
-          "maxItems": 248
+          "minItems": 249,
+          "maxItems": 249
         },
         "accepted_fixture_count": {
           "const": 61
         },
         "refusal_count": {
-          "const": 248
+          "const": 249
         },
         "mismatch_count": {
           "const": 0

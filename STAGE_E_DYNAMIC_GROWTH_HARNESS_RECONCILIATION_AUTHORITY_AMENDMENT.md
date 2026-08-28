@@ -62,7 +62,7 @@ closure is unchanged. Its `scripts/validate_stage_e_harness.py` rule contains
 the rejected provisional literals “63 fixtures” and “247 exact refusal cases.”
 Those two count literals are explicitly non-operative and are prospectively
 superseded, only for that one rule, by the mechanically executable 61-fixture
-and 248-refusal registries in this amendment, contract, schema and validation
+and 249-refusal registries in this amendment, contract, schema and validation
 contract. The path, no-substitution, no-count-only and complete-execution
 requirements in that rule remain binding. Treating 63/247 as executable
 counts, or changing any other manifest byte or meaning, refuses.
@@ -116,17 +116,19 @@ evidence schema. The assertion/applicator carrier resolves to the closed
 the closed `comment_nonreliance_pair` definition in that same schema. A
 missing, ambiguous, synthetic, or implementation-invented target refuses.
 
-The refusal ledger contains exactly 248 applied cases:
+The refusal ledger contains exactly 249 applied cases:
 
 - sixteen accepted Stage D negatives;
 - thirty-five accepted continuation negatives;
 - twenty-four accepted Stage E negatives;
 - one hundred fifty accepted dynamic-growth exact patches;
 - twenty-two accepted assertion/applicator keyword mutations;
-- one `$comment` annotation/non-reliance mutation.
+- one `$comment` annotation/non-reliance mutation; and
+- one reconciliation-owned non-N17 context-prohibition mutation.
 
-For each case the validator must use the committed 248-row refusal registry
-and its exact 119 complete base fixtures, including the dedicated N17 base.
+For each case the validator must use the committed 249-row refusal registry
+and its exact 120 complete base fixtures, including the dedicated N17 base and
+the non-N17 refusal-ledger-row base.
 Each row freezes case ID, source case pointer, named complete base fixture,
 target definition, exact RFC-6902 patch or complete mutated instance, patch
 identity, mutated-instance identity, structural-validity expectation,
@@ -153,12 +155,37 @@ complete direct Boolean Möbius oracle case
 `SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001`, `atomic_case_complete=true`, and
 continuation requested. Its sole RFC-6902 operation replaces
 `/atomic_case_complete` with `false`. The base and mutated canonical
-identities must differ; the base must pass the accepted schema and the named
-atomic-boundary relation, while the mutated record must remain structurally
-valid and fail `REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION`. Reusing an already
-partial base, applying a no-op, changing the operation or route, or omitting
-the completed/next-absent case identities is a refusal. This is a fixture-only
-semantic transition and carries no scientific or outcome evidence.
+identities must differ. Before that operation, the validator reconstructs the
+exact four-field `process_allocation/v2` preimage and requires its canonical
+digest `a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a`
+to equal `allocation_sha256` and both process-allocation identity digest
+fields. It then reconstructs the exact twelve-field `attempt_binding/v2`
+preimage, including a null ordinal-zero incoming checkpoint, and requires its
+canonical digest `0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec`
+to equal `binding_sha256` and both attempt-binding identity digest fields.
+Finally it reconstructs the exact five-field attempt-identity preimage and
+requires `attempt_id` to equal
+`cc255ec085c6be703dd48c59a5d7ed0ef80aad5ea7d09900347b8d372d5371b9`.
+The embedded and outer campaign, scientific-run, ordinal, incoming-checkpoint,
+binding and singular policy-receipt links must agree; worker-count/order and
+process uniqueness must pass; the clean-continuation terminal constraints must
+pass. The base must therefore pass every inherited continuation relation and
+the named atomic-boundary relation. The mutated record must pass the schema
+and every same inherited relation, failing only
+`REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION`. Reusing an already partial or
+identity-invalid base, applying a no-op, changing the operation or route, or
+omitting the completed/next-absent case identities is a refusal. This is a
+fixture-only semantic transition and carries no scientific or outcome
+evidence.
+
+`atomic_case_continuation_context` is admitted if and only if `case_id` is
+exactly `CONT-SCHEMA-N17`. The reconciliation schema requires it in that row
+and, in the `else` branch, makes the declared object incompatible with the
+required null type so every non-N17 occurrence refuses. The final
+reconciliation-owned negative starts from one complete non-N17
+`refusal_ledger_row`, adds the exact N17 context as its sole RFC-6902
+operation, and must fail structurally. A validator that merely checks N17
+presence without proving non-N17 prohibition is not a pass.
 
 `SE-KEYWORD-N23-$comment` is a paired annotation-nonreliance control, not an
 ordinary type error. The same integer `1` is validated under the exact schema

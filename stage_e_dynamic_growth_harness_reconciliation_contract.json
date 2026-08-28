@@ -80,7 +80,7 @@
       "247 exact refusal cases"
     ],
     "operative_fixture_count": 61,
-    "operative_refusal_count": 248,
+    "operative_refusal_count": 249,
     "supersession_scope": "ONLY_THE_TWO_COUNT_LITERALS_IN_THE_NAMED_PATH_RULE",
     "all_other_path_scope_and_no_substitution_rules_remain_binding": true,
     "using_rejected_literals_or_changing_any_other_manifest_meaning": "REFUSE"
@@ -182,15 +182,16 @@
       "dynamic_growth_exact_patches": 150,
       "assertion_and_applicator_mutations": 22,
       "annotation_non_reliance_mutations": 1,
-      "total": 248
+      "reconciliation_context_prohibition_mutations": 1,
+      "total": 249
     },
     "dynamic_growth_patch_split": {
       "json_schema": 116,
       "semantic_relation": 34
     },
     "positive_ledger_row_count": 61,
-    "refusal_ledger_row_count": 248,
-    "refusal_base_fixture_count": 119,
+    "refusal_ledger_row_count": 249,
+    "refusal_base_fixture_count": 120,
     "positive_fixture_registry_fields": [
       "ordinal",
       "fixture_id",
@@ -285,9 +286,56 @@
         ],
         "mutation_sets_atomic_case_complete": false,
         "base_and_mutated_canonical_identities_must_differ": true,
-        "base_must_pass_schema_and_named_semantic_relation": true,
-        "mutated_must_pass_schema_then_fail_only_named_semantic_relation": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
+        "process_allocation_preimage_fields": [
+          "worker_count",
+          "ordered_worker_allocations",
+          "scheduler_allocation_identity",
+          "policy_conformance_receipt_identity"
+        ],
+        "process_allocation_digest": "a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a",
+        "attempt_binding_preimage_fields": [
+          "campaign_id",
+          "scientific_run_id",
+          "campaign_execution_binding_identity",
+          "attempt_ordinal",
+          "incoming_checkpoint_identity",
+          "parallelization_boundary_identity",
+          "worker_allocation_policy_identity",
+          "storage_location_identity",
+          "durability_policy_identity",
+          "restart_policy_identity",
+          "process_allocation_identity",
+          "policy_conformance_receipt_identity"
+        ],
+        "attempt_binding_digest": "0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec",
+        "attempt_identity_preimage_fields": [
+          "campaign_id",
+          "scientific_run_id",
+          "attempt_ordinal",
+          "incoming_checkpoint_identity",
+          "attempt_binding_identity"
+        ],
+        "attempt_id": "cc255ec085c6be703dd48c59a5d7ed0ef80aad5ea7d09900347b8d372d5371b9",
+        "ordinal_zero_incoming_checkpoint_identity": null,
+        "base_required_inherited_relations": [
+          "outer and embedded campaign_id, scientific_run_id, attempt_ordinal and incoming_checkpoint_identity equality",
+          "worker count/order and unique process identity/index closure",
+          "singular policy-conformance receipt equality",
+          "process-allocation digest equals allocation_sha256 and both process-allocation identity digest fields",
+          "attempt-binding digest equals binding_sha256 and both attempt-binding identity digest fields",
+          "attempt_id equals the canonical five-field attempt-identity digest",
+          "clean continuation terminal state, null scientific disposition, continuation receipt, identity checks and watchdogs"
+        ],
+        "base_must_pass_schema_and_every_inherited_and_named_semantic_relation": true,
+        "mutated_must_pass_schema_and_every_inherited_relation_then_fail_only_named_semantic_relation": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION",
         "scientific_or_outcome_evidence": "NONE_NON_EVIDENCE_FIXTURE_ONLY"
+      },
+      "non_n17_context_prohibition": {
+        "schema_rule": "the N17 if branch requires atomic_case_continuation_context and the else branch makes that object incompatible with type null for every other case_id",
+        "negative_case_id": "SE-RC-CONTEXT-N01",
+        "base_fixture_id": "reconciliation-non-n17-refusal-ledger-row",
+        "exact_patch_operation": "add /atomic_case_continuation_context with the exact N17 context object",
+        "required_structural_disposition": "REFUSE_NON_N17_ATOMIC_CASE_CONTINUATION_CONTEXT"
       }
     },
     "positive_target_resolution": {
