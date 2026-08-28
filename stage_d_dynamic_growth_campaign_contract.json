@@ -1,0 +1,405 @@
+{
+  "authority_id": "EBU-STAGE-D-DYNAMIC-GROWTH-CAMPAIGN-AUTHORITY-v1",
+  "authority_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_ADDITIVE_AUTHORITY_ONLY",
+  "completion_marker": "STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_COMPLETE",
+  "accepted_base": {
+    "commit": "5a66c674a3a9a23861ac11b986754b2022e277dc",
+    "tree": "ee38ece14a945ddc8d4108f54ff2b813360c8c58",
+    "live_target_ref": "refs/heads/framework-v0.1",
+    "main_commit": "660d6e5a56cb096fe6d1e4d202f592155d982c79",
+    "released_alpha_commit": "fb9ae7b6dae14550a702e060600132faec539eca",
+    "signed_tag_object": "b140d4a31f60316cd23058305ae17f4698de86bc"
+  },
+  "candidate_files": [
+    "STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_AMENDMENT.md",
+    "stage_d_dynamic_growth_campaign_contract.json",
+    "stage_d_dynamic_growth_campaign_evidence_schema.json",
+    "stage_d_dynamic_growth_campaign_predecessor_manifest.json",
+    "stage_d_dynamic_growth_campaign_validation_contract.json"
+  ],
+  "candidate_file_count": 5,
+  "preservation_rule": "exactly five additions; every accepted and unrelated path remains byte-identical",
+  "study_registry_binding": {
+    "accepted_study_count": 14,
+    "accepted_order": ["SD-01","SD-02","SD-03","SD-04","SD-05","SD-06","SD-07","SD-08","SD-09","SD-10","SD-11","SD-12","SD-13","SD-14"],
+    "nested_campaign_id": "SD-01-GROWTH-v1",
+    "parent_study_id": "SD-01",
+    "execution_position": "after accepted fixed-topology SD-01 cells and applicable Stage E conformance; before SD-02",
+    "scientific_outcome_dependencies": [],
+    "authority_and_conformance_dependencies": ["SD-01","SD-06","SD-07","SD-08","SD-09","MOBIUS-EXACT-01","DAG-EXACT-01","CANONICAL-CACHE-01","accepted completion-oriented continuation authority"]
+  },
+  "registered_question": "For the exact finite growing-system domain, do incremental structural expansion and certified canonical-motif reuse reproduce the complete accepted scientific output of full reconstruction while reducing recomputation under declared locality, canonical-equivalence, and boundary-invariance conditions, and how do viability, service, reserves, recovery, collapse, conservation, and correction accounting behave while population, resource capacity, demand, and structure expand?",
+  "evidence_boundary": {
+    "target_level": 5,
+    "stage_e_classes": ["MATHEMATICAL_DERIVATION_CHECK","STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST","NUMERICAL_VERIFICATION"],
+    "stage_f_class": "REGISTERED_SCIENTIFIC_SIMULATION",
+    "interpretation_level": 7,
+    "nonclaims": ["constant computation","universal scalability","universal topology","universal Fibonacci law","empirical population or ecology","physical construction or activation completion","optimality","institutional prescription"]
+  },
+  "user_requirement_ids": ["DG-USER-01","DG-USER-02","DG-USER-03","DG-USER-04","DG-USER-05","DG-USER-06","DG-USER-07","DG-USER-08","DG-USER-09","DG-USER-10","DG-USER-11","DG-USER-12","DG-USER-13"],
+  "user_requirements": {
+    "DG-USER-01": "couple population, resource, and demand trajectories",
+    "DG-USER-02": "incrementally expand the declared dependency hypergraph and feasible poset",
+    "DG-USER-03": "recognize canonical motifs and reuse only certified lower-order calculations",
+    "DG-USER-04": "locally invalidate and propagate upward when a reused lower-level interaction value changes",
+    "DG-USER-05": "test long-run viability and homeostasis during expansion",
+    "DG-USER-06": "compare scientific and computational outputs against full reconstruction",
+    "DG-USER-07": "register linear, exponential, logistic-with-declared-cap, pulsed-seasonal, shock, and adversarial demand; logistic is a scenario, not a population law",
+    "DG-USER-08": "include full rebuild, incremental without reuse, certified reuse, wrong equivalence, random nonrecursive, and broad-reconfiguration controls",
+    "DG-USER-09": "measure viability, service, reserves, recovery or collapse, conservation, corrections, time, memory, evaluations, reuse, invalidation, storage, and continuation",
+    "DG-USER-10": "claim reduced recomputation only conditionally with exact full-rebuild scientific-output agreement; never claim constant computation",
+    "DG-USER-11": "propagate invalidation across certified boundaries or changed external interactions and never reuse stale values",
+    "DG-USER-12": "treat Fibonacci-like growth as one conditional benchmark and phyllotaxis only as motivation, compared with non-Fibonacci recursive and random or adversarial structures",
+    "DG-USER-13": "transport an exposed recursive coefficient only through a role-preserving map and typed authority-supplied or derived scaling operator; keep the exact residual visible, bind map rule factor units query residual dependency and invalidation identities, and directly recompute every non-scalable coordinate"
+  },
+  "mathematical_control_ids": ["DG-MATH-01","DG-MATH-02","DG-MATH-03","DG-MATH-04","DG-MATH-05","DG-MATH-06","DG-MATH-07","DG-MATH-08","DG-MATH-09"],
+  "mathematical_controls": {
+    "DG-MATH-01": "raw two-child Boolean Möbius surplus identity I_n({x,y})=J_n under one frozen protocol and nonzero E(empty) support",
+    "DG-MATH-02": "inverse reconstruction R_(n+1)=R_n+R_(n-1)+J_n and forced Fibonacci-kernel projection",
+    "DG-MATH-03": "Lucas scaling only for compatible bases and no population or universal inference",
+    "DG-MATH-04": "exact omitted-interaction error and algebraic correction propagation, never physical-wave or causal language",
+    "DG-MATH-05": "declared feasible-poset Möbius, zeta, and correction identities without invented infeasible Boolean values",
+    "DG-MATH-06": "conditional Fibonacci-capacity level benchmark separated from population law and homeostasis",
+    "DG-MATH-07": "conditional O(log N) recursive-summary corollary separated from physical construction, storage, data collection, coefficient acquisition, boundary certification, and exponential primitive all-subset reconstruction",
+    "DG-MATH-08": "incremental topology-extension theorem preserves an old coefficient exactly only when every old subset value in its defining domain is unchanged, with complete upward-cone and dependency-alias invalidation otherwise",
+    "DG-MATH-09": "role-preserving recursive coefficient transport satisfies K_(n+1)(iota_n S)=I_(n+1)(iota_n S)-lambda_(n,S)I_n(S) and delta I_(n+1)=lambda delta I_n+delta K; zero and nonzero residuals remain explicit and no factor is inferred automatically"
+  },
+  "external_conceptual_input": {
+    "name": "EBU_RECURSIVE_MOBIUS_GROWTH_THEOREM_AND_STUDY_BRIDGE.md",
+    "bytes": 21524,
+    "sha256": "26a4581d9270cdcb1414bfdfe8cc5b3ced632cbc78b214d6fe72df955ccab002",
+    "status": "EXTERNAL_CONCEPTUAL_INPUT_NOT_ACCEPTED_REPOSITORY_AUTHORITY_OR_SCIENTIFIC_EVIDENCE",
+    "repository_predecessor_row": false
+  },
+  "future_book_supporting_reference": {
+    "citation": "Swinton et al., Novel Fibonacci and non-Fibonacci structure in the sunflower, Royal Society Open Science (2016)",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4892450/",
+    "role": "brief accessible future-book example containing Fibonacci and non-Fibonacci observations and discouraging universal-law overclaiming",
+    "programme_role": "NONE",
+    "authority_role": "NONE",
+    "empirical_basis_for_theorem": false,
+    "test_design_role": "NONE",
+    "nonclaims": ["programme source","authority input","empirical basis for EBU theorem","reason to alter test design","Fibonacci universality","Fibonacci optimality","population law","EBU result","authority for topology selection"]
+  },
+  "time_and_growth": {
+    "horizon_ticks": 8192,
+    "tick_range": [0,8191],
+    "expansion_ticks": [256,512,768,1024,1280,1536,1792,2048,2304,2560,2816,3072,3328,3584,3840,4096],
+    "expansion_epoch_count": 16,
+    "population_rule": "e(t)=min(16,floor(t/256)); P_t=16+3*e(t)",
+    "population_initial": 16,
+    "population_final": 64,
+    "resource_capacity_rule": "K_t=4*P_t",
+    "reserve_rule": "R_t=P_t",
+    "initial_resource_stock": 48,
+    "regeneration_rule": "g_t=(1/8)*x_t*(1-x_t/K_t)",
+    "stock_transition": "x_pre=x_t+g_t-boundary_shock_t; x_(t+1)=x_pre-u_t",
+    "boundary_shock_rule": "boundary_shock_t=0 for every tick; SHOCKS-v1 is demand stress, not physical stock removal",
+    "structural_activation_rule": "the declared logical dependency topology activates exactly at each expansion tick; physical construction and activation delay or cost are outside this nested model, no physical-completion claim is permitted, and accepted SD-10 and SD-14 delay programmes are not superseded",
+    "numerical_policy": "NUMERICAL-POLICY-01",
+    "no_growth_inflow_rule": "population, K_t, topology, delivery capacity, and computation reuse never add resource stock"
+  },
+  "demand_processes": [
+    {"id":"FIXED-v1","rule":"q_t=1/64"},
+    {"id":"LINEAR-v1","rule":"q_t=1/64+t/(64*8192)"},
+    {"id":"EXPONENTIAL-v1","rule":"q_0=1/64; q_(t+1)=q_t*(1+1/8192)"},
+    {"id":"LOGISTIC-K1_16-v1","rule":"q_0=1/64; K_q=1/16; r_q=1/1024; q_(t+1)=q_t+r_q*q_t*(1-q_t/K_q)","interpretation":"scenario only; not a population law"},
+    {"id":"PULSED-SEASONAL-v1","rule":"q_t=1/32 iff t mod 512 in 0..63 else 1/64"},
+    {"id":"SHOCKS-v1","rule":"q_t=3/64 on 2048..2175,4096..4351,6144..6271 else 1/64"},
+    {"id":"ADVERSARIAL-PHASE-v1","rule":"greatest of q_t=1/16 when t mod 256 in 192..255, q_t=5/64 on 2560..2623 or 5120..5183, and q_t=1/32 otherwise"},
+    {"id":"DECLINING-MIGRATION-v1","rule":"q_t=max(1/128,1/32-t/(32*8192))","interpretation":"declining-demand control only; population trajectory remains separately frozen"}
+  ],
+  "demand_rule": "D_t=P_t*q_t",
+  "topology_model": {
+    "initial_vertices": 16,
+    "initial_topology": "ordered path v_0->v_1->...->v_15 with v_15 the initial anchor",
+    "vertices_added_per_epoch": 3,
+    "final_vertices": 64,
+    "maximum_vertices": 64,
+    "maximum_edges_and_hyperedges": 1024,
+    "maximum_hyperedge_order": 4,
+    "maximum_dependency_depth": 64,
+    "acyclicity_rule": "all sources have lower canonical IDs than the target",
+    "feasible_poset_rule": "exact reachability order of the sealed acyclic dependency declaration",
+    "motif_A": "ordered path from prior anchor through three new vertices",
+    "motif_B": "two order-2 anchor edges to the first two new vertices and one order-3 hyperedge from those vertices to the third",
+    "coefficient_rules": {"vertex":"1/16","order_2":"1/1024","order_3":"1/2048","order_4":"1/4096"},
+    "delivery_capacity_rule": "reduced-rational sum of all active coefficients after scheduled corrections",
+    "delivery_capacity_is_not_stock": true
+  },
+  "topology_instances": [
+    {"id":"FIBONACCI-CONDITIONAL-v1","count":1,"seed":"NONE","rule":"first 16 symbols of fixed point A->AB,B->A from A","nonclaim":"not universal and not optimal"},
+    {"id":"THUE-MORSE-NONFIB-v1","count":1,"seed":"NONE","rule":"first 16 symbols of fixed point A->AB,B->BA from A"},
+    {"id":"HASHED-NONRECURSIVE-v1","count":4,"seeds":[0,1,2,3],"rule":"A iff first SHA-256 byte of UTF-8 EBU-SD01-GROWTH-TOPOLOGY-v1|seed|epoch is even; otherwise B","reuse_presumption":"NONE"},
+    {"id":"BROAD-RECONFIGURATION-v1","count":1,"seed":"NONE","rule":"Fibonacci attachments; at epoch 8 the third new vertex is the aggregation vertex and receives exact order-2 edges from the initial terminal plus all seven earlier motif terminals; every existing occurrence boundary identity changes","required_invalidation":"complete affected closure before recertification"}
+  ],
+  "scheduled_corrections": [
+    {"tick":2560,"kind":"LOCAL_COEFFICIENT_CORRECTION","target":"third B occurrence order-3 coefficient","before":"1/2048","after":"3/4096","required_action":"complete upward dependency and alias invalidation"},
+    {"tick":5120,"kind":"LOCAL_LABEL_VERSION_CORRECTION","target":"newest occurrence","coefficient_change":false,"required_action":"complete upward dependency and alias invalidation"}
+  ],
+  "policies": [
+    {"id":"UNPROTECTED-v1","rule":"u_t=min(D_t,C_t,max(0,x_pre))"},
+    {"id":"RESERVE-ROBUST-v1","rule":"greatest capacity-admissible member of {0,D/4,D/2,3D/4,D} leaving current reserve feasibility and nonempty next-tick menus under the declared q_(t+1) and stress max(5/64,q_(t+1)) branches"}
+  ],
+  "terminal_lookahead_rule": "at scientific tick 8191 evaluate deterministic drivers at tick 8192 only to construct declared and stress next-branch menus; create no tick-8192 transition service or scientific observation",
+  "reconstruction_strategies": [
+    {"id":"FULL-REBUILD-v1","rule":"reconstruct every active coefficient, occurrence, boundary certificate, and delivery capacity at tick 0 and every expansion/correction event"},
+    {"id":"INCREMENTAL-NO-REUSE-v1","rule":"increment topology and recompute the complete directly affected closure without canonical-equivalence reuse"},
+    {"id":"CERTIFIED-MOTIF-REUSE-v1","rule":"reuse only with accepted A1-A8, complete key, equivalence, boundary, dependency, alias, correction epoch, numerical, authority, code, artifact, and environment identities"}
+  ],
+  "wrong_equivalence_control": {
+    "id": "WRONG-A-EQUALS-B-v1",
+    "mutation": "assign A and B one canonical identity while retaining distinct ordered dependency and boundary declarations",
+    "required_disposition": "REFUSED_BEFORE_TRAJECTORY",
+    "scientific_evidence_value": "NONE"
+  },
+  "registered_counts": {
+    "demand_processes": 8,
+    "topology_instances": 7,
+    "policies": 2,
+    "valid_strategies": 3,
+    "scientific_runs": 336,
+    "matched_strategy_triplets": 112,
+    "wrong_equivalence_refusal_fixtures": 56,
+    "wrong_equivalence_trajectories": 0,
+    "valid_scalar_transport_rows": 90,
+    "non_scalable_direct_rows": 15,
+    "transport_correction_cases": 180,
+    "misscaling_refusal_fixtures": 150,
+    "misscaled_reuse_trajectories": 0
+  },
+  "stochastic_policy": {
+    "rule_identity": "FORBIDDEN",
+    "run_seed": 0,
+    "permitted_stream_ids": [],
+    "next_counter_tuples": [],
+    "unknown_draw_or_stream_disposition": "REFUSE"
+  },
+  "scientific_output_projection_fields": ["population","resource_capacity","protected_reserve","resource_pre","resource_post","regeneration","boundary_exchange","demand","delivery_capacity","served","unmet","topology_version_identity","coefficient_projection_identity","selected_action","current_menu_identity","declared_next_menu_identity","stress_next_menu_identity","viability","homeostasis","recovery","collapse","conservation_residual","correction_projection_identity","scientific_disposition"],
+  "excluded_comparison_fields": ["algorithm_identity","wall_time","peak_memory","operation_counts","cache_events","provenance_receipts"],
+  "equivalence_rule": "all three valid strategy canonical scientific-output projections are byte-identical within each matched triplet",
+  "efficiency_rule": {
+    "eligible_topologies": ["FIBONACCI-CONDITIONAL-v1","THUE-MORSE-NONFIB-v1"],
+    "required_for_positive_reuse_efficiency": "CERTIFIED recomputed coefficients < INCREMENTAL recomputed coefficients < FULL recomputed coefficients; at least one certified hit; zero stale hits; exact invalidation receipts",
+    "random_topology_presumption": "NONE",
+    "broad_event_rule": "recompute the complete affected closure; no local-reuse claim",
+    "constant_computation_claim": "FORBIDDEN"
+  },
+  "accepted_complete_cache_key_fields": ["canonical_topology_id","motif_version","occurrence_version","composition_version","boundary_summary_version","initial_augmented_state_digest","admissible_history_digest","query_identity","horizon","units_semantics","boundary_semantics","removal_semantics","feasibility_semantics","numerical_policy_identity","stochastic_rule_identity","run_seed","permitted_stream_ids_digest","next_counter_tuple_per_stream_digest","uncertainty_policy_identity","framework_identity","authority_identity","protocol_identity","configuration_identity","code_identity","dependency_identity","environment_identity","evidence_identity","alias_closure_digest","correction_invalidation_epoch"],
+  "accepted_complete_cache_key_field_count": 29,
+  "scientific_predicates": {
+    "viability_unprotected": "0<=x_t<=K_t at every pre/post state",
+    "viability_reserve_robust": "R_t<=x_t<=K_t at every pre/post state",
+    "service_fraction": "1 if D_t=0 else u_t/D_t",
+    "growth_homeostasis": "each rolling 256-tick window ending after tick 1024 has at least 240 viable ticks and at least 240 ticks with service fraction >=19/20; reserve margin never negative where claimed; final 1000 ticks all viable and service fraction >=19/20",
+    "recovery": "least tick within 512 ticks after each expansion, shock-window start, or correction followed by 64 consecutive viable ticks with service fraction >=19/20 and nonnegative protected reserve where claimed",
+    "not_recovered": "NOT_RECOVERED_ON_HORIZON",
+    "collapse": "first viability exit or first start of 128 consecutive ticks with service fraction <1/2",
+    "regeneration": "g_t and every external boundary exchange recorded separately",
+    "recursive_feasibility": "current and both next-demand branch menus nonempty and recorded for every positive robust claim"
+  },
+  "accounting": {
+    "class": "GROWING_OPEN_CONTROL_VOLUME_WITH_STRUCTURAL_AND_COMPUTATIONAL_LEDGERS",
+    "ledgers": ["population boundary","resource stock","regeneration","external resource","demand","served","unmet","delivery capacity","reserve margin","topology","sparse coefficients","correction","cache","computation","provenance"],
+    "no_magical_gain": "population, carrying capacity, topology, coefficient, reserve margin, and reuse cannot create resource or service",
+    "no_double_count": "each stock/flow/coefficient/correction/reuse has one owner; internal transfers cancel once; reuse retains one original receipt plus one reuse receipt"
+  },
+  "computational_feasibility": {
+    "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL_WITH_EXACT_SPARSE_STRUCTURAL_ACCOUNTING",
+    "boolean_mobius_boundary": "any exact Boolean subproblem retains O(n*2^n) transform arithmetic plus subset-evaluation cost, O(2^n) storage, n<=18, subsets<=262144, order<=4, and direct-oracle agreement",
+    "full_rebuild_coefficient_evaluation_upper_bound_per_run": 1550,
+    "unprotected_primary_evaluation_upper_bound_per_run": 9742,
+    "robust_primary_evaluation_upper_bound_per_run": 460302,
+    "campaign_primary_evaluation_estimate_upper_bound": 78967392,
+    "transport_direct_value_acquisitions": 210,
+    "transport_scaled_predictions": 90,
+    "transport_residual_reconstructions": 90,
+    "transport_correction_reconstructions": 180,
+    "transport_refusal_preflights": 150,
+    "transport_oracle_arithmetic_and_preflight_total": 720,
+    "measurement_fields": ["active_wall_nanoseconds","process_tree_peak_rss_bytes","transition_evaluations","menu_evaluations","coefficient_evaluations","subset_evaluations","hyperedge_evaluations","canonical_candidates","vertices_inspected","edges_inspected","recomputed_coefficients","reused_coefficients","cache_hits","cache_misses","stale_hits","invalidation_radius","propagation_depth","storage_bytes","trace_bytes","output_bytes","checkpoint_write_nanoseconds","restart_read_nanoseconds"],
+    "hard_limits": {"vertices":64,"edges_and_hyperedges":1024,"hyperedge_order":4,"dependency_depth":64,"horizon_ticks":8192,"scientific_runs":336,"wrong_equivalence_refusal_fixtures":56,"misscaling_refusal_fixtures":150,"total_refusal_fixtures":206,"transport_oracle_arithmetic_and_preflight_total":720,"wall_seconds_per_attempt":14400,"peak_rss_bytes_per_attempt":4294967296,"primary_evaluations_per_attempt_and_run":1200000,"trace_bytes_per_run":5368709120,"logical_output_bytes_per_study":21474836480},
+    "continuation_campaign_envelope": {"maximum_attempts":2688,"cumulative_active_seconds":2592000,"cumulative_primary_evaluations":403200000,"cumulative_physical_write_bytes":85899345920,"logical_output_bytes":21474836480,"maximum_calendar_days":180,"maximum_peak_rss_bytes":4294967296},
+    "checkpoint_cadence_ticks": 256,
+    "resource_excess_disposition": "REFUSED_BEFORE_EXECUTION_OR_COMPUTATIONALLY_INCONCLUSIVE_NOT_A_SCIENTIFIC_OUTCOME",
+    "silent_fallbacks": "FORBIDDEN",
+    "approximation_gate": "SEPARATE_PROSPECTIVE_AUTHORITY_REQUIRED"
+  },
+  "recursive_mobius_surplus_theorem": {
+    "scope": "composition layer only; main EBU equation unchanged",
+    "macro_set_function": {"empty":"E(empty)","x":"E(M_n)","y":"E(M_(n-1))","xy":"E(M_(n+1))"},
+    "raw_pair_coefficient": "I_n({x,y})=e_n({x,y})-e_n({x})-e_n({y})+e_n(empty)=J_n",
+    "surplus_definition": "R_n=E(M_n)-E(empty)",
+    "inverse_reconstruction": "R_(n+1)=R_n+R_(n-1)+J_n",
+    "fibonacci_bases": {"F_0":0,"F_1":1},
+    "forced_projection": "R_n=F_n*R_1+F_(n-1)*R_0+sum_(k=1)^(n-1) F_(n-k)*J_k for n>=1",
+    "homogeneous_case": "J_k=0 gives the homogeneous Fibonacci recurrence for the declared surplus sequence",
+    "lucas_compatible_example": "R_0=2c,R_1=c gives R_n=c*L_n",
+    "lucas_nonclaim": "incompatible initial conditions are not Lucas scaling; neither Fibonacci nor Lucas is inferred from population data or universal",
+    "missing_interaction_error": "error_n=sum_(k=1)^(n-1) F_(n-k)*J_k",
+    "correction_propagation": "delta J_q changes later R_n by F_(n-q)*delta for n>q",
+    "propagation_label": "ALGEBRAIC_DEPENDENCY_PROPAGATION_NOT_PHYSICAL_WAVE_OR_CAUSAL_PROPAGATION"
+  },
+  "recursive_mobius_oracle_domain": {
+    "maximum_level": 16,
+    "macro_levels": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    "baselines": [0,5,-3],
+    "sequence_fixtures": [
+      {"id":"HOMOGENEOUS-FIBONACCI","R_0":0,"R_1":1,"J_rule":"all zero"},
+      {"id":"LUCAS-COMPATIBLE","R_0":6,"R_1":3,"J_rule":"all zero"},
+      {"id":"LUCAS-INCOMPATIBLE","R_0":1,"R_1":1,"J_rule":"all zero"},
+      {"id":"POSITIVE-IMPULSE","R_0":0,"R_1":1,"J_rule":"J_4=2; every other J zero"},
+      {"id":"NEGATIVE-IMPULSE","R_0":0,"R_1":1,"J_rule":"J_4=-2; every other J zero"},
+      {"id":"ALTERNATING","R_0":2,"R_1":-1,"J_rule":"J_k=(-1)^k"}
+    ],
+    "sequence_baseline_instances": 18,
+    "direct_macro_table_count": 270,
+    "required_checks": ["direct raw subset coefficient","I_pair equals J","inverse zeta reconstruction","forced projection","missing-interaction error","correction multiplier","nonzero baseline","positive J","negative J","Lucas compatible","Lucas incompatible"],
+    "negative_controls": ["perturbed recursion at level 8","broken A1-A8 certificate","stale cache","nonrecursive hashed topology"],
+    "full_expanded_comparison_level": 16
+  },
+  "recursive_coefficient_transport_scaling": {
+    "scope": "composition-layer exposed Mobius coefficients only; no change to the main EBU equation",
+    "role_preserving_map": "iota_n maps each declared exposed coordinate S of M_n to the same typed role coordinate iota_n(S) of M_(n+1)",
+    "typed_scaling_operator": "S_(n,S) is supplied by provider domain or model authority or by an accepted mathematical derivation and includes input role output role source units target units query equivalence boundary equivalence and numerical policy",
+    "scalar_prediction": "Ihat_(n+1)(iota_n S)=lambda_(n,S)*I_n(S)",
+    "exact_residual": "K_(n+1)(iota_n S)=I_(n+1)(iota_n S)-lambda_(n,S)*I_n(S)",
+    "zero_residual_meaning": "exact declared scaling only for that coordinate protocol boundary state history units and query",
+    "nonzero_residual_meaning": "new scale-dependent interaction boundary state congestion delay or other declared content that remains visible and is never silently absorbed",
+    "correction_propagation": "delta I_(n+1)(iota_n S)=lambda_(n,S)*delta I_n(S)+delta K_(n+1)(iota_n S)",
+    "scaling_classes": [
+      {"id":"INVARIANT-INTENSIVE","factor":"1","authority_condition":"same typed intensive query and units"},
+      {"id":"OCCURRENCE-EXTENSIVE","factor":"N_(n+1)/N_n","authority_condition":"proved identical per-occurrence contribution and complete additivity"},
+      {"id":"BOUNDARY-EXTENSIVE","factor":"B_(n+1)/B_n","authority_condition":"declared exposed-boundary measure and invariant boundary query"},
+      {"id":"DEGREE-HOMOGENEOUS","factor":"s_n^alpha_S","authority_condition":"separately justified scaling degree and scale variable"},
+      {"id":"SCALE-DEPENDENT-RESIDUAL","factor":"declared typed factor with explicit K","authority_condition":"direct target acquisition and visible residual"},
+      {"id":"NON-SCALABLE-DIRECT","factor":"NONE","authority_condition":"direct recomputation required and scaled reuse forbidden"}
+    ],
+    "fibonacci_occurrence_factor": "for N(M_n)=F_(n+1), lambda_n=F_(n+2)/F_(n+1) approaches phi only for the occurrence-extensive class under its proof obligations",
+    "lucas_occurrence_factor": "for a declared Lucas-compatible occurrence family N_n=L_(n+1), lambda_n=L_(n+2)/L_(n+1) has the analogous ratio limit with different finite-level bases",
+    "universal_factor_inference": "FORBIDDEN",
+    "missing_or_changed_inputs_disposition": "missing transport map factor units query equivalence authority derivation or residual refuses scaled reuse",
+    "cache_key_projection": {
+      "composition_version": ["scaling_operator_identity","scaling_class","provider_or_derivation_identity"],
+      "query_identity": ["transport_map_identity","source_coordinate_identity","target_coordinate_identity","query_equivalence_identity"],
+      "units_semantics": ["source_units_identity","target_units_identity","units_equivalence_identity"],
+      "boundary_semantics": ["boundary_equivalence_identity"],
+      "dependency_identity": ["scaling_rule_identity","scaling_factor_identity","scaling_residual_identity","transport_dependency_projection_identity"],
+      "alias_closure_digest": ["transport_alias_projection_identity"],
+      "correction_invalidation_epoch": ["scaling_rule_factor_map_or_residual_change_epoch"]
+    },
+    "canonical_identity_preimages": {
+      "canonicalization": "UTF-8 canonical JSON with lexicographically sorted object keys compact separators exact array order and SHA-256 lowercase hex; duplicate keys floating values and non-finite values refuse",
+      "transport_map_identity": ["mapping_version","level_n","source_coordinate_identity","target_coordinate_identity","coordinate_role"],
+      "scaling_operator_identity": ["scaling_rule_identity","scaling_class","source_coordinate_identity","target_coordinate_identity","coordinate_role","source_units_identity","target_units_identity","query_equivalence_identity","boundary_equivalence_identity","provider_or_derivation_identity"],
+      "scaling_factor_identity": ["scaling_rule_identity","scaling_class","level_n","coordinate_role","scaling_factor","source_units_identity","target_units_identity","provider_or_derivation_identity"],
+      "scaling_residual_identity": ["level_n","direct_target_coefficient","scaled_prediction","scaling_residual"],
+      "composition_version_projection_identity": ["scaling_operator_identity","scaling_class","provider_or_derivation_identity"],
+      "query_projection_identity": ["transport_map_identity","source_coordinate_identity","target_coordinate_identity","query_equivalence_identity"],
+      "units_projection_identity": ["source_units_identity","target_units_identity","units_equivalence_identity"],
+      "boundary_projection_identity": ["boundary_equivalence_identity"],
+      "dependency_projection_identity": ["scaling_rule_identity","scaling_factor_identity","scaling_residual_identity","transport_dependency_projection_identity"],
+      "alias_projection_identity": ["transport_alias_projection_identity"]
+    },
+    "invalidation_rule": "any changed map rule factor degree units query boundary residual provider authority or derivation invalidates every dependent larger-level coefficient before reuse"
+  },
+  "recursive_coefficient_transport_oracle_domain": {
+    "levels_n": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    "valid_scalar_families": [
+      {"id":"INVARIANT-INTENSIVE-v1","coordinate_role":"service_fraction","units":"dimensionless","I_n":"3/8","lambda":"1","K":"0"},
+      {"id":"FIBONACCI-OCCURRENCE-EXTENSIVE-v1","coordinate_role":"delivered_occurrence_units","units":"service-unit","I_n":"F_(n+1)/16","lambda":"F_(n+2)/F_(n+1)","K":"0"},
+      {"id":"LUCAS-OCCURRENCE-EXTENSIVE-v1","coordinate_role":"lucas_occurrence_units","units":"service-unit","I_n":"L_(n+1)/16","lambda":"L_(n+2)/L_(n+1)","K":"0"},
+      {"id":"BOUNDARY-EXTENSIVE-v1","coordinate_role":"exposed_boundary_load","units":"boundary-load-unit","boundary_measure":"B_n=2*(n+1)","I_n":"B_n/32","lambda":"B_(n+1)/B_n","K":"0"},
+      {"id":"DEGREE-HOMOGENEOUS-v1","coordinate_role":"quadratic_burden","units":"burden-unit","scale":"s_n=(n+2)/(n+1)","degree":2,"I_n":"(n+1)^2/256","lambda":"s_n^2","K":"0"},
+      {"id":"NONZERO-RESIDUAL-v1","coordinate_role":"congestion_interaction","units":"burden-unit","I_n":"n/64","lambda":"1","K":"1/64"}
+    ],
+    "valid_scalar_row_count": 90,
+    "non_scalable_family": {"id":"NON-SCALABLE-DIRECT-v1","coordinate_role":"hashed_boundary_interaction","units":"boundary-load-unit","I_n":"(first_SHA256_byte(UTF-8 EBU-SD01-GROWTH-NONSCALABLE-v1|n) mod 17 minus 8)/64","lambda":"NONE","required_action":"DIRECT_RECOMPUTATION"},
+    "non_scalable_direct_row_count": 15,
+    "correction_pairs": [
+      {"delta_I_n":"2/64","delta_K":"0"},
+      {"delta_I_n":"-3/64","delta_K":"1/128"}
+    ],
+    "correction_case_count": 180,
+    "misscaling_mutations": ["MISSING_TRANSPORT_MAP","MISSING_SCALING_FACTOR","MISSING_UNITS_EQUIVALENCE","MISSING_QUERY_EQUIVALENCE","INVARIANT_MISLABELED_OCCURRENCE","OCCURRENCE_MISLABELED_INVARIANT","BOUNDARY_MISLABELED_OCCURRENCE","WRONG_HOMOGENEOUS_DEGREE","HIDDEN_NONZERO_RESIDUAL","NONSCALABLE_ASSIGNED_FACTOR"],
+    "misscaling_refusal_fixture_count": 150,
+    "misscaled_reuse_trajectory_count": 0,
+    "required_stage_e_checks": ["direct source and target coefficients","role-preserving coordinate map","typed scaling authority or derivation","exact reduced-rational factor","direct versus scaled prediction","explicit exact residual","correction reconstruction","cache-key projection","dependency and alias projection","invalidation receipt"],
+    "required_stage_f_controls": ["invariant","occurrence extensive Fibonacci","occurrence extensive Lucas","boundary scaled","degree homogeneous","nonzero residual","deliberately misscaled","non-scalable direct recomputation"],
+    "evidence_boundary": "Stage E oracle checks are theorem or numerical conformance only; Stage F registered controls do not authorize a universal scaling claim"
+  },
+  "feasible_poset_oracle": {
+    "transform": "I(x)=sum_(y<=x) mu_P(y,x)E(y)",
+    "inverse": "E(x)=sum_(y<=x)I(y)",
+    "correction": "delta I(x)=sum_(q<=x)mu_P(q,x)delta E(q)",
+    "posets": [
+      {"id":"CHAIN-3","elements":["a","b","c"],"covers":[["a","b"],["b","c"]]},
+      {"id":"ANTICHAIN-4","elements":["a","b","c","d"],"covers":[]},
+      {"id":"V-3","elements":["a","b","c"],"covers":[["a","c"],["b","c"]]},
+      {"id":"DIAMOND-4","elements":["a","b","c","d"],"covers":[["a","b"],["a","c"],["b","d"],["c","d"]]}
+    ],
+    "seeds": [0,1,2,3,4,5,6,7],
+    "value_rule": "E_seed(x)=5+(first_SHA256_byte(UTF-8 EBU-SD01-GROWTH-POSET-v1|poset_id|seed|element_id) mod 17)-8",
+    "base_transform_count": 32,
+    "correction_deltas": [2,-3],
+    "one_element_correction_case_count": 224,
+    "infeasible_boolean_extension": "REFUSE"
+  },
+  "conditional_capacity_benchmark": {
+    "id": "FIBONACCI-CAPACITY-BENCHMARK-v1",
+    "per_occurrence_capacity_c": "1/16",
+    "capacity_rule": "C_n=c*F_(n+1)",
+    "reserve_margin_target": "P_t/64",
+    "selected_level": "n_t=min{n in 0..32:C_n>=D_t+P_t/64}",
+    "no_level_disposition": "CAPACITY_LEVEL_NOT_REACHED",
+    "conditional_unbounded_demand_result": "n_t=Theta(log D_t) only under proved per-occurrence/additivity assumptions",
+    "bounded_logistic_result": "after population and logistic demand saturate, selected level eventually saturates",
+    "nonclaims": ["population law","homeostasis proof","capacity prescription","universal Fibonacci topology"]
+  },
+  "recursive_summary_complexity_corollary": {
+    "assumptions": "accepted A1-A8, uniformly bounded-size summary, bounded composition cost",
+    "summary_through_level_n": "O(n)",
+    "expanded_occurrences": "F_(n+1)=Theta(phi^n)",
+    "summary_in_occurrence_count": "O(log N)",
+    "excluded_from_logarithmic_claim": ["physical construction","physical storage","data collection","coefficient acquisition","boundary certification","arbitrary primitive all-subset Mobius reconstruction"],
+    "primitive_boolean_boundary": "exponential O(n*2^n) transform plus subset-evaluation cost and O(2^n) storage"
+  },
+  "incremental_topology_extension_theorem": {
+    "domain_extension": "A_(t+1)=A_t union B_t",
+    "premise": "for old S subseteq A_t, E_(t+1)(T)=E_t(T) for every T subseteq S",
+    "conclusion": "I_(t+1)(S)=I_t(S)",
+    "proof_class": "term-by-term equality of the defining Mobius sums",
+    "reopen_conditions": ["old subset value","boundary","history","feasibility","removal","settlement","authority","numerical policy","external interaction","other result-affecting identity"],
+    "reopen_action": "complete declared Mobius upward cone and dependency-alias invalidation before recomputation or recertification",
+    "cache_nonclaim": "the theorem alone does not authorize reuse without complete A1-A8 and cache-key evidence"
+  },
+  "required_records": ["dynamic_growth_configuration/v1","growth_epoch_manifest/v1","growth_trace_row/v1","growth_reconstruction_comparison/v1","growth_invalidation_receipt/v1","recursive_mobius_surplus_oracle/v1","recursive_coefficient_transport_oracle/v1","coefficient_scaling_refusal_fixture/v1","feasible_poset_mobius_oracle/v1","growth_capacity_benchmark/v1","growth_campaign_summary/v1","wrong_equivalence_fixture/v1","cache_event/v1"],
+  "required_inherited_continuation_records": ["campaign_execution_binding/v2","attempt_binding/v2","attempt_manifest/v2","continuation_checkpoint/v2","run_resource_ledger/v2","campaign_resource_ledger/v2","continuation_receipt/v2"],
+  "falsifiers": ["valid strategy scientific-output mismatch","wrong equivalence accepted","stale hit","incomplete cache key","missing A1-A8 or boundary certificate","invalidation closure omission","broad change treated as local","unreconciled stock/service/coefficient/correction/receipt","resource created by growth or reuse","positive efficiency without strict eligible reduction","constant computation or universal Fibonacci claim","logistic treated as population law","phyllotaxis treated as evidence","raw pair coefficient differs from J","inverse or forced projection mismatch","Lucas label on incompatible bases","wrong omitted-interaction error or correction multiplier","infeasible Boolean value invented for a poset","missing or role-changing coefficient transport map","missing authority-derived scaling rule factor units or query equivalence","wrong scaling class or homogeneous degree","nonzero scaling residual hidden","non-scalable coefficient reused by scaling","wrong scaled correction reconstruction","scaling input change omitted from cache dependency or invalidation","O(log N) extended to excluded physical or primitive-all-subset work","topological compression treated as homeostasis","silent approximation sampling truncation or topology alteration","changed identity or post-outcome protocol","missing immutable evidence"],
+  "book_destinations_after_audited_results": ["Part V growing-system viability","Part VI recursive surplus coefficient transport scaling residuals and conditional motif reuse","Part VII expansion and reconfiguration","Part IX short cross-reference"],
+  "future_stage_boundary": {
+    "stage_e_authority_reconciliation_required": true,
+    "stage_e_implementation_authorized": false,
+    "stage_f_execution_authorized": false,
+    "outcome_inspection_authorized": false,
+    "results_figures_books_authorized": false,
+    "release_publication_authorized": false
+  },
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_execution_count": 0,
+    "gate_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  }
+}
