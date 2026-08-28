@@ -162,19 +162,20 @@ def _authority_lane(source: Path, head_commit: str, head_tree: str) -> dict[str,
     if status:
         raise Refusal("tracked Stage E validation source is dirty")
     predecessor = strict_load(source / "stage_e_scientific_harness_predecessor_manifest.json")
+    predecessor_base = predecessor["accepted_base"]["commit"]
     rows = predecessor["source_rows"]
     if len(rows) != 17 or len({row["path"] for row in rows}) != 17:
         raise Refusal("Stage E predecessor row closure mismatch")
     for row in rows:
         data = subprocess.run(
-            ["git", "-c", f"safe.directory={source}", "show", f"{IMPLEMENTATION_BASE}:{row['path']}"],
+            ["git", "-c", f"safe.directory={source}", "show", f"{predecessor_base}:{row['path']}"],
             cwd=source,
             capture_output=True,
             check=False,
         )
         if data.returncode or len(data.stdout) != row["byte_count"] or sha256_bytes(data.stdout) != row["raw_sha256"]:
             raise Refusal(f"predecessor byte lock mismatch: {row['path']}")
-        fields = _git(source, "ls-tree", IMPLEMENTATION_BASE, "--", row["path"]).split()
+        fields = _git(source, "ls-tree", predecessor_base, "--", row["path"]).split()
         if len(fields) < 4 or fields[0] != row["mode"] or fields[1] != "blob" or fields[2] != row["git_object"]:
             raise Refusal(f"predecessor Git lock mismatch: {row['path']}")
     for path in STAGE_E_AUTHORITY_FILES:
