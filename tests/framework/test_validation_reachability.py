@@ -645,7 +645,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "516d90533c12382b3a9b3cf62e66e897e1144df5704f5b101e1596dbd68506c6"
+TEST_SELF_SEAL = "1de9cfeb23ea35373826b9fc2deacf399c84e314b4bb77a8684428c1effeeb9a"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -4408,7 +4408,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         markers = {
             STAGE_E_RECONCILIATION_AUTHORITY_PATHS[0]: contract["completion_marker"],
             STAGE_E_RECONCILIATION_AUTHORITY_PATHS[1]: contract["completion_marker"],
-            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[2]: schema["completion_marker"],
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[2]: (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_"
+                "EVIDENCE_SCHEMA_COMPLETE"
+            ),
             STAGE_E_RECONCILIATION_AUTHORITY_PATHS[3]: implementation[
                 "completion_marker"
             ],
