@@ -316,6 +316,119 @@ STAGE_D_CONTINUATION_AUTHORITY_CANONICAL_SHA256 = {
 STAGE_D_CONTINUATION_AUTHORITY_SCOPE = STAGE_D_AUTHORITY_SCOPE | frozenset(
     STAGE_D_CONTINUATION_AUTHORITY_PATHS
 )
+STAGE_E_ACCEPTED_BASE_COMMIT = "d68bfb75fd822d2219c803fb3933ca60b54af4e0"
+STAGE_E_ACCEPTED_BASE_TREE = "15a128783388075978f9faa716bae1c8066361c9"
+STAGE_E_AUTHORITY_CANDIDATE = "0b1d58ab089d01901c9f0c384d6a7220593af0d8"
+STAGE_E_AUTHORITY_TARGET = "d3a9994d93f40cd1c0a72ee9322d181f69353024"
+STAGE_E_AUTHORITY_TREE = "b43b48dd2337edf4ef4494956ebfb958d3474161"
+STAGE_E_AUTHORITY_CHAIN = (
+    "3eda3f7be8796685c2edbd81d57df4ae40273d13",
+    "d1ebf9f5e1b94fd792c869316e0bcf2fdfcbadaa",
+    "d611b38c5cef347eb8ab2668ac2c23a185e956c3",
+    "ab57c9d147443ba0a53dc2c6b968f1a094bcdd69",
+    "1512369700e7eb1e40ecb43993cb0af78dc71d9d",
+    "547c2304982bcb45d2db7e74bb5a22ad91f33943",
+    STAGE_E_AUTHORITY_CANDIDATE,
+)
+STAGE_E_AUTHORITY_PATHS = (
+    "STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md",
+    "stage_e_scientific_harness_contract.json",
+    "stage_e_scientific_harness_evidence_schema.json",
+    "stage_e_scientific_harness_implementation_path_manifest.json",
+    "stage_e_scientific_harness_predecessor_manifest.json",
+    "stage_e_scientific_harness_validation_contract.json",
+)
+STAGE_E_AUTHORITY_RAW_SHA256 = {
+    "STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md": (
+        "997fc4d864b8c08f85adba8f4c481ed1f6eaeefe4a8c353b9df253ed221c3da8"
+    ),
+    "stage_e_scientific_harness_contract.json": (
+        "4abbb2e79bb7261a862ec6ab08902adcd43d9a7a0b6dce9141b05f007621f989"
+    ),
+    "stage_e_scientific_harness_evidence_schema.json": (
+        "f473e445416cfb2d5d6f596a85b90c5cd3fdc5dda06e05a2f45d095ccf114aae"
+    ),
+    "stage_e_scientific_harness_implementation_path_manifest.json": (
+        "b2b0e9bd5473815e3222cfc2d319649562a4723430cba0943e3e970c4835bb38"
+    ),
+    "stage_e_scientific_harness_predecessor_manifest.json": (
+        "c065a1270dd36d9e7972ec84ffae917002f9eb0765be4d9812a54876601973a7"
+    ),
+    "stage_e_scientific_harness_validation_contract.json": (
+        "7c8017bfe3af6235654d1f1103b53c195512002f534e85e79a99d2811c4e929d"
+    ),
+}
+STAGE_E_AUTHORITY_CANONICAL_SHA256 = {
+    "stage_e_scientific_harness_contract.json": (
+        "6f68868165145c4354c580ea31aa79e8c539054c96dd2558b872e07fe6048685"
+    ),
+    "stage_e_scientific_harness_evidence_schema.json": (
+        "76bb32fe827de66c445b908990d1b2a3dba9026cc9f09c10189794125de0c0aa"
+    ),
+    "stage_e_scientific_harness_implementation_path_manifest.json": (
+        "5a404f33fefb922eba99ab008faa51c0e5877655fa87fc3a63583878ce2db4e9"
+    ),
+    "stage_e_scientific_harness_predecessor_manifest.json": (
+        "a54d4f56075d058a5f62931ddad68adf6d0020efcec523598c61537bbd3f0aaa"
+    ),
+    "stage_e_scientific_harness_validation_contract.json": (
+        "dfc7a2bc807f5a014db564f408fc86fae4d06e07e8519cee18cd3e575afca71a"
+    ),
+}
+STAGE_E_HARNESS_IMPLEMENTATION_PATHS = (
+    ".github/workflows/tests.yml",
+    "scripts/build_stage_e_harness_zipapp.py",
+    "scripts/validate_stage_e_harness.py",
+    "stage_e_harness/__init__.py",
+    "stage_e_harness/__main__.py",
+    "stage_e_harness/accounting.py",
+    "stage_e_harness/cache.py",
+    "stage_e_harness/canonical.py",
+    "stage_e_harness/checkpoint.py",
+    "stage_e_harness/dag.py",
+    "stage_e_harness/environment.py",
+    "stage_e_harness/execution.py",
+    "stage_e_harness/mobius.py",
+    "stage_e_harness/oracles.py",
+    "stage_e_harness/records.py",
+    "stage_e_harness/registry.py",
+    "stage_e_harness/rng.py",
+    "stage_e_harness/schema.py",
+    "stage_e_harness/adapters/__init__.py",
+    "stage_e_harness/adapters/base.py",
+    "stage_e_harness/adapters/sd01.py",
+    "stage_e_harness/adapters/sd02.py",
+    "stage_e_harness/adapters/sd03.py",
+    "stage_e_harness/adapters/sd04.py",
+    "stage_e_harness/adapters/sd05.py",
+    "stage_e_harness/adapters/sd06.py",
+    "stage_e_harness/adapters/sd07.py",
+    "stage_e_harness/adapters/sd08.py",
+    "stage_e_harness/adapters/sd09.py",
+    "stage_e_harness/adapters/sd10.py",
+    "stage_e_harness/adapters/sd11.py",
+    "stage_e_harness/adapters/sd12.py",
+    "stage_e_harness/adapters/sd13.py",
+    "stage_e_harness/adapters/sd14.py",
+    "tests/stage_e/__init__.py",
+    "tests/stage_e/fixtures/deterministic_empty_checkpoint.json",
+    "tests/stage_e/fixtures/schema_negative_cases.json",
+    "tests/stage_e/fixtures/stochastic_checkpoint.json",
+    "tests/stage_e/test_adapters_and_guards.py",
+    "tests/stage_e/test_authority_bindings.py",
+    "tests/stage_e/test_complexity_evidence.py",
+    "tests/stage_e/test_dag_cache.py",
+    "tests/stage_e/test_environment_isolation.py",
+    "tests/stage_e/test_identity_rng_checkpoint.py",
+    "tests/stage_e/test_mobius_oracles.py",
+    "tests/stage_e/test_schema_records.py",
+)
+STAGE_E_AUTHORITY_SCOPE = STAGE_D_CONTINUATION_AUTHORITY_SCOPE | frozenset(
+    STAGE_E_AUTHORITY_PATHS
+)
+STAGE_E_HARNESS_IMPLEMENTATION_SCOPE = STAGE_E_AUTHORITY_SCOPE | frozenset(
+    STAGE_E_HARNESS_IMPLEMENTATION_PATHS
+)
 CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS = (
     "src/ebu_framework/__init__.py",
     "src/ebu_framework/errors.py",
@@ -325,7 +438,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "3baf507f2871695ed63dfdc9b49e564f6ae4c3994458ffcef96e922862acdd96"
+TEST_SELF_SEAL = "5d9f34052cbf939d384e37139151e4b09df4d1e126d80ae29eb698db7293c3fe"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1242,6 +1355,11 @@ class ValidationReachabilityTests(unittest.TestCase):
             self._audit_stage_d_authority(current_scope)
         if current_scope["stage_d_phase"] == "STAGE_D_CONTINUATION_AUTHORITY_ONLY":
             self._audit_stage_d_continuation_authority(current_scope)
+        if current_scope["stage_e_phase"] in (
+            "STAGE_E_HARNESS_AUTHORITY_ONLY",
+            "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION",
+        ):
+            self._audit_stage_e_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -1289,26 +1407,41 @@ class ValidationReachabilityTests(unittest.TestCase):
         if changed_paths == STAGE_C_AUTHORITY_SCOPE:
             stage_c_phase = "AUTHORITY_ONLY"
             stage_d_phase = None
+            stage_e_phase = None
         elif changed_paths == STAGE_C_IMPLEMENTATION_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = None
+            stage_e_phase = None
         elif changed_paths == STAGE_D_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_AUTHORITY_ONLY"
+            stage_e_phase = None
         elif changed_paths == STAGE_D_CONTINUATION_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = None
+        elif changed_paths == STAGE_E_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_AUTHORITY_ONLY"
+        elif changed_paths == STAGE_E_HARNESS_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
                 "the exact completed implementation, Stage D authority-only, "
-                "or Stage D continuation-authority-only "
+                "Stage D continuation-authority-only, Stage E harness "
+                "authority-only, or Stage E harness completed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
         self.assertEqual(len(STAGE_C_IMPLEMENTATION_SCOPE), 24)
         self.assertEqual(len(STAGE_D_AUTHORITY_SCOPE), 30)
         self.assertEqual(len(STAGE_D_CONTINUATION_AUTHORITY_SCOPE), 35)
+        self.assertEqual(len(STAGE_E_AUTHORITY_SCOPE), 41)
+        self.assertEqual(len(STAGE_E_HARNESS_IMPLEMENTATION_SCOPE), 86)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -1384,6 +1517,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             "current_path_bytes": current_path_bytes,
             "stage_c_phase": stage_c_phase,
             "stage_d_phase": stage_d_phase,
+            "stage_e_phase": stage_e_phase,
         }
 
     def _audit_stage_d_authority(self, current_scope: dict[str, object]) -> None:
@@ -1433,6 +1567,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         }
         if current_scope["stage_d_phase"] == "STAGE_D_CONTINUATION_AUTHORITY_ONLY":
             expected_implementation_delta.update(STAGE_D_CONTINUATION_AUTHORITY_PATHS)
+        if current_scope["stage_e_phase"] is not None:
+            expected_implementation_delta.update(STAGE_E_AUTHORITY_PATHS)
+        if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -1669,9 +1807,16 @@ class ValidationReachabilityTests(unittest.TestCase):
             for path in set(target_entries) | set(current_entries)
             if target_entries.get(path) != current_entries.get(path)
         )
+        expected_implementation_delta = {
+            "tests/framework/test_validation_reachability.py"
+        }
+        if current_scope["stage_e_phase"] is not None:
+            expected_implementation_delta.update(STAGE_E_AUTHORITY_PATHS)
+        if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
-            frozenset(("tests/framework/test_validation_reachability.py",)),
+            frozenset(expected_implementation_delta),
         )
 
         candidate_archive = _archive_members(STAGE_D_CONTINUATION_AUTHORITY_CANDIDATE)
@@ -1989,6 +2134,420 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(
             contract["future_stage_boundary"]["stage_e"],
             "separately authorized harness and conformance only after accepted continuation authority and durability",
+        )
+
+    def _audit_stage_e_authority(self, current_scope: dict[str, object]) -> None:
+        self.assertEqual(
+            _git(
+                "rev-parse", "--verify", f"{STAGE_E_ACCEPTED_BASE_COMMIT}^{{commit}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_E_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_ACCEPTED_BASE_COMMIT}^{{tree}}")
+            .decode()
+            .strip(),
+            STAGE_E_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_AUTHORITY_CANDIDATE}^{{tree}}")
+            .decode()
+            .strip(),
+            STAGE_E_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_AUTHORITY_TARGET}^{{tree}}")
+            .decode()
+            .strip(),
+            STAGE_E_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_AUTHORITY_TARGET}^1").decode().strip(),
+            STAGE_E_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_AUTHORITY_TARGET}^2").decode().strip(),
+            STAGE_E_AUTHORITY_CANDIDATE,
+        )
+        self.assertEqual(
+            _git("merge-base", STAGE_E_ACCEPTED_BASE_COMMIT, STAGE_E_AUTHORITY_CANDIDATE)
+            .decode()
+            .strip(),
+            STAGE_E_ACCEPTED_BASE_COMMIT,
+        )
+        history_rows = tuple(
+            tuple(line.split())
+            for line in _git(
+                "rev-list",
+                "--reverse",
+                "--parents",
+                f"{STAGE_E_ACCEPTED_BASE_COMMIT}..{STAGE_E_AUTHORITY_CANDIDATE}",
+            )
+            .decode()
+            .splitlines()
+        )
+        self.assertEqual(tuple(row[0] for row in history_rows), STAGE_E_AUTHORITY_CHAIN)
+        self.assertEqual(history_rows[0][1:], (STAGE_E_ACCEPTED_BASE_COMMIT,))
+        for previous, row in zip(STAGE_E_AUTHORITY_CHAIN, history_rows[1:]):
+            self.assertEqual(row[1:], (previous,))
+
+        base_entries = _tree_entries(STAGE_E_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(STAGE_E_AUTHORITY_CANDIDATE)
+        target_entries = _tree_entries(STAGE_E_AUTHORITY_TARGET)
+        current_entries = _tree_entries(current_scope["actual_head"])
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(candidate_delta, frozenset(STAGE_E_AUTHORITY_PATHS))
+        self.assertEqual(candidate_entries, target_entries)
+        implementation_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        expected_implementation_delta = {
+            "tests/framework/test_validation_reachability.py"
+        }
+        if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+        self.assertEqual(
+            implementation_delta,
+            frozenset(expected_implementation_delta),
+        )
+
+        candidate_archive = _archive_members(STAGE_E_AUTHORITY_CANDIDATE)
+        target_archive = _archive_members(STAGE_E_AUTHORITY_TARGET)
+        documents = {}
+        raw_by_path = {}
+        for path in STAGE_E_AUTHORITY_PATHS:
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(path, target_entries, target_archive)
+            self.assertEqual(candidate_row, target_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            current_raw = (ROOT / path).read_bytes()
+            self.assertEqual(current_raw, candidate_raw, path)
+            self.assertEqual(
+                _sha256(current_raw), STAGE_E_AUTHORITY_RAW_SHA256[path], path
+            )
+            self.assertTrue(
+                current_raw.endswith(b"\n") and not current_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", current_raw, path)
+            raw_by_path[path] = current_raw
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(current_raw, path)
+                canonical = _canonical_json_lf(documents[path])[:-1]
+                self.assertEqual(
+                    _sha256(canonical),
+                    STAGE_E_AUTHORITY_CANONICAL_SHA256[path],
+                    path,
+                )
+
+        contract = documents["stage_e_scientific_harness_contract.json"]
+        schema = documents["stage_e_scientific_harness_evidence_schema.json"]
+        implementation = documents[
+            "stage_e_scientific_harness_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "stage_e_scientific_harness_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_e_scientific_harness_validation_contract.json"
+        ]
+        self.assertEqual(tuple(contract["candidate_files"]), STAGE_E_AUTHORITY_PATHS)
+        self.assertEqual(contract["candidate_file_count"], 6)
+        self.assertEqual(tuple(validation["candidate_paths"]), STAGE_E_AUTHORITY_PATHS)
+        self.assertEqual(validation["candidate_path_count"], 6)
+        for document in (contract, implementation, predecessor):
+            self.assertEqual(
+                document["accepted_base"]["commit"], STAGE_E_ACCEPTED_BASE_COMMIT
+            )
+            self.assertEqual(
+                document["accepted_base"]["tree"], STAGE_E_ACCEPTED_BASE_TREE
+            )
+        self.assertEqual(validation["base_commit"], STAGE_E_ACCEPTED_BASE_COMMIT)
+        self.assertEqual(validation["base_tree"], STAGE_E_ACCEPTED_BASE_TREE)
+
+        history_policy = contract["candidate_history_policy"]
+        self.assertEqual(history_policy["shape"], "merge-free linear descendant chain")
+        self.assertIn("sole parent", history_policy["first_candidate_parent"])
+        self.assertIn("sole parent", history_policy["later_candidate_parent"])
+        self.assertEqual(
+            history_policy["merge_nonlinear_extra_parent_or_detached_commit"],
+            "REFUSE_STAGE_E_AUTHORITY",
+        )
+
+        self.assertEqual(predecessor["source_count"], 17)
+        source_rows = predecessor["source_rows"]
+        self.assertEqual(len(source_rows), 17)
+        self.assertEqual(len({row["path"] for row in source_rows}), 17)
+        base_archive = _archive_members(STAGE_E_ACCEPTED_BASE_COMMIT)
+        for row in source_rows:
+            reconstructed, base_raw = _object_row(
+                row["path"], base_entries, base_archive
+            )
+            self.assertEqual(
+                {
+                    key: reconstructed[key]
+                    for key in (
+                        "path",
+                        "mode",
+                        "object_type",
+                        "git_object",
+                        "byte_count",
+                        "raw_sha256",
+                    )
+                },
+                {
+                    key: row[key]
+                    for key in (
+                        "path",
+                        "mode",
+                        "object_type",
+                        "git_object",
+                        "byte_count",
+                        "raw_sha256",
+                    )
+                },
+                row["path"],
+            )
+            if row["path"] != "tests/framework/test_validation_reachability.py":
+                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+            if row["path"].endswith(".json"):
+                canonical = _canonical_json_lf(
+                    _strict_stage_d_json_bytes(base_raw, row["path"])
+                )[:-1]
+                self.assertEqual(row["canonical_byte_count"], len(canonical))
+                self.assertEqual(row["canonical_sha256"], _sha256(canonical))
+            else:
+                self.assertIsNone(row["canonical_byte_count"])
+                self.assertIsNone(row["canonical_sha256"])
+
+        self.assertEqual(tuple(implementation["authority_paths"]), STAGE_E_AUTHORITY_PATHS)
+        self.assertEqual(implementation["authority_path_count"], 6)
+        durability = implementation["prospective_durability"]
+        self.assertEqual(
+            durability["modified_paths"],
+            ["tests/framework/test_validation_reachability.py"],
+        )
+        self.assertEqual(durability["modified_path_count"], 1)
+        self.assertEqual(durability["new_paths"], [])
+        self.assertEqual(durability["new_path_count"], 0)
+        self.assertEqual(durability["required_phase"], "STAGE_E_HARNESS_AUTHORITY_ONLY")
+        harness_paths = implementation["prospective_harness_implementation"]
+        self.assertEqual(harness_paths["modified_paths"], [".github/workflows/tests.yml"])
+        self.assertEqual(harness_paths["modified_path_count"], 1)
+        self.assertEqual(
+            tuple(harness_paths["new_paths"]),
+            STAGE_E_HARNESS_IMPLEMENTATION_PATHS[1:],
+        )
+        self.assertEqual(harness_paths["new_path_count"], 45)
+        self.assertEqual(harness_paths["total_path_count"], 46)
+        self.assertEqual(
+            len(
+                set(STAGE_E_AUTHORITY_PATHS)
+                | {"tests/framework/test_validation_reachability.py"}
+                | set(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+            ),
+            53,
+        )
+        self.assertEqual(implementation["unknown_path_disposition"], "REFUSE_STAGE_E_IMPLEMENTATION")
+        self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
+        self.assertEqual(implementation["force_push_or_history_rewrite"], "FORBIDDEN")
+
+        study_order = tuple(f"SD-{index:02d}" for index in range(1, 15))
+        registry = contract["study_registry"]
+        self.assertEqual(tuple(registry["ordered_study_ids"]), study_order)
+        self.assertEqual(registry["study_count"], 14)
+        self.assertEqual(registry["first_priority"], "SD-01")
+        self.assertEqual(
+            tuple(registry["within_run_checkpoint_continuation"]),
+            ("SD-01", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"),
+        )
+        self.assertEqual(tuple(registry["conditional_inherited_continuation"]), ("SD-02",))
+        self.assertEqual(
+            tuple(registry["between_atomic_case_continuation_only"]),
+            ("SD-03", "SD-04", "SD-05", "SD-06", "SD-07"),
+        )
+
+        mobius = contract["mobius_conformance"]
+        self.assertEqual(mobius["shared_case_count"], 488)
+        self.assertEqual(mobius["complexity_cell_count"], 55)
+        self.assertEqual(mobius["declared_time"], "O(n*2^n) transform arithmetic plus 2^n*C_E subset evaluation")
+        self.assertEqual(mobius["declared_storage"], "O(2^n)")
+        self.assertEqual(mobius["hard_maximum_n"], 18)
+        self.assertEqual(mobius["hard_maximum_subsets"], 262_144)
+        self.assertEqual(mobius["universal_scalability_claim"], "FORBIDDEN")
+        dag = contract["dag_conformance"]
+        self.assertEqual(dag["valid_exact_case_count"], 39_467)
+        self.assertEqual(dag["invalid_refusal_case_count"], 14)
+        self.assertEqual(len(dag["complexity_cells"]), 5)
+        self.assertEqual(dag["declared_traversal_time"], "O(V+E)")
+        self.assertIn("not part of traversal claim", dag["canonicalization_bound"])
+        cache = contract["canonical_cache_conformance"]
+        self.assertEqual(cache["complete_cache_key_field_count"], 29)
+        self.assertEqual(cache["required_control_count"], 17)
+        self.assertEqual(cache["cache_key_omission_mutations"], 29)
+        self.assertFalse(cache["runtime_cache_authorized_in_stage_e"])
+
+        schema_profile = contract["schema_profile"]
+        expected_keywords = (
+            "$defs", "$id", "$ref", "$schema", "additionalProperties", "allOf",
+            "const", "description", "else", "enum", "format", "if", "items",
+            "maxItems", "maximum", "minItems", "minLength", "minProperties",
+            "minimum", "oneOf", "pattern", "prefixItems", "properties",
+            "required", "then", "title", "type", "uniqueItems",
+        )
+        self.assertEqual(tuple(schema_profile["supported_keywords_in_order"]), expected_keywords)
+        self.assertEqual(schema_profile["supported_keyword_count"], 28)
+        self.assertIn("derive", schema_profile["validator_scope"])
+        self.assertEqual(schema_profile["assertion_and_applicator_keyword_mutation_count"], 22)
+        self.assertEqual(schema_profile["positive_fixture_counts"]["total"], 19)
+        self.assertEqual(schema_profile["frozen_negative_fixture_counts"]["total"], 75)
+        self.assertEqual(schema_profile["total_refused_instance_count"], 97)
+        schema_documents = (
+            _strict_stage_d_json_bytes(
+                (ROOT / "stage_d_scientific_validation_evidence_schema.json").read_bytes(),
+                "stage_d_scientific_validation_evidence_schema.json",
+            ),
+            _strict_stage_d_json_bytes(
+                (ROOT / "stage_d_completion_oriented_continuation_evidence_schema.json").read_bytes(),
+                "stage_d_completion_oriented_continuation_evidence_schema.json",
+            ),
+            schema,
+        )
+        derived_keywords = set()
+
+        def collect_keywords(value: object) -> None:
+            if type(value) is dict:
+                for key, item in value.items():
+                    if key in expected_keywords:
+                        derived_keywords.add(key)
+                    collect_keywords(item)
+            elif type(value) is list:
+                for item in value:
+                    collect_keywords(item)
+
+        for schema_document in schema_documents:
+            collect_keywords(schema_document)
+        self.assertEqual(derived_keywords, set(expected_keywords))
+        self.assertIn(
+            b'"minProperties": 1',
+            (ROOT / "stage_d_scientific_validation_evidence_schema.json").read_bytes(),
+        )
+
+        self.assertEqual(len(schema["$defs"]), 22)
+        refs = []
+
+        def collect_refs(value: object) -> None:
+            if type(value) is dict:
+                for key, item in value.items():
+                    if key == "$ref":
+                        refs.append(item)
+                    collect_refs(item)
+            elif type(value) is list:
+                for item in value:
+                    collect_refs(item)
+
+        collect_refs(schema)
+        self.assertEqual(len(refs), 99)
+        for ref in refs:
+            self.assertTrue(ref.startswith("#/$defs/"), ref)
+            self.assertIn(ref.removeprefix("#/$defs/"), schema["$defs"])
+        schema_record = schema["$defs"]["schema_record"]["allOf"][1]["properties"]
+        self.assertEqual(tuple(schema_record["supported_keywords"]["const"]), expected_keywords)
+        self.assertEqual(schema_record["valid_instances"]["const"], 19)
+        self.assertEqual(schema_record["refused_instances"]["const"], 97)
+        self.assertEqual(schema_record["unresolved_local_refs"]["const"], 0)
+        self.assertEqual(len(schema["prospective_non_evidence_schema_fixtures"]), 11)
+        self.assertEqual(len(schema["prospective_negative_schema_cases"]), 24)
+
+        positive_groups = validation["positive_check_groups"]
+        self.assertEqual(sum(group["count"] for group in positive_groups), 195)
+        for group in positive_groups:
+            self.assertEqual(group["count"], len(group["checks"]), group["group_id"])
+        self.assertEqual(validation["required_positive_check_count"], 195)
+        self.assertEqual(len(validation["negative_cases"]), 95)
+        self.assertEqual(validation["required_negative_case_count"], 95)
+        self.assertTrue(validation["negative_cases"][-1].startswith("SE-N095 "))
+        self.assertTrue(
+            any(
+                "merge-free linear chain" in check
+                for check in positive_groups[0]["checks"]
+            )
+        )
+        self.assertTrue(
+            any(
+                "minProperties" in check
+                for group in positive_groups
+                for check in group["checks"]
+            )
+        )
+        self.assertEqual(len(validation["required_zero_counters"]), 17)
+        scientific_properties = schema["$defs"]["scientific_zero_counters"]["properties"]
+        release_properties = schema["$defs"]["release_zero_counters"]["properties"]
+        self.assertEqual(
+            set(validation["required_zero_counters"]),
+            set(scientific_properties) | set(release_properties),
+        )
+        self.assertEqual(
+            {row["const"] for row in scientific_properties.values()}, {0}
+        )
+        self.assertEqual({row["const"] for row in release_properties.values()}, {0})
+        self.assertEqual(schema["scientific_execution_count"], 0)
+        self.assertEqual(schema["stage_e_instance_count"], 0)
+
+        environment = contract["reference_environment"]
+        self.assertEqual(
+            environment["oci_manifest_digest"],
+            "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+        )
+        self.assertEqual(environment["architecture"], "linux/amd64")
+        self.assertEqual(environment["cpython"], "3.14.4-final")
+        self.assertEqual(environment["sqlite_version"], "3.46.1")
+        self.assertEqual(environment["network"], "OFFLINE")
+        self.assertEqual(environment["fallback_environment"], "FORBIDDEN")
+        artifacts = contract["framework_isolation"]["accepted_artifact_identities"]
+        self.assertEqual(artifacts["direct_wheel"]["byte_count"], 4_078_247)
+        self.assertEqual(
+            artifacts["direct_wheel"]["sha256"],
+            "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2",
+        )
+        self.assertEqual(artifacts["direct_wheel"], artifacts["sdist_derived_wheel"])
+        self.assertEqual(artifacts["sdist"]["byte_count"], 4_139_346)
+        self.assertEqual(
+            artifacts["sdist"]["sha256"],
+            "0dbf5eeaa3008c038bab55be43eadbcfe667b5f68ef6319285c86770e0fcfe41",
+        )
+
+        markers = {
+            "STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md": contract["completion_marker"],
+            "stage_e_scientific_harness_contract.json": contract["completion_marker"],
+            "stage_e_scientific_harness_evidence_schema.json": schema["completion_marker"],
+            "stage_e_scientific_harness_implementation_path_manifest.json": implementation["completion_marker"],
+            "stage_e_scientific_harness_predecessor_manifest.json": predecessor["completion_marker"],
+            "stage_e_scientific_harness_validation_contract.json": validation["completion_marker"],
+        }
+        for path, marker in markers.items():
+            self.assertEqual(raw_by_path[path].count(marker.encode("utf-8")), 1, path)
+        self.assertEqual(
+            tuple(
+                name
+                for name, value in self.__class__.__dict__.items()
+                if name.startswith("test_") and callable(value)
+            ),
+            (
+                "test_historical_i9_reconstruction",
+                "test_current_head_durability",
+                "test_post_i9_authority_cases",
+            ),
         )
 
     def _audit_validation_ast(self, contract, manifest) -> None:
