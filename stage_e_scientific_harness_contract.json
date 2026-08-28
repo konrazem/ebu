@@ -10,6 +10,14 @@
     "released_alpha_tag_object": "b140d4a31f60316cd23058305ae17f4698de86bc",
     "released_alpha_peeled_commit": "fb9ae7b6dae14550a702e060600132faec539eca"
   },
+  "candidate_history_policy": {
+    "shape": "merge-free linear descendant chain",
+    "first_candidate_parent": "the accepted base commit is the sole parent of the first candidate commit",
+    "later_candidate_parent": "every later candidate commit has exactly the immediately preceding candidate commit as its sole parent",
+    "merge_base": "the merge-base between the candidate and accepted target is exactly the accepted base",
+    "scope_evaluation": "the complete accepted-base-to-candidate chain has exactly the six-file authority scope",
+    "merge_nonlinear_extra_parent_or_detached_commit": "REFUSE_STAGE_E_AUTHORITY"
+  },
   "accepted_stage_d": {
     "scientific_validation_authority_candidate": "8936bb437426ee53556f8bcb0590215620e1065c",
     "scientific_validation_authority_integration": "388ccb864163cddf6bd4a0a83c24f29f6535cc68",
@@ -177,14 +185,14 @@
   "schema_profile": {
     "accepted_schema": "stage_d_scientific_validation_evidence_schema.json",
     "accepted_continuation_schema": "stage_d_completion_oriented_continuation_evidence_schema.json",
-    "validator_scope": "the exact Draft 2020-12 keyword vocabulary actually present in the two accepted schemas plus the Stage E evidence schema",
+    "validator_scope": "derive the exact Draft 2020-12 keyword vocabulary directly from both accepted schemas and the Stage E evidence schema, then require equality with the frozen ordered list; a self-reported list alone is insufficient",
     "supported_keywords_in_order": [
       "$defs", "$id", "$ref", "$schema", "additionalProperties", "allOf", "const", "description",
       "else", "enum", "format", "if", "items", "maxItems", "maximum", "minItems", "minLength",
-      "minimum", "oneOf", "pattern", "prefixItems", "properties", "required", "then", "title",
+      "minProperties", "minimum", "oneOf", "pattern", "prefixItems", "properties", "required", "then", "title",
       "type", "uniqueItems"
     ],
-    "supported_keyword_count": 27,
+    "supported_keyword_count": 28,
     "recognized_authority_metadata_keys_in_order": [
       "accepted_stage_d_schema", "completion_marker", "prospective_instance_count",
       "prospective_negative_schema_cases", "prospective_negative_validation_cases",
@@ -221,8 +229,8 @@
       "stage_e": 24,
       "total": 75
     },
-    "assertion_and_applicator_keyword_mutation_count": 21,
-    "total_refused_instance_count": 96,
+    "assertion_and_applicator_keyword_mutation_count": 22,
+    "total_refused_instance_count": 97,
     "unknown_keyword_or_authority_metadata_key": "REFUSE_VALIDATOR_BUILD",
     "format_reliance": "FORBIDDEN unless an exact local format checker is named and tested",
     "positive_instances": "all accepted Stage D and continuation non-evidence fixtures plus Stage E fixtures",

@@ -37,7 +37,7 @@
       "checks": [
         "SE-P-GIT-001 accepted base commit is d68bfb75fd822d2219c803fb3933ca60b54af4e0",
         "SE-P-GIT-002 accepted base tree is 15a128783388075978f9faa716bae1c8066361c9",
-        "SE-P-GIT-003 candidate has the accepted base as its sole parent",
+        "SE-P-GIT-003 candidate history from the accepted base is one merge-free linear chain: the base is the first candidate commit's sole parent and every later candidate commit has only its immediate predecessor as parent",
         "SE-P-GIT-004 candidate merge-base with the accepted target is the accepted base",
         "SE-P-GIT-005 freshly queried framework-v0.1 equals the accepted base before integration",
         "SE-P-GIT-006 freshly queried main equals the recorded draft-start main coordinate",
@@ -152,10 +152,10 @@
         "SE-P-SCHEMA-021 every manifest entry identity status and evidence class equals its underlying record",
         "SE-P-SCHEMA-022 all records and the manifest share the exact head tree and environment",
         "SE-P-SCHEMA-023 an underlying BOUND_NOT_SUPPORTED or FAIL record makes final PASS impossible",
-        "SE-P-SCHEMA-024 supported schema vocabulary is the exact ordered 27-keyword union",
+        "SE-P-SCHEMA-024 vocabulary derived directly from all three schemas equals the exact ordered 28-keyword union including minProperties",
         "SE-P-SCHEMA-025 accepted Stage D continuation and Stage E positive fixture counts are exactly 5 3 and 11",
         "SE-P-SCHEMA-026 frozen Stage D continuation and Stage E negative fixture counts are exactly 16 35 and 24",
-        "SE-P-SCHEMA-027 exactly 21 assertion/applicator mutations make the schema record report 19 accepted and 96 refused instances",
+        "SE-P-SCHEMA-027 exactly 22 assertion/applicator mutations including minProperties make the schema record report 19 accepted and 97 refused instances",
         "SE-P-SCHEMA-028 exactly eleven recognized authority-metadata keys are frozen separately from Draft keywords",
         "SE-P-SCHEMA-029 each accepted schema has the exact frozen metadata-key set and every value is consumed for authority closure"
       ]
@@ -394,9 +394,10 @@
     "SE-N091 BOUND_NOT_SUPPORTED or FAIL underlying record relabelled as final PASS",
     "SE-N092 supported keyword omitted added reordered or silently ignored",
     "SE-N093 required positive negative or keyword-mutation schema fixture omitted",
-    "SE-N094 authority-metadata key omitted changed added or silently ignored"
+    "SE-N094 authority-metadata key omitted changed added or silently ignored",
+    "SE-N095 candidate history contains a merge nonlinear ancestry extra parent detached commit or non-base merge-base"
   ],
-  "required_negative_case_count": 94,
+  "required_negative_case_count": 95,
   "schema_definition_requirements": {
     "minimum_definition_count": 20,
     "required_names": [
@@ -476,7 +477,7 @@
     "raw and canonical identities",
     "17 predecessor rows",
     "authority and implementation path closure",
-    "195 positive and 94 negative checks",
+    "195 positive and 95 negative checks",
     "zero counters",
     "prohibited actions",
     "stop condition",

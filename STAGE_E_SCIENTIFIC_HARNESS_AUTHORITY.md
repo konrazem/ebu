@@ -64,6 +64,16 @@ The exact authority candidate is:
 
 No seventh file is part of the authority candidate.
 
+The immutable candidate may contain one or more ordinary correction commits,
+but its history from the accepted base must be a single merge-free linear
+chain. The accepted base must be the sole parent of the first candidate
+commit; every later candidate commit must have exactly the immediately
+preceding candidate commit as its sole parent; and the merge base with the
+accepted target must remain the accepted base. A merge commit, nonlinear
+ancestry, additional parent, detached candidate commit, or different merge
+base refuses the authority gate. Base-to-candidate scope and byte closure are
+still evaluated across the whole chain.
+
 ## 3. Closed future repository scope
 
 After an independent authority PASS and normal authority integration, one
@@ -175,17 +185,20 @@ assertion and applicator keyword receives positive and negative conformance.
 An unknown keyword, unresolved local reference, silently ignored assertion,
 permissive fallback, or reliance on an unchecked `format` annotation refuses.
 
-The frozen union is exactly 27 keywords. The base conformance corpus contains
+The validator derives the vocabulary directly from all three schema documents
+before comparing it with the frozen list; a self-reported list alone cannot
+establish closure. The frozen union is exactly 28 keywords, including the
+accepted `minProperties` assertion. The base conformance corpus contains
 19 positive fixtures: five from Stage D, three from continuation, and eleven from
 Stage E. It contains 75 frozen negative fixtures: sixteen from Stage D,
-thirty-five from continuation, and twenty-four from Stage E. Exactly 21
+thirty-five from continuation, and twenty-four from Stage E. Exactly 22
 additional mutations each target one supported assertion or applicator
-keyword. Thus the schema record must report exactly 19 accepted and 96 refused
+keyword. Thus the schema record must report exactly 19 accepted and 97 refused
 instances. Annotation-only `title`, `description`, `format`, `$schema`, `$id`
 and `$defs` do not create rejection claims; `format` is never used to decide a
 PASS.
 
-Those 27 Draft keywords are distinct from eleven closed authority-metadata
+Those 28 Draft keywords are distinct from eleven closed authority-metadata
 keys used at the top level of the accepted schemas. The validator consumes and
 checks those metadata keys for authority closure but never treats them as
 instance assertions. The exact per-schema metadata-key sets are frozen in the
