@@ -1,0 +1,1851 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ebu.example/schemas/stage-e-dynamic-growth-harness-reconciliation-evidence-v2.json",
+  "$comment": "Additive reconciliation evidence only. Accepted Stage E v1 records and final-manifest.json retain their accepted closed schemas and filenames. STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_EVIDENCE_SCHEMA_COMPLETE",
+  "title": "EBU Stage E dynamic-growth harness reconciliation evidence v2",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "git_oid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "byte_count",
+        "sha256"
+      ],
+      "properties": {
+        "byte_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "prohibited_counters": {
+      "type": "object",
+      "required": [
+        "model_execution_count",
+        "trajectory_execution_count",
+        "runner_execution_count",
+        "gate_execution_count",
+        "simulation_execution_count",
+        "stochastic_draw_count",
+        "registered_configuration_count",
+        "outcome_inspection_count",
+        "result_count",
+        "figure_count",
+        "book_count",
+        "release_action_count",
+        "publication_action_count"
+      ],
+      "properties": {
+        "model_execution_count": {
+          "const": 0
+        },
+        "trajectory_execution_count": {
+          "const": 0
+        },
+        "runner_execution_count": {
+          "const": 0
+        },
+        "gate_execution_count": {
+          "const": 0
+        },
+        "simulation_execution_count": {
+          "const": 0
+        },
+        "stochastic_draw_count": {
+          "const": 0
+        },
+        "registered_configuration_count": {
+          "const": 0
+        },
+        "outcome_inspection_count": {
+          "const": 0
+        },
+        "result_count": {
+          "const": 0
+        },
+        "figure_count": {
+          "const": 0
+        },
+        "book_count": {
+          "const": 0
+        },
+        "release_action_count": {
+          "const": 0
+        },
+        "publication_action_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "accepted_binding_projection": {
+      "$comment": "Exact closed validation target for the accepted continuation fixture that is metadata in its source document rather than a source-schema root or definition.",
+      "const": {
+        "campaign_execution_binding_identity": {
+          "kind": "fixture",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "campaign-binding"
+        },
+        "permitted_stream_set_identity": {
+          "kind": "permitted_stream_set/v2",
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "seed": 0,
+        "stochastic_rule_identity": {
+          "kind": "fixture",
+          "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+          "value": "FORBIDDEN"
+        },
+        "study_id": "SD-01"
+      }
+    },
+    "keyword_conformance_pair": {
+      "$comment": "Closed carrier target for the 22 exact assertion/applicator schema-instance controls. The embedded schema is evaluated separately under the frozen 29-keyword interpreter.",
+      "type": "object",
+      "required": [
+        "schema",
+        "instance"
+      ],
+      "properties": {
+        "schema": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "instance": {}
+      },
+      "additionalProperties": false
+    },
+    "comment_nonreliance_pair": {
+      "$comment": "Closed annotation-nonreliance control. All three embedded schemas must validate the same integer; comment presence or text must not affect validity.",
+      "type": "object",
+      "required": [
+        "case_id",
+        "instance",
+        "schema_with_comment",
+        "schema_without_comment",
+        "schema_with_changed_comment",
+        "expected_validity_with_comment",
+        "expected_validity_without_comment",
+        "expected_validity_with_changed_comment"
+      ],
+      "properties": {
+        "case_id": {
+          "const": "SE-KEYWORD-N23-$comment"
+        },
+        "instance": {
+          "const": 1
+        },
+        "schema_with_comment": {
+          "const": {
+            "$comment": "This annotation must never alter validity.",
+            "type": "integer"
+          }
+        },
+        "schema_without_comment": {
+          "const": {
+            "type": "integer"
+          }
+        },
+        "schema_with_changed_comment": {
+          "const": {
+            "$comment": "Changed annotation text must never alter validity.",
+            "type": "integer"
+          }
+        },
+        "expected_validity_with_comment": {
+          "const": true
+        },
+        "expected_validity_without_comment": {
+          "const": true
+        },
+        "expected_validity_with_changed_comment": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "fixture_ledger_row": {
+      "type": "object",
+      "required": [
+        "ordinal",
+        "fixture_id",
+        "source_path",
+        "source_json_pointer",
+        "target_schema_path",
+        "target_definition_or_root",
+        "canonical_instance",
+        "canonical_identity",
+        "disposition"
+      ],
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 60
+        },
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_json_pointer": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "target_schema_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_definition_or_root": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_instance": {
+          "type": "string",
+          "minLength": 2
+        },
+        "canonical_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "disposition": {
+          "const": "ACCEPTED"
+        }
+      },
+      "additionalProperties": false
+    },
+    "refusal_ledger_row": {
+      "type": "object",
+      "required": [
+        "ordinal",
+        "case_id",
+        "source_case_pointer",
+        "base_fixture_id",
+        "base_fixture_identity",
+        "target_schema_path",
+        "target_definition",
+        "mutation_representation",
+        "rfc6902_patch_or_full_instance",
+        "patch_identity",
+        "mutated_instance_identity",
+        "validation_layer",
+        "expected_structural_validity",
+        "semantic_rule_id",
+        "required_disposition"
+      ],
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 248
+        },
+        "case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_case_pointer": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "base_fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base_fixture_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "target_schema_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mutation_representation": {
+          "enum": [
+            "RFC6902_PATCH",
+            "FULL_MUTATED_INSTANCE",
+            "RAW_JSON_TEXT"
+          ]
+        },
+        "rfc6902_patch_or_full_instance": {
+          "oneOf": [
+            {"type": "string", "minLength": 2},
+            {"type": "array", "minItems": 1},
+            {"type": "object", "minProperties": 1}
+          ]
+        },
+        "patch_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "mutated_instance_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "validation_layer": {
+          "enum": [
+            "JSON_SCHEMA",
+            "JSON_PARSE",
+            "SEMANTIC_RELATION",
+            "ANNOTATION_NON_RELIANCE"
+          ]
+        },
+        "expected_structural_validity": {
+          "type": "boolean"
+        },
+        "semantic_rule_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "atomic_case_continuation_context": {
+          "const": {
+            "study_id": "SD-06",
+            "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+            "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+            "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+            "continuation_requested": true,
+            "base_atomic_case_complete": true,
+            "mutation_sets_atomic_case_complete": false
+          }
+        },
+        "required_disposition": {
+          "const": "REFUSED"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "case_id": {
+                "const": "CONT-SCHEMA-N17"
+              }
+            },
+            "required": [
+              "case_id"
+            ]
+          },
+          "then": {
+            "required": [
+              "atomic_case_continuation_context"
+            ],
+            "properties": {
+              "base_fixture_id": {
+                "const": "continuation-n17-complete-atomic-case-boundary"
+              },
+              "validation_layer": {
+                "const": "SEMANTIC_RELATION"
+              },
+              "expected_structural_validity": {
+                "const": true
+              },
+              "semantic_rule_id": {
+                "const": "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "atomic_case_continuation_context": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "schema_replay_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "status",
+        "evidence_class",
+        "base_commit",
+        "candidate_commit",
+        "authority_identity",
+        "environment_identity",
+        "prohibited_counters",
+        "supported_keywords_in_order",
+        "positive_fixture_ledger",
+        "refusal_ledger",
+        "accepted_fixture_count",
+        "refusal_count",
+        "mismatch_count"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "SCHEMA_REPLAY_V2"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "HARNESS_COMPLEXITY_VERIFICATION"
+          ]
+        },
+        "base_commit": {
+          "const": "08cea14d828668413b9156da8f220beec2713c26"
+        },
+        "candidate_commit": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        },
+        "supported_keywords_in_order": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "$comment"
+            },
+            {
+              "const": "$defs"
+            },
+            {
+              "const": "$id"
+            },
+            {
+              "const": "$ref"
+            },
+            {
+              "const": "$schema"
+            },
+            {
+              "const": "additionalProperties"
+            },
+            {
+              "const": "allOf"
+            },
+            {
+              "const": "const"
+            },
+            {
+              "const": "description"
+            },
+            {
+              "const": "else"
+            },
+            {
+              "const": "enum"
+            },
+            {
+              "const": "format"
+            },
+            {
+              "const": "if"
+            },
+            {
+              "const": "items"
+            },
+            {
+              "const": "maxItems"
+            },
+            {
+              "const": "maximum"
+            },
+            {
+              "const": "minItems"
+            },
+            {
+              "const": "minLength"
+            },
+            {
+              "const": "minProperties"
+            },
+            {
+              "const": "minimum"
+            },
+            {
+              "const": "oneOf"
+            },
+            {
+              "const": "pattern"
+            },
+            {
+              "const": "prefixItems"
+            },
+            {
+              "const": "properties"
+            },
+            {
+              "const": "required"
+            },
+            {
+              "const": "then"
+            },
+            {
+              "const": "title"
+            },
+            {
+              "const": "type"
+            },
+            {
+              "const": "uniqueItems"
+            }
+          ],
+          "items": false,
+          "minItems": 29,
+          "maxItems": 29
+        },
+        "positive_fixture_ledger": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fixture_ledger_row"
+          },
+          "minItems": 61,
+          "maxItems": 61
+        },
+        "refusal_ledger": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refusal_ledger_row"
+          },
+          "minItems": 249,
+          "maxItems": 249
+        },
+        "accepted_fixture_count": {
+          "const": 61
+        },
+        "refusal_count": {
+          "const": 249
+        },
+        "mismatch_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "dag_edge": {
+      "type": "object",
+      "required": [
+        "source_key_identity",
+        "target_key_identity"
+      ],
+      "properties": {
+        "source_key_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "target_key_identity": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "dag_traversal_counters": {
+      "type": "object",
+      "required": [
+        "indegree_initializations",
+        "enqueues",
+        "dequeues",
+        "edge_inspections",
+        "queue_appends",
+        "head_advances",
+        "ready_node_comparisons"
+      ],
+      "properties": {
+        "indegree_initializations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "enqueues": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dequeues": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edge_inspections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queue_appends": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "head_advances": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ready_node_comparisons": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "dag_canonicalization_counters": {
+      "type": "object",
+      "required": [
+        "input_edge_count",
+        "canonicalization_comparisons",
+        "canonicalization_auxiliary_edge_slots"
+      ],
+      "properties": {
+        "input_edge_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "canonicalization_comparisons": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "canonicalization_auxiliary_edge_slots": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "dag_complexity_cell": {
+      "type": "object",
+      "required": [
+        "cell_id",
+        "vertices",
+        "edges",
+        "traversal",
+        "canonicalization",
+        "wall_nanoseconds",
+        "process_tree_peak_rss_bytes",
+        "storage_bytes",
+        "trace_bytes",
+        "output_bytes"
+      ],
+      "properties": {
+        "cell_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vertices": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "edges": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "traversal": {
+          "$ref": "#/$defs/dag_traversal_counters"
+        },
+        "canonicalization": {
+          "$ref": "#/$defs/dag_canonicalization_counters"
+        },
+        "wall_nanoseconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "process_tree_peak_rss_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "storage_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "trace_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "cache_invalidation_receipt": {
+      "type": "object",
+      "required": [
+        "changed_seed_identity",
+        "declared_key_universe",
+        "dependency_edges",
+        "alias_edges",
+        "expected_affected_key_identities",
+        "observed_affected_key_identities",
+        "traversal_order_key_identities",
+        "invalidated_key_identities",
+        "recomputed_key_identities",
+        "reused_key_identities",
+        "pre_cache_epoch",
+        "post_cache_epoch",
+        "correction_epoch",
+        "receipt_identity"
+      ],
+      "properties": {
+        "changed_seed_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "declared_key_universe": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "dependency_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dag_edge"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "alias_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dag_edge"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "expected_affected_key_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "observed_affected_key_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "traversal_order_key_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "invalidated_key_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "recomputed_key_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "reused_key_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "pre_cache_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "post_cache_epoch": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "correction_epoch": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "receipt_identity": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "dag_cache_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "status",
+        "evidence_class",
+        "base_commit",
+        "candidate_commit",
+        "authority_identity",
+        "environment_identity",
+        "prohibited_counters",
+        "dag_valid_cases",
+        "dag_refusal_cases",
+        "dag_complexity_cells",
+        "cache_control_count",
+        "cache_key_field_count",
+        "cache_key_omission_refusal_count",
+        "cache_invalidation_receipt",
+        "stale_cache_hits",
+        "mismatch_count"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "DAG_CACHE_CORRECTION_V2"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "HARNESS_COMPLEXITY_VERIFICATION"
+          ]
+        },
+        "base_commit": {
+          "const": "08cea14d828668413b9156da8f220beec2713c26"
+        },
+        "candidate_commit": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        },
+        "dag_valid_cases": {
+          "const": 39467
+        },
+        "dag_refusal_cases": {
+          "const": 14
+        },
+        "dag_complexity_cells": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/dag_complexity_cell"
+                },
+                {
+                  "properties": {
+                    "cell_id": {
+                      "const": "DAG-128-256"
+                    },
+                    "vertices": {
+                      "const": 128
+                    },
+                    "edges": {
+                      "const": 256
+                    },
+                    "traversal": {
+                      "properties": {
+                        "indegree_initializations": {
+                          "const": 128
+                        },
+                        "edge_inspections": {
+                          "const": 256
+                        }
+                      }
+                    },
+                    "canonicalization": {
+                      "properties": {
+                        "input_edge_count": {
+                          "const": 256
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/dag_complexity_cell"
+                },
+                {
+                  "properties": {
+                    "cell_id": {
+                      "const": "DAG-1024-4096"
+                    },
+                    "vertices": {
+                      "const": 1024
+                    },
+                    "edges": {
+                      "const": 4096
+                    },
+                    "traversal": {
+                      "properties": {
+                        "indegree_initializations": {
+                          "const": 1024
+                        },
+                        "edge_inspections": {
+                          "const": 4096
+                        }
+                      }
+                    },
+                    "canonicalization": {
+                      "properties": {
+                        "input_edge_count": {
+                          "const": 4096
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/dag_complexity_cell"
+                },
+                {
+                  "properties": {
+                    "cell_id": {
+                      "const": "DAG-10000-50000"
+                    },
+                    "vertices": {
+                      "const": 10000
+                    },
+                    "edges": {
+                      "const": 50000
+                    },
+                    "traversal": {
+                      "properties": {
+                        "indegree_initializations": {
+                          "const": 10000
+                        },
+                        "edge_inspections": {
+                          "const": 50000
+                        }
+                      }
+                    },
+                    "canonicalization": {
+                      "properties": {
+                        "input_edge_count": {
+                          "const": 50000
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/dag_complexity_cell"
+                },
+                {
+                  "properties": {
+                    "cell_id": {
+                      "const": "DAG-100000-500000"
+                    },
+                    "vertices": {
+                      "const": 100000
+                    },
+                    "edges": {
+                      "const": 500000
+                    },
+                    "traversal": {
+                      "properties": {
+                        "indegree_initializations": {
+                          "const": 100000
+                        },
+                        "edge_inspections": {
+                          "const": 500000
+                        }
+                      }
+                    },
+                    "canonicalization": {
+                      "properties": {
+                        "input_edge_count": {
+                          "const": 500000
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/dag_complexity_cell"
+                },
+                {
+                  "properties": {
+                    "cell_id": {
+                      "const": "DAG-512-130816"
+                    },
+                    "vertices": {
+                      "const": 512
+                    },
+                    "edges": {
+                      "const": 130816
+                    },
+                    "traversal": {
+                      "properties": {
+                        "indegree_initializations": {
+                          "const": 512
+                        },
+                        "edge_inspections": {
+                          "const": 130816
+                        }
+                      }
+                    },
+                    "canonicalization": {
+                      "properties": {
+                        "input_edge_count": {
+                          "const": 130816
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "items": false,
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "cache_control_count": {
+          "const": 17
+        },
+        "cache_key_field_count": {
+          "const": 29
+        },
+        "cache_key_omission_refusal_count": {
+          "const": 29
+        },
+        "cache_invalidation_receipt": {
+          "$ref": "#/$defs/cache_invalidation_receipt"
+        },
+        "stale_cache_hits": {
+          "const": 0
+        },
+        "mismatch_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "case_identity": {
+      "type": "object",
+      "required": [
+        "ordinal",
+        "case_id",
+        "canonical_input",
+        "input_identity",
+        "canonical_output",
+        "output_identity",
+        "canonical_relation",
+        "relation_identity",
+        "disposition"
+      ],
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_input": {
+          "type": "string",
+          "minLength": 2
+        },
+        "input_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "canonical_output": {
+          "type": "string",
+          "minLength": 2
+        },
+        "output_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "canonical_relation": {
+          "type": "string",
+          "minLength": 2
+        },
+        "relation_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "disposition": {
+          "enum": [
+            "PASS",
+            "REFUSED"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "recursive_growth_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "status",
+        "evidence_class",
+        "base_commit",
+        "candidate_commit",
+        "authority_identity",
+        "environment_identity",
+        "prohibited_counters",
+        "macro_cases",
+        "poset_base_cases",
+        "poset_correction_cases",
+        "transport_scalar_cases",
+        "transport_direct_cases",
+        "transport_correction_cases",
+        "transport_refusal_cases",
+        "mismatch_count"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "RECURSIVE_GROWTH_V2"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "HARNESS_COMPLEXITY_VERIFICATION"
+          ]
+        },
+        "base_commit": {
+          "const": "08cea14d828668413b9156da8f220beec2713c26"
+        },
+        "candidate_commit": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        },
+        "macro_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 270,
+          "maxItems": 270
+        },
+        "poset_base_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 32,
+          "maxItems": 32
+        },
+        "poset_correction_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 224,
+          "maxItems": 224
+        },
+        "transport_scalar_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 90,
+          "maxItems": 90
+        },
+        "transport_direct_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 15,
+          "maxItems": 15
+        },
+        "transport_correction_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 180,
+          "maxItems": 180
+        },
+        "transport_refusal_cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/case_identity"
+          },
+          "minItems": 150,
+          "maxItems": 150
+        },
+        "mismatch_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "dynamic_growth_guard_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "status",
+        "evidence_class",
+        "base_commit",
+        "candidate_commit",
+        "authority_identity",
+        "environment_identity",
+        "prohibited_counters",
+        "guarded_route_ids_in_order",
+        "preimport_refusal_count",
+        "dynamic_growth_fixture_count",
+        "dynamic_growth_exact_patch_count",
+        "registered_campaign_run_count",
+        "registered_horizon_ticks",
+        "registered_campaign_runs_executed",
+        "registered_horizon_ticks_executed",
+        "scientific_rows_populated"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "DYNAMIC_GROWTH_GUARD_V2"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "HARNESS_COMPLEXITY_VERIFICATION"
+          ]
+        },
+        "base_commit": {
+          "const": "08cea14d828668413b9156da8f220beec2713c26"
+        },
+        "candidate_commit": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        },
+        "guarded_route_ids_in_order": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "SD-01"
+            },
+            {
+              "const": "SD-01-GROWTH-v1"
+            },
+            {
+              "const": "SD-02"
+            },
+            {
+              "const": "SD-03"
+            },
+            {
+              "const": "SD-04"
+            },
+            {
+              "const": "SD-05"
+            },
+            {
+              "const": "SD-06"
+            },
+            {
+              "const": "SD-07"
+            },
+            {
+              "const": "SD-08"
+            },
+            {
+              "const": "SD-09"
+            },
+            {
+              "const": "SD-10"
+            },
+            {
+              "const": "SD-11"
+            },
+            {
+              "const": "SD-12"
+            },
+            {
+              "const": "SD-13"
+            },
+            {
+              "const": "SD-14"
+            }
+          ],
+          "items": false,
+          "minItems": 15,
+          "maxItems": 15
+        },
+        "preimport_refusal_count": {
+          "const": 15
+        },
+        "dynamic_growth_fixture_count": {
+          "const": 44
+        },
+        "dynamic_growth_exact_patch_count": {
+          "const": 150
+        },
+        "registered_campaign_run_count": {
+          "const": 396
+        },
+        "registered_horizon_ticks": {
+          "const": 8192
+        },
+        "registered_campaign_runs_executed": {
+          "const": 0
+        },
+        "registered_horizon_ticks_executed": {
+          "const": 0
+        },
+        "scientific_rows_populated": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "harness_artifact_record": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "status",
+        "evidence_class",
+        "base_commit",
+        "candidate_commit",
+        "authority_identity",
+        "environment_identity",
+        "prohibited_counters",
+        "replica_count",
+        "replica_identities",
+        "all_replicas_byte_identical",
+        "safe_member_count",
+        "unsafe_member_count",
+        "source_checkout_import_count",
+        "network_access_count"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "HARNESS_ARTIFACT_V2"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "HARNESS_COMPLEXITY_VERIFICATION"
+          ]
+        },
+        "base_commit": {
+          "const": "08cea14d828668413b9156da8f220beec2713c26"
+        },
+        "candidate_commit": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "environment_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        },
+        "replica_count": {
+          "const": 3
+        },
+        "replica_identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identity"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "all_replicas_byte_identical": {
+          "const": true
+        },
+        "safe_member_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unsafe_member_count": {
+          "const": 0
+        },
+        "source_checkout_import_count": {
+          "const": 0
+        },
+        "network_access_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "manifest_entry_pass": {
+      "type": "object",
+      "required": [
+        "name",
+        "identity",
+        "status",
+        "evidence_class"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "status": {
+          "const": "PASS"
+        },
+        "evidence_class": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "manifest_entry_bound": {
+      "type": "object",
+      "required": [
+        "name",
+        "identity",
+        "status",
+        "evidence_class"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "BOUND_NOT_SUPPORTED"
+          ]
+        },
+        "evidence_class": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "accepted_v1_manifest_seal": {
+      "type": "object",
+      "required": [
+        "name",
+        "identity",
+        "record_count",
+        "entry_names_in_order",
+        "all_entries_pass",
+        "all_required_lanes_completed",
+        "bound_supported",
+        "stage_f_execution_authorized"
+      ],
+      "properties": {
+        "name": {
+          "const": "final-manifest.json"
+        },
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "record_count": {
+          "const": 9
+        },
+        "entry_names_in_order": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": "authority.json"
+            },
+            {
+              "const": "schema.json"
+            },
+            {
+              "const": "identity-continuation.json"
+            },
+            {
+              "const": "mobius.json"
+            },
+            {
+              "const": "dag-cache.json"
+            },
+            {
+              "const": "adapter-guard.json"
+            },
+            {
+              "const": "installed-isolation.json"
+            },
+            {
+              "const": "complexity.json"
+            },
+            {
+              "const": "regression.json"
+            }
+          ],
+          "items": false,
+          "minItems": 9,
+          "maxItems": 9
+        },
+        "all_entries_pass": {
+          "const": true
+        },
+        "all_required_lanes_completed": {
+          "const": true
+        },
+        "bound_supported": {
+          "const": true
+        },
+        "stage_f_execution_authorized": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "reconciliation_manifest_pass": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "accepted_v1_manifest",
+        "entries",
+        "record_count",
+        "final_status",
+        "stage_f_route",
+        "prohibited_counters"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "RECONCILIATION_MANIFEST_V2"
+        },
+        "accepted_v1_manifest": {
+          "$ref": "#/$defs/accepted_v1_manifest_seal"
+        },
+        "entries": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/manifest_entry_pass"
+                },
+                {
+                  "properties": {
+                    "name": {
+                      "const": "schema-replay-v2.json"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/manifest_entry_pass"
+                },
+                {
+                  "properties": {
+                    "name": {
+                      "const": "recursive-growth-v2.json"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/manifest_entry_pass"
+                },
+                {
+                  "properties": {
+                    "name": {
+                      "const": "dag-cache-correction-v2.json"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/manifest_entry_pass"
+                },
+                {
+                  "properties": {
+                    "name": {
+                      "const": "dynamic-growth-guard-v2.json"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/manifest_entry_pass"
+                },
+                {
+                  "properties": {
+                    "name": {
+                      "const": "harness-artifact-v2.json"
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "items": false,
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "record_count": {
+          "const": 6
+        },
+        "final_status": {
+          "const": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS"
+        },
+        "stage_f_route": {
+          "const": "WAIT_FOR_EXPLICIT_USER_AUTHORIZATION"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reconciliation_manifest_bound": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "record_type",
+        "accepted_v1_manifest",
+        "entries",
+        "bound_record_names",
+        "record_count",
+        "final_status",
+        "stage_f_route",
+        "prohibited_counters"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "stage-e-reconciliation-evidence/v2"
+        },
+        "record_type": {
+          "const": "RECONCILIATION_MANIFEST_V2"
+        },
+        "accepted_v1_manifest": {
+          "$ref": "#/$defs/accepted_v1_manifest_seal"
+        },
+    "entries": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/manifest_entry_bound"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "schema-replay-v2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/manifest_entry_bound"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "recursive-growth-v2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/manifest_entry_bound"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "dag-cache-correction-v2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/manifest_entry_bound"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "dynamic-growth-guard-v2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/manifest_entry_bound"
+            },
+            {
+              "properties": {
+                "name": {
+                  "const": "harness-artifact-v2.json"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "items": false,
+      "minItems": 5,
+      "maxItems": 5
+    },
+        "bound_record_names": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 5,
+          "uniqueItems": true
+        },
+        "record_count": {
+          "const": 6
+        },
+        "final_status": {
+          "const": "STAGE_E_SCIENTIFIC_HARNESS_BOUND_NOT_SUPPORTED"
+        },
+        "stage_f_route": {
+          "const": "REFUSE"
+        },
+        "prohibited_counters": {
+          "$ref": "#/$defs/prohibited_counters"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/schema_replay_record"
+    },
+    {
+      "$ref": "#/$defs/recursive_growth_record"
+    },
+    {
+      "$ref": "#/$defs/dag_cache_record"
+    },
+    {
+      "$ref": "#/$defs/dynamic_growth_guard_record"
+    },
+    {
+      "$ref": "#/$defs/harness_artifact_record"
+    },
+    {
+      "$ref": "#/$defs/reconciliation_manifest_pass"
+    },
+    {
+      "$ref": "#/$defs/reconciliation_manifest_bound"
+    }
+  ]
+}
