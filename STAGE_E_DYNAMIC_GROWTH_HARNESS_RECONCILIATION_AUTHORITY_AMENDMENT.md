@@ -76,24 +76,51 @@ The Stage E schema lane must derive the exact supported Draft 2020-12 vocabulary
 
 Unknown assertion, applicator, or authority-metadata keywords refuse validator construction. Metadata is never silently treated as an instance assertion.
 
-The positive fixture ledger contains exactly 63 complete immutable non-evidence fixtures:
+The derived standard vocabulary is exactly 29 keywords. It includes
+`$comment`, as used by the accepted dynamic-growth schema. `$comment` is an
+accepted annotation keyword: it is consumed, never used to decide instance
+validity, and receives an exact annotation/non-reliance conformance case.
 
-- five accepted Stage D fixtures;
-- three accepted continuation fixtures;
-- eleven accepted Stage E fixtures;
+The positive fixture ledger contains exactly 61 complete immutable non-evidence fixtures:
+
+- four accepted Stage D object fixtures; the adjacent `purpose` string is
+  authority metadata and is never validated as an instance;
+- two accepted continuation object fixtures; its adjacent `purpose` string is
+  likewise metadata;
+- eleven reconciliation-owned complete Stage E v1 record fixtures which
+  materialize the eleven accepted Stage E fixture labels;
 - forty-four accepted dynamic-growth fixtures.
 
-Every fixture is loaded from its accepted authority document, hashed, validated against its named root or definition, and recorded with one ledger identity. A count derived without those 63 ledger rows is not a pass.
+The exact registry freezes, for every row, its source document and JSON
+Pointer, target root or definition, fixture ID, canonical byte identity, and
+ordinal. Every fixture is loaded or materialized from those committed bytes,
+hashed, validated against its named root or definition, and recorded with one
+ledger identity. A count derived without those 61 ledger rows is not a pass.
 
-The refusal ledger contains exactly 247 applied cases:
+The refusal ledger contains exactly 248 applied cases:
 
 - sixteen accepted Stage D negatives;
 - thirty-five accepted continuation negatives;
 - twenty-four accepted Stage E negatives;
 - one hundred fifty accepted dynamic-growth exact patches;
-- twenty-two accepted assertion/applicator keyword mutations.
+- twenty-two accepted assertion/applicator keyword mutations;
+- one `$comment` annotation/non-reliance mutation.
 
-For each case the validator must load the named complete base fixture, apply the exact frozen patch, compute the mutated identity, execute the named structural or semantic validation layer, and record the exact refusal. A generic empty object, a different mutation, a count-only claim, a skip, or an expected failure without executing the mutation is `NOT_A_PASS`.
+For each case the validator must use the committed 248-row refusal registry.
+Each row freezes case ID, source case pointer, named complete base fixture,
+target definition, exact RFC-6902 patch or complete mutated instance, patch
+identity, mutated-instance identity, structural-validity expectation,
+validation layer, semantic-rule ID where applicable, and disposition. The
+validator loads the named base, applies the exact patch, recomputes both
+identities, executes the named structural or semantic layer, and records the
+exact refusal. A generic empty object, a different mutation, a count-only
+claim, a skip, or an expected failure without executing the mutation is
+`NOT_A_PASS`.
+
+An inherited negative whose purpose is to refuse a floating JSON token is
+stored as exact UTF-8 raw JSON text plus its raw byte identity, never as a
+floating number inside an authority document. Its validation layer is
+`JSON_PARSE`; parsing it with the integer-only authority parser must refuse.
 
 The 150 dynamic-growth patches retain their exact split: 116 refuse structurally and 34 remain structurally valid but refuse under their named semantic relations. Structural rejection of one of the 34 semantic cases is not interchangeable evidence.
 
@@ -190,14 +217,25 @@ The optimized DAG path remains canonical dense-index FIFO Kahn traversal after s
 - exactly `V` indegree initializations;
 - at most `V` enqueues;
 - at most `V` dequeues;
-- at most `E` edge inspections;
+- exactly `E` edge inspections;
 - at most `V` queue appends;
 - at most `V` head advances;
 - zero ready-node comparisons.
 
-Canonicalization records exact comparison count and auxiliary edge slots separately. The traversal claim remains `O(V+E)`; canonicalization is bounded separately by `E*ceil(log2(E))` comparisons and `E` auxiliary edge slots. Every one of the five DAG complexity cells retains input vertices, input edges, all exact counters, canonicalization counters, wall time, peak process-tree RSS, storage bytes, trace bytes, and logical output bytes.
+Canonicalization records exact comparison count and auxiliary edge slots separately. The traversal claim remains `O(V+E)`; canonicalization is bounded separately by `E*ceil(log2(E))` comparisons and `E` auxiliary edge slots. Every registered edge is inspected exactly once. Canonicalization input-edge count equals traversal edge count. The five cells are exactly and uniquely `(V,E)=(128,256)`, `(1024,4096)`, `(10000,50000)`, `(100000,500000)`, and `(512,130816)`. Every cell retains its exact identity, input vertices, input edges, all exact counters, canonicalization counters, wall time, peak process-tree RSS, storage bytes, trace bytes, and logical output bytes.
 
-The cache-control evidence must include explicit nonempty dependency and alias edge arrays for the controls that claim dependency-local invalidation. It records the seed changed node, expected and observed affected closure, ordering, correction epoch, pre/post cache epochs, invalidated keys, recomputed keys, reused keys, and durable receipt identities. Empty arrays cannot establish traversal. Near-equivalent negative controls, incomplete-key collisions, stale-cache use, authority changes, scaling changes, and correction changes refuse.
+The cache-control evidence must include a closed declared key universe and
+explicit nonempty typed `{source_key_identity,target_key_identity}` dependency
+and alias edge arrays for controls that claim dependency-local invalidation.
+It records the changed seed, expected and observed affected identity arrays,
+ordering, correction epoch, pre/post cache epochs, exact invalidated,
+recomputed and reused identity arrays, and durable receipt identity. Every
+edge endpoint must belong to the key universe; expected and observed closures
+must equal direct traversal; invalidated and recomputed arrays equal the
+affected closure; reused identities are disjoint. Counts may be derived but
+cannot replace identities. Empty arrays cannot establish traversal.
+Near-equivalent negative controls, incomplete-key collisions, stale-cache
+use, authority changes, scaling changes, and correction changes refuse.
 
 ## 11. Complexity evidence and nonclaims
 
@@ -216,6 +254,39 @@ The completed Stage E harness must emit a deterministic standard-library-only zi
 The zip application embeds byte-exact accepted Stage D, continuation, Stage E, dynamic-growth, and reconciliation authority inputs with a canonical identity index. It contains no registered configuration, scientific output, result, figure, book, publication material, network fallback, mutable dependency, or hidden source-checkout import.
 
 Installed direct-wheel and sdist-derived-wheel lanes run outside the source checkout with isolated environment variables and verify that the harness does not import the checkout accidentally. All existing Stage C T0/T1/T2, conventional, packaging, installed-surface, runtime, archive, license, and reproducibility lanes remain passes. A skip or zero-test lane is not a pass.
+
+The accepted Stage E v1 records and `final-manifest.json` retain their exact
+accepted closed shapes, names, order, semantics and nine-entry v1 manifest.
+They are never validated as reconciliation-v2 records. Reconciliation adds
+five separately named records:
+
+- `schema-replay-v2.json`;
+- `recursive-growth-v2.json`;
+- `dag-cache-correction-v2.json`;
+- `dynamic-growth-guard-v2.json`;
+- `harness-artifact-v2.json`;
+
+and one `reconciliation-manifest-v2.json`. The v2 manifest seals the accepted
+v1 manifest plus those five records. A v2 PASS requires the accepted v1
+manifest and all five v2 records to be PASS. Any `BOUND_NOT_SUPPORTED` record
+produces only `STAGE_E_SCIENTIFIC_HARNESS_BOUND_NOT_SUPPORTED`, refuses every
+dependent Stage F route, and can never be relabelled PASS. The non-PASS
+manifest retains the same five exact ordered record names, permits each entry
+to state PASS or `BOUND_NOT_SUPPORTED`, requires at least one bound entry, and
+requires `bound_record_names` to equal exactly the names of the bound entries.
+
+The closed reconciliation evidence schema contains exactly 22 definitions,
+seven top-level roots, and 83 local `$ref` occurrences resolving to exactly 22
+unique local targets with zero unresolved reference. The same exact profile is
+frozen in the mechanical and validation contracts; a missing, extra, renamed,
+or unresolved definition or root refuses validation.
+
+The recursive, poset, transport, and correction records retain ordered
+canonical per-case identities whose preimages contain exact input operands,
+authority, algorithm/oracle identity, output/result and relation disposition.
+Aggregate counts or zero-mismatch fields never substitute for those case
+identities. The dynamic guard retains exact ordered coverage of all fourteen
+study routes plus `SD-01-GROWTH-v1`, and every one must refuse before import.
 
 Stage E evidence is limited to theorem checks, static/synthetic implementation tests, numerical oracle verification, and harness-complexity verification. Every scientific/model/outcome/result/figure/book/release/publication counter remains zero.
 

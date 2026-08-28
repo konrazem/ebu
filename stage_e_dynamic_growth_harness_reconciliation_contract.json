@@ -75,7 +75,7 @@
     {
       "id": "SE-RC-DEFECT-01",
       "problem": "schema positives counted arithmetically while only a subset was directly validated",
-      "required_correction": "load hash validate and ledger every one of the 63 exact complete fixtures"
+      "required_correction": "load hash validate and ledger every one of the 61 exact complete fixtures"
     },
     {
       "id": "SE-RC-DEFECT-02",
@@ -105,8 +105,9 @@
       "stage_e_scientific_harness_evidence_schema.json",
       "stage_d_dynamic_growth_campaign_evidence_schema.json"
     ],
-    "supported_keyword_count": 28,
+    "supported_keyword_count": 29,
     "supported_keywords_in_order": [
+      "$comment",
       "$defs",
       "$id",
       "$ref",
@@ -139,11 +140,11 @@
     "derive_vocabulary_from_all_four_schemas": true,
     "unknown_keyword_or_metadata": "REFUSE_VALIDATOR_BUILD",
     "positive_fixture_counts": {
-      "stage_d": 5,
-      "continuation": 3,
+      "stage_d": 4,
+      "continuation": 2,
       "stage_e": 11,
       "dynamic_growth": 44,
-      "total": 63
+      "total": 61
     },
     "negative_case_counts": {
       "stage_d": 16,
@@ -151,15 +152,53 @@
       "stage_e": 24,
       "dynamic_growth_exact_patches": 150,
       "assertion_and_applicator_mutations": 22,
-      "total": 247
+      "annotation_non_reliance_mutations": 1,
+      "total": 248
     },
     "dynamic_growth_patch_split": {
       "json_schema": 116,
       "semantic_relation": 34
     },
-    "positive_ledger_row_count": 63,
-    "refusal_ledger_row_count": 247,
+    "positive_ledger_row_count": 61,
+    "refusal_ledger_row_count": 248,
+    "positive_fixture_registry_fields": [
+      "ordinal",
+      "fixture_id",
+      "source_path",
+      "source_json_pointer",
+      "target_definition_or_root",
+      "canonical_byte_count",
+      "canonical_sha256"
+    ],
+    "refusal_registry_fields": [
+      "ordinal",
+      "case_id",
+      "source_path",
+      "source_case_pointer",
+      "base_fixture_id",
+      "base_fixture_identity",
+      "base_fixture_sha256",
+      "target_definition",
+      "mutation_representation",
+      "rfc6902_patch_or_full_instance",
+      "rfc6902_patch",
+      "patch_identity",
+      "mutated_instance_identity",
+      "mutated_instance_sha256",
+      "validation_layer",
+      "expected_structural_validity",
+      "semantic_rule_id",
+      "required_disposition"
+    ],
+    "reconciliation_evidence_schema_profile": {
+      "definition_count": 22,
+      "root_count": 7,
+      "local_ref_occurrence_count": 83,
+      "unique_local_ref_target_count": 22,
+      "unresolved_local_ref_count": 0
+    },
     "generic_empty_object_substitution": "FORBIDDEN",
+    "raw_json_parse_cases_are_utf8_text_with_raw_byte_identity": true,
     "representative_subset": "FORBIDDEN",
     "count_only_pass": "FORBIDDEN",
     "semantic_case_structural_rejection_substitution": "FORBIDDEN"
@@ -213,6 +252,8 @@
       -3
     ],
     "sequence_fixture_count": 6,
+    "ordered_macro_case_identity_count": 270,
+    "ordered_macro_case_identity_preimage": "case ordinal, sequence/baseline identity, level, exact e(empty), e(x), e(y), e(x,y), direct I, J, inverse result, forced-projection result, error result, correction multiplier, authority, oracle and disposition",
     "required_relations": [
       "direct raw two-child coefficient equals J",
       "inverse zeta reconstruction",
@@ -239,6 +280,8 @@
     "base_transform_count": 32,
     "correction_delta_count": 2,
     "one_element_correction_case_count": 224,
+    "ordered_base_case_identity_count": 32,
+    "ordered_correction_case_identity_count": 224,
     "infeasible_boolean_extension": "REFUSE"
   },
   "coefficient_transport_conformance": {
@@ -248,6 +291,10 @@
     "correction_reconstructions": 180,
     "misscaling_refusals": 150,
     "misscaled_trajectories": 0,
+    "ordered_valid_case_identity_count": 90,
+    "ordered_direct_case_identity_count": 15,
+    "ordered_correction_case_identity_count": 180,
+    "ordered_refusal_case_identity_count": 150,
     "required_scaling_classes": [
       "INVARIANT-INTENSIVE",
       "OCCURRENCE-EXTENSIVE",
@@ -330,7 +377,7 @@
       "indegree_initializations": "equals V",
       "enqueues": "at most V",
       "dequeues": "at most V",
-      "edge_inspections": "at most E",
+      "edge_inspections": "equals E",
       "queue_appends": "at most V",
       "head_advances": "at most V",
       "ready_node_comparisons": "equals 0"
@@ -339,6 +386,15 @@
       "canonicalization_comparisons",
       "canonicalization_auxiliary_edge_slots"
     ],
+    "exact_cells": [
+      {"cell_id": "DAG-128-256", "vertices": 128, "edges": 256},
+      {"cell_id": "DAG-1024-4096", "vertices": 1024, "edges": 4096},
+      {"cell_id": "DAG-10000-50000", "vertices": 10000, "edges": 50000},
+      {"cell_id": "DAG-100000-500000", "vertices": 100000, "edges": 500000},
+      {"cell_id": "DAG-512-130816", "vertices": 512, "edges": 130816}
+    ],
+    "cell_ids_unique_and_exact": true,
+    "canonicalization_input_edges_equal_traversal_edges": true,
     "required_per_cell_measurements": [
       "wall_nanoseconds",
       "process_tree_peak_rss_bytes",
@@ -356,20 +412,24 @@
     "nonempty_alias_edges_required_for_claimed_alias_control": true,
     "required_receipt_fields": [
       "changed_seed_identity",
-      "dependency_edges",
-      "alias_edges",
+      "declared_key_universe",
+      "typed_dependency_edges",
+      "typed_alias_edges",
       "expected_affected_closure",
       "observed_affected_closure",
       "traversal_order",
       "pre_cache_epoch",
       "post_cache_epoch",
-      "invalidated_keys",
-      "recomputed_keys",
-      "reused_keys",
+      "invalidated_key_identities",
+      "recomputed_key_identities",
+      "reused_key_identities",
       "correction_epoch",
       "receipt_identity"
     ],
     "empty_edges_as_traversal_evidence": "FORBIDDEN",
+    "edge_shape": "closed source_key_identity and target_key_identity",
+    "every_edge_endpoint_in_declared_key_universe": true,
+    "identity_arrays_replace_count_only_evidence": true,
     "stale_hit_count": 0,
     "authority_correction_scaling_or_boundary_change": "DETERMINISTIC_COMPLETE_AFFECTED_CLOSURE_INVALIDATION"
   },
@@ -386,7 +446,7 @@
     "bound_failure": "BOUND_NOT_SUPPORTED_AND_DEPENDENT_STAGE_F_ROUTE_REFUSES"
   },
   "evidence_outputs": {
-    "retain_accepted_record_names": [
+    "accepted_v1_record_names_byte_and_shape_semantics_preserved": [
       "authority.json",
       "schema.json",
       "identity-continuation.json",
@@ -398,12 +458,27 @@
       "regression.json",
       "final-manifest.json"
     ],
-    "record_count": 10,
-    "final_status": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS",
-    "dynamic_recursive_evidence_record": "mobius.json",
-    "dynamic_growth_and_capacity_evidence_record": "adapter-guard.json",
-    "schema_fixture_and_refusal_ledgers": "schema.json",
-    "dag_cache_and_invalidation_evidence": "dag-cache.json",
+    "accepted_v1_record_count_with_manifest": 10,
+    "accepted_v1_manifest_name": "final-manifest.json",
+    "accepted_v1_manifest_entry_count": 9,
+    "reconciliation_v2_record_names": [
+      "schema-replay-v2.json",
+      "recursive-growth-v2.json",
+      "dag-cache-correction-v2.json",
+      "dynamic-growth-guard-v2.json",
+      "harness-artifact-v2.json"
+    ],
+    "reconciliation_v2_manifest_name": "reconciliation-manifest-v2.json",
+    "reconciliation_v2_record_count_with_manifest": 6,
+    "total_output_file_count": 16,
+    "pass_status": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS",
+    "bound_not_supported_status": "STAGE_E_SCIENTIFIC_HARNESS_BOUND_NOT_SUPPORTED",
+    "pass_requires_accepted_v1_manifest_and_all_five_v2_records_pass": true,
+    "bound_not_supported_refuses_dependent_stage_f_route": true,
+    "bound_manifest_entries_use_exact_five_ordered_names_and_allow_pass_or_bound": true,
+    "bound_record_names_equal_exactly_the_bound_entry_names": true,
+    "bound_manifest_requires_at_least_one_bound_entry": true,
+    "incompatible_v1_filename_reuse": "FORBIDDEN",
     "all_record_bytes_hashes_statuses_classes_and_coordinates_sealed": true,
     "repository_output_path": "FORBIDDEN"
   },
@@ -440,6 +515,25 @@
       "SD-14"
     ],
     "stage_f_authorization_absent": true,
+    "guarded_route_count": 15,
+    "guarded_route_ids_in_order": [
+      "SD-01",
+      "SD-01-GROWTH-v1",
+      "SD-02",
+      "SD-03",
+      "SD-04",
+      "SD-05",
+      "SD-06",
+      "SD-07",
+      "SD-08",
+      "SD-09",
+      "SD-10",
+      "SD-11",
+      "SD-12",
+      "SD-13",
+      "SD-14"
+    ],
+    "preimport_refusal_count": 15,
     "pre_import_refusal": true,
     "model_step_state_advance_trajectory_runner_gate_simulation_registered_adapter_run": "FORBIDDEN",
     "candidate_outcome_inspection": "FORBIDDEN",
