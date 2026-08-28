@@ -645,7 +645,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "23317838fdbbcd9adf00cb311b20136995c7a3458159121eb19fc1a64f4a55ce"
+TEST_SELF_SEAL = "c430898537d9932bc27c490d624c3f779a383cd7a5169233580fc0410e80f181"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3921,8 +3921,15 @@ class ValidationReachabilityTests(unittest.TestCase):
         for row in bases.values():
             self.assertEqual(_json_identity(row["instance"]), row["canonical_identity"])
             source = load_document(row["source_path"])
+            source_value = _json_pointer(source, row["source_json_pointer"])
+            if (
+                type(source_value) is dict
+                and source_value.get("base_fixture_id") == row["base_fixture_id"]
+                and "instance" in source_value
+            ):
+                source_value = source_value["instance"]
             self.assertEqual(
-                _json_pointer(source, row["source_json_pointer"]),
+                source_value,
                 row["instance"],
                 row["base_fixture_id"],
             )
