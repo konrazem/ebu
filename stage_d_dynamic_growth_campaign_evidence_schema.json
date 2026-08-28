@@ -15,6 +15,8 @@
     {"$ref":"#/$defs/growth_capacity_benchmark"},
     {"$ref":"#/$defs/capacity_population_configuration"},
     {"$ref":"#/$defs/capacity_population_level_record"},
+    {"$ref":"#/$defs/capacity_population_stall_record"},
+    {"$ref":"#/$defs/capacity_population_predicate_oracle"},
     {"$ref":"#/$defs/capacity_population_reconstruction_comparison"},
     {"$ref":"#/$defs/capacity_population_computation_record"},
     {"$ref":"#/$defs/capacity_population_limit_decision"},
@@ -563,7 +565,7 @@
     "capacity_population_configuration": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["record_type","campaign_identity","scientific_run_identity","authority_identity","code_identity","artifact_identity","environment_identity","numerical_policy_identity","continuation_binding_identity","causal_arm","scenario_id","reconstruction_strategy","topology_family","topology_seed","topology_expansion_driver","demographic_state_may_change_expansion","service_demand_process","level_order","transition_source_levels","transition_target_levels","initial_capacity_C0","initial_capacity_C1","initial_population_P0","initial_population_P1","initial_resource_S0","initial_resource_S1","initial_reserve_allocation_QR0","initial_reserve_allocation_QR1","initial_quality_allocation_QQ0","initial_quality_allocation_QQ1","capacity_units_identity","resource_service_units_identity","raw_residual_rule_identity","capacity_conversion_rule_identity","expansion_burden_rule_identity","demographic_response_rule_identity","demographic_bookkeeping_rule_identity","resource_service_rule_identity","viability_homeostasis_recovery_rule_identity","bidirectional_expansion_rule_identity","run_seed","stochastic_rule_identity","permitted_stream_ids","exact_or_approximate_label","hard_limits"],
+      "required": ["record_type","campaign_identity","scientific_run_identity","authority_identity","code_identity","artifact_identity","environment_identity","numerical_policy_identity","continuation_binding_identity","causal_arm","scenario_id","reconstruction_strategy","topology_family","topology_seed","capacity_reconstruction_branch","topology_expansion_driver","demographic_state_may_change_expansion","service_demand_process","level_order","transition_source_levels","transition_target_levels","initial_capacity_C0","initial_capacity_C1","initial_population_P0","initial_population_P1","initial_resource_S0","initial_resource_S1","initial_reserve_allocation_QR0","initial_reserve_allocation_QR1","initial_quality_allocation_QQ0","initial_quality_allocation_QQ1","capacity_units_identity","resource_service_units_identity","raw_residual_rule_identity","capacity_conversion_rule_identity","expansion_burden_rule_identity","demographic_response_rule_identity","demographic_bookkeeping_rule_identity","resource_service_rule_identity","viability_homeostasis_recovery_rule_identity","bidirectional_expansion_rule_identity","run_seed","stochastic_rule_identity","permitted_stream_ids","exact_or_approximate_label","hard_limits"],
       "properties": {
         "record_type": {"const":"capacity_population_configuration/v1"},
         "campaign_identity": {"$ref":"#/$defs/identity"},
@@ -579,6 +581,7 @@
         "reconstruction_strategy": {"enum":["FULL-REBUILD-v1","INCREMENTAL-NO-REUSE-v1","CERTIFIED-MOTIF-REUSE-v1"]},
         "topology_family": {"enum":["FIBONACCI-CONDITIONAL-v1","HASHED-NONRECURSIVE-v1"]},
         "topology_seed": {"oneOf":[{"const":null},{"const":0}]},
+        "capacity_reconstruction_branch": {"enum":["RECURRENCE_WITH_TYPED_RESIDUAL","DIRECT_HASHED_TARGET_CAPACITY"]},
         "topology_expansion_driver": {"enum":["EXOGENOUS_REGISTERED_LEVEL_SEQUENCE","POPULATION_DERIVED_REQUIRED_CAPACITY_RECEIPT"]},
         "demographic_state_may_change_expansion": {"type":"boolean"},
         "service_demand_process": {"const":"CP-FIXED-SERVICE-v1:D_n=P_n/64"},
@@ -614,8 +617,8 @@
       "allOf": [
         {"if":{"properties":{"causal_arm":{"const":"ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY"}},"required":["causal_arm"]},"then":{"properties":{"topology_expansion_driver":{"const":"EXOGENOUS_REGISTERED_LEVEL_SEQUENCE"},"demographic_state_may_change_expansion":{"const":false},"bidirectional_expansion_rule_identity":{"const":null}}}},
         {"if":{"properties":{"causal_arm":{"const":"ARM-3-BIDIRECTIONAL-FEEDBACK"}},"required":["causal_arm"]},"then":{"properties":{"topology_expansion_driver":{"const":"POPULATION_DERIVED_REQUIRED_CAPACITY_RECEIPT"},"demographic_state_may_change_expansion":{"const":true},"bidirectional_expansion_rule_identity":{"$ref":"#/$defs/identity"}}}},
-        {"if":{"properties":{"scenario_id":{"const":"CP-NONRECURSIVE"}},"required":["scenario_id"]},"then":{"properties":{"topology_family":{"const":"HASHED-NONRECURSIVE-v1"},"topology_seed":{"const":0}}}},
-        {"if":{"properties":{"scenario_id":{"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK"]}},"required":["scenario_id"]},"then":{"properties":{"topology_family":{"const":"FIBONACCI-CONDITIONAL-v1"},"topology_seed":{"const":null}}}}
+        {"if":{"properties":{"scenario_id":{"const":"CP-NONRECURSIVE"}},"required":["scenario_id"]},"then":{"properties":{"topology_family":{"const":"HASHED-NONRECURSIVE-v1"},"topology_seed":{"const":0},"capacity_reconstruction_branch":{"const":"DIRECT_HASHED_TARGET_CAPACITY"}}}},
+        {"if":{"properties":{"scenario_id":{"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK"]}},"required":["scenario_id"]},"then":{"properties":{"topology_family":{"const":"FIBONACCI-CONDITIONAL-v1"},"topology_seed":{"const":null},"capacity_reconstruction_branch":{"const":"RECURRENCE_WITH_TYPED_RESIDUAL"}}}}
         ,{"if":{"properties":{"scenario_id":{"const":"CP-RESPONSE-DELAY"}},"required":["scenario_id"]},"then":{"properties":{"initial_population_P1":{"const":{"numerator":"8","denominator":"1"}}}}}
         ,{"if":{"properties":{"scenario_id":{"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-CAPACITY-SHOCK","CP-NONRECURSIVE"]}},"required":["scenario_id"]},"then":{"properties":{"initial_population_P1":{"const":{"numerator":"12","denominator":"1"}}}}}
       ]
@@ -623,7 +626,7 @@
     "capacity_population_level_record": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["record_type","campaign_identity","scientific_run_identity","attempt_identity","checkpoint_identity","causal_arm","scenario_id","reconstruction_strategy","service_demand_process","level_n","target_level_m","burden_index_rule","topology_identity","capacity_C_n_minus_1","capacity_C_n","raw_residual_J_n","capacity_compatible_residual_JC_n","construction_burden","maintenance_burden","resource_burden","correction_burden","delay_burden","loss_burden","total_expansion_burden_X_n_plus_1","capacity_C_n_plus_1","reserve_allocation_increment","quality_allocation_increment","cumulative_reserve_allocation","cumulative_quality_allocation","demographic_response_capacity","population_P_n_minus_1","population_P_n","population_P_n_plus_1","births","deaths","migration","demand","resource_state_previous","regeneration","boundary_exchange","resource_pre","served","unmet","resource_post","service_fraction","service_reserve_margin","viability_pass","homeostasis_window_disposition","terminal_homeostasis_member","recovery_event_identities","recovery_disposition","collapsed","collapse_reason","conditional_projection_rho","effective_rho","required_capacity","expansion_request_issued","expansion_request_receipt_identity","transition_disposition","terminal_disposition","raw_residual_receipt_identity","capacity_conversion_receipt_identity","construction_receipt_identity","maintenance_receipt_identity","resource_receipt_identity","correction_receipt_identity","delay_receipt_identity","loss_receipt_identity","capacity_ledger_receipt_identity","demographic_receipt_identity","service_receipt_identity","regeneration_receipt_identity","event_receipt_identities","conservation_receipt_identity","direct_reconstruction_identity","strategy_reconstruction_identity","scientific_projection_identity","exact_conditional_projection_eligible","exact_conditional_projection_pass","scientific_evidence_value"],
+      "required": ["record_type","campaign_identity","scientific_run_identity","attempt_identity","checkpoint_identity","causal_arm","scenario_id","reconstruction_strategy","capacity_reconstruction_branch","service_demand_process","level_n","target_level_m","burden_index_rule","topology_identity","capacity_C_n_minus_1","capacity_C_n","raw_residual_J_n","capacity_compatible_residual_JC_n","construction_burden","maintenance_burden","resource_burden","correction_burden","delay_burden","loss_burden","total_expansion_burden_X_n_plus_1","capacity_C_n_plus_1","reserve_allocation_increment","quality_allocation_increment","cumulative_reserve_allocation","cumulative_quality_allocation","demographic_response_capacity","population_P_n_minus_1","population_P_n","population_P_n_plus_1","births","deaths","migration","demand","resource_state_previous","regeneration","boundary_exchange","resource_pre","served","unmet","resource_post","service_fraction","service_reserve_margin","viability_pass","homeostasis_window_disposition","terminal_homeostasis_member","recovery_event_identities","recovery_disposition","collapsed","collapse_reason","conditional_projection_rho","effective_rho","required_capacity","expansion_request_issued","expansion_request_receipt_identity","transition_disposition","terminal_disposition","raw_residual_receipt_identity","capacity_conversion_receipt_identity","construction_receipt_identity","maintenance_receipt_identity","resource_receipt_identity","correction_receipt_identity","delay_receipt_identity","loss_receipt_identity","capacity_ledger_receipt_identity","demographic_receipt_identity","service_receipt_identity","regeneration_receipt_identity","event_receipt_identities","conservation_receipt_identity","direct_reconstruction_identity","strategy_reconstruction_identity","scientific_projection_identity","exact_conditional_projection_eligible","exact_conditional_projection_pass","scientific_evidence_value"],
       "properties": {
         "record_type": {"const":"capacity_population_level_record/v1"},
         "campaign_identity": {"$ref":"#/$defs/identity"},
@@ -633,6 +636,7 @@
         "causal_arm": {"enum":["ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY","ARM-3-BIDIRECTIONAL-FEEDBACK"]},
         "scenario_id": {"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK","CP-NONRECURSIVE"]},
         "reconstruction_strategy": {"enum":["FULL-REBUILD-v1","INCREMENTAL-NO-REUSE-v1","CERTIFIED-MOTIF-REUSE-v1"]},
+        "capacity_reconstruction_branch": {"enum":["RECURRENCE_WITH_TYPED_RESIDUAL","DIRECT_HASHED_TARGET_CAPACITY"]},
         "service_demand_process": {"const":"CP-FIXED-SERVICE-v1:D_n=P_n/64"},
         "level_n": {"type":"integer","minimum":1,"maximum":15},
         "target_level_m": {"type":"integer","minimum":2,"maximum":16},
@@ -675,7 +679,7 @@
         "homeostasis_window_disposition": {"enum":["NOT_YET_APPLICABLE","PASS","FAIL"]},
         "terminal_homeostasis_member": {"type":"boolean"},
         "recovery_event_identities": {"type":"array","items":{"$ref":"#/$defs/identity"},"uniqueItems":true},
-        "recovery_disposition": {"enum":["NOT_APPLICABLE","RECOVERED","NOT_RECOVERED_ON_HORIZON","COLLAPSED_BEFORE_RECOVERY"]},
+        "recovery_disposition": {"enum":["NOT_APPLICABLE","PENDING_WITHIN_REGISTERED_RECOVERY_WINDOW","RECOVERED","NOT_RECOVERED_ON_HORIZON","COLLAPSED_BEFORE_RECOVERY"]},
         "collapsed": {"type":"boolean"},
         "collapse_reason": {"oneOf":[{"const":null},{"enum":["VIABILITY_EXIT","SERVICE_BELOW_HALF_FOR_TWO_LEVELS"]}]},
         "conditional_projection_rho": {"oneOf":[{"const":null},{"$ref":"#/$defs/reduced_rational"}]},
@@ -683,8 +687,8 @@
         "required_capacity": {"oneOf":[{"const":null},{"$ref":"#/$defs/reduced_rational"}]},
         "expansion_request_issued": {"type":"boolean"},
         "expansion_request_receipt_identity": {"oneOf":[{"const":null},{"$ref":"#/$defs/identity"}]},
-        "transition_disposition": {"enum":["ADVANCED_EXOGENOUS","ADVANCED_BY_RECEIPTED_REQUEST","STALLED_REQUIRED_CAPACITY_NOT_GREATER_OR_RECEIPT_MISSING"]},
-        "terminal_disposition": {"enum":["CONTINUE_TO_NEXT_LEVEL","COMPLETED_LEVEL_16_NO_FURTHER_REQUEST","STALLED_NO_LATER_ROWS"]},
+        "transition_disposition": {"enum":["ADVANCED_EXOGENOUS","ADVANCED_BY_RECEIPTED_REQUEST"]},
+        "terminal_disposition": {"enum":["CONTINUE_TO_NEXT_LEVEL","COMPLETED_LEVEL_16_NO_FURTHER_REQUEST"]},
         "raw_residual_receipt_identity": {"$ref":"#/$defs/identity"},
         "capacity_conversion_receipt_identity": {"$ref":"#/$defs/identity"},
         "construction_receipt_identity": {"$ref":"#/$defs/identity"},
@@ -725,7 +729,81 @@
         {"if":{"properties":{"scenario_id":{"const":"CP-POSITIVE-NONCONVERTIBLE"}},"required":["scenario_id"]},"then":{"properties":{"raw_residual_J_n":{"const":{"numerator":"3","denominator":"8"}},"capacity_compatible_residual_JC_n":{"const":{"numerator":"0","denominator":"1"}}}}},
         {"if":{"properties":{"scenario_id":{"const":"CP-ZERO-RESIDUAL"}},"required":["scenario_id"]},"then":{"properties":{"raw_residual_J_n":{"const":{"numerator":"0","denominator":"1"}},"capacity_compatible_residual_JC_n":{"const":{"numerator":"0","denominator":"1"}}}}},
         {"if":{"properties":{"scenario_id":{"const":"CP-NEGATIVE-RESIDUAL"}},"required":["scenario_id"]},"then":{"properties":{"raw_residual_J_n":{"const":{"numerator":"-3","denominator":"8"}},"capacity_compatible_residual_JC_n":{"const":{"numerator":"-3","denominator":"8"}}}}},
-        {"if":{"properties":{"scenario_id":{"const":"CP-NONRECURSIVE"}},"required":["scenario_id"]},"then":{"properties":{"raw_residual_J_n":{"const":null},"capacity_compatible_residual_JC_n":{"const":null},"exact_conditional_projection_eligible":{"const":false},"exact_conditional_projection_pass":{"const":null}}}}
+        {"if":{"properties":{"scenario_id":{"const":"CP-NONRECURSIVE"}},"required":["scenario_id"]},"then":{"properties":{"capacity_reconstruction_branch":{"const":"DIRECT_HASHED_TARGET_CAPACITY"},"raw_residual_J_n":{"const":null},"capacity_compatible_residual_JC_n":{"const":null},"exact_conditional_projection_eligible":{"const":false},"exact_conditional_projection_pass":{"const":null}}}},
+        {"if":{"properties":{"scenario_id":{"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK"]}},"required":["scenario_id"]},"then":{"properties":{"capacity_reconstruction_branch":{"const":"RECURRENCE_WITH_TYPED_RESIDUAL"},"raw_residual_J_n":{"$ref":"#/$defs/reduced_rational"},"capacity_compatible_residual_JC_n":{"$ref":"#/$defs/reduced_rational"}}}}
+      ]
+    },
+    "capacity_population_stall_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_type","campaign_identity","scientific_run_identity","attempt_identity","checkpoint_identity","causal_arm","scenario_id","reconstruction_strategy","source_level_n","proposed_target_level_m","current_capacity_C_n","current_population_P_n","effective_rho","required_capacity","required_capacity_strictly_greater","expansion_request_issued","expansion_request_receipt_identity","stall_reason","last_visible_level_n","terminal_disposition","later_level_row_count","stall_receipt_identity","scientific_evidence_value"],
+      "properties": {
+        "record_type": {"const":"capacity_population_stall_record/v1"},
+        "campaign_identity": {"$ref":"#/$defs/identity"},
+        "scientific_run_identity": {"$ref":"#/$defs/identity"},
+        "attempt_identity": {"$ref":"#/$defs/identity"},
+        "checkpoint_identity": {"$ref":"#/$defs/identity"},
+        "causal_arm": {"const":"ARM-3-BIDIRECTIONAL-FEEDBACK"},
+        "scenario_id": {"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK","CP-NONRECURSIVE"]},
+        "reconstruction_strategy": {"enum":["FULL-REBUILD-v1","INCREMENTAL-NO-REUSE-v1","CERTIFIED-MOTIF-REUSE-v1"]},
+        "source_level_n": {"type":"integer","minimum":1,"maximum":15},
+        "proposed_target_level_m": {"type":"integer","minimum":2,"maximum":16},
+        "current_capacity_C_n": {"$ref":"#/$defs/reduced_rational"},
+        "current_population_P_n": {"$ref":"#/$defs/reduced_rational"},
+        "effective_rho": {"$ref":"#/$defs/reduced_rational"},
+        "required_capacity": {"$ref":"#/$defs/reduced_rational"},
+        "required_capacity_strictly_greater": {"type":"boolean"},
+        "expansion_request_issued": {"type":"boolean"},
+        "expansion_request_receipt_identity": {"const":null},
+        "stall_reason": {"enum":["REQUIRED_CAPACITY_NOT_GREATER","MISSING_EXPANSION_REQUEST_RECEIPT"]},
+        "last_visible_level_n": {"type":"integer","minimum":1,"maximum":15},
+        "terminal_disposition": {"const":"STALLED_NO_LATER_ROWS"},
+        "later_level_row_count": {"const":0},
+        "stall_receipt_identity": {"$ref":"#/$defs/identity"},
+        "scientific_evidence_value": {"const":"NOT_A_SCIENTIFIC_OUTCOME"}
+      },
+      "allOf": [
+        {"if":{"properties":{"stall_reason":{"const":"REQUIRED_CAPACITY_NOT_GREATER"}},"required":["stall_reason"]},"then":{"properties":{"required_capacity_strictly_greater":{"const":false},"expansion_request_issued":{"const":false},"expansion_request_receipt_identity":{"const":null}}}},
+        {"if":{"properties":{"stall_reason":{"const":"MISSING_EXPANSION_REQUEST_RECEIPT"}},"required":["stall_reason"]},"then":{"properties":{"required_capacity_strictly_greater":{"const":true},"expansion_request_issued":{"const":true},"expansion_request_receipt_identity":{"const":null}}}}
+      ]
+    },
+    "capacity_population_predicate_oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_type","oracle_identity","authority_identity","fixture_id","ordered_level_inputs","event_target_level","expected_recovery_target_level","recovery_disposition","expected_collapse_target_level","collapse_reason","terminal_homeostasis_member","scientific_evidence_value"],
+      "properties": {
+        "record_type": {"const":"capacity_population_predicate_oracle/v1"},
+        "oracle_identity": {"$ref":"#/$defs/identity"},
+        "authority_identity": {"$ref":"#/$defs/identity"},
+        "fixture_id": {"enum":["CP-RECOVERY-ORACLE-v1","CP-COLLAPSE-ORACLE-v1","CP-TERMINAL-HOMEOSTASIS-ORACLE-v1"]},
+        "ordered_level_inputs": {
+          "type":"array",
+          "minItems":2,
+          "maxItems":4,
+          "items": {
+            "type":"object",
+            "additionalProperties":false,
+            "required":["target_level_m","viability_pass","service_fraction","service_reserve_margin"],
+            "properties": {
+              "target_level_m":{"type":"integer","minimum":2,"maximum":16},
+              "viability_pass":{"type":"boolean"},
+              "service_fraction":{"$ref":"#/$defs/reduced_rational"},
+              "service_reserve_margin":{"$ref":"#/$defs/reduced_rational"}
+            }
+          }
+        },
+        "event_target_level": {"oneOf":[{"const":null},{"type":"integer","minimum":2,"maximum":16}]},
+        "expected_recovery_target_level": {"oneOf":[{"const":null},{"type":"integer","minimum":2,"maximum":16}]},
+        "recovery_disposition": {"enum":["NOT_APPLICABLE","RECOVERED"]},
+        "expected_collapse_target_level": {"oneOf":[{"const":null},{"type":"integer","minimum":2,"maximum":16}]},
+        "collapse_reason": {"oneOf":[{"const":null},{"enum":["VIABILITY_EXIT","SERVICE_BELOW_HALF_FOR_TWO_LEVELS"]}]},
+        "terminal_homeostasis_member": {"type":"boolean"},
+        "scientific_evidence_value": {"const":"PREDICATE_ORACLE_CONFORMANCE_NOT_A_SCIENTIFIC_OUTCOME"}
+      },
+      "allOf": [
+        {"if":{"properties":{"fixture_id":{"const":"CP-RECOVERY-ORACLE-v1"}},"required":["fixture_id"]},"then":{"properties":{"event_target_level":{"type":"integer","minimum":2,"maximum":16},"expected_recovery_target_level":{"type":"integer","minimum":2,"maximum":16},"recovery_disposition":{"const":"RECOVERED"},"expected_collapse_target_level":{"const":null},"collapse_reason":{"const":null},"terminal_homeostasis_member":{"const":false}}}},
+        {"if":{"properties":{"fixture_id":{"const":"CP-COLLAPSE-ORACLE-v1"}},"required":["fixture_id"]},"then":{"properties":{"event_target_level":{"const":null},"expected_recovery_target_level":{"const":null},"recovery_disposition":{"const":"NOT_APPLICABLE"},"expected_collapse_target_level":{"type":"integer","minimum":2,"maximum":16},"collapse_reason":{"enum":["VIABILITY_EXIT","SERVICE_BELOW_HALF_FOR_TWO_LEVELS"]},"terminal_homeostasis_member":{"const":false}}}},
+        {"if":{"properties":{"fixture_id":{"const":"CP-TERMINAL-HOMEOSTASIS-ORACLE-v1"}},"required":["fixture_id"]},"then":{"properties":{"event_target_level":{"const":null},"expected_recovery_target_level":{"const":null},"recovery_disposition":{"const":"NOT_APPLICABLE"},"expected_collapse_target_level":{"const":null},"collapse_reason":{"const":null},"terminal_homeostasis_member":{"const":true}}}}
       ]
     },
     "capacity_population_reconstruction_comparison": {
@@ -764,10 +842,40 @@
         {"if":{"properties":{"scenario_id":{"const":"CP-NONRECURSIVE"}},"required":["scenario_id"]},"then":{"properties":{"eligible_for_reuse_efficiency_claim":{"const":false},"recomputation_disposition":{"const":"NOT_ELIGIBLE_NONRECURSIVE_OR_BOUNDARY_CHANGE"}}}}
       ]
     },
+    "inherited_continuation_counter_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_resource_ledger_identity","campaign_resource_ledger_identity","run_cumulative_primary_evaluations","campaign_cumulative_primary_evaluations"],
+      "properties": {
+        "run_resource_ledger_identity": {"$ref":"#/$defs/identity"},
+        "campaign_resource_ledger_identity": {"$ref":"#/$defs/identity"},
+        "run_cumulative_primary_evaluations": {"type":"integer","minimum":0,"maximum":10000},
+        "campaign_cumulative_primary_evaluations": {"type":"integer","minimum":0,"maximum":600000}
+      }
+    },
+    "capacity_population_run_evidence_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binding_ordinal","scientific_run_identity","causal_arm","scenario_id","reconstruction_strategy","computation_record_identity","limit_decision_identity","run_resource_ledger_identity","campaign_resource_ledger_identity","run_cumulative_primary_evaluations","study_cumulative_primary_evaluations","run_terminal_disposition"],
+      "properties": {
+        "binding_ordinal": {"type":"integer","minimum":0,"maximum":59},
+        "scientific_run_identity": {"$ref":"#/$defs/identity"},
+        "causal_arm": {"enum":["ARM-2-TOPOLOGY-CAPACITY-PERMITS-DEMOGRAPHY","ARM-3-BIDIRECTIONAL-FEEDBACK"]},
+        "scenario_id": {"enum":["CP-POSITIVE-COMPATIBLE","CP-ZERO-RESIDUAL","CP-NEGATIVE-RESIDUAL","CP-POSITIVE-NONCONVERTIBLE","CP-RESERVE-ALLOCATION","CP-QUALITY-ALLOCATION","CP-DEMOGRAPHIC-TRANSITION","CP-RESPONSE-DELAY","CP-CAPACITY-SHOCK","CP-NONRECURSIVE"]},
+        "reconstruction_strategy": {"enum":["FULL-REBUILD-v1","INCREMENTAL-NO-REUSE-v1","CERTIFIED-MOTIF-REUSE-v1"]},
+        "computation_record_identity": {"$ref":"#/$defs/identity"},
+        "limit_decision_identity": {"$ref":"#/$defs/identity"},
+        "run_resource_ledger_identity": {"$ref":"#/$defs/identity"},
+        "campaign_resource_ledger_identity": {"$ref":"#/$defs/identity"},
+        "run_cumulative_primary_evaluations": {"type":"integer","minimum":0,"maximum":10000},
+        "study_cumulative_primary_evaluations": {"type":"integer","minimum":0,"maximum":600000},
+        "run_terminal_disposition": {"const":"RUN_CLOSED_WITHIN_CAPS"}
+      }
+    },
     "capacity_population_computation_record": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["record_type","campaign_identity","scientific_run_identity","attempt_identity","inherited_computation_record_identity","inherited_limit_decision_identity","hard_limits","attempt_primary_evaluations","run_cumulative_primary_evaluations","study_cumulative_primary_evaluations","active_wall_seconds","process_tree_peak_rss_bytes","trace_bytes","output_bytes","counter_reset_count","scientific_evidence_value"],
+      "required": ["record_type","campaign_identity","scientific_run_identity","attempt_identity","inherited_computation_record_identity","inherited_limit_decision_identity","inherited_continuation_counter_projection","hard_limits","attempt_primary_evaluations","run_cumulative_primary_evaluations","study_cumulative_primary_evaluations","active_wall_seconds","process_tree_peak_rss_bytes","trace_bytes","output_bytes","counter_reset_count","scientific_evidence_value"],
       "properties": {
         "record_type": {"const":"capacity_population_computation_record/v1"},
         "campaign_identity": {"$ref":"#/$defs/identity"},
@@ -775,6 +883,7 @@
         "attempt_identity": {"$ref":"#/$defs/identity"},
         "inherited_computation_record_identity": {"$ref":"#/$defs/identity"},
         "inherited_limit_decision_identity": {"$ref":"#/$defs/identity"},
+        "inherited_continuation_counter_projection": {"$ref":"#/$defs/inherited_continuation_counter_projection"},
         "hard_limits": {"$ref":"#/$defs/capacity_population_hard_limits"},
         "attempt_primary_evaluations": {"type":"integer","minimum":0,"maximum":10000},
         "run_cumulative_primary_evaluations": {"type":"integer","minimum":0,"maximum":10000},
@@ -810,7 +919,7 @@
     "capacity_population_campaign_summary": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["record_type","campaign_identity","authority_identity","code_identity","artifact_identity","environment_identity","hard_limits","registered_scientific_run_count","visible_scientific_run_count","arm2_run_count","arm3_run_count","matched_strategy_triplet_count","visible_triplet_count","scenario_count","strategy_count","level_count","level_rows_per_run","complete_capacity_ledger_count","complete_demographic_ledger_count","complete_resource_service_ledger_count","viability_record_count","homeostasis_window_count","terminal_homeostasis_disposition_count","recovery_event_count","collapse_disposition_count","arm3_request_receipt_count","arm3_terminal_level_count","stalled_run_count","reconstruction_comparison_count","exact_conditional_eligible_row_count","exact_conditional_pass_count","zero_residual_control_visible","negative_residual_control_visible","positive_nonconvertible_control_visible","reserve_allocation_control_visible","quality_allocation_control_visible","demographic_transition_control_visible","response_delay_control_visible","capacity_shock_control_visible","nonrecursive_control_visible","all_strategy_projections_compared","all_burdens_receipted","all_demographic_terms_receipted","all_resource_service_terms_receipted","all_viability_homeostasis_recovery_collapse_reconciled","all_causal_arms_separated","computation_record_identities","limit_decision_identities","study_cumulative_primary_evaluations","output_manifest_identity","campaign_disposition","interpretation_status"],
+      "required": ["record_type","campaign_identity","authority_identity","code_identity","artifact_identity","environment_identity","hard_limits","registered_scientific_run_count","visible_scientific_run_count","arm2_run_count","arm3_run_count","matched_strategy_triplet_count","visible_triplet_count","scenario_count","strategy_count","level_count","level_rows_per_run","complete_capacity_ledger_count","complete_demographic_ledger_count","complete_resource_service_ledger_count","viability_record_count","homeostasis_window_count","terminal_homeostasis_disposition_count","recovery_event_count","collapse_disposition_count","arm3_request_receipt_count","arm3_terminal_level_count","stalled_run_count","stall_record_identities","reconstruction_comparison_count","exact_conditional_eligible_row_count","exact_conditional_pass_count","zero_residual_control_visible","negative_residual_control_visible","positive_nonconvertible_control_visible","reserve_allocation_control_visible","quality_allocation_control_visible","demographic_transition_control_visible","response_delay_control_visible","capacity_shock_control_visible","nonrecursive_control_visible","all_strategy_projections_compared","all_burdens_receipted","all_demographic_terms_receipted","all_resource_service_terms_receipted","all_viability_homeostasis_recovery_collapse_reconciled","all_causal_arms_separated","run_evidence_bindings","computation_record_identities","limit_decision_identities","study_cumulative_primary_evaluations","output_manifest_identity","campaign_disposition","interpretation_status"],
       "properties": {
         "record_type": {"const":"capacity_population_campaign_summary/v1"},
         "campaign_identity": {"$ref":"#/$defs/identity"},
@@ -835,11 +944,12 @@
         "viability_record_count": {"type":"integer","minimum":0,"maximum":900},
         "homeostasis_window_count": {"type":"integer","minimum":0,"maximum":720},
         "terminal_homeostasis_disposition_count": {"type":"integer","minimum":0,"maximum":60},
-        "recovery_event_count": {"type":"integer","minimum":0},
+        "recovery_event_count": {"type":"integer","minimum":0,"maximum":216},
         "collapse_disposition_count": {"type":"integer","minimum":0,"maximum":60},
         "arm3_request_receipt_count": {"type":"integer","minimum":0,"maximum":450},
         "arm3_terminal_level_count": {"type":"integer","minimum":0,"maximum":30},
         "stalled_run_count": {"type":"integer","minimum":0,"maximum":30},
+        "stall_record_identities": {"type":"array","maxItems":30,"items":{"$ref":"#/$defs/identity"},"uniqueItems":true},
         "reconstruction_comparison_count": {"type":"integer","minimum":0,"maximum":20},
         "exact_conditional_eligible_row_count": {"const":450},
         "exact_conditional_pass_count": {"type":"integer","minimum":0,"maximum":450},
@@ -858,15 +968,16 @@
         "all_resource_service_terms_receipted": {"type":"boolean"},
         "all_viability_homeostasis_recovery_collapse_reconciled": {"type":"boolean"},
         "all_causal_arms_separated": {"type":"boolean"},
-        "computation_record_identities": {"type":"array","minItems":60,"items":{"$ref":"#/$defs/identity"},"uniqueItems":true},
-        "limit_decision_identities": {"type":"array","minItems":1,"items":{"$ref":"#/$defs/identity"},"uniqueItems":true},
+        "run_evidence_bindings": {"type":"array","maxItems":60,"items":{"$ref":"#/$defs/capacity_population_run_evidence_binding"},"uniqueItems":true},
+        "computation_record_identities": {"type":"array","maxItems":60,"items":{"$ref":"#/$defs/identity"},"uniqueItems":true},
+        "limit_decision_identities": {"type":"array","maxItems":60,"items":{"$ref":"#/$defs/identity"},"uniqueItems":true},
         "study_cumulative_primary_evaluations": {"type":"integer","minimum":0,"maximum":600000},
         "output_manifest_identity": {"$ref":"#/$defs/identity"},
         "campaign_disposition": {"enum":["COMPLETE_WITH_VISIBLE_CELL_DISPOSITIONS","FAILED_REGISTERED_FALSIFIER","COMPUTATIONALLY_INCONCLUSIVE","REFUSED_AUTHORITY_OR_IDENTITY"]},
         "interpretation_status": {"const":"REQUIRES_INDEPENDENT_STAGE_F_RESULT_INTEGRITY_AUDIT_AND_USER_REVIEW"}
       },
       "allOf": [
-        {"if":{"properties":{"campaign_disposition":{"const":"COMPLETE_WITH_VISIBLE_CELL_DISPOSITIONS"}},"required":["campaign_disposition"]},"then":{"properties":{"visible_scientific_run_count":{"const":60},"visible_triplet_count":{"const":20},"complete_capacity_ledger_count":{"const":900},"complete_demographic_ledger_count":{"const":900},"complete_resource_service_ledger_count":{"const":900},"viability_record_count":{"const":900},"homeostasis_window_count":{"const":720},"terminal_homeostasis_disposition_count":{"const":60},"collapse_disposition_count":{"const":60},"arm3_request_receipt_count":{"const":450},"arm3_terminal_level_count":{"const":30},"stalled_run_count":{"const":0},"reconstruction_comparison_count":{"const":20},"exact_conditional_pass_count":{"const":450},"zero_residual_control_visible":{"const":true},"negative_residual_control_visible":{"const":true},"positive_nonconvertible_control_visible":{"const":true},"reserve_allocation_control_visible":{"const":true},"quality_allocation_control_visible":{"const":true},"demographic_transition_control_visible":{"const":true},"response_delay_control_visible":{"const":true},"capacity_shock_control_visible":{"const":true},"nonrecursive_control_visible":{"const":true},"all_strategy_projections_compared":{"const":true},"all_burdens_receipted":{"const":true},"all_demographic_terms_receipted":{"const":true},"all_resource_service_terms_receipted":{"const":true},"all_viability_homeostasis_recovery_collapse_reconciled":{"const":true},"all_causal_arms_separated":{"const":true}}}}
+        {"if":{"properties":{"campaign_disposition":{"const":"COMPLETE_WITH_VISIBLE_CELL_DISPOSITIONS"}},"required":["campaign_disposition"]},"then":{"properties":{"visible_scientific_run_count":{"const":60},"visible_triplet_count":{"const":20},"complete_capacity_ledger_count":{"const":900},"complete_demographic_ledger_count":{"const":900},"complete_resource_service_ledger_count":{"const":900},"viability_record_count":{"const":900},"homeostasis_window_count":{"const":720},"terminal_homeostasis_disposition_count":{"const":60},"recovery_event_count":{"const":216},"collapse_disposition_count":{"const":60},"arm3_request_receipt_count":{"const":450},"arm3_terminal_level_count":{"const":30},"stalled_run_count":{"const":0},"stall_record_identities":{"const":[]},"reconstruction_comparison_count":{"const":20},"exact_conditional_pass_count":{"const":450},"zero_residual_control_visible":{"const":true},"negative_residual_control_visible":{"const":true},"positive_nonconvertible_control_visible":{"const":true},"reserve_allocation_control_visible":{"const":true},"quality_allocation_control_visible":{"const":true},"demographic_transition_control_visible":{"const":true},"response_delay_control_visible":{"const":true},"capacity_shock_control_visible":{"const":true},"nonrecursive_control_visible":{"const":true},"all_strategy_projections_compared":{"const":true},"all_burdens_receipted":{"const":true},"all_demographic_terms_receipted":{"const":true},"all_resource_service_terms_receipted":{"const":true},"all_viability_homeostasis_recovery_collapse_reconciled":{"const":true},"all_causal_arms_separated":{"const":true},"run_evidence_bindings":{"type":"array","minItems":60,"maxItems":60},"computation_record_identities":{"type":"array","minItems":60,"maxItems":60},"limit_decision_identities":{"type":"array","minItems":60,"maxItems":60}}}}
       ]
     },
     "growth_campaign_summary": {

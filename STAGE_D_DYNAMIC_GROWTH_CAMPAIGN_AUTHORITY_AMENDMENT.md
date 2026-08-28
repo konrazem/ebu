@@ -378,9 +378,12 @@ local limit decision, and campaign summary must carry the exact closed
 study cumulative primary evaluations `600000`, per-attempt wall seconds
 `14400`, process-tree peak RSS `4294967296`, trace bytes per run `5368709120`,
 and logical study output `21474836480`. The local computation and decision
-records bind the corresponding inherited Stage D/continuation computation and
-limit-decision identities. A missing, substituted, reset, or larger profile,
-or a cumulative count above 600,000, refuses or is computationally
+records bind the corresponding inherited Stage D/continuation computation,
+limit-decision, run-resource-ledger, and campaign-resource-ledger identities
+and exact counter projections. A complete campaign has exactly one distinct
+limit decision and computation binding for each of its 60 run cells. A
+missing, substituted, reset, nonmonotonic, or larger profile or counter, or a
+cumulative count above 600,000, refuses or is computationally
 inconclusive and is never a scientific result.
 Operation classes remain
 separate: transition/menu checks, coefficient evaluations, canonicalization,
@@ -647,10 +650,11 @@ Together the programme contains 396 scientific runs and 132 matched strategy
 triplets. The three arms are interventions in registered models, not evidence
 that any direction is universal in real populations.
 
-For Arms 2 and 3, use levels `0..16`, base capacities `C_0=2,C_1=3`, and the
-exact capacity-compatible recurrence
+For Arms 2 and 3, use levels `0..16` and base capacities `C_0=2,C_1=3`.
+The nine recursive scenarios use the exact capacity-compatible recurrence
 
-`C_(n+1)=C_n+C_(n-1)+J^C_n-X_(n+1)`.
+`C_(n+1)=C_n+C_(n-1)+J^C_n-X_(n+1)`; the nonrecursive control uses only its
+separately frozen direct target-capacity branch.
 
 `J^C_n` is the residual that the declared capacity model and typed conversion
 receipt permit to enter usable capacity. An arbitrary positive EBU or Möbius
@@ -692,16 +696,42 @@ quality; demographic transition with `rho=4` through level 8 and `rho=2`
 afterward; one-level demographic-response delay; an exact level-8 capacity
 shock; and a direct hashed nonrecursive topology. Reserve and quality allocations
 are excluded from demographic-response capacity. The nonrecursive case has no
-recursive projection. Arm 3 records
+recursive projection. The two capacity-reconstruction branches are mutually
+exclusive. The nine recursive scenarios use
+`C_m=C_(m-1)+C_(m-2)+J^C_(m-1)-X_m` for targets `m=2..16` and require both
+typed residuals. `CP-NONRECURSIVE` instead preserves the universal bases
+`C_0=2,C_1=3` and, only for targets `m=2..16`, directly acquires
+`C_m=2+(first_SHA256_byte(UTF-8
+EBU-SD01-GROWTH-NONRECURSIVE-CAPACITY-v1|m) mod 33)/16`. Its raw and
+capacity-compatible residuals are null, the recursive equation is forbidden,
+and the direct acquisition is the scenario's net usable-capacity control. The
+six burden terms and receipts remain visible comparators but are neither
+silently discarded nor subtracted a second time from that directly acquired
+value. A record cannot carry both reconstruction branches or use the direct
+rule at levels zero or one.
+Each nonrecursive target row also carries the exact immediately preceding pair:
+target two carries `(C_0,C_1)=(2,3)`; every later target carries the two
+previous direct hash values. A mismatched predecessor pair refuses even when
+the current target hash value is correct.
+
+Arm 3 records
 `expansion_rho_effective_n=P_n/C_n`, which is a required positive reduced
 rational and is distinct from any scenario's demographic-response factor.
 Thus `required_capacity_n=P_n/expansion_rho_effective_n+1/16=C_n+1/16`.
 For every source level `n=1..15`, only that exact strict inequality plus one
 typed request receipt authorizes target level `n+1`; all 15 requests must be
-present. At level 16 the exact terminal disposition is
+present in a completed Arm-3 run. At level 16 the exact terminal disposition is
 `COMPLETED_LEVEL_16_NO_FURTHER_REQUEST`. A null, zero, negative, arbitrary, or
-scenario-response-substituted expansion ratio refuses; a missing request
-stalls visibly and forbids fabrication of later level rows.
+scenario-response-substituted expansion ratio refuses. A non-greater required
+capacity or a missing request receipt creates a separate closed
+`capacity_population_stall_record/v1`, not a fabricated target-level state.
+That non-scientific record binds the source, proposed target, ratio, required
+capacity, request predicate, missing-or-failed receipt reason, exact last
+visible level, a typed stall receipt, `STALLED_NO_LATER_ROWS`, and a zero count
+of later rows. No `capacity_population_level_record/v1` at or above that
+proposed target may then exist for the same scientific run. A stall makes the
+run/campaign refused or computationally inconclusive according to its cause;
+it is never a positive or negative scientific answer.
 
 The capacity-population scenarios use one exact registered service-demand
 process, `CP-FIXED-SERVICE-v1`, at every level: `D_n=P_n/64`. Initial
@@ -739,6 +769,16 @@ consecutive target levels with service fraction below `1/2`. These predicates,
 event identities, first-event levels, and receipts are recorded per run and
 reconciled in the capacity-population campaign summary.
 
+The complete 60-run schedule contains exactly 216 recovery-event identities:
+two universal correction events in each of 60 runs (`120`), the level-8 shock
+in the six shock runs (`6`), and one activation at each of 15 target levels in
+the six response-delay runs (`90`). A completed summary must bind exactly 216;
+zero or any other count refuses. Static non-evidence fixtures must separately
+cover direct nonrecursive capacity, target levels 8, 10, and 16, reserve and
+quality allocation, response delay, recovery, collapse, terminal homeostasis,
+and the visible Arm-3 stall branch. These fixtures are oracle/conformance
+records only and contain no registered outcome.
+
 Every scenario runs full rebuild, incremental without reuse, and certified
 motif reuse; their scientific projections must match exactly. Capacity,
 residual conversion, every burden component, population, births, deaths,
@@ -761,6 +801,23 @@ preflights are keyed by the two causal arms and ten scenarios, use the
 certified-reuse strategy, and refuse before a level transition. Together with
 the 56 demand-driven fixtures this preserves exactly 76 representable refusal
 fixtures.
+
+Every completed capacity-population campaign summary also carries an exact
+ordered 60-entry run-evidence binding, one entry for each
+`causal arm -> scenario -> reconstruction strategy` cell. Each entry binds the
+run, its computation record, its per-run limit decision, and the inherited
+continuation run/campaign resource-ledger identities and cumulative evaluation
+projections. The summary's 60 computation identities and 60 limit-decision
+identities must equal those ordered projections exactly; a single shared limit
+decision, an omitted run, a duplicate, or a cross-run substitution refuses.
+For each computation record,
+`attempt_primary_evaluations <= run_cumulative_primary_evaluations <=
+study_cumulative_primary_evaluations`; the run and study values must equal the
+accepted inherited `run_resource_ledger/v2.cumulative_primary_evaluations` and
+`campaign_resource_ledger/v2.campaign_cumulative_primary_evaluations`
+projections bound by their immutable identities. Across the 60-entry order the
+study cumulative value is nondecreasing, and the summary value equals the last
+entry. Counters never reset, disappear, or change when an attempt is resumed.
 
 ## 11.3 External conceptual input and future-book-only nature reference
 
@@ -810,7 +867,7 @@ coefficients, service/reserve/recovery/collapse predicates, operation counters,
 cache events, certificates, corrections, invalidations, conservation receipts,
 limits, environment, and output digests.
 
-Prospective schema validation must first validate all 29 complete fixtures,
+Prospective schema validation must first validate all 44 complete fixtures,
 covering every one of the 25 closed schema definitions and both valid branches
 where a definition has materially distinct scalable/non-scalable,
 Arm-2/Arm-3, or Arm-1/capacity-population forms. This includes dynamic and
@@ -891,6 +948,15 @@ The campaign refuses or falsifies, as applicable, on any of the following:
 - one causal arm substituted for another, or zero/negative/nonconvertible,
   reserve/quality, demographic-transition, delay, shock, or nonrecursive
   controls hidden or reclassified;
+- recursive and direct nonrecursive capacity branches combined, a direct rule
+  applied to `C_0` or `C_1`, a nonrecursive target different from the frozen
+  hash value, or a null residual admitted to the recursive recurrence;
+- an Arm-3 missing/non-greater request represented as an advanced target row,
+  a stall without its typed refusal receipt, or any later row fabricated after
+  a visible stall;
+- a completed 60-run summary without exactly 216 recovery events, 60 distinct
+  per-run computation/limit bindings, exact inherited continuation-ledger
+  counter equality, or monotonic attempt/run/study cumulative accounting;
 - an `O(log N)` claim for physical construction, storage, data collection,
   coefficient acquisition, boundary certification, or arbitrary all-subset
   reconstruction;
