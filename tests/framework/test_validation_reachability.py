@@ -555,7 +555,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "b19b320ce116a9d168cacfd9366189c3d4374fa98be12e1c8fb5c5a047974738"
+TEST_SELF_SEAL = "25257f5c9f95ac8e5c7409f01953fd033629dbe3543c66c6dcb9f4814f6a1fd9"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3147,7 +3147,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         relations = validation["cross_record_semantic_relations"]
         self.assertEqual(len(relations), 44)
         self.assertTrue(any("216 events" in relation for relation in relations))
-        self.assertTrue(any("STALLED_NO_LATER_ROWS" in relation for relation in relations))
+        self.assertTrue(
+            any("DG-SEM-STALL-TERMINAL" in relation for relation in relations)
+        )
         self.assertTrue(any("attempt_primary_evaluations <=" in relation for relation in relations))
 
         zero_counters = contract["required_operation_counts"]
