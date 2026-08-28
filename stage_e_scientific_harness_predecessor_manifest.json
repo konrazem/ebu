@@ -1,0 +1,186 @@
+{
+  "manifest_id": "EBU-STAGE-E-SCIENTIFIC-HARNESS-PREDECESSOR-MANIFEST-v1",
+  "manifest_version": 1,
+  "status": "PROSPECTIVE_STATIC_LOCK_ONLY",
+  "accepted_base": {
+    "commit": "d68bfb75fd822d2219c803fb3933ca60b54af4e0",
+    "tree": "15a128783388075978f9faa716bae1c8066361c9",
+    "live_target_ref": "refs/heads/framework-v0.1"
+  },
+  "source_count": 17,
+  "source_rows": [
+    {
+      "path": ".github/workflows/tests.yml",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "fc35712939bc393a8b69173552385118a30a3d95",
+      "byte_count": 13830,
+      "raw_sha256": "43807da6aba6a55bdf9880f6e4407bf9ab7ba6dc4ee535c162824c1453e7a7aa",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "20fa88c3e9cff1071a4730f6dbb80e6a114a9467",
+      "byte_count": 26730,
+      "raw_sha256": "8e92550fd444c39516f35f1bd9d4d69f22018edc51b23b28aaf1c8e83fd98276",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "6970a453c1408471b204b3168444eebe8d792923",
+      "byte_count": 39939,
+      "raw_sha256": "f755c38aff690fe317b29550f0f1ef7d627c75902c0f555d9f8ca594499dba16",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "build_backend/ebu_build_backend.py",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "6939d4ebc75658ec621f72629530842f56b87e4c",
+      "byte_count": 26572,
+      "raw_sha256": "7d48c3707aae0982a7d8454aef8ca78798512d7fda068828f8f8cb9ee2f8bc98",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "2f56dbe4f8c9eeeade8cc66071dd2c89e21f1845",
+      "byte_count": 434,
+      "raw_sha256": "25f7a0cacdfa54c23f0fb7122d14f28d9e3e44d76105f8805f636e895e325b47",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "requirements-framework.lock",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "907bdff88be25741f04980ae5e6a769df2a61d4d",
+      "byte_count": 2036,
+      "raw_sha256": "8d37c527af8caf5b168d397fbc35e651f98266c51aefc12a1ad415c97c34663a",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "scripts/validate_stage_c_release_candidate.py",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "ac6b47778fcd26815f7b6b206c6ac0b907920b7a",
+      "byte_count": 90665,
+      "raw_sha256": "2246975766f1d0e2c55d31581969bda45a1b1966e4da721398d217f558a228a8",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    },
+    {
+      "path": "stage_d_completion_oriented_continuation_contract.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "45f869e9012fdb8f7bf1f660fbb82edb0f5ef184",
+      "byte_count": 26727,
+      "raw_sha256": "9c668e43e2fd06e6260296ca9608fc94ad5b6d806e317ff8f168eb0858802577",
+      "canonical_byte_count": 22930,
+      "canonical_sha256": "64201850cac7a4384f55511a1f21d019ad165993874d521f5f4299410bd88a59"
+    },
+    {
+      "path": "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "223fd60385ad727fc8dc1b362fa7060e72afa19d",
+      "byte_count": 71047,
+      "raw_sha256": "66ef7d3189e692404d0d8ef773bd15b7d70eb4172e44ca6b1b6f3a4a4da16f88",
+      "canonical_byte_count": 46838,
+      "canonical_sha256": "05da12e24c7971cda7a59a05564c7d828572cd2e432e577be7fc4fdb245ec442"
+    },
+    {
+      "path": "stage_d_completion_oriented_continuation_predecessor_manifest.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "c7bae1f109706dc37d8f4b461d0dd6fa554b9e3d",
+      "byte_count": 6169,
+      "raw_sha256": "b49c3318e3aa2f8367b3909c0a0dfa1fa62f2a90915d5e8728f5a331dff1725c",
+      "canonical_byte_count": 5239,
+      "canonical_sha256": "83e403f9de49e15e5c975e986243da1a30874ee76df80ac0c89051d0a9bb77a6"
+    },
+    {
+      "path": "stage_d_completion_oriented_continuation_validation_contract.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "99e443bb9f8ca84741b0eb0c52eb37b9a1915244",
+      "byte_count": 26778,
+      "raw_sha256": "73a27fee64f0b035150a57f9eb10568ea1cfc9559c4bccbcd0ef44402735baa3",
+      "canonical_byte_count": 24224,
+      "canonical_sha256": "e6933d1b05f82e70768e3ddcec51919ac573bdff24e7ad73e81f0454556f21de"
+    },
+    {
+      "path": "stage_d_scientific_validation_contract.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "ac1be73b81c31fc65e4e3ebcbaf45b74526ea7c4",
+      "byte_count": 44051,
+      "raw_sha256": "1b12c97f51d99720979700f048ac527cb0d97c1323f051fe53e0fda3ac743089",
+      "canonical_byte_count": 38538,
+      "canonical_sha256": "321709990be3a270db493050fa7a4a80789c4add5ed63de50c1944d4517a30c1"
+    },
+    {
+      "path": "stage_d_scientific_validation_evidence_schema.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "bbb33509f92f2c55b670e4c0b5d8fd45215aaaef",
+      "byte_count": 92769,
+      "raw_sha256": "956ff0fd38dce4cd72208dc029de15d092ea9e477151522306f9763dc3d621b3",
+      "canonical_byte_count": 69511,
+      "canonical_sha256": "527f6b65ba39b8b8e0485f30116e4f00ada6d0bd6abce207ab88d60d55ffd43e"
+    },
+    {
+      "path": "stage_d_scientific_validation_master_matrix.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "e6cd44f8b9e2e125403cb1359d819fc08afd2cb7",
+      "byte_count": 148183,
+      "raw_sha256": "081f2e994c23051514aef19a0516d1996d9c4b86cd528dfc05bf9d17658bdb81",
+      "canonical_byte_count": 121158,
+      "canonical_sha256": "e974840f0dabc29ee0ce0841443095b2dc17014d26b6b67ea244f1299dfa9db1"
+    },
+    {
+      "path": "stage_d_scientific_validation_predecessor_manifest.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "e15c8b130097120fff562397cfa17c31bb66510c",
+      "byte_count": 12753,
+      "raw_sha256": "d3216726c1759ee6dad86ce8e5bba40ee9318c1e4cea52f12db0ec19b746adee",
+      "canonical_byte_count": 10571,
+      "canonical_sha256": "e1b842e81f11bd10e51a5be881d607a292d2a9d63f3e4b152fbea4a4d101ba15"
+    },
+    {
+      "path": "stage_d_scientific_validation_validation_contract.json",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "a3aacfb377786ce2bddf91ceea0e2d58bcda9d01",
+      "byte_count": 37012,
+      "raw_sha256": "2707d9d645b3fc7ecc4ee61f02d861ba88c5d220d7bf6812ab98ece93ba51227",
+      "canonical_byte_count": 33228,
+      "canonical_sha256": "d8bc80fecaa7ba7d3f8b687a52880dc049d182ffa8d26a246d923dbed0fafb76"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "object_type": "blob",
+      "git_object": "6c94339517efb2bd728ebd816b095af4c026f1d0",
+      "byte_count": 138961,
+      "raw_sha256": "abe55cf67e2af2b1cdb81893daad0433b8adc7d26164fe388649f53a42ff36de",
+      "canonical_byte_count": null,
+      "canonical_sha256": null
+    }
+  ],
+  "preservation_rule": "all 17 rows must reconstruct exactly from the accepted base by Git tree, archive and filesystem routes; only the exact future paths authorized by the implementation manifest may change after the applicable independent gate",
+  "missing_duplicate_changed_or_unlocked_input": "REFUSE_STAGE_E_AUTHORITY_OR_IMPLEMENTATION",
+  "completion_marker": "STAGE_E_SCIENTIFIC_HARNESS_PREDECESSOR_MANIFEST_COMPLETE"
+}
