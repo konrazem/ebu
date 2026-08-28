@@ -645,7 +645,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "86bce479d6b45d97064e84428d9aefb6f5051485c269ea56ac9a36c389f109da"
+TEST_SELF_SEAL = "516d90533c12382b3a9b3cf62e66e897e1144df5704f5b101e1596dbd68506c6"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3931,6 +3931,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             elif (
                 type(source_value) is dict
                 and type(row["instance"]) is dict
+                and "case_id" not in row["instance"]
                 and set(source_value) == set(row["instance"]) | {"case_id"}
             ):
                 self.assertTrue(
