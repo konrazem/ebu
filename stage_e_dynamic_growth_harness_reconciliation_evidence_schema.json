@@ -1,0 +1,687 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ebu.example/schemas/stage-e-dynamic-growth-harness-reconciliation-evidence-v1.json",
+  "title": "EBU Stage E dynamic-growth harness reconciliation evidence",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "git_oid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "byte_count",
+        "sha256"
+      ],
+      "properties": {
+        "byte_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "common": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "status",
+        "evidence_class",
+        "head_commit",
+        "head_tree",
+        "authority_identity",
+        "scientific_zero_counters"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": 1
+        },
+        "record_type": {
+          "enum": [
+            "SCHEMA_REPLAY",
+            "RECURSIVE_MOBIUS_GROWTH",
+            "DAG_CACHE_CORRECTION",
+            "DYNAMIC_GROWTH_ADAPTER_GUARD",
+            "HARNESS_ARTIFACT",
+            "FINAL_MANIFEST"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "BOUND_NOT_SUPPORTED",
+            "REFUSED"
+          ]
+        },
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"
+          ]
+        },
+        "head_commit": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "head_tree": {
+          "$ref": "#/$defs/git_oid"
+        },
+        "authority_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "scientific_zero_counters": {
+          "$ref": "#/$defs/scientific_zero_counters"
+        }
+      }
+    },
+    "scientific_zero_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_execution_count",
+        "trajectory_execution_count",
+        "runner_execution_count",
+        "gate_execution_count",
+        "simulation_execution_count",
+        "stochastic_draw_count",
+        "registered_configuration_count",
+        "outcome_inspection_count",
+        "result_count",
+        "figure_count",
+        "book_count",
+        "release_action_count",
+        "publication_action_count"
+      ],
+      "properties": {
+        "model_execution_count": {
+          "const": 0
+        },
+        "trajectory_execution_count": {
+          "const": 0
+        },
+        "runner_execution_count": {
+          "const": 0
+        },
+        "gate_execution_count": {
+          "const": 0
+        },
+        "simulation_execution_count": {
+          "const": 0
+        },
+        "stochastic_draw_count": {
+          "const": 0
+        },
+        "registered_configuration_count": {
+          "const": 0
+        },
+        "outcome_inspection_count": {
+          "const": 0
+        },
+        "result_count": {
+          "const": 0
+        },
+        "figure_count": {
+          "const": 0
+        },
+        "book_count": {
+          "const": 0
+        },
+        "release_action_count": {
+          "const": 0
+        },
+        "publication_action_count": {
+          "const": 0
+        }
+      }
+    },
+    "fixture_ledger_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal",
+        "authority_schema_path",
+        "fixture_id",
+        "fixture_identity",
+        "validation_layer",
+        "disposition"
+      ],
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "authority_schema_path": {
+          "enum": [
+            "stage_d_scientific_validation_evidence_schema.json",
+            "stage_d_completion_oriented_continuation_evidence_schema.json",
+            "stage_e_scientific_harness_evidence_schema.json",
+            "stage_d_dynamic_growth_campaign_evidence_schema.json"
+          ]
+        },
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fixture_identity": {
+          "$ref": "#/$defs/sha256"
+        },
+        "validation_layer": {
+          "enum": [
+            "DRAFT_2020_12_CLOSED_SUBSET",
+            "CROSS_RECORD_SEMANTIC_RELATION",
+            "ASSERTION_APPLICATOR_MUTATION"
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "ACCEPTED",
+            "REFUSED"
+          ]
+        }
+      }
+    },
+    "schema_replay_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common",
+        "derived_keyword_count",
+        "derived_keywords",
+        "positive_coverage",
+        "refusal_coverage",
+        "positive_ledger",
+        "refusal_ledger",
+        "generic_empty_object_substitution_count",
+        "count_only_pass_count"
+      ],
+      "properties": {
+        "common": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/common"
+            },
+            {
+              "properties": {
+                "record_type": {
+                  "const": "SCHEMA_REPLAY"
+                },
+                "status": {
+                  "const": "PASS"
+                },
+                "evidence_class": {
+                  "const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"
+                }
+              }
+            }
+          ]
+        },
+        "derived_keyword_count": {
+          "const": 28
+        },
+        "derived_keywords": {
+          "type": "array",
+          "prefixItems": [
+            {"const": "$defs"},
+            {"const": "$id"},
+            {"const": "$ref"},
+            {"const": "$schema"},
+            {"const": "additionalProperties"},
+            {"const": "allOf"},
+            {"const": "const"},
+            {"const": "description"},
+            {"const": "else"},
+            {"const": "enum"},
+            {"const": "format"},
+            {"const": "if"},
+            {"const": "items"},
+            {"const": "maxItems"},
+            {"const": "maximum"},
+            {"const": "minItems"},
+            {"const": "minLength"},
+            {"const": "minProperties"},
+            {"const": "minimum"},
+            {"const": "oneOf"},
+            {"const": "pattern"},
+            {"const": "prefixItems"},
+            {"const": "properties"},
+            {"const": "required"},
+            {"const": "then"},
+            {"const": "title"},
+            {"const": "type"},
+            {"const": "uniqueItems"}
+          ],
+          "minItems": 28,
+          "maxItems": 28
+        },
+        "positive_coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stage_d", "continuation", "stage_e", "dynamic_growth", "total"],
+          "properties": {
+            "stage_d": {"const": 5},
+            "continuation": {"const": 3},
+            "stage_e": {"const": 11},
+            "dynamic_growth": {"const": 44},
+            "total": {"const": 63}
+          }
+        },
+        "refusal_coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stage_d", "continuation", "stage_e", "dynamic_growth_schema", "dynamic_growth_semantic", "assertion_applicator", "total"],
+          "properties": {
+            "stage_d": {"const": 16},
+            "continuation": {"const": 35},
+            "stage_e": {"const": 24},
+            "dynamic_growth_schema": {"const": 116},
+            "dynamic_growth_semantic": {"const": 34},
+            "assertion_applicator": {"const": 22},
+            "total": {"const": 247}
+          }
+        },
+        "positive_ledger": {
+          "type": "array",
+          "minItems": 63,
+          "maxItems": 63,
+          "uniqueItems": true,
+          "items": {
+            "allOf": [
+              {"$ref": "#/$defs/fixture_ledger_row"},
+              {"properties": {"disposition": {"const": "ACCEPTED"}}}
+            ]
+          }
+        },
+        "refusal_ledger": {
+          "type": "array",
+          "minItems": 247,
+          "maxItems": 247,
+          "uniqueItems": true,
+          "items": {
+            "allOf": [
+              {"$ref": "#/$defs/fixture_ledger_row"},
+              {"properties": {"disposition": {"const": "REFUSED"}}}
+            ]
+          }
+        },
+        "generic_empty_object_substitution_count": {
+          "const": 0
+        },
+        "count_only_pass_count": {
+          "const": 0
+        }
+      }
+    },
+    "dag_traversal_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vertices",
+        "edges",
+        "indegree_initializations",
+        "enqueues",
+        "dequeues",
+        "edge_inspections",
+        "queue_appends",
+        "head_advances",
+        "ready_node_comparisons"
+      ],
+      "properties": {
+        "vertices": {"type": "integer", "minimum": 0},
+        "edges": {"type": "integer", "minimum": 0},
+        "indegree_initializations": {"type": "integer", "minimum": 0},
+        "enqueues": {"type": "integer", "minimum": 0},
+        "dequeues": {"type": "integer", "minimum": 0},
+        "edge_inspections": {"type": "integer", "minimum": 0},
+        "queue_appends": {"type": "integer", "minimum": 0},
+        "head_advances": {"type": "integer", "minimum": 0},
+        "ready_node_comparisons": {"const": 0}
+      }
+    },
+    "dag_canonicalization_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_edge_count",
+        "tuple_comparisons",
+        "auxiliary_edge_slots"
+      ],
+      "properties": {
+        "input_edge_count": {"type": "integer", "minimum": 0},
+        "tuple_comparisons": {"type": "integer", "minimum": 0},
+        "auxiliary_edge_slots": {"type": "integer", "minimum": 0}
+      }
+    },
+    "dag_complexity_cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cell_id",
+        "repetition",
+        "traversal",
+        "canonicalization",
+        "wall_nanoseconds",
+        "process_tree_peak_rss_bytes",
+        "storage_bytes",
+        "trace_bytes",
+        "output_bytes",
+        "status"
+      ],
+      "properties": {
+        "cell_id": {"type": "string", "minLength": 1},
+        "repetition": {"const": 0},
+        "traversal": {"$ref": "#/$defs/dag_traversal_counters"},
+        "canonicalization": {"$ref": "#/$defs/dag_canonicalization_counters"},
+        "wall_nanoseconds": {"type": "integer", "minimum": 1},
+        "process_tree_peak_rss_bytes": {"type": "integer", "minimum": 1},
+        "storage_bytes": {"type": "integer", "minimum": 0},
+        "trace_bytes": {"type": "integer", "minimum": 0},
+        "output_bytes": {"type": "integer", "minimum": 0},
+        "status": {"enum": ["PASS", "BOUND_NOT_SUPPORTED"]}
+      }
+    },
+    "cache_invalidation_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "control_id",
+        "changed_seed_identity",
+        "dependency_edges",
+        "alias_edges",
+        "expected_affected_closure",
+        "observed_affected_closure",
+        "traversal_order",
+        "pre_cache_epoch",
+        "post_cache_epoch",
+        "invalidated_keys",
+        "recomputed_keys",
+        "reused_keys",
+        "correction_epoch",
+        "receipt_identity"
+      ],
+      "properties": {
+        "control_id": {"const": "CACHE-DEPENDENCY-LOCAL-INVALIDATION"},
+        "changed_seed_identity": {"$ref": "#/$defs/sha256"},
+        "dependency_edges": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "alias_edges": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "expected_affected_closure": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "observed_affected_closure": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "traversal_order": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "pre_cache_epoch": {"type": "integer", "minimum": 0},
+        "post_cache_epoch": {"type": "integer", "minimum": 1},
+        "invalidated_keys": {"type": "integer", "minimum": 2},
+        "recomputed_keys": {"type": "integer", "minimum": 2},
+        "reused_keys": {"type": "integer", "minimum": 0},
+        "correction_epoch": {"type": "integer", "minimum": 1},
+        "receipt_identity": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "dag_cache_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common",
+        "dag_valid_cases",
+        "dag_refusals",
+        "dag_mismatches",
+        "dag_complexity_cells",
+        "cache_controls",
+        "cache_key_omission_refusals",
+        "dependency_local_receipt",
+        "stale_cache_hits"
+      ],
+      "properties": {
+        "common": {
+          "allOf": [
+            {"$ref": "#/$defs/common"},
+            {"properties": {
+              "record_type": {"const": "DAG_CACHE_CORRECTION"},
+              "evidence_class": {"const": "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"}
+            }}
+          ]
+        },
+        "dag_valid_cases": {"const": 39467},
+        "dag_refusals": {"const": 14},
+        "dag_mismatches": {"const": 0},
+        "dag_complexity_cells": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/dag_complexity_cell"}
+        },
+        "cache_controls": {"const": 17},
+        "cache_key_omission_refusals": {"const": 29},
+        "dependency_local_receipt": {"$ref": "#/$defs/cache_invalidation_receipt"},
+        "stale_cache_hits": {"const": 0}
+      }
+    },
+    "recursive_mobius_growth_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common",
+        "direct_macro_tables",
+        "sequence_baseline_instances",
+        "macro_mismatches",
+        "poset_base_transforms",
+        "poset_correction_cases",
+        "transport_valid_rows",
+        "transport_direct_rows",
+        "transport_correction_reconstructions",
+        "transport_misscaling_refusals",
+        "physical_wave_claims",
+        "universal_fibonacci_claims"
+      ],
+      "properties": {
+        "common": {
+          "allOf": [
+            {"$ref": "#/$defs/common"},
+            {"properties": {
+              "record_type": {"const": "RECURSIVE_MOBIUS_GROWTH"},
+              "status": {"const": "PASS"},
+              "evidence_class": {"const": "MATHEMATICAL_DERIVATION_CHECK"}
+            }}
+          ]
+        },
+        "direct_macro_tables": {"const": 270},
+        "sequence_baseline_instances": {"const": 18},
+        "macro_mismatches": {"const": 0},
+        "poset_base_transforms": {"const": 32},
+        "poset_correction_cases": {"const": 224},
+        "transport_valid_rows": {"const": 90},
+        "transport_direct_rows": {"const": 15},
+        "transport_correction_reconstructions": {"const": 180},
+        "transport_misscaling_refusals": {"const": 150},
+        "physical_wave_claims": {"const": 0},
+        "universal_fibonacci_claims": {"const": 0}
+      }
+    },
+    "dynamic_growth_adapter_guard_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common",
+        "fixture_count",
+        "exact_patch_count",
+        "schema_refusals",
+        "semantic_refusals",
+        "event_order_phase_count",
+        "epoch_count",
+        "tick_2560_witness",
+        "registered_campaign_runs",
+        "registered_campaign_ticks",
+        "registered_level_rows",
+        "registered_windows",
+        "registered_requests",
+        "registered_recovery_events",
+        "stage_e_executed_runs",
+        "stage_e_executed_ticks",
+        "stage_e_populated_outcome_rows",
+        "preimport_refusal_count"
+      ],
+      "properties": {
+        "common": {
+          "allOf": [
+            {"$ref": "#/$defs/common"},
+            {"properties": {
+              "record_type": {"const": "DYNAMIC_GROWTH_ADAPTER_GUARD"},
+              "status": {"const": "PASS"},
+              "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"}
+            }}
+          ]
+        },
+        "fixture_count": {"const": 44},
+        "exact_patch_count": {"const": 150},
+        "schema_refusals": {"const": 116},
+        "semantic_refusals": {"const": 34},
+        "event_order_phase_count": {"const": 10},
+        "epoch_count": {"const": 16},
+        "tick_2560_witness": {"const": "BAAAABAAAAABBAAA"},
+        "registered_campaign_runs": {"const": 396},
+        "registered_campaign_ticks": {"const": 8192},
+        "registered_level_rows": {"const": 900},
+        "registered_windows": {"const": 720},
+        "registered_requests": {"const": 450},
+        "registered_recovery_events": {"const": 216},
+        "stage_e_executed_runs": {"const": 0},
+        "stage_e_executed_ticks": {"const": 0},
+        "stage_e_populated_outcome_rows": {"const": 0},
+        "preimport_refusal_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "harness_artifact_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common",
+        "artifact_identity",
+        "replica_identities",
+        "member_count",
+        "source_checkout_import_count",
+        "network_access_count",
+        "mutable_dependency_count"
+      ],
+      "properties": {
+        "common": {
+          "allOf": [
+            {"$ref": "#/$defs/common"},
+            {"properties": {
+              "record_type": {"const": "HARNESS_ARTIFACT"},
+              "status": {"const": "PASS"},
+              "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"}
+            }}
+          ]
+        },
+        "artifact_identity": {"$ref": "#/$defs/identity"},
+        "replica_identities": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/identity"}
+        },
+        "member_count": {"type": "integer", "minimum": 1},
+        "source_checkout_import_count": {"const": 0},
+        "network_access_count": {"const": 0},
+        "mutable_dependency_count": {"const": 0}
+      }
+    },
+    "manifest_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "identity", "status", "evidence_class"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "identity": {"$ref": "#/$defs/identity"},
+        "status": {"enum": ["PASS", "BOUND_NOT_SUPPORTED"]},
+        "evidence_class": {
+          "enum": [
+            "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST",
+            "MATHEMATICAL_DERIVATION_CHECK",
+            "NUMERICAL_VERIFICATION",
+            "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY"
+          ]
+        }
+      }
+    },
+    "final_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "common",
+        "final_status",
+        "records",
+        "record_count",
+        "stage_f_authorized",
+        "candidate_outcomes_inspected"
+      ],
+      "properties": {
+        "common": {
+          "allOf": [
+            {"$ref": "#/$defs/common"},
+            {"properties": {
+              "record_type": {"const": "FINAL_MANIFEST"},
+              "status": {"const": "PASS"},
+              "evidence_class": {"const": "STATIC_OR_SYNTHETIC_IMPLEMENTATION_TEST"}
+            }}
+          ]
+        },
+        "final_status": {"const": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS"},
+        "records": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/manifest_entry"}
+        },
+        "record_count": {"const": 10},
+        "stage_f_authorized": {"const": false},
+        "candidate_outcomes_inspected": {"const": false}
+      }
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/schema_replay_record"},
+    {"$ref": "#/$defs/recursive_mobius_growth_record"},
+    {"$ref": "#/$defs/dag_cache_record"},
+    {"$ref": "#/$defs/dynamic_growth_adapter_guard_record"},
+    {"$ref": "#/$defs/harness_artifact_record"},
+    {"$ref": "#/$defs/final_manifest"}
+  ],
+  "completion_marker": "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_COMPLETE"
+}

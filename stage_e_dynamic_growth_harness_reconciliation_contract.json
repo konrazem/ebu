@@ -1,0 +1,489 @@
+{
+  "authority_id": "EBU-STAGE-E-DYNAMIC-GROWTH-HARNESS-RECONCILIATION-v1",
+  "authority_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_ADDITIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "08cea14d828668413b9156da8f220beec2713c26",
+    "tree": "a1b690662e14eab7220492dd378fce93b15eb9c7",
+    "live_target_ref": "refs/heads/framework-v0.1",
+    "main_commit": "660d6e5a56cb096fe6d1e4d202f592155d982c79",
+    "released_alpha_commit": "fb9ae7b6dae14550a702e060600132faec539eca",
+    "signed_tag_object": "b140d4a31f60316cd23058305ae17f4698de86bc"
+  },
+  "candidate_files": [
+    "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_AMENDMENT.md",
+    "stage_e_dynamic_growth_harness_reconciliation_contract.json",
+    "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
+    "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json",
+    "stage_e_dynamic_growth_harness_reconciliation_predecessor_manifest.json",
+    "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json"
+  ],
+  "candidate_file_count": 6,
+  "preservation_rule": "exactly six additions; every accepted and unrelated path remains byte-identical",
+  "accepted_authority_sets": {
+    "stage_d_scientific_validation": {
+      "file_count": 6,
+      "predecessor_row_count": 39
+    },
+    "completion_oriented_continuation": {
+      "file_count": 5,
+      "direct_predecessor_row_count": 9
+    },
+    "stage_e_scientific_harness": {
+      "file_count": 6,
+      "direct_predecessor_row_count": 17
+    },
+    "stage_d_dynamic_growth": {
+      "file_count": 5,
+      "direct_predecessor_row_count": 19
+    },
+    "all_accepted_files_byte_preserved": true,
+    "authority_conflict_disposition": "REFUSE_AND_REQUIRE_SEPARATELY_AUDITED_PROSPECTIVE_CORRECTION"
+  },
+  "rejected_diagnostic_harness": {
+    "commit": "f2e8753db5be1ca8809bbbd8e2e59a0630288d46",
+    "tree": "24404819230883a139dd41fefa2574548560eae2",
+    "accepted_base": "5a66c674a3a9a23861ac11b986754b2022e277dc",
+    "path_count": 46,
+    "status": "DIAGNOSTIC_NOT_ACCEPTED_IMPLEMENTATION",
+    "scientific_execution_count": 0,
+    "outcome_inspection_count": 0,
+    "may_supply_prospective_source_material": true,
+    "may_supply_accepted_evidence": false
+  },
+  "prospective_implementation_scope": {
+    "accepted_stage_e_path_count": 46,
+    "added_reconciliation_paths": [
+      "stage_e_harness/growth.py",
+      "stage_e_harness/recursive.py",
+      "stage_e_harness/capacity_population.py",
+      "tests/stage_e/test_dynamic_growth_conformance.py",
+      "tests/stage_e/test_capacity_population_conformance.py"
+    ],
+    "added_reconciliation_path_count": 5,
+    "modified_paths": [
+      ".github/workflows/tests.yml"
+    ],
+    "modified_path_count": 1,
+    "new_path_count": 50,
+    "total_path_count": 51,
+    "unknown_or_additional_path": "REFUSE",
+    "scope_derived_exclusion": "FORBIDDEN",
+    "workflow_rule": "accepted 13830-byte Stage C prefix plus one exact append-only Stage E block; no existing job or failure routing changes"
+  },
+  "known_defect_corrections": [
+    {
+      "id": "SE-RC-DEFECT-01",
+      "problem": "schema positives counted arithmetically while only a subset was directly validated",
+      "required_correction": "load hash validate and ledger every one of the 63 exact complete fixtures"
+    },
+    {
+      "id": "SE-RC-DEFECT-02",
+      "problem": "continuation negatives substituted an empty object for the frozen mutation",
+      "required_correction": "load each named complete base fixture apply its exact patch and execute its named structural or semantic validation layer"
+    },
+    {
+      "id": "SE-RC-DEFECT-03",
+      "problem": "DAG evidence discarded exact traversal and canonicalization counters",
+      "required_correction": "retain all seven traversal counters and separate canonicalization comparison and auxiliary-storage counters"
+    },
+    {
+      "id": "SE-RC-DEFECT-04",
+      "problem": "complexity cells omitted logical output byte count",
+      "required_correction": "record exact logical output bytes for every repetition of every cell"
+    },
+    {
+      "id": "SE-RC-DEFECT-05",
+      "problem": "dependency-local cache invalidation was claimed after an empty-edge call",
+      "required_correction": "exercise and receipt declared nonempty dependency and alias edge traversals and exact affected closure"
+    }
+  ],
+  "schema_replay": {
+    "controlling_schemas": [
+      "stage_d_scientific_validation_evidence_schema.json",
+      "stage_d_completion_oriented_continuation_evidence_schema.json",
+      "stage_e_scientific_harness_evidence_schema.json",
+      "stage_d_dynamic_growth_campaign_evidence_schema.json"
+    ],
+    "supported_keyword_count": 28,
+    "supported_keywords_in_order": [
+      "$defs",
+      "$id",
+      "$ref",
+      "$schema",
+      "additionalProperties",
+      "allOf",
+      "const",
+      "description",
+      "else",
+      "enum",
+      "format",
+      "if",
+      "items",
+      "maxItems",
+      "maximum",
+      "minItems",
+      "minLength",
+      "minProperties",
+      "minimum",
+      "oneOf",
+      "pattern",
+      "prefixItems",
+      "properties",
+      "required",
+      "then",
+      "title",
+      "type",
+      "uniqueItems"
+    ],
+    "derive_vocabulary_from_all_four_schemas": true,
+    "unknown_keyword_or_metadata": "REFUSE_VALIDATOR_BUILD",
+    "positive_fixture_counts": {
+      "stage_d": 5,
+      "continuation": 3,
+      "stage_e": 11,
+      "dynamic_growth": 44,
+      "total": 63
+    },
+    "negative_case_counts": {
+      "stage_d": 16,
+      "continuation": 35,
+      "stage_e": 24,
+      "dynamic_growth_exact_patches": 150,
+      "assertion_and_applicator_mutations": 22,
+      "total": 247
+    },
+    "dynamic_growth_patch_split": {
+      "json_schema": 116,
+      "semantic_relation": 34
+    },
+    "positive_ledger_row_count": 63,
+    "refusal_ledger_row_count": 247,
+    "generic_empty_object_substitution": "FORBIDDEN",
+    "representative_subset": "FORBIDDEN",
+    "count_only_pass": "FORBIDDEN",
+    "semantic_case_structural_rejection_substitution": "FORBIDDEN"
+  },
+  "accepted_stage_e_core_conformance": {
+    "mobius_direct_optimized_agreement_cases": 488,
+    "mobius_complexity_cells": 55,
+    "mobius_declared_time": "O(n*2^n) plus subset-evaluation cost",
+    "mobius_declared_storage": "O(2^n)",
+    "dag_valid_cases": 39467,
+    "dag_refusal_cases": 14,
+    "dag_complexity_cells": 5,
+    "cache_controls": 17,
+    "cache_key_field_count": 29,
+    "cache_key_omission_mutations": 29,
+    "registered_study_count": 14,
+    "continuation_partition": {
+      "within_run_checkpoint_continuation": 8,
+      "conditional_inherited_continuation": 1,
+      "between_atomic_case_continuation_only": 5
+    }
+  },
+  "dynamic_recursive_mobius_conformance": {
+    "evidence_classes": [
+      "MATHEMATICAL_DERIVATION_CHECK",
+      "NUMERICAL_VERIFICATION"
+    ],
+    "scientific_outcome_value": "NONE",
+    "sequence_baseline_instances": 18,
+    "direct_macro_table_count": 270,
+    "macro_levels": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "baseline_values": [
+      0,
+      5,
+      -3
+    ],
+    "sequence_fixture_count": 6,
+    "required_relations": [
+      "direct raw two-child coefficient equals J",
+      "inverse zeta reconstruction",
+      "forced Fibonacci-kernel projection",
+      "missing-interaction error",
+      "correction multiplier",
+      "nonzero baseline",
+      "positive J",
+      "negative J",
+      "Lucas compatible",
+      "Lucas incompatible"
+    ],
+    "negative_controls": [
+      "perturbed recursion at level 8",
+      "broken A1-A8 certificate",
+      "stale cache",
+      "nonrecursive hashed topology"
+    ],
+    "physical_wave_or_universal_law_claim": "FORBIDDEN"
+  },
+  "feasible_poset_conformance": {
+    "poset_count": 4,
+    "seed_count": 8,
+    "base_transform_count": 32,
+    "correction_delta_count": 2,
+    "one_element_correction_case_count": 224,
+    "infeasible_boolean_extension": "REFUSE"
+  },
+  "coefficient_transport_conformance": {
+    "valid_scalar_family_count": 6,
+    "valid_scalar_rows": 90,
+    "non_scalable_direct_rows": 15,
+    "correction_reconstructions": 180,
+    "misscaling_refusals": 150,
+    "misscaled_trajectories": 0,
+    "required_scaling_classes": [
+      "INVARIANT-INTENSIVE",
+      "OCCURRENCE-EXTENSIVE",
+      "BOUNDARY-EXTENSIVE",
+      "DEGREE-HOMOGENEOUS",
+      "SCALE-DEPENDENT-RESIDUAL",
+      "NON-SCALABLE-DIRECT"
+    ],
+    "direct_target_acquisition_required": true,
+    "exact_residual_visible": true,
+    "correction_relation": "delta I target equals lambda times delta I source plus delta K",
+    "automatic_factor_inference": "FORBIDDEN",
+    "missing_map_factor_units_query_boundary_authority_or_residual": "REFUSE_SCALED_REUSE"
+  },
+  "dynamic_growth_conformance": {
+    "parent_study_id": "SD-01",
+    "nested_campaign_id": "SD-01-GROWTH-v1",
+    "execution_position": "after accepted fixed-topology SD-01 cells and before SD-02",
+    "registered_scientific_runs_executed_in_stage_e": 0,
+    "registered_horizon_ticks_executed_in_stage_e": 0,
+    "accepted_non_evidence_fixture_count": 44,
+    "accepted_exact_patch_count": 150,
+    "reconstruction_strategies": [
+      "FULL-REBUILD-v1",
+      "INCREMENTAL-NO-REUSE-v1",
+      "CERTIFIED-MOTIF-REUSE-v1"
+    ],
+    "exact_projection_equality_before_efficiency": true,
+    "eligible_efficiency_order": "certified recomputed coefficients less than incremental less than full",
+    "constant_computation_claim": "FORBIDDEN",
+    "full_registered_396_run_campaign": "FORBIDDEN_IN_STAGE_E",
+    "full_registered_8192_tick_trajectory": "FORBIDDEN_IN_STAGE_E",
+    "accepted_campaign_primary_evaluation_estimate": 79567392,
+    "campaign_estimate_execution_in_stage_e": 0,
+    "required_event_order_phase_count": 10,
+    "required_epoch_count": 16,
+    "required_tick_2560_witness": "BAAAABAAAAABBAAA; first two B epochs 0 and 5; correction at epoch 9 targets the second B occurrence",
+    "scientific_output_value": "NONE"
+  },
+  "capacity_population_conformance": {
+    "causal_arm_count": 3,
+    "capacity_population_scientific_runs_executed_in_stage_e": 0,
+    "future_scientific_level_rows_populated_in_stage_e": 0,
+    "future_scientific_windows_populated_in_stage_e": 0,
+    "future_scientific_requests_populated_in_stage_e": 0,
+    "future_scientific_recovery_events_populated_in_stage_e": 0,
+    "required_future_level_rows": 900,
+    "required_future_windows": 720,
+    "required_future_arm3_requests": 450,
+    "required_future_recovery_events": 216,
+    "nonrecursive_base_capacities": {
+      "C_0": "2",
+      "C_1": "3"
+    },
+    "nonrecursive_direct_target_range": [
+      2,
+      16
+    ],
+    "recursive_and_direct_branches_mutually_exclusive": true,
+    "required_material_fixture_classes": 11,
+    "stall_has_no_target_row_and_no_later_rows": true,
+    "conditional_population_projection_requires_all_premises": true,
+    "arbitrary_positive_coefficient_as_capacity": "REFUSE",
+    "demographic_guarantee_or_control_claim": "FORBIDDEN"
+  },
+  "dag_evidence_correction": {
+    "algorithm": "canonical dense-index FIFO Kahn traversal after separately accounted canonical edge sorting",
+    "traversal_claim": "O(V+E)",
+    "canonicalization_claim": "at most E*ceil(log2(E)) comparisons and E auxiliary edge slots",
+    "required_exact_counters": [
+      "indegree_initializations",
+      "enqueues",
+      "dequeues",
+      "edge_inspections",
+      "queue_appends",
+      "head_advances",
+      "ready_node_comparisons"
+    ],
+    "required_counter_bounds": {
+      "indegree_initializations": "equals V",
+      "enqueues": "at most V",
+      "dequeues": "at most V",
+      "edge_inspections": "at most E",
+      "queue_appends": "at most V",
+      "head_advances": "at most V",
+      "ready_node_comparisons": "equals 0"
+    },
+    "separate_canonicalization_counters": [
+      "canonicalization_comparisons",
+      "canonicalization_auxiliary_edge_slots"
+    ],
+    "required_per_cell_measurements": [
+      "wall_nanoseconds",
+      "process_tree_peak_rss_bytes",
+      "storage_bytes",
+      "trace_bytes",
+      "output_bytes"
+    ],
+    "missing_exact_counter_or_output_bytes": "REFUSE_CELL"
+  },
+  "cache_evidence_correction": {
+    "accepted_key_field_count": 29,
+    "accepted_control_count": 17,
+    "accepted_omission_mutation_count": 29,
+    "nonempty_dependency_edges_required_for_claimed_dependency_control": true,
+    "nonempty_alias_edges_required_for_claimed_alias_control": true,
+    "required_receipt_fields": [
+      "changed_seed_identity",
+      "dependency_edges",
+      "alias_edges",
+      "expected_affected_closure",
+      "observed_affected_closure",
+      "traversal_order",
+      "pre_cache_epoch",
+      "post_cache_epoch",
+      "invalidated_keys",
+      "recomputed_keys",
+      "reused_keys",
+      "correction_epoch",
+      "receipt_identity"
+    ],
+    "empty_edges_as_traversal_evidence": "FORBIDDEN",
+    "stale_hit_count": 0,
+    "authority_correction_scaling_or_boundary_change": "DETERMINISTIC_COMPLETE_AFFECTED_CLOSURE_INVALIDATION"
+  },
+  "complexity_evidence": {
+    "evidence_class": "NUMERICAL_VERIFICATION_OF_HARNESS_COMPLEXITY_ONLY",
+    "scientific_outcome_value": "NONE",
+    "fresh_process_per_cell": true,
+    "discarded_warmup": "FORBIDDEN",
+    "discarded_repetition": "FORBIDDEN",
+    "record_every_repetition": true,
+    "logical_output_bytes_required_for_every_cell": true,
+    "arbitrary_N_completion_promise": "FORBIDDEN",
+    "registered_campaign_execution": "FORBIDDEN",
+    "bound_failure": "BOUND_NOT_SUPPORTED_AND_DEPENDENT_STAGE_F_ROUTE_REFUSES"
+  },
+  "evidence_outputs": {
+    "retain_accepted_record_names": [
+      "authority.json",
+      "schema.json",
+      "identity-continuation.json",
+      "mobius.json",
+      "dag-cache.json",
+      "adapter-guard.json",
+      "installed-isolation.json",
+      "complexity.json",
+      "regression.json",
+      "final-manifest.json"
+    ],
+    "record_count": 10,
+    "final_status": "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS",
+    "dynamic_recursive_evidence_record": "mobius.json",
+    "dynamic_growth_and_capacity_evidence_record": "adapter-guard.json",
+    "schema_fixture_and_refusal_ledgers": "schema.json",
+    "dag_cache_and_invalidation_evidence": "dag-cache.json",
+    "all_record_bytes_hashes_statuses_classes_and_coordinates_sealed": true,
+    "repository_output_path": "FORBIDDEN"
+  },
+  "harness_artifact": {
+    "format": "deterministic standard-library-only Python zip application",
+    "replicas": 3,
+    "replica_claim": "three perturbed builds produced by the same pinned validator are byte-identical; not independent-build evidence",
+    "embedded_authority_sets": [
+      "accepted Stage D",
+      "accepted continuation",
+      "accepted Stage E",
+      "accepted dynamic growth",
+      "accepted Stage E reconciliation"
+    ],
+    "unsafe_unknown_extra_symlink_network_mutable_dependency_or_source_checkout_import": "REFUSE"
+  },
+  "stage_e_guard": {
+    "guard_id": "EBU-STAGE-E-NO-SCIENCE-v2",
+    "registered_study_ids": [
+      "SD-01",
+      "SD-01-GROWTH-v1",
+      "SD-02",
+      "SD-03",
+      "SD-04",
+      "SD-05",
+      "SD-06",
+      "SD-07",
+      "SD-08",
+      "SD-09",
+      "SD-10",
+      "SD-11",
+      "SD-12",
+      "SD-13",
+      "SD-14"
+    ],
+    "stage_f_authorization_absent": true,
+    "pre_import_refusal": true,
+    "model_step_state_advance_trajectory_runner_gate_simulation_registered_adapter_run": "FORBIDDEN",
+    "candidate_outcome_inspection": "FORBIDDEN",
+    "refusal_receipt_required": true
+  },
+  "stage_f_packet_gate": {
+    "only_after_independent_stage_e_integration_pass": true,
+    "one_packet_for_all_registered_studies_and_nested_campaign": true,
+    "measured_stage_e_throughput_and_projected_campaign_resources_required": true,
+    "one_explicit_user_authorization_required": true,
+    "before_authorization": "NO_REGISTERED_SCIENTIFIC_EXECUTION"
+  },
+  "independent_audits": {
+    "authority": "required before normal private authority integration",
+    "durability": "required after one-path reachability implementation and target CI",
+    "harness_implementation": "required before normal private harness integration",
+    "harness_integration": "required after exact-target CI and retained evidence",
+    "self_review_is_independent": false
+  },
+  "required_operation_counts": {
+    "stage_e_harness_implementation_count": 0,
+    "stage_e_schema_instance_validation_count": 0,
+    "stage_e_oracle_execution_count": 0,
+    "stage_e_benchmark_execution_count": 0,
+    "model_execution_count": 0,
+    "transform_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_execution_count": 0,
+    "gate_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "stage_boundary": {
+    "authority_draft": "static identity schema-shape count cross-reference and predecessor validation only",
+    "after_independent_authority_and_durability_pass": "private Stage E implementation and outcome-blind conformance only",
+    "stage_f": "registered execution requires one complete packet and explicit user authorization",
+    "stage_g_h": "results interpretation figures and books remain forbidden"
+  },
+  "completion_marker": "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_COMPLETE"
+}
