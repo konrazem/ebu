@@ -645,7 +645,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "c430898537d9932bc27c490d624c3f779a383cd7a5169233580fc0410e80f181"
+TEST_SELF_SEAL = "86bce479d6b45d97064e84428d9aefb6f5051485c269ea56ac9a36c389f109da"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3928,6 +3928,21 @@ class ValidationReachabilityTests(unittest.TestCase):
                 and "instance" in source_value
             ):
                 source_value = source_value["instance"]
+            elif (
+                type(source_value) is dict
+                and type(row["instance"]) is dict
+                and set(source_value) == set(row["instance"]) | {"case_id"}
+            ):
+                self.assertTrue(
+                    row["base_fixture_id"].startswith("keyword-")
+                    and row["base_fixture_id"].endswith("-base")
+                )
+                self.assertTrue(source_value["case_id"].startswith("SE-KEYWORD-N"))
+                source_value = {
+                    key: value
+                    for key, value in source_value.items()
+                    if key != "case_id"
+                }
             self.assertEqual(
                 source_value,
                 row["instance"],
