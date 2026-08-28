@@ -129,6 +129,22 @@ def _identity_exact(path: Path, byte_count: int, digest: str) -> dict[str, Any]:
     return actual
 
 
+def _isolated_python_path(path: Path) -> Path:
+    """Return the absolute venv entry point without dereferencing its symlink.
+
+    Resolving ``bin/python`` follows the virtual-environment symlink to the base
+    interpreter and discards the ``pyvenv.cfg`` discovery context.  The Stage E
+    installed probes must execute through the lexical venv path instead.
+    """
+
+    absolute = Path(os.path.abspath(os.fspath(path)))
+    if not absolute.is_file():
+        raise Refusal(f"isolated interpreter is missing: {absolute}")
+    if not (absolute.parent.parent / "pyvenv.cfg").is_file():
+        raise Refusal(f"isolated interpreter has no pyvenv.cfg: {absolute}")
+    return absolute
+
+
 def _authority_lane(source: Path, head_commit: str, head_tree: str) -> dict[str, Any]:
     if _git(source, "rev-parse", "HEAD") != head_commit or _git(source, "rev-parse", "HEAD^{tree}") != head_tree:
         raise Refusal("requested/head Git coordinate mismatch")
@@ -604,7 +620,7 @@ def _probe_installed(python: Path, source: Path, artifact: Path, cwd: Path, kind
     }
 
 
-def _install_lane(args: argparse.Namespace, work: Path) -> tuple[dict[str, Any], Path]:
+def _install_lane(args: argparse.Namespace, work: Path) -> tuple[dict[str, Any], Path, Path]:
     from build_stage_e_harness_zipapp import build
 
     replicas = []
@@ -627,9 +643,11 @@ def _install_lane(args: argparse.Namespace, work: Path) -> tuple[dict[str, Any],
         raise Refusal("direct and sdist-derived installed wheels differ")
     direct_cwd = Path(tempfile.mkdtemp(prefix="stage-e-direct-", dir=work))
     sdist_cwd = Path(tempfile.mkdtemp(prefix="stage-e-sdist-", dir=work))
-    direct_surface = _probe_installed(args.direct_python.resolve(), args.source, direct_wheel, direct_cwd, "DIRECT_WHEEL")
-    sdist_surface = _probe_installed(args.sdist_python.resolve(), args.source, sdist_wheel, sdist_cwd, "SDIST_DERIVED_WHEEL")
-    for python, cwd in ((args.direct_python.resolve(), direct_cwd), (args.sdist_python.resolve(), sdist_cwd)):
+    direct_python = _isolated_python_path(args.direct_python)
+    sdist_python = _isolated_python_path(args.sdist_python)
+    direct_surface = _probe_installed(direct_python, args.source, direct_wheel, direct_cwd, "DIRECT_WHEEL")
+    sdist_surface = _probe_installed(sdist_python, args.source, sdist_wheel, sdist_cwd, "SDIST_DERIVED_WHEEL")
+    for python, cwd in ((direct_python, direct_cwd), (sdist_python, sdist_cwd)):
         registry = _zipapp_json(python, outputs[0], ["registry"], cwd)
         if registry.get("studies") != list(STUDY_IDS) or registry.get("scientific_execution_count") != 0:
             raise Refusal("installed zipapp registry closure mismatch")
@@ -644,7 +662,7 @@ def _install_lane(args: argparse.Namespace, work: Path) -> tuple[dict[str, Any],
         "isolated_mode": True,
         "pythonpath_present": False,
         "repository_cwd": False,
-    }, outputs[0]
+    }, outputs[0], direct_python
 
 
 def _complexity_projections(source: Path, mobius_rate: int, dag_rate: int, peak_rss: int) -> list[dict[str, Any]]:
@@ -700,10 +718,10 @@ def validate(args: argparse.Namespace) -> int:
     environment = observed_environment(debian_identity=args.debian_identity, image_digest=args.image_digest)
     validate_environment(environment)
     authority_fields = _authority_lane(source, args.head_commit, args.head_tree)
-    install_fields, zipapp = _install_lane(args, work)
+    install_fields, zipapp, direct_python = _install_lane(args, work)
     cell_cwd = Path(tempfile.mkdtemp(prefix="stage-e-cell-", dir=work))
-    mobius_fields, mobius_rate = _mobius_lane(args.direct_python.resolve(), zipapp, cell_cwd)
-    dag_fields, dag_rate = _dag_cache_lane(args.direct_python.resolve(), zipapp, cell_cwd)
+    mobius_fields, mobius_rate = _mobius_lane(direct_python, zipapp, cell_cwd)
+    dag_fields, dag_rate = _dag_cache_lane(direct_python, zipapp, cell_cwd)
     adapter_fields = _adapter_guard_lane(source)
     identity_fields = _identity_continuation_lane(source)
     peak_rss = max(cell["peak_process_tree_rss_bytes"] for cell in mobius_fields["complexity_cells"] + dag_fields["dag_complexity_cells"])

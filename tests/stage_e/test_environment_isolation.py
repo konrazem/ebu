@@ -6,6 +6,7 @@ import unittest
 
 from stage_e_harness.canonical import Refusal
 from stage_e_harness.environment import EXPECTED_ENVIRONMENT, validate_framework_origin
+from scripts.validate_stage_e_harness import _isolated_python_path
 
 
 class StageEEnvironmentIsolationTests(unittest.TestCase):
@@ -23,6 +24,20 @@ class StageEEnvironmentIsolationTests(unittest.TestCase):
             origin = source / "ebu_framework" / "__init__.py"; origin.parent.mkdir(); origin.touch()
             with self.assertRaises(Refusal):
                 validate_framework_origin(str(origin), str(site), str(source))
+
+            base_python = root / "base-python"
+            base_python.touch()
+            environment = root / "isolated"
+            (environment / "bin").mkdir(parents=True)
+            (environment / "pyvenv.cfg").touch()
+            venv_python = environment / "bin" / "python"
+            venv_python.symlink_to(base_python)
+            self.assertEqual(_isolated_python_path(venv_python), venv_python.absolute())
+            self.assertNotEqual(_isolated_python_path(venv_python), venv_python.resolve())
+
+            (environment / "pyvenv.cfg").unlink()
+            with self.assertRaises(Refusal):
+                _isolated_python_path(venv_python)
 
 
 if __name__ == "__main__":
