@@ -438,7 +438,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "5d9f34052cbf939d384e37139151e4b09df4d1e126d80ae29eb698db7293c3fe"
+TEST_SELF_SEAL = "3fdcdf2d50ebd5dcaf31f26852257b79cf442d9109a3bbda437b8790905e93c9"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -645,6 +645,19 @@ def _git(*args: str) -> bytes:
         or args[:4] == ("ls-tree", "-rz", "-r", "--full-tree")
         or args[:2] == ("cat-file", "blob")
         or args[:2] == ("archive", "--format=tar")
+        or args
+        == (
+            "merge-base",
+            STAGE_E_ACCEPTED_BASE_COMMIT,
+            STAGE_E_AUTHORITY_CANDIDATE,
+        )
+        or args
+        == (
+            "rev-list",
+            "--reverse",
+            "--parents",
+            f"{STAGE_E_ACCEPTED_BASE_COMMIT}..{STAGE_E_AUTHORITY_CANDIDATE}",
+        )
         or args
         == (
             "show",
