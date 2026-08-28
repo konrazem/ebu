@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tarfile
 import unittest
+import unicodedata
 from pathlib import Path
 from unittest import mock
 
@@ -491,6 +492,93 @@ STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANONICAL_SHA256 = {
 STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE = STAGE_E_AUTHORITY_SCOPE | frozenset(
     STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
 )
+STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT = (
+    "08cea14d828668413b9156da8f220beec2713c26"
+)
+STAGE_E_RECONCILIATION_ACCEPTED_BASE_TREE = (
+    "a1b690662e14eab7220492dd378fce93b15eb9c7"
+)
+STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE = (
+    "ff82a5ea1658f86cb3a9b4120583efa575f71ce9"
+)
+STAGE_E_RECONCILIATION_AUTHORITY_TARGET = (
+    "0c8e8d8824b50fcdc5817d1c27ccea1a7c094ae6"
+)
+STAGE_E_RECONCILIATION_AUTHORITY_TREE = (
+    "55387ce0b1009b00b36ad6eb2e46fc6aa6ad69e4"
+)
+STAGE_E_RECONCILIATION_AUTHORITY_CHAIN = (
+    "1191d4d4815a65609b7f55182ef5110b1722583b",
+    "2dd1776a4694e2e585030379c48f73ae0de27f66",
+    "0add7f1299c18b8a032bf4db3631149012e51477",
+    "68a7ec7a4a36a1fa2e4806bf34580b01591df31e",
+    "00d15dd0fa048c7e07f2d683b531b74bdf1f1d45",
+    STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE,
+)
+STAGE_E_RECONCILIATION_AUTHORITY_PATHS = (
+    "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_AMENDMENT.md",
+    "stage_e_dynamic_growth_harness_reconciliation_contract.json",
+    "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json",
+    "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json",
+    "stage_e_dynamic_growth_harness_reconciliation_predecessor_manifest.json",
+    "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
+)
+STAGE_E_RECONCILIATION_AUTHORITY_RAW_SHA256 = {
+    "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_AMENDMENT.md": (
+        "5f791746390ff39ff1b4f730ba37f7c9687ee5a7dd9efda429727a7ef76d5728"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_contract.json": (
+        "115268c17fd5fecbb6eccaf71b3317e6915f413bae217da4685fd1fd9f417ad9"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json": (
+        "7aea36d0a010e849f1490e9e964756a61335804cefefa5d84059bf739ff399ee"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json": (
+        "bcd88263976eb6ee333b257965f6727dc716793d6d1214642620cdecc10b5b99"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_predecessor_manifest.json": (
+        "6d5426dcdeeeed95dbcd32545d47ffb5ad3dbc35070fd8981c0a1a9409758467"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json": (
+        "de108dea3e59ba95301824094dfb2f72652a0a97ffda48e08b2dd7d42c867986"
+    ),
+}
+STAGE_E_RECONCILIATION_AUTHORITY_CANONICAL_SHA256 = {
+    "stage_e_dynamic_growth_harness_reconciliation_contract.json": (
+        "c3604cec4d9d75779edbd8a24c3061f5f9135816a2be1d49eecf4d7517843f96"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json": (
+        "4d14b1e980f44f4717d0e47e8eab0ffc88a65eef9f05757d30b9a38e06d5a994"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json": (
+        "cc9c76ac54de74bdaf6797268e1b8f016fc33026cc29c77980cc88e60f9df077"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_predecessor_manifest.json": (
+        "e16a638a586ccc83dcc46e3848f28050658ae47c57848c7e7ca4bfd85253827a"
+    ),
+    "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json": (
+        "7adb3d55b2a2fcf51dbc724443f25e0cffe65abeb0025e7305e5892c1776e791"
+    ),
+}
+STAGE_E_RECONCILIATION_ADDED_HARNESS_PATHS = (
+    "stage_e_harness/growth.py",
+    "stage_e_harness/recursive.py",
+    "stage_e_harness/capacity_population.py",
+    "tests/stage_e/test_dynamic_growth_conformance.py",
+    "tests/stage_e/test_capacity_population_conformance.py",
+)
+STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS = (
+    STAGE_E_HARNESS_IMPLEMENTATION_PATHS
+    + STAGE_E_RECONCILIATION_ADDED_HARNESS_PATHS
+)
+STAGE_E_RECONCILIATION_AUTHORITY_SCOPE = (
+    STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE
+    | frozenset(STAGE_E_RECONCILIATION_AUTHORITY_PATHS)
+)
+STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_SCOPE = (
+    STAGE_E_RECONCILIATION_AUTHORITY_SCOPE
+    | frozenset(STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS)
+)
 STAGE_E_WORKFLOW_APPEND_BLOCK = br"""
   stage-e-scientific-harness:
     if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
@@ -555,7 +643,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "25257f5c9f95ac8e5c7409f01953fd033629dbe3543c66c6dcb9f4814f6a1fd9"
+TEST_SELF_SEAL = "506a2425a7e93b39cea2e113dc873ae6839d0295356f330207c962d9f6282299"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -657,6 +745,221 @@ def _canonical_json_lf(value: object) -> bytes:
         json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
         + "\n"
     ).encode("utf-8")
+
+
+def _canonical_json_bytes(value: object) -> bytes:
+    return _canonical_json_lf(value)[:-1]
+
+
+def _json_identity(value: object) -> dict[str, object]:
+    raw = _canonical_json_bytes(value)
+    return {"byte_count": len(raw), "sha256": _sha256(raw)}
+
+
+def _json_pointer(value: object, raw_pointer: str) -> object:
+    if raw_pointer == "":
+        return value
+    if not raw_pointer.startswith("/"):
+        raise AssertionError(f"invalid JSON pointer: {raw_pointer!r}")
+    current = value
+    for raw_token in raw_pointer[1:].split("/"):
+        token = raw_token.replace("~1", "/").replace("~0", "~")
+        if type(current) is list:
+            current = current[int(token)]
+        elif type(current) is dict:
+            current = current[token]
+        else:
+            raise AssertionError(f"JSON pointer enters a scalar: {raw_pointer!r}")
+    return current
+
+
+def _apply_json_patch(value: object, operations: object) -> object:
+    if type(operations) is not list:
+        raise AssertionError("RFC-6902 patch is not an array")
+    result = copy.deepcopy(value)
+    for operation in operations:
+        if type(operation) is not dict:
+            raise AssertionError("RFC-6902 operation is not an object")
+        op = operation.get("op")
+        raw_pointer = operation.get("path")
+        if op not in {"add", "remove", "replace"} or type(raw_pointer) is not str:
+            raise AssertionError(f"unsupported RFC-6902 operation: {operation!r}")
+        tokens = (
+            [
+                raw.replace("~1", "/").replace("~0", "~")
+                for raw in raw_pointer[1:].split("/")
+            ]
+            if raw_pointer.startswith("/") and raw_pointer != ""
+            else []
+        )
+        if raw_pointer and not raw_pointer.startswith("/"):
+            raise AssertionError(f"invalid RFC-6902 path: {raw_pointer!r}")
+        if not tokens:
+            if op == "remove":
+                raise AssertionError("root removal is forbidden")
+            result = copy.deepcopy(operation["value"])
+            continue
+        parent = result
+        for token in tokens[:-1]:
+            parent = parent[int(token)] if type(parent) is list else parent[token]
+        token = tokens[-1]
+        if type(parent) is list:
+            if op == "add" and token == "-":
+                parent.append(copy.deepcopy(operation["value"]))
+            elif op == "add":
+                parent.insert(int(token), copy.deepcopy(operation["value"]))
+            elif op == "remove":
+                del parent[int(token)]
+            else:
+                parent[int(token)] = copy.deepcopy(operation["value"])
+        elif type(parent) is dict:
+            if op == "remove":
+                del parent[token]
+            else:
+                parent[token] = copy.deepcopy(operation["value"])
+        else:
+            raise AssertionError(f"RFC-6902 path enters a scalar: {raw_pointer!r}")
+    return result
+
+
+def _schema_resolve(document: dict[str, object], schema: object) -> object:
+    if type(schema) is dict and "$ref" in schema:
+        ref = schema["$ref"]
+        if type(ref) is not str or not ref.startswith("#/"):
+            raise AssertionError(f"non-local schema reference: {ref!r}")
+        return _json_pointer(document, ref[1:])
+    return schema
+
+
+def _schema_valid(
+    document: dict[str, object], schema: object, instance: object
+) -> bool:
+    if schema is True:
+        return True
+    if schema is False:
+        return False
+    schema = _schema_resolve(document, schema)
+    if type(schema) is not dict:
+        raise AssertionError(f"schema node is not an object or Boolean: {schema!r}")
+    if "$ref" in schema:
+        return _schema_valid(document, _schema_resolve(document, schema), instance)
+    if "allOf" in schema and not all(
+        _schema_valid(document, item, instance) for item in schema["allOf"]
+    ):
+        return False
+    if "oneOf" in schema and sum(
+        _schema_valid(document, item, instance) for item in schema["oneOf"]
+    ) != 1:
+        return False
+    if "if" in schema:
+        branch = (
+            schema.get("then")
+            if _schema_valid(document, schema["if"], instance)
+            else schema.get("else")
+        )
+        if branch is not None and not _schema_valid(document, branch, instance):
+            return False
+    if "const" in schema and instance != schema["const"]:
+        return False
+    if "enum" in schema and instance not in schema["enum"]:
+        return False
+    kinds = schema.get("type")
+    if kinds is not None:
+        if type(kinds) is str:
+            kinds = [kinds]
+        if type(kinds) is not list:
+            raise AssertionError(f"schema type is not a string or array: {kinds!r}")
+        matches = {
+            "object": type(instance) is dict,
+            "array": type(instance) is list,
+            "string": type(instance) is str,
+            "integer": type(instance) is int,
+            "number": type(instance) in (int, float),
+            "boolean": type(instance) is bool,
+            "null": instance is None,
+        }
+        if not any(matches.get(kind, False) for kind in kinds):
+            return False
+    if type(instance) is dict:
+        required = schema.get("required", [])
+        if any(key not in instance for key in required):
+            return False
+        properties = schema.get("properties", {})
+        for key, item in instance.items():
+            if key in properties and not _schema_valid(document, properties[key], item):
+                return False
+            if key not in properties:
+                additional = schema.get("additionalProperties", True)
+                if additional is False:
+                    return False
+                if type(additional) is dict and not _schema_valid(
+                    document, additional, item
+                ):
+                    return False
+        if len(instance) < schema.get("minProperties", 0):
+            return False
+    if type(instance) is list:
+        if len(instance) < schema.get("minItems", 0):
+            return False
+        if len(instance) > schema.get("maxItems", sys.maxsize):
+            return False
+        if schema.get("uniqueItems") and len(
+            {_canonical_json_bytes(item) for item in instance}
+        ) != len(instance):
+            return False
+        prefix = schema.get("prefixItems", [])
+        for index, item in enumerate(instance[: len(prefix)]):
+            if not _schema_valid(document, prefix[index], item):
+                return False
+        items = schema.get("items")
+        if items is False and len(instance) > len(prefix):
+            return False
+        if type(items) is dict:
+            for item in instance[len(prefix) :]:
+                if not _schema_valid(document, items, item):
+                    return False
+    if type(instance) is str:
+        if len(instance) < schema.get("minLength", 0):
+            return False
+        if "pattern" in schema and re.search(schema["pattern"], instance) is None:
+            return False
+    if type(instance) is int:
+        if instance < schema.get("minimum", -sys.maxsize - 1):
+            return False
+        if instance > schema.get("maximum", sys.maxsize):
+            return False
+    return True
+
+
+def _schema_refs(value: object) -> tuple[str, ...]:
+    refs = []
+    if type(value) is dict:
+        for key, item in value.items():
+            if key == "$ref":
+                refs.append(item)
+            refs.extend(_schema_refs(item))
+    elif type(value) is list:
+        for item in value:
+            refs.extend(_schema_refs(item))
+    return tuple(refs)
+
+
+def _schema_keywords(value: object) -> frozenset[str]:
+    found = set()
+    if type(value) is dict:
+        found.update(value)
+        for key in ("$defs", "properties"):
+            for item in value.get(key, {}).values():
+                found.update(_schema_keywords(item))
+        for key in ("items", "if", "then", "else"):
+            item = value.get(key)
+            if type(item) is dict:
+                found.update(_schema_keywords(item))
+        for key in ("allOf", "oneOf", "prefixItems"):
+            for item in value.get(key, []):
+                if type(item) is dict:
+                    found.update(_schema_keywords(item))
+    return frozenset(found)
 
 
 def _independent_canonical_json_lf(value: object) -> bytes:
@@ -787,6 +1090,19 @@ def _git(*args: str) -> bytes:
             "--reverse",
             "--parents",
             f"{STAGE_D_DYNAMIC_GROWTH_ACCEPTED_BASE_COMMIT}..{STAGE_D_DYNAMIC_GROWTH_AUTHORITY_CANDIDATE}",
+        )
+        or args
+        == (
+            "merge-base",
+            STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,
+            STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE,
+        )
+        or args
+        == (
+            "rev-list",
+            "--reverse",
+            "--parents",
+            f"{STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT}..{STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE}",
         )
         or args
         == (
@@ -1508,6 +1824,11 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
         ):
             self._audit_stage_d_dynamic_growth_authority(current_scope)
+        if current_scope["stage_e_reconciliation_phase"] in (
+            "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_ONLY",
+            "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION",
+        ):
+            self._audit_stage_e_reconciliation_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -1561,43 +1882,61 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_d_phase = None
             stage_e_phase = None
             stage_d_dynamic_growth_phase = None
+            stage_e_reconciliation_phase = None
         elif changed_paths == STAGE_C_IMPLEMENTATION_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = None
             stage_e_phase = None
             stage_d_dynamic_growth_phase = None
+            stage_e_reconciliation_phase = None
         elif changed_paths == STAGE_D_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_AUTHORITY_ONLY"
             stage_e_phase = None
             stage_d_dynamic_growth_phase = None
+            stage_e_reconciliation_phase = None
         elif changed_paths == STAGE_D_CONTINUATION_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = None
             stage_d_dynamic_growth_phase = None
+            stage_e_reconciliation_phase = None
         elif changed_paths == STAGE_E_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = "STAGE_E_HARNESS_AUTHORITY_ONLY"
             stage_d_dynamic_growth_phase = None
-        elif changed_paths == STAGE_E_HARNESS_IMPLEMENTATION_SCOPE:
-            stage_c_phase = "COMPLETED_IMPLEMENTATION"
-            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
-            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
-            stage_d_dynamic_growth_phase = None
+            stage_e_reconciliation_phase = None
         elif changed_paths == STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = "STAGE_E_HARNESS_AUTHORITY_ONLY"
             stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = None
+        elif changed_paths == STAGE_E_RECONCILIATION_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_AUTHORITY_ONLY"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_ONLY"
+            )
+        elif changed_paths == STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
                 "the exact completed implementation, Stage D authority-only, "
                 "Stage D continuation-authority-only, Stage E harness "
-                "authority-only, Stage E harness completed-implementation, "
-                "or Stage D dynamic-growth authority-only "
+                "authority-only, Stage D dynamic-growth authority-only, "
+                "Stage E dynamic-growth reconciliation authority-only, or "
+                "the reconciled Stage E harness completed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -1607,6 +1946,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(len(STAGE_E_AUTHORITY_SCOPE), 41)
         self.assertEqual(len(STAGE_E_HARNESS_IMPLEMENTATION_SCOPE), 86)
         self.assertEqual(len(STAGE_D_DYNAMIC_GROWTH_AUTHORITY_SCOPE), 46)
+        self.assertEqual(len(STAGE_E_RECONCILIATION_AUTHORITY_SCOPE), 52)
+        self.assertEqual(len(STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS), 51)
+        self.assertEqual(len(STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_SCOPE), 102)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -1684,6 +2026,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             "stage_d_phase": stage_d_phase,
             "stage_e_phase": stage_e_phase,
             "stage_d_dynamic_growth_phase": stage_d_dynamic_growth_phase,
+            "stage_e_reconciliation_phase": stage_e_reconciliation_phase,
         }
 
     def _audit_stage_d_authority(self, current_scope: dict[str, object]) -> None:
@@ -1736,10 +2079,16 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["stage_e_phase"] is not None:
             expected_implementation_delta.update(STAGE_E_AUTHORITY_PATHS)
         if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
-            expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+            )
         if current_scope["stage_d_dynamic_growth_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+            )
+        if current_scope["stage_e_reconciliation_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILIATION_AUTHORITY_PATHS
             )
         self.assertEqual(
             implementation_delta,
@@ -1983,10 +2332,16 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["stage_e_phase"] is not None:
             expected_implementation_delta.update(STAGE_E_AUTHORITY_PATHS)
         if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
-            expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+            )
         if current_scope["stage_d_dynamic_growth_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+            )
+        if current_scope["stage_e_reconciliation_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILIATION_AUTHORITY_PATHS
             )
         self.assertEqual(
             implementation_delta,
@@ -2395,10 +2750,16 @@ class ValidationReachabilityTests(unittest.TestCase):
             "tests/framework/test_validation_reachability.py"
         }
         if current_scope["stage_e_phase"] == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
-            expected_implementation_delta.update(STAGE_E_HARNESS_IMPLEMENTATION_PATHS)
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+            )
         if current_scope["stage_d_dynamic_growth_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS
+            )
+        if current_scope["stage_e_reconciliation_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILIATION_AUTHORITY_PATHS
             )
         self.assertEqual(
             implementation_delta,
@@ -2885,9 +3246,23 @@ class ValidationReachabilityTests(unittest.TestCase):
             for path in set(target_entries) | set(current_entries)
             if target_entries.get(path) != current_entries.get(path)
         )
+        expected_implementation_delta = {
+            "tests/framework/test_validation_reachability.py"
+        }
+        if current_scope["stage_e_reconciliation_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILIATION_AUTHORITY_PATHS
+            )
+        if (
+            current_scope["stage_e_reconciliation_phase"]
+            == "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+            )
         self.assertEqual(
             implementation_delta,
-            frozenset(("tests/framework/test_validation_reachability.py",)),
+            frozenset(expected_implementation_delta),
         )
 
         candidate_archive = _archive_members(
@@ -3161,6 +3536,851 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(marker, predecessor["completion_marker"])
         self.assertEqual(marker, validation["completion_marker"])
         for path in STAGE_D_DYNAMIC_GROWTH_AUTHORITY_PATHS:
+            self.assertEqual(raw_by_path[path].count(marker.encode("utf-8")), 1, path)
+        self.assertEqual(
+            tuple(
+                name
+                for name, value in self.__class__.__dict__.items()
+                if name.startswith("test_") and callable(value)
+            ),
+            (
+                "test_historical_i9_reconstruction",
+                "test_current_head_durability",
+                "test_post_i9_authority_cases",
+            ),
+        )
+
+    def _audit_stage_e_reconciliation_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertIn(
+            current_scope["stage_e_reconciliation_phase"],
+            (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_ONLY",
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION",
+            ),
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                "--verify",
+                f"{STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT}^{{commit}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_E_RECONCILIATION_AUTHORITY_TARGET}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_RECONCILIATION_AUTHORITY_TARGET}^1")
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_E_RECONCILIATION_AUTHORITY_TARGET}^2")
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,
+                STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,
+        )
+        history_rows = tuple(
+            tuple(line.split())
+            for line in _git(
+                "rev-list",
+                "--reverse",
+                "--parents",
+                f"{STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT}..{STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE}",
+            )
+            .decode()
+            .splitlines()
+        )
+        self.assertEqual(
+            tuple(row[0] for row in history_rows),
+            STAGE_E_RECONCILIATION_AUTHORITY_CHAIN,
+        )
+        self.assertEqual(
+            history_rows[0][1:],
+            (STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,),
+        )
+        for previous, row in zip(
+            STAGE_E_RECONCILIATION_AUTHORITY_CHAIN, history_rows[1:]
+        ):
+            self.assertEqual(row[1:], (previous,))
+
+        base_entries = _tree_entries(STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE)
+        target_entries = _tree_entries(STAGE_E_RECONCILIATION_AUTHORITY_TARGET)
+        current_entries = _tree_entries(current_scope["actual_head"])
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(STAGE_E_RECONCILIATION_AUTHORITY_PATHS)
+        )
+        self.assertEqual(candidate_entries, target_entries)
+        for path in STAGE_E_RECONCILIATION_AUTHORITY_PATHS:
+            self.assertNotIn(path, base_entries)
+            self.assertEqual(candidate_entries[path]["mode"], "100644", path)
+            self.assertEqual(candidate_entries[path]["object_type"], "blob", path)
+        implementation_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        expected_implementation_delta = {
+            "tests/framework/test_validation_reachability.py"
+        }
+        if (
+            current_scope["stage_e_reconciliation_phase"]
+            == "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(
+                STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+            )
+        self.assertEqual(
+            implementation_delta,
+            frozenset(expected_implementation_delta),
+        )
+
+        candidate_archive = _archive_members(
+            STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE
+        )
+        target_archive = _archive_members(STAGE_E_RECONCILIATION_AUTHORITY_TARGET)
+        documents = {}
+        raw_by_path = {}
+        for path in STAGE_E_RECONCILIATION_AUTHORITY_PATHS:
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(
+                path, target_entries, target_archive
+            )
+            self.assertEqual(candidate_row, target_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            current_raw = (ROOT / path).read_bytes()
+            self.assertEqual(current_raw, candidate_raw, path)
+            self.assertEqual(
+                _sha256(current_raw),
+                STAGE_E_RECONCILIATION_AUTHORITY_RAW_SHA256[path],
+                path,
+            )
+            text = current_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                current_raw.endswith(b"\n") and not current_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\xef\xbb\xbf", current_raw, path)
+            self.assertNotIn(b"\r", current_raw, path)
+            self.assertTrue(
+                all(line == line.rstrip(" \t") for line in text.splitlines()),
+                path,
+            )
+            raw_by_path[path] = current_raw
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(current_raw, path)
+                canonical = _canonical_json_bytes(documents[path])
+                self.assertEqual(
+                    _sha256(canonical),
+                    STAGE_E_RECONCILIATION_AUTHORITY_CANONICAL_SHA256[path],
+                    path,
+                )
+
+        contract = documents[
+            "stage_e_dynamic_growth_harness_reconciliation_contract.json"
+        ]
+        schema = documents[
+            "stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json"
+        ]
+        implementation = documents[
+            "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "stage_e_dynamic_growth_harness_reconciliation_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json"
+        ]
+        self.assertEqual(
+            tuple(contract["candidate_files"]),
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS,
+        )
+        self.assertEqual(contract["candidate_file_count"], 6)
+        self.assertEqual(
+            tuple(validation["candidate_paths"]),
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS,
+        )
+        self.assertEqual(validation["candidate_path_count"], 6)
+        self.assertEqual(
+            tuple(implementation["authority_paths"]),
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS,
+        )
+        self.assertEqual(implementation["authority_path_count"], 6)
+        for document in (contract, implementation, predecessor, validation):
+            self.assertEqual(
+                document["accepted_base"]["commit"],
+                STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT,
+            )
+            self.assertEqual(
+                document["accepted_base"]["tree"],
+                STAGE_E_RECONCILIATION_ACCEPTED_BASE_TREE,
+            )
+
+        self.assertEqual(predecessor["source_count"], 24)
+        source_rows = predecessor["source_rows"]
+        self.assertEqual(len(source_rows), 24)
+        self.assertEqual(len({row["path"] for row in source_rows}), 24)
+        base_archive = _archive_members(STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT)
+        for row in source_rows:
+            reconstructed, base_raw = _object_row(
+                row["path"], base_entries, base_archive
+            )
+            self.assertEqual(
+                {
+                    "path": reconstructed["path"],
+                    "mode": reconstructed["mode"],
+                    "git_object": reconstructed["git_object"],
+                    "bytes": reconstructed["byte_count"],
+                    "sha256": reconstructed["raw_sha256"],
+                },
+                row,
+                row["path"],
+            )
+            changed_workflow = (
+                row["path"] == ".github/workflows/tests.yml"
+                and current_scope["stage_e_reconciliation_phase"]
+                == "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            if (
+                row["path"] != "tests/framework/test_validation_reachability.py"
+                and not changed_workflow
+            ):
+                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+        nested = predecessor["nested_authority_closure"]
+        self.assertEqual(nested["stage_d_predecessor_rows"], 39)
+        self.assertEqual(nested["continuation_direct_rows"], 9)
+        self.assertEqual(nested["stage_e_direct_rows"], 17)
+        self.assertEqual(nested["dynamic_growth_direct_rows"], 19)
+        self.assertTrue(
+            nested["all_nested_rows_reconstruct_at_their_own_accepted_commits"]
+        )
+
+        durability = implementation["prospective_durability"]
+        self.assertEqual(
+            durability["modified_path"],
+            "tests/framework/test_validation_reachability.py",
+        )
+        self.assertEqual(durability["modified_path_count"], 1)
+        self.assertTrue(durability["authority_integration_required_first"])
+        self.assertTrue(durability["independent_audit_required"])
+        harness = implementation["prospective_harness_implementation"]
+        self.assertEqual(harness["modified_paths"], [".github/workflows/tests.yml"])
+        self.assertEqual(harness["modified_path_count"], 1)
+        self.assertEqual(
+            tuple(harness["new_paths"]),
+            STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS[1:],
+        )
+        self.assertEqual(harness["new_path_count"], 50)
+        self.assertEqual(harness["total_path_count"], 51)
+        self.assertEqual(implementation["accepted_stage_e_implementation_path_count"], 46)
+        self.assertEqual(implementation["reconciliation_added_path_count"], 5)
+        self.assertEqual(implementation["unknown_path_disposition"], "REFUSE")
+        self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
+        self.assertEqual(
+            implementation["force_push_or_history_rewrite"], "FORBIDDEN"
+        )
+
+        def load_document(path: str) -> dict[str, object]:
+            if path not in documents:
+                documents[path] = _strict_stage_d_json_bytes(
+                    (ROOT / path).read_bytes(), path
+                )
+            return documents[path]
+
+        refs = _schema_refs(schema)
+        self.assertEqual(len(schema["$defs"]), 25)
+        self.assertEqual(len(schema["oneOf"]), 7)
+        self.assertEqual(len(refs), 83)
+        self.assertEqual(len(set(refs)), 22)
+        for ref in refs:
+            self.assertTrue(ref.startswith("#/$defs/"), ref)
+            self.assertIn(ref.removeprefix("#/$defs/"), schema["$defs"])
+        expected_keywords = tuple(
+            contract["schema_replay"]["supported_keywords_in_order"]
+        )
+        self.assertEqual(len(expected_keywords), 29)
+        self.assertEqual(expected_keywords[0], "$comment")
+        derived_keywords = set()
+        for path in contract["schema_replay"]["controlling_schemas"]:
+            derived_keywords.update(_schema_keywords(load_document(path)))
+        self.assertEqual(
+            derived_keywords.intersection(expected_keywords), set(expected_keywords)
+        )
+        profile = validation["schema_profile"]
+        self.assertEqual(profile["definition_count"], 25)
+        self.assertEqual(profile["root_count"], 7)
+        self.assertEqual(profile["local_ref_occurrence_count"], 83)
+        self.assertEqual(profile["unique_local_ref_target_count"], 22)
+        self.assertEqual(profile["supported_keyword_count"], 29)
+
+        positives = validation["positive_fixture_registry"]
+        self.assertEqual(len(positives), 61)
+        self.assertEqual(
+            tuple(row["ordinal"] for row in positives), tuple(range(61))
+        )
+        self.assertEqual(len({row["fixture_id"] for row in positives}), 61)
+        for row in positives:
+            source = load_document(row["source_path"])
+            instance = _json_pointer(source, row["source_json_pointer"])
+            self.assertEqual(
+                _json_identity(instance),
+                {
+                    "byte_count": row["canonical_byte_count"],
+                    "sha256": row["canonical_sha256"],
+                },
+                row["fixture_id"],
+            )
+            target_document = load_document(row["target_schema_path"])
+            target = row["target_definition_or_root"]
+            self.assertIn(target, target_document["$defs"], row["fixture_id"])
+            self.assertTrue(
+                _schema_valid(target_document, target_document["$defs"][target], instance),
+                row["fixture_id"],
+            )
+        self.assertEqual(
+            tuple(
+                sum(1 for row in positives if row["source_path"] == path)
+                for path in (
+                    "stage_d_scientific_validation_evidence_schema.json",
+                    "stage_d_completion_oriented_continuation_evidence_schema.json",
+                    "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
+                    "stage_d_dynamic_growth_campaign_validation_contract.json",
+                )
+            ),
+            (4, 2, 11, 44),
+        )
+
+        bases = {
+            row["base_fixture_id"]: row
+            for row in validation["refusal_base_fixtures"]
+        }
+        self.assertEqual(len(bases), 120)
+        for row in bases.values():
+            self.assertEqual(_json_identity(row["instance"]), row["canonical_identity"])
+            source = load_document(row["source_path"])
+            self.assertEqual(
+                _json_pointer(source, row["source_json_pointer"]),
+                row["instance"],
+                row["base_fixture_id"],
+            )
+        refusals = validation["refusal_registry"]
+        self.assertEqual(len(refusals), 249)
+        self.assertEqual(
+            tuple(row["ordinal"] for row in refusals), tuple(range(249))
+        )
+        self.assertEqual(len({row["case_id"] for row in refusals}), 249)
+        mutated_by_case = {}
+        structural_by_case = {}
+        for row in refusals:
+            base = bases[row["base_fixture_id"]]["instance"]
+            self.assertEqual(_json_identity(base), row["base_fixture_identity"])
+            self.assertEqual(
+                row["base_fixture_sha256"], row["base_fixture_identity"]["sha256"]
+            )
+            representation = row["mutation_representation"]
+            if representation == "RFC6902_PATCH":
+                self.assertEqual(
+                    row["rfc6902_patch_or_full_instance"], row["rfc6902_patch"]
+                )
+                self.assertEqual(
+                    _json_identity(row["rfc6902_patch"]), row["patch_identity"]
+                )
+                mutated = _apply_json_patch(base, row["rfc6902_patch"])
+            elif representation == "FULL_MUTATED_INSTANCE":
+                self.assertEqual(row["rfc6902_patch"], [])
+                self.assertEqual(
+                    _json_identity(row["rfc6902_patch_or_full_instance"]),
+                    row["patch_identity"],
+                )
+                mutated = row["rfc6902_patch_or_full_instance"]
+            else:
+                self.assertEqual(representation, "RAW_JSON_TEXT")
+                self.assertEqual(row["validation_layer"], "JSON_PARSE")
+                self.assertEqual(row["rfc6902_patch"], [])
+                raw_text = row["rfc6902_patch_or_full_instance"].encode("utf-8")
+                raw_identity = {
+                    "byte_count": len(raw_text),
+                    "sha256": _sha256(raw_text),
+                }
+                self.assertEqual(raw_identity, row["patch_identity"])
+                self.assertEqual(raw_identity, row["mutated_instance_identity"])
+
+                def reject_float(value: str) -> object:
+                    raise ValueError(f"floating JSON number: {value}")
+
+                with self.assertRaises(ValueError):
+                    json.loads(
+                        row["rfc6902_patch_or_full_instance"],
+                        parse_float=reject_float,
+                    )
+                mutated = None
+            if mutated is not None:
+                self.assertEqual(
+                    _json_identity(mutated), row["mutated_instance_identity"]
+                )
+                target_document = load_document(row["target_schema_path"])
+                target = row["target_definition"]
+                self.assertIn(target, target_document["$defs"], row["case_id"])
+                if target == "comment_nonreliance_pair":
+                    self.assertTrue(
+                        _schema_valid(
+                            target_document, target_document["$defs"][target], mutated
+                        )
+                    )
+                    outcomes = tuple(
+                        _schema_valid(mutated[name], mutated[name], mutated["instance"])
+                        for name in (
+                            "schema_with_comment",
+                            "schema_without_comment",
+                            "schema_with_changed_comment",
+                        )
+                    )
+                    self.assertEqual(outcomes, (True, True, True))
+                    structural = True
+                elif target == "keyword_conformance_pair":
+                    self.assertTrue(
+                        _schema_valid(
+                            target_document, target_document["$defs"][target], mutated
+                        )
+                    )
+                    structural = _schema_valid(
+                        mutated["schema"], mutated["schema"], mutated["instance"]
+                    )
+                else:
+                    structural = _schema_valid(
+                        target_document, target_document["$defs"][target], mutated
+                    )
+                self.assertIs(
+                    structural,
+                    row["expected_structural_validity"],
+                    row["case_id"],
+                )
+                mutated_by_case[row["case_id"]] = mutated
+                structural_by_case[row["case_id"]] = structural
+            self.assertEqual(
+                row["mutated_instance_sha256"],
+                row["mutated_instance_identity"]["sha256"],
+            )
+            self.assertNotEqual(row["required_disposition"], "PASS")
+        self.assertEqual(
+            tuple(
+                sum(1 for row in refusals if row["source_path"] == path)
+                for path in (
+                    "stage_d_scientific_validation_evidence_schema.json",
+                    "stage_d_completion_oriented_continuation_evidence_schema.json",
+                    "stage_e_scientific_harness_evidence_schema.json",
+                    "stage_d_dynamic_growth_campaign_validation_contract.json",
+                    "stage_e_dynamic_growth_harness_reconciliation_validation_contract.json",
+                )
+            ),
+            (16, 35, 24, 150, 24),
+        )
+        continuation_rows = tuple(
+            row
+            for row in refusals
+            if row["source_path"]
+            == "stage_d_completion_oriented_continuation_evidence_schema.json"
+        )
+        self.assertEqual(
+            sum(row["validation_layer"] == "JSON_SCHEMA" for row in continuation_rows),
+            31,
+        )
+        self.assertEqual(
+            sum(
+                row["validation_layer"] == "SEMANTIC_RELATION"
+                for row in continuation_rows
+            ),
+            4,
+        )
+        self.assertEqual(
+            {
+                row["case_id"]
+                for row in continuation_rows
+                if row["validation_layer"] == "SEMANTIC_RELATION"
+            },
+            {
+                "CONT-SCHEMA-N17",
+                "CONT-SCHEMA-N21",
+                "CONT-SCHEMA-N25",
+                "CONT-SCHEMA-N35",
+            },
+        )
+
+        n17 = next(
+            row for row in continuation_rows if row["case_id"] == "CONT-SCHEMA-N17"
+        )
+        n17_base = bases["continuation-n17-complete-atomic-case-boundary"]
+        expected_n17_context = {
+            "study_id": "SD-06",
+            "continuation_mode": "BETWEEN_ATOMIC_CASE_CONTINUATION_ONLY",
+            "atomic_operation_kind": "DIRECT_BOOLEAN_MOBIUS_ORACLE_CASE",
+            "completed_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000000",
+            "next_absent_atomic_case_id": "SD-06-BOOLEAN-MOBIUS-DIRECT-CASE-000001",
+            "continuation_requested": True,
+            "base_atomic_case_complete": True,
+            "mutation_sets_atomic_case_complete": False,
+        }
+        self.assertEqual(
+            n17_base["atomic_case_continuation_context"], expected_n17_context
+        )
+        self.assertEqual(n17["atomic_case_continuation_context"], expected_n17_context)
+        self.assertEqual(
+            _json_identity(n17["rfc6902_patch"]),
+            {
+                "byte_count": 63,
+                "sha256": "eccce0f57ae53e7c0d3c3a4d68320a364c2eecd429deef8456f796bc920c1fe5",
+            },
+        )
+        attempt = n17_base["instance"]
+        n17_mutated = mutated_by_case["CONT-SCHEMA-N17"]
+        self.assertTrue(attempt["atomic_case_complete"])
+        self.assertFalse(n17_mutated["atomic_case_complete"])
+        self.assertTrue(attempt["continuation_permitted"])
+        self.assertTrue(n17_mutated["continuation_permitted"])
+        self.assertEqual(
+            n17["semantic_rule_id"], "REFUSE_PARTIAL_ATOMIC_CASE_CONTINUATION"
+        )
+        binding = attempt["attempt_binding"]
+        allocation = binding["process_allocation"]
+        allocation_fields = (
+            "worker_count",
+            "ordered_worker_allocations",
+            "scheduler_allocation_identity",
+            "policy_conformance_receipt_identity",
+        )
+        allocation_digest = _json_identity(
+            {field: allocation[field] for field in allocation_fields}
+        )["sha256"]
+        self.assertEqual(
+            allocation_digest,
+            "a3497dd174e7f9a339586b6ab68607e91872eb4e82af6819f9f719d4939bdd7a",
+        )
+        self.assertEqual(allocation["allocation_sha256"], allocation_digest)
+        self.assertEqual(
+            binding["process_allocation_identity"],
+            {
+                "kind": "process_allocation/v2",
+                "value": allocation_digest,
+                "sha256": allocation_digest,
+            },
+        )
+        workers = allocation["ordered_worker_allocations"]
+        self.assertEqual(allocation["worker_count"], len(workers))
+        self.assertEqual(
+            tuple(worker["worker_ordinal"] for worker in workers),
+            tuple(range(len(workers))),
+        )
+        self.assertEqual(len({worker["process_index"] for worker in workers}), len(workers))
+        self.assertEqual(
+            len({_canonical_json_bytes(worker["process_identity"]) for worker in workers}),
+            len(workers),
+        )
+        self.assertEqual(
+            binding["policy_conformance_receipt_identity"],
+            allocation["policy_conformance_receipt_identity"],
+        )
+        binding_fields = (
+            "campaign_id",
+            "scientific_run_id",
+            "campaign_execution_binding_identity",
+            "attempt_ordinal",
+            "incoming_checkpoint_identity",
+            "parallelization_boundary_identity",
+            "worker_allocation_policy_identity",
+            "storage_location_identity",
+            "durability_policy_identity",
+            "restart_policy_identity",
+            "process_allocation_identity",
+            "policy_conformance_receipt_identity",
+        )
+        binding_digest = _json_identity(
+            {field: binding[field] for field in binding_fields}
+        )["sha256"]
+        self.assertEqual(
+            binding_digest,
+            "0ea5f567da08ac9f38cc8bf33ccba1abab62f9cc2ebe3bbfa6fb5d6c65d0dcec",
+        )
+        self.assertEqual(binding["binding_sha256"], binding_digest)
+        self.assertEqual(
+            attempt["attempt_binding_identity"],
+            {
+                "kind": "attempt_binding/v2",
+                "value": binding_digest,
+                "sha256": binding_digest,
+            },
+        )
+        for field in (
+            "campaign_id",
+            "scientific_run_id",
+            "attempt_ordinal",
+            "incoming_checkpoint_identity",
+        ):
+            self.assertEqual(attempt[field], binding[field])
+        attempt_fields = (
+            "campaign_id",
+            "scientific_run_id",
+            "attempt_ordinal",
+            "incoming_checkpoint_identity",
+            "attempt_binding_identity",
+        )
+        self.assertEqual(
+            _json_identity({field: attempt[field] for field in attempt_fields})[
+                "sha256"
+            ],
+            "cc255ec085c6be703dd48c59a5d7ed0ef80aad5ea7d09900347b8d372d5371b9",
+        )
+        self.assertEqual(
+            attempt["attempt_id"],
+            "cc255ec085c6be703dd48c59a5d7ed0ef80aad5ea7d09900347b8d372d5371b9",
+        )
+        self.assertEqual(attempt["attempt_ordinal"], 0)
+        self.assertIsNone(attempt["predecessor_attempt_identity"])
+        self.assertIsNone(attempt["incoming_checkpoint_identity"])
+        self.assertIsNone(attempt["scientific_disposition"])
+        self.assertIsNotNone(attempt["outgoing_checkpoint_identity"])
+        self.assertIsNotNone(attempt["continuation_receipt_identity"])
+        self.assertTrue(attempt["identity_checks_passed"])
+        self.assertTrue(attempt["watchdogs_respected"])
+        self.assertTrue(structural_by_case["CONT-SCHEMA-N17"])
+        self.assertTrue(
+            all(
+                n17_mutated[field] == attempt[field]
+                for field in attempt
+                if field != "atomic_case_complete"
+            )
+        )
+
+        n21_base = bases[
+            next(
+                row["base_fixture_id"]
+                for row in continuation_rows
+                if row["case_id"] == "CONT-SCHEMA-N21"
+            )
+        ]["instance"]
+        n21_mutated = mutated_by_case["CONT-SCHEMA-N21"]
+        self.assertEqual(n21_mutated["campaign_id"], n21_base["campaign_id"])
+        self.assertNotEqual(
+            n21_mutated["parallelization_boundary_identity"],
+            n21_base["parallelization_boundary_identity"],
+        )
+        n25_mutated = mutated_by_case["CONT-SCHEMA-N25"]
+        self.assertNotEqual(
+            n25_mutated["worker_count"],
+            len(n25_mutated["ordered_worker_allocations"]),
+        )
+        n35_mutated = mutated_by_case["CONT-SCHEMA-N35"]
+        self.assertNotEqual(
+            n35_mutated["policy_conformance_receipt_identity"],
+            n35_mutated["process_allocation"][
+                "policy_conformance_receipt_identity"
+            ],
+        )
+
+        non_n17_base = bases[
+            "reconciliation-non-n17-refusal-ledger-row"
+        ]["instance"]
+        context_case = next(
+            row for row in refusals if row["case_id"] == "SE-RC-CONTEXT-N01"
+        )
+        context_mutated = mutated_by_case["SE-RC-CONTEXT-N01"]
+        self.assertNotIn("atomic_case_continuation_context", non_n17_base)
+        self.assertEqual(
+            context_mutated["atomic_case_continuation_context"],
+            expected_n17_context,
+        )
+        self.assertFalse(structural_by_case["SE-RC-CONTEXT-N01"])
+        self.assertEqual(context_case["validation_layer"], "JSON_SCHEMA")
+        self.assertTrue(
+            all(
+                "atomic_case_continuation_context" not in row
+                for row in refusals
+                if row["case_id"] != "CONT-SCHEMA-N17"
+            )
+        )
+
+        outputs = contract["evidence_outputs"]
+        self.assertEqual(outputs["accepted_v1_record_count_with_manifest"], 10)
+        self.assertEqual(outputs["reconciliation_v2_record_count_with_manifest"], 6)
+        self.assertEqual(outputs["total_output_file_count"], 16)
+        self.assertTrue(
+            set(outputs["accepted_v1_record_names_byte_and_shape_semantics_preserved"])
+            .isdisjoint(
+                outputs["reconciliation_v2_record_names"]
+                + [outputs["reconciliation_v2_manifest_name"]]
+            )
+        )
+        dag = schema["$defs"]["dag_cache_record"]["properties"][
+            "dag_complexity_cells"
+        ]
+        exact_cells = []
+        for item in dag["prefixItems"]:
+            properties = item["allOf"][1]["properties"]
+            exact_cells.append(
+                (
+                    properties["cell_id"]["const"],
+                    properties["vertices"]["const"],
+                    properties["edges"]["const"],
+                    properties["traversal"]["properties"]["edge_inspections"][
+                        "const"
+                    ],
+                    properties["canonicalization"]["properties"][
+                        "input_edge_count"
+                    ]["const"],
+                )
+            )
+        self.assertEqual(
+            exact_cells,
+            [
+                ("DAG-128-256", 128, 256, 256, 256),
+                ("DAG-1024-4096", 1024, 4096, 4096, 4096),
+                ("DAG-10000-50000", 10000, 50000, 50000, 50000),
+                ("DAG-100000-500000", 100000, 500000, 500000, 500000),
+                ("DAG-512-130816", 512, 130816, 130816, 130816),
+            ],
+        )
+        cache = schema["$defs"]["cache_invalidation_receipt"]
+        self.assertTrue(
+            cache["properties"]["dependency_edges"]["items"]["$ref"].endswith(
+                "/dag_edge"
+            )
+        )
+        self.assertTrue(
+            cache["properties"]["alias_edges"]["items"]["$ref"].endswith(
+                "/dag_edge"
+            )
+        )
+        for name in (
+            "declared_key_universe",
+            "expected_affected_key_identities",
+            "observed_affected_key_identities",
+            "traversal_order_key_identities",
+            "invalidated_key_identities",
+            "recomputed_key_identities",
+            "reused_key_identities",
+        ):
+            self.assertTrue(
+                cache["properties"][name]["items"]["$ref"].endswith("/sha256")
+            )
+        guard = schema["$defs"]["dynamic_growth_guard_record"]["properties"]
+        guarded = tuple(
+            item["const"]
+            for item in guard["guarded_route_ids_in_order"]["prefixItems"]
+        )
+        self.assertEqual(
+            guarded,
+            ("SD-01", "SD-01-GROWTH-v1")
+            + tuple(f"SD-{index:02d}" for index in range(2, 15)),
+        )
+        self.assertEqual(guard["preimport_refusal_count"]["const"], 15)
+        pass_manifest = schema["$defs"]["reconciliation_manifest_pass"][
+            "properties"
+        ]
+        bound_manifest = schema["$defs"]["reconciliation_manifest_bound"][
+            "properties"
+        ]
+        for manifest in (pass_manifest, bound_manifest):
+            names = tuple(
+                item["allOf"][1]["properties"]["name"]["const"]
+                for item in manifest["entries"]["prefixItems"]
+            )
+            self.assertEqual(names, tuple(outputs["reconciliation_v2_record_names"]))
+        self.assertEqual(
+            pass_manifest["final_status"]["const"],
+            "STAGE_E_SCIENTIFIC_HARNESS_VALIDATION_PASS",
+        )
+        self.assertEqual(
+            bound_manifest["final_status"]["const"],
+            "STAGE_E_SCIENTIFIC_HARNESS_BOUND_NOT_SUPPORTED",
+        )
+        self.assertEqual(bound_manifest["stage_f_route"]["const"], "REFUSE")
+
+        mechanical = validation["mechanical_counts"]
+        self.assertEqual(mechanical["schema_fixture_count"], 61)
+        self.assertEqual(mechanical["refusal_base_fixtures"], 120)
+        self.assertEqual(mechanical["schema_refusal_count"], 249)
+        self.assertEqual(mechanical["evidence_schema_local_ref_occurrences"], 83)
+        self.assertEqual(len(validation["new_schema_semantic_relations"]), 38)
+        self.assertEqual(validation["required_positive_check_count"], 161)
+        self.assertEqual(len(validation["positive_checks"]), 161)
+        self.assertEqual(validation["required_negative_case_count"], 138)
+        self.assertEqual(len(validation["negative_cases"]), 138)
+        stale_rule = implementation["path_rules"][
+            "scripts/validate_stage_e_harness.py"
+        ]
+        self.assertIn("63 fixtures", stale_rule)
+        self.assertIn("247 exact refusal cases", stale_rule)
+        correction = contract["preserved_implementation_manifest_count_correction"]
+        self.assertEqual(correction["operative_fixture_count"], 61)
+        self.assertEqual(correction["operative_refusal_count"], 249)
+        zero_counters = contract["required_operation_counts"]
+        self.assertEqual(len(zero_counters), 18)
+        self.assertEqual(set(zero_counters.values()), {0})
+        self.assertEqual(predecessor["required_operation_counts"], zero_counters)
+        self.assertEqual(
+            validation["required_authority_operation_counts"], zero_counters
+        )
+        markers = {
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[0]: contract["completion_marker"],
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[1]: contract["completion_marker"],
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[2]: schema["completion_marker"],
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[3]: implementation[
+                "completion_marker"
+            ],
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[4]: predecessor[
+                "completion_marker"
+            ],
+            STAGE_E_RECONCILIATION_AUTHORITY_PATHS[5]: validation[
+                "completion_marker"
+            ],
+        }
+        for path, marker in markers.items():
             self.assertEqual(raw_by_path[path].count(marker.encode("utf-8")), 1, path)
         self.assertEqual(
             tuple(
