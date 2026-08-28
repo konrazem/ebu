@@ -71,6 +71,20 @@
     "scope_derived_exclusion": "FORBIDDEN",
     "workflow_rule": "accepted 13830-byte Stage C prefix plus one exact append-only Stage E block; no existing job or failure routing changes"
   },
+  "preserved_implementation_manifest_count_correction": {
+    "manifest_path": "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json",
+    "manifest_bytes_preserved": true,
+    "affected_rule_path": "scripts/validate_stage_e_harness.py",
+    "rejected_provisional_literals": [
+      "63 fixtures",
+      "247 exact refusal cases"
+    ],
+    "operative_fixture_count": 61,
+    "operative_refusal_count": 248,
+    "supersession_scope": "ONLY_THE_TWO_COUNT_LITERALS_IN_THE_NAMED_PATH_RULE",
+    "all_other_path_scope_and_no_substitution_rules_remain_binding": true,
+    "using_rejected_literals_or_changing_any_other_manifest_meaning": "REFUSE"
+  },
   "known_defect_corrections": [
     {
       "id": "SE-RC-DEFECT-01",

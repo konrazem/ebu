@@ -476,7 +476,8 @@
     "SE-RC-N133 bound v2 record promoted by PASS manifest",
     "SE-RC-N134 accepted v1 filename reused for v2 shape",
     "SE-RC-N135 recursive case operand omitted from canonical identity",
-    "SE-RC-N136 guarded route omitted duplicated or reordered"
+    "SE-RC-N136 guarded route omitted duplicated or reordered",
+    "SE-RC-N137 preserved implementation-manifest provisional 63/247 literals treated as operative or any other manifest meaning changed"
   ],
   "new_schema_semantic_relations": [
     "SE-RC-SR-001 common head commit and tree equal the exact implementation candidate",
@@ -513,7 +514,8 @@
     "SE-RC-SR-032 v2 PASS requires all five entries PASS; the non-PASS manifest retains the same five exact ordered names, requires at least one BOUND_NOT_SUPPORTED entry, binds bound_record_names exactly to those entries, and refuses Stage F",
     "SE-RC-SR-033 recursive poset transport and correction case ordinals canonical operands outputs relations and identities reconstruct exactly",
     "SE-RC-SR-034 the guard route list is exactly fifteen ordered IDs and every route has one preimport refusal",
-    "SE-RC-SR-035 all 61 positive and 248 refusal registry rows reconstruct their committed canonical identities"
+    "SE-RC-SR-035 all 61 positive and 248 refusal registry rows reconstruct their committed canonical identities",
+    "SE-RC-SR-036 the byte-preserved implementation manifest's provisional 63/247 literals are non-operative and superseded only by exact executable 61/248 registries while every other path and no-substitution rule remains binding"
   ],
   "pass_boundary": "A PASS authorizes only normal private authority integration, then the separately frozen one-path reachability durability lifecycle. Harness implementation remains frozen until durability integration PASS. Stage F remains separately user-gated.",
   "positive_checks": [
@@ -674,7 +676,8 @@
     "SE-RC-P155 exact five DAG cells and exact edge inspections",
     "SE-RC-P156 typed cache closure identity arrays and disjoint reuse",
     "SE-RC-P157 ordered recursive poset and transport case identities",
-    "SE-RC-P158 exact fifteen-route preimport guard coverage"
+    "SE-RC-P158 exact fifteen-route preimport guard coverage",
+    "SE-RC-P159 byte-preserved implementation manifest has exactly the known provisional 63/247 literals and the narrow 61/248 supersession is mechanically bound"
   ],
   "positive_fixture_registry": [
     {
@@ -29469,8 +29472,8 @@
     "trajectory_execution_count": 0,
     "transform_execution_count": 0
   },
-  "required_negative_case_count": 136,
-  "required_positive_check_count": 158,
+  "required_negative_case_count": 137,
+  "required_positive_check_count": 159,
   "schema_profile": {
     "definition_count": 22,
     "format_is_annotation_only": true,

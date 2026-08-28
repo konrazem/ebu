@@ -57,6 +57,16 @@ The accepted Stage E manifest authorizes one workflow modification and 45 new pa
 
 The prospective completed harness therefore changes exactly 51 paths relative to the accepted base: one existing workflow path and 50 new regular files. The workflow modification is still append-only and must preserve the accepted 13,830-byte Stage C prefix. The appended Stage E job may be prospectively extended only to include the exact reconciliation authority, the exact five new source/test paths, and their sealed evidence. Existing T0, T1, T2, conventional, packaging, release, and fail-closed routing remain unchanged.
 
+The implementation-path manifest is preserved byte-for-byte because its path
+closure is unchanged. Its `scripts/validate_stage_e_harness.py` rule contains
+the rejected provisional literals “63 fixtures” and “247 exact refusal cases.”
+Those two count literals are explicitly non-operative and are prospectively
+superseded, only for that one rule, by the mechanically executable 61-fixture
+and 248-refusal registries in this amendment, contract, schema and validation
+contract. The path, no-substitution, no-count-only and complete-execution
+requirements in that rule remain binding. Treating 63/247 as executable
+counts, or changing any other manifest byte or meaning, refuses.
+
 The three new modules have closed roles:
 
 - `growth.py` implements outcome-blind structural-growth fixture construction, full/incremental/reuse reconstruction comparison, exact work counters, topology receipts, and invalidation receipts;
