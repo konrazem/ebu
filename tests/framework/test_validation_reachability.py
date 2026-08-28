@@ -493,7 +493,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "8d027912ce85d6bc8844e26d34566d8d2181f533bf6cffcef9f7f76f5f64cee1"
+TEST_SELF_SEAL = "5a0a4fc4d43bb6473e151286d76104bc21513e162d323e6348884b79da48d5d9"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1437,7 +1437,11 @@ class ValidationReachabilityTests(unittest.TestCase):
         self._audit_public_surface(contract, manifest, clcd_contract)
         self._audit_import_graph(manifest, clcd_contract)
         self._audit_tables(contract)
-        self._audit_safety_and_ci(manifest, current_scope["stage_c_phase"])
+        self._audit_safety_and_ci(
+            manifest,
+            current_scope["stage_c_phase"],
+            current_scope["stage_e_phase"],
+        )
         self._audit_text_and_markdown(contract)
         self._audit_static_vectors(validation_contract)
         self._audit_cross_document(contract, validation_contract, predecessor, manifest)
@@ -2959,7 +2963,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             contract["audit_register"]["combined_projection"],
         )
 
-    def _audit_safety_and_ci(self, manifest, stage_c_phase: str) -> None:
+    def _audit_safety_and_ci(
+        self, manifest, stage_c_phase: str, stage_e_phase: str | None
+    ) -> None:
         safety_path = ROOT / "tests/framework/safety.py"
         safety_raw = safety_path.read_bytes()
         self.assertEqual(
@@ -3112,7 +3118,13 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertNotIn("from ebu_framework", historical_region)
         self.assertNotIn("import ebu_framework", historical_region)
         if stage_c_phase == "COMPLETED_IMPLEMENTATION":
-            self._audit_stage_c_ci(current_workflow_raw.decode("utf-8"))
+            stage_c_workflow_raw = current_workflow_raw
+            if stage_e_phase == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
+                self.assertTrue(current_workflow_raw.endswith(STAGE_E_WORKFLOW_APPEND_BLOCK))
+                stage_c_workflow_raw = current_workflow_raw[
+                    : -len(STAGE_E_WORKFLOW_APPEND_BLOCK)
+                ]
+            self._audit_stage_c_ci(stage_c_workflow_raw.decode("utf-8"))
 
     def _audit_stage_c_ci(self, workflow: str) -> None:
         self.assertNotIn("ubuntu-26.04", workflow)
