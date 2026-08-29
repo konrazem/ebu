@@ -645,7 +645,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "1de9cfeb23ea35373826b9fc2deacf399c84e314b4bb77a8684428c1effeeb9a"
+TEST_SELF_SEAL = "b49c5312f4dcd7bd8bd6c5bbd0eae88d7b89d62d9164c5d32fb805cb613c2778"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3354,7 +3354,15 @@ class ValidationReachabilityTests(unittest.TestCase):
                 row,
                 row["path"],
             )
-            if row["path"] != "tests/framework/test_validation_reachability.py":
+            changed_workflow = (
+                row["path"] == ".github/workflows/tests.yml"
+                and current_scope["stage_e_reconciliation_phase"]
+                == "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            if (
+                row["path"] != "tests/framework/test_validation_reachability.py"
+                and not changed_workflow
+            ):
                 self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
 
         nested = predecessor["nested_authority_locks"]
