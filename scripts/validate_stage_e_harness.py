@@ -194,10 +194,25 @@ def _authority_lane(source: Path, head_commit: str, head_tree: str) -> dict[str,
         raise Refusal("Stage E implementation is not based on the accepted durability integration")
     manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
     scope = manifest["prospective_harness_implementation"]
-    expected = set(scope["modified_paths"]) | set(scope["new_paths"])
+    expected_modified = set(scope["modified_paths"])
+    expected_added = set(scope["new_paths"])
+    expected = expected_modified | expected_added
     actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
     if actual != expected or len(actual) != 51:
         raise Refusal(f"Stage E implementation path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+    status_rows: dict[str, str] = {}
+    for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
+        fields = row.split("\t")
+        if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
+            raise Refusal(f"Stage E implementation has a forbidden Git operation: {row}")
+        status_rows[fields[1]] = fields[0]
+    expected_status = {path: "M" for path in expected_modified} | {path: "A" for path in expected_added}
+    if status_rows != expected_status:
+        raise Refusal("Stage E implementation add/modify classification mismatch")
+    for relative in expected:
+        fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
+        if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
+            raise Refusal(f"Stage E implementation mode/object mismatch: {relative}")
     harness_sources = [path for path in scope["new_paths"] if path.startswith("stage_e_harness/") and path.endswith(".py")]
     if len(harness_sources) != 34:
         raise Refusal("Stage E harness source closure mismatch")
