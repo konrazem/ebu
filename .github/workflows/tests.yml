@@ -182,3 +182,57 @@ jobs:
             ${{ runner.temp }}/stage-c-packaging-release-candidate/work/artifacts
           if-no-files-found: error
           retention-days: 30
+
+  stage-e-scientific-harness:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    needs: [test, framework-t0, framework-t1, framework-t2, packaging-release-candidate]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Prepare frozen offline Stage E inputs
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-e-${GITHUB_JOB}"
+          mkdir -p "$stage_root/source" "$stage_root/frontend-wheelhouse" "$stage_root/dependency-wheelhouse" "$stage_root/stage-c-evidence" "$stage_root/stage-c-work"
+          cp -a "$GITHUB_WORKSPACE/." "$stage_root/source/"
+          python -m pip download --only-binary=:all: --no-deps --dest "$stage_root/frontend-wheelhouse" build==1.5.0 packaging==26.3 pyproject_hooks==1.2.0 pip==26.2.1
+          python -m pip download --only-binary=:all: --require-hashes --dest "$stage_root/dependency-wheelhouse" -r requirements-framework.lock
+          find "$stage_root/source" -type f -exec chmod a-w {} +
+          find "$stage_root/source" -type d -exec chmod a-w {} +
+          docker pull "$EBU_STAGE_C_IMAGE"
+      - name: Run complete outcome-blind Stage E validation
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-e-${GITHUB_JOB}"
+          head_tree="$(git -C "$stage_root/source" rev-parse "${GITHUB_SHA}^{tree}")"
+          container=(docker run --rm --network none --read-only --platform linux/amd64 --user "$(id -u):$(id -g)" --tmpfs /tmp:rw,nosuid,nodev,exec,mode=1777 --tmpfs /private/tmp:rw,nosuid,nodev,exec,mode=1777 -e "EBU_STAGE_C_IMAGE_DIGEST=$EBU_STAGE_C_IMAGE_DIGEST" -v "$stage_root:/stage-e" -v "$stage_root/source:/stage-e/source:ro" "$EBU_STAGE_C_IMAGE")
+          "${container[@]}" python -I /stage-e/source/scripts/validate_stage_c_release_candidate.py static-authority --source /stage-e/source --evidence /stage-e/stage-c-evidence
+          "${container[@]}" python -I /stage-e/source/scripts/validate_stage_c_release_candidate.py packaging --source /stage-e/source --wheelhouse /stage-e/frontend-wheelhouse --work /stage-e/stage-c-work --evidence /stage-e/stage-c-evidence
+          "${container[@]}" python -I -c 'import sys,unittest; sys.path.insert(0,"/stage-e/source"); suite=unittest.defaultTestLoader.discover("/stage-e/source/tests/stage_e",top_level_dir="/stage-e/source"); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() else 1)'
+          "${container[@]}" python -I /stage-e/source/scripts/validate_stage_e_harness.py \
+            --source /stage-e/source \
+            --output /stage-e/stage-e-evidence \
+            --work /stage-e/harness-work \
+            --head-commit "$GITHUB_SHA" \
+            --head-tree "$head_tree" \
+            --direct-wheel /stage-e/stage-c-work/artifacts/direct/ebu_framework-0.1.0a1-cp314-none-any.whl \
+            --sdist-wheel /stage-e/stage-c-work/artifacts/sdist-wheel/ebu_framework-0.1.0a1-cp314-none-any.whl \
+            --sdist /stage-e/stage-c-work/artifacts/sdist/ebu_framework-0.1.0a1.tar.gz \
+            --direct-python /stage-e/stage-c-work/direct-env/bin/python \
+            --sdist-python /stage-e/stage-c-work/sdist-env/bin/python \
+            --debian-identity libsqlite3-0:amd64=3.46.1-7+deb13u1 \
+            --image-digest "$EBU_STAGE_C_IMAGE_DIGEST"
+      - name: Retain private Stage E harness evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-e-scientific-harness-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/stage-e-stage-e-scientific-harness/stage-e-evidence
+            ${{ runner.temp }}/stage-e-stage-e-scientific-harness/harness-work/stage-e-harness-*.pyz
+          if-no-files-found: error
+          retention-days: 30
