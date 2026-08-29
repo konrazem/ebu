@@ -454,7 +454,10 @@ def _schema_lane(
         raise Refusal("authority metadata-key closure mismatch")
     stage_e_validator = validators[SCHEMA_FILES[2]]
     for record in records:
-        stage_e_validator.validate(record)
+        try:
+            stage_e_validator.validate(record)
+        except Refusal as exc:
+            raise Refusal(f"v1 {record.get('record_type', '<missing>')} record: {exc}") from exc
     stage_e_validator.validate(manifest)
     bound_fixture = deepcopy(next(record for record in records if record["record_type"] == "MOBIUS"))
     bound_fixture["status"] = "BOUND_NOT_SUPPORTED"
@@ -1280,8 +1283,11 @@ def validate(args: argparse.Namespace) -> int:
     ]
     reconciliation_schema = strict_load(source / RECONCILIATION_SCHEMA_FILE)
     reconciliation_validator = Validator(reconciliation_schema)
-    for _, record in v2_records:
-        reconciliation_validator.validate(record)
+    for name, record in v2_records:
+        try:
+            reconciliation_validator.validate(record)
+        except Refusal as exc:
+            raise Refusal(f"v2 {name} record: {exc}") from exc
     reconciliation_manifest = _v2_manifest(manifest, v2_records)
     _validate_v2_semantics(
         source,
