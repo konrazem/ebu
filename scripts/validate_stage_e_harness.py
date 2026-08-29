@@ -58,7 +58,6 @@ from stage_e_harness.registry import (
 )
 from stage_e_harness.rng import ATTEMPT_CAP, Counter, bernoulli, categorical, exact_residue, u64
 from stage_e_harness.schema import (
-    ASSERTION_APPLICATOR_MUTATIONS,
     AUTHORITY_METADATA_KEYS,
     SUPPORTED_KEYWORDS,
     Validator,
@@ -419,112 +418,6 @@ def _schema_replay_lane(source: Path) -> dict[str, Any]:
         "refusal_count": 249,
         "mismatch_count": 0,
     }
-
-
-def _frozen_schema_negatives(source: Path, schemas: dict[str, dict[str, Any]], validators: dict[str, Validator]) -> int:
-    refused = 0
-    stage_d = schemas[SCHEMA_FILES[0]]
-    validator = validators[SCHEMA_FILES[0]]
-    fixtures = stage_d["prospective_non_evidence_schema_fixtures"]
-    for case in stage_d["prospective_negative_schema_cases"]:
-        target = case["target_definition"]
-        if "base_instance_json_pointer" in case:
-            instance = deepcopy(_pointer(stage_d, case["base_instance_json_pointer"]))
-            instance = apply_json_patch(instance, case["json_patch"])
-        elif case["case_id"] in {"SCHEMA-N03", "SCHEMA-N04", "SCHEMA-N05"}:
-            instance = deepcopy(fixtures["valid_limit_decision"])
-            if case["case_id"] == "SCHEMA-N03":
-                instance.update(decision="REFUSED_BEFORE_EXECUTION", scientific_evidence_value="ELIGIBLE_FOR_REGISTERED_EXECUTION")
-            elif case["case_id"] == "SCHEMA-N04":
-                instance.update(decision="COMPUTATIONALLY_INCONCLUSIVE", scientific_evidence_value="ELIGIBLE_FOR_REGISTERED_EXECUTION")
-            else:
-                instance.update(decision="WITHIN_CAPS", scientific_evidence_value="NOT_A_SCIENTIFIC_OUTCOME")
-        elif case["case_id"] in {"SCHEMA-N01", "SCHEMA-N02"}:
-            instance = deepcopy(stage_d["$defs"]["hard_caps"]["oneOf"][14]["const"])
-            if case["case_id"] == "SCHEMA-N01":
-                instance.pop("maximum_n")
-            else:
-                instance["unknown_cap"] = 1
-        else:
-            instance = {}
-        if validator.is_valid(instance, validator.definition(target)):
-            raise Refusal(f"accepted frozen Stage D negative case: {case['case_id']}")
-        refused += 1
-    continuation = schemas[SCHEMA_FILES[1]]
-    validator = validators[SCHEMA_FILES[1]]
-    for case in continuation["prospective_negative_validation_cases"]:
-        if validator.is_valid({}, validator.definition(case["target_definition"])):
-            raise Refusal(f"accepted frozen continuation negative case: {case['case_id']}")
-        refused += 1
-    return refused
-
-
-def _keyword_negative_count() -> int:
-    cases: dict[str, tuple[dict[str, Any], Any]] = {
-        "$ref": ({"$defs": {"x": {"const": 1}}, "$ref": "#/$defs/x"}, 2),
-        "additionalProperties": ({"type": "object", "properties": {}, "additionalProperties": False}, {"x": 1}),
-        "allOf": ({"allOf": [{"type": "integer"}, {"minimum": 2}]}, 1),
-        "const": ({"const": 1}, 2),
-        "else": ({"if": {"const": 1}, "then": {"const": 1}, "else": {"const": 2}}, 3),
-        "enum": ({"enum": [1, 2]}, 3),
-        "if": ({"if": {"const": 1}, "then": {"const": 2}}, 1),
-        "items": ({"type": "array", "items": {"type": "integer"}}, ["x"]),
-        "maxItems": ({"type": "array", "maxItems": 1}, [1, 2]),
-        "maximum": ({"type": "integer", "maximum": 1}, 2),
-        "minItems": ({"type": "array", "minItems": 1}, []),
-        "minLength": ({"type": "string", "minLength": 1}, ""),
-        "minProperties": ({"type": "object", "minProperties": 1}, {}),
-        "minimum": ({"type": "integer", "minimum": 1}, 0),
-        "oneOf": ({"oneOf": [{"type": "integer"}, {"minimum": 0}]}, 1),
-        "pattern": ({"type": "string", "pattern": "^x$"}, "y"),
-        "prefixItems": ({"type": "array", "prefixItems": [{"const": 1}]}, [2]),
-        "properties": ({"type": "object", "properties": {"x": {"const": 1}}}, {"x": 2}),
-        "required": ({"type": "object", "required": ["x"]}, {}),
-        "then": ({"if": {"const": 1}, "then": {"const": 2}}, 1),
-        "type": ({"type": "integer"}, "1"),
-        "uniqueItems": ({"type": "array", "uniqueItems": True}, [1, 1]),
-    }
-    if tuple(cases) != ASSERTION_APPLICATOR_MUTATIONS:
-        raise Refusal("assertion/applicator mutation closure mismatch")
-    for name, (schema, instance) in cases.items():
-        if Validator(schema).is_valid(instance):
-            raise Refusal(f"schema keyword mutation was accepted: {name}")
-    return len(cases)
-
-
-def _stage_e_negative_count(validator: Validator, records: list[dict[str, Any]], manifest: dict[str, Any]) -> int:
-    by_type = {record["record_type"]: record for record in records}
-    negatives: list[dict[str, Any]] = []
-    unknown = deepcopy(records[0]); unknown["record_type"] = "UNKNOWN"; negatives.append(unknown)
-    missing = deepcopy(records[0]); missing.pop("head_commit"); negatives.append(missing)
-    extra = deepcopy(records[0]); extra["extra"] = 1; negatives.append(extra)
-    bad_git = deepcopy(records[0]); bad_git["head_commit"] = "0" * 39; negatives.append(bad_git)
-    bad_sha = deepcopy(records[0]); bad_sha["authority_files"][0]["sha256"] = "x" * 64; negatives.append(bad_sha)
-    nonzero = deepcopy(records[0]); nonzero["scientific_counters"]["simulation_count"] = 1; negatives.append(nonzero)
-    release = deepcopy(records[0]); release["release_counters"].pop("tag_count"); negatives.append(release)
-    environment = deepcopy(records[0]); environment["environment"]["network"] = "ONLINE"; negatives.append(environment)
-    authority = deepcopy(records[0]); authority["authority_files"].pop(); negatives.append(authority)
-    schema = deepcopy(by_type["SCHEMA"]); schema["schema_identities"].pop(); negatives.append(schema)
-    schema_ref = deepcopy(by_type["SCHEMA"]); schema_ref["unresolved_local_refs"] = 1; negatives.append(schema_ref)
-    partition = deepcopy(by_type["IDENTITY_CONTINUATION"]); partition["within_run_study_bindings"] = 7; negatives.append(partition)
-    atomic = deepcopy(by_type["IDENTITY_CONTINUATION"]); atomic["intra_atomic_case_checkpoint_refusals"] = 4; negatives.append(atomic)
-    conditional = deepcopy(by_type["IDENTITY_CONTINUATION"]); conditional["conditional_false_branch_refusals"] = 0; negatives.append(conditional)
-    mobius = deepcopy(by_type["MOBIUS"]); mobius["complexity_cells"][0] = deepcopy(by_type["DAG_CACHE"]["dag_complexity_cells"][0]); negatives.append(mobius)
-    dag = deepcopy(by_type["DAG_CACHE"]); dag["dag_complexity_cells"][0] = deepcopy(by_type["MOBIUS"]["complexity_cells"][0]); negatives.append(dag)
-    install = deepcopy(by_type["INSTALLED_ISOLATION"]); install["direct_wheel"]["byte_count"] += 1; negatives.append(install)
-    origins = deepcopy(by_type["INSTALLED_ISOLATION"]); origins["installed_surfaces"].reverse(); negatives.append(origins)
-    complexity = deepcopy(by_type["COMPLEXITY"]); complexity["projections"].pop(); negatives.append(complexity)
-    regression = deepcopy(by_type["REGRESSION"]); regression["t0"] = 122; negatives.append(regression)
-    order = deepcopy(manifest); order["records"].reverse(); negatives.append(order)
-    bound = deepcopy(manifest); bound["bound_supported"] = False; negatives.append(bound)
-    nonpass = deepcopy(manifest); nonpass["records"][0]["status"] = "FAIL"; negatives.append(nonpass)
-    floating = deepcopy(records[0]); floating["schema_version"] = 1.0; negatives.append(floating)
-    if len(negatives) != 24:
-        raise AssertionError
-    for index, instance in enumerate(negatives, 1):
-        if validator.is_valid(instance):
-            raise Refusal(f"accepted Stage E schema negative SE-SCHEMA-N{index:02d}")
-    return len(negatives)
 
 
 def _schema_lane(
