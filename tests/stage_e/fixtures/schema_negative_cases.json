@@ -1,0 +1,29 @@
+{
+  "cases": [
+    "SE-SCHEMA-N01 unknown record type",
+    "SE-SCHEMA-N02 missing common required property",
+    "SE-SCHEMA-N03 extra record property",
+    "SE-SCHEMA-N04 malformed Git object identity",
+    "SE-SCHEMA-N05 malformed SHA-256 identity",
+    "SE-SCHEMA-N06 nonzero scientific counter",
+    "SE-SCHEMA-N07 missing or nonzero release counter",
+    "SE-SCHEMA-N08 runtime environment identity mismatch",
+    "SE-SCHEMA-N09 authority file count not six",
+    "SE-SCHEMA-N10 schema identity count not three",
+    "SE-SCHEMA-N11 unresolved local reference count nonzero",
+    "SE-SCHEMA-N12 continuation partition count mismatch",
+    "SE-SCHEMA-N13 illegal intra-atomic-case checkpoint acceptance",
+    "SE-SCHEMA-N14 conditional false-branch continuation acceptance",
+    "SE-SCHEMA-N15 DAG cell substituted into Möbius record",
+    "SE-SCHEMA-N16 Möbius cell substituted into DAG record",
+    "SE-SCHEMA-N17 installed wheel or sdist byte identity mismatch",
+    "SE-SCHEMA-N18 installed surface order or origin mismatch",
+    "SE-SCHEMA-N19 feasibility projection missing or duplicate study",
+    "SE-SCHEMA-N20 regression count mismatch",
+    "SE-SCHEMA-N21 final manifest record order mismatch",
+    "SE-SCHEMA-N22 final manifest bound or Stage F boolean mismatch",
+    "SE-SCHEMA-N23 non-PASS manifest entry",
+    "SE-SCHEMA-N24 floating representation of an authority integer"
+  ],
+  "fixture_class": "NON_SCIENTIFIC_SYNTHETIC_FIXTURE"
+}

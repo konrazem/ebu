@@ -1,0 +1,117 @@
+{
+  "algorithm_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "algorithm"
+  },
+  "alias_closure_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "alias"
+  },
+  "authority_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "authority"
+  },
+  "cache_epoch": 0,
+  "cache_key_schema_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "cache-key"
+  },
+  "campaign_execution_binding_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "campaign-binding"
+  },
+  "campaign_id": "STATIC-FIXTURE-NOT-A-CAMPAIGN",
+  "campaign_resource_ledger_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "campaign-ledger"
+  },
+  "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "code_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "code"
+  },
+  "completed_attempt_ordinal": 0,
+  "correction_invalidation_epoch": 0,
+  "counter_state_mode": "DETERMINISTIC_EMPTY",
+  "dependency_closure_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "dependency"
+  },
+  "durable": true,
+  "environment_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "environment"
+  },
+  "exact_or_approximate_label": "EXACT",
+  "installed_artifact_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "artifact"
+  },
+  "next_attempt_ordinal": 1,
+  "next_counter_tuple_set_identity": {
+    "kind": "next_counter_tuple_set/v2",
+    "sha256": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6",
+    "value": "8976a0ffe0e7e82b5b69727d6c92da65a3144e3bcb65e109fe6345e9d4b004c6"
+  },
+  "next_counter_tuples": [],
+  "numerical_policy_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "numerical"
+  },
+  "ordered_permitted_stream_ids": [],
+  "permitted_stream_set_identity": {
+    "kind": "permitted_stream_set/v2",
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "value": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "receipt_prefix_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "receipt"
+  },
+  "run_resource_ledger_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "run-ledger"
+  },
+  "schema": "continuation_checkpoint/v2",
+  "scientific_run_id": "STATIC-FIXTURE-NOT-A-RUN",
+  "seed": 0,
+  "state_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "state"
+  },
+  "stochastic_rule_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "FORBIDDEN"
+  },
+  "study_id": "SD-01",
+  "topology_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "topology"
+  },
+  "trace_prefix_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "trace"
+  },
+  "uncertainty_policy_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "deterministic"
+  }
+}

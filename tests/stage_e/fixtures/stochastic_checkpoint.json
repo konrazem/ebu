@@ -1,0 +1,137 @@
+{
+  "algorithm_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "algorithm"
+  },
+  "alias_closure_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "alias"
+  },
+  "authority_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "authority"
+  },
+  "cache_epoch": 0,
+  "cache_key_schema_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "cache-key"
+  },
+  "campaign_execution_binding_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "campaign-binding"
+  },
+  "campaign_id": "STATIC-FIXTURE-NOT-A-CAMPAIGN",
+  "campaign_resource_ledger_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "campaign-ledger"
+  },
+  "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "code_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "code"
+  },
+  "completed_attempt_ordinal": 0,
+  "correction_invalidation_epoch": 0,
+  "counter_state_mode": "STOCHASTIC_NONEMPTY",
+  "dependency_closure_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "dependency"
+  },
+  "durable": true,
+  "environment_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "environment"
+  },
+  "exact_or_approximate_label": "MODEL_EXACT_NUMERICAL",
+  "installed_artifact_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "artifact"
+  },
+  "next_attempt_ordinal": 1,
+  "next_counter_tuple_set_identity": {
+    "kind": "next_counter_tuple_set/v2",
+    "sha256": "c18b9934e63c17c17e3c973885b1de9b671337e0acfaa918a3f3bd027a088526",
+    "value": "c18b9934e63c17c17e3c973885b1de9b671337e0acfaa918a3f3bd027a088526"
+  },
+  "next_counter_tuples": [
+    {
+      "attempt_index": 0,
+      "draw_index": 0,
+      "draw_status": "READY",
+      "event_index": 1,
+      "stream_id": "bootstrap",
+      "tick": 3
+    },
+    {
+      "attempt_index": 0,
+      "draw_index": 1,
+      "draw_status": "READY",
+      "event_index": 1,
+      "stream_id": "shock",
+      "tick": 3
+    }
+  ],
+  "numerical_policy_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "numerical"
+  },
+  "ordered_permitted_stream_ids": [
+    "bootstrap",
+    "shock"
+  ],
+  "permitted_stream_set_identity": {
+    "kind": "permitted_stream_set/v2",
+    "sha256": "2aaff5a939e79e281627962bf9b50621d43a9f001723e82ba6781778f10aa959",
+    "value": "2aaff5a939e79e281627962bf9b50621d43a9f001723e82ba6781778f10aa959"
+  },
+  "receipt_prefix_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "receipt"
+  },
+  "run_resource_ledger_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "run-ledger"
+  },
+  "schema": "continuation_checkpoint/v2",
+  "scientific_run_id": "STATIC-FIXTURE-NOT-A-RUN",
+  "seed": 17,
+  "state_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "state"
+  },
+  "stochastic_rule_identity": {
+    "kind": "stochastic_rule/v1",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "value": "EBU-STAGE-F-COUNTER-HASH-DRAWS-v1"
+  },
+  "study_id": "SD-09",
+  "topology_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "topology"
+  },
+  "trace_prefix_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "trace"
+  },
+  "uncertainty_policy_identity": {
+    "kind": "fixture",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "value": "deterministic"
+  }
+}
