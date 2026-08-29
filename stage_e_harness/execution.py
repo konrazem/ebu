@@ -51,7 +51,7 @@ class StageEExecutionRefusal(RuntimeError):
 
 
 def guard_registered_configuration(configuration_id: str, stage_f_authorization: dict[str, Any] | None = None) -> None:
-    registered = any(configuration_id.startswith(prefix) for prefix in REGISTERED_PREFIXES)
+    registered = configuration_id in REGISTERED_ROUTE_IDS or any(configuration_id.startswith(prefix) for prefix in REGISTERED_PREFIXES)
     if not registered:
         return
     # The Stage E build does not contain a recognized campaign authorization

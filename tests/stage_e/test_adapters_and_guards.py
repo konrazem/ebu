@@ -21,12 +21,14 @@ class StageEAdaptersAndGuardsTests(unittest.TestCase):
         before = set(sys.modules)
         for binding in bindings:
             with self.assertRaises(StageEExecutionRefusal) as caught:
-                binding.refuse_registered_route(f"{binding.study_id}/NO-STAGE-F-AUTHORITY")
+                binding.refuse_registered_route(binding.study_id)
             self.assertEqual(caught.exception.receipt["project_runner_import_count"], 0)
         with self.assertRaises(StageEExecutionRefusal) as caught:
-            guard_registered_configuration("SD-01-GROWTH-v1/NO-STAGE-F-AUTHORITY")
+            guard_registered_configuration("SD-01-GROWTH-v1")
         self.assertEqual(caught.exception.receipt["project_runner_import_count"], 0)
         self.assertEqual(caught.exception.receipt["model_state_advance_count"], 0)
+        with self.assertRaises(StageEExecutionRefusal):
+            guard_registered_configuration("SD-01/NAMED-CONFIGURATION")
         self.assertFalse(any(name in sys.modules and name not in before for name in BLOCKED_PROJECT_RUNNERS))
 
     def test_unknown_study_refuses(self) -> None:

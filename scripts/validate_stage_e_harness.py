@@ -980,7 +980,7 @@ def _dynamic_guard_v2() -> dict[str, Any]:
     refused: list[str] = []
     for route_id in ("SD-01", "SD-01-GROWTH-v1", *STUDY_IDS[1:]):
         try:
-            guard_registered_configuration(f"{route_id}/STAGE-E-REFUSAL")
+            guard_registered_configuration(route_id)
         except StageEExecutionRefusal as exc:
             if exc.receipt["project_runner_import_count"] != 0 or exc.receipt["model_state_advance_count"] != 0:
                 raise Refusal("registered route reached forbidden work")
