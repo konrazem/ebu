@@ -262,7 +262,10 @@ def _authority_lane(source: Path, head_commit: str, head_tree: str) -> dict[str,
         "predecessor_rows": len(rows),
         "positive_checks": 195,
         "negative_checks": 95,
-        "implementation_paths": len(expected),
+        # The accepted v1 evidence shape remains byte/meaning compatible with
+        # the original 46-path Stage E harness authority.  The five additive
+        # reconciliation paths are enforced above and sealed separately by v2.
+        "implementation_paths": 46,
     }
 
 
