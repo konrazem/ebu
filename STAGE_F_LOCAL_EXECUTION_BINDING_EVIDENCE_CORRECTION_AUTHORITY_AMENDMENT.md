@@ -549,21 +549,45 @@ with a pre-call cutoff timestamp; only deterministic in-memory finalization may
 occur before the exact start call. After the call, a distinct container-start
 receipt binds that frozen handoff identity, intent, final gate, exact
 authenticated pipe exchange, response, post-call inspect and times. The
-receipt is ledgered before the historical handoff and final-gate snapshots are
-published under the already debited retained-evidence tail.
+normal same-controller receipt is ledgered before the historical handoff and
+final-gate snapshots are published under the already debited retained-evidence
+tail.
 
-The durable intent closes crash ambiguity. Recovery never retries the same
-intent. It inspects the exact container through an authenticated pipe and emits
-one typed start receipt classified as `RECOVERY_PRE_SEND_CREATED`,
-`RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN`, or
-`RECOVERY_POST_RESPONSE_PREPUBLICATION`. A created/restart-count-zero container
-invalidates the attempt and requires a fresh validation chain and new intent;
-any state consistent with possible start is stopped under the frozen emergency
-containment rule, quarantined, and the attempt is permanently invalid. It is
-never treated as a continuation unless a separately valid durable outgoing
-checkpoint and unchanged continuation authority independently permit that
-transition. Normal completion uses `NORMAL_RESPONSE_204`. Missing intent,
-ambiguous container identity, failed inspection or retry of an intent refuses.
+The durable intent is the conservative armed marker that closes crash
+ambiguity. Once it is durably ledgered, any later controller restart treats the
+start as possibly accepted; a `created` state is not proof that no request was
+delivered. Loss of the original controller also closes its root-watch and
+ledger handles, permanently invalidating that attempt; the original ledger is
+never reopened for write. Before reading the surviving intent or touching
+Docker, the recovery controller creates a fresh recovery-attempt genesis, root
+protection epoch and continuously held recovery ledger. Its containment
+receipt names that new epoch and ledger predecessor, embeds the predecessor's
+append observation, and carries the exact old intent identity only as immutable
+recovery input. Recovery never retries the start. It first inspects the exact
+container through an authenticated pipe, then issues an authenticated exact
+`DELETE /containers/{id}?force=true&v=false` emergency-containment exchange.
+Status 204 or already-absent status 404 is accepted. A final authenticated
+`GET /containers/{id}/json` must return 404, proving the container identity is
+absent and cannot later start or be reused. Failure to remove it, a non-404
+final inspection, or an identity mismatch freezes the host for human
+intervention and refuses. Force removal does not delete the separately held
+bind-mounted result or checkpoint roots.
+
+The typed receipt is classified as `PRECALL_ABANDONED_UNSENT` only when the
+same live controller proves that `WriteFile` was never invoked, as
+`RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN` after any unresolved-intent restart, or as
+`POST_RESPONSE_PREPUBLICATION_CONTAINED` only while the same live controller
+still retains the exact 204 response but cannot publish its normal receipt. A
+restart after an unpublished response uses the acceptance-unknown class; it
+does not reconstruct lost response bytes. Every non-normal class carries
+the force-remove exchange, final 404 inspection and permanent quarantine.
+After a crash during containment, force removal may be reissued; 404 makes the
+operation idempotent, and it is not a start retry. Normal completion uses
+`NORMAL_RESPONSE_204`. A contained attempt is never treated as a continuation
+unless a separately valid durable outgoing checkpoint and unchanged
+continuation authority independently permit that transition. Missing intent,
+ambiguous identity, failed inspection or containment, or any start retry
+refuses.
 
 ## 8. Raw power, Docker and reboot evidence
 
