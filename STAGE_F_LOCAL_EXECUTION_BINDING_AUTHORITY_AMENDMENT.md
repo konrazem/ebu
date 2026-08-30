@@ -165,10 +165,17 @@ controlled; it cannot substitute for a locally defined identity kind.
 
 Three mandatory public preimages are complete closed schema objects, not prose
 recipes. `stage_f_binding_implementation/v1` hashes one
-`binding_implementation_preimage`: the accepted base, implementation commit and
-tree, and exactly thirteen ordered `git_file_row` objects. Each row contains
-only `path`, mode `100644`, Git object, byte count, and raw SHA-256, and the path
-projection equals the exact implementation-path list in the contract.
+`binding_implementation_preimage`: the accepted base, the exact integrated-
+authority-set identity and commit, the same six ordered authority rows retained
+in that authority-set preimage, the implementation commit and tree, and exactly
+thirteen ordered implementation `git_file_row` objects. The integrated authority
+commit must be an ancestor of the implementation commit. Each authority row
+must reproduce the same mode, object, byte count, and raw SHA-256 in both the
+integrated-authority tree and the implementation tree. Each row contains only
+`path`, mode `100644`, Git object, byte count, and raw SHA-256, and each path
+projection equals its exact contract list. This makes an implementation from a
+different descendant or an implementation that changes an integrated authority
+byte mechanically inadmissible.
 
 `stage_f_binding_authority_set/v1` hashes one
 `binding_authority_set_preimage`: the accepted base, integrated authority commit
@@ -241,11 +248,17 @@ audit/retained-evidence` under the private Stage F root.
 
 The selected volume is the private volume GUID path returned by
 `GetVolumePathNameW` followed by `GetVolumeNameForVolumeMountPointW`; every
-volume query receives that exact trailing-backslash GUID path. The immutable
+ordinary volume query receives that exact trailing-backslash GUID path. A
+`CreateFileW` volume handle over that same GUID with only its terminal backslash
+removed is used for `DeviceIoControl(FSCTL_GET_NTFS_VOLUME_DATA)`. The immutable
 filesystem facts and every capacity snapshot record the exact successful API
 profile, volume serial, NTFS name, maximum component length, filesystem flags,
-sectors per cluster, bytes per sector, and allocation unit. Allocation unit
-equals sectors per cluster times bytes per sector from `GetDiskFreeSpaceW`.
+sectors per cluster, bytes per sector, allocation unit, and the raw NTFS volume-
+data fields including bytes per file-record segment. All four raw
+`GetDiskFreeSpaceW` outputs are unsigned 32-bit values. Allocation unit equals
+sectors per cluster times bytes per sector from `GetDiskFreeSpaceW`, and equals
+the NTFS bytes-per-cluster observation. A per-entry metadata floor equals bytes
+per file-record segment rounded up to a complete allocation unit.
 
 Each snapshot also records the raw free-cluster and total-cluster outputs from
 `GetDiskFreeSpaceW` and the available-to-caller, total-caller, and total-free
@@ -261,8 +274,12 @@ space observation, or caller-supplied value refuses.
 Inventory paths are private NFC relative paths ordered by ascending UTF-8
 bytes. Reparse points are refused without following them; sparse or compressed
 files and any file with hard-link count other than one refuse. Every regular
-file and directory, including the Stage F root, structural parents, and category
-roots, is independently enumerated with `FindFirstStreamW`; every established
+file and directory is opened by handle and queried with
+`GetFileInformationByHandleEx(FileStandardInfo)`; the raw allocation size, end
+of file, link count, delete-pending flag, and directory flag are recorded and
+must agree with the inventory row. Every regular file and directory, including
+the Stage F root, structural parents, and category roots, is independently
+enumerated with `FindFirstStreamW`; every established
 search continues with `FindNextStreamW` to `ERROR_HANDLE_EOF` and its handle is
 closed with `FindClose`. A regular file must expose exactly one `$DATA` stream,
 the default unnamed `::$DATA`, whose
@@ -272,14 +289,24 @@ streams. Any named `$DATA` stream on a file or directory, any missing or extra
 default stream, any other enumeration error, or any incomplete enumeration
 refuses. No stream is followed, ignored, or charged outside its owning row.
 
-A regular file is charged the greater of end-of-file length and
-`GetCompressedFileSizeW`; each directory is conservatively charged one volume
-allocation unit. Every non-metadata entry maps to exactly one category and an
-unclassified entry refuses. The Stage F root plus the `immutable-results` and
-`independent-audit` structural parent directories are charged to checkpoint-
-and-write overhead; category roots are charged to their category. Orphan
-partials are ordinary retained entries and therefore cannot disappear from
-accounting.
+A regular file's `allocated_bytes` equals the greatest of
+end-of-file length, `GetCompressedFileSizeW`, and the handle's
+`FILE_STANDARD_INFO.AllocationSize`; its `accounted_bytes` equals that value plus
+its per-entry metadata floor. A directory's `allocated_bytes` equals its complete
+`FILE_STANDARD_INFO.AllocationSize` for the default `$I30`
+`$INDEX_ALLOCATION` directory stream, and an upper bound for its `$BITMAP`:
+`round_up(ceil(directory_allocation_bytes / (4096 * 8)),
+volume_allocation_unit_bytes)`, with zero when directory allocation is zero.
+Its `accounted_bytes` equals those two allocation terms plus its metadata floor.
+The 4096-byte index-chunk and eight-bits-per-byte constants are fixed; resident
+index-root and bitmap metadata are covered by the metadata floor. Thus a large
+directory and every file-system entry consume measured or conservatively bounded
+bytes rather than a single-cluster placeholder. Every non-metadata entry maps to
+exactly one category and an unclassified entry refuses. The Stage F root plus
+the `immutable-results` and `independent-audit` structural parent directories
+are charged to checkpoint-and-write overhead; category roots are charged to
+their category. Orphan partials are ordinary retained entries and therefore
+cannot disappear from accounting.
 
 The retained-evidence component is fully predebited by 8 GiB so that the
 private manifest, capacity record, validation receipts, and audit receipts do
@@ -352,13 +379,18 @@ only permitted receipt disposition is `STAGE_F_LOCAL_BINDING_VALIDATION_FAIL`.
 Other detected defects may also produce FAIL while the guard field remains
 true; a validator never misstates an observed guard failure.
 
-Readiness, validation, independent audit, user receipt, and authorization carry
-UTC timestamps. A capacity snapshot completes no later than, and a power
-snapshot is observed no later than, the consuming readiness or authorization;
-both are at most 300 seconds old. Authorization also binds a validation receipt
-issued no later than authorization and over those exact current snapshot
-identities. The post-packet user statement is received no later than
-authorization. A future, stale, missing, or misordered timestamp refuses.
+Readiness, validation, independent audit, packet, user receipt, and authorization
+carry UTC timestamps. For the one mechanically linked chain, capacity completion
+and power observation are no later than validation; validation is no later than
+the pre-audit ready-readiness record; that readiness is no later than audit
+completion; audit completion is no later than final PASS readiness; final PASS
+readiness is no later than packet creation; packet creation is no later than the
+post-packet user statement; and that statement is no later than authorization.
+Capacity, power, and validation are also no more than 300 seconds before every
+readiness or authorization record that consumes them. All relations are checked
+after resolving the exact identity-linked records, never across individually
+valid records from different chains. A future, stale, missing, or misordered
+timestamp refuses.
 
 Each route wrapper is an exact projection of the referenced external
 `campaign_execution_binding/v2`: wrapper campaign and study identifiers equal
@@ -498,7 +530,8 @@ Validation must refuse at least:
     capacity snapshot, or a reparse, hard-linked, sparse, compressed,
     overwritten, truncated, deleted, or unclassified retained entry, or any
     named, missing, extra, unenumerated, or error-terminated NTFS `$DATA`
-    stream;
+    stream, or an impossible raw DWORD, missing file-standard observation,
+    missing per-entry MFT floor, or undercounted directory index or bitmap;
 11. insufficient current free space or uncounted retained material;
 12. missing AC, sleep, lid, Docker, reboot, fsync, atomicity, restart, hash, or
     orphan-partial evidence;
@@ -514,7 +547,11 @@ Validation must refuse at least:
     projection;
 17. project-runner import or any nonzero scientific counter during binding
     validation; and
-18. any result, figure, book, release, publication, or Stage G action.
+18. any result, figure, book, release, publication, or Stage G action;
+19. an implementation commit not descended from the exact integrated-authority
+    commit, or any of the six authority blobs differing in its tree; and
+20. validation, pre-audit readiness, audit, final PASS readiness, packet, user
+    statement, or authorization timestamps outside their exact chain order.
 
 ## 11. Candidate evidence boundary
 

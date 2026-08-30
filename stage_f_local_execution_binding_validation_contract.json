@@ -61,7 +61,7 @@
       "public alias is never substituted for a digest"
     ],
     "local_preimages": [
-      "stage_f_binding_implementation/v1 validates as binding_implementation_preimage; accepted base is an ancestor implementation_tree equals implementation_commit tree and exactly thirteen unique Git rows have the contract ordered paths and reproduce that commit mode object byte count and raw SHA-256",
+      "stage_f_binding_implementation/v1 validates as binding_implementation_preimage; accepted base is an ancestor; the resolved integrated authority-set identity and commit equal the implementation preimage fields; integrated authority commit is an ancestor of implementation commit; its six ordered authority rows reproduce both trees byte-exactly; implementation_tree equals implementation_commit tree; and exactly thirteen unique implementation Git rows have the contract ordered paths and reproduce that commit mode object byte count and raw SHA-256",
       "stage_f_binding_authority_set/v1 validates as binding_authority_set_preimage; accepted base is an ancestor integrated_authority_tree equals integrated_authority_commit tree and exactly six local authority Git rows follow the contract authority-file order with fifteen route-authority projections in exact campaign order",
       "each authority-set route projection equals the referenced campaign binding route campaign-binding identity authority_identity and continuation_authority_identity",
       "stage_f_sealed_campaign_packet/v1 validates as sealed_campaign_packet_manifest with no additional fields no private bytes zero sensitive-field disclosures and every required typed identity and ordered projection",
@@ -101,7 +101,9 @@
       "readiness storage-capacity-snapshot identity names the contemporaneous passing snapshot",
       "readiness power-snapshot identity names the contemporaneous passing power and reboot snapshot",
       "capacity completion and power observation are not in the future and are no more than 300 seconds before readiness_utc",
+      "the exact bound validation receipt validated_utc is not after readiness_utc",
       "READY has null independent audit identity; PASS or FAIL names a separate exact independent audit receipt over that ready bundle and pre-audit readiness record",
+      "pre-audit readiness_utc is not after audit_completed_utc and audit_completed_utc is not after the consuming final PASS or FAIL readiness_utc",
       "independent PASS has zero issue ids while independent FAIL has at least one unique issue id",
       "the audited bundle and pre-audit readiness remain immutable after the audit receipt is issued",
       "only the independent auditor may emit INDEPENDENT_BINDING_PASS or INDEPENDENT_BINDING_FAIL"
@@ -120,8 +122,9 @@
       "private absolute directories share the selected volume and remain outside Git",
       "snapshot start and completion timestamps bracket a quiescent recursive inventory",
       "GetVolumePathNameW and GetVolumeNameForVolumeMountPointW derive the selected volume GUID path and every volume API receives that exact trailing-backslash GUID path",
-      "GetVolumeInformationW records the exact NTFS name volume serial maximum component length and filesystem flags; GetDiskFreeSpaceW records sectors per cluster bytes per sector free clusters and total clusters",
+      "GetVolumeInformationW records the exact NTFS name volume serial maximum component length and filesystem flags; GetDiskFreeSpaceW records sectors per cluster bytes per sector free clusters and total clusters as raw unsigned 32-bit values",
       "volume allocation unit equals sectors per cluster times bytes per sector and equals the filesystem-facts allocation unit",
+      "CreateFileW opens the exact selected volume GUID without its terminal backslash and DeviceIoControl FSCTL_GET_NTFS_VOLUME_DATA succeeds; raw bytes-per-cluster equals the allocation unit and raw bytes-per-file-record-segment fixes the per-entry metadata floor rounded up to an allocation unit",
       "GetDiskFreeSpaceExW records available-to-caller total-caller and total-free bytes; observed capacity equals total-caller bytes and observed free equals the lesser of available-to-caller and total-free bytes",
       "filesystem facts and every later snapshot have equal selected volume GUID serial filesystem flags maximum component length sectors bytes allocation unit API profile and nine-path volume-GUID projection",
       "CreateFileW and GetFinalPathNameByHandleW FILE_NAME_NORMALIZED plus VOLUME_NAME_GUID resolve the nine unique private root role and category paths to the selected volume without following a reparse point",
@@ -131,7 +134,9 @@
       "reparse sparse compressed hard-linked non-regular or unclassified entries refuse",
       "FindFirstStreamW FindNextStreamW and FindClose enumerate every regular file and directory including structural and category roots; only final ERROR_HANDLE_EOF terminates an established search",
       "each regular file has exactly one default unnamed ::$DATA row whose StreamSize equals logical bytes; each directory has zero $DATA rows and initial ERROR_HANDLE_EOF; every named extra missing incomplete or error-terminated stream enumeration refuses",
-      "file accounted bytes equal max logical and allocated bytes and directory accounted bytes equal one volume allocation unit",
+      "GetFileInformationByHandleEx FileStandardInfo succeeds for every entry and its allocation end-of-file link delete-pending and directory fields agree with the row",
+      "file allocated bytes equal max logical GetCompressedFileSizeW and FileStandardInfo allocation; directory allocated bytes equal FileStandardInfo index allocation plus the rounded conservative bitmap upper bound derived from one bit per 4096-byte index chunk; accounted bytes equal allocated bytes plus the metadata floor",
+      "a synthetic large-directory control with index allocation above one volume allocation unit is charged by the complete directory formula and a one-allocation-unit substitution refuses",
       "retained evidence is fully predebited at 8589934592 bytes and recorded live allocation after snapshot write is independently rescanned not to exceed that ceiling",
       "every predecessor non-metadata inventory row remains byte-identical and only new rows may be appended",
       "six current usage fields sum to current total usage and each remains within its frozen component ceiling",
@@ -156,6 +161,7 @@
       "authorization private and public host identities equal the validation audit PASS-readiness public-binding and packet projections wherever present",
       "authorization binds the contemporaneous passing storage-capacity snapshot and the same identity appears in validation audit PASS readiness and sealed packet",
       "authorization binds the contemporaneous passing power snapshot and the same identity appears in validation audit PASS readiness and sealed packet",
+      "the exact chain orders capacity and power observation <= validation validated_utc <= pre-audit readiness_utc <= audit_completed_utc <= final PASS readiness_utc <= packet_created_utc <= statement_received_utc <= authorization_utc",
       "authorization_utc is no more than 300 seconds after the bound capacity power and validation receipt timestamps and not before the post-packet user statement",
       "post-packet explicit user authorization receipt is mandatory binds the same sealed campaign packet as authorization and has statement_received_utc not before packet_created_utc",
       "every identity digest is reconstructed from its exact retained canonical preimage and any mixed-record composition or replay refuses",
@@ -199,9 +205,12 @@
     {"case_id":"SF-BIND-N34","mutation":"a changed Stage E guard is recorded as preserved or stage_e_guard_preserved false is paired with PASS or NOT_SEALABLE","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N35","mutation":"selected volume GUID path is absent invented or differs across a private path filesystem facts or snapshot; a Win32 volume query fails uses another argument or raw allocation capacity or free output is changed; allocation or observed-byte formulas fail","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N36","mutation":"SD-01-GROWTH-v1 wrapper or referenced campaign_id differs from the frozen nested campaign id; or any two route campaign ids are equal swapped or reused","disposition":"REFUSE"},
-    {"case_id":"SF-BIND-N37","mutation":"binding implementation authority-set or sealed-packet preimage has a missing extra duplicate reordered renamed mistyped noncanonical or nonreconstructing field row path identity projection private byte or sensitive disclosure","disposition":"REFUSE"}
+    {"case_id":"SF-BIND-N37","mutation":"binding implementation authority-set or sealed-packet preimage has a missing extra duplicate reordered renamed mistyped noncanonical or nonreconstructing field row path identity projection private byte or sensitive disclosure","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N38","mutation":"implementation preimage names a different authority-set or integrated authority commit; integrated authority commit is not an ancestor of implementation commit; or any of the six authority rows differs between authority-set integrated tree and implementation tree","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N39","mutation":"validation occurs after consuming pre-audit readiness; audit completes before audited readiness; final PASS readiness predates audit; packet predates final PASS; statement predates packet; authorization predates statement; or timestamp records come from different identity chains","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N40","mutation":"a raw GetDiskFreeSpaceW output exceeds uint32; NTFS volume-data or FileStandardInfo observation is absent inconsistent or changed; an entry metadata floor is omitted; or a regular file large directory index allocation or directory bitmap upper bound is undercharged including substitution of one allocation unit","disposition":"REFUSE"}
   ],
-  "negative_case_count": 37,
+  "negative_case_count": 40,
   "allowed_validation_operations": [
     "Git object and byte inspection",
     "strict UTF-8 and JSON parsing",

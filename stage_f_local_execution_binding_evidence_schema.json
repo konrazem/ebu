@@ -27,6 +27,11 @@
       "minimum": 0,
       "maximum": 4294967295
     },
+    "positive_uint32": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4294967295
+    },
     "windows_volume_guid_path": {
       "type": "string",
       "pattern": "^\\\\\\\\\\?\\\\Volume\\{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\\}\\\\$"
@@ -299,12 +304,21 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "schema", "accepted_base", "implementation_commit", "implementation_tree",
+        "schema", "accepted_base", "integrated_authority_set_identity",
+        "integrated_authority_commit", "ordered_integrated_authority_file_rows",
+        "integrated_authority_file_count", "implementation_commit", "implementation_tree",
         "ordered_implementation_file_rows", "implementation_file_count"
       ],
       "properties": {
         "schema": {"const": "stage_f_binding_implementation/v1"},
         "accepted_base": {"$ref": "#/$defs/repository_coordinate"},
+        "integrated_authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
+        "integrated_authority_commit": {"$ref": "#/$defs/git_commit"},
+        "ordered_integrated_authority_file_rows": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
+        },
+        "integrated_authority_file_count": {"const": 6},
         "implementation_commit": {"$ref": "#/$defs/git_commit"},
         "implementation_tree": {"$ref": "#/$defs/git_commit"},
         "ordered_implementation_file_rows": {
@@ -388,7 +402,8 @@
       "additionalProperties": false,
       "required": [
         "mount_point_resolution", "volume_guid_resolution", "final_path_resolution",
-        "volume_information", "allocation_geometry", "capacity_and_free_space"
+        "volume_information", "allocation_geometry", "capacity_and_free_space",
+        "ntfs_volume_data"
       ],
       "properties": {
         "mount_point_resolution": {"const": "GetVolumePathNameW"},
@@ -396,7 +411,37 @@
         "final_path_resolution": {"const": "CreateFileW_GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
         "volume_information": {"const": "GetVolumeInformationW"},
         "allocation_geometry": {"const": "GetDiskFreeSpaceW"},
-        "capacity_and_free_space": {"const": "GetDiskFreeSpaceExW"}
+        "capacity_and_free_space": {"const": "GetDiskFreeSpaceExW"},
+        "ntfs_volume_data": {"const": "CreateFileW_GUID_without_terminal_backslash_DeviceIoControl_FSCTL_GET_NTFS_VOLUME_DATA"}
+      }
+    },
+    "ntfs_volume_data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_succeeded", "volume_serial_number", "number_sectors",
+        "total_clusters", "free_clusters", "total_reserved_clusters",
+        "bytes_per_sector", "bytes_per_cluster",
+        "bytes_per_file_record_segment", "clusters_per_file_record_segment",
+        "mft_valid_data_length", "mft_start_lcn", "mft2_start_lcn",
+        "mft_zone_start", "mft_zone_end"
+      ],
+      "properties": {
+        "query_succeeded": {"const": true},
+        "volume_serial_number": {"$ref": "#/$defs/nonnegative_integer"},
+        "number_sectors": {"$ref": "#/$defs/positive_integer"},
+        "total_clusters": {"$ref": "#/$defs/positive_integer"},
+        "free_clusters": {"$ref": "#/$defs/nonnegative_integer"},
+        "total_reserved_clusters": {"$ref": "#/$defs/nonnegative_integer"},
+        "bytes_per_sector": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_per_cluster": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_per_file_record_segment": {"$ref": "#/$defs/positive_uint32"},
+        "clusters_per_file_record_segment": {"$ref": "#/$defs/uint32"},
+        "mft_valid_data_length": {"$ref": "#/$defs/nonnegative_integer"},
+        "mft_start_lcn": {"$ref": "#/$defs/nonnegative_integer"},
+        "mft2_start_lcn": {"$ref": "#/$defs/nonnegative_integer"},
+        "mft_zone_start": {"$ref": "#/$defs/nonnegative_integer"},
+        "mft_zone_end": {"$ref": "#/$defs/nonnegative_integer"}
       }
     },
     "resolved_private_path_volume_guids": {
@@ -626,7 +671,9 @@
         "data_stream_enumeration_api", "data_stream_enumeration_scope",
         "regular_file_data_stream_rule", "directory_data_stream_rule",
         "named_data_stream_disposition", "stream_enumeration_error_disposition",
+        "file_standard_information_api", "entry_metadata_floor_rule",
         "accounted_file_bytes", "accounted_directory_bytes",
+        "directory_bitmap_upper_bound_rule",
         "structural_directory_accounting",
         "retained_evidence_accounting", "mutation_policy",
         "previous_snapshot_rule", "unknown_entry_disposition"
@@ -646,8 +693,11 @@
         "directory_data_stream_rule": {"const": "ZERO_WITH_INITIAL_ERROR_HANDLE_EOF"},
         "named_data_stream_disposition": {"const": "REFUSE"},
         "stream_enumeration_error_disposition": {"const": "REFUSE_UNLESS_INITIAL_DIRECTORY_ERROR_HANDLE_EOF_OR_FINAL_FIND_NEXT_ERROR_HANDLE_EOF"},
-        "accounted_file_bytes": {"const": "MAX_END_OF_FILE_AND_GET_COMPRESSED_FILE_SIZE_W"},
-        "accounted_directory_bytes": {"const": "ONE_VOLUME_ALLOCATION_UNIT"},
+        "file_standard_information_api": {"const": "CreateFileW_GetFileInformationByHandleEx_FileStandardInfo_EVERY_ENTRY"},
+        "entry_metadata_floor_rule": {"const": "ROUND_UP_NTFS_BYTES_PER_FILE_RECORD_SEGMENT_TO_VOLUME_ALLOCATION_UNIT"},
+        "accounted_file_bytes": {"const": "METADATA_FLOOR_PLUS_MAX_END_OF_FILE_GET_COMPRESSED_FILE_SIZE_W_AND_FILE_STANDARD_ALLOCATION_SIZE"},
+        "accounted_directory_bytes": {"const": "METADATA_FLOOR_PLUS_FILE_STANDARD_ALLOCATION_SIZE_PLUS_DIRECTORY_BITMAP_UPPER_BOUND"},
+        "directory_bitmap_upper_bound_rule": {"const": "ZERO_IF_INDEX_ALLOCATION_ZERO_ELSE_ROUND_UP_CEIL_INDEX_ALLOCATION_DIV_32768_TO_VOLUME_ALLOCATION_UNIT"},
         "structural_directory_accounting": {"const": "STAGE_F_ROOT_IMMUTABLE_RESULTS_AND_INDEPENDENT_AUDIT_PARENTS_TO_CHECKPOINT_AND_WRITE_OVERHEAD"},
         "retained_evidence_accounting": {"const": "FULL_8_GIB_PREDEBIT"},
         "mutation_policy": {"const": "WRITE_ONCE_NO_OVERWRITE_TRUNCATE_OR_DELETE"},
@@ -715,6 +765,10 @@
       "additionalProperties": false,
       "required": [
         "relative_path", "entry_type", "storage_category", "logical_bytes",
+        "get_compressed_file_size_bytes", "file_standard_allocation_size_bytes",
+        "file_standard_end_of_file_bytes", "file_standard_number_of_links",
+        "file_standard_delete_pending", "file_standard_directory",
+        "entry_metadata_floor_bytes", "directory_bitmap_upper_bound_bytes",
         "allocated_bytes", "accounted_bytes", "hard_link_count",
         "reparse_point", "sparse", "compressed",
         "data_stream_enumeration_completed", "data_stream_initial_result",
@@ -726,6 +780,19 @@
         "entry_type": {"enum": ["DIRECTORY", "REGULAR_FILE"]},
         "storage_category": {"$ref": "#/$defs/storage_category"},
         "logical_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "get_compressed_file_size_bytes": {
+          "oneOf": [
+            {"$ref": "#/$defs/nonnegative_integer"},
+            {"type": "null"}
+          ]
+        },
+        "file_standard_allocation_size_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "file_standard_end_of_file_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "file_standard_number_of_links": {"const": 1},
+        "file_standard_delete_pending": {"const": false},
+        "file_standard_directory": {"type": "boolean"},
+        "entry_metadata_floor_bytes": {"$ref": "#/$defs/positive_integer"},
+        "directory_bitmap_upper_bound_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "allocated_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "accounted_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "hard_link_count": {"const": 1},
@@ -763,6 +830,9 @@
               "data_stream_initial_result": {"const": "STREAM_FOUND"},
               "data_stream_search_handle_opened": {"const": true},
               "data_stream_search_handle_closed": {"const": true},
+              "get_compressed_file_size_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+              "file_standard_directory": {"const": false},
+              "directory_bitmap_upper_bound_bytes": {"const": 0},
               "content_sha256": {"$ref": "#/$defs/sha256"}
             }
           }
@@ -772,6 +842,9 @@
           "then": {
             "properties": {
               "logical_bytes": {"const": 0},
+              "get_compressed_file_size_bytes": {"type": "null"},
+              "file_standard_end_of_file_bytes": {"const": 0},
+              "file_standard_directory": {"const": true},
               "data_streams": {"maxItems": 0},
               "data_stream_initial_result": {"const": "ERROR_HANDLE_EOF"},
               "data_stream_search_handle_opened": {"const": false},
@@ -793,7 +866,7 @@
         "volume_serial_number", "filesystem_name", "maximum_component_length",
         "filesystem_flags", "sectors_per_cluster", "bytes_per_sector",
         "get_disk_free_space_free_clusters", "get_disk_free_space_total_clusters",
-        "volume_allocation_unit_bytes",
+        "volume_allocation_unit_bytes", "ntfs_volume_data",
         "get_disk_free_space_ex_available_to_caller_bytes",
         "get_disk_free_space_ex_total_caller_bytes",
         "get_disk_free_space_ex_total_free_bytes",
@@ -818,13 +891,14 @@
         "resolved_private_path_volume_guids": {"$ref": "#/$defs/resolved_private_path_volume_guids"},
         "volume_serial_number": {"$ref": "#/$defs/uint32"},
         "filesystem_name": {"const": "NTFS"},
-        "maximum_component_length": {"$ref": "#/$defs/positive_integer"},
+        "maximum_component_length": {"$ref": "#/$defs/positive_uint32"},
         "filesystem_flags": {"$ref": "#/$defs/uint32"},
-        "sectors_per_cluster": {"$ref": "#/$defs/positive_integer"},
-        "bytes_per_sector": {"$ref": "#/$defs/positive_integer"},
-        "get_disk_free_space_free_clusters": {"$ref": "#/$defs/nonnegative_integer"},
-        "get_disk_free_space_total_clusters": {"$ref": "#/$defs/positive_integer"},
+        "sectors_per_cluster": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_per_sector": {"$ref": "#/$defs/positive_uint32"},
+        "get_disk_free_space_free_clusters": {"$ref": "#/$defs/uint32"},
+        "get_disk_free_space_total_clusters": {"$ref": "#/$defs/positive_uint32"},
         "volume_allocation_unit_bytes": {"$ref": "#/$defs/positive_integer"},
+        "ntfs_volume_data": {"$ref": "#/$defs/ntfs_volume_data"},
         "get_disk_free_space_ex_available_to_caller_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "get_disk_free_space_ex_total_caller_bytes": {"$ref": "#/$defs/positive_integer"},
         "get_disk_free_space_ex_total_free_bytes": {"$ref": "#/$defs/nonnegative_integer"},
@@ -932,7 +1006,7 @@
         "maximum_component_length",
         "filesystem_flags",
         "sectors_per_cluster",
-        "bytes_per_sector",
+        "bytes_per_sector", "ntfs_volume_data",
         "private_directories",
         "storage_category_directories",
         "volume_allocation_unit_bytes",
@@ -946,10 +1020,11 @@
         "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
         "resolved_private_path_volume_guids": {"$ref": "#/$defs/resolved_private_path_volume_guids"},
         "volume_serial_number": {"$ref": "#/$defs/uint32"},
-        "maximum_component_length": {"$ref": "#/$defs/positive_integer"},
+        "maximum_component_length": {"$ref": "#/$defs/positive_uint32"},
         "filesystem_flags": {"$ref": "#/$defs/uint32"},
-        "sectors_per_cluster": {"$ref": "#/$defs/positive_integer"},
-        "bytes_per_sector": {"$ref": "#/$defs/positive_integer"},
+        "sectors_per_cluster": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_per_sector": {"$ref": "#/$defs/positive_uint32"},
+        "ntfs_volume_data": {"$ref": "#/$defs/ntfs_volume_data"},
         "private_directories": {"$ref": "#/$defs/private_directories"},
         "storage_category_directories": {"$ref": "#/$defs/storage_category_directories"},
         "volume_allocation_unit_bytes": {"$ref": "#/$defs/positive_integer"},
