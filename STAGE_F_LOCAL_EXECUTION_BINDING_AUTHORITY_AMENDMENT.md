@@ -230,11 +230,11 @@ exact runtime-root path identity, CPython version and architecture, Python and
 SQLite facts, and the complete recursive runtime-root file inventory with
 unique NFC relative paths in ascending UTF-8 byte order. It also binds the
 complete recursive directory inventory, including `.` for the root, with exact
-unsigned 64-bit volume serial, file ID, attributes, zero reparse tags, and a
-successful `GetSecurityInfo` owner, group, and DACL query under security-
-information mask 7. Each row records result zero, positive self-relative
-descriptor byte count and SHA-256, and successful `LocalFree` returning null in
-the same ordering convention. The executable digest
+unsigned 64-bit volume serial, file ID, attributes, zero reparse tags, security-
+information mask 7, self-relative format, positive DWORD descriptor byte count,
+and descriptor SHA-256 in the same ordering convention. These are stable
+manifest facts; ephemeral query pointers and handles are deliberately retained
+only in the per-run acquisition evidence. The executable digest
 must equal its `python.exe` inventory row. It runs standard-library-only with
 `-I -S -B`; site initialization, validator-zipapp bytecode-cache use, network
 access, project-package imports, scientific execution, and fallback are
@@ -243,84 +243,159 @@ public tier exposes only its digest identity.
 
 Before any host-validation-runtime process is launched, the designated local
 Stage F controller becomes the outer lock holder. That already-running
-controller process and Windows-kernel share-mode enforcement are the explicit
-operational trust boundary; its PID, creation FILETIME, executable path and
-digest, and command-line digest are retained. It first opens and holds the exact
+controller process, its retained independent anchor-continuity guards, the
+complete watch set, and the exact file share modes are the explicit operational
+trust boundary; its PID, creation FILETIME, executable path and
+digest, and command-line digest are retained. Every Win32 PID is a positive
+32-bit DWORD and every creation or exit FILETIME is a nonzero unsigned 64-bit
+value. It first opens and holds the exact
 normalized volume-GUID directory chain from the selected volume root through
 every runtime-path ancestor and the runtime root. Each path anchor uses
 `CreateFileW` desired access 131200, only `FILE_SHARE_READ`, `OPEN_EXISTING`, and
-raw flags 35651584, resolves its volume-GUID path, unsigned 64-bit volume serial,
-file ID, attributes and zero reparse tag, and performs the same successful
-positive-length self-relative `GetSecurityInfo` mask-7 hash and `LocalFree`-
-returns-null lifecycle. Only the first anchor has a null parent ordinal; every
+raw flags 35651584 and records its exact noninvalid handle value. `DuplicateHandle`
+creates one distinct same-access continuity guard for that handle, retained until
+release. The guard is created immediately after the anchor open and before any
+metadata or security query. Every path-resolution, `FileIdInfo`, and `FileAttributeTagInfo` query
+records the exact anchor-handle input and resolves the volume-GUID path, unsigned
+64-bit volume serial, file ID, attributes and zero reparse tag. Every security query binds that same handle value, result-zero
+`GetSecurityInfo` under mask 7, its nonzero returned descriptor pointer,
+successful `IsValidSecurityDescriptor`, successful `GetSecurityDescriptorControl`
+with revision 1 and raw control containing mask 32768 `SE_SELF_RELATIVE`, exact `GetSecurityDescriptorLength`,
+positive DWORD byte count and SHA-256. The validation, control, length, and hash
+input addresses all equal the exact returned pointer, and the hash byte count
+equals the returned length. Exactly one `LocalFree` call has a nonzero input
+address equal to the returned pointer and a null result. Query,
+hash, and free UTCs are nondecreasing. Only the first anchor has a null parent ordinal; every
 later parent ordinal is exactly its ordinal minus one. The first and last
 anchors are the selected-volume and runtime roots; every intervening row is the
 exact next path component. The absolute Python and private-artifact paths used
 in every actual command are these normalized volume-GUID paths.
 
-After anchoring and before remeasuring either inventory, it starts two distinct
-`ReadDirectoryChangesW` requests: a recursive runtime-root watch and a
-nonrecursive immediate-parent watch. The parent watch closes the documented
-blind spot whereby a directory watch does not report changes to the watched
-directory itself. Each exact nonreparse directory is opened with `CreateFileW`,
-`FILE_LIST_DIRECTORY`, only `FILE_SHARE_READ`, `OPEN_EXISTING`, and
-`FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS |
-FILE_FLAG_OPEN_REPARSE_POINT` (raw flags 1109393408). The two requests record
-pairwise-distinct exact watched-directory handle values, buffer base addresses,
-`OVERLAPPED` addresses, and event-handle values. Each watch owns an
-exclusive zero-initialized DWORD-aligned 65536-byte `VirtualAlloc`
-`MEM_RESERVE | MEM_COMMIT`, `PAGE_READWRITE` buffer and a distinct exclusive
-zero-initialized DWORD-aligned 32-byte x64 `OVERLAPPED` allocated by the same
-`VirtualAlloc` type and protection. Its offsets are zero and its `hEvent` is the
-exact distinct unique non-null manual-reset `CreateEventW` handle initially
-nonsignaled. The completion routine is null and
-an immediate nonwaiting `GetOverlappedResult` for each request must report
+After anchoring it creates a complete ordered watch set. For every non-volume-
+root anchor ordinal 2 through the runtime-root ordinal, one `ANCHOR_SELF_DIRECT`
+request watches that anchor's exact parent nonrecursively. One final
+`RUNTIME_ROOT_SUBTREE` request watches the runtime root recursively. Thus each
+non-volume-root anchor's self changes and every runtime-tree change are covered
+despite the documented watched-directory-self blind spot. Watch count equals
+anchor count and may not exceed 64. Every exact nonreparse watched directory is opened with
+`CreateFileW`, `FILE_LIST_DIRECTORY`, only `FILE_SHARE_READ`, `OPEN_EXISTING`,
+and `FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS |
+FILE_FLAG_OPEN_REPARSE_POINT` (raw flags 1109393408). Across all rows, exact
+directory-handle values, buffer base addresses, `OVERLAPPED` addresses, and
+event-handle values are pairwise distinct. Every watch row supplies that exact
+directory handle to path resolution, `FileIdInfo`, `FileAttributeTagInfo`,
+`ReadDirectoryChangesW`, every `GetOverlappedResult`, `CancelIoEx`, and final
+`CloseHandle`.
+
+Each watch owns an exclusive zero-initialized DWORD-aligned 65536-byte
+`VirtualAlloc` `MEM_RESERVE | MEM_COMMIT`, `PAGE_READWRITE` buffer and a distinct
+exclusive zero-initialized DWORD-aligned 32-byte x64 `OVERLAPPED` allocated by
+the same type and protection. Its offsets are zero. Exact
+`CreateEventW(NULL, TRUE, FALSE, NULL)` produces an unnamed unique event, and
+that exact handle is placed in `hEvent`. The completion routine is null. The
+exact recorded directory handle, buffer base, and `OVERLAPPED` address plus a
+null `lpBytesReturned` pointer are supplied to `ReadDirectoryChangesW`; the same handle and `OVERLAPPED` address are
+supplied to an immediate nonwaiting `GetOverlappedResult`, which must report
 `ERROR_IO_INCOMPLETE` and zero transferred bytes.
 
-It remeasures every directory identity under both active watches and refuses any
-reparse directory or failed, non-self-relative, zero-length, unfreed, or
-mismatching owner, group, or DACL descriptor. In exact
+After every ordered request is individually proven pending, one exact
+`WaitForMultipleObjects` call receives the ordered distinct event-handle array,
+count equal to the watch count and no greater than 64, `bWaitAll=FALSE`, and a
+zero-millisecond timeout. Only `WAIT_TIMEOUT` is accepted, proving no member of
+the complete set is signaled at that common prelaunch boundary. The protection
+epoch starts at that common check. Sequential setup before that boundary is not
+claimed as continuous coverage and no validator has launched. Under the complete active watch set the
+controller first proves each original anchor handle still names the same kernel
+object as its retained continuity guard with `KernelBase.dll!CompareObjectHandles`, then
+remeasures every exact same anchor handle and its complete
+pointer-bound security lifecycle, then remeasures every runtime-directory row
+through a short-lived exact nonreparse handle. That directory observation binds
+the stable manifest row and the exact handle supplied to path resolution,
+`FileIdInfo`, `FileAttributeTagInfo`, the security query, and close; it also binds the complete security lifecycle, exact
+`LocalFree` input-pointer equality, and successful handle close. It refuses any
+reparse, identity, attribute, descriptor-size, or descriptor-digest mismatch.
+In exact
 runtime-file-inventory order it then opens every runtime file with `CreateFileW`, `GENERIC_READ`, only
 `FILE_SHARE_READ`, `OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`; resolves
 the held handle with normalized volume-GUID path, `FileIdInfo`,
 `FileStandardInfo`, and `FileAttributeTagInfo`; and reads, counts, and hashes the
-bytes from that handle. `FILE_ID_INFO.VolumeSerialNumber` is retained as the
+bytes from `ReadFile` on that exact numeric handle. Every metadata-query and read
+input is retained and must equal the opened file handle. `FILE_ID_INFO.VolumeSerialNumber` is retained as the
 complete unsigned 64-bit value. Every path, byte count, digest, file identity,
 attribute, and ordinal must equal the complete host-runtime inventory
 projection. No path-anchor, watch, or runtime-file handle may be released before
 acquisition completes.
 
+The controller's frozen source, executable identity, and correct absence of any
+unrecorded close, duplicate, cancellation, reset, reissue, pointer overwrite, or
+resource reuse are inside the explicit operational trust base. Retained evidence
+proves exact API inputs and kernel-object equality at the declared checkpoints;
+it is not an independent kernel trace of every internal handle-table or I/O event.
+Accordingly, the claimed continuous interval begins only after successful guard
+duplication and complete-watch activation, and no pre-guard interval is claimed.
+
+There is no parent directory from which `ReadDirectoryChangesW` can observe the
+selected volume root's own security-or-attribute-only self-metadata change. This
+authority therefore does not claim to observe such a change made and restored
+between protection-epoch and final measurements. The exact same held volume-root
+handle is remeasured at the epoch and release and any persistent identity,
+attribute, reparse, or security mismatch refuses. A root self-metadata change
+alone cannot substitute a descendant path or file byte. Any propagated
+descendant or root-entry mutation completes the direct watch on the volume root;
+every non-volume-root anchor and the runtime tree remain continuously watched,
+and every runtime file remains held through its exact read handle. This boundary
+protects scientific byte, path, identity, and execution integrity; it makes no
+confidentiality claim against another local security principal that could gain
+temporary traversal, listing, or read access through a restored selected-volume-
+root self-metadata change.
+
 The canonical acquisition preimage contains only facts available before
 launch. Its SHA-256 is frozen before the orchestrator starts and is bound into
 all three retained invocation preimages and actual commands. The outer
-controller holds every path anchor, both watches, and every deny-write-and-delete
-runtime-file handle continuously across
+controller holds every path anchor that omits `FILE_SHARE_WRITE` and
+`FILE_SHARE_DELETE`, the complete watch set, and every runtime-file handle with
+only `FILE_SHARE_READ` continuously across
 the orchestrator, terminated-probe, and resumed-probe processes. Only after all
-three have returned successfully does it reread each exact same file handle and
-remeasure each exact same path-anchor handle, including root directory
+three have returned successfully does the protection epoch end, at the latest
+validator-process return UTC. It then rereads each exact same file handle and
+proves each anchor still names the same kernel object as its retained continuity
+guard before it remeasures that exact same path-anchor handle, including root directory
 attributes, reparse tag, and a second complete successful self-relative
-security-descriptor hash and `LocalFree` lifecycle. It reconciles every path,
+pointer-bound security-descriptor lifecycle. It reconciles every path,
 unsigned 64-bit volume serial, file ID, file byte count and digest, and anchor
-attribute and security fact, and keeps those handles until both watches are
+attribute and security fact. Every runtime-file release row supplies that exact
+held handle to path, file-ID, standard-info, attribute, zero-offset
+`SetFilePointerEx`, `ReadFile`, and final `CloseHandle`; it reconciles the full
+acquisition projection and final bytes. The controller keeps those handles until every watch is
 resolved. Only after every final file and anchor remeasurement, each watch's
 exact recorded watched-directory handle, buffer address, `OVERLAPPED` address,
 and event handle remain valid, exclusive, and unreused throughout the pending
 request. Nonwaiting `GetOverlappedResult` must report
 `ERROR_IO_INCOMPLETE` and zero bytes with no notification record or buffer
-overflow. `CancelIoEx` must complete that same `OVERLAPPED` request; a waiting
-`GetOverlappedResult` must report `ERROR_OPERATION_ABORTED` and zero bytes.
-Only after that cancellation-completion UTC may each exact watched-directory
-and event handle close once and the exact `OVERLAPPED` and buffer allocations be
-freed once by successful `VirtualFree` size zero `MEM_RELEASE`; all four UTCs
-are retained and `watch_released_utc` is not earlier. Each unchanged buffer
-hashes as 65536 zero bytes; every anchor and file handle then closes
-exactly once. Any transient
-add, remove, rename, attribute, size,
-last-write, creation, or security change refuses even if later restored. The
+overflow. `CancelIoEx` receives that exact directory handle and `OVERLAPPED`
+address and must complete the request; a waiting `GetOverlappedResult` on the
+same exact inputs must report `ERROR_OPERATION_ABORTED` and zero bytes.
+Only after that cancellation-completion UTC is the still-valid output buffer
+read and hashed as exactly 65536 zero bytes. Before completion the pending output
+buffer may not be read, hashed, freed, moved, or reused. Each exact watched-
+directory and unnamed-event value is then the input to one successful
+`CloseHandle`, and each exact `OVERLAPPED` and buffer base is the input to one
+successful `VirtualFree` size zero `MEM_RELEASE`;
+all UTCs are retained and `watch_released_utc` is not earlier. After every watch
+has released, every exact numeric anchor handle, its exact continuity-guard
+handle, and every same held file handle closes once. The anchor release UTC is
+the later of its two successful `CloseHandle` completion UTCs. Any
+transient protected non-volume-root anchor or runtime-tree add, remove, rename,
+attribute, size, last-write, creation, or security change during the closed
+protection epoch from its common pending check through the latest validator
+process return refuses even if later restored. No transient-refusal claim extends
+into sequential post-return watch teardown. The
 release observation binds all three
 process instances and invocation hashes and proves acquisition completion is no
 later than first launch, every process return is no later than release start,
-and release completion is no later than receipt completion. Acquisition and
+the release holder PID and creation FILETIME equal the acquisition holder, and
+release completion is no later than receipt completion. Process-local handle
+values may not be replayed under another holder identity. Acquisition and
 release facts are separated deliberately: no after-return value occurs in the
 prelaunch acquisition digest.
 
@@ -636,8 +711,10 @@ the Python `-c` argument; it is at most 8192 bytes.
 The bootstrap opens the named zipapp with `CreateFileW`, `GENERIC_READ`, only
 `FILE_SHARE_READ`, `OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`; resolves
 the held handle with `GetFinalPathNameByHandleW`, `FileIdInfo`,
-`FileStandardInfo`, and `FileAttributeTagInfo`; reads, counts, and hashes the
-artifact from that handle; and refuses before validator import on any mismatch.
+`FileStandardInfo`, and `FileAttributeTagInfo`; and reads, counts, and hashes the
+artifact with `ReadFile` on that handle. The observation retains the exact numeric
+handle supplied to every query and read and to the one successful final
+`CloseHandle`; it refuses before validator import on any mismatch.
 Write and delete sharing remain denied from before zipapp read until after the
 zipapp returns. Each process retains a closed lock observation binding its PID,
 creation FILETIME, invocation, validator and host-runtime identities, path,
