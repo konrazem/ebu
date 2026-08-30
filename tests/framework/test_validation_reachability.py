@@ -838,7 +838,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "a648008e3ee6a7a482566a878f18f9ba67287a10b3be3d181d86becf8ec519b7"
+TEST_SELF_SEAL = "200ea3771d52bba02fedb5412b5e73cf91bcd42dbb72aa055f61ad98e8895117"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -933,6 +933,70 @@ EXPECTED_NEGATIVE = {
 
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+CRLF_NORMALIZED_TEXT_SUFFIXES = frozenset(
+    {
+        ".cff",
+        ".gitignore",
+        ".json",
+        ".lock",
+        ".md",
+        ".py",
+        ".toml",
+        ".txt",
+        ".typed",
+        ".yaml",
+        ".yml",
+    }
+)
+CRLF_NORMALIZED_TEXT_NAMES = frozenset({".gitignore", "LICENSE"})
+
+
+def _is_crlf_normalized_text_path(path: Path) -> bool:
+    return (
+        path.suffix.lower() in CRLF_NORMALIZED_TEXT_SUFFIXES
+        or path.name in CRLF_NORMALIZED_TEXT_NAMES
+    )
+
+
+def _normalize_checkout_text_bytes(
+    checkout_raw: bytes, path: Path, label: str | None = None
+) -> bytes:
+    if not _is_crlf_normalized_text_path(path):
+        raise AssertionError(
+            f"CRLF normalization is forbidden for this path: {label or path}"
+        )
+    if checkout_raw.count(b"\r") != checkout_raw.count(b"\r\n"):
+        raise AssertionError(
+            f"checkout contains a non-CRLF carriage return: {label or path}"
+        )
+    normalized = checkout_raw.replace(b"\r\n", b"\n")
+    normalized.decode("utf-8", "strict")
+    return normalized
+
+
+def _checkout_lf_bytes(path: Path, label: str | None = None) -> bytes:
+    return _normalize_checkout_text_bytes(path.read_bytes(), path, label)
+
+
+def _assert_checkout_matches_blob(
+    path: Path, blob_raw: bytes, label: str | None = None
+) -> bytes:
+    checkout_raw = path.read_bytes()
+    if checkout_raw == blob_raw:
+        return blob_raw
+    if b"\r" in blob_raw:
+        raise AssertionError(
+            f"non-LF immutable blob cannot use checkout normalization: {label or path}"
+        )
+    blob_raw.decode("utf-8", "strict")
+    normalized = _normalize_checkout_text_bytes(checkout_raw, path, label)
+    if normalized != blob_raw:
+        raise AssertionError(
+            f"checkout does not reconcile to the immutable Git blob: {label or path}"
+        )
+    return blob_raw
 
 
 def _canonical_json_lf(value: object) -> bytes:
@@ -1219,7 +1283,7 @@ def _strict_json_bytes(raw: bytes, label: str) -> object:
 
 
 def _strict_json(path: Path) -> tuple[object, bytes]:
-    raw = path.read_bytes()
+    raw = _checkout_lf_bytes(path)
     document = _strict_json_bytes(raw, str(path))
     return document, raw
 
@@ -1560,7 +1624,7 @@ def _base_candidate_projection(path: str, raw: bytes) -> bytes:
 
 
 def _base_candidate_bytes(path: str) -> bytes:
-    return _base_candidate_projection(path, (ROOT / path).read_bytes())
+    return _base_candidate_projection(path, _checkout_lf_bytes(ROOT / path, path))
 
 
 def _blob_id(raw: bytes) -> str:
@@ -1717,7 +1781,7 @@ class ValidationReachabilityTests(unittest.TestCase):
     def _load_correction_authority(self) -> dict[str, object]:
         raw_files = {}
         for path in CORRECTION_AUTHORITY_FILES:
-            raw = (ROOT / path).read_bytes()
+            raw = _checkout_lf_bytes(ROOT / path, path)
             self.assertEqual(_sha256(raw), CORRECTION_AUTHORITY_RAW_SHA256[path], path)
             raw_files[path] = raw
         documents = {
@@ -1951,7 +2015,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             self.assertEqual(raw, historical["authority_raw"][path], path)
             documents.append(document)
         for path, expected in AUTHORITY_RAW_SHA256.items():
-            self.assertEqual(_sha256((ROOT / path).read_bytes()), expected)
+            self.assertEqual(_sha256(_checkout_lf_bytes(ROOT / path, path)), expected)
         contract, validation_contract, predecessor, manifest = documents
 
         self.assertEqual(
@@ -2219,7 +2283,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(len(predecessor_archive), 330)
         for row in predecessor["rows"]:
             path = row["path"]
-            reconstructed, _ = _object_row(
+            reconstructed, predecessor_raw = _object_row(
                 path, predecessor_entries, predecessor_archive
             )
             self.assertEqual(
@@ -2243,13 +2307,25 @@ class ValidationReachabilityTests(unittest.TestCase):
             self.assertEqual(actual_mode, row["mode"], path)
             if path in changed_paths or path in CLCD_AUTHORIZED_PREDECESSOR_MODIFICATIONS:
                 continue
-            raw = candidate.read_bytes()
+            current_entry = head_entries[path]
+            self.assertEqual(current_entry["git_object"], row["git_object"], path)
+            self.assertEqual(current_entry["mode"], row["mode"], path)
+            self.assertEqual(current_entry["object_type"], row["object_type"], path)
+            current_git_raw = _git("cat-file", "blob", current_entry["git_object"])
+            self.assertEqual(current_git_raw, predecessor_raw, path)
+            raw = current_git_raw
+            if _is_crlf_normalized_text_path(candidate):
+                self.assertEqual(
+                    _assert_checkout_matches_blob(candidate, current_git_raw, path),
+                    current_git_raw,
+                    path,
+                )
             self.assertEqual(len(raw), row["byte_count"], path)
             self.assertEqual(_sha256(raw), row["raw_sha256"], path)
             self.assertEqual(_blob_id(raw), row["git_object"], path)
 
         current_path_bytes = {
-            path: (ROOT / path).read_bytes() for path in IMPLEMENTATION_PATHS
+            path: _checkout_lf_bytes(ROOT / path, path) for path in IMPLEMENTATION_PATHS
         }
         if stage_c_phase == "AUTHORITY_ONLY":
             self.assertEqual(
@@ -2375,7 +2451,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             target_row, target_raw = _object_row(path, target_entries, target_archive)
             self.assertEqual(candidate_row, target_row, path)
             self.assertEqual(candidate_raw, target_raw, path)
-            current_raw = (ROOT / path).read_bytes()
+            current_raw = _assert_checkout_matches_blob(ROOT / path, candidate_raw, path)
             self.assertEqual(current_raw, candidate_raw, path)
             self.assertEqual(_sha256(current_raw), STAGE_D_AUTHORITY_RAW_SHA256[path], path)
             self.assertTrue(current_raw.endswith(b"\n") and not current_raw.endswith(b"\n\n"), path)
@@ -2637,7 +2713,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             target_row, target_raw = _object_row(path, target_entries, target_archive)
             self.assertEqual(candidate_row, target_row, path)
             self.assertEqual(candidate_raw, target_raw, path)
-            current_raw = (ROOT / path).read_bytes()
+            current_raw = _assert_checkout_matches_blob(ROOT / path, candidate_raw, path)
             self.assertEqual(current_raw, candidate_raw, path)
             self.assertEqual(
                 _sha256(current_raw),
@@ -2705,7 +2781,11 @@ class ValidationReachabilityTests(unittest.TestCase):
         base_archive = _archive_members(STAGE_D_CONTINUATION_ACCEPTED_BASE_COMMIT)
         for path in STAGE_D_AUTHORITY_PATHS:
             _, base_raw = _object_row(path, base_entries, base_archive)
-            self.assertEqual(base_raw, (ROOT / path).read_bytes(), path)
+            self.assertEqual(
+                base_raw,
+                _assert_checkout_matches_blob(ROOT / path, base_raw, path),
+                path,
+            )
             self.assertEqual(_sha256(base_raw), STAGE_D_AUTHORITY_RAW_SHA256[path], path)
 
         self.assertEqual(predecessor["source_count"], 9)
@@ -2745,7 +2825,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                 row["path"] != "tests/framework/test_validation_reachability.py"
                 and not stage_e_workflow_change
             ):
-                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+                self.assertEqual(
+                    _assert_checkout_matches_blob(
+                        ROOT / row["path"], base_raw, row["path"]
+                    ),
+                    base_raw,
+                    row["path"],
+                )
             if row["path"].endswith(".json"):
                 document = _strict_stage_d_json_bytes(base_raw, row["path"])
                 canonical = _canonical_json_lf(document)[:-1]
@@ -3064,7 +3150,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             target_row, target_raw = _object_row(path, target_entries, target_archive)
             self.assertEqual(candidate_row, target_row, path)
             self.assertEqual(candidate_raw, target_raw, path)
-            current_raw = (ROOT / path).read_bytes()
+            current_raw = _assert_checkout_matches_blob(ROOT / path, candidate_raw, path)
             self.assertEqual(current_raw, candidate_raw, path)
             self.assertEqual(
                 _sha256(current_raw), STAGE_E_AUTHORITY_RAW_SHA256[path], path
@@ -3161,7 +3247,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                 row["path"] != "tests/framework/test_validation_reachability.py"
                 and not stage_e_workflow_change
             ):
-                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+                self.assertEqual(
+                    _assert_checkout_matches_blob(
+                        ROOT / row["path"], base_raw, row["path"]
+                    ),
+                    base_raw,
+                    row["path"],
+                )
             if row["path"].endswith(".json"):
                 canonical = _canonical_json_lf(
                     _strict_stage_d_json_bytes(base_raw, row["path"])
@@ -3212,7 +3304,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             _, accepted_workflow_raw = _object_row(
                 workflow_row["path"], base_entries, base_archive
             )
-            current_workflow_raw = (ROOT / workflow_row["path"]).read_bytes()
+            current_workflow_raw = _checkout_lf_bytes(
+                ROOT / workflow_row["path"], workflow_row["path"]
+            )
             stage_e_workflow_raw = accepted_workflow_raw + STAGE_E_WORKFLOW_APPEND_BLOCK
             if (
                 current_scope["stage_f_local_binding_phase"]
@@ -3296,11 +3390,18 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(schema_profile["total_refused_instance_count"], 97)
         schema_documents = (
             _strict_stage_d_json_bytes(
-                (ROOT / "stage_d_scientific_validation_evidence_schema.json").read_bytes(),
+                _checkout_lf_bytes(
+                    ROOT / "stage_d_scientific_validation_evidence_schema.json",
+                    "stage_d_scientific_validation_evidence_schema.json",
+                ),
                 "stage_d_scientific_validation_evidence_schema.json",
             ),
             _strict_stage_d_json_bytes(
-                (ROOT / "stage_d_completion_oriented_continuation_evidence_schema.json").read_bytes(),
+                _checkout_lf_bytes(
+                    ROOT
+                    / "stage_d_completion_oriented_continuation_evidence_schema.json",
+                    "stage_d_completion_oriented_continuation_evidence_schema.json",
+                ),
                 "stage_d_completion_oriented_continuation_evidence_schema.json",
             ),
             schema,
@@ -3322,7 +3423,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(derived_keywords, set(expected_keywords))
         self.assertIn(
             b'"minProperties": 1',
-            (ROOT / "stage_d_scientific_validation_evidence_schema.json").read_bytes(),
+            _checkout_lf_bytes(
+                ROOT / "stage_d_scientific_validation_evidence_schema.json",
+                "stage_d_scientific_validation_evidence_schema.json",
+            ),
         )
 
         self.assertEqual(len(schema["$defs"]), 22)
@@ -3586,7 +3690,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             self.assertEqual(candidate_row, target_row, path)
             self.assertEqual(candidate_raw, target_raw, path)
-            current_raw = (ROOT / path).read_bytes()
+            current_raw = _assert_checkout_matches_blob(ROOT / path, candidate_raw, path)
             self.assertEqual(current_raw, candidate_raw, path)
             self.assertEqual(
                 _sha256(current_raw),
@@ -3667,7 +3771,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                 row["path"] != "tests/framework/test_validation_reachability.py"
                 and not changed_workflow
             ):
-                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+                self.assertEqual(
+                    _assert_checkout_matches_blob(
+                        ROOT / row["path"], base_raw, row["path"]
+                    ),
+                    base_raw,
+                    row["path"],
+                )
 
         nested = predecessor["nested_authority_locks"]
         self.assertEqual(nested["stage_d_nested_row_count"], 39)
@@ -4017,7 +4127,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             self.assertEqual(candidate_row, target_row, path)
             self.assertEqual(candidate_raw, target_raw, path)
-            current_raw = (ROOT / path).read_bytes()
+            current_raw = _assert_checkout_matches_blob(ROOT / path, candidate_raw, path)
             self.assertEqual(current_raw, candidate_raw, path)
             self.assertEqual(
                 _sha256(current_raw),
@@ -4129,7 +4239,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                 row["path"] != "tests/framework/test_validation_reachability.py"
                 and not changed_workflow
             ):
-                self.assertEqual((ROOT / row["path"]).read_bytes(), base_raw, row["path"])
+                self.assertEqual(
+                    _assert_checkout_matches_blob(
+                        ROOT / row["path"], base_raw, row["path"]
+                    ),
+                    base_raw,
+                    row["path"],
+                )
         nested = predecessor["nested_authority_closure"]
         self.assertEqual(nested["stage_d_predecessor_rows"], 39)
         self.assertEqual(nested["continuation_direct_rows"], 9)
@@ -4167,7 +4283,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         def load_document(path: str) -> dict[str, object]:
             if path not in documents:
                 documents[path] = _strict_stage_d_json_bytes(
-                    (ROOT / path).read_bytes(), path
+                    _checkout_lf_bytes(ROOT / path, path), path
                 )
             return documents[path]
 
@@ -4927,9 +5043,11 @@ class ValidationReachabilityTests(unittest.TestCase):
                 STAGE_F_LOCAL_BINDING_AUTHORITY_RAW_SHA256[path],
                 path,
             )
-            checkout_raw = (ROOT / path).read_bytes()
-            self.assertNotIn(b"\r", checkout_raw.replace(b"\r\n", b""), path)
-            self.assertEqual(checkout_raw.replace(b"\r\n", b"\n"), candidate_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
             text = candidate_raw.decode("utf-8", "strict")
             self.assertEqual(text, unicodedata.normalize("NFC", text), path)
             self.assertTrue(
@@ -6146,8 +6264,8 @@ class ValidationReachabilityTests(unittest.TestCase):
         dynamic_path = "tests/framework/fixtures/dynamic_static_v1.json"
         bridge = json.loads((ROOT / bridge_path).read_text(encoding="utf-8"))
         dynamic = json.loads((ROOT / dynamic_path).read_text(encoding="utf-8"))
-        bridge_hash = _sha256((ROOT / bridge_path).read_bytes())
-        dynamic_hash = _sha256((ROOT / dynamic_path).read_bytes())
+        bridge_hash = _sha256(_checkout_lf_bytes(ROOT / bridge_path, bridge_path))
+        dynamic_hash = _sha256(_checkout_lf_bytes(ROOT / dynamic_path, dynamic_path))
         expected_allowlist = tuple(
             ("V8", bridge_path, bridge_hash, row["case_id"], row["interface"])
             for row in bridge["positive_interface_vectors"]
@@ -6401,7 +6519,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         stage_f_local_binding_phase: str | None,
     ) -> None:
         safety_path = ROOT / "tests/framework/safety.py"
-        safety_raw = safety_path.read_bytes()
+        safety_raw = _checkout_lf_bytes(safety_path, "tests/framework/safety.py")
         self.assertEqual(
             _sha256(_base_candidate_bytes("tests/framework/safety.py")),
             "40346595695d908a575dbc8fe8228564f2e182268a0822b93ce5b0db03246eb6",
@@ -6423,7 +6541,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         }
         self.assertFalse(safety_imports & {"ebu_framework", "subprocess", "socket", "requests"})
 
-        current_workflow_raw = (ROOT / ".github/workflows/tests.yml").read_bytes()
+        current_workflow_raw = _checkout_lf_bytes(
+            ROOT / ".github/workflows/tests.yml", ".github/workflows/tests.yml"
+        )
         if stage_c_phase == "COMPLETED_IMPLEMENTATION":
             workflow_raw = _git(
                 "show", f"{STAGE_C_PREDECESSOR_COMMIT}:.github/workflows/tests.yml"
@@ -6642,11 +6762,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             + tuple(AUTHORITY_RAW_SHA256)
             + CORRECTION_AUTHORITY_FILES
         ):
-            checkout_raw = (ROOT / path).read_bytes()
-            self.assertEqual(
-                checkout_raw.count(b"\r"), checkout_raw.count(b"\r\n"), path
-            )
-            raw = checkout_raw.replace(b"\r\n", b"\n")
+            raw = _checkout_lf_bytes(ROOT / path, path)
             self.assertFalse(raw.startswith(b"\xef\xbb\xbf"), path)
             self.assertNotIn(b"\r", raw, path)
             self.assertTrue(raw.endswith(b"\n"), path)
