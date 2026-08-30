@@ -1,0 +1,243 @@
+{
+  "durability_bundle_identity": {
+    "kind": "stage_f_private_durability_bundle/v1",
+    "sha256": "024a5975f2f3202c89e48b8eeb0ba22fb48ed82b28a43648b3a7232bdfe510ce",
+    "value": "024a5975f2f3202c89e48b8eeb0ba22fb48ed82b28a43648b3a7232bdfe510ce"
+  },
+  "filesystem": {
+    "bytes_per_sector": 1,
+    "filesystem_flags": 0,
+    "filesystem_identity": {
+      "kind": "stage_f_filesystem_binding/v1",
+      "sha256": "e8f3611096e4598a22be2ca6f41169f7dd4cb783d172908775d866d843293fe5",
+      "value": "e8f3611096e4598a22be2ca6f41169f7dd4cb783d172908775d866d843293fe5"
+    },
+    "filesystem_type": "NTFS",
+    "maximum_component_length": 1,
+    "ntfs_volume_data": {
+      "bytes_per_cluster": 1,
+      "bytes_per_file_record_segment": 1,
+      "bytes_per_sector": 1,
+      "clusters_per_file_record_segment": 0,
+      "free_clusters": 0,
+      "mft2_start_lcn": 0,
+      "mft_start_lcn": 0,
+      "mft_valid_data_length": 0,
+      "mft_zone_end": 0,
+      "mft_zone_start": 0,
+      "number_sectors": 1,
+      "query_succeeded": true,
+      "total_clusters": 1,
+      "total_reserved_clusters": 0,
+      "volume_serial_number": 0
+    },
+    "private_directories": {
+      "continuation_checkpoints": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\continuation-checkpoints",
+      "immutable_results": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\immutable-results",
+      "independent_audit": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\independent-audit",
+      "stage_f_root": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f",
+      "temporary": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\temporary"
+    },
+    "reserved_envelope_bytes": 715112054784,
+    "resolved_private_path_volume_guids": {
+      "continuation_checkpoints": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "dynamic_growth_physical_writes": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "immutable_results": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "independent_audit": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "independent_audit_copy": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "primary_logical_output": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "retained_evidence": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "stage_f_root": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+      "temporary": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\"
+    },
+    "sectors_per_cluster": 1,
+    "selected_volume_guid_path": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\",
+    "storage_category_directories": {
+      "checkpoint_and_write_overhead": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\continuation-checkpoints",
+      "dynamic_growth_physical_writes": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\immutable-results\\dynamic-growth-physical-writes",
+      "independent_audit_copy": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\independent-audit\\complete-copy",
+      "primary_logical_output": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\immutable-results\\primary-logical-output",
+      "retained_evidence": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\independent-audit\\retained-evidence",
+      "temporary_archives": "\\\\?\\Volume{00000000-0000-0000-0000-000000000001}\\synthetic\\stage-f\\temporary"
+    },
+    "storage_inventory_policy_identity": {
+      "kind": "stage_f_storage_inventory_policy/v1",
+      "sha256": "30c5874a9433024d381d1bce424d721383775e8f9c285232d472839354b505e8",
+      "value": "30c5874a9433024d381d1bce424d721383775e8f9c285232d472839354b505e8"
+    },
+    "volume_allocation_unit_bytes": 1,
+    "volume_measurement_apis": {
+      "allocation_geometry": "GetDiskFreeSpaceW",
+      "capacity_and_free_space": "GetDiskFreeSpaceExW",
+      "final_path_resolution": "CreateFileW_GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID",
+      "mount_point_resolution": "GetVolumePathNameW",
+      "ntfs_volume_data": "CreateFileW_GUID_without_terminal_backslash_DeviceIoControl_FSCTL_GET_NTFS_VOLUME_DATA",
+      "volume_guid_resolution": "GetVolumeNameForVolumeMountPointW",
+      "volume_information": "GetVolumeInformationW"
+    },
+    "volume_serial_number": 0
+  },
+  "host": {
+    "architecture": "SYNTHETIC---host-architecture",
+    "computer_name": "SYNTHETIC-HOST",
+    "logical_processor_count": 1,
+    "os_build": "SYNTHETIC---host-os_build",
+    "os_name": "SYNTHETIC---host-os_name",
+    "os_version": "SYNTHETIC---host-os_version",
+    "physical_memory_bytes": 1,
+    "processor_name": "SYNTHETIC-CPU",
+    "user_name": "SYNTHETIC-USER"
+  },
+  "host_validation_runtime_identity": {
+    "kind": "stage_f_host_validation_runtime/v1",
+    "sha256": "d42787b4aac3cf36c6b2a0ee30471a64d497ac7847bf64a11277af618d8f7c23",
+    "value": "d42787b4aac3cf36c6b2a0ee30471a64d497ac7847bf64a11277af618d8f7c23"
+  },
+  "host_validation_runtime_preimage": {
+    "architecture": "AMD64",
+    "executable_relative_path": "python.exe",
+    "implementation": "CPython",
+    "inventory_complete": true,
+    "isolated_mode_required": true,
+    "network_access_permitted": false,
+    "ordered_runtime_directory_rows": [
+      {
+        "directory": true,
+        "file_id_128": "e716bff328b9d7b36de54999edf8c8c3",
+        "raw_file_attributes": 0,
+        "relative_path": ".",
+        "reparse_tag": 0,
+        "security_descriptor_byte_count": 1,
+        "security_descriptor_format": "SELF_RELATIVE",
+        "security_descriptor_sha256": "ffdc72545dd4812d092880b7bb5e2e4934d2c85927ba298fb7ee754b458f2d74",
+        "security_information_mask": 7,
+        "volume_serial_number": 0
+      }
+    ],
+    "ordered_runtime_file_rows": [
+      {
+        "byte_count": 0,
+        "relative_path": "runtime/file_1.bin",
+        "sha256": "02c2e2777136c269b0821d0791deb294238a975fa9f40f7477ad59f7675c28be"
+      }
+    ],
+    "project_package_import_permitted": false,
+    "provider_bundle_version": "SYNTHETIC-preimage-provider_bundle_version",
+    "python_executable_sha256": "f5ca7a7a8cc9528909b69cdf38121fef044a5f5d06d08e644419860fdb40ee72",
+    "python_version": "SYNTHETIC-_runtime_preimage-python_version",
+    "runtime_directory_count": 1,
+    "runtime_file_count": 1,
+    "runtime_root_path_identity": {
+      "kind": "stage_f_private_path/v1",
+      "sha256": "68be3c7de6cbe58412abd392b644c80b7716a1c2911db9d197f71d1316ee687e",
+      "value": "68be3c7de6cbe58412abd392b644c80b7716a1c2911db9d197f71d1316ee687e"
+    },
+    "schema": "stage_f_host_validation_runtime/v1",
+    "site_initialization_permitted": false,
+    "sqlite_version": "SYNTHETIC-_runtime_preimage-sqlite_version",
+    "standard_library_only": true,
+    "validator_zipapp_bytecode_cache_permitted": false
+  },
+  "initial_storage_capacity_snapshot_identity": {
+    "kind": "stage_f_storage_capacity_snapshot/v1",
+    "sha256": "7141b61ca6a188b00dc2eae1f65702786e0baf13134081d82752211bacc80fa8",
+    "value": "7141b61ca6a188b00dc2eae1f65702786e0baf13134081d82752211bacc80fa8"
+  },
+  "outcome_blind_attestation": true,
+  "policy_preimages": {
+    "durability": "{\"atomic_publication_required\":true,\"content_hash_required\":true,\"directory_durability_required\":true,\"file_flush_required\":true,\"orphan_partial_retained_and_refused\":true,\"overwrite_truncate_delete_permitted\":false,\"same_volume_required\":true,\"schema\":\"stage_f_durability_policy/v1\",\"versioned_immutable_final_paths_required\":true}",
+    "environment": "{\"dependencies_in_order\":[\"PyNaCl==1.6.2\",\"cffi==2.1.1\",\"pycparser==3.0\"],\"dependency_identities\":[{\"kind\":\"stage_f_installed_python_distribution/v1\",\"sha256\":\"b3cef06e4f4341e2f2d91799314c8171cb5dbce880b754516227a001b2c0c19c\",\"value\":\"b3cef06e4f4341e2f2d91799314c8171cb5dbce880b754516227a001b2c0c19c\"},{\"kind\":\"stage_f_installed_python_distribution/v1\",\"sha256\":\"994622b190290a25fc971b876a1c7b4193403753a653abceeedd1904a3c812ac\",\"value\":\"994622b190290a25fc971b876a1c7b4193403753a653abceeedd1904a3c812ac\"},{\"kind\":\"stage_f_installed_python_distribution/v1\",\"sha256\":\"b565d8da5a1aa74a55ba8818a49ca04fe5fd3b5a9c780d0697d94dddf1689747\",\"value\":\"b565d8da5a1aa74a55ba8818a49ca04fe5fd3b5a9c780d0697d94dddf1689747\"}],\"host_python_fallback_permitted\":false,\"image_digest\":\"sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab\",\"installed_artifact_sha256\":\"3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2\",\"installed_package\":\"ebu-framework==0.1.0a1\",\"network_fallback_permitted\":false,\"python_executable_sha256\":\"f5ca7a7a8cc9528909b69cdf38121fef044a5f5d06d08e644419860fdb40ee72\",\"python_version\":\"CPython 3.14.4 final\",\"schema\":\"stage_f_execution_environment_policy/v1\",\"sqlite_version\":\"3.46.1\"}",
+    "parallelization_boundary": "{\"cross_host_parallelism_permitted\":false,\"cross_route_shared_mutable_state_permitted\":false,\"execution_host_count\":1,\"public_host_alias\":\"EXECUTION-HOST-01\",\"schema\":\"stage_f_parallelization_boundary_policy/v1\",\"simultaneous_campaign_attempts\":1,\"within_attempt_process_allocation_source\":\"SEALED_CAMPAIGN_EXECUTION_BINDING_AND_PROCESS_ALLOCATION_V2\"}",
+    "restart": "{\"corrupt_checkpoint_disposition\":\"REFUSE\",\"last_verified_durable_checkpoint_only\":true,\"orphan_partial_disposition\":\"REFUSE\",\"pending_reboot_permitted\":false,\"schema\":\"stage_f_restart_policy/v1\",\"unattended_reboot_permitted\":false}",
+    "storage_inventory": "{\"accounted_directory_bytes\":\"METADATA_RECORD_UPPER_BOUND_PLUS_FILE_STANDARD_ALLOCATION_PLUS_DIRECTORY_BITMAP_UPPER_BOUND_PLUS_NONDATA_BACKUP_STREAM_ACCOUNTING\",\"accounted_file_bytes\":\"METADATA_RECORD_UPPER_BOUND_PLUS_MAX_END_OF_FILE_GET_COMPRESSED_FILE_SIZE_W_FILE_STANDARD_ALLOCATION_PLUS_NONDATA_BACKUP_STREAM_ACCOUNTING\",\"backup_stream_enumeration_api\":\"BackupRead_ACCESS_SYSTEM_SECURITY_PROCESS_SECURITY_TRUE_NO_BACKUP_SEEK_FINAL_ABORT\",\"compressed_file_disposition\":\"REFUSE\",\"data_stream_enumeration_api\":\"FindFirstStreamW_FindNextStreamW_FindClose\",\"data_stream_enumeration_scope\":\"EVERY_REGULAR_FILE_AND_DIRECTORY_INCLUDING_STAGE_F_ROOT_STRUCTURAL_PARENTS_AND_CATEGORY_ROOTS\",\"directory_bitmap_upper_bound_rule\":\"ZERO_IF_INDEX_ALLOCATION_ZERO_ELSE_ROUND_UP_CEIL_INDEX_ALLOCATION_DIV_32768_TO_VOLUME_ALLOCATION_UNIT\",\"directory_data_stream_rule\":\"ZERO_WITH_INITIAL_ERROR_HANDLE_EOF\",\"disallowed_backup_stream_attribute_bits\":{\"STREAM_CONTAINS_GHOSTED_FILE_EXTENTS\":16,\"STREAM_CONTAINS_PROPERTIES_OR_RESERVED\":4,\"STREAM_MODIFIED_WHEN_READ\":1,\"STREAM_SPARSE_ATTRIBUTE\":8},\"entry_order\":\"ASCENDING_UTF8_NFC_RELATIVE_PATH_BYTES\",\"enumeration_root\":\"PRIVATE_STAGE_F_ROOT\",\"file_attribute_information_api\":\"GetFileInformationByHandleEx_FileAttributeTagInfo_EVERY_ENTRY\",\"file_identity_information_api\":\"GetFileInformationByHandleEx_FileIdInfo_EVERY_ENTRY\",\"file_standard_information_api\":\"CreateFileW_GetFileInformationByHandleEx_FileStandardInfo_EVERY_ENTRY\",\"hard_link_count\":1,\"metadata_record_upper_bound_rule\":\"ROUND_UP_ONE_PLUS_EXTENTS_PLUS_BITMAP_CLUSTERS_PLUS_NONDATA_BACKUP_STREAMS_TIMES_NTFS_FILE_RECORD_SEGMENT\",\"mutation_policy\":\"WRITE_ONCE_NO_OVERWRITE_TRUNCATE_OR_DELETE\",\"named_data_stream_disposition\":\"REFUSE\",\"permitted_backup_stream_attribute_masks\":{\"BACKUP_DATA\":0,\"BACKUP_LINK\":0,\"BACKUP_SECURITY_DATA\":2},\"permitted_backup_stream_ids\":[\"BACKUP_DATA\",\"BACKUP_SECURITY_DATA\",\"BACKUP_LINK\"],\"platform\":\"WINDOWS_NTFS\",\"previous_snapshot_rule\":\"EVERY_PRIOR_NON_METADATA_ROW_PRESENT_BYTE_IDENTICAL_AND_NEW_ROWS_ONLY\",\"prohibited_file_attribute_rule\":\"ZERO_BITS_SET_FOR_DEVICE_REPARSE_SPARSE_COMPRESSED_OFFLINE_ENCRYPTED_INTEGRITY_VIRTUAL_NO_SCRUB_RECALL_PINNED_OR_UNPINNED\",\"refused_backup_stream_ids\":[\"BACKUP_EA_DATA\",\"BACKUP_ALTERNATE_DATA\",\"BACKUP_PROPERTY_DATA\",\"BACKUP_OBJECT_ID\",\"BACKUP_REPARSE_DATA\",\"BACKUP_SPARSE_BLOCK\",\"BACKUP_TXFS_DATA\",\"BACKUP_GHOSTED_FILE_EXTENTS\",\"UNKNOWN\"],\"regular_file_data_stream_rule\":\"EXACTLY_ONE_DEFAULT_UNNAMED_::$DATA_WITH_STREAM_SIZE_EQUAL_END_OF_FILE\",\"reparse_point_disposition\":\"REFUSE_WITHOUT_FOLLOWING\",\"retained_evidence_accounting\":\"FULL_8_GIB_PREDEBIT\",\"retrieval_extent_api\":\"DeviceIoControl_FSCTL_GET_RETRIEVAL_POINTERS_COMPLETE_VCN_CHAIN\",\"schema\":\"stage_f_storage_inventory_policy/v1\",\"sparse_file_disposition\":\"REFUSE\",\"stream_enumeration_error_disposition\":\"REFUSE_UNLESS_INITIAL_DIRECTORY_ERROR_HANDLE_EOF_OR_FINAL_FIND_NEXT_ERROR_HANDLE_EOF\",\"structural_directory_accounting\":\"STAGE_F_ROOT_IMMUTABLE_RESULTS_AND_INDEPENDENT_AUDIT_PARENTS_TO_CHECKPOINT_AND_WRITE_OVERHEAD\",\"unknown_entry_disposition\":\"REFUSE\",\"unknown_or_disallowed_backup_stream_attribute_bits\":\"REFUSE\"}",
+    "storage_location": "{\"absolute_paths_private\":true,\"category_layout\":[\"immutable-results/primary-logical-output\",\"independent-audit/complete-copy\",\"immutable-results/dynamic-growth-physical-writes\",\"continuation-checkpoints\",\"temporary\",\"independent-audit/retained-evidence\"],\"logical_directory_roles\":[\"immutable-results\",\"continuation-checkpoints\",\"independent-audit\",\"temporary\"],\"outside_git_required\":true,\"schema\":\"stage_f_storage_location_policy/v1\",\"single_volume_required\":true,\"storage_envelope\":{\"bytes_per_gib\":1073741824,\"checkpoint_and_write_overhead_gib\":64,\"dynamic_growth_physical_writes_gib\":80,\"independent_audit_copy_gib\":253,\"minimum_free_after_existing_data_gib\":350,\"primary_logical_output_gib\":253,\"retained_evidence_gib\":8,\"temporary_archives_gib\":8,\"total_gib\":666},\"unclassified_entry_disposition\":\"REFUSE\"}",
+    "worker_allocation": "{\"logical_processor_upper_bound_source\":\"PRIVATE_HOST_MANIFEST\",\"memory_limit_exact_match_required\":true,\"oversubscription_permitted\":false,\"process_and_thread_counts_exact_match_required\":true,\"public_host_alias\":\"EXECUTION-HOST-01\",\"schema\":\"stage_f_worker_allocation_policy/v1\",\"unbound_worker_permitted\":false,\"worker_host_count\":1}"
+  },
+  "privacy_nonce": "2c5d20589a1358f633b360d2ec522c6ae78dbb8b1d9a3994beea4158806c2ffb",
+  "public_host_alias": "EXECUTION-HOST-01",
+  "repository": {
+    "commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "tree": "212777d569af527ce9532ea6c836ff2225465d87"
+  },
+  "runtime": {
+    "dependency_identities": [
+      {
+        "kind": "stage_f_installed_python_distribution/v1",
+        "sha256": "b3cef06e4f4341e2f2d91799314c8171cb5dbce880b754516227a001b2c0c19c",
+        "value": "b3cef06e4f4341e2f2d91799314c8171cb5dbce880b754516227a001b2c0c19c"
+      },
+      {
+        "kind": "stage_f_installed_python_distribution/v1",
+        "sha256": "994622b190290a25fc971b876a1c7b4193403753a653abceeedd1904a3c812ac",
+        "value": "994622b190290a25fc971b876a1c7b4193403753a653abceeedd1904a3c812ac"
+      },
+      {
+        "kind": "stage_f_installed_python_distribution/v1",
+        "sha256": "b565d8da5a1aa74a55ba8818a49ca04fe5fd3b5a9c780d0697d94dddf1689747",
+        "value": "b565d8da5a1aa74a55ba8818a49ca04fe5fd3b5a9c780d0697d94dddf1689747"
+      }
+    ],
+    "dependency_preimages": [
+      {
+        "installed_files": [
+          {
+            "byte_count": 0,
+            "relative_path": "synthetic_dependency_1/file_1.py",
+            "sha256": "cb5dea9e8f299666eddb0404e5b798d1bc398a738be6fe3ecabd246aed3df64b"
+          }
+        ],
+        "name": "PyNaCl",
+        "schema": "stage_f_installed_python_distribution/v1",
+        "version": "1.6.2"
+      },
+      {
+        "installed_files": [
+          {
+            "byte_count": 0,
+            "relative_path": "synthetic_dependency_2/file_1.py",
+            "sha256": "a51375bab3161857ce0d6207846a7050aa078d02094239f2ed0d61263b080fd4"
+          }
+        ],
+        "name": "cffi",
+        "schema": "stage_f_installed_python_distribution/v1",
+        "version": "2.1.1"
+      },
+      {
+        "installed_files": [
+          {
+            "byte_count": 0,
+            "relative_path": "synthetic_dependency_3/file_1.py",
+            "sha256": "325d2284727662fba33a97cbaf4f5fbe9e6a766f522f47bc11517da5726f4275"
+          }
+        ],
+        "name": "pycparser",
+        "schema": "stage_f_installed_python_distribution/v1",
+        "version": "3.0"
+      }
+    ],
+    "image_digest": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+    "installed_artifact_sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2",
+    "installed_package": "ebu-framework==0.1.0a1",
+    "python_executable_sha256": "f5ca7a7a8cc9528909b69cdf38121fef044a5f5d06d08e644419860fdb40ee72",
+    "python_version": "CPython 3.14.4 final",
+    "sqlite_version": "3.46.1"
+  },
+  "schema": "private_execution_host_manifest/v1",
+  "scientific_counters": {
+    "benchmark_execution_count": 0,
+    "book_count": 0,
+    "figure_count": 0,
+    "gate_execution_count": 0,
+    "model_execution_count": 0,
+    "outcome_inspection_count": 0,
+    "publication_action_count": 0,
+    "registered_configuration_count": 0,
+    "release_action_count": 0,
+    "result_count": 0,
+    "runner_import_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "trajectory_execution_count": 0,
+    "transform_execution_count": 0
+  }
+}

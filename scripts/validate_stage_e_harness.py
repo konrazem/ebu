@@ -196,23 +196,51 @@ def _authority_lane(source: Path, head_commit: str, head_tree: str) -> dict[str,
     scope = manifest["prospective_harness_implementation"]
     expected_modified = set(scope["modified_paths"])
     expected_added = set(scope["new_paths"])
-    expected = expected_modified | expected_added
+    stage_e_expected = expected_modified | expected_added
+    if scope["modified_path_count"] != 1 or scope["new_path_count"] != 50 or scope["total_path_count"] != 51:
+        raise Refusal("accepted Stage E implementation path manifest count mismatch")
+    stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_implementation_path_manifest.json")
+    stage_f_authority_paths = (
+        "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+        "stage_f_local_execution_binding_contract.json",
+        "stage_f_local_execution_binding_evidence_schema.json",
+        "stage_f_local_execution_binding_implementation_path_manifest.json",
+        "stage_f_local_execution_binding_predecessor_manifest.json",
+        "stage_f_local_execution_binding_validation_contract.json",
+    )
+    if tuple(stage_f_manifest["authority_paths"]) != stage_f_authority_paths or stage_f_manifest["authority_path_count"] != 6:
+        raise Refusal("Stage F authority path closure mismatch")
+    reachability = stage_f_manifest["prospective_reachability_durability"]
+    reachability_path = "tests/framework/test_validation_reachability.py"
+    if reachability["modified_path"] != reachability_path or reachability["modified_path_count"] != 1:
+        raise Refusal("Stage F reachability path closure mismatch")
+    stage_f_scope = stage_f_manifest["prospective_implementation"]
+    stage_f_modified = tuple(stage_f_scope["modified_paths"])
+    stage_f_added = set(stage_f_scope["new_paths"])
+    if stage_f_modified != (".github/workflows/tests.yml", "scripts/validate_stage_e_harness.py") or stage_f_scope["modified_path_count"] != 2 or len(stage_f_added) != 12 or stage_f_scope["new_path_count"] != 12 or stage_f_scope["total_path_count"] != 14:
+        raise Refusal("Stage F implementation manifest closure mismatch")
+    final_closure = stage_f_manifest["final_descendant_path_closure"]
+    if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["authority_added_path_count"] != 6 or final_closure["reachability_durability_unique_path_count"] != 1 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 70:
+        raise Refusal("Stage F final descendant path arithmetic mismatch")
+    if set(stage_f_modified) - stage_e_expected or stage_f_added & (stage_e_expected | set(stage_f_authority_paths) | {reachability_path}):
+        raise Refusal("Stage F implementation path overlap mismatch")
+    expected = stage_e_expected | set(stage_f_authority_paths) | {reachability_path} | stage_f_added
     actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
-    if actual != expected or len(actual) != 51:
-        raise Refusal(f"Stage E implementation path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+    if actual != expected or len(actual) != 70:
+        raise Refusal(f"Stage F descendant path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
     status_rows: dict[str, str] = {}
     for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
-        fields = row.split("\t")
+        fields = row.split("	")
         if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
-            raise Refusal(f"Stage E implementation has a forbidden Git operation: {row}")
+            raise Refusal(f"Stage F descendant has a forbidden Git operation: {row}")
         status_rows[fields[1]] = fields[0]
-    expected_status = {path: "M" for path in expected_modified} | {path: "A" for path in expected_added}
+    expected_status = ({path: "M" for path in expected_modified} | {path: "A" for path in expected_added} | {path: "A" for path in stage_f_authority_paths} | {reachability_path: "M"} | {path: "A" for path in stage_f_added})
     if status_rows != expected_status:
-        raise Refusal("Stage E implementation add/modify classification mismatch")
+        raise Refusal("Stage F descendant add/modify classification mismatch")
     for relative in expected:
         fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
         if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
-            raise Refusal(f"Stage E implementation mode/object mismatch: {relative}")
+            raise Refusal(f"Stage F descendant mode/object mismatch: {relative}")
     harness_sources = [path for path in scope["new_paths"] if path.startswith("stage_e_harness/") and path.endswith(".py")]
     if len(harness_sources) != 34:
         raise Refusal("Stage E harness source closure mismatch")

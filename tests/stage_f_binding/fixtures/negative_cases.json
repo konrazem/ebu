@@ -1,0 +1,341 @@
+{
+  "schema": "stage_f_binding_negative_cases/v1",
+  "case_count": 67,
+  "cases": [
+    {
+      "case_id": "SF-BIND-N01",
+      "mutation": "wrong accepted commit or tree",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N02",
+      "mutation": "extra modified deleted renamed symlink or mode-changed authority path",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N03",
+      "mutation": "changed predecessor byte object size or hash",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N04",
+      "mutation": "alias used as identity value",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N05",
+      "mutation": "identity value differs from sha256 or canonical digest",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N06",
+      "mutation": "private manifest missing changed noncanonical or inaccessible to auditor",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N07",
+      "mutation": "public record contains username hostname serial MAC absolute path credential or private bytes",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N08",
+      "mutation": "alias collision or alias rebound after seal",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N09",
+      "mutation": "public private policy-preimage digest mismatch",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N10",
+      "mutation": "privacy field inserted into closed campaign_execution_binding/v2",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N11",
+      "mutation": "missing extra duplicate or reordered route",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N12",
+      "mutation": "nested growth mapped as an independent study instead of SD-01 subcampaign",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N13",
+      "mutation": "placeholder future fixture zero or inferred scientific identity",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N14",
+      "mutation": "unresolved scientific or institutional authority promoted to ready or pass",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N15",
+      "mutation": "modified Stage E guard byte or reachable registered route",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N16",
+      "mutation": "authorization without independent PASS or later explicit user receipt",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N17",
+      "mutation": "controller self-issued or unaudited authorization",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N18",
+      "mutation": "nonzero model trajectory runner Gate transform benchmark simulation RNG outcome result figure book release or publication counter",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N19",
+      "mutation": "durability probe outside exact private roots or across volumes",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N20",
+      "mutation": "missing file flush file durability primitive directory target directory fsync or platform-equivalent primitive atomic publication to a fresh versioned final restart reread or hash reconciliation",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N21",
+      "mutation": "corrupt stale or orphan partial accepted or last-good bytes overwritten",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N22",
+      "mutation": "storage arithmetic not exact or current free-space rule fails",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N23",
+      "mutation": "actual private manifest included in Git logs CI or public evidence",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N24",
+      "mutation": "missing AC sleep lid Docker reboot or restart precondition promoted to ready",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N25",
+      "mutation": "readiness or independent disposition replayed against a different bundle campaign-binding order code artifact implementation authority evidence or validator identity",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N26",
+      "mutation": "final Stage E descendant path union omits or adds the authority reachability implementation or overlapping modified paths or differs from 70 unique paths",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N27",
+      "mutation": "storage component usage exceeds its ceiling component sum differs from total remaining envelope arithmetic differs or free bytes are below 350 GiB or the remaining envelope",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N28",
+      "mutation": "embedded record digest omits the wrong field omits more than its one digest field uses noncanonical bytes or an enclosing record identity has a different kind value or digest",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N29",
+      "mutation": "route wrapper campaign or study differs from referenced campaign binding; file binding code artifact authority or host-policy projection mismatches; or a binding identity is relabeled duplicated reused null under SEALED or non-null under UNSEALED_AUTHORITY_GAP",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N30",
+      "mutation": "capacity or power timestamp is future misordered or over 300 seconds old; or capacity is unquiesced nonenumerable path-misordered predecessor-resetting or omits misclassifies follows or accepts an unknown reparse sparse compressed hard-linked overwritten truncated or deleted entry",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N31",
+      "mutation": "locally defined identity uses an arbitrary kind or a named private policy preimage fails its exact schema canonical reserialization or exact-kind digest link",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N32",
+      "mutation": "a regular file or directory has a named NTFS $DATA stream; a regular file lacks or duplicates the default unnamed ::$DATA stream; StreamSize differs from logical bytes; or stream enumeration is omitted incomplete or ends in an unexpected error",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N33",
+      "mutation": "authorization composes packet bundle final PASS readiness independent audit validation host capacity power route campaign binding code artifact implementation authority Stage E evidence validator or user-receipt identities from individually valid but different record chains",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N34",
+      "mutation": "a changed Stage E guard is recorded as preserved or stage_e_guard_preserved false is paired with PASS or NOT_SEALABLE",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N35",
+      "mutation": "selected volume GUID path is absent invented or differs across a private path filesystem facts or snapshot; a Win32 volume query fails uses another argument or raw allocation capacity or free output is changed; allocation or observed-byte formulas fail",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N36",
+      "mutation": "SD-01-GROWTH-v1 wrapper or referenced campaign_id differs from the frozen nested campaign id; or any two route campaign ids are equal swapped or reused",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N37",
+      "mutation": "binding implementation authority-set or sealed-packet preimage has a missing extra duplicate reordered renamed mistyped noncanonical or nonreconstructing field row path identity projection private byte or sensitive disclosure",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N38",
+      "mutation": "implementation preimage names a different authority-set or integrated authority commit; integrated authority commit is not an ancestor of implementation commit; or any of the six authority rows differs between authority-set integrated tree and implementation tree",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N39",
+      "mutation": "validation occurs after consuming pre-audit readiness; audit completes before audited readiness; final PASS readiness predates audit; packet predates final PASS; statement predates packet; authorization predates statement; or timestamp records come from different identity chains",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N40",
+      "mutation": "a raw GetDiskFreeSpaceW output exceeds uint32; NTFS volume-data or FileStandardInfo observation is absent inconsistent or changed; an entry metadata upper bound is omitted; or a regular file large directory index allocation or directory bitmap upper bound is undercharged including substitution of one allocation unit",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N41",
+      "mutation": "bundle authority-set identity differs from the integrated-authority-set identity resolved from its binding implementation or any readiness packet audit or authorization preserves the mixed chain",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N42",
+      "mutation": "FileAttributeTagInfo or FileIdInfo is missing mismatched replaced or has a prohibited bit tag volume serial or changed predecessor file ID; BackupRead omits SACL skips bytes uses BackupSeek fails cleanup admits or hides a refused or unknown stream; retrieval pointers omit reorder overlap gap or use a negative LCN; or metadata extension backup-stream directory-index or bitmap bytes are undercharged",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N43",
+      "mutation": "scientific implementation verifier implementation or Stage E integration identity is generic arbitrary-kind null at readiness self-asserted differently chained or lacks its exact closed preimage complete Git rows route coverage accepted CI artifact binding or byte-identical accepted Stage E authority local authority binding-foundation and execution-guard rows",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N44",
+      "mutation": "a permitted BackupRead stream label hides another raw dwStreamId; DATA SECURITY_DATA or LINK carries any attribute mask other than respectively 0 2 or 0; or bit 1 modified-when-read bit 4 properties-or-reserved bit 8 sparse bit 16 ghosted or any other reserved unknown or disallowed attribute bit is set",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N45",
+      "mutation": "scientific code identity is generic or its closed complete-tree preimage omits adds reorders or changes a Git blob; scientific code commit or tree differs from scientific implementation; or installed artifact kind digest source coordinate build method direct-wheel bytes or sdist-derived equality is absent mismatched or belongs to another implementation",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N46",
+      "mutation": "Stage E evidence identity is generic arbitrary-kind or differs from stage_e_exact_target_evidence_artifact/v1 over the exact raw artifact 9708926559 bytes; its digest differs from the accepted artifact SHA-256; or bundle readiness packet or authorization repeats another evidence identity",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N47",
+      "mutation": "durability receipt omits reorders or changes any frozen action row timestamp non-null input or output hash hash role byte count byte-count role OS result restart process observation or recovery disposition; matching booleans lack a reconstructable trace; role-projected hashes or byte counts do not reconcile; corrupt or orphan fixture equals accepted payload; or a private bundle does not resolve and recompute every receipt",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N48",
+      "mutation": "binding validator is arbitrary stale generic or built from a different binding implementation commit tree source row scientific environment host runtime or build method; its seven source rows do not reproduce the implementation; canonical source-bundle or executable-zipapp bytes count or SHA-256 do not rebuild; or bundle readiness packet or authorization pairs it with another binding implementation",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N49",
+      "mutation": "atomic publication evidence omits or changes MoveFileExW raw flag 8 source or target path identity same-volume target-nonexistence observation no-replace flag call result source-absence target-presence single-creation or zero-overwrite fact; or a copy write overwrite replacement or cross-volume move is labeled atomic",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N50",
+      "mutation": "validator source-bundle artifact omits adds renames nests reorders or changes a closed field schema literal member projection or count; content_base64 uses a nonstandard alphabet omitted or excess padding whitespace line breaks or noncanonical encoding; decoded bytes differ from the Git blob; or rebuilt canonical artifact bytes count or digest differs",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N51",
+      "mutation": "durability restart uses an out-of-range or mismatched PID TID FILETIME executable command invocation or actor fact; launch actor is not orchestrator or same serialized thread as process operations; launch substitutes/omits any CreateProcessW input start completion hash timestamp pointer/count strict canonical base64 bytes or digest; any command STARTUPINFO or PI end differs from base plus count, overflows, overlaps, releases early, changes before entry, hashes auxiliary storage, or PI releases before output hash; PI output is not captured from exact pointer after return or parsed handles PID TID differ, handles equal, or thread close starts before capture or completes after wait start; process handle differs from wait query close input; any uint32/uint64 output end overflows/differs, base64 fails strict decode or canonical re-encode, hash pointer/count bytes digest value differs, storage releases before output hash, FILETIME intervals overlap, start/Win32-return/output-hash/observation-completion/process-close order differs, calls not serialized, or close overlaps query; challenge/ack binding missing changed replayed fabricated",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N52",
+      "mutation": "a durability probe invocation has the wrong phase validator scientific environment host runtime host-runtime-lock acquisition digest bootstrap Git row or bytes executable zipapp artifact private path command schema construction UTF-16LE bytes base64 canonical encoding isolated flag network flag or zero-science counters; its parsed command has any missing extra reordered or changed argument; process executable command-line or invocation digest does not reconstruct; or a private bundle mixes another filesystem policy validator environment or host runtime",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N53",
+      "mutation": "directory_target_identity does not resolve exact normalized parent; directory actor PID or creation FILETIME differs from terminated process for SYNTHETIC_PAYLOAD or orchestrator for RESTART_CHALLENGE or synchronous operations are not serialized by one positive actor thread; observation does not hash/repeat successful action-5 MoveFileExW call timestamp/result; final open parameters/handle or VirtualAlloc parameters address size capacity zero/lifetime differ; GetFinalPathNameByHandleW receives substituted handle buffer capacity flag has invalid length or wrong final; PathCch receives substituted buffer/capacity or fails exact parent; CloseHandle or VirtualFree substitutes releases early late unsuccessfully or not once; or buffer-release UTC differs from observation UTC",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N54",
+      "mutation": "the Windows host-validation runtime is absent incomplete unordered nonreconstructing fallback-capable or substituted for the immutable linux/amd64 scientific environment; python.exe digest differs from its complete runtime inventory; or site validator-zipapp bytecode cache network or project import is admitted",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N55",
+      "mutation": "the executable validator zipapp has a shebang compression wrong local central or EOCD header timestamp create or extract version create or extract system reserved byte version-made-by version-needed volume disk number mode flags descriptor ZIP64 structure prefix extra comment member name order count source projection CRC offset size byte or digest; contains pyc or another member; or does not rebuild byte-identically from the exact source bundle",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N56",
+      "mutation": "any orchestrator terminated or resumed artifact-lock observation is missing changed noncanonical or mismatched to its process invocation validator runtime artifact path count digest normalized handle path volume file id standard info attributes or held-handle bytes; any path file-id standard-info attribute read or close API input does not equal the exact artifact handle or close does not succeed exactly once with handle_closed_utc equal to lock_released_utc; the zipapp is outside the exact retained-evidence role is not fresh write-once or is not retained; write or delete sharing is allowed; or the lock begins after zipapp read or ends before zipapp return",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N57",
+      "mutation": "ORCHESTRATOR PRE_RESTART or POST_RESTART invocation is missing/mislabeled; POST_RESTART changes challenge or acknowledgement arguments; acknowledgement target is not absent fresh CREATE_NEW write-through written flushed closed once by matching resumed process; one actor thread does not serialize create write flush close; created handle differs from WriteFile FlushFileBuffers CloseHandle input; write-buffer end overflows/differs, call-time base64 fails strict canonical re-encoding, bytes hash pointer/count digest lifetime/immutability differs; uint32 output end input/output base64 canonical image same-base hash decoded count or lifetime-through-hash differs; intervals overlap; null OVERLAPPED result success or create/hash/write/flush/close ordering differs",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N58",
+      "mutation": "locked_zipapp_bootstrap.py bytes differ from the exact Git row source bundle strict base64 or Python -c argument; bootstrap fails to open the exact zipapp with the frozen deny-write-delete CreateFileW parameters read and hash it from the held handle before import or executes any other artifact",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N59",
+      "mutation": "the host-runtime-lock acquisition is missing noncanonical postlaunch incomplete reordered or differs from the exact runtime inventory holder process root path count bytes normalized handle path file id standard info attributes or acquisition digest; a runtime row lacks an exact numeric handle, permits write or delete sharing, supplies any path file-id standard-info attribute or ReadFile call a different handle, differs from expected bytes, or releases before all three exact validator processes return",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N60",
+      "mutation": "a host-runtime or validator-artifact FileIdInfo VolumeSerialNumber is negative above uint64 truncated masked rounded encoded as uint32 or otherwise differs from the complete ULONGLONG returned by the held-handle query",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N61",
+      "mutation": "the host-runtime holder PID is outside positive uint32 or creation FILETIME is outside nonzero uint64, release holder PID or creation FILETIME differs from acquisition, or release starts before every exact validator process returns zero; it omits changes reorders substitutes or fails to reread any same acquisition handle; any path file-id standard-info attribute rewind ReadFile or CloseHandle input differs from the exact acquisition handle, rewind is not successful offset zero FILE_BEGIN, or path volume file id standard info attributes byte count or digest changes; a handle closes early more than once or unsuccessfully; or release completes after the durability receipt",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N62",
+      "mutation": "the host runtime has an omitted added reordered changed or reparse stable directory row or a dynamic directory observation uses a substituted handle pointer descriptor or close; any watch-row path file-id attribute ReadDirectoryChangesW GetOverlappedResult CancelIoEx or CloseHandle input differs from its exact watched-directory handle; ordered watch count or roles do not equal direct protected ordinals 2 through anchor count followed by runtime-root subtree or exceed 64; a watch starts before anchor completion is not individually proven pending before the common check or is issued or first checked after the epoch or inventory begins; the common WaitForMultipleObjects count ordered exact event array base or values bWaitAll timeout result UTC or equality to protection-epoch start differs; protection-epoch end does not equal the latest validator-process return; any watched path API share flags subtree filter exact unnamed event OVERLAPPED completion result lifetime or release differs; or a restored protected non-volume-root anchor or runtime-tree mutation during the closed protection epoch passes",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N63",
+      "mutation": "the deterministic zipapp leaves create-version extract-version extract-system reserved version-made-by version-needed volume disk-start EOCD disk fields descriptor ZIP64 prefix build stream offset or compression level unconstrained or permits two byte-distinct archives from identical registered inputs",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N64",
+      "mutation": "the normalized volume-GUID path-anchor chain is missing added reordered gapped changed or reparse; first or last is not selected-volume or runtime root; first parent ordinal is nonnull or any later parent ordinal differs from ordinal minus one; a command uses a DOS-device or unanchored path; an anchor DuplicateHandle input option timestamp distinct continuity-guard value retention KernelBase.dll CompareObjectHandles input or success differs; anchor open guard-duplicate and query-start UTCs are misordered; any path file-id attribute or security query input is not the exact anchor handle; acquisition protection-epoch and release anchor or continuity-guard handle differs or a persistent path volume identity attribute reparse or security fact changes; a protected non-volume-root in-epoch self change passes; controller-history trust or independent-trace nonclaim is hidden or an unrecorded internal mutation is permitted; selected-volume-root transient-self-metadata or local-principal-confidentiality nonclaim is hidden broadened or used to admit a descendant root-entry path or byte substitution; share mode is not exact raw 1 with FILE_SHARE_WRITE and FILE_SHARE_DELETE bits absent; any anchor or continuity guard releases before all watches or closes other than once through its exact numeric handle; or anchor lock_released_utc is not the later successful close UTC",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N65",
+      "mutation": "any asynchronous watch exact directory-handle value buffer base address 32-byte x64 OVERLAPPED address or event-handle value is shared or equal across rows freed moved reused changed or unbound before cancellation completion; ReadDirectoryChangesW GetOverlappedResult CancelIoEx CloseHandle buffer hash or VirtualFree receives a substituted null stale or mismatching recorded handle address or byte count, or ReadDirectoryChangesW lpBytesReturned is not exactly NULL; buffer or OVERLAPPED allocation type protection alignment size zero initialization exclusivity or release lifecycle differs; CreateEventW security attributes or name is nonnull manual reset or initial state differs or OVERLAPPED hEvent does not equal the exact event; acquisition and release values differ; cancellation begins before final remeasurements; pending output is read or hashed before cancellation completion; zero hash is absent or after free; or any close or release precedes cancellation completion",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N66",
+      "mutation": "challenge or acknowledgement write lacks create-start/create-complete input-hash write-start/write-complete output-hash flush-start/flush-complete close-start/close-complete UTC or order/serialization; actor PID/thread differs; created handle differs from WriteFile FlushFileBuffers or one CloseHandle input; interval formula nonoverflow disjointness lifetime-through-output-hash strict canonical base64 call-time bytes same-base hash zero image decoded count null OVERLAPPED or success differs; handshake_completed_utc differs from acknowledgement close completion or follows action 8; or claimed acknowledgement precedes action 8 while durable flush or close follows it",
+      "disposition": "REFUSE"
+    },
+    {
+      "case_id": "SF-BIND-N67",
+      "mutation": "any GetSecurityInfo lifecycle has a null invalid substituted or unbound query handle or returned descriptor address; IsValidSecurityDescriptor GetSecurityDescriptorControl GetSecurityDescriptorLength hashing or LocalFree receives null another pointer or any address other than the exact returned descriptor; descriptor validity control self-relative revision returned length hash input byte count digest or timestamp order differs; hash input byte count does not equal the returned length; LocalFree receives the right pointer more or less than once; or a freed descriptor is read hashed or freed again",
+      "disposition": "REFUSE"
+    }
+  ]
+}
