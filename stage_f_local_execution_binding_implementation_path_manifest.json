@@ -28,23 +28,25 @@
       "stage_f_binding/canonical.py",
       "stage_f_binding/binding.py",
       "stage_f_binding/durability.py",
+      "stage_f_binding/locked_zipapp_bootstrap.py",
       "tests/stage_f_binding/__init__.py",
       "tests/stage_f_binding/fixtures/negative_cases.json",
       "tests/stage_f_binding/fixtures/synthetic_private_host_manifest.json",
       "tests/stage_f_binding/test_binding_privacy_and_authorization.py",
       "tests/stage_f_binding/test_durability_and_no_science.py"
     ],
-    "new_path_count": 11,
-    "total_path_count": 13
+    "new_path_count": 12,
+    "total_path_count": 14
   },
   "path_rules": {
     ".github/workflows/tests.yml": "append one outcome-blind Stage F binding-foundation validation job; preserve every accepted job byte and failure behavior",
-    "scripts/validate_stage_e_harness.py": "preserve every accepted Stage E lane and zero-science rule while admitting only the exact 69-path descendant union: accepted 51 Stage E paths plus six authority additions plus one reachability-durability path plus eleven new Stage F paths; the two later modified paths already belong to the 51",
-    "scripts/build_stage_f_local_binding.py": "build deterministic outcome-blind binding validator artifact and synthetic fixtures only; never create an active authorization",
-    "scripts/validate_stage_f_local_binding.py": "strict static synthetic and optional private-local binding validation only; no scientific imports or execution",
+    "scripts/validate_stage_e_harness.py": "preserve every accepted Stage E lane and zero-science rule while admitting only the exact 70-path descendant union: accepted 51 Stage E paths plus six authority additions plus one reachability-durability path plus twelve new Stage F paths; the two later modified paths already belong to the 51",
+    "scripts/build_stage_f_local_binding.py": "build the deterministic outcome-blind validator source bundle and five-member ZIP_STORED executable zipapp plus synthetic fixtures only; never create an active authorization",
+    "scripts/validate_stage_f_local_binding.py": "strict static synthetic and optional private-local binding validation only; executable solely as the exact locked validator zipapp __main__.py; no scientific imports or execution",
     "stage_f_binding": "canonical digest private/public binding readiness authorization durability and refusal mechanics only; standard library only",
     "stage_f_binding/binding.py": "validate exact-kind identities closed implementation authority-set and sealed-packet preimages inherited campaign_execution_binding/v2 projections including the frozen nested growth campaign id exact distinct fifteen-route portfolio order privacy links timestamped selected-volume-bound storage and power snapshots truthful Stage E guard-failure receipts readiness independent audit and the complete inactive authorization record chain without constructing missing scientific identities",
     "stage_f_binding/durability.py": "perform the closed read-only NTFS inventory including exact selected-volume Win32 identity geometry capacity and free-space observations complete FindFirstStreamW FindNextStreamW default-stream-only enforcement and synthetic file flush directory fsync or exact platform-equivalent write-through atomic-publication-to-versioned-final restart hash corruption orphan-partial and last-good recovery probes only",
+    "stage_f_binding/locked_zipapp_bootstrap.py": "standalone exact UTF-8 source passed only through Python -c; before importing validator code it opens the exact validator zipapp with deny-write-and-delete sharing hashes the held handle verifies the bound artifact and retains the handle through process exit",
     "tests/stage_f_binding": "synthetic non-evidence positive and negative controls only"
   },
   "protected_paths": [
@@ -70,9 +72,9 @@
     "accepted_stage_e_path_count": 51,
     "authority_added_path_count": 6,
     "reachability_durability_unique_path_count": 1,
-    "stage_f_new_unique_path_count": 11,
+    "stage_f_new_unique_path_count": 12,
     "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
-    "final_unique_path_count": 69,
+    "final_unique_path_count": 70,
     "missing_extra_or_duplicate_path_disposition": "REFUSE"
   },
   "independent_implementation_audit_required": true,

@@ -89,6 +89,12 @@
         {"type": "object", "properties": {"kind": {"const": "stage_f_execution_environment_policy/v1"}}}
       ]
     },
+    "host_validation_runtime_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_host_validation_runtime/v1"}}}
+      ]
+    },
     "installed_dependency_identity": {
       "allOf": [
         {"$ref": "#/$defs/identity"},
@@ -391,10 +397,10 @@
         "implementation_commit": {"$ref": "#/$defs/git_commit"},
         "implementation_tree": {"$ref": "#/$defs/git_commit"},
         "ordered_implementation_file_rows": {
-          "type": "array", "minItems": 13, "maxItems": 13,
+          "type": "array", "minItems": 14, "maxItems": 14,
           "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
         },
-        "implementation_file_count": {"const": 13}
+        "implementation_file_count": {"const": 14}
       }
     },
     "binding_validator_preimage": {
@@ -403,8 +409,10 @@
       "required": [
         "schema", "binding_implementation_identity", "implementation_commit",
         "implementation_tree", "execution_environment_policy_identity",
+        "host_validation_runtime_identity",
         "ordered_validator_source_file_rows", "validator_source_file_count",
-        "artifact_build_method", "built_artifact_byte_count", "built_artifact_sha256"
+        "artifact_build_method", "built_artifact_byte_count", "built_artifact_sha256",
+        "executable_artifact_build_method", "executable_zipapp_manifest"
       ],
       "properties": {
         "schema": {"const": "stage_f_binding_validator/v1"},
@@ -412,14 +420,17 @@
         "implementation_commit": {"$ref": "#/$defs/git_commit"},
         "implementation_tree": {"$ref": "#/$defs/git_commit"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
         "ordered_validator_source_file_rows": {
-          "type": "array", "minItems": 6, "maxItems": 6,
+          "type": "array", "minItems": 7, "maxItems": 7,
           "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
         },
-        "validator_source_file_count": {"const": 6},
+        "validator_source_file_count": {"const": 7},
         "artifact_build_method": {"const": "CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1"},
         "built_artifact_byte_count": {"$ref": "#/$defs/positive_integer"},
-        "built_artifact_sha256": {"$ref": "#/$defs/sha256"}
+        "built_artifact_sha256": {"$ref": "#/$defs/sha256"},
+        "executable_artifact_build_method": {"const": "DETERMINISTIC_LOCKED_VALIDATOR_ZIPAPP_V1"},
+        "executable_zipapp_manifest": {"$ref": "#/$defs/validator_executable_zipapp_manifest"}
       }
     },
     "validator_source_bundle_member": {
@@ -444,7 +455,7 @@
       "required": [
         "schema", "binding_implementation_identity", "implementation_commit",
         "implementation_tree", "execution_environment_policy_identity",
-        "ordered_members", "member_count"
+        "host_validation_runtime_identity", "ordered_members", "member_count"
       ],
       "properties": {
         "schema": {"const": "stage_f_binding_validator_source_bundle/v1"},
@@ -452,11 +463,77 @@
         "implementation_commit": {"$ref": "#/$defs/git_commit"},
         "implementation_tree": {"$ref": "#/$defs/git_commit"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
         "ordered_members": {
-          "type": "array", "minItems": 6, "maxItems": 6,
-          "items": {"$ref": "#/$defs/validator_source_bundle_member"}, "uniqueItems": true
+          "type": "array", "minItems": 7, "maxItems": 7,
+          "prefixItems": [
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"scripts/build_stage_f_local_binding.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"scripts/validate_stage_f_local_binding.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"stage_f_binding/__init__.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"stage_f_binding/canonical.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"stage_f_binding/binding.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"stage_f_binding/durability.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_source_bundle_member"},{"properties":{"path":{"const":"stage_f_binding/locked_zipapp_bootstrap.py"}}}]}
+          ],
+          "items": false, "uniqueItems": true
         },
-        "member_count": {"const": 6}
+        "member_count": {"const": 7}
+      }
+    },
+    "validator_zipapp_member": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "archive_path", "source_path", "mode", "git_object", "byte_count", "raw_sha256"
+      ],
+      "properties": {
+        "archive_path": {"$ref": "#/$defs/nonempty_string"},
+        "source_path": {"$ref": "#/$defs/nonempty_string"},
+        "mode": {"const": "100644"},
+        "git_object": {"$ref": "#/$defs/git_commit"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "validator_executable_zipapp_manifest": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "source_bundle_sha256", "host_validation_runtime_identity",
+        "archive_format", "compression", "member_timestamp", "create_system",
+        "external_file_mode", "general_purpose_flag_bits", "internal_attributes",
+        "allow_zip64", "strict_timestamps", "archive_comment_base64",
+        "member_comment_base64", "member_extra_base64", "ordered_members", "member_count",
+        "artifact_byte_count", "artifact_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_binding_validator_executable_zipapp/v1"},
+        "source_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "archive_format": {"const": "PKZIP_APP_NO_SHEBANG"},
+        "compression": {"const": "ZIP_STORED"},
+        "member_timestamp": {"const": "1980-01-01T00:00:00_LOCAL_DOS"},
+        "create_system": {"const": 3},
+        "external_file_mode": {"const": "100644_SHIFT_LEFT_16"},
+        "general_purpose_flag_bits": {"const": 0},
+        "internal_attributes": {"const": 0},
+        "allow_zip64": {"const": false},
+        "strict_timestamps": {"const": true},
+        "archive_comment_base64": {"const": ""},
+        "member_comment_base64": {"const": ""},
+        "member_extra_base64": {"const": ""},
+        "ordered_members": {
+          "type": "array", "minItems": 5, "maxItems": 5,
+          "prefixItems": [
+            {"allOf":[{"$ref":"#/$defs/validator_zipapp_member"},{"properties":{"archive_path":{"const":"__main__.py"},"source_path":{"const":"scripts/validate_stage_f_local_binding.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_zipapp_member"},{"properties":{"archive_path":{"const":"stage_f_binding/__init__.py"},"source_path":{"const":"stage_f_binding/__init__.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_zipapp_member"},{"properties":{"archive_path":{"const":"stage_f_binding/canonical.py"},"source_path":{"const":"stage_f_binding/canonical.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_zipapp_member"},{"properties":{"archive_path":{"const":"stage_f_binding/binding.py"},"source_path":{"const":"stage_f_binding/binding.py"}}}]},
+            {"allOf":[{"$ref":"#/$defs/validator_zipapp_member"},{"properties":{"archive_path":{"const":"stage_f_binding/durability.py"},"source_path":{"const":"stage_f_binding/durability.py"}}}]}
+          ],
+          "items": false, "uniqueItems": true
+        },
+        "member_count": {"const": 5},
+        "artifact_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "artifact_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "route_authority_projection": {
@@ -809,6 +886,43 @@
         },
         "host_python_fallback_permitted": {"const": false},
         "network_fallback_permitted": {"const": false}
+      }
+    },
+    "host_validation_runtime_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "provider_bundle_version", "implementation", "python_version",
+        "architecture", "runtime_root_path_identity", "executable_relative_path",
+        "python_executable_sha256", "sqlite_version", "ordered_runtime_file_rows",
+        "runtime_file_count", "inventory_complete", "standard_library_only",
+        "isolated_mode_required", "site_initialization_permitted",
+        "validator_zipapp_bytecode_cache_permitted", "network_access_permitted",
+        "project_package_import_permitted"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_host_validation_runtime/v1"},
+        "provider_bundle_version": {"$ref": "#/$defs/nonempty_string"},
+        "implementation": {"const": "CPython"},
+        "python_version": {"$ref": "#/$defs/nonempty_string"},
+        "architecture": {"enum": ["AMD64", "ARM64"]},
+        "runtime_root_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "executable_relative_path": {"const": "python.exe"},
+        "python_executable_sha256": {"$ref": "#/$defs/sha256"},
+        "sqlite_version": {"$ref": "#/$defs/nonempty_string"},
+        "ordered_runtime_file_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/installed_distribution_file_row"},
+          "uniqueItems": true
+        },
+        "runtime_file_count": {"$ref": "#/$defs/positive_integer"},
+        "inventory_complete": {"const": true},
+        "standard_library_only": {"const": true},
+        "isolated_mode_required": {"const": true},
+        "site_initialization_permitted": {"const": false},
+        "validator_zipapp_bytecode_cache_permitted": {"const": false},
+        "network_access_permitted": {"const": false},
+        "project_package_import_permitted": {"const": false}
       }
     },
     "parallelization_boundary_policy_preimage": {
@@ -1493,6 +1607,8 @@
         "repository",
         "host",
         "runtime",
+        "host_validation_runtime_preimage",
+        "host_validation_runtime_identity",
         "filesystem",
         "policy_preimages",
         "durability_bundle_identity",
@@ -1507,6 +1623,8 @@
         "repository": {"$ref": "#/$defs/repository_coordinate"},
         "host": {"$ref": "#/$defs/private_host_facts"},
         "runtime": {"$ref": "#/$defs/runtime_facts"},
+        "host_validation_runtime_preimage": {"$ref": "#/$defs/host_validation_runtime_preimage"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
         "filesystem": {"$ref": "#/$defs/filesystem_facts"},
         "policy_preimages": {"$ref": "#/$defs/policy_preimages"},
         "durability_bundle_identity": {"$ref": "#/$defs/private_durability_bundle_identity"},
@@ -1523,6 +1641,7 @@
         "public_host_alias",
         "private_host_manifest_identity",
         "environment_identity",
+        "host_validation_runtime_identity",
         "parallelization_boundary_identity",
         "worker_allocation_policy_identity",
         "storage_location_identity",
@@ -1545,6 +1664,7 @@
         "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
         "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
         "environment_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
         "parallelization_boundary_identity": {"$ref": "#/$defs/parallelization_policy_identity"},
         "worker_allocation_policy_identity": {"$ref": "#/$defs/worker_policy_identity"},
         "storage_location_identity": {"$ref": "#/$defs/storage_policy_identity"},
@@ -1923,7 +2043,7 @@
         "action": {"enum": [
           "CREATE_FRESH_TEMPORARY", "WRITE_SYNTHETIC_PAYLOAD", "FLUSH_FILE_BUFFERS",
           "CLOSE_TEMPORARY_HANDLE", "ATOMIC_PUBLISH_FRESH_VERSIONED_FINAL",
-          "DURABILITY_SYNC_TARGET_DIRECTORY", "TERMINATE_PROBE_PROCESS",
+          "CONFIRM_WRITE_THROUGH_TARGET_PARENT_METADATA_DURABILITY", "TERMINATE_PROBE_PROCESS",
           "START_FRESH_PROBE_PROCESS", "REOPEN_FINAL_READ_ONLY",
           "REREAD_COMPLETE_FINAL", "RECOMPUTE_FINAL_SHA256",
           "PRESENT_CORRUPT_FINAL_FIXTURE", "REFUSE_CORRUPT_FINAL",
@@ -1963,7 +2083,7 @@
         {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":3},"action":{"const":"FLUSH_FILE_BUFFERS"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
         {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":4},"action":{"const":"CLOSE_TEMPORARY_HANDLE"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
         {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":5},"action":{"const":"ATOMIC_PUBLISH_FRESH_VERSIONED_FINAL"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":6},"action":{"const":"DURABILITY_SYNC_TARGET_DIRECTORY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":6},"action":{"const":"CONFIRM_WRITE_THROUGH_TARGET_PARENT_METADATA_DURABILITY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"},"os_result_code":{"const":0}}}]},
         {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":7},"action":{"const":"TERMINATE_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
         {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":8},"action":{"const":"START_FRESH_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
         {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":9},"action":{"const":"REOPEN_FINAL_READ_ONLY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
@@ -1982,40 +2102,148 @@
       "type": "object", "additionalProperties": false,
       "required": [
         "schema", "phase", "binding_validator_identity",
-        "execution_environment_policy_identity", "entrypoint_path",
-        "entrypoint_git_row", "executable_path_identity",
-        "entrypoint_absolute_path_identity", "invocation_preimage_path_identity",
-        "command_schema", "command_line_construction", "command_line_encoding", "command_line_base64",
+        "execution_environment_policy_identity", "host_validation_runtime_identity",
+        "bootstrap_source_path", "bootstrap_git_row", "bootstrap_source_byte_count",
+        "bootstrap_source_utf8_base64",
+        "executable_path_identity", "validator_zipapp_path_identity",
+        "validator_zipapp_byte_count", "validator_zipapp_sha256",
+        "invocation_preimage_path_identity", "restart_challenge_path_identity",
+        "restart_challenge_sha256", "acknowledgement_path_identity",
+        "command_schema", "command_line_construction", "command_line_encoding",
+        "command_line_base64", "command_line_utf16_code_unit_count", "entrypoint_mode",
         "isolated_mode", "network_access_permitted", "scientific_counters"
       ],
       "properties": {
         "schema": {"const": "stage_f_durability_probe_invocation/v1"},
-        "phase": {"enum": ["PRE_RESTART", "POST_RESTART"]},
+        "phase": {"enum": ["ORCHESTRATOR", "PRE_RESTART", "POST_RESTART"]},
         "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
-        "entrypoint_path": {"const": "scripts/validate_stage_f_local_binding.py"},
-        "entrypoint_git_row": {"$ref": "#/$defs/git_file_row"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "bootstrap_source_path": {"const": "stage_f_binding/locked_zipapp_bootstrap.py"},
+        "bootstrap_git_row": {"$ref": "#/$defs/git_file_row"},
+        "bootstrap_source_byte_count": {"type": "integer", "minimum": 1, "maximum": 8192},
+        "bootstrap_source_utf8_base64": {
+          "type": "string", "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
         "executable_path_identity": {"$ref": "#/$defs/private_path_identity"},
-        "entrypoint_absolute_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "validator_zipapp_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "validator_zipapp_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "validator_zipapp_sha256": {"$ref": "#/$defs/sha256"},
         "invocation_preimage_path_identity": {"$ref": "#/$defs/private_path_identity"},
-        "command_schema": {"const": "PYTHON_ISOLATED_STAGE_F_BINDING_VALIDATOR_DURABILITY_PROBE_V1"},
-        "command_line_construction": {"const": "CPYTHON_3_14_4_SUBPROCESS_LIST2CMDLINE"},
+        "restart_challenge_path_identity": {
+          "oneOf": [{"$ref": "#/$defs/private_path_identity"}, {"type": "null"}]
+        },
+        "restart_challenge_sha256": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "acknowledgement_path_identity": {
+          "oneOf": [{"$ref": "#/$defs/private_path_identity"}, {"type": "null"}]
+        },
+        "command_schema": {"enum": [
+          "PYTHON_LOCKED_ZIPAPP_STAGE_F_BINDING_VALIDATOR_ORCHESTRATOR_V1",
+          "PYTHON_LOCKED_ZIPAPP_STAGE_F_BINDING_VALIDATOR_PRE_RESTART_V1",
+          "PYTHON_LOCKED_ZIPAPP_STAGE_F_BINDING_VALIDATOR_POST_RESTART_V1"
+        ]},
+        "command_line_construction": {"const": "BOUND_HOST_CPYTHON_SUBPROCESS_LIST2CMDLINE"},
         "command_line_encoding": {"const": "UTF-16LE_WITHOUT_TERMINAL_NUL"},
         "command_line_base64": {
           "type": "string",
           "minLength": 4,
           "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
         },
+        "command_line_utf16_code_unit_count": {"type": "integer", "minimum": 1, "maximum": 32766},
+        "entrypoint_mode": {"const": "EXACT_GIT_BOOTSTRAP_C_OPTION_LOCKED_DETERMINISTIC_ZIPAPP"},
         "isolated_mode": {"const": true},
         "network_access_permitted": {"const": false},
         "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      },
+      "allOf": [
+        {"if":{"properties":{"phase":{"const":"ORCHESTRATOR"}}},"then":{"properties":{
+          "command_schema":{"const":"PYTHON_LOCKED_ZIPAPP_STAGE_F_BINDING_VALIDATOR_ORCHESTRATOR_V1"},
+          "restart_challenge_path_identity":{"type":"null"},
+          "restart_challenge_sha256":{"type":"null"},
+          "acknowledgement_path_identity":{"type":"null"}
+        }}},
+        {"if":{"properties":{"phase":{"const":"PRE_RESTART"}}},"then":{"properties":{
+          "command_schema":{"const":"PYTHON_LOCKED_ZIPAPP_STAGE_F_BINDING_VALIDATOR_PRE_RESTART_V1"},
+          "restart_challenge_path_identity":{"type":"null"},
+          "restart_challenge_sha256":{"type":"null"},
+          "acknowledgement_path_identity":{"type":"null"}
+        }}},
+        {"if":{"properties":{"phase":{"const":"POST_RESTART"}}},"then":{"properties":{
+          "command_schema":{"const":"PYTHON_LOCKED_ZIPAPP_STAGE_F_BINDING_VALIDATOR_POST_RESTART_V1"},
+          "restart_challenge_path_identity":{"$ref":"#/$defs/private_path_identity"},
+          "restart_challenge_sha256":{"$ref":"#/$defs/sha256"},
+          "acknowledgement_path_identity":{"$ref":"#/$defs/private_path_identity"}
+        }}}
+      ]
+    },
+    "validator_artifact_lock_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "actor_process_role", "actor_process_id",
+        "actor_process_creation_filetime_uint64", "binding_validator_identity",
+        "host_validation_runtime_identity", "invocation_sha256",
+        "artifact_path_identity", "expected_byte_count", "expected_sha256",
+        "open_api", "desired_access", "share_mode", "security_attributes",
+        "creation_disposition", "flags_and_attributes", "handle_valid",
+        "resolved_path_api", "resolved_path_identity", "volume_serial_number",
+        "file_id_128", "number_of_links", "delete_pending", "directory",
+        "raw_file_attributes", "reparse_tag", "read_from_held_handle",
+        "observed_byte_count", "observed_sha256", "lock_acquired_utc",
+        "validator_entrypoint_loaded_utc", "lock_released_utc",
+        "write_share_permitted", "delete_share_permitted",
+        "lock_held_from_before_zipapp_read_until_after_zipapp_return",
+        "status", "lock_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_validator_artifact_lock_observation/v1"},
+        "actor_process_role": {"enum": ["ORCHESTRATOR_PROCESS", "TERMINATED_PROBE_PROCESS", "RESUMED_PROBE_PROCESS"]},
+        "actor_process_id": {"$ref": "#/$defs/positive_integer"},
+        "actor_process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "invocation_sha256": {"$ref": "#/$defs/sha256"},
+        "artifact_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "expected_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "expected_sha256": {"$ref": "#/$defs/sha256"},
+        "open_api": {"const": "CreateFileW"},
+        "desired_access": {"const": 2147483648},
+        "share_mode": {"const": 1},
+        "security_attributes": {"const": "NULL"},
+        "creation_disposition": {"const": 3},
+        "flags_and_attributes": {"const": 2097152},
+        "handle_valid": {"const": true},
+        "resolved_path_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "resolved_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "volume_serial_number": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "number_of_links": {"const": 1},
+        "delete_pending": {"const": false},
+        "directory": {"const": false},
+        "raw_file_attributes": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "reparse_tag": {"const": 0},
+        "read_from_held_handle": {"const": true},
+        "observed_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "observed_sha256": {"$ref": "#/$defs/sha256"},
+        "lock_acquired_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "validator_entrypoint_loaded_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "lock_released_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "write_share_permitted": {"const": false},
+        "delete_share_permitted": {"const": false},
+        "lock_held_from_before_zipapp_read_until_after_zipapp_return": {"const": true},
+        "status": {"const": "PASS"},
+        "lock_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "durability_process_instance": {
       "type": "object", "additionalProperties": false,
       "required": [
         "process_id", "creation_filetime_uint64", "executable_path_identity",
-        "executable_sha256", "command_line_sha256", "invocation_sha256"
+        "executable_sha256", "command_line_sha256", "invocation_sha256",
+        "self_command_line_observation_api",
+        "locked_bootstrap_verified_invocation"
       ],
       "properties": {
         "process_id": {"$ref": "#/$defs/positive_integer"},
@@ -2023,7 +2251,9 @@
         "executable_path_identity": {"$ref": "#/$defs/private_path_identity"},
         "executable_sha256": {"$ref": "#/$defs/sha256"},
         "command_line_sha256": {"$ref": "#/$defs/sha256"},
-        "invocation_sha256": {"$ref": "#/$defs/sha256"}
+        "invocation_sha256": {"$ref": "#/$defs/sha256"},
+        "self_command_line_observation_api": {"const": "GetCommandLineW"},
+        "locked_bootstrap_verified_invocation": {"const": true}
       }
     },
     "durability_restart_challenge_preimage": {
@@ -2053,6 +2283,63 @@
         "acknowledged_utc": {"$ref": "#/$defs/utc_timestamp"}
       }
     },
+    "durability_control_file_write_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "content_role", "actor_process_id", "actor_process_creation_filetime_uint64",
+        "target_path_identity", "target_nonexistence_observation",
+        "create_api", "desired_access", "share_mode", "security_attributes",
+        "creation_disposition", "flags_and_attributes", "handle_valid",
+        "write_api", "write_returned_nonzero", "written_byte_count",
+        "written_sha256", "flush_api", "flush_returned_nonzero",
+        "close_api", "close_returned_nonzero", "target_created_once"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_control_file_write/v1"},
+        "content_role": {"enum": ["RESTART_CHALLENGE_TEMPORARY", "RESTART_ACKNOWLEDGEMENT_FINAL"]},
+        "actor_process_id": {"$ref": "#/$defs/positive_integer"},
+        "actor_process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "target_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "target_nonexistence_observation": {"const": "GetFileAttributesW_INVALID_FILE_ATTRIBUTES_ERROR_FILE_NOT_FOUND"},
+        "create_api": {"const": "CreateFileW"},
+        "desired_access": {"const": 1073741824},
+        "share_mode": {"const": 0},
+        "security_attributes": {"const": "NULL"},
+        "creation_disposition": {"const": 1},
+        "flags_and_attributes": {"const": 2147483648},
+        "handle_valid": {"const": true},
+        "write_api": {"const": "WriteFile"},
+        "write_returned_nonzero": {"const": true},
+        "written_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "written_sha256": {"$ref": "#/$defs/sha256"},
+        "flush_api": {"const": "FlushFileBuffers"},
+        "flush_returned_nonzero": {"const": true},
+        "close_api": {"const": "CloseHandle"},
+        "close_returned_nonzero": {"const": true},
+        "target_created_once": {"const": true}
+      }
+    },
+    "durability_challenge_publication_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "actor_process_id", "actor_process_creation_filetime_uint64",
+        "temporary_write_observation", "atomic_publication_observation",
+        "directory_durability_observation", "published_path_identity",
+        "published_byte_count", "published_sha256", "completed_before_launch"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_challenge_publication/v1"},
+        "actor_process_id": {"$ref": "#/$defs/positive_integer"},
+        "actor_process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "temporary_write_observation": {"$ref": "#/$defs/durability_control_file_write_observation"},
+        "atomic_publication_observation": {"$ref": "#/$defs/atomic_publication_observation"},
+        "directory_durability_observation": {"$ref": "#/$defs/directory_durability_observation"},
+        "published_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "published_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "published_sha256": {"$ref": "#/$defs/sha256"},
+        "completed_before_launch": {"const": true}
+      }
+    },
     "durability_restart_observation": {
       "type": "object", "additionalProperties": false,
       "required": [
@@ -2061,8 +2348,9 @@
         "inherit_handles", "create_process_returned_nonzero",
         "terminated_wait_result", "terminated_process_exit_code",
         "challenge_path_identity", "challenge_preimage", "challenge_sha256",
-        "challenge_written_file_flushed_and_directory_durable_before_launch",
+        "challenge_publication_observation",
         "acknowledgement_path_identity", "acknowledgement_preimage", "acknowledgement_sha256",
+        "acknowledgement_write_observation",
         "resumed_process_acknowledged_exact_challenge",
         "launch_utc", "handshake_completed_utc", "restart_utc"
       ],
@@ -2070,7 +2358,7 @@
         "orchestrator_process": {"$ref": "#/$defs/durability_process_instance"},
         "terminated_process": {"$ref": "#/$defs/durability_process_instance"},
         "resumed_process": {"$ref": "#/$defs/durability_process_instance"},
-        "process_identity_api": {"const": "GetProcessId_GetProcessTimes_QueryFullProcessImageNameW_HASHED_COMMAND_AND_INVOCATION"},
+        "process_identity_api": {"const": "GetProcessId_GetProcessTimes_QueryFullProcessImageNameW_GetCommandLineW_LOCKED_BOOTSTRAP_VERIFIED_INVOCATION"},
         "launch_api": {"const": "CreateProcessW"},
         "raw_creation_flags": {"const": 0},
         "inherit_handles": {"const": false},
@@ -2080,10 +2368,11 @@
         "challenge_path_identity": {"$ref": "#/$defs/private_path_identity"},
         "challenge_preimage": {"$ref": "#/$defs/durability_restart_challenge_preimage"},
         "challenge_sha256": {"$ref": "#/$defs/sha256"},
-        "challenge_written_file_flushed_and_directory_durable_before_launch": {"const": true},
+        "challenge_publication_observation": {"$ref": "#/$defs/durability_challenge_publication_observation"},
         "acknowledgement_path_identity": {"$ref": "#/$defs/private_path_identity"},
         "acknowledgement_preimage": {"$ref": "#/$defs/durability_restart_acknowledgement_preimage"},
         "acknowledgement_sha256": {"$ref": "#/$defs/sha256"},
+        "acknowledgement_write_observation": {"$ref": "#/$defs/durability_control_file_write_observation"},
         "resumed_process_acknowledged_exact_challenge": {"const": true},
         "launch_utc": {"$ref": "#/$defs/utc_timestamp"},
         "handshake_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
@@ -2093,7 +2382,7 @@
     "atomic_publication_observation": {
       "type": "object", "additionalProperties": false,
       "required": [
-        "primitive", "raw_flags", "movefile_write_through_flag_set",
+        "schema", "primitive", "raw_flags", "movefile_write_through_flag_set",
         "movefile_replace_existing_flag_set", "source_path_identity",
         "target_path_identity", "same_volume", "target_exists_before_call",
         "target_nonexistence_observation", "call_returned_nonzero",
@@ -2101,6 +2390,7 @@
         "target_created_once", "target_overwrite_attempt_count"
       ],
       "properties": {
+        "schema": {"const": "stage_f_atomic_publication_observation/v1"},
         "primitive": {"const": "MoveFileExW"},
         "raw_flags": {"const": 8},
         "movefile_write_through_flag_set": {"const": true},
@@ -2117,6 +2407,41 @@
         "target_overwrite_attempt_count": {"const": 0}
       }
     },
+    "directory_durability_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "evidence_source", "atomic_publication_observation_sha256",
+        "primitive", "raw_flags", "movefile_write_through_flag_set",
+        "movefile_replace_existing_flag_set", "source_path_identity",
+        "published_final_path_identity", "target_parent_path_identity",
+        "target_parent_derivation_api", "target_parent_resolution_succeeded",
+        "same_volume", "call_returned_nonzero",
+        "move_completed_on_disk_before_return", "normalized_os_result_code",
+        "observation_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_directory_durability_observation/v1"},
+        "evidence_source": {"enum": [
+          "SYNTHETIC_PAYLOAD_ATOMIC_PUBLICATION_ACTION_5_MOVEFILEEXW_WRITE_THROUGH",
+          "RESTART_CHALLENGE_ATOMIC_PUBLICATION_MOVEFILEEXW_WRITE_THROUGH"
+        ]},
+        "atomic_publication_observation_sha256": {"$ref": "#/$defs/sha256"},
+        "primitive": {"const": "MoveFileExW"},
+        "raw_flags": {"const": 8},
+        "movefile_write_through_flag_set": {"const": true},
+        "movefile_replace_existing_flag_set": {"const": false},
+        "source_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "published_final_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "target_parent_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "target_parent_derivation_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID_PathCchRemoveFileSpec"},
+        "target_parent_resolution_succeeded": {"const": true},
+        "same_volume": {"const": true},
+        "call_returned_nonzero": {"const": true},
+        "move_completed_on_disk_before_return": {"const": true},
+        "normalized_os_result_code": {"const": 0},
+        "observation_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
     "durability_probe_receipt": {
       "type": "object",
       "additionalProperties": false,
@@ -2127,8 +2452,13 @@
         "restart_policy_identity",
         "binding_validator_identity",
         "execution_environment_policy_identity",
+        "host_validation_runtime_identity",
+        "orchestrator_probe_invocation_preimage",
         "terminated_probe_invocation_preimage",
         "resumed_probe_invocation_preimage",
+        "orchestrator_artifact_lock_observation",
+        "terminated_artifact_lock_observation",
+        "resumed_artifact_lock_observation",
         "synthetic_payload_identity",
         "temporary_path_identity",
         "final_path_identity",
@@ -2150,6 +2480,7 @@
         "ordered_actions",
         "action_count",
         "atomic_publication_observation",
+        "directory_durability_observation",
         "restart_observation",
         "recovery_disposition",
         "same_volume",
@@ -2176,8 +2507,13 @@
         "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
         "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "orchestrator_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
         "terminated_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
         "resumed_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
+        "orchestrator_artifact_lock_observation": {"$ref": "#/$defs/validator_artifact_lock_observation"},
+        "terminated_artifact_lock_observation": {"$ref": "#/$defs/validator_artifact_lock_observation"},
+        "resumed_artifact_lock_observation": {"$ref": "#/$defs/validator_artifact_lock_observation"},
         "synthetic_payload_identity": {"$ref": "#/$defs/synthetic_payload_identity"},
         "temporary_path_identity": {"$ref": "#/$defs/private_path_identity"},
         "final_path_identity": {"$ref": "#/$defs/private_path_identity"},
@@ -2199,6 +2535,7 @@
         "ordered_actions": {"$ref": "#/$defs/durability_action_trace"},
         "action_count": {"const": 17},
         "atomic_publication_observation": {"$ref": "#/$defs/atomic_publication_observation"},
+        "directory_durability_observation": {"$ref": "#/$defs/directory_durability_observation"},
         "restart_observation": {"$ref": "#/$defs/durability_restart_observation"},
         "recovery_disposition": {"const": "RECOVERED_LAST_VERIFIED_DURABLE_CHECKPOINT"},
         "same_volume": {"const": true},
@@ -2207,13 +2544,7 @@
           "enum": ["FlushFileBuffers", "FSYNC"]
         },
         "directory_durability_completed": {"const": true},
-        "directory_durability_primitive": {
-          "enum": [
-            "MoveFileExW_WRITE_THROUGH_SAME_VOLUME",
-            "FlushFileBuffers_DIRECTORY_HANDLE",
-            "FSYNC_DIRECTORY"
-          ]
-        },
+        "directory_durability_primitive": {"const": "MoveFileExW_WRITE_THROUGH_TARGET_PARENT_METADATA_COMPLETION"},
         "atomic_publication_completed": {"const": true},
         "restart_reread_completed": {"const": true},
         "content_hash_reconciled": {"const": true},
@@ -2233,7 +2564,8 @@
       "required": [
         "schema", "filesystem_identity", "durability_policy_identity",
         "restart_policy_identity", "binding_validator_identity",
-        "execution_environment_policy_identity", "ordered_probe_receipt_identities",
+        "execution_environment_policy_identity", "host_validation_runtime_identity",
+        "ordered_probe_receipt_identities",
         "probe_receipt_count", "all_required_probes_pass",
         "scientific_counters", "bundle_sha256"
       ],
@@ -2244,6 +2576,7 @@
         "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
         "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
         "ordered_probe_receipt_identities": {
           "type": "array",
           "minItems": 1,
@@ -2459,9 +2792,13 @@
     {"$ref": "#/$defs/storage_capacity_snapshot"},
     {"$ref": "#/$defs/power_snapshot"},
     {"$ref": "#/$defs/public_execution_host_binding"},
+    {"$ref": "#/$defs/host_validation_runtime_preimage"},
     {"$ref": "#/$defs/binding_implementation_preimage"},
     {"$ref": "#/$defs/binding_validator_preimage"},
     {"$ref": "#/$defs/validator_source_bundle_artifact"},
+    {"$ref": "#/$defs/validator_executable_zipapp_manifest"},
+    {"$ref": "#/$defs/durability_probe_invocation_preimage"},
+    {"$ref": "#/$defs/validator_artifact_lock_observation"},
     {"$ref": "#/$defs/binding_authority_set_preimage"},
     {"$ref": "#/$defs/scientific_code_preimage"},
     {"$ref": "#/$defs/scientific_implementation_preimage"},

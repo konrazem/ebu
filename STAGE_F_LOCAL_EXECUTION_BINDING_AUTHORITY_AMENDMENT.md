@@ -76,8 +76,9 @@ The public tier contains only:
 - `public_host_alias`, exactly `EXECUTION-HOST-01` for this campaign;
 - canonical digest identities for the retained private host manifest and
   private durability bundle;
-- the accepted code, installed-artifact, runtime-image, and environment
-  identities;
+- the accepted code, installed-artifact, scientific runtime-image and
+  environment identities, plus the digest identity of the separate host-side
+  validation runtime;
 - logical storage roles, never personal absolute paths;
 - the frozen resource envelope and storage-margin rule;
 - the exact campaign order and, only after they exist, the ordered campaign-
@@ -86,7 +87,8 @@ The public tier contains only:
 
 The private tier retains the canonical bytes needed to reproduce those public
 digests. It contains the exact operating-system, architecture, processor,
-memory, Python, SQLite, dependency, installed-package, container, filesystem,
+memory, scientific and host-validation Python runtimes, SQLite, dependency,
+installed-package, container, filesystem,
 volume, absolute-directory, power, restart, fsync, atomic-publication, hash,
 recovery, and local-audit-copy observations. It is stored outside the Git
 worktree in the frozen Stage F evidence root and is made available to the
@@ -158,7 +160,7 @@ The evidence schema closes all seven parsed policy objects: execution
 environment, parallelization boundary, worker allocation, storage location,
 durability, restart, and storage inventory. Their identity kinds are exactly
 their schema names. The schema also closes the kinds of every new local host,
-filesystem, path, durability, bundle, readiness, validation, independent-
+filesystem, path, host-validation-runtime, durability, bundle, readiness, validation, independent-
 audit, scientific-implementation, verifier-implementation, exact Stage E
 integration and evidence-artifact, scientific-code, installed-scientific-artifact,
 and user-authorization identity. An arbitrary nonempty kind is accepted
@@ -170,7 +172,7 @@ recipes. `stage_f_binding_implementation/v1` hashes one
 `binding_implementation_preimage`: the accepted base, the exact integrated-
 authority-set identity and commit, the same six ordered authority rows retained
 in that authority-set preimage, the implementation commit and tree, and exactly
-thirteen ordered implementation `git_file_row` objects. The integrated authority
+fourteen ordered implementation `git_file_row` objects. The integrated authority
 commit must be an ancestor of the implementation commit. Each authority row
 must reproduce the same mode, object, byte count, and raw SHA-256 in both the
 integrated-authority tree and the implementation tree. Each row contains only
@@ -181,23 +183,52 @@ byte mechanically inadmissible.
 
 `stage_f_binding_validator/v1` hashes a closed `binding_validator_preimage`, not
 arbitrary executable bytes. That preimage names the exact binding-implementation
-identity and its commit/tree, the public host's execution-environment policy,
-and six ordered source rows: the binding builder and validator scripts plus the
-three `stage_f_binding` implementation modules and its package initializer. Each
+identity and its commit/tree, the public host's immutable scientific-execution
+environment and separate host-validation-runtime identities, and seven ordered
+source rows: the binding builder and validator scripts, the standalone locked-
+zipapp bootstrap, the three `stage_f_binding` implementation modules, and its
+package initializer. Each
 row must equal both the binding-implementation row and the named implementation
 tree. The deterministic `CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1` artifact is the
 canonical UTF-8 NFC serialization without a final LF of the closed
 `validator_source_bundle_artifact` schema object. That object has exactly the
 schema literal `stage_f_binding_validator_source_bundle/v1`, binding-
-implementation identity, implementation commit and tree, environment-policy
-identity, six `ordered_members`, and member count. Each closed member repeats
+implementation identity, implementation commit and tree, both runtime
+identities, seven `ordered_members`, and member count. Each closed member repeats
 exactly `path`, mode, Git object, byte count, and raw SHA-256 from its source row,
 plus `content_base64` of that exact Git blob. Base64 is RFC 4648 section 4's
 standard alphabet, uses required `=` padding, and permits no whitespace or line
 breaks; strict decode followed by standard padded re-encode must reproduce the
 field byte-for-byte. Its byte count and SHA-256 are retained and independently
-recomputed. A stale validator, another implementation or environment, a changed
-row, another build method, or network-dependent build refuses.
+recomputed.
+
+The same preimage contains a closed deterministic executable-zipapp manifest.
+It has no shebang, compression, archive comment, member extra, bytecode, or
+unregistered member. Its five `ZIP_STORED` members are ordered `__main__.py`
+from the exact validator-script blob followed by the exact package initializer,
+canonical, binding, and durability blobs. Every member uses DOS timestamp
+1980-01-01 00:00:00, create-system 3, mode `100644` shifted left sixteen, and
+zero general-purpose flags and internal attributes. The exact bound host
+runtime's `zipfile.ZipFile` is used in write mode with `ZIP_STORED`,
+`allowZip64=False`, and `strict_timestamps=True`, with empty member comments and
+extras. Local and central headers, CRCs, sizes, offsets,
+names, flags, modes, timestamps, extras, comments, member bytes, total byte
+count, and SHA-256 are parsed and independently rebuilt byte-for-byte. A stale
+validator, another implementation or either runtime, a changed row, bootstrap,
+archive byte, build method, or network-dependent build refuses.
+
+The accepted `linux/amd64` OCI environment remains the sole scientific
+execution environment. Windows `CreateProcessW` cannot execute its Linux Python
+binary, so outcome-blind host binding and durability checks use a distinct
+`stage_f_host_validation_runtime/v1`. Its private canonical preimage binds the
+exact runtime-root path identity, CPython version and architecture, Python and
+SQLite facts, and the complete recursive runtime-root file inventory with
+unique NFC relative paths in ascending UTF-8 byte order. The executable digest
+must equal its `python.exe` inventory row. It runs standard-library-only with
+`-I -S -B`; site initialization, validator-zipapp bytecode-cache use, network
+access, project-package imports, scientific execution, and fallback are
+forbidden. The
+public tier exposes only its digest identity.
 
 `stage_f_binding_authority_set/v1` hashes one
 `binding_authority_set_preimage`: the accepted base, integrated authority commit
@@ -469,18 +500,23 @@ published, post-restart, corrupt, orphan, last-good, and recovered SHA-256 value
 the terminated and resumed process identifiers and restart timestamp, and the
 exact recovery disposition. Process identity is the pair of PID and creation
 FILETIME, supplemented by the private executable-path identity and executable,
-command-line, and invocation SHA-256 values observed through `GetProcessId`,
-`GetProcessTimes`, and `QueryFullProcessImageNameW`. The orchestrator, terminated
-probe, and resumed probe instances are pairwise distinct. Rows 1 through 7 carry
-the terminated instance's PID and creation FILETIME; rows 8 through 17 carry the
-resumed instance's.
+`GetCommandLineW` command-line and canonical invocation SHA-256 values observed
+through `GetProcessId`, `GetProcessTimes`, and
+`QueryFullProcessImageNameW`. The orchestrator, terminated probe, and resumed
+probe instances are pairwise distinct. Rows 1 through 7 carry the terminated
+instance's PID and creation FILETIME; rows 8 through 17 carry the resumed
+instance's.
 
 The orchestrator retains a successful `CreateProcessW` observation with raw
 creation flags zero and handle inheritance false, a `WAIT_OBJECT_0` observation
 and exit code zero for the terminated process, and closed canonical challenge and
 acknowledgement preimages. The challenge binds the orchestrator and terminated
 process instances, published-final hash, monotonic challenge counter, and issue
-time; its fresh private file is file-flushed and its directory made durable before
+time. The orchestrator's closed control-file write observation binds its PID and
+creation FILETIME, fresh temporary target, exact challenge bytes and hash,
+`CreateFileW`/`WriteFile`/`FlushFileBuffers`/`CloseHandle` parameters and
+successes. Complete embedded atomic-publication and directory-durability
+observations then publish the exact challenge to its fresh final path before
 launch. The acknowledgement binds that exact challenge digest, the resumed
 process instance, and acknowledgement time. Both files' path identities and
 SHA-256 values are retained at distinct fresh write-once paths under the private
@@ -490,23 +526,47 @@ must write the exact acknowledgement before any post-restart durability action.
 Launch, handshake, and restart timestamps are ordered and cross-checked against
 actions 7 and 8.
 
-The terminated and resumed processes each bind a separate closed canonical
-durability-probe invocation preimage, respectively labelled `PRE_RESTART` and
-`POST_RESTART`. Both preimages name the exact binding-validator and public-host
-execution-environment identities, the validator entrypoint Git row, and private
-path identities for the Python executable, absolute validator entrypoint, and
-retained invocation preimage. Their command line is retained as strict standard
-padded RFC 4648 base64 of the exact `CreateProcessW` UTF-16LE bytes without a
-terminal NUL. Those bytes are the unique result of CPython 3.14.4
-`subprocess.list2cmdline` over exactly the Python executable, `-I`, validator
-entrypoint, `--durability-probe-phase`, the matching phase,
-`--invocation-preimage`, and the retained preimage path. `CommandLineToArgvW`
-must reproduce that seven-element vector, with no other argument.
-The process executable path and hash equal the invocation and accepted
-environment Python; its command-line hash equals those decoded bytes; and its
-invocation hash equals the canonical invocation preimage. The entrypoint row
-equals the same row in the exact binding implementation and rebuilt validator
-source-bundle artifact.
+The orchestrator, terminated, and resumed processes each bind a separate closed
+canonical durability-probe invocation preimage, respectively labelled
+`ORCHESTRATOR`, `PRE_RESTART`, and `POST_RESTART`. All three name the exact
+binding-validator, immutable scientific environment, separate host-validation
+runtime, deterministic executable zipapp, Python executable, and retained
+invocation-preimage path. The strict standard-padded RFC 4648 bootstrap field
+decodes byte-exactly to the standalone `locked_zipapp_bootstrap.py` Git blob and
+the Python `-c` argument; it is at most 8192 bytes.
+
+The bootstrap opens the named zipapp with `CreateFileW`, `GENERIC_READ`, only
+`FILE_SHARE_READ`, `OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`; resolves
+the held handle with `GetFinalPathNameByHandleW`, `FileIdInfo`,
+`FileStandardInfo`, and `FileAttributeTagInfo`; reads, counts, and hashes the
+artifact from that handle; and refuses before validator import on any mismatch.
+Write and delete sharing remain denied from before zipapp read until after the
+zipapp returns. Each process retains a closed lock observation binding its PID,
+creation FILETIME, invocation, validator and host-runtime identities, path,
+volume, file ID, attributes, expected and observed byte count and digest, lock
+times, and only the lock digest omitted from its canonical self-hash.
+
+The command line is strict standard-padded RFC 4648 base64 of exact
+`CreateProcessW` UTF-16LE bytes without a terminal NUL. Those bytes are the
+unique result of the bound host CPython's `subprocess.list2cmdline` over the
+Python executable, `-I -S -B -c`, exact bootstrap, zipapp path, byte count and
+SHA-256, phase, and invocation-preimage path. Only `POST_RESTART` appends the
+exact challenge path and SHA-256 plus the exact fresh acknowledgement path.
+`CommandLineToArgvW` must reproduce the phase-specific vector with no other
+argument, and the line may not exceed 32766 UTF-16 code units before its
+terminal NUL. Every process executable digest equals the bound host-runtime
+`python.exe` row; command-line and invocation digests reconstruct. The three
+separately retained lock observations match their exact process PID, creation
+FILETIME, and invocation without putting an after-return lock digest into an
+earlier challenge or acknowledgement preimage.
+
+The resumed locked validator receives the challenge path and digest in its
+actual parsed command. It requires the acknowledgement target to be absent,
+creates it once with `CreateFileW` `CREATE_NEW`, `GENERIC_WRITE`, zero sharing,
+and `FILE_FLAG_WRITE_THROUGH`, writes the exact acknowledgement, calls
+`FlushFileBuffers`, and closes the handle. The retained write observation binds
+the resumed PID and creation FILETIME, exact path, raw call parameters, byte
+count, digest, and successful write, flush, close, and single-creation facts.
 
 Payload identity, published final, post-restart reread,
 last verified durable checkpoint, and recovered final hashes must agree; corrupt
@@ -514,11 +574,11 @@ and orphan fixture hashes must differ from that hash and each other. An assertio
 boolean without this reconstructable evidence refuses. The private durability
 bundle resolves and recomputes every ordered receipt rather than treating receipt
 identities as opaque claims. Every resolved receipt's filesystem, durability,
-restart, binding-validator, and execution-environment identity equals the
-private bundle field of the same name; receipts from individually valid but
-different chains cannot be mixed. The receipt count equals the ordered identity
-count, and every resolved receipt has the synthetic durability-PASS disposition
-and zero scientific counters.
+restart, binding-validator, scientific-execution-environment, and host-
+validation-runtime identity equals the private bundle field of the same name;
+receipts from individually valid but different chains cannot be mixed. The
+receipt count equals the ordered identity count, and every resolved receipt has
+the synthetic durability-PASS disposition and zero scientific counters.
 
 Atomic publication is separately evidenced, not inferred from the step label.
 The receipt records `MoveFileExW`, raw flags `8` (`MOVEFILE_WRITE_THROUGH` with
@@ -528,11 +588,17 @@ the receipt's temporary and final paths, same-volume status, a pre-call
 nonzero call result, post-call source absence and target presence, exactly one
 target creation, and zero overwrite attempts. Missing or inconsistent primitive,
 flag, path, freshness, no-replace, or postcondition evidence refuses.
-The receipt's `directory_target_identity` resolves from its retained private path
-preimage to the exact normalized parent directory of the published
-`final_path_identity`. Action 6 applies the recorded directory-durability
-primitive to that exact parent after action 5; synchronizing any other allowed
-directory does not satisfy the receipt.
+The receipt's closed directory-durability observation hashes the complete atomic
+publication observation and repeats its exact API, raw flags, source, target,
+same-volume, and success facts. `GetFinalPathNameByHandleW` with normalized
+volume-GUID output followed by `PathCchRemoveFileSpec` derives the observation
+target-parent and receipt `directory_target_identity` as the exact normalized
+parent of `final_path_identity`. Action 6 is
+`CONFIRM_WRITE_THROUGH_TARGET_PARENT_METADATA_DURABILITY`: it records the same
+observation time and normalized result after the successful action-5
+`MoveFileExW` call with `MOVEFILE_WRITE_THROUGH`, whose documented platform
+semantics do not return until the file is actually moved on disk. A desired
+parent identity without this closed actual-call observation refuses.
 
 ## 7. Readiness and execution authorization
 
@@ -685,9 +751,9 @@ The implementation may also modify `scripts/validate_stage_e_harness.py` only
 to preserve every accepted Stage E lane while recognizing the exact union of
 the accepted 51-path Stage E implementation, the integrated six-file
 authority, the separately accepted one-path reachability-durability change,
-and the eleven new Stage F implementation paths. The two later modified paths
+and the twelve new Stage F implementation paths. The two later modified paths
 already belong to the accepted 51, so the final unique closure relative to the
-Stage E implementation base is exactly 69 paths. Without that narrow closure
+Stage E implementation base is exactly 70 paths. Without that narrow closure
 update the accepted validator would correctly refuse any descendant commit and
 exact-target CI could never pass. No Stage E evidence count, oracle, guard,
 route, or scientific boundary may change.
