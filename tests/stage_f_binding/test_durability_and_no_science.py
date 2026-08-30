@@ -8,6 +8,7 @@ import builtins
 import copy
 import ctypes
 import hashlib
+import inspect
 import json
 import os
 import subprocess
@@ -299,6 +300,56 @@ class SyntheticCheckpointTests(unittest.TestCase):
 
 class CapacityPostwriteClosureTests(unittest.TestCase):
     def test_exact_retained_delta_is_remeasured_and_unlisted_files_refuse(self) -> None:
+        if sys.platform != "win32":
+            with self.assertRaisesRegex(
+                BindingRefusal, r"^live Stage F storage inventory requires Win32$"
+            ):
+                validate_live_storage_inventory(
+                    Path.cwd(),
+                    (),
+                    capacity_snapshot={},
+                    capacity_snapshot_path=Path.cwd() / "capacity.json",
+                    retained_evidence_root=Path.cwd() / "retained-evidence",
+                    retained_file_observations={},
+                )
+            source = inspect.getsource(validate_live_storage_inventory)
+            tree = ast.parse(source)
+            refusal_messages = {
+                node.args[0].value
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == "_refuse"
+                and node.args
+                and isinstance(node.args[0], ast.Constant)
+                and isinstance(node.args[0].value, str)
+            }
+            self.assertTrue(
+                {
+                    "retained postwrite files differ from the exact causal role closure",
+                    "live recursive inventory path closure differs",
+                    "live recursive inventory rows changed between complete scans",
+                    (
+                        "retained allocation does not reconstruct the immediate capacity "
+                        "publication lower bound or exceeds the full predebit"
+                    ),
+                }.issubset(refusal_messages)
+            )
+            compact = "".join(source.split())
+            self.assertIn("recorded!=reconstructed_postwrite", compact)
+            self.assertIn("retained_live_allocated<reconstructed_postwrite", compact)
+            self.assertIn("retained_live_allocated>8*1073741824", compact)
+            for helper in ("enumerate_tree", "measure_tree"):
+                self.assertEqual(
+                    sum(
+                        isinstance(node, ast.Call)
+                        and isinstance(node.func, ast.Name)
+                        and node.func.id == helper
+                        for node in ast.walk(tree)
+                    ),
+                    2,
+                )
+            return
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             retained = root / "independent-audit" / "retained-evidence"
