@@ -676,18 +676,88 @@ probe instances are pairwise distinct. Rows 1 through 7 carry the terminated
 instance's PID and creation FILETIME; rows 8 through 17 carry the resumed
 instance's.
 
-The orchestrator retains a successful `CreateProcessW` observation with raw
-creation flags zero and handle inheritance false, a `WAIT_OBJECT_0` observation
-and exit code zero for the terminated process, the raw terminated-process exit
-FILETIME and its UTC conversion, and the UTC at which the successful wait
-completed. The resumed launch may occur only after both exit and wait completion.
+The orchestrator retains two closed successful `CreateProcessW` observations,
+one each for the `PRE_RESTART` and `POST_RESTART` processes. Each observation
+binds one retained orchestrator PID and thread ID on which `CreateProcessW` and
+the returned-thread `CloseHandle` are serialized, the exact normalized
+executable supplied as `lpApplicationName`; mutable
+UTF-16 command-line buffer address, bytes and code-unit count, present terminal
+NUL, capacity of count plus one wide character, and byte allocation of twice
+that capacity; null process and thread security attributes; false handle
+inheritance; raw creation flags zero; null environment and current-directory
+pointers; and the exact x64 `STARTUPINFOW` and `PROCESS_INFORMATION` addresses
+and counts. For each of those three concurrently live buffers, the retained
+exclusive end equals base plus its exact byte count without uint64 overflow.
+Their half-open intervals are pairwise disjoint and remain allocated through
+`CreateProcessW` return.
+
+The retained full call-time command-buffer base64 decodes exactly to the
+registered command-line bytes followed by one UTF-16 NUL; its SHA-256 is
+computed from the exact command-buffer base for the full allocation count.
+`STARTUPINFOW` is
+zero-initialized before its `cb` is set to 104; its exact call-time base64 is
+little-endian `cb=104` followed by 100 zero bytes, and its SHA-256 is computed
+from the exact `lpStartupInfo` address for 104 bytes. `PROCESS_INFORMATION` is
+exactly 24 zero bytes before the call, with its base64 and SHA-256 computed from
+the exact `lpProcessInformation` address for 24 bytes. All three input-image hash
+completions are retained before the `CreateProcessW` start UTC, and the images
+remain unchanged through call entry. After the successful call completes, the
+exact 24 output bytes are hashed again from that same
+`lpProcessInformation` address while that interval remains live and before
+either returned handle is used. Its
+little-endian offsets 0, 8, 16, and 20 parse exactly as the retained process
+handle, thread handle, PID, and TID. The two valid returned handles must differ.
+`launch_utc` equals call completion UTC.
+
+The exact returned thread-handle close starts and completes after the output
+capture and no later than the retained start of the first
+`WaitForSingleObject`; the distinct
+process handle remains held. For each process, that same process handle is the
+input to `WaitForSingleObject(INFINITE)`, successful `GetExitCodeProcess`,
+successful `GetProcessTimes`, and the one final successful `CloseHandle`. These
+calls are serialized by one retained orchestrator PID and thread ID. The wait
+returns raw zero (`WAIT_OBJECT_0`). The exit-code call's closed uint32 output
+observation proves an exact nonoverflowing four-byte interval, zero input image,
+post-call output image and hashes from that same base, strict standard-padded
+base64 decoding followed by canonical re-encoding, and little-endian exit
+code zero. Each of the four process-times output observations similarly proves
+an exact nonoverflowing eight-byte interval, zero input image, post-call output
+image and hashes from its same base, strict canonical base64, and a little-endian creation, exit, kernel,
+or user `FILETIME`; those four half-open intervals are pairwise disjoint and live
+through return and output capture.
+
+For each process, launch, output capture, thread-close start and completion,
+wait start and completion, exit-code start, Win32 return, output hash and
+observation completion, process-times start, Win32 return, all four output
+hashes and observation completion, process-close start, and process-close
+completion UTC values are nondecreasing. Each output-storage input hash precedes
+its call start. Raw creation and exit FILETIMEs and
+their UTC conversions are retained. The resumed launch may occur only after the
+terminated process's exit, successful wait, queries, and process-handle close
+have completed. The resumed process is likewise waited, queried, and closed only
+after its post-restart work completes.
 It also retains closed canonical challenge and acknowledgement preimages. The
 challenge binds the orchestrator and terminated
 process instances, published-final hash, monotonic challenge counter, and issue
 time. The orchestrator's closed control-file write observation binds its PID and
 creation FILETIME, fresh temporary target, exact challenge bytes and hash,
-`CreateFileW`/`WriteFile`/`FlushFileBuffers`/`CloseHandle` parameters and
-successes. Complete embedded atomic-publication and directory-durability
+the exact handle returned by `CreateFileW`, and that same handle as the input to
+`WriteFile`, `FlushFileBuffers`, and the one successful `CloseHandle`. It also
+binds the exact write-buffer base, requested byte count, nonnull bytes-written
+pointer, null `OVERLAPPED`, returned byte count, parameters, successes, and
+ordered UTC values. One retained actor PID and thread ID serializes create,
+write, flush, and close. The write-buffer exclusive end equals base plus requested
+count without uint64 overflow; strict base64 decodes to exactly those call-time
+bytes; and SHA-256 is computed from that exact base and count before write start.
+The bytes remain allocated and unchanged through return. The closed uint32
+bytes-written output observation has an exclusive end exactly four bytes after
+its base without overflow, hashes four zero input bytes from that exact base
+before the call, hashes the four output bytes from the same base after return,
+strictly decodes and canonically re-encodes their standard-padded base64, and
+parses the little-endian output as the returned byte count. Its half-open
+interval is disjoint from the write-buffer interval and lives through output
+capture. Create, write, flush, and close start/completion timestamps prove that
+serialization. Complete embedded atomic-publication and directory-durability
 observations then publish the exact challenge to its fresh final path before
 launch. The acknowledgement binds that exact challenge digest, the resumed
 process instance, and acknowledgement time. Both files' path identities and
@@ -746,10 +816,17 @@ actual parsed command. It requires the acknowledgement target to be absent,
 creates it once with `CreateFileW` `CREATE_NEW`, `GENERIC_WRITE`, zero sharing,
 and `FILE_FLAG_WRITE_THROUGH`, writes the exact acknowledgement, calls
 `FlushFileBuffers`, and closes the handle. The retained write observation binds
-the resumed PID and creation FILETIME, exact path, raw call parameters, byte
-count, digest, and successful write, flush, close, and single-creation facts,
-plus create-start, create-complete, write-complete, flush-complete, and
-close-complete UTC values in nondecreasing order. `handshake_completed_utc`
+the resumed PID and creation FILETIME, exact path, raw call parameters, the exact
+created handle as every write, flush, and close input, exact buffer address,
+requested and returned byte counts, nonnull bytes-written pointer, null
+`OVERLAPPED`, digest, and successful write, flush, close, and single-creation
+facts. Its input-buffer and uint32 output observations obey the same exact-end,
+nonoverflow, hash-input-address/count, disjointness, lifetime, output-image, and
+little-endian count rules as the challenge write. Create-start, create-complete,
+input-hash completion, output-storage zero-image hash, write-start,
+write-complete, output-image hash, flush-start, flush-complete, close-start, and
+close-complete UTC values
+are nondecreasing. `handshake_completed_utc`
 equals that actual close-complete UTC and is not after action 8.
 
 Payload identity, published final, post-restart reread,
@@ -774,10 +851,26 @@ target creation, and zero overwrite attempts. Missing or inconsistent primitive,
 flag, path, freshness, no-replace, or postcondition evidence refuses.
 The receipt's closed directory-durability observation hashes the complete atomic
 publication observation and repeats its exact API, raw flags, source, target,
-same-volume, and success facts. `GetFinalPathNameByHandleW` with normalized
-volume-GUID output followed by `PathCchRemoveFileSpec` derives the observation
-target-parent and receipt `directory_target_identity` as the exact normalized
-parent of `final_path_identity`. Action 6 is
+same-volume, and success facts. A retained actor PID, creation FILETIME, and
+thread ID serializes all
+of its synchronous open, allocation, query, derivation, close, and free calls;
+the synthetic-payload actor equals the terminated process and the restart-
+challenge actor equals the orchestrator. After publication it opens the exact final path
+once with `CreateFileW`, `FILE_READ_ATTRIBUTES`, sharing read/write/delete,
+`OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`, and retains the exact valid
+handle. It allocates one exclusive zero-initialized 65536-byte path buffer with
+`VirtualAlloc(NULL, 65536, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE)`.
+`GetFinalPathNameByHandleW` receives that exact handle, buffer and 32768-wide-
+character capacity with `FILE_NAME_NORMALIZED|VOLUME_NAME_GUID`, returns a
+positive length, and resolves exactly to the published final identity.
+`PathCchRemoveFileSpec` then receives that same buffer and capacity and returns
+`S_OK`, deriving the observation target-parent and receipt
+`directory_target_identity` as the exact normalized parent of
+`final_path_identity`. The exact final handle is then closed once and the exact
+buffer is released once with `VirtualFree(buffer, 0, MEM_RELEASE)`; open,
+allocation, query, derivation, close, and release UTC values are nondecreasing.
+The buffer-release UTC equals the closed observation UTC.
+Action 6 is
 `CONFIRM_WRITE_THROUGH_TARGET_PARENT_METADATA_DURABILITY`: it records the same
 observation time and normalized result after the successful action-5
 `MoveFileExW` call with `MOVEFILE_WRITE_THROUGH`, whose documented platform
