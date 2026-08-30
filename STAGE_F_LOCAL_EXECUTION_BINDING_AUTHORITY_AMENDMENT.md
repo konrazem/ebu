@@ -87,7 +87,7 @@ The public tier contains only:
 The private tier retains the canonical bytes needed to reproduce those public
 digests. It contains the exact operating-system, architecture, processor,
 memory, Python, SQLite, dependency, installed-package, container, filesystem,
-volume, absolute-directory, power, restart, fsync, atomic-replacement, hash,
+volume, absolute-directory, power, restart, fsync, atomic-publication, hash,
 recovery, and local-audit-copy observations. It is stored outside the Git
 worktree in the frozen Stage F evidence root and is made available to the
 independent local auditor.
@@ -121,16 +121,17 @@ host binding without `public_binding_sha256`; the embedded digest and both
 identity digest fields agree.
 
 Every other record carrying an embedded record digest has the same closed
-rule. The exact omitted field is `bundle_sha256` for
-`stage_f_local_binding_bundle/v1`, `readiness_sha256` for
-`stage_f_local_binding_readiness/v1`, `receipt_sha256` for each binding-
-validation or durability-probe receipt, and `authorization_sha256` for
-`stage_f_campaign_authorization/v1`. The embedded field equals SHA-256 of the
-complete canonical record with only that named field omitted. No second field,
-null substitution, enclosing identity, or presentation serialization is part
-of or excluded from the preimage. An identity of one of these records has the
-record's schema name as its `kind`, and both identity digest fields equal the
-embedded digest.
+rule. The exact omitted field is `snapshot_sha256` for a storage-capacity or
+power snapshot; `bundle_sha256` for a local binding or private durability bundle;
+`readiness_sha256` for readiness; `receipt_sha256` for each binding-validation
+or durability-probe receipt and the post-packet user receipt;
+`audit_sha256` for the independent audit; and
+`authorization_sha256` for campaign authorization. The embedded field equals
+SHA-256 of the complete canonical record with only that named field omitted.
+No second field, null substitution, enclosing identity, or presentation
+serialization is part of or excluded from the preimage. An identity of one of
+these records has the record's schema name as its `kind`, and both identity
+digest fields equal the embedded digest.
 
 The accepted `campaign_execution_binding/v2` record is not changed. Its
 `storage_location_identity`, environment identity, and worker host identities
@@ -142,7 +143,39 @@ Each named private policy preimage is stored as a canonical JSON string. The
 validator parses it with duplicate-key and integer-only refusal, requires
 canonical reserialization to reproduce the exact string, and hashes the parsed
 value. This keeps the enclosing private record closed without making policy
-contents opaque to the independent auditor.
+contents opaque to the independent auditor. The environment policy repeats the
+Python executable digest and the ordered dependency identities. Each dependency
+identity has kind `stage_f_installed_python_distribution/v1` and hashes the
+canonical distribution name, version, and installed-file relative-path,
+byte-count, and SHA-256 rows with a unique relative-path projection ordered by
+ascending UTF-8 NFC relative-path
+bytes; a package-metadata version string alone is
+not an installed dependency identity. The private runtime facts retain all
+three closed distribution preimage objects in the accepted dependency order,
+and their canonical hashes equal the environment-policy identities.
+
+The evidence schema closes all seven parsed policy objects: execution
+environment, parallelization boundary, worker allocation, storage location,
+durability, restart, and storage inventory. Their identity kinds are exactly
+their schema names. The schema also closes the kinds of every new local host,
+filesystem, path, durability, bundle, readiness, validation, independent-
+audit, and user-authorization identity. An arbitrary nonempty kind is accepted
+only where an inherited Stage D or Stage E identity remains externally
+controlled; it cannot substitute for a locally defined identity kind.
+
+The filesystem-binding identity has kind `stage_f_filesystem_binding/v1` and
+hashes the complete closed private `filesystem_facts` object with only its
+`filesystem_identity` field omitted. A storage-capacity snapshot has kind and
+schema `stage_f_storage_capacity_snapshot/v1`; its embedded
+`snapshot_sha256` omits only itself. These rules separate immutable host and
+filesystem policy from contemporaneous capacity observations.
+
+Power observations are likewise separate closed
+`stage_f_power_snapshot/v1` records. The private host manifest binds only its
+initial storage snapshot identity. Every power snapshot instead binds the
+already computed private-host-manifest identity; readiness, independent audit,
+and authorization bind contemporaneous snapshot identities without mutating
+the host-manifest or public-binding identity or permitting cross-host replay.
 
 ## 5. Frozen local storage envelope
 
@@ -169,6 +202,39 @@ component may exceed its own ceiling; the total may not exceed 666 GiB;
 usage; and observed free bytes must be at least both 350 GiB and the complete
 remaining reserved envelope.
 
+Capacity is not a caller assertion. A private
+`stage_f_storage_capacity_snapshot/v1` records start and completion timestamps,
+a quiescent-root attestation, volume allocation unit, capacity/free bytes, its
+predecessor snapshot identity, and an ordered recursive inventory. The six
+physical category locations are exactly `immutable-results/primary-logical-
+output`, `independent-audit/complete-copy`, `immutable-results/dynamic-growth-
+physical-writes`, `continuation-checkpoints`, `temporary`, and `independent-
+audit/retained-evidence` under the private Stage F root.
+
+Inventory paths are private NFC relative paths ordered by ascending UTF-8
+bytes. Reparse points are refused without following them; sparse or compressed
+files and any file with hard-link count other than one refuse. A regular file
+is charged the greater of end-of-file length and `GetCompressedFileSizeW`;
+each directory is conservatively charged one volume allocation unit. Every
+non-metadata entry maps to exactly one category and an unclassified entry
+refuses. The Stage F root plus the `immutable-results` and `independent-audit`
+structural parent directories are charged to checkpoint-and-write overhead;
+category roots are charged to their category. Orphan partials are ordinary
+retained entries and therefore cannot disappear from accounting.
+
+The retained-evidence component is fully predebited by 8 GiB so that the
+private manifest, capacity record, validation receipts, and audit receipts do
+not create a self-referential measurement gap; live allocation in that subtree
+after writing the capacity record is measured directly and must not exceed
+the same ceiling. The builder solves the stable record-size/allocation value and
+the independent auditor rescans it after write. All other rows are write-once.
+Overwrite,
+truncate, delete, sparse conversion, compression, hard-linking, or identity-
+changing reuse refuses. Every later snapshot retains every prior non-metadata
+row byte-for-byte and may add only new rows. A null predecessor is permitted
+only for the migration snapshot when the five non-metadata categories contain
+no files. Thus usage is independently enumerable and never reset by deletion.
+
 The logical directory-role order is exactly `immutable-results`,
 `continuation-checkpoints`, `independent-audit`, `temporary`. Their absolute
 paths exist only in the private manifest. Directory-role aliasing, overlap,
@@ -184,7 +250,8 @@ This authority grants no permission to change operating-system settings
 silently.
 
 Only outcome-blind payloads may be used to test write-through, file and
-directory fsync, atomic replacement, restart, hashing, orphan-partial refusal,
+directory fsync, atomic publication to a fresh versioned final path, restart,
+hashing, orphan-partial refusal,
 and recovery from the last verified durable checkpoint. A durability test must
 retain its input, ordered actions, hashes, restart observation, recovery
 disposition, and zero-science counters. It may not import a model or project
@@ -212,17 +279,57 @@ auditor may emit `INDEPENDENT_BINDING_PASS`.
 Every readiness record binds the exact local-binding-bundle identity, the
 ordered fifteen campaign-binding identities, scientific code, installed
 artifact, binding implementation, authority set, Stage E evidence, and
-validator identities. These fields must equal the referenced bundle exactly.
+validator identities, plus the exact validation receipt over its current
+storage and power snapshots. These fields must equal the referenced bundle and
+receipt exactly.
 A readiness or independent disposition cannot be replayed against a different
 bundle, code set, or campaign-binding list.
 
+Readiness, validation, independent audit, user receipt, and authorization carry
+UTC timestamps. A capacity snapshot completes no later than, and a power
+snapshot is observed no later than, the consuming readiness or authorization;
+both are at most 300 seconds old. Authorization also binds a validation receipt
+issued no later than authorization and over those exact current snapshot
+identities. The post-packet user statement is received no later than
+authorization. A future, stale, missing, or misordered timestamp refuses.
+
+Each route wrapper is an exact projection of the referenced external
+`campaign_execution_binding/v2`: wrapper campaign and study identifiers equal
+the referenced record, the ordinary route-to-study map is identity, and only
+`SD-01-GROWTH-v1` maps to parent study `SD-01`. File identities hash the exact
+referenced bytes and binding identities reconstruct `binding_sha256`. All
+non-null file and binding identities are pairwise distinct. A sealed row has
+both identities and no gaps; an unsealed row has both identities null and at
+least one gap. A ready bundle has exactly fifteen distinct sealed bindings in
+the frozen order. Relabelling, duplication, or reuse refuses.
+
+For every sealed route, referenced code and installed-artifact identities equal
+the bundle fields, and referenced environment, parallelization, worker,
+storage, durability, and restart identities equal the exact public-host-
+binding fields. The authority-set identity hashes the ordered projection of
+all referenced scientific and continuation authority identities together with
+the integrated Stage F local authority set. A policy, code, artifact, or
+authority projection mismatch refuses even when the isolated external campaign
+record is schema-valid.
+
+The local bundle is immutable at either `BINDING_NOT_SEALABLE` or
+`READY_FOR_INDEPENDENT_BINDING_AUDIT`; it never changes itself to an independent
+PASS. The independent auditor instead hashes a separate closed read-only audit
+receipt that binds the ready bundle, the pre-audit readiness record, private
+manifest, public binding, current storage and power snapshots, and validation
+receipt.
+The final readiness PASS binds that audit receipt. This order has no circular
+identity and prevents an audit of one bundle from being replayed onto another.
+
 `stage_f_campaign_authorization/v1` is a separate, closed, digest-bound record.
 It can be accepted only after `INDEPENDENT_BINDING_PASS` and only when it binds
-the exact complete portfolio, public host binding, independent audit receipt,
-and one explicit user authorization statement supplied after the human-
-readable Stage F packet. Presence of a dictionary, token-shaped string,
-earlier general instruction, controller assertion, or self-audit is not an
-authorization.
+the exact sealed packet, complete portfolio, public host binding, current
+capacity and power snapshots, independent audit receipt, and one closed
+`stage_f_post_packet_user_authorization_receipt/v1`. That receipt hashes the
+exact retained explicit user statement and binds the same sealed-packet
+identity; it is valid only when supplied after the human-readable Stage F
+packet. Presence of a dictionary, token-shaped string, earlier general
+instruction, controller assertion, or self-audit is not an authorization.
 
 The first scientific action remains forbidden until the authorization record
 passes. The guard must refuse before importing a project runner and must report
@@ -284,24 +391,30 @@ Validation must refuse at least:
 1. a wrong base commit/tree or altered predecessor byte;
 2. any authority-candidate path outside the exact six-file scope;
 3. an identity whose `value`, `sha256`, or embedded digest differs;
-4. a public personal path, username, computer name, credential, or private byte;
-5. a missing or inaccessible retained private manifest during independent audit;
-6. a private/public digest or logical-role mismatch;
-7. directory alias, overlap, root escape, or Git-worktree placement;
-8. envelope arithmetic other than exact 666 GiB and the six frozen components;
-9. insufficient current free space or uncounted retained material;
-10. missing AC, sleep, lid, Docker, reboot, fsync, atomicity, restart, hash, or
+4. a locally defined identity with any kind other than its exact registry kind,
+   or a named policy preimage that is noncanonical or fails its closed schema;
+5. a public personal path, username, computer name, credential, or private byte;
+6. a missing or inaccessible retained private manifest during independent audit;
+7. a private/public digest or logical-role mismatch;
+8. directory alias, overlap, root escape, or Git-worktree placement;
+9. envelope arithmetic other than exact 666 GiB and the six frozen components;
+10. a stale, nonenumerable, nonquiescent, predecessor-resetting, or incomplete
+    capacity snapshot, or a reparse, hard-linked, sparse, compressed,
+    overwritten, truncated, deleted, or unclassified retained entry;
+11. insufficient current free space or uncounted retained material;
+12. missing AC, sleep, lid, Docker, reboot, fsync, atomicity, restart, hash, or
     orphan-partial evidence;
-11. a missing, extra, duplicated, or misordered campaign binding;
-12. any unresolved scientific or institutional authority gap promoted to ready;
-13. a changed code, artifact, environment, algorithm, oracle, topology,
+13. a missing, extra, duplicated, relabelled, reused, wrapper-mismatched, or
+    misordered campaign binding;
+14. any unresolved scientific or institutional authority gap promoted to ready;
+15. a changed code, artifact, environment, algorithm, oracle, topology,
     policy, seed, stream, cache, checkpoint, control, falsifier, horizon, or cap
     identity after seal;
-14. authorization before an independent PASS or without the later explicit
+16. authorization before an independent PASS or without the later explicit
     user statement;
-15. project-runner import or any nonzero scientific counter during binding
+17. project-runner import or any nonzero scientific counter during binding
     validation; and
-16. any result, figure, book, release, publication, or Stage G action.
+18. any result, figure, book, release, publication, or Stage G action.
 
 ## 11. Candidate evidence boundary
 

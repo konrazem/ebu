@@ -26,6 +26,10 @@
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
     },
+    "utc_timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
     "public_host_alias": {
       "const": "EXECUTION-HOST-01"
     },
@@ -48,6 +52,180 @@
           "$ref": "#/$defs/sha256"
         }
       }
+    },
+    "private_host_manifest_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_private_execution_host_manifest/v1"}}}
+      ]
+    },
+    "public_host_binding_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_public_execution_host_binding/v1"}}}
+      ]
+    },
+    "environment_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_execution_environment_policy/v1"}}}
+      ]
+    },
+    "installed_dependency_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_installed_python_distribution/v1"}}}
+      ]
+    },
+    "parallelization_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_parallelization_boundary_policy/v1"}}}
+      ]
+    },
+    "worker_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_worker_allocation_policy/v1"}}}
+      ]
+    },
+    "storage_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_storage_location_policy/v1"}}}
+      ]
+    },
+    "durability_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_durability_policy/v1"}}}
+      ]
+    },
+    "restart_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_restart_policy/v1"}}}
+      ]
+    },
+    "storage_inventory_policy_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_storage_inventory_policy/v1"}}}
+      ]
+    },
+    "private_durability_bundle_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_private_durability_bundle/v1"}}}
+      ]
+    },
+    "campaign_binding_file_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "campaign_execution_binding_file/v2"}}}
+      ]
+    },
+    "campaign_binding_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "campaign_execution_binding/v2"}}}
+      ]
+    },
+    "local_binding_bundle_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_local_binding_bundle/v1"}}}
+      ]
+    },
+    "binding_implementation_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_binding_implementation/v1"}}}
+      ]
+    },
+    "binding_authority_set_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_binding_authority_set/v1"}}}
+      ]
+    },
+    "binding_validator_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_binding_validator/v1"}}}
+      ]
+    },
+    "independent_binding_audit_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_independent_binding_audit/v1"}}}
+      ]
+    },
+    "binding_readiness_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_local_binding_readiness/v1"}}}
+      ]
+    },
+    "binding_validation_receipt_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_binding_validation_receipt/v1"}}}
+      ]
+    },
+    "durability_probe_receipt_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_durability_probe_receipt/v1"}}}
+      ]
+    },
+    "filesystem_binding_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_filesystem_binding/v1"}}}
+      ]
+    },
+    "storage_capacity_snapshot_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_storage_capacity_snapshot/v1"}}}
+      ]
+    },
+    "power_snapshot_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_power_snapshot/v1"}}}
+      ]
+    },
+    "synthetic_payload_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_synthetic_durability_payload/v1"}}}
+      ]
+    },
+    "private_path_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_private_path/v1"}}}
+      ]
+    },
+    "post_packet_authorization_receipt_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_post_packet_user_authorization_receipt/v1"}}}
+      ]
+    },
+    "sealed_campaign_packet_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_sealed_campaign_packet/v1"}}}
+      ]
+    },
+    "campaign_authorization_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_campaign_authorization/v1"}}}
+      ]
     },
     "zero_science_counters": {
       "type": "object",
@@ -152,6 +330,231 @@
         "minimum_free_after_existing_data_gib": {"const": 350}
       }
     },
+    "installed_distribution_file_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "byte_count", "sha256"],
+      "properties": {
+        "relative_path": {"$ref": "#/$defs/nonempty_string"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "installed_distribution_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "name", "version", "installed_files"],
+      "properties": {
+        "schema": {"const": "stage_f_installed_python_distribution/v1"},
+        "name": {"$ref": "#/$defs/nonempty_string"},
+        "version": {"$ref": "#/$defs/nonempty_string"},
+        "installed_files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/installed_distribution_file_row"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "execution_environment_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "image_digest", "python_version", "sqlite_version",
+        "installed_package", "installed_artifact_sha256",
+        "python_executable_sha256", "dependencies_in_order",
+        "dependency_identities", "host_python_fallback_permitted",
+        "network_fallback_permitted"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_execution_environment_policy/v1"},
+        "image_digest": {"const": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"},
+        "python_version": {"const": "CPython 3.14.4 final"},
+        "sqlite_version": {"const": "3.46.1"},
+        "installed_package": {"const": "ebu-framework==0.1.0a1"},
+        "installed_artifact_sha256": {"const": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"},
+        "python_executable_sha256": {"$ref": "#/$defs/sha256"},
+        "dependencies_in_order": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "prefixItems": [
+            {"const": "PyNaCl==1.6.2"},
+            {"const": "cffi==2.1.1"},
+            {"const": "pycparser==3.0"}
+          ],
+          "items": false
+        },
+        "dependency_identities": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "items": {"$ref": "#/$defs/installed_dependency_identity"},
+          "uniqueItems": true
+        },
+        "host_python_fallback_permitted": {"const": false},
+        "network_fallback_permitted": {"const": false}
+      }
+    },
+    "parallelization_boundary_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "public_host_alias", "execution_host_count",
+        "cross_host_parallelism_permitted", "simultaneous_campaign_attempts",
+        "within_attempt_process_allocation_source",
+        "cross_route_shared_mutable_state_permitted"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_parallelization_boundary_policy/v1"},
+        "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
+        "execution_host_count": {"const": 1},
+        "cross_host_parallelism_permitted": {"const": false},
+        "simultaneous_campaign_attempts": {"const": 1},
+        "within_attempt_process_allocation_source": {"const": "SEALED_CAMPAIGN_EXECUTION_BINDING_AND_PROCESS_ALLOCATION_V2"},
+        "cross_route_shared_mutable_state_permitted": {"const": false}
+      }
+    },
+    "worker_allocation_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "public_host_alias", "worker_host_count",
+        "logical_processor_upper_bound_source", "oversubscription_permitted",
+        "process_and_thread_counts_exact_match_required",
+        "memory_limit_exact_match_required", "unbound_worker_permitted"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_worker_allocation_policy/v1"},
+        "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
+        "worker_host_count": {"const": 1},
+        "logical_processor_upper_bound_source": {"const": "PRIVATE_HOST_MANIFEST"},
+        "oversubscription_permitted": {"const": false},
+        "process_and_thread_counts_exact_match_required": {"const": true},
+        "memory_limit_exact_match_required": {"const": true},
+        "unbound_worker_permitted": {"const": false}
+      }
+    },
+    "storage_location_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "logical_directory_roles", "category_layout",
+        "single_volume_required", "outside_git_required",
+        "absolute_paths_private", "storage_envelope",
+        "unclassified_entry_disposition"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_storage_location_policy/v1"},
+        "logical_directory_roles": {"$ref": "#/$defs/directory_roles"},
+        "category_layout": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "prefixItems": [
+            {"const": "immutable-results/primary-logical-output"},
+            {"const": "independent-audit/complete-copy"},
+            {"const": "immutable-results/dynamic-growth-physical-writes"},
+            {"const": "continuation-checkpoints"},
+            {"const": "temporary"},
+            {"const": "independent-audit/retained-evidence"}
+          ],
+          "items": false
+        },
+        "single_volume_required": {"const": true},
+        "outside_git_required": {"const": true},
+        "absolute_paths_private": {"const": true},
+        "storage_envelope": {"$ref": "#/$defs/storage_envelope"},
+        "unclassified_entry_disposition": {"const": "REFUSE"}
+      }
+    },
+    "durability_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "same_volume_required", "file_flush_required",
+        "directory_durability_required", "atomic_publication_required",
+        "versioned_immutable_final_paths_required",
+        "overwrite_truncate_delete_permitted", "content_hash_required",
+        "orphan_partial_retained_and_refused"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_policy/v1"},
+        "same_volume_required": {"const": true},
+        "file_flush_required": {"const": true},
+        "directory_durability_required": {"const": true},
+        "atomic_publication_required": {"const": true},
+        "versioned_immutable_final_paths_required": {"const": true},
+        "overwrite_truncate_delete_permitted": {"const": false},
+        "content_hash_required": {"const": true},
+        "orphan_partial_retained_and_refused": {"const": true}
+      }
+    },
+    "restart_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "last_verified_durable_checkpoint_only",
+        "corrupt_checkpoint_disposition", "orphan_partial_disposition",
+        "pending_reboot_permitted", "unattended_reboot_permitted"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_restart_policy/v1"},
+        "last_verified_durable_checkpoint_only": {"const": true},
+        "corrupt_checkpoint_disposition": {"const": "REFUSE"},
+        "orphan_partial_disposition": {"const": "REFUSE"},
+        "pending_reboot_permitted": {"const": false},
+        "unattended_reboot_permitted": {"const": false}
+      }
+    },
+    "storage_inventory_policy_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "platform", "enumeration_root", "entry_order",
+        "reparse_point_disposition", "hard_link_count",
+        "sparse_file_disposition", "compressed_file_disposition",
+        "accounted_file_bytes", "accounted_directory_bytes",
+        "structural_directory_accounting",
+        "retained_evidence_accounting", "mutation_policy",
+        "previous_snapshot_rule", "unknown_entry_disposition"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_storage_inventory_policy/v1"},
+        "platform": {"const": "WINDOWS_NTFS"},
+        "enumeration_root": {"const": "PRIVATE_STAGE_F_ROOT"},
+        "entry_order": {"const": "ASCENDING_UTF8_NFC_RELATIVE_PATH_BYTES"},
+        "reparse_point_disposition": {"const": "REFUSE_WITHOUT_FOLLOWING"},
+        "hard_link_count": {"const": 1},
+        "sparse_file_disposition": {"const": "REFUSE"},
+        "compressed_file_disposition": {"const": "REFUSE"},
+        "accounted_file_bytes": {"const": "MAX_END_OF_FILE_AND_GET_COMPRESSED_FILE_SIZE_W"},
+        "accounted_directory_bytes": {"const": "ONE_VOLUME_ALLOCATION_UNIT"},
+        "structural_directory_accounting": {"const": "STAGE_F_ROOT_IMMUTABLE_RESULTS_AND_INDEPENDENT_AUDIT_PARENTS_TO_CHECKPOINT_AND_WRITE_OVERHEAD"},
+        "retained_evidence_accounting": {"const": "FULL_8_GIB_PREDEBIT"},
+        "mutation_policy": {"const": "WRITE_ONCE_NO_OVERWRITE_TRUNCATE_OR_DELETE"},
+        "previous_snapshot_rule": {"const": "EVERY_PRIOR_NON_METADATA_ROW_PRESENT_BYTE_IDENTICAL_AND_NEW_ROWS_ONLY"},
+        "unknown_entry_disposition": {"const": "REFUSE"}
+      }
+    },
+    "storage_category": {
+      "enum": [
+        "PRIMARY_LOGICAL_OUTPUT", "INDEPENDENT_AUDIT_COPY",
+        "DYNAMIC_GROWTH_PHYSICAL_WRITE", "CHECKPOINT_AND_WRITE_OVERHEAD",
+        "TEMPORARY_ARCHIVE", "RETAINED_EVIDENCE"
+      ]
+    },
+    "storage_category_directories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_logical_output", "independent_audit_copy",
+        "dynamic_growth_physical_writes", "checkpoint_and_write_overhead",
+        "temporary_archives", "retained_evidence"
+      ],
+      "properties": {
+        "primary_logical_output": {"$ref": "#/$defs/nonempty_string"},
+        "independent_audit_copy": {"$ref": "#/$defs/nonempty_string"},
+        "dynamic_growth_physical_writes": {"$ref": "#/$defs/nonempty_string"},
+        "checkpoint_and_write_overhead": {"$ref": "#/$defs/nonempty_string"},
+        "temporary_archives": {"$ref": "#/$defs/nonempty_string"},
+        "retained_evidence": {"$ref": "#/$defs/nonempty_string"}
+      }
+    },
     "storage_usage_bytes": {
       "type": "object",
       "additionalProperties": false,
@@ -170,8 +573,94 @@
         "dynamic_growth_physical_write_bytes": {"type": "integer", "minimum": 0, "maximum": 85899345920},
         "checkpoint_and_write_overhead_bytes": {"type": "integer", "minimum": 0, "maximum": 68719476736},
         "temporary_archive_bytes": {"type": "integer", "minimum": 0, "maximum": 8589934592},
-        "retained_evidence_bytes": {"type": "integer", "minimum": 0, "maximum": 8589934592},
+        "retained_evidence_bytes": {"const": 8589934592},
         "total_envelope_usage_bytes": {"type": "integer", "minimum": 0, "maximum": 715112054784}
+      }
+    },
+    "storage_inventory_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path", "entry_type", "storage_category", "logical_bytes",
+        "allocated_bytes", "accounted_bytes", "hard_link_count",
+        "reparse_point", "sparse", "compressed", "content_sha256"
+      ],
+      "properties": {
+        "relative_path": {"$ref": "#/$defs/nonempty_string"},
+        "entry_type": {"enum": ["DIRECTORY", "REGULAR_FILE"]},
+        "storage_category": {"$ref": "#/$defs/storage_category"},
+        "logical_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "allocated_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "accounted_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "hard_link_count": {"const": 1},
+        "reparse_point": {"const": false},
+        "sparse": {"const": false},
+        "compressed": {"const": false},
+        "content_sha256": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"entry_type": {"const": "REGULAR_FILE"}}},
+          "then": {"properties": {"content_sha256": {"$ref": "#/$defs/sha256"}}}
+        },
+        {
+          "if": {"properties": {"entry_type": {"const": "DIRECTORY"}}},
+          "then": {"properties": {"logical_bytes": {"const": 0}, "content_sha256": {"type": "null"}}}
+        }
+      ]
+    },
+    "storage_capacity_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "filesystem_identity", "storage_inventory_policy_identity",
+        "snapshot_started_utc", "snapshot_completed_utc", "roots_quiescent",
+        "volume_allocation_unit_bytes", "observed_capacity_bytes",
+        "observed_free_bytes", "inventory_entries",
+        "retained_evidence_metadata_subtree_predebited",
+        "retained_evidence_live_allocated_bytes_after_snapshot_write",
+        "retained_evidence_live_allocated_bytes_within_ceiling",
+        "current_envelope_usage", "reserved_envelope_bytes",
+        "remaining_reserved_envelope_bytes", "previous_snapshot_identity",
+        "unknown_entry_count", "scientific_counters", "snapshot_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_storage_capacity_snapshot/v1"},
+        "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
+        "storage_inventory_policy_identity": {"$ref": "#/$defs/storage_inventory_policy_identity"},
+        "snapshot_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "snapshot_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "roots_quiescent": {"const": true},
+        "volume_allocation_unit_bytes": {"$ref": "#/$defs/positive_integer"},
+        "observed_capacity_bytes": {"$ref": "#/$defs/positive_integer"},
+        "observed_free_bytes": {"$ref": "#/$defs/positive_integer"},
+        "inventory_entries": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/storage_inventory_entry"},
+          "uniqueItems": true
+        },
+        "retained_evidence_metadata_subtree_predebited": {"const": true},
+        "retained_evidence_live_allocated_bytes_after_snapshot_write": {
+          "type": "integer", "minimum": 0, "maximum": 8589934592
+        },
+        "retained_evidence_live_allocated_bytes_within_ceiling": {"const": true},
+        "current_envelope_usage": {"$ref": "#/$defs/storage_usage_bytes"},
+        "reserved_envelope_bytes": {"const": 715112054784},
+        "remaining_reserved_envelope_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "previous_snapshot_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
+            {"type": "null"}
+          ]
+        },
+        "unknown_entry_count": {"const": 0},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "private_host_facts": {
@@ -210,7 +699,8 @@
         "sqlite_version",
         "installed_package",
         "installed_artifact_sha256",
-        "dependency_identities"
+        "dependency_identities",
+        "dependency_preimages"
       ],
       "properties": {
         "image_digest": {
@@ -227,7 +717,15 @@
           "type": "array",
           "minItems": 3,
           "maxItems": 3,
-          "items": {"$ref": "#/$defs/identity"}
+          "items": {"$ref": "#/$defs/installed_dependency_identity"},
+          "uniqueItems": true
+        },
+        "dependency_preimages": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/installed_distribution_preimage"},
+          "uniqueItems": true
         }
       }
     },
@@ -238,21 +736,21 @@
         "filesystem_type",
         "volume_identity",
         "private_directories",
-        "observed_capacity_bytes",
-        "observed_free_bytes",
-        "current_envelope_usage",
-        "reserved_envelope_bytes",
-        "remaining_reserved_envelope_bytes"
+        "storage_category_directories",
+        "volume_allocation_unit_bytes",
+        "storage_inventory_policy_identity",
+        "filesystem_identity",
+        "reserved_envelope_bytes"
       ],
       "properties": {
         "filesystem_type": {"const": "NTFS"},
         "volume_identity": {"$ref": "#/$defs/nonempty_string"},
         "private_directories": {"$ref": "#/$defs/private_directories"},
-        "observed_capacity_bytes": {"$ref": "#/$defs/positive_integer"},
-        "observed_free_bytes": {"$ref": "#/$defs/positive_integer"},
-        "current_envelope_usage": {"$ref": "#/$defs/storage_usage_bytes"},
-        "reserved_envelope_bytes": {"const": 715112054784},
-        "remaining_reserved_envelope_bytes": {"$ref": "#/$defs/nonnegative_integer"}
+        "storage_category_directories": {"$ref": "#/$defs/storage_category_directories"},
+        "volume_allocation_unit_bytes": {"$ref": "#/$defs/positive_integer"},
+        "storage_inventory_policy_identity": {"$ref": "#/$defs/storage_inventory_policy_identity"},
+        "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
+        "reserved_envelope_bytes": {"const": 715112054784}
       }
     },
     "power_facts": {
@@ -264,21 +762,41 @@
         "plugged_in_sleep_disabled",
         "plugged_in_lid_action",
         "lid_open_required",
+        "lid_open_attested",
         "docker_desktop_running",
         "docker_autostart_enabled",
+        "pending_reboot",
         "unattended_reboot_blocked"
       ],
       "properties": {
-        "snapshot_utc": {"$ref": "#/$defs/nonempty_string"},
+        "snapshot_utc": {"$ref": "#/$defs/utc_timestamp"},
         "ac_connected": {"type": "boolean"},
         "plugged_in_sleep_disabled": {"type": "boolean"},
         "plugged_in_lid_action": {
           "enum": ["SLEEP", "DO_NOTHING"]
         },
         "lid_open_required": {"type": "boolean"},
+        "lid_open_attested": {"type": "boolean"},
         "docker_desktop_running": {"type": "boolean"},
         "docker_autostart_enabled": {"type": "boolean"},
+        "pending_reboot": {"type": "boolean"},
         "unattended_reboot_blocked": {"type": "boolean"}
+      }
+    },
+    "power_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "private_host_manifest_identity", "facts", "settings_changed_by_validator",
+        "scientific_counters", "snapshot_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_power_snapshot/v1"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
+        "facts": {"$ref": "#/$defs/power_facts"},
+        "settings_changed_by_validator": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "snapshot_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "policy_preimages": {
@@ -290,7 +808,8 @@
         "worker_allocation",
         "storage_location",
         "durability",
-        "restart"
+        "restart",
+        "storage_inventory"
       ],
       "properties": {
         "environment": {"$ref": "#/$defs/nonempty_string"},
@@ -298,7 +817,8 @@
         "worker_allocation": {"$ref": "#/$defs/nonempty_string"},
         "storage_location": {"$ref": "#/$defs/nonempty_string"},
         "durability": {"$ref": "#/$defs/nonempty_string"},
-        "restart": {"$ref": "#/$defs/nonempty_string"}
+        "restart": {"$ref": "#/$defs/nonempty_string"},
+        "storage_inventory": {"$ref": "#/$defs/nonempty_string"}
       }
     },
     "private_execution_host_manifest": {
@@ -312,9 +832,9 @@
         "host",
         "runtime",
         "filesystem",
-        "power",
         "policy_preimages",
         "durability_bundle_identity",
+        "initial_storage_capacity_snapshot_identity",
         "outcome_blind_attestation",
         "scientific_counters"
       ],
@@ -326,9 +846,9 @@
         "host": {"$ref": "#/$defs/private_host_facts"},
         "runtime": {"$ref": "#/$defs/runtime_facts"},
         "filesystem": {"$ref": "#/$defs/filesystem_facts"},
-        "power": {"$ref": "#/$defs/power_facts"},
         "policy_preimages": {"$ref": "#/$defs/policy_preimages"},
-        "durability_bundle_identity": {"$ref": "#/$defs/identity"},
+        "durability_bundle_identity": {"$ref": "#/$defs/private_durability_bundle_identity"},
+        "initial_storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
         "outcome_blind_attestation": {"const": true},
         "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
       }
@@ -347,6 +867,8 @@
         "durability_policy_identity",
         "restart_policy_identity",
         "private_durability_bundle_identity",
+        "filesystem_identity",
+        "storage_inventory_policy_identity",
         "logical_directory_roles",
         "storage_envelope",
         "private_manifest_retained",
@@ -359,14 +881,16 @@
       "properties": {
         "schema": {"const": "stage_f_public_execution_host_binding/v1"},
         "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
-        "private_host_manifest_identity": {"$ref": "#/$defs/identity"},
-        "environment_identity": {"$ref": "#/$defs/identity"},
-        "parallelization_boundary_identity": {"$ref": "#/$defs/identity"},
-        "worker_allocation_policy_identity": {"$ref": "#/$defs/identity"},
-        "storage_location_identity": {"$ref": "#/$defs/identity"},
-        "durability_policy_identity": {"$ref": "#/$defs/identity"},
-        "restart_policy_identity": {"$ref": "#/$defs/identity"},
-        "private_durability_bundle_identity": {"$ref": "#/$defs/identity"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
+        "environment_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "parallelization_boundary_identity": {"$ref": "#/$defs/parallelization_policy_identity"},
+        "worker_allocation_policy_identity": {"$ref": "#/$defs/worker_policy_identity"},
+        "storage_location_identity": {"$ref": "#/$defs/storage_policy_identity"},
+        "durability_policy_identity": {"$ref": "#/$defs/durability_policy_identity"},
+        "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
+        "private_durability_bundle_identity": {"$ref": "#/$defs/private_durability_bundle_identity"},
+        "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
+        "storage_inventory_policy_identity": {"$ref": "#/$defs/storage_inventory_policy_identity"},
         "logical_directory_roles": {"$ref": "#/$defs/directory_roles"},
         "storage_envelope": {"$ref": "#/$defs/storage_envelope"},
         "private_manifest_retained": {"const": true},
@@ -420,13 +944,13 @@
         "campaign_id": {"$ref": "#/$defs/nonempty_string"},
         "campaign_execution_binding_file_identity": {
           "oneOf": [
-            {"$ref": "#/$defs/identity"},
+            {"$ref": "#/$defs/campaign_binding_file_identity"},
             {"type": "null"}
           ]
         },
         "campaign_execution_binding_identity": {
           "oneOf": [
-            {"$ref": "#/$defs/identity"},
+            {"$ref": "#/$defs/campaign_binding_identity"},
             {"type": "null"}
           ]
         },
@@ -438,7 +962,24 @@
           "items": {"$ref": "#/$defs/nonempty_string"},
           "uniqueItems": true
         }
-      }
+      },
+      "allOf": [
+        {"if":{"properties":{"route_id":{"const":"SD-01"}}},"then":{"properties":{"study_id":{"const":"SD-01"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-01-GROWTH-v1"}}},"then":{"properties":{"study_id":{"const":"SD-01"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-02"}}},"then":{"properties":{"study_id":{"const":"SD-02"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-03"}}},"then":{"properties":{"study_id":{"const":"SD-03"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-04"}}},"then":{"properties":{"study_id":{"const":"SD-04"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-05"}}},"then":{"properties":{"study_id":{"const":"SD-05"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-06"}}},"then":{"properties":{"study_id":{"const":"SD-06"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-07"}}},"then":{"properties":{"study_id":{"const":"SD-07"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-08"}}},"then":{"properties":{"study_id":{"const":"SD-08"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-09"}}},"then":{"properties":{"study_id":{"const":"SD-09"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-10"}}},"then":{"properties":{"study_id":{"const":"SD-10"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-11"}}},"then":{"properties":{"study_id":{"const":"SD-11"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-12"}}},"then":{"properties":{"study_id":{"const":"SD-12"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-13"}}},"then":{"properties":{"study_id":{"const":"SD-13"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-14"}}},"then":{"properties":{"study_id":{"const":"SD-14"}}}}
+      ]
     },
     "local_binding_bundle": {
       "type": "object",
@@ -457,7 +998,6 @@
         "authority_set_identity",
         "stage_e_evidence_identity",
         "validator_identity",
-        "independent_audit_identity",
         "disposition",
         "scientific_counters",
         "bundle_sha256"
@@ -476,25 +1016,17 @@
           "maxItems": 15,
           "items": {"$ref": "#/$defs/route_binding"}
         },
-        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
         "scientific_code_identity": {"$ref": "#/$defs/identity"},
         "installed_artifact_identity": {"$ref": "#/$defs/identity"},
-        "binding_implementation_identity": {"$ref": "#/$defs/identity"},
-        "authority_set_identity": {"$ref": "#/$defs/identity"},
+        "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
+        "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
-        "validator_identity": {"$ref": "#/$defs/identity"},
-        "independent_audit_identity": {
-          "oneOf": [
-            {"$ref": "#/$defs/identity"},
-            {"type": "null"}
-          ]
-        },
+        "validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "disposition": {
           "enum": [
             "BINDING_NOT_SEALABLE",
-            "READY_FOR_INDEPENDENT_BINDING_AUDIT",
-            "INDEPENDENT_BINDING_PASS",
-            "INDEPENDENT_BINDING_FAIL"
+            "READY_FOR_INDEPENDENT_BINDING_AUDIT"
           ]
         },
         "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
@@ -506,6 +1038,7 @@
       "additionalProperties": false,
       "required": [
         "schema",
+        "readiness_utc",
         "local_binding_bundle_identity",
         "public_host_binding_identity",
         "ordered_route_ids",
@@ -516,6 +1049,9 @@
         "authority_set_identity",
         "stage_e_evidence_identity",
         "validator_identity",
+        "binding_validation_receipt_identity",
+        "storage_capacity_snapshot_identity",
+        "power_snapshot_identity",
         "unresolved_authority_ids",
         "storage_preconditions_pass",
         "power_preconditions_pass",
@@ -528,8 +1064,9 @@
       ],
       "properties": {
         "schema": {"const": "stage_f_local_binding_readiness/v1"},
-        "local_binding_bundle_identity": {"$ref": "#/$defs/identity"},
-        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "readiness_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "local_binding_bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
         "ordered_route_ids": {
           "type": "array",
           "minItems": 15,
@@ -542,17 +1079,20 @@
           "maxItems": 15,
           "items": {
             "oneOf": [
-              {"$ref": "#/$defs/identity"},
+              {"$ref": "#/$defs/campaign_binding_identity"},
               {"type": "null"}
             ]
           }
         },
         "scientific_code_identity": {"$ref": "#/$defs/identity"},
         "installed_artifact_identity": {"$ref": "#/$defs/identity"},
-        "binding_implementation_identity": {"$ref": "#/$defs/identity"},
-        "authority_set_identity": {"$ref": "#/$defs/identity"},
+        "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
+        "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
-        "validator_identity": {"$ref": "#/$defs/identity"},
+        "validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
+        "binding_validation_receipt_identity": {"$ref": "#/$defs/binding_validation_receipt_identity"},
+        "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
+        "power_snapshot_identity": {"$ref": "#/$defs/power_snapshot_identity"},
         "unresolved_authority_ids": {
           "type": "array",
           "items": {"$ref": "#/$defs/nonempty_string"},
@@ -564,7 +1104,7 @@
         "private_public_digest_reconciled": {"type": "boolean"},
         "independent_audit_identity": {
           "oneOf": [
-            {"$ref": "#/$defs/identity"},
+            {"$ref": "#/$defs/independent_binding_audit_identity"},
             {"type": "null"}
           ]
         },
@@ -585,13 +1125,21 @@
       "additionalProperties": false,
       "required": [
         "schema",
+        "validated_utc",
         "bundle_identity",
         "private_manifest_identity",
         "public_host_binding_identity",
+        "storage_capacity_snapshot_identity",
+        "power_snapshot_identity",
         "validated_route_order",
         "schema_check_count",
         "semantic_check_count",
         "unresolved_authority_ids",
+        "identity_preimages_pass",
+        "portfolio_projection_pass",
+        "storage_preconditions_pass",
+        "power_preconditions_pass",
+        "durability_preconditions_pass",
         "private_public_digest_reconciled",
         "stage_e_guard_preserved",
         "disposition",
@@ -600,9 +1148,12 @@
       ],
       "properties": {
         "schema": {"const": "stage_f_binding_validation_receipt/v1"},
-        "bundle_identity": {"$ref": "#/$defs/identity"},
-        "private_manifest_identity": {"$ref": "#/$defs/identity"},
-        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "validated_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
+        "private_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
+        "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
+        "power_snapshot_identity": {"$ref": "#/$defs/power_snapshot_identity"},
         "validated_route_order": {
           "type": "array",
           "minItems": 15,
@@ -616,6 +1167,11 @@
           "items": {"$ref": "#/$defs/nonempty_string"},
           "uniqueItems": true
         },
+        "identity_preimages_pass": {"type": "boolean"},
+        "portfolio_projection_pass": {"type": "boolean"},
+        "storage_preconditions_pass": {"type": "boolean"},
+        "power_preconditions_pass": {"type": "boolean"},
+        "durability_preconditions_pass": {"type": "boolean"},
         "private_public_digest_reconciled": {"type": "boolean"},
         "stage_e_guard_preserved": {"const": true},
         "disposition": {
@@ -641,12 +1197,13 @@
         "temporary_path_identity",
         "final_path_identity",
         "directory_target_identity",
+        "storage_capacity_snapshot_identity",
         "same_volume",
         "file_flush_completed",
         "file_durability_primitive",
         "directory_durability_completed",
         "directory_durability_primitive",
-        "atomic_replacement_completed",
+        "atomic_publication_completed",
         "restart_reread_completed",
         "content_hash_reconciled",
         "corrupt_final_refused",
@@ -660,13 +1217,14 @@
       ],
       "properties": {
         "schema": {"const": "stage_f_durability_probe_receipt/v1"},
-        "filesystem_identity": {"$ref": "#/$defs/identity"},
-        "durability_policy_identity": {"$ref": "#/$defs/identity"},
-        "restart_policy_identity": {"$ref": "#/$defs/identity"},
-        "synthetic_payload_identity": {"$ref": "#/$defs/identity"},
-        "temporary_path_identity": {"$ref": "#/$defs/identity"},
-        "final_path_identity": {"$ref": "#/$defs/identity"},
-        "directory_target_identity": {"$ref": "#/$defs/identity"},
+        "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
+        "durability_policy_identity": {"$ref": "#/$defs/durability_policy_identity"},
+        "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
+        "synthetic_payload_identity": {"$ref": "#/$defs/synthetic_payload_identity"},
+        "temporary_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "final_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "directory_target_identity": {"$ref": "#/$defs/private_path_identity"},
+        "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
         "same_volume": {"const": true},
         "file_flush_completed": {"const": true},
         "file_durability_primitive": {
@@ -680,7 +1238,7 @@
             "FSYNC_DIRECTORY"
           ]
         },
-        "atomic_replacement_completed": {"const": true},
+        "atomic_publication_completed": {"const": true},
         "restart_reread_completed": {"const": true},
         "content_hash_reconciled": {"const": true},
         "corrupt_final_refused": {"const": true},
@@ -693,12 +1251,99 @@
         "receipt_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
+    "private_durability_bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "filesystem_identity", "durability_policy_identity",
+        "restart_policy_identity", "ordered_probe_receipt_identities",
+        "probe_receipt_count", "all_required_probes_pass",
+        "scientific_counters", "bundle_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_private_durability_bundle/v1"},
+        "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
+        "durability_policy_identity": {"$ref": "#/$defs/durability_policy_identity"},
+        "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
+        "ordered_probe_receipt_identities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/durability_probe_receipt_identity"},
+          "uniqueItems": true
+        },
+        "probe_receipt_count": {"$ref": "#/$defs/positive_integer"},
+        "all_required_probes_pass": {"const": true},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "bundle_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "independent_binding_audit_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "audit_completed_utc", "auditor_role", "audited_bundle_identity",
+        "audited_ready_readiness_identity", "private_host_manifest_identity",
+        "public_host_binding_identity", "storage_capacity_snapshot_identity",
+        "power_snapshot_identity",
+        "binding_validation_receipt_identity", "private_bytes_directly_read",
+        "all_digest_links_recomputed", "repair_action_count", "issue_ids",
+        "disposition", "scientific_counters", "audit_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_independent_binding_audit/v1"},
+        "audit_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "auditor_role": {"const": "INDEPENDENT_READ_ONLY_AUDITOR"},
+        "audited_bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
+        "audited_ready_readiness_identity": {"$ref": "#/$defs/binding_readiness_identity"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
+        "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
+        "power_snapshot_identity": {"$ref": "#/$defs/power_snapshot_identity"},
+        "binding_validation_receipt_identity": {"$ref": "#/$defs/binding_validation_receipt_identity"},
+        "private_bytes_directly_read": {"const": true},
+        "all_digest_links_recomputed": {"const": true},
+        "repair_action_count": {"const": 0},
+        "issue_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonempty_string"},
+          "uniqueItems": true
+        },
+        "disposition": {"enum": ["INDEPENDENT_BINDING_PASS", "INDEPENDENT_BINDING_FAIL"]},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "audit_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "post_packet_user_authorization_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "sealed_campaign_packet_identity", "statement_sha256",
+        "statement_received_utc", "statement_bytes_retained_privately",
+        "explicit_stage_f_execution_authorization",
+        "issued_after_packet", "outcome_inspected_before_authorization",
+        "scientific_counters", "receipt_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_post_packet_user_authorization_receipt/v1"},
+        "sealed_campaign_packet_identity": {"$ref": "#/$defs/sealed_campaign_packet_identity"},
+        "statement_sha256": {"$ref": "#/$defs/sha256"},
+        "statement_received_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "statement_bytes_retained_privately": {"const": true},
+        "explicit_stage_f_execution_authorization": {"const": true},
+        "issued_after_packet": {"const": true},
+        "outcome_inspected_before_authorization": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "campaign_authorization": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "schema",
+        "authorization_utc",
         "ordered_route_ids",
+        "sealed_campaign_packet_identity",
         "sealed_binding_bundle_identity",
         "public_host_binding_identity",
         "private_host_manifest_identity",
@@ -707,6 +1352,9 @@
         "stage_e_integration_identity",
         "stage_e_evidence_identity",
         "independent_binding_audit_identity",
+        "binding_validation_receipt_identity",
+        "storage_capacity_snapshot_identity",
+        "power_snapshot_identity",
         "post_packet_explicit_user_authorization_receipt_identity",
         "issued_before_first_model_step",
         "outcome_inspected_before_issue",
@@ -715,21 +1363,26 @@
       ],
       "properties": {
         "schema": {"const": "stage_f_campaign_authorization/v1"},
+        "authorization_utc": {"$ref": "#/$defs/utc_timestamp"},
         "ordered_route_ids": {
           "type": "array",
           "minItems": 15,
           "maxItems": 15,
           "items": {"$ref": "#/$defs/route_id"}
         },
-        "sealed_binding_bundle_identity": {"$ref": "#/$defs/identity"},
-        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
-        "private_host_manifest_identity": {"$ref": "#/$defs/identity"},
+        "sealed_campaign_packet_identity": {"$ref": "#/$defs/sealed_campaign_packet_identity"},
+        "sealed_binding_bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
         "scientific_implementation_identity": {"$ref": "#/$defs/identity"},
         "verifier_identity": {"$ref": "#/$defs/identity"},
         "stage_e_integration_identity": {"$ref": "#/$defs/identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
-        "independent_binding_audit_identity": {"$ref": "#/$defs/identity"},
-        "post_packet_explicit_user_authorization_receipt_identity": {"$ref": "#/$defs/identity"},
+        "independent_binding_audit_identity": {"$ref": "#/$defs/independent_binding_audit_identity"},
+        "binding_validation_receipt_identity": {"$ref": "#/$defs/binding_validation_receipt_identity"},
+        "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
+        "power_snapshot_identity": {"$ref": "#/$defs/power_snapshot_identity"},
+        "post_packet_explicit_user_authorization_receipt_identity": {"$ref": "#/$defs/post_packet_authorization_receipt_identity"},
         "issued_before_first_model_step": {"const": true},
         "outcome_inspected_before_issue": {"const": false},
         "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
@@ -739,11 +1392,16 @@
   },
   "oneOf": [
     {"$ref": "#/$defs/private_execution_host_manifest"},
+    {"$ref": "#/$defs/storage_capacity_snapshot"},
+    {"$ref": "#/$defs/power_snapshot"},
     {"$ref": "#/$defs/public_execution_host_binding"},
     {"$ref": "#/$defs/local_binding_bundle"},
     {"$ref": "#/$defs/binding_readiness_record"},
     {"$ref": "#/$defs/binding_validation_receipt"},
     {"$ref": "#/$defs/durability_probe_receipt"},
+    {"$ref": "#/$defs/private_durability_bundle"},
+    {"$ref": "#/$defs/independent_binding_audit_receipt"},
+    {"$ref": "#/$defs/post_packet_user_authorization_receipt"},
     {"$ref": "#/$defs/campaign_authorization"}
   ],
   "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"
