@@ -22,6 +22,15 @@
       "type": "integer",
       "minimum": 1
     },
+    "uint32": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "windows_volume_guid_path": {
+      "type": "string",
+      "pattern": "^\\\\\\\\\\?\\\\Volume\\{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\\}\\\\$"
+    },
     "git_commit": {
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
@@ -274,6 +283,76 @@
         "tree": {"$ref": "#/$defs/git_commit"}
       }
     },
+    "git_file_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "mode", "git_object", "byte_count", "raw_sha256"],
+      "properties": {
+        "path": {"$ref": "#/$defs/nonempty_string"},
+        "mode": {"const": "100644"},
+        "git_object": {"$ref": "#/$defs/git_commit"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "binding_implementation_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "accepted_base", "implementation_commit", "implementation_tree",
+        "ordered_implementation_file_rows", "implementation_file_count"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_binding_implementation/v1"},
+        "accepted_base": {"$ref": "#/$defs/repository_coordinate"},
+        "implementation_commit": {"$ref": "#/$defs/git_commit"},
+        "implementation_tree": {"$ref": "#/$defs/git_commit"},
+        "ordered_implementation_file_rows": {
+          "type": "array", "minItems": 13, "maxItems": 13,
+          "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
+        },
+        "implementation_file_count": {"const": 13}
+      }
+    },
+    "route_authority_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id", "campaign_execution_binding_identity",
+        "scientific_authority_identity", "continuation_authority_identity"
+      ],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route_id"},
+        "campaign_execution_binding_identity": {"$ref": "#/$defs/campaign_binding_identity"},
+        "scientific_authority_identity": {"$ref": "#/$defs/identity"},
+        "continuation_authority_identity": {"$ref": "#/$defs/identity"}
+      }
+    },
+    "binding_authority_set_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "accepted_base", "integrated_authority_commit", "integrated_authority_tree",
+        "ordered_local_authority_file_rows", "local_authority_file_count",
+        "ordered_route_authority_projections", "route_authority_projection_count"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_binding_authority_set/v1"},
+        "accepted_base": {"$ref": "#/$defs/repository_coordinate"},
+        "integrated_authority_commit": {"$ref": "#/$defs/git_commit"},
+        "integrated_authority_tree": {"$ref": "#/$defs/git_commit"},
+        "ordered_local_authority_file_rows": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
+        },
+        "local_authority_file_count": {"const": 6},
+        "ordered_route_authority_projections": {
+          "type": "array", "minItems": 15, "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_authority_projection"}, "uniqueItems": true
+        },
+        "route_authority_projection_count": {"const": 15}
+      }
+    },
     "directory_roles": {
       "type": "array",
       "minItems": 4,
@@ -302,6 +381,42 @@
         "continuation_checkpoints": {"$ref": "#/$defs/nonempty_string"},
         "independent_audit": {"$ref": "#/$defs/nonempty_string"},
         "temporary": {"$ref": "#/$defs/nonempty_string"}
+      }
+    },
+    "volume_measurement_api_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mount_point_resolution", "volume_guid_resolution", "final_path_resolution",
+        "volume_information", "allocation_geometry", "capacity_and_free_space"
+      ],
+      "properties": {
+        "mount_point_resolution": {"const": "GetVolumePathNameW"},
+        "volume_guid_resolution": {"const": "GetVolumeNameForVolumeMountPointW"},
+        "final_path_resolution": {"const": "CreateFileW_GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "volume_information": {"const": "GetVolumeInformationW"},
+        "allocation_geometry": {"const": "GetDiskFreeSpaceW"},
+        "capacity_and_free_space": {"const": "GetDiskFreeSpaceExW"}
+      }
+    },
+    "resolved_private_path_volume_guids": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_f_root", "immutable_results", "continuation_checkpoints",
+        "independent_audit", "temporary", "primary_logical_output",
+        "independent_audit_copy", "dynamic_growth_physical_writes", "retained_evidence"
+      ],
+      "properties": {
+        "stage_f_root": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "immutable_results": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "continuation_checkpoints": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "independent_audit": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "temporary": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "primary_logical_output": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "independent_audit_copy": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "dynamic_growth_physical_writes": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "retained_evidence": {"$ref": "#/$defs/windows_volume_guid_path"}
       }
     },
     "storage_envelope": {
@@ -673,8 +788,16 @@
       "required": [
         "schema", "filesystem_identity", "storage_inventory_policy_identity",
         "snapshot_started_utc", "snapshot_completed_utc", "roots_quiescent",
-        "volume_allocation_unit_bytes", "observed_capacity_bytes",
-        "observed_free_bytes", "inventory_entries",
+        "volume_measurement_apis", "volume_queries_succeeded",
+        "selected_volume_guid_path", "resolved_private_path_volume_guids",
+        "volume_serial_number", "filesystem_name", "maximum_component_length",
+        "filesystem_flags", "sectors_per_cluster", "bytes_per_sector",
+        "get_disk_free_space_free_clusters", "get_disk_free_space_total_clusters",
+        "volume_allocation_unit_bytes",
+        "get_disk_free_space_ex_available_to_caller_bytes",
+        "get_disk_free_space_ex_total_caller_bytes",
+        "get_disk_free_space_ex_total_free_bytes",
+        "observed_capacity_bytes", "observed_free_bytes", "inventory_entries",
         "retained_evidence_metadata_subtree_predebited",
         "retained_evidence_live_allocated_bytes_after_snapshot_write",
         "retained_evidence_live_allocated_bytes_within_ceiling",
@@ -689,9 +812,24 @@
         "snapshot_started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "snapshot_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "roots_quiescent": {"const": true},
+        "volume_measurement_apis": {"$ref": "#/$defs/volume_measurement_api_profile"},
+        "volume_queries_succeeded": {"const": true},
+        "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "resolved_private_path_volume_guids": {"$ref": "#/$defs/resolved_private_path_volume_guids"},
+        "volume_serial_number": {"$ref": "#/$defs/uint32"},
+        "filesystem_name": {"const": "NTFS"},
+        "maximum_component_length": {"$ref": "#/$defs/positive_integer"},
+        "filesystem_flags": {"$ref": "#/$defs/uint32"},
+        "sectors_per_cluster": {"$ref": "#/$defs/positive_integer"},
+        "bytes_per_sector": {"$ref": "#/$defs/positive_integer"},
+        "get_disk_free_space_free_clusters": {"$ref": "#/$defs/nonnegative_integer"},
+        "get_disk_free_space_total_clusters": {"$ref": "#/$defs/positive_integer"},
         "volume_allocation_unit_bytes": {"$ref": "#/$defs/positive_integer"},
+        "get_disk_free_space_ex_available_to_caller_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "get_disk_free_space_ex_total_caller_bytes": {"$ref": "#/$defs/positive_integer"},
+        "get_disk_free_space_ex_total_free_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "observed_capacity_bytes": {"$ref": "#/$defs/positive_integer"},
-        "observed_free_bytes": {"$ref": "#/$defs/positive_integer"},
+        "observed_free_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "inventory_entries": {
           "type": "array",
           "items": {"$ref": "#/$defs/storage_inventory_entry"},
@@ -787,7 +925,14 @@
       "additionalProperties": false,
       "required": [
         "filesystem_type",
-        "volume_identity",
+        "volume_measurement_apis",
+        "selected_volume_guid_path",
+        "resolved_private_path_volume_guids",
+        "volume_serial_number",
+        "maximum_component_length",
+        "filesystem_flags",
+        "sectors_per_cluster",
+        "bytes_per_sector",
         "private_directories",
         "storage_category_directories",
         "volume_allocation_unit_bytes",
@@ -797,7 +942,14 @@
       ],
       "properties": {
         "filesystem_type": {"const": "NTFS"},
-        "volume_identity": {"$ref": "#/$defs/nonempty_string"},
+        "volume_measurement_apis": {"$ref": "#/$defs/volume_measurement_api_profile"},
+        "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "resolved_private_path_volume_guids": {"$ref": "#/$defs/resolved_private_path_volume_guids"},
+        "volume_serial_number": {"$ref": "#/$defs/uint32"},
+        "maximum_component_length": {"$ref": "#/$defs/positive_integer"},
+        "filesystem_flags": {"$ref": "#/$defs/uint32"},
+        "sectors_per_cluster": {"$ref": "#/$defs/positive_integer"},
+        "bytes_per_sector": {"$ref": "#/$defs/positive_integer"},
         "private_directories": {"$ref": "#/$defs/private_directories"},
         "storage_category_directories": {"$ref": "#/$defs/storage_category_directories"},
         "volume_allocation_unit_bytes": {"$ref": "#/$defs/positive_integer"},
@@ -1018,7 +1170,7 @@
       },
       "allOf": [
         {"if":{"properties":{"route_id":{"const":"SD-01"}}},"then":{"properties":{"study_id":{"const":"SD-01"}}}},
-        {"if":{"properties":{"route_id":{"const":"SD-01-GROWTH-v1"}}},"then":{"properties":{"study_id":{"const":"SD-01"}}}},
+        {"if":{"properties":{"route_id":{"const":"SD-01-GROWTH-v1"}}},"then":{"properties":{"study_id":{"const":"SD-01"},"campaign_id":{"const":"SD-01-GROWTH-v1"}}}},
         {"if":{"properties":{"route_id":{"const":"SD-02"}}},"then":{"properties":{"study_id":{"const":"SD-02"}}}},
         {"if":{"properties":{"route_id":{"const":"SD-03"}}},"then":{"properties":{"study_id":{"const":"SD-03"}}}},
         {"if":{"properties":{"route_id":{"const":"SD-04"}}},"then":{"properties":{"study_id":{"const":"SD-04"}}}},
@@ -1124,7 +1276,8 @@
           "type": "array",
           "minItems": 15,
           "maxItems": 15,
-          "items": {"$ref": "#/$defs/route_id"}
+          "items": {"$ref": "#/$defs/route_id"},
+          "uniqueItems": true
         },
         "ordered_campaign_execution_binding_identities": {
           "type": "array",
@@ -1211,7 +1364,8 @@
           "type": "array",
           "minItems": 15,
           "maxItems": 15,
-          "items": {"$ref": "#/$defs/route_id"}
+          "items": {"$ref": "#/$defs/route_id"},
+          "uniqueItems": true
         },
         "schema_check_count": {"$ref": "#/$defs/positive_integer"},
         "semantic_check_count": {"$ref": "#/$defs/positive_integer"},
@@ -1393,6 +1547,73 @@
         "audit_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
+    "sealed_campaign_packet_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "packet_created_utc",
+        "local_binding_bundle_identity",
+        "independent_binding_pass_readiness_identity",
+        "independent_binding_audit_identity",
+        "binding_validation_receipt_identity",
+        "public_host_binding_identity",
+        "private_host_manifest_identity",
+        "storage_capacity_snapshot_identity",
+        "power_snapshot_identity",
+        "scientific_code_identity",
+        "scientific_implementation_identity",
+        "installed_artifact_identity",
+        "verifier_identity",
+        "binding_implementation_identity",
+        "authority_set_identity",
+        "stage_e_integration_identity",
+        "stage_e_evidence_identity",
+        "validator_identity",
+        "ordered_route_ids",
+        "ordered_campaign_execution_binding_identities",
+        "independent_binding_pass_confirmed",
+        "unresolved_authority_ids",
+        "private_bytes_embedded",
+        "sensitive_field_disclosure_count",
+        "outcome_inspected_before_packet",
+        "scientific_counters"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_sealed_campaign_packet/v1"},
+        "packet_created_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "local_binding_bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
+        "independent_binding_pass_readiness_identity": {"$ref": "#/$defs/binding_readiness_identity"},
+        "independent_binding_audit_identity": {"$ref": "#/$defs/independent_binding_audit_identity"},
+        "binding_validation_receipt_identity": {"$ref": "#/$defs/binding_validation_receipt_identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
+        "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
+        "power_snapshot_identity": {"$ref": "#/$defs/power_snapshot_identity"},
+        "scientific_code_identity": {"$ref": "#/$defs/identity"},
+        "scientific_implementation_identity": {"$ref": "#/$defs/identity"},
+        "installed_artifact_identity": {"$ref": "#/$defs/identity"},
+        "verifier_identity": {"$ref": "#/$defs/identity"},
+        "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
+        "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
+        "stage_e_integration_identity": {"$ref": "#/$defs/identity"},
+        "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
+        "validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
+        "ordered_route_ids": {
+          "type": "array", "minItems": 15, "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_id"}, "uniqueItems": true
+        },
+        "ordered_campaign_execution_binding_identities": {
+          "type": "array", "minItems": 15, "maxItems": 15,
+          "items": {"$ref": "#/$defs/campaign_binding_identity"}, "uniqueItems": true
+        },
+        "independent_binding_pass_confirmed": {"const": true},
+        "unresolved_authority_ids": {"type": "array", "maxItems": 0},
+        "private_bytes_embedded": {"const": false},
+        "sensitive_field_disclosure_count": {"const": 0},
+        "outcome_inspected_before_packet": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      }
+    },
     "post_packet_user_authorization_receipt": {
       "type": "object",
       "additionalProperties": false,
@@ -1449,7 +1670,8 @@
           "type": "array",
           "minItems": 15,
           "maxItems": 15,
-          "items": {"$ref": "#/$defs/route_id"}
+          "items": {"$ref": "#/$defs/route_id"},
+          "uniqueItems": true
         },
         "sealed_campaign_packet_identity": {"$ref": "#/$defs/sealed_campaign_packet_identity"},
         "sealed_binding_bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
@@ -1477,12 +1699,15 @@
     {"$ref": "#/$defs/storage_capacity_snapshot"},
     {"$ref": "#/$defs/power_snapshot"},
     {"$ref": "#/$defs/public_execution_host_binding"},
+    {"$ref": "#/$defs/binding_implementation_preimage"},
+    {"$ref": "#/$defs/binding_authority_set_preimage"},
     {"$ref": "#/$defs/local_binding_bundle"},
     {"$ref": "#/$defs/binding_readiness_record"},
     {"$ref": "#/$defs/binding_validation_receipt"},
     {"$ref": "#/$defs/durability_probe_receipt"},
     {"$ref": "#/$defs/private_durability_bundle"},
     {"$ref": "#/$defs/independent_binding_audit_receipt"},
+    {"$ref": "#/$defs/sealed_campaign_packet_manifest"},
     {"$ref": "#/$defs/post_packet_user_authorization_receipt"},
     {"$ref": "#/$defs/campaign_authorization"}
   ],

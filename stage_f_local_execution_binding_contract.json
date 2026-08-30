@@ -105,12 +105,12 @@
     "stage_f_independent_binding_audit/v1": "complete canonical record omitting only audit_sha256",
     "stage_f_post_packet_user_authorization_receipt/v1": "complete canonical record omitting only receipt_sha256",
     "stage_f_campaign_authorization/v1": "complete canonical record omitting only authorization_sha256",
-    "stage_f_binding_implementation/v1": "ordered exact Git mode object byte-count and raw-SHA256 rows for the authorized thirteen implementation paths",
-    "stage_f_binding_authority_set/v1": "ordered exact integrated six-file local authority rows plus ordered per-route scientific and continuation authority identities",
+    "stage_f_binding_implementation/v1": "closed binding_implementation_preimage object with exact ordered thirteen-path Git rows",
+    "stage_f_binding_authority_set/v1": "closed binding_authority_set_preimage object with exact ordered six authority Git rows and fifteen route authority projections",
     "stage_f_binding_validator/v1": "exact deterministic built validator artifact bytes",
     "stage_f_synthetic_durability_payload/v1": "exact synthetic payload bytes",
     "stage_f_private_path/v1": "UTF-8 NFC absolute private path bytes without final LF",
-    "stage_f_sealed_campaign_packet/v1": "complete canonical self-contained Stage F packet manifest bytes"
+    "stage_f_sealed_campaign_packet/v1": "complete closed sealed_campaign_packet_manifest object bytes"
   },
   "private_policy_preimage_definitions": {
     "environment": "execution_environment_policy_preimage",
@@ -144,10 +144,64 @@
     "parent_study_id": "SD-01",
     "independent_study_count_increment": 0
   },
+  "binding_implementation_preimage": {
+    "schema_definition": "binding_implementation_preimage",
+    "row_schema_definition": "git_file_row",
+    "row_order": "EXACT_LIST_ORDER",
+    "ordered_paths": [
+      ".github/workflows/tests.yml",
+      "scripts/validate_stage_e_harness.py",
+      "scripts/build_stage_f_local_binding.py",
+      "scripts/validate_stage_f_local_binding.py",
+      "stage_f_binding/__init__.py",
+      "stage_f_binding/canonical.py",
+      "stage_f_binding/binding.py",
+      "stage_f_binding/durability.py",
+      "tests/stage_f_binding/__init__.py",
+      "tests/stage_f_binding/fixtures/negative_cases.json",
+      "tests/stage_f_binding/fixtures/synthetic_private_host_manifest.json",
+      "tests/stage_f_binding/test_binding_privacy_and_authorization.py",
+      "tests/stage_f_binding/test_durability_and_no_science.py"
+    ],
+    "row_fields_in_order": ["path", "mode", "git_object", "byte_count", "raw_sha256"],
+    "path_count": 13,
+    "mode": "100644",
+    "implementation_tree_equals_commit_tree": true,
+    "accepted_base_is_ancestor": true,
+    "missing_extra_reordered_or_changed_row": "REFUSE"
+  },
+  "binding_authority_set_preimage": {
+    "schema_definition": "binding_authority_set_preimage",
+    "file_row_schema_definition": "git_file_row",
+    "route_row_schema_definition": "route_authority_projection",
+    "local_authority_row_order": "EXACT_AUTHORITY_FILE_LIST_ORDER",
+    "ordered_local_authority_paths": [
+      "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+      "stage_f_local_execution_binding_contract.json",
+      "stage_f_local_execution_binding_evidence_schema.json",
+      "stage_f_local_execution_binding_implementation_path_manifest.json",
+      "stage_f_local_execution_binding_predecessor_manifest.json",
+      "stage_f_local_execution_binding_validation_contract.json"
+    ],
+    "file_row_fields_in_order": ["path", "mode", "git_object", "byte_count", "raw_sha256"],
+    "route_row_fields_in_order": [
+      "route_id", "campaign_execution_binding_identity",
+      "scientific_authority_identity", "continuation_authority_identity"
+    ],
+    "route_row_order": "EXACT_CAMPAIGN_ORDER",
+    "local_authority_file_count": 6,
+    "route_authority_projection_count": 15,
+    "integrated_authority_tree_equals_commit_tree": true,
+    "accepted_base_is_ancestor": true,
+    "missing_extra_reordered_or_changed_row": "REFUSE"
+  },
   "route_binding_projection": {
     "ordered_route_ids_equal_campaign_order": true,
     "ordinary_route_study_id_equals_route_id": true,
     "nested_growth_study_id": "SD-01",
+    "nested_growth_campaign_id": "SD-01-GROWTH-v1",
+    "nested_growth_wrapper_and_referenced_campaign_id_equal_frozen_nested_campaign_id": true,
+    "all_wrapper_campaign_ids_unique": true,
     "wrapper_campaign_id_equals_referenced_binding_campaign_id": true,
     "wrapper_study_id_equals_referenced_binding_study_id": true,
     "binding_file_identity_equals_exact_referenced_file_bytes": true,
@@ -228,6 +282,19 @@
     "snapshot_timestamps_required": true,
     "roots_quiescent_required": true,
     "recursive_inventory_required": true,
+    "selected_volume_identity": "GetVolumePathNameW_then_GetVolumeNameForVolumeMountPointW_volume_GUID_path",
+    "all_private_path_final_volume_resolution": "CreateFileW_then_GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID",
+    "volume_information_api": "GetVolumeInformationW",
+    "allocation_geometry_api": "GetDiskFreeSpaceW",
+    "capacity_and_free_space_api": "GetDiskFreeSpaceExW",
+    "volume_api_argument": "exact selected volume GUID path with trailing backslash",
+    "raw_volume_serial_filesystem_flags_maximum_component_sectors_bytes_clusters_capacity_and_free_outputs_recorded": true,
+    "filesystem_and_snapshot_stable_volume_observations_equal": true,
+    "allocation_unit_formula": "sectors_per_cluster * bytes_per_sector",
+    "observed_capacity_formula": "get_disk_free_space_ex_total_caller_bytes",
+    "observed_free_formula": "min(get_disk_free_space_ex_available_to_caller_bytes, get_disk_free_space_ex_total_free_bytes)",
+    "all_nine_unique_private_paths_resolve_to_selected_volume_guid": true,
+    "failed_mismatched_or_caller_supplied_volume_observation": "REFUSE",
     "category_layout_in_order": [
       "immutable-results/primary-logical-output",
       "independent-audit/complete-copy",
@@ -328,7 +395,13 @@
     "bundle_mutation_after_audit": "REFUSE"
   },
   "sealed_campaign_packet_authorization_projection": {
+    "schema_definition": "sealed_campaign_packet_manifest",
     "canonical_self_contained_manifest_required": true,
+    "identity_preimage": "complete canonical sealed_campaign_packet_manifest object",
+    "additional_fields": "REFUSE",
+    "private_bytes_embedded": false,
+    "sensitive_field_disclosure_count": 0,
+    "packet_created_not_before_bound_validation_audit_and_final_pass_readiness": true,
     "required_identity_fields": [
       "local_binding_bundle_identity",
       "independent_binding_pass_readiness_identity",
@@ -368,6 +441,7 @@
     "private_public_host_and_current_snapshot_projections_equal_validation_audit_pass_readiness_packet_and_public_binding": true,
     "mixed_record_composition_or_replay": "REFUSE",
     "later_explicit_user_statement_required": true,
+    "user_statement_received_not_before_packet_created": true,
     "controller_self_authorization_permitted": false,
     "dictionary_presence_is_authorization": false,
     "preimport_guard_required": true

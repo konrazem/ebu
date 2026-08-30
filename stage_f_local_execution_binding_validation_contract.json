@@ -41,11 +41,13 @@
     "storage components sum exactly to 666 GiB",
     "minimum free-space and nonresetting accounting rules are present",
     "capacity snapshot is timestamped independently enumerable predecessor-linked and storage-quiescent",
+    "capacity and allocation observations are raw Win32 outputs bound to the exact selected volume GUID and filesystem facts",
     "every NTFS file and directory has complete FindFirstStreamW FindNextStreamW enumeration and no named data stream",
     "power and durability preconditions are complete",
     "Stage E execution guard is protected and unchanged",
     "final descendant path union relative to the Stage E implementation base is exactly 69 paths",
-    "sealed packet carries the complete frozen authorization projection",
+    "binding implementation authority-set and sealed-packet preimages validate against exact closed schemas and projections",
+    "sealed packet carries the complete frozen closed authorization projection without private or additional fields",
     "authorization requires one exact independently passed record chain and later explicit user receipt",
     "all authority-candidate scientific counters are zero"
   ],
@@ -57,6 +59,14 @@
       "an enclosing record identity kind equals the record schema name and both digest fields equal the embedded digest",
       "every local identity kind equals the exact identity-kind registry entry for its field",
       "public alias is never substituted for a digest"
+    ],
+    "local_preimages": [
+      "stage_f_binding_implementation/v1 validates as binding_implementation_preimage; accepted base is an ancestor implementation_tree equals implementation_commit tree and exactly thirteen unique Git rows have the contract ordered paths and reproduce that commit mode object byte count and raw SHA-256",
+      "stage_f_binding_authority_set/v1 validates as binding_authority_set_preimage; accepted base is an ancestor integrated_authority_tree equals integrated_authority_commit tree and exactly six local authority Git rows follow the contract authority-file order with fifteen route-authority projections in exact campaign order",
+      "each authority-set route projection equals the referenced campaign binding route campaign-binding identity authority_identity and continuation_authority_identity",
+      "stage_f_sealed_campaign_packet/v1 validates as sealed_campaign_packet_manifest with no additional fields no private bytes zero sensitive-field disclosures and every required typed identity and ordered projection",
+      "sealed packet creation timestamp is not before its bound validation audit or final independent-PASS readiness timestamps",
+      "each local preimage is strictly parsed canonically reserialized and hashed in full; missing extra duplicate reordered or differently encoded substantive input refuses"
     ],
     "private_public": [
       "private_host_manifest_identity == sha256(exact retained canonical private manifest bytes)",
@@ -71,9 +81,11 @@
       "every campaign binding digest is reconstructed under accepted canonical JSON",
       "ordered route identities are complete unique and exact",
       "SD-01-GROWTH-v1 route has study_id SD-01",
+      "SD-01-GROWTH-v1 wrapper and referenced binding campaign_id both equal the frozen nested campaign id SD-01-GROWTH-v1",
       "every ordinary route has study_id equal to route_id",
       "each wrapper campaign_id and study_id equal the referenced campaign_execution_binding/v2 fields",
       "every non-null binding-file identity and binding identity is pairwise distinct and matches exact file bytes and reconstructed binding_sha256",
+      "all fifteen wrapper and referenced campaign ids are pairwise distinct so the main SD-01 and nested growth bindings cannot be exchanged",
       "each referenced code and installed-artifact identity equals the bundle and each environment parallelization worker storage durability and restart identity equals the public host binding",
       "authority-set identity reconstructs from the ordered referenced scientific and continuation authority projection plus integrated Stage F local authority files",
       "SEALED requires both identities and zero gaps while UNSEALED_AUTHORITY_GAP requires both identities null and at least one gap",
@@ -107,6 +119,12 @@
       "logical directory roles are exact and nonoverlapping",
       "private absolute directories share the selected volume and remain outside Git",
       "snapshot start and completion timestamps bracket a quiescent recursive inventory",
+      "GetVolumePathNameW and GetVolumeNameForVolumeMountPointW derive the selected volume GUID path and every volume API receives that exact trailing-backslash GUID path",
+      "GetVolumeInformationW records the exact NTFS name volume serial maximum component length and filesystem flags; GetDiskFreeSpaceW records sectors per cluster bytes per sector free clusters and total clusters",
+      "volume allocation unit equals sectors per cluster times bytes per sector and equals the filesystem-facts allocation unit",
+      "GetDiskFreeSpaceExW records available-to-caller total-caller and total-free bytes; observed capacity equals total-caller bytes and observed free equals the lesser of available-to-caller and total-free bytes",
+      "filesystem facts and every later snapshot have equal selected volume GUID serial filesystem flags maximum component length sectors bytes allocation unit API profile and nine-path volume-GUID projection",
+      "CreateFileW and GetFinalPathNameByHandleW FILE_NAME_NORMALIZED plus VOLUME_NAME_GUID resolve the nine unique private root role and category paths to the selected volume without following a reparse point",
       "all six category directories are exact nonoverlapping descendants and every non-metadata entry maps to exactly one",
       "Stage F root immutable-results parent and independent-audit parent directory allocation units charge to checkpoint-and-write overhead",
       "relative paths are unique NFC and ordered by ascending UTF-8 bytes",
@@ -130,6 +148,7 @@
     "authorization": [
       "no real stage_f_campaign_authorization/v1 is issued by the foundation implementation",
       "a validator resolves all referenced retained canonical records and may accept only an authorization naming a final readiness record with disposition INDEPENDENT_BINDING_PASS",
+      "authorization sealed campaign packet bytes validate against the closed sealed_campaign_packet_manifest schema and its identity is recomputed over the complete canonical object",
       "authorization sealed-binding-bundle identity equals the bundle named by the sealed packet final PASS readiness independent audit and binding-validation receipt",
       "authorization independent-audit identity equals final PASS readiness independent-audit identity; that audit has disposition INDEPENDENT_BINDING_PASS and names the exact immutable pre-audit readiness with READY_FOR_INDEPENDENT_BINDING_AUDIT and the same bundle",
       "authorization ordered route ids and the packet ordered route ids equal the frozen order and bundle route wrappers; the packet ordered fifteen campaign-binding identities equal the bundle and final PASS readiness identities",
@@ -138,7 +157,7 @@
       "authorization binds the contemporaneous passing storage-capacity snapshot and the same identity appears in validation audit PASS readiness and sealed packet",
       "authorization binds the contemporaneous passing power snapshot and the same identity appears in validation audit PASS readiness and sealed packet",
       "authorization_utc is no more than 300 seconds after the bound capacity power and validation receipt timestamps and not before the post-packet user statement",
-      "post-packet explicit user authorization receipt is mandatory and binds the same sealed campaign packet as authorization",
+      "post-packet explicit user authorization receipt is mandatory binds the same sealed campaign packet as authorization and has statement_received_utc not before packet_created_utc",
       "every identity digest is reconstructed from its exact retained canonical preimage and any mixed-record composition or replay refuses",
       "guard refusal occurs before project-runner import on any missing or mismatched field"
     ]
@@ -177,9 +196,12 @@
     {"case_id":"SF-BIND-N31","mutation":"locally defined identity uses an arbitrary kind or a named private policy preimage fails its exact schema canonical reserialization or exact-kind digest link","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N32","mutation":"a regular file or directory has a named NTFS $DATA stream; a regular file lacks or duplicates the default unnamed ::$DATA stream; StreamSize differs from logical bytes; or stream enumeration is omitted incomplete or ends in an unexpected error","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N33","mutation":"authorization composes packet bundle final PASS readiness independent audit validation host capacity power route campaign binding code artifact implementation authority Stage E evidence validator or user-receipt identities from individually valid but different record chains","disposition":"REFUSE"},
-    {"case_id":"SF-BIND-N34","mutation":"a changed Stage E guard is recorded as preserved or stage_e_guard_preserved false is paired with PASS or NOT_SEALABLE","disposition":"REFUSE"}
+    {"case_id":"SF-BIND-N34","mutation":"a changed Stage E guard is recorded as preserved or stage_e_guard_preserved false is paired with PASS or NOT_SEALABLE","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N35","mutation":"selected volume GUID path is absent invented or differs across a private path filesystem facts or snapshot; a Win32 volume query fails uses another argument or raw allocation capacity or free output is changed; allocation or observed-byte formulas fail","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N36","mutation":"SD-01-GROWTH-v1 wrapper or referenced campaign_id differs from the frozen nested campaign id; or any two route campaign ids are equal swapped or reused","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N37","mutation":"binding implementation authority-set or sealed-packet preimage has a missing extra duplicate reordered renamed mistyped noncanonical or nonreconstructing field row path identity projection private byte or sensitive disclosure","disposition":"REFUSE"}
   ],
-  "negative_case_count": 34,
+  "negative_case_count": 37,
   "allowed_validation_operations": [
     "Git object and byte inspection",
     "strict UTF-8 and JSON parsing",

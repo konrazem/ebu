@@ -163,6 +163,34 @@ audit, and user-authorization identity. An arbitrary nonempty kind is accepted
 only where an inherited Stage D or Stage E identity remains externally
 controlled; it cannot substitute for a locally defined identity kind.
 
+Three mandatory public preimages are complete closed schema objects, not prose
+recipes. `stage_f_binding_implementation/v1` hashes one
+`binding_implementation_preimage`: the accepted base, implementation commit and
+tree, and exactly thirteen ordered `git_file_row` objects. Each row contains
+only `path`, mode `100644`, Git object, byte count, and raw SHA-256, and the path
+projection equals the exact implementation-path list in the contract.
+
+`stage_f_binding_authority_set/v1` hashes one
+`binding_authority_set_preimage`: the accepted base, integrated authority commit
+and tree, exactly six ordered local-authority `git_file_row` objects in the
+authority-file order, and exactly fifteen ordered route-authority projections.
+Each route projection contains only route, campaign-binding, scientific-
+authority, and continuation-authority identities and equals the corresponding
+referenced `campaign_execution_binding/v2` fields. Missing, additional,
+duplicate, reordered, renamed, differently typed, noncanonical, or
+nonreconstructing input refuses.
+
+`stage_f_sealed_campaign_packet/v1` hashes the complete canonical closed
+`sealed_campaign_packet_manifest` object. That schema freezes every typed
+packet, bundle, final-readiness, audit, validation, host, capacity, power, code,
+artifact, implementation, verifier, authority, Stage E, validator, route, and
+campaign-binding projection used by authorization. It permits no additional
+field, contains no private bytes, records zero sensitive-field disclosures,
+and carries zero scientific counters. A prose report or arbitrary dictionary
+is not the packet identity preimage.
+Its creation timestamp is no earlier than the bound validation, audit, and
+final independent-PASS readiness timestamps.
+
 The filesystem-binding identity has kind `stage_f_filesystem_binding/v1` and
 hashes the complete closed private `filesystem_facts` object with only its
 `filesystem_identity` field omitted. A storage-capacity snapshot has kind and
@@ -210,6 +238,25 @@ physical category locations are exactly `immutable-results/primary-logical-
 output`, `independent-audit/complete-copy`, `immutable-results/dynamic-growth-
 physical-writes`, `continuation-checkpoints`, `temporary`, and `independent-
 audit/retained-evidence` under the private Stage F root.
+
+The selected volume is the private volume GUID path returned by
+`GetVolumePathNameW` followed by `GetVolumeNameForVolumeMountPointW`; every
+volume query receives that exact trailing-backslash GUID path. The immutable
+filesystem facts and every capacity snapshot record the exact successful API
+profile, volume serial, NTFS name, maximum component length, filesystem flags,
+sectors per cluster, bytes per sector, and allocation unit. Allocation unit
+equals sectors per cluster times bytes per sector from `GetDiskFreeSpaceW`.
+
+Each snapshot also records the raw free-cluster and total-cluster outputs from
+`GetDiskFreeSpaceW` and the available-to-caller, total-caller, and total-free
+byte outputs from `GetDiskFreeSpaceExW`. Observed capacity equals total-caller
+bytes; observed free bytes equal the lesser of available-to-caller and total-
+free bytes. `CreateFileW` and `GetFinalPathNameByHandleW` with
+`FILE_NAME_NORMALIZED | VOLUME_NAME_GUID` resolve the nine unique private root,
+role, and category paths to that same GUID without accepting a reparse point.
+All stable volume observations equal the bound filesystem facts. A failed API,
+different volume or argument, mismatched allocation unit, substituted free-
+space observation, or caller-supplied value refuses.
 
 Inventory paths are private NFC relative paths ordered by ascending UTF-8
 bytes. Reparse points are refused without following them; sparse or compressed
@@ -323,6 +370,12 @@ both identities and no gaps; an unsealed row has both identities null and at
 least one gap. A ready bundle has exactly fifteen distinct sealed bindings in
 the frozen order. Relabelling, duplication, or reuse refuses.
 
+The nested growth route is additionally fixed to campaign ID
+`SD-01-GROWTH-v1`: both its wrapper and referenced binding carry that exact
+value. All fifteen wrapper and referenced campaign IDs are pairwise distinct.
+Consequently the main `SD-01` binding and its nested growth binding cannot be
+swapped even though both correctly carry study ID `SD-01`.
+
 For every sealed route, referenced code and installed-artifact identities equal
 the bundle fields, and referenced environment, parallelization, worker,
 storage, durability, and restart identities equal the exact public-host-
@@ -351,6 +404,11 @@ packet; its audit identity must equal the PASS-readiness audit identity; and
 the audit disposition must be `INDEPENDENT_BINDING_PASS` over the exact
 pre-audit ready record named by the audit.
 
+The sealed packet bytes must first validate against the closed
+`sealed_campaign_packet_manifest` schema and reproduce their packet identity;
+an extra, private, mistyped, or omitted field refuses before any cross-record
+comparison.
+
 The authorization's ordered routes, fifteen campaign-binding identities,
 scientific code or implementation, installed artifact, binding implementation,
 authority set, Stage E integration and evidence, and validator identities must
@@ -365,7 +423,8 @@ The authorization additionally binds one closed
 `stage_f_post_packet_user_authorization_receipt/v1`. That receipt hashes the
 exact retained explicit user statement and binds the same sealed-packet
 identity; it is valid only when supplied after the human-readable Stage F
-packet. Presence of a dictionary, token-shaped string, earlier general
+packet, and its statement timestamp is no earlier than the packet creation
+timestamp. Presence of a dictionary, token-shaped string, earlier general
 instruction, controller assertion, or self-audit is not an authorization.
 
 The first scientific action remains forbidden until the authorization record
