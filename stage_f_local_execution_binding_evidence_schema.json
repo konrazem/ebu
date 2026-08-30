@@ -152,6 +152,28 @@
         "minimum_free_after_existing_data_gib": {"const": 350}
       }
     },
+    "storage_usage_bytes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_logical_output_bytes",
+        "independent_audit_copy_bytes",
+        "dynamic_growth_physical_write_bytes",
+        "checkpoint_and_write_overhead_bytes",
+        "temporary_archive_bytes",
+        "retained_evidence_bytes",
+        "total_envelope_usage_bytes"
+      ],
+      "properties": {
+        "primary_logical_output_bytes": {"type": "integer", "minimum": 0, "maximum": 271656681472},
+        "independent_audit_copy_bytes": {"type": "integer", "minimum": 0, "maximum": 271656681472},
+        "dynamic_growth_physical_write_bytes": {"type": "integer", "minimum": 0, "maximum": 85899345920},
+        "checkpoint_and_write_overhead_bytes": {"type": "integer", "minimum": 0, "maximum": 68719476736},
+        "temporary_archive_bytes": {"type": "integer", "minimum": 0, "maximum": 8589934592},
+        "retained_evidence_bytes": {"type": "integer", "minimum": 0, "maximum": 8589934592},
+        "total_envelope_usage_bytes": {"type": "integer", "minimum": 0, "maximum": 715112054784}
+      }
+    },
     "private_host_facts": {
       "type": "object",
       "additionalProperties": false,
@@ -218,8 +240,9 @@
         "private_directories",
         "observed_capacity_bytes",
         "observed_free_bytes",
-        "existing_stage_f_bytes",
-        "reserved_envelope_bytes"
+        "current_envelope_usage",
+        "reserved_envelope_bytes",
+        "remaining_reserved_envelope_bytes"
       ],
       "properties": {
         "filesystem_type": {"const": "NTFS"},
@@ -227,8 +250,9 @@
         "private_directories": {"$ref": "#/$defs/private_directories"},
         "observed_capacity_bytes": {"$ref": "#/$defs/positive_integer"},
         "observed_free_bytes": {"$ref": "#/$defs/positive_integer"},
-        "existing_stage_f_bytes": {"$ref": "#/$defs/nonnegative_integer"},
-        "reserved_envelope_bytes": {"const": 715112054784}
+        "current_envelope_usage": {"$ref": "#/$defs/storage_usage_bytes"},
+        "reserved_envelope_bytes": {"const": 715112054784},
+        "remaining_reserved_envelope_bytes": {"$ref": "#/$defs/nonnegative_integer"}
       }
     },
     "power_facts": {
@@ -429,6 +453,7 @@
         "public_host_binding_identity",
         "scientific_code_identity",
         "installed_artifact_identity",
+        "binding_implementation_identity",
         "authority_set_identity",
         "stage_e_evidence_identity",
         "validator_identity",
@@ -454,6 +479,7 @@
         "public_host_binding_identity": {"$ref": "#/$defs/identity"},
         "scientific_code_identity": {"$ref": "#/$defs/identity"},
         "installed_artifact_identity": {"$ref": "#/$defs/identity"},
+        "binding_implementation_identity": {"$ref": "#/$defs/identity"},
         "authority_set_identity": {"$ref": "#/$defs/identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
         "validator_identity": {"$ref": "#/$defs/identity"},
@@ -480,8 +506,16 @@
       "additionalProperties": false,
       "required": [
         "schema",
+        "local_binding_bundle_identity",
         "public_host_binding_identity",
         "ordered_route_ids",
+        "ordered_campaign_execution_binding_identities",
+        "scientific_code_identity",
+        "installed_artifact_identity",
+        "binding_implementation_identity",
+        "authority_set_identity",
+        "stage_e_evidence_identity",
+        "validator_identity",
         "unresolved_authority_ids",
         "storage_preconditions_pass",
         "power_preconditions_pass",
@@ -494,6 +528,7 @@
       ],
       "properties": {
         "schema": {"const": "stage_f_local_binding_readiness/v1"},
+        "local_binding_bundle_identity": {"$ref": "#/$defs/identity"},
         "public_host_binding_identity": {"$ref": "#/$defs/identity"},
         "ordered_route_ids": {
           "type": "array",
@@ -501,6 +536,23 @@
           "maxItems": 15,
           "items": {"$ref": "#/$defs/route_id"}
         },
+        "ordered_campaign_execution_binding_identities": {
+          "type": "array",
+          "minItems": 15,
+          "maxItems": 15,
+          "items": {
+            "oneOf": [
+              {"$ref": "#/$defs/identity"},
+              {"type": "null"}
+            ]
+          }
+        },
+        "scientific_code_identity": {"$ref": "#/$defs/identity"},
+        "installed_artifact_identity": {"$ref": "#/$defs/identity"},
+        "binding_implementation_identity": {"$ref": "#/$defs/identity"},
+        "authority_set_identity": {"$ref": "#/$defs/identity"},
+        "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
+        "validator_identity": {"$ref": "#/$defs/identity"},
         "unresolved_authority_ids": {
           "type": "array",
           "items": {"$ref": "#/$defs/nonempty_string"},

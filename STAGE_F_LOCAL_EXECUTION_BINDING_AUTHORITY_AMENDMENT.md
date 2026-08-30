@@ -117,8 +117,20 @@ scientific seed, permitted stream, or model draw.
 
 The public host-binding identity has kind
 `stage_f_public_execution_host_binding/v1`. Its preimage is the complete public
-host binding without `binding_sha256`; the embedded digest and both identity
-digest fields agree.
+host binding without `public_binding_sha256`; the embedded digest and both
+identity digest fields agree.
+
+Every other record carrying an embedded record digest has the same closed
+rule. The exact omitted field is `bundle_sha256` for
+`stage_f_local_binding_bundle/v1`, `readiness_sha256` for
+`stage_f_local_binding_readiness/v1`, `receipt_sha256` for each binding-
+validation or durability-probe receipt, and `authorization_sha256` for
+`stage_f_campaign_authorization/v1`. The embedded field equals SHA-256 of the
+complete canonical record with only that named field omitted. No second field,
+null substitution, enclosing identity, or presentation serialization is part
+of or excluded from the preimage. An identity of one of these records has the
+record's schema name as its `kind`, and both identity digest fields equal the
+embedded digest.
 
 The accepted `campaign_execution_binding/v2` record is not changed. Its
 `storage_location_identity`, environment identity, and worker host identities
@@ -149,6 +161,13 @@ existing data is accounted for and at least the full remaining frozen
 envelope before a first or resumed segment. Existing evidence, checkpoints,
 audit copies, temporary archives, orphan partials, and already written
 physical bytes are included; none is silently excluded or reset.
+
+The private capacity snapshot records current bytes separately for all six
+envelope components, their exact sum, and the remaining reserved bytes. No
+component may exceed its own ceiling; the total may not exceed 666 GiB;
+`remaining_reserved_envelope_bytes` equals the total envelope minus current
+usage; and observed free bytes must be at least both 350 GiB and the complete
+remaining reserved envelope.
 
 The logical directory-role order is exactly `immutable-results`,
 `continuation-checkpoints`, `independent-audit`, `temporary`. Their absolute
@@ -190,6 +209,13 @@ authority gaps, a passing private/public digest check, current storage and
 power evidence, and all scientific counters at zero. Only the independent
 auditor may emit `INDEPENDENT_BINDING_PASS`.
 
+Every readiness record binds the exact local-binding-bundle identity, the
+ordered fifteen campaign-binding identities, scientific code, installed
+artifact, binding implementation, authority set, Stage E evidence, and
+validator identities. These fields must equal the referenced bundle exactly.
+A readiness or independent disposition cannot be replayed against a different
+bundle, code set, or campaign-binding list.
+
 `stage_f_campaign_authorization/v1` is a separate, closed, digest-bound record.
 It can be accepted only after `INDEPENDENT_BINDING_PASS` and only when it binds
 the exact complete portfolio, public host binding, independent audit receipt,
@@ -217,12 +243,15 @@ implementation paths in the path manifest may add only:
 - synthetic fixtures, negative controls, tests, and an append-only CI lane.
 
 The implementation may also modify `scripts/validate_stage_e_harness.py` only
-to preserve every accepted Stage E lane while recognizing the exact integrated
-six-file authority and exact prospective implementation path closure as
-non-scientific descendants. Without that narrow path-closure update the
-accepted validator would correctly refuse any descendant commit and exact-
-target CI could never pass. No Stage E evidence count, oracle, guard, route, or
-scientific boundary may change.
+to preserve every accepted Stage E lane while recognizing the exact union of
+the accepted 51-path Stage E implementation, the integrated six-file
+authority, the separately accepted one-path reachability-durability change,
+and the eleven new Stage F implementation paths. The two later modified paths
+already belong to the accepted 51, so the final unique closure relative to the
+Stage E implementation base is exactly 69 paths. Without that narrow closure
+update the accepted validator would correctly refuse any descendant commit and
+exact-target CI could never pass. No Stage E evidence count, oracle, guard,
+route, or scientific boundary may change.
 
 The implementation may not modify `stage_e_harness/execution.py`, import a
 legacy or future project runner, implement a scientific model, invent a missing

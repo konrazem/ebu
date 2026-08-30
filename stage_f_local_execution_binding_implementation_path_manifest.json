@@ -39,7 +39,7 @@
   },
   "path_rules": {
     ".github/workflows/tests.yml": "append one outcome-blind Stage F binding-foundation validation job; preserve every accepted job byte and failure behavior",
-    "scripts/validate_stage_e_harness.py": "preserve every accepted Stage E lane and zero-science rule while admitting only the exact integrated binding authority and exact prospective implementation path closure as non-scientific descendants",
+    "scripts/validate_stage_e_harness.py": "preserve every accepted Stage E lane and zero-science rule while admitting only the exact 69-path descendant union: accepted 51 Stage E paths plus six authority additions plus one reachability-durability path plus eleven new Stage F paths; the two later modified paths already belong to the 51",
     "scripts/build_stage_f_local_binding.py": "build deterministic outcome-blind binding validator artifact and synthetic fixtures only; never create an active authorization",
     "scripts/validate_stage_f_local_binding.py": "strict static synthetic and optional private-local binding validation only; no scientific imports or execution",
     "stage_f_binding": "canonical digest private/public binding readiness authorization durability and refusal mechanics only; standard library only",
@@ -65,6 +65,15 @@
     "modified_path_count": 1,
     "authority_integration_required_first": true,
     "independent_audit_required": true
+  },
+  "final_descendant_path_closure": {
+    "accepted_stage_e_path_count": 51,
+    "authority_added_path_count": 6,
+    "reachability_durability_unique_path_count": 1,
+    "stage_f_new_unique_path_count": 11,
+    "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
+    "final_unique_path_count": 69,
+    "missing_extra_or_duplicate_path_disposition": "REFUSE"
   },
   "independent_implementation_audit_required": true,
   "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"

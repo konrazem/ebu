@@ -33,6 +33,18 @@
     "duplicate_keys": "REFUSE",
     "identity_value_and_sha256_equal_digest": true
   },
+  "record_digest_preimages": {
+    "stage_f_public_execution_host_binding/v1": "omit only public_binding_sha256",
+    "stage_f_local_binding_bundle/v1": "omit only bundle_sha256",
+    "stage_f_local_binding_readiness/v1": "omit only readiness_sha256",
+    "stage_f_binding_validation_receipt/v1": "omit only receipt_sha256",
+    "stage_f_durability_probe_receipt/v1": "omit only receipt_sha256",
+    "stage_f_campaign_authorization/v1": "omit only authorization_sha256",
+    "embedded_digest_rule": "sha256(canonical complete record with the named field omitted)",
+    "enclosing_identity_kind_rule": "record schema name",
+    "enclosing_identity_value_and_sha256_rule": "both equal embedded digest",
+    "unknown_or_additional_exclusion_disposition": "REFUSE"
+  },
   "campaign_order": [
     "SD-01",
     "SD-01-GROWTH-v1",
@@ -110,6 +122,9 @@
     "retained_evidence_gib": 8,
     "total_gib": 666,
     "minimum_free_after_existing_data_gib": 350,
+    "component_usage_record_required": true,
+    "remaining_envelope_formula": "715112054784 - current_total_envelope_usage_bytes",
+    "free_space_rule": "observed_free_bytes >= max(375809638400, remaining_reserved_envelope_bytes)",
     "cumulative_accounting_nonresetting": true
   },
   "accepted_environment": {
@@ -125,6 +140,15 @@
     ],
     "host_python_fallback_permitted": false,
     "network_fallback_permitted": false
+  },
+  "stage_e_descendant_path_closure": {
+    "accepted_stage_e_unique_paths": 51,
+    "authority_added_paths": 6,
+    "reachability_durability_unique_paths": 1,
+    "stage_f_new_unique_paths": 11,
+    "stage_f_modified_paths_already_in_stage_e_closure": 2,
+    "final_unique_paths_relative_to_stage_e_implementation_base": 69,
+    "extra_missing_or_duplicate_path_disposition": "REFUSE"
   },
   "power_preconditions": [
     "AC_CONNECTED",
