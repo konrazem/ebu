@@ -702,6 +702,78 @@ STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS = (
     + (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,)
     + STAGE_F_LOCAL_BINDING_NEW_PATHS
 )
+STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
+scope = manifest["prospective_harness_implementation"]
+expected_modified = set(scope["modified_paths"])
+expected_added = set(scope["new_paths"])
+stage_e_expected = expected_modified | expected_added
+if scope["modified_path_count"] != 1 or scope["new_path_count"] != 50 or scope["total_path_count"] != 51:
+    raise Refusal("accepted Stage E implementation path manifest count mismatch")
+stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_implementation_path_manifest.json")
+stage_f_authority_paths = (
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_contract.json",
+    "stage_f_local_execution_binding_evidence_schema.json",
+    "stage_f_local_execution_binding_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_predecessor_manifest.json",
+    "stage_f_local_execution_binding_validation_contract.json",
+)
+if tuple(stage_f_manifest["authority_paths"]) != stage_f_authority_paths or stage_f_manifest["authority_path_count"] != 6:
+    raise Refusal("Stage F authority path closure mismatch")
+reachability = stage_f_manifest["prospective_reachability_durability"]
+reachability_path = "tests/framework/test_validation_reachability.py"
+if reachability["modified_path"] != reachability_path or reachability["modified_path_count"] != 1:
+    raise Refusal("Stage F reachability path closure mismatch")
+stage_f_scope = stage_f_manifest["prospective_implementation"]
+stage_f_modified = tuple(stage_f_scope["modified_paths"])
+stage_f_added = set(stage_f_scope["new_paths"])
+if stage_f_modified != (".github/workflows/tests.yml", "scripts/validate_stage_e_harness.py") or stage_f_scope["modified_path_count"] != 2 or len(stage_f_added) != 12 or stage_f_scope["new_path_count"] != 12 or stage_f_scope["total_path_count"] != 14:
+    raise Refusal("Stage F implementation manifest closure mismatch")
+final_closure = stage_f_manifest["final_descendant_path_closure"]
+if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["authority_added_path_count"] != 6 or final_closure["reachability_durability_unique_path_count"] != 1 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 70:
+    raise Refusal("Stage F final descendant path arithmetic mismatch")
+if set(stage_f_modified) - stage_e_expected or stage_f_added & (stage_e_expected | set(stage_f_authority_paths) | {reachability_path}):
+    raise Refusal("Stage F implementation path overlap mismatch")
+expected = stage_e_expected | set(stage_f_authority_paths) | {reachability_path} | stage_f_added
+actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
+if actual != expected or len(actual) != 70:
+    raise Refusal(f"Stage F descendant path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+status_rows: dict[str, str] = {}
+for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
+    fields = row.split("\t")
+    if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
+        raise Refusal(f"Stage F descendant has a forbidden Git operation: {row}")
+    status_rows[fields[1]] = fields[0]
+expected_status = ({path: "M" for path in expected_modified} | {path: "A" for path in expected_added} | {path: "A" for path in stage_f_authority_paths} | {reachability_path: "M"} | {path: "A" for path in stage_f_added})
+if status_rows != expected_status:
+    raise Refusal("Stage F descendant add/modify classification mismatch")
+for relative in expected:
+    fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
+    if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
+        raise Refusal(f"Stage F descendant mode/object mismatch: {relative}")
+"""
+STAGE_E_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = br"""    manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
+    scope = manifest["prospective_harness_implementation"]
+    expected_modified = set(scope["modified_paths"])
+    expected_added = set(scope["new_paths"])
+    expected = expected_modified | expected_added
+    actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
+    if actual != expected or len(actual) != 51:
+        raise Refusal(f"Stage E implementation path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+    status_rows: dict[str, str] = {}
+    for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
+        fields = row.split("\t")
+        if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
+            raise Refusal(f"Stage E implementation has a forbidden Git operation: {row}")
+        status_rows[fields[1]] = fields[0]
+    expected_status = {path: "M" for path in expected_modified} | {path: "A" for path in expected_added}
+    if status_rows != expected_status:
+        raise Refusal("Stage E implementation add/modify classification mismatch")
+    for relative in expected:
+        fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
+        if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
+            raise Refusal(f"Stage E implementation mode/object mismatch: {relative}")
+"""
 STAGE_E_WORKFLOW_APPEND_BLOCK = br"""
   stage-e-scientific-harness:
     if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
@@ -766,7 +838,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "3fd99a64ac41b2c2ee58c9024129aaddfac7de02442dc6de103f0f7526bdfae9"
+TEST_SELF_SEAL = "a648008e3ee6a7a482566a878f18f9ba67287a10b3be3d181d86becf8ec519b7"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1187,7 +1259,12 @@ def _git(*args: str) -> bytes:
         or args[:1] == ("rev-parse",)
         or args[:4] == ("ls-tree", "-rz", "-r", "--full-tree")
         or args[:2] == ("cat-file", "blob")
-        or args[:2] == ("archive", "--format=tar")
+        or (
+            len(args) == 5
+            and args[:4]
+            == ("-c", "core.autocrlf=false", "archive", "--format=tar")
+            and re.fullmatch(r"[0-9a-f]{40}", args[4]) is not None
+        )
         or args
         == (
             "merge-base",
@@ -1300,7 +1377,9 @@ def _tree_entries(commit: str) -> dict[str, dict[str, object]]:
 
 
 def _archive_members(commit: str) -> dict[str, bytes]:
-    raw = _git("archive", "--format=tar", commit)
+    if re.fullmatch(r"[0-9a-f]{40}", commit) is None:
+        raise AssertionError(f"archive coordinate is not an immutable commit: {commit!r}")
+    raw = _git("-c", "core.autocrlf=false", "archive", "--format=tar", commit)
     members = {}
     with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as archive:
         for member in archive.getmembers():
@@ -2178,12 +2257,15 @@ class ValidationReachabilityTests(unittest.TestCase):
                 historical["implementation_raw"][".github/workflows/tests.yml"],
             )
         self.assertNotEqual(TEST_SELF_SEAL, "0" * 64)
+        test_path = "tests/framework/test_validation_reachability.py"
+        test_entry = head_entries[test_path]
+        test_blob = _git("cat-file", "blob", test_entry["git_object"])
+        test_checkout = current_path_bytes[test_path]
+        self.assertEqual(test_checkout.count(b"\r"), test_checkout.count(b"\r\n"))
+        self.assertEqual(test_checkout.replace(b"\r\n", b"\n"), test_blob)
+        self.assertNotIn(b"\r", test_blob)
         self.assertEqual(
-            _sha256(
-                _normalized_test_bytes(
-                    current_path_bytes["tests/framework/test_validation_reachability.py"]
-                )
-            ),
+            _sha256(_normalized_test_bytes(test_blob)),
             TEST_SELF_SEAL,
         )
         for path in ("src/ebu_framework/validation.py", "tests/framework/safety.py"):
@@ -5547,12 +5629,40 @@ class ValidationReachabilityTests(unittest.TestCase):
             self.assertTrue(workflow_suffix.endswith(b"\n"))
             self.assertNotIn(b"\r", workflow_suffix)
             suffix_text = workflow_suffix.decode("utf-8", "strict")
+            self.assertEqual(
+                tuple(suffix_text[:-1].split("\n")),
+                (
+                    "",
+                    "  stage-f-binding-foundation:",
+                    "    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
+                    "    needs: [stage-e-scientific-harness]",
+                    "    runs-on: ubuntu-24.04",
+                    "    steps:",
+                    "      - uses: actions/checkout@v4",
+                    "        with:",
+                    "          fetch-depth: 0",
+                    "      - uses: actions/setup-python@v5",
+                    "        with:",
+                    '          python-version: "3.14"',
+                    "      - name: Build deterministic Stage F binding-foundation artifacts",
+                    "        run: |",
+                    "          set -euo pipefail",
+                    '          stage_root="$RUNNER_TEMP/stage-f-${GITHUB_JOB}"',
+                    '          mkdir -p "$stage_root/first" "$stage_root/second"',
+                    '          python -I scripts/build_stage_f_local_binding.py --source "$GITHUB_WORKSPACE" --output "$stage_root/first"',
+                    '          python -I scripts/build_stage_f_local_binding.py --source "$GITHUB_WORKSPACE" --output "$stage_root/second"',
+                    '          cmp -- "$stage_root/first/stage-f-binding-validator-source-bundle.json" "$stage_root/second/stage-f-binding-validator-source-bundle.json"',
+                    '          cmp -- "$stage_root/first/stage-f-binding-validator.pyz" "$stage_root/second/stage-f-binding-validator.pyz"',
+                    "      - name: Run outcome-blind Stage F binding-foundation synthetic controls",
+                    "        run: |",
+                    "          set -euo pipefail",
+                    "          python -I -c 'import os,sys,unittest; sys.path.insert(0,os.environ[\"GITHUB_WORKSPACE\"]); names=(\"tests.stage_f_binding.test_binding_privacy_and_authorization\",\"tests.stage_f_binding.test_durability_and_no_science\"); suite=unittest.defaultTestLoader.loadTestsFromNames(names); count=suite.countTestCases(); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if count > 0 and result.testsRun == count and result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses else 1)'",
+                ),
+            )
             top_level_jobs = tuple(
                 re.findall(r"(?m)^  ([a-z0-9][a-z0-9-]*):\n", suffix_text)
             )
-            self.assertEqual(len(top_level_jobs), 1)
-            self.assertIn("stage-f", top_level_jobs[0])
-            self.assertIn("binding", top_level_jobs[0])
+            self.assertEqual(top_level_jobs, ("stage-f-binding-foundation",))
             self.assertEqual(
                 suffix_text.count(
                     "    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'\n"
@@ -5563,10 +5673,20 @@ class ValidationReachabilityTests(unittest.TestCase):
                 suffix_text.count("    needs: [stage-e-scientific-harness]\n"), 1
             )
             self.assertEqual(suffix_text.count("    runs-on: ubuntu-24.04\n"), 1)
+            self.assertEqual(suffix_text.count("    steps:\n"), 1)
             self.assertEqual(
                 tuple(re.findall(r"(?m)^      - uses: ([^\n]+)$", suffix_text)),
                 ("actions/checkout@v4", "actions/setup-python@v5"),
             )
+            self.assertEqual(
+                tuple(re.findall(r"(?m)^      - name: ([^\n]+)$", suffix_text)),
+                (
+                    "Build deterministic Stage F binding-foundation artifacts",
+                    "Run outcome-blind Stage F binding-foundation synthetic controls",
+                ),
+            )
+            self.assertEqual(suffix_text.count("        with:\n"), 2)
+            self.assertEqual(suffix_text.count("        run: |\n"), 2)
             self.assertEqual(suffix_text.count("          fetch-depth: 0\n"), 1)
             self.assertEqual(
                 suffix_text.count('          python-version: "3.14"\n'), 1
@@ -5592,29 +5712,38 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "results/",
                 "figures/",
                 "books/",
+                "..",
             ):
                 self.assertNotIn(forbidden, suffix_text)
 
             run_commands = []
-            for line in suffix_text.splitlines():
+            for line in suffix_text[:-1].split("\n"):
                 if not line:
                     continue
                 indent = len(line) - len(line.lstrip(" "))
                 stripped = line.strip()
                 if indent == 2:
-                    self.assertEqual(stripped, f"{top_level_jobs[0]}:")
+                    self.assertEqual(stripped, "stage-f-binding-foundation:")
                 elif indent == 4:
-                    self.assertTrue(
-                        stripped.startswith("if: ")
-                        or stripped == "needs: [stage-e-scientific-harness]"
-                        or stripped == "runs-on: ubuntu-24.04"
-                        or stripped == "steps:",
+                    self.assertIn(
+                        stripped,
+                        (
+                            "if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'",
+                            "needs: [stage-e-scientific-harness]",
+                            "runs-on: ubuntu-24.04",
+                            "steps:",
+                        ),
                         line,
                     )
                 elif indent == 6:
-                    self.assertTrue(
-                        stripped.startswith("- uses: ")
-                        or stripped.startswith("- name: "),
+                    self.assertIn(
+                        stripped,
+                        (
+                            "- uses: actions/checkout@v4",
+                            "- uses: actions/setup-python@v5",
+                            "- name: Build deterministic Stage F binding-foundation artifacts",
+                            "- name: Run outcome-blind Stage F binding-foundation synthetic controls",
+                        ),
                         line,
                     )
                 elif indent == 8:
@@ -5639,11 +5768,20 @@ class ValidationReachabilityTests(unittest.TestCase):
                     r"python -I -m unittest -v tests\.stage_f_binding\.test_binding_privacy_and_authorization tests\.stage_f_binding\.test_durability_and_no_science"
                 ),
             )
-            for command in run_commands:
-                self.assertTrue(
-                    any(pattern.fullmatch(command) for pattern in allowed_commands),
-                    f"forbidden Stage F workflow command: {command!r}",
-                )
+            self.assertEqual(
+                tuple(run_commands),
+                (
+                    "set -euo pipefail",
+                    'stage_root="$RUNNER_TEMP/stage-f-${GITHUB_JOB}"',
+                    'mkdir -p "$stage_root/first" "$stage_root/second"',
+                    'python -I scripts/build_stage_f_local_binding.py --source "$GITHUB_WORKSPACE" --output "$stage_root/first"',
+                    'python -I scripts/build_stage_f_local_binding.py --source "$GITHUB_WORKSPACE" --output "$stage_root/second"',
+                    'cmp -- "$stage_root/first/stage-f-binding-validator-source-bundle.json" "$stage_root/second/stage-f-binding-validator-source-bundle.json"',
+                    'cmp -- "$stage_root/first/stage-f-binding-validator.pyz" "$stage_root/second/stage-f-binding-validator.pyz"',
+                    "set -euo pipefail",
+                    "python -I -c 'import os,sys,unittest; sys.path.insert(0,os.environ[\"GITHUB_WORKSPACE\"]); names=(\"tests.stage_f_binding.test_binding_privacy_and_authorization\",\"tests.stage_f_binding.test_durability_and_no_science\"); suite=unittest.defaultTestLoader.loadTestsFromNames(names); count=suite.countTestCases(); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if count > 0 and result.testsRun == count and result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses else 1)'",
+                ),
+            )
             self.assertEqual(
                 sum(
                     "scripts/build_stage_f_local_binding.py" in command
@@ -5653,7 +5791,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             self.assertEqual(sum(command.startswith("cmp -- ") for command in run_commands), 2)
             self.assertEqual(
-                sum(command.startswith("python -I -m unittest -v ") for command in run_commands),
+                sum(command.startswith("python -I -c ") for command in run_commands),
                 1,
             )
 
@@ -5663,6 +5801,25 @@ class ValidationReachabilityTests(unittest.TestCase):
             current_validator_raw = _object_row(
                 "scripts/validate_stage_e_harness.py", current_entries, current_archive
             )[1]
+            self.assertEqual(
+                accepted_validator_raw.count(
+                    STAGE_E_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK
+                ),
+                1,
+            )
+            stage_f_scope_raw = STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK.encode(
+                "utf-8", "strict"
+            )
+            self.assertTrue(stage_f_scope_raw.endswith(b"\n"))
+            indented_stage_f_scope_raw = b"\n".join(
+                b"    " + line for line in stage_f_scope_raw[:-1].split(b"\n")
+            ) + b"\n"
+            expected_validator_raw = accepted_validator_raw.replace(
+                STAGE_E_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK,
+                indented_stage_f_scope_raw,
+                1,
+            )
+            self.assertEqual(current_validator_raw, expected_validator_raw)
             accepted_validator_tree = ast.parse(
                 accepted_validator_raw.decode("utf-8", "strict")
             )
@@ -5765,6 +5922,19 @@ class ValidationReachabilityTests(unittest.TestCase):
                 ),
             )
             changed_lane_nodes = current_lane.body[current_start:current_end]
+            expected_changed_lane_nodes = ast.parse(
+                STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK
+            ).body
+            self.assertEqual(
+                tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in changed_lane_nodes
+                ),
+                tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in expected_changed_lane_nodes
+                ),
+            )
             lane_source = "\n".join(
                 ast.get_source_segment(
                     current_validator_raw.decode("utf-8", "strict"), node
@@ -5788,10 +5958,20 @@ class ValidationReachabilityTests(unittest.TestCase):
                 '"ls-tree"',
                 '"100644"',
                 '"blob"',
+                "actual != expected",
+                "len(actual) != 70",
+                "status_rows != expected_status",
+                "for relative in expected:",
             ):
                 self.assertIn(required, lane_source)
             changed_lane_tree = ast.Module(
                 body=list(changed_lane_nodes), type_ignores=[]
+            )
+            self.assertTrue(
+                all(
+                    isinstance(node, (ast.Assign, ast.AnnAssign, ast.If, ast.For))
+                    for node in changed_lane_nodes
+                )
             )
             self.assertEqual(
                 sum(isinstance(node, ast.For) for node in ast.walk(changed_lane_tree)),
@@ -5809,6 +5989,10 @@ class ValidationReachabilityTests(unittest.TestCase):
                             ast.Import,
                             ast.ImportFrom,
                             ast.Lambda,
+                            ast.Break,
+                            ast.Continue,
+                            ast.Pass,
+                            ast.Return,
                             ast.Try,
                             ast.While,
                             ast.With,
@@ -5820,6 +6004,32 @@ class ValidationReachabilityTests(unittest.TestCase):
                     for node in ast.walk(changed_lane_tree)
                 )
             )
+            for guard in (
+                node for node in ast.walk(changed_lane_tree) if isinstance(node, ast.If)
+            ):
+                self.assertFalse(isinstance(guard.test, ast.Constant))
+                self.assertFalse(
+                    any(
+                        isinstance(node, (ast.And, ast.IfExp, ast.NamedExpr))
+                        or (
+                            isinstance(node, ast.Constant)
+                            and type(node.value) is bool
+                        )
+                        for node in ast.walk(guard.test)
+                    )
+                )
+                self.assertEqual(len(guard.body), 1)
+                self.assertIsInstance(guard.body[0], ast.Raise)
+                self.assertEqual(guard.orelse, [])
+            for refusal in (
+                node
+                for node in ast.walk(changed_lane_tree)
+                if isinstance(node, ast.Raise)
+            ):
+                self.assertIsNone(refusal.cause)
+                self.assertIsInstance(refusal.exc, ast.Call)
+                self.assertIsInstance(refusal.exc.func, ast.Name)
+                self.assertEqual(refusal.exc.func.id, "Refusal")
             call_names = tuple(
                 node.func.id
                 if isinstance(node.func, ast.Name)
@@ -5833,6 +6043,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 set(call_names)
                 <= {
                     "_git",
+                    "Refusal",
                     "filter",
                     "len",
                     "set",
@@ -5841,12 +6052,18 @@ class ValidationReachabilityTests(unittest.TestCase):
                     "splitlines",
                     "strict_load",
                     "tuple",
-                    "update",
                 },
                 call_names,
             )
             self.assertEqual(call_names.count("strict_load"), 2)
             self.assertEqual(call_names.count("_git"), 3)
+            self.assertEqual(
+                call_names.count("Refusal"),
+                sum(
+                    isinstance(node, ast.If)
+                    for node in ast.walk(changed_lane_tree)
+                ),
+            )
             for forbidden in (
                 "subprocess",
                 "ebu_framework",
@@ -6425,7 +6642,11 @@ class ValidationReachabilityTests(unittest.TestCase):
             + tuple(AUTHORITY_RAW_SHA256)
             + CORRECTION_AUTHORITY_FILES
         ):
-            raw = (ROOT / path).read_bytes()
+            checkout_raw = (ROOT / path).read_bytes()
+            self.assertEqual(
+                checkout_raw.count(b"\r"), checkout_raw.count(b"\r\n"), path
+            )
+            raw = checkout_raw.replace(b"\r\n", b"\n")
             self.assertFalse(raw.startswith(b"\xef\xbb\xbf"), path)
             self.assertNotIn(b"\r", raw, path)
             self.assertTrue(raw.endswith(b"\n"), path)
