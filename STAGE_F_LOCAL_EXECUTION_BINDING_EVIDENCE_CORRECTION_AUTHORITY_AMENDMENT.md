@@ -131,13 +131,16 @@ guard handle. `CompareObjectHandles` must prove that the write handle and guard
 refer to the same kernel object. The original write handle then closes once;
 the guard remains valid and unreused.
 
-Before the target-absence check, the controller starts a direct nonrecursive
-`ReadDirectoryChangesW` filename watch on the common parent. The watch uses a
-distinct 65536-byte buffer, distinct `OVERLAPPED`, distinct manual-reset event,
-`FILE_NOTIFY_CHANGE_FILE_NAME`, and the same pending/common-set/cancel/release
-discipline as the accepted runtime watches. It remains pending across the
-absence check, `MoveFileExW(source,target,8)`, same-object verification and
-final lock acquisition.
+Before the target-absence check, and while the enclosing Stage F root
+protection epoch and its USN start observation are already active, the
+controller starts one direct nonrecursive ReadDirectoryChangesW filename watch
+on the common parent. The directory is opened for overlapped I/O. The watch
+uses a distinct zeroed DWORD-aligned 65536-byte buffer, distinct zeroed x64
+OVERLAPPED storage, distinct unnamed manual-reset event,
+FILE_NOTIFY_CHANGE_FILE_NAME, a null asynchronous bytes-returned pointer and a
+null completion routine. The exact raw issue result and a nonwaiting
+GetOverlappedResult result of false, ERROR_IO_INCOMPLETE and zero bytes prove
+that this request was issued and pending before the target-absence check.
 
 After successful `MoveFileExW` with only `MOVEFILE_WRITE_THROUGH`, the exact
 guard handle must:
@@ -163,14 +166,29 @@ refused by the protected-root watches, stable file identity and USN
 reconciliation. Only the guard's pre-close comparison with the original write
 handle may use `CompareObjectHandles`.
 
-The completed parent watch must contain exactly one ordered
-`FILE_ACTION_RENAMED_OLD_NAME` for the temporary basename followed by one
-`FILE_ACTION_RENAMED_NEW_NAME` for the final basename, with no overflow,
-truncation, malformed record, extra name, reset, reissue or notification. Any
-source or target replacement, different object with equal bytes, extra hard
-link, early guard close, final-path tuple mismatch, other-handle hash, watch
-overflow or unexplained event refuses. Cleanup never deletes an unverified
-object; failed fresh paths remain versioned and ineligible for recovery.
+Immediately after MoveFileExW returns and before same-object verification or
+final-lock acquisition, a waiting GetOverlappedResult receives the exact
+directory handle and OVERLAPPED address. It must complete successfully with a
+positive byte count. The controller retains the exact transferred buffer bytes
+as base64 plus their SHA-256, parses only those bytes, and requires exactly one
+ordered FILE_ACTION_RENAMED_OLD_NAME for the temporary basename followed by one
+FILE_ACTION_RENAMED_NEW_NAME for the final basename, with no overflow,
+truncation, malformed record, extra name, reset, reissue or notification. This
+single request is complete at that point; it is not falsely described as still
+pending and CancelIoEx is not called. The enclosing protected-root watches and
+USN range, rather than a reissued parent watch, provide continuous mutation
+coverage from that completion through same-object verification, final-lock
+acquisition and transaction seal.
+
+After the transferred bytes have been retained, hashed and parsed, the exact
+directory and event handles close once and the exact OVERLAPPED and buffer base
+allocations are each released once. The closed observation records every API
+input, result, error-bearing branch, byte count, base address, digest and
+release time. Any source or target replacement, different object with equal
+bytes, extra hard link, early guard close, final-path tuple mismatch,
+other-handle hash, watch overflow, unexplained event, CancelIoEx call, storage
+reuse or premature release refuses. Cleanup never deletes an unverified object;
+failed fresh paths remain versioned and ineligible for recovery.
 
 The seventeen durability action ordinals remain unchanged. Action 4 closes the
 original write handle only; the explicitly evidenced duplicate guard supplies
@@ -337,9 +355,19 @@ closed capacity-publication observation binds:
   `FSCTL_GET_RETRIEVAL_POINTERS` extents. Absent streams are explicit. The MFT
   upper bound is exact record count times bytes per file record; the directory
   upper bound is that value plus allocated nonresident stream clusters;
-- the exact direct retained-evidence subtree allocation after publication;
-- a fresh `GetDiskFreeSpaceW`, `GetDiskFreeSpaceExW` and NTFS-volume-data
-  observation; and
+- a closed post-publication retained-subtree allocation observation containing
+  the complete ordered UTF-8 NFC relative-path inventory, every existing
+  storage-inventory entry and allocation component, an exact entry count, zero
+  unknown entries, the direct accounted-byte sum and the identical live
+  retained-evidence allocation scalar;
+- a closed raw post-publication volume-capacity observation containing the
+  exact GetDiskFreeSpaceW and GetDiskFreeSpaceExW return values and output
+  fields, the exact NTFS volume handle and FSCTL_GET_NTFS_VOLUME_DATA result and
+  complete output structure, and independently recomputed allocation-unit,
+  cluster-free-byte and capacity/free-space formulas. The publication's fresh
+  observed-free scalar is the conservative minimum of GetDiskFreeSpaceW free
+  bytes, GetDiskFreeSpaceExW available-to-caller and total-free bytes, and NTFS
+  volume-data free bytes; and
 - the enclosing mutation ticket, root-protection epoch and USN range.
 
 After all evidence needed for readiness and launch is published, a distinct
@@ -458,6 +486,23 @@ Stage F authority paths, one reachability-durability path, six correction
 authority paths and twelve new Stage F implementation paths. The two modified
 implementation paths already belong to the accepted Stage E 51.
 
+The correction necessarily changes that already-counted reachability-
+durability path. After correction-authority integration and before any of the
+fourteen implementation paths may change, one separate reachability-correction
+step may modify exactly tests/framework/test_validation_reachability.py and no
+other path. Its static receipt must bind the actual integrated correction
+commit and tree; reconstruct from that tree the ordered six correction paths,
+their mode 100644, Git blob IDs, byte counts and raw SHA-256 values; prove the
+accepted six v1 authority blobs unchanged; and recompute the exact 76-path
+arithmetic. Only static Git-object, JSON, schema, AST and source-text checks are
+permitted. The change may update only closed reachability expectations and
+negative controls; project imports, production validators, host probes and all
+scientific operations remain forbidden. A new independent PASS over the exact
+reachability-correction commit/tree is required before implementation begins.
+This separately audited path is not a fifteenth implementation row and does not
+increase the 76 unique paths because it is the already-counted one
+reachability-durability path.
+
 ## 11. Exact future implementation boundary
 
 Only after independent authority PASS and normal integration may a successor
@@ -490,8 +535,7 @@ The required order is:
 
 1. correction-authority candidate audit;
 2. correction-authority integration;
-3. reachability update and independent audit if required by exact-target
-   closure;
+3. the exact one-path reachability correction and independent audit;
 4. corrected binding-foundation implementation audit;
 5. implementation integration and exact-target CI;
 6. private/public host-binding audit;
@@ -508,12 +552,16 @@ Validation refuses at least:
 
 1. a wrong required target, predecessor blob, Stage E coordinate, CI run or
    artifact digest;
-2. any candidate or implementation path outside its exact closed set;
+2. any candidate, reachability-correction or implementation path outside its
+   exact closed set, or a reachability correction that does not bind the actual
+   integrated coordinate and six correction rows;
 3. a v1 authority-set, implementation or validator identity in a v2 ready
    chain;
 4. a direct final write, early source-guard release, source/target
    substitution, same-byte different object, unexpected hard link, other-
-   handle hash, parent-watch overflow or extra notification;
+   handle hash, parent-watch overflow or extra notification, an impossible
+   completed-and-pending watch claim, a post-completion CancelIoEx call, or
+   missing raw completion and cleanup evidence;
 5. a launchable DOS alias not derived from and identical to the retained
    volume-GUID runtime object;
 6. a missing `CREATE_SUSPENDED`, image mismatch, early user-code entry,
@@ -525,8 +573,9 @@ Validation refuses at least:
 8. a missing, reset, wrapped, discontinuous, inaccessible or malformed USN
    journal, unmatched mutation ticket, ledger fork/reset/replay, or deleted
    prior challenge, acknowledgement, receipt or capacity row;
-9. a scalar-only or lower-bound postpublication capacity claim, omitted
-   directory allocation, unlisted causal file, insufficient retained tail or
+9. a scalar-only or lower-bound postpublication capacity claim, omitted or
+   substituted direct retained-subtree inventory, raw volume query, directory
+   allocation or causal file, a formula mismatch, insufficient retained tail or
    stale pre-resume/pre-start capacity gate;
 10. caller-only power, Docker, lid or reboot booleans, any raw probe failure,
     pending reboot, absent reboot-block policy, unavailable daemon/image, AC or

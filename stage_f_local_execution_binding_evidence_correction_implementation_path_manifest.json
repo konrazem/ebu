@@ -15,6 +15,23 @@
     "stage_f_local_execution_binding_evidence_correction_validation_contract.json"
   ],
   "authority_path_count": 6,
+  "prospective_reachability_correction": {
+    "phase": "AFTER_CORRECTION_AUTHORITY_INTEGRATION_BEFORE_IMPLEMENTATION",
+    "modified_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "modified_path_count": 1,
+    "path_rule": "update only static reachability expectations and negative controls; bind the actual integrated correction commit and tree, reconstruct the ordered six correction paths with mode, Git blob ID, byte count and raw SHA-256, prove the accepted six v1 authority blobs unchanged, and recompute the exact 76-path closure",
+    "allowed_operations": [
+      "GIT_OBJECT_INSPECTION",
+      "STRICT_JSON_AND_SCHEMA_VALIDATION",
+      "AST_AND_SOURCE_TEXT_INSPECTION",
+      "OUTCOME_BLIND_REACHABILITY_CHECKS"
+    ],
+    "project_import_production_validator_host_probe_or_science": "FORBIDDEN",
+    "independent_audit_required_before_implementation": true,
+    "counts_as_implementation_path": false
+  },
   "prospective_implementation": {
     "modified_paths": [
       ".github/workflows/tests.yml",

@@ -97,8 +97,8 @@
   },
   "schema_delta_from_historical": {
     "historical_definition_count": 143,
-    "effective_definition_count": 183,
-    "added_definition_count": 40,
+    "effective_definition_count": 185,
+    "added_definition_count": 42,
     "added_definitions_in_order": [
       "attested_process_image_observation",
       "capacity_causal_file_row",
@@ -130,6 +130,8 @@
       "stage_f_ledger_append_ticket",
       "stage_f_lid_open_statement_identity",
       "stage_f_lid_open_statement_receipt",
+      "stage_f_raw_volume_capacity_observation",
+      "stage_f_retained_subtree_allocation_observation",
       "stage_f_root_path_anchor",
       "stage_f_root_protection_epoch",
       "stage_f_root_protection_epoch_identity",
@@ -266,11 +268,21 @@
       "recursive": false,
       "filter": 1,
       "buffer_byte_count": 65536,
+      "issued_and_pending_before_target_check": true,
+      "immediate_get_overlapped_result": "FALSE_ERROR_IO_INCOMPLETE_ZERO_BYTES",
+      "completion_get_overlapped_result": "SUCCESS_POSITIVE_BYTES_AFTER_MOVE_BEFORE_FINAL_LOCK",
+      "raw_completed_bytes_base64_and_sha256_required": true,
+      "issue_completion_and_cleanup_handle_pointer_and_base_values_must_equal": true,
+      "completion_byte_count_must_equal_raw_buffer_byte_count": true,
       "expected_actions_in_order": [
         "FILE_ACTION_RENAMED_OLD_NAME_TEMPORARY_BASENAME",
         "FILE_ACTION_RENAMED_NEW_NAME_FINAL_BASENAME"
       ],
-      "extra_missing_reordered_malformed_or_overflow": "REFUSE"
+      "extra_missing_reordered_malformed_or_overflow": "REFUSE",
+      "request_reissued": false,
+      "cancel_io_ex_call_count": 0,
+      "postcompletion_coverage": "ENCLOSING_ROOT_WATCHES_AND_USN_RANGE",
+      "exact_directory_event_overlapped_and_buffer_cleanup_required": true
     },
     "failed_unverified_path_cleanup": "RETAIN_VERSIONED_AND_INELIGIBLE"
   },
@@ -417,9 +429,18 @@
     "mft_record_upper_bound_rule": "resolved_file_record_count * bytes_per_file_record",
     "directory_allocation_upper_bound_rule": "mft_record_upper_bound + allocated_index_allocation_clusters + allocated_bitmap_clusters",
     "direct_retained_subtree_allocation_required": true,
+    "postpublication_retained_subtree_record_schema": "stage_f_retained_subtree_allocation_observation/v1",
+    "postpublication_retained_subtree_complete_ordered_inventory_required": true,
+    "postpublication_retained_subtree_direct_sum_must_equal_live_scalar": true,
     "all_causal_postcutoff_files_listed": true,
     "bounded_remaining_tail_required": true,
     "fresh_volume_free_space_required": true,
+    "postpublication_raw_volume_record_schema": "stage_f_raw_volume_capacity_observation/v1",
+    "postpublication_raw_get_disk_free_space_w_outputs_required": true,
+    "postpublication_raw_get_disk_free_space_ex_w_outputs_required": true,
+    "postpublication_raw_ntfs_volume_data_required": true,
+    "postpublication_capacity_formulas_recomputed_and_reconciled": true,
+    "fresh_observed_free_bytes_rule": "minimum(GetDiskFreeSpaceW_free_bytes, GetDiskFreeSpaceExW_available_to_caller_bytes, GetDiskFreeSpaceExW_total_free_bytes, NTFS_volume_data_free_bytes)",
     "instantaneous_pre_resume_and_pre_start_volume_trust_boundary": true,
     "dedicated_volume_claimed": false,
     "new_gate_before_every_resumed_segment": true
@@ -513,6 +534,31 @@
     "SUSPENDED_LAUNCH_ATTESTATION",
     "CLEANUP_APPENDED_WITHOUT_REPLACING_PRIMARY_CAUSE"
   ],
+  "prospective_reachability_correction": {
+    "phase": "AFTER_CORRECTION_AUTHORITY_INTEGRATION_BEFORE_IMPLEMENTATION",
+    "only_modified_path": "tests/framework/test_validation_reachability.py",
+    "modified_path_count": 1,
+    "bind_actual_integrated_correction_commit_and_tree": true,
+    "reconstruct_ordered_six_correction_rows_from_integrated_tree": true,
+    "each_correction_row_fields": [
+      "path",
+      "mode_100644",
+      "git_blob_id",
+      "byte_count",
+      "raw_sha256"
+    ],
+    "accepted_six_v1_authority_blobs_unchanged": true,
+    "final_unique_path_count": 76,
+    "counts_as_fifteenth_implementation_path": false,
+    "independent_pass_required_before_implementation": true,
+    "allowed_operations": [
+      "GIT_OBJECT_INSPECTION",
+      "STRICT_JSON_AND_SCHEMA_VALIDATION",
+      "AST_AND_SOURCE_TEXT_INSPECTION",
+      "OUTCOME_BLIND_REACHABILITY_CHECKS"
+    ],
+    "project_import_host_probe_or_science": "FORBIDDEN"
+  },
   "scientific_counters": {
     "model_execution_count": 0,
     "trajectory_execution_count": 0,

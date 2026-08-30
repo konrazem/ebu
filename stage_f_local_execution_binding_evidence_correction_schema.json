@@ -10755,16 +10755,74 @@
         "directory_handle_value_uint64",
         "recursive",
         "notify_filter",
+        "buffer_base_address_uint64",
         "buffer_byte_count",
+        "buffer_initial_sha256",
         "overlapped_address_uint64",
         "event_handle_value_uint64",
+        "read_api",
+        "read_input_directory_handle_value_uint64",
+        "read_input_buffer_base_address_uint64",
+        "read_input_buffer_byte_count",
+        "read_input_recursive",
+        "read_input_notify_filter",
+        "read_input_bytes_returned_pointer_is_null",
+        "read_input_overlapped_address_uint64",
+        "read_input_completion_routine_is_null",
+        "read_returned_nonzero",
+        "issued_utc",
+        "immediate_result_api",
+        "immediate_result_directory_handle_value_uint64",
+        "immediate_result_overlapped_address_uint64",
+        "immediate_result_wait",
+        "immediate_result_returned_nonzero",
+        "immediate_result_last_error",
+        "immediate_result_bytes_transferred",
+        "immediate_result_utc",
         "pending_before_target_check",
         "temporary_basename",
         "final_basename",
+        "completion_result_api",
+        "completion_result_directory_handle_value_uint64",
+        "completion_result_overlapped_address_uint64",
+        "completion_result_wait",
+        "completion_result_returned_nonzero",
+        "completion_result_bytes_transferred",
+        "completion_disposition",
+        "completion_observed_utc",
+        "completed_before_same_object_verification_and_final_lock",
+        "raw_completed_buffer_base_address_uint64",
+        "raw_completed_buffer_bytes_base64",
+        "raw_completed_buffer_byte_count",
+        "raw_completed_buffer_sha256",
         "records",
         "record_count",
         "overflow_or_enumeration_loss",
-        "cancel_completed",
+        "request_reissue_count",
+        "cancel_io_ex_call_count",
+        "postcompletion_root_watch_and_usn_coverage",
+        "root_protection_epoch_identity",
+        "postcompletion_usn_range",
+        "close_api",
+        "close_input_directory_handle_value_uint64",
+        "close_returned_nonzero",
+        "directory_handle_closed_utc",
+        "event_close_api",
+        "event_close_input_handle_value_uint64",
+        "event_close_returned_nonzero",
+        "event_handle_closed_utc",
+        "overlapped_storage_release_api",
+        "overlapped_storage_release_size",
+        "overlapped_storage_release_type",
+        "overlapped_storage_release_base_address_uint64",
+        "overlapped_storage_release_returned_nonzero",
+        "overlapped_storage_released_utc",
+        "buffer_release_api",
+        "buffer_release_size",
+        "buffer_release_type",
+        "buffer_release_base_address_uint64",
+        "buffer_release_returned_nonzero",
+        "buffer_released_utc",
         "released_utc"
       ],
       "properties": {
@@ -10783,14 +10841,77 @@
         "notify_filter": {
           "const": 1
         },
+        "buffer_base_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
         "buffer_byte_count": {
           "const": 65536
+        },
+        "buffer_initial_sha256": {
+          "const": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31"
         },
         "overlapped_address_uint64": {
           "$ref": "#/$defs/nonzero_uint64"
         },
         "event_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "read_api": {
+          "const": "ReadDirectoryChangesW"
+        },
+        "read_input_directory_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "read_input_buffer_base_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "read_input_buffer_byte_count": {
+          "const": 65536
+        },
+        "read_input_recursive": {
+          "const": false
+        },
+        "read_input_notify_filter": {
+          "const": 1
+        },
+        "read_input_bytes_returned_pointer_is_null": {
+          "const": true
+        },
+        "read_input_overlapped_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "read_input_completion_routine_is_null": {
+          "const": true
+        },
+        "read_returned_nonzero": {
+          "const": true
+        },
+        "issued_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "immediate_result_api": {
+          "const": "GetOverlappedResult"
+        },
+        "immediate_result_directory_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "immediate_result_overlapped_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "immediate_result_wait": {
+          "const": false
+        },
+        "immediate_result_returned_nonzero": {
+          "const": false
+        },
+        "immediate_result_last_error": {
+          "const": 996
+        },
+        "immediate_result_bytes_transferred": {
+          "const": 0
+        },
+        "immediate_result_utc": {
+          "$ref": "#/$defs/utc_timestamp"
         },
         "pending_before_target_check": {
           "const": true
@@ -10800,6 +10921,47 @@
         },
         "final_basename": {
           "$ref": "#/$defs/nonempty_string"
+        },
+        "completion_result_api": {
+          "const": "GetOverlappedResult"
+        },
+        "completion_result_directory_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "completion_result_overlapped_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "completion_result_wait": {
+          "const": true
+        },
+        "completion_result_returned_nonzero": {
+          "const": true
+        },
+        "completion_result_bytes_transferred": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "completion_disposition": {
+          "const": "COMPLETED_NORMALLY_BEFORE_CANCEL"
+        },
+        "completion_observed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "completed_before_same_object_verification_and_final_lock": {
+          "const": true
+        },
+        "raw_completed_buffer_base_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "raw_completed_buffer_bytes_base64": {
+          "type": "string",
+          "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "raw_completed_buffer_byte_count": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "raw_completed_buffer_sha256": {
+          "$ref": "#/$defs/sha256"
         },
         "records": {
           "type": "array",
@@ -10848,8 +11010,80 @@
         "overflow_or_enumeration_loss": {
           "const": false
         },
-        "cancel_completed": {
+        "request_reissue_count": {
+          "const": 0
+        },
+        "cancel_io_ex_call_count": {
+          "const": 0
+        },
+        "postcompletion_root_watch_and_usn_coverage": {
           "const": true
+        },
+        "root_protection_epoch_identity": {
+          "$ref": "#/$defs/stage_f_root_protection_epoch_identity"
+        },
+        "postcompletion_usn_range": {
+          "$ref": "#/$defs/stage_f_usn_journal_range"
+        },
+        "close_api": {
+          "const": "CloseHandle"
+        },
+        "close_input_directory_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "close_returned_nonzero": {
+          "const": true
+        },
+        "directory_handle_closed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "event_close_api": {
+          "const": "CloseHandle"
+        },
+        "event_close_input_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "event_close_returned_nonzero": {
+          "const": true
+        },
+        "event_handle_closed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "overlapped_storage_release_api": {
+          "const": "VirtualFree"
+        },
+        "overlapped_storage_release_size": {
+          "const": 0
+        },
+        "overlapped_storage_release_type": {
+          "const": 32768
+        },
+        "overlapped_storage_release_base_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "overlapped_storage_release_returned_nonzero": {
+          "const": true
+        },
+        "overlapped_storage_released_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "buffer_release_api": {
+          "const": "VirtualFree"
+        },
+        "buffer_release_size": {
+          "const": 0
+        },
+        "buffer_release_type": {
+          "const": 32768
+        },
+        "buffer_release_base_address_uint64": {
+          "$ref": "#/$defs/nonzero_uint64"
+        },
+        "buffer_release_returned_nonzero": {
+          "const": true
+        },
+        "buffer_released_utc": {
+          "$ref": "#/$defs/utc_timestamp"
         },
         "released_utc": {
           "$ref": "#/$defs/utc_timestamp"
@@ -12164,6 +12398,239 @@
         }
       }
     },
+    "stage_f_raw_volume_capacity_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "selected_volume_guid_path",
+        "volume_measurement_apis",
+        "get_disk_free_space_w_input_root_path_identity",
+        "get_disk_free_space_w_returned_nonzero",
+        "sectors_per_cluster",
+        "bytes_per_sector",
+        "number_of_free_clusters",
+        "total_number_of_clusters",
+        "allocation_unit_bytes",
+        "get_disk_free_space_w_free_bytes",
+        "get_disk_free_space_w_capacity_bytes",
+        "get_disk_free_space_ex_w_input_directory_path_identity",
+        "get_disk_free_space_ex_w_returned_nonzero",
+        "available_to_caller_bytes",
+        "total_number_of_bytes",
+        "total_number_of_free_bytes",
+        "ntfs_volume_handle_value_uint64",
+        "ntfs_volume_path_identity",
+        "ntfs_volume_data_query_api",
+        "ntfs_volume_data_control_code",
+        "ntfs_volume_data_query_returned_nonzero",
+        "ntfs_volume_data_output_byte_count",
+        "ntfs_volume_data_output_bytes_base64",
+        "ntfs_volume_data_output_sha256",
+        "ntfs_volume_data",
+        "ntfs_volume_data_free_bytes",
+        "ntfs_volume_data_capacity_bytes",
+        "conservative_observed_free_bytes",
+        "conservative_observed_capacity_bytes",
+        "all_formulas_recomputed",
+        "free_space_outputs_reconciled",
+        "capacity_outputs_reconciled",
+        "observed_utc"
+      ],
+      "properties": {
+        "schema": {
+          "const": "stage_f_raw_volume_capacity_observation/v1"
+        },
+        "selected_volume_guid_path": {
+          "$ref": "#/$defs/windows_volume_guid_path"
+        },
+        "volume_measurement_apis": {
+          "$ref": "#/$defs/volume_measurement_api_profile"
+        },
+        "get_disk_free_space_w_input_root_path_identity": {
+          "$ref": "#/$defs/private_path_identity"
+        },
+        "get_disk_free_space_w_returned_nonzero": {
+          "const": true
+        },
+        "sectors_per_cluster": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "bytes_per_sector": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "number_of_free_clusters": {
+          "$ref": "#/$defs/uint32"
+        },
+        "total_number_of_clusters": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "allocation_unit_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "get_disk_free_space_w_free_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "get_disk_free_space_w_capacity_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "get_disk_free_space_ex_w_input_directory_path_identity": {
+          "$ref": "#/$defs/private_path_identity"
+        },
+        "get_disk_free_space_ex_w_returned_nonzero": {
+          "const": true
+        },
+        "available_to_caller_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "total_number_of_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "total_number_of_free_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "ntfs_volume_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "ntfs_volume_path_identity": {
+          "$ref": "#/$defs/private_path_identity"
+        },
+        "ntfs_volume_data_query_api": {
+          "const": "DeviceIoControl"
+        },
+        "ntfs_volume_data_control_code": {
+          "const": "FSCTL_GET_NTFS_VOLUME_DATA"
+        },
+        "ntfs_volume_data_query_returned_nonzero": {
+          "const": true
+        },
+        "ntfs_volume_data_output_byte_count": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "ntfs_volume_data_output_bytes_base64": {
+          "type": "string",
+          "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "ntfs_volume_data_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ntfs_volume_data": {
+          "$ref": "#/$defs/ntfs_volume_data"
+        },
+        "ntfs_volume_data_free_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "ntfs_volume_data_capacity_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "conservative_observed_free_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "conservative_observed_capacity_bytes": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "all_formulas_recomputed": {
+          "const": true
+        },
+        "free_space_outputs_reconciled": {
+          "const": true
+        },
+        "capacity_outputs_reconciled": {
+          "const": true
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        }
+      }
+    },
+    "stage_f_retained_subtree_allocation_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "retained_evidence_root_path_identity",
+        "inventory_started_utc",
+        "inventory_completed_utc",
+        "inventory_entries",
+        "inventory_entry_count",
+        "ordered_relative_paths_utf8_nfc_ascending",
+        "root_entry_included",
+        "all_descendants_included",
+        "all_entries_measured_from_held_nonreparse_handles",
+        "unknown_entry_count",
+        "direct_accounted_bytes_sum",
+        "retained_evidence_live_allocated_bytes",
+        "direct_sum_equals_live_scalar"
+      ],
+      "properties": {
+        "schema": {
+          "const": "stage_f_retained_subtree_allocation_observation/v1"
+        },
+        "retained_evidence_root_path_identity": {
+          "$ref": "#/$defs/private_path_identity"
+        },
+        "inventory_started_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "inventory_completed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "inventory_entries": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/storage_inventory_entry"
+              },
+              {
+                "properties": {
+                  "storage_category": {
+                    "const": "RETAINED_EVIDENCE"
+                  }
+                },
+                "required": [
+                  "storage_category"
+                ]
+              }
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "inventory_entry_count": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "ordered_relative_paths_utf8_nfc_ascending": {
+          "const": true
+        },
+        "root_entry_included": {
+          "const": true
+        },
+        "all_descendants_included": {
+          "const": true
+        },
+        "all_entries_measured_from_held_nonreparse_handles": {
+          "const": true
+        },
+        "unknown_entry_count": {
+          "const": 0
+        },
+        "direct_accounted_bytes_sum": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8589934592
+        },
+        "retained_evidence_live_allocated_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8589934592
+        },
+        "direct_sum_equals_live_scalar": {
+          "const": true
+        }
+      }
+    },
     "stage_f_capacity_publication_observation": {
       "type": "object",
       "additionalProperties": false,
@@ -12174,8 +12641,10 @@
         "snapshot_file_observation",
         "affected_directory_rows",
         "affected_directory_row_count",
+        "postpublication_retained_subtree_observation",
         "retained_evidence_live_allocated_bytes",
         "retained_evidence_within_ceiling",
+        "postpublication_raw_volume_observation",
         "fresh_observed_free_bytes",
         "root_protection_epoch_identity",
         "evidence_ledger_predecessor_identity",
@@ -12210,6 +12679,9 @@
         "affected_directory_row_count": {
           "$ref": "#/$defs/positive_uint32"
         },
+        "postpublication_retained_subtree_observation": {
+          "$ref": "#/$defs/stage_f_retained_subtree_allocation_observation"
+        },
         "retained_evidence_live_allocated_bytes": {
           "type": "integer",
           "minimum": 0,
@@ -12217,6 +12689,9 @@
         },
         "retained_evidence_within_ceiling": {
           "const": true
+        },
+        "postpublication_raw_volume_observation": {
+          "$ref": "#/$defs/stage_f_raw_volume_capacity_observation"
         },
         "fresh_observed_free_bytes": {
           "$ref": "#/$defs/nonnegative_integer"
