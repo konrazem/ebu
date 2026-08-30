@@ -567,6 +567,12 @@ top-level correction-schema records. The normal or contained same-controller
 receipt is their sole durable publication envelope and names the same live
 ledger head that existed at the pre-call freeze.
 
+`CAPACITY_LIVE_GATE` and `LAUNCH_HANDOFF` are not valid evidence-ledger-entry
+or ledger-append-ticket roles. The handoff labels its final gate only as nested
+nonledgered evidence and asserts that the handoff itself is nested-only. A
+ticket or entry attempting either role refuses even if its named record would
+otherwise be well formed.
+
 The durable intent is the conservative armed marker that closes crash
 ambiguity. Once it is durably ledgered, any later controller restart treats the
 start as possibly accepted; a `created` state is not proof that no request was
@@ -586,6 +592,16 @@ output images, byte counts and hashes. A same-handle post-read standard-info
 query proves stability. The handles remain open through canonical parsing and
 the recovery receipt's durable ledger append; their later exact closes and the
 receipt append observation are recorded in the root-protection release.
+
+Every output-producing recovery call records a distinct exact zeroed pre-call
+buffer image and SHA-256 plus paired call-start and call-completion UTCs.
+Variable-sized path and ReadFile buffers additionally prove that the zero image
+has exactly the passed capacity. The pathname row reconciles the returned WCHAR
+count, two-byte UTF-16LE width, exactly one in-capacity terminating WCHAR and
+the projected resolved path. Both FileStandardInfo rows, FileIdInfo and
+FileAttributeTagInfo retain the complete fixed-width zero input and returned
+images. SetFilePointerEx retains the zero input and returned eight-byte new-file
+position image. Missing, substituted or unordered raw provenance refuses.
 
 The recovery receipt embeds the complete recovered intent record and a typed
 old-ledger binding: exact raw prefix bytes, parsed genesis and ordered entries,
@@ -631,6 +647,20 @@ continuation authority independently permit that transition. Missing intent,
 ambiguous identity, failed inspection or containment, or any start retry
 refuses.
 
+Every Docker pipe connection is switched with an exact successful
+`SetNamedPipeHandleState` call to byte-read `PIPE_NOWAIT` mode before its first
+wire call. `WriteFile` and every `ReadFile` are synchronous with a null
+`lpOverlapped`, and their input handle must equal that connection's exact
+authenticated pipe handle. A successful zero-byte WriteFile for a positive
+request is a short write and follows the live acceptance-unknown containment
+route. After a full start write, absence of response is representable only by
+ordered nonblocking `ReadFile` calls whose `ERROR_NO_DATA` rows are retained
+while `GetTickCount64` advances to the exact 30000-ms deadline. Polls use a
+25-ms delay and no more than 1201 read attempts. The final raw no-data call,
+deadline arithmetic without uint64 wrap, terminal tick and ordinals must
+reconcile. An empty read list, a blocking pipe, a substituted handle or
+overlapped input, or an unbounded timeout cannot establish no response.
+
 ## 8. Raw power, Docker and reboot evidence
 
 The host-prerequisite snapshot is the closed raw successor of the historical
@@ -674,8 +704,9 @@ failure, inaccessible marker, unknown power state, client-only Docker
 installation, daemon mismatch, image mismatch, stale statement or missing
 policy refuses.
 
-Every Docker exchange has a closed `CreateFileW`/`WriteFile`/ordered-`ReadFile`
-wire observation. The same held pipe handle is passed to
+Every Docker exchange has a closed `CreateFileW`/
+`SetNamedPipeHandleState(PIPE_READMODE_BYTE | PIPE_NOWAIT)`/`WriteFile`/
+ordered-`ReadFile` wire observation. The same held pipe handle is passed to
 `GetNamedPipeServerProcessId`; the returned PID and creation FILETIME equal one
 exact process runtime identity. That PID is the input to a closed
 `OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION)` row; the returned process
@@ -687,7 +718,11 @@ order, and the creation value and normalized image path reconcile the embedded
 runtime identity. Full HTTP framing, raw request/response
 bytes and parsed body/status reconcile. Every `WriteFile` and `ReadFile` DWORD
 count output binds its exact pointer, zero input image, returned four-byte
-image, scalar and hashes. Pathname-only or copied-response
+image, scalar and hashes. Every such I/O call records null `lpOverlapped`; its
+handle equals the authenticated connection handle. Successful exchanges may
+contain ordered `ERROR_NO_DATA` retry rows before response data but must finish
+with a complete framed response within the same exact monotonic 30000-ms and
+1201-read-attempt ceiling. Pathname-only or copied-response
 evidence refuses.
 
 The full raw snapshot is remeasured immediately before every process resume,
