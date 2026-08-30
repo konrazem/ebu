@@ -95,6 +95,13 @@ v1 schema. A validator may not merge definitions by convenience: it loads the
 complete correction schema and separately verifies the historical schema blob
 as an immutable predecessor.
 
+The added- and changed-definition lists in the correction contract are
+derived by strict ascending comparison of the UTF-8 bytes of NFC definition
+names. All current names are ASCII, so this is also ascending Unicode code
+point order. The declared order is independent of JSON object-member traversal
+order. A duplicate, non-NFC name, different sort, count mismatch or member
+mismatch refuses under BEC-067.
+
 The corrected public identity kinds are
 `stage_f_binding_authority_set/v2`, `stage_f_binding_implementation/v2`, and
 `stage_f_binding_validator/v2`. Their preimages bind all twelve ordered local
@@ -421,11 +428,14 @@ before its publication; its later ledger entry becomes the next predecessor.
 No record carries its own future ledger-entry identity, and no ledger entry
 claims the outcome of its own not-yet-performed append.
 
-Every capacity closure, validation, readiness, audit, packet, post-packet user
-receipt and authorization therefore reconstructs one exact predecessor-to-new-
-head transition. Every record that names a ledger predecessor also embeds the
-exact append observation for that predecessor; the launch gate and prestart
-handoff use their explicitly named equivalent live-head observations. A
+Every independently published ledgerable capacity closure, validation,
+readiness, audit, packet, post-packet user receipt and authorization therefore
+reconstructs one exact predecessor-to-new-head transition. Every independently
+published ledgerable record that names a ledger predecessor also embeds the
+exact append observation for that predecessor; the launch gate, durable start
+intent and prestart handoff use their explicitly named equivalent live-head
+observations. A frozen pre-call object embedded inside the post-call receipt is
+historical nested evidence, not a separately published ledgerable record. A
 missing prefix, fork, counter reset, replay, survivor-only
 scan, earlier challenge deletion, whole-prefix replacement, write at a
 nonterminal offset, current-head handle mismatch or unconfirmed non-head append
@@ -539,7 +549,8 @@ capacity-consumption-closure identity; it does not claim that an earlier live
 measurement remains current. After the launch-gate ledger append is directly
 observed, the controller constructs the acyclic one-shot start capability and
 durably publishes a single-use container-start intent containing that
-capability. Only after the intent ledger append is directly observed does it
+capability and the exact launch-gate ledger-predecessor append observation.
+Only after the intent ledger append is directly observed does it
 remeasure the full host-prerequisite snapshot and one
 `SCIENTIFIC_CONTAINER_START` gate. That gate binds the exact
 start-capability identity and the same stable capacity-consumption-closure
@@ -547,11 +558,14 @@ identity and is embedded with the capability, intent and fresh host snapshot in
 the in-memory handoff. Exact canonical handoff bytes and SHA-256 are frozen
 with a pre-call cutoff timestamp; only deterministic in-memory finalization may
 occur before the exact start call. After the call, a distinct container-start
-receipt binds that frozen handoff identity, intent, final gate, exact
-authenticated pipe exchange, response, post-call inspect and times. The
-normal same-controller receipt is ledgered before the historical handoff and
-final-gate snapshots are published under the already debited retained-evidence
-tail.
+receipt embeds the complete frozen handoff object, and therefore the complete
+fresh host snapshot and final gate, and binds their identities, the intent,
+exact authenticated pipe exchange or exact failed/incomplete attempt,
+post-call inspect and times. The handoff, fresh host snapshot and final gate
+are never separately published or ledgered after the call and are not valid
+top-level correction-schema records. The normal or contained same-controller
+receipt is their sole durable publication envelope and names the same live
+ledger head that existed at the pre-call freeze.
 
 The durable intent is the conservative armed marker that closes crash
 ambiguity. Once it is durably ledgered, any later controller restart treats the
@@ -563,11 +577,27 @@ Docker, the recovery controller creates a fresh recovery-attempt genesis, root
 protection epoch and continuously held recovery ledger. Its containment
 receipt names that new epoch and ledger predecessor, embeds the predecessor's
 append observation, and carries the exact old intent identity only as immutable
-recovery input. Under the fresh root protection, read-only held nonreparse
-handles measure the old ledger file and intent file by normalized path, volume
-serial, file ID, byte count and SHA-256. The old ledger prefix is reconstructed
-without write/delete access and must contain the exact durable intent entry and
-append; the receipt embeds both measurements and the successful binding.
+recovery input. Under the fresh root protection, distinct read-only held
+nonreparse handles open the old ledger file and intent file with write and
+delete sharing denied. Exact GetFinalPathNameByHandleW,
+GetFileInformationByHandleEx, SetFilePointerEx and ordered ReadFile calls retain
+all input handles, pointers, capacities, zero images, return/error values, raw
+output images, byte counts and hashes. A same-handle post-read standard-info
+query proves stability. The handles remain open through canonical parsing and
+the recovery receipt's durable ledger append; their later exact closes and the
+receipt append observation are recorded in the root-protection release.
+
+The recovery receipt embeds the complete recovered intent record and a typed
+old-ledger binding: exact raw prefix bytes, parsed genesis and ordered entries,
+the intent entry and its offset/wire bytes when present, and every identity,
+path, volume, file ID, byte-count and digest reconciliation. If a durable
+successor entry preserves the intent entry's append observation, it is embedded
+and verified. A crash can instead lose the current head's in-memory append
+observation; that state is explicitly classified
+`INTENT_ENTRY_RECOVERED_CURRENT_HEAD_APPEND_OBSERVATION_LOST` and never claims
+that the call observation was reconstructed. An absent or unverifiable intent
+entry is separately classified. Every such disposition still requires
+containment and quarantine and is never evidence that the start was unsent.
 Recovery never retries the start. It first inspects the exact
 container through an authenticated pipe, then issues an authenticated exact
 `DELETE /containers/{id}?force=true&v=false` emergency-containment exchange.
@@ -580,9 +610,16 @@ bind-mounted result or checkpoint roots.
 
 The typed receipt is classified as `PRECALL_ABANDONED_UNSENT` only when the
 same live controller proves that `WriteFile` was never invoked, as
-`RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN` after any unresolved-intent restart, or as
-`POST_RESPONSE_PREPUBLICATION_CONTAINED` only while the same live controller
-still retains the exact 204 response but cannot publish its normal receipt. A
+`LIVE_TRANSPORT_ACCEPTANCE_UNKNOWN_CONTAINED` when that controller invoked a
+failed or short WriteFile or cannot retain a complete, well-framed exact 204
+response, as `RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN` after any unresolved-intent
+restart, or as `POST_RESPONSE_PREPUBLICATION_CONTAINED` only while the same
+live controller still retains the exact 204 response but cannot publish its
+normal receipt. The live transport-unknown receipt retains the exact request,
+WriteFile inputs/output image/count/error, every ReadFile call and accumulated
+response bytes plus the terminal framing/parse disposition. It immediately
+performs the same authenticated inspect, force removal, final 404 and
+quarantine; deliberate restart is not a proof or containment workaround. A
 restart after an unpublished response uses the acceptance-unknown class; it
 does not reconstruct lost response bytes. Every non-normal class carries
 the force-remove exchange, final 404 inspection and permanent quarantine.
