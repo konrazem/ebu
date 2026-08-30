@@ -41,10 +41,12 @@
     "storage components sum exactly to 666 GiB",
     "minimum free-space and nonresetting accounting rules are present",
     "capacity snapshot is timestamped independently enumerable predecessor-linked and storage-quiescent",
+    "every NTFS file and directory has complete FindFirstStreamW FindNextStreamW enumeration and no named data stream",
     "power and durability preconditions are complete",
     "Stage E execution guard is protected and unchanged",
     "final descendant path union relative to the Stage E implementation base is exactly 69 paths",
-    "authorization requires independent PASS and later explicit user receipt",
+    "sealed packet carries the complete frozen authorization projection",
+    "authorization requires one exact independently passed record chain and later explicit user receipt",
     "all authority-candidate scientific counters are zero"
   ],
   "semantic_relations": {
@@ -96,6 +98,7 @@
       "STAGE_F_LOCAL_BINDING_VALIDATION_PASS requires zero unresolved authority ids and every identity portfolio storage power durability private-public and Stage E guard check true",
       "STAGE_F_LOCAL_BINDING_NOT_SEALABLE requires structurally valid identity and portfolio links but at least one unresolved authority id or false storage power or durability precondition",
       "STAGE_F_LOCAL_BINDING_VALIDATION_FAIL is mandatory for malformed schema digest projection privacy predecessor guard or cross-record linkage",
+      "stage_e_guard_preserved is an observed boolean; PASS and NOT_SEALABLE require true while false requires VALIDATION_FAIL; FAIL for another defect may retain true",
       "receipt route order and snapshot identities equal the referenced bundle and readiness projections"
     ],
     "storage": [
@@ -108,6 +111,8 @@
       "Stage F root immutable-results parent and independent-audit parent directory allocation units charge to checkpoint-and-write overhead",
       "relative paths are unique NFC and ordered by ascending UTF-8 bytes",
       "reparse sparse compressed hard-linked non-regular or unclassified entries refuse",
+      "FindFirstStreamW FindNextStreamW and FindClose enumerate every regular file and directory including structural and category roots; only final ERROR_HANDLE_EOF terminates an established search",
+      "each regular file has exactly one default unnamed ::$DATA row whose StreamSize equals logical bytes; each directory has zero $DATA rows and initial ERROR_HANDLE_EOF; every named extra missing incomplete or error-terminated stream enumeration refuses",
       "file accounted bytes equal max logical and allocated bytes and directory accounted bytes equal one volume allocation unit",
       "retained evidence is fully predebited at 8589934592 bytes and recorded live allocation after snapshot write is independently rescanned not to exceed that ceiling",
       "every predecessor non-metadata inventory row remains byte-identical and only new rows may be appended",
@@ -124,11 +129,17 @@
     ],
     "authorization": [
       "no real stage_f_campaign_authorization/v1 is issued by the foundation implementation",
-      "a validator may accept only a record bound to INDEPENDENT_BINDING_PASS",
-      "authorization binds the contemporaneous passing storage-capacity snapshot",
-      "authorization binds the contemporaneous passing power snapshot",
+      "a validator resolves all referenced retained canonical records and may accept only an authorization naming a final readiness record with disposition INDEPENDENT_BINDING_PASS",
+      "authorization sealed-binding-bundle identity equals the bundle named by the sealed packet final PASS readiness independent audit and binding-validation receipt",
+      "authorization independent-audit identity equals final PASS readiness independent-audit identity; that audit has disposition INDEPENDENT_BINDING_PASS and names the exact immutable pre-audit readiness with READY_FOR_INDEPENDENT_BINDING_AUDIT and the same bundle",
+      "authorization ordered route ids and the packet ordered route ids equal the frozen order and bundle route wrappers; the packet ordered fifteen campaign-binding identities equal the bundle and final PASS readiness identities",
+      "authorization scientific implementation verifier Stage E integration and Stage E evidence identities equal the exact sealed-packet projections; every packet code installed-artifact binding-implementation authority-set Stage E evidence and validator projection equals the bundle and PASS-readiness projection",
+      "authorization private and public host identities equal the validation audit PASS-readiness public-binding and packet projections wherever present",
+      "authorization binds the contemporaneous passing storage-capacity snapshot and the same identity appears in validation audit PASS readiness and sealed packet",
+      "authorization binds the contemporaneous passing power snapshot and the same identity appears in validation audit PASS readiness and sealed packet",
       "authorization_utc is no more than 300 seconds after the bound capacity power and validation receipt timestamps and not before the post-packet user statement",
       "post-packet explicit user authorization receipt is mandatory and binds the same sealed campaign packet as authorization",
+      "every identity digest is reconstructed from its exact retained canonical preimage and any mixed-record composition or replay refuses",
       "guard refusal occurs before project-runner import on any missing or mismatched field"
     ]
   },
@@ -163,9 +174,12 @@
     {"case_id":"SF-BIND-N28","mutation":"embedded record digest omits the wrong field omits more than its one digest field uses noncanonical bytes or an enclosing record identity has a different kind value or digest","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N29","mutation":"route wrapper campaign or study differs from referenced campaign binding; file binding code artifact authority or host-policy projection mismatches; or a binding identity is relabeled duplicated reused null under SEALED or non-null under UNSEALED_AUTHORITY_GAP","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N30","mutation":"capacity or power timestamp is future misordered or over 300 seconds old; or capacity is unquiesced nonenumerable path-misordered predecessor-resetting or omits misclassifies follows or accepts an unknown reparse sparse compressed hard-linked overwritten truncated or deleted entry","disposition":"REFUSE"},
-    {"case_id":"SF-BIND-N31","mutation":"locally defined identity uses an arbitrary kind or a named private policy preimage fails its exact schema canonical reserialization or exact-kind digest link","disposition":"REFUSE"}
+    {"case_id":"SF-BIND-N31","mutation":"locally defined identity uses an arbitrary kind or a named private policy preimage fails its exact schema canonical reserialization or exact-kind digest link","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N32","mutation":"a regular file or directory has a named NTFS $DATA stream; a regular file lacks or duplicates the default unnamed ::$DATA stream; StreamSize differs from logical bytes; or stream enumeration is omitted incomplete or ends in an unexpected error","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N33","mutation":"authorization composes packet bundle final PASS readiness independent audit validation host capacity power route campaign binding code artifact implementation authority Stage E evidence validator or user-receipt identities from individually valid but different record chains","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N34","mutation":"a changed Stage E guard is recorded as preserved or stage_e_guard_preserved false is paired with PASS or NOT_SEALABLE","disposition":"REFUSE"}
   ],
-  "negative_case_count": 31,
+  "negative_case_count": 34,
   "allowed_validation_operations": [
     "Git object and byte inspection",
     "strict UTF-8 and JSON parsing",

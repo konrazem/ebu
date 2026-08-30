@@ -213,14 +213,26 @@ audit/retained-evidence` under the private Stage F root.
 
 Inventory paths are private NFC relative paths ordered by ascending UTF-8
 bytes. Reparse points are refused without following them; sparse or compressed
-files and any file with hard-link count other than one refuse. A regular file
-is charged the greater of end-of-file length and `GetCompressedFileSizeW`;
-each directory is conservatively charged one volume allocation unit. Every
-non-metadata entry maps to exactly one category and an unclassified entry
-refuses. The Stage F root plus the `immutable-results` and `independent-audit`
-structural parent directories are charged to checkpoint-and-write overhead;
-category roots are charged to their category. Orphan partials are ordinary
-retained entries and therefore cannot disappear from accounting.
+files and any file with hard-link count other than one refuse. Every regular
+file and directory, including the Stage F root, structural parents, and category
+roots, is independently enumerated with `FindFirstStreamW`; every established
+search continues with `FindNextStreamW` to `ERROR_HANDLE_EOF` and its handle is
+closed with `FindClose`. A regular file must expose exactly one `$DATA` stream,
+the default unnamed `::$DATA`, whose
+reported `StreamSize` equals the file end-of-file length. A directory must
+return `ERROR_HANDLE_EOF` from the first call and therefore expose zero `$DATA`
+streams. Any named `$DATA` stream on a file or directory, any missing or extra
+default stream, any other enumeration error, or any incomplete enumeration
+refuses. No stream is followed, ignored, or charged outside its owning row.
+
+A regular file is charged the greater of end-of-file length and
+`GetCompressedFileSizeW`; each directory is conservatively charged one volume
+allocation unit. Every non-metadata entry maps to exactly one category and an
+unclassified entry refuses. The Stage F root plus the `immutable-results` and
+`independent-audit` structural parent directories are charged to checkpoint-
+and-write overhead; category roots are charged to their category. Orphan
+partials are ordinary retained entries and therefore cannot disappear from
+accounting.
 
 The retained-evidence component is fully predebited by 8 GiB so that the
 private manifest, capacity record, validation receipts, and audit receipts do
@@ -285,6 +297,14 @@ receipt exactly.
 A readiness or independent disposition cannot be replayed against a different
 bundle, code set, or campaign-binding list.
 
+The validation receipt records `stage_e_guard_preserved` as an observed
+boolean. `STAGE_F_LOCAL_BINDING_VALIDATION_PASS` and
+`STAGE_F_LOCAL_BINDING_NOT_SEALABLE` require it to be true. If the protected
+Stage E guard or reachability boundary is changed, the field is false and the
+only permitted receipt disposition is `STAGE_F_LOCAL_BINDING_VALIDATION_FAIL`.
+Other detected defects may also produce FAIL while the guard field remains
+true; a validator never misstates an observed guard failure.
+
 Readiness, validation, independent audit, user receipt, and authorization carry
 UTC timestamps. A capacity snapshot completes no later than, and a power
 snapshot is observed no later than, the consuming readiness or authorization;
@@ -322,9 +342,26 @@ The final readiness PASS binds that audit receipt. This order has no circular
 identity and prevents an audit of one bundle from being replayed onto another.
 
 `stage_f_campaign_authorization/v1` is a separate, closed, digest-bound record.
-It can be accepted only after `INDEPENDENT_BINDING_PASS` and only when it binds
-the exact sealed packet, complete portfolio, public host binding, current
-capacity and power snapshots, independent audit receipt, and one closed
+It can be accepted only after `INDEPENDENT_BINDING_PASS` and therefore names
+the exact final PASS readiness record as well as its exact independent audit
+receipt. The authorization validator resolves every named record rather than
+accepting identities in isolation. Its bundle identity must equal the bundle
+named by the PASS readiness, audit receipt, validation receipt, and sealed
+packet; its audit identity must equal the PASS-readiness audit identity; and
+the audit disposition must be `INDEPENDENT_BINDING_PASS` over the exact
+pre-audit ready record named by the audit.
+
+The authorization's ordered routes, fifteen campaign-binding identities,
+scientific code or implementation, installed artifact, binding implementation,
+authority set, Stage E integration and evidence, and validator identities must
+equal the corresponding sealed-packet and bundle projections. Its private and
+public host identities and current capacity and power snapshot identities must
+equal the validation, audit, PASS-readiness, public-binding, and packet
+projections wherever those records carry them. Every digest is reconstructed
+from retained canonical bytes. A mixed-record composition or replay refuses
+even when every referenced record is individually valid.
+
+The authorization additionally binds one closed
 `stage_f_post_packet_user_authorization_receipt/v1`. That receipt hashes the
 exact retained explicit user statement and binds the same sealed-packet
 identity; it is valid only when supplied after the human-readable Stage F
@@ -400,7 +437,9 @@ Validation must refuse at least:
 9. envelope arithmetic other than exact 666 GiB and the six frozen components;
 10. a stale, nonenumerable, nonquiescent, predecessor-resetting, or incomplete
     capacity snapshot, or a reparse, hard-linked, sparse, compressed,
-    overwritten, truncated, deleted, or unclassified retained entry;
+    overwritten, truncated, deleted, or unclassified retained entry, or any
+    named, missing, extra, unenumerated, or error-terminated NTFS `$DATA`
+    stream;
 11. insufficient current free space or uncounted retained material;
 12. missing AC, sleep, lid, Docker, reboot, fsync, atomicity, restart, hash, or
     orphan-partial evidence;
@@ -410,8 +449,10 @@ Validation must refuse at least:
 15. a changed code, artifact, environment, algorithm, oracle, topology,
     policy, seed, stream, cache, checkpoint, control, falsifier, horizon, or cap
     identity after seal;
-16. authorization before an independent PASS or without the later explicit
-    user statement;
+16. authorization before an independent PASS, without the later explicit user
+    statement, or with any mixed packet, bundle, readiness, audit, validation,
+    host, snapshot, route, code, artifact, authority, Stage E, or validator
+    projection;
 17. project-runner import or any nonzero scientific counter during binding
     validation; and
 18. any result, figure, book, release, publication, or Stage G action.

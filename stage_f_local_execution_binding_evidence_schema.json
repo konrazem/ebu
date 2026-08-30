@@ -508,6 +508,9 @@
         "schema", "platform", "enumeration_root", "entry_order",
         "reparse_point_disposition", "hard_link_count",
         "sparse_file_disposition", "compressed_file_disposition",
+        "data_stream_enumeration_api", "data_stream_enumeration_scope",
+        "regular_file_data_stream_rule", "directory_data_stream_rule",
+        "named_data_stream_disposition", "stream_enumeration_error_disposition",
         "accounted_file_bytes", "accounted_directory_bytes",
         "structural_directory_accounting",
         "retained_evidence_accounting", "mutation_policy",
@@ -522,6 +525,12 @@
         "hard_link_count": {"const": 1},
         "sparse_file_disposition": {"const": "REFUSE"},
         "compressed_file_disposition": {"const": "REFUSE"},
+        "data_stream_enumeration_api": {"const": "FindFirstStreamW_FindNextStreamW_FindClose"},
+        "data_stream_enumeration_scope": {"const": "EVERY_REGULAR_FILE_AND_DIRECTORY_INCLUDING_STAGE_F_ROOT_STRUCTURAL_PARENTS_AND_CATEGORY_ROOTS"},
+        "regular_file_data_stream_rule": {"const": "EXACTLY_ONE_DEFAULT_UNNAMED_::$DATA_WITH_STREAM_SIZE_EQUAL_END_OF_FILE"},
+        "directory_data_stream_rule": {"const": "ZERO_WITH_INITIAL_ERROR_HANDLE_EOF"},
+        "named_data_stream_disposition": {"const": "REFUSE"},
+        "stream_enumeration_error_disposition": {"const": "REFUSE_UNLESS_INITIAL_DIRECTORY_ERROR_HANDLE_EOF_OR_FINAL_FIND_NEXT_ERROR_HANDLE_EOF"},
         "accounted_file_bytes": {"const": "MAX_END_OF_FILE_AND_GET_COMPRESSED_FILE_SIZE_W"},
         "accounted_directory_bytes": {"const": "ONE_VOLUME_ALLOCATION_UNIT"},
         "structural_directory_accounting": {"const": "STAGE_F_ROOT_IMMUTABLE_RESULTS_AND_INDEPENDENT_AUDIT_PARENTS_TO_CHECKPOINT_AND_WRITE_OVERHEAD"},
@@ -577,13 +586,25 @@
         "total_envelope_usage_bytes": {"type": "integer", "minimum": 0, "maximum": 715112054784}
       }
     },
+    "storage_data_stream_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stream_name", "stream_size_bytes"],
+      "properties": {
+        "stream_name": {"const": "::$DATA"},
+        "stream_size_bytes": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
     "storage_inventory_entry": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "relative_path", "entry_type", "storage_category", "logical_bytes",
         "allocated_bytes", "accounted_bytes", "hard_link_count",
-        "reparse_point", "sparse", "compressed", "content_sha256"
+        "reparse_point", "sparse", "compressed",
+        "data_stream_enumeration_completed", "data_stream_initial_result",
+        "data_stream_terminal_result", "data_stream_search_handle_opened",
+        "data_stream_search_handle_closed", "data_streams", "content_sha256"
       ],
       "properties": {
         "relative_path": {"$ref": "#/$defs/nonempty_string"},
@@ -596,6 +617,16 @@
         "reparse_point": {"const": false},
         "sparse": {"const": false},
         "compressed": {"const": false},
+        "data_stream_enumeration_completed": {"const": true},
+        "data_stream_initial_result": {"enum": ["STREAM_FOUND", "ERROR_HANDLE_EOF"]},
+        "data_stream_terminal_result": {"const": "ERROR_HANDLE_EOF"},
+        "data_stream_search_handle_opened": {"type": "boolean"},
+        "data_stream_search_handle_closed": {"type": "boolean"},
+        "data_streams": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/storage_data_stream_entry"},
+          "uniqueItems": true
+        },
         "content_sha256": {
           "oneOf": [
             {"$ref": "#/$defs/sha256"},
@@ -606,11 +637,33 @@
       "allOf": [
         {
           "if": {"properties": {"entry_type": {"const": "REGULAR_FILE"}}},
-          "then": {"properties": {"content_sha256": {"$ref": "#/$defs/sha256"}}}
+          "then": {
+            "properties": {
+              "data_streams": {
+                "minItems": 1,
+                "maxItems": 1,
+                "prefixItems": [{"$ref": "#/$defs/storage_data_stream_entry"}],
+                "items": false
+              },
+              "data_stream_initial_result": {"const": "STREAM_FOUND"},
+              "data_stream_search_handle_opened": {"const": true},
+              "data_stream_search_handle_closed": {"const": true},
+              "content_sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
         },
         {
           "if": {"properties": {"entry_type": {"const": "DIRECTORY"}}},
-          "then": {"properties": {"logical_bytes": {"const": 0}, "content_sha256": {"type": "null"}}}
+          "then": {
+            "properties": {
+              "logical_bytes": {"const": 0},
+              "data_streams": {"maxItems": 0},
+              "data_stream_initial_result": {"const": "ERROR_HANDLE_EOF"},
+              "data_stream_search_handle_opened": {"const": false},
+              "data_stream_search_handle_closed": {"const": false},
+              "content_sha256": {"type": "null"}
+            }
+          }
         }
       ]
     },
@@ -1173,7 +1226,7 @@
         "power_preconditions_pass": {"type": "boolean"},
         "durability_preconditions_pass": {"type": "boolean"},
         "private_public_digest_reconciled": {"type": "boolean"},
-        "stage_e_guard_preserved": {"const": true},
+        "stage_e_guard_preserved": {"type": "boolean"},
         "disposition": {
           "enum": [
             "STAGE_F_LOCAL_BINDING_VALIDATION_PASS",
@@ -1183,7 +1236,34 @@
         },
         "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
         "receipt_sha256": {"$ref": "#/$defs/sha256"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "enum": [
+                  "STAGE_F_LOCAL_BINDING_VALIDATION_PASS",
+                  "STAGE_F_LOCAL_BINDING_NOT_SEALABLE"
+                ]
+              }
+            },
+            "required": ["disposition"]
+          },
+          "then": {"properties": {"stage_e_guard_preserved": {"const": true}}}
+        },
+        {
+          "if": {
+            "properties": {"stage_e_guard_preserved": {"const": false}},
+            "required": ["stage_e_guard_preserved"]
+          },
+          "then": {
+            "properties": {
+              "disposition": {"const": "STAGE_F_LOCAL_BINDING_VALIDATION_FAIL"}
+            }
+          }
+        }
+      ]
     },
     "durability_probe_receipt": {
       "type": "object",
@@ -1345,6 +1425,7 @@
         "ordered_route_ids",
         "sealed_campaign_packet_identity",
         "sealed_binding_bundle_identity",
+        "independent_binding_pass_readiness_identity",
         "public_host_binding_identity",
         "private_host_manifest_identity",
         "scientific_implementation_identity",
@@ -1372,6 +1453,7 @@
         },
         "sealed_campaign_packet_identity": {"$ref": "#/$defs/sealed_campaign_packet_identity"},
         "sealed_binding_bundle_identity": {"$ref": "#/$defs/local_binding_bundle_identity"},
+        "independent_binding_pass_readiness_identity": {"$ref": "#/$defs/binding_readiness_identity"},
         "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
         "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
         "scientific_implementation_identity": {"$ref": "#/$defs/identity"},
