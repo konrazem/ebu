@@ -10899,9 +10899,26 @@
         "opened_utc",
         "path_query_api",
         "path_query_input_handle_value_uint64",
+        "path_query_output_buffer_base_address_uint64",
+        "path_query_output_buffer_wchar_capacity",
+        "path_query_returned_wchar_count",
+        "path_query_returned_nonzero",
+        "path_query_last_error",
+        "path_query_output_bytes_base64",
+        "path_query_output_sha256",
+        "path_query_started_utc",
+        "path_query_completed_utc",
         "path_query_output_identity",
         "file_id_query_api",
         "file_id_query_input_handle_value_uint64",
+        "file_id_query_output_buffer_base_address_uint64",
+        "file_id_query_output_buffer_capacity",
+        "file_id_query_returned_nonzero",
+        "file_id_query_last_error",
+        "file_id_query_output_bytes_base64",
+        "file_id_query_output_sha256",
+        "file_id_query_started_utc",
+        "file_id_query_completed_utc",
         "volume_serial_number_uint64",
         "file_id_128",
         "attribute_query_api",
@@ -10951,9 +10968,26 @@
         "opened_utc": {"$ref": "#/$defs/utc_timestamp"},
         "path_query_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
         "path_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "path_query_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "path_query_output_buffer_wchar_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "path_query_returned_wchar_count": {"$ref": "#/$defs/positive_uint32"},
+        "path_query_returned_nonzero": {"const": true},
+        "path_query_last_error": {"type": "null"},
+        "path_query_output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "path_query_output_sha256": {"$ref": "#/$defs/sha256"},
+        "path_query_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "path_query_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "path_query_output_identity": {"$ref": "#/$defs/private_path_identity"},
         "file_id_query_api": {"const": "GetFileInformationByHandleEx_FileIdInfo"},
         "file_id_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "file_id_query_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "file_id_query_output_buffer_capacity": {"const": 24},
+        "file_id_query_returned_nonzero": {"const": true},
+        "file_id_query_last_error": {"type": "null"},
+        "file_id_query_output_bytes_base64": {"type": "string","minLength": 32,"maxLength": 32,"pattern": "^[A-Za-z0-9+/]{32}$"},
+        "file_id_query_output_sha256": {"$ref": "#/$defs/sha256"},
+        "file_id_query_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "file_id_query_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
         "file_id_128": {"$ref": "#/$defs/file_id_128"},
         "attribute_query_api": {"const": "GetFileInformationByHandleEx_FileAttributeTagInfo"},
@@ -11839,7 +11873,7 @@
     "stage_f_root_watch_release_observation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["schema","watch_ordinal","directory_handle_value_uint64","buffer_base_address_uint64","overlapped_address_uint64","event_handle_value_uint64","terminal_branch","cancel_api","cancel_directory_handle_value_uint64","cancel_overlapped_address_uint64","cancel_returned_nonzero","cancel_last_error","completion_api","completion_wait","completion_returned_nonzero","completion_last_error","completion_bytes_transferred","raw_completed_bytes_base64","raw_completed_sha256","terminal_records","terminal_record_count","terminal_records_reconciled","terminal_completion_utc","close_directory_api","close_directory_input_handle_value_uint64","close_directory_returned_nonzero","directory_handle_closed_utc","close_event_api","close_event_input_handle_value_uint64","close_event_returned_nonzero","event_handle_closed_utc","free_overlapped_api","free_overlapped_base_address_uint64","free_overlapped_size","free_overlapped_type","free_overlapped_returned_nonzero","overlapped_freed_utc","free_buffer_api","free_buffer_base_address_uint64","free_buffer_size","free_buffer_type","free_buffer_returned_nonzero","buffer_freed_utc","release_order_exact","released_utc"],
+      "required": ["schema","watch_ordinal","directory_handle_value_uint64","buffer_base_address_uint64","overlapped_address_uint64","event_handle_value_uint64","terminal_branch","cancel_api","cancel_directory_handle_value_uint64","cancel_overlapped_address_uint64","cancel_started_utc","cancel_returned_nonzero","cancel_last_error","cancel_completed_utc","completion_api","completion_directory_handle_value_uint64","completion_overlapped_address_uint64","completion_bytes_output_address_uint64","completion_bytes_output_input_bytes_base64","completion_bytes_output_input_sha256","completion_wait","completion_started_utc","completion_returned_nonzero","completion_last_error","completion_bytes_transferred","completion_bytes_output_bytes_base64","completion_bytes_output_sha256","raw_completed_bytes_base64","raw_completed_sha256","terminal_records","terminal_record_count","terminal_records_reconciled","terminal_completion_utc","close_directory_api","close_directory_input_handle_value_uint64","close_directory_returned_nonzero","directory_handle_closed_utc","close_event_api","close_event_input_handle_value_uint64","close_event_returned_nonzero","event_handle_closed_utc","free_overlapped_api","free_overlapped_base_address_uint64","free_overlapped_size","free_overlapped_type","free_overlapped_returned_nonzero","overlapped_freed_utc","free_buffer_api","free_buffer_base_address_uint64","free_buffer_size","free_buffer_type","free_buffer_returned_nonzero","buffer_freed_utc","release_order_exact","released_utc"],
       "properties": {
         "schema": {"const": "stage_f_root_watch_release_observation/v1"},
         "watch_ordinal": {"$ref": "#/$defs/positive_uint32"},
@@ -11847,17 +11881,27 @@
         "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "event_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
-        "terminal_branch": {"enum": ["QUIET_CANCELLED","NORMAL_COMPLETION_WON_CANCEL_RACE"]},
+        "terminal_branch": {"enum": ["QUIET_CANCELLED","NORMAL_COMPLETION_AFTER_CANCEL_ACCEPTED","NORMAL_COMPLETION_BEFORE_CANCEL"]},
         "cancel_api": {"const": "CancelIoEx"},
         "cancel_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "cancel_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "cancel_started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "cancel_returned_nonzero": {"type": "boolean"},
         "cancel_last_error": {"oneOf": [{"$ref": "#/$defs/uint32"},{"type": "null"}]},
+        "cancel_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "completion_api": {"const": "GetOverlappedResult"},
+        "completion_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "completion_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "completion_bytes_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "completion_bytes_output_input_bytes_base64": {"const": "AAAAAA=="},
+        "completion_bytes_output_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
         "completion_wait": {"const": true},
+        "completion_started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "completion_returned_nonzero": {"type": "boolean"},
         "completion_last_error": {"oneOf": [{"$ref": "#/$defs/uint32"},{"type": "null"}]},
         "completion_bytes_transferred": {"$ref": "#/$defs/nonnegative_integer"},
+        "completion_bytes_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "completion_bytes_output_sha256": {"$ref": "#/$defs/sha256"},
         "raw_completed_bytes_base64": {"oneOf": [{"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},{"type": "null"}]},
         "raw_completed_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"},{"type": "null"}]},
         "terminal_records": {"type": "array","items": {"$ref": "#/$defs/stage_f_file_notify_record"}},
@@ -11902,8 +11946,27 @@
               "terminal_records": {"maxItems": 0},
               "terminal_record_count": {"const": 0}
             }
-          },
-          "else": {
+          }
+        },
+        {
+          "if": {"properties": {"terminal_branch": {"const": "NORMAL_COMPLETION_AFTER_CANCEL_ACCEPTED"}}, "required": ["terminal_branch"]},
+          "then": {
+            "properties": {
+              "cancel_returned_nonzero": {"const": true},
+              "cancel_last_error": {"type": "null"},
+              "completion_returned_nonzero": {"const": true},
+              "completion_last_error": {"type": "null"},
+              "completion_bytes_transferred": {"$ref": "#/$defs/positive_uint32"},
+              "raw_completed_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+              "raw_completed_sha256": {"$ref": "#/$defs/sha256"},
+              "terminal_records": {"minItems": 1},
+              "terminal_record_count": {"$ref": "#/$defs/positive_uint32"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"terminal_branch": {"const": "NORMAL_COMPLETION_BEFORE_CANCEL"}}, "required": ["terminal_branch"]},
+          "then": {
             "properties": {
               "cancel_returned_nonzero": {"const": false},
               "cancel_last_error": {"const": 1168},
@@ -11969,7 +12032,7 @@
     },
     "stage_f_usn_volume_handle_observation": {
       "type": "object","additionalProperties": false,
-      "required": ["schema","selected_volume_guid_path","create_api","create_input_path_identity","create_desired_access","create_share_mode","create_security_attributes","create_disposition","create_flags_and_attributes","create_returned_valid_handle","volume_handle_value_uint64","volume_information_api","volume_information_input_handle_value_uint64","volume_serial_number_uint64","filesystem_name","ntfs_volume_data_api","ntfs_volume_data_input_handle_value_uint64","ntfs_volume_data_control_code_uint32","ntfs_volume_data_input_buffer_pointer_is_null","ntfs_volume_data_input_buffer_byte_count","ntfs_volume_data_output_buffer_base_address_uint64","ntfs_volume_data_output_buffer_capacity","ntfs_volume_data_bytes_returned_output_address_uint64","ntfs_volume_data_returned_nonzero","ntfs_volume_data_last_error","ntfs_volume_data_output_bytes_base64","ntfs_volume_data_output_byte_count","ntfs_volume_data_output_sha256","ntfs_volume_data","opened_utc","continuously_retained"],
+      "required": ["schema","selected_volume_guid_path","create_api","create_input_path_identity","create_desired_access","create_share_mode","create_security_attributes","create_disposition","create_flags_and_attributes","create_returned_valid_handle","volume_handle_value_uint64","volume_information_api","volume_information_input_handle_value_uint64","volume_information_volume_name_buffer_pointer_is_null","volume_information_volume_name_buffer_wchar_capacity","volume_information_serial_output_address_uint64","volume_information_serial_input_bytes_base64","volume_information_serial_input_sha256","volume_information_max_component_length_pointer_is_null","volume_information_filesystem_flags_pointer_is_null","volume_information_filesystem_name_buffer_base_address_uint64","volume_information_filesystem_name_buffer_wchar_capacity","volume_information_returned_nonzero","volume_information_last_error","volume_information_serial_output_bytes_base64","volume_information_serial_output_sha256","volume_serial_number_uint32","volume_information_serial_raw_projection_exact","volume_information_filesystem_name_output_bytes_base64","volume_information_filesystem_name_output_sha256","filesystem_name","ntfs_volume_serial_number_uint64","ntfs_volume_serial_matches_ntfs_volume_data","serial_sources_not_conflated","ntfs_volume_data_api","ntfs_volume_data_input_handle_value_uint64","ntfs_volume_data_control_code_uint32","ntfs_volume_data_input_buffer_pointer_is_null","ntfs_volume_data_input_buffer_byte_count","ntfs_volume_data_output_buffer_base_address_uint64","ntfs_volume_data_output_buffer_capacity","ntfs_volume_data_bytes_returned_output_address_uint64","ntfs_volume_data_returned_nonzero","ntfs_volume_data_last_error","ntfs_volume_data_output_bytes_base64","ntfs_volume_data_output_byte_count","ntfs_volume_data_output_sha256","ntfs_volume_data","opened_utc","continuously_retained"],
       "properties": {
         "schema": {"const": "stage_f_usn_volume_handle_observation/v1"},
         "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
@@ -11984,8 +12047,27 @@
         "volume_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "volume_information_api": {"const": "GetVolumeInformationByHandleW"},
         "volume_information_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
-        "volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "volume_information_volume_name_buffer_pointer_is_null": {"const": true},
+        "volume_information_volume_name_buffer_wchar_capacity": {"const": 0},
+        "volume_information_serial_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "volume_information_serial_input_bytes_base64": {"const": "AAAAAA=="},
+        "volume_information_serial_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+        "volume_information_max_component_length_pointer_is_null": {"const": true},
+        "volume_information_filesystem_flags_pointer_is_null": {"const": true},
+        "volume_information_filesystem_name_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "volume_information_filesystem_name_buffer_wchar_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "volume_information_returned_nonzero": {"const": true},
+        "volume_information_last_error": {"type": "null"},
+        "volume_information_serial_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "volume_information_serial_output_sha256": {"$ref": "#/$defs/sha256"},
+        "volume_serial_number_uint32": {"$ref": "#/$defs/uint32"},
+        "volume_information_serial_raw_projection_exact": {"const": true},
+        "volume_information_filesystem_name_output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "volume_information_filesystem_name_output_sha256": {"$ref": "#/$defs/sha256"},
         "filesystem_name": {"const": "NTFS"},
+        "ntfs_volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "ntfs_volume_serial_matches_ntfs_volume_data": {"const": true},
+        "serial_sources_not_conflated": {"const": true},
         "ntfs_volume_data_api": {"const": "DeviceIoControl_FSCTL_GET_NTFS_VOLUME_DATA"},
         "ntfs_volume_data_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "ntfs_volume_data_control_code_uint32": {"const": 589924},
@@ -12083,7 +12165,7 @@
     },
     "stage_f_usn_record": {
       "type": "object","additionalProperties": false,
-      "required": ["record_version","buffer_ordinal","record_offset","raw_record_bytes_base64","raw_record_sha256","record_length","major_version","minor_version","file_reference_width_bits","file_reference_number","parent_file_reference_number","usn","timestamp_filetime_uint64","reason_mask","source_info","security_id","file_attributes","file_name_length_bytes","file_name_offset","file_name_utf16le_base64","file_name","strict_projection_exact","scope_disposition","protected_identity_match_count","mutation_ticket_identity","mutation_ticket_match_count"],
+      "required": ["record_version","buffer_ordinal","record_offset","raw_record_bytes_base64","raw_record_sha256","record_length","major_version","minor_version","file_reference_width_bits","file_reference_raw_bytes_base64","parent_file_reference_raw_bytes_base64","file_reference_number","parent_file_reference_number","file_reference_normalization","file_reference_normalization_recomputed_from_raw_bytes","parent_file_reference_normalization_recomputed_from_raw_bytes","usn","timestamp_filetime_uint64","reason_mask","source_info","security_id","file_attributes","file_name_length_bytes","file_name_offset","file_name_utf16le_base64","file_name","strict_projection_exact","scope_disposition","protected_identity_match_count","mutation_ticket_identity","mutation_ticket_match_count"],
       "properties": {
         "record_version": {"enum": [2,3]},
         "buffer_ordinal": {"$ref": "#/$defs/positive_uint32"},
@@ -12094,8 +12176,13 @@
         "major_version": {"enum": [2,3]},
         "minor_version": {"const": 0},
         "file_reference_width_bits": {"enum": [64,128]},
-        "file_reference_number": {"$ref": "#/$defs/nonempty_string"},
-        "parent_file_reference_number": {"$ref": "#/$defs/nonempty_string"},
+        "file_reference_raw_bytes_base64": {"type": "string"},
+        "parent_file_reference_raw_bytes_base64": {"type": "string"},
+        "file_reference_number": {"$ref": "#/$defs/file_id_128"},
+        "parent_file_reference_number": {"$ref": "#/$defs/file_id_128"},
+        "file_reference_normalization": {"enum": ["V2_RAW_LE_8_PLUS_8_ZERO_BYTES_TO_LOWER_HEX_16_BYTES","V3_RAW_LE_16_BYTES_TO_LOWER_HEX_16_BYTES"]},
+        "file_reference_normalization_recomputed_from_raw_bytes": {"const": true},
+        "parent_file_reference_normalization_recomputed_from_raw_bytes": {"const": true},
         "usn": {"$ref": "#/$defs/nonnegative_integer"},
         "timestamp_filetime_uint64": {"$ref": "#/$defs/uint64"},
         "reason_mask": {"$ref": "#/$defs/uint32"},
@@ -12111,7 +12198,30 @@
         "protected_identity_match_count": {"$ref": "#/$defs/nonnegative_integer"},
         "mutation_ticket_identity": {"oneOf": [{"$ref": "#/$defs/identity"},{"type": "null"}]},
         "mutation_ticket_match_count": {"$ref": "#/$defs/nonnegative_integer"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"record_version": {"const": 2}}, "required": ["record_version"]},
+          "then": {"properties": {
+            "major_version": {"const": 2},
+            "file_reference_width_bits": {"const": 64},
+            "file_reference_raw_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+            "parent_file_reference_raw_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+            "file_reference_number": {"type": "string","pattern": "^[0-9a-f]{16}0{16}$"},
+            "parent_file_reference_number": {"type": "string","pattern": "^[0-9a-f]{16}0{16}$"},
+            "file_reference_normalization": {"const": "V2_RAW_LE_8_PLUS_8_ZERO_BYTES_TO_LOWER_HEX_16_BYTES"}
+          }},
+          "else": {"properties": {
+            "major_version": {"const": 3},
+            "file_reference_width_bits": {"const": 128},
+            "file_reference_raw_bytes_base64": {"type": "string","minLength": 24,"maxLength": 24,"pattern": "^[A-Za-z0-9+/]{22}==$"},
+            "parent_file_reference_raw_bytes_base64": {"type": "string","minLength": 24,"maxLength": 24,"pattern": "^[A-Za-z0-9+/]{22}==$"},
+            "file_reference_number": {"$ref": "#/$defs/file_id_128"},
+            "parent_file_reference_number": {"$ref": "#/$defs/file_id_128"},
+            "file_reference_normalization": {"const": "V3_RAW_LE_16_BYTES_TO_LOWER_HEX_16_BYTES"}
+          }}
+        }
+      ]
     },
     "stage_f_usn_journal_range": {
       "type": "object","additionalProperties": false,
@@ -12264,6 +12374,36 @@
             }
           }
         }
+      ]
+    },
+    "stage_f_root_watch_live_state_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_root_watch_live_state/v1"}}}
+      ]
+    },
+    "stage_f_container_start_capability_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_container_start_capability/v1"}}}
+      ]
+    },
+    "stage_f_container_start_intent_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_container_start_intent/v1"}}}
+      ]
+    },
+    "stage_f_container_start_receipt_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_container_start_receipt/v1"}}}
+      ]
+    },
+    "stage_f_scientific_launch_handoff_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_scientific_launch_handoff/v1"}}}
       ]
     },
     "stage_f_execution_attempt_genesis": {
@@ -12512,6 +12652,14 @@
         "ledger_file_id_128",
         "standard_info_query_api",
         "standard_info_query_input_handle_value_uint64",
+        "standard_info_query_output_buffer_base_address_uint64",
+        "standard_info_query_output_buffer_capacity",
+        "standard_info_query_returned_nonzero",
+        "standard_info_query_last_error",
+        "standard_info_query_output_bytes_base64",
+        "standard_info_query_output_sha256",
+        "standard_info_query_started_utc",
+        "standard_info_query_completed_utc",
         "allocation_size_bytes",
         "end_of_file_bytes",
         "number_of_links",
@@ -12519,6 +12667,14 @@
         "directory",
         "attribute_query_api",
         "attribute_query_input_handle_value_uint64",
+        "attribute_query_output_buffer_base_address_uint64",
+        "attribute_query_output_buffer_capacity",
+        "attribute_query_returned_nonzero",
+        "attribute_query_last_error",
+        "attribute_query_output_bytes_base64",
+        "attribute_query_output_sha256",
+        "attribute_query_started_utc",
+        "attribute_query_completed_utc",
         "raw_file_attributes",
         "reparse_tag",
         "handle_continuously_retained",
@@ -12538,13 +12694,38 @@
         "ledger_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "path_query_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
         "path_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "path_query_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "path_query_output_buffer_wchar_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "path_query_returned_wchar_count": {"$ref": "#/$defs/positive_uint32"},
+        "path_query_returned_nonzero": {"const": true},
+        "path_query_last_error": {"type": "null"},
+        "path_query_output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "path_query_output_sha256": {"$ref": "#/$defs/sha256"},
+        "path_query_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "path_query_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "path_query_output_identity": {"$ref": "#/$defs/private_path_identity"},
         "file_id_query_api": {"const": "GetFileInformationByHandleEx_FileIdInfo"},
         "file_id_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "file_id_query_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "file_id_query_output_buffer_capacity": {"const": 24},
+        "file_id_query_returned_nonzero": {"const": true},
+        "file_id_query_last_error": {"type": "null"},
+        "file_id_query_output_bytes_base64": {"type": "string","minLength": 32,"maxLength": 32,"pattern": "^[A-Za-z0-9+/]{32}$"},
+        "file_id_query_output_sha256": {"$ref": "#/$defs/sha256"},
+        "file_id_query_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "file_id_query_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "ledger_file_volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
         "ledger_file_id_128": {"$ref": "#/$defs/file_id_128"},
         "standard_info_query_api": {"const": "GetFileInformationByHandleEx_FileStandardInfo"},
         "standard_info_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "standard_info_query_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "standard_info_query_output_buffer_capacity": {"const": 24},
+        "standard_info_query_returned_nonzero": {"const": true},
+        "standard_info_query_last_error": {"type": "null"},
+        "standard_info_query_output_bytes_base64": {"type": "string","minLength": 32,"maxLength": 32,"pattern": "^[A-Za-z0-9+/]{32}$"},
+        "standard_info_query_output_sha256": {"$ref": "#/$defs/sha256"},
+        "standard_info_query_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "standard_info_query_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "allocation_size_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "end_of_file_bytes": {"const": 0},
         "number_of_links": {"const": 1},
@@ -12552,6 +12733,14 @@
         "directory": {"const": false},
         "attribute_query_api": {"const": "GetFileInformationByHandleEx_FileAttributeTagInfo"},
         "attribute_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "attribute_query_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "attribute_query_output_buffer_capacity": {"const": 8},
+        "attribute_query_returned_nonzero": {"const": true},
+        "attribute_query_last_error": {"type": "null"},
+        "attribute_query_output_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+        "attribute_query_output_sha256": {"$ref": "#/$defs/sha256"},
+        "attribute_query_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "attribute_query_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "raw_file_attributes": {"$ref": "#/$defs/uint32"},
         "reparse_tag": {"const": 0},
         "handle_continuously_retained": {"const": true},
@@ -12724,6 +12913,9 @@
             "POST_PACKET_USER_RECEIPT",
             "CAMPAIGN_AUTHORIZATION",
             "LAUNCH_GATE",
+            "CONTAINER_START_INTENT",
+            "CAPACITY_LIVE_GATE",
+            "CONTAINER_START_RECEIPT",
             "LAUNCH_HANDOFF",
             "FROZEN_PER_ROUTE_AUTHORIZED_SCIENTIFIC_RECORD",
             "FROZEN_CONTINUATION_AUTHORIZED_RECORD"
@@ -13523,7 +13715,7 @@
         "observed_utc",
         "observations_completed_after_ledger_predecessor_append",
         "exact_following_operation_capability_identity",
-        "no_intervening_external_or_capacity_affecting_operation",
+        "no_intervening_controller_capacity_affecting_operation",
         "held_in_controller_memory_through_following_operation",
         "scientific_counters",
         "gate_sha256"
@@ -13598,7 +13790,7 @@
         "exact_following_operation_capability_identity": {
           "$ref": "#/$defs/identity"
         },
-        "no_intervening_external_or_capacity_affecting_operation": {
+        "no_intervening_controller_capacity_affecting_operation": {
           "const": true
         },
         "held_in_controller_memory_through_following_operation": {
@@ -13626,19 +13818,7 @@
           "then": {
             "properties": {
               "exact_following_operation_capability_identity": {
-                "allOf": [
-                  {
-                    "$ref": "#/$defs/identity"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "kind": {
-                        "const": "stage_f_container_start_capability/v1"
-                      }
-                    }
-                  }
-                ]
+                "$ref": "#/$defs/stage_f_container_start_capability_identity"
               }
             }
           }
@@ -13721,7 +13901,9 @@
         "autostart_raw_value_utf16le_base64",
         "named_pipe_path",
         "ordered_engine_request_observations",
-        "engine_request_observation_count"
+        "engine_request_observation_count",
+        "all_exchange_server_runtime_identities_present_in_runtime_identities",
+        "all_engine_exchange_server_identities_equal"
       ],
       "properties": {
         "desktop_or_backend_process_present": {
@@ -13855,6 +14037,12 @@
         },
         "engine_request_observation_count": {
           "const": 3
+        },
+        "all_exchange_server_runtime_identities_present_in_runtime_identities": {
+          "const": true
+        },
+        "all_engine_exchange_server_identities_equal": {
+          "const": true
         }
       }
     },
@@ -14004,9 +14192,11 @@
       "required": [
         "schema",
         "docker_engine_observation",
+        "named_pipe_connection_observation",
         "named_pipe_path",
         "create_method",
         "create_endpoint",
+        "create_exchange",
         "create_request_bytes_base64",
         "create_request_sha256",
         "create_transport_result",
@@ -14015,8 +14205,12 @@
         "create_response_sha256",
         "container_id",
         "create_observed_utc",
+        "create_restart_policy_name",
+        "create_restart_policy_maximum_retry_count",
+        "create_auto_remove",
         "inspect_method",
         "inspect_endpoint",
+        "inspect_exchange",
         "inspect_request_bytes_base64",
         "inspect_request_sha256",
         "inspect_transport_result",
@@ -14025,6 +14219,10 @@
         "inspect_response_sha256",
         "inspect_state_status",
         "inspect_state_running",
+        "inspect_restart_policy_name",
+        "inspect_restart_policy_maximum_retry_count",
+        "inspect_auto_remove",
+        "inspect_restart_count",
         "inspect_observed_utc",
         "immutable_image_digest",
         "immutable_image_id",
@@ -14044,14 +14242,17 @@
         "scientific_entry_count",
         "container_created_without_scientific_entry",
         "inspect_projection_exactly_matches_create_request_and_sealed_bindings",
+        "all_named_pipe_connections_and_server_identities_reconcile",
         "container_observation_sha256"
       ],
       "properties": {
         "schema": {"const": "stage_f_inert_container_observation/v1"},
         "docker_engine_observation": {"$ref": "#/$defs/docker_engine_observation"},
+        "named_pipe_connection_observation": {"$ref": "#/$defs/docker_named_pipe_connection_observation"},
         "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
         "create_method": {"const": "POST"},
         "create_endpoint": {"const": "/containers/create"},
+        "create_exchange": {"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},
         "create_request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "create_request_sha256": {"$ref": "#/$defs/sha256"},
         "create_transport_result": {"const": 0},
@@ -14060,8 +14261,12 @@
         "create_response_sha256": {"$ref": "#/$defs/sha256"},
         "container_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "create_observed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "create_restart_policy_name": {"const": "no"},
+        "create_restart_policy_maximum_retry_count": {"const": 0},
+        "create_auto_remove": {"const": false},
         "inspect_method": {"const": "GET"},
         "inspect_endpoint": {"type": "string", "pattern": "^/containers/[0-9a-f]{64}/json$"},
+        "inspect_exchange": {"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},
         "inspect_request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "inspect_request_sha256": {"$ref": "#/$defs/sha256"},
         "inspect_transport_result": {"const": 0},
@@ -14070,6 +14275,10 @@
         "inspect_response_sha256": {"$ref": "#/$defs/sha256"},
         "inspect_state_status": {"const": "created"},
         "inspect_state_running": {"const": false},
+        "inspect_restart_policy_name": {"const": "no"},
+        "inspect_restart_policy_maximum_retry_count": {"const": 0},
+        "inspect_auto_remove": {"const": false},
+        "inspect_restart_count": {"const": 0},
         "inspect_observed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "immutable_image_digest": {"const": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"},
         "immutable_image_id": {"$ref": "#/$defs/nonempty_string"},
@@ -14089,6 +14298,7 @@
         "scientific_entry_count": {"const": 0},
         "container_created_without_scientific_entry": {"const": true},
         "inspect_projection_exactly_matches_create_request_and_sealed_bindings": {"const": true},
+        "all_named_pipe_connections_and_server_identities_reconcile": {"const": true},
         "container_observation_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
@@ -14098,6 +14308,7 @@
       "required": [
         "schema",
         "docker_engine_observation",
+        "named_pipe_connection_observation",
         "named_pipe_path",
         "named_pipe_open_api",
         "named_pipe_open_input_path",
@@ -14109,12 +14320,14 @@
         "named_pipe_open_returned_valid_handle",
         "named_pipe_handle_value_uint64",
         "named_pipe_handle_held_through_start_call",
+        "named_pipe_fields_and_server_identity_reconcile",
         "inert_container_identity",
         "container_id",
         "method",
         "endpoint",
         "request_bytes_base64",
         "request_sha256",
+        "request_is_complete_http_wire",
         "request_constructed_not_sent",
         "start_call_invoked",
         "response_http_status",
@@ -14127,6 +14340,7 @@
       "properties": {
         "schema": {"const": "stage_f_container_start_capability/v1"},
         "docker_engine_observation": {"$ref": "#/$defs/docker_engine_observation"},
+        "named_pipe_connection_observation": {"$ref": "#/$defs/docker_named_pipe_connection_observation"},
         "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
         "named_pipe_open_api": {"const": "CreateFileW"},
         "named_pipe_open_input_path": {"const": "\\\\.\\pipe\\docker_engine"},
@@ -14138,12 +14352,14 @@
         "named_pipe_open_returned_valid_handle": {"const": true},
         "named_pipe_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "named_pipe_handle_held_through_start_call": {"const": true},
+        "named_pipe_fields_and_server_identity_reconcile": {"const": true},
         "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
         "container_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "method": {"const": "POST"},
         "endpoint": {"type": "string", "pattern": "^/containers/[0-9a-f]{64}/start$"},
         "request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "request_sha256": {"$ref": "#/$defs/sha256"},
+        "request_is_complete_http_wire": {"const": true},
         "request_constructed_not_sent": {"const": true},
         "start_call_invoked": {"const": false},
         "response_http_status": {"type": "null"},
@@ -14153,6 +14369,157 @@
         "issued_utc": {"$ref": "#/$defs/utc_timestamp"},
         "capability_sha256": {"$ref": "#/$defs/sha256"}
       }
+    },
+    "stage_f_container_start_intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","scientific_launch_gate_identity","root_protection_epoch_identity","evidence_ledger_predecessor_identity","inert_container_identity","inert_container_observation","container_start_capability_identity","container_start_capability","container_state_status","container_state_running","restart_policy_name","restart_policy_maximum_retry_count","auto_remove","restart_count","start_request_not_sent","single_use","same_intent_retry_forbidden","all_embedded_identities_and_container_bindings_reconcile","capability_request_exactly_targets_intent_container","issued_utc","scientific_counters","intent_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_container_start_intent/v1"},
+        "scientific_launch_gate_identity": {"$ref": "#/$defs/stage_f_scientific_launch_gate_identity"},
+        "root_protection_epoch_identity": {"$ref": "#/$defs/stage_f_root_protection_epoch_identity"},
+        "evidence_ledger_predecessor_identity": {"$ref": "#/$defs/stage_f_evidence_ledger_identity"},
+        "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
+        "inert_container_observation": {"$ref": "#/$defs/stage_f_inert_container_observation"},
+        "container_start_capability_identity": {"$ref": "#/$defs/stage_f_container_start_capability_identity"},
+        "container_start_capability": {"$ref": "#/$defs/stage_f_container_start_capability"},
+        "container_state_status": {"const": "created"},
+        "container_state_running": {"const": false},
+        "restart_policy_name": {"const": "no"},
+        "restart_policy_maximum_retry_count": {"const": 0},
+        "auto_remove": {"const": false},
+        "restart_count": {"const": 0},
+        "start_request_not_sent": {"const": true},
+        "single_use": {"const": true},
+        "same_intent_retry_forbidden": {"const": true},
+        "all_embedded_identities_and_container_bindings_reconcile": {"const": true},
+        "capability_request_exactly_targets_intent_container": {"const": true},
+        "issued_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "intent_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stage_f_container_start_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","classification","container_start_intent_identity","scientific_launch_handoff_identity","final_prestart_capacity_live_gate_identity","host_prerequisite_snapshot_identity","container_start_capability_identity","inert_container_identity","start_exchange","recovery_inspect_exchange","observed_container_state_status","observed_container_state_running","observed_restart_policy_name","observed_restart_policy_maximum_retry_count","observed_auto_remove","observed_restart_count","handoff_preimage_was_frozen_before_call","start_may_have_occurred","same_intent_retry_forbidden","intent_consumed_at_most_once","all_present_identities_and_container_bindings_reconcile","recovery_inspect_exactly_targets_intent_container","emergency_stop_required","attempt_disposition","ledger_record_role","per_route_scientific_receipt_is_not_transport_receipt","call_started_utc","call_returned_utc","response_http_status","response_body_bytes_base64","response_body_sha256","receipt_completed_utc","receipt_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_container_start_receipt/v1"},
+        "classification": {"enum": ["NORMAL_RESPONSE_204","RECOVERY_PRE_SEND_CREATED","RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN","RECOVERY_POST_RESPONSE_PREPUBLICATION"]},
+        "container_start_intent_identity": {"$ref": "#/$defs/stage_f_container_start_intent_identity"},
+        "scientific_launch_handoff_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_scientific_launch_handoff_identity"},{"type": "null"}]},
+        "final_prestart_capacity_live_gate_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_capacity_live_gate_identity"},{"type": "null"}]},
+        "host_prerequisite_snapshot_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},{"type": "null"}]},
+        "container_start_capability_identity": {"$ref": "#/$defs/stage_f_container_start_capability_identity"},
+        "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
+        "start_exchange": {"oneOf": [{"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "POST"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/start$"}}}]},{"type": "null"}]},
+        "recovery_inspect_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "GET"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/json$"},"response_http_status": {"const": 200}}}]},
+        "observed_container_state_status": {"enum": ["created","running","exited","paused","restarting","dead","removing"]},
+        "observed_container_state_running": {"type": "boolean"},
+        "observed_restart_policy_name": {"const": "no"},
+        "observed_restart_policy_maximum_retry_count": {"const": 0},
+        "observed_auto_remove": {"const": false},
+        "observed_restart_count": {"const": 0},
+        "handoff_preimage_was_frozen_before_call": {"type": "boolean"},
+        "start_may_have_occurred": {"type": "boolean"},
+        "same_intent_retry_forbidden": {"const": true},
+        "intent_consumed_at_most_once": {"const": true},
+        "all_present_identities_and_container_bindings_reconcile": {"const": true},
+        "recovery_inspect_exactly_targets_intent_container": {"const": true},
+        "emergency_stop_required": {"type": "boolean"},
+        "attempt_disposition": {"enum": ["VALID_NORMAL_START","INVALIDATED_FRESH_CHAIN_REQUIRED","INVALIDATED_STOP_AND_QUARANTINE"]},
+        "ledger_record_role": {"const": "CONTAINER_START_RECEIPT"},
+        "per_route_scientific_receipt_is_not_transport_receipt": {"const": true},
+        "call_started_utc": {"oneOf": [{"$ref": "#/$defs/utc_timestamp"},{"type": "null"}]},
+        "call_returned_utc": {"oneOf": [{"$ref": "#/$defs/utc_timestamp"},{"type": "null"}]},
+        "response_http_status": {"oneOf": [{"$ref": "#/$defs/uint16"},{"type": "null"}]},
+        "response_body_bytes_base64": {"oneOf": [{"type": "string","pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},{"type": "null"}]},
+        "response_body_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"},{"type": "null"}]},
+        "receipt_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"classification": {"const": "NORMAL_RESPONSE_204"}},"required": ["classification"]},
+          "then": {"properties": {
+            "scientific_launch_handoff_identity": {"$ref": "#/$defs/stage_f_scientific_launch_handoff_identity"},
+            "final_prestart_capacity_live_gate_identity": {"$ref": "#/$defs/stage_f_capacity_live_gate_identity"},
+            "host_prerequisite_snapshot_identity": {"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},
+            "start_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "POST"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/start$"},"response_http_status": {"const": 204},"response_body_bytes_base64": {"const": ""},"response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}]},
+            "handoff_preimage_was_frozen_before_call": {"const": true},
+            "start_may_have_occurred": {"const": true},
+            "emergency_stop_required": {"const": false},
+            "attempt_disposition": {"const": "VALID_NORMAL_START"},
+            "call_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+            "call_returned_utc": {"$ref": "#/$defs/utc_timestamp"},
+            "response_http_status": {"const": 204},
+            "response_body_bytes_base64": {"const": ""},
+            "response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+          }}
+        },
+        {
+          "if": {"properties": {"classification": {"const": "RECOVERY_PRE_SEND_CREATED"}},"required": ["classification"]},
+          "then": {"properties": {
+            "scientific_launch_handoff_identity": {"type": "null"},
+            "final_prestart_capacity_live_gate_identity": {"type": "null"},
+            "host_prerequisite_snapshot_identity": {"type": "null"},
+            "start_exchange": {"type": "null"},
+            "observed_container_state_status": {"const": "created"},
+            "observed_container_state_running": {"const": false},
+            "handoff_preimage_was_frozen_before_call": {"const": false},
+            "start_may_have_occurred": {"const": false},
+            "emergency_stop_required": {"const": false},
+            "attempt_disposition": {"const": "INVALIDATED_FRESH_CHAIN_REQUIRED"},
+            "call_started_utc": {"type": "null"},
+            "call_returned_utc": {"type": "null"},
+            "response_http_status": {"type": "null"},
+            "response_body_bytes_base64": {"type": "null"},
+            "response_body_sha256": {"type": "null"}
+          }}
+        },
+        {
+          "if": {"properties": {"classification": {"const": "RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN"}},"required": ["classification"]},
+          "then": {"properties": {
+            "scientific_launch_handoff_identity": {"$ref": "#/$defs/stage_f_scientific_launch_handoff_identity"},
+            "final_prestart_capacity_live_gate_identity": {"$ref": "#/$defs/stage_f_capacity_live_gate_identity"},
+            "host_prerequisite_snapshot_identity": {"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},
+            "start_exchange": {"type": "null"},
+            "observed_container_state_status": {"enum": ["running","exited","paused","restarting","dead","removing"]},
+            "handoff_preimage_was_frozen_before_call": {"const": true},
+            "start_may_have_occurred": {"const": true},
+            "emergency_stop_required": {"const": true},
+            "attempt_disposition": {"const": "INVALIDATED_STOP_AND_QUARANTINE"},
+            "call_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+            "call_returned_utc": {"type": "null"},
+            "response_http_status": {"type": "null"},
+            "response_body_bytes_base64": {"type": "null"},
+            "response_body_sha256": {"type": "null"}
+          }}
+        },
+        {
+          "if": {"properties": {"classification": {"const": "RECOVERY_POST_RESPONSE_PREPUBLICATION"}},"required": ["classification"]},
+          "then": {"properties": {
+            "scientific_launch_handoff_identity": {"$ref": "#/$defs/stage_f_scientific_launch_handoff_identity"},
+            "final_prestart_capacity_live_gate_identity": {"$ref": "#/$defs/stage_f_capacity_live_gate_identity"},
+            "host_prerequisite_snapshot_identity": {"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},
+            "start_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "POST"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/start$"},"response_http_status": {"const": 204},"response_body_bytes_base64": {"const": ""},"response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}]},
+            "observed_container_state_status": {"enum": ["running","exited","paused","restarting","dead","removing"]},
+            "handoff_preimage_was_frozen_before_call": {"const": true},
+            "start_may_have_occurred": {"const": true},
+            "emergency_stop_required": {"const": true},
+            "attempt_disposition": {"const": "INVALIDATED_STOP_AND_QUARANTINE"},
+            "call_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+            "call_returned_utc": {"$ref": "#/$defs/utc_timestamp"},
+            "response_http_status": {"const": 204},
+            "response_body_bytes_base64": {"const": ""},
+            "response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+          }}
+        }
+      ]
     },
     "stage_f_scientific_launch_gate": {
       "type": "object",
@@ -14175,7 +14542,9 @@
         "ordered_route_ids",
         "inert_container_identity",
         "inert_container_observation",
+        "root_watch_live_state_identity",
         "root_watch_live_state",
+        "root_watch_live_state_identity_reconciles",
         "container_created_without_scientific_entry",
         "all_gate_predicates_pass",
         "issued_before_first_model_step",
@@ -14241,8 +14610,14 @@
         "inert_container_observation": {
           "$ref": "#/$defs/stage_f_inert_container_observation"
         },
+        "root_watch_live_state_identity": {
+          "$ref": "#/$defs/stage_f_root_watch_live_state_identity"
+        },
         "root_watch_live_state": {
           "$ref": "#/$defs/stage_f_root_watch_live_state"
+        },
+        "root_watch_live_state_identity_reconciles": {
+          "const": true
         },
         "container_created_without_scientific_entry": {
           "const": true
@@ -14274,20 +14649,36 @@
         "evidence_ledger_predecessor_identity",
         "container_identity",
         "container_observation",
+        "container_start_intent_identity",
+        "container_start_intent",
+        "container_start_intent_ledger_append_observation",
+        "container_start_intent_ledger_role",
+        "host_prerequisite_snapshot_identity",
+        "host_prerequisite_snapshot",
+        "host_prerequisite_snapshot_remeasured_after_intent_append",
+        "container_start_capability_identity",
         "container_start_capability",
         "final_prestart_capacity_live_gate_identity",
         "final_prestart_capacity_live_gate",
+        "final_prestart_capacity_live_gate_ledger_role",
+        "final_prestart_capacity_live_gate_completed_after_fresh_host_snapshot",
+        "root_watch_live_state_identity",
         "root_watch_live_state",
+        "all_embedded_identities_and_container_bindings_reconcile",
         "start_api",
         "start_authorized",
         "started_utc",
         "scientific_execution_authorization_source",
         "scientific_counters_before_start",
+        "handoff_preimage_frozen_utc",
+        "handoff_preimage_frozen_before_start_call",
+        "handoff_sha256_computed_before_start_call",
         "handoff_sha256",
         "launch_gate_ledger_entry_live_observation",
         "start_call_not_yet_invoked",
         "handoff_held_in_controller_memory_through_exact_start_call",
-        "actual_start_requires_existing_per_route_execution_receipt"
+        "post_call_container_start_receipt_required",
+        "post_call_container_start_receipt_ledger_role"
       ],
       "properties": {
         "schema": {
@@ -14308,6 +14699,30 @@
         "container_observation": {
           "$ref": "#/$defs/stage_f_inert_container_observation"
         },
+        "container_start_intent_identity": {
+          "$ref": "#/$defs/stage_f_container_start_intent_identity"
+        },
+        "container_start_intent": {
+          "$ref": "#/$defs/stage_f_container_start_intent"
+        },
+        "container_start_intent_ledger_append_observation": {
+          "$ref": "#/$defs/stage_f_evidence_ledger_append_observation"
+        },
+        "container_start_intent_ledger_role": {
+          "const": "CONTAINER_START_INTENT"
+        },
+        "host_prerequisite_snapshot_identity": {
+          "$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"
+        },
+        "host_prerequisite_snapshot": {
+          "$ref": "#/$defs/stage_f_host_prerequisite_snapshot"
+        },
+        "host_prerequisite_snapshot_remeasured_after_intent_append": {
+          "const": true
+        },
+        "container_start_capability_identity": {
+          "$ref": "#/$defs/stage_f_container_start_capability_identity"
+        },
         "container_start_capability": {
           "$ref": "#/$defs/stage_f_container_start_capability"
         },
@@ -14317,8 +14732,20 @@
         "final_prestart_capacity_live_gate": {
           "$ref": "#/$defs/stage_f_capacity_live_gate"
         },
+        "final_prestart_capacity_live_gate_ledger_role": {
+          "const": "CAPACITY_LIVE_GATE"
+        },
+        "final_prestart_capacity_live_gate_completed_after_fresh_host_snapshot": {
+          "const": true
+        },
+        "root_watch_live_state_identity": {
+          "$ref": "#/$defs/stage_f_root_watch_live_state_identity"
+        },
         "root_watch_live_state": {
           "$ref": "#/$defs/stage_f_root_watch_live_state"
+        },
+        "all_embedded_identities_and_container_bindings_reconcile": {
+          "const": true
         },
         "start_api": {
           "const": "DOCKER_ENGINE_CONTAINER_START"
@@ -14335,6 +14762,15 @@
         "scientific_counters_before_start": {
           "$ref": "#/$defs/zero_science_counters"
         },
+        "handoff_preimage_frozen_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "handoff_preimage_frozen_before_start_call": {
+          "const": true
+        },
+        "handoff_sha256_computed_before_start_call": {
+          "const": true
+        },
         "handoff_sha256": {
           "$ref": "#/$defs/sha256"
         },
@@ -14347,8 +14783,11 @@
         "handoff_held_in_controller_memory_through_exact_start_call": {
           "const": true
         },
-        "actual_start_requires_existing_per_route_execution_receipt": {
+        "post_call_container_start_receipt_required": {
           "const": true
+        },
+        "post_call_container_start_receipt_ledger_role": {
+          "const": "CONTAINER_START_RECEIPT"
         }
       }
     },
@@ -14420,6 +14859,9 @@
             "POST_PACKET_USER_RECEIPT",
             "CAMPAIGN_AUTHORIZATION",
             "LAUNCH_GATE",
+            "CONTAINER_START_INTENT",
+            "CAPACITY_LIVE_GATE",
+            "CONTAINER_START_RECEIPT",
             "LAUNCH_HANDOFF",
             "FROZEN_PER_ROUTE_AUTHORIZED_SCIENTIFIC_RECORD",
             "FROZEN_CONTINUATION_AUTHORIZED_RECORD"
@@ -14458,6 +14900,12 @@
         "ledger_handle_value_uint64",
         "preappend_file_standard_info_api",
         "preappend_file_standard_info_handle_value_uint64",
+        "preappend_file_standard_info_output_buffer_base_address_uint64",
+        "preappend_file_standard_info_output_buffer_capacity",
+        "preappend_file_standard_info_returned_nonzero",
+        "preappend_file_standard_info_last_error",
+        "preappend_file_standard_info_output_bytes_base64",
+        "preappend_file_standard_info_output_sha256",
         "preappend_allocation_size_bytes",
         "preappend_end_of_file_bytes",
         "preappend_end_of_file_observed_utc",
@@ -14466,7 +14914,13 @@
         "set_append_pointer_input_handle_value_uint64",
         "set_append_pointer_distance_to_move",
         "set_append_pointer_move_method",
+        "set_append_pointer_new_position_output_address_uint64",
+        "set_append_pointer_new_position_input_bytes_base64",
+        "set_append_pointer_new_position_input_sha256",
         "set_append_pointer_returned_nonzero",
+        "set_append_pointer_last_error",
+        "set_append_pointer_new_position_output_bytes_base64",
+        "set_append_pointer_new_position_output_sha256",
         "set_append_pointer_result_offset",
         "append_pointer_set_utc",
         "append_byte_count",
@@ -14480,9 +14934,14 @@
         "write_input_buffer_base_address_uint64",
         "write_input_byte_count",
         "write_bytes_written_output_address_uint64",
+        "write_bytes_written_input_bytes_base64",
+        "write_bytes_written_input_sha256",
         "write_overlapped_pointer_is_null",
         "write_started_utc",
         "write_returned_nonzero",
+        "write_last_error",
+        "write_bytes_written_output_bytes_base64",
+        "write_bytes_written_output_sha256",
         "written_byte_count",
         "write_completed_utc",
         "flush_api",
@@ -14491,13 +14950,25 @@
         "flush_completed_utc",
         "postflush_file_standard_info_api",
         "postflush_file_standard_info_handle_value_uint64",
+        "postflush_file_standard_info_output_buffer_base_address_uint64",
+        "postflush_file_standard_info_output_buffer_capacity",
+        "postflush_file_standard_info_returned_nonzero",
+        "postflush_file_standard_info_last_error",
+        "postflush_file_standard_info_output_bytes_base64",
+        "postflush_file_standard_info_output_sha256",
         "postflush_file_size",
         "postflush_file_size_observed_utc",
         "set_reread_pointer_api",
         "set_reread_pointer_input_handle_value_uint64",
         "set_reread_pointer_distance_to_move",
         "set_reread_pointer_move_method",
+        "set_reread_pointer_new_position_output_address_uint64",
+        "set_reread_pointer_new_position_input_bytes_base64",
+        "set_reread_pointer_new_position_input_sha256",
         "set_reread_pointer_returned_nonzero",
+        "set_reread_pointer_last_error",
+        "set_reread_pointer_new_position_output_bytes_base64",
+        "set_reread_pointer_new_position_output_sha256",
         "set_reread_pointer_result_offset",
         "reread_pointer_set_utc",
         "reread_api",
@@ -14506,8 +14977,14 @@
         "reread_buffer_base_address_uint64",
         "reread_byte_count",
         "reread_bytes_read_output_address_uint64",
+        "reread_bytes_read_input_bytes_base64",
+        "reread_bytes_read_input_sha256",
         "reread_overlapped_pointer_is_null",
         "reread_returned_nonzero",
+        "reread_last_error",
+        "reread_bytes_read_output_bytes_base64",
+        "reread_bytes_read_output_sha256",
+        "reread_bytes_read",
         "reread_raw_bytes_base64",
         "reread_sha256",
         "reread_completed_utc",
@@ -14515,7 +14992,13 @@
         "restore_pointer_input_handle_value_uint64",
         "restore_pointer_distance_to_move",
         "restore_pointer_move_method",
+        "restore_pointer_new_position_output_address_uint64",
+        "restore_pointer_new_position_input_bytes_base64",
+        "restore_pointer_new_position_input_sha256",
         "restore_pointer_returned_nonzero",
+        "restore_pointer_last_error",
+        "restore_pointer_new_position_output_bytes_base64",
+        "restore_pointer_new_position_output_sha256",
         "restore_pointer_result_offset",
         "pointer_restored_utc",
         "all_offsets_counts_hashes_and_handles_reconciled",
@@ -14551,6 +15034,12 @@
         "preappend_file_standard_info_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "preappend_file_standard_info_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "preappend_file_standard_info_output_buffer_capacity": {"const": 24},
+        "preappend_file_standard_info_returned_nonzero": {"const": true},
+        "preappend_file_standard_info_last_error": {"type": "null"},
+        "preappend_file_standard_info_output_bytes_base64": {"type": "string","minLength": 32,"maxLength": 32,"pattern": "^[A-Za-z0-9+/]{32}$"},
+        "preappend_file_standard_info_output_sha256": {"$ref": "#/$defs/sha256"},
         "preappend_allocation_size_bytes": {
           "$ref": "#/$defs/nonnegative_integer"
         },
@@ -14575,9 +15064,15 @@
         "set_append_pointer_move_method": {
           "const": "FILE_BEGIN"
         },
+        "set_append_pointer_new_position_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "set_append_pointer_new_position_input_bytes_base64": {"const": "AAAAAAAAAAA="},
+        "set_append_pointer_new_position_input_sha256": {"const": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"},
         "set_append_pointer_returned_nonzero": {
           "const": true
         },
+        "set_append_pointer_last_error": {"type": "null"},
+        "set_append_pointer_new_position_output_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+        "set_append_pointer_new_position_output_sha256": {"$ref": "#/$defs/sha256"},
         "set_append_pointer_result_offset": {
           "$ref": "#/$defs/nonnegative_integer"
         },
@@ -14619,6 +15114,8 @@
         "write_bytes_written_output_address_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "write_bytes_written_input_bytes_base64": {"const": "AAAAAA=="},
+        "write_bytes_written_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
         "write_overlapped_pointer_is_null": {
           "const": true
         },
@@ -14628,6 +15125,9 @@
         "write_returned_nonzero": {
           "const": true
         },
+        "write_last_error": {"type": "null"},
+        "write_bytes_written_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "write_bytes_written_output_sha256": {"$ref": "#/$defs/sha256"},
         "written_byte_count": {
           "$ref": "#/$defs/positive_integer"
         },
@@ -14652,6 +15152,12 @@
         "postflush_file_standard_info_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "postflush_file_standard_info_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "postflush_file_standard_info_output_buffer_capacity": {"const": 24},
+        "postflush_file_standard_info_returned_nonzero": {"const": true},
+        "postflush_file_standard_info_last_error": {"type": "null"},
+        "postflush_file_standard_info_output_bytes_base64": {"type": "string","minLength": 32,"maxLength": 32,"pattern": "^[A-Za-z0-9+/]{32}$"},
+        "postflush_file_standard_info_output_sha256": {"$ref": "#/$defs/sha256"},
         "postflush_file_size": {
           "$ref": "#/$defs/positive_integer"
         },
@@ -14670,9 +15176,15 @@
         "set_reread_pointer_move_method": {
           "const": "FILE_BEGIN"
         },
+        "set_reread_pointer_new_position_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "set_reread_pointer_new_position_input_bytes_base64": {"const": "AAAAAAAAAAA="},
+        "set_reread_pointer_new_position_input_sha256": {"const": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"},
         "set_reread_pointer_returned_nonzero": {
           "const": true
         },
+        "set_reread_pointer_last_error": {"type": "null"},
+        "set_reread_pointer_new_position_output_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+        "set_reread_pointer_new_position_output_sha256": {"$ref": "#/$defs/sha256"},
         "set_reread_pointer_result_offset": {
           "$ref": "#/$defs/nonnegative_integer"
         },
@@ -14697,12 +15209,18 @@
         "reread_bytes_read_output_address_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "reread_bytes_read_input_bytes_base64": {"const": "AAAAAA=="},
+        "reread_bytes_read_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
         "reread_overlapped_pointer_is_null": {
           "const": true
         },
         "reread_returned_nonzero": {
           "const": true
         },
+        "reread_last_error": {"type": "null"},
+        "reread_bytes_read_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "reread_bytes_read_output_sha256": {"$ref": "#/$defs/sha256"},
+        "reread_bytes_read": {"$ref": "#/$defs/positive_uint32"},
         "reread_raw_bytes_base64": {
           "type": "string",
           "minLength": 4,
@@ -14726,9 +15244,15 @@
         "restore_pointer_move_method": {
           "const": "FILE_BEGIN"
         },
+        "restore_pointer_new_position_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "restore_pointer_new_position_input_bytes_base64": {"const": "AAAAAAAAAAA="},
+        "restore_pointer_new_position_input_sha256": {"const": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"},
         "restore_pointer_returned_nonzero": {
           "const": true
         },
+        "restore_pointer_last_error": {"type": "null"},
+        "restore_pointer_new_position_output_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+        "restore_pointer_new_position_output_sha256": {"$ref": "#/$defs/sha256"},
         "restore_pointer_result_offset": {
           "$ref": "#/$defs/positive_integer"
         },
@@ -14923,6 +15447,78 @@
         }
       ]
     },
+    "ntfs_file_record_call_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "call_ordinal",
+        "volume_handle_value_uint64",
+        "api",
+        "control_code_name",
+        "control_code_uint32",
+        "input_buffer_base_address_uint64",
+        "input_buffer_byte_count",
+        "input_bytes_base64",
+        "input_sha256",
+        "requested_file_reference_number_uint64",
+        "input_bytes_decode_to_requested_file_reference",
+        "output_buffer_base_address_uint64",
+        "output_buffer_capacity",
+        "bytes_returned_output_address_uint64",
+        "bytes_returned_input_bytes_base64",
+        "bytes_returned_input_sha256",
+        "device_io_control_returned_nonzero",
+        "get_last_error",
+        "bytes_returned_output_bytes_base64",
+        "bytes_returned_output_sha256",
+        "bytes_returned",
+        "output_bytes_base64",
+        "output_sha256",
+        "returned_file_reference_number_uint64",
+        "returned_file_record_length",
+        "returned_file_record_bytes_base64",
+        "returned_file_record_sha256",
+        "returned_reference_equals_requested",
+        "output_embedded_record_exactly_reconciles",
+        "started_utc",
+        "completed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_ntfs_file_record_call_observation/v1"},
+        "call_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "volume_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "api": {"const": "DeviceIoControl"},
+        "control_code_name": {"const": "FSCTL_GET_NTFS_FILE_RECORD"},
+        "control_code_uint32": {"const": 589928},
+        "input_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "input_buffer_byte_count": {"const": 8},
+        "input_bytes_base64": {"type": "string","minLength": 12,"maxLength": 12,"pattern": "^[A-Za-z0-9+/]{11}=$"},
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "requested_file_reference_number_uint64": {"$ref": "#/$defs/uint64"},
+        "input_bytes_decode_to_requested_file_reference": {"const": true},
+        "output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "bytes_returned_input_bytes_base64": {"const": "AAAAAA=="},
+        "bytes_returned_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+        "device_io_control_returned_nonzero": {"const": true},
+        "get_last_error": {"type": "null"},
+        "bytes_returned_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "bytes_returned_output_sha256": {"$ref": "#/$defs/sha256"},
+        "bytes_returned": {"$ref": "#/$defs/positive_uint32"},
+        "output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "output_sha256": {"$ref": "#/$defs/sha256"},
+        "returned_file_reference_number_uint64": {"$ref": "#/$defs/uint64"},
+        "returned_file_record_length": {"$ref": "#/$defs/positive_uint32"},
+        "returned_file_record_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "returned_file_record_sha256": {"$ref": "#/$defs/sha256"},
+        "returned_reference_equals_requested": {"const": true},
+        "output_embedded_record_exactly_reconciles": {"const": true},
+        "started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
     "ntfs_retrieval_pointers_call_observation": {
       "type": "object",
       "additionalProperties": false,
@@ -15047,6 +15643,8 @@
         "directory_attribute_set",
         "directory_handle_held_through_complete_retrieval_chain",
         "query_api",
+        "ordered_file_record_calls",
+        "file_record_call_count",
         "bytes_per_file_record",
         "bytes_per_cluster",
         "ordered_file_record_numbers",
@@ -15119,6 +15717,13 @@
         "query_api": {
           "const": "DeviceIoControl_FSCTL_GET_NTFS_FILE_RECORD"
         },
+        "ordered_file_record_calls": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/ntfs_file_record_call_observation"},
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "file_record_call_count": {"$ref": "#/$defs/positive_uint32"},
         "bytes_per_file_record": {
           "$ref": "#/$defs/positive_integer"
         },
@@ -15294,6 +15899,159 @@
         }
       ]
     },
+    "docker_named_pipe_connection_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","named_pipe_path","open_api","open_input_path","open_desired_access","open_share_mode","open_security_attributes","open_disposition","open_flags_and_attributes","open_returned_valid_handle","open_last_error","pipe_handle_value_uint64","server_process_query_api","server_process_query_input_handle_value_uint64","server_process_id_output_address_uint64","server_process_id_input_bytes_base64","server_process_id_input_sha256","server_process_query_returned_nonzero","server_process_query_last_error","server_process_id_output_bytes_base64","server_process_id_output_sha256","server_process_id","server_open_process_api","server_open_process_desired_access","server_open_process_inherit_handle","server_open_process_input_process_id","server_open_process_returned_valid_handle","server_process_handle_value_uint64","server_open_process_last_error","server_get_process_times_api","server_get_process_times_input_handle_value_uint64","server_creation_time_output_address_uint64","server_exit_time_output_address_uint64","server_kernel_time_output_address_uint64","server_user_time_output_address_uint64","server_times_input_bytes_base64","server_times_input_sha256","server_get_process_times_returned_nonzero","server_get_process_times_last_error","server_times_output_bytes_base64","server_times_output_sha256","server_process_creation_filetime_uint64","server_query_image_api","server_query_image_input_handle_value_uint64","server_query_image_flags","server_query_image_buffer_base_address_uint64","server_query_image_buffer_wchar_capacity","server_query_image_size_output_address_uint64","server_query_image_size_input_bytes_base64","server_query_image_size_input_sha256","server_query_image_returned_nonzero","server_query_image_last_error","server_query_image_size_output_bytes_base64","server_query_image_size_output_sha256","server_query_image_returned_wchar_count","server_query_image_output_utf16le_base64","server_query_image_output_sha256","server_runtime_identity","server_identity_matches_runtime_identity","server_query_image_matches_runtime_identity","all_server_process_handles_and_pid_reconcile","server_close_process_handle_api","server_close_process_handle_input_handle_value_uint64","server_close_process_handle_returned_nonzero","server_process_handle_closed_utc","server_identity_query_completed_before_first_pipe_write","opened_utc","handle_held"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_docker_named_pipe_connection_observation/v1"},
+        "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "open_api": {"const": "CreateFileW"},
+        "open_input_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "open_desired_access": {"const": 3221225472},
+        "open_share_mode": {"const": 0},
+        "open_security_attributes": {"const": "NULL"},
+        "open_disposition": {"const": 3},
+        "open_flags_and_attributes": {"const": 0},
+        "open_returned_valid_handle": {"const": true},
+        "open_last_error": {"type": "null"},
+        "pipe_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_process_query_api": {"const": "GetNamedPipeServerProcessId"},
+        "server_process_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_process_id_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_process_id_input_bytes_base64": {"const": "AAAAAA=="},
+        "server_process_id_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+        "server_process_query_returned_nonzero": {"const": true},
+        "server_process_query_last_error": {"type": "null"},
+        "server_process_id_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "server_process_id_output_sha256": {"$ref": "#/$defs/sha256"},
+        "server_process_id": {"$ref": "#/$defs/positive_uint32"},
+        "server_open_process_api": {"const": "OpenProcess"},
+        "server_open_process_desired_access": {"const": 4096},
+        "server_open_process_inherit_handle": {"const": false},
+        "server_open_process_input_process_id": {"$ref": "#/$defs/positive_uint32"},
+        "server_open_process_returned_valid_handle": {"const": true},
+        "server_process_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_open_process_last_error": {"type": "null"},
+        "server_get_process_times_api": {"const": "GetProcessTimes"},
+        "server_get_process_times_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_creation_time_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_exit_time_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_kernel_time_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_user_time_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_times_input_bytes_base64": {"const": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="},
+        "server_times_input_sha256": {"const": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925"},
+        "server_get_process_times_returned_nonzero": {"const": true},
+        "server_get_process_times_last_error": {"type": "null"},
+        "server_times_output_bytes_base64": {"type": "string","minLength": 44,"maxLength": 44,"pattern": "^[A-Za-z0-9+/]{43}=$"},
+        "server_times_output_sha256": {"$ref": "#/$defs/sha256"},
+        "server_process_creation_filetime_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_query_image_api": {"const": "QueryFullProcessImageNameW"},
+        "server_query_image_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_query_image_flags": {"const": 0},
+        "server_query_image_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_query_image_buffer_wchar_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "server_query_image_size_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "server_query_image_size_input_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "server_query_image_size_input_sha256": {"$ref": "#/$defs/sha256"},
+        "server_query_image_returned_nonzero": {"const": true},
+        "server_query_image_last_error": {"type": "null"},
+        "server_query_image_size_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "server_query_image_size_output_sha256": {"$ref": "#/$defs/sha256"},
+        "server_query_image_returned_wchar_count": {"$ref": "#/$defs/positive_uint32"},
+        "server_query_image_output_utf16le_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "server_query_image_output_sha256": {"$ref": "#/$defs/sha256"},
+        "server_runtime_identity": {
+          "allOf": [
+            {"$ref": "#/$defs/docker_runtime_identity_observation"},
+            {"type": "object", "properties": {"source_kind": {"const": "PROCESS"}}}
+          ]
+        },
+        "server_identity_matches_runtime_identity": {"const": true},
+        "server_query_image_matches_runtime_identity": {"const": true},
+        "all_server_process_handles_and_pid_reconcile": {"const": true},
+        "server_close_process_handle_api": {"const": "CloseHandle"},
+        "server_close_process_handle_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_close_process_handle_returned_nonzero": {"const": true},
+        "server_process_handle_closed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "server_identity_query_completed_before_first_pipe_write": {"const": true},
+        "opened_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "handle_held": {"const": true}
+      }
+    },
+    "docker_named_pipe_http_exchange_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","connection","method","endpoint","request_wire_buffer_base_address_uint64","request_wire_byte_count","request_wire_bytes_base64","request_wire_sha256","write_api","write_input_handle_value_uint64","write_input_buffer_base_address_uint64","write_input_byte_count","write_bytes_written_output_address_uint64","write_bytes_written_input_bytes_base64","write_bytes_written_input_sha256","write_returned_nonzero","write_last_error","write_bytes_written_output_bytes_base64","write_bytes_written_output_sha256","written_byte_count","write_completed_utc","ordered_read_calls","read_call_count","response_wire_bytes_base64","response_wire_sha256","response_http_status","response_body_bytes_base64","response_body_sha256","response_framing_complete","request_and_response_reconcile","completed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_docker_named_pipe_http_exchange_observation/v1"},
+        "connection": {"$ref": "#/$defs/docker_named_pipe_connection_observation"},
+        "method": {"enum": ["GET","POST"]},
+        "endpoint": {"$ref": "#/$defs/nonempty_string"},
+        "request_wire_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "request_wire_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "request_wire_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "request_wire_sha256": {"$ref": "#/$defs/sha256"},
+        "write_api": {"const": "WriteFile"},
+        "write_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "write_input_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "write_input_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "write_bytes_written_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "write_bytes_written_input_bytes_base64": {"const": "AAAAAA=="},
+        "write_bytes_written_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+        "write_returned_nonzero": {"const": true},
+        "write_last_error": {"type": "null"},
+        "write_bytes_written_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "write_bytes_written_output_sha256": {"$ref": "#/$defs/sha256"},
+        "written_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "write_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "ordered_read_calls": {
+          "type": "array","minItems": 1,"uniqueItems": true,
+          "items": {
+            "type": "object","additionalProperties": false,
+            "required": ["ordinal","api","input_handle_value_uint64","buffer_base_address_uint64","buffer_capacity","bytes_read_output_address_uint64","bytes_read_input_bytes_base64","bytes_read_input_sha256","returned_nonzero","last_error","bytes_read_output_bytes_base64","bytes_read_output_sha256","bytes_read","output_bytes_base64","output_sha256","disposition","started_utc","completed_utc"],
+            "properties": {
+              "ordinal": {"$ref": "#/$defs/positive_uint32"},
+              "api": {"const": "ReadFile"},
+              "input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+              "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+              "buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+              "bytes_read_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+              "bytes_read_input_bytes_base64": {"const": "AAAAAA=="},
+              "bytes_read_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+              "returned_nonzero": {"type": "boolean"},
+              "last_error": {"oneOf": [{"const": 234},{"type": "null"}]},
+              "bytes_read_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
+              "bytes_read_output_sha256": {"$ref": "#/$defs/sha256"},
+              "bytes_read": {"$ref": "#/$defs/positive_uint32"},
+              "output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+              "output_sha256": {"$ref": "#/$defs/sha256"},
+              "disposition": {"enum": ["DATA","ERROR_MORE_DATA_CONTINUE"]},
+              "started_utc": {"$ref": "#/$defs/utc_timestamp"},
+              "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
+            },
+            "allOf": [{
+              "if": {"properties": {"disposition": {"const": "DATA"}},"required": ["disposition"]},
+              "then": {"properties": {"returned_nonzero": {"const": true},"last_error": {"type": "null"}}},
+              "else": {"properties": {"returned_nonzero": {"const": false},"last_error": {"const": 234}}}
+            }]
+          }
+        },
+        "read_call_count": {"$ref": "#/$defs/positive_uint32"},
+        "response_wire_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "response_wire_sha256": {"$ref": "#/$defs/sha256"},
+        "response_http_status": {"type": "integer","minimum": 100,"maximum": 599},
+        "response_body_bytes_base64": {"type": "string","pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "response_body_sha256": {"$ref": "#/$defs/sha256"},
+        "response_framing_complete": {"const": true},
+        "request_and_response_reconcile": {"const": true},
+        "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
     "docker_runtime_identity_observation": {
       "type": "object",
       "additionalProperties": false,
@@ -15468,10 +16226,12 @@
         "method",
         "endpoint",
         "named_pipe_path",
+        "exchange",
         "transport_result",
         "http_status",
         "response_bytes_base64",
         "response_sha256",
+        "wrapper_and_exchange_reconcile",
         "observed_utc"
       ],
       "properties": {
@@ -15491,6 +16251,9 @@
         "named_pipe_path": {
           "const": "\\\\.\\pipe\\docker_engine"
         },
+        "exchange": {
+          "$ref": "#/$defs/docker_named_pipe_http_exchange_observation"
+        },
         "transport_result": {
           "const": 0
         },
@@ -15504,6 +16267,9 @@
         },
         "response_sha256": {
           "$ref": "#/$defs/sha256"
+        },
+        "wrapper_and_exchange_reconcile": {
+          "const": true
         },
         "observed_utc": {
           "$ref": "#/$defs/utc_timestamp"
@@ -15677,6 +16443,12 @@
     },
     {
       "$ref": "#/$defs/stage_f_scientific_launch_gate"
+    },
+    {
+      "$ref": "#/$defs/stage_f_container_start_intent"
+    },
+    {
+      "$ref": "#/$defs/stage_f_container_start_receipt"
     },
     {
       "$ref": "#/$defs/stage_f_scientific_launch_handoff"

@@ -304,7 +304,12 @@ request per acquired watch in a complete live-state observation. On final
 release, each watch has an ordered terminal branch. A still-pending request is
 passed to CancelIoEx and a waiting GetOverlappedResult proves
 ERROR_OPERATION_ABORTED and zero bytes. If normal completion wins the cancel
-race, its exact bytes are parsed and reconciled before release. Every exact
+race, its exact bytes are parsed and reconciled before release. Cancellation
+return and completion outcome are independent: `CancelIoEx` may return nonzero
+and the request may nevertheless complete normally. Every cancellation and
+terminal `GetOverlappedResult` row binds the exact pending directory handle,
+OVERLAPPED address, bytes-transferred output address, zeroed input image, raw
+output image, return, last error and ordered start/completion UTC. Every exact
 directory/event handle closes once and every exact buffer/OVERLAPPED allocation
 is freed once; holder PID and creation FILETIME, identities, addresses and UTCs
 must pair with acquisition. No request, handle or storage may be substituted,
@@ -343,6 +348,10 @@ also covers mutation through an outside-root hard-link alias.
 
 The selected-volume handle has a closed CreateFileW acquisition and NTFS
 volume identity and remains the exact input handle for every DeviceIoControl.
+Its `GetVolumeInformationByHandleW` call retains the exact input handle,
+pointer/capacity inputs, return/error, raw UTF-16LE filesystem-name output and
+raw four-byte serial output. That Win32 serial is unsigned 32-bit and is not
+conflated with the separate 64-bit NTFS/`FILE_ID_INFO` volume serial.
 The range embeds raw FSCTL_QUERY_USN_JOURNAL start and end call rows using the
 complete 80-byte `USN_JOURNAL_DATA_V2` output, including supported record-
 version and range-tracking fields, and ordered raw FSCTL_READ_USN_JOURNAL call
@@ -356,6 +365,13 @@ next-USN is the exact next call start. V2/V3 records bind buffer ordinal and
 byte offset, raw record bytes,
 record length, fixed-width file references, USN, timestamp, reason, source,
 security, attributes, FileNameOffset/FileNameLength and exact UTF-16LE name.
+`record_version` equals `major_version`. V2 references are exactly eight raw
+little-endian bytes and normalize to repository `file_id_128` form by appending
+eight zero bytes and lowercase-hex encoding the resulting sixteen bytes in
+memory order. V3 references are exactly sixteen raw bytes and use the same
+lowercase memory-order hex encoding without extension. Parent references use
+the identical rule. Decimal, native-integer, big-endian and shortened aliases
+refuse.
 The strict parser projection, raw buffer partition, call count, record count,
 ticket/scope disposition and terminal next-USN must all reconstruct exactly.
 
@@ -385,7 +401,11 @@ address, count and SHA-256 are the WriteFile input with a null OVERLAPPED and an
 exact bytes-written output. After complete WriteFile and FlushFileBuffers, a
 second same-handle FileStandardInfo proves old EOF plus wire count. Explicit
 SetFilePointerEx, ReadFile and pointer restoration rows retain the raw reread
-bytes and prove their count/digest equal the entry wire. All API inputs equal
+bytes and prove their count/digest equal the entry wire. Every path, FileId,
+standard-info and attribute query retains its exact pointer/capacity inputs,
+return/error, raw output bytes/count/hash and ordered UTC. Every pointer and
+byte-count output starts from a retained zero image and records its exact raw
+returned image and scalar; copied parsed values never establish a call. All API inputs equal
 the continuously retained genesis handle, timestamps are ordered, partial or
 nonterminal writes refuse, and the handle's final exact close is recorded only
 after launch handoff or refused-attempt release.
@@ -435,6 +455,14 @@ closed capacity-publication observation binds:
   `FSCTL_GET_RETRIEVAL_POINTERS` extents. Absent streams are explicit. The MFT
   upper bound is exact record count times bytes per file record; the directory
   upper bound is that value plus allocated nonresident stream clusters;
+- every `FSCTL_GET_NTFS_FILE_RECORD` request has a closed DeviceIoControl row
+  binding the exact volume handle, numeric control code, eight-byte input
+  address/bytes/hash, output address/capacity, bytes-returned pointer, return,
+  error, the bytes-returned pointer's zero and returned four-byte images and
+  hashes, raw output/count/hash, requested record ordinal, returned record
+  ordinal and embedded record length. Windows may return a lower in-use record;
+  any returned ordinal unequal to the requested base or extension ordinal
+  refuses;
 - every retrieval-pointer enumeration uses the exact held nonreparse directory
   handle resolved to that row's path, volume serial and file ID, never the
   selected-volume handle or an unrelated file. Its first raw STARTING_VCN input
@@ -490,12 +518,19 @@ claim is not made.
 Every live gate therefore embeds a newly completed direct retained-subtree
 observation and raw volume-capacity observation, binds the exact still-held root
 epoch and the exact immediately following operation capability, and records
-that no intervening external or capacity-affecting operation and no stale
-observation is permitted. Deterministic in-memory record finalization is
-permitted; filesystem, Docker, process-resume and other capacity-affecting
-calls are not. Its scalars and formulas reconstruct from the raw objects. The
+that no intervening controller capacity-affecting operation and no stale
+controller observation is permitted. Deterministic in-memory record
+finalization is permitted; controller filesystem, Docker, process-resume and
+other capacity-affecting calls are not. Its scalars and formulas reconstruct from the raw objects. The
 measurement is retained in process memory through the named call; the call
 outcome is recorded by its separate launch receipt.
+
+The gate proves capacity at its exact observation cutoff. Because the selected
+volume is not dedicated, it does not claim to observe or prevent an unrelated
+external writer in the following interval. The 350-GiB floor plus remaining
+frozen envelope is the declared operational margin. This explicit
+instantaneous trust boundary replaces any unprovable assertion of continuous
+absence of external allocation.
 
 The launch-control chain separates the stable capacity-consumption closure from
 the single transient pre-start gate so no digest cycle or stale measurement is
@@ -503,14 +538,32 @@ hidden. The published launch-gate record carries the exact stable
 capacity-consumption-closure identity; it does not claim that an earlier live
 measurement remains current. After the launch-gate ledger append is directly
 observed, the controller constructs the acyclic one-shot start capability and
-then measures one `SCIENTIFIC_CONTAINER_START` gate. That gate binds the exact
+durably publishes a single-use container-start intent containing that
+capability. Only after the intent ledger append is directly observed does it
+remeasure the full host-prerequisite snapshot and one
+`SCIENTIFIC_CONTAINER_START` gate. That gate binds the exact
 start-capability identity and the same stable capacity-consumption-closure
-identity and is embedded with the capability in the in-memory handoff; only
-deterministic in-memory handoff finalization may occur before the exact start
-call. The final gate and handoff are published after the call under the already
-debited retained-evidence tail. Failure before start refuses; failure after a
-scientific segment has begun follows only the separately frozen
-checkpoint/continuation rules and is never hidden by a retry.
+identity and is embedded with the capability, intent and fresh host snapshot in
+the in-memory handoff. Exact canonical handoff bytes and SHA-256 are frozen
+with a pre-call cutoff timestamp; only deterministic in-memory finalization may
+occur before the exact start call. After the call, a distinct container-start
+receipt binds that frozen handoff identity, intent, final gate, exact
+authenticated pipe exchange, response, post-call inspect and times. The
+receipt is ledgered before the historical handoff and final-gate snapshots are
+published under the already debited retained-evidence tail.
+
+The durable intent closes crash ambiguity. Recovery never retries the same
+intent. It inspects the exact container through an authenticated pipe and emits
+one typed start receipt classified as `RECOVERY_PRE_SEND_CREATED`,
+`RECOVERY_DAEMON_ACCEPTANCE_UNKNOWN`, or
+`RECOVERY_POST_RESPONSE_PREPUBLICATION`. A created/restart-count-zero container
+invalidates the attempt and requires a fresh validation chain and new intent;
+any state consistent with possible start is stopped under the frozen emergency
+containment rule, quarantined, and the attempt is permanently invalid. It is
+never treated as a continuation unless a separately valid durable outgoing
+checkpoint and unchanged continuation authority independently permit that
+transition. Normal completion uses `NORMAL_RESPONSE_204`. Missing intent,
+ambiguous container identity, failed inspection or retry of an intent refuses.
 
 ## 8. Raw power, Docker and reboot evidence
 
@@ -555,16 +608,32 @@ failure, inaccessible marker, unknown power state, client-only Docker
 installation, daemon mismatch, image mismatch, stale statement or missing
 policy refuses.
 
+Every Docker exchange has a closed `CreateFileW`/`WriteFile`/ordered-`ReadFile`
+wire observation. The same held pipe handle is passed to
+`GetNamedPipeServerProcessId`; the returned PID and creation FILETIME equal one
+exact process runtime identity. That PID is the input to a closed
+`OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION)` row; the returned process
+handle is the exact input to `GetProcessTimes` and
+`QueryFullProcessImageNameW`, with every output pointer, initial and returned
+image, scalar, raw UTF-16LE path and digest retained before that process handle
+is closed. The four FILETIME outputs are hashed in creation, exit, kernel, user
+order, and the creation value and normalized image path reconcile the embedded
+runtime identity. Full HTTP framing, raw request/response
+bytes and parsed body/status reconcile. Every `WriteFile` and `ReadFile` DWORD
+count output binds its exact pointer, zero input image, returned four-byte
+image, scalar and hashes. Pathname-only or copied-response
+evidence refuses.
+
 The full raw snapshot is remeasured immediately before every process resume,
-scientific start and continuation. Any change invalidates the prior readiness
-chain.
+scientific start and continuation and is embedded in the final handoff. Any
+change invalidates the prior readiness chain.
 
 ## 9. Validation-to-scientific-launch handoff
 
 This amendment defines evidence for a future launch but does not authorize the
 launch. A closed launch-gate record binds the exact final independent-PASS
 readiness, sealed packet, later post-packet user statement, campaign
-authorization, Stage-F-root protection epoch, ledger head, capacity gate,
+authorization, Stage-F-root protection epoch, ledger head, capacity closure,
 host-prerequisite snapshot, historical power-snapshot projection, Docker
 engine, OCI image, mount/source identities, scientific
 implementation, installed artifact, verifier and complete fifteen-route order.
@@ -577,20 +646,29 @@ The future execution controller may create an inert Docker container only after
 all public/private identities pass and before any scientific entry. Container
 creation must not invoke the runner. It validates the created container's
 immutable image, command, environment, mounts, network prohibition, resource
-limits and output/checkpoint paths while the root epoch remains active. Only
+limits and output/checkpoint paths while the root epoch remains active.
+`HostConfig.RestartPolicy.Name="no"`, `MaximumRetryCount=0`,
+`AutoRemove=false` and initial `RestartCount=0` are accepted in create and
+inspect projections; the exact container remains in `created` state until the
+authorized call. Only
 the exact later `docker start` operation named by a valid launch gate can begin
 science, and that operation remains prohibited until the separate post-packet
-user authorization exists. The prestart handoff skeleton and acyclic start
-capability are constructed and retained in controller memory only after the
-launch-gate ledger entry has a direct live append observation. The start
+user authorization exists. The acyclic start capability and durable start
+intent are constructed only after the launch-gate ledger entry has a direct
+live append observation. The prestart handoff is constructed and retained in
+controller memory only after the intent has a direct live append observation.
+The start
 capability does not contain the launch-gate identity; instead the handoff binds
 both objects, preventing a digest cycle. After the final direct
 `SCIENTIFIC_CONTAINER_START` capacity gate is measured, the handoff embeds that
-full gate and its identity. It records `start_authorized=true`,
+full gate and its identity plus the fresh host-prerequisite snapshot. Its exact
+canonical bytes and digest are frozen before the call. It records `start_authorized=true`,
 `start_call_not_yet_invoked=true` and `started_utc=null`; this is an exact
-one-call capability, not a claim that start has occurred. The existing
-per-route scientific execution receipt, unchanged by this amendment, must
-record the later call and outcome.
+historical pre-call snapshot, not a claim about its later publication time. The
+new `stage_f_container_start_receipt/v1` records the later call, Docker response
+and recovery classification. Per-route scientific receipts remain governed by
+their unchanged scientific authority and do not substitute for this transport
+receipt.
 
 The inert-container identity is typed, not a generic digest label. Its value
 and SHA-256 equal the digest of the separate complete inert-container
@@ -607,7 +685,10 @@ response do not yet exist. That observation deliberately omits the launch-gate
 identity; its separate companion identity has kind
 `stage_f_container_start_capability/v1` and both digest fields equal the
 observation's `capability_sha256`. The handoff binds the launch gate, capability
-observation and final live gate without any self-reference. Any generic
+observation, durable intent and final live gate without any self-reference.
+The root-watch live-state and handoff records each have a separate exact-kind
+companion identity carried by their consuming gate, handoff or start receipt;
+those identities are not embedded in their own digest preimages. Any generic
 identity, config omission, mutable image,
 network, wrong mount/resource/path, container-ID substitution or different
 start target refuses.
