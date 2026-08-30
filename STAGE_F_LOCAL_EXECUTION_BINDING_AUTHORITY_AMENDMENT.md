@@ -176,10 +176,13 @@ runner.
 The closed readiness dispositions are:
 
 - `NOT_READY_AUTHORITY_GAPS`;
-- `BINDING_NOT_SEALABLE`;
 - `READY_FOR_INDEPENDENT_BINDING_AUDIT`;
 - `INDEPENDENT_BINDING_PASS`; and
 - `INDEPENDENT_BINDING_FAIL`.
+
+When readiness is `NOT_READY_AUTHORITY_GAPS`, the complete portfolio bundle
+must have the distinct disposition `BINDING_NOT_SEALABLE`; that bundle
+disposition is never a readiness PASS.
 
 `READY_FOR_INDEPENDENT_BINDING_AUDIT` requires all fifteen ordered campaign-
 binding identities, exact code and implementation identities, zero unresolved
@@ -212,6 +215,14 @@ implementation paths in the path manifest may add only:
 - privacy scanning, storage arithmetic, environment checks, durability probes,
   and fail-closed guards;
 - synthetic fixtures, negative controls, tests, and an append-only CI lane.
+
+The implementation may also modify `scripts/validate_stage_e_harness.py` only
+to preserve every accepted Stage E lane while recognizing the exact integrated
+six-file authority and exact prospective implementation path closure as
+non-scientific descendants. Without that narrow path-closure update the
+accepted validator would correctly refuse any descendant commit and exact-
+target CI could never pass. No Stage E evidence count, oracle, guard, route, or
+scientific boundary may change.
 
 The implementation may not modify `stage_e_harness/execution.py`, import a
 legacy or future project runner, implement a scientific model, invent a missing

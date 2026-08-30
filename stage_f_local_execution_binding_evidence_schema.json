@@ -329,6 +329,7 @@
         "independent_private_byte_audit_required",
         "sensitive_field_disclosure_count",
         "outcome_inspected",
+        "scientific_counters",
         "public_binding_sha256"
       ],
       "properties": {
@@ -348,6 +349,7 @@
         "independent_private_byte_audit_required": {"const": true},
         "sensitive_field_disclosure_count": {"const": 0},
         "outcome_inspected": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
         "public_binding_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
@@ -473,6 +475,59 @@
         "bundle_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
+    "binding_readiness_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "public_host_binding_identity",
+        "ordered_route_ids",
+        "unresolved_authority_ids",
+        "storage_preconditions_pass",
+        "power_preconditions_pass",
+        "durability_preconditions_pass",
+        "private_public_digest_reconciled",
+        "independent_audit_identity",
+        "disposition",
+        "scientific_counters",
+        "readiness_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_local_binding_readiness/v1"},
+        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "ordered_route_ids": {
+          "type": "array",
+          "minItems": 15,
+          "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_id"}
+        },
+        "unresolved_authority_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonempty_string"},
+          "uniqueItems": true
+        },
+        "storage_preconditions_pass": {"type": "boolean"},
+        "power_preconditions_pass": {"type": "boolean"},
+        "durability_preconditions_pass": {"type": "boolean"},
+        "private_public_digest_reconciled": {"type": "boolean"},
+        "independent_audit_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/identity"},
+            {"type": "null"}
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "NOT_READY_AUTHORITY_GAPS",
+            "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+            "INDEPENDENT_BINDING_PASS",
+            "INDEPENDENT_BINDING_FAIL"
+          ]
+        },
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "readiness_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "binding_validation_receipt": {
       "type": "object",
       "additionalProperties": false,
@@ -533,9 +588,12 @@
         "synthetic_payload_identity",
         "temporary_path_identity",
         "final_path_identity",
+        "directory_target_identity",
         "same_volume",
         "file_flush_completed",
-        "os_durability_primitive",
+        "file_durability_primitive",
+        "directory_durability_completed",
+        "directory_durability_primitive",
         "atomic_replacement_completed",
         "restart_reread_completed",
         "content_hash_reconciled",
@@ -556,10 +614,19 @@
         "synthetic_payload_identity": {"$ref": "#/$defs/identity"},
         "temporary_path_identity": {"$ref": "#/$defs/identity"},
         "final_path_identity": {"$ref": "#/$defs/identity"},
+        "directory_target_identity": {"$ref": "#/$defs/identity"},
         "same_volume": {"const": true},
         "file_flush_completed": {"const": true},
-        "os_durability_primitive": {
+        "file_durability_primitive": {
           "enum": ["FlushFileBuffers", "FSYNC"]
+        },
+        "directory_durability_completed": {"const": true},
+        "directory_durability_primitive": {
+          "enum": [
+            "MoveFileExW_WRITE_THROUGH_SAME_VOLUME",
+            "FlushFileBuffers_DIRECTORY_HANDLE",
+            "FSYNC_DIRECTORY"
+          ]
         },
         "atomic_replacement_completed": {"const": true},
         "restart_reread_completed": {"const": true},
@@ -622,6 +689,7 @@
     {"$ref": "#/$defs/private_execution_host_manifest"},
     {"$ref": "#/$defs/public_execution_host_binding"},
     {"$ref": "#/$defs/local_binding_bundle"},
+    {"$ref": "#/$defs/binding_readiness_record"},
     {"$ref": "#/$defs/binding_validation_receipt"},
     {"$ref": "#/$defs/durability_probe_receipt"},
     {"$ref": "#/$defs/campaign_authorization"}

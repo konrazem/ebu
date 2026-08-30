@@ -17,9 +17,10 @@
   "authority_path_count": 6,
   "prospective_implementation": {
     "modified_paths": [
-      ".github/workflows/tests.yml"
+      ".github/workflows/tests.yml",
+      "scripts/validate_stage_e_harness.py"
     ],
-    "modified_path_count": 1,
+    "modified_path_count": 2,
     "new_paths": [
       "scripts/build_stage_f_local_binding.py",
       "scripts/validate_stage_f_local_binding.py",
@@ -34,15 +35,16 @@
       "tests/stage_f_binding/test_durability_and_no_science.py"
     ],
     "new_path_count": 11,
-    "total_path_count": 12
+    "total_path_count": 13
   },
   "path_rules": {
     ".github/workflows/tests.yml": "append one outcome-blind Stage F binding-foundation validation job; preserve every accepted job byte and failure behavior",
+    "scripts/validate_stage_e_harness.py": "preserve every accepted Stage E lane and zero-science rule while admitting only the exact integrated binding authority and exact prospective implementation path closure as non-scientific descendants",
     "scripts/build_stage_f_local_binding.py": "build deterministic outcome-blind binding validator artifact and synthetic fixtures only; never create an active authorization",
     "scripts/validate_stage_f_local_binding.py": "strict static synthetic and optional private-local binding validation only; no scientific imports or execution",
     "stage_f_binding": "canonical digest private/public binding readiness authorization durability and refusal mechanics only; standard library only",
     "stage_f_binding/binding.py": "validate inherited campaign_execution_binding/v2 records exact fifteen-route portfolio order privacy links readiness and inactive authorization records without constructing missing scientific identities",
-    "stage_f_binding/durability.py": "synthetic write-through atomic-replacement restart hash corruption orphan-partial and last-good recovery probes only",
+    "stage_f_binding/durability.py": "synthetic file flush directory fsync or exact platform-equivalent write-through atomic-replacement restart hash corruption orphan-partial and last-good recovery probes only",
     "tests/stage_f_binding": "synthetic non-evidence positive and negative controls only"
   },
   "protected_paths": [

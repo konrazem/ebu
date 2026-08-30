@@ -64,6 +64,11 @@
       "any unresolved authority makes disposition BINDING_NOT_SEALABLE",
       "BINDING_NOT_SEALABLE is not PASS"
     ],
+    "readiness": [
+      "NOT_READY_AUTHORITY_GAPS requires at least one unresolved authority identity and produces bundle disposition BINDING_NOT_SEALABLE",
+      "READY_FOR_INDEPENDENT_BINDING_AUDIT requires zero unresolved authority identities and passing storage power durability and private-public digest checks",
+      "only the independent auditor may emit INDEPENDENT_BINDING_PASS or INDEPENDENT_BINDING_FAIL"
+    ],
     "storage": [
       "253 + 253 + 80 + 64 + 8 + 8 == 666",
       "666 * 1073741824 == 715112054784",
@@ -98,7 +103,7 @@
     {"case_id":"SF-BIND-N17","mutation":"controller self-issued or unaudited authorization","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N18","mutation":"nonzero model trajectory runner Gate transform benchmark simulation RNG outcome result figure book release or publication counter","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N19","mutation":"durability probe outside exact private roots or across volumes","disposition":"REFUSE"},
-    {"case_id":"SF-BIND-N20","mutation":"missing file flush OS durability primitive atomic replace restart reread or hash reconciliation","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N20","mutation":"missing file flush file durability primitive directory target directory fsync or platform-equivalent primitive atomic replace restart reread or hash reconciliation","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N21","mutation":"corrupt stale or orphan partial accepted or last-good bytes overwritten","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N22","mutation":"storage arithmetic not exact or current free-space rule fails","disposition":"REFUSE"},
     {"case_id":"SF-BIND-N23","mutation":"actual private manifest included in Git logs CI or public evidence","disposition":"REFUSE"},
