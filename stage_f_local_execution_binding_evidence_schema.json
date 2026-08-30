@@ -32,6 +32,11 @@
       "minimum": 1,
       "maximum": 4294967295
     },
+    "uint64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 18446744073709551615
+    },
     "windows_volume_guid_path": {
       "type": "string",
       "pattern": "^\\\\\\\\\\?\\\\Volume\\{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\\}\\\\$"
@@ -836,6 +841,22 @@
         "sha256": {"$ref": "#/$defs/sha256"}
       }
     },
+    "host_validation_runtime_directory_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path", "volume_serial_number", "file_id_128",
+        "raw_file_attributes", "reparse_tag", "directory"
+      ],
+      "properties": {
+        "relative_path": {"$ref": "#/$defs/nonempty_string"},
+        "volume_serial_number": {"$ref": "#/$defs/uint64"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "reparse_tag": {"const": 0},
+        "directory": {"const": true}
+      }
+    },
     "installed_distribution_preimage": {
       "type": "object",
       "additionalProperties": false,
@@ -895,7 +916,8 @@
         "schema", "provider_bundle_version", "implementation", "python_version",
         "architecture", "runtime_root_path_identity", "executable_relative_path",
         "python_executable_sha256", "sqlite_version", "ordered_runtime_file_rows",
-        "runtime_file_count", "inventory_complete", "standard_library_only",
+        "runtime_file_count", "ordered_runtime_directory_rows",
+        "runtime_directory_count", "inventory_complete", "standard_library_only",
         "isolated_mode_required", "site_initialization_permitted",
         "validator_zipapp_bytecode_cache_permitted", "network_access_permitted",
         "project_package_import_permitted"
@@ -916,6 +938,12 @@
           "uniqueItems": true
         },
         "runtime_file_count": {"$ref": "#/$defs/positive_integer"},
+        "ordered_runtime_directory_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/host_validation_runtime_directory_row"},
+          "uniqueItems": true
+        },
+        "runtime_directory_count": {"$ref": "#/$defs/positive_integer"},
         "inventory_complete": {"const": true},
         "standard_library_only": {"const": true},
         "isolated_mode_required": {"const": true},
@@ -2098,11 +2126,280 @@
       ],
       "items": false
     },
+    "host_runtime_lock_holder_process": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "actor_role", "trust_boundary", "process_id",
+        "process_creation_filetime_uint64", "executable_path_identity",
+        "executable_sha256", "command_line_sha256",
+        "windows_kernel_share_enforcement_relied_upon", "scientific_counters"
+      ],
+      "properties": {
+        "actor_role": {"const": "DESIGNATED_LOCAL_STAGE_F_CONTROLLER_LOCK_HOLDER"},
+        "trust_boundary": {"const": "DESIGNATED_LOCAL_CONTROLLER_PROCESS_AND_WINDOWS_KERNEL"},
+        "process_id": {"$ref": "#/$defs/positive_integer"},
+        "process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "executable_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "executable_sha256": {"$ref": "#/$defs/sha256"},
+        "command_line_sha256": {"$ref": "#/$defs/sha256"},
+        "windows_kernel_share_enforcement_relied_upon": {"const": true},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      }
+    },
+    "host_runtime_tree_change_watch_acquisition_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "runtime_root_path_identity", "open_api", "desired_access",
+        "share_mode", "security_attributes", "creation_disposition",
+        "flags_and_attributes", "handle_valid", "resolved_path_api",
+        "resolved_path_identity", "volume_serial_number", "file_id_128",
+        "raw_file_attributes", "reparse_tag", "directory",
+        "change_watch_api", "watch_subtree", "notify_filter_raw",
+        "buffer_byte_count", "overlapped_mode", "watch_call_returned_nonzero",
+        "watch_pending", "watch_issued_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_host_validation_runtime_tree_watch_acquisition/v1"},
+        "runtime_root_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "open_api": {"const": "CreateFileW"},
+        "desired_access": {"const": 1},
+        "share_mode": {"const": 1},
+        "security_attributes": {"const": "NULL"},
+        "creation_disposition": {"const": 3},
+        "flags_and_attributes": {"const": 1109393408},
+        "handle_valid": {"const": true},
+        "resolved_path_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "resolved_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "volume_serial_number": {"$ref": "#/$defs/uint64"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "reparse_tag": {"const": 0},
+        "directory": {"const": true},
+        "change_watch_api": {"const": "ReadDirectoryChangesW"},
+        "watch_subtree": {"const": true},
+        "notify_filter_raw": {"const": 351},
+        "buffer_byte_count": {"const": 65536},
+        "overlapped_mode": {"const": true},
+        "watch_call_returned_nonzero": {"const": true},
+        "watch_pending": {"const": true},
+        "watch_issued_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "host_runtime_file_lock_acquisition_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "ordinal", "runtime_relative_path", "runtime_path_identity",
+        "expected_byte_count", "expected_sha256", "open_api", "desired_access",
+        "share_mode", "security_attributes", "creation_disposition",
+        "flags_and_attributes", "handle_valid", "resolved_path_api",
+        "resolved_path_identity", "volume_serial_number", "file_id_128",
+        "number_of_links", "delete_pending", "directory", "raw_file_attributes",
+        "reparse_tag", "read_from_held_handle", "observed_byte_count",
+        "observed_sha256", "lock_acquired_utc", "write_share_permitted",
+        "delete_share_permitted", "handle_held_at_acquisition_completion"
+      ],
+      "properties": {
+        "ordinal": {"$ref": "#/$defs/positive_integer"},
+        "runtime_relative_path": {"$ref": "#/$defs/nonempty_string"},
+        "runtime_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "expected_byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "expected_sha256": {"$ref": "#/$defs/sha256"},
+        "open_api": {"const": "CreateFileW"},
+        "desired_access": {"const": 2147483648},
+        "share_mode": {"const": 1},
+        "security_attributes": {"const": "NULL"},
+        "creation_disposition": {"const": 3},
+        "flags_and_attributes": {"const": 2097152},
+        "handle_valid": {"const": true},
+        "resolved_path_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "resolved_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "volume_serial_number": {"$ref": "#/$defs/uint64"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "number_of_links": {"const": 1},
+        "delete_pending": {"const": false},
+        "directory": {"const": false},
+        "raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "reparse_tag": {"const": 0},
+        "read_from_held_handle": {"const": true},
+        "observed_byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "observed_sha256": {"$ref": "#/$defs/sha256"},
+        "lock_acquired_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "write_share_permitted": {"const": false},
+        "delete_share_permitted": {"const": false},
+        "handle_held_at_acquisition_completion": {"const": true}
+      }
+    },
+    "host_runtime_lock_acquisition_preimage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "public_host_alias", "host_validation_runtime_identity",
+        "runtime_root_path_identity", "lock_holder_process",
+        "tree_change_watch_acquisition_observation",
+        "ordered_runtime_directory_rows", "runtime_directory_count",
+        "ordered_runtime_file_lock_rows", "runtime_file_lock_count",
+        "runtime_inventory_file_count", "acquisition_started_utc",
+        "acquisition_completed_utc", "complete_runtime_inventory_projection",
+        "ordinal_and_relative_path_order_exact", "all_expected_bytes_reconciled",
+        "any_handle_released_before_completion", "scientific_counters"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_host_validation_runtime_lock_acquisition/v1"},
+        "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
+        "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "runtime_root_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "lock_holder_process": {"$ref": "#/$defs/host_runtime_lock_holder_process"},
+        "tree_change_watch_acquisition_observation": {"$ref": "#/$defs/host_runtime_tree_change_watch_acquisition_observation"},
+        "ordered_runtime_directory_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/host_validation_runtime_directory_row"},
+          "uniqueItems": true
+        },
+        "runtime_directory_count": {"$ref": "#/$defs/positive_integer"},
+        "ordered_runtime_file_lock_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/host_runtime_file_lock_acquisition_observation"},
+          "uniqueItems": true
+        },
+        "runtime_file_lock_count": {"$ref": "#/$defs/positive_integer"},
+        "runtime_inventory_file_count": {"$ref": "#/$defs/positive_integer"},
+        "acquisition_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "acquisition_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "complete_runtime_inventory_projection": {"const": true},
+        "ordinal_and_relative_path_order_exact": {"const": true},
+        "all_expected_bytes_reconciled": {"const": true},
+        "any_handle_released_before_completion": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      }
+    },
+    "host_runtime_tree_change_watch_release_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "runtime_root_path_identity", "volume_serial_number",
+        "file_id_128", "same_handle_retained_from_acquisition",
+        "watch_held_before_inventory_through_all_validator_returns",
+        "pre_cancel_result_api", "pre_cancel_result_returned_nonzero",
+        "pre_cancel_last_error", "pre_cancel_bytes_transferred", "pre_cancel_check_utc",
+        "file_notify_record_count", "buffer_overflow_observed",
+        "cancel_api", "cancel_returned_nonzero", "cancel_completion_api",
+        "cancel_completion_returned_nonzero", "cancel_completion_last_error",
+        "cancel_completion_bytes_transferred", "cancel_completed_utc", "close_api",
+        "close_returned_nonzero", "watch_released_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_host_validation_runtime_tree_watch_release/v1"},
+        "runtime_root_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "volume_serial_number": {"$ref": "#/$defs/uint64"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "same_handle_retained_from_acquisition": {"const": true},
+        "watch_held_before_inventory_through_all_validator_returns": {"const": true},
+        "pre_cancel_result_api": {"const": "GetOverlappedResult"},
+        "pre_cancel_result_returned_nonzero": {"const": false},
+        "pre_cancel_last_error": {"const": 996},
+        "pre_cancel_bytes_transferred": {"const": 0},
+        "pre_cancel_check_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "file_notify_record_count": {"const": 0},
+        "buffer_overflow_observed": {"const": false},
+        "cancel_api": {"const": "CancelIoEx"},
+        "cancel_returned_nonzero": {"const": true},
+        "cancel_completion_api": {"const": "GetOverlappedResult"},
+        "cancel_completion_returned_nonzero": {"const": false},
+        "cancel_completion_last_error": {"const": 995},
+        "cancel_completion_bytes_transferred": {"const": 0},
+        "cancel_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "close_api": {"const": "CloseHandle"},
+        "close_returned_nonzero": {"const": true},
+        "watch_released_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "host_runtime_file_lock_release_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "ordinal", "runtime_relative_path", "runtime_path_identity",
+        "volume_serial_number", "file_id_128", "same_handle_retained_from_acquisition",
+        "final_read_from_held_handle", "final_observed_byte_count",
+        "final_observed_sha256", "final_remeasurement_utc", "close_api",
+        "close_returned_nonzero", "lock_released_utc"
+      ],
+      "properties": {
+        "ordinal": {"$ref": "#/$defs/positive_integer"},
+        "runtime_relative_path": {"$ref": "#/$defs/nonempty_string"},
+        "runtime_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "volume_serial_number": {"$ref": "#/$defs/uint64"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "same_handle_retained_from_acquisition": {"const": true},
+        "final_read_from_held_handle": {"const": true},
+        "final_observed_byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "final_observed_sha256": {"$ref": "#/$defs/sha256"},
+        "final_remeasurement_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "close_api": {"const": "CloseHandle"},
+        "close_returned_nonzero": {"const": true},
+        "lock_released_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "locked_validator_process_reference": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "phase", "process_id", "process_creation_filetime_uint64",
+        "invocation_sha256", "process_returned_utc", "exit_code"
+      ],
+      "properties": {
+        "phase": {"enum": ["ORCHESTRATOR", "PRE_RESTART", "POST_RESTART"]},
+        "process_id": {"$ref": "#/$defs/positive_integer"},
+        "process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "invocation_sha256": {"$ref": "#/$defs/sha256"},
+        "process_returned_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "exit_code": {"const": 0}
+      }
+    },
+    "host_runtime_lock_release_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "host_runtime_lock_acquisition_sha256",
+        "lock_holder_process_id", "lock_holder_process_creation_filetime_uint64",
+        "locked_validator_processes", "last_validator_process_returned_utc",
+        "release_started_utc", "tree_change_watch_release_observation",
+        "ordered_runtime_file_release_rows",
+        "runtime_file_release_count", "release_completed_utc",
+        "any_handle_released_before_all_validator_processes_returned",
+        "complete_acquisition_projection_remeasured", "all_handles_closed_once",
+        "scientific_counters"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_host_validation_runtime_lock_release/v1"},
+        "host_runtime_lock_acquisition_sha256": {"$ref": "#/$defs/sha256"},
+        "lock_holder_process_id": {"$ref": "#/$defs/positive_integer"},
+        "lock_holder_process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "locked_validator_processes": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "prefixItems": [
+            {"allOf": [{"$ref": "#/$defs/locked_validator_process_reference"}, {"properties": {"phase": {"const": "ORCHESTRATOR"}}}]},
+            {"allOf": [{"$ref": "#/$defs/locked_validator_process_reference"}, {"properties": {"phase": {"const": "PRE_RESTART"}}}]},
+            {"allOf": [{"$ref": "#/$defs/locked_validator_process_reference"}, {"properties": {"phase": {"const": "POST_RESTART"}}}]}
+          ],
+          "items": false
+        },
+        "last_validator_process_returned_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "release_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "tree_change_watch_release_observation": {"$ref": "#/$defs/host_runtime_tree_change_watch_release_observation"},
+        "ordered_runtime_file_release_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/host_runtime_file_lock_release_observation"},
+          "uniqueItems": true
+        },
+        "runtime_file_release_count": {"$ref": "#/$defs/positive_integer"},
+        "release_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "any_handle_released_before_all_validator_processes_returned": {"const": false},
+        "complete_acquisition_projection_remeasured": {"const": true},
+        "all_handles_closed_once": {"const": true},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      }
+    },
     "durability_probe_invocation_preimage": {
       "type": "object", "additionalProperties": false,
       "required": [
         "schema", "phase", "binding_validator_identity",
         "execution_environment_policy_identity", "host_validation_runtime_identity",
+        "host_runtime_lock_acquisition_sha256",
         "bootstrap_source_path", "bootstrap_git_row", "bootstrap_source_byte_count",
         "bootstrap_source_utf8_base64",
         "executable_path_identity", "validator_zipapp_path_identity",
@@ -2119,6 +2416,7 @@
         "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
         "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "host_runtime_lock_acquisition_sha256": {"$ref": "#/$defs/sha256"},
         "bootstrap_source_path": {"const": "stage_f_binding/locked_zipapp_bootstrap.py"},
         "bootstrap_git_row": {"$ref": "#/$defs/git_file_row"},
         "bootstrap_source_byte_count": {"type": "integer", "minimum": 1, "maximum": 8192},
@@ -2217,7 +2515,7 @@
         "handle_valid": {"const": true},
         "resolved_path_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
         "resolved_path_identity": {"$ref": "#/$defs/private_path_identity"},
-        "volume_serial_number": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "volume_serial_number": {"$ref": "#/$defs/uint64"},
         "file_id_128": {"$ref": "#/$defs/file_id_128"},
         "number_of_links": {"const": 1},
         "delete_pending": {"const": false},
@@ -2346,7 +2644,9 @@
         "orchestrator_process", "terminated_process", "resumed_process",
         "process_identity_api", "launch_api", "raw_creation_flags",
         "inherit_handles", "create_process_returned_nonzero",
-        "terminated_wait_result", "terminated_process_exit_code",
+        "terminated_wait_api", "terminated_wait_result", "terminated_process_exit_code",
+        "terminated_process_exit_filetime_uint64", "terminated_process_exit_utc",
+        "terminated_wait_completed_utc",
         "challenge_path_identity", "challenge_preimage", "challenge_sha256",
         "challenge_publication_observation",
         "acknowledgement_path_identity", "acknowledgement_preimage", "acknowledgement_sha256",
@@ -2363,8 +2663,12 @@
         "raw_creation_flags": {"const": 0},
         "inherit_handles": {"const": false},
         "create_process_returned_nonzero": {"const": true},
+        "terminated_wait_api": {"const": "WaitForSingleObject"},
         "terminated_wait_result": {"const": "WAIT_OBJECT_0"},
         "terminated_process_exit_code": {"const": 0},
+        "terminated_process_exit_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "terminated_process_exit_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "terminated_wait_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "challenge_path_identity": {"$ref": "#/$defs/private_path_identity"},
         "challenge_preimage": {"$ref": "#/$defs/durability_restart_challenge_preimage"},
         "challenge_sha256": {"$ref": "#/$defs/sha256"},
@@ -2453,6 +2757,9 @@
         "binding_validator_identity",
         "execution_environment_policy_identity",
         "host_validation_runtime_identity",
+        "host_runtime_lock_acquisition_preimage",
+        "host_runtime_lock_acquisition_sha256",
+        "host_runtime_lock_release_observation",
         "orchestrator_probe_invocation_preimage",
         "terminated_probe_invocation_preimage",
         "resumed_probe_invocation_preimage",
@@ -2508,6 +2815,9 @@
         "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
         "host_validation_runtime_identity": {"$ref": "#/$defs/host_validation_runtime_identity"},
+        "host_runtime_lock_acquisition_preimage": {"$ref": "#/$defs/host_runtime_lock_acquisition_preimage"},
+        "host_runtime_lock_acquisition_sha256": {"$ref": "#/$defs/sha256"},
+        "host_runtime_lock_release_observation": {"$ref": "#/$defs/host_runtime_lock_release_observation"},
         "orchestrator_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
         "terminated_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
         "resumed_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
@@ -2793,6 +3103,8 @@
     {"$ref": "#/$defs/power_snapshot"},
     {"$ref": "#/$defs/public_execution_host_binding"},
     {"$ref": "#/$defs/host_validation_runtime_preimage"},
+    {"$ref": "#/$defs/host_runtime_lock_acquisition_preimage"},
+    {"$ref": "#/$defs/host_runtime_lock_release_observation"},
     {"$ref": "#/$defs/binding_implementation_preimage"},
     {"$ref": "#/$defs/binding_validator_preimage"},
     {"$ref": "#/$defs/validator_source_bundle_artifact"},

@@ -223,12 +223,57 @@ binary, so outcome-blind host binding and durability checks use a distinct
 `stage_f_host_validation_runtime/v1`. Its private canonical preimage binds the
 exact runtime-root path identity, CPython version and architecture, Python and
 SQLite facts, and the complete recursive runtime-root file inventory with
-unique NFC relative paths in ascending UTF-8 byte order. The executable digest
+unique NFC relative paths in ascending UTF-8 byte order. It also binds the
+complete recursive directory inventory, including `.` for the root, with exact
+unsigned 64-bit volume serial, file ID, attributes, and zero reparse tags in the
+same ordering convention. The executable digest
 must equal its `python.exe` inventory row. It runs standard-library-only with
 `-I -S -B`; site initialization, validator-zipapp bytecode-cache use, network
 access, project-package imports, scientific execution, and fallback are
 forbidden. The
 public tier exposes only its digest identity.
+
+Before any host-validation-runtime process is launched, the designated local
+Stage F controller becomes the outer lock holder. That already-running
+controller process and Windows-kernel share-mode enforcement are the explicit
+operational trust boundary; its PID, creation FILETIME, executable path and
+digest, and command-line digest are retained. Before remeasuring either
+inventory, it opens the exact nonreparse runtime root with `CreateFileW`,
+`FILE_LIST_DIRECTORY`, only `FILE_SHARE_READ`, `OPEN_EXISTING`, and
+`FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS |
+FILE_FLAG_OPEN_REPARSE_POINT` (raw flags 1109393408), then issues one
+65536-byte overlapped `ReadDirectoryChangesW` watch over the entire subtree with
+raw notify filter 351. It remeasures every directory identity under that active
+watch and refuses any reparse directory. In exact runtime-file-inventory order
+it then opens every runtime file with `CreateFileW`, `GENERIC_READ`, only
+`FILE_SHARE_READ`, `OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`; resolves
+the held handle with normalized volume-GUID path, `FileIdInfo`,
+`FileStandardInfo`, and `FileAttributeTagInfo`; and reads, counts, and hashes the
+bytes from that handle. `FILE_ID_INFO.VolumeSerialNumber` is retained as the
+complete unsigned 64-bit value. Every path, byte count, digest, file identity,
+attribute, and ordinal must equal the complete host-runtime inventory
+projection. No runtime handle may be released before acquisition completes.
+
+The canonical acquisition preimage contains only facts available before
+launch. Its SHA-256 is frozen before the orchestrator starts and is bound into
+all three retained invocation preimages and actual commands. The outer
+controller holds the tree watch and every deny-write-and-delete runtime-file
+handle continuously across
+the orchestrator, terminated-probe, and resumed-probe processes. Only after all
+three have returned successfully does it reread each exact same file handle,
+reconcile path, unsigned 64-bit volume serial, file ID, byte count, and digest,
+and close each file handle exactly once while the tree watch remains active.
+`GetOverlappedResult` must then report `ERROR_IO_INCOMPLETE` and zero bytes,
+with no notification record or buffer overflow. `CancelIoEx` must complete that
+watch with `ERROR_OPERATION_ABORTED` and zero bytes, after which the root handle
+closes exactly once. Any transient add, remove, rename, attribute, size,
+last-write, creation, or security change refuses even if later restored. The
+release observation binds all three
+process instances and invocation hashes and proves acquisition completion is no
+later than first launch, every process return is no later than release start,
+and release completion is no later than receipt completion. Acquisition and
+release facts are separated deliberately: no after-return value occurs in the
+prelaunch acquisition digest.
 
 `stage_f_binding_authority_set/v1` hashes one
 `binding_authority_set_preimage`: the accepted base, integrated authority commit
@@ -509,8 +554,11 @@ instance's.
 
 The orchestrator retains a successful `CreateProcessW` observation with raw
 creation flags zero and handle inheritance false, a `WAIT_OBJECT_0` observation
-and exit code zero for the terminated process, and closed canonical challenge and
-acknowledgement preimages. The challenge binds the orchestrator and terminated
+and exit code zero for the terminated process, the raw terminated-process exit
+FILETIME and its UTC conversion, and the UTC at which the successful wait
+completed. The resumed launch may occur only after both exit and wait completion.
+It also retains closed canonical challenge and acknowledgement preimages. The
+challenge binds the orchestrator and terminated
 process instances, published-final hash, monotonic challenge counter, and issue
 time. The orchestrator's closed control-file write observation binds its PID and
 creation FILETIME, fresh temporary target, exact challenge bytes and hash,
@@ -531,7 +579,8 @@ canonical durability-probe invocation preimage, respectively labelled
 `ORCHESTRATOR`, `PRE_RESTART`, and `POST_RESTART`. All three name the exact
 binding-validator, immutable scientific environment, separate host-validation
 runtime, deterministic executable zipapp, Python executable, and retained
-invocation-preimage path. The strict standard-padded RFC 4648 bootstrap field
+invocation-preimage path, plus the identical prelaunch host-runtime-lock
+acquisition SHA-256. The strict standard-padded RFC 4648 bootstrap field
 decodes byte-exactly to the standalone `locked_zipapp_bootstrap.py` Git blob and
 the Python `-c` argument; it is at most 8192 bytes.
 
@@ -545,12 +594,17 @@ zipapp returns. Each process retains a closed lock observation binding its PID,
 creation FILETIME, invocation, validator and host-runtime identities, path,
 volume, file ID, attributes, expected and observed byte count and digest, lock
 times, and only the lock digest omitted from its canonical self-hash.
+The zipapp itself is one fresh write-once file under the exact private
+retained-evidence role on the selected volume; every invocation and lock names
+the same path, count, and digest, and the bytes remain retained through
+independent audit.
 
 The command line is strict standard-padded RFC 4648 base64 of exact
 `CreateProcessW` UTF-16LE bytes without a terminal NUL. Those bytes are the
 unique result of the bound host CPython's `subprocess.list2cmdline` over the
 Python executable, `-I -S -B -c`, exact bootstrap, zipapp path, byte count and
-SHA-256, phase, and invocation-preimage path. Only `POST_RESTART` appends the
+SHA-256, host-runtime-lock acquisition SHA-256, phase, and invocation-preimage
+path. Only `POST_RESTART` appends the
 exact challenge path and SHA-256 plus the exact fresh acknowledgement path.
 `CommandLineToArgvW` must reproduce the phase-specific vector with no other
 argument, and the line may not exceed 32766 UTF-16 code units before its
