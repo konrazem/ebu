@@ -563,7 +563,12 @@ Docker, the recovery controller creates a fresh recovery-attempt genesis, root
 protection epoch and continuously held recovery ledger. Its containment
 receipt names that new epoch and ledger predecessor, embeds the predecessor's
 append observation, and carries the exact old intent identity only as immutable
-recovery input. Recovery never retries the start. It first inspects the exact
+recovery input. Under the fresh root protection, read-only held nonreparse
+handles measure the old ledger file and intent file by normalized path, volume
+serial, file ID, byte count and SHA-256. The old ledger prefix is reconstructed
+without write/delete access and must contain the exact durable intent entry and
+append; the receipt embeds both measurements and the successful binding.
+Recovery never retries the start. It first inspects the exact
 container through an authenticated pipe, then issues an authenticated exact
 `DELETE /containers/{id}?force=true&v=false` emergency-containment exchange.
 Status 204 or already-absent status 404 is accepted. A final authenticated

@@ -10881,6 +10881,38 @@
         }
       }
     },
+    "stage_f_readonly_recovery_file_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","path_identity","open_api","open_input_path_identity","open_input_path_identity_reconciles","open_desired_access","open_share_mode","open_security_attributes","open_disposition","open_flags_and_attributes","open_returned_valid_handle","open_last_error","handle_value_uint64","opened_utc","measurement","measurement_handle_and_path_reconcile","no_write_or_delete_access_or_share","handle_held_through_complete_measurement","close_api","close_input_handle_value_uint64","close_input_handle_reconciles_open_handle","close_returned_nonzero","closed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_readonly_recovery_file_observation/v1"},
+        "path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "open_api": {"const": "CreateFileW"},
+        "open_input_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "open_input_path_identity_reconciles": {"const": true},
+        "open_desired_access": {"const": 2147483648},
+        "open_share_mode": {"const": 1},
+        "open_security_attributes": {"const": "NULL"},
+        "open_disposition": {"const": 3},
+        "open_flags_and_attributes": {"const": 2097152},
+        "open_returned_valid_handle": {"const": true},
+        "open_last_error": {"type": "null"},
+        "handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "opened_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "measurement": {"$ref": "#/$defs/file_object_measurement"},
+        "measurement_handle_and_path_reconcile": {"const": true},
+        "no_write_or_delete_access_or_share": {"const": true},
+        "handle_held_through_complete_measurement": {"const": true},
+        "close_api": {"const": "CloseHandle"},
+        "close_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "close_input_handle_reconciles_open_handle": {"const": true},
+        "close_returned_nonzero": {"const": true},
+        "closed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
     "directory_watch_acquisition_observation": {
       "type": "object",
       "additionalProperties": false,
@@ -14407,7 +14439,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "schema","classification","container_start_intent_identity","receipt_root_protection_epoch_identity","receipt_evidence_ledger_predecessor_identity","receipt_evidence_ledger_predecessor_append_observation","recovery_attempt_genesis_identity","recovery_attempt_genesis_identity_reconciles","original_attempt_ledger_reopened_for_write","same_live_original_attempt_ledger_continuity","receipt_ledger_context_matches_original_if_same_live_and_fresh_recovery_if_restarted","scientific_launch_handoff_identity","final_prestart_capacity_live_gate_identity","host_prerequisite_snapshot_identity","container_start_capability_identity","inert_container_identity","start_exchange","recovery_inspect_exchange","observed_container_state_status","observed_container_state_running","observed_restart_policy_name","observed_restart_policy_maximum_retry_count","observed_auto_remove","observed_restart_count","controller_restart_observed_since_intent","same_live_controller_proves_start_writefile_never_invoked","handoff_preimage_was_frozen_before_call","handoff_identity_presence_reconciles_frozen_state","start_may_have_occurred","same_intent_retry_forbidden","intent_consumed_at_most_once","all_present_identities_and_container_bindings_reconcile","recovery_inspect_exactly_targets_intent_container","all_containment_exchanges_exactly_target_intent_container","emergency_force_remove_required","emergency_force_remove_exchange","emergency_force_remove_completed","final_absence_inspect_exchange","container_absent_after_containment","container_and_attempt_permanently_quarantined","force_remove_reissue_after_crash_is_permitted_and_is_not_start_retry","force_remove_does_not_delete_held_bind_mounted_roots","containment_completed_utc","attempt_disposition","ledger_record_role","per_route_scientific_receipt_is_not_transport_receipt","call_started_utc","call_returned_utc","response_http_status","response_body_bytes_base64","response_body_sha256","receipt_completed_utc","receipt_sha256"
+        "schema","classification","container_start_intent_identity","receipt_root_protection_epoch_identity","receipt_evidence_ledger_predecessor_identity","receipt_evidence_ledger_predecessor_append_observation","recovery_attempt_genesis_identity","recovery_attempt_genesis_identity_reconciles","original_attempt_ledger_reopened_for_write","same_live_original_attempt_ledger_continuity","receipt_ledger_context_matches_original_if_same_live_and_fresh_recovery_if_restarted","recovery_original_ledger_readonly_observation","recovery_original_intent_readonly_observation","original_intent_durable_ledger_entry_and_append_binding_verified","scientific_launch_handoff_identity","final_prestart_capacity_live_gate_identity","host_prerequisite_snapshot_identity","container_start_capability_identity","inert_container_identity","start_exchange","recovery_inspect_exchange","observed_container_state_status","observed_container_state_running","observed_restart_policy_name","observed_restart_policy_maximum_retry_count","observed_auto_remove","observed_restart_count","controller_restart_observed_since_intent","same_live_controller_proves_start_writefile_never_invoked","handoff_preimage_was_frozen_before_call","handoff_identity_presence_reconciles_frozen_state","start_may_have_occurred","same_intent_retry_forbidden","intent_consumed_at_most_once","all_present_identities_and_container_bindings_reconcile","recovery_inspect_exactly_targets_intent_container","all_containment_exchanges_exactly_target_intent_container","emergency_force_remove_required","emergency_force_remove_exchange","emergency_force_remove_completed","final_absence_inspect_exchange","container_absent_after_containment","container_and_attempt_permanently_quarantined","force_remove_reissue_after_crash_is_permitted_and_is_not_start_retry","force_remove_does_not_delete_held_bind_mounted_roots","containment_completed_utc","attempt_disposition","ledger_record_role","per_route_scientific_receipt_is_not_transport_receipt","call_started_utc","call_returned_utc","response_http_status","response_body_bytes_base64","response_body_sha256","receipt_completed_utc","receipt_sha256"
       ],
       "properties": {
         "schema": {"const": "stage_f_container_start_receipt/v1"},
@@ -14421,6 +14453,9 @@
         "original_attempt_ledger_reopened_for_write": {"const": false},
         "same_live_original_attempt_ledger_continuity": {"type": "boolean"},
         "receipt_ledger_context_matches_original_if_same_live_and_fresh_recovery_if_restarted": {"const": true},
+        "recovery_original_ledger_readonly_observation": {"oneOf": [{"$ref": "#/$defs/stage_f_readonly_recovery_file_observation"},{"type": "null"}]},
+        "recovery_original_intent_readonly_observation": {"oneOf": [{"$ref": "#/$defs/stage_f_readonly_recovery_file_observation"},{"type": "null"}]},
+        "original_intent_durable_ledger_entry_and_append_binding_verified": {"const": true},
         "scientific_launch_handoff_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_scientific_launch_handoff_identity"},{"type": "null"}]},
         "final_prestart_capacity_live_gate_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_capacity_live_gate_identity"},{"type": "null"}]},
         "host_prerequisite_snapshot_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},{"type": "null"}]},
@@ -14473,6 +14508,8 @@
             "host_prerequisite_snapshot_identity": {"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},
             "recovery_attempt_genesis_identity": {"type": "null"},
             "same_live_original_attempt_ledger_continuity": {"const": true},
+            "recovery_original_ledger_readonly_observation": {"type": "null"},
+            "recovery_original_intent_readonly_observation": {"type": "null"},
             "start_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "POST"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/start$"},"response_http_status": {"const": 204},"response_body_bytes_base64": {"const": ""},"response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}]},
             "recovery_inspect_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "GET"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/json$"},"response_http_status": {"const": 200}}}]},
             "controller_restart_observed_since_intent": {"const": false},
@@ -14504,6 +14541,8 @@
             "host_prerequisite_snapshot_identity": {"oneOf": [{"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},{"type": "null"}]},
             "recovery_attempt_genesis_identity": {"type": "null"},
             "same_live_original_attempt_ledger_continuity": {"const": true},
+            "recovery_original_ledger_readonly_observation": {"type": "null"},
+            "recovery_original_intent_readonly_observation": {"type": "null"},
             "start_exchange": {"type": "null"},
             "recovery_inspect_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "GET"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/json$"},"response_http_status": {"const": 200}}}]},
             "observed_container_state_status": {"const": "created"},
@@ -14537,6 +14576,8 @@
             "host_prerequisite_snapshot_identity": {"type": "null"},
             "recovery_attempt_genesis_identity": {"allOf": [{"$ref": "#/$defs/identity"},{"type": "object","properties": {"kind": {"const": "stage_f_execution_attempt_genesis/v1"}}}]},
             "same_live_original_attempt_ledger_continuity": {"const": false},
+            "recovery_original_ledger_readonly_observation": {"$ref": "#/$defs/stage_f_readonly_recovery_file_observation"},
+            "recovery_original_intent_readonly_observation": {"$ref": "#/$defs/stage_f_readonly_recovery_file_observation"},
             "start_exchange": {"type": "null"},
             "controller_restart_observed_since_intent": {"const": true},
             "same_live_controller_proves_start_writefile_never_invoked": {"const": false},
@@ -14567,6 +14608,8 @@
             "host_prerequisite_snapshot_identity": {"$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"},
             "recovery_attempt_genesis_identity": {"type": "null"},
             "same_live_original_attempt_ledger_continuity": {"const": true},
+            "recovery_original_ledger_readonly_observation": {"type": "null"},
+            "recovery_original_intent_readonly_observation": {"type": "null"},
             "start_exchange": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "POST"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}/start$"},"response_http_status": {"const": 204},"response_body_bytes_base64": {"const": ""},"response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}]},
             "controller_restart_observed_since_intent": {"const": false},
             "same_live_controller_proves_start_writefile_never_invoked": {"const": false},
