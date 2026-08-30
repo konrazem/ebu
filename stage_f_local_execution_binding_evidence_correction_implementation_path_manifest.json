@@ -1,0 +1,90 @@
+{
+  "manifest_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-EVIDENCE-CORRECTION-PATHS-v2",
+  "manifest_version": "2.0.0-candidate",
+  "status": "PROSPECTIVE_CLOSED_IMPLEMENTATION_SCOPE",
+  "required_current_target": {
+    "commit": "1033501b77f7f55ed9aacd9a71cef95f81966e4a",
+    "tree": "d8ffbd105eb76cfbb72472772e07f18a11112db3"
+  },
+  "authority_paths": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_evidence_correction_contract.json",
+    "stage_f_local_execution_binding_evidence_correction_schema.json",
+    "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_validation_contract.json"
+  ],
+  "authority_path_count": 6,
+  "prospective_implementation": {
+    "modified_paths": [
+      ".github/workflows/tests.yml",
+      "scripts/validate_stage_e_harness.py"
+    ],
+    "modified_path_count": 2,
+    "new_paths": [
+      "scripts/build_stage_f_local_binding.py",
+      "scripts/validate_stage_f_local_binding.py",
+      "stage_f_binding/__init__.py",
+      "stage_f_binding/canonical.py",
+      "stage_f_binding/binding.py",
+      "stage_f_binding/durability.py",
+      "stage_f_binding/locked_zipapp_bootstrap.py",
+      "tests/stage_f_binding/__init__.py",
+      "tests/stage_f_binding/fixtures/negative_cases.json",
+      "tests/stage_f_binding/fixtures/synthetic_private_host_manifest.json",
+      "tests/stage_f_binding/test_binding_privacy_and_authorization.py",
+      "tests/stage_f_binding/test_durability_and_no_science.py"
+    ],
+    "new_path_count": 12,
+    "total_path_count": 14
+  },
+  "path_rules": {
+    ".github/workflows/tests.yml": "preserve every accepted workflow byte and append only the corrected outcome-blind Stage F authority/foundation lane",
+    "scripts/validate_stage_e_harness.py": "preserve every Stage E count oracle and guard while admitting only the exact 76-path descendant closure",
+    "scripts/build_stage_f_local_binding.py": "build deterministic v2 authority-bound source bundle and locked zipapp artifacts only",
+    "scripts/validate_stage_f_local_binding.py": "validate the complete v2 record chain root-protection ledger capacity host and inactive launch gate without scientific imports",
+    "stage_f_binding/__init__.py": "export only corrected non-scientific binding interfaces",
+    "stage_f_binding/canonical.py": "strict canonical JSON and digest functions only",
+    "stage_f_binding/binding.py": "closed v2 identity record-chain schema capacity host readiness packet and authorization validation only",
+    "stage_f_binding/durability.py": "same-object publication suspended host-runtime launch root protection USN ledger inventory capacity and outcome-blind durability only",
+    "stage_f_binding/locked_zipapp_bootstrap.py": "locked exact-artifact bootstrap without project imports network site or bytecode cache",
+    "tests/stage_f_binding": "deterministic static or synthetic positive and negative controls with zero science"
+  },
+  "protected_paths": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_contract.json",
+    "stage_f_local_execution_binding_evidence_schema.json",
+    "stage_f_local_execution_binding_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_predecessor_manifest.json",
+    "stage_f_local_execution_binding_validation_contract.json",
+    "stage_e_harness/execution.py",
+    "stage_e_harness/adapters",
+    "src/ebu_framework",
+    "results",
+    "figures"
+  ],
+  "private_evidence_paths_in_repository": "FORBIDDEN",
+  "scientific_runner_or_adapter_paths": "FORBIDDEN",
+  "unknown_path_disposition": "REFUSE",
+  "scope_derived_exclusion": "FORBIDDEN",
+  "force_push_or_history_rewrite": "FORBIDDEN",
+  "authority_integration_required_before_implementation": true,
+  "rejected_candidate_handling": {
+    "commit": "c6e659305713ba462dbadc54d37d704e2e4de168",
+    "merge_or_accept": "FORBIDDEN",
+    "content_may_be_reconstructed_by_explicit_diff_after_authority_integration": true
+  },
+  "final_descendant_path_closure": {
+    "accepted_stage_e_path_count": 51,
+    "accepted_stage_f_v1_authority_path_count": 6,
+    "reachability_durability_unique_path_count": 1,
+    "correction_authority_added_path_count": 6,
+    "stage_f_new_unique_path_count": 12,
+    "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
+    "final_unique_path_count": 76,
+    "missing_extra_duplicate_or_reordered_path_disposition": "REFUSE"
+  },
+  "independent_authority_audit_required": true,
+  "independent_implementation_audit_required": true,
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_CANDIDATE_COMPLETE"
+}
