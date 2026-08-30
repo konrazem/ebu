@@ -160,7 +160,8 @@ durability, restart, and storage inventory. Their identity kinds are exactly
 their schema names. The schema also closes the kinds of every new local host,
 filesystem, path, durability, bundle, readiness, validation, independent-
 audit, scientific-implementation, verifier-implementation, exact Stage E
-integration, and user-authorization identity. An arbitrary nonempty kind is accepted
+integration and evidence-artifact, scientific-code, installed-scientific-artifact,
+and user-authorization identity. An arbitrary nonempty kind is accepted
 only where an inherited Stage D or Stage E identity remains externally
 controlled; it cannot substitute for a locally defined identity kind.
 
@@ -188,22 +189,44 @@ referenced `campaign_execution_binding/v2` fields. Missing, additional,
 duplicate, reordered, renamed, differently typed, noncanonical, or
 nonreconstructing input refuses.
 
-Three further implementation-chain identities are closed local preimages rather
+The remaining implementation-chain identities are exact typed preimages rather
 than generic digests. `stage_e_exact_target_integration/v1` hashes the exact
 accepted integration commit `c43ead831c3e4021405985134ed564b761bb1aed`, tree
 `212777d569af527ce9532ea6c836ff2225465d87`, all 51 implementation rows in the
 accepted manifest's `modified_paths`-then-`new_paths` order, CI run
 `33231168021`, its six successful jobs, artifact `9708926559`, and
 artifact SHA-256 `2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345`.
+Its `stage_e_evidence_identity` has the exact kind
+`stage_e_exact_target_evidence_artifact/v1`; its preimage is the exact raw bytes
+of artifact `9708926559`, and both digest fields equal that accepted artifact
+SHA-256. The integration preimage contains that identity and the bundle must
+repeat it, so a matched arbitrary Stage E evidence digest cannot be replayed.
+
+`stage_f_scientific_code/v1` hashes a closed `scientific_code_preimage` containing
+the implementation commit, its exact tree, and every recursive Git blob row in
+ascending UTF-8 NFC path-byte order. Both repository modes `100644` and `100755`
+are retained; any missing, extra, duplicate, reordered, non-blob, symlink, or
+submodule row refuses. The scientific implementation must name that exact code
+identity, and the resolved code commit and tree must equal its own implementation
+commit and tree.
 
 `stage_f_scientific_implementation/v1` hashes its exact binding-foundation and
 authority-set identities, foundation commit and tree, descendant implementation
-commit and tree, the fifteen route and sealed campaign-binding identities, and
+commit and tree, scientific-code and installed-artifact identities, the fifteen
+route and sealed campaign-binding identities, and
 the complete ordered additive-or-modified Git diff. Deletion, rename, symlink,
 submodule, non-`100644` mode, missing row, or extra row refuses.
 Every accepted Stage E authority row, local Stage F authority row, binding-
 foundation row, and the Stage E execution guard remains byte-identical; the
 scientific implementation cannot silently revise the authority it claims.
+The installed artifact has exact kind
+`stage_f_installed_scientific_artifact/v1`; its preimage is the exact raw direct
+wheel bytes. Its two digest fields equal the raw wheel SHA-256. The implementation
+preimage repeats the artifact's source commit and tree, which must equal the
+implementation coordinate, and requires the accepted outcome-blind Stage C static
+packaging path to produce byte-identical direct and sdist-derived wheels in the
+bound no-network environment. A wheel digest, source coordinate, or build receipt
+from another implementation refuses.
 `stage_f_verifier_implementation/v1` hashes that exact scientific-
 implementation identity and commit/tree, fifteen route-verifier projections,
 and every verifier Git row reproduced from the implementation tree. Every route
@@ -324,10 +347,17 @@ refuses. No stream is followed, ignored, or charged outside its owning row.
 attributes. The same synchronous handle is therefore fully traversed with
 `BackupRead`, `ACCESS_SYSTEM_SECURITY`, and `bProcessSecurity=TRUE`; SACL
 inclusion and final abort cleanup are mandatory, and `BackupSeek` is forbidden.
-Only `BACKUP_DATA`, `BACKUP_SECURITY_DATA`, and `BACKUP_LINK` may occur.
+Only numeric stream IDs `1`, `3`, and `5`, labeled respectively `BACKUP_DATA`,
+`BACKUP_SECURITY_DATA`, and `BACKUP_LINK`, may occur.
 Extended-attribute, alternate-data, property, object-ID, reparse, sparse, TxF,
-ghosted-extent, or unknown backup stream IDs refuse. Every permitted stream's
-header, size, and content hash is retained. Each non-data permitted stream is
+ghosted-extent, or unknown backup stream IDs refuse. The raw
+`dwStreamAttributes` mask is also closed per permitted ID: `BACKUP_DATA` is `0`,
+`BACKUP_SECURITY_DATA` is `2` (`STREAM_CONTAINS_SECURITY`), and `BACKUP_LINK` is
+`0`. Modified-when-read bit `1`, properties-or-reserved bit `4`, sparse bit `8`,
+ghosted-extent bit `16`, every other reserved or unknown bit, and any mask other
+than the one exact permitted mask for its stream ID refuse; a stream label cannot hide a different numeric
+ID or attribute mask. Every permitted stream's header, size, and content hash is
+retained. Each non-data permitted stream is
 charged its size rounded up to an allocation unit. Thus `$EA`,
 `$EA_INFORMATION`, EFS or logged-utility state, `$OBJECT_ID`, TxF data, and
 other unmodelled externally mutable attributes cannot hide outside the row.
@@ -402,6 +432,24 @@ and recovery from the last verified durable checkpoint. A durability test must
 retain its input, ordered actions, hashes, restart observation, recovery
 disposition, and zero-science counters. It may not import a model or project
 runner.
+
+The closed durability receipt retains a fixed seventeen-step action trace from
+fresh temporary creation through write, file flush, close, atomic publish,
+directory durability, termination, a distinct fresh probe process, complete
+reread and hash, corrupt-final and orphan-partial presentation and refusal,
+last-good recovery, and recovered hash. Every step records its ordinal, exact
+action, UTC observation, applicable input and output hashes, observed byte count,
+operating-system result code, and PASS status. The receipt also retains the probe
+start and completion timestamps, payload and reread byte counts, payload,
+published, post-restart, corrupt, orphan, last-good, and recovered SHA-256 values,
+the terminated and resumed process identifiers and restart timestamp, and the
+exact recovery disposition. The resumed process identifier must differ from the
+terminated identifier. Payload identity, published final, post-restart reread,
+last verified durable checkpoint, and recovered final hashes must agree; corrupt
+and orphan fixture hashes must differ from that hash and each other. An assertion
+boolean without this reconstructable evidence refuses. The private durability
+bundle resolves and recomputes every ordered receipt rather than treating receipt
+identities as opaque claims.
 
 ## 7. Readiness and execution authorization
 
@@ -482,7 +530,10 @@ set identity resolved from its binding-implementation preimage. Its scientific-
 implementation preimage must in turn name that same binding foundation and
 authority set; its verifier preimage must name that same scientific
 implementation; and its Stage E integration identity must resolve the exact
-accepted 51-path integration preimage. Bundle, readiness, packet, audit, and
+accepted 51-path integration preimage and exact raw accepted evidence artifact.
+The scientific implementation's resolved code and installed-artifact identities
+must equal the bundle, and the code and artifact source coordinates must equal the
+scientific implementation coordinate. Bundle, readiness, packet, audit, and
 authorization repeat this one chain. Individually valid records from different
 authority, foundation, scientific-implementation, verifier, or Stage E chains
 refuse.
