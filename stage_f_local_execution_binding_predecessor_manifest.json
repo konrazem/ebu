@@ -1,0 +1,73 @@
+{
+  "manifest_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FOUNDATION-PREDECESSORS-v1",
+  "manifest_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_EXACT_PREDECESSOR_LOCK",
+  "accepted_base": {
+    "commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "tree": "212777d569af527ce9532ea6c836ff2225465d87"
+  },
+  "source_count": 28,
+  "source_rows": [
+    {"path":"STAGE_D_SCIENTIFIC_VALIDATION_AUTHORITY.md","mode":"100644","git_object":"6970a453c1408471b204b3168444eebe8d792923","bytes":39939,"sha256":"f755c38aff690fe317b29550f0f1ef7d627c75902c0f555d9f8ca594499dba16"},
+    {"path":"stage_d_scientific_validation_contract.json","mode":"100644","git_object":"ac1be73b81c31fc65e4e3ebcbaf45b74526ea7c4","bytes":44051,"sha256":"1b12c97f51d99720979700f048ac527cb0d97c1323f051fe53e0fda3ac743089"},
+    {"path":"stage_d_scientific_validation_evidence_schema.json","mode":"100644","git_object":"bbb33509f92f2c55b670e4c0b5d8fd45215aaaef","bytes":92769,"sha256":"956ff0fd38dce4cd72208dc029de15d092ea9e477151522306f9763dc3d621b3"},
+    {"path":"stage_d_scientific_validation_master_matrix.json","mode":"100644","git_object":"e6cd44f8b9e2e125403cb1359d819fc08afd2cb7","bytes":148183,"sha256":"081f2e994c23051514aef19a0516d1996d9c4b86cd528dfc05bf9d17658bdb81"},
+    {"path":"stage_d_scientific_validation_predecessor_manifest.json","mode":"100644","git_object":"e15c8b130097120fff562397cfa17c31bb66510c","bytes":12753,"sha256":"d3216726c1759ee6dad86ce8e5bba40ee9318c1e4cea52f12db0ec19b746adee"},
+    {"path":"stage_d_scientific_validation_validation_contract.json","mode":"100644","git_object":"a3aacfb377786ce2bddf91ceea0e2d58bcda9d01","bytes":37012,"sha256":"2707d9d645b3fc7ecc4ee61f02d861ba88c5d220d7bf6812ab98ece93ba51227"},
+    {"path":"STAGE_D_COMPLETION_ORIENTED_CONTINUATION_AUTHORITY_AMENDMENT.md","mode":"100644","git_object":"20fa88c3e9cff1071a4730f6dbb80e6a114a9467","bytes":26730,"sha256":"8e92550fd444c39516f35f1bd9d4d69f22018edc51b23b28aaf1c8e83fd98276"},
+    {"path":"stage_d_completion_oriented_continuation_contract.json","mode":"100644","git_object":"45f869e9012fdb8f7bf1f660fbb82edb0f5ef184","bytes":26727,"sha256":"9c668e43e2fd06e6260296ca9608fc94ad5b6d806e317ff8f168eb0858802577"},
+    {"path":"stage_d_completion_oriented_continuation_evidence_schema.json","mode":"100644","git_object":"223fd60385ad727fc8dc1b362fa7060e72afa19d","bytes":71047,"sha256":"66ef7d3189e692404d0d8ef773bd15b7d70eb4172e44ca6b1b6f3a4a4da16f88"},
+    {"path":"stage_d_completion_oriented_continuation_predecessor_manifest.json","mode":"100644","git_object":"c7bae1f109706dc37d8f4b461d0dd6fa554b9e3d","bytes":6169,"sha256":"b49c3318e3aa2f8367b3909c0a0dfa1fa62f2a90915d5e8728f5a331dff1725c"},
+    {"path":"stage_d_completion_oriented_continuation_validation_contract.json","mode":"100644","git_object":"99e443bb9f8ca84741b0eb0c52eb37b9a1915244","bytes":26778,"sha256":"73a27fee64f0b035150a57f9eb10568ea1cfc9559c4bccbcd0ef44402735baa3"},
+    {"path":"STAGE_D_DYNAMIC_GROWTH_CAMPAIGN_AUTHORITY_AMENDMENT.md","mode":"100644","git_object":"cd5fba38ad9c9af027d5a26dcfd0d0aaca35cb77","bytes":54927,"sha256":"5e55617ee5c1f107567685e81377f1a697a4b7d49ce0e844ee1b3dbf72aec0eb"},
+    {"path":"stage_d_dynamic_growth_campaign_contract.json","mode":"100644","git_object":"c3ab930bc3f8f81cb9c276ec584498029b14a203","bytes":53845,"sha256":"7d9ce96dba89f46771a08747c7c5db7762e94f2072bb83fdf8bcc1e68e6e3c22"},
+    {"path":"stage_d_dynamic_growth_campaign_evidence_schema.json","mode":"100644","git_object":"c4b8504edcafe3bf4e9992022965950de8418584","bytes":103416,"sha256":"be93bb6ad0abbc8605e293d3bb7f7ec1634cf55e71dff57372b7078810afe8e9"},
+    {"path":"stage_d_dynamic_growth_campaign_predecessor_manifest.json","mode":"100644","git_object":"90cd3e6ec962941832b54159f0fd43cc91f9ae8f","bytes":6600,"sha256":"c729fa3b038ba479b6a7651a24e620a36b0bfea6f901a72b7b8c19b1c0b9c312"},
+    {"path":"stage_d_dynamic_growth_campaign_validation_contract.json","mode":"100644","git_object":"6cf88d3429b0d85db166022b309161863e951290","bytes":429128,"sha256":"4c85d28f822558fbabee47cb2b294cf1f9ad85936b4fe388e06243e4d83fa0d2"},
+    {"path":"STAGE_E_SCIENTIFIC_HARNESS_AUTHORITY.md","mode":"100644","git_object":"6ed928c0003d44c0f5b8ed6656f55759234d532d","bytes":24001,"sha256":"997fc4d864b8c08f85adba8f4c481ed1f6eaeefe4a8c353b9df253ed221c3da8"},
+    {"path":"stage_e_scientific_harness_contract.json","mode":"100644","git_object":"b29edfe0299bfb7989cadc355e82e183438b8a12","bytes":25962,"sha256":"4abbb2e79bb7261a862ec6ab08902adcd43d9a7a0b6dce9141b05f007621f989"},
+    {"path":"stage_e_scientific_harness_evidence_schema.json","mode":"100644","git_object":"35f5feaaff54694024954834444a096c2fa55cc9","bytes":31272,"sha256":"f473e445416cfb2d5d6f596a85b90c5cd3fdc5dda06e05a2f45d095ccf114aae"},
+    {"path":"stage_e_scientific_harness_implementation_path_manifest.json","mode":"100644","git_object":"d362466cba2006b2463ec1f2fff88f980959012b","bytes":8643,"sha256":"b2b0e9bd5473815e3222cfc2d319649562a4723430cba0943e3e970c4835bb38"},
+    {"path":"stage_e_scientific_harness_predecessor_manifest.json","mode":"100644","git_object":"0cd54db396976dce39479c6dbfd055d809800121","bytes":7780,"sha256":"c065a1270dd36d9e7972ec84ffae917002f9eb0765be4d9812a54876601973a7"},
+    {"path":"stage_e_scientific_harness_validation_contract.json","mode":"100644","git_object":"fc282dc73e432690d8d67dd53143911c555de701","bytes":29296,"sha256":"7c8017bfe3af6235654d1f1103b53c195512002f534e85e79a99d2811c4e929d"},
+    {"path":"STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_AUTHORITY_AMENDMENT.md","mode":"100644","git_object":"ac0ce6a7b80314f1f23c7db326e753c7f1fd7b21","bytes":30162,"sha256":"5f791746390ff39ff1b4f730ba37f7c9687ee5a7dd9efda429727a7ef76d5728"},
+    {"path":"stage_e_dynamic_growth_harness_reconciliation_contract.json","mode":"100644","git_object":"e754476a70ab9325ce122d96ce32ac85d2711e73","bytes":29102,"sha256":"115268c17fd5fecbb6eccaf71b3317e6915f413bae217da4685fd1fd9f417ad9"},
+    {"path":"stage_e_dynamic_growth_harness_reconciliation_evidence_schema.json","mode":"100644","git_object":"8a7ebd4c8baef1ee0457e97ac935d5cc293f9080","bytes":47666,"sha256":"7aea36d0a010e849f1490e9e964756a61335804cefefa5d84059bf739ff399ee"},
+    {"path":"stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json","mode":"100644","git_object":"058a378f2e1bad45969ec8a9bc1a258628e0f4cf","bytes":8326,"sha256":"bcd88263976eb6ee333b257965f6727dc716793d6d1214642620cdecc10b5b99"},
+    {"path":"stage_e_dynamic_growth_harness_reconciliation_predecessor_manifest.json","mode":"100644","git_object":"6b8c11e8a0ebe4277a3191fafaa582eea4c59179","bytes":10888,"sha256":"6d5426dcdeeeed95dbcd32545d47ffb5ad3dbc35070fd8981c0a1a9409758467"},
+    {"path":"stage_e_dynamic_growth_harness_reconciliation_validation_contract.json","mode":"100644","git_object":"585f85d90606b152f136612a59f67b9758ffcbdc","bytes":1161314,"sha256":"de108dea3e59ba95301824094dfb2f72652a0a97ffda48e08b2dd7d42c867986"}
+  ],
+  "accepted_stage_e_implementation": {
+    "integration_commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "integration_tree": "212777d569af527ce9532ea6c836ff2225465d87",
+    "implementation_path_count": 51,
+    "path_closure_source": "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json"
+  },
+  "accepted_stage_e_ci": {
+    "run_id": 33231168021,
+    "required_job_count": 6,
+    "conclusion": "success",
+    "artifact_id": 9708926559,
+    "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"
+  },
+  "preservation_rule": "every source row must match accepted-base mode object raw bytes and SHA-256; the accepted base tree closes every implementation byte",
+  "missing_duplicate_changed_or_unlocked_input": "REFUSE",
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_import_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"
+}

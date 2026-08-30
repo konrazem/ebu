@@ -1,0 +1,630 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ebu.example/schema/stage-f-local-execution-binding-foundation-v1.json",
+  "title": "EBU Stage F local execution-binding foundation records",
+  "description": "Closed privacy, host-binding, portfolio-readiness, durability and inactive authorization records; no scientific evidence.",
+  "schema_version": "1.0.0-candidate",
+  "scientific_execution_count": 0,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nonempty_string": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonnegative_integer": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "git_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "public_host_alias": {
+      "const": "EXECUTION-HOST-01"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value",
+        "sha256"
+      ],
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/nonempty_string"
+        },
+        "value": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "zero_science_counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_execution_count",
+        "trajectory_execution_count",
+        "runner_import_count",
+        "gate_execution_count",
+        "transform_execution_count",
+        "benchmark_execution_count",
+        "simulation_execution_count",
+        "stochastic_draw_count",
+        "registered_configuration_count",
+        "outcome_inspection_count",
+        "result_count",
+        "figure_count",
+        "book_count",
+        "release_action_count",
+        "publication_action_count"
+      ],
+      "properties": {
+        "model_execution_count": {"const": 0},
+        "trajectory_execution_count": {"const": 0},
+        "runner_import_count": {"const": 0},
+        "gate_execution_count": {"const": 0},
+        "transform_execution_count": {"const": 0},
+        "benchmark_execution_count": {"const": 0},
+        "simulation_execution_count": {"const": 0},
+        "stochastic_draw_count": {"const": 0},
+        "registered_configuration_count": {"const": 0},
+        "outcome_inspection_count": {"const": 0},
+        "result_count": {"const": 0},
+        "figure_count": {"const": 0},
+        "book_count": {"const": 0},
+        "release_action_count": {"const": 0},
+        "publication_action_count": {"const": 0}
+      }
+    },
+    "repository_coordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "tree"],
+      "properties": {
+        "commit": {"$ref": "#/$defs/git_commit"},
+        "tree": {"$ref": "#/$defs/git_commit"}
+      }
+    },
+    "directory_roles": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {"const": "immutable-results"},
+        {"const": "continuation-checkpoints"},
+        {"const": "independent-audit"},
+        {"const": "temporary"}
+      ],
+      "items": false
+    },
+    "private_directories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_f_root",
+        "immutable_results",
+        "continuation_checkpoints",
+        "independent_audit",
+        "temporary"
+      ],
+      "properties": {
+        "stage_f_root": {"$ref": "#/$defs/nonempty_string"},
+        "immutable_results": {"$ref": "#/$defs/nonempty_string"},
+        "continuation_checkpoints": {"$ref": "#/$defs/nonempty_string"},
+        "independent_audit": {"$ref": "#/$defs/nonempty_string"},
+        "temporary": {"$ref": "#/$defs/nonempty_string"}
+      }
+    },
+    "storage_envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bytes_per_gib",
+        "primary_logical_output_gib",
+        "independent_audit_copy_gib",
+        "dynamic_growth_physical_writes_gib",
+        "checkpoint_and_write_overhead_gib",
+        "temporary_archives_gib",
+        "retained_evidence_gib",
+        "total_gib",
+        "minimum_free_after_existing_data_gib"
+      ],
+      "properties": {
+        "bytes_per_gib": {"const": 1073741824},
+        "primary_logical_output_gib": {"const": 253},
+        "independent_audit_copy_gib": {"const": 253},
+        "dynamic_growth_physical_writes_gib": {"const": 80},
+        "checkpoint_and_write_overhead_gib": {"const": 64},
+        "temporary_archives_gib": {"const": 8},
+        "retained_evidence_gib": {"const": 8},
+        "total_gib": {"const": 666},
+        "minimum_free_after_existing_data_gib": {"const": 350}
+      }
+    },
+    "private_host_facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "os_name",
+        "os_version",
+        "os_build",
+        "architecture",
+        "computer_name",
+        "user_name",
+        "processor_name",
+        "logical_processor_count",
+        "physical_memory_bytes"
+      ],
+      "properties": {
+        "os_name": {"$ref": "#/$defs/nonempty_string"},
+        "os_version": {"$ref": "#/$defs/nonempty_string"},
+        "os_build": {"$ref": "#/$defs/nonempty_string"},
+        "architecture": {"$ref": "#/$defs/nonempty_string"},
+        "computer_name": {"$ref": "#/$defs/nonempty_string"},
+        "user_name": {"$ref": "#/$defs/nonempty_string"},
+        "processor_name": {"$ref": "#/$defs/nonempty_string"},
+        "logical_processor_count": {"$ref": "#/$defs/positive_integer"},
+        "physical_memory_bytes": {"$ref": "#/$defs/positive_integer"}
+      }
+    },
+    "runtime_facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image_digest",
+        "python_version",
+        "python_executable_sha256",
+        "sqlite_version",
+        "installed_package",
+        "installed_artifact_sha256",
+        "dependency_identities"
+      ],
+      "properties": {
+        "image_digest": {
+          "const": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"
+        },
+        "python_version": {"const": "CPython 3.14.4 final"},
+        "python_executable_sha256": {"$ref": "#/$defs/sha256"},
+        "sqlite_version": {"const": "3.46.1"},
+        "installed_package": {"const": "ebu-framework==0.1.0a1"},
+        "installed_artifact_sha256": {
+          "const": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2"
+        },
+        "dependency_identities": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {"$ref": "#/$defs/identity"}
+        }
+      }
+    },
+    "filesystem_facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filesystem_type",
+        "volume_identity",
+        "private_directories",
+        "observed_capacity_bytes",
+        "observed_free_bytes",
+        "existing_stage_f_bytes",
+        "reserved_envelope_bytes"
+      ],
+      "properties": {
+        "filesystem_type": {"const": "NTFS"},
+        "volume_identity": {"$ref": "#/$defs/nonempty_string"},
+        "private_directories": {"$ref": "#/$defs/private_directories"},
+        "observed_capacity_bytes": {"$ref": "#/$defs/positive_integer"},
+        "observed_free_bytes": {"$ref": "#/$defs/positive_integer"},
+        "existing_stage_f_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "reserved_envelope_bytes": {"const": 715112054784}
+      }
+    },
+    "power_facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_utc",
+        "ac_connected",
+        "plugged_in_sleep_disabled",
+        "plugged_in_lid_action",
+        "lid_open_required",
+        "docker_desktop_running",
+        "docker_autostart_enabled",
+        "unattended_reboot_blocked"
+      ],
+      "properties": {
+        "snapshot_utc": {"$ref": "#/$defs/nonempty_string"},
+        "ac_connected": {"type": "boolean"},
+        "plugged_in_sleep_disabled": {"type": "boolean"},
+        "plugged_in_lid_action": {
+          "enum": ["SLEEP", "DO_NOTHING"]
+        },
+        "lid_open_required": {"type": "boolean"},
+        "docker_desktop_running": {"type": "boolean"},
+        "docker_autostart_enabled": {"type": "boolean"},
+        "unattended_reboot_blocked": {"type": "boolean"}
+      }
+    },
+    "policy_preimages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "environment",
+        "parallelization_boundary",
+        "worker_allocation",
+        "storage_location",
+        "durability",
+        "restart"
+      ],
+      "properties": {
+        "environment": {"$ref": "#/$defs/nonempty_string"},
+        "parallelization_boundary": {"$ref": "#/$defs/nonempty_string"},
+        "worker_allocation": {"$ref": "#/$defs/nonempty_string"},
+        "storage_location": {"$ref": "#/$defs/nonempty_string"},
+        "durability": {"$ref": "#/$defs/nonempty_string"},
+        "restart": {"$ref": "#/$defs/nonempty_string"}
+      }
+    },
+    "private_execution_host_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "public_host_alias",
+        "privacy_nonce",
+        "repository",
+        "host",
+        "runtime",
+        "filesystem",
+        "power",
+        "policy_preimages",
+        "durability_bundle_identity",
+        "outcome_blind_attestation",
+        "scientific_counters"
+      ],
+      "properties": {
+        "schema": {"const": "private_execution_host_manifest/v1"},
+        "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
+        "privacy_nonce": {"$ref": "#/$defs/sha256"},
+        "repository": {"$ref": "#/$defs/repository_coordinate"},
+        "host": {"$ref": "#/$defs/private_host_facts"},
+        "runtime": {"$ref": "#/$defs/runtime_facts"},
+        "filesystem": {"$ref": "#/$defs/filesystem_facts"},
+        "power": {"$ref": "#/$defs/power_facts"},
+        "policy_preimages": {"$ref": "#/$defs/policy_preimages"},
+        "durability_bundle_identity": {"$ref": "#/$defs/identity"},
+        "outcome_blind_attestation": {"const": true},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      }
+    },
+    "public_execution_host_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "public_host_alias",
+        "private_host_manifest_identity",
+        "environment_identity",
+        "parallelization_boundary_identity",
+        "worker_allocation_policy_identity",
+        "storage_location_identity",
+        "durability_policy_identity",
+        "restart_policy_identity",
+        "private_durability_bundle_identity",
+        "logical_directory_roles",
+        "storage_envelope",
+        "private_manifest_retained",
+        "independent_private_byte_audit_required",
+        "sensitive_field_disclosure_count",
+        "outcome_inspected",
+        "public_binding_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_public_execution_host_binding/v1"},
+        "public_host_alias": {"$ref": "#/$defs/public_host_alias"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/identity"},
+        "environment_identity": {"$ref": "#/$defs/identity"},
+        "parallelization_boundary_identity": {"$ref": "#/$defs/identity"},
+        "worker_allocation_policy_identity": {"$ref": "#/$defs/identity"},
+        "storage_location_identity": {"$ref": "#/$defs/identity"},
+        "durability_policy_identity": {"$ref": "#/$defs/identity"},
+        "restart_policy_identity": {"$ref": "#/$defs/identity"},
+        "private_durability_bundle_identity": {"$ref": "#/$defs/identity"},
+        "logical_directory_roles": {"$ref": "#/$defs/directory_roles"},
+        "storage_envelope": {"$ref": "#/$defs/storage_envelope"},
+        "private_manifest_retained": {"const": true},
+        "independent_private_byte_audit_required": {"const": true},
+        "sensitive_field_disclosure_count": {"const": 0},
+        "outcome_inspected": {"const": false},
+        "public_binding_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "route_id": {
+      "enum": [
+        "SD-01",
+        "SD-01-GROWTH-v1",
+        "SD-02",
+        "SD-03",
+        "SD-04",
+        "SD-05",
+        "SD-06",
+        "SD-07",
+        "SD-08",
+        "SD-09",
+        "SD-10",
+        "SD-11",
+        "SD-12",
+        "SD-13",
+        "SD-14"
+      ]
+    },
+    "study_id": {
+      "enum": [
+        "SD-01", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07",
+        "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"
+      ]
+    },
+    "route_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "study_id",
+        "campaign_id",
+        "campaign_execution_binding_file_identity",
+        "campaign_execution_binding_identity",
+        "seal_status",
+        "unresolved_authority_ids"
+      ],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route_id"},
+        "study_id": {"$ref": "#/$defs/study_id"},
+        "campaign_id": {"$ref": "#/$defs/nonempty_string"},
+        "campaign_execution_binding_file_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/identity"},
+            {"type": "null"}
+          ]
+        },
+        "campaign_execution_binding_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/identity"},
+            {"type": "null"}
+          ]
+        },
+        "seal_status": {
+          "enum": ["SEALED", "UNSEALED_AUTHORITY_GAP"]
+        },
+        "unresolved_authority_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonempty_string"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "local_binding_bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "accepted_base",
+        "stage_e_ci_run_id",
+        "stage_e_artifact_id",
+        "stage_e_artifact_sha256",
+        "ordered_route_bindings",
+        "public_host_binding_identity",
+        "scientific_code_identity",
+        "installed_artifact_identity",
+        "authority_set_identity",
+        "stage_e_evidence_identity",
+        "validator_identity",
+        "independent_audit_identity",
+        "disposition",
+        "scientific_counters",
+        "bundle_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_local_binding_bundle/v1"},
+        "accepted_base": {"$ref": "#/$defs/repository_coordinate"},
+        "stage_e_ci_run_id": {"const": 33231168021},
+        "stage_e_artifact_id": {"const": 9708926559},
+        "stage_e_artifact_sha256": {
+          "const": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"
+        },
+        "ordered_route_bindings": {
+          "type": "array",
+          "minItems": 15,
+          "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_binding"}
+        },
+        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "scientific_code_identity": {"$ref": "#/$defs/identity"},
+        "installed_artifact_identity": {"$ref": "#/$defs/identity"},
+        "authority_set_identity": {"$ref": "#/$defs/identity"},
+        "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
+        "validator_identity": {"$ref": "#/$defs/identity"},
+        "independent_audit_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/identity"},
+            {"type": "null"}
+          ]
+        },
+        "disposition": {
+          "enum": [
+            "BINDING_NOT_SEALABLE",
+            "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+            "INDEPENDENT_BINDING_PASS",
+            "INDEPENDENT_BINDING_FAIL"
+          ]
+        },
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "bundle_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "binding_validation_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "bundle_identity",
+        "private_manifest_identity",
+        "public_host_binding_identity",
+        "validated_route_order",
+        "schema_check_count",
+        "semantic_check_count",
+        "unresolved_authority_ids",
+        "private_public_digest_reconciled",
+        "stage_e_guard_preserved",
+        "disposition",
+        "scientific_counters",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_binding_validation_receipt/v1"},
+        "bundle_identity": {"$ref": "#/$defs/identity"},
+        "private_manifest_identity": {"$ref": "#/$defs/identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "validated_route_order": {
+          "type": "array",
+          "minItems": 15,
+          "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_id"}
+        },
+        "schema_check_count": {"$ref": "#/$defs/positive_integer"},
+        "semantic_check_count": {"$ref": "#/$defs/positive_integer"},
+        "unresolved_authority_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonempty_string"},
+          "uniqueItems": true
+        },
+        "private_public_digest_reconciled": {"type": "boolean"},
+        "stage_e_guard_preserved": {"const": true},
+        "disposition": {
+          "enum": [
+            "STAGE_F_LOCAL_BINDING_VALIDATION_PASS",
+            "STAGE_F_LOCAL_BINDING_NOT_SEALABLE",
+            "STAGE_F_LOCAL_BINDING_VALIDATION_FAIL"
+          ]
+        },
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "durability_probe_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "filesystem_identity",
+        "durability_policy_identity",
+        "restart_policy_identity",
+        "synthetic_payload_identity",
+        "temporary_path_identity",
+        "final_path_identity",
+        "same_volume",
+        "file_flush_completed",
+        "os_durability_primitive",
+        "atomic_replacement_completed",
+        "restart_reread_completed",
+        "content_hash_reconciled",
+        "corrupt_final_refused",
+        "orphan_partial_refused",
+        "last_good_recovery_completed",
+        "observed_free_bytes",
+        "reserved_envelope_bytes",
+        "disposition",
+        "scientific_counters",
+        "receipt_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_probe_receipt/v1"},
+        "filesystem_identity": {"$ref": "#/$defs/identity"},
+        "durability_policy_identity": {"$ref": "#/$defs/identity"},
+        "restart_policy_identity": {"$ref": "#/$defs/identity"},
+        "synthetic_payload_identity": {"$ref": "#/$defs/identity"},
+        "temporary_path_identity": {"$ref": "#/$defs/identity"},
+        "final_path_identity": {"$ref": "#/$defs/identity"},
+        "same_volume": {"const": true},
+        "file_flush_completed": {"const": true},
+        "os_durability_primitive": {
+          "enum": ["FlushFileBuffers", "FSYNC"]
+        },
+        "atomic_replacement_completed": {"const": true},
+        "restart_reread_completed": {"const": true},
+        "content_hash_reconciled": {"const": true},
+        "corrupt_final_refused": {"const": true},
+        "orphan_partial_refused": {"const": true},
+        "last_good_recovery_completed": {"const": true},
+        "observed_free_bytes": {"$ref": "#/$defs/positive_integer"},
+        "reserved_envelope_bytes": {"const": 715112054784},
+        "disposition": {"const": "STAGE_F_SYNTHETIC_DURABILITY_PASS"},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "receipt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "campaign_authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "ordered_route_ids",
+        "sealed_binding_bundle_identity",
+        "public_host_binding_identity",
+        "private_host_manifest_identity",
+        "scientific_implementation_identity",
+        "verifier_identity",
+        "stage_e_integration_identity",
+        "stage_e_evidence_identity",
+        "independent_binding_audit_identity",
+        "post_packet_explicit_user_authorization_receipt_identity",
+        "issued_before_first_model_step",
+        "outcome_inspected_before_issue",
+        "scientific_counters",
+        "authorization_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_campaign_authorization/v1"},
+        "ordered_route_ids": {
+          "type": "array",
+          "minItems": 15,
+          "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_id"}
+        },
+        "sealed_binding_bundle_identity": {"$ref": "#/$defs/identity"},
+        "public_host_binding_identity": {"$ref": "#/$defs/identity"},
+        "private_host_manifest_identity": {"$ref": "#/$defs/identity"},
+        "scientific_implementation_identity": {"$ref": "#/$defs/identity"},
+        "verifier_identity": {"$ref": "#/$defs/identity"},
+        "stage_e_integration_identity": {"$ref": "#/$defs/identity"},
+        "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
+        "independent_binding_audit_identity": {"$ref": "#/$defs/identity"},
+        "post_packet_explicit_user_authorization_receipt_identity": {"$ref": "#/$defs/identity"},
+        "issued_before_first_model_step": {"const": true},
+        "outcome_inspected_before_issue": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"},
+        "authorization_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/private_execution_host_manifest"},
+    {"$ref": "#/$defs/public_execution_host_binding"},
+    {"$ref": "#/$defs/local_binding_bundle"},
+    {"$ref": "#/$defs/binding_validation_receipt"},
+    {"$ref": "#/$defs/durability_probe_receipt"},
+    {"$ref": "#/$defs/campaign_authorization"}
+  ],
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"
+}

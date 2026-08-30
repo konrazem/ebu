@@ -1,0 +1,179 @@
+{
+  "contract_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FOUNDATION-v1",
+  "contract_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_ADDITIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "tree": "212777d569af527ce9532ea6c836ff2225465d87"
+  },
+  "authority_files": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_contract.json",
+    "stage_f_local_execution_binding_evidence_schema.json",
+    "stage_f_local_execution_binding_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_predecessor_manifest.json",
+    "stage_f_local_execution_binding_validation_contract.json"
+  ],
+  "authority_file_count": 6,
+  "precedence": {
+    "mode": "ADDITIVE_ONLY",
+    "accepted_campaign_execution_binding_schema": "campaign_execution_binding/v2",
+    "accepted_campaign_execution_binding_unchanged": true,
+    "stage_e_guard_unchanged": true,
+    "missing_scientific_authority_may_be_filled": false,
+    "scientific_execution_authorized": false
+  },
+  "canonical_json": {
+    "encoding": "UTF-8",
+    "unicode_normalization": "NFC",
+    "object_keys": "RECURSIVELY_SORTED",
+    "separators": ",:",
+    "integer_only_numbers": true,
+    "final_lf": false,
+    "duplicate_keys": "REFUSE",
+    "identity_value_and_sha256_equal_digest": true
+  },
+  "campaign_order": [
+    "SD-01",
+    "SD-01-GROWTH-v1",
+    "SD-02",
+    "SD-03",
+    "SD-04",
+    "SD-05",
+    "SD-06",
+    "SD-07",
+    "SD-08",
+    "SD-09",
+    "SD-10",
+    "SD-11",
+    "SD-12",
+    "SD-13",
+    "SD-14"
+  ],
+  "nested_campaign_rule": {
+    "nested_id": "SD-01-GROWTH-v1",
+    "parent_study_id": "SD-01",
+    "independent_study_count_increment": 0
+  },
+  "accepted_base_readiness": {
+    "binding_sealable": false,
+    "required_disposition": "BINDING_NOT_SEALABLE",
+    "gap_registry": [
+      {"route_id":"SD-01","gap_class":"IMPLEMENTATION_AUTHORITY","gap_ids":["STAGE_F_SD01_ADAPTER_AND_RUN_ID_CLOSURE"]},
+      {"route_id":"SD-01-GROWTH-v1","gap_class":"IMPLEMENTATION_AUTHORITY","gap_ids":["STAGE_F_DYNAMIC_GROWTH_RUNNER_AND_DURABLE_RECORD_CLOSURE"]},
+      {"route_id":"SD-02","gap_class":"IMPLEMENTATION_AUTHORITY","gap_ids":["GATE_1D_C_LOCAL_HOST_REBINDING_AND_RECORD_TRANSLATION"]},
+      {"route_id":"SD-03","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["ATOMIC_GENERATOR_EXECUTABLE_CHAIN_AND_EXACT_ORACLE"]},
+      {"route_id":"SD-04","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["TAYLOR_COEFFICIENT_REMAINDER_AND_COMMUTATOR_ORACLE"]},
+      {"route_id":"SD-05","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["PARALLEL_AND_SUBSET_VALUE_SEMANTICS"]},
+      {"route_id":"SD-06","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["FINITE_POSET_INPUT_VALUE_TABLES"]},
+      {"route_id":"SD-07","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["CONCRETE_REUSE_QUERY_AND_BOUNDARY_CERTIFICATES"]},
+      {"route_id":"SD-08","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["PART_VII_ROUTE_QUEUE_AND_TIE_BREAKING_SEMANTICS"]},
+      {"route_id":"SD-09","gap_class":"INSTITUTIONAL_AUTHORITY","gap_ids":["FAIRNESS_METRIC_AUTHORITY","SD_08_AUDITED_RESULT_BASIS"]},
+      {"route_id":"SD-10","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["CORRECTION_COST_RECEIPT_AND_PROPAGATION_MODEL"]},
+      {"route_id":"SD-11","gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["EVENT_FIXTURE_AND_INDEPENDENT_LEDGER_ORACLE_CLOSURE"]},
+      {"route_id":"SD-12","gap_class":"INSTITUTIONAL_AUTHORITY","gap_ids":["COOPERATION_DISCLOSURE_AND_GOVERNANCE_MODEL_AUTHORITY"]},
+      {"route_id":"SD-13","gap_class":"INSTITUTIONAL_AUTHORITY","gap_ids":["SETTLEMENT_RESERVE_APPEAL_FRAUD_AND_GOVERNANCE_AUTHORITY"]},
+      {"route_id":"SD-14","gap_class":"INSTITUTIONAL_AND_DEPENDENCY_AUTHORITY","gap_ids":["COMPLETE_ECONOMY_MODEL_AND_EXCHANGE_AUTHORITY","SD_01_THROUGH_SD_13_ACCEPTED_DISPOSITIONS"]}
+    ]
+  },
+  "privacy_tiers": {
+    "public": {
+      "host_alias": "EXECUTION-HOST-01",
+      "personal_identifiers_permitted": false,
+      "absolute_paths_permitted": false,
+      "private_manifest_bytes_permitted": false,
+      "private_manifest_digest_identity_required": true,
+      "logical_directory_roles_required": true
+    },
+    "private": {
+      "retained_canonical_bytes_required": true,
+      "non_scientific_privacy_nonce_required": true,
+      "independent_local_auditor_access_required": true,
+      "public_digest_alone_is_proof": false,
+      "git_worktree_storage_permitted": false
+    }
+  },
+  "logical_directory_roles_in_order": [
+    "immutable-results",
+    "continuation-checkpoints",
+    "independent-audit",
+    "temporary"
+  ],
+  "storage_envelope": {
+    "unit": "GiB",
+    "bytes_per_gib": 1073741824,
+    "primary_logical_output_gib": 253,
+    "independent_audit_copy_gib": 253,
+    "dynamic_growth_physical_writes_gib": 80,
+    "checkpoint_and_write_overhead_gib": 64,
+    "temporary_archives_gib": 8,
+    "retained_evidence_gib": 8,
+    "total_gib": 666,
+    "minimum_free_after_existing_data_gib": 350,
+    "cumulative_accounting_nonresetting": true
+  },
+  "accepted_environment": {
+    "image_digest": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab",
+    "python": "CPython 3.14.4 final",
+    "sqlite": "3.46.1",
+    "installed_package": "ebu-framework==0.1.0a1",
+    "installed_artifact_sha256": "3d11dca3efe1798f02da5faf16e1eeff30b0ddb38cf0a9dccb8ab43193b794c2",
+    "dependencies_in_order": [
+      "PyNaCl==1.6.2",
+      "cffi==2.1.1",
+      "pycparser==3.0"
+    ],
+    "host_python_fallback_permitted": false,
+    "network_fallback_permitted": false
+  },
+  "power_preconditions": [
+    "AC_CONNECTED",
+    "PLUGGED_IN_SLEEP_DISABLED",
+    "LID_OPEN_OR_PLUGGED_IN_LID_ACTION_DO_NOTHING",
+    "DOCKER_DESKTOP_RUNNING",
+    "UNATTENDED_REBOOT_CANNOT_INTERRUPT_ACTIVE_ATTEMPT"
+  ],
+  "durability_preconditions": [
+    "WRITE_THROUGH",
+    "FILE_FSYNC",
+    "DIRECTORY_FSYNC_OR_PLATFORM_EQUIVALENT",
+    "ATOMIC_REPLACEMENT",
+    "CONTENT_HASH_RECOMPUTATION",
+    "PROCESS_RESTART_RECOVERY",
+    "ORPHAN_PARTIAL_REFUSAL",
+    "LAST_VERIFIED_DURABLE_CHECKPOINT_ONLY"
+  ],
+  "readiness_dispositions": [
+    "NOT_READY_AUTHORITY_GAPS",
+    "BINDING_NOT_SEALABLE",
+    "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+    "INDEPENDENT_BINDING_PASS",
+    "INDEPENDENT_BINDING_FAIL"
+  ],
+  "authorization": {
+    "schema": "stage_f_campaign_authorization/v1",
+    "independent_binding_pass_required": true,
+    "later_explicit_user_statement_required": true,
+    "controller_self_authorization_permitted": false,
+    "dictionary_presence_is_authorization": false,
+    "preimport_guard_required": true
+  },
+  "prohibited_counters": {
+    "model_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_import_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"
+}

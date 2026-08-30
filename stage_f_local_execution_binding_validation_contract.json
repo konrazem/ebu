@@ -1,0 +1,134 @@
+{
+  "validation_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FOUNDATION-VALIDATION-v1",
+  "validation_version": "1.0.0-candidate",
+  "status": "PROSPECTIVE_OUTCOME_BLIND_VALIDATION_ONLY",
+  "accepted_base": {
+    "commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "tree": "212777d569af527ce9532ea6c836ff2225465d87"
+  },
+  "authority_candidate": {
+    "added_paths": [
+      "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+      "stage_f_local_execution_binding_contract.json",
+      "stage_f_local_execution_binding_evidence_schema.json",
+      "stage_f_local_execution_binding_implementation_path_manifest.json",
+      "stage_f_local_execution_binding_predecessor_manifest.json",
+      "stage_f_local_execution_binding_validation_contract.json"
+    ],
+    "added_path_count": 6,
+    "modified_path_count": 0,
+    "deleted_path_count": 0,
+    "renamed_path_count": 0,
+    "allowed_mode": "100644"
+  },
+  "static_positive_checks": [
+    "exact accepted commit and tree",
+    "exact six-path authority candidate",
+    "all 28 predecessor rows reconstruct at accepted base",
+    "accepted Stage E 51-path closure reconstructs",
+    "Stage E CI run and artifact tuple match",
+    "all JSON parses with duplicate-key integer-only strictness",
+    "all local schema references resolve",
+    "authority contract schema path and validation records agree",
+    "campaign route order is exactly fifteen routes with nested growth second",
+    "nested growth maps to study SD-01",
+    "campaign_execution_binding/v2 accepted definition is not modified",
+    "identity value and sha256 are digest-only and equal",
+    "opaque host alias is metadata and not an identity value",
+    "private host bytes remain outside repository",
+    "public tier contains logical directory roles only",
+    "storage components sum exactly to 666 GiB",
+    "minimum free-space and nonresetting accounting rules are present",
+    "power and durability preconditions are complete",
+    "Stage E execution guard is protected and unchanged",
+    "authorization requires independent PASS and later explicit user receipt",
+    "all authority-candidate scientific counters are zero"
+  ],
+  "semantic_relations": {
+    "identity": [
+      "identity.value == identity.sha256",
+      "identity.value == sha256(canonical_preimage)",
+      "public alias is never substituted for a digest"
+    ],
+    "private_public": [
+      "private_host_manifest_identity == sha256(exact retained canonical private manifest bytes)",
+      "each public policy identity equals the matching named private policy-preimage digest",
+      "independent audit reads private bytes locally and recomputes every link",
+      "public sensitive-field disclosure count equals zero"
+    ],
+    "binding": [
+      "every external campaign record validates against stage_d_completion_oriented_continuation_evidence_schema.json#/$defs/campaign_execution_binding",
+      "every campaign binding digest is reconstructed under accepted canonical JSON",
+      "ordered route identities are complete unique and exact",
+      "SD-01-GROWTH-v1 route has study_id SD-01",
+      "any unresolved authority makes disposition BINDING_NOT_SEALABLE",
+      "BINDING_NOT_SEALABLE is not PASS"
+    ],
+    "storage": [
+      "253 + 253 + 80 + 64 + 8 + 8 == 666",
+      "666 * 1073741824 == 715112054784",
+      "logical directory roles are exact and nonoverlapping",
+      "private absolute directories share the selected volume and remain outside Git",
+      "current free bytes account for existing evidence checkpoints audit copies temporary files and physical writes"
+    ],
+    "authorization": [
+      "no real stage_f_campaign_authorization/v1 is issued by the foundation implementation",
+      "a validator may accept only a record bound to INDEPENDENT_BINDING_PASS",
+      "post-packet explicit user authorization receipt is mandatory",
+      "guard refusal occurs before project-runner import on any missing or mismatched field"
+    ]
+  },
+  "negative_cases": [
+    {"case_id":"SF-BIND-N01","mutation":"wrong accepted commit or tree","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N02","mutation":"extra modified deleted renamed symlink or mode-changed authority path","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N03","mutation":"changed predecessor byte object size or hash","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N04","mutation":"alias used as identity value","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N05","mutation":"identity value differs from sha256 or canonical digest","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N06","mutation":"private manifest missing changed noncanonical or inaccessible to auditor","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N07","mutation":"public record contains username hostname serial MAC absolute path credential or private bytes","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N08","mutation":"alias collision or alias rebound after seal","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N09","mutation":"public private policy-preimage digest mismatch","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N10","mutation":"privacy field inserted into closed campaign_execution_binding/v2","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N11","mutation":"missing extra duplicate or reordered route","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N12","mutation":"nested growth mapped as an independent study instead of SD-01 subcampaign","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N13","mutation":"placeholder future fixture zero or inferred scientific identity","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N14","mutation":"unresolved scientific or institutional authority promoted to ready or pass","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N15","mutation":"modified Stage E guard byte or reachable registered route","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N16","mutation":"authorization without independent PASS or later explicit user receipt","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N17","mutation":"controller self-issued or unaudited authorization","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N18","mutation":"nonzero model trajectory runner Gate transform benchmark simulation RNG outcome result figure book release or publication counter","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N19","mutation":"durability probe outside exact private roots or across volumes","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N20","mutation":"missing file flush OS durability primitive atomic replace restart reread or hash reconciliation","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N21","mutation":"corrupt stale or orphan partial accepted or last-good bytes overwritten","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N22","mutation":"storage arithmetic not exact or current free-space rule fails","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N23","mutation":"actual private manifest included in Git logs CI or public evidence","disposition":"REFUSE"},
+    {"case_id":"SF-BIND-N24","mutation":"missing AC sleep lid Docker reboot or restart precondition promoted to ready","disposition":"REFUSE"}
+  ],
+  "negative_case_count": 24,
+  "allowed_validation_operations": [
+    "Git object and byte inspection",
+    "strict UTF-8 and JSON parsing",
+    "canonical JSON serialization",
+    "SHA-256 hashing",
+    "closed-set and ordered-list comparison",
+    "JSON Schema inspection and synthetic validation",
+    "integer-only storage arithmetic",
+    "static source inspection"
+  ],
+  "forbidden_validation_operations": [
+    "project runner import",
+    "model or state transition",
+    "registered configuration",
+    "trajectory or simulation",
+    "Gate or scientific transform",
+    "benchmark used as scientific evidence",
+    "scientific RNG draw",
+    "outcome inspection",
+    "result figure book release or publication"
+  ],
+  "independent_dispositions": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_PASS",
+    "FAIL"
+  ],
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"
+}
