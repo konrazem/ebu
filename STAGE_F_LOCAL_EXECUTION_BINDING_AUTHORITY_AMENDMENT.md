@@ -207,11 +207,16 @@ It has no shebang, compression, archive comment, member extra, bytecode, or
 unregistered member. Its five `ZIP_STORED` members are ordered `__main__.py`
 from the exact validator-script blob followed by the exact package initializer,
 canonical, binding, and durability blobs. Every member uses DOS timestamp
-1980-01-01 00:00:00, create-system 3, mode `100644` shifted left sixteen, and
-zero general-purpose flags and internal attributes. The exact bound host
-runtime's `zipfile.ZipFile` is used in write mode with `ZIP_STORED`,
+1980-01-01 00:00:00, create-system 3, create-version 20, extract-version 20,
+reserved byte zero, volume zero, no compression level, mode `100644` shifted
+left sixteen, and zero general-purpose flags and internal attributes. Local and
+central extract-system bytes are zero, version-needed is uint16 20, central
+version-made-by is uint16 788, and every disk-start or EOCD disk number is zero.
+The exact bound host runtime's `zipfile.ZipFile` is used over an empty seekable
+`io.BytesIO` at offset zero in write mode with `ZIP_STORED`,
 `allowZip64=False`, and `strict_timestamps=True`, with empty member comments and
-extras. Local and central headers, CRCs, sizes, offsets,
+extras. No prefix, data descriptor, ZIP64 structure, or reserved header
+variation is permitted. Local, central, and EOCD headers, CRCs, sizes, offsets,
 names, flags, modes, timestamps, extras, comments, member bytes, total byte
 count, and SHA-256 are parsed and independently rebuilt byte-for-byte. A stale
 validator, another implementation or either runtime, a changed row, bootstrap,
@@ -225,8 +230,11 @@ exact runtime-root path identity, CPython version and architecture, Python and
 SQLite facts, and the complete recursive runtime-root file inventory with
 unique NFC relative paths in ascending UTF-8 byte order. It also binds the
 complete recursive directory inventory, including `.` for the root, with exact
-unsigned 64-bit volume serial, file ID, attributes, and zero reparse tags in the
-same ordering convention. The executable digest
+unsigned 64-bit volume serial, file ID, attributes, zero reparse tags, and a
+successful `GetSecurityInfo` owner, group, and DACL query under security-
+information mask 7. Each row records result zero, positive self-relative
+descriptor byte count and SHA-256, and successful `LocalFree` returning null in
+the same ordering convention. The executable digest
 must equal its `python.exe` inventory row. It runs standard-library-only with
 `-I -S -B`; site initialization, validator-zipapp bytecode-cache use, network
 access, project-package imports, scientific execution, and fallback are
@@ -237,41 +245,77 @@ Before any host-validation-runtime process is launched, the designated local
 Stage F controller becomes the outer lock holder. That already-running
 controller process and Windows-kernel share-mode enforcement are the explicit
 operational trust boundary; its PID, creation FILETIME, executable path and
-digest, and command-line digest are retained. Before remeasuring either
-inventory, it opens the exact nonreparse runtime root with `CreateFileW`,
+digest, and command-line digest are retained. It first opens and holds the exact
+normalized volume-GUID directory chain from the selected volume root through
+every runtime-path ancestor and the runtime root. Each path anchor uses
+`CreateFileW` desired access 131200, only `FILE_SHARE_READ`, `OPEN_EXISTING`, and
+raw flags 35651584, resolves its volume-GUID path, unsigned 64-bit volume serial,
+file ID, attributes and zero reparse tag, and performs the same successful
+positive-length self-relative `GetSecurityInfo` mask-7 hash and `LocalFree`-
+returns-null lifecycle. Only the first anchor has a null parent ordinal; every
+later parent ordinal is exactly its ordinal minus one. The first and last
+anchors are the selected-volume and runtime roots; every intervening row is the
+exact next path component. The absolute Python and private-artifact paths used
+in every actual command are these normalized volume-GUID paths.
+
+After anchoring and before remeasuring either inventory, it starts two distinct
+`ReadDirectoryChangesW` requests: a recursive runtime-root watch and a
+nonrecursive immediate-parent watch. The parent watch closes the documented
+blind spot whereby a directory watch does not report changes to the watched
+directory itself. Each exact nonreparse directory is opened with `CreateFileW`,
 `FILE_LIST_DIRECTORY`, only `FILE_SHARE_READ`, `OPEN_EXISTING`, and
 `FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS |
-FILE_FLAG_OPEN_REPARSE_POINT` (raw flags 1109393408), then issues one
-65536-byte overlapped `ReadDirectoryChangesW` watch over the entire subtree with
-raw notify filter 351. The buffer is DWORD-aligned; the zero-offset `OVERLAPPED`
-uses one unique non-null manual-reset `CreateEventW` handle initially
-nonsignaled, the completion routine is null, and an immediate nonwaiting
-`GetOverlappedResult` must report `ERROR_IO_INCOMPLETE` and zero transferred
-bytes. It remeasures every directory identity under that active
-watch and refuses any reparse directory. In exact runtime-file-inventory order
-it then opens every runtime file with `CreateFileW`, `GENERIC_READ`, only
+FILE_FLAG_OPEN_REPARSE_POINT` (raw flags 1109393408). The two requests record
+pairwise-distinct exact watched-directory handle values, buffer base addresses,
+`OVERLAPPED` addresses, and event-handle values. Each watch owns an
+exclusive zero-initialized DWORD-aligned 65536-byte `VirtualAlloc`
+`MEM_RESERVE | MEM_COMMIT`, `PAGE_READWRITE` buffer and a distinct exclusive
+zero-initialized DWORD-aligned 32-byte x64 `OVERLAPPED` allocated by the same
+`VirtualAlloc` type and protection. Its offsets are zero and its `hEvent` is the
+exact distinct unique non-null manual-reset `CreateEventW` handle initially
+nonsignaled. The completion routine is null and
+an immediate nonwaiting `GetOverlappedResult` for each request must report
+`ERROR_IO_INCOMPLETE` and zero transferred bytes.
+
+It remeasures every directory identity under both active watches and refuses any
+reparse directory or failed, non-self-relative, zero-length, unfreed, or
+mismatching owner, group, or DACL descriptor. In exact
+runtime-file-inventory order it then opens every runtime file with `CreateFileW`, `GENERIC_READ`, only
 `FILE_SHARE_READ`, `OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`; resolves
 the held handle with normalized volume-GUID path, `FileIdInfo`,
 `FileStandardInfo`, and `FileAttributeTagInfo`; and reads, counts, and hashes the
 bytes from that handle. `FILE_ID_INFO.VolumeSerialNumber` is retained as the
 complete unsigned 64-bit value. Every path, byte count, digest, file identity,
 attribute, and ordinal must equal the complete host-runtime inventory
-projection. No runtime handle may be released before acquisition completes.
+projection. No path-anchor, watch, or runtime-file handle may be released before
+acquisition completes.
 
 The canonical acquisition preimage contains only facts available before
 launch. Its SHA-256 is frozen before the orchestrator starts and is bound into
 all three retained invocation preimages and actual commands. The outer
-controller holds the tree watch and every deny-write-and-delete runtime-file
-handle continuously across
+controller holds every path anchor, both watches, and every deny-write-and-delete
+runtime-file handle continuously across
 the orchestrator, terminated-probe, and resumed-probe processes. Only after all
-three have returned successfully does it reread each exact same file handle,
-reconcile path, unsigned 64-bit volume serial, file ID, byte count, and digest,
-and close each file handle exactly once while the tree watch remains active.
-nonwaiting `GetOverlappedResult` must then report `ERROR_IO_INCOMPLETE` and zero bytes,
-with no notification record or buffer overflow. `CancelIoEx` must complete that
-same `OVERLAPPED` request; a waiting `GetOverlappedResult` must report
-`ERROR_OPERATION_ABORTED` and zero bytes, after which the root and event handles
-each close exactly once. Any transient add, remove, rename, attribute, size,
+three have returned successfully does it reread each exact same file handle and
+remeasure each exact same path-anchor handle, including root directory
+attributes, reparse tag, and a second complete successful self-relative
+security-descriptor hash and `LocalFree` lifecycle. It reconciles every path,
+unsigned 64-bit volume serial, file ID, file byte count and digest, and anchor
+attribute and security fact, and keeps those handles until both watches are
+resolved. Only after every final file and anchor remeasurement, each watch's
+exact recorded watched-directory handle, buffer address, `OVERLAPPED` address,
+and event handle remain valid, exclusive, and unreused throughout the pending
+request. Nonwaiting `GetOverlappedResult` must report
+`ERROR_IO_INCOMPLETE` and zero bytes with no notification record or buffer
+overflow. `CancelIoEx` must complete that same `OVERLAPPED` request; a waiting
+`GetOverlappedResult` must report `ERROR_OPERATION_ABORTED` and zero bytes.
+Only after that cancellation-completion UTC may each exact watched-directory
+and event handle close once and the exact `OVERLAPPED` and buffer allocations be
+freed once by successful `VirtualFree` size zero `MEM_RELEASE`; all four UTCs
+are retained and `watch_released_utc` is not earlier. Each unchanged buffer
+hashes as 65536 zero bytes; every anchor and file handle then closes
+exactly once. Any transient
+add, remove, rename, attribute, size,
 last-write, creation, or security change refuses even if later restored. The
 release observation binds all three
 process instances and invocation hashes and proves acquisition completion is no
@@ -607,7 +651,8 @@ independent audit.
 The command line is strict standard-padded RFC 4648 base64 of exact
 `CreateProcessW` UTF-16LE bytes without a terminal NUL. Those bytes are the
 unique result of the bound host CPython's `subprocess.list2cmdline` over the
-Python executable, `-I -S -B -c`, exact bootstrap, zipapp path, byte count and
+normalized volume-GUID Python executable path, `-I -S -B -c`, exact bootstrap,
+normalized volume-GUID zipapp path, byte count and
 SHA-256, host-runtime-lock acquisition SHA-256, phase, and invocation-preimage
 path. Only `POST_RESTART` appends the
 exact challenge path and SHA-256 plus the exact fresh acknowledgement path.
@@ -625,7 +670,10 @@ creates it once with `CreateFileW` `CREATE_NEW`, `GENERIC_WRITE`, zero sharing,
 and `FILE_FLAG_WRITE_THROUGH`, writes the exact acknowledgement, calls
 `FlushFileBuffers`, and closes the handle. The retained write observation binds
 the resumed PID and creation FILETIME, exact path, raw call parameters, byte
-count, digest, and successful write, flush, close, and single-creation facts.
+count, digest, and successful write, flush, close, and single-creation facts,
+plus create-start, create-complete, write-complete, flush-complete, and
+close-complete UTC values in nondecreasing order. `handshake_completed_utc`
+equals that actual close-complete UTC and is not after action 8.
 
 Payload identity, published final, post-restart reread,
 last verified durable checkpoint, and recovered final hashes must agree; corrupt
