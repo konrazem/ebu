@@ -40,6 +40,10 @@
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
     },
+    "file_id_128": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
     "utc_timestamp": {
       "type": "string",
       "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
@@ -161,6 +165,24 @@
       "allOf": [
         {"$ref": "#/$defs/identity"},
         {"type": "object", "properties": {"kind": {"const": "stage_f_binding_authority_set/v1"}}}
+      ]
+    },
+    "scientific_implementation_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_scientific_implementation/v1"}}}
+      ]
+    },
+    "verifier_implementation_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_verifier_implementation/v1"}}}
+      ]
+    },
+    "stage_e_integration_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_e_exact_target_integration/v1"}}}
       ]
     },
     "binding_validator_identity": {
@@ -300,6 +322,19 @@
         "raw_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
+    "git_diff_file_row": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "path", "mode", "git_object", "byte_count", "raw_sha256"],
+      "properties": {
+        "status": {"enum": ["ADDED", "MODIFIED"]},
+        "path": {"$ref": "#/$defs/nonempty_string"},
+        "mode": {"const": "100644"},
+        "git_object": {"$ref": "#/$defs/git_commit"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "binding_implementation_preimage": {
       "type": "object",
       "additionalProperties": false,
@@ -365,6 +400,104 @@
           "items": {"$ref": "#/$defs/route_authority_projection"}, "uniqueItems": true
         },
         "route_authority_projection_count": {"const": 15}
+      }
+    },
+    "scientific_implementation_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "accepted_base", "binding_foundation_identity", "authority_set_identity",
+        "foundation_commit", "foundation_tree", "implementation_commit", "implementation_tree",
+        "ordered_route_ids", "ordered_campaign_execution_binding_identities",
+        "ordered_implementation_file_rows", "implementation_file_count"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_scientific_implementation/v1"},
+        "accepted_base": {"$ref": "#/$defs/repository_coordinate"},
+        "binding_foundation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
+        "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
+        "foundation_commit": {"$ref": "#/$defs/git_commit"},
+        "foundation_tree": {"$ref": "#/$defs/git_commit"},
+        "implementation_commit": {"$ref": "#/$defs/git_commit"},
+        "implementation_tree": {"$ref": "#/$defs/git_commit"},
+        "ordered_route_ids": {
+          "type": "array", "minItems": 15, "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_id"}, "uniqueItems": true
+        },
+        "ordered_campaign_execution_binding_identities": {
+          "type": "array", "minItems": 15, "maxItems": 15,
+          "items": {"$ref": "#/$defs/campaign_binding_identity"}, "uniqueItems": true
+        },
+        "ordered_implementation_file_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/git_diff_file_row"}, "uniqueItems": true
+        },
+        "implementation_file_count": {"$ref": "#/$defs/positive_integer"}
+      }
+    },
+    "route_verifier_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_id", "campaign_execution_binding_identity", "verifier_file_paths"],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route_id"},
+        "campaign_execution_binding_identity": {"$ref": "#/$defs/campaign_binding_identity"},
+        "verifier_file_paths": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/nonempty_string"}, "uniqueItems": true
+        }
+      }
+    },
+    "verifier_implementation_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "scientific_implementation_identity", "implementation_commit",
+        "implementation_tree", "ordered_route_verifier_projections",
+        "ordered_verifier_file_rows", "verifier_file_count"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_verifier_implementation/v1"},
+        "scientific_implementation_identity": {"$ref": "#/$defs/scientific_implementation_identity"},
+        "implementation_commit": {"$ref": "#/$defs/git_commit"},
+        "implementation_tree": {"$ref": "#/$defs/git_commit"},
+        "ordered_route_verifier_projections": {
+          "type": "array", "minItems": 15, "maxItems": 15,
+          "items": {"$ref": "#/$defs/route_verifier_projection"}, "uniqueItems": true
+        },
+        "ordered_verifier_file_rows": {
+          "type": "array", "minItems": 1,
+          "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
+        },
+        "verifier_file_count": {"$ref": "#/$defs/positive_integer"}
+      }
+    },
+    "stage_e_integration_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "integration_commit", "integration_tree",
+        "implementation_path_manifest_path", "implementation_path_manifest_git_row",
+        "ordered_implementation_file_rows",
+        "implementation_path_count", "ci_run_id", "required_job_count",
+        "ci_conclusion", "artifact_id", "artifact_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_e_exact_target_integration/v1"},
+        "integration_commit": {"const": "c43ead831c3e4021405985134ed564b761bb1aed"},
+        "integration_tree": {"const": "212777d569af527ce9532ea6c836ff2225465d87"},
+        "implementation_path_manifest_path": {"const": "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json"},
+        "implementation_path_manifest_git_row": {"$ref": "#/$defs/git_file_row"},
+        "ordered_implementation_file_rows": {
+          "type": "array", "minItems": 51, "maxItems": 51,
+          "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
+        },
+        "implementation_path_count": {"const": 51},
+        "ci_run_id": {"const": 33231168021},
+        "required_job_count": {"const": 6},
+        "ci_conclusion": {"const": "success"},
+        "artifact_id": {"const": 9708926559},
+        "artifact_sha256": {"const": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"}
       }
     },
     "directory_roles": {
@@ -671,7 +804,11 @@
         "data_stream_enumeration_api", "data_stream_enumeration_scope",
         "regular_file_data_stream_rule", "directory_data_stream_rule",
         "named_data_stream_disposition", "stream_enumeration_error_disposition",
-        "file_standard_information_api", "entry_metadata_floor_rule",
+        "file_standard_information_api", "file_attribute_information_api",
+        "file_identity_information_api",
+        "prohibited_file_attribute_rule", "backup_stream_enumeration_api",
+        "permitted_backup_stream_ids", "refused_backup_stream_ids",
+        "retrieval_extent_api", "metadata_record_upper_bound_rule",
         "accounted_file_bytes", "accounted_directory_bytes",
         "directory_bitmap_upper_bound_rule",
         "structural_directory_accounting",
@@ -694,9 +831,30 @@
         "named_data_stream_disposition": {"const": "REFUSE"},
         "stream_enumeration_error_disposition": {"const": "REFUSE_UNLESS_INITIAL_DIRECTORY_ERROR_HANDLE_EOF_OR_FINAL_FIND_NEXT_ERROR_HANDLE_EOF"},
         "file_standard_information_api": {"const": "CreateFileW_GetFileInformationByHandleEx_FileStandardInfo_EVERY_ENTRY"},
-        "entry_metadata_floor_rule": {"const": "ROUND_UP_NTFS_BYTES_PER_FILE_RECORD_SEGMENT_TO_VOLUME_ALLOCATION_UNIT"},
-        "accounted_file_bytes": {"const": "METADATA_FLOOR_PLUS_MAX_END_OF_FILE_GET_COMPRESSED_FILE_SIZE_W_AND_FILE_STANDARD_ALLOCATION_SIZE"},
-        "accounted_directory_bytes": {"const": "METADATA_FLOOR_PLUS_FILE_STANDARD_ALLOCATION_SIZE_PLUS_DIRECTORY_BITMAP_UPPER_BOUND"},
+        "file_attribute_information_api": {"const": "GetFileInformationByHandleEx_FileAttributeTagInfo_EVERY_ENTRY"},
+        "file_identity_information_api": {"const": "GetFileInformationByHandleEx_FileIdInfo_EVERY_ENTRY"},
+        "prohibited_file_attribute_rule": {"const": "ZERO_BITS_SET_FOR_DEVICE_REPARSE_SPARSE_COMPRESSED_OFFLINE_ENCRYPTED_INTEGRITY_VIRTUAL_NO_SCRUB_RECALL_PINNED_OR_UNPINNED"},
+        "backup_stream_enumeration_api": {"const": "BackupRead_ACCESS_SYSTEM_SECURITY_PROCESS_SECURITY_TRUE_NO_BACKUP_SEEK_FINAL_ABORT"},
+        "permitted_backup_stream_ids": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "prefixItems": [
+            {"const": "BACKUP_DATA"}, {"const": "BACKUP_SECURITY_DATA"}, {"const": "BACKUP_LINK"}
+          ], "items": false
+        },
+        "refused_backup_stream_ids": {
+          "type": "array", "minItems": 9, "maxItems": 9,
+          "prefixItems": [
+            {"const": "BACKUP_EA_DATA"}, {"const": "BACKUP_ALTERNATE_DATA"},
+            {"const": "BACKUP_PROPERTY_DATA"}, {"const": "BACKUP_OBJECT_ID"},
+            {"const": "BACKUP_REPARSE_DATA"}, {"const": "BACKUP_SPARSE_BLOCK"},
+            {"const": "BACKUP_TXFS_DATA"}, {"const": "BACKUP_GHOSTED_FILE_EXTENTS"},
+            {"const": "UNKNOWN"}
+          ], "items": false
+        },
+        "retrieval_extent_api": {"const": "DeviceIoControl_FSCTL_GET_RETRIEVAL_POINTERS_COMPLETE_VCN_CHAIN"},
+        "metadata_record_upper_bound_rule": {"const": "ROUND_UP_ONE_PLUS_EXTENTS_PLUS_BITMAP_CLUSTERS_PLUS_NONDATA_BACKUP_STREAMS_TIMES_NTFS_FILE_RECORD_SEGMENT"},
+        "accounted_file_bytes": {"const": "METADATA_RECORD_UPPER_BOUND_PLUS_MAX_END_OF_FILE_GET_COMPRESSED_FILE_SIZE_W_FILE_STANDARD_ALLOCATION_PLUS_NONDATA_BACKUP_STREAM_ACCOUNTING"},
+        "accounted_directory_bytes": {"const": "METADATA_RECORD_UPPER_BOUND_PLUS_FILE_STANDARD_ALLOCATION_PLUS_DIRECTORY_BITMAP_UPPER_BOUND_PLUS_NONDATA_BACKUP_STREAM_ACCOUNTING"},
         "directory_bitmap_upper_bound_rule": {"const": "ZERO_IF_INDEX_ALLOCATION_ZERO_ELSE_ROUND_UP_CEIL_INDEX_ALLOCATION_DIV_32768_TO_VOLUME_ALLOCATION_UNIT"},
         "structural_directory_accounting": {"const": "STAGE_F_ROOT_IMMUTABLE_RESULTS_AND_INDEPENDENT_AUDIT_PARENTS_TO_CHECKPOINT_AND_WRITE_OVERHEAD"},
         "retained_evidence_accounting": {"const": "FULL_8_GIB_PREDEBIT"},
@@ -760,6 +918,31 @@
         "stream_size_bytes": {"$ref": "#/$defs/nonnegative_integer"}
       }
     },
+    "storage_backup_stream_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stream_id", "stream_attributes", "stream_size_bytes",
+        "stream_name", "stream_content_sha256"
+      ],
+      "properties": {
+        "stream_id": {"enum": ["BACKUP_DATA", "BACKUP_SECURITY_DATA", "BACKUP_LINK"]},
+        "stream_attributes": {"$ref": "#/$defs/uint32"},
+        "stream_size_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "stream_name": {"type": "null"},
+        "stream_content_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "storage_extent_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["starting_vcn", "next_vcn", "lcn"],
+      "properties": {
+        "starting_vcn": {"$ref": "#/$defs/nonnegative_integer"},
+        "next_vcn": {"$ref": "#/$defs/positive_integer"},
+        "lcn": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
     "storage_inventory_entry": {
       "type": "object",
       "additionalProperties": false,
@@ -768,7 +951,19 @@
         "get_compressed_file_size_bytes", "file_standard_allocation_size_bytes",
         "file_standard_end_of_file_bytes", "file_standard_number_of_links",
         "file_standard_delete_pending", "file_standard_directory",
-        "entry_metadata_floor_bytes", "directory_bitmap_upper_bound_bytes",
+        "raw_file_attributes", "file_attribute_reparse_tag",
+        "file_id_volume_serial_number", "file_id_128",
+        "prohibited_file_attribute_bits_set",
+        "backup_read_completed", "backup_read_security_included",
+        "backup_read_sacl_included", "backup_read_abort_completed",
+        "backup_seek_call_count", "backup_streams", "backup_stream_count",
+        "permitted_non_data_backup_stream_count",
+        "permitted_non_data_backup_stream_allocation_cluster_count",
+        "permitted_non_data_backup_stream_accounted_bytes",
+        "retrieval_pointer_enumeration_completed", "retrieval_pointer_initial_result",
+        "retrieval_pointer_terminal_result", "retrieval_extents",
+        "retrieval_extent_count", "metadata_record_upper_bound_bytes",
+        "directory_bitmap_allocation_cluster_count", "directory_bitmap_upper_bound_bytes",
         "allocated_bytes", "accounted_bytes", "hard_link_count",
         "reparse_point", "sparse", "compressed",
         "data_stream_enumeration_completed", "data_stream_initial_result",
@@ -791,7 +986,36 @@
         "file_standard_number_of_links": {"const": 1},
         "file_standard_delete_pending": {"const": false},
         "file_standard_directory": {"type": "boolean"},
-        "entry_metadata_floor_bytes": {"$ref": "#/$defs/positive_integer"},
+        "raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "file_attribute_reparse_tag": {"const": 0},
+        "file_id_volume_serial_number": {"$ref": "#/$defs/nonnegative_integer"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "prohibited_file_attribute_bits_set": {"const": 0},
+        "backup_read_completed": {"const": true},
+        "backup_read_security_included": {"const": true},
+        "backup_read_sacl_included": {"const": true},
+        "backup_read_abort_completed": {"const": true},
+        "backup_seek_call_count": {"const": 0},
+        "backup_streams": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/storage_backup_stream_entry"},
+          "uniqueItems": true
+        },
+        "backup_stream_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "permitted_non_data_backup_stream_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "permitted_non_data_backup_stream_allocation_cluster_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "permitted_non_data_backup_stream_accounted_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "retrieval_pointer_enumeration_completed": {"const": true},
+        "retrieval_pointer_initial_result": {"enum": ["EXTENTS_FOUND", "ERROR_HANDLE_EOF_RESIDENT"]},
+        "retrieval_pointer_terminal_result": {"enum": ["SUCCESS_COMPLETE", "ERROR_HANDLE_EOF"]},
+        "retrieval_extents": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/storage_extent_entry"},
+          "uniqueItems": true
+        },
+        "retrieval_extent_count": {"$ref": "#/$defs/uint32"},
+        "metadata_record_upper_bound_bytes": {"$ref": "#/$defs/positive_integer"},
+        "directory_bitmap_allocation_cluster_count": {"$ref": "#/$defs/nonnegative_integer"},
         "directory_bitmap_upper_bound_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "allocated_bytes": {"$ref": "#/$defs/nonnegative_integer"},
         "accounted_bytes": {"$ref": "#/$defs/nonnegative_integer"},
@@ -832,6 +1056,7 @@
               "data_stream_search_handle_closed": {"const": true},
               "get_compressed_file_size_bytes": {"$ref": "#/$defs/nonnegative_integer"},
               "file_standard_directory": {"const": false},
+              "directory_bitmap_allocation_cluster_count": {"const": 0},
               "directory_bitmap_upper_bound_bytes": {"const": 0},
               "content_sha256": {"$ref": "#/$defs/sha256"}
             }
@@ -1273,9 +1498,12 @@
         "ordered_route_bindings",
         "public_host_binding_identity",
         "scientific_code_identity",
+        "scientific_implementation_identity",
         "installed_artifact_identity",
+        "verifier_identity",
         "binding_implementation_identity",
         "authority_set_identity",
+        "stage_e_integration_identity",
         "stage_e_evidence_identity",
         "validator_identity",
         "disposition",
@@ -1298,9 +1526,22 @@
         },
         "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
         "scientific_code_identity": {"$ref": "#/$defs/identity"},
+        "scientific_implementation_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/scientific_implementation_identity"},
+            {"type": "null"}
+          ]
+        },
         "installed_artifact_identity": {"$ref": "#/$defs/identity"},
+        "verifier_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/verifier_implementation_identity"},
+            {"type": "null"}
+          ]
+        },
         "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
         "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
+        "stage_e_integration_identity": {"$ref": "#/$defs/stage_e_integration_identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
         "validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "disposition": {
@@ -1324,9 +1565,12 @@
         "ordered_route_ids",
         "ordered_campaign_execution_binding_identities",
         "scientific_code_identity",
+        "scientific_implementation_identity",
         "installed_artifact_identity",
+        "verifier_identity",
         "binding_implementation_identity",
         "authority_set_identity",
+        "stage_e_integration_identity",
         "stage_e_evidence_identity",
         "validator_identity",
         "binding_validation_receipt_identity",
@@ -1366,9 +1610,22 @@
           }
         },
         "scientific_code_identity": {"$ref": "#/$defs/identity"},
+        "scientific_implementation_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/scientific_implementation_identity"},
+            {"type": "null"}
+          ]
+        },
         "installed_artifact_identity": {"$ref": "#/$defs/identity"},
+        "verifier_identity": {
+          "oneOf": [
+            {"$ref": "#/$defs/verifier_implementation_identity"},
+            {"type": "null"}
+          ]
+        },
         "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
         "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
+        "stage_e_integration_identity": {"$ref": "#/$defs/stage_e_integration_identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
         "validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "binding_validation_receipt_identity": {"$ref": "#/$defs/binding_validation_receipt_identity"},
@@ -1665,12 +1922,12 @@
         "storage_capacity_snapshot_identity": {"$ref": "#/$defs/storage_capacity_snapshot_identity"},
         "power_snapshot_identity": {"$ref": "#/$defs/power_snapshot_identity"},
         "scientific_code_identity": {"$ref": "#/$defs/identity"},
-        "scientific_implementation_identity": {"$ref": "#/$defs/identity"},
+        "scientific_implementation_identity": {"$ref": "#/$defs/scientific_implementation_identity"},
         "installed_artifact_identity": {"$ref": "#/$defs/identity"},
-        "verifier_identity": {"$ref": "#/$defs/identity"},
+        "verifier_identity": {"$ref": "#/$defs/verifier_implementation_identity"},
         "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
         "authority_set_identity": {"$ref": "#/$defs/binding_authority_set_identity"},
-        "stage_e_integration_identity": {"$ref": "#/$defs/identity"},
+        "stage_e_integration_identity": {"$ref": "#/$defs/stage_e_integration_identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
         "validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
         "ordered_route_ids": {
@@ -1753,9 +2010,9 @@
         "independent_binding_pass_readiness_identity": {"$ref": "#/$defs/binding_readiness_identity"},
         "public_host_binding_identity": {"$ref": "#/$defs/public_host_binding_identity"},
         "private_host_manifest_identity": {"$ref": "#/$defs/private_host_manifest_identity"},
-        "scientific_implementation_identity": {"$ref": "#/$defs/identity"},
-        "verifier_identity": {"$ref": "#/$defs/identity"},
-        "stage_e_integration_identity": {"$ref": "#/$defs/identity"},
+        "scientific_implementation_identity": {"$ref": "#/$defs/scientific_implementation_identity"},
+        "verifier_identity": {"$ref": "#/$defs/verifier_implementation_identity"},
+        "stage_e_integration_identity": {"$ref": "#/$defs/stage_e_integration_identity"},
         "stage_e_evidence_identity": {"$ref": "#/$defs/identity"},
         "independent_binding_audit_identity": {"$ref": "#/$defs/independent_binding_audit_identity"},
         "binding_validation_receipt_identity": {"$ref": "#/$defs/binding_validation_receipt_identity"},
@@ -1776,6 +2033,9 @@
     {"$ref": "#/$defs/public_execution_host_binding"},
     {"$ref": "#/$defs/binding_implementation_preimage"},
     {"$ref": "#/$defs/binding_authority_set_preimage"},
+    {"$ref": "#/$defs/scientific_implementation_preimage"},
+    {"$ref": "#/$defs/verifier_implementation_preimage"},
+    {"$ref": "#/$defs/stage_e_integration_preimage"},
     {"$ref": "#/$defs/local_binding_bundle"},
     {"$ref": "#/$defs/binding_readiness_record"},
     {"$ref": "#/$defs/binding_validation_receipt"},

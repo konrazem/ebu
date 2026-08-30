@@ -159,7 +159,8 @@ environment, parallelization boundary, worker allocation, storage location,
 durability, restart, and storage inventory. Their identity kinds are exactly
 their schema names. The schema also closes the kinds of every new local host,
 filesystem, path, durability, bundle, readiness, validation, independent-
-audit, and user-authorization identity. An arbitrary nonempty kind is accepted
+audit, scientific-implementation, verifier-implementation, exact Stage E
+integration, and user-authorization identity. An arbitrary nonempty kind is accepted
 only where an inherited Stage D or Stage E identity remains externally
 controlled; it cannot substitute for a locally defined identity kind.
 
@@ -186,6 +187,30 @@ authority, and continuation-authority identities and equals the corresponding
 referenced `campaign_execution_binding/v2` fields. Missing, additional,
 duplicate, reordered, renamed, differently typed, noncanonical, or
 nonreconstructing input refuses.
+
+Three further implementation-chain identities are closed local preimages rather
+than generic digests. `stage_e_exact_target_integration/v1` hashes the exact
+accepted integration commit `c43ead831c3e4021405985134ed564b761bb1aed`, tree
+`212777d569af527ce9532ea6c836ff2225465d87`, all 51 implementation rows in the
+accepted manifest's `modified_paths`-then-`new_paths` order, CI run
+`33231168021`, its six successful jobs, artifact `9708926559`, and
+artifact SHA-256 `2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345`.
+
+`stage_f_scientific_implementation/v1` hashes its exact binding-foundation and
+authority-set identities, foundation commit and tree, descendant implementation
+commit and tree, the fifteen route and sealed campaign-binding identities, and
+the complete ordered additive-or-modified Git diff. Deletion, rename, symlink,
+submodule, non-`100644` mode, missing row, or extra row refuses.
+Every accepted Stage E authority row, local Stage F authority row, binding-
+foundation row, and the Stage E execution guard remains byte-identical; the
+scientific implementation cannot silently revise the authority it claims.
+`stage_f_verifier_implementation/v1` hashes that exact scientific-
+implementation identity and commit/tree, fifteen route-verifier projections,
+and every verifier Git row reproduced from the implementation tree. Every route
+has a nonempty verifier-path projection, and the unique union of those paths is
+exactly the ordered verifier-row path set. These preimages may remain absent while
+their authority gaps remain explicit, but a ready bundle, packet, or
+authorization cannot use null, generic, arbitrary-kind, or self-asserted values.
 
 `stage_f_sealed_campaign_packet/v1` hashes the complete canonical closed
 `sealed_campaign_packet_manifest` object. That schema freezes every typed
@@ -257,8 +282,8 @@ sectors per cluster, bytes per sector, allocation unit, and the raw NTFS volume-
 data fields including bytes per file-record segment. All four raw
 `GetDiskFreeSpaceW` outputs are unsigned 32-bit values. Allocation unit equals
 sectors per cluster times bytes per sector from `GetDiskFreeSpaceW`, and equals
-the NTFS bytes-per-cluster observation. A per-entry metadata floor equals bytes
-per file-record segment rounded up to a complete allocation unit.
+the NTFS bytes-per-cluster observation. Bytes per file-record segment is the
+measured unit used by the complete per-entry metadata upper bound below.
 
 Each snapshot also records the raw free-cluster and total-cluster outputs from
 `GetDiskFreeSpaceW` and the available-to-caller, total-caller, and total-free
@@ -277,7 +302,13 @@ files and any file with hard-link count other than one refuse. Every regular
 file and directory is opened by handle and queried with
 `GetFileInformationByHandleEx(FileStandardInfo)`; the raw allocation size, end
 of file, link count, delete-pending flag, and directory flag are recorded and
-must agree with the inventory row. Every regular file and directory, including
+must agree with the inventory row. `FileAttributeTagInfo` is also recorded and
+refuses device, reparse, sparse, compressed, offline, encrypted, integrity,
+virtual, no-scrub, recall, pinned, or unpinned state. The same handle's
+`FileIdInfo` volume serial and 128-bit file ID are retained;
+the serial must equal the selected NTFS volume and the file ID remains byte-
+identical in every predecessor row, so delete-and-replace cannot masquerade as
+an append. Every regular file and directory, including
 the Stage F root, structural parents, and category roots, is independently
 enumerated with `FindFirstStreamW`; every established
 search continues with `FindNextStreamW` to `ERROR_HANDLE_EOF` and its handle is
@@ -289,17 +320,46 @@ streams. Any named `$DATA` stream on a file or directory, any missing or extra
 default stream, any other enumeration error, or any incomplete enumeration
 refuses. No stream is followed, ignored, or charged outside its owning row.
 
+`FindFirstStreamW` is not treated as an enumeration of non-`$DATA` NTFS
+attributes. The same synchronous handle is therefore fully traversed with
+`BackupRead`, `ACCESS_SYSTEM_SECURITY`, and `bProcessSecurity=TRUE`; SACL
+inclusion and final abort cleanup are mandatory, and `BackupSeek` is forbidden.
+Only `BACKUP_DATA`, `BACKUP_SECURITY_DATA`, and `BACKUP_LINK` may occur.
+Extended-attribute, alternate-data, property, object-ID, reparse, sparse, TxF,
+ghosted-extent, or unknown backup stream IDs refuse. Every permitted stream's
+header, size, and content hash is retained. Each non-data permitted stream is
+charged its size rounded up to an allocation unit. Thus `$EA`,
+`$EA_INFORMATION`, EFS or logged-utility state, `$OBJECT_ID`, TxF data, and
+other unmodelled externally mutable attributes cannot hide outside the row.
+
+`FSCTL_GET_RETRIEVAL_POINTERS` is followed through every buffer-overflow VCN
+continuation to the end for the default file-data or directory stream. Extents
+are ordered, nonoverlapping, gap-free over allocated VCNs, have no negative LCN,
+and reproduce the handle allocation; resident streams record initial
+`ERROR_HANDLE_EOF` and zero extents, while nonresident streams record every
+initial and terminal API result. To
+cover the base MFT record, `$ATTRIBUTE_LIST`, extension file records, fragmented
+default-stream mappings, bitmap mappings, and permitted metadata streams, the
+entry's MFT-record upper bound is
+`round_up((1 + retrieval_extent_count + directory_bitmap_allocation_cluster_count
++ permitted_non_data_backup_stream_allocation_cluster_count) * bytes_per_file_record_segment,
+volume_allocation_unit_bytes)`. This allocates at least one whole record slot to
+every possible extension cause; a missing, shortened, skipped, or negative-LCN
+extent refuses.
+
 A regular file's `allocated_bytes` equals the greatest of
 end-of-file length, `GetCompressedFileSizeW`, and the handle's
-`FILE_STANDARD_INFO.AllocationSize`; its `accounted_bytes` equals that value plus
-its per-entry metadata floor. A directory's `allocated_bytes` equals its complete
+`FILE_STANDARD_INFO.AllocationSize`, plus all permitted non-data backup-stream
+charges; its `accounted_bytes` equals that value plus its MFT-record upper bound.
+A directory's `allocated_bytes` equals its complete
 `FILE_STANDARD_INFO.AllocationSize` for the default `$I30`
 `$INDEX_ALLOCATION` directory stream, and an upper bound for its `$BITMAP`:
 `round_up(ceil(directory_allocation_bytes / (4096 * 8)),
 volume_allocation_unit_bytes)`, with zero when directory allocation is zero.
-Its `accounted_bytes` equals those two allocation terms plus its metadata floor.
+and all permitted non-data backup-stream charges. Its `accounted_bytes` equals
+those allocation terms plus its MFT-record upper bound.
 The 4096-byte index-chunk and eight-bits-per-byte constants are fixed; resident
-index-root and bitmap metadata are covered by the metadata floor. Thus a large
+index-root and bitmap metadata are covered by the MFT-record upper bound. Thus a large
 directory and every file-system entry consume measured or conservatively bounded
 bytes rather than a single-cluster placeholder. Every non-metadata entry maps to
 exactly one category and an unclassified entry refuses. The Stage F root plus
@@ -417,6 +477,16 @@ the integrated Stage F local authority set. A policy, code, artifact, or
 authority projection mismatch refuses even when the isolated external campaign
 record is schema-valid.
 
+The bundle's authority-set identity must equal the exact integrated-authority-
+set identity resolved from its binding-implementation preimage. Its scientific-
+implementation preimage must in turn name that same binding foundation and
+authority set; its verifier preimage must name that same scientific
+implementation; and its Stage E integration identity must resolve the exact
+accepted 51-path integration preimage. Bundle, readiness, packet, audit, and
+authorization repeat this one chain. Individually valid records from different
+authority, foundation, scientific-implementation, verifier, or Stage E chains
+refuse.
+
 The local bundle is immutable at either `BINDING_NOT_SEALABLE` or
 `READY_FOR_INDEPENDENT_BINDING_AUDIT`; it never changes itself to an independent
 PASS. The independent auditor instead hashes a separate closed read-only audit
@@ -531,7 +601,9 @@ Validation must refuse at least:
     overwritten, truncated, deleted, or unclassified retained entry, or any
     named, missing, extra, unenumerated, or error-terminated NTFS `$DATA`
     stream, or an impossible raw DWORD, missing file-standard observation,
-    missing per-entry MFT floor, or undercounted directory index or bitmap;
+    missing MFT-record upper bound, incomplete retrieval-pointer chain,
+    prohibited file attribute, unenumerated/refused backup stream, skipped SACL,
+    or undercounted file metadata, directory index, or bitmap;
 11. insufficient current free space or uncounted retained material;
 12. missing AC, sleep, lid, Docker, reboot, fsync, atomicity, restart, hash, or
     orphan-partial evidence;
@@ -551,7 +623,14 @@ Validation must refuse at least:
 19. an implementation commit not descended from the exact integrated-authority
     commit, or any of the six authority blobs differing in its tree; and
 20. validation, pre-audit readiness, audit, final PASS readiness, packet, user
-    statement, or authorization timestamps outside their exact chain order.
+    statement, or authorization timestamps outside their exact chain order;
+21. a bundle authority set different from the authority set embedded in its
+    binding implementation, or any later projection of that mixed chain;
+22. an ungrounded, generic-kind, null-at-ready, noncanonical, different-chain,
+    or nonreconstructing scientific implementation, verifier implementation, or
+    Stage E integration identity; and
+23. an NTFS attribute, backup stream, retrieval extent, extension-record cause,
+    or security descriptor that is neither explicitly refused nor charged.
 
 ## 11. Candidate evidence boundary
 
