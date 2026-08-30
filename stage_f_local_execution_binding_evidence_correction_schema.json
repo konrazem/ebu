@@ -3891,6 +3891,8 @@
         "setting_guid",
         "output_value_index_pointer_uint64",
         "result_uint32",
+        "output_value_index_bytes_base64",
+        "output_value_index_sha256",
         "raw_value_index_uint32",
         "observed_utc"
       ],
@@ -3904,6 +3906,8 @@
         "setting_guid": {"$ref": "#/$defs/nonempty_string"},
         "output_value_index_pointer_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "result_uint32": {"const": 0},
+        "output_value_index_bytes_base64": {"type": "string", "minLength": 8, "maxLength": 8, "pattern": "^[A-Za-z0-9+/]{6}==$"},
+        "output_value_index_sha256": {"$ref": "#/$defs/sha256"},
         "raw_value_index_uint32": {"$ref": "#/$defs/uint32"},
         "observed_utc": {"$ref": "#/$defs/utc_timestamp"}
       },
@@ -11965,7 +11969,7 @@
     },
     "stage_f_usn_volume_handle_observation": {
       "type": "object","additionalProperties": false,
-      "required": ["schema","selected_volume_guid_path","create_api","create_input_path_identity","create_desired_access","create_share_mode","create_security_attributes","create_disposition","create_flags_and_attributes","create_returned_valid_handle","volume_handle_value_uint64","volume_information_api","volume_information_input_handle_value_uint64","volume_serial_number_uint64","filesystem_name","ntfs_volume_data_api","ntfs_volume_data_input_handle_value_uint64","ntfs_volume_data_returned_nonzero","ntfs_volume_data_output_bytes_base64","ntfs_volume_data_output_byte_count","ntfs_volume_data_output_sha256","ntfs_volume_data","opened_utc","continuously_retained"],
+      "required": ["schema","selected_volume_guid_path","create_api","create_input_path_identity","create_desired_access","create_share_mode","create_security_attributes","create_disposition","create_flags_and_attributes","create_returned_valid_handle","volume_handle_value_uint64","volume_information_api","volume_information_input_handle_value_uint64","volume_serial_number_uint64","filesystem_name","ntfs_volume_data_api","ntfs_volume_data_input_handle_value_uint64","ntfs_volume_data_control_code_uint32","ntfs_volume_data_input_buffer_pointer_is_null","ntfs_volume_data_input_buffer_byte_count","ntfs_volume_data_output_buffer_base_address_uint64","ntfs_volume_data_output_buffer_capacity","ntfs_volume_data_bytes_returned_output_address_uint64","ntfs_volume_data_returned_nonzero","ntfs_volume_data_last_error","ntfs_volume_data_output_bytes_base64","ntfs_volume_data_output_byte_count","ntfs_volume_data_output_sha256","ntfs_volume_data","opened_utc","continuously_retained"],
       "properties": {
         "schema": {"const": "stage_f_usn_volume_handle_observation/v1"},
         "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
@@ -11984,7 +11988,14 @@
         "filesystem_name": {"const": "NTFS"},
         "ntfs_volume_data_api": {"const": "DeviceIoControl_FSCTL_GET_NTFS_VOLUME_DATA"},
         "ntfs_volume_data_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "ntfs_volume_data_control_code_uint32": {"const": 589924},
+        "ntfs_volume_data_input_buffer_pointer_is_null": {"const": true},
+        "ntfs_volume_data_input_buffer_byte_count": {"const": 0},
+        "ntfs_volume_data_output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "ntfs_volume_data_output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "ntfs_volume_data_bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "ntfs_volume_data_returned_nonzero": {"const": true},
+        "ntfs_volume_data_last_error": {"type": "null"},
         "ntfs_volume_data_output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "ntfs_volume_data_output_byte_count": {"$ref": "#/$defs/positive_uint32"},
         "ntfs_volume_data_output_sha256": {"$ref": "#/$defs/sha256"},
@@ -11995,7 +12006,7 @@
     },
     "stage_f_usn_query_call_observation": {
       "type": "object","additionalProperties": false,
-      "required": ["schema","phase","api","volume_handle_value_uint64","control_code_name","control_code_uint32","input_buffer_pointer_is_null","input_buffer_byte_count","input_buffer_bytes_base64","output_buffer_base_address_uint64","output_buffer_capacity","bytes_returned_output_address_uint64","returned_nonzero","last_error","bytes_returned","output_buffer_bytes_base64","output_buffer_sha256","journal_id_uint64","first_usn","next_usn","lowest_valid_usn","maximum_usn","maximum_size","allocation_delta","started_utc","returned_utc"],
+      "required": ["schema","phase","api","volume_handle_value_uint64","control_code_name","control_code_uint32","input_buffer_pointer_is_null","input_buffer_byte_count","input_buffer_bytes_base64","output_structure","output_buffer_base_address_uint64","output_buffer_capacity","bytes_returned_output_address_uint64","returned_nonzero","last_error","bytes_returned","output_buffer_bytes_base64","output_buffer_sha256","journal_id_uint64","first_usn","next_usn","lowest_valid_usn","maximum_usn","maximum_size","allocation_delta","minimum_supported_major_version","maximum_supported_major_version","flags","range_track_chunk_size","range_track_file_size_threshold","requested_record_versions_supported","started_utc","returned_utc"],
       "properties": {
         "schema": {"const": "stage_f_usn_query_call_observation/v1"},
         "phase": {"enum": ["START","END"]},
@@ -12006,13 +12017,14 @@
         "input_buffer_pointer_is_null": {"const": true},
         "input_buffer_byte_count": {"const": 0},
         "input_buffer_bytes_base64": {"const": ""},
+        "output_structure": {"const": "USN_JOURNAL_DATA_V2"},
         "output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
-        "output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "output_buffer_capacity": {"type": "integer", "minimum": 80, "maximum": 4294967295},
         "bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "returned_nonzero": {"const": true},
         "last_error": {"type": "null"},
-        "bytes_returned": {"$ref": "#/$defs/positive_uint32"},
-        "output_buffer_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "bytes_returned": {"const": 80},
+        "output_buffer_bytes_base64": {"type": "string","minLength": 108,"maxLength": 108,"pattern": "^[A-Za-z0-9+/]{107}=$"},
         "output_buffer_sha256": {"$ref": "#/$defs/sha256"},
         "journal_id_uint64": {"$ref": "#/$defs/uint64"},
         "first_usn": {"$ref": "#/$defs/nonnegative_integer"},
@@ -12021,13 +12033,19 @@
         "maximum_usn": {"$ref": "#/$defs/nonnegative_integer"},
         "maximum_size": {"$ref": "#/$defs/nonnegative_integer"},
         "allocation_delta": {"$ref": "#/$defs/nonnegative_integer"},
+        "minimum_supported_major_version": {"$ref": "#/$defs/uint16"},
+        "maximum_supported_major_version": {"$ref": "#/$defs/uint16"},
+        "flags": {"$ref": "#/$defs/uint32"},
+        "range_track_chunk_size": {"$ref": "#/$defs/uint64"},
+        "range_track_file_size_threshold": {"$ref": "#/$defs/uint64"},
+        "requested_record_versions_supported": {"const": true},
         "started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "returned_utc": {"$ref": "#/$defs/utc_timestamp"}
       }
     },
     "stage_f_usn_read_call_observation": {
       "type": "object","additionalProperties": false,
-      "required": ["schema","ordinal","api","volume_handle_value_uint64","control_code_name","control_code_uint32","input_buffer_base_address_uint64","input_buffer_byte_count","input_buffer_bytes_base64","input_buffer_sha256","start_usn","reason_mask","return_only_on_close","timeout_uint64","bytes_to_wait_for_uint64","journal_id_uint64","output_buffer_base_address_uint64","output_buffer_capacity","bytes_returned_output_address_uint64","returned_nonzero","last_error","bytes_returned","output_buffer_bytes_base64","output_buffer_sha256","leading_next_usn","record_count","terminal_for_requested_end","started_utc","returned_utc"],
+      "required": ["schema","ordinal","api","volume_handle_value_uint64","control_code_name","control_code_uint32","input_structure","input_buffer_base_address_uint64","input_buffer_byte_count","input_buffer_bytes_base64","input_buffer_sha256","start_usn","reason_mask","return_only_on_close","timeout_uint64","bytes_to_wait_for_uint64","journal_id_uint64","minimum_major_version","maximum_major_version","output_buffer_base_address_uint64","output_buffer_capacity","bytes_returned_output_address_uint64","returned_nonzero","last_error","bytes_returned","output_buffer_bytes_base64","output_buffer_sha256","leading_next_usn","record_count","terminal_for_requested_end","started_utc","returned_utc"],
       "properties": {
         "schema": {"const": "stage_f_usn_read_call_observation/v1"},
         "ordinal": {"$ref": "#/$defs/positive_uint32"},
@@ -12035,16 +12053,19 @@
         "volume_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "control_code_name": {"const": "FSCTL_READ_USN_JOURNAL"},
         "control_code_uint32": {"const": 590011},
+        "input_structure": {"const": "READ_USN_JOURNAL_DATA_V1"},
         "input_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
-        "input_buffer_byte_count": {"const": 40},
-        "input_buffer_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "input_buffer_byte_count": {"const": 48},
+        "input_buffer_bytes_base64": {"type": "string","minLength": 64,"maxLength": 64,"pattern": "^[A-Za-z0-9+/]{64}$"},
         "input_buffer_sha256": {"$ref": "#/$defs/sha256"},
         "start_usn": {"$ref": "#/$defs/nonnegative_integer"},
-        "reason_mask": {"$ref": "#/$defs/uint32"},
+        "reason_mask": {"const": 4294967295},
         "return_only_on_close": {"const": 0},
         "timeout_uint64": {"const": 0},
         "bytes_to_wait_for_uint64": {"const": 0},
         "journal_id_uint64": {"$ref": "#/$defs/uint64"},
+        "minimum_major_version": {"const": 2},
+        "maximum_major_version": {"const": 3},
         "output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
         "bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
@@ -13502,8 +13523,8 @@
         "observed_utc",
         "observations_completed_after_ledger_predecessor_append",
         "exact_following_operation_capability_identity",
-        "no_intervening_controller_operation",
-        "held_in_controller_memory_through_start",
+        "no_intervening_external_or_capacity_affecting_operation",
+        "held_in_controller_memory_through_following_operation",
         "scientific_counters",
         "gate_sha256"
       ],
@@ -13577,10 +13598,10 @@
         "exact_following_operation_capability_identity": {
           "$ref": "#/$defs/identity"
         },
-        "no_intervening_controller_operation": {
+        "no_intervening_external_or_capacity_affecting_operation": {
           "const": true
         },
-        "held_in_controller_memory_through_start": {
+        "held_in_controller_memory_through_following_operation": {
           "const": true
         },
         "scientific_counters": {
@@ -13589,7 +13610,40 @@
         "gate_sha256": {
           "$ref": "#/$defs/sha256"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "gate_role": {
+                "const": "SCIENTIFIC_CONTAINER_START"
+              }
+            },
+            "required": [
+              "gate_role"
+            ]
+          },
+          "then": {
+            "properties": {
+              "exact_following_operation_capability_identity": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/identity"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "stage_f_container_start_capability/v1"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
     },
     "registry_probe_row": {
       "type": "object",
@@ -13955,17 +14009,23 @@
         "create_endpoint",
         "create_request_bytes_base64",
         "create_request_sha256",
+        "create_transport_result",
         "create_http_status",
         "create_response_bytes_base64",
         "create_response_sha256",
         "container_id",
+        "create_observed_utc",
         "inspect_method",
         "inspect_endpoint",
         "inspect_request_bytes_base64",
         "inspect_request_sha256",
+        "inspect_transport_result",
         "inspect_http_status",
         "inspect_response_bytes_base64",
         "inspect_response_sha256",
+        "inspect_state_status",
+        "inspect_state_running",
+        "inspect_observed_utc",
         "immutable_image_digest",
         "immutable_image_id",
         "ordered_entrypoint",
@@ -13984,7 +14044,6 @@
         "scientific_entry_count",
         "container_created_without_scientific_entry",
         "inspect_projection_exactly_matches_create_request_and_sealed_bindings",
-        "inert_container_identity",
         "container_observation_sha256"
       ],
       "properties": {
@@ -13995,17 +14054,23 @@
         "create_endpoint": {"const": "/containers/create"},
         "create_request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "create_request_sha256": {"$ref": "#/$defs/sha256"},
+        "create_transport_result": {"const": 0},
         "create_http_status": {"const": 201},
         "create_response_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "create_response_sha256": {"$ref": "#/$defs/sha256"},
         "container_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "create_observed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "inspect_method": {"const": "GET"},
         "inspect_endpoint": {"type": "string", "pattern": "^/containers/[0-9a-f]{64}/json$"},
         "inspect_request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "inspect_request_sha256": {"$ref": "#/$defs/sha256"},
+        "inspect_transport_result": {"const": 0},
         "inspect_http_status": {"const": 200},
         "inspect_response_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "inspect_response_sha256": {"$ref": "#/$defs/sha256"},
+        "inspect_state_status": {"const": "created"},
+        "inspect_state_running": {"const": false},
+        "inspect_observed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "immutable_image_digest": {"const": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"},
         "immutable_image_id": {"$ref": "#/$defs/nonempty_string"},
         "ordered_entrypoint": {"type": "array", "items": {"$ref": "#/$defs/nonempty_string"}},
@@ -14024,7 +14089,6 @@
         "scientific_entry_count": {"const": 0},
         "container_created_without_scientific_entry": {"const": true},
         "inspect_projection_exactly_matches_create_request_and_sealed_bindings": {"const": true},
-        "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
         "container_observation_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
@@ -14035,9 +14099,18 @@
         "schema",
         "docker_engine_observation",
         "named_pipe_path",
+        "named_pipe_open_api",
+        "named_pipe_open_input_path",
+        "named_pipe_open_desired_access",
+        "named_pipe_open_share_mode",
+        "named_pipe_open_security_attributes",
+        "named_pipe_open_disposition",
+        "named_pipe_open_flags_and_attributes",
+        "named_pipe_open_returned_valid_handle",
+        "named_pipe_handle_value_uint64",
+        "named_pipe_handle_held_through_start_call",
         "inert_container_identity",
         "container_id",
-        "scientific_launch_gate_identity",
         "method",
         "endpoint",
         "request_bytes_base64",
@@ -14055,9 +14128,18 @@
         "schema": {"const": "stage_f_container_start_capability/v1"},
         "docker_engine_observation": {"$ref": "#/$defs/docker_engine_observation"},
         "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "named_pipe_open_api": {"const": "CreateFileW"},
+        "named_pipe_open_input_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "named_pipe_open_desired_access": {"const": 3221225472},
+        "named_pipe_open_share_mode": {"const": 0},
+        "named_pipe_open_security_attributes": {"const": "NULL"},
+        "named_pipe_open_disposition": {"const": 3},
+        "named_pipe_open_flags_and_attributes": {"const": 0},
+        "named_pipe_open_returned_valid_handle": {"const": true},
+        "named_pipe_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "named_pipe_handle_held_through_start_call": {"const": true},
         "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
         "container_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-        "scientific_launch_gate_identity": {"$ref": "#/$defs/stage_f_scientific_launch_gate_identity"},
         "method": {"const": "POST"},
         "endpoint": {"type": "string", "pattern": "^/containers/[0-9a-f]{64}/start$"},
         "request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
@@ -14083,7 +14165,7 @@
         "campaign_authorization_identity",
         "root_protection_epoch_identity",
         "evidence_ledger_predecessor_identity",
-        "capacity_live_gate_identity",
+        "capacity_consumption_closure_identity",
         "host_prerequisite_snapshot_identity",
         "docker_engine_observation",
         "scientific_environment_identity",
@@ -14123,8 +14205,8 @@
         "evidence_ledger_predecessor_identity": {
           "$ref": "#/$defs/stage_f_evidence_ledger_identity"
         },
-        "capacity_live_gate_identity": {
-          "$ref": "#/$defs/stage_f_capacity_live_gate_identity"
+        "capacity_consumption_closure_identity": {
+          "$ref": "#/$defs/stage_f_capacity_consumption_closure_identity"
         },
         "host_prerequisite_snapshot_identity": {
           "$ref": "#/$defs/stage_f_host_prerequisite_snapshot_identity"
@@ -14193,6 +14275,8 @@
         "container_identity",
         "container_observation",
         "container_start_capability",
+        "final_prestart_capacity_live_gate_identity",
+        "final_prestart_capacity_live_gate",
         "root_watch_live_state",
         "start_api",
         "start_authorized",
@@ -14226,6 +14310,12 @@
         },
         "container_start_capability": {
           "$ref": "#/$defs/stage_f_container_start_capability"
+        },
+        "final_prestart_capacity_live_gate_identity": {
+          "$ref": "#/$defs/stage_f_capacity_live_gate_identity"
+        },
+        "final_prestart_capacity_live_gate": {
+          "$ref": "#/$defs/stage_f_capacity_live_gate"
         },
         "root_watch_live_state": {
           "$ref": "#/$defs/stage_f_root_watch_live_state"
@@ -15086,19 +15176,22 @@
         "retrieval_pointer_calls": {
           "type": "array",
           "items": {"$ref": "#/$defs/ntfs_retrieval_pointers_call_observation"},
-          "minItems": 1
+          "uniqueItems": true
         },
         "retrieval_pointer_call_count": {
-          "$ref": "#/$defs/positive_uint32"
+          "$ref": "#/$defs/uint32"
         },
         "retrieval_first_starting_vcn": {
-          "const": 0
+          "oneOf": [
+            {"const": 0},
+            {"type": "null"}
+          ]
         },
         "retrieval_continuations_complete": {
           "const": true
         },
         "retrieval_terminal_disposition": {
-          "const": "COMPLETE"
+          "enum": ["COMPLETE", "NOT_APPLICABLE_RESIDENT_ONLY"]
         },
         "retrieval_target_is_exact_held_directory": {
           "const": true
@@ -15147,12 +15240,59 @@
           "$ref": "#/$defs/utc_timestamp"
         },
         "retrieval_pointers_result": {
-          "$ref": "#/$defs/uint32"
+          "oneOf": [
+            {"$ref": "#/$defs/uint32"},
+            {"type": "null"}
+          ]
         },
         "retrieval_pointers_succeeded": {
-          "type": "boolean"
+          "oneOf": [
+            {"type": "boolean"},
+            {"type": "null"}
+          ]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "index_allocation_stream": {
+                "properties": {"present": {"const": false}},
+                "required": ["present"]
+              }
+            },
+            "required": ["index_allocation_stream"]
+          },
+          "then": {
+            "properties": {
+              "retrieval_pointer_calls": {"maxItems": 0},
+              "retrieval_pointer_call_count": {"const": 0},
+              "retrieval_first_starting_vcn": {"type": "null"},
+              "retrieval_terminal_disposition": {"const": "NOT_APPLICABLE_RESIDENT_ONLY"},
+              "retrieval_pointers_raw_bytes_base64": {"type": "null"},
+              "retrieval_pointers_sha256": {"type": "null"},
+              "retrieval_extent_count": {"const": 0},
+              "retrieval_allocated_cluster_count": {"const": 0},
+              "retrieval_pointers_result": {"type": "null"},
+              "retrieval_pointers_succeeded": {"type": "null"}
+            }
+          },
+          "else": {
+            "properties": {
+              "retrieval_pointer_calls": {"minItems": 1},
+              "retrieval_pointer_call_count": {"$ref": "#/$defs/positive_uint32"},
+              "retrieval_first_starting_vcn": {"const": 0},
+              "retrieval_terminal_disposition": {"const": "COMPLETE"},
+              "retrieval_pointers_raw_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+              "retrieval_pointers_sha256": {"$ref": "#/$defs/sha256"},
+              "retrieval_extent_count": {"$ref": "#/$defs/positive_integer"},
+              "retrieval_allocated_cluster_count": {"$ref": "#/$defs/positive_integer"},
+              "retrieval_pointers_result": {"const": 0},
+              "retrieval_pointers_succeeded": {"const": true}
+            }
+          }
+        }
+      ]
     },
     "docker_runtime_identity_observation": {
       "type": "object",
