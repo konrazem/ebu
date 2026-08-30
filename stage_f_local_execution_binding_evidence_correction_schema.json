@@ -3839,18 +3839,114 @@
         }
       }
     },
+    "stage_f_active_power_scheme_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "api",
+        "user_root_power_key_pointer_is_null",
+        "output_pointer_storage_address_uint64",
+        "result_uint32",
+        "returned_guid_pointer_uint64",
+        "returned_guid_bytes_base64",
+        "returned_guid_sha256",
+        "active_scheme_guid",
+        "local_free_api",
+        "local_free_input_pointer_uint64",
+        "local_free_returned_null",
+        "observed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_active_power_scheme_observation/v1"},
+        "api": {"const": "PowerGetActiveScheme"},
+        "user_root_power_key_pointer_is_null": {"const": true},
+        "output_pointer_storage_address_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "result_uint32": {"const": 0},
+        "returned_guid_pointer_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "returned_guid_bytes_base64": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 24,
+          "pattern": "^[A-Za-z0-9+/]{22}==$"
+        },
+        "returned_guid_sha256": {"$ref": "#/$defs/sha256"},
+        "active_scheme_guid": {"$ref": "#/$defs/nonempty_string"},
+        "local_free_api": {"const": "LocalFree"},
+        "local_free_input_pointer_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "local_free_returned_null": {"const": true},
+        "observed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "stage_f_power_setting_query_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "setting_role",
+        "api",
+        "user_root_power_key_pointer_is_null",
+        "active_scheme_guid",
+        "subgroup_guid",
+        "setting_guid",
+        "output_value_index_pointer_uint64",
+        "result_uint32",
+        "raw_value_index_uint32",
+        "observed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_power_setting_query_observation/v1"},
+        "setting_role": {"enum": ["PLUGGED_IN_STANDBY_IDLE_SECONDS", "PLUGGED_IN_LID_ACTION"]},
+        "api": {"const": "PowerReadACValueIndex"},
+        "user_root_power_key_pointer_is_null": {"const": true},
+        "active_scheme_guid": {"$ref": "#/$defs/nonempty_string"},
+        "subgroup_guid": {"$ref": "#/$defs/nonempty_string"},
+        "setting_guid": {"$ref": "#/$defs/nonempty_string"},
+        "output_value_index_pointer_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "result_uint32": {"const": 0},
+        "raw_value_index_uint32": {"$ref": "#/$defs/uint32"},
+        "observed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"setting_role": {"const": "PLUGGED_IN_STANDBY_IDLE_SECONDS"}}, "required": ["setting_role"]},
+          "then": {
+            "properties": {
+              "subgroup_guid": {"const": "238c9fa8-0aad-41ed-83f4-97be242c8f20"},
+              "setting_guid": {"const": "29f6c1db-86da-48c5-9fdb-f2b67b1f44da"},
+              "raw_value_index_uint32": {"const": 0}
+            }
+          },
+          "else": {
+            "properties": {
+              "subgroup_guid": {"const": "4f971e89-eebd-4455-a8de-9e59040e7347"},
+              "setting_guid": {"const": "5ca83367-6e45-459f-a27b-476b1d01c936"},
+              "raw_value_index_uint32": {"enum": [0, 1, 2, 3]}
+            }
+          }
+        }
+      ]
+    },
     "power_facts": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "get_system_power_status_returned_nonzero",
+        "get_system_power_status_output_address_uint64",
+        "system_power_status_bytes_base64",
+        "system_power_status_sha256",
         "ac_line_status",
         "battery_flag",
         "battery_life_percent",
         "active_scheme_guid",
+        "active_power_scheme_observation",
         "power_get_active_scheme_result",
         "plugged_in_standby_idle_seconds",
+        "plugged_in_standby_query_observation",
+        "plugged_in_lid_action_raw_index",
         "plugged_in_lid_action",
+        "plugged_in_lid_query_observation",
+        "derived_power_fields_reconcile_raw_queries",
         "lid_open_statement_identity",
         "docker_engine_observation",
         "pending_reboot_registry_rows",
@@ -3860,7 +3956,6 @@
         "controller_session_logged_on",
         "observed_utc",
         "system_status_flag",
-        "reserved1",
         "battery_life_time_seconds",
         "battery_full_life_time_seconds",
         "power_read_ac_standby_api",
@@ -3874,17 +3969,36 @@
         "get_system_power_status_returned_nonzero": {
           "const": true
         },
+        "get_system_power_status_output_address_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "system_power_status_bytes_base64": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 16,
+          "pattern": "^[A-Za-z0-9+/]{16}$"
+        },
+        "system_power_status_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
         "ac_line_status": {
           "const": 1
         },
         "battery_flag": {
-          "$ref": "#/$defs/uint32"
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
         },
         "battery_life_percent": {
-          "$ref": "#/$defs/uint32"
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
         },
         "active_scheme_guid": {
           "$ref": "#/$defs/nonempty_string"
+        },
+        "active_power_scheme_observation": {
+          "$ref": "#/$defs/stage_f_active_power_scheme_observation"
         },
         "power_get_active_scheme_result": {
           "const": 0
@@ -3892,11 +4006,29 @@
         "plugged_in_standby_idle_seconds": {
           "const": 0
         },
+        "plugged_in_standby_query_observation": {
+          "allOf": [
+            {"$ref": "#/$defs/stage_f_power_setting_query_observation"},
+            {"properties": {"setting_role": {"const": "PLUGGED_IN_STANDBY_IDLE_SECONDS"}}, "required": ["setting_role"]}
+          ]
+        },
+        "plugged_in_lid_action_raw_index": {
+          "enum": [0, 1]
+        },
         "plugged_in_lid_action": {
           "enum": [
             "DO_NOTHING",
             "SLEEP"
           ]
+        },
+        "plugged_in_lid_query_observation": {
+          "allOf": [
+            {"$ref": "#/$defs/stage_f_power_setting_query_observation"},
+            {"properties": {"setting_role": {"const": "PLUGGED_IN_LID_ACTION"}}, "required": ["setting_role"]}
+          ]
+        },
+        "derived_power_fields_reconcile_raw_queries": {
+          "const": true
         },
         "lid_open_statement_identity": {
           "oneOf": [
@@ -3936,10 +4068,9 @@
           "$ref": "#/$defs/utc_timestamp"
         },
         "system_status_flag": {
-          "$ref": "#/$defs/uint32"
-        },
-        "reserved1": {
-          "$ref": "#/$defs/uint32"
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
         },
         "battery_life_time_seconds": {
           "$ref": "#/$defs/uint32"
@@ -10746,11 +10877,158 @@
         }
       }
     },
+    "directory_watch_acquisition_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "directory_path_identity",
+        "create_api",
+        "create_input_path_identity",
+        "create_desired_access",
+        "create_share_mode",
+        "create_security_attributes",
+        "create_disposition",
+        "create_flags_and_attributes",
+        "create_returned_valid_handle",
+        "directory_handle_value_uint64",
+        "opened_utc",
+        "path_query_api",
+        "path_query_input_handle_value_uint64",
+        "path_query_output_identity",
+        "file_id_query_api",
+        "file_id_query_input_handle_value_uint64",
+        "volume_serial_number_uint64",
+        "file_id_128",
+        "attribute_query_api",
+        "attribute_query_input_handle_value_uint64",
+        "raw_file_attributes",
+        "reparse_tag",
+        "directory_attribute_set",
+        "buffer_allocate_api",
+        "buffer_allocate_address_is_null",
+        "buffer_allocate_size",
+        "buffer_allocate_type",
+        "buffer_allocate_protection",
+        "buffer_allocate_returned_nonzero",
+        "buffer_base_address_uint64",
+        "buffer_dword_aligned",
+        "buffer_initial_sha256",
+        "overlapped_allocate_api",
+        "overlapped_allocate_address_is_null",
+        "overlapped_allocate_size",
+        "overlapped_allocate_type",
+        "overlapped_allocate_protection",
+        "overlapped_allocate_returned_nonzero",
+        "overlapped_address_uint64",
+        "overlapped_dword_aligned",
+        "overlapped_initial_sha256",
+        "event_create_api",
+        "event_security_attributes",
+        "event_manual_reset",
+        "event_initial_state",
+        "event_name",
+        "event_handle_value_uint64",
+        "overlapped_event_handle_value_uint64",
+        "all_resources_distinct_and_exclusive"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_directory_watch_acquisition/v1"},
+        "directory_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "create_api": {"const": "CreateFileW"},
+        "create_input_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "create_desired_access": {"const": 1},
+        "create_share_mode": {"const": 7},
+        "create_security_attributes": {"const": "NULL"},
+        "create_disposition": {"const": 3},
+        "create_flags_and_attributes": {"const": 1109393408},
+        "create_returned_valid_handle": {"const": true},
+        "directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "opened_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "path_query_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "path_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "path_query_output_identity": {"$ref": "#/$defs/private_path_identity"},
+        "file_id_query_api": {"const": "GetFileInformationByHandleEx_FileIdInfo"},
+        "file_id_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "attribute_query_api": {"const": "GetFileInformationByHandleEx_FileAttributeTagInfo"},
+        "attribute_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "reparse_tag": {"const": 0},
+        "directory_attribute_set": {"const": true},
+        "buffer_allocate_api": {"const": "VirtualAlloc"},
+        "buffer_allocate_address_is_null": {"const": true},
+        "buffer_allocate_size": {"const": 65536},
+        "buffer_allocate_type": {"const": 12288},
+        "buffer_allocate_protection": {"const": 4},
+        "buffer_allocate_returned_nonzero": {"const": true},
+        "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "buffer_dword_aligned": {"const": true},
+        "buffer_initial_sha256": {"const": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31"},
+        "overlapped_allocate_api": {"const": "VirtualAlloc"},
+        "overlapped_allocate_address_is_null": {"const": true},
+        "overlapped_allocate_size": {"const": 32},
+        "overlapped_allocate_type": {"const": 12288},
+        "overlapped_allocate_protection": {"const": 4},
+        "overlapped_allocate_returned_nonzero": {"const": true},
+        "overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "overlapped_dword_aligned": {"const": true},
+        "overlapped_initial_sha256": {"const": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925"},
+        "event_create_api": {"const": "CreateEventW"},
+        "event_security_attributes": {"const": "NULL"},
+        "event_manual_reset": {"const": true},
+        "event_initial_state": {"const": false},
+        "event_name": {"const": null},
+        "event_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "overlapped_event_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "all_resources_distinct_and_exclusive": {"const": true}
+      }
+    },
+    "stage_f_file_notify_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "buffer_ordinal",
+        "record_offset",
+        "next_entry_offset",
+        "action_uint32",
+        "action",
+        "file_name_length_bytes",
+        "file_name_utf16le_base64",
+        "name",
+        "record_byte_count",
+        "raw_record_bytes_base64",
+        "raw_record_sha256",
+        "scope_disposition",
+        "protected_identity_match_count",
+        "mutation_ticket_identity",
+        "mutation_ticket_match_count"
+      ],
+      "properties": {
+        "buffer_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "record_offset": {"$ref": "#/$defs/nonnegative_integer"},
+        "next_entry_offset": {"$ref": "#/$defs/nonnegative_integer"},
+        "action_uint32": {"enum": [1,2,3,4,5]},
+        "action": {"enum": ["FILE_ACTION_ADDED","FILE_ACTION_REMOVED","FILE_ACTION_MODIFIED","FILE_ACTION_RENAMED_OLD_NAME","FILE_ACTION_RENAMED_NEW_NAME"]},
+        "file_name_length_bytes": {"$ref": "#/$defs/positive_uint32"},
+        "file_name_utf16le_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "name": {"$ref": "#/$defs/nonempty_string"},
+        "record_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "raw_record_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "raw_record_sha256": {"$ref": "#/$defs/sha256"},
+        "scope_disposition": {"enum": ["AUTHORIZED_TICKET_MATCH","OUTSIDE_PROTECTED_SCOPE","REFUSED_PROTECTED_MUTATION"]},
+        "protected_identity_match_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "mutation_ticket_identity": {"oneOf": [{"$ref": "#/$defs/identity"},{"type": "null"}]},
+        "mutation_ticket_match_count": {"$ref": "#/$defs/nonnegative_integer"}
+      }
+    },
     "publication_parent_watch_observation": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "schema",
+        "acquisition",
         "parent_path_identity",
         "directory_handle_value_uint64",
         "recursive",
@@ -10828,6 +11106,9 @@
       "properties": {
         "schema": {
           "const": "stage_f_publication_parent_watch/v1"
+        },
+        "acquisition": {
+          "$ref": "#/$defs/directory_watch_acquisition_observation"
         },
         "parent_path_identity": {
           "$ref": "#/$defs/private_path_identity"
@@ -11370,6 +11651,8 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "schema",
+        "acquisition",
         "ordinal",
         "role",
         "watched_path_identity",
@@ -11380,11 +11663,31 @@
         "overlapped_address_uint64",
         "event_handle_value_uint64",
         "notify_filter",
+        "read_api",
+        "read_input_directory_handle_value_uint64",
+        "read_input_buffer_base_address_uint64",
+        "read_input_buffer_byte_count",
+        "read_input_watch_subtree",
+        "read_input_notify_filter",
+        "read_input_bytes_returned_pointer_is_null",
+        "read_input_overlapped_address_uint64",
+        "read_input_completion_routine_is_null",
+        "read_returned_nonzero",
+        "immediate_result_api",
+        "immediate_result_directory_handle_value_uint64",
+        "immediate_result_overlapped_address_uint64",
+        "immediate_result_wait",
+        "immediate_result_returned_nonzero",
+        "immediate_result_last_error",
+        "immediate_result_bytes_transferred",
+        "issued_utc",
         "pending_at_common_epoch",
         "overflow_or_enumeration_loss",
         "held_through_launch_handoff"
       ],
       "properties": {
+        "schema": {"const": "stage_f_root_watch/v1"},
+        "acquisition": {"$ref": "#/$defs/directory_watch_acquisition_observation"},
         "ordinal": {
           "$ref": "#/$defs/positive_uint32"
         },
@@ -11418,6 +11721,24 @@
         "notify_filter": {
           "const": 351
         },
+        "read_api": {"const": "ReadDirectoryChangesW"},
+        "read_input_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "read_input_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "read_input_buffer_byte_count": {"const": 65536},
+        "read_input_watch_subtree": {"type": "boolean"},
+        "read_input_notify_filter": {"const": 351},
+        "read_input_bytes_returned_pointer_is_null": {"const": true},
+        "read_input_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "read_input_completion_routine_is_null": {"const": true},
+        "read_returned_nonzero": {"const": true},
+        "immediate_result_api": {"const": "GetOverlappedResult"},
+        "immediate_result_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "immediate_result_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "immediate_result_wait": {"const": false},
+        "immediate_result_returned_nonzero": {"const": false},
+        "immediate_result_last_error": {"const": 996},
+        "immediate_result_bytes_transferred": {"const": 0},
+        "issued_utc": {"$ref": "#/$defs/utc_timestamp"},
         "pending_at_common_epoch": {
           "const": true
         },
@@ -11428,6 +11749,171 @@
           "const": true
         }
       }
+    },
+    "stage_f_root_watch_completion_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","watch_ordinal","cycle_ordinal","directory_handle_value_uint64","buffer_base_address_uint64","overlapped_address_uint64","event_handle_value_uint64","completion_api","completion_directory_handle_value_uint64","completion_overlapped_address_uint64","completion_wait","completion_returned_nonzero","completion_bytes_transferred","raw_buffer_bytes_base64","raw_buffer_byte_count","raw_buffer_sha256","records","record_count","strict_parser_projection_exact","overflow_or_enumeration_loss","authorized_ticket_match_count","outside_scope_record_count","refused_protected_record_count","completed_utc","reset_event_api","reset_event_input_handle_value_uint64","reset_event_returned_nonzero","buffer_zeroed_sha256","overlapped_zeroed_sha256","overlapped_ready_bytes_base64","overlapped_ready_sha256","overlapped_event_assignment_handle_value_uint64","reissue_api","reissue_directory_handle_value_uint64","reissue_buffer_base_address_uint64","reissue_buffer_byte_count","reissue_watch_subtree","reissue_notify_filter","reissue_bytes_returned_pointer_is_null","reissue_overlapped_address_uint64","reissue_completion_routine_is_null","reissue_returned_nonzero","reissue_immediate_result_api","reissue_immediate_directory_handle_value_uint64","reissue_immediate_overlapped_address_uint64","reissue_immediate_wait","reissue_immediate_returned_nonzero","reissue_immediate_last_error","reissue_immediate_bytes_transferred","reissued_pending_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_root_watch_completion_observation/v1"},
+        "watch_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "cycle_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "event_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "completion_api": {"const": "GetOverlappedResult"},
+        "completion_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "completion_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "completion_wait": {"const": true},
+        "completion_returned_nonzero": {"const": true},
+        "completion_bytes_transferred": {"$ref": "#/$defs/positive_uint32"},
+        "raw_buffer_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "raw_buffer_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "raw_buffer_sha256": {"$ref": "#/$defs/sha256"},
+        "records": {"type": "array","items": {"$ref": "#/$defs/stage_f_file_notify_record"},"minItems": 1},
+        "record_count": {"$ref": "#/$defs/positive_uint32"},
+        "strict_parser_projection_exact": {"const": true},
+        "overflow_or_enumeration_loss": {"const": false},
+        "authorized_ticket_match_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "outside_scope_record_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "refused_protected_record_count": {"const": 0},
+        "completed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "reset_event_api": {"const": "ResetEvent"},
+        "reset_event_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "reset_event_returned_nonzero": {"const": true},
+        "buffer_zeroed_sha256": {"const": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31"},
+        "overlapped_zeroed_sha256": {"const": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925"},
+        "overlapped_ready_bytes_base64": {"type": "string", "minLength": 44, "maxLength": 44, "pattern": "^[A-Za-z0-9+/]{43}=$"},
+        "overlapped_ready_sha256": {"$ref": "#/$defs/sha256"},
+        "overlapped_event_assignment_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "reissue_api": {"const": "ReadDirectoryChangesW"},
+        "reissue_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "reissue_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "reissue_buffer_byte_count": {"const": 65536},
+        "reissue_watch_subtree": {"type": "boolean"},
+        "reissue_notify_filter": {"const": 351},
+        "reissue_bytes_returned_pointer_is_null": {"const": true},
+        "reissue_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "reissue_completion_routine_is_null": {"const": true},
+        "reissue_returned_nonzero": {"const": true},
+        "reissue_immediate_result_api": {"const": "GetOverlappedResult"},
+        "reissue_immediate_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "reissue_immediate_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "reissue_immediate_wait": {"const": false},
+        "reissue_immediate_returned_nonzero": {"const": false},
+        "reissue_immediate_last_error": {"const": 996},
+        "reissue_immediate_bytes_transferred": {"const": 0},
+        "reissued_pending_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "stage_f_root_watch_live_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema","root_protection_epoch_identity","holder_process_id","holder_process_creation_filetime_uint64","completion_rows","completion_row_count","completion_rows_complete_and_strictly_ordered","watch_count","pending_watch_ordinals","pending_cycle_ordinals","counts_and_pending_cycles_reconcile","all_pending_since_latest_issue_or_reissue","all_acquired_watches_pending","unmatched_protected_event_count","observed_utc","live_state_sha256"],
+      "properties": {
+        "schema": {"const": "stage_f_root_watch_live_state/v1"},
+        "root_protection_epoch_identity": {"$ref": "#/$defs/stage_f_root_protection_epoch_identity"},
+        "holder_process_id": {"$ref": "#/$defs/positive_uint32"},
+        "holder_process_creation_filetime_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "completion_rows": {"type": "array","items": {"$ref": "#/$defs/stage_f_root_watch_completion_observation"}},
+        "completion_row_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "completion_rows_complete_and_strictly_ordered": {"const": true},
+        "watch_count": {"$ref": "#/$defs/positive_uint32"},
+        "pending_watch_ordinals": {"type": "array","items": {"$ref": "#/$defs/positive_uint32"},"minItems": 2,"uniqueItems": true},
+        "pending_cycle_ordinals": {"type": "array","items": {"$ref": "#/$defs/positive_uint32"},"minItems": 2},
+        "counts_and_pending_cycles_reconcile": {"const": true},
+        "all_pending_since_latest_issue_or_reissue": {"const": true},
+        "all_acquired_watches_pending": {"const": true},
+        "unmatched_protected_event_count": {"const": 0},
+        "observed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "live_state_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stage_f_root_watch_release_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema","watch_ordinal","directory_handle_value_uint64","buffer_base_address_uint64","overlapped_address_uint64","event_handle_value_uint64","terminal_branch","cancel_api","cancel_directory_handle_value_uint64","cancel_overlapped_address_uint64","cancel_returned_nonzero","cancel_last_error","completion_api","completion_wait","completion_returned_nonzero","completion_last_error","completion_bytes_transferred","raw_completed_bytes_base64","raw_completed_sha256","terminal_records","terminal_record_count","terminal_records_reconciled","terminal_completion_utc","close_directory_api","close_directory_input_handle_value_uint64","close_directory_returned_nonzero","directory_handle_closed_utc","close_event_api","close_event_input_handle_value_uint64","close_event_returned_nonzero","event_handle_closed_utc","free_overlapped_api","free_overlapped_base_address_uint64","free_overlapped_size","free_overlapped_type","free_overlapped_returned_nonzero","overlapped_freed_utc","free_buffer_api","free_buffer_base_address_uint64","free_buffer_size","free_buffer_type","free_buffer_returned_nonzero","buffer_freed_utc","release_order_exact","released_utc"],
+      "properties": {
+        "schema": {"const": "stage_f_root_watch_release_observation/v1"},
+        "watch_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "event_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "terminal_branch": {"enum": ["QUIET_CANCELLED","NORMAL_COMPLETION_WON_CANCEL_RACE"]},
+        "cancel_api": {"const": "CancelIoEx"},
+        "cancel_directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "cancel_overlapped_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "cancel_returned_nonzero": {"type": "boolean"},
+        "cancel_last_error": {"oneOf": [{"$ref": "#/$defs/uint32"},{"type": "null"}]},
+        "completion_api": {"const": "GetOverlappedResult"},
+        "completion_wait": {"const": true},
+        "completion_returned_nonzero": {"type": "boolean"},
+        "completion_last_error": {"oneOf": [{"$ref": "#/$defs/uint32"},{"type": "null"}]},
+        "completion_bytes_transferred": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_completed_bytes_base64": {"oneOf": [{"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},{"type": "null"}]},
+        "raw_completed_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"},{"type": "null"}]},
+        "terminal_records": {"type": "array","items": {"$ref": "#/$defs/stage_f_file_notify_record"}},
+        "terminal_record_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "terminal_records_reconciled": {"const": true},
+        "terminal_completion_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "close_directory_api": {"const": "CloseHandle"},
+        "close_directory_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "close_directory_returned_nonzero": {"const": true},
+        "directory_handle_closed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "close_event_api": {"const": "CloseHandle"},
+        "close_event_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "close_event_returned_nonzero": {"const": true},
+        "event_handle_closed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "free_overlapped_api": {"const": "VirtualFree"},
+        "free_overlapped_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "free_overlapped_size": {"const": 0},
+        "free_overlapped_type": {"const": 32768},
+        "free_overlapped_returned_nonzero": {"const": true},
+        "overlapped_freed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "free_buffer_api": {"const": "VirtualFree"},
+        "free_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "free_buffer_size": {"const": 0},
+        "free_buffer_type": {"const": 32768},
+        "free_buffer_returned_nonzero": {"const": true},
+        "buffer_freed_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "release_order_exact": {"const": true},
+        "released_utc": {"$ref": "#/$defs/utc_timestamp"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"terminal_branch": {"const": "QUIET_CANCELLED"}}, "required": ["terminal_branch"]},
+          "then": {
+            "properties": {
+              "cancel_returned_nonzero": {"const": true},
+              "cancel_last_error": {"type": "null"},
+              "completion_returned_nonzero": {"const": false},
+              "completion_last_error": {"const": 995},
+              "completion_bytes_transferred": {"const": 0},
+              "raw_completed_bytes_base64": {"type": "null"},
+              "raw_completed_sha256": {"type": "null"},
+              "terminal_records": {"maxItems": 0},
+              "terminal_record_count": {"const": 0}
+            }
+          },
+          "else": {
+            "properties": {
+              "cancel_returned_nonzero": {"const": false},
+              "cancel_last_error": {"const": 1168},
+              "completion_returned_nonzero": {"const": true},
+              "completion_last_error": {"type": "null"},
+              "completion_bytes_transferred": {"$ref": "#/$defs/positive_uint32"},
+              "raw_completed_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+              "raw_completed_sha256": {"$ref": "#/$defs/sha256"},
+              "terminal_records": {"minItems": 1},
+              "terminal_record_count": {"$ref": "#/$defs/positive_uint32"}
+            }
+          }
+        }
+      ]
     },
     "stage_f_immutable_file_lock": {
       "type": "object",
@@ -11477,158 +11963,166 @@
         }
       }
     },
-    "stage_f_usn_record": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "record_version",
-        "record_length",
-        "major_version",
-        "minor_version",
-        "file_reference_number",
-        "parent_file_reference_number",
-        "usn",
-        "reason_mask",
-        "source_info",
-        "security_id",
-        "file_attributes",
-        "file_name"
-      ],
+    "stage_f_usn_volume_handle_observation": {
+      "type": "object","additionalProperties": false,
+      "required": ["schema","selected_volume_guid_path","create_api","create_input_path_identity","create_desired_access","create_share_mode","create_security_attributes","create_disposition","create_flags_and_attributes","create_returned_valid_handle","volume_handle_value_uint64","volume_information_api","volume_information_input_handle_value_uint64","volume_serial_number_uint64","filesystem_name","ntfs_volume_data_api","ntfs_volume_data_input_handle_value_uint64","ntfs_volume_data_returned_nonzero","ntfs_volume_data_output_bytes_base64","ntfs_volume_data_output_byte_count","ntfs_volume_data_output_sha256","ntfs_volume_data","opened_utc","continuously_retained"],
       "properties": {
-        "record_version": {
-          "enum": [
-            2,
-            3
-          ]
-        },
-        "record_length": {
-          "$ref": "#/$defs/positive_uint32"
-        },
-        "major_version": {
-          "enum": [
-            2,
-            3
-          ]
-        },
-        "minor_version": {
-          "const": 0
-        },
-        "file_reference_number": {
-          "$ref": "#/$defs/nonempty_string"
-        },
-        "parent_file_reference_number": {
-          "$ref": "#/$defs/nonempty_string"
-        },
-        "usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "reason_mask": {
-          "$ref": "#/$defs/uint32"
-        },
-        "source_info": {
-          "$ref": "#/$defs/uint32"
-        },
-        "security_id": {
-          "$ref": "#/$defs/uint32"
-        },
-        "file_attributes": {
-          "$ref": "#/$defs/uint32"
-        },
-        "file_name": {
-          "$ref": "#/$defs/nonempty_string"
-        }
+        "schema": {"const": "stage_f_usn_volume_handle_observation/v1"},
+        "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "create_api": {"const": "CreateFileW"},
+        "create_input_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "create_desired_access": {"const": 2147483648},
+        "create_share_mode": {"const": 3},
+        "create_security_attributes": {"const": "NULL"},
+        "create_disposition": {"const": 3},
+        "create_flags_and_attributes": {"const": 0},
+        "create_returned_valid_handle": {"const": true},
+        "volume_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "volume_information_api": {"const": "GetVolumeInformationByHandleW"},
+        "volume_information_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "filesystem_name": {"const": "NTFS"},
+        "ntfs_volume_data_api": {"const": "DeviceIoControl_FSCTL_GET_NTFS_VOLUME_DATA"},
+        "ntfs_volume_data_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "ntfs_volume_data_returned_nonzero": {"const": true},
+        "ntfs_volume_data_output_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "ntfs_volume_data_output_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "ntfs_volume_data_output_sha256": {"$ref": "#/$defs/sha256"},
+        "ntfs_volume_data": {"$ref": "#/$defs/ntfs_volume_data"},
+        "opened_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "continuously_retained": {"const": true}
+      }
+    },
+    "stage_f_usn_query_call_observation": {
+      "type": "object","additionalProperties": false,
+      "required": ["schema","phase","api","volume_handle_value_uint64","control_code_name","control_code_uint32","input_buffer_pointer_is_null","input_buffer_byte_count","input_buffer_bytes_base64","output_buffer_base_address_uint64","output_buffer_capacity","bytes_returned_output_address_uint64","returned_nonzero","last_error","bytes_returned","output_buffer_bytes_base64","output_buffer_sha256","journal_id_uint64","first_usn","next_usn","lowest_valid_usn","maximum_usn","maximum_size","allocation_delta","started_utc","returned_utc"],
+      "properties": {
+        "schema": {"const": "stage_f_usn_query_call_observation/v1"},
+        "phase": {"enum": ["START","END"]},
+        "api": {"const": "DeviceIoControl"},
+        "volume_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "control_code_name": {"const": "FSCTL_QUERY_USN_JOURNAL"},
+        "control_code_uint32": {"const": 590068},
+        "input_buffer_pointer_is_null": {"const": true},
+        "input_buffer_byte_count": {"const": 0},
+        "input_buffer_bytes_base64": {"const": ""},
+        "output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "returned_nonzero": {"const": true},
+        "last_error": {"type": "null"},
+        "bytes_returned": {"$ref": "#/$defs/positive_uint32"},
+        "output_buffer_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "output_buffer_sha256": {"$ref": "#/$defs/sha256"},
+        "journal_id_uint64": {"$ref": "#/$defs/uint64"},
+        "first_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "next_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "lowest_valid_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "maximum_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "maximum_size": {"$ref": "#/$defs/nonnegative_integer"},
+        "allocation_delta": {"$ref": "#/$defs/nonnegative_integer"},
+        "started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "returned_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "stage_f_usn_read_call_observation": {
+      "type": "object","additionalProperties": false,
+      "required": ["schema","ordinal","api","volume_handle_value_uint64","control_code_name","control_code_uint32","input_buffer_base_address_uint64","input_buffer_byte_count","input_buffer_bytes_base64","input_buffer_sha256","start_usn","reason_mask","return_only_on_close","timeout_uint64","bytes_to_wait_for_uint64","journal_id_uint64","output_buffer_base_address_uint64","output_buffer_capacity","bytes_returned_output_address_uint64","returned_nonzero","last_error","bytes_returned","output_buffer_bytes_base64","output_buffer_sha256","leading_next_usn","record_count","terminal_for_requested_end","started_utc","returned_utc"],
+      "properties": {
+        "schema": {"const": "stage_f_usn_read_call_observation/v1"},
+        "ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "api": {"const": "DeviceIoControl"},
+        "volume_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "control_code_name": {"const": "FSCTL_READ_USN_JOURNAL"},
+        "control_code_uint32": {"const": 590011},
+        "input_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "input_buffer_byte_count": {"const": 40},
+        "input_buffer_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "input_buffer_sha256": {"$ref": "#/$defs/sha256"},
+        "start_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "reason_mask": {"$ref": "#/$defs/uint32"},
+        "return_only_on_close": {"const": 0},
+        "timeout_uint64": {"const": 0},
+        "bytes_to_wait_for_uint64": {"const": 0},
+        "journal_id_uint64": {"$ref": "#/$defs/uint64"},
+        "output_buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "returned_nonzero": {"const": true},
+        "last_error": {"type": "null"},
+        "bytes_returned": {"$ref": "#/$defs/positive_uint32"},
+        "output_buffer_bytes_base64": {"type": "string","minLength": 12,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "output_buffer_sha256": {"$ref": "#/$defs/sha256"},
+        "leading_next_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "record_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "terminal_for_requested_end": {"type": "boolean"},
+        "started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "returned_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "stage_f_usn_record": {
+      "type": "object","additionalProperties": false,
+      "required": ["record_version","buffer_ordinal","record_offset","raw_record_bytes_base64","raw_record_sha256","record_length","major_version","minor_version","file_reference_width_bits","file_reference_number","parent_file_reference_number","usn","timestamp_filetime_uint64","reason_mask","source_info","security_id","file_attributes","file_name_length_bytes","file_name_offset","file_name_utf16le_base64","file_name","strict_projection_exact","scope_disposition","protected_identity_match_count","mutation_ticket_identity","mutation_ticket_match_count"],
+      "properties": {
+        "record_version": {"enum": [2,3]},
+        "buffer_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "record_offset": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_record_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "raw_record_sha256": {"$ref": "#/$defs/sha256"},
+        "record_length": {"$ref": "#/$defs/positive_uint32"},
+        "major_version": {"enum": [2,3]},
+        "minor_version": {"const": 0},
+        "file_reference_width_bits": {"enum": [64,128]},
+        "file_reference_number": {"$ref": "#/$defs/nonempty_string"},
+        "parent_file_reference_number": {"$ref": "#/$defs/nonempty_string"},
+        "usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "timestamp_filetime_uint64": {"$ref": "#/$defs/uint64"},
+        "reason_mask": {"$ref": "#/$defs/uint32"},
+        "source_info": {"$ref": "#/$defs/uint32"},
+        "security_id": {"$ref": "#/$defs/uint32"},
+        "file_attributes": {"$ref": "#/$defs/uint32"},
+        "file_name_length_bytes": {"$ref": "#/$defs/positive_uint32"},
+        "file_name_offset": {"$ref": "#/$defs/positive_uint32"},
+        "file_name_utf16le_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "file_name": {"$ref": "#/$defs/nonempty_string"},
+        "strict_projection_exact": {"const": true},
+        "scope_disposition": {"enum": ["AUTHORIZED_TICKET_MATCH","OUTSIDE_PROTECTED_SCOPE","REFUSED_PROTECTED_MUTATION"]},
+        "protected_identity_match_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "mutation_ticket_identity": {"oneOf": [{"$ref": "#/$defs/identity"},{"type": "null"}]},
+        "mutation_ticket_match_count": {"$ref": "#/$defs/nonnegative_integer"}
       }
     },
     "stage_f_usn_journal_range": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "schema",
-        "selected_volume_guid_path",
-        "query_api",
-        "read_api",
-        "journal_id_uint64",
-        "lowest_valid_usn",
-        "first_usn",
-        "next_usn",
-        "maximum_usn",
-        "start_watermark_usn",
-        "end_watermark_usn",
-        "records",
-        "record_count",
-        "continuation_buffer_count",
-        "terminal_next_usn",
-        "journal_id_unchanged",
-        "range_complete",
-        "wrapped_or_gapped",
-        "unknown_record_count",
-        "access_errors"
-      ],
+      "type": "object","additionalProperties": false,
+      "required": ["schema","selected_volume_guid_path","volume_handle_observation","start_query","read_calls","read_call_count","end_query","journal_id_uint64","lowest_valid_usn","first_usn","next_usn","maximum_usn","start_watermark_usn","end_watermark_usn","records","record_count","continuation_buffer_count","terminal_next_usn","raw_buffers_partition_into_records_exactly","protected_ticket_match_count","outside_scope_record_count","refused_protected_record_count","journal_id_unchanged","range_complete","wrapped_or_gapped","unknown_record_count","access_errors"],
       "properties": {
-        "schema": {
-          "const": "stage_f_usn_journal_range/v1"
-        },
-        "selected_volume_guid_path": {
-          "$ref": "#/$defs/windows_volume_guid_path"
-        },
-        "query_api": {
-          "const": "DeviceIoControl_FSCTL_QUERY_USN_JOURNAL"
-        },
-        "read_api": {
-          "const": "DeviceIoControl_FSCTL_READ_USN_JOURNAL"
-        },
-        "journal_id_uint64": {
-          "$ref": "#/$defs/uint64"
-        },
-        "lowest_valid_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "first_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "next_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "maximum_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "start_watermark_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "end_watermark_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "records": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/stage_f_usn_record"
-          },
-          "minItems": 0
-        },
-        "record_count": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "continuation_buffer_count": {
-          "$ref": "#/$defs/positive_uint32"
-        },
-        "terminal_next_usn": {
-          "$ref": "#/$defs/nonnegative_integer"
-        },
-        "journal_id_unchanged": {
-          "const": true
-        },
-        "range_complete": {
-          "const": true
-        },
-        "wrapped_or_gapped": {
-          "const": false
-        },
-        "unknown_record_count": {
-          "const": 0
-        },
-        "access_errors": {
-          "const": 0
-        }
+        "schema": {"const": "stage_f_usn_journal_range/v1"},
+        "selected_volume_guid_path": {"$ref": "#/$defs/windows_volume_guid_path"},
+        "volume_handle_observation": {"$ref": "#/$defs/stage_f_usn_volume_handle_observation"},
+        "start_query": {"$ref": "#/$defs/stage_f_usn_query_call_observation"},
+        "read_calls": {"type": "array","items": {"$ref": "#/$defs/stage_f_usn_read_call_observation"},"minItems": 1},
+        "read_call_count": {"$ref": "#/$defs/positive_uint32"},
+        "end_query": {"$ref": "#/$defs/stage_f_usn_query_call_observation"},
+        "journal_id_uint64": {"$ref": "#/$defs/uint64"},
+        "lowest_valid_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "first_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "next_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "maximum_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "start_watermark_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "end_watermark_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "records": {"type": "array","items": {"$ref": "#/$defs/stage_f_usn_record"}},
+        "record_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "continuation_buffer_count": {"$ref": "#/$defs/positive_uint32"},
+        "terminal_next_usn": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_buffers_partition_into_records_exactly": {"const": true},
+        "protected_ticket_match_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "outside_scope_record_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "refused_protected_record_count": {"const": 0},
+        "journal_id_unchanged": {"const": true},
+        "range_complete": {"const": true},
+        "wrapped_or_gapped": {"const": false},
+        "unknown_record_count": {"const": 0},
+        "access_errors": {"const": 0}
       }
     },
     "stage_f_root_protection_epoch_identity": {
@@ -11973,6 +12467,76 @@
         }
       ]
     },
+    "stage_f_ledger_create_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "ledger_file_path_identity",
+        "create_api",
+        "create_input_path_identity",
+        "create_desired_access",
+        "create_share_mode",
+        "create_security_attributes_pointer_is_null",
+        "create_disposition",
+        "create_flags_and_attributes",
+        "create_returned_valid_handle",
+        "ledger_handle_value_uint64",
+        "path_query_api",
+        "path_query_input_handle_value_uint64",
+        "path_query_output_identity",
+        "file_id_query_api",
+        "file_id_query_input_handle_value_uint64",
+        "ledger_file_volume_serial_number_uint64",
+        "ledger_file_id_128",
+        "standard_info_query_api",
+        "standard_info_query_input_handle_value_uint64",
+        "allocation_size_bytes",
+        "end_of_file_bytes",
+        "number_of_links",
+        "delete_pending",
+        "directory",
+        "attribute_query_api",
+        "attribute_query_input_handle_value_uint64",
+        "raw_file_attributes",
+        "reparse_tag",
+        "handle_continuously_retained",
+        "created_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_ledger_create_observation/v1"},
+        "ledger_file_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "create_api": {"const": "CreateFileW"},
+        "create_input_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "create_desired_access": {"const": 3221225472},
+        "create_share_mode": {"const": 1},
+        "create_security_attributes_pointer_is_null": {"const": true},
+        "create_disposition": {"const": 1},
+        "create_flags_and_attributes": {"const": 2149580928},
+        "create_returned_valid_handle": {"const": true},
+        "ledger_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "path_query_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "path_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "path_query_output_identity": {"$ref": "#/$defs/private_path_identity"},
+        "file_id_query_api": {"const": "GetFileInformationByHandleEx_FileIdInfo"},
+        "file_id_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "ledger_file_volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "ledger_file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "standard_info_query_api": {"const": "GetFileInformationByHandleEx_FileStandardInfo"},
+        "standard_info_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "allocation_size_bytes": {"$ref": "#/$defs/nonnegative_integer"},
+        "end_of_file_bytes": {"const": 0},
+        "number_of_links": {"const": 1},
+        "delete_pending": {"const": false},
+        "directory": {"const": false},
+        "attribute_query_api": {"const": "GetFileInformationByHandleEx_FileAttributeTagInfo"},
+        "attribute_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "reparse_tag": {"const": 0},
+        "handle_continuously_retained": {"const": true},
+        "created_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
     "stage_f_evidence_ledger_genesis": {
       "type": "object",
       "additionalProperties": false,
@@ -11996,6 +12560,7 @@
         "ledger_file_id_128",
         "ledger_handle_value_uint64",
         "ledger_handle_continuously_retained",
+        "ledger_create_observation",
         "entry_start_offset",
         "entry_wire_byte_count",
         "entry_wire_format",
@@ -12058,6 +12623,9 @@
         },
         "ledger_handle_continuously_retained": {
           "const": true
+        },
+        "ledger_create_observation": {
+          "$ref": "#/$defs/stage_f_ledger_create_observation"
         },
         "entry_start_offset": {
           "const": 0
@@ -12285,10 +12853,17 @@
         "root_protection_epoch_identity",
         "holder_process_id",
         "holder_process_creation_filetime_uint64",
+        "final_watch_live_state",
+        "watch_release_rows",
+        "watch_release_count",
         "final_usn_range",
         "unmatched_watch_event_count",
         "unmatched_usn_record_count",
         "all_resources_released_once",
+        "ledger_close_api",
+        "ledger_close_input_handle_value_uint64",
+        "ledger_close_returned_nonzero",
+        "ledger_handle_closed_utc",
         "release_disposition",
         "released_utc",
         "scientific_counters",
@@ -12307,6 +12882,16 @@
         "holder_process_creation_filetime_uint64": {
           "$ref": "#/$defs/nonzero_uint64"
         },
+        "final_watch_live_state": {
+          "$ref": "#/$defs/stage_f_root_watch_live_state"
+        },
+        "watch_release_rows": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/stage_f_root_watch_release_observation"},
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "watch_release_count": {"$ref": "#/$defs/positive_uint32"},
         "final_usn_range": {
           "$ref": "#/$defs/stage_f_usn_journal_range"
         },
@@ -12319,6 +12904,10 @@
         "all_resources_released_once": {
           "const": true
         },
+        "ledger_close_api": {"const": "CloseHandle"},
+        "ledger_close_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "ledger_close_returned_nonzero": {"const": true},
+        "ledger_handle_closed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "release_disposition": {
           "enum": [
             "QUIET_CANCELLED",
@@ -12769,11 +13358,18 @@
         "causal_postcutoff_files",
         "causal_postcutoff_file_count",
         "affected_directory_rows",
+        "current_retained_subtree_observation",
+        "current_raw_volume_observation",
+        "inventory_difference_equals_causal_rows",
         "retained_evidence_live_allocated_bytes",
+        "direct_sum_equals_live_scalar",
         "retained_evidence_remaining_tail_bytes",
+        "remaining_tail_formula_recomputed",
         "retained_evidence_within_ceiling",
         "observed_free_bytes",
+        "observed_free_equals_conservative_raw_minimum",
         "remaining_reserved_envelope_bytes",
+        "remaining_reserved_envelope_formula_recomputed",
         "free_space_floor_and_remaining_envelope_pass",
         "root_protection_epoch_identity",
         "evidence_ledger_predecessor_identity",
@@ -12815,15 +13411,30 @@
           "minItems": 1,
           "uniqueItems": true
         },
+        "current_retained_subtree_observation": {
+          "$ref": "#/$defs/stage_f_retained_subtree_allocation_observation"
+        },
+        "current_raw_volume_observation": {
+          "$ref": "#/$defs/stage_f_raw_volume_capacity_observation"
+        },
+        "inventory_difference_equals_causal_rows": {
+          "const": true
+        },
         "retained_evidence_live_allocated_bytes": {
           "type": "integer",
           "minimum": 0,
           "maximum": 8589934592
         },
+        "direct_sum_equals_live_scalar": {
+          "const": true
+        },
         "retained_evidence_remaining_tail_bytes": {
           "type": "integer",
           "minimum": 0,
           "maximum": 8589934592
+        },
+        "remaining_tail_formula_recomputed": {
+          "const": true
         },
         "retained_evidence_within_ceiling": {
           "const": true
@@ -12831,8 +13442,14 @@
         "observed_free_bytes": {
           "$ref": "#/$defs/nonnegative_integer"
         },
+        "observed_free_equals_conservative_raw_minimum": {
+          "const": true
+        },
         "remaining_reserved_envelope_bytes": {
           "$ref": "#/$defs/nonnegative_integer"
+        },
+        "remaining_reserved_envelope_formula_recomputed": {
+          "const": true
         },
         "free_space_floor_and_remaining_envelope_pass": {
           "const": true
@@ -12867,17 +13484,25 @@
         "schema",
         "capacity_consumption_closure_identity",
         "gate_role",
+        "fresh_retained_subtree_observation",
+        "fresh_raw_volume_observation",
         "get_disk_free_space_ex_succeeded",
         "observed_free_bytes",
+        "observed_free_equals_conservative_raw_minimum",
         "retained_evidence_live_allocated_bytes",
+        "direct_sum_equals_live_scalar",
         "minimum_free_bytes",
         "remaining_reserved_envelope_bytes",
+        "remaining_reserved_envelope_formula_recomputed",
         "retained_evidence_ceiling_bytes",
         "all_capacity_predicates_pass",
         "root_protection_epoch_identity",
         "evidence_ledger_predecessor_identity",
         "evidence_ledger_predecessor_append_observation",
         "observed_utc",
+        "observations_completed_after_ledger_predecessor_append",
+        "exact_following_operation_capability_identity",
+        "no_intervening_controller_operation",
         "held_in_controller_memory_through_start",
         "scientific_counters",
         "gate_sha256"
@@ -12896,22 +13521,37 @@
             "CONTINUATION_SEGMENT_START"
           ]
         },
+        "fresh_retained_subtree_observation": {
+          "$ref": "#/$defs/stage_f_retained_subtree_allocation_observation"
+        },
+        "fresh_raw_volume_observation": {
+          "$ref": "#/$defs/stage_f_raw_volume_capacity_observation"
+        },
         "get_disk_free_space_ex_succeeded": {
           "const": true
         },
         "observed_free_bytes": {
           "$ref": "#/$defs/nonnegative_integer"
         },
+        "observed_free_equals_conservative_raw_minimum": {
+          "const": true
+        },
         "retained_evidence_live_allocated_bytes": {
           "type": "integer",
           "minimum": 0,
           "maximum": 8589934592
+        },
+        "direct_sum_equals_live_scalar": {
+          "const": true
         },
         "minimum_free_bytes": {
           "const": 375809638400
         },
         "remaining_reserved_envelope_bytes": {
           "$ref": "#/$defs/nonnegative_integer"
+        },
+        "remaining_reserved_envelope_formula_recomputed": {
+          "const": true
         },
         "retained_evidence_ceiling_bytes": {
           "const": 8589934592
@@ -12930,6 +13570,15 @@
         },
         "observed_utc": {
           "$ref": "#/$defs/utc_timestamp"
+        },
+        "observations_completed_after_ledger_predecessor_append": {
+          "const": true
+        },
+        "exact_following_operation_capability_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "no_intervening_controller_operation": {
+          "const": true
         },
         "held_in_controller_memory_through_start": {
           "const": true
@@ -13253,6 +13902,176 @@
         }
       }
     },
+    "stage_f_container_mount_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mount_ordinal",
+        "mount_type",
+        "source_path_identity",
+        "source_handle_value_uint64",
+        "source_volume_serial_number_uint64",
+        "source_file_id_128",
+        "source_raw_file_attributes",
+        "source_reparse_tag",
+        "source_measured_from_held_nonreparse_handle",
+        "source_handle_held_through_container_start",
+        "target_path",
+        "read_only",
+        "propagation",
+        "matches_sealed_storage_binding"
+      ],
+      "properties": {
+        "mount_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "mount_type": {"const": "bind"},
+        "source_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "source_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "source_volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "source_file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "source_raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "source_reparse_tag": {"const": 0},
+        "source_measured_from_held_nonreparse_handle": {"const": true},
+        "source_handle_held_through_container_start": {"const": true},
+        "target_path": {"$ref": "#/$defs/nonempty_string"},
+        "read_only": {"type": "boolean"},
+        "propagation": {"const": "rprivate"},
+        "matches_sealed_storage_binding": {"const": true}
+      }
+    },
+    "stage_f_inert_container_identity": {
+      "allOf": [
+        {"$ref": "#/$defs/identity"},
+        {"type": "object", "properties": {"kind": {"const": "stage_f_inert_container/v1"}}}
+      ]
+    },
+    "stage_f_inert_container_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "docker_engine_observation",
+        "named_pipe_path",
+        "create_method",
+        "create_endpoint",
+        "create_request_bytes_base64",
+        "create_request_sha256",
+        "create_http_status",
+        "create_response_bytes_base64",
+        "create_response_sha256",
+        "container_id",
+        "inspect_method",
+        "inspect_endpoint",
+        "inspect_request_bytes_base64",
+        "inspect_request_sha256",
+        "inspect_http_status",
+        "inspect_response_bytes_base64",
+        "inspect_response_sha256",
+        "immutable_image_digest",
+        "immutable_image_id",
+        "ordered_entrypoint",
+        "ordered_cmd",
+        "ordered_environment",
+        "ordered_mounts",
+        "mount_count",
+        "network_mode",
+        "memory_limit_bytes",
+        "nano_cpus",
+        "pids_limit",
+        "resource_limits_match_sealed_process_allocation",
+        "results_path_identity",
+        "checkpoint_path_identity",
+        "created_utc",
+        "scientific_entry_count",
+        "container_created_without_scientific_entry",
+        "inspect_projection_exactly_matches_create_request_and_sealed_bindings",
+        "inert_container_identity",
+        "container_observation_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_inert_container_observation/v1"},
+        "docker_engine_observation": {"$ref": "#/$defs/docker_engine_observation"},
+        "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "create_method": {"const": "POST"},
+        "create_endpoint": {"const": "/containers/create"},
+        "create_request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "create_request_sha256": {"$ref": "#/$defs/sha256"},
+        "create_http_status": {"const": 201},
+        "create_response_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "create_response_sha256": {"$ref": "#/$defs/sha256"},
+        "container_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "inspect_method": {"const": "GET"},
+        "inspect_endpoint": {"type": "string", "pattern": "^/containers/[0-9a-f]{64}/json$"},
+        "inspect_request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "inspect_request_sha256": {"$ref": "#/$defs/sha256"},
+        "inspect_http_status": {"const": 200},
+        "inspect_response_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "inspect_response_sha256": {"$ref": "#/$defs/sha256"},
+        "immutable_image_digest": {"const": "sha256:a1f225293efe68c4cb9dddb084b04fa1a21a4d751ad130d0224902e00b1e55ab"},
+        "immutable_image_id": {"$ref": "#/$defs/nonempty_string"},
+        "ordered_entrypoint": {"type": "array", "items": {"$ref": "#/$defs/nonempty_string"}},
+        "ordered_cmd": {"type": "array", "items": {"$ref": "#/$defs/nonempty_string"}, "minItems": 1},
+        "ordered_environment": {"type": "array", "items": {"$ref": "#/$defs/nonempty_string"}, "uniqueItems": true},
+        "ordered_mounts": {"type": "array", "items": {"$ref": "#/$defs/stage_f_container_mount_observation"}, "minItems": 2, "uniqueItems": true},
+        "mount_count": {"$ref": "#/$defs/positive_uint32"},
+        "network_mode": {"const": "none"},
+        "memory_limit_bytes": {"$ref": "#/$defs/positive_integer"},
+        "nano_cpus": {"$ref": "#/$defs/positive_integer"},
+        "pids_limit": {"$ref": "#/$defs/positive_integer"},
+        "resource_limits_match_sealed_process_allocation": {"const": true},
+        "results_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "checkpoint_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "created_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "scientific_entry_count": {"const": 0},
+        "container_created_without_scientific_entry": {"const": true},
+        "inspect_projection_exactly_matches_create_request_and_sealed_bindings": {"const": true},
+        "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
+        "container_observation_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "stage_f_container_start_capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "docker_engine_observation",
+        "named_pipe_path",
+        "inert_container_identity",
+        "container_id",
+        "scientific_launch_gate_identity",
+        "method",
+        "endpoint",
+        "request_bytes_base64",
+        "request_sha256",
+        "request_constructed_not_sent",
+        "start_call_invoked",
+        "response_http_status",
+        "response_bytes_base64",
+        "single_use",
+        "held_in_controller_memory",
+        "issued_utc",
+        "capability_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_container_start_capability/v1"},
+        "docker_engine_observation": {"$ref": "#/$defs/docker_engine_observation"},
+        "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "inert_container_identity": {"$ref": "#/$defs/stage_f_inert_container_identity"},
+        "container_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "scientific_launch_gate_identity": {"$ref": "#/$defs/stage_f_scientific_launch_gate_identity"},
+        "method": {"const": "POST"},
+        "endpoint": {"type": "string", "pattern": "^/containers/[0-9a-f]{64}/start$"},
+        "request_bytes_base64": {"type": "string", "minLength": 4, "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "request_constructed_not_sent": {"const": true},
+        "start_call_invoked": {"const": false},
+        "response_http_status": {"type": "null"},
+        "response_bytes_base64": {"type": "null"},
+        "single_use": {"const": true},
+        "held_in_controller_memory": {"const": true},
+        "issued_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "capability_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "stage_f_scientific_launch_gate": {
       "type": "object",
       "additionalProperties": false,
@@ -13273,6 +14092,8 @@
         "verifier_identity",
         "ordered_route_ids",
         "inert_container_identity",
+        "inert_container_observation",
+        "root_watch_live_state",
         "container_created_without_scientific_entry",
         "all_gate_predicates_pass",
         "issued_before_first_model_step",
@@ -13333,7 +14154,13 @@
           }
         },
         "inert_container_identity": {
-          "$ref": "#/$defs/identity"
+          "$ref": "#/$defs/stage_f_inert_container_identity"
+        },
+        "inert_container_observation": {
+          "$ref": "#/$defs/stage_f_inert_container_observation"
+        },
+        "root_watch_live_state": {
+          "$ref": "#/$defs/stage_f_root_watch_live_state"
         },
         "container_created_without_scientific_entry": {
           "const": true
@@ -13364,6 +14191,9 @@
         "root_protection_epoch_identity",
         "evidence_ledger_predecessor_identity",
         "container_identity",
+        "container_observation",
+        "container_start_capability",
+        "root_watch_live_state",
         "start_api",
         "start_authorized",
         "started_utc",
@@ -13389,7 +14219,16 @@
           "$ref": "#/$defs/stage_f_evidence_ledger_identity"
         },
         "container_identity": {
-          "$ref": "#/$defs/identity"
+          "$ref": "#/$defs/stage_f_inert_container_identity"
+        },
+        "container_observation": {
+          "$ref": "#/$defs/stage_f_inert_container_observation"
+        },
+        "container_start_capability": {
+          "$ref": "#/$defs/stage_f_container_start_capability"
+        },
+        "root_watch_live_state": {
+          "$ref": "#/$defs/stage_f_root_watch_live_state"
         },
         "start_api": {
           "const": "DOCKER_ENGINE_CONTAINER_START"
@@ -13527,22 +14366,69 @@
         "ledger_file_volume_serial_number_uint64",
         "ledger_file_id_128",
         "ledger_handle_value_uint64",
+        "preappend_file_standard_info_api",
+        "preappend_file_standard_info_handle_value_uint64",
+        "preappend_allocation_size_bytes",
+        "preappend_end_of_file_bytes",
+        "preappend_end_of_file_observed_utc",
         "append_start_offset",
+        "set_append_pointer_api",
+        "set_append_pointer_input_handle_value_uint64",
+        "set_append_pointer_distance_to_move",
+        "set_append_pointer_move_method",
+        "set_append_pointer_returned_nonzero",
+        "set_append_pointer_result_offset",
+        "append_pointer_set_utc",
         "append_byte_count",
         "append_end_offset",
+        "entry_wire_bytes_base64",
+        "entry_wire_buffer_base_address_uint64",
+        "entry_wire_buffer_byte_count",
         "entry_wire_sha256",
         "write_api",
         "write_input_handle_value_uint64",
+        "write_input_buffer_base_address_uint64",
+        "write_input_byte_count",
+        "write_bytes_written_output_address_uint64",
+        "write_overlapped_pointer_is_null",
+        "write_started_utc",
         "write_returned_nonzero",
         "written_byte_count",
+        "write_completed_utc",
         "flush_api",
         "flush_input_handle_value_uint64",
         "flush_returned_nonzero",
+        "flush_completed_utc",
+        "postflush_file_standard_info_api",
+        "postflush_file_standard_info_handle_value_uint64",
         "postflush_file_size",
+        "postflush_file_size_observed_utc",
+        "set_reread_pointer_api",
+        "set_reread_pointer_input_handle_value_uint64",
+        "set_reread_pointer_distance_to_move",
+        "set_reread_pointer_move_method",
+        "set_reread_pointer_returned_nonzero",
+        "set_reread_pointer_result_offset",
+        "reread_pointer_set_utc",
+        "reread_api",
         "reread_input_handle_value_uint64",
         "reread_start_offset",
+        "reread_buffer_base_address_uint64",
         "reread_byte_count",
+        "reread_bytes_read_output_address_uint64",
+        "reread_overlapped_pointer_is_null",
+        "reread_returned_nonzero",
+        "reread_raw_bytes_base64",
         "reread_sha256",
+        "reread_completed_utc",
+        "restore_pointer_api",
+        "restore_pointer_input_handle_value_uint64",
+        "restore_pointer_distance_to_move",
+        "restore_pointer_move_method",
+        "restore_pointer_returned_nonzero",
+        "restore_pointer_result_offset",
+        "pointer_restored_utc",
+        "all_offsets_counts_hashes_and_handles_reconciled",
         "parent_watch_range_sha256",
         "usn_range_sha256",
         "completed_utc"
@@ -13569,13 +14455,60 @@
         "ledger_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "preappend_file_standard_info_api": {
+          "const": "GetFileInformationByHandleEx_FileStandardInfo"
+        },
+        "preappend_file_standard_info_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "preappend_allocation_size_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "preappend_end_of_file_bytes": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "preappend_end_of_file_observed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
         "append_start_offset": {
           "$ref": "#/$defs/nonnegative_integer"
+        },
+        "set_append_pointer_api": {
+          "const": "SetFilePointerEx"
+        },
+        "set_append_pointer_input_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "set_append_pointer_distance_to_move": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "set_append_pointer_move_method": {
+          "const": "FILE_BEGIN"
+        },
+        "set_append_pointer_returned_nonzero": {
+          "const": true
+        },
+        "set_append_pointer_result_offset": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "append_pointer_set_utc": {
+          "$ref": "#/$defs/utc_timestamp"
         },
         "append_byte_count": {
           "$ref": "#/$defs/positive_integer"
         },
         "append_end_offset": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "entry_wire_bytes_base64": {
+          "type": "string",
+          "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "entry_wire_buffer_base_address_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "entry_wire_buffer_byte_count": {
           "$ref": "#/$defs/positive_integer"
         },
         "entry_wire_sha256": {
@@ -13587,11 +14520,29 @@
         "write_input_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "write_input_buffer_base_address_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "write_input_byte_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "write_bytes_written_output_address_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "write_overlapped_pointer_is_null": {
+          "const": true
+        },
+        "write_started_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
         "write_returned_nonzero": {
           "const": true
         },
         "written_byte_count": {
           "$ref": "#/$defs/positive_integer"
+        },
+        "write_completed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
         },
         "flush_api": {
           "const": "FlushFileBuffers"
@@ -13602,8 +14553,44 @@
         "flush_returned_nonzero": {
           "const": true
         },
+        "flush_completed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "postflush_file_standard_info_api": {
+          "const": "GetFileInformationByHandleEx_FileStandardInfo"
+        },
+        "postflush_file_standard_info_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
         "postflush_file_size": {
           "$ref": "#/$defs/positive_integer"
+        },
+        "postflush_file_size_observed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "set_reread_pointer_api": {
+          "const": "SetFilePointerEx"
+        },
+        "set_reread_pointer_input_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "set_reread_pointer_distance_to_move": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "set_reread_pointer_move_method": {
+          "const": "FILE_BEGIN"
+        },
+        "set_reread_pointer_returned_nonzero": {
+          "const": true
+        },
+        "set_reread_pointer_result_offset": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "reread_pointer_set_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "reread_api": {
+          "const": "ReadFile"
         },
         "reread_input_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
@@ -13611,11 +14598,55 @@
         "reread_start_offset": {
           "$ref": "#/$defs/nonnegative_integer"
         },
+        "reread_buffer_base_address_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
         "reread_byte_count": {
           "$ref": "#/$defs/positive_integer"
         },
+        "reread_bytes_read_output_address_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "reread_overlapped_pointer_is_null": {
+          "const": true
+        },
+        "reread_returned_nonzero": {
+          "const": true
+        },
+        "reread_raw_bytes_base64": {
+          "type": "string",
+          "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
         "reread_sha256": {
           "$ref": "#/$defs/sha256"
+        },
+        "reread_completed_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "restore_pointer_api": {
+          "const": "SetFilePointerEx"
+        },
+        "restore_pointer_input_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "restore_pointer_distance_to_move": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "restore_pointer_move_method": {
+          "const": "FILE_BEGIN"
+        },
+        "restore_pointer_returned_nonzero": {
+          "const": true
+        },
+        "restore_pointer_result_offset": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "pointer_restored_utc": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "all_offsets_counts_hashes_and_handles_reconciled": {
+          "const": true
         },
         "parent_watch_range_sha256": {
           "$ref": "#/$defs/sha256"
@@ -13802,6 +14833,100 @@
         }
       ]
     },
+    "ntfs_retrieval_pointers_call_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "call_ordinal",
+        "directory_path_identity",
+        "directory_volume_serial_number_uint64",
+        "directory_file_id_128",
+        "directory_handle_value_uint64",
+        "directory_handle_continuously_held_nonreparse",
+        "api",
+        "control_code_name",
+        "control_code_uint32",
+        "input_buffer_base_address_uint64",
+        "input_buffer_byte_count",
+        "input_bytes_base64",
+        "input_sha256",
+        "starting_vcn",
+        "output_buffer_base_address_uint64",
+        "output_buffer_capacity",
+        "bytes_returned_output_address_uint64",
+        "device_io_control_returned_nonzero",
+        "get_last_error",
+        "bytes_returned",
+        "output_bytes_base64",
+        "output_sha256",
+        "ordered_extents",
+        "extent_count",
+        "returned_next_vcn",
+        "result_disposition",
+        "terminal_call",
+        "completed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_ntfs_retrieval_pointers_call_observation/v1"},
+        "call_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "directory_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "directory_volume_serial_number_uint64": {"$ref": "#/$defs/uint64"},
+        "directory_file_id_128": {"$ref": "#/$defs/file_id_128"},
+        "directory_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "directory_handle_continuously_held_nonreparse": {"const": true},
+        "api": {"const": "DeviceIoControl"},
+        "control_code_name": {"const": "FSCTL_GET_RETRIEVAL_POINTERS"},
+        "control_code_uint32": {"const": 589939},
+        "input_buffer_base_address_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "input_buffer_byte_count": {"const": 8},
+        "input_bytes_base64": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 12,
+          "pattern": "^[A-Za-z0-9+/]{11}=$"
+        },
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "starting_vcn": {"$ref": "#/$defs/nonnegative_integer"},
+        "output_buffer_base_address_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "output_buffer_capacity": {"$ref": "#/$defs/positive_uint32"},
+        "bytes_returned_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "device_io_control_returned_nonzero": {"type": "boolean"},
+        "get_last_error": {"$ref": "#/$defs/uint32"},
+        "bytes_returned": {"$ref": "#/$defs/positive_uint32"},
+        "output_bytes_base64": {
+          "type": "string",
+          "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "output_sha256": {"$ref": "#/$defs/sha256"},
+        "ordered_extents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["next_vcn", "lcn"],
+            "properties": {
+              "next_vcn": {"$ref": "#/$defs/positive_integer"},
+              "lcn": {"$ref": "#/$defs/nonnegative_integer"}
+            }
+          },
+          "minItems": 1
+        },
+        "extent_count": {"$ref": "#/$defs/positive_uint32"},
+        "returned_next_vcn": {"$ref": "#/$defs/positive_integer"},
+        "result_disposition": {"enum": ["ERROR_MORE_DATA_CONTINUE", "COMPLETE"]},
+        "terminal_call": {"type": "boolean"},
+        "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"result_disposition": {"const": "ERROR_MORE_DATA_CONTINUE"}}, "required": ["result_disposition"]},
+          "then": {"properties": {"device_io_control_returned_nonzero": {"const": false}, "get_last_error": {"const": 234}, "terminal_call": {"const": false}}},
+          "else": {"properties": {"device_io_control_returned_nonzero": {"const": true}, "get_last_error": {"const": 0}, "terminal_call": {"const": true}}}
+        }
+      ]
+    },
     "ntfs_directory_allocation_observation": {
       "type": "object",
       "additionalProperties": false,
@@ -13810,7 +14935,27 @@
         "directory_path_identity",
         "directory_file_id_128",
         "directory_volume_serial_number_uint64",
+        "directory_open_api",
+        "directory_open_input_path_identity",
+        "directory_open_desired_access",
+        "directory_open_share_mode",
+        "directory_open_security_attributes",
+        "directory_open_disposition",
+        "directory_open_flags_and_attributes",
+        "directory_open_returned_valid_handle",
         "volume_handle_value_uint64",
+        "directory_handle_value_uint64",
+        "directory_path_query_api",
+        "directory_path_query_input_handle_value_uint64",
+        "directory_path_query_output_identity",
+        "directory_file_id_query_api",
+        "directory_file_id_query_input_handle_value_uint64",
+        "directory_attribute_query_api",
+        "directory_attribute_query_input_handle_value_uint64",
+        "directory_raw_file_attributes",
+        "directory_reparse_tag",
+        "directory_attribute_set",
+        "directory_handle_held_through_complete_retrieval_chain",
         "query_api",
         "bytes_per_file_record",
         "bytes_per_cluster",
@@ -13825,11 +14970,18 @@
         "index_allocation_stream",
         "bitmap_stream",
         "retrieval_pointers_api",
+        "retrieval_pointer_calls",
+        "retrieval_pointer_call_count",
+        "retrieval_first_starting_vcn",
+        "retrieval_continuations_complete",
+        "retrieval_terminal_disposition",
+        "retrieval_target_is_exact_held_directory",
         "retrieval_pointers_raw_bytes_base64",
         "retrieval_pointers_sha256",
         "retrieval_extent_count",
         "retrieval_allocated_cluster_count",
         "retrieval_matches_index_allocation_runlist",
+        "bitmap_allocation_derived_only_from_mft_mapping_pairs",
         "mft_record_allocation_upper_bound_bytes",
         "directory_total_allocation_upper_bound_bytes",
         "observed_utc",
@@ -13849,9 +15001,31 @@
         "directory_volume_serial_number_uint64": {
           "$ref": "#/$defs/uint64"
         },
+        "directory_open_api": {"const": "CreateFileW"},
+        "directory_open_input_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "directory_open_desired_access": {"const": 131200},
+        "directory_open_share_mode": {"const": 1},
+        "directory_open_security_attributes": {"const": "NULL"},
+        "directory_open_disposition": {"const": 3},
+        "directory_open_flags_and_attributes": {"const": 35651584},
+        "directory_open_returned_valid_handle": {"const": true},
         "volume_handle_value_uint64": {
           "$ref": "#/$defs/valid_handle_value_uint64"
         },
+        "directory_handle_value_uint64": {
+          "$ref": "#/$defs/valid_handle_value_uint64"
+        },
+        "directory_path_query_api": {"const": "GetFinalPathNameByHandleW_FILE_NAME_NORMALIZED_VOLUME_NAME_GUID"},
+        "directory_path_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "directory_path_query_output_identity": {"$ref": "#/$defs/private_path_identity"},
+        "directory_file_id_query_api": {"const": "GetFileInformationByHandleEx_FileIdInfo"},
+        "directory_file_id_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "directory_attribute_query_api": {"const": "GetFileInformationByHandleEx_FileAttributeTagInfo"},
+        "directory_attribute_query_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "directory_raw_file_attributes": {"$ref": "#/$defs/uint32"},
+        "directory_reparse_tag": {"const": 0},
+        "directory_attribute_set": {"const": true},
+        "directory_handle_held_through_complete_retrieval_chain": {"const": true},
         "query_api": {
           "const": "DeviceIoControl_FSCTL_GET_NTFS_FILE_RECORD"
         },
@@ -13909,6 +15083,26 @@
         "retrieval_pointers_api": {
           "const": "DeviceIoControl_FSCTL_GET_RETRIEVAL_POINTERS"
         },
+        "retrieval_pointer_calls": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/ntfs_retrieval_pointers_call_observation"},
+          "minItems": 1
+        },
+        "retrieval_pointer_call_count": {
+          "$ref": "#/$defs/positive_uint32"
+        },
+        "retrieval_first_starting_vcn": {
+          "const": 0
+        },
+        "retrieval_continuations_complete": {
+          "const": true
+        },
+        "retrieval_terminal_disposition": {
+          "const": "COMPLETE"
+        },
+        "retrieval_target_is_exact_held_directory": {
+          "const": true
+        },
         "retrieval_pointers_raw_bytes_base64": {
           "oneOf": [
             {
@@ -13938,6 +15132,9 @@
           "$ref": "#/$defs/nonnegative_integer"
         },
         "retrieval_matches_index_allocation_runlist": {
+          "const": true
+        },
+        "bitmap_allocation_derived_only_from_mft_mapping_pairs": {
           "const": true
         },
         "mft_record_allocation_upper_bound_bytes": {

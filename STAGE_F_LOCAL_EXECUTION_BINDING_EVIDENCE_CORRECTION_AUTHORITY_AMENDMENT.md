@@ -142,6 +142,20 @@ null completion routine. The exact raw issue result and a nonwaiting
 GetOverlappedResult result of false, ERROR_IO_INCOMPLETE and zero bytes prove
 that this request was issued and pending before the target-absence check.
 
+The watch acquisition is itself closed evidence. CreateFileW receives the
+exact resolved common-parent volume-GUID path, desired access 1
+(FILE_LIST_DIRECTORY), share mode 7, null security attributes, OPEN_EXISTING
+and raw flags 1109393408 (FILE_FLAG_OVERLAPPED |
+FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT). The returned valid
+handle is the input to GetFinalPathNameByHandleW, FileIdInfo and
+FileAttributeTagInfo; their normalized path, volume serial, file ID, directory
+attribute and zero reparse tag must equal the resolved parent of both source
+and target. VirtualAlloc records the exact allocation type, protection, size,
+base, alignment and initial-zero hash for the buffer and OVERLAPPED storage.
+CreateEventW records exact null security, manual-reset true, initial-state
+false, null name and the returned event placed in hEvent. Every later watch,
+completion, hash, close and release input must equal these acquired resources.
+
 After successful `MoveFileExW` with only `MOVEFILE_WRITE_THROUGH`, the exact
 guard handle must:
 
@@ -268,6 +282,34 @@ Before the first private byte is read, the controller acquires and retains:
 - one selected-volume handle for `FSCTL_QUERY_USN_JOURNAL` and
   `FSCTL_READ_USN_JOURNAL`.
 
+Every root-watch row carries the same closed directory-open, handle-to-path,
+buffer, OVERLAPPED and event acquisition evidence as section 4, with filter
+351 and its declared direct or recursive role. A watch is a long-lived
+directory handle with an ordered sequence of one-shot requests, not one request
+falsely claimed to remain pending for the whole epoch. Each normal completion
+records waiting GetOverlappedResult inputs and result, exact transferred raw
+buffer bytes/base/count/SHA-256, strict FILE_NOTIFY_INFORMATION parsing,
+monotonic per-watch cycle number and one-to-one protected-scope mutation-ticket
+mapping. Zero bytes, overflow, malformed records, unknown events or ambiguous
+tickets refuse. After the completed bytes are retained and parsed, the event is
+reset, the buffer and OVERLAPPED are zeroed without reuse, and the same exact
+resources are reissued. A nonwaiting GetOverlappedResult must again prove
+ERROR_IO_INCOMPLETE and zero bytes before the next protected operation.
+Directory changes accumulated by the same handle between calls are therefore
+drained by the next request and are also bridged by the raw USN range.
+
+Before each closed gate and launch handoff, the controller drains every
+completed root-watch cycle, reconciles it, reissues it, and proves one pending
+request per acquired watch in a complete live-state observation. On final
+release, each watch has an ordered terminal branch. A still-pending request is
+passed to CancelIoEx and a waiting GetOverlappedResult proves
+ERROR_OPERATION_ABORTED and zero bytes. If normal completion wins the cancel
+race, its exact bytes are parsed and reconciled before release. Every exact
+directory/event handle closes once and every exact buffer/OVERLAPPED allocation
+is freed once; holder PID and creation FILETIME, identities, addresses and UTCs
+must pair with acquisition. No request, handle or storage may be substituted,
+reused or released early.
+
 The protection epoch begins at the common pending-set check and USN start
 watermark. All reads, record publications, capacity measurements, validation,
 independent-audit materialization, packet construction, post-packet user-
@@ -275,14 +317,19 @@ receipt publication and prelaunch gate occur within the same epoch. If the
 controller exits or any required resource releases before launch handoff, the
 packet becomes stale and a new outcome-blind validation chain is required.
 
-Every intentional write has a fresh closed mutation ticket issued before the
+Every intentional protected-scope write has a fresh closed mutation ticket issued before the
 operation. A ticket binds transaction ID, ordinal, actor process and thread,
 operation, exact temporary and final path identities, expected old/new file
 IDs where applicable, expected byte count and SHA-256, permitted notification
-and USN reason masks, and issue/expiry timestamps. Every watch notification and
-USN record must reconcile one-to-one with exactly one ticket. Unknown,
-duplicated, reordered, expired or unconsumed tickets and unmatched events
-refuse.
+and USN reason masks, and issue/expiry timestamps. Every protected-root watch
+notification and every USN record whose file reference is a protected root,
+held immutable file or authorized new protected-scope object must reconcile
+one-to-one with exactly one ticket. Raw volume records outside every protected
+file reference and ancestor scope are retained and classified as unrelated;
+they are not silently omitted and cannot authorize a protected mutation. This
+is consistent with the explicit no-dedicated-volume claim and the later
+conservative free-space gates. Unknown protected-scope, duplicated, reordered,
+expired or unconsumed tickets and unmatched protected events refuse.
 
 The USN evidence binds the exact volume, journal ID, lowest valid USN, first
 USN, next USN, maximum USN, start and end watermarks, complete ordered V2/V3
@@ -293,6 +340,20 @@ unexplained reason refuses. A USN record whose file reference equals any held
 immutable root file refuses on data, basic-info, security, rename, hard-link,
 reparse, compression or close reasons unless the exact ticket permits it; this
 also covers mutation through an outside-root hard-link alias.
+
+The selected-volume handle has a closed CreateFileW acquisition and NTFS
+volume identity and remains the exact input handle for every DeviceIoControl.
+The range embeds raw FSCTL_QUERY_USN_JOURNAL start and end call rows and ordered
+raw FSCTL_READ_USN_JOURNAL call rows. Each row binds numeric control code,
+exact handle, raw input structure, input/output addresses and sizes, return and
+last-error branch, bytes returned, output bytes and SHA-256, and start/return
+UTC. Every read input exposes StartUsn, ReasonMask, ReturnOnlyOnClose, Timeout,
+BytesToWaitFor and journal ID; its output's leading next-USN is the exact next
+call start. V2/V3 records bind buffer ordinal and byte offset, raw record bytes,
+record length, fixed-width file references, USN, timestamp, reason, source,
+security, attributes, FileNameOffset/FileNameLength and exact UTF-16LE name.
+The strict parser projection, raw buffer partition, call count, record count,
+ticket/scope disposition and terminal next-USN must all reconstruct exactly.
 
 The fresh genesis creates one ledger file with `CreateFileW(CREATE_NEW)`,
 `GENERIC_READ | GENERIC_WRITE`, only `FILE_SHARE_READ`, and
@@ -309,6 +370,21 @@ same-handle reread. The append ticket is issued in memory before the write and
 binds the root epoch, ledger file ID, previous head, actor, record role,
 record identity, exact start offset and expiry; it does not contain the future
 entry identity, so neither ticket nor entry has a hash cycle.
+
+Ledger genesis embeds a closed CreateFileW acquisition: exact path, access
+3221225472, share 1, null security attributes, CREATE_NEW, raw flags 2149580928,
+valid returned handle, path/FileId/standard-info/attributes observation and
+creation UTC. Before every append, same-handle FileStandardInfo proves the
+prior durable EOF. SetFilePointerEx with FILE_BEGIN positions that handle at the
+EOF and returns the same position. The exact canonical entry wire bytes, base
+address, count and SHA-256 are the WriteFile input with a null OVERLAPPED and an
+exact bytes-written output. After complete WriteFile and FlushFileBuffers, a
+second same-handle FileStandardInfo proves old EOF plus wire count. Explicit
+SetFilePointerEx, ReadFile and pointer restoration rows retain the raw reread
+bytes and prove their count/digest equal the entry wire. All API inputs equal
+the continuously retained genesis handle, timestamps are ordered, partial or
+nonterminal writes refuse, and the handle's final exact close is recorded only
+after launch handoff or refused-attempt release.
 
 Every later ledger entry names exactly the prior entry identity, monotonic
 ordinal, transaction identity, record role, canonical-record identity,
@@ -355,6 +431,16 @@ closed capacity-publication observation binds:
   `FSCTL_GET_RETRIEVAL_POINTERS` extents. Absent streams are explicit. The MFT
   upper bound is exact record count times bytes per file record; the directory
   upper bound is that value plus allocated nonresident stream clusters;
+- every retrieval-pointer enumeration uses the exact held nonreparse directory
+  handle resolved to that row's path, volume serial and file ID, never the
+  selected-volume handle or an unrelated file. Its first raw STARTING_VCN input
+  is zero; ordered continuation calls use the prior returned NextVcn until the
+  exact terminal result, retaining every input/output buffer, size, result,
+  error, bytes-returned value and digest. The reconstructed VCN/LCN runlist must
+  equal the parsed $I30 $INDEX_ALLOCATION mapping pairs. A nonresident $I30
+  $BITMAP allocation is accounted from its fully resolved MFT mapping pairs;
+  no unsupported claim that the directory handle enumerates that distinct
+  named stream is made;
 - a closed post-publication retained-subtree allocation observation containing
   the complete ordered UTF-8 NFC relative-path inventory, every existing
   storage-inventory entry and allocation component, an exact entry count, zero
@@ -379,6 +465,14 @@ already debited as 8 GiB, so later audit and launch-control records may consume
 only the explicitly bounded remaining tail. They cannot reduce any other
 component or the free-space floor.
 
+The consumption closure embeds a fresh complete retained-subtree observation
+and fresh raw volume-capacity observation of the same closed forms used by the
+publication observation. The current ordered inventory minus the cutoff
+inventory must equal the complete causal post-cutoff rows; the direct accounted
+sum equals the live scalar; remaining retained tail equals 8 GiB minus that
+sum; observed free bytes equals the conservative raw minimum; and the floor
+plus remaining-envelope predicate is recomputed rather than asserted.
+
 Immediately before a host-validation thread is resumed, and immediately before
 a separately authorized scientific container is started, the still-running
 controller repeats the direct free-space and retained-allocation gate while all
@@ -386,6 +480,14 @@ root-protection resources remain held. This instantaneous pre-resume/pre-start
 gate is the declared volume-wide trust boundary for unrelated writers. Each
 later or resumed scientific segment requires a new gate. A dedicated-volume
 claim is not made.
+
+Every live gate therefore embeds a newly completed direct retained-subtree
+observation and raw volume-capacity observation, binds the exact still-held root
+epoch and the exact immediately following ResumeThread or typed container-start
+capability, and records that no intervening controller operation or stale
+observation is permitted. Its scalars and formulas reconstruct from those raw
+objects. The measurement is retained in process memory through the named call;
+the call outcome is recorded by its separate launch receipt.
 
 The gate observation is retained in controller memory through the start call
 and then published under the already debited retained-evidence tail. Failure
@@ -401,10 +503,20 @@ power snapshot, not a set of caller booleans. It binds the historical
 an exact projection of the same observation; disagreement, a different
 observation epoch, or an opaque historical identity refuses. It also binds:
 
-- `GetSystemPowerStatus`, including the raw return and every field of
-  `SYSTEM_POWER_STATUS`;
-- `PowerGetActiveScheme` plus raw `PowerReadACValueIndex` results and exact
-  plugged-in standby and lid-action indices;
+- `GetSystemPowerStatus`, including the exact output address, its twelve raw
+  output bytes and digest, the raw return and every field of the current
+  `SYSTEM_POWER_STATUS` (`ACLineStatus`, `BatteryFlag`, `BatteryLifePercent`,
+  `SystemStatusFlag`, `BatteryLifeTime` and `BatteryFullLifeTime`);
+- a closed PowerGetActiveScheme row with its exact output pointer, GUID bytes,
+  allocation and LocalFree lifecycle, plus two closed PowerReadACValueIndex
+  rows. Each read row carries the exact active-scheme GUID and the frozen
+  subgroup/setting GUID pair, output pointer, raw uint32 index, result and UTC.
+  The standby row uses sleep subgroup 238c9fa8-0aad-41ed-83f4-97be242c8f20
+  and setting 29f6c1db-86da-48c5-9fdb-f2b67b1f44da; the lid row uses subgroup
+  4f971e89-eebd-4455-a8de-9e59040e7347 and setting
+  5ca83367-6e45-459f-a27b-476b1d01c936. The derived lid action uses only the
+  frozen raw mapping 0=DO_NOTHING, 1=SLEEP, 2=HIBERNATE, 3=SHUTDOWN. Every
+  SYSTEM_POWER_STATUS BYTE field is constrained to 0 through 255;
 - Docker Desktop/backend process or service identities with executable paths,
   file digests and PID/creation-FILETIME or running-service identity; the exact
   HKCU autostart open/query result, type and raw UTF-16LE value; and ordered raw
@@ -454,6 +566,20 @@ append observation. It records `start_authorized=true`,
 one-call capability, not a claim that start has occurred. The existing
 per-route scientific execution receipt, unchanged by this amendment, must
 record the later call and outcome.
+
+The inert-container identity is typed, not a generic digest label. Its complete
+digest preimage embeds the exact Docker daemon identity, raw create request and
+response, returned container ID, raw inspect request and response, immutable
+image digest and ID, ordered Entrypoint/Cmd and environment, every mount's held
+source identity/target/mode, network mode none, resource and process limits,
+output and checkpoint path identities, creation time and zero scientific-entry
+count. The launch gate and handoff contain that exact typed identity. The
+handoff also embeds a process-local one-shot start-capability observation with
+the exact daemon connection, container ID, launch-gate identity and raw
+POST /containers/{id}/start request bytes, while recording that the call and
+response do not yet exist. Any generic identity, config omission, mutable image,
+network, wrong mount/resource/path, container-ID substitution or different
+start target refuses.
 
 Root watches remain active across start. Expected output and checkpoint
 mutations after scientific entry are governed by separately accepted per-study
@@ -568,18 +694,26 @@ Validation refuses at least:
    premature thread close, failed `ResumeThread`, wrong prior suspend count or
    unclosed refused child;
 7. a root that was not freshly created for null-predecessor genesis, an
-   incomplete anchor/watch/file-lock set, a released protection epoch or an
-   unregistered launch handoff;
+   incomplete anchor/watch/file-lock set, fabricated watch acquisition or
+   pending state, missing completion/reissue/drain cycle, substituted resource,
+   unresolved cancellation race, premature release or unregistered launch
+   handoff;
 8. a missing, reset, wrapped, discontinuous, inaccessible or malformed USN
-   journal, unmatched mutation ticket, ledger fork/reset/replay, or deleted
-   prior challenge, acknowledgement, receipt or capacity row;
+   journal, wrong volume handle, altered or omitted raw query/read buffer,
+   malformed record projection, unmatched protected-scope mutation ticket,
+   ledger create/open/share/flag mismatch, append buffer/pointer/EOF/reread
+   substitution, ledger fork/reset/replay, or deleted prior challenge,
+   acknowledgement, receipt or capacity row;
 9. a scalar-only or lower-bound postpublication capacity claim, omitted or
    substituted direct retained-subtree inventory, raw volume query, directory
-   allocation or causal file, a formula mismatch, insufficient retained tail or
-   stale pre-resume/pre-start capacity gate;
+   allocation or causal file, a retrieval-pointer wrong handle or incomplete
+   continuation, a formula mismatch, insufficient retained tail or stale
+   pre-resume/pre-start capacity gate;
 10. caller-only power, Docker, lid or reboot booleans, any raw probe failure,
-    pending reboot, absent reboot-block policy, unavailable daemon/image, AC or
-    sleep failure, or lid `SLEEP` without the exact current human statement;
+    wrong power GUID or raw/derived power mismatch, pending reboot, absent
+    reboot-block policy, unavailable daemon/image, untyped or substituted inert
+    container/start target, wrong container config, AC or sleep failure, or lid
+    `SLEEP` without the exact current human statement;
 11. a changed Stage E guard or any nonzero scientific counter during authority,
     implementation, readiness, audit or packet construction;
 12. any unresolved scientific or institutional gap promoted to ready; and
