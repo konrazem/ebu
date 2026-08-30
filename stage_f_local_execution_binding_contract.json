@@ -119,7 +119,7 @@
     "stage_f_verifier_implementation/v1": "closed verifier_implementation_preimage object whose ordered verifier Git rows are reproduced by the exact scientific implementation tree and cover all fifteen sealed route projections",
     "stage_e_exact_target_integration/v1": "closed stage_e_integration_preimage object with exact c43ead8 integration commit and tree fifty-one ordered implementation rows exact-target CI run 33231168021 artifact 9708926559 and accepted artifact digest",
     "stage_e_exact_target_evidence_artifact/v1": "exact raw bytes of accepted CI artifact 9708926559 whose SHA-256 is 2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345",
-    "stage_f_binding_validator/v1": "exact deterministic built validator artifact bytes",
+    "stage_f_binding_validator/v1": "closed binding_validator_preimage tying the exact binding implementation source rows environment and deterministic canonical validator source-bundle artifact",
     "stage_f_synthetic_durability_payload/v1": "exact synthetic payload bytes",
     "stage_f_private_path/v1": "UTF-8 NFC absolute private path bytes without final LF",
     "stage_f_sealed_campaign_packet/v1": "complete closed sealed_campaign_packet_manifest object bytes"
@@ -220,6 +220,27 @@
     "accepted_base_is_ancestor": true,
     "missing_extra_reordered_or_changed_row": "REFUSE"
   },
+  "binding_validator_preimage": {
+    "schema_definition": "binding_validator_preimage",
+    "binding_implementation_identity_resolves_exact_preimage": true,
+    "implementation_commit_and_tree_equal_resolved_binding_implementation": true,
+    "execution_environment_policy_identity_equals_public_host_binding": true,
+    "ordered_validator_source_paths": [
+      "scripts/build_stage_f_local_binding.py",
+      "scripts/validate_stage_f_local_binding.py",
+      "stage_f_binding/__init__.py",
+      "stage_f_binding/canonical.py",
+      "stage_f_binding/binding.py",
+      "stage_f_binding/durability.py"
+    ],
+    "validator_source_file_count": 6,
+    "source_rows_reproduce_implementation_tree_and_binding_implementation_rows": true,
+    "artifact_build_method": "CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1",
+    "artifact_build_definition": "canonical UTF-8 NFC JSON object without final LF containing schema implementation coordinate ordered source-row metadata and base64 of each exact Git blob in source-path order",
+    "built_artifact_byte_count_and_sha256_recomputed": true,
+    "build_network_access_permitted": false,
+    "missing_extra_reordered_changed_stale_or_cross_implementation_input": "REFUSE"
+  },
   "scientific_code_preimage": {
     "schema_definition": "scientific_code_preimage",
     "row_schema_definition": "git_tree_file_row",
@@ -233,7 +254,7 @@
   },
   "scientific_implementation_preimage": {
     "schema_definition": "scientific_implementation_preimage",
-    "row_schema_definition": "git_file_row",
+    "row_schema_definition": "git_diff_file_row",
     "foundation_identity_resolves_exact_binding_implementation_preimage": true,
     "authority_set_identity_equals_resolved_foundation_and_bundle_authority_set": true,
     "foundation_commit_and_tree_equal_resolved_binding_implementation_commit_and_tree": true,
@@ -290,6 +311,8 @@
   },
   "bundle_identity_linkage": {
     "resolved_binding_implementation_integrated_authority_set_identity_equals_bundle_authority_set_identity": true,
+    "resolved_binding_validator_binding_implementation_identity_equals_bundle_binding_implementation_identity": true,
+    "resolved_binding_validator_environment_policy_identity_equals_public_host_binding_environment_policy_identity": true,
     "resolved_scientific_implementation_binding_foundation_identity_equals_bundle_binding_implementation_identity": true,
     "resolved_scientific_implementation_authority_set_identity_equals_bundle_authority_set_identity": true,
     "resolved_scientific_implementation_code_identity_equals_bundle_scientific_code_identity": true,
@@ -542,7 +565,17 @@
     "published_post_restart_last_good_and_recovered_hashes_equal_payload_hash": true,
     "payload_and_post_restart_byte_counts_equal": true,
     "corrupt_and_orphan_fixture_hashes_differ_from_payload_and_each_other": true,
-    "every_action_retains_input_and_output_hash_nullable_only_when_not_applicable_byte_count_os_result_and_status": true,
+    "every_action_retains_non_null_input_and_output_hashes_byte_count_exact_hash_and_byte_count_roles_os_result_and_status": true,
+    "action_hash_and_byte_count_role_mapping": "EXACT_SEVENTEEN_ROW_DURABILITY_ACTION_TRACE_PREFIX_ITEMS",
+    "empty_hash_role_value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "atomic_publication_primitive": "MoveFileExW",
+    "atomic_publication_raw_flags": 8,
+    "atomic_publication_flags": "MOVEFILE_WRITE_THROUGH set and MOVEFILE_REPLACE_EXISTING absent",
+    "atomic_publication_source_identity_equals_temporary_path_identity": true,
+    "atomic_publication_target_identity_equals_final_path_identity": true,
+    "atomic_publication_precondition": "GetFileAttributesW returns INVALID_FILE_ATTRIBUTES with ERROR_FILE_NOT_FOUND for target",
+    "atomic_publication_postcondition": "call succeeds source absent target present target created once and overwrite attempt count zero",
+    "atomic_publication_same_volume_required": true,
     "recovery_disposition": "RECOVERED_LAST_VERIFIED_DURABLE_CHECKPOINT",
     "private_bundle_resolves_and_recomputes_every_ordered_probe_receipt": true,
     "assertion_without_complete_reconstructable_trace": "REFUSE"

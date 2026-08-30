@@ -179,6 +179,19 @@ projection equals its exact contract list. This makes an implementation from a
 different descendant or an implementation that changes an integrated authority
 byte mechanically inadmissible.
 
+`stage_f_binding_validator/v1` hashes a closed `binding_validator_preimage`, not
+arbitrary executable bytes. That preimage names the exact binding-implementation
+identity and its commit/tree, the public host's execution-environment policy,
+and six ordered source rows: the binding builder and validator scripts plus the
+three `stage_f_binding` implementation modules and its package initializer. Each
+row must equal both the binding-implementation row and the named implementation
+tree. The deterministic `CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1` artifact is one
+canonical UTF-8 NFC JSON object without a final LF containing the schema,
+implementation coordinate, ordered row metadata, and base64 of each resolved Git
+blob in that order. Its byte count and SHA-256 are retained and independently
+recomputed. A stale validator, another implementation or environment, a changed
+row, another build method, or network-dependent build refuses.
+
 `stage_f_binding_authority_set/v1` hashes one
 `binding_authority_set_preimage`: the accepted base, integrated authority commit
 and tree, exactly six ordered local-authority `git_file_row` objects in the
@@ -439,7 +452,11 @@ directory durability, termination, a distinct fresh probe process, complete
 reread and hash, corrupt-final and orphan-partial presentation and refusal,
 last-good recovery, and recovered hash. Every step records its ordinal, exact
 action, UTC observation, applicable input and output hashes, observed byte count,
-operating-system result code, and PASS status. The receipt also retains the probe
+operating-system result code, and PASS status. No action observation is nullable.
+Each row also carries exact input-hash, output-hash, and byte-count role labels;
+the seventeen tuple schemas freeze which receipt-level payload, published,
+post-restart, corrupt, orphan, last-good, recovered, zero, or empty value the row
+must reproduce. The receipt also retains the probe
 start and completion timestamps, payload and reread byte counts, payload,
 published, post-restart, corrupt, orphan, last-good, and recovered SHA-256 values,
 the terminated and resumed process identifiers and restart timestamp, and the
@@ -450,6 +467,15 @@ and orphan fixture hashes must differ from that hash and each other. An assertio
 boolean without this reconstructable evidence refuses. The private durability
 bundle resolves and recomputes every ordered receipt rather than treating receipt
 identities as opaque claims.
+
+Atomic publication is separately evidenced, not inferred from the step label.
+The receipt records `MoveFileExW`, raw flags `8` (`MOVEFILE_WRITE_THROUGH` with
+`MOVEFILE_REPLACE_EXISTING` absent), source and target path identities equal to
+the receipt's temporary and final paths, same-volume status, a pre-call
+`GetFileAttributesW` observation of `ERROR_FILE_NOT_FOUND` for the target, a
+nonzero call result, post-call source absence and target presence, exactly one
+target creation, and zero overwrite attempts. Missing or inconsistent primitive,
+flag, path, freshness, no-replace, or postcondition evidence refuses.
 
 ## 7. Readiness and execution authorization
 

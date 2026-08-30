@@ -397,6 +397,31 @@
         "implementation_file_count": {"const": 13}
       }
     },
+    "binding_validator_preimage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "binding_implementation_identity", "implementation_commit",
+        "implementation_tree", "execution_environment_policy_identity",
+        "ordered_validator_source_file_rows", "validator_source_file_count",
+        "artifact_build_method", "built_artifact_byte_count", "built_artifact_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_binding_validator/v1"},
+        "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
+        "implementation_commit": {"$ref": "#/$defs/git_commit"},
+        "implementation_tree": {"$ref": "#/$defs/git_commit"},
+        "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "ordered_validator_source_file_rows": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {"$ref": "#/$defs/git_file_row"}, "uniqueItems": true
+        },
+        "validator_source_file_count": {"const": 6},
+        "artifact_build_method": {"const": "CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1"},
+        "built_artifact_byte_count": {"$ref": "#/$defs/positive_integer"},
+        "built_artifact_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
     "route_authority_projection": {
       "type": "object",
       "additionalProperties": false,
@@ -1851,7 +1876,8 @@
       "additionalProperties": false,
       "required": [
         "ordinal", "action", "observed_utc", "input_sha256",
-        "output_sha256", "observed_byte_count", "os_result_code", "status"
+        "input_hash_role", "output_sha256", "output_hash_role",
+        "observed_byte_count", "byte_count_role", "os_result_code", "status"
       ],
       "properties": {
         "ordinal": {"type": "integer", "minimum": 1, "maximum": 17},
@@ -1866,9 +1892,23 @@
           "RECOVER_LAST_VERIFIED_DURABLE_FINAL", "RECOMPUTE_RECOVERED_SHA256"
         ]},
         "observed_utc": {"$ref": "#/$defs/utc_timestamp"},
-        "input_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
-        "output_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
-        "observed_byte_count": {"oneOf": [{"$ref": "#/$defs/nonnegative_integer"}, {"type": "null"}]},
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "input_hash_role": {"enum": [
+          "EMPTY", "SYNTHETIC_PAYLOAD", "PUBLISHED_FINAL", "POST_RESTART_REREAD",
+          "CORRUPT_FIXTURE", "ORPHAN_PARTIAL",
+          "LAST_VERIFIED_DURABLE_CHECKPOINT", "RECOVERED_FINAL"
+        ]},
+        "output_sha256": {"$ref": "#/$defs/sha256"},
+        "output_hash_role": {"enum": [
+          "EMPTY", "SYNTHETIC_PAYLOAD", "PUBLISHED_FINAL", "POST_RESTART_REREAD",
+          "CORRUPT_FIXTURE", "ORPHAN_PARTIAL",
+          "LAST_VERIFIED_DURABLE_CHECKPOINT", "RECOVERED_FINAL"
+        ]},
+        "observed_byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "byte_count_role": {"enum": [
+          "ZERO", "SYNTHETIC_PAYLOAD", "POST_RESTART_REREAD",
+          "CORRUPT_FIXTURE", "ORPHAN_PARTIAL"
+        ]},
         "os_result_code": {"$ref": "#/$defs/nonnegative_integer"},
         "status": {"const": "PASS"}
       }
@@ -1876,23 +1916,23 @@
     "durability_action_trace": {
       "type": "array", "minItems": 17, "maxItems": 17,
       "prefixItems": [
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":1},"action":{"const":"CREATE_FRESH_TEMPORARY"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":2},"action":{"const":"WRITE_SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":3},"action":{"const":"FLUSH_FILE_BUFFERS"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":4},"action":{"const":"CLOSE_TEMPORARY_HANDLE"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":5},"action":{"const":"ATOMIC_PUBLISH_FRESH_VERSIONED_FINAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":6},"action":{"const":"DURABILITY_SYNC_TARGET_DIRECTORY"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":7},"action":{"const":"TERMINATE_PROBE_PROCESS"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":8},"action":{"const":"START_FRESH_PROBE_PROCESS"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":9},"action":{"const":"REOPEN_FINAL_READ_ONLY"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":10},"action":{"const":"REREAD_COMPLETE_FINAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":11},"action":{"const":"RECOMPUTE_FINAL_SHA256"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":12},"action":{"const":"PRESENT_CORRUPT_FINAL_FIXTURE"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":13},"action":{"const":"REFUSE_CORRUPT_FINAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":14},"action":{"const":"PRESENT_ORPHAN_PARTIAL_FIXTURE"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":15},"action":{"const":"REFUSE_ORPHAN_PARTIAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":16},"action":{"const":"RECOVER_LAST_VERIFIED_DURABLE_FINAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":17},"action":{"const":"RECOMPUTE_RECOVERED_SHA256"}}}]}
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":1},"action":{"const":"CREATE_FRESH_TEMPORARY"},"input_hash_role":{"const":"EMPTY"},"output_hash_role":{"const":"EMPTY"},"byte_count_role":{"const":"ZERO"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":2},"action":{"const":"WRITE_SYNTHETIC_PAYLOAD"},"input_hash_role":{"const":"EMPTY"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":3},"action":{"const":"FLUSH_FILE_BUFFERS"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":4},"action":{"const":"CLOSE_TEMPORARY_HANDLE"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":5},"action":{"const":"ATOMIC_PUBLISH_FRESH_VERSIONED_FINAL"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":6},"action":{"const":"DURABILITY_SYNC_TARGET_DIRECTORY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":7},"action":{"const":"TERMINATE_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":8},"action":{"const":"START_FRESH_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":9},"action":{"const":"REOPEN_FINAL_READ_ONLY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":10},"action":{"const":"REREAD_COMPLETE_FINAL"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"POST_RESTART_REREAD"},"byte_count_role":{"const":"POST_RESTART_REREAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":11},"action":{"const":"RECOMPUTE_FINAL_SHA256"},"input_hash_role":{"const":"POST_RESTART_REREAD"},"output_hash_role":{"const":"POST_RESTART_REREAD"},"byte_count_role":{"const":"POST_RESTART_REREAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":12},"action":{"const":"PRESENT_CORRUPT_FINAL_FIXTURE"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"CORRUPT_FIXTURE"},"byte_count_role":{"const":"CORRUPT_FIXTURE"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":13},"action":{"const":"REFUSE_CORRUPT_FINAL"},"input_hash_role":{"const":"CORRUPT_FIXTURE"},"output_hash_role":{"const":"CORRUPT_FIXTURE"},"byte_count_role":{"const":"CORRUPT_FIXTURE"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":14},"action":{"const":"PRESENT_ORPHAN_PARTIAL_FIXTURE"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"ORPHAN_PARTIAL"},"byte_count_role":{"const":"ORPHAN_PARTIAL"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":15},"action":{"const":"REFUSE_ORPHAN_PARTIAL"},"input_hash_role":{"const":"ORPHAN_PARTIAL"},"output_hash_role":{"const":"ORPHAN_PARTIAL"},"byte_count_role":{"const":"ORPHAN_PARTIAL"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":16},"action":{"const":"RECOVER_LAST_VERIFIED_DURABLE_FINAL"},"input_hash_role":{"const":"LAST_VERIFIED_DURABLE_CHECKPOINT"},"output_hash_role":{"const":"RECOVERED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":17},"action":{"const":"RECOMPUTE_RECOVERED_SHA256"},"input_hash_role":{"const":"RECOVERED_FINAL"},"output_hash_role":{"const":"RECOVERED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]}
       ],
       "items": false
     },
@@ -1908,6 +1948,33 @@
         "resumed_process_id": {"$ref": "#/$defs/positive_integer"},
         "fresh_process_confirmed": {"const": true},
         "restart_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "atomic_publication_observation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "primitive", "raw_flags", "movefile_write_through_flag_set",
+        "movefile_replace_existing_flag_set", "source_path_identity",
+        "target_path_identity", "same_volume", "target_exists_before_call",
+        "target_nonexistence_observation", "call_returned_nonzero",
+        "source_absent_after_call", "target_present_after_call",
+        "target_created_once", "target_overwrite_attempt_count"
+      ],
+      "properties": {
+        "primitive": {"const": "MoveFileExW"},
+        "raw_flags": {"const": 8},
+        "movefile_write_through_flag_set": {"const": true},
+        "movefile_replace_existing_flag_set": {"const": false},
+        "source_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "target_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "same_volume": {"const": true},
+        "target_exists_before_call": {"const": false},
+        "target_nonexistence_observation": {"const": "GetFileAttributesW_INVALID_FILE_ATTRIBUTES_ERROR_FILE_NOT_FOUND"},
+        "call_returned_nonzero": {"const": true},
+        "source_absent_after_call": {"const": true},
+        "target_present_after_call": {"const": true},
+        "target_created_once": {"const": true},
+        "target_overwrite_attempt_count": {"const": 0}
       }
     },
     "durability_probe_receipt": {
@@ -1930,12 +1997,15 @@
         "published_final_sha256",
         "post_restart_reread_byte_count",
         "post_restart_reread_sha256",
+        "corrupt_fixture_byte_count",
         "corrupt_fixture_sha256",
+        "orphan_partial_byte_count",
         "orphan_partial_sha256",
         "last_verified_durable_checkpoint_sha256",
         "recovered_final_sha256",
         "ordered_actions",
         "action_count",
+        "atomic_publication_observation",
         "restart_observation",
         "recovery_disposition",
         "same_volume",
@@ -1972,12 +2042,15 @@
         "published_final_sha256": {"$ref": "#/$defs/sha256"},
         "post_restart_reread_byte_count": {"$ref": "#/$defs/positive_integer"},
         "post_restart_reread_sha256": {"$ref": "#/$defs/sha256"},
+        "corrupt_fixture_byte_count": {"$ref": "#/$defs/positive_integer"},
         "corrupt_fixture_sha256": {"$ref": "#/$defs/sha256"},
+        "orphan_partial_byte_count": {"$ref": "#/$defs/positive_integer"},
         "orphan_partial_sha256": {"$ref": "#/$defs/sha256"},
         "last_verified_durable_checkpoint_sha256": {"$ref": "#/$defs/sha256"},
         "recovered_final_sha256": {"$ref": "#/$defs/sha256"},
         "ordered_actions": {"$ref": "#/$defs/durability_action_trace"},
         "action_count": {"const": 17},
+        "atomic_publication_observation": {"$ref": "#/$defs/atomic_publication_observation"},
         "restart_observation": {"$ref": "#/$defs/durability_restart_observation"},
         "recovery_disposition": {"const": "RECOVERED_LAST_VERIFIED_DURABLE_CHECKPOINT"},
         "same_volume": {"const": true},
@@ -2236,6 +2309,7 @@
     {"$ref": "#/$defs/power_snapshot"},
     {"$ref": "#/$defs/public_execution_host_binding"},
     {"$ref": "#/$defs/binding_implementation_preimage"},
+    {"$ref": "#/$defs/binding_validator_preimage"},
     {"$ref": "#/$defs/binding_authority_set_preimage"},
     {"$ref": "#/$defs/scientific_code_preimage"},
     {"$ref": "#/$defs/scientific_implementation_preimage"},
