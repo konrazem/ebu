@@ -185,10 +185,17 @@ identity and its commit/tree, the public host's execution-environment policy,
 and six ordered source rows: the binding builder and validator scripts plus the
 three `stage_f_binding` implementation modules and its package initializer. Each
 row must equal both the binding-implementation row and the named implementation
-tree. The deterministic `CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1` artifact is one
-canonical UTF-8 NFC JSON object without a final LF containing the schema,
-implementation coordinate, ordered row metadata, and base64 of each resolved Git
-blob in that order. Its byte count and SHA-256 are retained and independently
+tree. The deterministic `CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1` artifact is the
+canonical UTF-8 NFC serialization without a final LF of the closed
+`validator_source_bundle_artifact` schema object. That object has exactly the
+schema literal `stage_f_binding_validator_source_bundle/v1`, binding-
+implementation identity, implementation commit and tree, environment-policy
+identity, six `ordered_members`, and member count. Each closed member repeats
+exactly `path`, mode, Git object, byte count, and raw SHA-256 from its source row,
+plus `content_base64` of that exact Git blob. Base64 is RFC 4648 section 4's
+standard alphabet, uses required `=` padding, and permits no whitespace or line
+breaks; strict decode followed by standard padded re-encode must reproduce the
+field byte-for-byte. Its byte count and SHA-256 are retained and independently
 recomputed. A stale validator, another implementation or environment, a changed
 row, another build method, or network-dependent build refuses.
 
@@ -460,13 +467,58 @@ must reproduce. The receipt also retains the probe
 start and completion timestamps, payload and reread byte counts, payload,
 published, post-restart, corrupt, orphan, last-good, and recovered SHA-256 values,
 the terminated and resumed process identifiers and restart timestamp, and the
-exact recovery disposition. The resumed process identifier must differ from the
-terminated identifier. Payload identity, published final, post-restart reread,
+exact recovery disposition. Process identity is the pair of PID and creation
+FILETIME, supplemented by the private executable-path identity and executable,
+command-line, and invocation SHA-256 values observed through `GetProcessId`,
+`GetProcessTimes`, and `QueryFullProcessImageNameW`. The orchestrator, terminated
+probe, and resumed probe instances are pairwise distinct. Rows 1 through 7 carry
+the terminated instance's PID and creation FILETIME; rows 8 through 17 carry the
+resumed instance's.
+
+The orchestrator retains a successful `CreateProcessW` observation with raw
+creation flags zero and handle inheritance false, a `WAIT_OBJECT_0` observation
+and exit code zero for the terminated process, and closed canonical challenge and
+acknowledgement preimages. The challenge binds the orchestrator and terminated
+process instances, published-final hash, monotonic challenge counter, and issue
+time; its fresh private file is file-flushed and its directory made durable before
+launch. The acknowledgement binds that exact challenge digest, the resumed
+process instance, and acknowledgement time. Both files' path identities and
+SHA-256 values are retained at distinct fresh write-once paths under the private
+temporary role. The challenge counter is strictly greater than every prior
+retained durability challenge counter for this private root. The resumed process
+must write the exact acknowledgement before any post-restart durability action.
+Launch, handshake, and restart timestamps are ordered and cross-checked against
+actions 7 and 8.
+
+The terminated and resumed processes each bind a separate closed canonical
+durability-probe invocation preimage, respectively labelled `PRE_RESTART` and
+`POST_RESTART`. Both preimages name the exact binding-validator and public-host
+execution-environment identities, the validator entrypoint Git row, and private
+path identities for the Python executable, absolute validator entrypoint, and
+retained invocation preimage. Their command line is retained as strict standard
+padded RFC 4648 base64 of the exact `CreateProcessW` UTF-16LE bytes without a
+terminal NUL. Those bytes are the unique result of CPython 3.14.4
+`subprocess.list2cmdline` over exactly the Python executable, `-I`, validator
+entrypoint, `--durability-probe-phase`, the matching phase,
+`--invocation-preimage`, and the retained preimage path. `CommandLineToArgvW`
+must reproduce that seven-element vector, with no other argument.
+The process executable path and hash equal the invocation and accepted
+environment Python; its command-line hash equals those decoded bytes; and its
+invocation hash equals the canonical invocation preimage. The entrypoint row
+equals the same row in the exact binding implementation and rebuilt validator
+source-bundle artifact.
+
+Payload identity, published final, post-restart reread,
 last verified durable checkpoint, and recovered final hashes must agree; corrupt
 and orphan fixture hashes must differ from that hash and each other. An assertion
 boolean without this reconstructable evidence refuses. The private durability
 bundle resolves and recomputes every ordered receipt rather than treating receipt
-identities as opaque claims.
+identities as opaque claims. Every resolved receipt's filesystem, durability,
+restart, binding-validator, and execution-environment identity equals the
+private bundle field of the same name; receipts from individually valid but
+different chains cannot be mixed. The receipt count equals the ordered identity
+count, and every resolved receipt has the synthetic durability-PASS disposition
+and zero scientific counters.
 
 Atomic publication is separately evidenced, not inferred from the step label.
 The receipt records `MoveFileExW`, raw flags `8` (`MOVEFILE_WRITE_THROUGH` with
@@ -476,6 +528,11 @@ the receipt's temporary and final paths, same-volume status, a pre-call
 nonzero call result, post-call source absence and target presence, exactly one
 target creation, and zero overwrite attempts. Missing or inconsistent primitive,
 flag, path, freshness, no-replace, or postcondition evidence refuses.
+The receipt's `directory_target_identity` resolves from its retained private path
+preimage to the exact normalized parent directory of the published
+`final_path_identity`. Action 6 applies the recorded directory-durability
+primitive to that exact parent after action 5; synchronizing any other allowed
+directory does not satisfy the receipt.
 
 ## 7. Readiness and execution authorization
 

@@ -422,6 +422,43 @@
         "built_artifact_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
+    "validator_source_bundle_member": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "path", "mode", "git_object", "byte_count", "raw_sha256", "content_base64"
+      ],
+      "properties": {
+        "path": {"$ref": "#/$defs/nonempty_string"},
+        "mode": {"const": "100644"},
+        "git_object": {"$ref": "#/$defs/git_commit"},
+        "byte_count": {"$ref": "#/$defs/nonnegative_integer"},
+        "raw_sha256": {"$ref": "#/$defs/sha256"},
+        "content_base64": {
+          "type": "string",
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        }
+      }
+    },
+    "validator_source_bundle_artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "binding_implementation_identity", "implementation_commit",
+        "implementation_tree", "execution_environment_policy_identity",
+        "ordered_members", "member_count"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_binding_validator_source_bundle/v1"},
+        "binding_implementation_identity": {"$ref": "#/$defs/binding_implementation_identity"},
+        "implementation_commit": {"$ref": "#/$defs/git_commit"},
+        "implementation_tree": {"$ref": "#/$defs/git_commit"},
+        "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "ordered_members": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {"$ref": "#/$defs/validator_source_bundle_member"}, "uniqueItems": true
+        },
+        "member_count": {"const": 6}
+      }
+    },
     "route_authority_projection": {
       "type": "object",
       "additionalProperties": false,
@@ -1877,7 +1914,9 @@
       "required": [
         "ordinal", "action", "observed_utc", "input_sha256",
         "input_hash_role", "output_sha256", "output_hash_role",
-        "observed_byte_count", "byte_count_role", "os_result_code", "status"
+        "observed_byte_count", "byte_count_role", "actor_process_role",
+        "actor_process_id", "actor_process_creation_filetime_uint64",
+        "os_result_code", "status"
       ],
       "properties": {
         "ordinal": {"type": "integer", "minimum": 1, "maximum": 17},
@@ -1909,6 +1948,9 @@
           "ZERO", "SYNTHETIC_PAYLOAD", "POST_RESTART_REREAD",
           "CORRUPT_FIXTURE", "ORPHAN_PARTIAL"
         ]},
+        "actor_process_role": {"enum": ["TERMINATED_PROBE_PROCESS", "RESUMED_PROBE_PROCESS"]},
+        "actor_process_id": {"$ref": "#/$defs/positive_integer"},
+        "actor_process_creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
         "os_result_code": {"$ref": "#/$defs/nonnegative_integer"},
         "status": {"const": "PASS"}
       }
@@ -1916,37 +1958,135 @@
     "durability_action_trace": {
       "type": "array", "minItems": 17, "maxItems": 17,
       "prefixItems": [
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":1},"action":{"const":"CREATE_FRESH_TEMPORARY"},"input_hash_role":{"const":"EMPTY"},"output_hash_role":{"const":"EMPTY"},"byte_count_role":{"const":"ZERO"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":2},"action":{"const":"WRITE_SYNTHETIC_PAYLOAD"},"input_hash_role":{"const":"EMPTY"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":3},"action":{"const":"FLUSH_FILE_BUFFERS"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":4},"action":{"const":"CLOSE_TEMPORARY_HANDLE"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":5},"action":{"const":"ATOMIC_PUBLISH_FRESH_VERSIONED_FINAL"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":6},"action":{"const":"DURABILITY_SYNC_TARGET_DIRECTORY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":7},"action":{"const":"TERMINATE_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":8},"action":{"const":"START_FRESH_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":9},"action":{"const":"REOPEN_FINAL_READ_ONLY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":10},"action":{"const":"REREAD_COMPLETE_FINAL"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"POST_RESTART_REREAD"},"byte_count_role":{"const":"POST_RESTART_REREAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":11},"action":{"const":"RECOMPUTE_FINAL_SHA256"},"input_hash_role":{"const":"POST_RESTART_REREAD"},"output_hash_role":{"const":"POST_RESTART_REREAD"},"byte_count_role":{"const":"POST_RESTART_REREAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":12},"action":{"const":"PRESENT_CORRUPT_FINAL_FIXTURE"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"CORRUPT_FIXTURE"},"byte_count_role":{"const":"CORRUPT_FIXTURE"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":13},"action":{"const":"REFUSE_CORRUPT_FINAL"},"input_hash_role":{"const":"CORRUPT_FIXTURE"},"output_hash_role":{"const":"CORRUPT_FIXTURE"},"byte_count_role":{"const":"CORRUPT_FIXTURE"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":14},"action":{"const":"PRESENT_ORPHAN_PARTIAL_FIXTURE"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"ORPHAN_PARTIAL"},"byte_count_role":{"const":"ORPHAN_PARTIAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":15},"action":{"const":"REFUSE_ORPHAN_PARTIAL"},"input_hash_role":{"const":"ORPHAN_PARTIAL"},"output_hash_role":{"const":"ORPHAN_PARTIAL"},"byte_count_role":{"const":"ORPHAN_PARTIAL"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":16},"action":{"const":"RECOVER_LAST_VERIFIED_DURABLE_FINAL"},"input_hash_role":{"const":"LAST_VERIFIED_DURABLE_CHECKPOINT"},"output_hash_role":{"const":"RECOVERED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]},
-        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":17},"action":{"const":"RECOMPUTE_RECOVERED_SHA256"},"input_hash_role":{"const":"RECOVERED_FINAL"},"output_hash_role":{"const":"RECOVERED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"}}}]}
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":1},"action":{"const":"CREATE_FRESH_TEMPORARY"},"input_hash_role":{"const":"EMPTY"},"output_hash_role":{"const":"EMPTY"},"byte_count_role":{"const":"ZERO"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":2},"action":{"const":"WRITE_SYNTHETIC_PAYLOAD"},"input_hash_role":{"const":"EMPTY"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":3},"action":{"const":"FLUSH_FILE_BUFFERS"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":4},"action":{"const":"CLOSE_TEMPORARY_HANDLE"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":5},"action":{"const":"ATOMIC_PUBLISH_FRESH_VERSIONED_FINAL"},"input_hash_role":{"const":"SYNTHETIC_PAYLOAD"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":6},"action":{"const":"DURABILITY_SYNC_TARGET_DIRECTORY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":7},"action":{"const":"TERMINATE_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"TERMINATED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":8},"action":{"const":"START_FRESH_PROBE_PROCESS"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":9},"action":{"const":"REOPEN_FINAL_READ_ONLY"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"PUBLISHED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":10},"action":{"const":"REREAD_COMPLETE_FINAL"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"POST_RESTART_REREAD"},"byte_count_role":{"const":"POST_RESTART_REREAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":11},"action":{"const":"RECOMPUTE_FINAL_SHA256"},"input_hash_role":{"const":"POST_RESTART_REREAD"},"output_hash_role":{"const":"POST_RESTART_REREAD"},"byte_count_role":{"const":"POST_RESTART_REREAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":12},"action":{"const":"PRESENT_CORRUPT_FINAL_FIXTURE"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"CORRUPT_FIXTURE"},"byte_count_role":{"const":"CORRUPT_FIXTURE"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":13},"action":{"const":"REFUSE_CORRUPT_FINAL"},"input_hash_role":{"const":"CORRUPT_FIXTURE"},"output_hash_role":{"const":"CORRUPT_FIXTURE"},"byte_count_role":{"const":"CORRUPT_FIXTURE"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":14},"action":{"const":"PRESENT_ORPHAN_PARTIAL_FIXTURE"},"input_hash_role":{"const":"PUBLISHED_FINAL"},"output_hash_role":{"const":"ORPHAN_PARTIAL"},"byte_count_role":{"const":"ORPHAN_PARTIAL"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":15},"action":{"const":"REFUSE_ORPHAN_PARTIAL"},"input_hash_role":{"const":"ORPHAN_PARTIAL"},"output_hash_role":{"const":"ORPHAN_PARTIAL"},"byte_count_role":{"const":"ORPHAN_PARTIAL"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":16},"action":{"const":"RECOVER_LAST_VERIFIED_DURABLE_FINAL"},"input_hash_role":{"const":"LAST_VERIFIED_DURABLE_CHECKPOINT"},"output_hash_role":{"const":"RECOVERED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]},
+        {"allOf":[{"$ref":"#/$defs/durability_action_record"},{"properties":{"ordinal":{"const":17},"action":{"const":"RECOMPUTE_RECOVERED_SHA256"},"input_hash_role":{"const":"RECOVERED_FINAL"},"output_hash_role":{"const":"RECOVERED_FINAL"},"byte_count_role":{"const":"SYNTHETIC_PAYLOAD"},"actor_process_role":{"const":"RESUMED_PROBE_PROCESS"}}}]}
       ],
       "items": false
+    },
+    "durability_probe_invocation_preimage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "phase", "binding_validator_identity",
+        "execution_environment_policy_identity", "entrypoint_path",
+        "entrypoint_git_row", "executable_path_identity",
+        "entrypoint_absolute_path_identity", "invocation_preimage_path_identity",
+        "command_schema", "command_line_construction", "command_line_encoding", "command_line_base64",
+        "isolated_mode", "network_access_permitted", "scientific_counters"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_probe_invocation/v1"},
+        "phase": {"enum": ["PRE_RESTART", "POST_RESTART"]},
+        "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
+        "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "entrypoint_path": {"const": "scripts/validate_stage_f_local_binding.py"},
+        "entrypoint_git_row": {"$ref": "#/$defs/git_file_row"},
+        "executable_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "entrypoint_absolute_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "invocation_preimage_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "command_schema": {"const": "PYTHON_ISOLATED_STAGE_F_BINDING_VALIDATOR_DURABILITY_PROBE_V1"},
+        "command_line_construction": {"const": "CPYTHON_3_14_4_SUBPROCESS_LIST2CMDLINE"},
+        "command_line_encoding": {"const": "UTF-16LE_WITHOUT_TERMINAL_NUL"},
+        "command_line_base64": {
+          "type": "string",
+          "minLength": 4,
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+        },
+        "isolated_mode": {"const": true},
+        "network_access_permitted": {"const": false},
+        "scientific_counters": {"$ref": "#/$defs/zero_science_counters"}
+      }
+    },
+    "durability_process_instance": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "process_id", "creation_filetime_uint64", "executable_path_identity",
+        "executable_sha256", "command_line_sha256", "invocation_sha256"
+      ],
+      "properties": {
+        "process_id": {"$ref": "#/$defs/positive_integer"},
+        "creation_filetime_uint64": {"$ref": "#/$defs/positive_integer"},
+        "executable_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "executable_sha256": {"$ref": "#/$defs/sha256"},
+        "command_line_sha256": {"$ref": "#/$defs/sha256"},
+        "invocation_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "durability_restart_challenge_preimage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "orchestrator_process", "terminated_process",
+        "published_final_sha256", "challenge_counter", "challenge_issued_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_restart_challenge/v1"},
+        "orchestrator_process": {"$ref": "#/$defs/durability_process_instance"},
+        "terminated_process": {"$ref": "#/$defs/durability_process_instance"},
+        "published_final_sha256": {"$ref": "#/$defs/sha256"},
+        "challenge_counter": {"$ref": "#/$defs/positive_integer"},
+        "challenge_issued_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
+    "durability_restart_acknowledgement_preimage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema", "challenge_sha256", "resumed_process", "acknowledged_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_durability_restart_acknowledgement/v1"},
+        "challenge_sha256": {"$ref": "#/$defs/sha256"},
+        "resumed_process": {"$ref": "#/$defs/durability_process_instance"},
+        "acknowledged_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
     },
     "durability_restart_observation": {
       "type": "object", "additionalProperties": false,
       "required": [
-        "terminated_process_id", "terminated_process_exit_code",
-        "resumed_process_id", "fresh_process_confirmed", "restart_utc"
+        "orchestrator_process", "terminated_process", "resumed_process",
+        "process_identity_api", "launch_api", "raw_creation_flags",
+        "inherit_handles", "create_process_returned_nonzero",
+        "terminated_wait_result", "terminated_process_exit_code",
+        "challenge_path_identity", "challenge_preimage", "challenge_sha256",
+        "challenge_written_file_flushed_and_directory_durable_before_launch",
+        "acknowledgement_path_identity", "acknowledgement_preimage", "acknowledgement_sha256",
+        "resumed_process_acknowledged_exact_challenge",
+        "launch_utc", "handshake_completed_utc", "restart_utc"
       ],
       "properties": {
-        "terminated_process_id": {"$ref": "#/$defs/positive_integer"},
+        "orchestrator_process": {"$ref": "#/$defs/durability_process_instance"},
+        "terminated_process": {"$ref": "#/$defs/durability_process_instance"},
+        "resumed_process": {"$ref": "#/$defs/durability_process_instance"},
+        "process_identity_api": {"const": "GetProcessId_GetProcessTimes_QueryFullProcessImageNameW_HASHED_COMMAND_AND_INVOCATION"},
+        "launch_api": {"const": "CreateProcessW"},
+        "raw_creation_flags": {"const": 0},
+        "inherit_handles": {"const": false},
+        "create_process_returned_nonzero": {"const": true},
+        "terminated_wait_result": {"const": "WAIT_OBJECT_0"},
         "terminated_process_exit_code": {"const": 0},
-        "resumed_process_id": {"$ref": "#/$defs/positive_integer"},
-        "fresh_process_confirmed": {"const": true},
+        "challenge_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "challenge_preimage": {"$ref": "#/$defs/durability_restart_challenge_preimage"},
+        "challenge_sha256": {"$ref": "#/$defs/sha256"},
+        "challenge_written_file_flushed_and_directory_durable_before_launch": {"const": true},
+        "acknowledgement_path_identity": {"$ref": "#/$defs/private_path_identity"},
+        "acknowledgement_preimage": {"$ref": "#/$defs/durability_restart_acknowledgement_preimage"},
+        "acknowledgement_sha256": {"$ref": "#/$defs/sha256"},
+        "resumed_process_acknowledged_exact_challenge": {"const": true},
+        "launch_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "handshake_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "restart_utc": {"$ref": "#/$defs/utc_timestamp"}
       }
     },
@@ -1985,6 +2125,10 @@
         "filesystem_identity",
         "durability_policy_identity",
         "restart_policy_identity",
+        "binding_validator_identity",
+        "execution_environment_policy_identity",
+        "terminated_probe_invocation_preimage",
+        "resumed_probe_invocation_preimage",
         "synthetic_payload_identity",
         "temporary_path_identity",
         "final_path_identity",
@@ -2030,6 +2174,10 @@
         "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
         "durability_policy_identity": {"$ref": "#/$defs/durability_policy_identity"},
         "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
+        "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
+        "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
+        "terminated_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
+        "resumed_probe_invocation_preimage": {"$ref": "#/$defs/durability_probe_invocation_preimage"},
         "synthetic_payload_identity": {"$ref": "#/$defs/synthetic_payload_identity"},
         "temporary_path_identity": {"$ref": "#/$defs/private_path_identity"},
         "final_path_identity": {"$ref": "#/$defs/private_path_identity"},
@@ -2084,7 +2232,8 @@
       "additionalProperties": false,
       "required": [
         "schema", "filesystem_identity", "durability_policy_identity",
-        "restart_policy_identity", "ordered_probe_receipt_identities",
+        "restart_policy_identity", "binding_validator_identity",
+        "execution_environment_policy_identity", "ordered_probe_receipt_identities",
         "probe_receipt_count", "all_required_probes_pass",
         "scientific_counters", "bundle_sha256"
       ],
@@ -2093,6 +2242,8 @@
         "filesystem_identity": {"$ref": "#/$defs/filesystem_binding_identity"},
         "durability_policy_identity": {"$ref": "#/$defs/durability_policy_identity"},
         "restart_policy_identity": {"$ref": "#/$defs/restart_policy_identity"},
+        "binding_validator_identity": {"$ref": "#/$defs/binding_validator_identity"},
+        "execution_environment_policy_identity": {"$ref": "#/$defs/environment_policy_identity"},
         "ordered_probe_receipt_identities": {
           "type": "array",
           "minItems": 1,
@@ -2310,6 +2461,7 @@
     {"$ref": "#/$defs/public_execution_host_binding"},
     {"$ref": "#/$defs/binding_implementation_preimage"},
     {"$ref": "#/$defs/binding_validator_preimage"},
+    {"$ref": "#/$defs/validator_source_bundle_artifact"},
     {"$ref": "#/$defs/binding_authority_set_preimage"},
     {"$ref": "#/$defs/scientific_code_preimage"},
     {"$ref": "#/$defs/scientific_implementation_preimage"},
