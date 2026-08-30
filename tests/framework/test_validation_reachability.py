@@ -581,6 +581,127 @@ STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_SCOPE = (
     STAGE_E_RECONCILIATION_AUTHORITY_SCOPE
     | frozenset(STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS)
 )
+STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT = (
+    "c43ead831c3e4021405985134ed564b761bb1aed"
+)
+STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_TREE = (
+    "212777d569af527ce9532ea6c836ff2225465d87"
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE = (
+    "c683040869ecbbe439835a8fabd0a6c3d7ea0e3d"
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET = (
+    "4ab6a8a8b158e6ff32d06e67d29a3d974a6326be"
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_TREE = (
+    "46ce30f0c3675836b449bc2fb00ae22a688ca287"
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_CHAIN = (
+    "0727f59c7f8071724e4661048f0afaa25267b291",
+    "6d7f59449d895ad23c02f3cc8eee1d4d4747565e",
+    "1357fef2ad3bff2ecc482a108fba7e9063fe81da",
+    "ba6002a24696ae780706cc030bebb53df2bd820b",
+    "152f809b7cac4dbbdd64d4c006b0bdcc63206a5f",
+    "a9a23cf45bcb6ae0831a1d1683921ef092c75f82",
+    "b688a3bad48d41b85fd608c306ad8db4919a3271",
+    "0c218d5e2b8bb6f43be1c6a0a15b74d89e8b9133",
+    "bd08f1e2695b8d4f600858413e05f3960aab9098",
+    "5b5cd95d6c7dd34f1e6fd9cdb402c90e5b0f1d8f",
+    "4f639decf09594de73558152af91b15884a14de9",
+    "f61532d45f9400db4616f250659e0b84fe91a6da",
+    "ffae1444e2c9ddac4163294388535275fe5da410",
+    "24024beec928bfad6496af9b57fa47ff76310571",
+    "c484f8fb3ff23a0a8a1f9de78782581cab67e537",
+    "b0917eeaf71fb920a01b752e0f02275563411afc",
+    "f3a3219b307d669afa753cfaa3bc68e9cbadf218",
+    STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE,
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS = (
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_contract.json",
+    "stage_f_local_execution_binding_evidence_schema.json",
+    "stage_f_local_execution_binding_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_predecessor_manifest.json",
+    "stage_f_local_execution_binding_validation_contract.json",
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_RAW_SHA256 = {
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md": (
+        "05b5679e61991c692b8f245d22897665089dafc25d0769590b3b0ad153fecad0"
+    ),
+    "stage_f_local_execution_binding_contract.json": (
+        "74b582fae72216f2234aa7de354586a3ff679147a89b9bad4f7df43082a9d59f"
+    ),
+    "stage_f_local_execution_binding_evidence_schema.json": (
+        "0062377ea1aea416e09e6c149ec3973f5aab632a0b84b438d7e181aee505a396"
+    ),
+    "stage_f_local_execution_binding_implementation_path_manifest.json": (
+        "befdb7b717be75f7b62f6489d053274bad9330f7b8f53f2a5b4c0d4da059ae23"
+    ),
+    "stage_f_local_execution_binding_predecessor_manifest.json": (
+        "28ffee108f64c9b0f0341cdf61b51437ed315ee2b84d9979cbfeb89c6bd6baab"
+    ),
+    "stage_f_local_execution_binding_validation_contract.json": (
+        "6550603ec759580660300d10361cac66ef43b7d657ac1f49672d712ba5de1abf"
+    ),
+}
+STAGE_F_LOCAL_BINDING_AUTHORITY_CANONICAL_SHA256 = {
+    "stage_f_local_execution_binding_contract.json": (
+        "087b06257389fe726e583b15b41199550eaafec41599988019c0a4b2c77e277c"
+    ),
+    "stage_f_local_execution_binding_evidence_schema.json": (
+        "a38dffe3326cf9d732218a7291be356f10c93af7c50c702a29deb70e8a863452"
+    ),
+    "stage_f_local_execution_binding_implementation_path_manifest.json": (
+        "f51427478cc13145a4fada6ad12d55988ddc43d1db84984067b357d117f603f4"
+    ),
+    "stage_f_local_execution_binding_predecessor_manifest.json": (
+        "d501dd8bf0f70435b67347c5251f0612bfd9a363702a138b61e744fae552c634"
+    ),
+    "stage_f_local_execution_binding_validation_contract.json": (
+        "10da4c6789d370ea4ff013c5fa8ceb41a361115c9e2b52802052c83bcf6cce4a"
+    ),
+}
+STAGE_F_LOCAL_BINDING_MODIFIED_PATHS = (
+    ".github/workflows/tests.yml",
+    "scripts/validate_stage_e_harness.py",
+)
+STAGE_F_LOCAL_BINDING_NEW_PATHS = (
+    "scripts/build_stage_f_local_binding.py",
+    "scripts/validate_stage_f_local_binding.py",
+    "stage_f_binding/__init__.py",
+    "stage_f_binding/canonical.py",
+    "stage_f_binding/binding.py",
+    "stage_f_binding/durability.py",
+    "stage_f_binding/locked_zipapp_bootstrap.py",
+    "tests/stage_f_binding/__init__.py",
+    "tests/stage_f_binding/fixtures/negative_cases.json",
+    "tests/stage_f_binding/fixtures/synthetic_private_host_manifest.json",
+    "tests/stage_f_binding/test_binding_privacy_and_authorization.py",
+    "tests/stage_f_binding/test_durability_and_no_science.py",
+)
+STAGE_F_LOCAL_BINDING_REACHABILITY_PATH = (
+    "tests/framework/test_validation_reachability.py"
+)
+STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE = (
+    STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_SCOPE
+    | frozenset(STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS)
+)
+STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION_SCOPE = (
+    STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE
+    | frozenset(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+)
+STAGE_F_DESCENDANT_PATH_BASE_COMMIT = (
+    "b7ebe8615d54ae5e23645734b1a6c7667ce28bce"
+)
+STAGE_F_DESCENDANT_PATH_BASE_TREE = (
+    "24f2693b6d26d42bf9e360b295e3209a16417f74"
+)
+STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS = (
+    STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+    + STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+    + (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,)
+    + STAGE_F_LOCAL_BINDING_NEW_PATHS
+)
 STAGE_E_WORKFLOW_APPEND_BLOCK = br"""
   stage-e-scientific-harness:
     if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
@@ -645,7 +766,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "b49c5312f4dcd7bd8bd6c5bbd0eae88d7b89d62d9164c5d32fb805cb613c2778"
+TEST_SELF_SEAL = "3fd99a64ac41b2c2ee58c9024129aaddfac7de02442dc6de103f0f7526bdfae9"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1105,6 +1226,25 @@ def _git(*args: str) -> bytes:
             "--reverse",
             "--parents",
             f"{STAGE_E_RECONCILIATION_ACCEPTED_BASE_COMMIT}..{STAGE_E_RECONCILIATION_AUTHORITY_CANDIDATE}",
+        )
+        or args
+        == (
+            "merge-base",
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+            STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE,
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == ("merge-base", STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or args
+        == (
+            "rev-list",
+            "--reverse",
+            "--parents",
+            f"{STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT}..{STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE}",
         )
         or args
         == (
@@ -1831,6 +1971,11 @@ class ValidationReachabilityTests(unittest.TestCase):
             "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION",
         ):
             self._audit_stage_e_reconciliation_authority(current_scope)
+        if current_scope["stage_f_local_binding_phase"] in (
+            "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY",
+            "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION",
+        ):
+            self._audit_stage_f_local_binding_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -1844,6 +1989,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             manifest,
             current_scope["stage_c_phase"],
             current_scope["stage_e_phase"],
+            current_scope["stage_f_local_binding_phase"],
         )
         self._audit_text_and_markdown(contract)
         self._audit_static_vectors(validation_contract)
@@ -1879,6 +2025,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             for path in set(base_entries) | set(head_entries)
             if head_entries.get(path) != base_entries.get(path)
         )
+        stage_f_local_binding_phase = None
         if changed_paths == STAGE_C_AUTHORITY_SCOPE:
             stage_c_phase = "AUTHORITY_ONLY"
             stage_d_phase = None
@@ -1931,6 +2078,26 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_e_reconciliation_phase = (
                 "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
             )
+        elif changed_paths == STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+        elif changed_paths == STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = (
+                "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+            )
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
@@ -1938,7 +2105,9 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "Stage D continuation-authority-only, Stage E harness "
                 "authority-only, Stage D dynamic-growth authority-only, "
                 "Stage E dynamic-growth reconciliation authority-only, or "
-                "the reconciled Stage E harness completed-implementation "
+                "the reconciled Stage E harness completed-implementation, "
+                "Stage F local-binding authority-only, or Stage F local-binding "
+                "completed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -1951,6 +2120,12 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(len(STAGE_E_RECONCILIATION_AUTHORITY_SCOPE), 52)
         self.assertEqual(len(STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS), 51)
         self.assertEqual(len(STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_SCOPE), 102)
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE), 108)
+        self.assertEqual(
+            len(STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION_SCOPE), 120
+        )
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 70)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 70)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -2029,6 +2204,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             "stage_e_phase": stage_e_phase,
             "stage_d_dynamic_growth_phase": stage_d_dynamic_growth_phase,
             "stage_e_reconciliation_phase": stage_e_reconciliation_phase,
+            "stage_f_local_binding_phase": stage_f_local_binding_phase,
         }
 
     def _audit_stage_d_authority(self, current_scope: dict[str, object]) -> None:
@@ -2092,6 +2268,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_E_RECONCILIATION_AUTHORITY_PATHS
             )
+        if current_scope["stage_f_local_binding_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -2345,6 +2530,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_E_RECONCILIATION_AUTHORITY_PATHS
             )
+        if current_scope["stage_f_local_binding_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -2763,6 +2957,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_E_RECONCILIATION_AUTHORITY_PATHS
             )
+        if current_scope["stage_f_local_binding_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -2928,25 +3131,35 @@ class ValidationReachabilityTests(unittest.TestCase):
                 workflow_row["path"], base_entries, base_archive
             )
             current_workflow_raw = (ROOT / workflow_row["path"]).read_bytes()
+            stage_e_workflow_raw = accepted_workflow_raw + STAGE_E_WORKFLOW_APPEND_BLOCK
+            if (
+                current_scope["stage_f_local_binding_phase"]
+                == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+            ):
+                self.assertTrue(
+                    current_workflow_raw.startswith(stage_e_workflow_raw),
+                    "Stage F workflow must retain every accepted Stage E byte as a prefix",
+                )
+            else:
+                self.assertEqual(
+                    current_workflow_raw,
+                    stage_e_workflow_raw,
+                    "Stage E workflow must be the exact accepted workflow plus the frozen additive job",
+                )
             self.assertEqual(
-                current_workflow_raw,
-                accepted_workflow_raw + STAGE_E_WORKFLOW_APPEND_BLOCK,
-                "Stage E workflow must be the exact accepted workflow plus the frozen additive job",
-            )
-            self.assertEqual(
-                current_workflow_raw.count(b"  stage-e-scientific-harness:\n"),
+                stage_e_workflow_raw.count(b"  stage-e-scientific-harness:\n"),
                 1,
             )
             self.assertEqual(
-                current_workflow_raw.count(
+                stage_e_workflow_raw.count(
                     b"    needs: [test, framework-t0, framework-t1, framework-t2, packaging-release-candidate]\n"
                 ),
                 1,
             )
-            self.assertEqual(current_workflow_raw.count(b"--network none"), 6)
-            self.assertEqual(current_workflow_raw.count(b"--read-only"), 6)
+            self.assertEqual(stage_e_workflow_raw.count(b"--network none"), 6)
+            self.assertEqual(stage_e_workflow_raw.count(b"--read-only"), 6)
             self.assertEqual(
-                current_workflow_raw.count(b"--platform linux/amd64"), 6
+                stage_e_workflow_raw.count(b"--platform linux/amd64"), 6
             )
 
         study_order = tuple(f"SD-{index:02d}" for index in range(1, 15))
@@ -3262,6 +3475,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
             )
+        if current_scope["stage_f_local_binding_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -3684,6 +3906,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
             )
+        if current_scope["stage_f_local_binding_phase"] is not None:
+            expected_implementation_delta.update(
+                STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -4445,6 +4676,1211 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
         )
 
+    def _audit_stage_f_local_binding_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertIn(
+            current_scope["stage_f_local_binding_phase"],
+            (
+                "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY",
+                "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION",
+            ),
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                "--verify",
+                f"{STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT}^{{commit}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET}^1")
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET}^2")
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+                STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+        )
+        history_rows = tuple(
+            tuple(line.split())
+            for line in _git(
+                "rev-list",
+                "--reverse",
+                "--parents",
+                f"{STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT}..{STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE}",
+            )
+            .decode()
+            .splitlines()
+        )
+        self.assertEqual(
+            tuple(row[0] for row in history_rows),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_CHAIN,
+        )
+        self.assertEqual(
+            history_rows[0][1:], (STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,)
+        )
+        for previous, row in zip(
+            STAGE_F_LOCAL_BINDING_AUTHORITY_CHAIN, history_rows[1:]
+        ):
+            self.assertEqual(row[1:], (previous,))
+
+        base_entries = _tree_entries(STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE)
+        target_entries = _tree_entries(STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET)
+        current_entries = _tree_entries(current_scope["actual_head"])
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET,
+                current_scope["actual_head"],
+            )
+            .decode()
+            .strip(),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET,
+        )
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS)
+        )
+        self.assertEqual(candidate_entries, target_entries)
+        for path in STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS:
+            self.assertNotIn(path, base_entries)
+            self.assertEqual(candidate_entries[path]["mode"], "100644", path)
+            self.assertEqual(candidate_entries[path]["object_type"], "blob", path)
+        implementation_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        expected_implementation_delta = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_MODIFIED_PATHS)
+            expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        self.assertEqual(
+            implementation_delta, frozenset(expected_implementation_delta)
+        )
+
+        candidate_archive = _archive_members(
+            STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE
+        )
+        target_archive = _archive_members(STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET)
+        current_archive = _archive_members(current_scope["actual_head"])
+        documents = {}
+        raw_by_path = {}
+        expected_blob_bytes = {
+            "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md": 71550,
+            "stage_f_local_execution_binding_contract.json": 68095,
+            "stage_f_local_execution_binding_evidence_schema.json": 229992,
+            "stage_f_local_execution_binding_implementation_path_manifest.json": 5321,
+            "stage_f_local_execution_binding_predecessor_manifest.json": 8318,
+            "stage_f_local_execution_binding_validation_contract.json": 71510,
+        }
+        for path in STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS:
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(
+                path, target_entries, target_archive
+            )
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(candidate_row, target_row, path)
+            self.assertEqual(candidate_row, current_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(len(candidate_raw), expected_blob_bytes[path], path)
+            self.assertEqual(
+                _sha256(candidate_raw),
+                STAGE_F_LOCAL_BINDING_AUTHORITY_RAW_SHA256[path],
+                path,
+            )
+            checkout_raw = (ROOT / path).read_bytes()
+            self.assertNotIn(b"\r", checkout_raw.replace(b"\r\n", b""), path)
+            self.assertEqual(checkout_raw.replace(b"\r\n", b"\n"), candidate_raw, path)
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n")
+                and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\xef\xbb\xbf", candidate_raw, path)
+            self.assertNotIn(b"\r", candidate_raw, path)
+            self.assertTrue(
+                all(line == line.rstrip(" \t") for line in text.splitlines()),
+                path,
+            )
+            raw_by_path[path] = candidate_raw
+            if path.endswith(".json"):
+                document = _strict_stage_d_json_bytes(candidate_raw, path)
+                documents[path] = document
+                canonical = _canonical_json_bytes(document)
+                self.assertEqual(
+                    _sha256(canonical),
+                    STAGE_F_LOCAL_BINDING_AUTHORITY_CANONICAL_SHA256[path],
+                    path,
+                )
+
+        contract = documents["stage_f_local_execution_binding_contract.json"]
+        schema = documents["stage_f_local_execution_binding_evidence_schema.json"]
+        implementation = documents[
+            "stage_f_local_execution_binding_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "stage_f_local_execution_binding_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_f_local_execution_binding_validation_contract.json"
+        ]
+        self.assertEqual(
+            tuple(contract["authority_files"]),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS,
+        )
+        self.assertEqual(contract["authority_file_count"], 6)
+        self.assertEqual(
+            tuple(implementation["authority_paths"]),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS,
+        )
+        self.assertEqual(implementation["authority_path_count"], 6)
+        authority_candidate = validation["authority_candidate"]
+        self.assertEqual(
+            tuple(authority_candidate["added_paths"]),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS,
+        )
+        self.assertEqual(
+            authority_candidate,
+            {
+                "added_paths": list(STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS),
+                "added_path_count": 6,
+                "modified_path_count": 0,
+                "deleted_path_count": 0,
+                "renamed_path_count": 0,
+                "allowed_mode": "100644",
+            },
+        )
+        for document in (contract, implementation, predecessor, validation):
+            self.assertEqual(
+                document["accepted_base"],
+                {
+                    "commit": STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+                    "tree": STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_TREE,
+                },
+            )
+
+        self.assertEqual(predecessor["source_count"], 28)
+        source_rows = predecessor["source_rows"]
+        self.assertEqual(len(source_rows), 28)
+        self.assertEqual(len({row["path"] for row in source_rows}), 28)
+        base_archive = _archive_members(STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT)
+        for row in source_rows:
+            reconstructed, base_raw = _object_row(
+                row["path"], base_entries, base_archive
+            )
+            self.assertEqual(
+                {
+                    "path": reconstructed["path"],
+                    "mode": reconstructed["mode"],
+                    "git_object": reconstructed["git_object"],
+                    "bytes": reconstructed["byte_count"],
+                    "sha256": reconstructed["raw_sha256"],
+                },
+                row,
+                row["path"],
+            )
+            self.assertEqual(current_entries[row["path"]], base_entries[row["path"]])
+            self.assertEqual(
+                _object_row(row["path"], current_entries, current_archive)[1],
+                base_raw,
+                row["path"],
+            )
+
+        accepted_stage_e = predecessor["accepted_stage_e_implementation"]
+        self.assertEqual(
+            accepted_stage_e,
+            {
+                "integration_commit": STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+                "integration_tree": STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_TREE,
+                "implementation_path_count": 51,
+                "path_closure_source": "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json",
+            },
+        )
+        reconciliation_manifest_raw = _object_row(
+            accepted_stage_e["path_closure_source"], base_entries, base_archive
+        )[1]
+        reconciliation_manifest = _strict_stage_d_json_bytes(
+            reconciliation_manifest_raw, accepted_stage_e["path_closure_source"]
+        )
+        accepted_scope = reconciliation_manifest["prospective_harness_implementation"]
+        accepted_stage_e_paths = tuple(accepted_scope["modified_paths"]) + tuple(
+            accepted_scope["new_paths"]
+        )
+        self.assertEqual(
+            accepted_stage_e_paths, STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+        )
+        self.assertEqual(len(accepted_stage_e_paths), 51)
+        self.assertEqual(len(set(accepted_stage_e_paths)), 51)
+        for path in accepted_stage_e_paths:
+            self.assertEqual(base_entries[path]["mode"], "100644", path)
+            self.assertEqual(base_entries[path]["object_type"], "blob", path)
+            if (
+                current_scope["stage_f_local_binding_phase"]
+                != "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+                or path not in STAGE_F_LOCAL_BINDING_MODIFIED_PATHS
+            ):
+                self.assertEqual(current_entries[path], base_entries[path], path)
+        self.assertEqual(
+            current_entries["stage_e_harness/execution.py"],
+            base_entries["stage_e_harness/execution.py"],
+        )
+        accepted_ci = predecessor["accepted_stage_e_ci"]
+        self.assertEqual(
+            accepted_ci,
+            {
+                "run_id": 33231168021,
+                "required_job_count": 6,
+                "conclusion": "success",
+                "artifact_id": 9708926559,
+                "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345",
+            },
+        )
+
+        prospective = implementation["prospective_implementation"]
+        self.assertEqual(
+            tuple(prospective["modified_paths"]),
+            STAGE_F_LOCAL_BINDING_MODIFIED_PATHS,
+        )
+        self.assertEqual(prospective["modified_path_count"], 2)
+        self.assertEqual(
+            tuple(prospective["new_paths"]), STAGE_F_LOCAL_BINDING_NEW_PATHS
+        )
+        self.assertEqual(prospective["new_path_count"], 12)
+        self.assertEqual(prospective["total_path_count"], 14)
+        durability = implementation["prospective_reachability_durability"]
+        self.assertEqual(
+            durability,
+            {
+                "modified_path": STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,
+                "modified_path_count": 1,
+                "authority_integration_required_first": True,
+                "independent_audit_required": True,
+            },
+        )
+        final_closure = implementation["final_descendant_path_closure"]
+        self.assertEqual(
+            final_closure,
+            {
+                "accepted_stage_e_path_count": 51,
+                "authority_added_path_count": 6,
+                "reachability_durability_unique_path_count": 1,
+                "stage_f_new_unique_path_count": 12,
+                "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
+                "final_unique_path_count": 70,
+                "missing_extra_or_duplicate_path_disposition": "REFUSE",
+            },
+        )
+        self.assertEqual(
+            set(STAGE_F_LOCAL_BINDING_MODIFIED_PATHS)
+            & set(accepted_stage_e_paths),
+            set(STAGE_F_LOCAL_BINDING_MODIFIED_PATHS),
+        )
+        self.assertFalse(
+            set(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+            & (
+                set(accepted_stage_e_paths)
+                | set(STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS)
+                | {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
+            )
+        )
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 70)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 70)
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{STAGE_F_DESCENDANT_PATH_BASE_COMMIT}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            STAGE_F_DESCENDANT_PATH_BASE_TREE,
+        )
+        descendant_base_entries = _tree_entries(STAGE_F_DESCENDANT_PATH_BASE_COMMIT)
+        descendant_delta = frozenset(
+            path
+            for path in set(descendant_base_entries) | set(current_entries)
+            if descendant_base_entries.get(path) != current_entries.get(path)
+        )
+        expected_descendant_delta = (
+            set(accepted_stage_e_paths)
+            | set(STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS)
+            | {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
+        )
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_descendant_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
+        self.assertEqual(
+            len(descendant_delta),
+            70
+            if current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+            else 58,
+        )
+        self.assertEqual(implementation["unknown_path_disposition"], "REFUSE")
+        self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
+        self.assertEqual(
+            implementation["force_push_or_history_rewrite"], "FORBIDDEN"
+        )
+        self.assertTrue(implementation["authority_integration_required_before_implementation"])
+        self.assertTrue(implementation["independent_implementation_audit_required"])
+
+        campaign_order = (
+            "SD-01",
+            "SD-01-GROWTH-v1",
+            *tuple(f"SD-{index:02d}" for index in range(2, 15)),
+        )
+        self.assertEqual(tuple(contract["campaign_order"]), campaign_order)
+        self.assertEqual(
+            contract["nested_campaign_rule"],
+            {
+                "nested_id": "SD-01-GROWTH-v1",
+                "parent_study_id": "SD-01",
+                "independent_study_count_increment": 0,
+            },
+        )
+        route_projection = contract["route_binding_projection"]
+        self.assertTrue(route_projection["ordered_route_ids_equal_campaign_order"])
+        self.assertEqual(route_projection["nested_growth_study_id"], "SD-01")
+        self.assertEqual(
+            route_projection["nested_growth_campaign_id"], "SD-01-GROWTH-v1"
+        )
+        self.assertTrue(route_projection["all_wrapper_campaign_ids_unique"])
+        self.assertTrue(route_projection["ready_bundle_requires_fifteen_distinct_sealed_binding_identities"])
+
+        identity_kinds = contract["identity_kind_registry"]
+        identity_preimages = contract["identity_preimage_registry"]
+        self.assertEqual(len(identity_kinds), 36)
+        self.assertEqual(len(identity_preimages), 36)
+        self.assertEqual(len(set(identity_kinds.values())), 36)
+        self.assertEqual(set(identity_kinds.values()), set(identity_preimages))
+        self.assertEqual(
+            identity_kinds["campaign_binding"], "campaign_execution_binding/v2"
+        )
+        self.assertEqual(
+            identity_kinds["binding_implementation"],
+            "stage_f_binding_implementation/v1",
+        )
+        self.assertEqual(
+            identity_kinds["binding_authority_set"],
+            "stage_f_binding_authority_set/v1",
+        )
+        self.assertEqual(
+            identity_kinds["sealed_campaign_packet"],
+            "stage_f_sealed_campaign_packet/v1",
+        )
+        binding_implementation = contract["binding_implementation_preimage"]
+        self.assertEqual(
+            tuple(binding_implementation["ordered_integrated_authority_paths"]),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS,
+        )
+        self.assertEqual(
+            tuple(binding_implementation["ordered_paths"]),
+            STAGE_F_LOCAL_BINDING_MODIFIED_PATHS
+            + STAGE_F_LOCAL_BINDING_NEW_PATHS,
+        )
+        self.assertEqual(binding_implementation["path_count"], 14)
+        self.assertEqual(binding_implementation["integrated_authority_file_count"], 6)
+        self.assertEqual(
+            tuple(binding_implementation["row_fields_in_order"]),
+            ("path", "mode", "git_object", "byte_count", "raw_sha256"),
+        )
+        authority_set = contract["binding_authority_set_preimage"]
+        self.assertEqual(
+            tuple(authority_set["ordered_local_authority_paths"]),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS,
+        )
+        self.assertEqual(authority_set["local_authority_file_count"], 6)
+        self.assertEqual(authority_set["route_authority_projection_count"], 15)
+        validator_preimage = contract["binding_validator_preimage"]
+        self.assertEqual(validator_preimage["validator_source_file_count"], 7)
+        self.assertEqual(
+            tuple(validator_preimage["ordered_validator_source_paths"]),
+            STAGE_F_LOCAL_BINDING_NEW_PATHS[:7],
+        )
+        stage_e_preimage = contract["stage_e_integration_preimage"]
+        self.assertEqual(
+            stage_e_preimage["integration_commit"],
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            stage_e_preimage["integration_tree"],
+            STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(stage_e_preimage["implementation_path_count"], 51)
+        self.assertEqual(stage_e_preimage["ci_run_id"], 33231168021)
+        self.assertEqual(stage_e_preimage["artifact_id"], 9708926559)
+        self.assertEqual(
+            stage_e_preimage["artifact_sha256"], accepted_ci["artifact_sha256"]
+        )
+        self.assertTrue(
+            contract["scientific_code_preimage"][
+                "ordered_rows_equal_complete_recursive_git_tree_blob_inventory"
+            ]
+        )
+        self.assertTrue(
+            contract["scientific_implementation_preimage"][
+                "stage_e_harness_execution_guard_remains_byte_identical"
+            ]
+        )
+        self.assertTrue(
+            contract["verifier_implementation_preimage"][
+                "all_fifteen_routes_have_static_verifier_coverage"
+            ]
+        )
+        linkage = contract["bundle_identity_linkage"]
+        self.assertEqual(linkage["mixed_individually_valid_chain"], "REFUSE")
+        self.assertTrue(
+            all(value is True for key, value in linkage.items() if key != "mixed_individually_valid_chain")
+        )
+
+        refs = _schema_refs(schema)
+        self.assertEqual(len(schema["$defs"]), 143)
+        self.assertEqual(len(schema["oneOf"]), 27)
+        self.assertEqual(len(refs), 990)
+        self.assertEqual(len(set(refs)), 135)
+        for ref in refs:
+            self.assertIs(type(ref), str)
+            self.assertTrue(ref.startswith("#/$defs/"), ref)
+            _json_pointer(schema, ref[1:])
+        expected_root_names = (
+            "private_execution_host_manifest",
+            "storage_capacity_snapshot",
+            "power_snapshot",
+            "public_execution_host_binding",
+            "host_validation_runtime_preimage",
+            "host_runtime_lock_acquisition_preimage",
+            "host_runtime_lock_release_observation",
+            "binding_implementation_preimage",
+            "binding_validator_preimage",
+            "validator_source_bundle_artifact",
+            "validator_executable_zipapp_manifest",
+            "durability_probe_invocation_preimage",
+            "validator_artifact_lock_observation",
+            "binding_authority_set_preimage",
+            "scientific_code_preimage",
+            "scientific_implementation_preimage",
+            "verifier_implementation_preimage",
+            "stage_e_integration_preimage",
+            "local_binding_bundle",
+            "binding_readiness_record",
+            "binding_validation_receipt",
+            "durability_probe_receipt",
+            "private_durability_bundle",
+            "independent_binding_audit_receipt",
+            "sealed_campaign_packet_manifest",
+            "post_packet_user_authorization_receipt",
+            "campaign_authorization",
+        )
+        self.assertEqual(
+            tuple(item["$ref"].removeprefix("#/$defs/") for item in schema["oneOf"]),
+            expected_root_names,
+        )
+        object_nodes = []
+
+        def collect_object_nodes(value: object, path: tuple[object, ...] = ()) -> None:
+            if type(value) is dict:
+                if value.get("type") == "object":
+                    object_nodes.append((path, value))
+                for key, item in value.items():
+                    collect_object_nodes(item, path + (key,))
+            elif type(value) is list:
+                for index, item in enumerate(value):
+                    collect_object_nodes(item, path + (index,))
+
+        collect_object_nodes(schema)
+        self.assertEqual(len(object_nodes), 125)
+        closed_objects = tuple(
+            (path, node)
+            for path, node in object_nodes
+            if node.get("additionalProperties") is False
+        )
+        refinements = tuple(
+            (path, node)
+            for path, node in object_nodes
+            if "additionalProperties" not in node
+        )
+        self.assertEqual(len(closed_objects), 89)
+        self.assertEqual(len(refinements), 36)
+        for path, node in closed_objects:
+            self.assertEqual(set(node.get("required", [])), set(node["properties"]), path)
+        for path, node in refinements:
+            self.assertEqual(path[-2:], ("allOf", 1), path)
+            self.assertNotIn("required", node, path)
+            self.assertTrue(node["properties"], path)
+        self.assertEqual(schema["scientific_execution_count"], 0)
+
+        self.assertEqual(len(validation["static_positive_checks"]), 28)
+        self.assertEqual(
+            tuple(validation["semantic_relations"]),
+            (
+                "identity",
+                "local_preimages",
+                "private_public",
+                "binding",
+                "readiness",
+                "validation_receipt",
+                "storage",
+                "power",
+                "durability",
+                "authorization",
+            ),
+        )
+        self.assertEqual(
+            sum(len(rows) for rows in validation["semantic_relations"].values()),
+            144,
+        )
+        negatives = validation["negative_cases"]
+        self.assertEqual(validation["negative_case_count"], 67)
+        self.assertEqual(len(negatives), 67)
+        self.assertEqual(
+            tuple(row["case_id"] for row in negatives),
+            tuple(f"SF-BIND-N{index:02d}" for index in range(1, 68)),
+        )
+        self.assertEqual({row["disposition"] for row in negatives}, {"REFUSE"})
+        zero_counters = contract["prohibited_counters"]
+        self.assertEqual(len(zero_counters), 15)
+        self.assertEqual(set(zero_counters.values()), {0})
+        self.assertEqual(predecessor["required_operation_counts"], zero_counters)
+        self.assertEqual(schema["scientific_execution_count"], 0)
+        self.assertEqual(
+            validation["allowed_validation_operations"],
+            [
+                "Git object and byte inspection",
+                "strict UTF-8 and JSON parsing",
+                "canonical JSON serialization",
+                "SHA-256 hashing",
+                "closed-set and ordered-list comparison",
+                "JSON Schema inspection and synthetic validation",
+                "deterministic ZIP_STORED archive construction parsing and byte-for-byte rebuild",
+                "outcome-blind host-runtime inventory and named Win32 identity storage power and durability observations",
+                "integer-only storage arithmetic",
+                "static source inspection",
+            ],
+        )
+        self.assertEqual(
+            validation["forbidden_validation_operations"],
+            [
+                "project runner import",
+                "model or state transition",
+                "registered configuration",
+                "trajectory or simulation",
+                "Gate or scientific transform",
+                "benchmark used as scientific evidence",
+                "scientific RNG draw",
+                "outcome inspection",
+                "result figure book release or publication",
+            ],
+        )
+
+        self.assertEqual(
+            contract["accepted_base_readiness"]["binding_sealable"], False
+        )
+        self.assertEqual(
+            contract["accepted_base_readiness"]["required_disposition"],
+            "BINDING_NOT_SEALABLE",
+        )
+        readiness_gaps = contract["accepted_base_readiness"]["gap_registry"]
+        self.assertEqual(len(readiness_gaps), 15)
+        self.assertEqual(
+            tuple(row["route_id"] for row in readiness_gaps), campaign_order
+        )
+        self.assertTrue(
+            all(
+                row["gap_class"]
+                in {
+                    "IMPLEMENTATION_AUTHORITY",
+                    "SCIENTIFIC_AUTHORITY",
+                    "INSTITUTIONAL_AUTHORITY",
+                    "INSTITUTIONAL_AND_DEPENDENCY_AUTHORITY",
+                }
+                and row["gap_ids"]
+                and len(set(row["gap_ids"])) == len(row["gap_ids"])
+                for row in readiness_gaps
+            )
+        )
+        self.assertEqual(
+            tuple(contract["readiness_dispositions"]),
+            (
+                "NOT_READY_AUTHORITY_GAPS",
+                "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+                "INDEPENDENT_BINDING_PASS",
+                "INDEPENDENT_BINDING_FAIL",
+            ),
+        )
+        self.assertEqual(
+            tuple(contract["bundle_dispositions"]),
+            ("BINDING_NOT_SEALABLE", "READY_FOR_INDEPENDENT_BINDING_AUDIT"),
+        )
+
+        public_privacy = contract["privacy_tiers"]["public"]
+        private_privacy = contract["privacy_tiers"]["private"]
+        self.assertEqual(public_privacy["host_alias"], "EXECUTION-HOST-01")
+        self.assertFalse(public_privacy["personal_identifiers_permitted"])
+        self.assertFalse(public_privacy["absolute_paths_permitted"])
+        self.assertFalse(public_privacy["private_manifest_bytes_permitted"])
+        self.assertTrue(public_privacy["private_manifest_digest_identity_required"])
+        self.assertTrue(public_privacy["logical_directory_roles_required"])
+        self.assertTrue(private_privacy["retained_canonical_bytes_required"])
+        self.assertTrue(private_privacy["non_scientific_privacy_nonce_required"])
+        self.assertTrue(private_privacy["independent_local_auditor_access_required"])
+        self.assertFalse(private_privacy["public_digest_alone_is_proof"])
+        self.assertFalse(private_privacy["git_worktree_storage_permitted"])
+
+        storage = contract["storage_envelope"]
+        gib = 1073741824
+        component_gib = (
+            storage["primary_logical_output_gib"],
+            storage["independent_audit_copy_gib"],
+            storage["dynamic_growth_physical_writes_gib"],
+            storage["checkpoint_and_write_overhead_gib"],
+            storage["temporary_archives_gib"],
+            storage["retained_evidence_gib"],
+        )
+        self.assertEqual(storage["bytes_per_gib"], gib)
+        self.assertEqual(component_gib, (253, 253, 80, 64, 8, 8))
+        self.assertEqual(sum(component_gib), storage["total_gib"])
+        self.assertEqual(storage["total_gib"], 666)
+        self.assertEqual(storage["minimum_free_after_existing_data_gib"], 350)
+        self.assertEqual(storage["retained_evidence_bytes_predebited"], 8 * gib)
+        self.assertEqual(
+            storage["remaining_envelope_formula"],
+            "715112054784 - current_envelope_usage.total_envelope_usage_bytes",
+        )
+        self.assertEqual(
+            storage["free_space_rule"],
+            "observed_free_bytes >= max(375809638400, remaining_reserved_envelope_bytes)",
+        )
+        self.assertTrue(storage["component_usage_record_required"])
+        self.assertTrue(storage["cumulative_accounting_nonresetting"])
+        self.assertEqual(
+            contract["stage_e_descendant_path_closure"],
+            {
+                "accepted_stage_e_unique_paths": 51,
+                "authority_added_paths": 6,
+                "reachability_durability_unique_paths": 1,
+                "stage_f_new_unique_paths": 12,
+                "stage_f_modified_paths_already_in_stage_e_closure": 2,
+                "final_unique_paths_relative_to_stage_e_implementation_base": 70,
+                "extra_missing_or_duplicate_path_disposition": "REFUSE",
+            },
+        )
+
+        packet = contract["sealed_campaign_packet_authorization_projection"]
+        self.assertTrue(packet["canonical_self_contained_manifest_required"])
+        self.assertEqual(
+            packet["identity_preimage"],
+            "complete canonical sealed_campaign_packet_manifest object",
+        )
+        self.assertEqual(packet["additional_fields"], "REFUSE")
+        self.assertFalse(packet["private_bytes_embedded"])
+        self.assertEqual(packet["sensitive_field_disclosure_count"], 0)
+        self.assertTrue(
+            packet[
+                "packet_created_not_before_bound_validation_audit_and_final_pass_readiness"
+            ]
+        )
+        self.assertEqual(
+            tuple(packet["required_identity_fields"]),
+            (
+                "local_binding_bundle_identity",
+                "independent_binding_pass_readiness_identity",
+                "independent_binding_audit_identity",
+                "binding_validation_receipt_identity",
+                "public_host_binding_identity",
+                "private_host_manifest_identity",
+                "storage_capacity_snapshot_identity",
+                "power_snapshot_identity",
+                "scientific_code_identity",
+                "scientific_implementation_identity",
+                "installed_artifact_identity",
+                "verifier_identity",
+                "binding_implementation_identity",
+                "authority_set_identity",
+                "stage_e_integration_identity",
+                "stage_e_evidence_identity",
+                "validator_identity",
+            ),
+        )
+        self.assertEqual(
+            tuple(packet["required_ordered_fields"]),
+            (
+                "ordered_route_ids",
+                "ordered_campaign_execution_binding_identities",
+            ),
+        )
+        self.assertTrue(packet["all_identity_preimages_retained_and_recomputed"])
+        self.assertEqual(packet["projection_mismatch"], "REFUSE")
+
+        self.assertEqual(
+            contract["independent_audit_sequence"],
+            {
+                "audited_bundle_disposition": "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+                "audited_readiness_disposition": "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+                "audited_readiness_independent_audit_identity": None,
+                "audit_receipt_schema": "stage_f_independent_binding_audit/v1",
+                "final_readiness_binds_exact_audit_receipt": True,
+                "bundle_mutation_after_audit": "REFUSE",
+            },
+        )
+        authorization = contract["authorization"]
+        self.assertEqual(
+            authorization["schema"], "stage_f_campaign_authorization/v1"
+        )
+        self.assertTrue(authorization["independent_binding_pass_required"])
+        self.assertTrue(
+            authorization[
+                "final_independent_binding_pass_readiness_identity_required"
+            ]
+        )
+        self.assertTrue(
+            authorization["all_referenced_records_resolved_from_retained_canonical_bytes"]
+        )
+        self.assertTrue(
+            authorization[
+                "bundle_identity_equal_across_authorization_packet_pass_readiness_audit_and_validation"
+            ]
+        )
+        self.assertTrue(
+            authorization["audit_identity_equals_pass_readiness_audit_identity"]
+        )
+        self.assertEqual(authorization["audit_disposition"], "INDEPENDENT_BINDING_PASS")
+        self.assertEqual(
+            authorization["audit_pre_audit_readiness_disposition"],
+            "READY_FOR_INDEPENDENT_BINDING_AUDIT",
+        )
+        self.assertTrue(
+            authorization[
+                "route_campaign_binding_code_artifact_implementation_authority_stage_e_and_validator_projections_equal_packet_and_bundle"
+            ]
+        )
+        self.assertTrue(
+            authorization[
+                "private_public_host_and_current_snapshot_projections_equal_validation_audit_pass_readiness_packet_and_public_binding"
+            ]
+        )
+        self.assertEqual(authorization["mixed_record_composition_or_replay"], "REFUSE")
+        self.assertTrue(authorization["later_explicit_user_statement_required"])
+        self.assertTrue(authorization["user_statement_received_not_before_packet_created"])
+        self.assertFalse(authorization["controller_self_authorization_permitted"])
+        self.assertFalse(authorization["dictionary_presence_is_authorization"])
+        self.assertTrue(authorization["preimport_guard_required"])
+
+        marker = "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_COMPLETE"
+        for document in (contract, schema, implementation, predecessor, validation):
+            self.assertEqual(document["completion_marker"], marker)
+        for path, raw in raw_by_path.items():
+            self.assertEqual(raw.count(marker.encode("utf-8")), 1, path)
+
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            accepted_workflow_raw = _object_row(
+                ".github/workflows/tests.yml", base_entries, base_archive
+            )[1]
+            current_workflow_raw = _object_row(
+                ".github/workflows/tests.yml", current_entries, current_archive
+            )[1]
+            self.assertTrue(current_workflow_raw.startswith(accepted_workflow_raw))
+            workflow_suffix = current_workflow_raw[len(accepted_workflow_raw) :]
+            self.assertTrue(workflow_suffix.startswith(b"\n"))
+            self.assertTrue(workflow_suffix.endswith(b"\n"))
+            self.assertNotIn(b"\r", workflow_suffix)
+            suffix_text = workflow_suffix.decode("utf-8", "strict")
+            top_level_jobs = tuple(
+                re.findall(r"(?m)^  ([a-z0-9][a-z0-9-]*):\n", suffix_text)
+            )
+            self.assertEqual(len(top_level_jobs), 1)
+            self.assertIn("stage-f", top_level_jobs[0])
+            self.assertIn("binding", top_level_jobs[0])
+            self.assertEqual(
+                suffix_text.count(
+                    "    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'\n"
+                ),
+                1,
+            )
+            self.assertEqual(
+                suffix_text.count("    needs: [stage-e-scientific-harness]\n"), 1
+            )
+            self.assertEqual(suffix_text.count("    runs-on: ubuntu-24.04\n"), 1)
+            self.assertEqual(
+                tuple(re.findall(r"(?m)^      - uses: ([^\n]+)$", suffix_text)),
+                ("actions/checkout@v4", "actions/setup-python@v5"),
+            )
+            self.assertEqual(suffix_text.count("          fetch-depth: 0\n"), 1)
+            self.assertEqual(
+                suffix_text.count('          python-version: "3.14"\n'), 1
+            )
+            for forbidden in (
+                "${{",
+                "secrets.",
+                "upload-artifact",
+                "download-artifact",
+                "actions/cache",
+                "continue-on-error",
+                "permissions:",
+                "environment:",
+                "services:",
+                "container:",
+                "curl ",
+                "wget ",
+                "pip ",
+                "gh ",
+                "stage_e_harness/execution.py",
+                "scripts/validate_stage_f_local_binding.py",
+                "ebu_framework",
+                "results/",
+                "figures/",
+                "books/",
+            ):
+                self.assertNotIn(forbidden, suffix_text)
+
+            run_commands = []
+            for line in suffix_text.splitlines():
+                if not line:
+                    continue
+                indent = len(line) - len(line.lstrip(" "))
+                stripped = line.strip()
+                if indent == 2:
+                    self.assertEqual(stripped, f"{top_level_jobs[0]}:")
+                elif indent == 4:
+                    self.assertTrue(
+                        stripped.startswith("if: ")
+                        or stripped == "needs: [stage-e-scientific-harness]"
+                        or stripped == "runs-on: ubuntu-24.04"
+                        or stripped == "steps:",
+                        line,
+                    )
+                elif indent == 6:
+                    self.assertTrue(
+                        stripped.startswith("- uses: ")
+                        or stripped.startswith("- name: "),
+                        line,
+                    )
+                elif indent == 8:
+                    self.assertIn(stripped, ("with:", "run: |"), line)
+                elif indent == 10:
+                    if stripped not in ("fetch-depth: 0", 'python-version: "3.14"'):
+                        run_commands.append(stripped)
+                else:
+                    self.fail(f"forbidden Stage F workflow indentation or field: {line!r}")
+
+            allowed_commands = (
+                re.compile(r"set -euo pipefail"),
+                re.compile(r'stage_root="\$RUNNER_TEMP/stage-f-\$\{GITHUB_JOB\}"'),
+                re.compile(r'mkdir -p(?: "\$stage_root/[a-z0-9._/-]+")+'),
+                re.compile(
+                    r'python -I scripts/build_stage_f_local_binding\.py(?: --[a-z][a-z-]* (?:"(?:\$GITHUB_WORKSPACE|\$stage_root/[a-z0-9._/-]+)"|[A-Za-z0-9._/-]+))+'
+                ),
+                re.compile(
+                    r'cmp -- "\$stage_root/[a-z0-9._/-]+" "\$stage_root/[a-z0-9._/-]+"'
+                ),
+                re.compile(
+                    r"python -I -m unittest -v tests\.stage_f_binding\.test_binding_privacy_and_authorization tests\.stage_f_binding\.test_durability_and_no_science"
+                ),
+            )
+            for command in run_commands:
+                self.assertTrue(
+                    any(pattern.fullmatch(command) for pattern in allowed_commands),
+                    f"forbidden Stage F workflow command: {command!r}",
+                )
+            self.assertEqual(
+                sum(
+                    "scripts/build_stage_f_local_binding.py" in command
+                    for command in run_commands
+                ),
+                2,
+            )
+            self.assertEqual(sum(command.startswith("cmp -- ") for command in run_commands), 2)
+            self.assertEqual(
+                sum(command.startswith("python -I -m unittest -v ") for command in run_commands),
+                1,
+            )
+
+            accepted_validator_raw = _object_row(
+                "scripts/validate_stage_e_harness.py", base_entries, base_archive
+            )[1]
+            current_validator_raw = _object_row(
+                "scripts/validate_stage_e_harness.py", current_entries, current_archive
+            )[1]
+            accepted_validator_tree = ast.parse(
+                accepted_validator_raw.decode("utf-8", "strict")
+            )
+            current_validator_tree = ast.parse(
+                current_validator_raw.decode("utf-8", "strict")
+            )
+
+            def without_authority_lane(tree: ast.Module) -> tuple[str, ...]:
+                return tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in tree.body
+                    if not (
+                        isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                        and node.name == "_authority_lane"
+                    )
+                )
+
+            self.assertEqual(
+                without_authority_lane(current_validator_tree),
+                without_authority_lane(accepted_validator_tree),
+            )
+            def authority_lane(tree: ast.Module) -> ast.FunctionDef:
+                lanes = tuple(
+                    node
+                    for node in tree.body
+                    if isinstance(node, ast.FunctionDef)
+                    and node.name == "_authority_lane"
+                )
+                self.assertEqual(len(lanes), 1)
+                return lanes[0]
+
+            accepted_lane = authority_lane(accepted_validator_tree)
+            current_lane = authority_lane(current_validator_tree)
+            self.assertEqual(
+                ast.dump(current_lane.args, include_attributes=False),
+                ast.dump(accepted_lane.args, include_attributes=False),
+            )
+            self.assertEqual(current_lane.decorator_list, accepted_lane.decorator_list)
+            self.assertEqual(
+                ast.dump(current_lane.returns, include_attributes=False),
+                ast.dump(accepted_lane.returns, include_attributes=False),
+            )
+
+            def contains_string(node: ast.AST, value: str) -> bool:
+                return any(
+                    isinstance(child, ast.Constant) and child.value == value
+                    for child in ast.walk(node)
+                )
+
+            def assigned_name(node: ast.AST) -> str | None:
+                if (
+                    isinstance(node, ast.Assign)
+                    and len(node.targets) == 1
+                    and isinstance(node.targets[0], ast.Name)
+                ):
+                    return node.targets[0].id
+                return None
+
+            stage_e_manifest_name = (
+                "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json"
+            )
+            accepted_start = next(
+                index
+                for index, node in enumerate(accepted_lane.body)
+                if contains_string(node, stage_e_manifest_name)
+            )
+            current_start = next(
+                index
+                for index, node in enumerate(current_lane.body)
+                if contains_string(node, stage_e_manifest_name)
+            )
+            accepted_end = next(
+                index
+                for index, node in enumerate(accepted_lane.body)
+                if assigned_name(node) == "harness_sources"
+            )
+            current_end = next(
+                index
+                for index, node in enumerate(current_lane.body)
+                if assigned_name(node) == "harness_sources"
+            )
+            self.assertEqual(
+                tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in current_lane.body[:current_start]
+                ),
+                tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in accepted_lane.body[:accepted_start]
+                ),
+            )
+            self.assertEqual(
+                tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in current_lane.body[current_end:]
+                ),
+                tuple(
+                    ast.dump(node, include_attributes=False)
+                    for node in accepted_lane.body[accepted_end:]
+                ),
+            )
+            changed_lane_nodes = current_lane.body[current_start:current_end]
+            lane_source = "\n".join(
+                ast.get_source_segment(
+                    current_validator_raw.decode("utf-8", "strict"), node
+                )
+                or ""
+                for node in changed_lane_nodes
+            )
+            for required in (
+                stage_e_manifest_name,
+                "stage_f_local_execution_binding_implementation_path_manifest.json",
+                "authority_paths",
+                "prospective_reachability_durability",
+                "prospective_implementation",
+                "modified_paths",
+                "new_paths",
+                "final_descendant_path_closure",
+                "final_unique_path_count",
+                STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,
+                '"diff", "--name-only"',
+                '"diff", "--name-status"',
+                '"ls-tree"',
+                '"100644"',
+                '"blob"',
+            ):
+                self.assertIn(required, lane_source)
+            changed_lane_tree = ast.Module(
+                body=list(changed_lane_nodes), type_ignores=[]
+            )
+            self.assertEqual(
+                sum(isinstance(node, ast.For) for node in ast.walk(changed_lane_tree)),
+                2,
+            )
+            self.assertFalse(
+                any(
+                    isinstance(
+                        node,
+                        (
+                            ast.AsyncFor,
+                            ast.AsyncFunctionDef,
+                            ast.ClassDef,
+                            ast.FunctionDef,
+                            ast.Import,
+                            ast.ImportFrom,
+                            ast.Lambda,
+                            ast.Try,
+                            ast.While,
+                            ast.With,
+                            ast.AsyncWith,
+                            ast.Yield,
+                            ast.YieldFrom,
+                        ),
+                    )
+                    for node in ast.walk(changed_lane_tree)
+                )
+            )
+            call_names = tuple(
+                node.func.id
+                if isinstance(node.func, ast.Name)
+                else node.func.attr
+                if isinstance(node.func, ast.Attribute)
+                else "<dynamic>"
+                for node in ast.walk(changed_lane_tree)
+                if isinstance(node, ast.Call)
+            )
+            self.assertTrue(
+                set(call_names)
+                <= {
+                    "_git",
+                    "filter",
+                    "len",
+                    "set",
+                    "sorted",
+                    "split",
+                    "splitlines",
+                    "strict_load",
+                    "tuple",
+                    "update",
+                },
+                call_names,
+            )
+            self.assertEqual(call_names.count("strict_load"), 2)
+            self.assertEqual(call_names.count("_git"), 3)
+            for forbidden in (
+                "subprocess",
+                "ebu_framework",
+                "stage_e_harness/execution.py",
+                "trajectory",
+                "simulation",
+                "random",
+                "result",
+                "figure",
+                "book",
+            ):
+                self.assertNotIn(forbidden, lane_source)
+            self.assertIn(
+                70,
+                {
+                    node.value
+                    for node in ast.walk(changed_lane_tree)
+                    if isinstance(node, ast.Constant) and type(node.value) is int
+                },
+            )
+
+        self.assertEqual(
+            tuple(
+                name
+                for name, value in self.__class__.__dict__.items()
+                if name.startswith("test_") and callable(value)
+            ),
+            (
+                "test_historical_i9_reconstruction",
+                "test_current_head_durability",
+                "test_post_i9_authority_cases",
+            ),
+        )
+
     def _audit_validation_ast(self, contract, manifest) -> None:
         path = SOURCE / "validation.py"
         source = path.read_text(encoding="utf-8")
@@ -4741,7 +6177,11 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
 
     def _audit_safety_and_ci(
-        self, manifest, stage_c_phase: str, stage_e_phase: str | None
+        self,
+        manifest,
+        stage_c_phase: str,
+        stage_e_phase: str | None,
+        stage_f_local_binding_phase: str | None,
     ) -> None:
         safety_path = ROOT / "tests/framework/safety.py"
         safety_raw = safety_path.read_bytes()
@@ -4895,10 +6335,32 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertNotIn("from ebu_framework", historical_region)
         self.assertNotIn("import ebu_framework", historical_region)
         if stage_c_phase == "COMPLETED_IMPLEMENTATION":
-            stage_c_workflow_raw = current_workflow_raw
+            stage_e_current_workflow_raw = current_workflow_raw
+            if (
+                stage_f_local_binding_phase
+                == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+            ):
+                stage_f_base_entries = _tree_entries(
+                    STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT
+                )
+                stage_f_base_archive = _archive_members(
+                    STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT
+                )
+                _, accepted_stage_e_workflow_raw = _object_row(
+                    ".github/workflows/tests.yml",
+                    stage_f_base_entries,
+                    stage_f_base_archive,
+                )
+                self.assertTrue(
+                    current_workflow_raw.startswith(accepted_stage_e_workflow_raw)
+                )
+                stage_e_current_workflow_raw = accepted_stage_e_workflow_raw
+            stage_c_workflow_raw = stage_e_current_workflow_raw
             if stage_e_phase == "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION":
-                self.assertTrue(current_workflow_raw.endswith(STAGE_E_WORKFLOW_APPEND_BLOCK))
-                stage_c_workflow_raw = current_workflow_raw[
+                self.assertTrue(
+                    stage_e_current_workflow_raw.endswith(STAGE_E_WORKFLOW_APPEND_BLOCK)
+                )
+                stage_c_workflow_raw = stage_e_current_workflow_raw[
                     : -len(STAGE_E_WORKFLOW_APPEND_BLOCK)
                 ]
             self._audit_stage_c_ci(stage_c_workflow_raw.decode("utf-8"))
