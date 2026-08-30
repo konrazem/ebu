@@ -243,7 +243,11 @@ inventory, it opens the exact nonreparse runtime root with `CreateFileW`,
 `FILE_FLAG_OVERLAPPED | FILE_FLAG_BACKUP_SEMANTICS |
 FILE_FLAG_OPEN_REPARSE_POINT` (raw flags 1109393408), then issues one
 65536-byte overlapped `ReadDirectoryChangesW` watch over the entire subtree with
-raw notify filter 351. It remeasures every directory identity under that active
+raw notify filter 351. The buffer is DWORD-aligned; the zero-offset `OVERLAPPED`
+uses one unique non-null manual-reset `CreateEventW` handle initially
+nonsignaled, the completion routine is null, and an immediate nonwaiting
+`GetOverlappedResult` must report `ERROR_IO_INCOMPLETE` and zero transferred
+bytes. It remeasures every directory identity under that active
 watch and refuses any reparse directory. In exact runtime-file-inventory order
 it then opens every runtime file with `CreateFileW`, `GENERIC_READ`, only
 `FILE_SHARE_READ`, `OPEN_EXISTING`, and `FILE_FLAG_OPEN_REPARSE_POINT`; resolves
@@ -263,10 +267,11 @@ the orchestrator, terminated-probe, and resumed-probe processes. Only after all
 three have returned successfully does it reread each exact same file handle,
 reconcile path, unsigned 64-bit volume serial, file ID, byte count, and digest,
 and close each file handle exactly once while the tree watch remains active.
-`GetOverlappedResult` must then report `ERROR_IO_INCOMPLETE` and zero bytes,
+nonwaiting `GetOverlappedResult` must then report `ERROR_IO_INCOMPLETE` and zero bytes,
 with no notification record or buffer overflow. `CancelIoEx` must complete that
-watch with `ERROR_OPERATION_ABORTED` and zero bytes, after which the root handle
-closes exactly once. Any transient add, remove, rename, attribute, size,
+same `OVERLAPPED` request; a waiting `GetOverlappedResult` must report
+`ERROR_OPERATION_ABORTED` and zero bytes, after which the root and event handles
+each close exactly once. Any transient add, remove, rename, attribute, size,
 last-write, creation, or security change refuses even if later restored. The
 release observation binds all three
 process instances and invocation hashes and proves acquisition completion is no
