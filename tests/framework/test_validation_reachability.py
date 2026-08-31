@@ -795,6 +795,73 @@ STAGE_F_FINAL_EVIDENCE_CLOSURE_ROWS = (
         "25ed317603593bcdb3495696deb2db88b4e1e8e2be1ef5ba8a1cb94bb3c3c86c",
     ),
 )
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT = (
+    "06a1b1400d5bd15cdfb50363333602c58b5ac692"
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_TREE = (
+    "ca0bd70c96c0a6d9542ce9656be78a11465662f3"
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE = (
+    "fcb38eb1acffeb11e4a63f0fc17bd92cf5548d63"
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET = (
+    "be7f180547a144f1a4dbf3f9d88bc6c20af95fcb"
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TREE = (
+    "aeeecb9b0a49a1486adf6e10107e7d9af07d07b3"
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS = (
+    "STAGE_F_LOCAL_EXECUTION_BINDING_ATTEMPT_ROOT_BOOTSTRAP_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_contract.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_schema.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_validation_contract.json",
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_ROWS = (
+    (
+        "STAGE_F_LOCAL_EXECUTION_BINDING_ATTEMPT_ROOT_BOOTSTRAP_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "100644",
+        "d91d115da9d9b88b3b0e1371939105d2428f264d",
+        15470,
+        "2fd8181d4a4b3fb74d12a6f7a94e39ad9dec6c78d012bd1661468bcebfdcb470",
+    ),
+    (
+        "stage_f_local_execution_binding_attempt_root_bootstrap_correction_contract.json",
+        "100644",
+        "21c5ae1bb46b480121ba811f4e83c5df27e9848b",
+        38266,
+        "c3fb378f8e40c1a507a2ea97fc44899f915087091788991b8d5fb97457e50693",
+    ),
+    (
+        "stage_f_local_execution_binding_attempt_root_bootstrap_correction_schema.json",
+        "100644",
+        "ff30f37135d92b00d8c6d238bff9b373f4d0e8f0",
+        878634,
+        "51e679986ee4122e258075c5aa3d7c1fd088711f9f215c1b93ba54ae44d1a0be",
+    ),
+    (
+        "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
+        "100644",
+        "5fd765fe17c807e6ec742c82b159ad3ac8ab1a3c",
+        8918,
+        "1dbc429a4935bbf927b8beafabc03bf281b2d908740ffa9034b0983587fa1f67",
+    ),
+    (
+        "stage_f_local_execution_binding_attempt_root_bootstrap_correction_predecessor_manifest.json",
+        "100644",
+        "08df778f711c258c085eb1e232b5b4de8310ffd9",
+        11622,
+        "cae7faee780ae97682791db98aabf80258327459fef2848302809830ebb8cc00",
+    ),
+    (
+        "stage_f_local_execution_binding_attempt_root_bootstrap_correction_validation_contract.json",
+        "100644",
+        "a7fa65fd2fbac07ef282e226fcdf151de785778c",
+        73073,
+        "5361b1704c0b1c070493254b595b197f89d04d3913af07bbc400044d11b8e9d7",
+    ),
+)
 STAGE_F_LOCAL_BINDING_MODIFIED_PATHS = (
     ".github/workflows/tests.yml",
     "scripts/validate_stage_e_harness.py",
@@ -840,6 +907,14 @@ STAGE_F_FINAL_EVIDENCE_CLOSURE_COMPLETED_IMPLEMENTATION_SCOPE = (
     STAGE_F_FINAL_EVIDENCE_CLOSURE_AUTHORITY_SCOPE
     | frozenset(STAGE_F_LOCAL_BINDING_NEW_PATHS)
 )
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_AUTHORITY_SCOPE = (
+    STAGE_F_FINAL_EVIDENCE_CLOSURE_AUTHORITY_SCOPE
+    | frozenset(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS)
+)
+STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_COMPLETED_IMPLEMENTATION_SCOPE = (
+    STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_AUTHORITY_SCOPE
+    | frozenset(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+)
 STAGE_F_DESCENDANT_PATH_BASE_COMMIT = (
     "b7ebe8615d54ae5e23645734b1a6c7667ce28bce"
 )
@@ -852,6 +927,7 @@ STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS = (
     + (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,)
     + STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
     + STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
+    + STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
     + STAGE_F_LOCAL_BINDING_NEW_PATHS
 )
 STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
@@ -883,7 +959,7 @@ stage_f_correction_authority_paths = (
 )
 if tuple(stage_f_v2_manifest["authority_paths"]) != stage_f_correction_authority_paths or stage_f_v2_manifest["authority_path_count"] != 6:
     raise Refusal("Stage F correction authority path closure mismatch")
-stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json")
+stage_f_v3_manifest = strict_load(source / "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json")
 stage_f_final_closure_authority_paths = (
     "STAGE_F_LOCAL_EXECUTION_BINDING_FINAL_EVIDENCE_CLOSURE_CORRECTION_AUTHORITY_AMENDMENT.md",
     "stage_f_local_execution_binding_final_evidence_closure_correction_contract.json",
@@ -892,40 +968,51 @@ stage_f_final_closure_authority_paths = (
     "stage_f_local_execution_binding_final_evidence_closure_correction_predecessor_manifest.json",
     "stage_f_local_execution_binding_final_evidence_closure_correction_validation_contract.json",
 )
-if tuple(stage_f_manifest["authority_paths"]) != stage_f_final_closure_authority_paths or stage_f_manifest["authority_path_count"] != 6:
+if tuple(stage_f_v3_manifest["authority_paths"]) != stage_f_final_closure_authority_paths or stage_f_v3_manifest["authority_path_count"] != 6:
     raise Refusal("Stage F final-evidence-closure authority path closure mismatch")
+stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json")
+stage_f_attempt_root_bootstrap_authority_paths = (
+    "STAGE_F_LOCAL_EXECUTION_BINDING_ATTEMPT_ROOT_BOOTSTRAP_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_contract.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_schema.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_validation_contract.json",
+)
+if tuple(stage_f_manifest["authority_paths"]) != stage_f_attempt_root_bootstrap_authority_paths or stage_f_manifest["authority_path_count"] != 6:
+    raise Refusal("Stage F attempt-root-bootstrap authority path closure mismatch")
 reachability = stage_f_manifest["prospective_reachability_correction"]
 reachability_path = "tests/framework/test_validation_reachability.py"
 if reachability["modified_paths"] != [reachability_path] or reachability["modified_path_count"] != 1:
-    raise Refusal("Stage F final-evidence-closure reachability path closure mismatch")
+    raise Refusal("Stage F attempt-root-bootstrap reachability path closure mismatch")
 stage_f_scope = stage_f_manifest["prospective_implementation"]
 stage_f_modified = tuple(stage_f_scope["modified_paths"])
 stage_f_added = set(stage_f_scope["new_paths"])
 if stage_f_modified != (".github/workflows/tests.yml", "scripts/validate_stage_e_harness.py") or stage_f_scope["modified_path_count"] != 2 or len(stage_f_added) != 12 or stage_f_scope["new_path_count"] != 12 or stage_f_scope["total_path_count"] != 14:
-    raise Refusal("Stage F final-evidence-closure implementation manifest closure mismatch")
+    raise Refusal("Stage F attempt-root-bootstrap implementation manifest closure mismatch")
 final_closure = stage_f_manifest["final_descendant_path_closure"]
-if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["accepted_stage_f_v1_authority_path_count"] != 6 or final_closure["accepted_stage_f_evidence_correction_authority_path_count"] != 6 or final_closure["reachability_durability_unique_path_count"] != 1 or final_closure["final_evidence_closure_correction_authority_added_path_count"] != 6 or final_closure["successor_active_authority_row_count"] != 18 or final_closure["historical_authority_only_unique_path_count"] != 64 or final_closure["historical_completed_implementation_unique_path_count"] != 76 or final_closure["authority_only_unique_path_count"] != 70 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 82:
-    raise Refusal("Stage F final-evidence-closure descendant path arithmetic mismatch")
-all_authority_paths = set(stage_f_v1_authority_paths) | set(stage_f_correction_authority_paths) | set(stage_f_final_closure_authority_paths)
+if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["accepted_stage_f_v1_authority_path_count"] != 6 or final_closure["accepted_stage_f_evidence_correction_authority_path_count"] != 6 or final_closure["accepted_stage_f_final_evidence_closure_authority_path_count"] != 6 or final_closure["reachability_unique_path_count"] != 1 or final_closure["attempt_root_bootstrap_correction_authority_added_path_count"] != 6 or final_closure["successor_active_authority_row_count"] != 24 or final_closure["historical_authority_only_unique_path_count"] != 70 or final_closure["historical_completed_implementation_unique_path_count"] != 82 or final_closure["authority_only_unique_path_count"] != 76 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 88:
+    raise Refusal("Stage F attempt-root-bootstrap descendant path arithmetic mismatch")
+all_authority_paths = set(stage_f_v1_authority_paths) | set(stage_f_correction_authority_paths) | set(stage_f_final_closure_authority_paths) | set(stage_f_attempt_root_bootstrap_authority_paths)
 if set(stage_f_modified) - stage_e_expected or stage_f_added & (stage_e_expected | all_authority_paths | {reachability_path}):
-    raise Refusal("Stage F final-evidence-closure implementation path overlap mismatch")
+    raise Refusal("Stage F attempt-root-bootstrap implementation path overlap mismatch")
 expected = stage_e_expected | all_authority_paths | {reachability_path} | stage_f_added
 actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
-if actual != expected or len(actual) != 82:
-    raise Refusal(f"Stage F final-evidence-closure descendant path mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+if actual != expected or len(actual) != 88:
+    raise Refusal(f"Stage F attempt-root-bootstrap descendant path mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
 status_rows: dict[str, str] = {}
 for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
     fields = row.split("\t")
     if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
-        raise Refusal(f"Stage F final-evidence-closure descendant has a forbidden Git operation: {row}")
+        raise Refusal(f"Stage F attempt-root-bootstrap descendant has a forbidden Git operation: {row}")
     status_rows[fields[1]] = fields[0]
 expected_status = ({path: "M" for path in expected_modified} | {path: "A" for path in expected_added} | {path: "A" for path in all_authority_paths} | {reachability_path: "M"} | {path: "A" for path in stage_f_added})
 if status_rows != expected_status:
-    raise Refusal("Stage F final-evidence-closure add/modify classification mismatch")
+    raise Refusal("Stage F attempt-root-bootstrap add/modify classification mismatch")
 for relative in expected:
     fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
     if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
-        raise Refusal(f"Stage F final-evidence-closure mode/object mismatch: {relative}")
+        raise Refusal(f"Stage F attempt-root-bootstrap mode/object mismatch: {relative}")
 """
 STAGE_E_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = br"""    manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
     scope = manifest["prospective_harness_implementation"]
@@ -1013,7 +1100,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "fc8e784f0d0dde6b0cf9c96ede40668952350660b09ebfe62803e65be7352be4"
+TEST_SELF_SEAL = "5c1fe07f026cc953c2d8efbb7e89dc1becf76fda8297f5ceeef722d5c1aed70e"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1584,6 +1671,18 @@ def _git(*args: str) -> bytes:
             len(args) == 3
             and args[:2]
             == ("merge-base", STAGE_F_FINAL_EVIDENCE_CLOSURE_TARGET)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or args
+        == (
+            "merge-base",
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE,
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == ("merge-base", STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET)
             and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
         )
         or args
@@ -2466,6 +2565,29 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_f_local_binding_phase = (
                 "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
             )
+        elif changed_paths == STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+        elif (
+            changed_paths
+            == STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_COMPLETED_IMPLEMENTATION_SCOPE
+        ):
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = (
+                "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+            )
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
@@ -2477,7 +2599,9 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "Stage F corrected local-binding authority-only, Stage F "
                 "corrected local-binding completed-implementation, Stage F "
                 "final-evidence-closure authority-only, or Stage F "
-                "final-evidence-closure completed-implementation "
+                "final-evidence-closure completed-implementation, Stage F "
+                "attempt-root-bootstrap authority-only, or Stage F "
+                "attempt-root-bootstrap completed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -2506,8 +2630,13 @@ class ValidationReachabilityTests(unittest.TestCase):
             len(STAGE_F_FINAL_EVIDENCE_CLOSURE_COMPLETED_IMPLEMENTATION_SCOPE),
             132,
         )
-        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 82)
-        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 82)
+        self.assertEqual(len(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_AUTHORITY_SCOPE), 126)
+        self.assertEqual(
+            len(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_COMPLETED_IMPLEMENTATION_SCOPE),
+            138,
+        )
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -2672,6 +2801,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             expected_implementation_delta.update(
                 STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -2940,6 +3072,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             expected_implementation_delta.update(
                 STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -3383,6 +3518,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             expected_implementation_delta.update(
                 STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -3926,6 +4064,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
             )
+            expected_implementation_delta.update(
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
+            )
         if (
             current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
@@ -4368,6 +4509,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
             expected_implementation_delta.update(
                 STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -5141,6 +5285,967 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
         )
 
+    def _audit_stage_f_attempt_root_bootstrap(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        actual_head = current_scope["actual_head"]
+        for commit in (
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE,
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET,
+        ):
+            self.assertEqual(
+                _git("rev-parse", "--verify", f"{commit}^{{commit}}")
+                .decode()
+                .strip(),
+                commit,
+            )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_TREE,
+        )
+        for commit in (
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE,
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET,
+        ):
+            self.assertEqual(
+                _git("rev-parse", f"{commit}^{{tree}}").decode().strip(),
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TREE,
+            )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET}^1")
+            .decode()
+            .strip(),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET}^2")
+            .decode()
+            .strip(),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET,
+                actual_head,
+            )
+            .decode()
+            .strip(),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET,
+        )
+
+        base_entries = _tree_entries(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT)
+        candidate_entries = _tree_entries(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE)
+        target_entries = _tree_entries(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET)
+        current_entries = _tree_entries(actual_head)
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS)
+        )
+        self.assertEqual(candidate_entries, target_entries)
+
+        base_archive = _archive_members(
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT
+        )
+        candidate_archive = _archive_members(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_CANDIDATE)
+        target_archive = _archive_members(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET)
+        current_archive = _archive_members(actual_head)
+        documents = {}
+        for path, mode, git_object, byte_count, raw_sha256 in (
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_ROWS
+        ):
+            expected_row = {
+                "path": path,
+                "mode": mode,
+                "object_type": "blob",
+                "git_object": git_object,
+                "byte_count": byte_count,
+                "raw_sha256": raw_sha256,
+            }
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(path, target_entries, target_archive)
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(candidate_row, expected_row, path)
+            self.assertEqual(target_row, expected_row, path)
+            self.assertEqual(current_row, expected_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n") and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\xef\xbb\xbf", candidate_raw, path)
+            self.assertNotIn(b"\r", candidate_raw, path)
+            self.assertTrue(
+                all(line == line.rstrip(" \t") for line in text.splitlines()), path
+            )
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(candidate_raw, path)
+
+        contract = documents[
+            "stage_f_local_execution_binding_attempt_root_bootstrap_correction_contract.json"
+        ]
+        schema = documents[
+            "stage_f_local_execution_binding_attempt_root_bootstrap_correction_schema.json"
+        ]
+        implementation = documents[
+            "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "stage_f_local_execution_binding_attempt_root_bootstrap_correction_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_f_local_execution_binding_attempt_root_bootstrap_correction_validation_contract.json"
+        ]
+        required_target = {
+            "commit": STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+            "tree": STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_TREE,
+        }
+        for document in (contract, implementation, validation):
+            self.assertEqual(document["required_current_target"], required_target)
+        predecessor_target = predecessor["required_current_target"]
+        self.assertEqual(
+            {key: predecessor_target[key] for key in ("commit", "tree")},
+            required_target,
+        )
+        self.assertEqual(
+            predecessor_target,
+            {
+                "commit": STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_COMMIT,
+                "tree": STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_REQUIRED_BASE_TREE,
+                "recursive_blob_row_count": 454,
+                "mode_100644_count": 452,
+                "mode_100755_count": 2,
+                "symlink_count": 0,
+                "submodule_count": 0,
+                "total_blob_bytes": 133039592,
+                "ordered_path_projection_encoding": "canonical JSON array of Git paths in git ls-tree -r order, UTF-8 NFC, sorted keys, comma-colon separators, no final LF",
+                "ordered_path_projection_sha256": "8b1d0bb830b16512fd439c8caa88e44b3bb8eb8f99c290a6451caddd4de96b67",
+                "ordered_row_projection_fields": [
+                    "path",
+                    "mode",
+                    "git_object",
+                    "byte_count",
+                    "raw_sha256",
+                ],
+                "ordered_row_projection_encoding": "canonical JSON array of closed row objects in git ls-tree -r order, UTF-8 NFC, sorted keys, comma-colon separators, no final LF",
+                "ordered_row_projection_sha256": "dd6d520abaec7f6adee77d0dd4e74684dd7db4e09161f7f7fce4bbdb81878350",
+            },
+        )
+        self.assertEqual(
+            tuple(contract["authority_files_in_order"]),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS,
+        )
+        self.assertEqual(contract["authority_file_count"], 6)
+        self.assertEqual(
+            tuple(implementation["authority_paths"]),
+            STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS,
+        )
+        self.assertEqual(implementation["authority_path_count"], 6)
+        self.assertEqual(
+            validation["authority_candidate"],
+            {
+                "ordered_paths": list(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS),
+                "path_count": 6,
+                "mode": "100644",
+                "additions_only": True,
+            },
+        )
+
+        accepted_rows = (
+            predecessor["accepted_original_authority_rows"]
+            + predecessor["accepted_evidence_correction_authority_rows"]
+            + predecessor["accepted_final_evidence_closure_authority_rows"]
+        )
+        self.assertEqual(predecessor["accepted_prior_authority_row_count"], 18)
+        self.assertEqual(len(accepted_rows), 18)
+        self.assertEqual(
+            tuple(row["path"] for row in accepted_rows),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            + STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
+            + STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS,
+        )
+        for row in accepted_rows:
+            path = row["path"]
+            reconstructed, reconstructed_raw = _object_row(
+                path, base_entries, base_archive
+            )
+            projected = {
+                key: reconstructed[key]
+                for key in ("path", "mode", "git_object", "byte_count", "raw_sha256")
+            }
+            self.assertEqual(projected, row, path)
+            for entries, archive in (
+                (candidate_entries, candidate_archive),
+                (target_entries, target_archive),
+                (current_entries, current_archive),
+            ):
+                later_row, later_raw = _object_row(path, entries, archive)
+                self.assertEqual(later_row, reconstructed, path)
+                self.assertEqual(later_raw, reconstructed_raw, path)
+
+        reachability_row = predecessor["accepted_reachability_row"]
+        reconstructed_reachability, reachability_raw = _object_row(
+            STAGE_F_LOCAL_BINDING_REACHABILITY_PATH, base_entries, base_archive
+        )
+        self.assertEqual(
+            {
+                key: reconstructed_reachability[key]
+                for key in ("path", "mode", "git_object", "byte_count", "raw_sha256")
+            },
+            reachability_row,
+        )
+        self.assertNotEqual(
+            _object_row(
+                STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,
+                current_entries,
+                current_archive,
+            )[1],
+            reachability_raw,
+        )
+
+        v1_schema = _strict_stage_d_json_bytes(
+            _object_row(
+                "stage_f_local_execution_binding_evidence_schema.json",
+                current_entries,
+                current_archive,
+            )[1],
+            "stage_f_local_execution_binding_evidence_schema.json",
+        )
+        v2_schema = _strict_stage_d_json_bytes(
+            _object_row(
+                "stage_f_local_execution_binding_evidence_correction_schema.json",
+                current_entries,
+                current_archive,
+            )[1],
+            "stage_f_local_execution_binding_evidence_correction_schema.json",
+        )
+        v3_schema = _strict_stage_d_json_bytes(
+            _object_row(
+                "stage_f_local_execution_binding_final_evidence_closure_correction_schema.json",
+                current_entries,
+                current_archive,
+            )[1],
+            "stage_f_local_execution_binding_final_evidence_closure_correction_schema.json",
+        )
+        v1_definitions = v1_schema["$defs"]
+        v2_definitions = v2_schema["$defs"]
+        v3_definitions = v3_schema["$defs"]
+        v4_definitions = schema["$defs"]
+
+        def definition_delta(
+            prior: dict[str, object], successor: dict[str, object]
+        ) -> tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]]:
+            key = lambda value: unicodedata.normalize("NFC", value).encode("utf-8")
+            added = tuple(sorted(set(successor) - set(prior), key=key))
+            changed = tuple(
+                sorted(
+                    (
+                        name
+                        for name in set(prior) & set(successor)
+                        if prior[name] != successor[name]
+                    ),
+                    key=key,
+                )
+            )
+            removed = tuple(sorted(set(prior) - set(successor), key=key))
+            return added, changed, removed
+
+        immediate_added, immediate_changed, immediate_removed = definition_delta(
+            v3_definitions, v4_definitions
+        )
+        historical_added, historical_changed, historical_removed = definition_delta(
+            v1_definitions, v4_definitions
+        )
+        effective = contract["effective_schema"]
+        self.assertEqual(
+            (
+                len(v1_definitions),
+                len(v2_definitions),
+                len(v3_definitions),
+                len(v4_definitions),
+            ),
+            (143, 220, 228, 243),
+        )
+        self.assertEqual(
+            immediate_added,
+            tuple(effective["added_definitions_in_strict_nfc_utf8_order"]),
+        )
+        self.assertEqual(
+            immediate_changed,
+            tuple(effective["changed_definitions_in_strict_nfc_utf8_order"]),
+        )
+        self.assertFalse(immediate_removed)
+        self.assertEqual(
+            (
+                len(immediate_added),
+                len(immediate_changed),
+                len(immediate_removed),
+                len(historical_added),
+                len(historical_changed),
+                len(historical_removed),
+            ),
+            (15, 28, 0, 100, 28, 0),
+        )
+        schema_delta = validation["schema_delta"]
+        self.assertEqual(tuple(schema_delta["added_definitions"]), immediate_added)
+        self.assertEqual(tuple(schema_delta["changed_definitions"]), immediate_changed)
+        self.assertEqual(schema_delta["removed_definitions"], [])
+        refs = _schema_refs(schema)
+        self.assertEqual(len(refs), 2588)
+        for ref in refs:
+            self.assertIs(type(ref), str)
+            self.assertTrue(ref.startswith("#/$defs/"), ref)
+            _json_pointer(schema, ref[1:])
+        self.assertEqual(len(schema["oneOf"]), 52)
+        root_names = tuple(
+            item["$ref"].removeprefix("#/$defs/") for item in schema["oneOf"]
+        )
+        self.assertEqual(len(root_names), len(set(root_names)))
+
+        prior_validation = _strict_stage_d_json_bytes(
+            _object_row(
+                "stage_f_local_execution_binding_final_evidence_closure_correction_validation_contract.json",
+                current_entries,
+                current_archive,
+            )[1],
+            "stage_f_local_execution_binding_final_evidence_closure_correction_validation_contract.json",
+        )
+        cases = validation["cases"]
+        self.assertEqual(cases[:184], prior_validation["cases"])
+        self.assertEqual(
+            tuple(row["id"] for row in cases),
+            tuple(f"BEC-{index:03d}" for index in range(1, 197)),
+        )
+        self.assertEqual(
+            (
+                validation["case_count"],
+                validation["positive_case_count"],
+                validation["negative_case_count"],
+                sum(row["class"] == "POSITIVE" for row in cases),
+                sum(row["class"] == "NEGATIVE" for row in cases),
+            ),
+            (196, 33, 163, 33, 163),
+        )
+        self.assertEqual(
+            cases[-2],
+            {
+                "id": "BEC-195",
+                "class": "POSITIVE",
+                "mutation": "VALID_CANONICAL_V4_AUTHORITY_SET_IMPLEMENTATION_AND_VALIDATOR_PREIMAGES_WITH_EXACT_24_AUTHORITY_ROWS_REPEATED_IN_THE_IMPLEMENTATION_PREIMAGE_14_IMPLEMENTATION_ROWS_7_VALIDATOR_SOURCE_ROWS_AND_ALL_SEVEN_DOWNSTREAM_V3_CONSUMERS_DIRECTLY_BINDING_THE_SAME_V4_IDENTITIES",
+                "expected": "PASS",
+                "falsifier": "CURRENT_V4_AUTHORITY_PROVENANCE_CHAIN_UNREPRESENTABLE",
+            },
+        )
+        self.assertEqual(
+            cases[-1],
+            {
+                "id": "BEC-196",
+                "class": "NEGATIVE",
+                "mutation": "OMIT_REORDER_DUPLICATE_SUBSTITUTE_OR_ADD_A_V4_AUTHORITY_ROW_MISMATCH_THE_24_ROW_AUTHORITY_PROJECTION_BETWEEN_AUTHORITY_AND_IMPLEMENTATION_PREIMAGES_OR_SPLICE_ANY_V4_AUTHORITY_IMPLEMENTATION_OR_VALIDATOR_IDENTITY_IN_ANY_DOWNSTREAM_V3_CONSUMER",
+                "expected": "REFUSE",
+                "falsifier": "CURRENT_V4_AUTHORITY_OR_DOWNSTREAM_V3_PROVENANCE_FAIL_OPEN",
+            },
+        )
+        for row in cases:
+            if row["class"] == "NEGATIVE":
+                self.assertIs(type(row["falsifier"]), str)
+                self.assertTrue(row["falsifier"].strip(), row["id"])
+                self.assertEqual(row["expected"], "REFUSE", row["id"])
+        for row in cases[184:]:
+            self.assertIs(type(row["falsifier"]), str)
+            self.assertTrue(row["falsifier"].strip(), row["id"])
+        validation_text = json.dumps(
+            validation, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        )
+        self.assertIn(
+            "IMMEDIATE_SCHEMA_DELTA_228_TO_243_ADDED15_CHANGED28_REMOVED0",
+            validation["static_positive_checks"],
+        )
+        self.assertNotIn("CHANGED26", validation_text)
+        self.assertEqual(
+            validation["executable_semantic_recomputations"][:2],
+            [
+                "RECOMPUTE_CANONICAL_V4_AUTHORITY_IMPLEMENTATION_VALIDATOR_PREIMAGES_IDENTITIES_AND_EXACT_24_24_14_ROW_ORDER",
+                "RECOMPUTE_EVERY_DOWNSTREAM_V3_CONSUMER_IDENTITY_EQUALITY_TO_THE_SAME_V4_AUTHORITY_IMPLEMENTATION_AND_VALIDATOR_CHAIN",
+            ],
+        )
+
+        identity_closure = contract["identity_and_preimage_closure"]
+        self.assertEqual(
+            identity_closure,
+            {
+                "successor_authority_set_version": "v4",
+                "successor_authority_row_count": 24,
+                "authority_rows_order": "six_accepted_v1_then_six_accepted_v2_then_six_accepted_v3_then_six_integrated_v4",
+                "unchanged_route_authority_projection_count": 15,
+                "binding_implementation_exact_path_row_count": 14,
+                "binding_validator_source_member_count": 7,
+                "binding_validator_zipapp_member_count": 5,
+                "binding_validator_zip_method": "ZIP_STORED",
+                "all_authority_rows_equal_in_integrated_authority_and_implementation_trees": True,
+                "bundle_readiness_validation_audit_packet_post_packet_receipt_and_campaign_authorization_consumer_identity_kinds_are_v3": True,
+                "successor_consumer_identity_kinds_are_v2": False,
+                "v2_successor_consumer_identity_in_v3_successor_chain": "REFUSE",
+                "future_digest_or_git_coordinate_in_preimage": "REFUSE",
+                "identity_graph_acyclic": True,
+                "bundle_embeds_complete_v4_authority_implementation_and_validator_preimages": True,
+                "bundle_readiness_validation_audit_packet_post_packet_receipt_and_campaign_authorization_directly_bind_v4_identities": True,
+                "successor_consumer_identity_kinds_are_v3": True,
+                "v3_authority_implementation_or_validator_identity_in_v4_identity_chain": "REFUSE",
+                "v4_identity_mismatch_in_any_v3_successor_consumer": "REFUSE",
+            },
+        )
+        authority_preimage = v4_definitions["binding_authority_set_preimage"]
+        implementation_preimage = v4_definitions["binding_implementation_preimage"]
+        validator_preimage = v4_definitions["binding_validator_preimage"]
+        self.assertEqual(
+            authority_preimage["properties"]["schema"]["const"],
+            "stage_f_binding_authority_set/v4",
+        )
+        self.assertEqual(
+            (
+                authority_preimage["properties"]["ordered_local_authority_file_rows"]["minItems"],
+                authority_preimage["properties"]["ordered_local_authority_file_rows"]["maxItems"],
+                authority_preimage["properties"]["local_authority_file_count"]["const"],
+            ),
+            (24, 24, 24),
+        )
+        self.assertEqual(
+            implementation_preimage["properties"]["schema"]["const"],
+            "stage_f_binding_implementation/v4",
+        )
+        self.assertEqual(
+            (
+                implementation_preimage["properties"]["ordered_integrated_authority_file_rows"]["minItems"],
+                implementation_preimage["properties"]["ordered_integrated_authority_file_rows"]["maxItems"],
+                implementation_preimage["properties"]["integrated_authority_file_count"]["const"],
+                implementation_preimage["properties"]["ordered_implementation_file_rows"]["minItems"],
+                implementation_preimage["properties"]["ordered_implementation_file_rows"]["maxItems"],
+                implementation_preimage["properties"]["implementation_file_count"]["const"],
+            ),
+            (24, 24, 24, 14, 14, 14),
+        )
+        self.assertEqual(
+            validator_preimage["properties"]["schema"]["const"],
+            "stage_f_binding_validator/v4",
+        )
+        self.assertEqual(
+            (
+                validator_preimage["properties"]["ordered_validator_source_file_rows"]["minItems"],
+                validator_preimage["properties"]["ordered_validator_source_file_rows"]["maxItems"],
+                validator_preimage["properties"]["validator_source_file_count"]["const"],
+                validator_preimage["properties"]["artifact_build_method"]["const"],
+                validator_preimage["properties"]["executable_artifact_build_method"]["const"],
+            ),
+            (
+                7,
+                7,
+                7,
+                "CANONICAL_VALIDATOR_SOURCE_BUNDLE_V1",
+                "DETERMINISTIC_LOCKED_VALIDATOR_ZIPAPP_V1",
+            ),
+        )
+        active_authority_paths = (
+            tuple(row["path"] for row in accepted_rows)
+            + STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
+        )
+        self.assertEqual(len(active_authority_paths), 24)
+        self.assertEqual(len(set(active_authority_paths)), 24)
+        consumer_kinds = {
+            "local_binding_bundle": "stage_f_local_binding_bundle/v3",
+            "binding_validation_receipt": "stage_f_binding_validation_receipt/v3",
+            "binding_readiness_record": "stage_f_local_binding_readiness/v3",
+            "independent_binding_audit_receipt": "stage_f_independent_binding_audit/v3",
+            "sealed_campaign_packet_manifest": "stage_f_sealed_campaign_packet/v3",
+            "post_packet_user_authorization_receipt": "stage_f_post_packet_user_authorization_receipt/v3",
+            "campaign_authorization": "stage_f_campaign_authorization/v3",
+        }
+        identity_kind_keys = {
+            "local_binding_bundle": "local_binding_bundle",
+            "binding_validation_receipt": "binding_validation_receipt",
+            "binding_readiness_record": "binding_readiness",
+            "independent_binding_audit_receipt": "independent_binding_audit",
+            "sealed_campaign_packet_manifest": "sealed_campaign_packet",
+            "post_packet_user_authorization_receipt": "post_packet_authorization_receipt",
+            "campaign_authorization": "campaign_authorization",
+        }
+        for name, kind in consumer_kinds.items():
+            definition = v4_definitions[name]
+            self.assertEqual(definition["properties"]["schema"]["const"], kind)
+            self.assertEqual(
+                contract["successor_identity_kinds"][identity_kind_keys[name]], kind
+            )
+            self.assertTrue(
+                {
+                    "authority_set_identity",
+                    "binding_implementation_identity",
+                    "validator_identity",
+                }
+                <= set(definition["required"]),
+                name,
+            )
+            self.assertEqual(
+                definition["properties"]["authority_set_identity"]["$ref"],
+                "#/$defs/binding_authority_set_identity",
+            )
+            self.assertEqual(
+                definition["properties"]["binding_implementation_identity"]["$ref"],
+                "#/$defs/binding_implementation_identity",
+            )
+            self.assertEqual(
+                definition["properties"]["validator_identity"]["$ref"],
+                "#/$defs/binding_validator_identity",
+            )
+        self.assertTrue(
+            {
+                "authority_set_preimage",
+                "binding_implementation_preimage",
+                "binding_validator_preimage",
+            }
+            <= set(v4_definitions["local_binding_bundle"]["required"])
+        )
+        self.assertEqual(
+            v4_definitions["nonzero_uint64"],
+            {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 18446744073709551615,
+            },
+        )
+        self.assertEqual(
+            v4_definitions["valid_handle_value_uint64"],
+            {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 18446744073709551614,
+            },
+        )
+
+        bootstrap = contract["attempt_root_bootstrap_correction"]
+        self.assertEqual(
+            bootstrap["dag_in_order"],
+            [
+                "BOOTSTRAP_TRANSACTION_PREIMAGE",
+                "BOOTSTRAP_PROTECTION_AND_PRECREATE_TICKET",
+                "WATCH_OBSERVATION_USN_OBSERVATION_EXECUTION_ATTEMPT_GENESIS_CREATION_OBSERVATION",
+                "REALIZED_ROOT_PROTECTION_EPOCH",
+                "EVIDENCE_LEDGER_GENESIS",
+            ],
+        )
+        self.assertEqual(
+            bootstrap["dag_edges"],
+            [
+                "TRANSACTION_TO_PROTECTION",
+                "PROTECTION_TO_TICKET",
+                "PROTECTION_AND_TICKET_TO_WATCH_USN_GENESIS_CREATION",
+                "WATCH_USN_GENESIS_CREATION_TO_REALIZED_EPOCH",
+                "REALIZED_EPOCH_TO_LEDGER_GENESIS",
+            ],
+        )
+        self.assertTrue(bootstrap["acyclic"])
+        self.assertFalse(bootstrap["scientific_write_authorized"])
+        ticket = v4_definitions["stage_f_attempt_root_mutation_ticket"]["properties"]
+        self.assertEqual(ticket["operation"]["const"], "CREATE_ATTEMPT_ROOT")
+        self.assertEqual(ticket["create_api"]["const"], "CreateDirectoryW")
+        self.assertEqual(
+            ticket["permitted_watch_actions"],
+            {
+                "type": "array",
+                "prefixItems": [{"const": "FILE_ACTION_ADDED"}],
+                "items": False,
+                "minItems": 1,
+                "maxItems": 1,
+            },
+        )
+        self.assertEqual(ticket["required_usn_reason_bits_uint32"]["const"], 0x100)
+        self.assertEqual(
+            ticket["permitted_usn_reason_mask_uint32"]["const"], 0x80000100
+        )
+        for field in (
+            "future_root_epoch_identity_present",
+            "future_ledger_identity_present",
+            "future_watch_usn_creation_or_genesis_identity_present",
+        ):
+            self.assertFalse(ticket[field]["const"])
+        self.assertTrue(ticket["single_use_required"]["const"])
+        legacy_operations = v4_definitions["stage_f_authorized_mutation_ticket"][
+            "properties"
+        ]["operation"]["enum"]
+        self.assertNotIn("CREATE_ATTEMPT_ROOT", legacy_operations)
+
+        watch_completion = v4_definitions[
+            "stage_f_attempt_root_watch_completion_observation"
+        ]["properties"]
+        self.assertEqual(
+            (
+                watch_completion["notification_filter"]["const"],
+                watch_completion["buffer_capacity"]["const"],
+                watch_completion["raw_buffer_capacity"]["const"],
+                watch_completion["bootstrap_ticket_match_count"]["const"],
+                watch_completion["ordinary_authorized_ticket_match_count"]["const"],
+                watch_completion["refused_protected_record_count"]["const"],
+            ),
+            (351, 65536, 65536, 1, 0, 0),
+        )
+        self.assertEqual(
+            v4_definitions["stage_f_attempt_root_watch_completion_observation"][
+                "properties"
+            ]["records"]["not"]["contains"]["properties"]["scope_disposition"][
+                "enum"
+            ],
+            ["AUTHORIZED_TICKET_MATCH", "REFUSED_PROTECTED_MUTATION"],
+        )
+        watch_observation = v4_definitions["stage_f_attempt_root_watch_observation"][
+            "properties"
+        ]
+        self.assertEqual(
+            (
+                watch_observation["matching_bootstrap_record_count"]["const"],
+                watch_observation["ordinary_authorized_ticket_match_count"]["const"],
+                watch_observation["refused_protected_record_count"]["const"],
+            ),
+            (1, 0, 0),
+        )
+        usn_range = v4_definitions["stage_f_attempt_root_usn_range"]["properties"]
+        self.assertEqual(
+            (
+                usn_range["bootstrap_ticket_match_count"]["const"],
+                usn_range["ordinary_authorized_ticket_match_count"]["const"],
+                usn_range["refused_protected_record_count"]["const"],
+                usn_range["range_complete"]["const"],
+                usn_range["wrapped_or_gapped"]["const"],
+                usn_range["unknown_record_count"]["const"],
+                usn_range["access_errors"]["const"],
+            ),
+            (1, 0, 0, True, False, 0, 0),
+        )
+        self.assertEqual(
+            usn_range["records"]["not"]["contains"]["properties"][
+                "scope_disposition"
+            ]["enum"],
+            ["AUTHORIZED_TICKET_MATCH", "REFUSED_PROTECTED_MUTATION"],
+        )
+        bootstrap_scope = "ATTEMPT_ROOT_BOOTSTRAP_TICKET_MATCH"
+        for record_name in ("stage_f_file_notify_record", "stage_f_usn_record"):
+            record = v4_definitions[record_name]
+            self.assertEqual(
+                record["properties"]["scope_disposition"]["enum"],
+                [
+                    "AUTHORIZED_TICKET_MATCH",
+                    bootstrap_scope,
+                    "OUTSIDE_PROTECTED_SCOPE",
+                    "REFUSED_PROTECTED_MUTATION",
+                ],
+            )
+            bootstrap_branches = [
+                branch
+                for branch in record["allOf"]
+                if branch.get("if", {})
+                .get("properties", {})
+                .get("scope_disposition", {})
+                .get("const")
+                == bootstrap_scope
+            ]
+            self.assertEqual(len(bootstrap_branches), 1, record_name)
+            bootstrap_fields = bootstrap_branches[0]["then"]["properties"]
+            self.assertEqual(
+                bootstrap_fields["protected_identity_match_count"], {"const": 1}
+            )
+            self.assertEqual(
+                bootstrap_fields["mutation_ticket_identity"], {"type": "null"}
+            )
+            self.assertEqual(
+                bootstrap_fields["mutation_ticket_match_count"], {"const": 0}
+            )
+            self.assertEqual(
+                bootstrap_fields["mutation_transaction_identity"], {"type": "null"}
+            )
+            self.assertEqual(
+                bootstrap_fields["ledger_mutation_entry_identity"],
+                {"type": "null"},
+            )
+            self.assertEqual(
+                bootstrap_fields["bootstrap_transaction_identity"]["$ref"],
+                "#/$defs/stage_f_attempt_root_bootstrap_transaction_identity",
+            )
+            self.assertEqual(
+                bootstrap_fields["bootstrap_protection_identity"]["$ref"],
+                "#/$defs/stage_f_attempt_root_bootstrap_protection_identity",
+            )
+            self.assertEqual(
+                bootstrap_fields["attempt_root_ticket_identity"]["$ref"],
+                "#/$defs/stage_f_attempt_root_mutation_ticket_identity",
+            )
+        self.assertEqual(
+            (
+                contract["usn_range_closure"]["query_output_byte_count"],
+                contract["usn_range_closure"]["read_input_byte_count"],
+                contract["usn_range_closure"]["passing_range_refused_record_count"],
+            ),
+            (80, 48, 0),
+        )
+        genesis = v4_definitions["stage_f_execution_attempt_genesis"]["properties"]
+        self.assertEqual(
+            (
+                genesis["attempt_absent_observation"]["const"],
+                genesis["create_api"]["const"],
+                genesis["create_returned_nonzero"]["const"],
+                genesis["created_once"]["const"],
+                genesis["ticket_consumed_by_this_create_call"]["const"],
+            ),
+            (
+                "GetFileAttributesW_INVALID_FILE_ATTRIBUTES_ERROR_FILE_NOT_FOUND",
+                "CreateDirectoryW",
+                True,
+                True,
+                True,
+            ),
+        )
+        creation = v4_definitions["stage_f_attempt_root_creation_observation"][
+            "properties"
+        ]
+        self.assertEqual(
+            (
+                creation["create_api"]["const"],
+                creation["create_returned_nonzero"]["const"],
+                creation["ticket_preceded_create_and_was_consumed_by_only_this_call"][
+                    "const"
+                ],
+            ),
+            ("CreateDirectoryW", True, True),
+        )
+        epoch = v4_definitions["stage_f_root_protection_epoch"]
+        self.assertTrue(
+            {
+                "execution_attempt_genesis",
+                "bootstrap_protection",
+                "attempt_root_ticket",
+                "attempt_root_watch_observation",
+                "attempt_root_usn_observation",
+                "attempt_root_creation_observation",
+            }
+            <= set(epoch["required"])
+        )
+        self.assertTrue(
+            epoch["properties"][
+                "bootstrap_watch_usn_genesis_creation_and_epoch_bijection_recomputed"
+            ]["const"]
+        )
+        ledger = v4_definitions["stage_f_evidence_ledger_genesis"]
+        self.assertTrue(
+            {
+                "execution_attempt_genesis_identity",
+                "root_protection_epoch_identity",
+                "bootstrap_transaction_identity",
+                "bootstrap_protection_identity",
+                "attempt_root_ticket_identity",
+                "attempt_root_watch_observation_identity",
+                "attempt_root_usn_observation_identity",
+                "attempt_root_creation_observation_identity",
+            }
+            <= set(ledger["required"])
+        )
+        self.assertEqual(
+            (
+                ledger["properties"]["entry_type"]["const"],
+                ledger["properties"]["ordinal"]["const"],
+                ledger["properties"]["bootstrap_ticket_consumed_once"]["const"],
+                ledger["properties"][
+                    "future_ledger_entry_identity_in_preledger_bootstrap_preimages"
+                ]["const"],
+            ),
+            ("GENESIS", 0, True, False),
+        )
+        semantic_algorithms = {
+            row["name"]: row for row in validation["semantic_recomputation_algorithms"]
+        }
+        self.assertEqual(
+            tuple(
+                semantic_algorithms["V4_AUTHORITY_AND_DOWNSTREAM_IDENTITY_CLOSURE"][
+                    "inputs"
+                ]
+            ),
+            (
+                "binding_authority_set_preimage/v4",
+                "binding_authority_set_identity/v4",
+                "binding_implementation_preimage/v4",
+                "binding_implementation_identity/v4",
+                "binding_validator_preimage/v4",
+                "binding_validator_identity/v4",
+                "local_binding_bundle/v3",
+                "binding_validation_receipt/v3",
+                "binding_readiness_record/v3",
+                "independent_binding_audit_receipt/v3",
+                "sealed_campaign_packet_manifest/v3",
+                "post_packet_user_authorization_receipt/v3",
+                "campaign_authorization/v3",
+            ),
+        )
+        self.assertEqual(
+            set(
+                semantic_algorithms["V4_AUTHORITY_AND_DOWNSTREAM_IDENTITY_CLOSURE"][
+                    "refuse"
+                ]
+            ),
+            {
+                "authority row missing, reordered, duplicated, substituted or added",
+                "authority rows or identity differ between authority and implementation preimages",
+                "implementation row or identity mismatch",
+                "validator source row or identity mismatch",
+                "v2 consumer kind or v3 authority, implementation or validator identity replay",
+                "downstream v3 consumer identity splice",
+                "future digest or Git coordinate in any preimage",
+            },
+        )
+        self.assertEqual(
+            tuple(semantic_algorithms["ATTEMPT_ROOT_BOOTSTRAP_DAG"]["inputs"]),
+            (
+                "stage_f_attempt_root_bootstrap_transaction_preimage",
+                "stage_f_attempt_root_bootstrap_protection",
+                "stage_f_attempt_root_mutation_ticket",
+                "stage_f_attempt_root_watch_completion_observation",
+                "stage_f_attempt_root_watch_observation",
+                "stage_f_attempt_root_usn_range",
+                "stage_f_attempt_root_usn_observation",
+                "stage_f_execution_attempt_genesis",
+                "stage_f_attempt_root_creation_observation",
+                "stage_f_root_protection_epoch",
+                "stage_f_evidence_ledger_genesis",
+            ),
+        )
+
+        reachability = implementation["prospective_reachability_correction"]
+        self.assertEqual(
+            reachability["modified_paths"],
+            [STAGE_F_LOCAL_BINDING_REACHABILITY_PATH],
+        )
+        self.assertEqual(
+            (
+                reachability["modified_path_count"],
+                reachability["new_path_count"],
+                reachability["total_path_count"],
+            ),
+            (1, 0, 1),
+        )
+        self.assertTrue(reachability["independent_audit_required_before_implementation"])
+        self.assertFalse(reachability["counts_as_implementation_path"])
+        self.assertEqual(
+            reachability["project_import_production_validator_host_probe_or_science"],
+            "FORBIDDEN",
+        )
+        prospective = implementation["prospective_implementation"]
+        self.assertEqual(
+            tuple(prospective["modified_paths"]), STAGE_F_LOCAL_BINDING_MODIFIED_PATHS
+        )
+        self.assertEqual(tuple(prospective["new_paths"]), STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        self.assertEqual(
+            (
+                prospective["modified_path_count"],
+                prospective["new_path_count"],
+                prospective["total_path_count"],
+            ),
+            (2, 12, 14),
+        )
+        self.assertEqual(
+            implementation["final_descendant_path_closure"],
+            {
+                "accepted_stage_e_path_count": 51,
+                "accepted_stage_f_v1_authority_path_count": 6,
+                "accepted_stage_f_evidence_correction_authority_path_count": 6,
+                "accepted_stage_f_final_evidence_closure_authority_path_count": 6,
+                "reachability_unique_path_count": 1,
+                "attempt_root_bootstrap_correction_authority_added_path_count": 6,
+                "successor_active_authority_row_count": 24,
+                "stage_f_new_unique_path_count": 12,
+                "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
+                "historical_authority_only_unique_path_count": 70,
+                "historical_completed_implementation_unique_path_count": 82,
+                "authority_only_unique_path_count": 76,
+                "final_unique_path_count": 88,
+                "missing_extra_duplicate_or_reordered_path_disposition": "REFUSE",
+            },
+        )
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
+
+        post_integration_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        expected_post_integration_delta = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
+        expected_status = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH: "M"}
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_post_integration_delta.update(STAGE_F_LOCAL_BINDING_MODIFIED_PATHS)
+            expected_post_integration_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+            expected_status.update(
+                {path: "M" for path in STAGE_F_LOCAL_BINDING_MODIFIED_PATHS}
+            )
+            expected_status.update(
+                {path: "A" for path in STAGE_F_LOCAL_BINDING_NEW_PATHS}
+            )
+        self.assertEqual(
+            post_integration_delta, frozenset(expected_post_integration_delta)
+        )
+        self.assertEqual(
+            {
+                path: "M" if path in target_entries else "A"
+                for path in post_integration_delta
+            },
+            expected_status,
+        )
+        self.assertEqual(schema["scientific_execution_count"], 0)
+        for document in (contract, implementation, predecessor):
+            self.assertEqual(set(document["required_operation_counts"].values()), {0})
+        self.assertEqual(
+            contract["authority_audit_host_probe_docker_connection_and_stage_g_action_count"],
+            0,
+        )
+        self.assertIn("ZERO_SCIENCE_COUNTERS", validation["static_positive_checks"])
+        self.assertIn("LIVE_HOST_PROBE", validation["forbidden_validation_operations"])
+        self.assertIn(
+            "SCIENTIFIC_RNG_DRAW", validation["forbidden_validation_operations"]
+        )
+        self.assertFalse(contract["precedence"]["scientific_execution_authorized"])
+        self.assertTrue(
+            contract["precedence"]["post_packet_user_authorization_still_required"]
+        )
+
     def _audit_stage_f_final_evidence_closure(
         self, current_scope: dict[str, object]
     ) -> None:
@@ -5588,8 +6693,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
             (51, 6, 6, 1, 6, 18, 64, 76, 70, 82),
         )
-        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 82)
-        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 82)
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
 
         post_integration_delta = frozenset(
             path
@@ -5598,6 +6703,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         expected_post_integration_delta = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
         expected_status = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH: "M"}
+        expected_post_integration_delta.update(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS)
+        expected_status.update(
+            {path: "A" for path in STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS}
+        )
         if (
             current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
@@ -6039,8 +7148,8 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "missing_extra_duplicate_or_reordered_path_disposition": "REFUSE",
             },
         )
-        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 82)
-        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 82)
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
 
         post_integration_delta = frozenset(
             path
@@ -6054,6 +7163,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         expected_post_integration_delta.update(STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS)
         expected_status.update(
             {path: "A" for path in STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS}
+        )
+        expected_post_integration_delta.update(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS)
+        expected_status.update(
+            {path: "A" for path in STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS}
         )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -6089,6 +7202,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION",
             ),
         )
+        self._audit_stage_f_attempt_root_bootstrap(current_scope)
         self._audit_stage_f_final_evidence_closure(current_scope)
         self._audit_stage_f_binding_evidence_correction(current_scope)
         self.assertEqual(
@@ -6209,6 +7323,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
         )
         expected_implementation_delta.update(STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS)
+        expected_implementation_delta.update(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS)
         if (
             current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
@@ -6453,8 +7568,8 @@ class ValidationReachabilityTests(unittest.TestCase):
                 | {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
             )
         )
-        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 82)
-        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 82)
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
         self.assertEqual(
             _git(
                 "rev-parse", f"{STAGE_F_DESCENDANT_PATH_BASE_COMMIT}^{{tree}}"
@@ -6475,6 +7590,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             | {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
             | set(STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS)
             | set(STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS)
+            | set(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS)
         )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -6484,10 +7600,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
         self.assertEqual(
             len(descendant_delta),
-            82
+            88
             if current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
-            else 70,
+            else 76,
         )
         self.assertEqual(implementation["unknown_path_disposition"], "REFUSE")
         self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
@@ -7278,6 +8394,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "stage_f_local_execution_binding_implementation_path_manifest.json",
                 "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
                 "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json",
+                "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
                 "authority_paths",
                 "prospective_reachability_correction",
                 "prospective_implementation",
@@ -7287,7 +8404,9 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "final_unique_path_count",
                 "accepted_stage_f_v1_authority_path_count",
                 "accepted_stage_f_evidence_correction_authority_path_count",
-                "final_evidence_closure_correction_authority_added_path_count",
+                "accepted_stage_f_final_evidence_closure_authority_path_count",
+                "attempt_root_bootstrap_correction_authority_added_path_count",
+                "successor_active_authority_row_count",
                 "historical_authority_only_unique_path_count",
                 "historical_completed_implementation_unique_path_count",
                 "authority_only_unique_path_count",
@@ -7298,7 +8417,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 '"100644"',
                 '"blob"',
                 "actual != expected",
-                "len(actual) != 82",
+                "len(actual) != 88",
                 "status_rows != expected_status",
                 "for relative in expected:",
             ):
@@ -7394,7 +8513,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 },
                 call_names,
             )
-            self.assertEqual(call_names.count("strict_load"), 4)
+            self.assertEqual(call_names.count("strict_load"), 5)
             self.assertEqual(call_names.count("_git"), 3)
             self.assertEqual(
                 call_names.count("Refusal"),
@@ -7415,14 +8534,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "book",
             ):
                 self.assertNotIn(forbidden, lane_source)
-            self.assertIn(
-                70,
-                {
-                    node.value
-                    for node in ast.walk(changed_lane_tree)
-                    if isinstance(node, ast.Constant) and type(node.value) is int
-                },
-            )
+            lane_integer_constants = {
+                node.value
+                for node in ast.walk(changed_lane_tree)
+                if isinstance(node, ast.Constant) and type(node.value) is int
+            }
+            for count in (70, 76, 82, 88):
+                self.assertIn(count, lane_integer_constants)
 
         self.assertEqual(
             tuple(
