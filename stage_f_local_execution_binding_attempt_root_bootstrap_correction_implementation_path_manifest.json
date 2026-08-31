@@ -1,0 +1,158 @@
+{
+  "manifest_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-ATTEMPT-ROOT-BOOTSTRAP-CORRECTION-PATHS-v4",
+  "manifest_version": "4.0.0-candidate",
+  "status": "PROSPECTIVE_CLOSED_IMPLEMENTATION_SCOPE",
+  "required_current_target": {
+    "commit": "06a1b1400d5bd15cdfb50363333602c58b5ac692",
+    "tree": "ca0bd70c96c0a6d9542ce9656be78a11465662f3"
+  },
+  "authority_paths": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_ATTEMPT_ROOT_BOOTSTRAP_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_contract.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_schema.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_attempt_root_bootstrap_correction_validation_contract.json"
+  ],
+  "authority_path_count": 6,
+  "authority_additions_only": true,
+  "authority_mode": "100644",
+  "accepted_predecessor_path_closure": {
+    "accepted_stage_e_path_count": 51,
+    "accepted_stage_f_v1_authority_path_count": 6,
+    "accepted_stage_f_evidence_correction_authority_path_count": 6,
+    "accepted_stage_f_final_evidence_closure_authority_path_count": 6,
+    "accepted_reachability_unique_path_count": 1,
+    "accepted_authority_only_descendant_path_count": 70,
+    "accepted_completed_implementation_descendant_path_count": 82,
+    "accepted_counts_remain_reconstructable": true
+  },
+  "prospective_reachability_correction": {
+    "phase": "AFTER_ATTEMPT_ROOT_BOOTSTRAP_CORRECTION_AUTHORITY_INTEGRATION_BEFORE_IMPLEMENTATION",
+    "modified_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "modified_path_count": 1,
+    "new_paths": [],
+    "new_path_count": 0,
+    "total_path_count": 1,
+    "path_rule": "update only static reachability expectations and negative controls; bind the actual integrated attempt-root-bootstrap correction commit and tree, reconstruct the ordered six v4 correction paths with mode, Git blob ID, byte count and raw SHA-256, prove all eighteen accepted earlier Stage F authority blobs and the accepted v3 reachability predecessor blob unchanged, preserve the historical 70-path authority-only and 82-path completed closures, and recompute the active 76-path authority-only and 88-path completed closures",
+    "allowed_operations": [
+      "GIT_OBJECT_INSPECTION",
+      "STRICT_JSON_AND_SCHEMA_VALIDATION",
+      "AST_AND_SOURCE_TEXT_INSPECTION",
+      "OUTCOME_BLIND_REACHABILITY_CHECKS"
+    ],
+    "project_import_production_validator_host_probe_or_science": "FORBIDDEN",
+    "independent_audit_required_before_implementation": true,
+    "counts_as_implementation_path": false
+  },
+  "prospective_implementation": {
+    "modified_paths": [
+      ".github/workflows/tests.yml",
+      "scripts/validate_stage_e_harness.py"
+    ],
+    "modified_path_count": 2,
+    "new_paths": [
+      "scripts/build_stage_f_local_binding.py",
+      "scripts/validate_stage_f_local_binding.py",
+      "stage_f_binding/__init__.py",
+      "stage_f_binding/canonical.py",
+      "stage_f_binding/binding.py",
+      "stage_f_binding/durability.py",
+      "stage_f_binding/locked_zipapp_bootstrap.py",
+      "tests/stage_f_binding/__init__.py",
+      "tests/stage_f_binding/fixtures/negative_cases.json",
+      "tests/stage_f_binding/fixtures/synthetic_private_host_manifest.json",
+      "tests/stage_f_binding/test_binding_privacy_and_authorization.py",
+      "tests/stage_f_binding/test_durability_and_no_science.py"
+    ],
+    "new_path_count": 12,
+    "total_path_count": 14,
+    "authority_identity_assignment": {
+      "binding_authority_set": "stage_f_binding_authority_set/v4",
+      "binding_implementation": "stage_f_binding_implementation/v4",
+      "binding_validator": "stage_f_binding_validator/v4",
+      "successor_consumers": "v3"
+    }
+  },
+  "path_rules": {
+    ".github/workflows/tests.yml": "preserve every accepted workflow byte and append only the corrected outcome-blind Stage F authority and implementation lane",
+    "scripts/validate_stage_e_harness.py": "preserve every Stage E count oracle and guard while admitting only the exact 88-path attempt-root-bootstrap descendant",
+    "scripts/build_stage_f_local_binding.py": "build deterministic v4 24-authority-row source bundle and locked zipapp artifacts only",
+    "scripts/validate_stage_f_local_binding.py": "validate the complete v4 record chain including typed acyclic attempt-root bootstrap and internally produced raw live evidence without scientific imports",
+    "stage_f_binding/__init__.py": "export only corrected non-scientific binding interfaces",
+    "stage_f_binding/canonical.py": "strict canonical JSON and digest functions only",
+    "stage_f_binding/binding.py": "closed v4 identity record-chain schema readiness packet authorization and receipt validation only",
+    "stage_f_binding/durability.py": "internally produce and validate typed attempt-root bootstrap, same-object publication, suspended host-runtime launch, root protection, USN, ledger, inventory, capacity, Docker and outcome-blind durability evidence only",
+    "stage_f_binding/locked_zipapp_bootstrap.py": "locked exact-artifact bootstrap without project imports network site or bytecode cache",
+    "tests/stage_f_binding": "deterministic static synthetic positive and negative controls with exact zero science"
+  },
+  "protected_paths": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_contract.json",
+    "stage_f_local_execution_binding_evidence_schema.json",
+    "stage_f_local_execution_binding_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_predecessor_manifest.json",
+    "stage_f_local_execution_binding_validation_contract.json",
+    "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_evidence_correction_contract.json",
+    "stage_f_local_execution_binding_evidence_correction_schema.json",
+    "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+    "STAGE_F_LOCAL_EXECUTION_BINDING_FINAL_EVIDENCE_CLOSURE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_contract.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_schema.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_validation_contract.json",
+    "stage_e_harness/execution.py",
+    "stage_e_harness/adapters",
+    "src/ebu_framework",
+    "results",
+    "figures"
+  ],
+  "private_evidence_paths_in_repository": "FORBIDDEN",
+  "scientific_runner_or_adapter_paths": "FORBIDDEN",
+  "unknown_path_disposition": "REFUSE",
+  "scope_derived_exclusion": "FORBIDDEN",
+  "force_push_or_history_rewrite": "FORBIDDEN",
+  "authority_integration_required_before_reachability_or_implementation": true,
+  "final_descendant_path_closure": {
+    "accepted_stage_e_path_count": 51,
+    "accepted_stage_f_v1_authority_path_count": 6,
+    "accepted_stage_f_evidence_correction_authority_path_count": 6,
+    "accepted_stage_f_final_evidence_closure_authority_path_count": 6,
+    "reachability_unique_path_count": 1,
+    "attempt_root_bootstrap_correction_authority_added_path_count": 6,
+    "successor_active_authority_row_count": 24,
+    "stage_f_new_unique_path_count": 12,
+    "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
+    "historical_authority_only_unique_path_count": 70,
+    "historical_completed_implementation_unique_path_count": 82,
+    "authority_only_unique_path_count": 76,
+    "final_unique_path_count": 88,
+    "missing_extra_duplicate_or_reordered_path_disposition": "REFUSE"
+  },
+  "independent_authority_audit_required": true,
+  "independent_implementation_audit_required": true,
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_import_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_ATTEMPT_ROOT_BOOTSTRAP_CORRECTION_CANDIDATE_COMPLETE"
+}
