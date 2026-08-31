@@ -1,0 +1,199 @@
+{
+  "manifest_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FINAL-EVIDENCE-CLOSURE-CORRECTION-PREDECESSORS-v3",
+  "manifest_version": "3.0.0-candidate",
+  "status": "PROSPECTIVE_EXACT_PREDECESSOR_LOCK",
+  "required_current_target": {
+    "commit": "f47648320be2054edf51a166b0e7fd7e9ab20594",
+    "tree": "382472276e7fbb7b483cc120467f23f83bc25ca3",
+    "recursive_blob_row_count": 448,
+    "mode_100644_count": 446,
+    "mode_100755_count": 2,
+    "symlink_count": 0,
+    "submodule_count": 0,
+    "total_blob_bytes": 132022530,
+    "ordered_path_projection_encoding": "canonical JSON array of Git paths in git ls-tree -r order, UTF-8 NFC, sorted keys, comma-colon separators, no final LF",
+    "ordered_path_projection_sha256": "53b11e516d0f6375142eef3d3e951657e601b31fc653e892968c137ed0197d2e",
+    "ordered_row_projection_fields": [
+      "path",
+      "mode",
+      "git_object",
+      "byte_count",
+      "raw_sha256"
+    ],
+    "ordered_row_projection_encoding": "canonical JSON array of closed row objects in git ls-tree -r order, UTF-8 NFC, sorted keys, comma-colon separators, no final LF",
+    "ordered_row_projection_sha256": "ae2296219fd012964648f82915181ebb25a3fcc7a0d08e1b6e6f24ae8d138295"
+  },
+  "accepted_stage_e": {
+    "integration_commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "integration_tree": "212777d569af527ce9532ea6c836ff2225465d87",
+    "implementation_path_count": 51,
+    "ci_run_id": 33231168021,
+    "ci_required_job_count": 6,
+    "ci_conclusion": "success",
+    "artifact_id": 9708926559,
+    "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"
+  },
+  "accepted_local_binding_authority": {
+    "candidate_commit": "c683040869ecbbe439835a8fabd0a6c3d7ea0e3d",
+    "candidate_tree": "46ce30f0c3675836b449bc2fb00ae22a688ca287",
+    "integration_commit": "4ab6a8a8b158e6ff32d06e67d29a3d974a6326be",
+    "integration_tree": "46ce30f0c3675836b449bc2fb00ae22a688ca287"
+  },
+  "accepted_original_authority_rows": [
+    {
+      "path": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "45d2f7fcd57455b519ea29a6761e29b023b08869",
+      "byte_count": 71550,
+      "raw_sha256": "05b5679e61991c692b8f245d22897665089dafc25d0769590b3b0ad153fecad0"
+    },
+    {
+      "path": "stage_f_local_execution_binding_contract.json",
+      "mode": "100644",
+      "git_object": "39445162d904042d399581bcb7dcace499a431bb",
+      "byte_count": 68095,
+      "raw_sha256": "74b582fae72216f2234aa7de354586a3ff679147a89b9bad4f7df43082a9d59f"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_schema.json",
+      "mode": "100644",
+      "git_object": "ec64c0aa7313ed421657cc1bff2a4b0b332504df",
+      "byte_count": 229992,
+      "raw_sha256": "0062377ea1aea416e09e6c149ec3973f5aab632a0b84b438d7e181aee505a396"
+    },
+    {
+      "path": "stage_f_local_execution_binding_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "5410a66496f92814040a1e802bfd092031454497",
+      "byte_count": 5321,
+      "raw_sha256": "befdb7b717be75f7b62f6489d053274bad9330f7b8f53f2a5b4c0d4da059ae23"
+    },
+    {
+      "path": "stage_f_local_execution_binding_predecessor_manifest.json",
+      "mode": "100644",
+      "git_object": "95927fde83cc5644e82978a1162ab27170ace8e7",
+      "byte_count": 8318,
+      "raw_sha256": "28ffee108f64c9b0f0341cdf61b51437ed315ee2b84d9979cbfeb89c6bd6baab"
+    },
+    {
+      "path": "stage_f_local_execution_binding_validation_contract.json",
+      "mode": "100644",
+      "git_object": "97e95179ddf1787743603a6b5b3f586b6838d377",
+      "byte_count": 71510,
+      "raw_sha256": "6550603ec759580660300d10361cac66ef43b7d657ac1f49672d712ba5de1abf"
+    }
+  ],
+  "accepted_original_authority_row_count": 6,
+  "accepted_evidence_correction_authority": {
+    "candidate_commit": "dd1a38aee4a6c1048122cb2b5a4e7cf542c5e101",
+    "candidate_tree": "c5d6e6c53528ae64a90151d286feb2cc62be47be",
+    "integration_commit": "db9d305be120e69d00be14f0d07e06999ca77999",
+    "integration_tree": "c5d6e6c53528ae64a90151d286feb2cc62be47be",
+    "required_base_commit": "1033501b77f7f55ed9aacd9a71cef95f81966e4a",
+    "required_base_tree": "d8ffbd105eb76cfbb72472772e07f18a11112db3"
+  },
+  "accepted_evidence_correction_authority_rows": [
+    {
+      "path": "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "f0506c94553d8240086525e2218077915fde900d",
+      "byte_count": 63947,
+      "raw_sha256": "4e49bd26a2e28fc8703de447d18e541eb04b64f4856953bf96e1da57fd93e0c4"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_correction_contract.json",
+      "mode": "100644",
+      "git_object": "a2204c4e7a8625d4c21e8f7af09c6aeabfd94f34",
+      "byte_count": 51342,
+      "raw_sha256": "83a0d753bd30ee56af585e9f191e0319f7b2fe6070ff088ea60a9149f859b94f"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_correction_schema.json",
+      "mode": "100644",
+      "git_object": "cf1369548d55b6f85d486ac20a6c28f45f46596c",
+      "byte_count": 654186,
+      "raw_sha256": "9a74d517029a684a0889f1460df253f0757c8e712a961670d888a90dc2389673"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "ee1c9f57328efc1eac51530822f4c667f1648916",
+      "byte_count": 5788,
+      "raw_sha256": "734aeef99d900700bc1fea89ea94932b904ff126d5197dd6a01d10fe4aa87919"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+      "mode": "100644",
+      "git_object": "b29e67292febabfd91debe245fd164d0377d6567",
+      "byte_count": 5270,
+      "raw_sha256": "1e9162e64f9e1d89cdaa87a7701441b76d0d63e7a804d1129b140c52e5ebfc58"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+      "mode": "100644",
+      "git_object": "bd8639ed159953062c844109332895fedae5e990",
+      "byte_count": 31186,
+      "raw_sha256": "29a53c1fb987f48a7ed89d9344cf715927839fd31f093e6e13c2c612ffe8c050"
+    }
+  ],
+  "accepted_evidence_correction_authority_row_count": 6,
+  "accepted_prior_authority_row_count": 12,
+  "accepted_reachability_correction": {
+    "candidate_commit": "0b618dafd1cbc795d9b05038a0d298552b5eb372",
+    "candidate_tree": "382472276e7fbb7b483cc120467f23f83bc25ca3",
+    "integration_commit": "f47648320be2054edf51a166b0e7fd7e9ab20594",
+    "integration_tree": "382472276e7fbb7b483cc120467f23f83bc25ca3",
+    "required_parent_commit": "db9d305be120e69d00be14f0d07e06999ca77999",
+    "required_parent_tree": "c5d6e6c53528ae64a90151d286feb2cc62be47be",
+    "modified_path_count": 1
+  },
+  "accepted_reachability_row": {
+    "path": "tests/framework/test_validation_reachability.py",
+    "mode": "100644",
+    "git_object": "44d828ec3a94378ce2716d90487659a6b61f315a",
+    "byte_count": 352938,
+    "raw_sha256": "0388fa6f83e669362424d36328aeabd70f73fe22e68581a6386a8abd945b022c"
+  },
+  "accepted_historical_descendant_path_counts": {
+    "authority_only_unique_path_count": 64,
+    "completed_implementation_unique_path_count": 76,
+    "preserved_as_reconstructable_predecessor_facts": true
+  },
+  "prospective_successor_descendant_path_counts": {
+    "authority_only_unique_path_count": 70,
+    "completed_implementation_unique_path_count": 82,
+    "successor_authority_additive_path_count": 6,
+    "successor_active_authority_row_count": 18,
+    "prospective_reachability_modified_path_count": 1,
+    "implementation_path_count": 14
+  },
+  "rejected_foundation_candidate": {
+    "commit": "c6e659305713ba462dbadc54d37d704e2e4de168",
+    "tree": "52a4039eccca8f860cad3156e44abfd21add37a3",
+    "ci_run_id": 33327944297,
+    "ci_conclusion": "success",
+    "independent_disposition": "INDEPENDENT_BINDING_FAIL",
+    "accepted_as_predecessor": false
+  },
+  "preservation_rule": "required current target commit and tree, Stage E coordinate and evidence identity, all six accepted original Stage F authority rows, all six accepted evidence-correction authority rows, and the accepted reachability row must reconstruct exactly by Git object and raw-byte routes; no earlier authority or reachability byte may be changed, replaced, omitted, duplicated or reordered",
+  "missing_duplicate_changed_unreachable_or_unlocked_input": "REFUSE",
+  "independent_authority_audit_required": true,
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_import_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_FINAL_EVIDENCE_CLOSURE_CORRECTION_CANDIDATE_COMPLETE"
+}

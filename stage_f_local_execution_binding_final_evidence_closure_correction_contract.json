@@ -1,0 +1,729 @@
+{
+  "contract_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FINAL-EVIDENCE-CLOSURE-CORRECTION-CONTRACT-v3",
+  "contract_version": "3.0.0-candidate",
+  "status": "PROSPECTIVE_OUTCOME_BLIND_AUTHORITY",
+  "required_current_target": {
+    "commit": "f47648320be2054edf51a166b0e7fd7e9ab20594",
+    "tree": "382472276e7fbb7b483cc120467f23f83bc25ca3"
+  },
+  "accepted_stage_e": {
+    "commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "tree": "212777d569af527ce9532ea6c836ff2225465d87",
+    "ci_run_id": 33231168021,
+    "artifact_id": 9708926559,
+    "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"
+  },
+  "accepted_stage_f_chain": {
+    "local_binding_authority_candidate_commit": "c683040869ecbbe439835a8fabd0a6c3d7ea0e3d",
+    "local_binding_authority_candidate_tree": "46ce30f0c3675836b449bc2fb00ae22a688ca287",
+    "local_binding_authority_integration_commit": "4ab6a8a8b158e6ff32d06e67d29a3d974a6326be",
+    "local_binding_authority_integration_tree": "46ce30f0c3675836b449bc2fb00ae22a688ca287",
+    "local_binding_authority_file_count": 6,
+    "evidence_correction_candidate_commit": "dd1a38aee4a6c1048122cb2b5a4e7cf542c5e101",
+    "evidence_correction_candidate_tree": "c5d6e6c53528ae64a90151d286feb2cc62be47be",
+    "evidence_correction_integration_commit": "db9d305be120e69d00be14f0d07e06999ca77999",
+    "evidence_correction_integration_tree": "c5d6e6c53528ae64a90151d286feb2cc62be47be",
+    "evidence_correction_authority_file_count": 6,
+    "reachability_candidate_commit": "0b618dafd1cbc795d9b05038a0d298552b5eb372",
+    "reachability_integration_commit": "f47648320be2054edf51a166b0e7fd7e9ab20594",
+    "reachability_integration_tree": "382472276e7fbb7b483cc120467f23f83bc25ca3",
+    "reachability_path": "tests/framework/test_validation_reachability.py",
+    "reachability_mode": "100644",
+    "reachability_blob": "44d828ec3a94378ce2716d90487659a6b61f315a",
+    "reachability_byte_count": 352938,
+    "reachability_raw_sha256": "0388fa6f83e669362424d36328aeabd70f73fe22e68581a6386a8abd945b022c"
+  },
+  "rejected_implementation_coordinates": [
+    {
+      "commit": "0748e88d76ba8c2d86c41f4d7b8d632960041a1c",
+      "disposition": "NOT_SEALABLE"
+    },
+    {
+      "commit": "c6e659305713ba462dbadc54d37d704e2e4de168",
+      "tree": "52a4039eccca8f860cad3156e44abfd21add37a3",
+      "disposition": "INDEPENDENT_BINDING_FAIL"
+    }
+  ],
+  "authority_files_in_order": [
+    "STAGE_F_LOCAL_EXECUTION_BINDING_FINAL_EVIDENCE_CLOSURE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_contract.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_schema.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_final_evidence_closure_correction_validation_contract.json"
+  ],
+  "authority_file_count": 6,
+  "authority_mode": "100644",
+  "authority_additions_only": true,
+  "authority_manifest_ids": {
+    "implementation_path_manifest": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FINAL-EVIDENCE-CLOSURE-CORRECTION-PATHS-v3",
+    "predecessor_manifest": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FINAL-EVIDENCE-CLOSURE-CORRECTION-PREDECESSORS-v3",
+    "validation_contract": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-FINAL-EVIDENCE-CLOSURE-CORRECTION-VALIDATION-v3"
+  },
+  "precedence": {
+    "mode": "NARROW_ADDITIVE_SUPERSESSION",
+    "prior_stage_f_authority_file_count": 12,
+    "integrated_successor_stage_f_authority_file_count": 18,
+    "scientific_authority_changed": false,
+    "stage_e_guard_changed": false,
+    "campaign_order_changed": false,
+    "missing_scientific_authority_may_be_filled": false,
+    "scientific_execution_authorized": false,
+    "host_mutation_authorized_during_authority_audit": false,
+    "post_packet_user_authorization_still_required": true
+  },
+  "campaign_order": [
+    "SD-01",
+    "SD-01-GROWTH-v1",
+    "SD-02",
+    "SD-03",
+    "SD-04",
+    "SD-05",
+    "SD-06",
+    "SD-07",
+    "SD-08",
+    "SD-09",
+    "SD-10",
+    "SD-11",
+    "SD-12",
+    "SD-13",
+    "SD-14"
+  ],
+  "nested_campaign_rule": {
+    "route": "SD-01-GROWTH-v1",
+    "parent_study": "SD-01",
+    "route_count": 15,
+    "independent_study_count": 14,
+    "independent_study": false
+  },
+  "superseded_non_scientific_clauses": [
+    "CONFLATED_ABSENT_INTENT_LEDGER_ENTRY_AND_UNVERIFIABLE_LEDGER_PREFIX",
+    "GENERIC_REGISTRY_AND_DOCKER_AUTOSTART_SOURCE_ROWS",
+    "GENERIC_FOLLOWING_OPERATION_CAPABILITY_AND_UNBOUND_REMAINING_ENVELOPE",
+    "UNDERCONSTRAINED_USN_QUERY_READ_AND_TICKET_RECONCILIATION",
+    "UNDERCONSTRAINED_WATCH_ROLE_AND_RESOURCE_PROVENANCE",
+    "UNRESOLVED_SCIENTIFIC_MUTATION_AUTHORITY_IDENTITY",
+    "NONEXECUTABLE_DOCKER_WRITE_TIMING_AND_TERMINAL_PRECEDENCE",
+    "REGEX_ONLY_CONTAINER_TARGET_AND_UNBOUND_CONNECTION_LIFETIME",
+    "ORCHESTRATOR_PHASE_WITHOUT_DURABLE_LAUNCH_OBSERVATION"
+  ],
+  "effective_schema": {
+    "path": "stage_f_local_execution_binding_final_evidence_closure_correction_schema.json",
+    "schema_version": "3.0.0-candidate",
+    "complete_closed_schema_required": true,
+    "dynamic_schema_merge_permitted": false,
+    "local_refs_must_resolve": true,
+    "literal_local_ref_occurrence_count": 2431,
+    "unresolved_local_ref_count": 0,
+    "root_variant_count": 46,
+    "prior_effective_definition_count": 220,
+    "effective_definition_count": 228,
+    "added_definition_count": 8,
+    "added_definitions_in_strict_nfc_utf8_order": [
+      "durability_suspended_process_launch_attestation",
+      "stage_f_capacity_usage_projection",
+      "stage_f_capacity_usage_projection_identity",
+      "stage_f_continuation_segment_start_capability",
+      "stage_f_continuation_segment_start_capability_identity",
+      "stage_f_host_validation_process_resume_capability",
+      "stage_f_host_validation_process_resume_capability_identity",
+      "stage_f_root_watch_pending_resource_projection"
+    ],
+    "changed_definition_count": 44,
+    "changed_definitions_in_strict_nfc_utf8_order": [
+      "binding_authority_set_identity",
+      "binding_authority_set_preimage",
+      "binding_implementation_identity",
+      "binding_implementation_preimage",
+      "binding_readiness_identity",
+      "binding_readiness_record",
+      "binding_validation_receipt",
+      "binding_validation_receipt_identity",
+      "binding_validator_identity",
+      "binding_validator_preimage",
+      "campaign_authorization",
+      "campaign_authorization_identity",
+      "directory_watch_acquisition_observation",
+      "docker_engine_observation",
+      "docker_named_pipe_bounded_response_window_observation",
+      "docker_named_pipe_http_exchange_observation",
+      "docker_named_pipe_http_start_attempt_observation",
+      "durability_process_launch_observation",
+      "durability_restart_observation",
+      "independent_binding_audit_identity",
+      "independent_binding_audit_receipt",
+      "local_binding_bundle",
+      "local_binding_bundle_identity",
+      "post_packet_authorization_receipt_identity",
+      "post_packet_user_authorization_receipt",
+      "power_facts",
+      "registry_probe_row",
+      "sealed_campaign_packet_identity",
+      "sealed_campaign_packet_manifest",
+      "stage_f_authorized_mutation_ticket",
+      "stage_f_capacity_consumption_closure",
+      "stage_f_capacity_live_gate",
+      "stage_f_container_start_receipt",
+      "stage_f_evidence_ledger_entry",
+      "stage_f_file_notify_record",
+      "stage_f_recovery_original_intent_binding_observation",
+      "stage_f_root_watch",
+      "stage_f_root_watch_completion_observation",
+      "stage_f_root_watch_live_state",
+      "stage_f_root_watch_release_observation",
+      "stage_f_usn_journal_range",
+      "stage_f_usn_query_call_observation",
+      "stage_f_usn_read_call_observation",
+      "stage_f_usn_record"
+    ],
+    "removed_definition_count": 0,
+    "original_historical_definition_count": 143,
+    "effective_added_from_original_historical_count": 85,
+    "effective_changed_from_original_historical_count": 28,
+    "effective_removed_from_original_historical_count": 0,
+    "definition_name_ordering_rule": "STRICT_ASCENDING_UTF8_BYTES_OF_NFC_DEFINITION_NAMES_INDEPENDENT_OF_JSON_OBJECT_MEMBER_ORDER",
+    "all_unlisted_predecessor_definitions_byte_semantically_unchanged": true,
+    "numeric_precision_change_outside_changed_list": "REFUSE"
+  },
+  "successor_identity_kinds": {
+    "binding_authority_set": "stage_f_binding_authority_set/v3",
+    "binding_implementation": "stage_f_binding_implementation/v3",
+    "binding_validator": "stage_f_binding_validator/v3",
+    "local_binding_bundle": "stage_f_local_binding_bundle/v2",
+    "binding_validation_receipt": "stage_f_binding_validation_receipt/v2",
+    "binding_readiness": "stage_f_local_binding_readiness/v2",
+    "independent_binding_audit": "stage_f_independent_binding_audit/v2",
+    "sealed_campaign_packet": "stage_f_sealed_campaign_packet/v2",
+    "post_packet_authorization_receipt": "stage_f_post_packet_user_authorization_receipt/v2",
+    "campaign_authorization": "stage_f_campaign_authorization/v2",
+    "host_validation_process_resume_capability": "stage_f_host_validation_process_resume_capability/v1",
+    "continuation_segment_start_capability": "stage_f_continuation_segment_start_capability/v1"
+  },
+  "recovery_disposition_split": {
+    "dispositions_in_order": [
+      "INTENT_ENTRY_AND_APPEND_OBSERVATION_RECOVERED",
+      "INTENT_FILE_RECOVERED_LEDGER_ENTRY_ABSENT_IN_COMPLETE_PREFIX",
+      "INTENT_FILE_RECOVERED_LEDGER_PREFIX_UNVERIFIABLE",
+      "INTENT_ENTRY_RECOVERED_CURRENT_HEAD_APPEND_OBSERVATION_LOST"
+    ],
+    "mutually_exclusive": true,
+    "complete_prefix_absent_entry_branch": {
+      "ledger_prefix_parse_complete": true,
+      "complete_genesis_entries_count_chain_and_terminal_length_required": true,
+      "recovered_intent_identity_absent_from_every_entry": true,
+      "intent_entry_offset_wire_and_append_fields": "NULL"
+    },
+    "unverifiable_prefix_branch": {
+      "ledger_prefix_parse_complete": false,
+      "parsed_genesis_head_count_intent_entry_offset_wire_and_append_fields": "NULL",
+      "false_reconstructed_prefix_claim": "REFUSE"
+    },
+    "current_head_append_observation_lost_branch": {
+      "complete_prefix_through_recovered_intent_entry_required": true,
+      "direct_live_current_head_append_observation_lost": true,
+      "raw_call_failure_substitution": "REFUSE"
+    },
+    "old_root_and_ledger_reopened_for_write": false,
+    "fresh_recovery_genesis_root_epoch_and_ledger_before_old_intent_read_or_docker_touch": true,
+    "start_retry": "FORBIDDEN",
+    "lost_response_reconstruction": "FORBIDDEN",
+    "created_container_state_proves_unsent": false,
+    "containment_and_quarantine_required": true
+  },
+  "registry_source_closure": {
+    "pending_reboot_root_hive": "HKEY_LOCAL_MACHINE",
+    "pending_reboot_rows_in_order": [
+      {
+        "ordinal": 1,
+        "subkey": "SYSTEM\\CurrentControlSet\\Control\\Session Manager",
+        "value_name": "PendingFileRenameOperations",
+        "probe_kind": "VALUE"
+      },
+      {
+        "ordinal": 2,
+        "subkey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\RebootPending",
+        "value_name": "<KEY_EXISTS>",
+        "probe_kind": "KEY_EXISTS"
+      },
+      {
+        "ordinal": 3,
+        "subkey": "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired",
+        "value_name": "<KEY_EXISTS>",
+        "probe_kind": "KEY_EXISTS"
+      },
+      {
+        "ordinal": 4,
+        "subkey": "SOFTWARE\\Microsoft\\Updates",
+        "value_name": "UpdateExeVolatile",
+        "probe_kind": "VALUE"
+      },
+      {
+        "ordinal": 5,
+        "subkey": "SYSTEM\\CurrentControlSet\\Services\\Netlogon",
+        "value_name": "JoinDomain",
+        "probe_kind": "VALUE"
+      },
+      {
+        "ordinal": 6,
+        "subkey": "SYSTEM\\CurrentControlSet\\Services\\Netlogon",
+        "value_name": "AvoidSpnSet",
+        "probe_kind": "VALUE"
+      },
+      {
+        "ordinal": 7,
+        "subkey": "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ActiveComputerName",
+        "value_name": "ComputerName",
+        "probe_kind": "VALUE"
+      },
+      {
+        "ordinal": 8,
+        "subkey": "SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ComputerName",
+        "value_name": "ComputerName",
+        "probe_kind": "VALUE"
+      }
+    ],
+    "pending_reboot_row_count": 8,
+    "registry_open_api": "RegOpenKeyExW",
+    "registry_value_query_api": "RegQueryValueExW",
+    "error_success_uint32": 0,
+    "error_file_not_found_uint32": 2,
+    "key_exists_branch_invokes_value_query": false,
+    "key_exists_open_result_marker_relation": {
+      "ERROR_SUCCESS": true,
+      "ERROR_FILE_NOT_FOUND": false
+    },
+    "key_exists_null_fields_in_order": [
+      "query_result",
+      "value_type",
+      "value_bytes_base64",
+      "value_sha256"
+    ],
+    "successful_open_handle_and_close": {
+      "opened_key_handle_value_uint64": "VALID_HANDLE",
+      "close_api": "RegCloseKey",
+      "close_input_handle_equals_opened_handle": true,
+      "close_returned_success": true,
+      "closed_utc_required": true
+    },
+    "not_found_open_handle_and_close_fields": "NULL",
+    "value_probe_branches": {
+      "OPEN_NOT_FOUND": {
+        "open_result": 2,
+        "query_invoked": false,
+        "marker_present": false,
+        "query_value_type_bytes_and_digest": "NULL"
+      },
+      "OPEN_SUCCESS_QUERY_NOT_FOUND": {
+        "open_result": 0,
+        "query_result": 2,
+        "marker_present": false,
+        "value_type_bytes_and_digest": "NULL"
+      },
+      "OPEN_SUCCESS_QUERY_SUCCESS": {
+        "open_result": 0,
+        "query_result": 0,
+        "marker_present": true,
+        "typed_raw_value_and_sha256_required": true
+      }
+    },
+    "other_open_query_result_handle_close_or_branch_mismatch": "REFUSE",
+    "pending_marker_count_and_ordered_names_recomputed_from_raw_rows": true,
+    "copied_marker_present_boolean_is_authority": false,
+    "access_error_is_absence": false,
+    "update_exe_volatile_rule": "ABSENT_OR_REG_DWORD_RAW_LITTLE_ENDIAN_UINT32_ZERO",
+    "other_pending_marker_rule": "ABSENT",
+    "computer_name_rows_equal": true,
+    "no_auto_reboot_policy": {
+      "ordinal": 9,
+      "probe_kind": "VALUE",
+      "root_hive": "HKEY_LOCAL_MACHINE",
+      "subkey": "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU",
+      "value_name": "NoAutoRebootWithLoggedOnUsers",
+      "required_open_and_query_success": true,
+      "value_type_uint32": 4,
+      "value_type_name": "REG_DWORD",
+      "raw_little_endian_uint32": 1
+    },
+    "docker_autostart": {
+      "root_hive": "HKEY_CURRENT_USER",
+      "subkey": "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+      "value_name": "Docker Desktop",
+      "required_open_and_query_success": true,
+      "allowed_value_types_uint32": [
+        1,
+        2
+      ],
+      "allowed_value_type_names_in_same_order": [
+        "REG_SZ",
+        "REG_EXPAND_SZ"
+      ],
+      "raw_utf16le_required": true
+    }
+  },
+  "typed_capacity_capabilities": {
+    "reserved_envelope_bytes": 715112054784,
+    "minimum_free_bytes": 375809638400,
+    "retained_evidence_predebit_bytes": 8589934592,
+    "roles": {
+      "HOST_VALIDATION_PROCESS_RESUME": {
+        "capability_definition": "stage_f_host_validation_process_resume_capability",
+        "identity_definition": "stage_f_host_validation_process_resume_capability_identity",
+        "identity_kind": "stage_f_host_validation_process_resume_capability/v1",
+        "pre_resume_attestation_definition": "durability_suspended_process_launch_attestation",
+        "exact_phase_role_pairs": {
+          "ORCHESTRATOR": "ORCHESTRATOR_PROCESS",
+          "PRE_RESTART": "PRE_RESTART_PROCESS",
+          "POST_RESTART": "POST_RESTART_PROCESS"
+        },
+        "binds_exact_suspended_process_thread_pid_tid_creation_invocation_root_and_single_use": true,
+        "completed_launch_repeats_attestation_capability_and_live_gate_identities": true,
+        "future_live_gate_identity_in_preimage": false
+      },
+      "SCIENTIFIC_CONTAINER_START": {
+        "capability_definition": "stage_f_container_start_capability",
+        "identity_definition": "stage_f_container_start_capability_identity",
+        "identity_kind": "stage_f_container_start_capability/v1",
+        "future_live_gate_identity_in_preimage": false
+      },
+      "CONTINUATION_SEGMENT_START": {
+        "capability_definition": "stage_f_continuation_segment_start_capability",
+        "identity_definition": "stage_f_continuation_segment_start_capability_identity",
+        "identity_kind": "stage_f_continuation_segment_start_capability/v1",
+        "binds_exact_route_checkpoint_predecessor_continuation_authority_invocation_root_and_single_use": true,
+        "required_predecessor_fields_in_order": [
+          "continuation_receipt_identity",
+          "completed_attempt_identity",
+          "outgoing_checkpoint_identity",
+          "next_attempt_ordinal",
+          "run_resource_ledger_identity",
+          "campaign_resource_ledger_identity"
+        ],
+        "future_live_gate_identity_in_preimage": false
+      }
+    },
+    "generic_or_cross_role_capability": "REFUSE",
+    "capability_single_use": true,
+    "consumption_closure_exact_snapshot_usage_projection_required": true,
+    "capacity_usage_projection_definition": "stage_f_capacity_usage_projection",
+    "capacity_usage_projection_identity_definition": "stage_f_capacity_usage_projection_identity",
+    "consumption_closure_direct_component_usage_projection_and_identity_required": true,
+    "usage_components_in_order": [
+      "primary_logical_output_bytes",
+      "independent_audit_copy_bytes",
+      "dynamic_growth_physical_write_bytes",
+      "checkpoint_and_write_overhead_bytes",
+      "temporary_archive_bytes",
+      "retained_evidence_bytes"
+    ],
+    "total_envelope_usage_bytes_is_exact_six_component_sum": true,
+    "remaining_reserved_envelope_formula": "715112054784 - total_envelope_usage_bytes",
+    "exact_nonnegative_integer_arithmetic_required": true,
+    "live_gate_repeats_closure_identity_total_usage_and_recomputed_remaining_value": true,
+    "live_gate_direct_component_usage_projection_identity_required": true,
+    "transitive_snapshot_presence_without_direct_projection": "REFUSE",
+    "caller_supplied_lower_remaining_value": "REFUSE",
+    "fresh_raw_capacity_may_truthfully_lower_current_availability_but_not_rewrite_closure": true,
+    "deterministic_in_memory_finalization_only_between_gate_and_call": true,
+    "instantaneous_external_writer_trust_boundary_explicit": true
+  },
+  "usn_range_closure": {
+    "start_query_phase": "START",
+    "end_query_phase": "END",
+    "same_retained_volume_handle_and_journal_id_required": true,
+    "query_output_structure": "USN_JOURNAL_DATA_V2",
+    "query_output_byte_count": 80,
+    "query_output_buffer_address_capacity_and_full_zero_preimage_required": true,
+    "query_bytes_returned_pointer_address_required": true,
+    "query_bytes_returned_preimage": "EXACT_FOUR_ZERO_BYTES",
+    "query_bytes_returned_postimage_hash_and_uint32_decode_required": true,
+    "query_decoded_count_equals_returned_slice_length_and_is_within_capacity": true,
+    "read_input_structure": "READ_USN_JOURNAL_DATA_V1",
+    "read_input_byte_count": 48,
+    "read_output_buffer_address_capacity_and_full_zero_preimage_required": true,
+    "read_bytes_returned_pointer_address_required": true,
+    "read_bytes_returned_preimage": "EXACT_FOUR_ZERO_BYTES",
+    "read_bytes_returned_postimage_hash_and_uint32_decode_required": true,
+    "read_decoded_count_equals_returned_slice_length_and_is_within_capacity": true,
+    "returned_slice_hash_and_leading_next_usn_reconciliation_required": true,
+    "read_call_ordinals": "CONTIGUOUS_ONE_BASED",
+    "first_input_start_usn_equals_start_watermark": true,
+    "each_leading_next_usn_equals_next_call_start_usn": true,
+    "final_call_explicitly_terminal_and_covers_end_watermark": true,
+    "gaps_overlaps_wrap_journal_change_or_lowest_valid_advance": "REFUSE",
+    "raw_query_and_read_buffers_counts_hashes_and_v2_v3_partition_required": true,
+    "scope_dispositions": [
+      "OUTSIDE_PROTECTED_SCOPE",
+      "AUTHORIZED_TICKET_MATCH",
+      "REFUSED_PROTECTED_MUTATION"
+    ],
+    "authorized_record_requires_exact_preceding_unexpired_unconsumed_ticket": true,
+    "ticket_root_protection_epoch_identity_required": true,
+    "ticket_ledger_mutation_transaction_identity_required": true,
+    "ticket_watch_usn_ledger_join_kind_required": true,
+    "file_notify_record_ledger_mutation_entry_identity_required": true,
+    "record_ticket_watch_and_ledger_transaction_bijection_required": true,
+    "declared_counts_recomputed_from_raw_records": true,
+    "passing_range_refused_record_count": 0,
+    "refused_record_hidden_by_zero_count": "REFUSE"
+  },
+  "watch_provenance_closure": {
+    "pending_resource_projection_definition": "stage_f_root_watch_pending_resource_projection",
+    "roles": {
+      "ANCHOR_SELF_DIRECT": {
+        "recursive": false,
+        "read_directory_changes_w_b_watch_subtree": false
+      },
+      "EXECUTION_ATTEMPT_ROOT_SUBTREE": {
+        "recursive": true,
+        "read_directory_changes_w_b_watch_subtree": true
+      }
+    },
+    "completion_reissue_live_and_release_equal_acquisition_fields": [
+      "directory_handle_value_uint64",
+      "overlapped_address_uint64",
+      "event_handle_value_uint64",
+      "buffer_base_address_uint64",
+      "buffer_capacity",
+      "completion_bytes_output_address_uint64",
+      "notification_filter",
+      "watch_subtree"
+    ],
+    "completion_and_reissue_dword_zero_preimage_returned_image_hash_and_decoded_count_required": true,
+    "live_state_pending_resources_reconcile_acquisition_completion_and_latest_reissue": true,
+    "contiguous_cycle_ordinals_required": true,
+    "one_pending_request_per_watch": true,
+    "cross_watch_resource_substitution": "REFUSE",
+    "cancel_and_terminal_completion_are_distinct_raw_calls": true,
+    "normal_completion_winning_cancel_race_must_be_parsed_and_reconciled": true,
+    "close_and_free_once_after_no_pending_request": true
+  },
+  "scientific_mutation_authority_resolution": {
+    "scientific_write_authorized_by_this_contract": false,
+    "FROZEN_PER_ROUTE_AUTHORIZED_WRITE": {
+      "required_campaign_authorization_identity": true,
+      "required_exact_route_id": true,
+      "resolved_field": "scientific_authority_identity",
+      "source": "exact_matching_route_authority_projection"
+    },
+    "FROZEN_CONTINUATION_AUTHORIZED_WRITE": {
+      "required_campaign_authorization_identity": true,
+      "required_exact_route_id": true,
+      "resolved_field": "continuation_authority_identity",
+      "source": "exact_matching_route_authority_projection"
+    },
+    "non_scientific_ticket_campaign_route_and_resolved_authority_fields": "NULL",
+    "generic_wrong_route_swapped_or_unresolved_authority": "REFUSE",
+    "one_ticket_one_watch_record_one_usn_record_one_ledger_mutation": true
+  },
+  "docker_transport_algorithm": {
+    "named_pipe": "\\\\.\\pipe\\docker_engine",
+    "read_mode": "PIPE_READMODE_BYTE",
+    "wait_mode": "PIPE_NOWAIT",
+    "lp_overlapped": "NULL",
+    "dword_output_preimage": "EXACT_FOUR_ZERO_BYTES",
+    "dword_output_decode": "UNSIGNED_LITTLE_ENDIAN_UINT32",
+    "applies_to_every_generic_and_specialized_named_pipe_exchange": true,
+    "covered_exchange_roles_in_order": [
+      "ENGINE_INSPECT",
+      "CONTAINER_CREATE",
+      "INERT_CONTAINER_INSPECT",
+      "CONTAINER_START",
+      "CONTAINMENT_INSPECT",
+      "FORCE_DELETE",
+      "FINAL_ABSENCE_404"
+    ],
+    "write_dispositions": {
+      "FAILED_WRITE": "WriteFile_false_and_bytes_written_zero",
+      "SHORT_WRITE": "WriteFile_true_and_0_le_bytes_written_lt_request_byte_count",
+      "FULL_WRITE": "WriteFile_true_and_bytes_written_eq_request_byte_count"
+    },
+    "only_full_write_enters_response_algorithm": true,
+    "generic_exchange_failed_or_short_write_with_complete_response": "REFUSE",
+    "write_started_tick_source": "GetTickCount64_immediately_before_WriteFile",
+    "bounded_window_start_tick_equals_write_started_tick": true,
+    "independent_or_earlier_window_origin": "REFUSE",
+    "deadline_formula": "write_started_tick + 30000",
+    "deadline_uint64_overflow": "REFUSE",
+    "maximum_read_attempt_count": 1201,
+    "no_data_error_code": 232,
+    "no_data_retry_sleep_formula": "minimum(25, remaining_window_ms), positive 1 through 25",
+    "each_strictly_preddeadline_no_data_row_eligible_for_another_read_has_exactly_one_following_sleep_and_eligibility_sample": true,
+    "no_data_post_tick_equal_to_deadline_at_read_count_at_most_1200_has_no_sleep_or_following_read": true,
+    "byte_mode_error_more_data_234": "IMPOSSIBLE_AND_REFUSE",
+    "terminal_precedence_in_order": [
+      "TERMINAL_READ_FAILURE",
+      "COMPLETE_VALID_HTTP_RESPONSE",
+      "DETECTED_MALFORMED_RESPONSE",
+      "POSTDEADLINE_TERMINAL_DATA_OR_NO_DATA_READ",
+      "MAXIMUM_READ_ATTEMPT_COUNT_REACHED",
+      "FIRST_READ_GATE_DEADLINE",
+      "BETWEEN_READS_GATE_DEADLINE_DATA_ONLY",
+      "FINAL_NO_DATA_DEADLINE"
+    ],
+    "maximum_read_cut_exact_count": 1201,
+    "maximum_read_cut_last_post_tick_relation": "AT_OR_BEFORE_DEADLINE",
+    "maximum_read_cut_has_following_poll": false,
+    "first_read_gate_deadline_read_count": 0,
+    "between_reads_gate_deadline_last_read_disposition": "DATA",
+    "between_reads_gate_deadline_maximum_read_count": 1200,
+    "ordinary_final_no_data_maximum_read_count_except_1201st_postdeadline_no_data": 1200,
+    "ordered_data_bytes_reconstruct_response_prefix_exactly": true,
+    "http_framing_status_body_and_parent_window_projection_recomputed": true,
+    "boolean_only_response_evidence": "REFUSE",
+    "acceptance_unknown_requires_authenticated_containment_final_404_and_quarantine": true
+  },
+  "container_and_connection_binding": {
+    "container_id_source": "exact_raw_create_response",
+    "container_id_pattern": "^[0-9a-f]{64}$",
+    "container_id_equal_across_inert_identity_gate_capability_intent_handoff_receipt_and_containment": true,
+    "endpoints": {
+      "inspect": "GET /containers/{id}/json",
+      "start": "POST /containers/{id}/start",
+      "force_delete": "DELETE /containers/{id}?force=true&v=false",
+      "final_absence": "GET /containers/{id}/json"
+    },
+    "endpoint_bytes_reconstructed_from_exact_container_id": true,
+    "force_delete_allowed_http_statuses": [
+      204,
+      404
+    ],
+    "final_absence_required_http_status": 404,
+    "regex_only_target_binding": "REFUSE",
+    "every_exchange_fresh_createfilew_connection": true,
+    "server_authentication_api": "GetNamedPipeServerProcessId",
+    "server_pid_creation_filetime_and_image_equal_exact_docker_runtime_identity": true,
+    "connection_intervals_nonoverlapping_when_fresh_successor_required": true,
+    "connection_closed_exactly_once_after_final_io": true,
+    "use_after_close": "REFUSE",
+    "numeric_handle_reuse_after_close_and_fresh_authenticated_acquisition": "PERMITTED",
+    "connection_or_daemon_splice": "REFUSE"
+  },
+  "orchestrator_launch_closure": {
+    "launch_phase_vocabulary": [
+      "ORCHESTRATOR",
+      "PRE_RESTART",
+      "POST_RESTART"
+    ],
+    "durability_restart_required_property": "orchestrator_process_launch_observation",
+    "property_schema": "durability_process_launch_observation",
+    "property_phase_const": "ORCHESTRATOR",
+    "pre_resume_attestation_schema": "durability_suspended_process_launch_attestation",
+    "pre_resume_attestation_phase_const": "ORCHESTRATOR",
+    "pre_resume_attestation_projected_process_role_const": "ORCHESTRATOR_PROCESS",
+    "resume_capability_schema": "stage_f_host_validation_process_resume_capability",
+    "completed_launch_required_backlinks_in_order": [
+      "pre_resume_launch_attestation_sha256",
+      "host_validation_process_resume_capability_identity",
+      "capacity_live_gate_identity"
+    ],
+    "launch_attestation_capability_gate_resume_order_recomputed": true,
+    "actor_pid_and_creation_filetime_equal_host_runtime_acquisition_lock_holder": true,
+    "returned_process_equal_orchestrator_process_projection": true,
+    "executable_command_invocation_suspended_handles_attestation_resume_and_cleanup_bound": true,
+    "nested_in_durable_restart_receipt": true,
+    "separate_ledger_role_added": false,
+    "successful_ephemeral_only_orchestrator_launch": "REFUSE",
+    "create_suspended_and_pre_user_code_attestation_required": true,
+    "scientific_process": false
+  },
+  "validation_closure": {
+    "preserved_case_range": "BEC-001..BEC-131",
+    "successor_added_case_range": "BEC-132..BEC-184",
+    "successor_added_case_count": 53,
+    "successor_added_positive_count": 16,
+    "successor_added_negative_count": 37,
+    "effective_case_count": 184,
+    "effective_positive_count": 31,
+    "effective_negative_count": 153,
+    "case_ids_contiguous_and_unique": true,
+    "byte_and_semantic_controls_required": true,
+    "synthetic_outcome_blind_only": true,
+    "scientific_code_imported_or_executed": false
+  },
+  "identity_and_preimage_closure": {
+    "successor_authority_set_version": "v3",
+    "successor_authority_row_count": 18,
+    "authority_rows_order": "six_accepted_v1_then_six_accepted_v2_then_six_integrated_v3",
+    "unchanged_route_authority_projection_count": 15,
+    "binding_implementation_exact_path_row_count": 14,
+    "binding_validator_source_member_count": 7,
+    "binding_validator_zipapp_member_count": 5,
+    "binding_validator_zip_method": "ZIP_STORED",
+    "all_authority_rows_equal_in_integrated_authority_and_implementation_trees": true,
+    "bundle_embeds_complete_v3_authority_implementation_and_validator_preimages": true,
+    "bundle_readiness_validation_audit_packet_post_packet_receipt_and_campaign_authorization_directly_bind_v3_identities": true,
+    "successor_consumer_identity_kinds_are_v2": true,
+    "v2_ready_identity_in_v3_ready_chain": "REFUSE",
+    "v1_successor_consumer_identity_in_v2_successor_chain": "REFUSE",
+    "future_digest_or_git_coordinate_in_preimage": "REFUSE",
+    "identity_graph_acyclic": true
+  },
+  "prospective_reachability_correction": {
+    "authorized": true,
+    "path": "tests/framework/test_validation_reachability.py",
+    "exact_modified_path_count": 1,
+    "after_authority_integration_before_implementation": true,
+    "bind_actual_integrated_v3_commit_tree_and_six_git_rows": true,
+    "prove_prior_twelve_stage_f_authority_rows_unchanged": true,
+    "project_import_host_probe_or_science_permitted": false,
+    "independent_exact_coordinate_pass_required": true
+  },
+  "prospective_implementation": {
+    "authorized_only_after_authority_and_reachability_integration_and_independent_passes": true,
+    "exact_path_count": 14,
+    "modified_path_count": 2,
+    "added_path_count": 12,
+    "paths_in_order": [
+      ".github/workflows/tests.yml",
+      "scripts/validate_stage_e_harness.py",
+      "scripts/build_stage_f_local_binding.py",
+      "scripts/validate_stage_f_local_binding.py",
+      "stage_f_binding/__init__.py",
+      "stage_f_binding/canonical.py",
+      "stage_f_binding/binding.py",
+      "stage_f_binding/durability.py",
+      "stage_f_binding/locked_zipapp_bootstrap.py",
+      "tests/stage_f_binding/__init__.py",
+      "tests/stage_f_binding/fixtures/negative_cases.json",
+      "tests/stage_f_binding/fixtures/synthetic_private_host_manifest.json",
+      "tests/stage_f_binding/test_binding_privacy_and_authorization.py",
+      "tests/stage_f_binding/test_durability_and_no_science.py"
+    ],
+    "fifteenth_implementation_path_permitted": false
+  },
+  "final_descendant_path_closure": {
+    "accepted_stage_e_paths": 51,
+    "accepted_v1_stage_f_authority_paths": 6,
+    "accepted_v2_stage_f_authority_paths": 6,
+    "accepted_reachability_path": 1,
+    "historical_authority_only_unique_paths": 64,
+    "historical_completed_unique_paths": 76,
+    "successor_v3_authority_additions": 6,
+    "successor_active_authority_row_count": 18,
+    "successor_authority_only_unique_paths": 70,
+    "prospective_implementation_new_paths": 12,
+    "prospective_implementation_paths_overlapping_accepted_stage_e": 2,
+    "successor_completed_unique_paths": 82,
+    "prospective_reachability_path_is_already_counted": true,
+    "path_set_equality_required_in_addition_to_counts": true
+  },
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_import_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "authority_audit_host_probe_docker_connection_and_stage_g_action_count": 0,
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_FINAL_EVIDENCE_CLOSURE_CORRECTION_CANDIDATE_COMPLETE"
+}
