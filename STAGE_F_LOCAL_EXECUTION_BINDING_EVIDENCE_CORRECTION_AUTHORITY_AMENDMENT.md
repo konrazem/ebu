@@ -662,13 +662,22 @@ and the remaining window, and no more than 1201 reads are permitted. A read is
 issued only when its pre-call tick is at or before the deadline. After a final
 `ERROR_NO_DATA`, a distinct `GetTickCount64` sample records that the deadline
 has been reached; a final shortened Sleep row may end at that sample without a
-following read. No speculative post-deadline read is issued. If the full
-`WriteFile` completes only after the deadline, the controller issues no read or
-poll and records the typed
-`FULL_WRITE_DEADLINE_ELAPSED_BEFORE_FIRST_READ` disposition. It closes that
-connection and immediately follows the same fresh-connection authenticated
-inspection, force removal, final 404 and quarantine route; an empty read list is
-valid only for this exact measured cut. The terminal-capture target is 5000 ms
+following read. No speculative post-deadline read is issued. Immediately before
+each prospective read, including the first, a distinct read-eligibility
+`GetTickCount64` sample is taken. The typed `FULL_WRITE_NO_FURTHER_READ_CUT`
+disposition applies when that sample first observes the deadline after a full
+write but before the first read, when it observes the deadline between reads
+while the accumulated response remains incomplete, or when exactly 1201 reads
+have been reached while the response remains incomplete. The first reason
+permits the write-completion tick to be either before or after the deadline; the
+eligibility tick, rather than write completion, defines the cut. The inter-read
+reason requires 1 through 1200 completed reads and the read-limit reason requires
+exactly 1201. The record retains every read and poll row, the actual eligibility
+tick, the exact empty or partial response prefix and the reason/count projection,
+then closes that connection and immediately follows the same fresh-connection
+authenticated inspection, force removal, final 404 and quarantine route. No
+read or poll occurs after the cut. An empty read list is valid only for the exact
+first-read deadline reason. The terminal-capture target is 5000 ms
 after the deadline, but it is not a validity ceiling: every actual monotonic
 tick is retained without truncation, and any later scheduler-suspension capture
 is typed `OVERSHOOT_RECORDED_CONTAINMENT` and follows acceptance-unknown
@@ -676,10 +685,11 @@ containment rather than refusing the evidence. A partial prefix at the deadline
 cut is incomplete; no bytes is no response. If the final predeadline-issued read
 instead returns a complete 204 after the deadline, the typed late-204
 disposition likewise treats it as acceptance unknown and performs containment
-and quarantine. An unexplained empty full-write read list, delayed clock start,
-missing raw sleep/tick row, a blocking pipe, a substituted handle or overlapped
-input, or an unbounded timeout refuses; truthful post-write timing evidence
-never refuses merely because the controller was descheduled.
+and quarantine. An unexplained empty full-write read list, a no-further-read cut
+with a false reason, count, eligibility tick or response projection, delayed
+clock start, missing raw sleep/tick row, a blocking pipe, a substituted handle
+or overlapped input, or an unbounded timeout refuses; truthful post-write timing
+evidence never refuses merely because the controller was descheduled.
 
 Each Docker exchange or failed attempt owns one authenticated pipe handle. As
 soon as its final I/O result is captured, an exact `CloseHandle` observation
