@@ -661,6 +661,73 @@ STAGE_F_LOCAL_BINDING_AUTHORITY_CANONICAL_SHA256 = {
         "10da4c6789d370ea4ff013c5fa8ceb41a361115c9e2b52802052c83bcf6cce4a"
     ),
 }
+STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT = (
+    "1033501b77f7f55ed9aacd9a71cef95f81966e4a"
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_TREE = (
+    "d8ffbd105eb76cfbb72472772e07f18a11112db3"
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE = (
+    "dd1a38aee4a6c1048122cb2b5a4e7cf542c5e101"
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET = (
+    "db9d305be120e69d00be14f0d07e06999ca77999"
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_TREE = (
+    "c5d6e6c53528ae64a90151d286feb2cc62be47be"
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS = (
+    "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_evidence_correction_contract.json",
+    "stage_f_local_execution_binding_evidence_correction_schema.json",
+    "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_ROWS = (
+    (
+        "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "100644",
+        "f0506c94553d8240086525e2218077915fde900d",
+        63947,
+        "4e49bd26a2e28fc8703de447d18e541eb04b64f4856953bf96e1da57fd93e0c4",
+    ),
+    (
+        "stage_f_local_execution_binding_evidence_correction_contract.json",
+        "100644",
+        "a2204c4e7a8625d4c21e8f7af09c6aeabfd94f34",
+        51342,
+        "83a0d753bd30ee56af585e9f191e0319f7b2fe6070ff088ea60a9149f859b94f",
+    ),
+    (
+        "stage_f_local_execution_binding_evidence_correction_schema.json",
+        "100644",
+        "cf1369548d55b6f85d486ac20a6c28f45f46596c",
+        654186,
+        "9a74d517029a684a0889f1460df253f0757c8e712a961670d888a90dc2389673",
+    ),
+    (
+        "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+        "100644",
+        "ee1c9f57328efc1eac51530822f4c667f1648916",
+        5788,
+        "734aeef99d900700bc1fea89ea94932b904ff126d5197dd6a01d10fe4aa87919",
+    ),
+    (
+        "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+        "100644",
+        "b29e67292febabfd91debe245fd164d0377d6567",
+        5270,
+        "1e9162e64f9e1d89cdaa87a7701441b76d0d63e7a804d1129b140c52e5ebfc58",
+    ),
+    (
+        "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+        "100644",
+        "bd8639ed159953062c844109332895fedae5e990",
+        31186,
+        "29a53c1fb987f48a7ed89d9344cf715927839fd31f093e6e13c2c612ffe8c050",
+    ),
+)
 STAGE_F_LOCAL_BINDING_MODIFIED_PATHS = (
     ".github/workflows/tests.yml",
     "scripts/validate_stage_e_harness.py",
@@ -690,6 +757,14 @@ STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION_SCOPE = (
     STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE
     | frozenset(STAGE_F_LOCAL_BINDING_NEW_PATHS)
 )
+STAGE_F_BINDING_EVIDENCE_CORRECTION_AUTHORITY_SCOPE = (
+    STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE
+    | frozenset(STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS)
+)
+STAGE_F_BINDING_EVIDENCE_CORRECTION_COMPLETED_IMPLEMENTATION_SCOPE = (
+    STAGE_F_BINDING_EVIDENCE_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+)
 STAGE_F_DESCENDANT_PATH_BASE_COMMIT = (
     "b7ebe8615d54ae5e23645734b1a6c7667ce28bce"
 )
@@ -700,6 +775,7 @@ STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS = (
     STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
     + STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
     + (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,)
+    + STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
     + STAGE_F_LOCAL_BINDING_NEW_PATHS
 )
 STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
@@ -709,8 +785,8 @@ expected_added = set(scope["new_paths"])
 stage_e_expected = expected_modified | expected_added
 if scope["modified_path_count"] != 1 or scope["new_path_count"] != 50 or scope["total_path_count"] != 51:
     raise Refusal("accepted Stage E implementation path manifest count mismatch")
-stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_implementation_path_manifest.json")
-stage_f_authority_paths = (
+stage_f_v1_manifest = strict_load(source / "stage_f_local_execution_binding_implementation_path_manifest.json")
+stage_f_v1_authority_paths = (
     "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
     "stage_f_local_execution_binding_contract.json",
     "stage_f_local_execution_binding_evidence_schema.json",
@@ -718,39 +794,51 @@ stage_f_authority_paths = (
     "stage_f_local_execution_binding_predecessor_manifest.json",
     "stage_f_local_execution_binding_validation_contract.json",
 )
-if tuple(stage_f_manifest["authority_paths"]) != stage_f_authority_paths or stage_f_manifest["authority_path_count"] != 6:
-    raise Refusal("Stage F authority path closure mismatch")
-reachability = stage_f_manifest["prospective_reachability_durability"]
+if tuple(stage_f_v1_manifest["authority_paths"]) != stage_f_v1_authority_paths or stage_f_v1_manifest["authority_path_count"] != 6:
+    raise Refusal("Stage F v1 authority path closure mismatch")
+stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json")
+stage_f_correction_authority_paths = (
+    "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "stage_f_local_execution_binding_evidence_correction_contract.json",
+    "stage_f_local_execution_binding_evidence_correction_schema.json",
+    "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+    "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+)
+if tuple(stage_f_manifest["authority_paths"]) != stage_f_correction_authority_paths or stage_f_manifest["authority_path_count"] != 6:
+    raise Refusal("Stage F correction authority path closure mismatch")
+reachability = stage_f_manifest["prospective_reachability_correction"]
 reachability_path = "tests/framework/test_validation_reachability.py"
-if reachability["modified_path"] != reachability_path or reachability["modified_path_count"] != 1:
-    raise Refusal("Stage F reachability path closure mismatch")
+if reachability["modified_paths"] != [reachability_path] or reachability["modified_path_count"] != 1:
+    raise Refusal("Stage F correction reachability path closure mismatch")
 stage_f_scope = stage_f_manifest["prospective_implementation"]
 stage_f_modified = tuple(stage_f_scope["modified_paths"])
 stage_f_added = set(stage_f_scope["new_paths"])
 if stage_f_modified != (".github/workflows/tests.yml", "scripts/validate_stage_e_harness.py") or stage_f_scope["modified_path_count"] != 2 or len(stage_f_added) != 12 or stage_f_scope["new_path_count"] != 12 or stage_f_scope["total_path_count"] != 14:
-    raise Refusal("Stage F implementation manifest closure mismatch")
+    raise Refusal("Stage F corrected implementation manifest closure mismatch")
 final_closure = stage_f_manifest["final_descendant_path_closure"]
-if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["authority_added_path_count"] != 6 or final_closure["reachability_durability_unique_path_count"] != 1 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 70:
-    raise Refusal("Stage F final descendant path arithmetic mismatch")
-if set(stage_f_modified) - stage_e_expected or stage_f_added & (stage_e_expected | set(stage_f_authority_paths) | {reachability_path}):
-    raise Refusal("Stage F implementation path overlap mismatch")
-expected = stage_e_expected | set(stage_f_authority_paths) | {reachability_path} | stage_f_added
+if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["accepted_stage_f_v1_authority_path_count"] != 6 or final_closure["reachability_durability_unique_path_count"] != 1 or final_closure["correction_authority_added_path_count"] != 6 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 76:
+    raise Refusal("Stage F corrected final descendant path arithmetic mismatch")
+all_authority_paths = set(stage_f_v1_authority_paths) | set(stage_f_correction_authority_paths)
+if set(stage_f_modified) - stage_e_expected or stage_f_added & (stage_e_expected | all_authority_paths | {reachability_path}):
+    raise Refusal("Stage F corrected implementation path overlap mismatch")
+expected = stage_e_expected | all_authority_paths | {reachability_path} | stage_f_added
 actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
-if actual != expected or len(actual) != 70:
-    raise Refusal(f"Stage F descendant path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+if actual != expected or len(actual) != 76:
+    raise Refusal(f"Stage F corrected descendant path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
 status_rows: dict[str, str] = {}
 for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
     fields = row.split("\t")
     if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
-        raise Refusal(f"Stage F descendant has a forbidden Git operation: {row}")
+        raise Refusal(f"Stage F corrected descendant has a forbidden Git operation: {row}")
     status_rows[fields[1]] = fields[0]
-expected_status = ({path: "M" for path in expected_modified} | {path: "A" for path in expected_added} | {path: "A" for path in stage_f_authority_paths} | {reachability_path: "M"} | {path: "A" for path in stage_f_added})
+expected_status = ({path: "M" for path in expected_modified} | {path: "A" for path in expected_added} | {path: "A" for path in all_authority_paths} | {reachability_path: "M"} | {path: "A" for path in stage_f_added})
 if status_rows != expected_status:
-    raise Refusal("Stage F descendant add/modify classification mismatch")
+    raise Refusal("Stage F corrected descendant add/modify classification mismatch")
 for relative in expected:
     fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
     if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
-        raise Refusal(f"Stage F descendant mode/object mismatch: {relative}")
+        raise Refusal(f"Stage F corrected descendant mode/object mismatch: {relative}")
 """
 STAGE_E_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = br"""    manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
     scope = manifest["prospective_harness_implementation"]
@@ -838,7 +926,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "b4f1b960e965f94e2bdbf3718da59e13328709b5dfbc234dcd2e6e39d43a5040"
+TEST_SELF_SEAL = "6be87ea769b6a5d36a037f90a1442ebc04261ef31fff273eadd7e1af01f5e5c3"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1386,6 +1474,18 @@ def _git(*args: str) -> bytes:
             "--reverse",
             "--parents",
             f"{STAGE_F_LOCAL_BINDING_ACCEPTED_BASE_COMMIT}..{STAGE_F_LOCAL_BINDING_AUTHORITY_CANDIDATE}",
+        )
+        or args
+        == (
+            "merge-base",
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT,
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE,
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == ("merge-base", STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
         )
         or args
         == (
@@ -2221,7 +2321,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_e_reconciliation_phase = (
                 "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
             )
-        elif changed_paths == STAGE_F_LOCAL_BINDING_AUTHORITY_SCOPE:
+        elif changed_paths == STAGE_F_BINDING_EVIDENCE_CORRECTION_AUTHORITY_SCOPE:
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
@@ -2230,7 +2330,10 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
             )
             stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
-        elif changed_paths == STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION_SCOPE:
+        elif (
+            changed_paths
+            == STAGE_F_BINDING_EVIDENCE_CORRECTION_COMPLETED_IMPLEMENTATION_SCOPE
+        ):
             stage_c_phase = "COMPLETED_IMPLEMENTATION"
             stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
             stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
@@ -2249,8 +2352,8 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "authority-only, Stage D dynamic-growth authority-only, "
                 "Stage E dynamic-growth reconciliation authority-only, or "
                 "the reconciled Stage E harness completed-implementation, "
-                "Stage F local-binding authority-only, or Stage F local-binding "
-                "completed-implementation "
+                "Stage F corrected local-binding authority-only, or Stage F "
+                "corrected local-binding completed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -2267,8 +2370,15 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(
             len(STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION_SCOPE), 120
         )
-        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 70)
-        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 70)
+        self.assertEqual(
+            len(STAGE_F_BINDING_EVIDENCE_CORRECTION_AUTHORITY_SCOPE), 114
+        )
+        self.assertEqual(
+            len(STAGE_F_BINDING_EVIDENCE_CORRECTION_COMPLETED_IMPLEMENTATION_SCOPE),
+            126,
+        )
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 76)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 76)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -2427,6 +2537,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["stage_f_local_binding_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -2689,6 +2802,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["stage_f_local_binding_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -3126,6 +3242,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["stage_f_local_binding_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -3663,6 +3782,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
             )
+            expected_implementation_delta.update(
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
+            )
         if (
             current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
@@ -4099,6 +4221,9 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["stage_f_local_binding_phase"] is not None:
             expected_implementation_delta.update(
                 STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+            )
+            expected_implementation_delta.update(
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
             )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -4872,6 +4997,452 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
         )
 
+    def _audit_stage_f_binding_evidence_correction(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        actual_head = current_scope["actual_head"]
+        for commit in (
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT,
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE,
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET,
+        ):
+            self.assertEqual(
+                _git("rev-parse", "--verify", f"{commit}^{{commit}}")
+                .decode()
+                .strip(),
+                commit,
+            )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_TREE,
+        )
+        for commit in (
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE,
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET,
+        ):
+            self.assertEqual(
+                _git("rev-parse", f"{commit}^{{tree}}").decode().strip(),
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_TREE,
+            )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET}^1")
+            .decode()
+            .strip(),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET}^2")
+            .decode()
+            .strip(),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT,
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET,
+                actual_head,
+            )
+            .decode()
+            .strip(),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET,
+        )
+
+        base_entries = _tree_entries(
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT
+        )
+        candidate_entries = _tree_entries(
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE
+        )
+        target_entries = _tree_entries(STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET)
+        current_entries = _tree_entries(actual_head)
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta,
+            frozenset(STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS),
+        )
+        self.assertEqual(candidate_entries, target_entries)
+
+        candidate_archive = _archive_members(
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_CANDIDATE
+        )
+        target_archive = _archive_members(STAGE_F_BINDING_EVIDENCE_CORRECTION_TARGET)
+        current_archive = _archive_members(actual_head)
+        documents = {}
+        for path, mode, git_object, byte_count, raw_sha256 in (
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_ROWS
+        ):
+            expected_row = {
+                "path": path,
+                "mode": mode,
+                "object_type": "blob",
+                "git_object": git_object,
+                "byte_count": byte_count,
+                "raw_sha256": raw_sha256,
+            }
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            target_row, target_raw = _object_row(
+                path, target_entries, target_archive
+            )
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(candidate_row, expected_row, path)
+            self.assertEqual(target_row, expected_row, path)
+            self.assertEqual(current_row, expected_row, path)
+            self.assertEqual(candidate_raw, target_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n")
+                and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\xef\xbb\xbf", candidate_raw, path)
+            self.assertNotIn(b"\r", candidate_raw, path)
+            self.assertTrue(
+                all(line == line.rstrip(" \t") for line in text.splitlines()),
+                path,
+            )
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(candidate_raw, path)
+
+        contract = documents[
+            "stage_f_local_execution_binding_evidence_correction_contract.json"
+        ]
+        schema = documents[
+            "stage_f_local_execution_binding_evidence_correction_schema.json"
+        ]
+        implementation = documents[
+            "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "stage_f_local_execution_binding_evidence_correction_validation_contract.json"
+        ]
+        required_target = {
+            "commit": STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT,
+            "tree": STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_TREE,
+        }
+        for document in (contract, implementation, predecessor, validation):
+            target = document["required_current_target"]
+            self.assertEqual(target["commit"], required_target["commit"])
+            self.assertEqual(target["tree"], required_target["tree"])
+        self.assertEqual(
+            tuple(contract["authority_files_in_order"]),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS,
+        )
+        self.assertEqual(contract["authority_file_count"], 6)
+        self.assertEqual(
+            tuple(implementation["authority_paths"]),
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS,
+        )
+        self.assertEqual(implementation["authority_path_count"], 6)
+        self.assertEqual(
+            validation["authority_candidate"],
+            {
+                "ordered_paths": list(STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS),
+                "path_count": 6,
+                "mode": "100644",
+                "additions_only": True,
+            },
+        )
+
+        original_target_entries = _tree_entries(STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET)
+        original_target_archive = _archive_members(
+            STAGE_F_LOCAL_BINDING_AUTHORITY_TARGET
+        )
+        base_archive = _archive_members(
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_REQUIRED_BASE_COMMIT
+        )
+        original_rows = predecessor["accepted_original_authority_rows"]
+        self.assertEqual(len(original_rows), 6)
+        self.assertEqual(
+            tuple(row["path"] for row in original_rows),
+            STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS,
+        )
+        for row in original_rows:
+            path = row["path"]
+            rows_and_raw = (
+                _object_row(path, original_target_entries, original_target_archive),
+                _object_row(path, base_entries, base_archive),
+                _object_row(path, candidate_entries, candidate_archive),
+                _object_row(path, target_entries, target_archive),
+                _object_row(path, current_entries, current_archive),
+            )
+            projected = {
+                key: rows_and_raw[0][0][key]
+                for key in ("path", "mode", "git_object", "byte_count", "raw_sha256")
+            }
+            self.assertEqual(projected, row, path)
+            self.assertTrue(all(item[0] == rows_and_raw[0][0] for item in rows_and_raw))
+            self.assertTrue(all(item[1] == rows_and_raw[0][1] for item in rows_and_raw))
+
+        reachability_row = predecessor["accepted_reachability_row"]
+        reconstructed_reachability, reachability_raw = _object_row(
+            STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,
+            base_entries,
+            base_archive,
+        )
+        self.assertEqual(
+            {
+                key: reconstructed_reachability[key]
+                for key in ("path", "mode", "git_object", "byte_count", "raw_sha256")
+            },
+            reachability_row,
+        )
+        self.assertNotEqual(
+            _object_row(
+                STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,
+                current_entries,
+                current_archive,
+            )[1],
+            reachability_raw,
+        )
+
+        historical_schema_raw = _object_row(
+            "stage_f_local_execution_binding_evidence_schema.json",
+            current_entries,
+            current_archive,
+        )[1]
+        historical_schema = _strict_stage_d_json_bytes(
+            historical_schema_raw,
+            "stage_f_local_execution_binding_evidence_schema.json",
+        )
+        historical_definitions = historical_schema["$defs"]
+        effective_definitions = schema["$defs"]
+        added_names = tuple(
+            sorted(
+                set(effective_definitions) - set(historical_definitions),
+                key=lambda value: unicodedata.normalize("NFC", value).encode("utf-8"),
+            )
+        )
+        changed_names = tuple(
+            sorted(
+                (
+                    name
+                    for name in set(historical_definitions) & set(effective_definitions)
+                    if historical_definitions[name] != effective_definitions[name]
+                ),
+                key=lambda value: unicodedata.normalize("NFC", value).encode("utf-8"),
+            )
+        )
+        removed_names = set(historical_definitions) - set(effective_definitions)
+        delta = contract["schema_delta_from_historical"]
+        self.assertEqual(len(historical_definitions), 143)
+        self.assertEqual(len(effective_definitions), 220)
+        self.assertEqual(added_names, tuple(delta["added_definitions_in_order"]))
+        self.assertEqual(changed_names, tuple(delta["changed_definitions_in_order"]))
+        self.assertFalse(removed_names)
+        self.assertEqual(
+            (
+                delta["historical_definition_count"],
+                delta["effective_definition_count"],
+                delta["added_definition_count"],
+                delta["changed_definition_count"],
+                delta["removed_definition_count"],
+            ),
+            (143, 220, 77, 21, 0),
+        )
+        refs = _schema_refs(schema)
+        self.assertEqual(len(refs), 2257)
+        for ref in refs:
+            self.assertIs(type(ref), str)
+            self.assertTrue(ref.startswith("#/$defs/"), ref)
+            _json_pointer(schema, ref[1:])
+        self.assertEqual(len(schema["oneOf"]), 46)
+        root_names = tuple(
+            item["$ref"].removeprefix("#/$defs/") for item in schema["oneOf"]
+        )
+        self.assertEqual(len(root_names), len(set(root_names)))
+        for nested_only in delta["removed_nested_only_root_variants_in_order"]:
+            self.assertNotIn(nested_only, root_names)
+
+        closed_object_count = 0
+        enum_count = 0
+
+        def audit_schema_node(value: object, path: tuple[object, ...] = ()) -> None:
+            nonlocal closed_object_count, enum_count
+            if type(value) is dict:
+                if (
+                    value.get("additionalProperties") is False
+                    and type(value.get("properties")) is dict
+                ):
+                    closed_object_count += 1
+                    self.assertEqual(
+                        set(value.get("required", [])),
+                        set(value["properties"]),
+                        path,
+                    )
+                    self.assertEqual(
+                        len(value.get("required", [])),
+                        len(set(value.get("required", []))),
+                        path,
+                    )
+                if type(value.get("enum")) is list:
+                    enum_count += 1
+                    enum_rows = tuple(
+                        _canonical_json_bytes(item) for item in value["enum"]
+                    )
+                    self.assertEqual(len(enum_rows), len(set(enum_rows)), path)
+                for key, item in value.items():
+                    audit_schema_node(item, path + (key,))
+            elif type(value) is list:
+                for index, item in enumerate(value):
+                    audit_schema_node(item, path + (index,))
+
+        audit_schema_node(schema)
+        self.assertGreater(closed_object_count, 0)
+        self.assertGreater(enum_count, 0)
+        create_observation = effective_definitions[
+            "stage_f_ledger_create_observation"
+        ]
+        append_observation = effective_definitions[
+            "stage_f_evidence_ledger_append_observation"
+        ]
+        self.assertEqual(
+            (len(create_observation["required"]), len(create_observation["properties"])),
+            (76, 76),
+        )
+        self.assertEqual(
+            (len(append_observation["required"]), len(append_observation["properties"])),
+            (123, 123),
+        )
+        self.assertEqual(
+            effective_definitions["docker_named_pipe_bounded_response_window_observation"]
+            ["properties"]["terminal_read_post_tick_relation_to_deadline"]["enum"],
+            ["AT_OR_BEFORE_DEADLINE", "AFTER_DEADLINE"],
+        )
+        terminal_error_rule = effective_definitions[
+            "docker_named_pipe_read_attempt_observation"
+        ]["allOf"][2]["then"]["properties"]["last_error"]
+        self.assertEqual(terminal_error_rule["allOf"][1]["not"]["enum"], [232, 234])
+
+        cases = validation["cases"]
+        self.assertEqual(
+            tuple(row["id"] for row in cases),
+            tuple(f"BEC-{index:03d}" for index in range(1, 132)),
+        )
+        self.assertEqual(
+            (
+                validation["case_count"],
+                validation["positive_case_count"],
+                validation["negative_case_count"],
+            ),
+            (131, 15, 116),
+        )
+        self.assertEqual(
+            sum(row["class"] == "POSITIVE" for row in cases), 15
+        )
+        self.assertEqual(
+            sum(row["class"] == "NEGATIVE" for row in cases), 116
+        )
+
+        reachability = implementation["prospective_reachability_correction"]
+        self.assertEqual(
+            reachability["modified_paths"],
+            [STAGE_F_LOCAL_BINDING_REACHABILITY_PATH],
+        )
+        self.assertEqual(reachability["modified_path_count"], 1)
+        self.assertTrue(reachability["independent_audit_required_before_implementation"])
+        self.assertFalse(reachability["counts_as_implementation_path"])
+        self.assertEqual(
+            reachability["project_import_production_validator_host_probe_or_science"],
+            "FORBIDDEN",
+        )
+        prospective = implementation["prospective_implementation"]
+        self.assertEqual(
+            tuple(prospective["modified_paths"]),
+            STAGE_F_LOCAL_BINDING_MODIFIED_PATHS,
+        )
+        self.assertEqual(
+            tuple(prospective["new_paths"]), STAGE_F_LOCAL_BINDING_NEW_PATHS
+        )
+        self.assertEqual(
+            (
+                prospective["modified_path_count"],
+                prospective["new_path_count"],
+                prospective["total_path_count"],
+            ),
+            (2, 12, 14),
+        )
+        self.assertEqual(
+            implementation["final_descendant_path_closure"],
+            {
+                "accepted_stage_e_path_count": 51,
+                "accepted_stage_f_v1_authority_path_count": 6,
+                "reachability_durability_unique_path_count": 1,
+                "correction_authority_added_path_count": 6,
+                "stage_f_new_unique_path_count": 12,
+                "stage_f_modified_paths_overlapping_accepted_stage_e_count": 2,
+                "final_unique_path_count": 76,
+                "missing_extra_duplicate_or_reordered_path_disposition": "REFUSE",
+            },
+        )
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 76)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 76)
+
+        post_integration_delta = frozenset(
+            path
+            for path in set(target_entries) | set(current_entries)
+            if target_entries.get(path) != current_entries.get(path)
+        )
+        expected_post_integration_delta = {
+            STAGE_F_LOCAL_BINDING_REACHABILITY_PATH
+        }
+        expected_status = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH: "M"}
+        if (
+            current_scope["stage_f_local_binding_phase"]
+            == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
+        ):
+            expected_post_integration_delta.update(STAGE_F_LOCAL_BINDING_MODIFIED_PATHS)
+            expected_post_integration_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+            expected_status.update(
+                {path: "M" for path in STAGE_F_LOCAL_BINDING_MODIFIED_PATHS}
+            )
+            expected_status.update(
+                {path: "A" for path in STAGE_F_LOCAL_BINDING_NEW_PATHS}
+            )
+        self.assertEqual(
+            post_integration_delta, frozenset(expected_post_integration_delta)
+        )
+        status_rows = {
+            path: "M" if path in target_entries else "A"
+            for path in post_integration_delta
+        }
+        self.assertEqual(status_rows, expected_status)
+        self.assertEqual(schema["scientific_execution_count"], 0)
+        self.assertEqual(set(predecessor["required_operation_counts"].values()), {0})
+        self.assertIn("ZERO_SCIENCE_COUNTERS", validation["static_positive_checks"])
+
     def _audit_stage_f_local_binding_authority(
         self, current_scope: dict[str, object]
     ) -> None:
@@ -4882,6 +5453,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION",
             ),
         )
+        self._audit_stage_f_binding_evidence_correction(current_scope)
         self.assertEqual(
             _git(
                 "rev-parse",
@@ -4996,6 +5568,9 @@ class ValidationReachabilityTests(unittest.TestCase):
             if target_entries.get(path) != current_entries.get(path)
         )
         expected_implementation_delta = {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
+        expected_implementation_delta.update(
+            STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
+        )
         if (
             current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
@@ -5240,8 +5815,8 @@ class ValidationReachabilityTests(unittest.TestCase):
                 | {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
             )
         )
-        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 70)
-        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 70)
+        self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 76)
+        self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 76)
         self.assertEqual(
             _git(
                 "rev-parse", f"{STAGE_F_DESCENDANT_PATH_BASE_COMMIT}^{{tree}}"
@@ -5260,6 +5835,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             set(accepted_stage_e_paths)
             | set(STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS)
             | {STAGE_F_LOCAL_BINDING_REACHABILITY_PATH}
+            | set(STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS)
         )
         if (
             current_scope["stage_f_local_binding_phase"]
@@ -5269,10 +5845,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
         self.assertEqual(
             len(descendant_delta),
-            70
+            76
             if current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
-            else 58,
+            else 64,
         )
         self.assertEqual(implementation["unknown_path_disposition"], "REFUSE")
         self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
@@ -6061,13 +6637,16 @@ class ValidationReachabilityTests(unittest.TestCase):
             for required in (
                 stage_e_manifest_name,
                 "stage_f_local_execution_binding_implementation_path_manifest.json",
+                "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
                 "authority_paths",
-                "prospective_reachability_durability",
+                "prospective_reachability_correction",
                 "prospective_implementation",
                 "modified_paths",
                 "new_paths",
                 "final_descendant_path_closure",
                 "final_unique_path_count",
+                "accepted_stage_f_v1_authority_path_count",
+                "correction_authority_added_path_count",
                 STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,
                 '"diff", "--name-only"',
                 '"diff", "--name-status"',
@@ -6075,7 +6654,7 @@ class ValidationReachabilityTests(unittest.TestCase):
                 '"100644"',
                 '"blob"',
                 "actual != expected",
-                "len(actual) != 70",
+                "len(actual) != 76",
                 "status_rows != expected_status",
                 "for relative in expected:",
             ):
