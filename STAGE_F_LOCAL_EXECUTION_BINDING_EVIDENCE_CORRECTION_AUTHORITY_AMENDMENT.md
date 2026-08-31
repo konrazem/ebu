@@ -401,8 +401,10 @@ entry identity, so neither ticket nor entry has a hash cycle.
 Ledger genesis embeds a closed CreateFileW acquisition: exact path, access
 3221225472, share 1, null security attributes, CREATE_NEW, raw flags 2149580928,
 valid returned handle, path/FileId/standard-info/attributes observation and
-creation UTC. Before every append, same-handle FileStandardInfo proves the
-prior durable EOF. SetFilePointerEx with FILE_BEGIN positions that handle at the
+creation UTC. The create observation requires all 76 declared properties: none
+of the path-query or FileId-query pointer, capacity, result, error, raw-image,
+digest or timestamp fields may be omitted. Before every append, same-handle
+FileStandardInfo proves the prior durable EOF. SetFilePointerEx with FILE_BEGIN positions that handle at the
 EOF and returns the same position. The exact canonical entry wire bytes, base
 address, count and SHA-256 are the WriteFile input with a null OVERLAPPED and an
 exact bytes-written output. After complete WriteFile and FlushFileBuffers, a
@@ -411,8 +413,14 @@ SetFilePointerEx, ReadFile and pointer restoration rows retain the raw reread
 bytes and prove their count/digest equal the entry wire. Every path, FileId,
 standard-info and attribute query retains its exact pointer/capacity inputs,
 return/error, raw output bytes/count/hash and ordered UTC. Every pointer and
-byte-count output starts from a retained zero image and records its exact raw
-returned image and scalar; copied parsed values never establish a call. All API inputs equal
+byte-count output, and every caller-supplied path, FileId, standard-info,
+attribute and reread-data output region, starts from a retained exact zero
+image. The evidence records the zero input bytes and SHA-256, proves their byte
+count equals the caller-supplied capacity, retains the exact raw returned image
+and scalar or parsed value, and independently decodes and reconciles all of
+them; copied parsed values or reconciliation booleans alone never establish a
+call. The append observation requires all 123 declared properties. All API
+inputs equal
 the continuously retained genesis handle, timestamps are ordered, partial or
 nonterminal writes refuse, and the handle's final exact close is recorded only
 after launch handoff or refused-attempt release.
@@ -777,7 +785,12 @@ contain ordered `ERROR_NO_DATA` retry rows before response data but must finish
 with a complete framed response within the same exact monotonic 30000-ms and
 1201-read-attempt ceiling. Because the handle is fixed to byte-read mode,
 available bytes return as successful `DATA`; `ERROR_MORE_DATA` 234 is an
-impossible transcript and refuses. Each successful exchange then closes its
+impossible transcript under every Docker read disposition, including
+`TERMINAL_FAILURE`, and refuses. `terminal_read_post_tick_relation_to_deadline`
+has exactly two disjoint values: `AT_OR_BEFORE_DEADLINE` if and only if the raw
+post-read tick is less than or equal to the deadline, and `AFTER_DEADLINE` if
+and only if it is greater. The deprecated `AT_OR_AFTER_DEADLINE` token and any
+token/arithmetic disagreement refuse. Each successful exchange then closes its
 owned pipe handle exactly once before any later exchange. Pathname-only or copied-response
 evidence refuses.
 

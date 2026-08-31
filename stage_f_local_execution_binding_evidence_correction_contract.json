@@ -471,6 +471,29 @@
     "ledger_create_share_mode": 1,
     "ledger_create_disposition": 1,
     "ledger_create_flags_and_attributes": 2149580928,
+    "ledger_create_all_declared_properties_required": true,
+    "ledger_create_required_and_declared_property_count": 76,
+    "ledger_create_path_query_existing_raw_fields_mandatory_in_order": [
+      "path_query_output_buffer_base_address_uint64",
+      "path_query_output_buffer_wchar_capacity",
+      "path_query_returned_wchar_count",
+      "path_query_returned_nonzero",
+      "path_query_last_error",
+      "path_query_output_bytes_base64",
+      "path_query_output_sha256",
+      "path_query_started_utc",
+      "path_query_completed_utc"
+    ],
+    "ledger_create_file_id_query_existing_raw_fields_mandatory_in_order": [
+      "file_id_query_output_buffer_base_address_uint64",
+      "file_id_query_output_buffer_capacity",
+      "file_id_query_returned_nonzero",
+      "file_id_query_last_error",
+      "file_id_query_output_bytes_base64",
+      "file_id_query_output_sha256",
+      "file_id_query_started_utc",
+      "file_id_query_completed_utc"
+    ],
     "ledger_reopen_replace_rename_truncate_or_nonterminal_write": "REFUSE",
     "entry_wire_format": "CANONICAL_JSON_OBJECT_UTF8_THEN_SINGLE_LF",
     "append_apis_in_order": [
@@ -486,6 +509,20 @@
     "postflush_same_handle_eof_query_required": true,
     "explicit_same_handle_rewind_read_restore_and_raw_bytes_required": true,
     "every_ledger_api_call_binds_exact_handle_pointer_capacity_result_last_error_zero_initialized_output_image_returned_output_image_and_ordered_times": true,
+    "ledger_zero_preimage_buffer_roles_in_order": [
+      "CREATE_PATH_QUERY_OUTPUT_BUFFER",
+      "CREATE_FILE_ID_QUERY_OUTPUT_BUFFER",
+      "CREATE_STANDARD_INFO_QUERY_OUTPUT_BUFFER",
+      "CREATE_ATTRIBUTE_QUERY_OUTPUT_BUFFER",
+      "APPEND_PREAPPEND_STANDARD_INFO_OUTPUT_BUFFER",
+      "APPEND_POSTFLUSH_STANDARD_INFO_OUTPUT_BUFFER",
+      "APPEND_REREAD_DATA_BUFFER"
+    ],
+    "every_ledger_output_region_zero_preimage_binds_exact_bytes_sha256_and_capacity_relation": true,
+    "every_ledger_returned_image_and_parsed_value_reconciles_the_same_caller_region": true,
+    "validator_independently_decodes_zero_and_returned_images_recomputes_hashes_and_checks_sizes": true,
+    "ledger_append_all_declared_properties_required": true,
+    "ledger_append_required_and_declared_property_count": 123,
     "reread_actual_bytes_read_output_must_equal_appended_wire_byte_count": true,
     "final_exact_handle_close_recorded_at_epoch_release": true,
     "append_ticket_contains_future_entry_identity": false,
@@ -639,6 +676,7 @@
     "docker_writefile_and_every_readfile_handle_equal_authenticated_connection_pipe_handle": true,
     "every_successful_docker_exchange_completes_within_monotonic_30000ms_deadline_and_1201_read_attempts": true,
     "docker_byte_read_mode_error_more_data_234": "IMPOSSIBLE_AND_REFUSE",
+    "docker_error_more_data_234_excluded_from_every_read_disposition_including_terminal_failure": true,
     "every_exchange_pipe_connection_closed_exactly_once_after_final_io_with_no_use_after_close": true,
     "every_later_exchange_uses_a_fresh_authenticated_nonoverlapping_connection": true,
     "closed_numeric_handle_value_may_be_reused_by_later_fresh_createfilew_acquisition": true,
@@ -759,6 +797,15 @@
     "same_live_every_full_write_response_maximum_poll_delay_ms": 25,
     "same_live_every_full_write_response_maximum_read_attempt_count": 1201,
     "same_live_every_full_write_response_terminal_capture_target_ms": 5000,
+    "same_live_terminal_read_post_tick_relation_vocabulary": [
+      "AT_OR_BEFORE_DEADLINE",
+      "AFTER_DEADLINE"
+    ],
+    "same_live_terminal_read_post_tick_relation_rules": {
+      "AT_OR_BEFORE_DEADLINE": "POST_TICK_LESS_THAN_OR_EQUAL_TO_DEADLINE",
+      "AFTER_DEADLINE": "POST_TICK_GREATER_THAN_DEADLINE"
+    },
+    "same_live_terminal_read_post_tick_relation_deprecated_or_arithmetic_mismatch": "REFUSE",
     "same_live_terminal_capture_later_than_target": "RECORD_ACTUAL_TICKS_AND_ACCEPTANCE_UNKNOWN_CONTAINMENT",
     "same_live_no_further_read_cut_reasons": [
       "FIRST_READ_GATE_DEADLINE",
