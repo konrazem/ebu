@@ -196,23 +196,74 @@ def _authority_lane(source: Path, head_commit: str, head_tree: str) -> dict[str,
     scope = manifest["prospective_harness_implementation"]
     expected_modified = set(scope["modified_paths"])
     expected_added = set(scope["new_paths"])
-    expected = expected_modified | expected_added
+    stage_e_expected = expected_modified | expected_added
+    if scope["modified_path_count"] != 1 or scope["new_path_count"] != 50 or scope["total_path_count"] != 51:
+        raise Refusal("accepted Stage E implementation path manifest count mismatch")
+    stage_f_v1_manifest = strict_load(source / "stage_f_local_execution_binding_implementation_path_manifest.json")
+    stage_f_v1_authority_paths = (
+        "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+        "stage_f_local_execution_binding_contract.json",
+        "stage_f_local_execution_binding_evidence_schema.json",
+        "stage_f_local_execution_binding_implementation_path_manifest.json",
+        "stage_f_local_execution_binding_predecessor_manifest.json",
+        "stage_f_local_execution_binding_validation_contract.json",
+    )
+    if tuple(stage_f_v1_manifest["authority_paths"]) != stage_f_v1_authority_paths or stage_f_v1_manifest["authority_path_count"] != 6:
+        raise Refusal("Stage F v1 authority path closure mismatch")
+    stage_f_v2_manifest = strict_load(source / "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json")
+    stage_f_correction_authority_paths = (
+        "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "stage_f_local_execution_binding_evidence_correction_contract.json",
+        "stage_f_local_execution_binding_evidence_correction_schema.json",
+        "stage_f_local_execution_binding_evidence_correction_implementation_path_manifest.json",
+        "stage_f_local_execution_binding_evidence_correction_predecessor_manifest.json",
+        "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+    )
+    if tuple(stage_f_v2_manifest["authority_paths"]) != stage_f_correction_authority_paths or stage_f_v2_manifest["authority_path_count"] != 6:
+        raise Refusal("Stage F correction authority path closure mismatch")
+    stage_f_manifest = strict_load(source / "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json")
+    stage_f_final_closure_authority_paths = (
+        "STAGE_F_LOCAL_EXECUTION_BINDING_FINAL_EVIDENCE_CLOSURE_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "stage_f_local_execution_binding_final_evidence_closure_correction_contract.json",
+        "stage_f_local_execution_binding_final_evidence_closure_correction_schema.json",
+        "stage_f_local_execution_binding_final_evidence_closure_correction_implementation_path_manifest.json",
+        "stage_f_local_execution_binding_final_evidence_closure_correction_predecessor_manifest.json",
+        "stage_f_local_execution_binding_final_evidence_closure_correction_validation_contract.json",
+    )
+    if tuple(stage_f_manifest["authority_paths"]) != stage_f_final_closure_authority_paths or stage_f_manifest["authority_path_count"] != 6:
+        raise Refusal("Stage F final-evidence-closure authority path closure mismatch")
+    reachability = stage_f_manifest["prospective_reachability_correction"]
+    reachability_path = "tests/framework/test_validation_reachability.py"
+    if reachability["modified_paths"] != [reachability_path] or reachability["modified_path_count"] != 1:
+        raise Refusal("Stage F final-evidence-closure reachability path closure mismatch")
+    stage_f_scope = stage_f_manifest["prospective_implementation"]
+    stage_f_modified = tuple(stage_f_scope["modified_paths"])
+    stage_f_added = set(stage_f_scope["new_paths"])
+    if stage_f_modified != (".github/workflows/tests.yml", "scripts/validate_stage_e_harness.py") or stage_f_scope["modified_path_count"] != 2 or len(stage_f_added) != 12 or stage_f_scope["new_path_count"] != 12 or stage_f_scope["total_path_count"] != 14:
+        raise Refusal("Stage F final-evidence-closure implementation manifest closure mismatch")
+    final_closure = stage_f_manifest["final_descendant_path_closure"]
+    if final_closure["accepted_stage_e_path_count"] != 51 or final_closure["accepted_stage_f_v1_authority_path_count"] != 6 or final_closure["accepted_stage_f_evidence_correction_authority_path_count"] != 6 or final_closure["reachability_durability_unique_path_count"] != 1 or final_closure["final_evidence_closure_correction_authority_added_path_count"] != 6 or final_closure["successor_active_authority_row_count"] != 18 or final_closure["historical_authority_only_unique_path_count"] != 64 or final_closure["historical_completed_implementation_unique_path_count"] != 76 or final_closure["authority_only_unique_path_count"] != 70 or final_closure["stage_f_new_unique_path_count"] != 12 or final_closure["stage_f_modified_paths_overlapping_accepted_stage_e_count"] != 2 or final_closure["final_unique_path_count"] != 82:
+        raise Refusal("Stage F final-evidence-closure descendant path arithmetic mismatch")
+    all_authority_paths = set(stage_f_v1_authority_paths) | set(stage_f_correction_authority_paths) | set(stage_f_final_closure_authority_paths)
+    if set(stage_f_modified) - stage_e_expected or stage_f_added & (stage_e_expected | all_authority_paths | {reachability_path}):
+        raise Refusal("Stage F final-evidence-closure implementation path overlap mismatch")
+    expected = stage_e_expected | all_authority_paths | {reachability_path} | stage_f_added
     actual = set(filter(None, _git(source, "diff", "--name-only", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()))
-    if actual != expected or len(actual) != 51:
-        raise Refusal(f"Stage E implementation path closure mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
+    if actual != expected or len(actual) != 82:
+        raise Refusal(f"Stage F final-evidence-closure descendant path mismatch: missing={sorted(expected-actual)} extra={sorted(actual-expected)}")
     status_rows: dict[str, str] = {}
     for row in filter(None, _git(source, "diff", "--name-status", f"{IMPLEMENTATION_BASE}..HEAD").splitlines()):
-        fields = row.split("\t")
+        fields = row.split("	")
         if len(fields) != 2 or fields[0] not in {"A", "M"} or fields[1] in status_rows:
-            raise Refusal(f"Stage E implementation has a forbidden Git operation: {row}")
+            raise Refusal(f"Stage F final-evidence-closure descendant has a forbidden Git operation: {row}")
         status_rows[fields[1]] = fields[0]
-    expected_status = {path: "M" for path in expected_modified} | {path: "A" for path in expected_added}
+    expected_status = ({path: "M" for path in expected_modified} | {path: "A" for path in expected_added} | {path: "A" for path in all_authority_paths} | {reachability_path: "M"} | {path: "A" for path in stage_f_added})
     if status_rows != expected_status:
-        raise Refusal("Stage E implementation add/modify classification mismatch")
+        raise Refusal("Stage F final-evidence-closure add/modify classification mismatch")
     for relative in expected:
         fields = _git(source, "ls-tree", "HEAD", "--", relative).split()
         if len(fields) < 4 or fields[0] != "100644" or fields[1] != "blob":
-            raise Refusal(f"Stage E implementation mode/object mismatch: {relative}")
+            raise Refusal(f"Stage F final-evidence-closure mode/object mismatch: {relative}")
     harness_sources = [path for path in scope["new_paths"] if path.startswith("stage_e_harness/") and path.endswith(".py")]
     if len(harness_sources) != 34:
         raise Refusal("Stage E harness source closure mismatch")

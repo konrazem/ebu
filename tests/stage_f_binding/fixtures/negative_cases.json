@@ -1,0 +1,1318 @@
+{
+  "schema": "stage_f_binding_negative_cases/v3",
+  "original_registry": {
+    "schema": "stage_f_binding_negative_cases/v1",
+    "case_count": 67,
+    "cases": [
+      {
+        "case_id": "SF-BIND-N01",
+        "mutation": "wrong accepted commit or tree",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N02",
+        "mutation": "extra modified deleted renamed symlink or mode-changed authority path",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N03",
+        "mutation": "changed predecessor byte object size or hash",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N04",
+        "mutation": "alias used as identity value",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N05",
+        "mutation": "identity value differs from sha256 or canonical digest",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N06",
+        "mutation": "private manifest missing changed noncanonical or inaccessible to auditor",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N07",
+        "mutation": "public record contains username hostname serial MAC absolute path credential or private bytes",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N08",
+        "mutation": "alias collision or alias rebound after seal",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N09",
+        "mutation": "public private policy-preimage digest mismatch",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N10",
+        "mutation": "privacy field inserted into closed campaign_execution_binding/v2",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N11",
+        "mutation": "missing extra duplicate or reordered route",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N12",
+        "mutation": "nested growth mapped as an independent study instead of SD-01 subcampaign",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N13",
+        "mutation": "placeholder future fixture zero or inferred scientific identity",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N14",
+        "mutation": "unresolved scientific or institutional authority promoted to ready or pass",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N15",
+        "mutation": "modified Stage E guard byte or reachable registered route",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N16",
+        "mutation": "authorization without independent PASS or later explicit user receipt",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N17",
+        "mutation": "controller self-issued or unaudited authorization",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N18",
+        "mutation": "nonzero model trajectory runner Gate transform benchmark simulation RNG outcome result figure book release or publication counter",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N19",
+        "mutation": "durability probe outside exact private roots or across volumes",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N20",
+        "mutation": "missing file flush file durability primitive directory target directory fsync or platform-equivalent primitive atomic publication to a fresh versioned final restart reread or hash reconciliation",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N21",
+        "mutation": "corrupt stale or orphan partial accepted or last-good bytes overwritten",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N22",
+        "mutation": "storage arithmetic not exact or current free-space rule fails",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N23",
+        "mutation": "actual private manifest included in Git logs CI or public evidence",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N24",
+        "mutation": "missing AC sleep lid Docker reboot or restart precondition promoted to ready",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N25",
+        "mutation": "readiness or independent disposition replayed against a different bundle campaign-binding order code artifact implementation authority evidence or validator identity",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N26",
+        "mutation": "final Stage E descendant path union omits or adds the authority reachability implementation or overlapping modified paths or differs from 70 unique paths",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N27",
+        "mutation": "storage component usage exceeds its ceiling component sum differs from total remaining envelope arithmetic differs or free bytes are below 350 GiB or the remaining envelope",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N28",
+        "mutation": "embedded record digest omits the wrong field omits more than its one digest field uses noncanonical bytes or an enclosing record identity has a different kind value or digest",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N29",
+        "mutation": "route wrapper campaign or study differs from referenced campaign binding; file binding code artifact authority or host-policy projection mismatches; or a binding identity is relabeled duplicated reused null under SEALED or non-null under UNSEALED_AUTHORITY_GAP",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N30",
+        "mutation": "capacity or power timestamp is future misordered or over 300 seconds old; or capacity is unquiesced nonenumerable path-misordered predecessor-resetting or omits misclassifies follows or accepts an unknown reparse sparse compressed hard-linked overwritten truncated or deleted entry",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N31",
+        "mutation": "locally defined identity uses an arbitrary kind or a named private policy preimage fails its exact schema canonical reserialization or exact-kind digest link",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N32",
+        "mutation": "a regular file or directory has a named NTFS $DATA stream; a regular file lacks or duplicates the default unnamed ::$DATA stream; StreamSize differs from logical bytes; or stream enumeration is omitted incomplete or ends in an unexpected error",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N33",
+        "mutation": "authorization composes packet bundle final PASS readiness independent audit validation host capacity power route campaign binding code artifact implementation authority Stage E evidence validator or user-receipt identities from individually valid but different record chains",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N34",
+        "mutation": "a changed Stage E guard is recorded as preserved or stage_e_guard_preserved false is paired with PASS or NOT_SEALABLE",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N35",
+        "mutation": "selected volume GUID path is absent invented or differs across a private path filesystem facts or snapshot; a Win32 volume query fails uses another argument or raw allocation capacity or free output is changed; allocation or observed-byte formulas fail",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N36",
+        "mutation": "SD-01-GROWTH-v1 wrapper or referenced campaign_id differs from the frozen nested campaign id; or any two route campaign ids are equal swapped or reused",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N37",
+        "mutation": "binding implementation authority-set or sealed-packet preimage has a missing extra duplicate reordered renamed mistyped noncanonical or nonreconstructing field row path identity projection private byte or sensitive disclosure",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N38",
+        "mutation": "implementation preimage names a different authority-set or integrated authority commit; integrated authority commit is not an ancestor of implementation commit; or any of the six authority rows differs between authority-set integrated tree and implementation tree",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N39",
+        "mutation": "validation occurs after consuming pre-audit readiness; audit completes before audited readiness; final PASS readiness predates audit; packet predates final PASS; statement predates packet; authorization predates statement; or timestamp records come from different identity chains",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N40",
+        "mutation": "a raw GetDiskFreeSpaceW output exceeds uint32; NTFS volume-data or FileStandardInfo observation is absent inconsistent or changed; an entry metadata upper bound is omitted; or a regular file large directory index allocation or directory bitmap upper bound is undercharged including substitution of one allocation unit",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N41",
+        "mutation": "bundle authority-set identity differs from the integrated-authority-set identity resolved from its binding implementation or any readiness packet audit or authorization preserves the mixed chain",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N42",
+        "mutation": "FileAttributeTagInfo or FileIdInfo is missing mismatched replaced or has a prohibited bit tag volume serial or changed predecessor file ID; BackupRead omits SACL skips bytes uses BackupSeek fails cleanup admits or hides a refused or unknown stream; retrieval pointers omit reorder overlap gap or use a negative LCN; or metadata extension backup-stream directory-index or bitmap bytes are undercharged",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N43",
+        "mutation": "scientific implementation verifier implementation or Stage E integration identity is generic arbitrary-kind null at readiness self-asserted differently chained or lacks its exact closed preimage complete Git rows route coverage accepted CI artifact binding or byte-identical accepted Stage E authority local authority binding-foundation and execution-guard rows",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N44",
+        "mutation": "a permitted BackupRead stream label hides another raw dwStreamId; DATA SECURITY_DATA or LINK carries any attribute mask other than respectively 0 2 or 0; or bit 1 modified-when-read bit 4 properties-or-reserved bit 8 sparse bit 16 ghosted or any other reserved unknown or disallowed attribute bit is set",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N45",
+        "mutation": "scientific code identity is generic or its closed complete-tree preimage omits adds reorders or changes a Git blob; scientific code commit or tree differs from scientific implementation; or installed artifact kind digest source coordinate build method direct-wheel bytes or sdist-derived equality is absent mismatched or belongs to another implementation",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N46",
+        "mutation": "Stage E evidence identity is generic arbitrary-kind or differs from stage_e_exact_target_evidence_artifact/v1 over the exact raw artifact 9708926559 bytes; its digest differs from the accepted artifact SHA-256; or bundle readiness packet or authorization repeats another evidence identity",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N47",
+        "mutation": "durability receipt omits reorders or changes any frozen action row timestamp non-null input or output hash hash role byte count byte-count role OS result restart process observation or recovery disposition; matching booleans lack a reconstructable trace; role-projected hashes or byte counts do not reconcile; corrupt or orphan fixture equals accepted payload; or a private bundle does not resolve and recompute every receipt",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N48",
+        "mutation": "binding validator is arbitrary stale generic or built from a different binding implementation commit tree source row scientific environment host runtime or build method; its seven source rows do not reproduce the implementation; canonical source-bundle or executable-zipapp bytes count or SHA-256 do not rebuild; or bundle readiness packet or authorization pairs it with another binding implementation",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N49",
+        "mutation": "atomic publication evidence omits or changes MoveFileExW raw flag 8 source or target path identity same-volume target-nonexistence observation no-replace flag call result source-absence target-presence single-creation or zero-overwrite fact; or a copy write overwrite replacement or cross-volume move is labeled atomic",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N50",
+        "mutation": "validator source-bundle artifact omits adds renames nests reorders or changes a closed field schema literal member projection or count; content_base64 uses a nonstandard alphabet omitted or excess padding whitespace line breaks or noncanonical encoding; decoded bytes differ from the Git blob; or rebuilt canonical artifact bytes count or digest differs",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N51",
+        "mutation": "durability restart uses an out-of-range or mismatched PID TID FILETIME executable command invocation or actor fact; launch actor is not orchestrator or same serialized thread as process operations; launch substitutes/omits any CreateProcessW input start completion hash timestamp pointer/count strict canonical base64 bytes or digest; any command STARTUPINFO or PI end differs from base plus count, overflows, overlaps, releases early, changes before entry, hashes auxiliary storage, or PI releases before output hash; PI output is not captured from exact pointer after return or parsed handles PID TID differ, handles equal, or thread close starts before capture or completes after wait start; process handle differs from wait query close input; any uint32/uint64 output end overflows/differs, base64 fails strict decode or canonical re-encode, hash pointer/count bytes digest value differs, storage releases before output hash, FILETIME intervals overlap, start/Win32-return/output-hash/observation-completion/process-close order differs, calls not serialized, or close overlaps query; challenge/ack binding missing changed replayed fabricated",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N52",
+        "mutation": "a durability probe invocation has the wrong phase validator scientific environment host runtime host-runtime-lock acquisition digest bootstrap Git row or bytes executable zipapp artifact private path command schema construction UTF-16LE bytes base64 canonical encoding isolated flag network flag or zero-science counters; its parsed command has any missing extra reordered or changed argument; process executable command-line or invocation digest does not reconstruct; or a private bundle mixes another filesystem policy validator environment or host runtime",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N53",
+        "mutation": "directory_target_identity does not resolve exact normalized parent; directory actor PID or creation FILETIME differs from terminated process for SYNTHETIC_PAYLOAD or orchestrator for RESTART_CHALLENGE or synchronous operations are not serialized by one positive actor thread; observation does not hash/repeat successful action-5 MoveFileExW call timestamp/result; final open parameters/handle or VirtualAlloc parameters address size capacity zero/lifetime differ; GetFinalPathNameByHandleW receives substituted handle buffer capacity flag has invalid length or wrong final; PathCch receives substituted buffer/capacity or fails exact parent; CloseHandle or VirtualFree substitutes releases early late unsuccessfully or not once; or buffer-release UTC differs from observation UTC",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N54",
+        "mutation": "the Windows host-validation runtime is absent incomplete unordered nonreconstructing fallback-capable or substituted for the immutable linux/amd64 scientific environment; python.exe digest differs from its complete runtime inventory; or site validator-zipapp bytecode cache network or project import is admitted",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N55",
+        "mutation": "the executable validator zipapp has a shebang compression wrong local central or EOCD header timestamp create or extract version create or extract system reserved byte version-made-by version-needed volume disk number mode flags descriptor ZIP64 structure prefix extra comment member name order count source projection CRC offset size byte or digest; contains pyc or another member; or does not rebuild byte-identically from the exact source bundle",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N56",
+        "mutation": "any orchestrator terminated or resumed artifact-lock observation is missing changed noncanonical or mismatched to its process invocation validator runtime artifact path count digest normalized handle path volume file id standard info attributes or held-handle bytes; any path file-id standard-info attribute read or close API input does not equal the exact artifact handle or close does not succeed exactly once with handle_closed_utc equal to lock_released_utc; the zipapp is outside the exact retained-evidence role is not fresh write-once or is not retained; write or delete sharing is allowed; or the lock begins after zipapp read or ends before zipapp return",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N57",
+        "mutation": "ORCHESTRATOR PRE_RESTART or POST_RESTART invocation is missing/mislabeled; POST_RESTART changes challenge or acknowledgement arguments; acknowledgement target is not absent fresh CREATE_NEW write-through written flushed closed once by matching resumed process; one actor thread does not serialize create write flush close; created handle differs from WriteFile FlushFileBuffers CloseHandle input; write-buffer end overflows/differs, call-time base64 fails strict canonical re-encoding, bytes hash pointer/count digest lifetime/immutability differs; uint32 output end input/output base64 canonical image same-base hash decoded count or lifetime-through-hash differs; intervals overlap; null OVERLAPPED result success or create/hash/write/flush/close ordering differs",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N58",
+        "mutation": "locked_zipapp_bootstrap.py bytes differ from the exact Git row source bundle strict base64 or Python -c argument; bootstrap fails to open the exact zipapp with the frozen deny-write-delete CreateFileW parameters read and hash it from the held handle before import or executes any other artifact",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N59",
+        "mutation": "the host-runtime-lock acquisition is missing noncanonical postlaunch incomplete reordered or differs from the exact runtime inventory holder process root path count bytes normalized handle path file id standard info attributes or acquisition digest; a runtime row lacks an exact numeric handle, permits write or delete sharing, supplies any path file-id standard-info attribute or ReadFile call a different handle, differs from expected bytes, or releases before all three exact validator processes return",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N60",
+        "mutation": "a host-runtime or validator-artifact FileIdInfo VolumeSerialNumber is negative above uint64 truncated masked rounded encoded as uint32 or otherwise differs from the complete ULONGLONG returned by the held-handle query",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N61",
+        "mutation": "the host-runtime holder PID is outside positive uint32 or creation FILETIME is outside nonzero uint64, release holder PID or creation FILETIME differs from acquisition, or release starts before every exact validator process returns zero; it omits changes reorders substitutes or fails to reread any same acquisition handle; any path file-id standard-info attribute rewind ReadFile or CloseHandle input differs from the exact acquisition handle, rewind is not successful offset zero FILE_BEGIN, or path volume file id standard info attributes byte count or digest changes; a handle closes early more than once or unsuccessfully; or release completes after the durability receipt",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N62",
+        "mutation": "the host runtime has an omitted added reordered changed or reparse stable directory row or a dynamic directory observation uses a substituted handle pointer descriptor or close; any watch-row path file-id attribute ReadDirectoryChangesW GetOverlappedResult CancelIoEx or CloseHandle input differs from its exact watched-directory handle; ordered watch count or roles do not equal direct protected ordinals 2 through anchor count followed by runtime-root subtree or exceed 64; a watch starts before anchor completion is not individually proven pending before the common check or is issued or first checked after the epoch or inventory begins; the common WaitForMultipleObjects count ordered exact event array base or values bWaitAll timeout result UTC or equality to protection-epoch start differs; protection-epoch end does not equal the latest validator-process return; any watched path API share flags subtree filter exact unnamed event OVERLAPPED completion result lifetime or release differs; or a restored protected non-volume-root anchor or runtime-tree mutation during the closed protection epoch passes",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N63",
+        "mutation": "the deterministic zipapp leaves create-version extract-version extract-system reserved version-made-by version-needed volume disk-start EOCD disk fields descriptor ZIP64 prefix build stream offset or compression level unconstrained or permits two byte-distinct archives from identical registered inputs",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N64",
+        "mutation": "the normalized volume-GUID path-anchor chain is missing added reordered gapped changed or reparse; first or last is not selected-volume or runtime root; first parent ordinal is nonnull or any later parent ordinal differs from ordinal minus one; a command uses a DOS-device or unanchored path; an anchor DuplicateHandle input option timestamp distinct continuity-guard value retention KernelBase.dll CompareObjectHandles input or success differs; anchor open guard-duplicate and query-start UTCs are misordered; any path file-id attribute or security query input is not the exact anchor handle; acquisition protection-epoch and release anchor or continuity-guard handle differs or a persistent path volume identity attribute reparse or security fact changes; a protected non-volume-root in-epoch self change passes; controller-history trust or independent-trace nonclaim is hidden or an unrecorded internal mutation is permitted; selected-volume-root transient-self-metadata or local-principal-confidentiality nonclaim is hidden broadened or used to admit a descendant root-entry path or byte substitution; share mode is not exact raw 1 with FILE_SHARE_WRITE and FILE_SHARE_DELETE bits absent; any anchor or continuity guard releases before all watches or closes other than once through its exact numeric handle; or anchor lock_released_utc is not the later successful close UTC",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N65",
+        "mutation": "any asynchronous watch exact directory-handle value buffer base address 32-byte x64 OVERLAPPED address or event-handle value is shared or equal across rows freed moved reused changed or unbound before cancellation completion; ReadDirectoryChangesW GetOverlappedResult CancelIoEx CloseHandle buffer hash or VirtualFree receives a substituted null stale or mismatching recorded handle address or byte count, or ReadDirectoryChangesW lpBytesReturned is not exactly NULL; buffer or OVERLAPPED allocation type protection alignment size zero initialization exclusivity or release lifecycle differs; CreateEventW security attributes or name is nonnull manual reset or initial state differs or OVERLAPPED hEvent does not equal the exact event; acquisition and release values differ; cancellation begins before final remeasurements; pending output is read or hashed before cancellation completion; zero hash is absent or after free; or any close or release precedes cancellation completion",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N66",
+        "mutation": "challenge or acknowledgement write lacks create-start/create-complete input-hash write-start/write-complete output-hash flush-start/flush-complete close-start/close-complete UTC or order/serialization; actor PID/thread differs; created handle differs from WriteFile FlushFileBuffers or one CloseHandle input; interval formula nonoverflow disjointness lifetime-through-output-hash strict canonical base64 call-time bytes same-base hash zero image decoded count null OVERLAPPED or success differs; handshake_completed_utc differs from acknowledgement close completion or follows action 8; or claimed acknowledgement precedes action 8 while durable flush or close follows it",
+        "disposition": "REFUSE"
+      },
+      {
+        "case_id": "SF-BIND-N67",
+        "mutation": "any GetSecurityInfo lifecycle has a null invalid substituted or unbound query handle or returned descriptor address; IsValidSecurityDescriptor GetSecurityDescriptorControl GetSecurityDescriptorLength hashing or LocalFree receives null another pointer or any address other than the exact returned descriptor; descriptor validity control self-relative revision returned length hash input byte count digest or timestamp order differs; hash input byte count does not equal the returned length; LocalFree receives the right pointer more or less than once; or a freed descriptor is read hashed or freed again",
+        "disposition": "REFUSE"
+      }
+    ]
+  },
+  "correction_registry": {
+    "schema": "stage_f_binding_evidence_correction_cases/v1",
+    "authority_path": "stage_f_local_execution_binding_evidence_correction_validation_contract.json",
+    "authority_git_object": "bd8639ed159953062c844109332895fedae5e990",
+    "case_count": 131,
+    "positive_case_count": 15,
+    "negative_case_count": 116,
+    "case_id_rule": "exact contiguous BEC-001 through BEC-131",
+    "cases": [
+      {
+        "id": "BEC-001",
+        "class": "POSITIVE",
+        "mutation": "NONE_EXACT_SIX_FILE_PACKAGE",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-002",
+        "class": "POSITIVE",
+        "mutation": "RECONSTRUCT_REQUIRED_TARGET_AND_PREDECESSOR_ROWS",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-003",
+        "class": "POSITIVE",
+        "mutation": "VALIDATE_COMPLETE_EFFECTIVE_SCHEMA_AND_REFERENCES",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-004",
+        "class": "POSITIVE",
+        "mutation": "RECONSTRUCT_12_AUTHORITY_14_IMPLEMENTATION_76_DESCENDANT_COUNTS",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-005",
+        "class": "NEGATIVE",
+        "mutation": "WRONG_REQUIRED_TARGET_COMMIT",
+        "expected": "REFUSE",
+        "falsifier": "TARGET_COMMIT_MISMATCH"
+      },
+      {
+        "id": "BEC-006",
+        "class": "NEGATIVE",
+        "mutation": "WRONG_REQUIRED_TARGET_TREE",
+        "expected": "REFUSE",
+        "falsifier": "TARGET_TREE_MISMATCH"
+      },
+      {
+        "id": "BEC-007",
+        "class": "NEGATIVE",
+        "mutation": "SEVENTH_AUTHORITY_PATH",
+        "expected": "REFUSE",
+        "falsifier": "AUTHORITY_SCOPE_EXTRA_PATH"
+      },
+      {
+        "id": "BEC-008",
+        "class": "NEGATIVE",
+        "mutation": "MODIFY_ACCEPTED_AUTHORITY_BLOB",
+        "expected": "REFUSE",
+        "falsifier": "HISTORICAL_AUTHORITY_CHANGED"
+      },
+      {
+        "id": "BEC-009",
+        "class": "NEGATIVE",
+        "mutation": "MODIFY_STAGE_E_OR_SCIENTIFIC_BYTE",
+        "expected": "REFUSE",
+        "falsifier": "SCIENTIFIC_PREDECESSOR_CHANGED"
+      },
+      {
+        "id": "BEC-010",
+        "class": "NEGATIVE",
+        "mutation": "USE_V1_AUTHORITY_SET_IN_V2_READY_CHAIN",
+        "expected": "REFUSE",
+        "falsifier": "HISTORICAL_IDENTITY_REPLAY"
+      },
+      {
+        "id": "BEC-011",
+        "class": "NEGATIVE",
+        "mutation": "ACCEPT_OR_MERGE_REJECTED_C6E6593_COORDINATE",
+        "expected": "REFUSE",
+        "falsifier": "REJECTED_CANDIDATE_PROMOTED"
+      },
+      {
+        "id": "BEC-012",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_DIRECT_FINAL_WRITE",
+        "expected": "REFUSE",
+        "falsifier": "NO_FRESH_TEMPORARY"
+      },
+      {
+        "id": "BEC-013",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_WRITE_SHARE_ENABLED",
+        "expected": "REFUSE",
+        "falsifier": "WRITE_SHARE_WEAKENED"
+      },
+      {
+        "id": "BEC-014",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_GUARD_NOT_DUPLICATED",
+        "expected": "REFUSE",
+        "falsifier": "NO_SAME_OBJECT_GUARD"
+      },
+      {
+        "id": "BEC-015",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_GUARD_DIFFERENT_OBJECT",
+        "expected": "REFUSE",
+        "falsifier": "PRECLOSE_COMPARE_FALSE"
+      },
+      {
+        "id": "BEC-016",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_GUARD_CLOSED_BEFORE_MOVE",
+        "expected": "REFUSE",
+        "falsifier": "GUARD_CONTINUITY_GAP"
+      },
+      {
+        "id": "BEC-017",
+        "class": "NEGATIVE",
+        "mutation": "SOURCE_REPLACED_BETWEEN_CLOSE_AND_MOVE",
+        "expected": "REFUSE",
+        "falsifier": "POSTMOVE_GUARD_PATH_OR_OBJECT_MISMATCH"
+      },
+      {
+        "id": "BEC-018",
+        "class": "NEGATIVE",
+        "mutation": "ORIGINAL_RENAMED_AWAY_REPLACEMENT_MOVED",
+        "expected": "REFUSE",
+        "falsifier": "POSTMOVE_GUARD_PATH_OR_FILE_ID_MISMATCH"
+      },
+      {
+        "id": "BEC-019",
+        "class": "NEGATIVE",
+        "mutation": "FINAL_REPLACED_BEFORE_REOPEN",
+        "expected": "REFUSE",
+        "falsifier": "FINAL_STABLE_IDENTITY_OR_CONTENT_TUPLE_MISMATCH"
+      },
+      {
+        "id": "BEC-020",
+        "class": "NEGATIVE",
+        "mutation": "SAME_HASH_DIFFERENT_FILE_ID",
+        "expected": "REFUSE",
+        "falsifier": "SAME_BYTES_DIFFERENT_OBJECT"
+      },
+      {
+        "id": "BEC-021",
+        "class": "NEGATIVE",
+        "mutation": "HASH_READ_FROM_OTHER_HANDLE",
+        "expected": "REFUSE",
+        "falsifier": "HASH_HANDLE_INPUT_MISMATCH"
+      },
+      {
+        "id": "BEC-022",
+        "class": "NEGATIVE",
+        "mutation": "PARENT_WATCH_MISSING_RENAME_RECORD",
+        "expected": "REFUSE",
+        "falsifier": "PUBLICATION_WATCH_INCOMPLETE"
+      },
+      {
+        "id": "BEC-023",
+        "class": "NEGATIVE",
+        "mutation": "PARENT_WATCH_EXTRA_EVENT",
+        "expected": "REFUSE",
+        "falsifier": "UNAUTHORIZED_PUBLICATION_EVENT"
+      },
+      {
+        "id": "BEC-024",
+        "class": "NEGATIVE",
+        "mutation": "PARENT_WATCH_BUFFER_OVERFLOW",
+        "expected": "REFUSE",
+        "falsifier": "NOTIFICATION_LOSS"
+      },
+      {
+        "id": "BEC-025",
+        "class": "NEGATIVE",
+        "mutation": "VOLUME_GUID_PATH_USED_AS_LPAPPLICATIONNAME",
+        "expected": "REFUSE",
+        "falsifier": "UNEXECUTABLE_PATH_REPRESENTATION"
+      },
+      {
+        "id": "BEC-026",
+        "class": "NEGATIVE",
+        "mutation": "DOS_ALIAS_NOT_DERIVED_FROM_RETAINED_HANDLE",
+        "expected": "REFUSE",
+        "falsifier": "UNBOUND_LAUNCH_ALIAS"
+      },
+      {
+        "id": "BEC-027",
+        "class": "NEGATIVE",
+        "mutation": "DOS_ALIAS_AND_VOLUME_GUID_DIFFERENT_FILE_ID",
+        "expected": "REFUSE",
+        "falsifier": "LAUNCH_ALIAS_OBJECT_MISMATCH"
+      },
+      {
+        "id": "BEC-028",
+        "class": "NEGATIVE",
+        "mutation": "CREATE_SUSPENDED_FLAG_MISSING",
+        "expected": "REFUSE",
+        "falsifier": "CHILD_MAY_EXECUTE_BEFORE_ATTESTATION"
+      },
+      {
+        "id": "BEC-029",
+        "class": "NEGATIVE",
+        "mutation": "SUSPENDED_CHILD_NATIVE_IMAGE_DIFFERS",
+        "expected": "REFUSE",
+        "falsifier": "PROCESS_IMAGE_SUBSTITUTION"
+      },
+      {
+        "id": "BEC-030",
+        "class": "NEGATIVE",
+        "mutation": "USER_CODE_TIMESTAMP_BEFORE_IMAGE_ATTESTATION",
+        "expected": "REFUSE",
+        "falsifier": "EARLY_CHILD_EXECUTION"
+      },
+      {
+        "id": "BEC-031",
+        "class": "NEGATIVE",
+        "mutation": "RESUME_THREAD_RETURNS_MINUS_ONE",
+        "expected": "REFUSE",
+        "falsifier": "RESUME_FAILED"
+      },
+      {
+        "id": "BEC-032",
+        "class": "NEGATIVE",
+        "mutation": "RESUME_THREAD_PREVIOUS_COUNT_NOT_ONE",
+        "expected": "REFUSE",
+        "falsifier": "SUSPEND_STATE_MISMATCH"
+      },
+      {
+        "id": "BEC-033",
+        "class": "NEGATIVE",
+        "mutation": "REFUSED_CHILD_NOT_TERMINATED_WAITED_AND_CLOSED",
+        "expected": "REFUSE",
+        "falsifier": "REFUSAL_CLEANUP_INCOMPLETE"
+      },
+      {
+        "id": "BEC-034",
+        "class": "NEGATIVE",
+        "mutation": "NULL_PREDECESSOR_ON_PREEXISTING_ATTEMPT_ROOT",
+        "expected": "REFUSE",
+        "falsifier": "FALSE_GENESIS"
+      },
+      {
+        "id": "BEC-035",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_EPOCH_STARTS_AFTER_PRIVATE_READ",
+        "expected": "REFUSE",
+        "falsifier": "UNPROTECTED_INITIAL_READ"
+      },
+      {
+        "id": "BEC-036",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_ANCESTOR_ANCHOR_OR_DIRECT_WATCH_OMITTED",
+        "expected": "REFUSE",
+        "falsifier": "INCOMPLETE_ROOT_PROTECTION"
+      },
+      {
+        "id": "BEC-037",
+        "class": "NEGATIVE",
+        "mutation": "IMMUTABLE_FILE_LOCK_ACQUIRED_AFTER_PARSE",
+        "expected": "REFUSE",
+        "falsifier": "PRELOCK_MUTATION_WINDOW"
+      },
+      {
+        "id": "BEC-038",
+        "class": "NEGATIVE",
+        "mutation": "OUTSIDE_ROOT_HARDLINK_MUTATION",
+        "expected": "REFUSE",
+        "falsifier": "USN_FILE_REFERENCE_MUTATION"
+      },
+      {
+        "id": "BEC-039",
+        "class": "NEGATIVE",
+        "mutation": "UNKNOWN_ROOT_WATCH_EVENT",
+        "expected": "REFUSE",
+        "falsifier": "UNMATCHED_MUTATION"
+      },
+      {
+        "id": "BEC-040",
+        "class": "NEGATIVE",
+        "mutation": "USN_JOURNAL_ID_CHANGED",
+        "expected": "REFUSE",
+        "falsifier": "JOURNAL_RESET_OR_RECREATE"
+      },
+      {
+        "id": "BEC-041",
+        "class": "NEGATIVE",
+        "mutation": "USN_LOWEST_VALID_ADVANCED_PAST_START",
+        "expected": "REFUSE",
+        "falsifier": "JOURNAL_WRAP"
+      },
+      {
+        "id": "BEC-042",
+        "class": "NEGATIVE",
+        "mutation": "USN_RANGE_GAP_OR_UNKNOWN_RECORD_VERSION",
+        "expected": "REFUSE",
+        "falsifier": "JOURNAL_CONTINUITY_LOSS"
+      },
+      {
+        "id": "BEC-043",
+        "class": "NEGATIVE",
+        "mutation": "MUTATION_TICKET_PATH_ACTION_OR_FILE_ID_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "TICKET_EVENT_MISMATCH"
+      },
+      {
+        "id": "BEC-044",
+        "class": "NEGATIVE",
+        "mutation": "EARLIER_CHALLENGE_ACK_RECEIPT_DELETED",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_PREFIX_MISSING"
+      },
+      {
+        "id": "BEC-045",
+        "class": "NEGATIVE",
+        "mutation": "LEDGER_FORK_RESET_OR_REPLAY",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_CONTINUITY_FAILURE"
+      },
+      {
+        "id": "BEC-046",
+        "class": "NEGATIVE",
+        "mutation": "CAPACITY_SCALAR_EQUALS_ONLY_LOWER_BOUND",
+        "expected": "REFUSE",
+        "falsifier": "POSTPUBLICATION_NOT_DIRECTLY_MEASURED"
+      },
+      {
+        "id": "BEC-047",
+        "class": "NEGATIVE",
+        "mutation": "CAPACITY_DIRECTORY_I30_BITMAP_OR_MFT_GROWTH_OMITTED",
+        "expected": "REFUSE",
+        "falsifier": "DIRECTORY_ALLOCATION_UNDERCOUNT"
+      },
+      {
+        "id": "BEC-048",
+        "class": "NEGATIVE",
+        "mutation": "CAUSAL_POSTCUTOFF_FILE_OMITTED",
+        "expected": "REFUSE",
+        "falsifier": "CAPACITY_CONSUMPTION_CLOSURE_INCOMPLETE"
+      },
+      {
+        "id": "BEC-049",
+        "class": "NEGATIVE",
+        "mutation": "RETAINED_EVIDENCE_TAIL_EXCEEDED",
+        "expected": "REFUSE",
+        "falsifier": "PREDEBIT_CEILING_EXCEEDED"
+      },
+      {
+        "id": "BEC-050",
+        "class": "NEGATIVE",
+        "mutation": "EXTERNAL_ALLOCATION_BREAKS_IMMEDIATE_GATE",
+        "expected": "REFUSE",
+        "falsifier": "PRESTART_FREE_SPACE_FAILED"
+      },
+      {
+        "id": "BEC-051",
+        "class": "NEGATIVE",
+        "mutation": "POWER_API_UNKNOWN_OR_FAILED",
+        "expected": "REFUSE",
+        "falsifier": "POWER_EVIDENCE_UNAVAILABLE"
+      },
+      {
+        "id": "BEC-052",
+        "class": "NEGATIVE",
+        "mutation": "LID_SLEEP_WITHOUT_CURRENT_HUMAN_STATEMENT",
+        "expected": "REFUSE",
+        "falsifier": "LID_PRECONDITION_UNPROVEN"
+      },
+      {
+        "id": "BEC-053",
+        "class": "NEGATIVE",
+        "mutation": "DOCKER_CLIENT_PRESENT_DAEMON_ABSENT_OR_IMAGE_DIFFERS",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_RUNTIME_UNAVAILABLE"
+      },
+      {
+        "id": "BEC-054",
+        "class": "NEGATIVE",
+        "mutation": "PENDING_REBOOT_MARKER_OR_REGISTRY_ACCESS_ERROR",
+        "expected": "REFUSE",
+        "falsifier": "REBOOT_STATE_UNSAFE"
+      },
+      {
+        "id": "BEC-055",
+        "class": "NEGATIVE",
+        "mutation": "NO_AUTO_REBOOT_POLICY_MISSING_OR_SESSION_NOT_LOGGED_ON",
+        "expected": "REFUSE",
+        "falsifier": "UNATTENDED_REBOOT_CONTROL_UNPROVEN"
+      },
+      {
+        "id": "BEC-056",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_EPOCH_RELEASE_OR_CONTAINER_START_BEFORE_VALID_GATE",
+        "expected": "REFUSE",
+        "falsifier": "VALIDATION_TO_LAUNCH_HANDOFF_GAP"
+      },
+      {
+        "id": "BEC-057",
+        "class": "NEGATIVE",
+        "mutation": "SCIENTIFIC_COUNTER_NONZERO",
+        "expected": "REFUSE",
+        "falsifier": "SCIENTIFIC_EXECUTION_DURING_BINDING"
+      },
+      {
+        "id": "BEC-058",
+        "class": "NEGATIVE",
+        "mutation": "POST_PACKET_USER_STATEMENT_ABSENT_OR_PREDATES_PACKET",
+        "expected": "REFUSE",
+        "falsifier": "EXECUTION_AUTHORIZATION_MISSING"
+      },
+      {
+        "id": "BEC-059",
+        "class": "NEGATIVE",
+        "mutation": "LEDGER_REOPEN_REPLACE_RENAME_OR_TRUNCATE",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_HANDLE_CONTINUITY_BROKEN"
+      },
+      {
+        "id": "BEC-060",
+        "class": "NEGATIVE",
+        "mutation": "LEDGER_APPEND_AT_NONTERMINAL_OFFSET_OR_WRONG_HANDLE",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_APPEND_NOT_EXACT_EOF"
+      },
+      {
+        "id": "BEC-061",
+        "class": "NEGATIVE",
+        "mutation": "NONHEAD_APPEND_UNCONFIRMED_OR_CURRENT_HEAD_NOT_LIVE_OBSERVED",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_APPEND_CONFIRMATION_GAP"
+      },
+      {
+        "id": "BEC-062",
+        "class": "NEGATIVE",
+        "mutation": "COMPAREOBJECTHANDLES_REQUIRED_TRUE_FOR_INDEPENDENT_OPEN",
+        "expected": "REFUSE",
+        "falsifier": "INVALID_FILE_OBJECT_EQUIVALENCE_PROOF"
+      },
+      {
+        "id": "BEC-063",
+        "class": "NEGATIVE",
+        "mutation": "HISTORICAL_POWER_SNAPSHOT_RAW_FACT_PROJECTION_DIFFERS",
+        "expected": "REFUSE",
+        "falsifier": "POWER_CHAIN_PROJECTION_MISMATCH"
+      },
+      {
+        "id": "BEC-064",
+        "class": "NEGATIVE",
+        "mutation": "PRESTART_HANDOFF_WITHOUT_LIVE_LAUNCH_GATE_LEDGER_OBSERVATION",
+        "expected": "REFUSE",
+        "falsifier": "LAUNCH_GATE_HEAD_NOT_LIVE"
+      },
+      {
+        "id": "BEC-065",
+        "class": "NEGATIVE",
+        "mutation": "UNSIGNED_UINT64_OR_VALID_HANDLE_MAXIMUM_ROUNDED",
+        "expected": "REFUSE",
+        "falsifier": "JSON_INTEGER_PRECISION_DRIFT"
+      },
+      {
+        "id": "BEC-066",
+        "class": "NEGATIVE",
+        "mutation": "UNLISTED_HISTORICAL_SCHEMA_DEFINITION_CHANGED",
+        "expected": "REFUSE",
+        "falsifier": "SCHEMA_DELTA_SCOPE_DRIFT"
+      },
+      {
+        "id": "BEC-067",
+        "class": "NEGATIVE",
+        "mutation": "SCHEMA_DELTA_COUNT_OR_ORDER_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "SCHEMA_DELTA_MANIFEST_MISMATCH"
+      },
+      {
+        "id": "BEC-068",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_WATCH_COMPLETION_CLAIMED_STILL_PENDING_OR_CANCELLED_AFTER_NORMAL_COMPLETION",
+        "expected": "REFUSE",
+        "falsifier": "IMPOSSIBLE_PARENT_WATCH_LIFECYCLE"
+      },
+      {
+        "id": "BEC-069",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_WATCH_RAW_ISSUE_PENDING_COMPLETION_BUFFER_PARSE_DIGEST_OR_EXACT_CLEANUP_EVIDENCE_MISSING_OR_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "PARENT_WATCH_LIFECYCLE_NOT_AUDITABLE"
+      },
+      {
+        "id": "BEC-070",
+        "class": "NEGATIVE",
+        "mutation": "REACHABILITY_CORRECTION_PATH_GRANT_MISSING_EXTRA_REORDERED_OUTSIDE_PHASE_OR_NOT_BOUND_TO_ACTUAL_INTEGRATED_TREE_AND_SIX_CORRECTION_ROWS",
+        "expected": "REFUSE",
+        "falsifier": "REACHABILITY_CORRECTION_SCOPE_OR_IDENTITY_DRIFT"
+      },
+      {
+        "id": "BEC-071",
+        "class": "NEGATIVE",
+        "mutation": "POSTPUBLICATION_RETAINED_SUBTREE_DIRECT_INVENTORY_MISSING_INCOMPLETE_REORDERED_SUBSTITUTED_OR_SUM_DIFFERS_FROM_LIVE_SCALAR",
+        "expected": "REFUSE",
+        "falsifier": "DIRECT_RETAINED_SUBTREE_EVIDENCE_MISSING"
+      },
+      {
+        "id": "BEC-072",
+        "class": "NEGATIVE",
+        "mutation": "POSTPUBLICATION_RAW_GETDISKFREESPACEW_GETDISKFREESPACEEXW_OR_NTFS_VOLUME_DATA_OBSERVATION_MISSING_SUBSTITUTED_OR_FORMULA_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "RAW_POSTPUBLICATION_VOLUME_EVIDENCE_MISSING"
+      },
+      {
+        "id": "BEC-073",
+        "class": "NEGATIVE",
+        "mutation": "PUBLICATION_PARENT_WATCH_CREATEFILEW_PATH_FILEID_ATTRIBUTE_BUFFER_OR_EVENT_ACQUISITION_MISSING_OR_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "PARENT_WATCH_ACQUISITION_UNBOUND"
+      },
+      {
+        "id": "BEC-074",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_WATCH_ACQUISITION_FABRICATED_WRONG_PATH_OR_RESOURCE_ADDRESS_REUSED",
+        "expected": "REFUSE",
+        "falsifier": "ROOT_WATCH_ACQUISITION_UNBOUND"
+      },
+      {
+        "id": "BEC-075",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_WATCH_COMPLETION_RAW_BUFFER_PARSE_RESET_ZERO_REISSUE_OR_PENDING_PROOF_MISSING_OR_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "ROOT_WATCH_COMPLETION_CYCLE_INCOMPLETE"
+      },
+      {
+        "id": "BEC-076",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_WATCH_FINAL_DRAIN_CANCEL_RACE_BRANCH_RESOURCE_CLOSE_OR_VIRTUALFREE_EVIDENCE_MISSING_OR_INCONSISTENT",
+        "expected": "REFUSE",
+        "falsifier": "ROOT_WATCH_RELEASE_INCOMPLETE"
+      },
+      {
+        "id": "BEC-077",
+        "class": "NEGATIVE",
+        "mutation": "USN_VOLUME_CREATEFILEW_IDENTITY_QUERY_OR_RAW_QUERY_USN_JOURNAL_INPUT_OUTPUT_MISSING_OR_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "USN_QUERY_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-078",
+        "class": "NEGATIVE",
+        "mutation": "USN_READ_NOT_48_BYTE_V1_MIN2_MAX3_OR_RAW_INPUT_OUTPUT_BUFFER_CALL_ORDER_NEXT_USN_CHAIN_OR_TERMINAL_RANGE_MISSING_OR_INCONSISTENT",
+        "expected": "REFUSE",
+        "falsifier": "USN_READ_CHAIN_INCOMPLETE"
+      },
+      {
+        "id": "BEC-079",
+        "class": "NEGATIVE",
+        "mutation": "USN_V2_V3_RECORD_RAW_BYTES_FIXED_FIELDS_UTF16LE_NAME_SCOPE_OR_MUTATION_TICKET_PROJECTION_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "USN_RECORD_PROJECTION_OR_TICKET_MISMATCH"
+      },
+      {
+        "id": "BEC-080",
+        "class": "NEGATIVE",
+        "mutation": "LEDGER_CREATEFILEW_CREATE_NEW_ACCESS_SHARE_FLAGS_PATH_FILEID_STANDARD_INFO_OR_ATTRIBUTE_PROVENANCE_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_CREATE_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-081",
+        "class": "NEGATIVE",
+        "mutation": "LEDGER_PREAPPEND_EOF_SETFILEPOINTEREX_WIRE_BUFFER_ADDRESS_COUNT_SHA_OR_WRITEFILE_INPUT_OUTPUT_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_APPEND_WIRE_PROVENANCE_MISMATCH"
+      },
+      {
+        "id": "BEC-082",
+        "class": "NEGATIVE",
+        "mutation": "LEDGER_FLUSH_POST_EOF_REREAD_RAW_BYTES_COUNT_SHA_POINTER_RESTORE_OR_RETAINED_HANDLE_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_APPEND_READBACK_INCOMPLETE"
+      },
+      {
+        "id": "BEC-083",
+        "class": "NEGATIVE",
+        "mutation": "NTFS_RETRIEVAL_POINTERS_WRONG_DIRECTORY_HANDLE_NONZERO_FIRST_VCN_MISSING_CONTINUATION_OR_NONTERMINAL_CHAIN",
+        "expected": "REFUSE",
+        "falsifier": "NTFS_RETRIEVAL_POINTER_CHAIN_UNBOUND"
+      },
+      {
+        "id": "BEC-084",
+        "class": "NEGATIVE",
+        "mutation": "CONSUMPTION_CLOSURE_DIRECT_SUBTREE_OR_RAW_VOLUME_OBSERVATION_MISSING_STALE_INVENTORY_DIFFERENCE_OR_FORMULA_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "CAPACITY_CLOSURE_DIRECT_EVIDENCE_MISSING"
+      },
+      {
+        "id": "BEC-085",
+        "class": "NEGATIVE",
+        "mutation": "LAUNCH_GATE_CLAIMS_TRANSIENT_LIVE_GATE_OR_OMITS_STABLE_CAPACITY_CLOSURE_OR_FINAL_LIVE_GATE_DIRECT_SUBTREE_OR_RAW_VOLUME_OBSERVATION_STALE_WRONG_FOLLOWING_CAPABILITY_OR_INTERVENING_CONTROLLER_CAPACITY_OPERATION",
+        "expected": "REFUSE",
+        "falsifier": "CAPACITY_LIVE_GATE_NOT_IMMEDIATE"
+      },
+      {
+        "id": "BEC-086",
+        "class": "NEGATIVE",
+        "mutation": "POWER_ACTIVE_SCHEME_OR_SETTING_GUID_POINTER_RAW_INDEX_LIFECYCLE_MISSING_BYTE_FIELD_OVER_255_OR_DERIVED_MAPPING_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "RAW_POWER_QUERY_PROVENANCE_MISMATCH"
+      },
+      {
+        "id": "BEC-087",
+        "class": "NEGATIVE",
+        "mutation": "INERT_CONTAINER_GENERIC_IDENTITY_CREATE_INSPECT_IMAGE_COMMAND_ENV_MOUNT_NETWORK_RESOURCE_OR_PATH_PROJECTION_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "INERT_CONTAINER_CONFIG_UNBOUND"
+      },
+      {
+        "id": "BEC-088",
+        "class": "NEGATIVE",
+        "mutation": "CONTAINER_START_CAPABILITY_WRONG_DAEMON_CONTAINER_ENDPOINT_REQUEST_OR_TYPED_IDENTITY_CONTAINS_LAUNCH_GATE_HASH_CYCLE_ALREADY_SENT_RESPONSE_EXISTS_FINAL_GATE_NOT_EMBEDDED_OR_ROOT_WATCH_NOT_LIVE",
+        "expected": "REFUSE",
+        "falsifier": "SCIENTIFIC_START_CAPABILITY_SUBSTITUTED_OR_PREINVOKED"
+      },
+      {
+        "id": "BEC-089",
+        "class": "POSITIVE",
+        "mutation": "ROOT_WATCH_CANCELIOEX_RETURNS_TRUE_AND_GETOVERLAPPEDRESULT_REPORTS_NORMAL_COMPLETION_ON_EXACT_HANDLE_OVERLAPPED_AND_BYTES_OUTPUT",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-090",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_WATCH_RELEASE_GETOVERLAPPEDRESULT_HANDLE_OVERLAPPED_BYTES_OUTPUT_ZERO_IMAGE_OR_RETURNED_IMAGE_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "ROOT_WATCH_TERMINAL_CALL_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-091",
+        "class": "NEGATIVE",
+        "mutation": "ANY_CREATE_PATH_FILEID_STANDARD_INFO_OR_ATTRIBUTE_APPEND_PREAPPEND_OR_POSTFLUSH_STANDARD_INFO_OR_APPEND_REREAD_DATA_BUFFER_ZERO_PREIMAGE_BYTES_SHA256_CAPACITY_RELATION_RETURNED_IMAGE_PARSED_RESULT_POINTER_RESULT_ERROR_OR_ACTUAL_REREAD_BYTES_OUTPUT_IS_MISSING_OR_MISMATCHED",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_RAW_CALL_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-092",
+        "class": "NEGATIVE",
+        "mutation": "NTFS_FILE_RECORD_CALL_WRONG_VOLUME_HANDLE_CONTROL_CODE_INPUT_OUTPUT_PROVENANCE_OR_RETURNED_LOWER_IN_USE_ORDINAL",
+        "expected": "REFUSE",
+        "falsifier": "NTFS_FILE_RECORD_CALL_OR_ORDINAL_UNBOUND"
+      },
+      {
+        "id": "BEC-093",
+        "class": "NEGATIVE",
+        "mutation": "GETVOLUMEINFORMATIONBYHANDLEW_CALL_FAILED_OR_POINTER_CAPACITY_RAW_FILESYSTEM_NAME_RAW_FOUR_BYTE_SERIAL_MISSING_OR_UINT32_WIN32_SERIAL_CONFLATED_WITH_UINT64_NTFS_SERIAL",
+        "expected": "REFUSE",
+        "falsifier": "VOLUME_SERIAL_SOURCE_OR_WIDTH_CONFLATED"
+      },
+      {
+        "id": "BEC-094",
+        "class": "NEGATIVE",
+        "mutation": "DOCKER_PIPE_GETNAMEDPIPESERVERPROCESSID_OPENPROCESS_GETPROCESSTIMES_QUERYFULLPROCESSIMAGENAMEW_PID_CREATION_FILETIME_PROCESS_HANDLE_OR_RUNTIME_IDENTITY_DIFFERS_OR_RAW_CREATEFILEW_WRITEFILE_READFILE_HTTP_WIRE_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_DAEMON_OR_WIRE_TRANSPORT_UNBOUND"
+      },
+      {
+        "id": "BEC-095",
+        "class": "NEGATIVE",
+        "mutation": "INERT_CONTAINER_RESTART_POLICY_NOT_NO_MAXIMUM_RETRY_COUNT_NONZERO_AUTOREMOVE_TRUE_OR_INITIAL_RESTARTCOUNT_NONZERO",
+        "expected": "REFUSE",
+        "falsifier": "AUTOMATIC_CONTAINER_RESTART_PERMITTED"
+      },
+      {
+        "id": "BEC-096",
+        "class": "NEGATIVE",
+        "mutation": "DURABLE_START_INTENT_OMITS_EXACT_LAUNCH_GATE_PREDECESSOR_APPEND_OBSERVATION_IS_NOT_LEDGERED_BEFORE_FRESH_HOST_AND_CAPACITY_GATE_HANDOFF_PREIMAGE_NOT_FROZEN_BEFORE_CALL_OR_TYPED_START_RECEIPT_NOT_LEDGERED",
+        "expected": "REFUSE",
+        "falsifier": "CONTAINER_START_ORDER_OR_DURABLE_RECEIPT_GAP"
+      },
+      {
+        "id": "BEC-097",
+        "class": "NEGATIVE",
+        "mutation": "UNRESOLVED_DURABLE_INTENT_AFTER_RESTART_IS_TREATED_AS_PROVEN_UNSENT_ORIGINAL_LEDGER_IS_REOPENED_NO_FRESH_RECOVERY_GENESIS_ROOT_LEDGER_OR_PREDECESSOR_APPEND_EXISTS_OLD_LEDGER_OR_INTENT_RAW_READ_HELD_NONREPARSE_OBSERVATION_OR_EXACT_PARSED_LEDGER_PREFIX_INTENT_BINDING_MISSING_LOST_CURRENT_HEAD_APPEND_IS_FALSELY_RECONSTRUCTED_RECOVERY_RETRIES_START_OMITS_AUTHENTICATED_FORCE_REMOVE_OR_FINAL_404_INSPECT_REUSES_QUARANTINED_ATTEMPT_OR_TREATS_POSSIBLE_START_AS_CONTINUATION_WITHOUT_INDEPENDENT_CHECKPOINT_AUTHORITY",
+        "expected": "REFUSE",
+        "falsifier": "CONTAINER_START_CRASH_RECOVERY_LEDGER_OR_CONTAINMENT_AMBIGUOUS"
+      },
+      {
+        "id": "BEC-098",
+        "class": "NEGATIVE",
+        "mutation": "ROOT_WATCH_LIVE_STATE_START_CAPABILITY_START_INTENT_START_RECEIPT_OR_HANDOFF_COMPANION_IDENTITY_MISSING_WRONG_KIND_OR_DIGEST_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "COMPANION_IDENTITY_MISSING_OR_MISMATCHED"
+      },
+      {
+        "id": "BEC-099",
+        "class": "NEGATIVE",
+        "mutation": "USN_V2_OR_V3_FILE_OR_PARENT_REFERENCE_RAW_WIDTH_VERSION_ZERO_EXTENSION_OR_LOWERCASE_MEMORY_ORDER_HEX_NORMALIZATION_MISMATCH",
+        "expected": "REFUSE",
+        "falsifier": "USN_FILE_REFERENCE_CANONICALIZATION_AMBIGUOUS"
+      },
+      {
+        "id": "BEC-100",
+        "class": "NEGATIVE",
+        "mutation": "CAPACITY_GATE_HAS_INTERVENING_CONTROLLER_CAPACITY_AFFECTING_OPERATION_OR_CLAIMS_CONTINUOUS_ABSENCE_OF_UNRELATED_EXTERNAL_WRITERS",
+        "expected": "REFUSE",
+        "falsifier": "CAPACITY_TRUST_BOUNDARY_MISSTATED"
+      },
+      {
+        "id": "BEC-101",
+        "class": "NEGATIVE",
+        "mutation": "SCHEMA_DELTA_NAME_LIST_NOT_STRICT_ASCENDING_UTF8_BYTES_OF_NFC_NAMES_OR_DEPENDS_ON_JSON_OBJECT_MEMBER_TRAVERSAL_ORDER",
+        "expected": "REFUSE",
+        "falsifier": "SCHEMA_DELTA_ORDERING_RULE_AMBIGUOUS"
+      },
+      {
+        "id": "BEC-102",
+        "class": "NEGATIVE",
+        "mutation": "PRECALL_HANDOFF_HOST_SNAPSHOT_OR_FINAL_GATE_NOT_COMPLETELY_NESTED_IN_RECEIPT_OR_IS_SEPARATELY_POSTCALL_PUBLISHED_LEDGERED_OR_ACCEPTED_AS_TOP_LEVEL_CORRECTION_RECORD",
+        "expected": "REFUSE",
+        "falsifier": "FROZEN_PRECALL_PREDECESSOR_BECOMES_STALE"
+      },
+      {
+        "id": "BEC-103",
+        "class": "NEGATIVE",
+        "mutation": "START_WRITEFILE_FAILED_OR_SHORT_BUT_RAW_REQUEST_POINTER_OUTPUT_IMAGE_COUNT_ERROR_OR_UNKNOWN_ACCEPTANCE_CONTAINMENT_RECEIPT_IS_MISSING_OR_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "FAILED_OR_SHORT_START_WRITE_UNCONTAINED"
+      },
+      {
+        "id": "BEC-104",
+        "class": "NEGATIVE",
+        "mutation": "FULL_START_WRITE_HAS_NO_TRUNCATED_MALFORMED_TIMED_OUT_OR_NON_204_RESPONSE_BUT_LIVE_UNKNOWN_CLASS_INSPECT_FORCE_REMOVE_FINAL_404_OR_QUARANTINE_IS_MISSING",
+        "expected": "REFUSE",
+        "falsifier": "SAME_LIVE_DAEMON_ACCEPTANCE_UNKNOWN_UNCONTAINED"
+      },
+      {
+        "id": "BEC-105",
+        "class": "NEGATIVE",
+        "mutation": "RECOVERY_OLD_LEDGER_OR_INTENT_OPEN_PATH_QUERY_FILE_ID_STANDARD_INFO_ATTRIBUTE_SEEK_READ_EOF_POSTREAD_RAW_POINTER_ZERO_IMAGE_RETURN_ERROR_BYTES_OR_HASH_EVIDENCE_MISSING_OR_SUBSTITUTED",
+        "expected": "REFUSE",
+        "falsifier": "RECOVERY_FILE_RAW_CALL_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-106",
+        "class": "NEGATIVE",
+        "mutation": "RECOVERY_OLD_LEDGER_AND_INTENT_PATH_OR_FILE_ID_NOT_DISTINCT_PARSED_INTENT_OR_LEDGER_ENTRY_OFFSET_WIRE_BYTES_PREFIX_CHAIN_FILE_ID_COUNT_HASH_OR_RECEIPT_IDENTITY_DOES_NOT_RECONCILE",
+        "expected": "REFUSE",
+        "falsifier": "RECOVERED_INTENT_NOT_BOUND_TO_OLD_LEDGER_PREFIX"
+      },
+      {
+        "id": "BEC-107",
+        "class": "NEGATIVE",
+        "mutation": "RECOVERY_OLD_FILE_HANDLE_CLOSES_BEFORE_RECEIPT_LEDGER_APPEND_ROOT_RELEASE_OMITS_RECEIPT_APPEND_OR_EXACT_TWO_ACQUISITION_HANDLE_CLOSES_OR_LOST_CURRENT_HEAD_APPEND_OBSERVATION_IS_CLAIMED_RECOVERED",
+        "expected": "REFUSE",
+        "falsifier": "RECOVERY_HANDLE_LIFETIME_OR_APPEND_STATUS_FALSE"
+      },
+      {
+        "id": "BEC-108",
+        "class": "NEGATIVE",
+        "mutation": "CAPACITY_LIVE_GATE_OR_LAUNCH_HANDOFF_IS_ACCEPTED_AS_EVIDENCE_LEDGER_ENTRY_OR_APPEND_TICKET_ROLE_OR_HANDOFF_LABELS_FINAL_GATE_AS_LEDGERED",
+        "expected": "REFUSE",
+        "falsifier": "NESTED_ONLY_PRECALL_RECORD_INDEPENDENTLY_LEDGERABLE"
+      },
+      {
+        "id": "BEC-109",
+        "class": "NEGATIVE",
+        "mutation": "DOCKER_WRITEFILE_OR_READFILE_LPOVERLAPPED_INPUT_MISSING_NON_NULL_OR_ANY_IO_HANDLE_DIFFERS_FROM_AUTHENTICATED_CONNECTION_PIPE_HANDLE",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_IO_CALL_OR_CONNECTION_HANDLE_SPLICE"
+      },
+      {
+        "id": "BEC-110",
+        "class": "POSITIVE",
+        "mutation": "SUCCESSFUL_ZERO_BYTE_WRITEFILE_FOR_POSITIVE_START_REQUEST_IS_RECORDED_AS_SHORT_WRITE_AND_FOLLOWS_LIVE_ACCEPTANCE_UNKNOWN_CONTAINMENT",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-111",
+        "class": "NEGATIVE",
+        "mutation": "DOCKER_CONNECTION_OMITS_OR_SUBSTITUTES_SETNAMEDPIPEHANDLESTATE_BYTE_READ_PIPE_NOWAIT_MODE_OR_USES_BLOCKING_WAIT_MODE",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_PIPE_READ_OR_WRITE_MAY_BLOCK_UNBOUNDED"
+      },
+      {
+        "id": "BEC-112",
+        "class": "NEGATIVE",
+        "mutation": "FULL_WRITE_NO_RESPONSE_HAS_EMPTY_READ_LIST_NO_RAW_ERROR_NO_DATA_CALL_MISSING_GETTICKCOUNT64_30000MS_DEADLINE_EXCEEDS_1201_ATTEMPTS_OR_UNBOUNDED_POLL",
+        "expected": "REFUSE",
+        "falsifier": "START_NO_RESPONSE_NOT_BOUNDED_OR_OBSERVED"
+      },
+      {
+        "id": "BEC-113",
+        "class": "NEGATIVE",
+        "mutation": "RECOVERY_PATH_FILEID_STANDARD_ATTRIBUTE_SEEK_OR_READ_CALL_OMITS_EXACT_OUTPUT_BUFFER_ZERO_PREIMAGE_SHA_START_OR_COMPLETION_UTC_OR_PATH_COUNT_WIDTH_TERMINATOR_RELATION",
+        "expected": "REFUSE",
+        "falsifier": "RECOVERY_RAW_PRECALL_OR_TIMING_PROVENANCE_INCOMPLETE"
+      },
+      {
+        "id": "BEC-114",
+        "class": "POSITIVE",
+        "mutation": "SUCCESSFUL_PIPE_NOWAIT_EXCHANGE_RETAINS_ORDERED_ERROR_NO_DATA_RETRIES_BEFORE_COMPLETE_FRAMED_RESPONSE_ON_THE_SAME_AUTHENTICATED_HANDLE_WITHIN_THE_MONOTONIC_DEADLINE_AND_READ_ATTEMPT_CEILING_INCLUDING_EXACT_POST_TICK_EQUALITY_MAPPED_TO_AT_OR_BEFORE_DEADLINE",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-115",
+        "class": "NEGATIVE",
+        "mutation": "BYTE_READ_PIPE_NOWAIT_DOCKER_READ_CLAIMS_ERROR_MORE_DATA_234_UNDER_ANY_DISPOSITION_INCLUDING_TERMINAL_FAILURE_OR_CLAIMS_MESSAGE_MODE_PARTIAL_RESULT",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_READ_TRANSCRIPT_IMPOSSIBLE_UNDER_FROZEN_PIPE_MODE"
+      },
+      {
+        "id": "BEC-116",
+        "class": "NEGATIVE",
+        "mutation": "RESPONSE_WINDOW_START_TICK_IS_NOT_SAMPLED_BEFORE_WRITEFILE_WRITE_TICKS_OR_READ_PRE_POST_TICKS_DO_NOT_RECONCILE_OR_SLEEP_ROWS_ARE_MISSING_UNORDERED_OR_NOT_BIJECTIVE",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_RESPONSE_WINDOW_CLOCK_OR_POLL_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-117",
+        "class": "NEGATIVE",
+        "mutation": "DEADLINE_CUT_ISSUES_POSTDEADLINE_READ_OMITS_OR_FALSIFIES_ACTUAL_OVERSHOOT_TICKS_USES_DEPRECATED_AT_OR_AFTER_DEADLINE_TOKEN_HAS_POST_TICK_RELATION_TOKEN_ARITHMETIC_MISMATCH_OR_READ_OR_POLL_OCCURS_AFTER_TERMINAL_CUT",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_RESPONSE_DEADLINE_BOUNDARY_OR_TIMING_PROVENANCE_UNBOUND"
+      },
+      {
+        "id": "BEC-118",
+        "class": "POSITIVE",
+        "mutation": "PREDEADLINE_ISSUED_PIPE_NOWAIT_READ_RETURNS_COMPLETE_204_AFTER_DEADLINE_AND_USES_TYPED_LATE_204_ACCEPTANCE_UNKNOWN_CONTAINMENT_FINAL_404_AND_QUARANTINE",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-119",
+        "class": "POSITIVE",
+        "mutation": "PARTIAL_HTTP_PREFIX_FOLLOWED_BY_FINAL_PREDEADLINE_ERROR_NO_DATA_READ_REACHING_DEADLINE_IS_CLASSIFIED_INCOMPLETE_AND_CONTAINED",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-120",
+        "class": "NEGATIVE",
+        "mutation": "DOCKER_PIPE_CLOSE_MISSING_EARLY_DOUBLE_WRONG_HANDLE_HAS_PENDING_IO_OVERLAPS_A_LATER_CONNECTION_OR_OPEN_AMBIGUOUS_STREAM_IS_REUSED_FOR_CONTAINMENT",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_PIPE_CONNECTION_RELEASE_OR_FRESH_LIFETIME_OWNERSHIP_UNBOUND"
+      },
+      {
+        "id": "BEC-121",
+        "class": "NEGATIVE",
+        "mutation": "SUCCESSFUL_DOCKER_EXCHANGE_OMITS_PREWRITE_RESPONSE_WINDOW_COMPLETES_AFTER_DEADLINE_OR_EXCEEDS_1201_READS",
+        "expected": "REFUSE",
+        "falsifier": "SUCCESSFUL_DOCKER_EXCHANGE_NOT_BOUNDED"
+      },
+      {
+        "id": "BEC-122",
+        "class": "NEGATIVE",
+        "mutation": "ANY_FULL_WRITE_START_DISPOSITION_OMITS_ITS_TYPED_BOUNDED_RESPONSE_OR_NO_FURTHER_READ_CUT_WINDOW_OR_PARTIAL_PREFIX_TIMEOUT_LACKS_FINAL_NO_DATA_CUT",
+        "expected": "REFUSE",
+        "falsifier": "FULL_WRITE_RESPONSE_BRANCH_NOT_UNIVERSALLY_BOUNDED_OR_TYPED"
+      },
+      {
+        "id": "BEC-123",
+        "class": "POSITIVE",
+        "mutation": "FULL_WRITE_COMPLETES_BEFORE_OR_AFTER_DEADLINE_THEN_FIRST_READ_ELIGIBILITY_SAMPLE_IS_AFTER_DEADLINE_WITH_ZERO_READS_AND_POLLS_AND_TYPED_ACCEPTANCE_UNKNOWN_CONTAINMENT",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-124",
+        "class": "POSITIVE",
+        "mutation": "SCHEDULER_SUSPENSION_DELAYS_TERMINAL_CAPTURE_BEYOND_5000MS_TARGET_ACTUAL_TICKS_ARE_RETAINED_AND_TYPED_OVERSHOOT_FOLLOWS_ACCEPTANCE_UNKNOWN_CONTAINMENT",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-125",
+        "class": "POSITIVE",
+        "mutation": "CLOSED_NUMERIC_PIPE_HANDLE_VALUE_IS_REUSED_BY_A_LATER_FRESH_CREATEFILEW_ACQUISITION_WITH_NONOVERLAPPING_LIFETIME_REAUTHENTICATION_EXACT_CLOSE_AND_NO_USE_AFTER_CLOSE",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-126",
+        "class": "POSITIVE",
+        "mutation": "PARTIAL_DATA_READ_COMPLETES_BY_DEADLINE_NEXT_READ_ELIGIBILITY_SAMPLE_IS_AFTER_DEADLINE_PREFIX_IS_RETAINED_AND_TYPED_NO_FURTHER_READ_CONTAINMENT_FOLLOWS",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-127",
+        "class": "POSITIVE",
+        "mutation": "EXACTLY_1201_READS_END_WITH_AN_INCOMPLETE_EMPTY_OR_PARTIAL_RESPONSE_AND_LAST_READ_POST_TICK_AT_OR_BEFORE_DEADLINE_THEN_TYPED_READ_LIMIT_CONTAINMENT_FOLLOWS_WITHOUT_ANOTHER_POLL_OR_READ_EVEN_IF_SCHEDULING_DELAYS_THE_ELIGIBILITY_SAMPLE",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-128",
+        "class": "NEGATIVE",
+        "mutation": "NO_FURTHER_READ_CUT_REASON_PRECEDENCE_READ_COUNT_LAST_READ_DISPOSITION_POST_TICK_GATE_TICK_POLL_ROWS_OR_ACCUMULATED_PREFIX_DOES_NOT_RECONCILE_OR_READ_OR_POLL_OCCURS_AFTER_CUT",
+        "expected": "REFUSE",
+        "falsifier": "NO_FURTHER_READ_CUT_PROVENANCE_PRECEDENCE_OR_STATE_MACHINE_UNBOUND"
+      },
+      {
+        "id": "BEC-129",
+        "class": "NEGATIVE",
+        "mutation": "INCOMPLETE_1201ST_READ_WITH_POST_TICK_AT_OR_BEFORE_DEADLINE_USES_ORDINARY_FINAL_NO_DATA_ROUTE_OR_MAXIMUM_CUT_IS_CLAIMED_AFTER_TERMINAL_FAILURE_COMPLETE_RESPONSE_DETECTED_MALFORMED_RESPONSE_OR_POSTDEADLINE_TERMINAL_READ_ALREADY_WON_PRECEDENCE",
+        "expected": "REFUSE",
+        "falsifier": "DOCKER_TERMINAL_CLASSIFICATION_NONCANONICAL_OR_OVERLAPPING"
+      },
+      {
+        "id": "BEC-130",
+        "class": "POSITIVE",
+        "mutation": "READ_1201_IS_ISSUED_PREDEADLINE_RETURNS_ERROR_NO_DATA_WITH_POST_TICK_AFTER_DEADLINE_AND_EMPTY_OR_PARTIAL_PREFIX_USES_ORDINARY_FINAL_NO_DATA_ACCEPTANCE_UNKNOWN_CONTAINMENT",
+        "expected": "PASS"
+      },
+      {
+        "id": "BEC-131",
+        "class": "NEGATIVE",
+        "mutation": "OMIT_ANY_ONE_DECLARED_LEDGER_CREATE_OR_APPEND_OBSERVATION_PROPERTY_INCLUDING_ANY_EXISTING_RAW_PATH_OR_FILE_ID_QUERY_FIELD_OR_NEW_ZERO_PREIMAGE_RECONCILIATION_FIELD",
+        "expected": "REFUSE",
+        "falsifier": "LEDGER_REQUIRED_PROPERTY_CLOSURE_INCOMPLETE"
+      }
+    ]
+  },
+  "final_closure_registry": {
+    "schema": "stage_f_binding_final_closure_cases/v3",
+    "case_count": 53,
+    "positive_case_count": 16,
+    "negative_case_count": 37,
+    "cases": [
+      {"id":"BEC-132","class":"POSITIVE","mutation":"VALID_ORCHESTRATOR_SUSPENDED_LAUNCH_EMBEDDED_IN_RESTART_WITH_EXACT_PROCESS_THREAD_HANDLE_AND_TIMESTAMP_CONTINUITY","expected":"PASS","falsifier":"DURABLE_ORCHESTRATOR_LAUNCH_UNREPRESENTABLE"},
+      {"id":"BEC-133","class":"NEGATIVE","mutation":"OMIT_SWAP_OR_MISPHASE_ORCHESTRATOR_PROCESS_LAUNCH_OBSERVATION_OR_BREAK_ITS_RESTART_HANDLE_PROCESS_THREAD_OR_TIME_EQUALITIES","expected":"REFUSE","falsifier":"ORCHESTRATOR_LAUNCH_RESTART_CLOSURE_FAIL_OPEN"},
+      {"id":"BEC-134","class":"POSITIVE","mutation":"VALID_RECOVERY_WITH_DURABLE_CANONICAL_INTENT_FILE_AND_COMPLETE_VALID_LEDGER_PREFIX_IN_WHICH_THE_INTENT_ENTRY_IS_HONESTLY_ABSENT","expected":"PASS","falsifier":"COMPLETE_PREFIX_ABSENCE_BRANCH_UNREPRESENTABLE"},
+      {"id":"BEC-135","class":"NEGATIVE","mutation":"CONFLATE_COMPLETE_PREFIX_INTENT_ABSENCE_WITH_UNVERIFIABLE_PREFIX_OR_SET_THE_WRONG_PARSE_CHAIN_STATUS","expected":"REFUSE","falsifier":"RECOVERY_ABSENCE_UNVERIFIABLE_CONFLATION"},
+      {"id":"BEC-136","class":"NEGATIVE","mutation":"CLAIM_UNVERIFIABLE_LEDGER_PREFIX_WHILE_POPULATING_PARSED_GENESIS_ENTRIES_OFFSETS_HASHES_OR_CHAIN_SUCCESS","expected":"REFUSE","falsifier":"UNVERIFIABLE_PREFIX_FABRICATES_PARSED_EVIDENCE"},
+      {"id":"BEC-137","class":"POSITIVE","mutation":"VALID_EXACT_ONE_BASED_EIGHT_PENDING_REBOOT_PROBES_TYPED_KEY_EXISTS_NULL_QUERIES_POLICY_DWORD_RAW_HASH_POWER_GUID_SETTING_OUTPUTS_AND_DOCKER_AUTOSTART_SOURCE","expected":"PASS","falsifier":"RAW_HOST_PREREQUISITE_SET_UNREPRESENTABLE"},
+      {"id":"BEC-138","class":"NEGATIVE","mutation":"REORDER_DUPLICATE_OMIT_OR_SUBSTITUTE_ANY_PENDING_REBOOT_SOURCE_ORDINAL_PROBE_KIND_SUBKEY_VALUE_NAME_OR_KEY_EXISTS_NULL_QUERY_FIELD","expected":"REFUSE","falsifier":"PENDING_REBOOT_SOURCE_SET_FAIL_OPEN"},
+      {"id":"BEC-139","class":"NEGATIVE","mutation":"SUBSTITUTE_NO_AUTO_REBOOT_POLICY_SOURCE_PROBE_KIND_OPEN_QUERY_RESULT_VALUE_TYPE_RAW_DWORD_BYTES_HASH_OR_DERIVED_VALUE","expected":"REFUSE","falsifier":"REBOOT_POLICY_RAW_EVIDENCE_FAIL_OPEN"},
+      {"id":"BEC-140","class":"NEGATIVE","mutation":"SUBSTITUTE_DOCKER_AUTOSTART_SOURCE_WITH_PROCESS_PRESENCE_SERVICE_STATE_OR_ANOTHER_REGISTRY_LOCATION","expected":"REFUSE","falsifier":"DOCKER_AUTOSTART_SOURCE_FAIL_OPEN"},
+      {"id":"BEC-141","class":"NEGATIVE","mutation":"MISMATCH_POWERGETACTIVESCHEME_GUID_BYTES_HASH_OR_POWERREADACVALUEINDEX_GUID_OUTPUT_BYTES_HASH_AND_DERIVED_STANDBY_OR_LID_VALUE","expected":"REFUSE","falsifier":"POWER_RAW_TO_DERIVED_RECOMPUTATION_MISSING"},
+      {"id":"BEC-142","class":"POSITIVE","mutation":"VALID_ORCHESTRATOR_HOST_VALIDATION_PROCESS_RESUME_GATE_WITH_PRE_RESUME_CREATEPROCESS_ATTESTATION_ROLE_PROCESS_THREAD_HANDLE_CREATION_FILETIME_INVOCATION_PATH_COMMAND_DIGEST_CAPABILITY_AND_LIVE_GATE_EQUALITIES","expected":"PASS","falsifier":"HOST_RESUME_CAPABILITY_UNREPRESENTABLE"},
+      {"id":"BEC-143","class":"POSITIVE","mutation":"VALID_CONTINUATION_SEGMENT_START_GATE_WITH_EXACT_ROUTE_CONTINUATION_RECEIPT_COMPLETED_ATTEMPT_OUTGOING_CHECKPOINT_NEXT_ORDINAL_RUN_AND_CAMPAIGN_LEDGER_CONTINUATION_AUTHORITY_INVOCATION_AND_ACTOR_BINDINGS","expected":"PASS","falsifier":"CONTINUATION_CAPABILITY_UNREPRESENTABLE"},
+      {"id":"BEC-144","class":"NEGATIVE","mutation":"USE_GENERIC_IDENTITY_SCIENTIFIC_CONTAINER_CAPABILITY_OR_WRONG_ROLE_CAPABILITY_FOR_HOST_RESUME_OR_CONTINUATION_START_GATE","expected":"REFUSE","falsifier":"CAPACITY_GATE_ROLE_CAPABILITY_SUBSTITUTION"},
+      {"id":"BEC-145","class":"NEGATIVE","mutation":"MISMATCH_EMBEDDED_STORAGE_SNAPSHOT_IDENTITY_OR_ANY_OF_SIX_COMPONENT_USAGES_TOTAL_SUM_RESERVED_ENVELOPE_REMAINING_FORMULA_OR_CAPACITY_CLOSURE_PROJECTION_IDENTITY","expected":"REFUSE","falsifier":"CAPACITY_CLOSURE_RECOMPUTATION_FAIL_OPEN"},
+      {"id":"BEC-146","class":"NEGATIVE","mutation":"MISMATCH_LIVE_GATE_EMBEDDED_CLOSURE_IDENTITY_PROJECTION_IDENTITY_TOTAL_REMAINING_FRESH_MEASUREMENTS_CAPABILITY_IDENTITY_OBJECT_OR_FOLLOWING_OPERATION","expected":"REFUSE","falsifier":"CAPACITY_LIVE_GATE_RECOMPUTATION_FAIL_OPEN"},
+      {"id":"BEC-147","class":"POSITIVE","mutation":"VALID_USN_START_QUERY_READ_BUFFER_CHAIN_V2_V3_RECORD_PARTITION_END_QUERY_RANGE_COUNTS_AND_TOP_LEVEL_TICKET_JOINS","expected":"PASS","falsifier":"USN_EXACT_CHAIN_UNREPRESENTABLE"},
+      {"id":"BEC-148","class":"NEGATIVE","mutation":"SWAP_USN_START_END_PHASES_OR_BREAK_QUERY_OR_READ_RAW_DWORD_ZERO_PREIMAGE_RETURNED_IMAGE_DECODE_OUTPUT_BUFFER_PREIMAGE_CAPACITY_SLICE_HASH_CONTINUATION_TERMINAL_WATERMARK_JOURNAL_OR_COUNT_EQUALITY","expected":"REFUSE","falsifier":"USN_QUERY_READ_CHAIN_FAIL_OPEN"},
+      {"id":"BEC-149","class":"NEGATIVE","mutation":"CONTRADICT_USN_SCOPE_DISPOSITION_PROTECTED_MATCH_TICKET_MATCH_COUNTS_OR_INCLUDE_REFUSED_PROTECTED_RECORD_IN_ACCEPTED_RANGE","expected":"REFUSE","falsifier":"USN_SCOPE_DISPOSITION_FAIL_OPEN"},
+      {"id":"BEC-150","class":"NEGATIVE","mutation":"OMIT_SUBSTITUTE_REUSE_OR_FAIL_TO_BIJECT_AN_AUTHORIZED_USN_RECORD_SINGLE_USE_MUTATION_TICKET_ROOT_EPOCH_TRANSACTION_WATCH_RECORD_AND_LEDGER_MUTATION_ENTRY","expected":"REFUSE","falsifier":"USN_TICKET_JOIN_FAIL_OPEN"},
+      {"id":"BEC-151","class":"POSITIVE","mutation":"VALID_DIRECT_AND_SUBTREE_WATCH_ACQUISITION_COMPLETION_REISSUE_CANCEL_TERMINAL_PARSE_RELEASE_AND_NO_USE_AFTER_RELEASE_RESOURCE_CHAIN","expected":"PASS","falsifier":"WATCH_RESOURCE_CHAIN_UNREPRESENTABLE"},
+      {"id":"BEC-152","class":"NEGATIVE","mutation":"MISMATCH_WATCH_ROLE_RECURSIVE_READ_WATCH_SUBTREE_OR_REISSUE_WATCH_SUBTREE","expected":"REFUSE","falsifier":"WATCH_ROLE_RECURSION_FAIL_OPEN"},
+      {"id":"BEC-153","class":"NEGATIVE","mutation":"SUBSTITUTE_WATCH_DIRECTORY_HANDLE_BUFFER_CAPACITY_OVERLAPPED_EVENT_DWORD_OUTPUT_ADDRESS_FILTER_SUBTREE_CYCLE_COMPLETION_REISSUE_CANCEL_CLOSE_OR_FREE_RESOURCE_OR_USE_AFTER_RELEASE","expected":"REFUSE","falsifier":"WATCH_RESOURCE_PROVENANCE_FAIL_OPEN"},
+      {"id":"BEC-154","class":"POSITIVE","mutation":"VALID_FROZEN_PER_ROUTE_AUTHORIZED_WRITE_TICKET_WITH_FULL_ROUTE_PROJECTION_AND_SELECTED_SCIENTIFIC_AUTHORITY_IDENTITY","expected":"PASS","falsifier":"PER_ROUTE_MUTATION_AUTHORITY_UNREPRESENTABLE"},
+      {"id":"BEC-155","class":"POSITIVE","mutation":"VALID_FROZEN_CONTINUATION_AUTHORIZED_WRITE_TICKET_WITH_FULL_ROUTE_PROJECTION_AND_SELECTED_CONTINUATION_AUTHORITY_IDENTITY","expected":"PASS","falsifier":"CONTINUATION_MUTATION_AUTHORITY_UNREPRESENTABLE"},
+      {"id":"BEC-156","class":"NEGATIVE","mutation":"USE_GENERIC_UNRESOLVED_WRONG_CAMPAIGN_AUTHORIZATION_WRONG_ROUTE_ID_OR_SWAPPED_SCIENTIFIC_CONTINUATION_AUTHORITY_IDENTITY_OR_PROJECTION_IN_MUTATION_TICKET","expected":"REFUSE","falsifier":"SCIENTIFIC_MUTATION_AUTHORITY_FAIL_OPEN"},
+      {"id":"BEC-157","class":"POSITIVE","mutation":"VALID_FAILED_WRITEFILE_OBSERVATION_WITH_NONNULL_ERROR_ZERO_INITIAL_AND_OUTPUT_DWORD_BYTES_EXACT_ZERO_HASH_AND_WRITTEN_COUNT_ZERO","expected":"PASS","falsifier":"FAILED_WRITE_RAW_DWORD_STATE_UNREPRESENTABLE"},
+      {"id":"BEC-158","class":"NEGATIVE","mutation":"MISMATCH_WRITEFILE_INITIAL_OR_OUTPUT_DWORD_BYTES_HASH_WRITTEN_COUNT_REQUEST_COUNT_RETURN_VALUE_LAST_ERROR_OR_WRITE_DISPOSITION","expected":"REFUSE","falsifier":"WRITEFILE_RAW_RESULT_FAIL_OPEN"},
+      {"id":"BEC-159","class":"NEGATIVE","mutation":"ASSERT_FALSE_DOCKER_MONOTONIC_OR_UTC_ORDER_SLEEP_INPUT_RETURN_DEADLINE_SAMPLE_READ_CAP_TERMINAL_CLASS_RESPONSE_WIRE_OR_DISPOSITION_PROJECTION","expected":"REFUSE","falsifier":"DOCKER_STATE_MACHINE_BOOLEAN_TRUST_FAIL_OPEN"},
+      {"id":"BEC-160","class":"POSITIVE","mutation":"VALID_NORMAL_OR_CONTAINMENT_START_RECEIPT_WITH_ONE_EXACT_CONTAINER_ID_AND_FRESH_NONOVERLAPPING_AUTHENTICATED_CLOSED_CONNECTIONS","expected":"PASS","falsifier":"START_TARGET_CONNECTION_CLOSURE_UNREPRESENTABLE"},
+      {"id":"BEC-161","class":"NEGATIVE","mutation":"TARGET_ANY_START_INSPECT_DELETE_FINAL404_RECOVERY_OR_RECEIPT_ENDPOINT_AT_A_CONTAINER_ID_OTHER_THAN_THE_IMMUTABLE_INTENT_CONTAINER","expected":"REFUSE","falsifier":"CONTAINER_TARGET_SUBSTITUTION_FAIL_OPEN"},
+      {"id":"BEC-162","class":"NEGATIVE","mutation":"SPLICE_REUSE_OVERLAP_DOUBLE_CLOSE_OR_USE_AFTER_CLOSE_AN_AUTHENTICATED_DOCKER_CONNECTION_OR_SUBSTITUTE_SERVER_RUNTIME_IDENTITY","expected":"REFUSE","falsifier":"DOCKER_CONNECTION_FRESHNESS_FAIL_OPEN"},
+      {"id":"BEC-163","class":"NEGATIVE","mutation":"MISMATCH_RECOVERY_INTENT_PREFIX_ORIGINAL_ATTEMPT_CONTAINER_RECEIPT_CAPABILITY_HANDOFF_INSPECT_DELETE_FINAL404_OR_QUARANTINE_CROSSLINK","expected":"REFUSE","falsifier":"RECOVERY_CONTAINER_RECEIPT_CROSSLINK_FAIL_OPEN"},
+      {"id":"BEC-164","class":"POSITIVE","mutation":"VALID_RECOVERY_WITH_DURABLE_INTENT_FILE_AND_GENUINELY_UNVERIFIABLE_OLD_LEDGER_PREFIX_TYPED_WITH_NO_FABRICATED_PARSE_OR_CHAIN_SUCCESS","expected":"PASS","falsifier":"UNVERIFIABLE_PREFIX_CONTAINMENT_BRANCH_UNREPRESENTABLE"},
+      {"id":"BEC-165","class":"POSITIVE","mutation":"VALID_CANONICAL_V3_AUTHORITY_SET_IMPLEMENTATION_AND_VALIDATOR_PREIMAGES_WITH_EXACT_18_AUTHORITY_ROWS_14_IMPLEMENTATION_ROWS_AND_DOWNSTREAM_V2_PROPAGATION","expected":"PASS","falsifier":"SUCCESSOR_AUTHORITY_PROVENANCE_CHAIN_UNREPRESENTABLE"},
+      {"id":"BEC-166","class":"NEGATIVE","mutation":"USE_ANY_V2_AUTHORITY_IMPLEMENTATION_OR_VALIDATOR_IDENTITY_TWELVE_ROW_PREIMAGE_MISSING_REORDERED_DUPLICATED_SUBSTITUTED_OR_EXTRA_SUCCESSOR_AUTHORITY_ROW","expected":"REFUSE","falsifier":"SUCCESSOR_SIX_AUTHORITY_ROWS_NOT_CRYPTOGRAPHICALLY_BOUND"},
+      {"id":"BEC-167","class":"NEGATIVE","mutation":"OMIT_OR_MISMATCH_V3_AUTHORITY_IMPLEMENTATION_VALIDATOR_PREIMAGES_OR_IDENTITIES_IN_BUNDLE_VALIDATION_READINESS_AUDIT_PACKET_POSTAUTH_OR_CAMPAIGN_CONSUMER","expected":"REFUSE","falsifier":"DOWNSTREAM_SUCCESSOR_AUTHORITY_PROPAGATION_FAIL_OPEN"},
+      {"id":"BEC-168","class":"NEGATIVE","mutation":"SUBSTITUTE_A_POST_RESUME_COMPLETED_DURABILITY_PROCESS_LAUNCH_OBSERVATION_FOR_THE_PRE_RESUME_ATTESTATION_OR_USE_A_PRE_RESUME_ATTESTATION_AS_A_COMPLETED_RESTART_LAUNCH_RECEIPT","expected":"REFUSE","falsifier":"PRE_RESUME_POST_RESUME_LAUNCH_STATE_CONFLATION"},
+      {"id":"BEC-169","class":"POSITIVE","mutation":"VALID_PRE_RESTART_HOST_VALIDATION_PROCESS_RESUME_GATE_WITH_PRE_RESUME_ATTESTATION_PROJECTED_ROLE_AND_EXACT_TARGET_EQUALITIES","expected":"PASS","falsifier":"PRE_RESTART_PRE_RESUME_CAPABILITY_UNREPRESENTABLE"},
+      {"id":"BEC-170","class":"POSITIVE","mutation":"VALID_POST_RESTART_HOST_VALIDATION_PROCESS_RESUME_GATE_WITH_PRE_RESUME_ATTESTATION_PROJECTED_ROLE_AND_EXACT_TARGET_EQUALITIES","expected":"PASS","falsifier":"POST_RESTART_PRE_RESUME_CAPABILITY_UNREPRESENTABLE"},
+      {"id":"BEC-171","class":"NEGATIVE","mutation":"SWAP_LAUNCH_PHASE_PROJECTED_PROCESS_ROLE_CAPABILITY_TARGET_PID_TID_THREAD_HANDLE_CREATION_FILETIME_INVOCATION_PATH_OR_COMMAND_DIGEST","expected":"REFUSE","falsifier":"PRE_RESUME_PHASE_ROLE_OR_TARGET_SUBSTITUTION"},
+      {"id":"BEC-172","class":"NEGATIVE","mutation":"MISMATCH_PRE_RESUME_ATTESTATION_DIGEST_CAPABILITY_IDENTITY_CAPACITY_LIVE_GATE_IDENTITY_OR_COMPLETED_LAUNCH_BACKLINK_AND_RESUME_ORDER","expected":"REFUSE","falsifier":"ATTESTATION_CAPABILITY_GATE_COMPLETED_LAUNCH_DAG_BREAK"},
+      {"id":"BEC-173","class":"NEGATIVE","mutation":"SWAP_OR_OMIT_CONTINUATION_RECEIPT_COMPLETED_ATTEMPT_OUTGOING_CHECKPOINT_NEXT_ATTEMPT_ORDINAL_RUN_LEDGER_CAMPAIGN_LEDGER_ROUTE_OR_RESOLVED_CONTINUATION_AUTHORITY","expected":"REFUSE","falsifier":"CONTINUATION_PREDECESSOR_OR_LEDGER_SPLICE"},
+      {"id":"BEC-174","class":"NEGATIVE","mutation":"SPLICE_CAMPAIGN_AUTHORIZATION_ROUTE_ID_ROUTE_PROJECTION_OR_SELECTED_PER_ROUTE_VERSUS_CONTINUATION_AUTHORITY_OR_POPULATE_SCIENTIFIC_FIELDS_FOR_NONSCIENTIFIC_TICKET","expected":"REFUSE","falsifier":"MUTATION_CAMPAIGN_ROUTE_AUTHORITY_SPLICE"},
+      {"id":"BEC-175","class":"POSITIVE","mutation":"VALID_REGISTRY_VALUE_OPEN_NOT_FOUND_QUERY_NOT_INVOKED_AND_OPEN_SUCCESS_QUERY_NOT_FOUND_BRANCHES_PLUS_KEY_EXISTS_PRESENT_AND_ABSENT_BRANCHES_WITH_EXACT_NULLS_AND_CLOSE_STATE","expected":"PASS","falsifier":"REGISTRY_ABSENCE_BRANCH_UNREPRESENTABLE"},
+      {"id":"BEC-176","class":"NEGATIVE","mutation":"FABRICATE_VALUE_TYPE_BYTES_OR_HASH_ON_ABSENCE_QUERY_AFTER_FAILED_OPEN_ARBITRARY_KEY_EXISTS_MARKER_OTHER_ERROR_AS_ABSENCE_OR_MISMATCH_OPEN_HANDLE_CLOSE","expected":"REFUSE","falsifier":"REGISTRY_CALL_BRANCH_FAIL_OPEN"},
+      {"id":"BEC-177","class":"NEGATIVE","mutation":"ALTER_ONE_CAPACITY_COMPONENT_OR_TOTAL_SO_SIX_COMPONENT_NONNEGATIVE_SUM_OR_715112054784_MINUS_TOTAL_FORMULA_NO_LONGER_RECONCILES","expected":"REFUSE","falsifier":"CAPACITY_COMPONENT_ARITHMETIC_FAIL_OPEN"},
+      {"id":"BEC-178","class":"NEGATIVE","mutation":"SPLICE_COMPONENT_PROJECTION_FROM_ANOTHER_STORAGE_SNAPSHOT_OR_MISMATCH_CLOSURE_AND_LIVE_GATE_PROJECTION_IDENTITY_TOTAL_OR_REMAINING_VALUE","expected":"REFUSE","falsifier":"CAPACITY_PROJECTION_OR_GATE_COPY_FAIL_OPEN"},
+      {"id":"BEC-179","class":"NEGATIVE","mutation":"MISMATCH_WATCH_DWORD_OUTPUT_ADDRESS_ZERO_PREIMAGE_RETURNED_FOUR_BYTE_IMAGE_DECODE_BUFFER_PREIMAGE_REISSUE_CYCLE_OR_LIVE_PENDING_RESOURCE_PROJECTION","expected":"REFUSE","falsifier":"WATCH_DWORD_OR_REISSUE_PROVENANCE_FAIL_OPEN"},
+      {"id":"BEC-180","class":"NEGATIVE","mutation":"MISMATCH_USN_QUERY_OR_READ_DWORD_OUTPUT_ADDRESS_ZERO_PREIMAGE_RETURNED_FOUR_BYTE_IMAGE_DECODE_OUTPUT_BUFFER_ZERO_PREIMAGE_CAPACITY_RETURNED_SLICE_OR_COMPLETION_ORDER","expected":"REFUSE","falsifier":"USN_RAW_OUTPUT_PROVENANCE_FAIL_OPEN"},
+      {"id":"BEC-181","class":"NEGATIVE","mutation":"MISMATCH_MUTATION_TICKET_ROOT_EPOCH_LEDGER_TRANSACTION_IDENTITY_NOTIFY_RECORD_USN_RECORD_LEDGER_ENTRY_OR_ALLOW_NONBIJECTIVE_CONSUMPTION","expected":"REFUSE","falsifier":"TICKET_WATCH_USN_LEDGER_JOIN_FAIL_OPEN"},
+      {"id":"BEC-182","class":"NEGATIVE","mutation":"ACCEPT_GENERIC_ENGINE_INSPECT_CONTAINMENT_DELETE_OR_FINAL404_EXCHANGE_WHEN_RAW_WRITE_DWORD_DECODES_SHORT_COUNT_OR_WRITTEN_COUNT_DIFFERS_FROM_REQUEST","expected":"REFUSE","falsifier":"GENERIC_DOCKER_SHORT_WRITE_FAIL_OPEN"},
+      {"id":"BEC-183","class":"NEGATIVE","mutation":"SPLICE_DOCKER_WINDOW_START_WRITE_START_DEADLINE_PARENT_READ_SLEEP_TICK_OR_CONNECTION_FROM_ANOTHER_START_OR_GENERIC_EXCHANGE","expected":"REFUSE","falsifier":"DOCKER_DEADLINE_OR_PARENT_WINDOW_SPLICE"},
+      {"id":"BEC-184","class":"NEGATIVE","mutation":"CLAIM_GENERIC_DOCKER_COMPLETE_RESPONSE_WHEN_ORDERED_RAW_READ_BYTES_STATUS_BODY_HASH_FRAMING_TERMINAL_PRECEDENCE_RELEASE_OR_PARENT_PROJECTION_DO_NOT_RECONCILE","expected":"REFUSE","falsifier":"GENERIC_DOCKER_RESPONSE_RECONSTRUCTION_FAIL_OPEN"}
+    ]
+  }
+}

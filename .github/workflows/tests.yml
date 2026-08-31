@@ -236,3 +236,28 @@ jobs:
             ${{ runner.temp }}/stage-e-stage-e-scientific-harness/harness-work/stage-e-harness-*.pyz
           if-no-files-found: error
           retention-days: 30
+
+  stage-f-binding-foundation:
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    needs: [stage-e-scientific-harness]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Build deterministic Stage F binding-foundation artifacts
+        run: |
+          set -euo pipefail
+          stage_root="$RUNNER_TEMP/stage-f-${GITHUB_JOB}"
+          mkdir -p "$stage_root/first" "$stage_root/second"
+          python -I scripts/build_stage_f_local_binding.py --source "$GITHUB_WORKSPACE" --output "$stage_root/first"
+          python -I scripts/build_stage_f_local_binding.py --source "$GITHUB_WORKSPACE" --output "$stage_root/second"
+          cmp -- "$stage_root/first/stage-f-binding-validator-source-bundle.json" "$stage_root/second/stage-f-binding-validator-source-bundle.json"
+          cmp -- "$stage_root/first/stage-f-binding-validator.pyz" "$stage_root/second/stage-f-binding-validator.pyz"
+      - name: Run outcome-blind Stage F binding-foundation synthetic controls
+        run: |
+          set -euo pipefail
+          python -I -c 'import os,sys,unittest; sys.path.insert(0,os.environ["GITHUB_WORKSPACE"]); names=("tests.stage_f_binding.test_binding_privacy_and_authorization","tests.stage_f_binding.test_durability_and_no_science"); suite=unittest.defaultTestLoader.loadTestsFromNames(names); count=suite.countTestCases(); result=unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if count > 0 and result.testsRun == count and result.wasSuccessful() and not result.skipped and not result.expectedFailures and not result.unexpectedSuccesses else 1)'
