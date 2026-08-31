@@ -671,13 +671,22 @@ while the accumulated response remains incomplete, or when exactly 1201 reads
 have been reached while the response remains incomplete. The first reason
 permits the write-completion tick to be either before or after the deadline; the
 eligibility tick, rather than write completion, defines the cut. The inter-read
-reason requires 1 through 1200 completed reads and the read-limit reason requires
-exactly 1201. The record retains every read and poll row, the actual eligibility
-tick, the exact empty or partial response prefix and the reason/count projection,
-then closes that connection and immediately follows the same fresh-connection
-authenticated inspection, force removal, final 404 and quarantine route. No
-read or poll occurs after the cut. An empty read list is valid only for the exact
-first-read deadline reason. The terminal-capture target is 5000 ms
+reason requires 1 through 1200 completed reads, a final DATA post-tick at or
+before the deadline, and a later eligibility tick after it. A final
+`ERROR_NO_DATA` below the cap always uses the existing final-no-data deadline
+route. Terminal classification precedence is exact and exclusive: terminal read
+failure; complete response; detected malformed response; deadline crossed by a
+terminal read or final-no-data sample; exactly 1201 incomplete reads whose last
+post-tick is still at or before the deadline; then a later first-read or
+between-DATA-read eligibility-gate deadline. Thus the read-limit reason requires
+exactly 1201, cuts immediately without a following poll, and the ordinary
+final-no-data deadline route is limited to at most 1200 reads. The record retains
+every read and poll row, the actual eligibility tick, the exact empty or partial
+response prefix and the reason/count projection, then closes that connection and
+immediately follows the same fresh-connection authenticated inspection, force
+removal, final 404 and quarantine route. No read or poll occurs after the cut. An
+empty read list is valid only for the exact first-read deadline reason. The
+terminal-capture target is 5000 ms
 after the deadline, but it is not a validity ceiling: every actual monotonic
 tick is retained without truncation, and any later scheduler-suspension capture
 is typed `OVERSHOOT_RECORDED_CONTAINMENT` and follows acceptance-unknown

@@ -765,6 +765,15 @@
       "BETWEEN_READS_GATE_DEADLINE",
       "MAXIMUM_READ_ATTEMPT_COUNT_REACHED"
     ],
+    "same_live_terminal_classification_precedence": [
+      "READ_TERMINAL_FAILURE",
+      "COMPLETE_RESPONSE",
+      "DETECTED_MALFORMED_RESPONSE",
+      "DEADLINE_CROSSED_BY_TERMINAL_READ_OR_FINAL_NO_DATA_SAMPLE",
+      "MAXIMUM_READ_ATTEMPT_COUNT_REACHED_WITH_LAST_POST_TICK_AT_OR_BEFORE_DEADLINE",
+      "LATER_FIRST_OR_BETWEEN_DATA_READ_ELIGIBILITY_GATE_DEADLINE"
+    ],
+    "same_live_final_no_data_deadline_route_maximum_read_count": 1200,
     "same_live_no_further_read_cut": "ACCEPTANCE_UNKNOWN_FORCE_REMOVE_FINAL_404_AND_QUARANTINE",
     "same_live_every_full_write_response_requires_raw_pre_and_post_read_monotonic_ticks_and_ordered_sleep_rows": true,
     "same_live_deadline_cut_uses_final_predeadline_no_data_read_without_postdeadline_read": true,
