@@ -662,22 +662,35 @@ and the remaining window, and no more than 1201 reads are permitted. A read is
 issued only when its pre-call tick is at or before the deadline. After a final
 `ERROR_NO_DATA`, a distinct `GetTickCount64` sample records that the deadline
 has been reached; a final shortened Sleep row may end at that sample without a
-following read. No speculative post-deadline read is issued. The terminal
-sample may overshoot the deadline by at most 5000 ms, after which the record
-refuses and freezes. A partial prefix at that cut is incomplete; no bytes is no
-response. If the final predeadline-issued read instead returns a
-complete 204 after the deadline, the typed late-204 disposition treats it as
-acceptance unknown and performs containment and quarantine. An empty full-write
-read list, delayed clock start, missing raw sleep/tick row, a blocking pipe, a
-substituted handle or overlapped input, or an unbounded timeout refuses.
+following read. No speculative post-deadline read is issued. If the full
+`WriteFile` completes only after the deadline, the controller issues no read or
+poll and records the typed
+`FULL_WRITE_DEADLINE_ELAPSED_BEFORE_FIRST_READ` disposition. It closes that
+connection and immediately follows the same fresh-connection authenticated
+inspection, force removal, final 404 and quarantine route; an empty read list is
+valid only for this exact measured cut. The terminal-capture target is 5000 ms
+after the deadline, but it is not a validity ceiling: every actual monotonic
+tick is retained without truncation, and any later scheduler-suspension capture
+is typed `OVERSHOOT_RECORDED_CONTAINMENT` and follows acceptance-unknown
+containment rather than refusing the evidence. A partial prefix at the deadline
+cut is incomplete; no bytes is no response. If the final predeadline-issued read
+instead returns a complete 204 after the deadline, the typed late-204
+disposition likewise treats it as acceptance unknown and performs containment
+and quarantine. An unexplained empty full-write read list, delayed clock start,
+missing raw sleep/tick row, a blocking pipe, a substituted handle or overlapped
+input, or an unbounded timeout refuses; truthful post-write timing evidence
+never refuses merely because the controller was descheduled.
 
 Each Docker exchange or failed attempt owns one authenticated pipe handle. As
 soon as its final I/O result is captured, an exact `CloseHandle` observation
 must bind that connection's path, daemon PID and creation FILETIME and prove no
-pending I/O, exactly one close, no later I/O and no handle reuse. Any following
-inspection or containment call opens and authenticates a fresh distinct pipe
-connection. Missing, early, wrong-handle or double close, or reuse of an
-ambiguous byte stream, refuses.
+pending I/O, exactly one close and no later I/O through that closed connection.
+Any following inspection or containment call performs a fresh `CreateFileW`
+acquisition and authentication after the prior lifetime ended. Windows may
+legitimately reuse the same numeric `HANDLE` value for that nonoverlapping fresh
+acquisition; numeric inequality is not evidence of freshness. Missing, early,
+wrong-handle or double close, overlapping connection lifetimes, use after close,
+or reuse of an ambiguous open byte stream refuses.
 
 ## 8. Raw power, Docker and reboot evidence
 
