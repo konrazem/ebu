@@ -1,0 +1,122 @@
+{
+  "manifest_id": "EBU-STAGE-F-LOCAL-EXECUTION-BINDING-EVIDENCE-CORRECTION-PREDECESSORS-v2",
+  "manifest_version": "2.0.0-candidate",
+  "status": "PROSPECTIVE_EXACT_PREDECESSOR_LOCK",
+  "required_current_target": {
+    "commit": "1033501b77f7f55ed9aacd9a71cef95f81966e4a",
+    "tree": "d8ffbd105eb76cfbb72472772e07f18a11112db3",
+    "recursive_blob_row_count": 442,
+    "mode_100644_count": 440,
+    "mode_100755_count": 2,
+    "symlink_count": 0,
+    "submodule_count": 0,
+    "total_blob_bytes": 131186401,
+    "ordered_path_projection_encoding": "canonical JSON array of Git paths in git ls-tree -r order, UTF-8 NFC, sorted keys, comma-colon separators, no final LF",
+    "ordered_path_projection_sha256": "f9ec1d8c8538e03fdbea4677e410891331c2bd24ff07f8eb09950263db91e206",
+    "ordered_row_projection_fields": [
+      "path",
+      "mode",
+      "git_object",
+      "byte_count",
+      "raw_sha256"
+    ],
+    "ordered_row_projection_encoding": "canonical JSON array of closed row objects in git ls-tree -r order, UTF-8 NFC, sorted keys, comma-colon separators, no final LF",
+    "ordered_row_projection_sha256": "184ac49c0d40ebc86b2ace95ce23610c2d4e43a0c7811e040037e815ff332be0"
+  },
+  "accepted_stage_e": {
+    "integration_commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "integration_tree": "212777d569af527ce9532ea6c836ff2225465d87",
+    "implementation_path_count": 51,
+    "ci_run_id": 33231168021,
+    "ci_required_job_count": 6,
+    "ci_conclusion": "success",
+    "artifact_id": 9708926559,
+    "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"
+  },
+  "accepted_local_binding_authority": {
+    "candidate_commit": "c683040869ecbbe439835a8fabd0a6c3d7ea0e3d",
+    "candidate_tree": "46ce30f0c3675836b449bc2fb00ae22a688ca287",
+    "integration_commit": "4ab6a8a8b158e6ff32d06e67d29a3d974a6326be",
+    "integration_tree": "46ce30f0c3675836b449bc2fb00ae22a688ca287"
+  },
+  "accepted_original_authority_rows": [
+    {
+      "path": "STAGE_F_LOCAL_EXECUTION_BINDING_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "45d2f7fcd57455b519ea29a6761e29b023b08869",
+      "byte_count": 71550,
+      "raw_sha256": "05b5679e61991c692b8f245d22897665089dafc25d0769590b3b0ad153fecad0"
+    },
+    {
+      "path": "stage_f_local_execution_binding_contract.json",
+      "mode": "100644",
+      "git_object": "39445162d904042d399581bcb7dcace499a431bb",
+      "byte_count": 68095,
+      "raw_sha256": "74b582fae72216f2234aa7de354586a3ff679147a89b9bad4f7df43082a9d59f"
+    },
+    {
+      "path": "stage_f_local_execution_binding_evidence_schema.json",
+      "mode": "100644",
+      "git_object": "ec64c0aa7313ed421657cc1bff2a4b0b332504df",
+      "byte_count": 229992,
+      "raw_sha256": "0062377ea1aea416e09e6c149ec3973f5aab632a0b84b438d7e181aee505a396"
+    },
+    {
+      "path": "stage_f_local_execution_binding_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "5410a66496f92814040a1e802bfd092031454497",
+      "byte_count": 5321,
+      "raw_sha256": "befdb7b717be75f7b62f6489d053274bad9330f7b8f53f2a5b4c0d4da059ae23"
+    },
+    {
+      "path": "stage_f_local_execution_binding_predecessor_manifest.json",
+      "mode": "100644",
+      "git_object": "95927fde83cc5644e82978a1162ab27170ace8e7",
+      "byte_count": 8318,
+      "raw_sha256": "28ffee108f64c9b0f0341cdf61b51437ed315ee2b84d9979cbfeb89c6bd6baab"
+    },
+    {
+      "path": "stage_f_local_execution_binding_validation_contract.json",
+      "mode": "100644",
+      "git_object": "97e95179ddf1787743603a6b5b3f586b6838d377",
+      "byte_count": 71510,
+      "raw_sha256": "6550603ec759580660300d10361cac66ef43b7d657ac1f49672d712ba5de1abf"
+    }
+  ],
+  "accepted_original_authority_row_count": 6,
+  "accepted_reachability_row": {
+    "path": "tests/framework/test_validation_reachability.py",
+    "mode": "100644",
+    "git_object": "cb666eb442d4e9862de0b9b904c49beb5d07dbc6",
+    "byte_count": 328528,
+    "raw_sha256": "f7703c3f544c3915b6d10facce649f97c03e217344367a8f7ef9baa2451e9bd4"
+  },
+  "rejected_foundation_candidate": {
+    "commit": "c6e659305713ba462dbadc54d37d704e2e4de168",
+    "tree": "52a4039eccca8f860cad3156e44abfd21add37a3",
+    "ci_run_id": 33327944297,
+    "ci_conclusion": "success",
+    "independent_disposition": "INDEPENDENT_BINDING_FAIL",
+    "accepted_as_predecessor": false
+  },
+  "preservation_rule": "required current target commit and tree, every accepted original authority row, accepted reachability row, Stage E coordinate and evidence identity must reconstruct exactly by Git object and raw byte routes",
+  "missing_duplicate_changed_unreachable_or_unlocked_input": "REFUSE",
+  "required_operation_counts": {
+    "model_execution_count": 0,
+    "trajectory_execution_count": 0,
+    "runner_import_count": 0,
+    "gate_execution_count": 0,
+    "transform_execution_count": 0,
+    "benchmark_execution_count": 0,
+    "simulation_execution_count": 0,
+    "stochastic_draw_count": 0,
+    "registered_configuration_count": 0,
+    "outcome_inspection_count": 0,
+    "result_count": 0,
+    "figure_count": 0,
+    "book_count": 0,
+    "release_action_count": 0,
+    "publication_action_count": 0
+  },
+  "completion_marker": "STAGE_F_LOCAL_EXECUTION_BINDING_EVIDENCE_CORRECTION_CANDIDATE_COMPLETE"
+}
