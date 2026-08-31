@@ -14723,7 +14723,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "schema","classification","container_start_intent_identity","receipt_root_protection_epoch_identity","receipt_evidence_ledger_predecessor_identity","receipt_evidence_ledger_predecessor_append_observation","recovery_attempt_genesis_identity","recovery_attempt_genesis_identity_reconciles","original_attempt_ledger_reopened_for_write","same_live_original_attempt_ledger_continuity","receipt_ledger_context_matches_original_if_same_live_and_fresh_recovery_if_restarted","recovery_original_intent_binding_observation","scientific_launch_handoff_identity","scientific_launch_handoff","embedded_handoff_matches_all_precall_identities_and_is_not_separately_published","final_prestart_capacity_live_gate_identity","host_prerequisite_snapshot_identity","container_start_capability_identity","inert_container_identity","start_exchange","start_attempt","start_exchange_and_start_attempt_presence_matches_classification","receipt_response_projection_matches_start_exchange_or_attempt","recovery_inspect_exchange","observed_container_state_status","observed_container_state_running","observed_restart_policy_name","observed_restart_policy_maximum_retry_count","observed_auto_remove","observed_restart_count","controller_restart_observed_since_intent","same_live_controller_proves_start_writefile_never_invoked","handoff_preimage_was_frozen_before_call","handoff_identity_presence_reconciles_frozen_state","start_may_have_occurred","same_intent_retry_forbidden","intent_consumed_at_most_once","all_present_identities_and_container_bindings_reconcile","recovery_inspect_exactly_targets_intent_container","all_containment_exchanges_exactly_target_intent_container","emergency_force_remove_required","emergency_force_remove_exchange","emergency_force_remove_completed","final_absence_inspect_exchange","container_absent_after_containment","container_and_attempt_permanently_quarantined","force_remove_reissue_after_crash_is_permitted_and_is_not_start_retry","force_remove_does_not_delete_held_bind_mounted_roots","containment_completed_utc","attempt_disposition","ledger_record_role","per_route_scientific_receipt_is_not_transport_receipt","call_started_utc","call_returned_utc","response_http_status","response_body_bytes_base64","response_body_sha256","receipt_completed_utc","receipt_sha256"
+        "schema","classification","container_start_intent_identity","receipt_root_protection_epoch_identity","receipt_evidence_ledger_predecessor_identity","receipt_evidence_ledger_predecessor_append_observation","recovery_attempt_genesis_identity","recovery_attempt_genesis_identity_reconciles","original_attempt_ledger_reopened_for_write","same_live_original_attempt_ledger_continuity","receipt_ledger_context_matches_original_if_same_live_and_fresh_recovery_if_restarted","recovery_original_intent_binding_observation","scientific_launch_handoff_identity","scientific_launch_handoff","embedded_handoff_matches_all_precall_identities_and_is_not_separately_published","final_prestart_capacity_live_gate_identity","host_prerequisite_snapshot_identity","container_start_capability_identity","inert_container_identity","start_exchange","start_attempt","start_exchange_and_start_attempt_presence_matches_classification","receipt_response_projection_matches_start_exchange_or_attempt","recovery_inspect_exchange","observed_container_state_status","observed_container_state_running","observed_restart_policy_name","observed_restart_policy_maximum_retry_count","observed_auto_remove","observed_restart_count","controller_restart_observed_since_intent","same_live_controller_proves_start_writefile_never_invoked","handoff_preimage_was_frozen_before_call","handoff_identity_presence_reconciles_frozen_state","start_may_have_occurred","same_intent_retry_forbidden","intent_consumed_at_most_once","all_present_identities_and_container_bindings_reconcile","recovery_inspect_exactly_targets_intent_container","all_containment_exchanges_exactly_target_intent_container","all_present_docker_exchange_pipe_handles_are_distinct_closed_once_and_never_reused","emergency_force_remove_required","emergency_force_remove_exchange","emergency_force_remove_completed","final_absence_inspect_exchange","container_absent_after_containment","container_and_attempt_permanently_quarantined","force_remove_reissue_after_crash_is_permitted_and_is_not_start_retry","force_remove_does_not_delete_held_bind_mounted_roots","containment_completed_utc","attempt_disposition","ledger_record_role","per_route_scientific_receipt_is_not_transport_receipt","call_started_utc","call_returned_utc","response_http_status","response_body_bytes_base64","response_body_sha256","receipt_completed_utc","receipt_sha256"
       ],
       "properties": {
         "schema": {"const": "stage_f_container_start_receipt/v1"},
@@ -14766,6 +14766,7 @@
         "all_present_identities_and_container_bindings_reconcile": {"const": true},
         "recovery_inspect_exactly_targets_intent_container": {"const": true},
         "all_containment_exchanges_exactly_target_intent_container": {"const": true},
+        "all_present_docker_exchange_pipe_handles_are_distinct_closed_once_and_never_reused": {"const": true},
         "emergency_force_remove_required": {"type": "boolean"},
         "emergency_force_remove_exchange": {"oneOf": [{"allOf": [{"$ref": "#/$defs/docker_named_pipe_http_exchange_observation"},{"type": "object","properties": {"method": {"const": "DELETE"},"endpoint": {"type": "string","pattern": "^/containers/[0-9a-f]{64}\\?force=true&v=false$"},"response_http_status": {"enum": [204,404]}}}]},{"type": "null"}]},
         "emergency_force_remove_completed": {"type": "boolean"},
@@ -14885,7 +14886,7 @@
             "attempt_disposition": {"const": "INVALIDATED_FORCE_REMOVED_AND_QUARANTINED"},
             "call_started_utc": {"$ref": "#/$defs/utc_timestamp"},
             "call_returned_utc": {"$ref": "#/$defs/utc_timestamp"},
-            "response_http_status": {"oneOf": [{"allOf": [{"$ref": "#/$defs/uint16"},{"not": {"const": 204}}]},{"type": "null"}]}
+            "response_http_status": {"oneOf": [{"$ref": "#/$defs/uint16"},{"type": "null"}]}
           }}
         },
         {
@@ -14958,6 +14959,14 @@
           "if": {"properties": {"scientific_launch_handoff_identity": {"type": "null"}},"required": ["scientific_launch_handoff_identity"]},
           "then": {"properties": {"scientific_launch_handoff": {"type": "null"}}},
           "else": {"properties": {"scientific_launch_handoff": {"$ref": "#/$defs/stage_f_scientific_launch_handoff"}}}
+        },
+        {
+          "if": {"properties": {"classification": {"const": "LIVE_TRANSPORT_ACCEPTANCE_UNKNOWN_CONTAINED"},"start_attempt": {"type": "object","properties": {"transport_disposition": {"const": "FULL_WRITE_LATE_COMPLETE_204_RESPONSE"}},"required": ["transport_disposition"]}},"required": ["classification","start_attempt"]},
+          "then": {"properties": {"response_http_status": {"const": 204},"response_body_bytes_base64": {"const": ""},"response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}
+        },
+        {
+          "if": {"properties": {"classification": {"const": "LIVE_TRANSPORT_ACCEPTANCE_UNKNOWN_CONTAINED"},"response_http_status": {"const": 204}},"required": ["classification","response_http_status"]},
+          "then": {"properties": {"start_attempt": {"type": "object","properties": {"transport_disposition": {"const": "FULL_WRITE_LATE_COMPLETE_204_RESPONSE"}},"required": ["transport_disposition"]}}}
         },
         {
           "if": {
@@ -16369,6 +16378,84 @@
         }
       ]
     },
+    "docker_named_pipe_bounded_response_window_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema","clock_api","window_start_monotonic_tick_uint64","window_start_sampled_utc","timeout_ms","monotonic_deadline_tick_uint64","deadline_equals_start_plus_timeout_without_uint64_wrap","window_start_sampled_before_writefile_call","write_started_monotonic_tick_uint64","write_completed_monotonic_tick_uint64","write_ticks_reconcile_parent_call","write_and_window_ticks_monotonic","poll_delay_api","maximum_poll_delay_ms","ordered_poll_delay_calls","poll_delay_call_count","poll_delay_call_count_and_contiguous_ordinals_reconcile","every_poll_delay_bijects_a_no_data_continuation_and_either_precedes_the_next_read_or_is_the_terminal_deadline_delay","maximum_read_attempt_count","read_call_count","read_call_count_within_maximum_and_reconciles_parent","first_read_started_after_write_completion","every_read_has_exact_pre_and_post_gettickcount64_samples_and_starts_at_or_before_deadline","terminal_read_call_ordinal","terminal_read_disposition","terminal_read_pre_monotonic_tick_uint64","terminal_read_pre_tick_at_or_before_deadline","terminal_read_post_monotonic_tick_uint64","terminal_read_post_tick_relation_to_deadline","terminal_read_call_is_last_and_ticks_reconcile_parent","terminal_deadline_clock_sample_monotonic_tick_uint64","terminal_deadline_clock_sample_utc","terminal_deadline_observed_after_final_no_data_without_another_read","terminal_deadline_clock_sample_at_or_after_deadline_and_at_or_before_deadline_plus_overshoot","terminal_capture_overshoot_ms","terminal_post_tick_at_or_before_deadline_plus_overshoot","window_terminal_disposition","no_read_or_poll_after_terminal_cut","all_ticks_calls_sleeps_ordinals_and_parent_projection_reconcile","observed_utc"
+      ],
+      "properties": {
+        "schema": {"const": "stage_f_docker_named_pipe_bounded_response_window_observation/v1"},
+        "clock_api": {"const": "GetTickCount64"},
+        "window_start_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "window_start_sampled_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "timeout_ms": {"const": 30000},
+        "monotonic_deadline_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "deadline_equals_start_plus_timeout_without_uint64_wrap": {"const": true},
+        "window_start_sampled_before_writefile_call": {"const": true},
+        "write_started_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "write_completed_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "write_ticks_reconcile_parent_call": {"const": true},
+        "write_and_window_ticks_monotonic": {"const": true},
+        "poll_delay_api": {"const": "Sleep"},
+        "maximum_poll_delay_ms": {"const": 25},
+        "ordered_poll_delay_calls": {
+          "type": "array","maxItems": 1200,"uniqueItems": true,
+          "items": {
+            "type": "object","additionalProperties": false,
+            "required": ["ordinal","api","requested_ms","requested_ms_equals_minimum_of_25_and_remaining_window_ms","preceding_no_data_read_ordinal","following_read_ordinal","terminal_delay_without_following_read","started_monotonic_tick_uint64","completed_monotonic_tick_uint64","completed_before_following_read_pre_tick","started_utc","completed_utc"],
+            "properties": {
+              "ordinal": {"$ref": "#/$defs/positive_uint32"},
+              "api": {"const": "Sleep"},
+              "requested_ms": {"type": "integer","minimum": 1,"maximum": 25},
+              "requested_ms_equals_minimum_of_25_and_remaining_window_ms": {"const": true},
+              "preceding_no_data_read_ordinal": {"$ref": "#/$defs/positive_uint32"},
+              "following_read_ordinal": {"oneOf": [{"$ref": "#/$defs/positive_uint32"},{"type": "null"}]},
+              "terminal_delay_without_following_read": {"type": "boolean"},
+              "started_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+              "completed_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+              "completed_before_following_read_pre_tick": {"oneOf": [{"const": true},{"type": "null"}]},
+              "started_utc": {"$ref": "#/$defs/utc_timestamp"},
+              "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
+            },
+            "allOf": [{"if": {"properties": {"terminal_delay_without_following_read": {"const": true}},"required": ["terminal_delay_without_following_read"]},"then": {"properties": {"following_read_ordinal": {"type": "null"},"completed_before_following_read_pre_tick": {"type": "null"}}},"else": {"properties": {"following_read_ordinal": {"$ref": "#/$defs/positive_uint32"},"completed_before_following_read_pre_tick": {"const": true}}}}]
+          }
+        },
+        "poll_delay_call_count": {"type": "integer","minimum": 0,"maximum": 1200},
+        "poll_delay_call_count_and_contiguous_ordinals_reconcile": {"const": true},
+        "every_poll_delay_bijects_a_no_data_continuation_and_either_precedes_the_next_read_or_is_the_terminal_deadline_delay": {"const": true},
+        "maximum_read_attempt_count": {"const": 1201},
+        "read_call_count": {"type": "integer","minimum": 1,"maximum": 1201},
+        "read_call_count_within_maximum_and_reconciles_parent": {"const": true},
+        "first_read_started_after_write_completion": {"const": true},
+        "every_read_has_exact_pre_and_post_gettickcount64_samples_and_starts_at_or_before_deadline": {"const": true},
+        "terminal_read_call_ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "terminal_read_disposition": {"enum": ["DATA","NO_DATA_RETRY","TERMINAL_FAILURE"]},
+        "terminal_read_pre_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "terminal_read_pre_tick_at_or_before_deadline": {"const": true},
+        "terminal_read_post_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "terminal_read_post_tick_relation_to_deadline": {"enum": ["AT_OR_BEFORE_DEADLINE","AT_OR_AFTER_DEADLINE","AFTER_DEADLINE"]},
+        "terminal_read_call_is_last_and_ticks_reconcile_parent": {"const": true},
+        "terminal_deadline_clock_sample_monotonic_tick_uint64": {"oneOf": [{"$ref": "#/$defs/uint64"},{"type": "null"}]},
+        "terminal_deadline_clock_sample_utc": {"oneOf": [{"$ref": "#/$defs/utc_timestamp"},{"type": "null"}]},
+        "terminal_deadline_observed_after_final_no_data_without_another_read": {"type": "boolean"},
+        "terminal_deadline_clock_sample_at_or_after_deadline_and_at_or_before_deadline_plus_overshoot": {"type": "boolean"},
+        "terminal_capture_overshoot_ms": {"const": 5000},
+        "terminal_post_tick_at_or_before_deadline_plus_overshoot": {"const": true},
+        "window_terminal_disposition": {"enum": ["COMPLETE_RESPONSE_WITHIN_DEADLINE","COMPLETE_RESPONSE_AFTER_DEADLINE","DEADLINE_REACHED_AFTER_FINAL_NO_DATA","MALFORMED_RESPONSE_DETECTED_WITHIN_DEADLINE","INCOMPLETE_OR_MALFORMED_RESPONSE_AFTER_DEADLINE","READ_TERMINAL_FAILURE"]},
+        "no_read_or_poll_after_terminal_cut": {"const": true},
+        "all_ticks_calls_sleeps_ordinals_and_parent_projection_reconcile": {"const": true},
+        "observed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      },
+      "allOf": [
+        {"if": {"properties": {"window_terminal_disposition": {"const": "COMPLETE_RESPONSE_WITHIN_DEADLINE"}},"required": ["window_terminal_disposition"]},"then": {"properties": {"terminal_read_disposition": {"const": "DATA"},"terminal_read_post_tick_relation_to_deadline": {"const": "AT_OR_BEFORE_DEADLINE"}}}},
+        {"if": {"properties": {"window_terminal_disposition": {"const": "COMPLETE_RESPONSE_AFTER_DEADLINE"}},"required": ["window_terminal_disposition"]},"then": {"properties": {"terminal_read_disposition": {"const": "DATA"},"terminal_read_post_tick_relation_to_deadline": {"const": "AFTER_DEADLINE"}}}},
+        {"if": {"properties": {"window_terminal_disposition": {"const": "DEADLINE_REACHED_AFTER_FINAL_NO_DATA"}},"required": ["window_terminal_disposition"]},"then": {"properties": {"terminal_read_disposition": {"const": "NO_DATA_RETRY"},"terminal_deadline_clock_sample_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},"terminal_deadline_clock_sample_utc": {"$ref": "#/$defs/utc_timestamp"},"terminal_deadline_observed_after_final_no_data_without_another_read": {"const": true},"terminal_deadline_clock_sample_at_or_after_deadline_and_at_or_before_deadline_plus_overshoot": {"const": true}}},"else": {"properties": {"terminal_deadline_clock_sample_monotonic_tick_uint64": {"type": "null"},"terminal_deadline_clock_sample_utc": {"type": "null"},"terminal_deadline_observed_after_final_no_data_without_another_read": {"const": false},"terminal_deadline_clock_sample_at_or_after_deadline_and_at_or_before_deadline_plus_overshoot": {"const": false}}}},
+        {"if": {"properties": {"window_terminal_disposition": {"const": "MALFORMED_RESPONSE_DETECTED_WITHIN_DEADLINE"}},"required": ["window_terminal_disposition"]},"then": {"properties": {"terminal_read_disposition": {"const": "DATA"},"terminal_read_post_tick_relation_to_deadline": {"const": "AT_OR_BEFORE_DEADLINE"}}}},
+        {"if": {"properties": {"window_terminal_disposition": {"const": "INCOMPLETE_OR_MALFORMED_RESPONSE_AFTER_DEADLINE"}},"required": ["window_terminal_disposition"]},"then": {"properties": {"terminal_read_disposition": {"const": "DATA"},"terminal_read_post_tick_relation_to_deadline": {"const": "AFTER_DEADLINE"}}}},
+        {"if": {"properties": {"window_terminal_disposition": {"const": "READ_TERMINAL_FAILURE"}},"required": ["window_terminal_disposition"]},"then": {"properties": {"terminal_read_disposition": {"const": "TERMINAL_FAILURE"}}}}
+      ]
+    },
     "docker_named_pipe_connection_observation": {
       "type": "object",
       "additionalProperties": false,
@@ -16465,12 +16552,39 @@
         "handle_held": {"const": true}
       }
     },
+    "docker_named_pipe_connection_release_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema","named_pipe_path","pipe_handle_value_uint64","server_process_id","server_process_creation_filetime_uint64","connection_identity_fields_reconcile_parent","all_pending_io_completed_or_no_pending_io_exists","close_reason","close_api","close_input_handle_value_uint64","close_input_handle_matches_connection_pipe_handle","close_returned_nonzero","no_pipe_io_after_close","fresh_connection_required_for_every_later_exchange","single_close_ownership_no_double_close_and_no_handle_reuse","close_started_utc","closed_utc"],
+      "properties": {
+        "schema": {"const": "stage_f_docker_named_pipe_connection_release_observation/v1"},
+        "named_pipe_path": {"const": "\\\\.\\pipe\\docker_engine"},
+        "pipe_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "server_process_id": {"$ref": "#/$defs/positive_uint32"},
+        "server_process_creation_filetime_uint64": {"$ref": "#/$defs/nonzero_uint64"},
+        "connection_identity_fields_reconcile_parent": {"const": true},
+        "all_pending_io_completed_or_no_pending_io_exists": {"const": true},
+        "close_reason": {"enum": ["NORMAL_RESPONSE_COMPLETE","WRITE_FAILED","WRITE_SHORT","RESPONSE_DEADLINE_OR_MALFORMED","NON_204_RESPONSE","LATE_COMPLETE_204_RESPONSE","READ_TERMINAL_FAILURE"]},
+        "close_api": {"const": "CloseHandle"},
+        "close_input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
+        "close_input_handle_matches_connection_pipe_handle": {"const": true},
+        "close_returned_nonzero": {"const": true},
+        "no_pipe_io_after_close": {"const": true},
+        "fresh_connection_required_for_every_later_exchange": {"const": true},
+        "single_close_ownership_no_double_close_and_no_handle_reuse": {"const": true},
+        "close_started_utc": {"$ref": "#/$defs/utc_timestamp"},
+        "closed_utc": {"$ref": "#/$defs/utc_timestamp"}
+      }
+    },
     "docker_named_pipe_read_attempt_observation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["ordinal","api","input_handle_value_uint64","buffer_base_address_uint64","buffer_capacity","bytes_read_output_address_uint64","bytes_read_input_bytes_base64","bytes_read_input_sha256","overlapped_pointer_is_null","returned_nonzero","last_error","bytes_read_output_bytes_base64","bytes_read_output_sha256","bytes_read","output_bytes_base64","output_sha256","disposition","all_handles_counts_output_images_and_bytes_reconcile","started_utc","completed_utc"],
+      "required": ["ordinal","pre_read_clock_api","pre_read_monotonic_tick_uint64","pre_read_tick_sampled_immediately_before_call","api","input_handle_value_uint64","buffer_base_address_uint64","buffer_capacity","bytes_read_output_address_uint64","bytes_read_input_bytes_base64","bytes_read_input_sha256","overlapped_pointer_is_null","returned_nonzero","last_error","bytes_read_output_bytes_base64","bytes_read_output_sha256","bytes_read","output_bytes_base64","output_sha256","disposition","post_read_clock_api","post_read_monotonic_tick_uint64","post_read_tick_sampled_immediately_after_return","all_handles_counts_output_images_bytes_and_ticks_reconcile","started_utc","completed_utc"],
       "properties": {
         "ordinal": {"$ref": "#/$defs/positive_uint32"},
+        "pre_read_clock_api": {"const": "GetTickCount64"},
+        "pre_read_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "pre_read_tick_sampled_immediately_before_call": {"const": true},
         "api": {"const": "ReadFile"},
         "input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
         "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
@@ -16486,22 +16600,24 @@
         "bytes_read": {"$ref": "#/$defs/uint32"},
         "output_bytes_base64": {"type": "string","pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "output_sha256": {"$ref": "#/$defs/sha256"},
-        "disposition": {"enum": ["DATA","ERROR_MORE_DATA_CONTINUE","NO_DATA_RETRY","TERMINAL_FAILURE"]},
-        "all_handles_counts_output_images_and_bytes_reconcile": {"const": true},
+        "disposition": {"enum": ["DATA","NO_DATA_RETRY","TERMINAL_FAILURE"]},
+        "post_read_clock_api": {"const": "GetTickCount64"},
+        "post_read_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+        "post_read_tick_sampled_immediately_after_return": {"const": true},
+        "all_handles_counts_output_images_bytes_and_ticks_reconcile": {"const": true},
         "started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
       },
       "allOf": [
         {"if": {"properties": {"disposition": {"const": "DATA"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": true},"last_error": {"type": "null"},"bytes_read": {"$ref": "#/$defs/positive_uint32"}}}},
-        {"if": {"properties": {"disposition": {"const": "ERROR_MORE_DATA_CONTINUE"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": false},"last_error": {"const": 234},"bytes_read": {"$ref": "#/$defs/positive_uint32"}}}},
         {"if": {"properties": {"disposition": {"const": "NO_DATA_RETRY"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": false},"last_error": {"const": 232},"bytes_read": {"const": 0},"output_bytes_base64": {"const": ""},"output_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}},
-        {"if": {"properties": {"disposition": {"const": "TERMINAL_FAILURE"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": false},"last_error": {"allOf": [{"$ref": "#/$defs/uint32"},{"not": {"enum": [232,234]}}]}}}}
+        {"if": {"properties": {"disposition": {"const": "TERMINAL_FAILURE"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": false},"last_error": {"allOf": [{"$ref": "#/$defs/uint32"},{"not": {"const": 232}}]}}}}
       ]
     },
     "docker_named_pipe_http_start_attempt_observation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["schema","connection","method","endpoint","request_wire_buffer_base_address_uint64","request_wire_byte_count","request_wire_bytes_base64","request_wire_sha256","request_wire_hash_completed_utc","request_wire_buffer_live_and_unchanged_through_write_return","request_matches_frozen_start_capability_and_handoff","write_api","write_invoked","write_input_handle_value_uint64","write_input_buffer_base_address_uint64","write_input_byte_count","write_overlapped_pointer_is_null","request_and_write_buffer_addresses_counts_hashes_reconcile","write_bytes_written_output_address_uint64","write_bytes_written_input_bytes_base64","write_bytes_written_input_sha256","write_started_utc","write_returned_nonzero","write_last_error","write_bytes_written_output_bytes_base64","write_bytes_written_output_sha256","written_byte_count","write_disposition","written_byte_count_equals_request","written_byte_count_less_than_request","write_result_counts_and_raw_output_reconcile","write_completed_utc","ordered_read_calls","read_call_count","read_call_count_and_contiguous_ordinals_reconcile","write_and_every_read_input_handle_equal_connection_pipe_handle","terminal_failure_call_present","terminal_failure_call_is_last_when_present","ordered_read_outputs_concatenate_to_response_wire_bytes","response_wire_bytes_base64","response_wire_sha256","response_http_status","response_body_bytes_base64","response_body_sha256","response_framing_complete","response_parse_complete","response_is_exact_complete_http_204","bounded_no_response_observation","transport_disposition","daemon_acceptance_unknown","all_call_timestamps_ordered","completed_utc"],
+      "required": ["schema","connection","method","endpoint","request_wire_buffer_base_address_uint64","request_wire_byte_count","request_wire_bytes_base64","request_wire_sha256","request_wire_hash_completed_utc","request_wire_buffer_live_and_unchanged_through_write_return","request_matches_frozen_start_capability_and_handoff","write_api","write_invoked","write_input_handle_value_uint64","write_input_buffer_base_address_uint64","write_input_byte_count","write_overlapped_pointer_is_null","request_and_write_buffer_addresses_counts_hashes_reconcile","write_bytes_written_output_address_uint64","write_bytes_written_input_bytes_base64","write_bytes_written_input_sha256","write_started_monotonic_tick_uint64","write_started_utc","write_returned_nonzero","write_last_error","write_bytes_written_output_bytes_base64","write_bytes_written_output_sha256","written_byte_count","write_disposition","written_byte_count_equals_request","written_byte_count_less_than_request","write_result_counts_and_raw_output_reconcile","write_completed_monotonic_tick_uint64","write_completed_utc","ordered_read_calls","read_call_count","read_call_count_and_contiguous_ordinals_reconcile","write_and_every_read_input_handle_equal_connection_pipe_handle","terminal_failure_call_present","terminal_failure_call_is_last_when_present","ordered_read_outputs_concatenate_to_response_wire_bytes","response_wire_bytes_base64","response_wire_sha256","response_http_status","response_body_bytes_base64","response_body_sha256","response_framing_complete","response_parse_complete","response_is_exact_complete_http_204","bounded_response_window","transport_disposition","daemon_acceptance_unknown","connection_release","connection_release_completed_after_final_io_and_before_any_later_exchange","all_call_timestamps_ordered","completed_utc"],
       "properties": {
         "schema": {"const": "stage_f_docker_named_pipe_http_start_attempt_observation/v1"},
         "connection": {"$ref": "#/$defs/docker_named_pipe_connection_observation"},
@@ -16524,6 +16640,7 @@
         "write_bytes_written_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "write_bytes_written_input_bytes_base64": {"const": "AAAAAA=="},
         "write_bytes_written_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+        "write_started_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
         "write_started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "write_returned_nonzero": {"type": "boolean"},
         "write_last_error": {"oneOf": [{"$ref": "#/$defs/uint32"},{"type": "null"}]},
@@ -16534,8 +16651,9 @@
         "written_byte_count_equals_request": {"type": "boolean"},
         "written_byte_count_less_than_request": {"type": "boolean"},
         "write_result_counts_and_raw_output_reconcile": {"const": true},
+        "write_completed_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
         "write_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
-        "ordered_read_calls": {"type": "array","uniqueItems": true,"items": {"$ref": "#/$defs/docker_named_pipe_read_attempt_observation"}},
+        "ordered_read_calls": {"type": "array","maxItems": 1201,"uniqueItems": true,"items": {"$ref": "#/$defs/docker_named_pipe_read_attempt_observation"}},
         "read_call_count": {"$ref": "#/$defs/nonnegative_integer"},
         "read_call_count_and_contiguous_ordinals_reconcile": {"const": true},
         "write_and_every_read_input_handle_equal_connection_pipe_handle": {"const": true},
@@ -16549,40 +16667,12 @@
         "response_body_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"},{"type": "null"}]},
         "response_framing_complete": {"type": "boolean"},
         "response_parse_complete": {"type": "boolean"},
-        "response_is_exact_complete_http_204": {"const": false},
-        "bounded_no_response_observation": {
-          "oneOf": [
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["schema","clock_api","monotonic_start_tick_uint64","timeout_ms","monotonic_deadline_tick_uint64","deadline_equals_start_plus_timeout_without_uint64_wrap","poll_delay_api","poll_delay_ms","maximum_read_attempt_count","read_attempt_count_within_maximum","terminal_monotonic_tick_uint64","terminal_tick_at_or_after_deadline","final_read_call_ordinal","final_read_call_disposition","final_read_call_completed_at_or_after_deadline","every_read_was_synchronous_pipe_nowait_and_returned_without_blocking","no_response_bytes_observed_before_deadline","all_ticks_calls_and_ordinals_reconcile","observed_utc"],
-              "properties": {
-                "schema": {"const": "stage_f_docker_named_pipe_bounded_no_response_observation/v1"},
-                "clock_api": {"const": "GetTickCount64"},
-                "monotonic_start_tick_uint64": {"$ref": "#/$defs/uint64"},
-                "timeout_ms": {"const": 30000},
-                "monotonic_deadline_tick_uint64": {"$ref": "#/$defs/uint64"},
-                "deadline_equals_start_plus_timeout_without_uint64_wrap": {"const": true},
-                "poll_delay_api": {"const": "Sleep"},
-                "poll_delay_ms": {"const": 25},
-                "maximum_read_attempt_count": {"const": 1201},
-                "read_attempt_count_within_maximum": {"const": true},
-                "terminal_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
-                "terminal_tick_at_or_after_deadline": {"const": true},
-                "final_read_call_ordinal": {"$ref": "#/$defs/positive_uint32"},
-                "final_read_call_disposition": {"const": "NO_DATA_RETRY"},
-                "final_read_call_completed_at_or_after_deadline": {"const": true},
-                "every_read_was_synchronous_pipe_nowait_and_returned_without_blocking": {"const": true},
-                "no_response_bytes_observed_before_deadline": {"const": true},
-                "all_ticks_calls_and_ordinals_reconcile": {"const": true},
-                "observed_utc": {"$ref": "#/$defs/utc_timestamp"}
-              }
-            },
-            {"type": "null"}
-          ]
-        },
-        "transport_disposition": {"enum": ["FAILED_WRITE","SHORT_WRITE","FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE","FULL_WRITE_COMPLETE_NON_204_RESPONSE","READ_TERMINAL_FAILURE_AFTER_ANY_WRITE"]},
+        "response_is_exact_complete_http_204": {"type": "boolean"},
+        "bounded_response_window": {"oneOf": [{"$ref": "#/$defs/docker_named_pipe_bounded_response_window_observation"},{"type": "null"}]},
+        "transport_disposition": {"enum": ["FAILED_WRITE","SHORT_WRITE","FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE","FULL_WRITE_COMPLETE_NON_204_RESPONSE","FULL_WRITE_LATE_COMPLETE_204_RESPONSE","READ_TERMINAL_FAILURE_AFTER_ANY_WRITE"]},
         "daemon_acceptance_unknown": {"const": true},
+        "connection_release": {"$ref": "#/$defs/docker_named_pipe_connection_release_observation"},
+        "connection_release_completed_after_final_io_and_before_any_later_exchange": {"const": true},
         "all_call_timestamps_ordered": {"const": true},
         "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
       },
@@ -16590,22 +16680,25 @@
         {"if": {"properties": {"write_disposition": {"const": "FAILED_WRITE"}},"required": ["write_disposition"]},"then": {"properties": {"write_returned_nonzero": {"const": false},"write_last_error": {"$ref": "#/$defs/uint32"},"written_byte_count_equals_request": {"const": false},"written_byte_count_less_than_request": {"const": true}}}},
         {"if": {"properties": {"write_disposition": {"const": "SHORT_WRITE"}},"required": ["write_disposition"]},"then": {"properties": {"write_returned_nonzero": {"const": true},"write_last_error": {"type": "null"},"written_byte_count": {"$ref": "#/$defs/uint32"},"written_byte_count_equals_request": {"const": false},"written_byte_count_less_than_request": {"const": true}}}},
         {"if": {"properties": {"write_disposition": {"const": "FULL_WRITE"}},"required": ["write_disposition"]},"then": {"properties": {"write_returned_nonzero": {"const": true},"write_last_error": {"type": "null"},"written_byte_count": {"$ref": "#/$defs/positive_uint32"},"written_byte_count_equals_request": {"const": true},"written_byte_count_less_than_request": {"const": false}}}},
-        {"if": {"properties": {"transport_disposition": {"const": "FAILED_WRITE"}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "FAILED_WRITE"}}}},
-        {"if": {"properties": {"transport_disposition": {"const": "SHORT_WRITE"}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "SHORT_WRITE"}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "FAILED_WRITE"}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "FAILED_WRITE"},"bounded_response_window": {"type": "null"},"connection_release": {"properties": {"close_reason": {"const": "WRITE_FAILED"}}}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "SHORT_WRITE"}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "SHORT_WRITE"},"bounded_response_window": {"type": "null"},"connection_release": {"properties": {"close_reason": {"const": "WRITE_SHORT"}}}}}},
         {"if": {"properties": {"transport_disposition": {"enum": ["FAILED_WRITE","SHORT_WRITE"]}},"required": ["transport_disposition"]},"then": {"properties": {"ordered_read_calls": {"maxItems": 0},"read_call_count": {"const": 0},"response_wire_bytes_base64": {"const": ""},"response_wire_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"response_http_status": {"type": "null"},"response_body_bytes_base64": {"type": "null"},"response_body_sha256": {"type": "null"},"response_framing_complete": {"const": false},"response_parse_complete": {"const": false}}}},
-        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_NO_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"ordered_read_calls": {"minItems": 1,"maxItems": 1201,"items": {"type": "object","properties": {"disposition": {"const": "NO_DATA_RETRY"}},"required": ["disposition"]},"contains": {"type": "object","properties": {"disposition": {"const": "NO_DATA_RETRY"}},"required": ["disposition"]},"minContains": 1},"read_call_count": {"type": "integer","minimum": 1,"maximum": 1201},"bounded_no_response_observation": {"type": "object"},"response_wire_bytes_base64": {"const": ""},"response_wire_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"response_framing_complete": {"const": false}}},"else": {"properties": {"bounded_no_response_observation": {"type": "null"}}}},
-        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_COMPLETE_NON_204_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "FULL_WRITE"},"terminal_failure_call_present": {"const": false},"response_framing_complete": {"const": true},"response_parse_complete": {"const": true},"response_http_status": {"allOf": [{"type": "integer","minimum": 100,"maximum": 599},{"not": {"const": 204}}]},"response_body_bytes_base64": {"type": "string"},"response_body_sha256": {"$ref": "#/$defs/sha256"}}}},
-        {"if": {"properties": {"transport_disposition": {"enum": ["FAILED_WRITE","SHORT_WRITE","FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE","FULL_WRITE_COMPLETE_NON_204_RESPONSE"]}},"required": ["transport_disposition"]},"then": {"properties": {"terminal_failure_call_present": {"const": false},"ordered_read_calls": {"not": {"contains": {"type": "object","properties": {"disposition": {"const": "TERMINAL_FAILURE"}},"required": ["disposition"]}}}}}},
-        {"if": {"properties": {"transport_disposition": {"enum": ["FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE"]}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "FULL_WRITE"},"response_parse_complete": {"const": false},"response_http_status": {"type": "null"},"response_body_bytes_base64": {"type": "null"},"response_body_sha256": {"type": "null"}}}},
-        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"response_wire_bytes_base64": {"type": "string","minLength": 4}}}},
-        {"if": {"properties": {"transport_disposition": {"const": "READ_TERMINAL_FAILURE_AFTER_ANY_WRITE"}},"required": ["transport_disposition"]},"then": {"properties": {"ordered_read_calls": {"minItems": 1,"contains": {"type": "object","properties": {"disposition": {"const": "TERMINAL_FAILURE"}},"required": ["disposition"]},"minContains": 1,"maxContains": 1},"read_call_count": {"$ref": "#/$defs/positive_integer"},"terminal_failure_call_present": {"const": true},"response_parse_complete": {"const": false},"response_http_status": {"type": "null"},"response_body_bytes_base64": {"type": "null"},"response_body_sha256": {"type": "null"}}}}
+        {"if": {"properties": {"transport_disposition": {"enum": ["FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE","FULL_WRITE_COMPLETE_NON_204_RESPONSE","FULL_WRITE_LATE_COMPLETE_204_RESPONSE","READ_TERMINAL_FAILURE_AFTER_ANY_WRITE"]}},"required": ["transport_disposition"]},"then": {"properties": {"write_disposition": {"const": "FULL_WRITE"},"ordered_read_calls": {"minItems": 1,"maxItems": 1201},"read_call_count": {"type": "integer","minimum": 1,"maximum": 1201},"bounded_response_window": {"$ref": "#/$defs/docker_named_pipe_bounded_response_window_observation"}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_NO_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"ordered_read_calls": {"items": {"type": "object","properties": {"disposition": {"const": "NO_DATA_RETRY"}},"required": ["disposition"]}},"response_wire_bytes_base64": {"const": ""},"response_wire_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"response_framing_complete": {"const": false},"bounded_response_window": {"properties": {"window_terminal_disposition": {"const": "DEADLINE_REACHED_AFTER_FINAL_NO_DATA"}}},"connection_release": {"properties": {"close_reason": {"const": "RESPONSE_DEADLINE_OR_MALFORMED"}}}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"response_wire_bytes_base64": {"type": "string","minLength": 4},"response_parse_complete": {"const": false},"response_http_status": {"type": "null"},"response_body_bytes_base64": {"type": "null"},"response_body_sha256": {"type": "null"},"bounded_response_window": {"properties": {"window_terminal_disposition": {"enum": ["DEADLINE_REACHED_AFTER_FINAL_NO_DATA","MALFORMED_RESPONSE_DETECTED_WITHIN_DEADLINE","INCOMPLETE_OR_MALFORMED_RESPONSE_AFTER_DEADLINE"]}}},"connection_release": {"properties": {"close_reason": {"const": "RESPONSE_DEADLINE_OR_MALFORMED"}}}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_COMPLETE_NON_204_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"terminal_failure_call_present": {"const": false},"response_framing_complete": {"const": true},"response_parse_complete": {"const": true},"response_http_status": {"allOf": [{"type": "integer","minimum": 100,"maximum": 599},{"not": {"const": 204}}]},"response_body_bytes_base64": {"type": "string"},"response_body_sha256": {"$ref": "#/$defs/sha256"},"bounded_response_window": {"properties": {"window_terminal_disposition": {"enum": ["COMPLETE_RESPONSE_WITHIN_DEADLINE","COMPLETE_RESPONSE_AFTER_DEADLINE"]}}},"connection_release": {"properties": {"close_reason": {"const": "NON_204_RESPONSE"}}}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_LATE_COMPLETE_204_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"terminal_failure_call_present": {"const": false},"response_framing_complete": {"const": true},"response_parse_complete": {"const": true},"response_http_status": {"const": 204},"response_body_bytes_base64": {"const": ""},"response_body_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"bounded_response_window": {"properties": {"window_terminal_disposition": {"const": "COMPLETE_RESPONSE_AFTER_DEADLINE"}}},"connection_release": {"properties": {"close_reason": {"const": "LATE_COMPLETE_204_RESPONSE"}}}}}},
+        {"if": {"properties": {"transport_disposition": {"enum": ["FAILED_WRITE","SHORT_WRITE","FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE","FULL_WRITE_COMPLETE_NON_204_RESPONSE","FULL_WRITE_LATE_COMPLETE_204_RESPONSE"]}},"required": ["transport_disposition"]},"then": {"properties": {"terminal_failure_call_present": {"const": false},"ordered_read_calls": {"not": {"contains": {"type": "object","properties": {"disposition": {"const": "TERMINAL_FAILURE"}},"required": ["disposition"]}}}}}},
+        {"if": {"properties": {"transport_disposition": {"enum": ["FULL_WRITE_NO_RESPONSE","FULL_WRITE_INCOMPLETE_OR_MALFORMED_RESPONSE"]}},"required": ["transport_disposition"]},"then": {"properties": {"response_parse_complete": {"const": false},"response_http_status": {"type": "null"},"response_body_bytes_base64": {"type": "null"},"response_body_sha256": {"type": "null"}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "READ_TERMINAL_FAILURE_AFTER_ANY_WRITE"}},"required": ["transport_disposition"]},"then": {"properties": {"ordered_read_calls": {"contains": {"type": "object","properties": {"disposition": {"const": "TERMINAL_FAILURE"}},"required": ["disposition"]},"minContains": 1,"maxContains": 1},"terminal_failure_call_present": {"const": true},"response_parse_complete": {"const": false},"response_http_status": {"type": "null"},"response_body_bytes_base64": {"type": "null"},"response_body_sha256": {"type": "null"},"bounded_response_window": {"properties": {"window_terminal_disposition": {"const": "READ_TERMINAL_FAILURE"}}},"connection_release": {"properties": {"close_reason": {"const": "READ_TERMINAL_FAILURE"}}}}}},
+        {"if": {"properties": {"transport_disposition": {"const": "FULL_WRITE_LATE_COMPLETE_204_RESPONSE"}},"required": ["transport_disposition"]},"then": {"properties": {"response_is_exact_complete_http_204": {"const": true}}},"else": {"properties": {"response_is_exact_complete_http_204": {"const": false}}}}
       ]
     },
     "docker_named_pipe_http_exchange_observation": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "schema","connection","method","endpoint","request_wire_buffer_base_address_uint64","request_wire_byte_count","request_wire_bytes_base64","request_wire_sha256","write_api","write_input_handle_value_uint64","write_input_buffer_base_address_uint64","write_input_byte_count","write_overlapped_pointer_is_null","write_bytes_written_output_address_uint64","write_bytes_written_input_bytes_base64","write_bytes_written_input_sha256","write_started_utc","write_returned_nonzero","write_last_error","write_bytes_written_output_bytes_base64","write_bytes_written_output_sha256","written_byte_count","write_completed_utc","ordered_read_calls","read_call_count","read_call_count_and_contiguous_ordinals_reconcile","write_and_every_read_input_handle_equal_connection_pipe_handle","bounded_response_observation","response_wire_bytes_base64","response_wire_sha256","response_http_status","response_body_bytes_base64","response_body_sha256","response_framing_complete","request_and_response_reconcile","all_call_timestamps_ordered","completed_utc"
+        "schema","connection","method","endpoint","request_wire_buffer_base_address_uint64","request_wire_byte_count","request_wire_bytes_base64","request_wire_sha256","write_api","write_input_handle_value_uint64","write_input_buffer_base_address_uint64","write_input_byte_count","write_overlapped_pointer_is_null","write_bytes_written_output_address_uint64","write_bytes_written_input_bytes_base64","write_bytes_written_input_sha256","write_started_monotonic_tick_uint64","write_started_utc","write_returned_nonzero","write_last_error","write_bytes_written_output_bytes_base64","write_bytes_written_output_sha256","written_byte_count","write_completed_monotonic_tick_uint64","write_completed_utc","ordered_read_calls","read_call_count","read_call_count_and_contiguous_ordinals_reconcile","write_and_every_read_input_handle_equal_connection_pipe_handle","bounded_response_window","response_wire_bytes_base64","response_wire_sha256","response_http_status","response_body_bytes_base64","response_body_sha256","response_framing_complete","request_and_response_reconcile","connection_release","connection_release_completed_after_final_io_and_before_any_later_exchange","all_call_timestamps_ordered","completed_utc"
       ],
       "properties": {
         "schema": {"const": "stage_f_docker_named_pipe_http_exchange_observation/v1"},
@@ -16624,20 +16717,25 @@
         "write_bytes_written_output_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
         "write_bytes_written_input_bytes_base64": {"const": "AAAAAA=="},
         "write_bytes_written_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
+        "write_started_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
         "write_started_utc": {"$ref": "#/$defs/utc_timestamp"},
         "write_returned_nonzero": {"const": true},
         "write_last_error": {"type": "null"},
         "write_bytes_written_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
         "write_bytes_written_output_sha256": {"$ref": "#/$defs/sha256"},
         "written_byte_count": {"$ref": "#/$defs/positive_uint32"},
+        "write_completed_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
         "write_completed_utc": {"$ref": "#/$defs/utc_timestamp"},
         "ordered_read_calls": {
           "type": "array","minItems": 1,"maxItems": 1201,"uniqueItems": true,
           "items": {
             "type": "object","additionalProperties": false,
-            "required": ["ordinal","api","input_handle_value_uint64","buffer_base_address_uint64","buffer_capacity","bytes_read_output_address_uint64","bytes_read_input_bytes_base64","bytes_read_input_sha256","overlapped_pointer_is_null","returned_nonzero","last_error","bytes_read_output_bytes_base64","bytes_read_output_sha256","bytes_read","output_bytes_base64","output_sha256","disposition","started_utc","completed_utc"],
+            "required": ["ordinal","pre_read_clock_api","pre_read_monotonic_tick_uint64","pre_read_tick_sampled_immediately_before_call","api","input_handle_value_uint64","buffer_base_address_uint64","buffer_capacity","bytes_read_output_address_uint64","bytes_read_input_bytes_base64","bytes_read_input_sha256","overlapped_pointer_is_null","returned_nonzero","last_error","bytes_read_output_bytes_base64","bytes_read_output_sha256","bytes_read","output_bytes_base64","output_sha256","disposition","post_read_clock_api","post_read_monotonic_tick_uint64","post_read_tick_sampled_immediately_after_return","all_handles_counts_output_images_bytes_and_ticks_reconcile","started_utc","completed_utc"],
             "properties": {
               "ordinal": {"$ref": "#/$defs/positive_uint32"},
+              "pre_read_clock_api": {"const": "GetTickCount64"},
+              "pre_read_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+              "pre_read_tick_sampled_immediately_before_call": {"const": true},
               "api": {"const": "ReadFile"},
               "input_handle_value_uint64": {"$ref": "#/$defs/valid_handle_value_uint64"},
               "buffer_base_address_uint64": {"$ref": "#/$defs/nonzero_uint64"},
@@ -16647,19 +16745,22 @@
               "bytes_read_input_sha256": {"const": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"},
               "overlapped_pointer_is_null": {"const": true},
               "returned_nonzero": {"type": "boolean"},
-              "last_error": {"oneOf": [{"enum": [232,234]},{"type": "null"}]},
+              "last_error": {"oneOf": [{"const": 232},{"type": "null"}]},
               "bytes_read_output_bytes_base64": {"type": "string","minLength": 8,"maxLength": 8,"pattern": "^[A-Za-z0-9+/]{6}==$"},
               "bytes_read_output_sha256": {"$ref": "#/$defs/sha256"},
               "bytes_read": {"$ref": "#/$defs/uint32"},
               "output_bytes_base64": {"type": "string","pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
               "output_sha256": {"$ref": "#/$defs/sha256"},
-              "disposition": {"enum": ["DATA","ERROR_MORE_DATA_CONTINUE","NO_DATA_RETRY"]},
+              "disposition": {"enum": ["DATA","NO_DATA_RETRY"]},
+              "post_read_clock_api": {"const": "GetTickCount64"},
+              "post_read_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
+              "post_read_tick_sampled_immediately_after_return": {"const": true},
+              "all_handles_counts_output_images_bytes_and_ticks_reconcile": {"const": true},
               "started_utc": {"$ref": "#/$defs/utc_timestamp"},
               "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
             },
             "allOf": [
               {"if": {"properties": {"disposition": {"const": "DATA"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": true},"last_error": {"type": "null"},"bytes_read": {"$ref": "#/$defs/positive_uint32"},"output_bytes_base64": {"type": "string","minLength": 4}}}},
-              {"if": {"properties": {"disposition": {"const": "ERROR_MORE_DATA_CONTINUE"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": false},"last_error": {"const": 234},"bytes_read": {"$ref": "#/$defs/positive_uint32"},"output_bytes_base64": {"type": "string","minLength": 4}}}},
               {"if": {"properties": {"disposition": {"const": "NO_DATA_RETRY"}},"required": ["disposition"]},"then": {"properties": {"returned_nonzero": {"const": false},"last_error": {"const": 232},"bytes_read": {"const": 0},"output_bytes_base64": {"const": ""},"output_sha256": {"const": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}}}}
             ]
           }
@@ -16667,25 +16768,7 @@
         "read_call_count": {"$ref": "#/$defs/positive_uint32"},
         "read_call_count_and_contiguous_ordinals_reconcile": {"const": true},
         "write_and_every_read_input_handle_equal_connection_pipe_handle": {"const": true},
-        "bounded_response_observation": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["schema","clock_api","monotonic_start_tick_uint64","timeout_ms","monotonic_deadline_tick_uint64","deadline_equals_start_plus_timeout_without_uint64_wrap","maximum_read_attempt_count","read_attempt_count_within_maximum","response_complete_monotonic_tick_uint64","response_completed_at_or_before_deadline","all_ticks_calls_and_ordinals_reconcile","observed_utc"],
-          "properties": {
-            "schema": {"const": "stage_f_docker_named_pipe_bounded_response_observation/v1"},
-            "clock_api": {"const": "GetTickCount64"},
-            "monotonic_start_tick_uint64": {"$ref": "#/$defs/uint64"},
-            "timeout_ms": {"const": 30000},
-            "monotonic_deadline_tick_uint64": {"$ref": "#/$defs/uint64"},
-            "deadline_equals_start_plus_timeout_without_uint64_wrap": {"const": true},
-            "maximum_read_attempt_count": {"const": 1201},
-            "read_attempt_count_within_maximum": {"const": true},
-            "response_complete_monotonic_tick_uint64": {"$ref": "#/$defs/uint64"},
-            "response_completed_at_or_before_deadline": {"const": true},
-            "all_ticks_calls_and_ordinals_reconcile": {"const": true},
-            "observed_utc": {"$ref": "#/$defs/utc_timestamp"}
-          }
-        },
+        "bounded_response_window": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_bounded_response_window_observation"},{"type": "object","properties": {"window_terminal_disposition": {"const": "COMPLETE_RESPONSE_WITHIN_DEADLINE"}}}]},
         "response_wire_bytes_base64": {"type": "string","minLength": 4,"pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
         "response_wire_sha256": {"$ref": "#/$defs/sha256"},
         "response_http_status": {"type": "integer","minimum": 100,"maximum": 599},
@@ -16693,6 +16776,8 @@
         "response_body_sha256": {"$ref": "#/$defs/sha256"},
         "response_framing_complete": {"const": true},
         "request_and_response_reconcile": {"const": true},
+        "connection_release": {"allOf": [{"$ref": "#/$defs/docker_named_pipe_connection_release_observation"},{"type": "object","properties": {"close_reason": {"const": "NORMAL_RESPONSE_COMPLETE"}}}]},
+        "connection_release_completed_after_final_io_and_before_any_later_exchange": {"const": true},
         "all_call_timestamps_ordered": {"const": true},
         "completed_utc": {"$ref": "#/$defs/utc_timestamp"}
       }

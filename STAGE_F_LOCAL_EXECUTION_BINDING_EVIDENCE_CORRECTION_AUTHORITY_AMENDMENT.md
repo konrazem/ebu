@@ -653,13 +653,31 @@ wire call. `WriteFile` and every `ReadFile` are synchronous with a null
 `lpOverlapped`, and their input handle must equal that connection's exact
 authenticated pipe handle. A successful zero-byte WriteFile for a positive
 request is a short write and follows the live acceptance-unknown containment
-route. After a full start write, absence of response is representable only by
-ordered nonblocking `ReadFile` calls whose `ERROR_NO_DATA` rows are retained
-while `GetTickCount64` advances to the exact 30000-ms deadline. Polls use a
-25-ms delay and no more than 1201 read attempts. The final raw no-data call,
-deadline arithmetic without uint64 wrap, terminal tick and ordinals must
-reconcile. An empty read list, a blocking pipe, a substituted handle or
-overlapped input, or an unbounded timeout cannot establish no response.
+route. A `GetTickCount64` response window begins before the nonblocking
+`WriteFile`, not after it. Every full write, including a partial response,
+malformed response, non-204 response and terminal read failure, retains that
+same exact 30000-ms window, each ReadFile's immediately bracketing monotonic
+samples and every intervening `Sleep` call. Poll delays are the lesser of 25 ms
+and the remaining window, and no more than 1201 reads are permitted. A read is
+issued only when its pre-call tick is at or before the deadline. After a final
+`ERROR_NO_DATA`, a distinct `GetTickCount64` sample records that the deadline
+has been reached; a final shortened Sleep row may end at that sample without a
+following read. No speculative post-deadline read is issued. The terminal
+sample may overshoot the deadline by at most 5000 ms, after which the record
+refuses and freezes. A partial prefix at that cut is incomplete; no bytes is no
+response. If the final predeadline-issued read instead returns a
+complete 204 after the deadline, the typed late-204 disposition treats it as
+acceptance unknown and performs containment and quarantine. An empty full-write
+read list, delayed clock start, missing raw sleep/tick row, a blocking pipe, a
+substituted handle or overlapped input, or an unbounded timeout refuses.
+
+Each Docker exchange or failed attempt owns one authenticated pipe handle. As
+soon as its final I/O result is captured, an exact `CloseHandle` observation
+must bind that connection's path, daemon PID and creation FILETIME and prove no
+pending I/O, exactly one close, no later I/O and no handle reuse. Any following
+inspection or containment call opens and authenticates a fresh distinct pipe
+connection. Missing, early, wrong-handle or double close, or reuse of an
+ambiguous byte stream, refuses.
 
 ## 8. Raw power, Docker and reboot evidence
 
@@ -722,7 +740,10 @@ image, scalar and hashes. Every such I/O call records null `lpOverlapped`; its
 handle equals the authenticated connection handle. Successful exchanges may
 contain ordered `ERROR_NO_DATA` retry rows before response data but must finish
 with a complete framed response within the same exact monotonic 30000-ms and
-1201-read-attempt ceiling. Pathname-only or copied-response
+1201-read-attempt ceiling. Because the handle is fixed to byte-read mode,
+available bytes return as successful `DATA`; `ERROR_MORE_DATA` 234 is an
+impossible transcript and refuses. Each successful exchange then closes its
+owned pipe handle exactly once before any later exchange. Pathname-only or copied-response
 evidence refuses.
 
 The full raw snapshot is remeasured immediately before every process resume,
