@@ -930,6 +930,100 @@ STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS = (
     + STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
     + STAGE_F_LOCAL_BINDING_NEW_PATHS
 )
+AWS_C0_ACCEPTED_BASE_COMMIT = "a4af44afd3c878311ee373bc19e3be14b2aacec5"
+AWS_C0_ACCEPTED_BASE_TREE = "619b59875cfa4c6ad4a7da4f6a1aaaa465d3f23a"
+AWS_C0_AUTHORITY_CANDIDATE = "f76f79b4ca68ea9466d31fba1e4627dc31f40679"
+AWS_C0_AUTHORITY_INTEGRATION = "bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118"
+AWS_C0_AUTHORITY_TREE = "d97add63617885305b0768371cce7a7828dbe35f"
+AWS_C0_DIAGNOSTIC_COMMIT = "df7e8447dbe98ae21b78d97a07093b2f3de5555d"
+AWS_C0_DIAGNOSTIC_TREE = "847afbed0e750528b25c72e4c0e1d2c5643696af"
+AWS_C0_AUTHORITY_PATHS = (
+    "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_AUTHORITY_AMENDMENT.md",
+    "aws_c0_unattended_synthetic_rehearsal_contract.json",
+    "aws_c0_unattended_synthetic_rehearsal_evidence_schema.json",
+    "aws_c0_unattended_synthetic_rehearsal_implementation_path_manifest.json",
+    "aws_c0_unattended_synthetic_rehearsal_predecessor_manifest.json",
+    "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+)
+AWS_C0_AUTHORITY_ROWS = (
+    (
+        "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_AUTHORITY_AMENDMENT.md",
+        "100644",
+        "4fe23a434d1cbde87c540718dade24288115d5ca",
+        15308,
+        "ae73aa9286f1db0ee473c1fa06e2180832aba26eec5f4460cba0e49e8890b186",
+    ),
+    (
+        "aws_c0_unattended_synthetic_rehearsal_contract.json",
+        "100644",
+        "1b0f54973bea3b3e7d85080d2b53c95def72733b",
+        12359,
+        "ae20af92bd4184b504b819fa044b9425200806fa13b1f5f6121fb44e43b842b7",
+    ),
+    (
+        "aws_c0_unattended_synthetic_rehearsal_evidence_schema.json",
+        "100644",
+        "d067f17106e79cc1425495ddf5ce4b7a205652f2",
+        30746,
+        "58d9e4bc7bdf0eb953ba55f051c5e8d3114972237fee21aaa2a69b083385b8a9",
+    ),
+    (
+        "aws_c0_unattended_synthetic_rehearsal_implementation_path_manifest.json",
+        "100644",
+        "90eee83efa5f6800530ae315dafe4b9529e6cc87",
+        5446,
+        "d1a54744e908b8c95f46454c12e0d5db1296322fde5fb24df812bb8acfbc72fc",
+    ),
+    (
+        "aws_c0_unattended_synthetic_rehearsal_predecessor_manifest.json",
+        "100644",
+        "c346d6ec135df1073b80b2aa9ffce7f2194dd6b2",
+        8044,
+        "c10f92fc56729582d4ed6d353726b3bc60a66d2bd4531e4070432f16bbce7364",
+    ),
+    (
+        "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+        "100644",
+        "f1ccf9881ac0f37c824386f764b22a55ce75e6f8",
+        13274,
+        "d3c0a039cf5a81367e17303a1e4961758c06e2a489002ea4a6d67c7458c468dd",
+    ),
+)
+AWS_C0_IMPLEMENTATION_PATHS = (
+    ".github/workflows/aws-c0-static.yml",
+    "scripts/validate_aws_c0_static.py",
+    "aws/c0/README.md",
+    "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+    "aws/c0/state-machine/aws-c0.asl.json",
+    "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+    "aws/c0/controller/ebu_c0_controller.py",
+    "aws/c0/controller/ebu-c0@.service",
+    "aws/c0/finalizer/finalizer.py",
+    "aws/c0/container/Dockerfile",
+    "aws/c0/container/synthetic_worker.py",
+    "aws/c0/fixtures/launch-request.valid.json",
+    "aws/c0/fixtures/negative-cases.json",
+    "tests/aws/test_aws_c0_unattended_synthetic.py",
+)
+AWS_C0_AUTHORITY_SCOPE = (
+    STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_AUTHORITY_PATHS)
+)
+AWS_C0_COMPLETED_IMPLEMENTATION_SCOPE = (
+    AWS_C0_AUTHORITY_SCOPE | frozenset(AWS_C0_IMPLEMENTATION_PATHS)
+)
+AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS = (
+    STAGE_E_RECONCILED_HARNESS_IMPLEMENTATION_PATHS
+    + STAGE_F_LOCAL_BINDING_AUTHORITY_PATHS
+    + (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,)
+    + STAGE_F_BINDING_EVIDENCE_CORRECTION_PATHS
+    + STAGE_F_FINAL_EVIDENCE_CLOSURE_PATHS
+    + STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_PATHS
+    + AWS_C0_AUTHORITY_PATHS
+)
+AWS_C0_COMPLETED_DESCENDANT_PATHS = (
+    AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS + AWS_C0_IMPLEMENTATION_PATHS
+)
 STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
 scope = manifest["prospective_harness_implementation"]
 expected_modified = set(scope["modified_paths"])
@@ -1100,7 +1194,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "5c1fe07f026cc953c2d8efbb7e89dc1becf76fda8297f5ceeef722d5c1aed70e"
+TEST_SELF_SEAL = "c89df83a1a7e5a3a46f73a2b2f253c0a05fba9ef61bf6588f1f2f296a5a469a7"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -1683,6 +1777,17 @@ def _git(*args: str) -> bytes:
             len(args) == 3
             and args[:2]
             == ("merge-base", STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_TARGET)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or args
+        == (
+            "merge-base",
+            AWS_C0_ACCEPTED_BASE_COMMIT,
+            AWS_C0_AUTHORITY_CANDIDATE,
+        )
+        or (
+            len(args) == 3
+            and args[:2] == ("merge-base", AWS_C0_AUTHORITY_INTEGRATION)
             and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
         )
         or args
@@ -2417,6 +2522,11 @@ class ValidationReachabilityTests(unittest.TestCase):
             "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION",
         ):
             self._audit_stage_f_local_binding_authority(current_scope)
+        if current_scope["aws_c0_phase"] in (
+            "AWS_C0_AUTHORITY_ONLY",
+            "AWS_C0_COMPLETED_IMPLEMENTATION",
+        ):
+            self._audit_aws_c0_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -2467,6 +2577,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             if head_entries.get(path) != base_entries.get(path)
         )
         stage_f_local_binding_phase = None
+        aws_c0_phase = None
         if changed_paths == STAGE_C_AUTHORITY_SCOPE:
             stage_c_phase = "AUTHORITY_ONLY"
             stage_d_phase = None
@@ -2588,6 +2699,26 @@ class ValidationReachabilityTests(unittest.TestCase):
             stage_f_local_binding_phase = (
                 "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
             )
+        elif changed_paths == AWS_C0_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = "AWS_C0_AUTHORITY_ONLY"
+        elif changed_paths == AWS_C0_COMPLETED_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = "AWS_C0_COMPLETED_IMPLEMENTATION"
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
@@ -2601,7 +2732,8 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "final-evidence-closure authority-only, or Stage F "
                 "final-evidence-closure completed-implementation, Stage F "
                 "attempt-root-bootstrap authority-only, or Stage F "
-                "attempt-root-bootstrap completed-implementation "
+                "attempt-root-bootstrap completed-implementation, AWS-C0 "
+                "authority-only, or AWS-C0 completed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -2635,8 +2767,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             len(STAGE_F_ATTEMPT_ROOT_BOOTSTRAP_COMPLETED_IMPLEMENTATION_SCOPE),
             138,
         )
+        self.assertEqual(len(AWS_C0_AUTHORITY_SCOPE), 132)
+        self.assertEqual(len(AWS_C0_COMPLETED_IMPLEMENTATION_SCOPE), 146)
         self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
         self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
+        self.assertEqual(len(AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS), 82)
+        self.assertEqual(len(set(AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS)), 82)
+        self.assertEqual(len(AWS_C0_COMPLETED_DESCENDANT_PATHS), 96)
+        self.assertEqual(len(set(AWS_C0_COMPLETED_DESCENDANT_PATHS)), 96)
         for path in changed_paths:
             self.assertIn(path, head_entries)
             self.assertEqual(head_entries[path]["mode"], "100644", path)
@@ -2704,10 +2842,14 @@ class ValidationReachabilityTests(unittest.TestCase):
         test_blob = _git("cat-file", "blob", test_entry["git_object"])
         test_checkout = current_path_bytes[test_path]
         self.assertEqual(test_checkout.count(b"\r"), test_checkout.count(b"\r\n"))
-        self.assertEqual(test_checkout.replace(b"\r\n", b"\n"), test_blob)
-        self.assertNotIn(b"\r", test_blob)
+        normalized_checkout = test_checkout.replace(b"\r\n", b"\n")
+        if actual_head == AWS_C0_AUTHORITY_INTEGRATION:
+            self.assertNotEqual(normalized_checkout, test_blob)
+        else:
+            self.assertEqual(normalized_checkout, test_blob)
+        self.assertNotIn(b"\r", normalized_checkout)
         self.assertEqual(
-            _sha256(_normalized_test_bytes(test_blob)),
+            _sha256(_normalized_test_bytes(normalized_checkout)),
             TEST_SELF_SEAL,
         )
         for path in ("src/ebu_framework/validation.py", "tests/framework/safety.py"):
@@ -2729,6 +2871,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             "stage_d_dynamic_growth_phase": stage_d_dynamic_growth_phase,
             "stage_e_reconciliation_phase": stage_e_reconciliation_phase,
             "stage_f_local_binding_phase": stage_f_local_binding_phase,
+            "aws_c0_phase": aws_c0_phase,
         }
 
     def _audit_stage_d_authority(self, current_scope: dict[str, object]) -> None:
@@ -2810,6 +2953,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
         ):
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_implementation_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -3081,6 +3228,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
         ):
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_implementation_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -3527,6 +3678,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
         ):
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_implementation_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -4072,6 +4227,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
         ):
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_implementation_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -4518,6 +4677,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
         ):
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_implementation_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta,
             frozenset(expected_implementation_delta),
@@ -6219,6 +6382,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in STAGE_F_LOCAL_BINDING_NEW_PATHS}
             )
+        if current_scope["aws_c0_phase"] is not None:
+            expected_post_integration_delta.update(AWS_C0_AUTHORITY_PATHS)
+            expected_status.update({path: "A" for path in AWS_C0_AUTHORITY_PATHS})
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+            expected_status.update(
+                {path: "A" for path in AWS_C0_IMPLEMENTATION_PATHS}
+            )
         self.assertEqual(
             post_integration_delta, frozenset(expected_post_integration_delta)
         )
@@ -6719,6 +6890,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in STAGE_F_LOCAL_BINDING_NEW_PATHS}
             )
+        if current_scope["aws_c0_phase"] is not None:
+            expected_post_integration_delta.update(AWS_C0_AUTHORITY_PATHS)
+            expected_status.update({path: "A" for path in AWS_C0_AUTHORITY_PATHS})
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+            expected_status.update(
+                {path: "A" for path in AWS_C0_IMPLEMENTATION_PATHS}
+            )
         self.assertEqual(
             post_integration_delta, frozenset(expected_post_integration_delta)
         )
@@ -7180,6 +7359,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in STAGE_F_LOCAL_BINDING_NEW_PATHS}
             )
+        if current_scope["aws_c0_phase"] is not None:
+            expected_post_integration_delta.update(AWS_C0_AUTHORITY_PATHS)
+            expected_status.update({path: "A" for path in AWS_C0_AUTHORITY_PATHS})
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+            expected_status.update(
+                {path: "A" for path in AWS_C0_IMPLEMENTATION_PATHS}
+            )
         self.assertEqual(
             post_integration_delta, frozenset(expected_post_integration_delta)
         )
@@ -7330,6 +7517,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_MODIFIED_PATHS)
             expected_implementation_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_implementation_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
             implementation_delta, frozenset(expected_implementation_delta)
         )
@@ -7597,13 +7788,24 @@ class ValidationReachabilityTests(unittest.TestCase):
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
         ):
             expected_descendant_delta.update(STAGE_F_LOCAL_BINDING_NEW_PATHS)
+        if current_scope["aws_c0_phase"] is not None:
+            expected_descendant_delta.update(AWS_C0_AUTHORITY_PATHS)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_descendant_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
-        self.assertEqual(
-            len(descendant_delta),
-            88
+        expected_descendant_count = (
+            96
+            if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION"
+            else 82
+            if current_scope["aws_c0_phase"] == "AWS_C0_AUTHORITY_ONLY"
+            else 88
             if current_scope["stage_f_local_binding_phase"]
             == "STAGE_F_LOCAL_BINDING_COMPLETED_IMPLEMENTATION"
-            else 76,
+            else 76
+        )
+        self.assertEqual(
+            len(descendant_delta),
+            expected_descendant_count,
         )
         self.assertEqual(implementation["unknown_path_disposition"], "REFUSE")
         self.assertEqual(implementation["scope_derived_exclusion"], "FORBIDDEN")
@@ -8553,6 +8755,296 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "test_current_head_durability",
                 "test_post_i9_authority_cases",
             ),
+        )
+
+    def _audit_aws_c0_authority(self, current_scope: dict[str, object]) -> None:
+        self.assertIn(
+            current_scope["aws_c0_phase"],
+            ("AWS_C0_AUTHORITY_ONLY", "AWS_C0_COMPLETED_IMPLEMENTATION"),
+        )
+        actual_head = current_scope["actual_head"]
+        for commit in (
+            AWS_C0_ACCEPTED_BASE_COMMIT,
+            AWS_C0_AUTHORITY_CANDIDATE,
+            AWS_C0_AUTHORITY_INTEGRATION,
+            AWS_C0_DIAGNOSTIC_COMMIT,
+        ):
+            self.assertEqual(
+                _git("rev-parse", "--verify", f"{commit}^{{commit}}")
+                .decode()
+                .strip(),
+                commit,
+            )
+        self.assertEqual(
+            _git("rev-parse", f"{AWS_C0_ACCEPTED_BASE_COMMIT}^{{tree}}")
+            .decode()
+            .strip(),
+            AWS_C0_ACCEPTED_BASE_TREE,
+        )
+        for commit in (AWS_C0_AUTHORITY_CANDIDATE, AWS_C0_AUTHORITY_INTEGRATION):
+            self.assertEqual(
+                _git("rev-parse", f"{commit}^{{tree}}").decode().strip(),
+                AWS_C0_AUTHORITY_TREE,
+            )
+        self.assertEqual(
+            _git("rev-parse", f"{AWS_C0_DIAGNOSTIC_COMMIT}^{{tree}}")
+            .decode()
+            .strip(),
+            AWS_C0_DIAGNOSTIC_TREE,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{AWS_C0_AUTHORITY_CANDIDATE}^1")
+            .decode()
+            .strip(),
+            AWS_C0_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{AWS_C0_AUTHORITY_INTEGRATION}^1")
+            .decode()
+            .strip(),
+            AWS_C0_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("rev-parse", f"{AWS_C0_AUTHORITY_INTEGRATION}^2")
+            .decode()
+            .strip(),
+            AWS_C0_AUTHORITY_CANDIDATE,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                AWS_C0_ACCEPTED_BASE_COMMIT,
+                AWS_C0_AUTHORITY_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            AWS_C0_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git("merge-base", AWS_C0_AUTHORITY_INTEGRATION, actual_head)
+            .decode()
+            .strip(),
+            AWS_C0_AUTHORITY_INTEGRATION,
+        )
+
+        base_entries = _tree_entries(AWS_C0_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(AWS_C0_AUTHORITY_CANDIDATE)
+        integration_entries = _tree_entries(AWS_C0_AUTHORITY_INTEGRATION)
+        current_entries = _tree_entries(actual_head)
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(candidate_delta, frozenset(AWS_C0_AUTHORITY_PATHS))
+        self.assertEqual(candidate_entries, integration_entries)
+        candidate_archive = _archive_members(AWS_C0_AUTHORITY_CANDIDATE)
+        integration_archive = _archive_members(AWS_C0_AUTHORITY_INTEGRATION)
+        current_archive = _archive_members(actual_head)
+        documents = {}
+        for expected in AWS_C0_AUTHORITY_ROWS:
+            path, mode, git_object, byte_count, raw_sha256 = expected
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            integration_row, integration_raw = _object_row(
+                path, integration_entries, integration_archive
+            )
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(
+                (
+                    candidate_row["path"],
+                    candidate_row["mode"],
+                    candidate_row["git_object"],
+                    candidate_row["byte_count"],
+                    candidate_row["raw_sha256"],
+                ),
+                expected,
+                path,
+            )
+            self.assertEqual(mode, "100644", path)
+            self.assertEqual(git_object, candidate_entries[path]["git_object"], path)
+            self.assertEqual(len(candidate_raw), byte_count, path)
+            self.assertEqual(_sha256(candidate_raw), raw_sha256, path)
+            self.assertEqual(candidate_row, integration_row, path)
+            self.assertEqual(candidate_row, current_row, path)
+            self.assertEqual(candidate_raw, integration_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n")
+                and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", candidate_raw, path)
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(candidate_raw, path)
+
+        contract = documents["aws_c0_unattended_synthetic_rehearsal_contract.json"]
+        schema = documents[
+            "aws_c0_unattended_synthetic_rehearsal_evidence_schema.json"
+        ]
+        implementation = documents[
+            "aws_c0_unattended_synthetic_rehearsal_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "aws_c0_unattended_synthetic_rehearsal_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "aws_c0_unattended_synthetic_rehearsal_validation_contract.json"
+        ]
+        accepted_base = {
+            "commit": AWS_C0_ACCEPTED_BASE_COMMIT,
+            "tree": AWS_C0_ACCEPTED_BASE_TREE,
+        }
+        for document in (contract, implementation, predecessor):
+            self.assertEqual(
+                {
+                    key: document["accepted_base"][key]
+                    for key in ("commit", "tree")
+                },
+                accepted_base,
+            )
+        self.assertEqual(validation["accepted_base_commit"], AWS_C0_ACCEPTED_BASE_COMMIT)
+        self.assertEqual(validation["accepted_base_tree"], AWS_C0_ACCEPTED_BASE_TREE)
+        self.assertEqual(contract["candidate_file_count"], 6)
+        self.assertEqual(
+            tuple(contract["candidate_files_in_order"]), AWS_C0_AUTHORITY_PATHS
+        )
+        self.assertEqual(implementation["authority_path_count"], 6)
+        self.assertEqual(
+            tuple(implementation["authority_paths_in_order"]),
+            AWS_C0_AUTHORITY_PATHS,
+        )
+        reachability = implementation["prospective_reachability_correction"]
+        self.assertEqual(reachability["modified_path_count"], 1)
+        self.assertEqual(
+            tuple(reachability["modified_paths"]),
+            (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,),
+        )
+        self.assertEqual(
+            tuple(reachability["required_new_phases_in_order"]),
+            ("AWS_C0_AUTHORITY_ONLY", "AWS_C0_COMPLETED_IMPLEMENTATION"),
+        )
+        prospective = implementation["prospective_implementation"]
+        self.assertEqual(prospective["modified_path_count"], 0)
+        self.assertEqual(prospective["modified_paths"], [])
+        self.assertEqual(prospective["added_path_count"], 14)
+        self.assertEqual(prospective["total_path_count"], 14)
+        self.assertEqual(
+            tuple(row["path"] for row in prospective["paths_in_order"]),
+            AWS_C0_IMPLEMENTATION_PATHS,
+        )
+        self.assertEqual(
+            {(row["status"], row["mode"]) for row in prospective["paths_in_order"]},
+            {("A", "100644")},
+        )
+        arithmetic = implementation["descendant_path_arithmetic"]
+        self.assertEqual(
+            (
+                arithmetic["accepted_stage_e_path_count"],
+                arithmetic["accepted_stage_f_authority_path_count"],
+                arithmetic["existing_reachability_unique_path_count"],
+                arithmetic["current_authority_only_unique_path_count"],
+                arithmetic["aws_c0_authority_added_path_count"],
+                arithmetic["aws_c0_authority_only_unique_path_count"],
+                arithmetic["aws_c0_reachability_new_unique_path_count"],
+                arithmetic["aws_c0_implementation_added_path_count"],
+                arithmetic["aws_c0_completed_unique_path_count"],
+            ),
+            (51, 24, 1, 76, 6, 82, 0, 14, 96),
+        )
+
+        expected_schema_roots = tuple(contract["evidence_schema_roots_in_order"])
+        self.assertEqual(
+            tuple(validation["required_schema_roots_in_order"]),
+            expected_schema_roots,
+        )
+        schema_refs = tuple(row["$ref"] for row in schema["oneOf"])
+        self.assertEqual(
+            schema_refs,
+            tuple(
+                f"#/$defs/{root.removesuffix('/v1')}"
+                for root in expected_schema_roots
+            ),
+        )
+        self.assertEqual(len(schema_refs), 12)
+        self.assertEqual(validation["lane_count"], len(validation["lanes_in_order"]))
+        self.assertEqual(validation["positive_case_count"], len(validation["positive_cases"]))
+        self.assertEqual(validation["negative_case_count"], len(validation["negative_cases"]))
+        self.assertEqual(
+            validation["total_case_count"],
+            validation["positive_case_count"] + validation["negative_case_count"],
+        )
+        self.assertEqual(set(contract["authority_phase_counters"].values()), {0})
+        self.assertEqual(set(contract["zero_science_counters"].values()), {0})
+
+        diagnostic = predecessor["published_diagnostic_source"]
+        self.assertEqual(diagnostic["commit"], AWS_C0_DIAGNOSTIC_COMMIT)
+        self.assertEqual(diagnostic["tree"], AWS_C0_DIAGNOSTIC_TREE)
+        self.assertFalse(diagnostic["accepted_base"])
+        self.assertFalse(diagnostic["accepted_predecessor"])
+        self.assertFalse(diagnostic["accepted_implementation"])
+        self.assertEqual(diagnostic["row_count"], 16)
+        self.assertEqual(len(diagnostic["rows"]), 16)
+        diagnostic_entries = _tree_entries(AWS_C0_DIAGNOSTIC_COMMIT)
+        diagnostic_delta = frozenset(
+            path
+            for path in set(base_entries) | set(diagnostic_entries)
+            if base_entries.get(path) != diagnostic_entries.get(path)
+        )
+        self.assertEqual(len(diagnostic_delta), 16)
+        self.assertNotEqual(diagnostic_delta, frozenset(AWS_C0_AUTHORITY_PATHS))
+        current_scope_base_entries = _tree_entries(IMPLEMENTATION_BASE_COMMIT)
+        diagnostic_current_scope = frozenset(
+            path
+            for path in set(current_scope_base_entries) | set(diagnostic_entries)
+            if current_scope_base_entries.get(path) != diagnostic_entries.get(path)
+        )
+        self.assertNotEqual(diagnostic_current_scope, AWS_C0_AUTHORITY_SCOPE)
+        self.assertNotEqual(
+            diagnostic_current_scope, AWS_C0_COMPLETED_IMPLEMENTATION_SCOPE
+        )
+
+        post_integration_delta = frozenset(
+            path
+            for path in set(integration_entries) | set(current_entries)
+            if integration_entries.get(path) != current_entries.get(path)
+        )
+        expected_post_integration_delta = set()
+        if actual_head != AWS_C0_AUTHORITY_INTEGRATION:
+            expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
+        if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION":
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+        self.assertEqual(
+            post_integration_delta, frozenset(expected_post_integration_delta)
+        )
+
+        descendant_base_entries = _tree_entries(STAGE_F_DESCENDANT_PATH_BASE_COMMIT)
+        descendant_delta = frozenset(
+            path
+            for path in set(descendant_base_entries) | set(current_entries)
+            if descendant_base_entries.get(path) != current_entries.get(path)
+        )
+        expected_descendant_paths = (
+            AWS_C0_COMPLETED_DESCENDANT_PATHS
+            if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION"
+            else AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS
+        )
+        self.assertEqual(descendant_delta, frozenset(expected_descendant_paths))
+        self.assertEqual(
+            len(descendant_delta),
+            96
+            if current_scope["aws_c0_phase"] == "AWS_C0_COMPLETED_IMPLEMENTATION"
+            else 82,
         )
 
     def _audit_validation_ast(self, contract, manifest) -> None:
