@@ -1,0 +1,149 @@
+{
+  "authority_id": "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1",
+  "status": "PROSPECTIVE ADDITIVE NON-SCIENTIFIC AUTHORITY CANDIDATE ONLY",
+  "accepted_base": {
+    "commit": "a4af44afd3c878311ee373bc19e3be14b2aacec5",
+    "tree": "619b59875cfa4c6ad4a7da4f6a1aaaa465d3f23a"
+  },
+  "authority_path_count": 6,
+  "authority_paths_in_order": [
+    "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_AUTHORITY_AMENDMENT.md",
+    "aws_c0_unattended_synthetic_rehearsal_contract.json",
+    "aws_c0_unattended_synthetic_rehearsal_evidence_schema.json",
+    "aws_c0_unattended_synthetic_rehearsal_implementation_path_manifest.json",
+    "aws_c0_unattended_synthetic_rehearsal_predecessor_manifest.json",
+    "aws_c0_unattended_synthetic_rehearsal_validation_contract.json"
+  ],
+  "authority_mode": "100644",
+  "prospective_reachability_correction": {
+    "authorized_only_after_authority_integration_and_independent_pass": true,
+    "modified_path_count": 1,
+    "modified_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "added_path_count": 0,
+    "scientific_or_project_import_permitted": false,
+    "live_aws_call_permitted": false,
+    "required_new_phases_in_order": [
+      "AWS_C0_AUTHORITY_ONLY",
+      "AWS_C0_COMPLETED_IMPLEMENTATION"
+    ]
+  },
+  "prospective_implementation": {
+    "authorized_only_after_authority_and_reachability_integration_and_independent_passes": true,
+    "modified_path_count": 0,
+    "modified_paths": [],
+    "added_path_count": 14,
+    "total_path_count": 14,
+    "paths_in_order": [
+      {
+        "path": ".github/workflows/aws-c0-static.yml",
+        "status": "A",
+        "mode": "100644",
+        "role": "credential-free static CI only"
+      },
+      {
+        "path": "scripts/validate_aws_c0_static.py",
+        "status": "A",
+        "mode": "100644",
+        "role": "standard-library static authority and implementation validator"
+      },
+      {
+        "path": "aws/c0/README.md",
+        "status": "A",
+        "mode": "100644",
+        "role": "operator-facing non-scientific boundary and later packet workflow"
+      },
+      {
+        "path": "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+        "status": "A",
+        "mode": "100644",
+        "role": "prospective exact Step Functions Standard, SSM, IAM and cleanup resources"
+      },
+      {
+        "path": "aws/c0/state-machine/aws-c0.asl.json",
+        "status": "A",
+        "mode": "100644",
+        "role": "versioned Standard workflow definition for the exact existing EC2 instance"
+      },
+      {
+        "path": "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+        "status": "A",
+        "mode": "100644",
+        "role": "fixed SSM Command document starting only the bounded root-owned service"
+      },
+      {
+        "path": "aws/c0/controller/ebu_c0_controller.py",
+        "status": "A",
+        "mode": "100644",
+        "role": "synthetic-only attempt controller"
+      },
+      {
+        "path": "aws/c0/controller/ebu-c0@.service",
+        "status": "A",
+        "mode": "100644",
+        "role": "root-owned bounded systemd template unit"
+      },
+      {
+        "path": "aws/c0/finalizer/finalizer.py",
+        "status": "A",
+        "mode": "100644",
+        "role": "terminal evidence verification and cleanup finalizer"
+      },
+      {
+        "path": "aws/c0/container/Dockerfile",
+        "status": "A",
+        "mode": "100644",
+        "role": "synthetic-only immutable image recipe"
+      },
+      {
+        "path": "aws/c0/container/synthetic_worker.py",
+        "status": "A",
+        "mode": "100644",
+        "role": "inert heartbeat checkpoint checksum and bounded-load worker"
+      },
+      {
+        "path": "aws/c0/fixtures/launch-request.valid.json",
+        "status": "A",
+        "mode": "100644",
+        "role": "non-evidence synthetic valid launch-request fixture"
+      },
+      {
+        "path": "aws/c0/fixtures/negative-cases.json",
+        "status": "A",
+        "mode": "100644",
+        "role": "ordered static refusal mutations"
+      },
+      {
+        "path": "tests/aws/test_aws_c0_unattended_synthetic.py",
+        "status": "A",
+        "mode": "100644",
+        "role": "static architecture path schema and zero-science tests"
+      }
+    ],
+    "fifteenth_path_permitted": false,
+    "deletion_rename_symlink_submodule_or_mode_substitution": "REFUSE",
+    "live_aws_call_during_implementation_or_audit": "FORBIDDEN",
+    "scientific_import_or_execution": "FORBIDDEN"
+  },
+  "descendant_path_arithmetic": {
+    "accepted_stage_e_path_count": 51,
+    "accepted_stage_f_authority_path_count": 24,
+    "existing_reachability_unique_path_count": 1,
+    "current_authority_only_unique_path_count": 76,
+    "aws_c0_authority_added_path_count": 6,
+    "aws_c0_authority_only_unique_path_count": 82,
+    "aws_c0_reachability_new_unique_path_count": 0,
+    "aws_c0_implementation_added_path_count": 14,
+    "aws_c0_completed_unique_path_count": 96,
+    "counts_do_not_substitute_for_exact_path_set": true
+  },
+  "preserved_paths": {
+    "scripts_validate_stage_e_harness": "BYTE_IDENTICAL",
+    "stage_e_harness_execution_guard": "BYTE_IDENTICAL",
+    "accepted_stage_d_e_f_authority": "BYTE_IDENTICAL",
+    "scientific_results_figures_books_release_paths": "UNCHANGED",
+    "published_diagnostic_source_paths": "NOT_INTEGRATED_BY_THIS_AUTHORITY"
+  },
+  "completion_marker": "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_IMPLEMENTATION_PATH_MANIFEST_COMPLETE"
+}

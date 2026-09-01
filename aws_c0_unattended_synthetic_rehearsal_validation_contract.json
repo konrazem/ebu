@@ -1,0 +1,161 @@
+{
+  "authority_id": "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1",
+  "status": "PROSPECTIVE ADDITIVE NON-SCIENTIFIC AUTHORITY CANDIDATE ONLY",
+  "validation_version": "1.0.0-candidate",
+  "accepted_base_commit": "a4af44afd3c878311ee373bc19e3be14b2aacec5",
+  "accepted_base_tree": "619b59875cfa4c6ad4a7da4f6a1aaaa465d3f23a",
+  "validation_scope": "STATIC_AUTHORITY_AND_PROSPECTIVE_IMPLEMENTATION_CONFORMANCE_ONLY",
+  "permitted_operations": [
+    "read-only Git object and ancestry inspection",
+    "strict UTF-8 JSON parsing with duplicate float nonfinite and trailing-data refusal",
+    "canonical JSON hashing",
+    "JSON Schema Draft 2020-12 metaschema and instance validation",
+    "exact path mode blob byte-count and SHA-256 comparison",
+    "AST and source-text inspection",
+    "deterministic in-memory positive and negative fixture validation",
+    "bash syntax parsing without script execution"
+  ],
+  "forbidden_operations": [
+    "AWS API call",
+    "AWS login or credential resolution",
+    "CloudFormation validation deployment or change set",
+    "Step Functions execution",
+    "SSM command",
+    "EC2 start stop reboot or mutation",
+    "IAM mutation",
+    "Docker build pull push or run",
+    "network access",
+    "project runner import",
+    "EBU framework or Stage E harness import",
+    "registered configuration construction",
+    "model state advance trajectory simulation Gate scientific RNG or outcome inspection"
+  ],
+  "lanes_in_order": [
+    {
+      "lane_id": "C0-AUTH",
+      "purpose": "accepted base candidate history six-path scope predecessor rows and diagnostic-source nonacceptance"
+    },
+    {
+      "lane_id": "C0-SCHEMA",
+      "purpose": "closed twelve-root evidence schema positive fixtures and ordered negative mutations"
+    },
+    {
+      "lane_id": "C0-ARCH",
+      "purpose": "Step Functions Standard exact EC2 fixed SSM root-owned systemd controller finalizer and synthetic image closure"
+    },
+    {
+      "lane_id": "C0-PATH",
+      "purpose": "one-path reachability and exact fourteen-path future implementation closure"
+    },
+    {
+      "lane_id": "C0-ZERO-SCIENCE",
+      "purpose": "forbidden import field action output and Stage F claim refusals"
+    },
+    {
+      "lane_id": "C0-STATIC-CI",
+      "purpose": "credential-free offline deterministic static workflow and validator closure"
+    }
+  ],
+  "lane_count": 6,
+  "required_schema_roots_in_order": [
+    "aws_c0_authority_audit/v1",
+    "aws_c0_static_validation/v1",
+    "aws_c0_private_infrastructure_snapshot/v1",
+    "aws_c0_launch_request/v1",
+    "aws_c0_start_receipt/v1",
+    "aws_c0_heartbeat/v1",
+    "aws_c0_checkpoint/v1",
+    "aws_c0_terminal_receipt/v1",
+    "aws_c0_finalizer_receipt/v1",
+    "aws_c0_retrieval_verification/v1",
+    "aws_c0_cost_closure/v1",
+    "aws_c0_final_manifest/v1"
+  ],
+  "positive_cases": [
+    {"case_id": "C0-P01", "target": "authority package", "expected": "six exact additions from a4af44a"},
+    {"case_id": "C0-P02", "target": "diagnostic source", "expected": "df7e844 is reconstructable but not accepted"},
+    {"case_id": "C0-P03", "target": "architecture", "expected": "Standard workflow and exact instance"},
+    {"case_id": "C0-P04", "target": "SSM", "expected": "fixed EBU-C0-Start-v1 document identity"},
+    {"case_id": "C0-P05", "target": "systemd", "expected": "root-owned bounded ebu-c0@.service"},
+    {"case_id": "C0-P06", "target": "controller", "expected": "synthetic-only single-attempt controller"},
+    {"case_id": "C0-P07", "target": "finalizer", "expected": "terminal verification and stopped-state closure"},
+    {"case_id": "C0-P08", "target": "reachability", "expected": "one exact modified path and two literal phases"},
+    {"case_id": "C0-P09", "target": "implementation", "expected": "fourteen additions and zero modifications"},
+    {"case_id": "C0-P10", "target": "quota", "expected": "operator supplied unverified and nonauthorizing"},
+    {"case_id": "C0-P11", "target": "schema", "expected": "twelve closed roots"},
+    {"case_id": "C0-P12", "target": "zero science", "expected": "all ten counters zero"},
+    {"case_id": "C0-P13", "target": "finalizer receipt", "expected": "acyclic supervisor observation then fresh S3 object receipt closes"},
+    {"case_id": "C0-P14", "target": "failure closure", "expected": "pre-start controller timeout retrieval cost finalizer and stop failures close truthfully"},
+    {"case_id": "C0-P15", "target": "sealed live envelope", "expected": "exact identities deadlines phase timeouts intervals cost model and resource maxima close"},
+    {"case_id": "C0-P16", "target": "record identity", "expected": "single record_sha256 omission and exact identity equality close"},
+    {"case_id": "C0-P17", "target": "supervisor closure", "expected": "not-started failed and timed-out finalizer paths retain closure evidence"},
+    {"case_id": "C0-P18", "target": "initial state", "expected": "fresh authenticated quota-verified stopped snapshot binds launch"}
+  ],
+  "negative_cases": [
+    {"case_id": "C0-N01", "mutation": "use df7e844 as accepted base", "expected": "REFUSE", "falsifier": "DIAGNOSTIC_SOURCE_PROMOTED"},
+    {"case_id": "C0-N02", "mutation": "wrong a4af44a tree", "expected": "REFUSE", "falsifier": "ACCEPTED_BASE_IDENTITY_MISMATCH"},
+    {"case_id": "C0-N03", "mutation": "seventh authority path", "expected": "REFUSE", "falsifier": "AUTHORITY_SCOPE_BROADENED"},
+    {"case_id": "C0-N04", "mutation": "candidate modifies an accepted path", "expected": "REFUSE", "falsifier": "AUTHORITY_PHASE_MODIFICATION"},
+    {"case_id": "C0-N05", "mutation": "aws prefix or glob allowlist", "expected": "REFUSE", "falsifier": "DYNAMIC_PATH_ALLOWLIST"},
+    {"case_id": "C0-N06", "mutation": "reachability modifies a second path", "expected": "REFUSE", "falsifier": "REACHABILITY_SCOPE_BROADENED"},
+    {"case_id": "C0-N07", "mutation": "fifteenth implementation path", "expected": "REFUSE", "falsifier": "IMPLEMENTATION_SCOPE_BROADENED"},
+    {"case_id": "C0-N08", "mutation": "implementation modifies an accepted file", "expected": "REFUSE", "falsifier": "IMPLEMENTATION_MODIFICATION_FORBIDDEN"},
+    {"case_id": "C0-N09", "mutation": "Step Functions Express", "expected": "REFUSE", "falsifier": "WORKFLOW_TYPE_MISMATCH"},
+    {"case_id": "C0-N10", "mutation": "another EC2 instance", "expected": "REFUSE", "falsifier": "INSTANCE_IDENTITY_MISMATCH"},
+    {"case_id": "C0-N11", "mutation": "mutable SSM document", "expected": "REFUSE", "falsifier": "SSM_DOCUMENT_NOT_FROZEN"},
+    {"case_id": "C0-N12", "mutation": "user-writable controller or unit", "expected": "REFUSE", "falsifier": "ROOT_OWNERSHIP_OR_MODE_FAILURE"},
+    {"case_id": "C0-N13", "mutation": "Mac or interactive SSM owns long run", "expected": "REFUSE", "falsifier": "UNATTENDED_CONTROL_NOT_DURABLE"},
+    {"case_id": "C0-N14", "mutation": "AWS Batch or Spot added", "expected": "REFUSE", "falsifier": "ARCHITECTURE_SCOPE_MISMATCH"},
+    {"case_id": "C0-N15", "mutation": "mutable container tag accepted as identity", "expected": "REFUSE", "falsifier": "IMAGE_NOT_DIGEST_BOUND"},
+    {"case_id": "C0-N16", "mutation": "automatic retry exceeds one attempt", "expected": "REFUSE", "falsifier": "ATTEMPT_REPLAY_ENABLED"},
+    {"case_id": "C0-N17", "mutation": "runtime cost storage or process limit missing", "expected": "REFUSE", "falsifier": "RESOURCE_BOUND_MISSING"},
+    {"case_id": "C0-N18", "mutation": "record overwrite or attempt identity reuse", "expected": "REFUSE", "falsifier": "IMMUTABILITY_OR_SINGLE_USE_FAILURE"},
+    {"case_id": "C0-N19", "mutation": "CloudWatch only terminal evidence", "expected": "REFUSE", "falsifier": "DURABLE_TERMINAL_EVIDENCE_MISSING"},
+    {"case_id": "C0-N20", "mutation": "missing stopped-state or typed cleanup failure", "expected": "REFUSE", "falsifier": "INSTANCE_POSTCONDITION_MISSING"},
+    {"case_id": "C0-N21", "mutation": "project runner import", "expected": "REFUSE", "falsifier": "PROJECT_RUNNER_REACHABLE"},
+    {"case_id": "C0-N22", "mutation": "EBU framework or Stage E harness import", "expected": "REFUSE", "falsifier": "SCIENTIFIC_CODE_REACHABLE"},
+    {"case_id": "C0-N23", "mutation": "registered configuration or model advance", "expected": "REFUSE", "falsifier": "SCIENTIFIC_EXECUTION_REACHABLE"},
+    {"case_id": "C0-N24", "mutation": "scientific seed outcome result claim figure interpretation or publication field", "expected": "REFUSE", "falsifier": "SCIENTIFIC_FIELD_PRESENT"},
+    {"case_id": "C0-N25", "mutation": "any zero-science counter nonzero", "expected": "REFUSE", "falsifier": "ZERO_SCIENCE_COUNTER_NONZERO"},
+    {"case_id": "C0-N26", "mutation": "Stage F readiness or authorization claimed", "expected": "REFUSE", "falsifier": "STAGE_F_STATUS_PROMOTED"},
+    {"case_id": "C0-N27", "mutation": "operator quota fact marked verified", "expected": "REFUSE", "falsifier": "UNVERIFIED_QUOTA_PROMOTED"},
+    {"case_id": "C0-N28", "mutation": "quota fact used as execution authorization", "expected": "REFUSE", "falsifier": "QUOTA_FACT_TREATED_AS_AUTHORITY"},
+    {"case_id": "C0-N29", "mutation": "credential secret token root key or Docker login committed", "expected": "REFUSE", "falsifier": "PRIVATE_CREDENTIAL_MATERIAL_IN_GIT"},
+    {"case_id": "C0-N30", "mutation": "live AWS call during authority implementation or audit", "expected": "REFUSE", "falsifier": "LIVE_AWS_BOUNDARY_CROSSED"},
+    {"case_id": "C0-N31", "mutation": "live rehearsal without exact sealed packet", "expected": "REFUSE", "falsifier": "AWS_C0_PACKET_MISSING"},
+    {"case_id": "C0-N32", "mutation": "live rehearsal without later post-packet user statement", "expected": "REFUSE", "falsifier": "AWS_C0_EXECUTION_NOT_AUTHORIZED"},
+    {"case_id": "C0-N33", "mutation": "failed skipped partial filtered zero-check or stale lane reported PASS", "expected": "REFUSE", "falsifier": "VALIDATION_STATUS_PROMOTED"},
+    {"case_id": "C0-N34", "mutation": "finalizer identity without a finalizer receipt", "expected": "REFUSE", "falsifier": "FINALIZER_EVIDENCE_NOT_CLOSED"},
+    {"case_id": "C0-N35", "mutation": "early failure forced to invent heartbeat checkpoint or manifest identity", "expected": "REFUSE", "falsifier": "FAILURE_EVIDENCE_FABRICATED"},
+    {"case_id": "C0-N36", "mutation": "retrieval hash failure or unavailable cost relabelled PASS", "expected": "REFUSE", "falsifier": "FAILURE_STATUS_PROMOTED"},
+    {"case_id": "C0-N37", "mutation": "typed stop failure paired with stopped cost-closure assertion", "expected": "REFUSE", "falsifier": "INSTANCE_POSTCONDITION_CONTRADICTION"},
+    {"case_id": "C0-N38", "mutation": "account IAM static-validation quota-observation or stopped precondition binding omitted", "expected": "REFUSE", "falsifier": "LIVE_PACKET_IDENTITY_INCOMPLETE"},
+    {"case_id": "C0-N39", "mutation": "absolute attempt or cleanup deadline phase timeout heartbeat or checkpoint interval omitted or misordered", "expected": "REFUSE", "falsifier": "TIME_ENVELOPE_INCOMPLETE"},
+    {"case_id": "C0-N40", "mutation": "currency cost model ceiling resource maximum or cost reconciliation missing", "expected": "REFUSE", "falsifier": "COST_ENVELOPE_INCOMPLETE"},
+    {"case_id": "C0-N41", "mutation": "finalizer observation preimage contains its own future S3 version or receipt identity", "expected": "REFUSE", "falsifier": "FINALIZER_RECEIPT_IDENTITY_CYCLE"},
+    {"case_id": "C0-N42", "mutation": "identity value sha256 or referenced record_sha256 differs", "expected": "REFUSE", "falsifier": "RECORD_IDENTITY_MISMATCH"},
+    {"case_id": "C0-N43", "mutation": "record digest omits a field other than record_sha256 or uses a null substitution", "expected": "REFUSE", "falsifier": "UNDECLARED_DIGEST_PREIMAGE"},
+    {"case_id": "C0-N44", "mutation": "finalizer process failure has no Step Functions supervisor closure", "expected": "REFUSE", "falsifier": "FINALIZER_FAILURE_NOT_CLOSED"},
+    {"case_id": "C0-N45", "mutation": "launch snapshot is stale unverified running or mismatched to account region instance workflow SSM IAM or quota", "expected": "REFUSE", "falsifier": "INITIAL_STATE_SNAPSHOT_NOT_BOUND"},
+    {"case_id": "C0-N46", "mutation": "refused or failed start has no failure phase or code", "expected": "REFUSE", "falsifier": "START_FAILURE_REASON_MISSING"},
+    {"case_id": "C0-N47", "mutation": "container runtime policy identity omitted or mismatched", "expected": "REFUSE", "falsifier": "CONTAINER_RUNTIME_POLICY_NOT_BOUND"},
+    {"case_id": "C0-N48", "mutation": "unknown non-root identity kind or finalizer-observation identity does not hash the complete embedded observation", "expected": "REFUSE", "falsifier": "NON_ROOT_IDENTITY_PREIMAGE_MISMATCH"}
+  ],
+  "positive_case_count": 18,
+  "negative_case_count": 48,
+  "total_case_count": 66,
+  "required_final_dispositions": [
+    "AWS_C0_AUTHORITY_PASS",
+    "AWS_C0_AUTHORITY_FAIL"
+  ],
+  "authority_pass_effect": "READY_FOR_NORMAL_AUTHORITY_INTEGRATION_ONLY",
+  "authority_pass_does_not_authorize": [
+    "reachability implementation",
+    "AWS-C0 implementation",
+    "AWS API mutation or spending",
+    "deployment or image push",
+    "workflow SSM systemd or container execution",
+    "Stage F readiness or scientific execution"
+  ],
+  "completion_marker": "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_VALIDATION_CONTRACT_COMPLETE"
+}
