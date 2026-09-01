@@ -1,0 +1,53 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadBucketLocation",
+      "Effect": "Allow",
+      "Action": "s3:GetBucketLocation",
+      "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2"
+    },
+    {
+      "Sid": "ListOnlyTheRehearsalPrefix",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2",
+      "Condition": {
+        "StringLike": {
+          "s3:prefix": [
+            "rehearsal",
+            "rehearsal/*"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "ReadAndWriteOnlyRehearsalObjects",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/*"
+    },
+    {
+      "Sid": "AuthenticateToECR",
+      "Effect": "Allow",
+      "Action": "ecr:GetAuthorizationToken",
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadOnlyAccessToTheSpecificECRRepository",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:DescribeImages",
+        "ecr:DescribeRepositories",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:ListImages"
+      ],
+      "Resource": "arn:aws:ecr:us-east-1:623609441658:repository/ebu/ebu-stage-f"
+    }
+  ]
+}

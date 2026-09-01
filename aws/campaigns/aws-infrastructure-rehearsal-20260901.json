@@ -1,0 +1,52 @@
+{
+  "schema_version": "ebu_aws_infrastructure_rehearsal/v1",
+  "record_class": "NON_SCIENTIFIC_INFRASTRUCTURE_EVIDENCE",
+  "status": "PASS",
+  "scientific_configuration": "NOT_RUN",
+  "scientific_workload": "NOT_RUN",
+  "scientific_execution_authorized": false,
+  "started_at_utc": "2026-09-01T11:03:54Z",
+  "region": "us-east-1",
+  "instance": {
+    "id": "i-048bac00bdb540a4e",
+    "name": "EBU-rehearsal-01",
+    "type": "t3.small",
+    "architecture": "x86_64",
+    "operating_system": "Ubuntu 24.04.4 LTS",
+    "imds_v2_required": true,
+    "inbound_rule_count": 0,
+    "root_volume_encrypted": true,
+    "final_state_verified": "stopped"
+  },
+  "software": {
+    "docker_client_server": "29.7.2",
+    "aws_cli": "2.36.36",
+    "docker_hello_world": "PASS"
+  },
+  "ecr": {
+    "repository": "ebu/ebu-stage-f",
+    "tag_mutability": "IMMUTABLE",
+    "encryption": "AES256",
+    "authentication": "PASS",
+    "image_reference_count": 0
+  },
+  "s3": {
+    "bucket": "ebu-stage-f-results-k7m4p2",
+    "result_key": "rehearsal/i-048bac00bdb540a4e/20260901T110354Z/synthetic-result.txt",
+    "checksum_key": "rehearsal/i-048bac00bdb540a4e/20260901T110354Z/synthetic-result.txt.sha256",
+    "result_bytes": 451,
+    "result_sha256": "63b9d408bbcc6b99ef58c301d41547d21ba06cee755ae68227cd7c4bd8b8a6dc",
+    "server_side_encryption": "AES256",
+    "version_id": "UHL7dn2kIH2SZB85voyhbxqL3J.Oqg2."
+  },
+  "verification": {
+    "vm_fresh_download_sha256": "PASS",
+    "mac_fresh_download_sha256": "PASS",
+    "mac_after_instance_stopped_sha256": "PASS"
+  },
+  "historical_script_sha256": {
+    "run-ebu-rehearsal-from-mac.sh": "82a3fcaae4d92fbae08d9c394e8c653e73ca66403259612b26b776b0d92ce6cb",
+    "ebu-rehearsal-vm.sh": "3391fa0803ef5d911cefe17caa198e252394451316b2add6d1badd024823956c"
+  },
+  "ssm_command_id": "414cf5f4-0c51-4280-8539-9bbcb7fcf8b0"
+}

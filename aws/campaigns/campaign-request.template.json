@@ -1,0 +1,48 @@
+{
+  "schema_version": "ebu_aws_campaign_request/v1-draft",
+  "record_class": "PROSPECTIVE_OPERATIONAL_TEMPLATE_ONLY",
+  "status": "DRAFT_NON_EXECUTABLE",
+  "scientific_execution_authorized": false,
+  "campaign_id": "REQUIRED_UNIQUE_CAMPAIGN_ID",
+  "scientific_source": {
+    "commit": "REQUIRED_40_HEX_COMMIT",
+    "tree": "REQUIRED_40_HEX_TREE"
+  },
+  "stage_e": {
+    "accepted_integration_commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "accepted_evidence_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345"
+  },
+  "aws_execution_binding": {
+    "authority_commit": "REQUIRED_ACCEPTED_AWS_BINDING_AUTHORITY_COMMIT",
+    "validation_evidence_sha256": "REQUIRED_64_HEX_SHA256"
+  },
+  "image": {
+    "repository": "623609441658.dkr.ecr.us-east-1.amazonaws.com/ebu/ebu-stage-f",
+    "digest": "REQUIRED_SHA256_DIGEST",
+    "mutable_tag_is_not_authority": true
+  },
+  "batch": {
+    "region": "us-east-1",
+    "job_queue": "REQUIRED_ACCEPTED_JOB_QUEUE",
+    "job_definition_arn_and_revision": "REQUIRED_ACCEPTED_JOB_DEFINITION",
+    "attempt_duration_seconds": "REQUIRED_FROZEN_INTEGER",
+    "retry_attempts": "REQUIRED_FROZEN_INTEGER"
+  },
+  "step_functions": {
+    "workflow_type": "STANDARD",
+    "state_machine_arn": "REQUIRED_ACCEPTED_STATE_MACHINE_ARN",
+    "definition_sha256": "REQUIRED_64_HEX_SHA256",
+    "batch_integration_pattern": "RUN_A_JOB_SYNC"
+  },
+  "storage": {
+    "bucket": "ebu-stage-f-results-k7m4p2",
+    "prefix": "campaigns/REQUIRED_UNIQUE_CAMPAIGN_ID/",
+    "encryption_required": true,
+    "checksum_manifest_required": true
+  },
+  "authorization": {
+    "human_packet_sha256": "REQUIRED_64_HEX_SHA256",
+    "user_authorization_record": "REQUIRED_POST_PACKET_AUTHORIZATION",
+    "authorization_consumed": false
+  }
+}
