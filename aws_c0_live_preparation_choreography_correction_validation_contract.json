@@ -1,0 +1,257 @@
+{
+  "authority_id": "EBU-AWS-C0-LIVE-PREPARATION-CHOREOGRAPHY-CORRECTION-AUTHORITY-v1",
+  "status": "PROSPECTIVE ADDITIVE NON-SCIENTIFIC CORRECTION AUTHORITY CANDIDATE ONLY",
+  "validation_version": "1.0.0-candidate",
+  "accepted_base_commit": "eec94950430c0f2811d0aea99b413cef35b72a7c",
+  "accepted_base_tree": "8ea6df371e804866ad509bb251cfc25e0a447964",
+  "validation_scope": "STATIC_CORRECTION_AUTHORITY_AND_PROSPECTIVE_CORRECTED_IMPLEMENTATION_CONFORMANCE_ONLY",
+  "permitted_operations": [
+    "read-only Git object and ancestry inspection",
+    "strict UTF-8 JSON parsing with duplicate float nonfinite and trailing-data refusal",
+    "JSON Schema Draft 2020-12 metaschema validation",
+    "canonical JSON and statement hashing",
+    "exact path mode blob byte-count and SHA-256 comparison",
+    "AST and source-text inspection",
+    "deterministic in-memory positive and negative fixture validation",
+    "integer deadline resource cost and case-count arithmetic",
+    "bash syntax parsing without script execution"
+  ],
+  "forbidden_operations": [
+    "AWS API call or credential resolution",
+    "CloudFormation validation change set deployment or execution",
+    "Step Functions execution",
+    "SSM command",
+    "EC2 start stop reboot or mutation",
+    "IAM mutation",
+    "S3 write or delete",
+    "Docker build pull push run or login",
+    "network access",
+    "project runner import",
+    "EBU framework or Stage E harness import",
+    "registered configuration construction",
+    "model state advance trajectory simulation Gate scientific RNG or outcome inspection"
+  ],
+  "lanes_in_order": [
+    {
+      "lane_id": "C0-LPC-AUTH",
+      "purpose": "exact base six-path candidate history preserved authority and nonaccepted design-source classification"
+    },
+    {
+      "lane_id": "C0-LPC-IDENTITY",
+      "purpose": "closed canonical root and non-root byte identities statement identities and opaque VersionId ordering"
+    },
+    {
+      "lane_id": "C0-LPC-OPERATOR",
+      "purpose": "separate exact root-limited operator-bootstrap prerequisite and constrained preparation and live sessions"
+    },
+    {
+      "lane_id": "C0-LPC-PREP-PACKET",
+      "purpose": "complete preparation packet exact actions resources deadlines bounds rollback and first approval"
+    },
+    {
+      "lane_id": "C0-LPC-PREP-EXEC",
+      "purpose": "immutable staging IAM remediation bounded bootstrap stop change-set-create-only and preparation closure"
+    },
+    {
+      "lane_id": "C0-LPC-LIVE-PACKET",
+      "purpose": "complete output-bound final live packet exact second statement and acyclic live-authorization record"
+    },
+    {
+      "lane_id": "C0-LPC-RUNTIME",
+      "purpose": "launch-v2 start-v2 closed execution input dominating preflight single attempt and failure closure"
+    },
+    {
+      "lane_id": "C0-LPC-PATH-CI",
+      "purpose": "one-path reachability same fourteen-path implementation and credential-free exact-target static CI"
+    },
+    {
+      "lane_id": "C0-LPC-ZERO-SCIENCE",
+      "purpose": "recursive scientific-field import action output and Stage F claim refusals"
+    }
+  ],
+  "lane_count": 9,
+  "required_record_schemas_in_order": [
+    "aws_c0_operator_bootstrap_packet/v1",
+    "aws_c0_operator_bootstrap_authorization/v1",
+    "aws_c0_operator_bootstrap_closure/v1",
+    "aws_c0_preparation_packet/v1",
+    "aws_c0_preparation_authorization/v1",
+    "aws_c0_launch_request/v2",
+    "aws_c0_preparation_closure/v1",
+    "aws_c0_live_packet/v1",
+    "aws_c0_live_authorization/v1",
+    "aws_c0_start_receipt/v2"
+  ],
+  "positive_cases": [
+    {"case_id": "C0-LPC-P01", "target": "accepted base", "expected": "exact eec9495 commit and 8ea6df3 tree with two frozen parents"},
+    {"case_id": "C0-LPC-P02", "target": "candidate scope", "expected": "six exact mode-100644 additions and no other change"},
+    {"case_id": "C0-LPC-P03", "target": "preserved authority", "expected": "original six files and every accepted base byte remain identical"},
+    {"case_id": "C0-LPC-P04", "target": "design source", "expected": "88be758 and 80178bc are reconstructable but nonaccepted"},
+    {"case_id": "C0-LPC-P05", "target": "control identity", "expected": "complete canonical stored-byte SHA binds non-root key receipt and identity"},
+    {"case_id": "C0-LPC-P06", "target": "root identity", "expected": "only record_sha256 is omitted from root preimage while receipt binds complete bytes"},
+    {"case_id": "C0-LPC-P07", "target": "opaque outputs", "expected": "VersionIds and change-set identities appear only in later derived records"},
+    {"case_id": "C0-LPC-P08", "target": "phase A and operator prerequisite", "expected": "offline local assembly and read-only inventory precede one separately approved root-limited exact-role bootstrap that closes one constrained preparation session"},
+    {"case_id": "C0-LPC-P09", "target": "preparation packet", "expected": "operator-bootstrap PASS account session resource API IAM S3 bootstrap change-set deadline cost rollback and zero-science closure"},
+    {"case_id": "C0-LPC-P10", "target": "first statement", "expected": "exact NFC no-newline statement deterministically renders the complete preparation packet identity"},
+    {"case_id": "C0-LPC-P11", "target": "first authorization", "expected": "complete authorization record binds exact statement packet and authenticated source"},
+    {"case_id": "C0-LPC-P12", "target": "IAM remediation", "expected": "only exact role policy delta and inverse rollback restore closed before and after identities"},
+    {"case_id": "C0-LPC-P13", "target": "S3 staging", "expected": "fresh conditional checksum versioned puts and exact-version readback close every object"},
+    {"case_id": "C0-LPC-P14", "target": "bootstrap", "expected": "one exact stopped-instance start one SSM command no container run and bounded stopped postcondition"},
+    {"case_id": "C0-LPC-P15", "target": "change set", "expected": "one named reviewable change set is created and canonically observed but not executed or deleted"},
+    {"case_id": "C0-LPC-P16", "target": "preparation cleanup", "expected": "bounded stop and packet-listed inverse IAM rollback close without S3 or change-set deletion"},
+    {"case_id": "C0-LPC-P17", "target": "launch v2", "expected": "preparation packet authorization snapshot artifacts and live envelope bind without closure or live authorization cycle"},
+    {"case_id": "C0-LPC-P18", "target": "preparation closure", "expected": "all actions versions IAM bootstrap stop change-set cost and typed disposition close"},
+    {"case_id": "C0-LPC-P19", "target": "final live packet", "expected": "PASS closure launch v2 unexecuted change set exact effect sets subset-proven live-session policy fresh stopped preflight limits and publication observation bind"},
+    {"case_id": "C0-LPC-P20", "target": "second statement", "expected": "exact later statement binds stored live packet change set account instance attempt and one exact live-session assumption"},
+    {"case_id": "C0-LPC-P21", "target": "live authorization", "expected": "closed post-statement record binds the observed live session and is acyclic with no CloudFormation parameter or launch field carrying it"},
+    {"case_id": "C0-LPC-P22", "target": "runtime", "expected": "authorization preflight dominates every instance-start path and start v2 binds packet authorization and execution identities"},
+    {"case_id": "C0-LPC-P23", "target": "future scope", "expected": "one exact reachability modification and the same fourteen additions with no fifteenth path"},
+    {"case_id": "C0-LPC-P24", "target": "zero science", "expected": "all ten counters remain zero and Stage F execution authorization remains false"}
+  ],
+  "negative_cases": [
+    {"case_id": "C0-LPC-N01", "mutation": "use any base other than eec9495 and its exact tree", "expected": "REFUSE", "falsifier": "ACCEPTED_BASE_IDENTITY_MISMATCH"},
+    {"case_id": "C0-LPC-N02", "mutation": "seventh authority path", "expected": "REFUSE", "falsifier": "AUTHORITY_SCOPE_BROADENED"},
+    {"case_id": "C0-LPC-N03", "mutation": "candidate modifies deletes renames or changes mode of an accepted path", "expected": "REFUSE", "falsifier": "ACCEPTED_BYTE_OR_PATH_CHANGED"},
+    {"case_id": "C0-LPC-N04", "mutation": "candidate is a merge or nonlinear history", "expected": "REFUSE", "falsifier": "CANDIDATE_HISTORY_NOT_LINEAR"},
+    {"case_id": "C0-LPC-N05", "mutation": "88be758 or 80178bc is accepted as corrected predecessor", "expected": "REFUSE", "falsifier": "CIRCULAR_DESIGN_SOURCE_PROMOTED"},
+    {"case_id": "C0-LPC-N06", "mutation": "original AWS-C0 authority architecture root count or zero-science rule is removed", "expected": "REFUSE", "falsifier": "PRESERVED_AUTHORITY_WEAKENED"},
+    {"case_id": "C0-LPC-N07", "mutation": "control record embeds a self digest", "expected": "REFUSE", "falsifier": "NONROOT_SELF_DIGEST_CYCLE"},
+    {"case_id": "C0-LPC-N08", "mutation": "control key or receipt binds anything but complete stored bytes", "expected": "REFUSE", "falsifier": "NONROOT_BYTE_IDENTITY_MISMATCH"},
+    {"case_id": "C0-LPC-N09", "mutation": "root preimage omits any field other than record_sha256", "expected": "REFUSE", "falsifier": "ROOT_PREIMAGE_OMISSION_MISMATCH"},
+    {"case_id": "C0-LPC-N10", "mutation": "root object receipt uses record_sha256 instead of full stored-byte SHA", "expected": "REFUSE", "falsifier": "ROOT_RECEIPT_DIGEST_MISMATCH"},
+    {"case_id": "C0-LPC-N11", "mutation": "duplicate key float nonfinite trailing data non-NFC or final newline is accepted", "expected": "REFUSE", "falsifier": "CANONICAL_JSON_RULE_BROKEN"},
+    {"case_id": "C0-LPC-N12", "mutation": "an AWS VersionId is predicted normalized or inserted into its producing object", "expected": "REFUSE", "falsifier": "OPAQUE_OUTPUT_CYCLE"},
+    {"case_id": "C0-LPC-N13", "mutation": "phase A mutates AWS, contacts a network or registry, pulls or runs an image, or accepts an absent or mutable base", "expected": "REFUSE", "falsifier": "LOCAL_OR_READ_ONLY_BOUNDARY_CROSSED"},
+    {"case_id": "C0-LPC-N14", "mutation": "temporary root creates verifies or assumes the operator role without its complete packet and exact later bootstrap approval", "expected": "REFUSE", "falsifier": "OPERATOR_BOOTSTRAP_AUTHORITY_MISSING"},
+    {"case_id": "C0-LPC-N15", "mutation": "operator bootstrap uses another or mismatched role, arbitrary API, wildcard, absent policy identity, absent MFA/source identity, or exceeds deadline/call maxima", "expected": "REFUSE", "falsifier": "OPERATOR_BOOTSTRAP_SCOPE_NOT_CLOSED"},
+    {"case_id": "C0-LPC-N16", "mutation": "root performs a C0 preparation/live action, assumes another session, or bootstrap FAIL/INCONCLUSIVE is promoted", "expected": "REFUSE", "falsifier": "ROOT_OR_FAILED_BOOTSTRAP_PROMOTED"},
+    {"case_id": "C0-LPC-N17", "mutation": "preparation packet omits PASS operator-bootstrap closure, constrained session, account, Region, instance, or stopped identity", "expected": "REFUSE", "falsifier": "PREPARATION_TARGET_OR_OPERATOR_INCOMPLETE"},
+    {"case_id": "C0-LPC-N18", "mutation": "preparation packet omits artifact bytes hash key or request maxima", "expected": "REFUSE", "falsifier": "PREPARATION_ARTIFACT_SCOPE_INCOMPLETE"},
+    {"case_id": "C0-LPC-N19", "mutation": "preparation packet omits IAM before after exact delta or inverse rollback", "expected": "REFUSE", "falsifier": "PREPARATION_IAM_SCOPE_INCOMPLETE"},
+    {"case_id": "C0-LPC-N20", "mutation": "preparation packet omits bootstrap payload paths facts calls deadline cost or stopped postcondition", "expected": "REFUSE", "falsifier": "PREPARATION_BOOTSTRAP_SCOPE_INCOMPLETE"},
+    {"case_id": "C0-LPC-N21", "mutation": "preparation packet omits stack change-set template parameters capabilities or create-only rule", "expected": "REFUSE", "falsifier": "PREPARATION_CHANGE_SET_SCOPE_INCOMPLETE"},
+    {"case_id": "C0-LPC-N22", "mutation": "preparation statement precedes its complete packet", "expected": "REFUSE", "falsifier": "PREPARATION_AUTHORIZATION_PREMATURE"},
+    {"case_id": "C0-LPC-N23", "mutation": "preparation statement is paraphrased reordered newline-terminated or non-NFC", "expected": "REFUSE", "falsifier": "PREPARATION_STATEMENT_BYTES_MISMATCH"},
+    {"case_id": "C0-LPC-N24", "mutation": "preparation statement packet digest or rendered field differs", "expected": "REFUSE", "falsifier": "PREPARATION_STATEMENT_BINDING_MISMATCH"},
+    {"case_id": "C0-LPC-N25", "mutation": "preparation authorization source is missing or unauthenticated", "expected": "REFUSE", "falsifier": "PREPARATION_AUTHORIZATION_SOURCE_MISSING"},
+    {"case_id": "C0-LPC-N26", "mutation": "preparation begins after approval deadline", "expected": "REFUSE", "falsifier": "PREPARATION_AUTHORIZATION_EXPIRED"},
+    {"case_id": "C0-LPC-N27", "mutation": "a packet accepts arbitrary API-array strings or preparation calls an API outside the exact allowlist", "expected": "REFUSE", "falsifier": "API_SET_NOT_CLOSED_OR_AUTHORIZED"},
+    {"case_id": "C0-LPC-N28", "mutation": "preparation selects an unlisted resource wildcard bucket key role document instance stack or change set", "expected": "REFUSE", "falsifier": "PREPARATION_RESOURCE_NOT_AUTHORIZED"},
+    {"case_id": "C0-LPC-N29", "mutation": "IAM observed before identity differs from the packet", "expected": "REFUSE", "falsifier": "IAM_BEFORE_STATE_DRIFT"},
+    {"case_id": "C0-LPC-N30", "mutation": "IAM remediation or rollback action or policy bytes differ", "expected": "REFUSE", "falsifier": "IAM_DELTA_NOT_EXACT"},
+    {"case_id": "C0-LPC-N31", "mutation": "IAM after or rollback identity does not equal its declared target", "expected": "REFUSE", "falsifier": "IAM_AFTER_STATE_NOT_CLOSED"},
+    {"case_id": "C0-LPC-N32", "mutation": "S3 bucket versioning is not Enabled", "expected": "REFUSE", "falsifier": "S3_VERSIONING_NOT_ENABLED"},
+    {"case_id": "C0-LPC-N33", "mutation": "S3 put omits If-None-Match star checksum or sealed encryption", "expected": "REFUSE", "falsifier": "S3_IMMUTABLE_PUT_NOT_CLOSED"},
+    {"case_id": "C0-LPC-N34", "mutation": "an object key already exists or is overwritten reused or deleted", "expected": "REFUSE", "falsifier": "S3_FRESH_KEY_RULE_BROKEN"},
+    {"case_id": "C0-LPC-N35", "mutation": "returned VersionId checksum byte count or exact-version readback is missing or mismatched", "expected": "REFUSE", "falsifier": "S3_VERSION_RECEIPT_NOT_CLOSED"},
+    {"case_id": "C0-LPC-N36", "mutation": "bootstrap instance is not initially stopped or another instance is selected", "expected": "REFUSE", "falsifier": "BOOTSTRAP_TARGET_OR_STATE_MISMATCH"},
+    {"case_id": "C0-LPC-N37", "mutation": "bootstrap sends a second command or uses another document version or payload", "expected": "REFUSE", "falsifier": "BOOTSTRAP_COMMAND_SCOPE_BROKEN"},
+    {"case_id": "C0-LPC-N38", "mutation": "bootstrap installs an unchecked artifact or unlisted path, fetches or installs Docker/AWS CLI, or accepts a Docker 29.7.2 or AWS CLI 2.36.36 mismatch", "expected": "REFUSE", "falsifier": "BOOTSTRAP_INSTALL_OR_TOOL_IDENTITY_SCOPE_BROKEN"},
+    {"case_id": "C0-LPC-N39", "mutation": "bootstrap runs the synthetic image or invokes systemd attempt service", "expected": "REFUSE", "falsifier": "BOOTSTRAP_BECAME_ATTEMPT"},
+    {"case_id": "C0-LPC-N40", "mutation": "bootstrap exceeds time call cost bound or does not close stopped", "expected": "REFUSE", "falsifier": "BOOTSTRAP_BOUND_OR_POSTCONDITION_FAILED"},
+    {"case_id": "C0-LPC-N41", "mutation": "preparation creates a second change set or direct stack operation", "expected": "REFUSE", "falsifier": "CHANGE_SET_CREATE_SCOPE_BROKEN"},
+    {"case_id": "C0-LPC-N42", "mutation": "preparation executes deletes or recreates the change set", "expected": "REFUSE", "falsifier": "CHANGE_SET_EXECUTION_OR_DELETION_PREMATURE"},
+    {"case_id": "C0-LPC-N43", "mutation": "change-set template parameters capabilities role or canonical diff differs", "expected": "REFUSE", "falsifier": "CHANGE_SET_OBSERVATION_MISMATCH"},
+    {"case_id": "C0-LPC-N44", "mutation": "preparation failure advances without exact stop and permitted IAM rollback closure", "expected": "REFUSE", "falsifier": "PREPARATION_FAILURE_CLEANUP_MISSING"},
+    {"case_id": "C0-LPC-N45", "mutation": "FAIL or INCONCLUSIVE has null failure fields or advances, or PASS has an unknown/failed/out-of-order action, incomplete/running bootstrap, wrong tool/image fact, missing receipt, unavailable change set, or upper_bound 999 above ceiling 1 despite within_ceiling true", "expected": "REFUSE", "falsifier": "CONDITIONAL_CLOSURE_SEMANTICS_BROKEN"},
+    {"case_id": "C0-LPC-N46", "mutation": "launch v2 contains preparation closure identity", "expected": "REFUSE", "falsifier": "LAUNCH_CLOSURE_CYCLE"},
+    {"case_id": "C0-LPC-N47", "mutation": "launch v2 contains live authorization identity", "expected": "REFUSE", "falsifier": "LAUNCH_AUTHORIZATION_CYCLE"},
+    {"case_id": "C0-LPC-N48", "mutation": "corrected attempt accepts launch request v1", "expected": "REFUSE", "falsifier": "OLD_LAUNCH_SCHEMA_ACCEPTED"},
+    {"case_id": "C0-LPC-N49", "mutation": "live packet omits PASS closure launch root receipt change set or fresh stopped preflight", "expected": "REFUSE", "falsifier": "FINAL_LIVE_PACKET_INCOMPLETE"},
+    {"case_id": "C0-LPC-N50", "mutation": "live packet or change set drifts expires is replaced or already executed, or no-service-role effect APIs/resources are absent from or exceed the subset-proven live-session policy", "expected": "REFUSE", "falsifier": "FINAL_LIVE_PACKET_STALE_OR_EFFECT_POLICY_INOPERABLE"},
+    {"case_id": "C0-LPC-N51", "mutation": "live statement precedes the complete live-packet publication observation", "expected": "REFUSE", "falsifier": "LIVE_AUTHORIZATION_PREMATURE"},
+    {"case_id": "C0-LPC-N52", "mutation": "live statement packet key VersionId hash change set account instance or attempt differs", "expected": "REFUSE", "falsifier": "LIVE_STATEMENT_BINDING_MISMATCH"},
+    {"case_id": "C0-LPC-N53", "mutation": "live statement is paraphrased reordered newline-terminated non-NFC or unauthenticated", "expected": "REFUSE", "falsifier": "LIVE_STATEMENT_BYTES_OR_SOURCE_MISMATCH"},
+    {"case_id": "C0-LPC-N54", "mutation": "live authorization is injected as CloudFormation parameter environment or launch field", "expected": "REFUSE", "falsifier": "LIVE_AUTHORIZATION_CYCLE_REINTRODUCED"},
+    {"case_id": "C0-LPC-N55", "mutation": "workflow input is empty arbitrary has extra fields or binds another packet or attempt", "expected": "REFUSE", "falsifier": "LIVE_EXECUTION_INPUT_NOT_CLOSED"},
+    {"case_id": "C0-LPC-N56", "mutation": "any path reaches StartInstances before successful live-authorization preflight", "expected": "REFUSE", "falsifier": "AUTHORIZATION_PREFLIGHT_BYPASS"},
+    {"case_id": "C0-LPC-N57", "mutation": "live authorization expiry is not strictly after observed UTC, or start v2 omits/mismatches an identity or substitutes aws_account_identity/v1 for workflow SSM systemd or container kind", "expected": "REFUSE", "falsifier": "LIVE_TIME_OR_START_V2_IDENTITY_CLOSURE_BROKEN"},
+    {"case_id": "C0-LPC-N58", "mutation": "replay duplicate claim second execution or other change set is attempted", "expected": "REFUSE", "falsifier": "SINGLE_USE_BOUNDARY_BROKEN"},
+    {"case_id": "C0-LPC-N59", "mutation": "reachability uses a second path wildcard or implementation adds modifies or substitutes a fifteenth path", "expected": "REFUSE", "falsifier": "FUTURE_PATH_SCOPE_BROADENED"},
+    {"case_id": "C0-LPC-N60", "mutation": "scientific import field action output counter or Stage F readiness or execution claim is present", "expected": "REFUSE", "falsifier": "ZERO_SCIENCE_OR_STAGE_F_BOUNDARY_BROKEN"}
+  ],
+  "positive_case_count": 24,
+  "negative_case_count": 60,
+  "total_case_count": 84,
+  "original_authority_case_arithmetic": {
+    "positive_case_count": 18,
+    "negative_case_count": 48,
+    "total_case_count": 66,
+    "changed_by_correction": false,
+    "may_be_substituted_by_correction_cases": false
+  },
+  "required_cross_record_proofs": [
+    "identity value equals identity sha256 and applicable referenced preimage digest",
+    "operator-bootstrap statement follows and deterministically binds the complete operator-bootstrap packet and authenticated source",
+    "temporary root uses only the exact role-scoped bootstrap API set then stops after one preparation-session assumption",
+    "operator-bootstrap PASS closes exact role policies session policy expiry actions and rollback before preparation packet creation",
+    "preparation statement is issued after and deterministically binds the complete preparation packet",
+    "preparation authorization source is authenticated and deadline is live before first mutation",
+    "every mutating API resource action count and response is permitted by the exact preparation packet",
+    "IAM observed before after and optional rollback identities match packet targets",
+    "every S3 put is fresh conditional checksummed versioned exact-version-read and within maxima",
+    "bootstrap begins stopped uses one start and one SSM command runs no container and ends stopped within bounds",
+    "launch v2 binds preparation packet and authorization but neither future closure nor live authorization",
+    "preparation PASS binds every action object bootstrap change set cost and stopped postcondition",
+    "live packet is published after PASS closure and binds an unchanged available unexecuted change set",
+    "live-session policy is derived after the observed change set and is proven a subset of the bootstrap ceiling and role base policy",
+    "live statement is issued after and binds exact live packet object change set account instance attempt and one exact live-session assumption",
+    "live authorization binds the observed constrained live session policy and expiry",
+    "live authorization complete-byte identity is supplied only as exact workflow input",
+    "successful authorization preflight dominates every instance start",
+    "start v2 and later attempt chain bind the unique launch packet authorization and execution",
+    "deadline cost request and resource arithmetic remain within both preparation and live envelopes",
+    "all zero-science counters and Stage F false values remain exact"
+  ],
+  "mandatory_future_validator_algorithms": {
+    "identity_kind_closure": "Enumerate every schema property whose name ends _identity plus every bare identity property; require an identity_kind_by_field entry, enforce its exact kind or allowed_kinds/null predicate, enforce bare_identity_kind_by_enclosing_schema, policy_identity_kind_by_iam_action, and resource_identity_kind_by_action. Reject missing, surplus, unknown, generic-ref, or aws_account_identity/v1 substituted runtime identities.",
+    "operator_bootstrap_pass": "For PASS require every root_action_observation disposition SUCCEEDED with null failure_code, exact resource kind by API action, exactly one successful sts:AssumeRole, no action outside packet arrays or maxima, nonnull exact role/policy/session/expiry, null rollback, observed_utc strictly before session expiry, and role readback equal packet target.",
+    "preparation_pass_actions": "Require exactly ten action observations in phase_order and sequence order 0..9, each SUCCEEDED with nonnull started/completed UTC, started_utc<=completed_utc, exact action-specific resource kind, and no omitted, duplicate, unknown, FAILED, ROLLED_BACK, or NOT_STARTED item.",
+    "preparation_pass_bootstrap": "Require initial/final stopped, exactly one start and SSM command, at least one bounded stop, nonnull OS/version/architecture/type, exact Docker 29.7.2 and AWS CLI 2.36.36, exact packet image digest, zero container runs, nonnull started/stopped UTC with started_utc<stopped_utc, and all observations within packet deadline/call/resource maxima.",
+    "preparation_cost_arithmetic": "Recompute integer upper_bound_minor_units from the sealed cost model and observed resource use; require within_ceiling equals (upper_bound_minor_units<=ceiling_minor_units), both ceiling values equal the packet, and PASS only when the comparison is true.",
+    "timestamp_ordering": "Parse every UTC value; require authorization observed after its complete packet, every action before its deadline, operator session expiry after bootstrap closure and preparation deadline, live packet assumer expiry after packet observation and second-approval window, live authorization execution_session_expires_utc strictly greater than live authorization observed_utc, and all launch/cleanup/attempt deadlines in declared order.",
+    "live_effect_policy_operability": "Canonicalize the exact template and change-set diff into closed effect API/resource records; because cloudformation_role_identity is null, require every underlying create/update/delete/read/tag and rollback action in the live session policy. Require iam:PassRole exactly when Lambda or Step Functions Role properties consume the exact template-derived execution roles, forbid PassRole on every other role, and prove the final session policy is a subset of both ceiling and base policy.",
+    "conditional_failure_semantics": "Require FAIL/INCONCLUSIVE typed nonnull phase/code and forbid advancement; require START_ACCEPTED exact runtime identity kinds plus nonnull docker container and null failure fields; require refused/failed start null container unless an observed container existed and nonnull typed failure fields."
+  },
+  "required_fixture_expansions_by_case": {
+    "C0-LPC-N45": [
+      "PASS with action EVIL:API",
+      "PASS with one FAILED action_observation",
+      "PASS with duplicate or out-of-order phase sequence",
+      "PASS with bootstrap final_state running",
+      "PASS with null bootstrap facts or zero SSM command",
+      "PASS with Docker or AWS CLI version mismatch",
+      "PASS with upper_bound_minor_units 999 ceiling_minor_units 1 and within_ceiling true",
+      "FAIL or INCONCLUSIVE with null failure phase or code"
+    ],
+    "C0-LPC-N50": [
+      "null CloudFormation service role and missing exact iam:PassRole for template Lambda role",
+      "null CloudFormation service role and missing exact iam:PassRole for template Step Functions role",
+      "iam:PassRole on any resource outside the exact two template-derived execution role identities",
+      "live session effect policy omits a canonical change-set effect or exceeds its ceiling"
+    ],
+    "C0-LPC-N57": [
+      "live authorization execution_session_expires_utc equals observed_utc",
+      "live authorization execution_session_expires_utc precedes observed_utc",
+      "start-v2 workflow_execution_identity kind is aws_account_identity/v1",
+      "start-v2 ssm_command_identity kind is aws_account_identity/v1",
+      "start-v2 systemd_invocation_identity kind is aws_account_identity/v1",
+      "START_ACCEPTED container_identity kind is aws_account_identity/v1"
+    ]
+  },
+  "required_final_dispositions": [
+    "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_PASS",
+    "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_FAIL"
+  ],
+  "authority_pass_effect": "READY_FOR_NORMAL_CORRECTION_AUTHORITY_INTEGRATION_ONLY",
+  "authority_pass_does_not_authorize": [
+    "reachability or implementation change",
+    "local Docker operation",
+    "AWS read mutation spend or IAM action",
+    "artifact staging bootstrap or change-set creation",
+    "change-set or workflow execution",
+    "systemd or container start",
+    "Stage F readiness or scientific execution"
+  ],
+  "completion_marker": "AWS_C0_LIVE_PREPARATION_CHOREOGRAPHY_CORRECTION_VALIDATION_CONTRACT_COMPLETE"
+}
