@@ -1,0 +1,200 @@
+{
+  "authority_id": "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1",
+  "status": "PROSPECTIVE ADDITIVE NON-SCIENTIFIC AUTHORITY CANDIDATE ONLY",
+  "accepted_base": {
+    "commit": "a4af44afd3c878311ee373bc19e3be14b2aacec5",
+    "tree": "619b59875cfa4c6ad4a7da4f6a1aaaa465d3f23a",
+    "parents_in_order": [
+      "be7f180547a144f1a4dbf3f9d88bc6c20af95fcb",
+      "8adf22f7556fb467a0c1fd339549274821f7d214"
+    ],
+    "accepted_base_is_only_candidate_parent": true
+  },
+  "accepted_stage_e": {
+    "integration_commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "integration_tree": "212777d569af527ce9532ea6c836ff2225465d87",
+    "ci_run_id": 33231168021,
+    "artifact_id": 9708926559,
+    "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345",
+    "stage_f_execution_authorized": false
+  },
+  "accepted_stage_f_authority_chain": {
+    "local_binding_authority_integration_commit": "4ab6a8a8b158e6ff32d06e67d29a3d974a6326be",
+    "evidence_correction_integration_commit": "db9d305be120e69d00be14f0d07e06999ca77999",
+    "final_evidence_closure_integration_commit": "1f4650411ea360d82df3e9f0708af32a58608729",
+    "attempt_root_bootstrap_integration_commit": "be7f180547a144f1a4dbf3f9d88bc6c20af95fcb",
+    "authority_file_count": 24,
+    "implementation_accepted": false,
+    "aws_binding_accepted": false,
+    "scientific_execution_authorized": false
+  },
+  "critical_base_rows": [
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "git_object": "8610e8f07c3f462d6a4a6e2b4b677f56ffd89ae5",
+      "bytes": 1853,
+      "sha256": "b23e3e26c336fe2db258e735f20e60e291d7f22cf9ee9d5e623d69ba141c002b"
+    },
+    {
+      "path": ".github/workflows/tests.yml",
+      "mode": "100644",
+      "git_object": "8e7c12896aa3b31787ed0f29344418f9643b45c0",
+      "bytes": 17795,
+      "sha256": "1b66eb3c0a7782852ee7678b383dec32822953af2d675b106c5b1779e65a7a4a"
+    },
+    {
+      "path": "scripts/validate_stage_e_harness.py",
+      "mode": "100644",
+      "git_object": "00628ea06d69610937893823ad8530c9f667cbf7",
+      "bytes": 69917,
+      "sha256": "1817bb21af568ce9af53d89ee43c6c5ae97483b03240ee68610efba20ffbaccf"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_object": "7cb9cb9709205535bfdc9f59195c089ee3684557",
+      "bytes": 432097,
+      "sha256": "c013fe3c5c3f7e965bf9985ef9b9a0302cf9f767b746eeeb17bd16503e3ba98c"
+    },
+    {
+      "path": "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "5fd765fe17c807e6ec742c82b159ad3ac8ab1a3c",
+      "bytes": 8918,
+      "sha256": "1dbc429a4935bbf927b8beafabc03bf281b2d908740ffa9034b0983587fa1f67"
+    }
+  ],
+  "published_diagnostic_source": {
+    "commit": "df7e8447dbe98ae21b78d97a07093b2f3de5555d",
+    "tree": "847afbed0e750528b25c72e4c0e1d2c5643696af",
+    "parent": "a4af44afd3c878311ee373bc19e3be14b2aacec5",
+    "disposition": "PUBLISHED_DIAGNOSTIC_SOURCE_NOT_ACCEPTED_BASE",
+    "accepted_base": false,
+    "accepted_predecessor": false,
+    "accepted_implementation": false,
+    "historical_rehearsal_is_unattended_evidence": false,
+    "rows": [
+      {
+        "path": "aws/AWS_STAGE_E_TO_STAGE_F_READINESS.md",
+        "mode": "100644",
+        "git_object": "51c2fd5b4546a71e94bf166b32f1bb511c42d419",
+        "bytes": 3753,
+        "sha256": "7168df39ab92d25e91b1cfb1f478b7aeb82b574858571ddf00192de8ea4e8327"
+      },
+      {
+        "path": "aws/AWS_UNATTENDED_CAMPAIGN_PLAN.md",
+        "mode": "100644",
+        "git_object": "12edd22d206725400a2e0c3d125d21d99b387307",
+        "bytes": 11131,
+        "sha256": "936f50077f375cd5d856892caaf04b2827524ce18a6c2b7bad002e840bff4127"
+      },
+      {
+        "path": "aws/OPERATOR_RUNBOOK.md",
+        "mode": "100644",
+        "git_object": "c69bb00c27ce90078f8f458d3ea4a67386df1d9a",
+        "bytes": 4343,
+        "sha256": "d19af2ac05db32ab2cca30584a381006d72c4333dff2dacb60b9c5ff26d25bf0"
+      },
+      {
+        "path": "aws/README.md",
+        "mode": "100644",
+        "git_object": "47fa1831745d78c949dbde61255e4ff6e973c04a",
+        "bytes": 4399,
+        "sha256": "807f70d31199ec71f86ba532a7052d2660a65b33c3719aedcfe6491cdd6b8e03"
+      },
+      {
+        "path": "aws/campaigns/aws-infrastructure-rehearsal-20260901.json",
+        "mode": "100644",
+        "git_object": "814bf47ceba9ea7f3f758654f06697a90c909ab5",
+        "bytes": 1848,
+        "sha256": "3f050bc0b6dd469e5dab047fa1a6b7f1184b2eea2e5f0ea88af3c7b12800bb68"
+      },
+      {
+        "path": "aws/campaigns/campaign-request.template.json",
+        "mode": "100644",
+        "git_object": "665f48d4630f64846c55865aab68021127d96d39",
+        "bytes": 1776,
+        "sha256": "64f046d653ab30274749810641d0ae5d79219cada2bf0baeea6360fe709a8a9e"
+      },
+      {
+        "path": "aws/iam/rehearsal-ec2-role-policy.json",
+        "mode": "100644",
+        "git_object": "9362faea734e7bdfe22df2ac9929e4e16778afba",
+        "bytes": 1327,
+        "sha256": "bf8256183b2d6402189597aaa283123f9309398ccfd7a85235c56ebf633a27c0"
+      },
+      {
+        "path": "aws/rehearsals/2026-09-01/REHEARSAL_RECORD.md",
+        "mode": "100644",
+        "git_object": "d2f83aafcc719f2c7dc9e0465a347798554afe5c",
+        "bytes": 2652,
+        "sha256": "e5298e334db51f41bbb0c9ad6c6c0b3070f615554f079e028e9fe2f18f2aba96"
+      },
+      {
+        "path": "aws/rehearsals/2026-09-01/ebu-rehearsal-vm.sh",
+        "mode": "100755",
+        "git_object": "ecea578ce64ab9c6013c62ba3658ed593f5c6757",
+        "bytes": 8546,
+        "sha256": "3391fa0803ef5d911cefe17caa198e252394451316b2add6d1badd024823956c"
+      },
+      {
+        "path": "aws/rehearsals/2026-09-01/run-ebu-rehearsal-from-mac.sh",
+        "mode": "100755",
+        "git_object": "a9e80470b8225b00bb502d086c14dd4f5afc8bf7",
+        "bytes": 10281,
+        "sha256": "82a3fcaae4d92fbae08d9c394e8c653e73ca66403259612b26b776b0d92ce6cb"
+      },
+      {
+        "path": "aws/rehearsals/2026-09-01/s3-head-object.json",
+        "mode": "100644",
+        "git_object": "60d70d783336c24a3539191d74ddc168aa467d1e",
+        "bytes": 193,
+        "sha256": "f9d48dd5b91e72fa1fedd84d12944a98d4791ee5838fa7548981b315dbded999"
+      },
+      {
+        "path": "aws/rehearsals/2026-09-01/synthetic-result.txt",
+        "mode": "100644",
+        "git_object": "c4e9fa3b2e79afa82048826545a45a49cde8b398",
+        "bytes": 451,
+        "sha256": "63b9d408bbcc6b99ef58c301d41547d21ba06cee755ae68227cd7c4bd8b8a6dc"
+      },
+      {
+        "path": "aws/rehearsals/2026-09-01/synthetic-result.txt.sha256",
+        "mode": "100644",
+        "git_object": "c236fc07169910e976e1975b517e3bc02766bfc0",
+        "bytes": 87,
+        "sha256": "c1b556525b14538ce5cbd661cbd37a75a8b5c170181d4c9ab8932e5eef8065a1"
+      },
+      {
+        "path": "aws/scripts/download-results.sh",
+        "mode": "100755",
+        "git_object": "312b65a2974ca1d0f41d49c4fb064f842a022f0c",
+        "bytes": 3156,
+        "sha256": "8b4ff18b36e5d65209a37909697306695d0f4fc68f82625825da954e6e1b3547"
+      },
+      {
+        "path": "tests/aws/__init__.py",
+        "mode": "100644",
+        "git_object": "befc4c9ddfaa248fe760567012b3ecf0c29074d6",
+        "bytes": 61,
+        "sha256": "9a7e96f0e35fc1775c0a1ba2f41c566887cd7fa48dd5b4b46fd84f46613a9053"
+      },
+      {
+        "path": "tests/aws/test_aws_campaign_assets.py",
+        "mode": "100644",
+        "git_object": "24dc3a9396060fd941d79392992687ea4bd699ba",
+        "bytes": 4298,
+        "sha256": "592863bf63b1382adc597f339e15628992ed0148a2d2e7c3e04112011e621f91"
+      }
+    ],
+    "row_count": 16
+  },
+  "operator_supplied_quota_fact": {
+    "statement": "Region us-east-1; quota name All Standard new limit; value 64; effective after 30 minutes.",
+    "evidence_class": "OPERATOR_SUPPLIED_UNVERIFIED_QUOTA_FACT",
+    "independently_verified": false,
+    "execution_authority": false
+  },
+  "completion_marker": "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_PREDECESSOR_MANIFEST_COMPLETE"
+}
