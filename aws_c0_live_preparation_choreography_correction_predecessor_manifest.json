@@ -1,0 +1,239 @@
+{
+  "authority_id": "EBU-AWS-C0-LIVE-PREPARATION-CHOREOGRAPHY-CORRECTION-AUTHORITY-v1",
+  "status": "PROSPECTIVE ADDITIVE NON-SCIENTIFIC CORRECTION AUTHORITY CANDIDATE ONLY",
+  "accepted_base": {
+    "commit": "eec94950430c0f2811d0aea99b413cef35b72a7c",
+    "tree": "8ea6df371e804866ad509bb251cfc25e0a447964",
+    "parents_in_order": [
+      "bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118",
+      "2de79d7fc7451d9d32ecdf17e0a148b2246bdeb9"
+    ],
+    "subject": "Merge commit '2de79d7fc7451d9d32ecdf17e0a148b2246bdeb9' into framework/aws-c0-unattended-synthetic-rehearsal-reachability-integration",
+    "tree_entry_count": 466,
+    "regular_mode_100644_blob_count": 464,
+    "regular_mode_100755_blob_count": 2,
+    "total_blob_count": 466
+  },
+  "accepted_aws_c0_chain_in_order": [
+    {
+      "phase": "ORIGINAL_AUTHORITY_CANDIDATE",
+      "commit": "f76f79b4ca68ea9466d31fba1e4627dc31f40679",
+      "tree": "d97add63617885305b0768371cce7a7828dbe35f",
+      "parents": ["a4af44afd3c878311ee373bc19e3be14b2aacec5"],
+      "disposition": "ACCEPTED_ANCESTRY_COORDINATE"
+    },
+    {
+      "phase": "ORIGINAL_AUTHORITY_INTEGRATION",
+      "commit": "bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118",
+      "tree": "d97add63617885305b0768371cce7a7828dbe35f",
+      "parents": [
+        "a4af44afd3c878311ee373bc19e3be14b2aacec5",
+        "f76f79b4ca68ea9466d31fba1e4627dc31f40679"
+      ],
+      "disposition": "ACCEPTED_ANCESTRY_COORDINATE"
+    },
+    {
+      "phase": "ORIGINAL_REACHABILITY_CORRECTION",
+      "commit": "2de79d7fc7451d9d32ecdf17e0a148b2246bdeb9",
+      "tree": "8ea6df371e804866ad509bb251cfc25e0a447964",
+      "parents": ["bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118"],
+      "disposition": "ACCEPTED_ANCESTRY_COORDINATE"
+    },
+    {
+      "phase": "ORIGINAL_REACHABILITY_INTEGRATION",
+      "commit": "eec94950430c0f2811d0aea99b413cef35b72a7c",
+      "tree": "8ea6df371e804866ad509bb251cfc25e0a447964",
+      "parents": [
+        "bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118",
+        "2de79d7fc7451d9d32ecdf17e0a148b2246bdeb9"
+      ],
+      "disposition": "ACCEPTED_BASE"
+    }
+  ],
+  "critical_base_rows": [
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "git_object": "8610e8f07c3f462d6a4a6e2b4b677f56ffd89ae5",
+      "bytes": 1853,
+      "sha256": "b23e3e26c336fe2db258e735f20e60e291d7f22cf9ee9d5e623d69ba141c002b"
+    },
+    {
+      "path": "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_object": "4fe23a434d1cbde87c540718dade24288115d5ca",
+      "bytes": 15308,
+      "sha256": "ae73aa9286f1db0ee473c1fa06e2180832aba26eec5f4460cba0e49e8890b186"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_contract.json",
+      "mode": "100644",
+      "git_object": "1b0f54973bea3b3e7d85080d2b53c95def72733b",
+      "bytes": 12359,
+      "sha256": "ae20af92bd4184b504b819fa044b9425200806fa13b1f5f6121fb44e43b842b7"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_evidence_schema.json",
+      "mode": "100644",
+      "git_object": "d067f17106e79cc1425495ddf5ce4b7a205652f2",
+      "bytes": 30746,
+      "sha256": "58d9e4bc7bdf0eb953ba55f051c5e8d3114972237fee21aaa2a69b083385b8a9"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "90eee83efa5f6800530ae315dafe4b9529e6cc87",
+      "bytes": 5446,
+      "sha256": "d1a54744e908b8c95f46454c12e0d5db1296322fde5fb24df812bb8acfbc72fc"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_predecessor_manifest.json",
+      "mode": "100644",
+      "git_object": "c346d6ec135df1073b80b2aa9ffce7f2194dd6b2",
+      "bytes": 8044,
+      "sha256": "c10f92fc56729582d4ed6d353726b3bc60a66d2bd4531e4070432f16bbce7364"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+      "mode": "100644",
+      "git_object": "f1ccf9881ac0f37c824386f764b22a55ce75e6f8",
+      "bytes": 13274,
+      "sha256": "d3c0a039cf5a81367e17303a1e4961758c06e2a489002ea4a6d67c7458c468dd"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_object": "6589b48c4ae67d9b805ec388e70c8a532d11c0e0",
+      "bytes": 454821,
+      "sha256": "41be6e5a83ba6e59a3560c5e67aeedd8cdcda02cd23d013248d9e1e182086d31"
+    },
+    {
+      "path": ".github/workflows/tests.yml",
+      "mode": "100644",
+      "git_object": "8e7c12896aa3b31787ed0f29344418f9643b45c0",
+      "bytes": 17795,
+      "sha256": "1b66eb3c0a7782852ee7678b383dec32822953af2d675b106c5b1779e65a7a4a"
+    },
+    {
+      "path": "scripts/validate_stage_e_harness.py",
+      "mode": "100644",
+      "git_object": "00628ea06d69610937893823ad8530c9f667cbf7",
+      "bytes": 69917,
+      "sha256": "1817bb21af568ce9af53d89ee43c6c5ae97483b03240ee68610efba20ffbaccf"
+    },
+    {
+      "path": "stage_f_local_execution_binding_attempt_root_bootstrap_correction_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_object": "5fd765fe17c807e6ec742c82b159ad3ac8ab1a3c",
+      "bytes": 8918,
+      "sha256": "1dbc429a4935bbf927b8beafabc03bf281b2d908740ffa9034b0983587fa1f67"
+    }
+  ],
+  "candidate_paths_at_base": [
+    {
+      "path": "AWS_C0_LIVE_PREPARATION_CHOREOGRAPHY_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "base_state": "ABSENT"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_contract.json",
+      "base_state": "ABSENT"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_evidence_schema.json",
+      "base_state": "ABSENT"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_implementation_path_manifest.json",
+      "base_state": "ABSENT"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_predecessor_manifest.json",
+      "base_state": "ABSENT"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+      "base_state": "ABSENT"
+    }
+  ],
+  "nonaccepted_circular_design_source": {
+    "implementation": {
+      "commit": "88be7584bcb92e0f547beff202087fe85889f666",
+      "tree": "d0595648a518413a37bb8dd97828b546da835ac4",
+      "parent": "eec94950430c0f2811d0aea99b413cef35b72a7c"
+    },
+    "integration": {
+      "commit": "80178bc27c16a1c7b7cecc473ab2895e3ab04a66",
+      "tree": "d0595648a518413a37bb8dd97828b546da835ac4",
+      "parents": [
+        "eec94950430c0f2811d0aea99b413cef35b72a7c",
+        "88be7584bcb92e0f547beff202087fe85889f666"
+      ]
+    },
+    "disposition": "NONACCEPTED_CIRCULAR_LIVE_PREPARATION_DESIGN_SOURCE",
+    "reason": "LIVE_AUTHORIZATION_AND_OPAQUE_VERSION_IDENTITIES_ARE_REQUIRED_BEFORE_THE_POSTPACKET_APPROVAL_AND_CHANGE_SET_DIFF_EXIST",
+    "accepted_predecessor": false,
+    "accepted_implementation": false,
+    "accepted_integration": false,
+    "deployment_or_execution_authority": false,
+    "added_paths": [
+      ".github/workflows/aws-c0-static.yml",
+      "aws/c0/README.md",
+      "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+      "aws/c0/container/Dockerfile",
+      "aws/c0/container/synthetic_worker.py",
+      "aws/c0/controller/ebu-c0@.service",
+      "aws/c0/controller/ebu_c0_controller.py",
+      "aws/c0/finalizer/finalizer.py",
+      "aws/c0/fixtures/launch-request.valid.json",
+      "aws/c0/fixtures/negative-cases.json",
+      "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+      "aws/c0/state-machine/aws-c0.asl.json",
+      "scripts/validate_aws_c0_static.py",
+      "tests/aws/test_aws_c0_unattended_synthetic.py"
+    ],
+    "added_path_count": 14,
+    "may_supply_reviewed_source_ideas": true,
+    "may_be_merged_or_cherry_picked_as_corrected_implementation": false
+  },
+  "operator_identity_precondition": {
+    "accepted_base_establishes_a_constrained_live_operator": false,
+    "temporary_root_may_be_treated_as_preparation_or_live_operator": false,
+    "correction_requires_observed_operator_bootstrap_pass_before_preparation_packet": true,
+    "private_inventory_fact_or_credential_committed_here": false,
+    "missing_exact_constrained_session_disposition": "REQUIRE_SEPARATE_OPERATOR_BOOTSTRAP_PACKET_AND_APPROVAL_OR_STOP"
+  },
+  "preserved_stage_e_coordinate": {
+    "commit": "c43ead831c3e4021405985134ed564b761bb1aed",
+    "tree": "212777d569af527ce9532ea6c836ff2225465d87",
+    "ci_run_id": 33231168021,
+    "artifact_sha256": "2b2b5cc213082392bda715e82b9a23f670b7628b92848ace9455724f903bc345",
+    "scientific_repeat_required_for_aws_c0": false,
+    "state_changed_by_correction": false
+  },
+  "stage_f_boundary": {
+    "stage_f_execution_authorized": false,
+    "stage_f_readiness_claimed": false,
+    "aws_binding_accepted": false,
+    "scientific_execution_authorized": false,
+    "state_changed_by_correction": false
+  },
+  "prospective_outputs": {
+    "candidate_commit": {
+      "status": "NOT_YET_CREATED",
+      "type": "GIT_COMMIT_SHA1_REQUIRED_AFTER_FUTURE_COMMIT"
+    },
+    "candidate_tree": {
+      "status": "NOT_YET_CREATED",
+      "type": "GIT_TREE_SHA1_REQUIRED_AFTER_FUTURE_COMMIT"
+    },
+    "authority_audit_root": {
+      "status": "NOT_YET_CREATED",
+      "type": "AWS_C0_CORRECTION_AUTHORITY_AUDIT_ROOT_REQUIRED_AFTER_INDEPENDENT_AUDIT"
+    },
+    "integration_commit": {
+      "status": "NOT_YET_CREATED",
+      "type": "GIT_COMMIT_SHA1_REQUIRED_AFTER_NORMAL_INTEGRATION"
+    }
+  },
+  "completion_marker": "AWS_C0_LIVE_PREPARATION_CHOREOGRAPHY_CORRECTION_PREDECESSOR_MANIFEST_COMPLETE"
+}
