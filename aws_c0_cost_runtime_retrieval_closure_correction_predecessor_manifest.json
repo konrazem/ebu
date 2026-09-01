@@ -1,0 +1,207 @@
+{
+  "authority_id": "EBU-AWS-C0-COST-RUNTIME-RETRIEVAL-CLOSURE-CORRECTION-AUTHORITY-v1",
+  "status": "PROSPECTIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "0bcc1729516f580c2fd30061ec2db15eb2364b2b",
+    "tree": "7fc84a90875594c7bf666b4072b43b23ee5fbdd9",
+    "parents_in_order": [
+      "019d812ac41b5ffd46471b8b7ac8129a9f962f88",
+      "86f7e33e48d459468094d54fc3c41e56a8a9339b"
+    ]
+  },
+  "accepted_aws_c0_chain_in_order": [
+    {
+      "role": "ORIGINAL_AUTHORITY_CANDIDATE",
+      "commit": "f76f79b4ca68ea9466d31fba1e4627dc31f40679",
+      "tree": "d97add63617885305b0768371cce7a7828dbe35f",
+      "parent": "a4af44afd3c878311ee373bc19e3be14b2aacec5"
+    },
+    {
+      "role": "ORIGINAL_AUTHORITY_INTEGRATION",
+      "commit": "bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118",
+      "tree": "d97add63617885305b0768371cce7a7828dbe35f",
+      "parents_in_order": [
+        "a4af44afd3c878311ee373bc19e3be14b2aacec5",
+        "f76f79b4ca68ea9466d31fba1e4627dc31f40679"
+      ]
+    },
+    {
+      "role": "ORIGINAL_REACHABILITY_INTEGRATION",
+      "commit": "eec94950430c0f2811d0aea99b413cef35b72a7c",
+      "tree": "8ea6df371e804866ad509bb251cfc25e0a447964",
+      "parents_in_order": [
+        "bf8fbe97f2c53cbcec91b27fa90d7ef6b0ad5118",
+        "2de79d7fc7451d9d32ecdf17e0a148b2246bdeb9"
+      ]
+    },
+    {
+      "role": "LIVE_PREPARATION_CORRECTION_AUTHORITY_CANDIDATE",
+      "commit": "1876c76a23bc5e85fb325def976d8986458ae39a",
+      "tree": "bf1efd6a6ff41e1fbec5096318a119152840bf95",
+      "parent": "eec94950430c0f2811d0aea99b413cef35b72a7c"
+    },
+    {
+      "role": "LIVE_PREPARATION_CORRECTION_AUTHORITY_INTEGRATION",
+      "commit": "019d812ac41b5ffd46471b8b7ac8129a9f962f88",
+      "tree": "bf1efd6a6ff41e1fbec5096318a119152840bf95",
+      "parents_in_order": [
+        "eec94950430c0f2811d0aea99b413cef35b72a7c",
+        "1876c76a23bc5e85fb325def976d8986458ae39a"
+      ]
+    },
+    {
+      "role": "LIVE_PREPARATION_REACHABILITY_CANDIDATE",
+      "commit": "86f7e33e48d459468094d54fc3c41e56a8a9339b",
+      "tree": "7fc84a90875594c7bf666b4072b43b23ee5fbdd9",
+      "parent": "019d812ac41b5ffd46471b8b7ac8129a9f962f88"
+    },
+    {
+      "role": "LIVE_PREPARATION_REACHABILITY_INTEGRATION_AND_CURRENT_ACCEPTED_BASE",
+      "commit": "0bcc1729516f580c2fd30061ec2db15eb2364b2b",
+      "tree": "7fc84a90875594c7bf666b4072b43b23ee5fbdd9",
+      "parents_in_order": [
+        "019d812ac41b5ffd46471b8b7ac8129a9f962f88",
+        "86f7e33e48d459468094d54fc3c41e56a8a9339b"
+      ]
+    }
+  ],
+  "critical_base_rows": [
+    {
+      "path": "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "4fe23a434d1cbde87c540718dade24288115d5ca",
+      "sha256": "ae73aa9286f1db0ee473c1fa06e2180832aba26eec5f4460cba0e49e8890b186"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_contract.json",
+      "mode": "100644",
+      "git_blob": "1b0f54973bea3b3e7d85080d2b53c95def72733b",
+      "sha256": "ae20af92bd4184b504b819fa044b9425200806fa13b1f5f6121fb44e43b842b7"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_evidence_schema.json",
+      "mode": "100644",
+      "git_blob": "d067f17106e79cc1425495ddf5ce4b7a205652f2",
+      "sha256": "58d9e4bc7bdf0eb953ba55f051c5e8d3114972237fee21aaa2a69b083385b8a9"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_blob": "90eee83efa5f6800530ae315dafe4b9529e6cc87",
+      "sha256": "d1a54744e908b8c95f46454c12e0d5db1296322fde5fb24df812bb8acfbc72fc"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "c346d6ec135df1073b80b2aa9ffce7f2194dd6b2",
+      "sha256": "c10f92fc56729582d4ed6d353726b3bc60a66d2bd4531e4070432f16bbce7364"
+    },
+    {
+      "path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "f1ccf9881ac0f37c824386f764b22a55ce75e6f8",
+      "sha256": "d3c0a039cf5a81367e17303a1e4961758c06e2a489002ea4a6d67c7458c468dd"
+    },
+    {
+      "path": "AWS_C0_LIVE_PREPARATION_CHOREOGRAPHY_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "5b2613695bd57d3926278a878a06d639bd3d7dcf",
+      "sha256": "2853c8b7113c19e0c933541e21e1ac942ac56e3b47c77b840f321005c8d4fc56"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_contract.json",
+      "mode": "100644",
+      "git_blob": "2d6a334fec9b713cfa766b8ed6dd3db9fa7d6b35",
+      "sha256": "2bac78a461e9527ebfa6d7aef6457ea2c280c657305789c7b045c2be7f8f9b9b"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_evidence_schema.json",
+      "mode": "100644",
+      "git_blob": "1b52aecc7b76ca97ac61ba43046054dfa3e52dec",
+      "sha256": "51be66d9e69d82b03b08a1ec5e1a66ef97ec7ce778e43ade922d80140c8d8a2b"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_blob": "3c483a219364751ed3dea556715a37982c583f4c",
+      "sha256": "875d28083942492b3364218a2e03c5cd872497f5faf6c13024655f6bd6e7fb63"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "3de290c587ad78216d434894a501d8dc4ec104b4",
+      "sha256": "a716fb60ee03a0471419035f777c33b370ee10f9c1af84e81ce1ed95d57e72cb"
+    },
+    {
+      "path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "20dc4feb199104caf4838d25c56a6e44baccaf75",
+      "sha256": "4bee6d765e0e83315efbb2d80882293c5b631988fbee8e0c407f17653e5ada3f"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_blob": "65cd695850e8b3851788680e7f0eb7fce13dff35",
+      "sha256": "2eeb8393d8cf3b2c19783a1c0edc4a0bb0d88c94d11da39a07f5b7dd9b2f265e"
+    }
+  ],
+  "nonaccepted_diagnostic_design_source": {
+    "classification": "NONACCEPTED_COST_RUNTIME_RETRIEVAL_CLOSURE_BLOCKED_DESIGN_SOURCE",
+    "commit": "e18c881ba53bfe3cfb496533587f254a9a8f92a5",
+    "tree": "0bb6844c54486962664a2d673b4a80b05caff5a7",
+    "sole_parent": "0bcc1729516f580c2fd30061ec2db15eb2364b2b",
+    "is_predecessor": false,
+    "may_be_parent_or_base_of_corrected_implementation": false,
+    "may_be_copied_as_authoritative_implementation": false,
+    "diagnostic_facts_only": [
+      "STATIC_VALIDATOR_EXPLICIT_EXIT_2_BLOCKER",
+      "FRESH_RUNTIME_CONTROL_PREIMAGES_UNAVAILABLE",
+      "COST_MODEL_RATE_PREIMAGE_AND_AUTHENTICATED_RESOURCE_USE_UNAVAILABLE",
+      "AUTHORITY_AUDIT_AND_STATIC_VALIDATION_EXACT_VERSION_RECEIPTS_UNAVAILABLE",
+      "SUCCESS_PASS_UNREACHABLE",
+      "INDEPENDENT_AUDIT_FAIL"
+    ],
+    "required_reachability_rule": "REJECT_AS_ANCESTOR_PARENT_BASE_OR_ACCEPTED_DESIGN"
+  },
+  "rejected_earlier_design_commits": [
+    "88be758",
+    "80178bc"
+  ],
+  "candidate_paths_at_base": {
+    "new_authority_paths_exist": false,
+    "future_14_implementation_paths_exist": false,
+    "reachability_path_exists": true
+  },
+  "preserved_stage_e_coordinate": {
+    "status": "ACCEPTED_FINISHED_UNCHANGED",
+    "validator_modification_authorized": false
+  },
+  "stage_f_boundary": {
+    "status": "FROZEN",
+    "scientific_execution_authorized": false,
+    "separate_aws_linux_binding_and_scientific_packet_required": true
+  },
+  "prospective_outputs": {
+    "authority_candidate": "EXACT_SIX_NEW_FILES_ONLY",
+    "authority_integration": "SEPARATE_ACCEPTANCE_REQUIRED",
+    "reachability_correction": "EXACT_ONE_EXISTING_PATH_ONLY_AFTER_INTEGRATION",
+    "corrected_implementation": "EXACT_SAME_14_NEW_PATHS_ONLY_AFTER_REACHABILITY_INTEGRATION",
+    "live_aws": "SEPARATE_COMPLETE_PACKETS_AND_EXACT_APPROVALS_REQUIRED"
+  },
+  "future_coordinate_observation_contract": {
+    "candidate_does_not_predict_future_commit_tree_or_receipt": true,
+    "authority_audit_later_binds": ["AUTHORITY_CANDIDATE_COMMIT_TREE", "AUTHORITY_INTEGRATION_COMMIT_TREE", "REACHABILITY_CANDIDATE_COMMIT_TREE", "REACHABILITY_INTEGRATION_COMMIT_TREE", "IMPLEMENTATION_CANDIDATE_COMMIT_TREE", "SIX_AUTHORITY_PATH_HASH_MODE_ROWS", "ONE_REACHABILITY_PATH_HASH_MODE_ROW", "FOURTEEN_IMPLEMENTATION_PATH_HASH_MODE_ROWS", "PARENT_AND_ANCESTRY_AUDIT_OUTPUT"],
+    "static_validation_later_binds": ["AUTHORITY_AUDIT_EXACT_RECEIPT", "VALIDATOR_IDENTITY_AND_OUTPUT_HASH", "EIGHT_LANE_RESULTS", "THIRTY_SIX_POSITIVE_RESULTS", "SEVENTY_TWO_NEGATIVE_RESULTS", "EXACT_TEST_COUNT", "GLOBAL_144_TO_158", "DESCENDANT_94_TO_108"],
+    "unknown_future_coordinate_in_preapproval_packet": "REFUSE"
+  },
+  "future_reachability_scope_counts": {
+    "global_before": 144,
+    "global_after": 158,
+    "descendant_before": 94,
+    "descendant_after": 108,
+    "existing_paths_modified": 1,
+    "unique_paths_added": 0,
+    "corrected_implementation_paths_added": 14
+  },
+  "completion_marker": "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CORRECTION_AUTHORITY_COMPLETE"
+}
