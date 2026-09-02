@@ -1,0 +1,933 @@
+{
+  "authority_id": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION",
+  "authority_version": 1,
+  "status": "PROSPECTIVE_AUTHORITY_ONLY_NO_AWS_DEPLOYMENT_CONTAINER_OR_SCIENTIFIC_EXECUTION",
+  "accepted_base": {
+    "commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+    "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827"
+  },
+  "candidate_file_count": 6,
+  "candidate_mode": "100644",
+  "candidate_files_in_order": [
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_audit_static_publication_handoff_correction_contract.json",
+    "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+    "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json",
+    "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json",
+    "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+  ],
+  "correction_boundary": {
+    "defect": "STATIC_V2_REFERENCES_A_FUTURE_AUTHORITY_AUDIT_PUBLICATION_COORDINATE_WITHOUT_A_DETERMINISTIC_TWO_INVOCATION_PUBLIC_HANDOFF",
+    "audit_category_root_replacement": {
+      "from": "aws_c0_material_runtime_authority_audit/v2",
+      "to": "aws_c0_audit_static_handoff_authority_audit/v3",
+      "same_semantic_category_and_pre_live_slot": true,
+      "prior_v2_embedded_not_separately_published": true
+    },
+    "static_root_replacement": {
+      "from": "aws_c0_material_runtime_static_validation/v2",
+      "to": "aws_c0_material_runtime_static_validation/v3",
+      "semantic_category": "STATIC",
+      "pre_live_slot_unchanged": true
+    },
+    "ssm_dispatch_replacement": {
+      "from": "aws_c0_ssm_dispatch_request/v1",
+      "to": "aws_c0_ssm_dispatch_request/v2",
+      "reason": "REMOVE_SELF_REFERENTIAL_TRANSPORT_FIELDS_FROM_SEMANTIC_PREIMAGE"
+    },
+    "forbidden_widening": [
+      "PRE_LIVE_COUNT",
+      "EVIDENCE_ROOT_CATEGORY_COUNT",
+      "COST_DIMENSION_COUNT",
+      "READ_PLAN_ROW_COUNT",
+      "STAGE_F",
+      "SCIENCE",
+      "AWS_EXECUTION"
+    ],
+    "authority_audit_schema_semantics": "EXACT_ACCEPTED_MATERIAL_CORRECTION_DEFINITION_NO_REDEFINITION"
+  },
+  "preserved_invariants": {
+    "pre_live_object_count": 21,
+    "evidence_root_category_count": 12,
+    "cost_dimension_count": 22,
+    "sealed_read_plan_row_count": 63,
+    "prior_case_count": 324,
+    "stage_e_status": "ACCEPTED_FINISHED_UNCHANGED",
+    "stage_f_status": "FROZEN_SEPARATE_AWS_LINUX_BINDING_SCIENTIFIC_PACKET_VALIDATION_AND_AUTHORIZATION_REQUIRED",
+    "scientific_execution_authorized": false,
+    "aws_execution_authorized": false
+  },
+  "canonical_json": {
+    "encoding": "UTF-8",
+    "normalization": "NFC",
+    "object_keys": "LEXICOGRAPHIC",
+    "separators": "COMMA_COLON_NO_WHITESPACE",
+    "numbers": "SIGNED_64_BIT_INTEGERS_ONLY_NO_FLOAT_NONFINITE_OR_NEGATIVE_WHERE_COUNT_OR_BYTES",
+    "duplicate_keys": "REFUSE",
+    "unknown_fields": "REFUSE",
+    "final_lf": false,
+    "root_digest": "SHA256_OF_COMPLETE_CANONICAL_RECORD_OMITTING_ONLY_RECORD_SHA256",
+    "nonroot_observation_digest": "SHA256_OF_COMPLETE_CANONICAL_OBSERVATION_OMITTING_ONLY_OBSERVATION_SHA256",
+    "identity_rule": "IDENTITY_VALUE_EQUALS_IDENTITY_SHA256_EQUALS_CANONICAL_PREIMAGE_SHA256"
+  },
+  "new_identity_preimages": {
+    "aws_c0_audit_static_handoff_authority_audit/v3": "COMPLETE_ROOT_WITH_EMBEDDED_PRIOR_V2_AND_ALL_6_6_1_1_14_14_COORDINATE_PATH_GROUPS_OMITTING_ONLY_RECORD_SHA256",
+    "aws_c0_material_runtime_authority_audit_input_observation/v1": "COMPLETE_CLOSED_PRIOR_V2_EMBEDDING_OBSERVATION_OMITTING_ONLY_OBSERVATION_SHA256",
+    "aws_c0_audit_static_handoff_authority_audit_input_observation/v1": "COMPLETE_CLOSED_AUDIT_V3_INPUT_OBSERVATION_OMITTING_ONLY_OBSERVATION_SHA256",
+    "aws_c0_sigv4_s3_conditional_put_request/v1": "EXACT_DECODED_CONDITIONAL_PUT_REQUEST_PREIMAGE",
+    "aws_c0_s3_conditional_put_response/v1": "EXACT_DECODED_CONDITIONAL_PUT_RESPONSE_TRANSCRIPT",
+    "aws_c0_provisional_conditional_put_observation/v1": "COMPLETE_CLOSED_PROVISIONAL_OBSERVATION_OMITTING_ONLY_OBSERVATION_SHA256",
+    "aws_c0_sigv4_s3_get_object_exact_version_request/v1": "EXACT_DECODED_EXACT_VERSION_GET_REQUEST_PREIMAGE",
+    "aws_c0_s3_get_object_exact_version_response/v1": "EXACT_DECODED_EXACT_VERSION_GET_RESPONSE_TRANSCRIPT",
+    "aws_c0_sigv4_s3_list_object_versions_request/v1": "EXACT_DECODED_PAGE_REQUEST_PREIMAGE",
+    "aws_c0_s3_list_object_versions_response/v1": "EXACT_DECODED_PAGE_RESPONSE_TRANSCRIPT",
+    "aws_c0_sigv4_authentication_evidence/v1": "ALGORITHM_CREDENTIAL_SCOPE_SIGNED_HEADERS_NONSECRET_CANONICAL_HEADER_MAP_SECURITY_TOKEN_SHA256_AND_BYTES_ROLE_SESSION_POLICY_CREDENTIAL_SOURCE_AUTHORIZATION_SIGNATURE_DATE_REQUEST_AND_STRING_TO_SIGN_HASHES_REQUEST_ID_RUNTIME_RECOMPUTATION_AND_ZEROIZATION",
+    "aws_c0_tls_authenticated_response/v1": "SERVER_NAME_TLS_PROTOCOL_PEER_CERTIFICATE_HASH_HOSTNAME_AND_CHAIN_RESULTS_RESPONSE_HEADER_HASH_REQUEST_ID_AND_OBSERVED_UTC_OMITTING_ONLY_OBSERVATION_SHA256",
+    "aws_c0_authenticated_exact_version_readback_observation/v1": "COMPLETE_CLOSED_READBACK_OBSERVATION_OMITTING_ONLY_OBSERVATION_SHA256",
+    "aws_c0_static_validator_software/v3": "EXACT_VALIDATOR_PATH_MODE_BYTES_SHA256_GIT_BLOB_IMPLEMENTATION_INTEGRATION_INTERPRETER_AND_DEPENDENCY_POLICY",
+    "aws_c0_static_validator_configuration/v3": "EXACT_SOURCE_HEAD_ORDERED_MODES_FIVE_CONTRACT_IDENTITIES_324_28_352_COUNTS_AND_INPUT_POLICY",
+    "aws_c0_static_validator_output_protocol/v3": "EXACT_ENCODING_CANONICALIZATION_NO_FINAL_LF_ABSOLUTE_PATH_EXCLUSIVE_ATOMIC_CREATE_NO_REPLACE_NO_PARTIAL_OUTPUT",
+    "aws_c0_validation_contract_file/v1": "EXACT_PATH_MODE_BYTE_COUNT_SHA256_AND_SOURCE_HEAD",
+    "aws_c0_validation_case_constructor/v1": "EXACT_CONTRACT_IDENTITY_CASE_ID_CALLABLE_SOURCE_PATH_AND_HASH_FIXTURE_POINTER_AND_CANONICAL_EXECUTION_SPEC_BYTES",
+    "aws_c0_launch_request_source/v1": "EXACT_LAUNCH_V3_BUCKET_KEY_VERSION_ID_BYTES_SHA256_REHEARSAL_AND_ATTEMPT",
+    "aws_c0_live_packet_source/v1": "EXACT_LIVE_PACKET_V3_BUCKET_KEY_VERSION_ID_BYTES_SHA256_REHEARSAL_AND_ATTEMPT",
+    "aws_c0_live_authorization_source/v1": "EXACT_LIVE_AUTHORIZATION_V3_BUCKET_KEY_VERSION_ID_BYTES_SHA256_REHEARSAL_AND_ATTEMPT",
+    "aws_c0_ssm_dispatch_request/v2": "EXACT_DOCUMENT_NAME_VERSION_TARGET_ATTEMPT_AND_21_FIELD_SEMANTIC_PARAMETER_PREIMAGE_EXCLUDING_ONLY_TWO_OUTER_TRANSPORT_FIELDS",
+    "aws_c0_material_runtime_static_validation/v3": "COMPLETE_ROOT_RECORD_OMITTING_ONLY_RECORD_SHA256",
+    "digest_rule_for_every_entry": "STRICT_UTF8_NFC_COMPACT_SORTED_INTEGER_ONLY_CANONICAL_JSON_NO_FINAL_LF_SHA256_AND_IDENTITY_KIND_VALUE_SHA256_EQUALITY",
+    "unknown_kind_or_preimage": "REFUSE"
+  },
+  "cli_contract": {
+    "executable_path": "scripts/validate_aws_c0_static.py",
+    "implementation_language": "PYTHON_STANDARD_LIBRARY_ONLY",
+    "argv_only": true,
+    "environment_reads": "REFUSE",
+    "stdin_reads": "REFUSE",
+    "sockets_network_aws_sdk_credential_provider_or_metadata": "REFUSE",
+    "undeclared_file_reads": "REFUSE",
+    "authority_audit": {
+      "exact_argv_in_order": [
+        "--mode",
+        "authority-audit",
+        "--source",
+        "ABSOLUTE_NORMALIZED_FINAL_IMPLEMENTATION_INTEGRATION_REPOSITORY",
+        "--output",
+        "ABSOLUTE_EXCLUSIVE_OUTPUT_PATH"
+      ],
+      "permitted_inputs": [
+        "ARGV",
+        "DECLARED_SOURCE_REPOSITORY_BYTES_AND_IMMUTABLE_GIT_OBJECTS"
+      ],
+      "output_schema": "aws_c0_audit_static_handoff_authority_audit/v3",
+      "output_contains_publication_observation": false,
+      "embedded_prior_material_audit_schema_binding": {
+        "path": "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+        "mode": "100644",
+        "git_blob": "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+        "byte_count": 769841,
+        "sha256": "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99",
+        "json_pointer": "#/$defs/authority_audit_v2"
+      },
+      "output_exact_full_common_stage_and_ten_zero_science_fields": true,
+      "output_exact_handoff_authority_reachability_and_final_implementation_candidate_integration_coordinates": true
+    },
+    "static_validation": {
+      "exact_argv_in_order": [
+        "--mode",
+        "static-validation",
+        "--source",
+        "SAME_ABSOLUTE_NORMALIZED_FINAL_IMPLEMENTATION_INTEGRATION_REPOSITORY",
+        "--authority-audit-record",
+        "ABSOLUTE_EXACT_LOCAL_CANONICAL_AUDIT_FILE",
+        "--authority-audit-receipt",
+        "ABSOLUTE_EXACT_LOCAL_CANONICAL_PROVISIONAL_CONDITIONAL_PUT_OBSERVATION_FILE",
+        "--output",
+        "ABSOLUTE_EXCLUSIVE_OUTPUT_PATH"
+      ],
+      "permitted_inputs": [
+        "ARGV",
+        "DECLARED_SOURCE_REPOSITORY_BYTES_AND_IMMUTABLE_GIT_OBJECTS",
+        "DECLARED_AUDIT_RECORD_FILE",
+        "DECLARED_PROVISIONAL_CONDITIONAL_PUT_OBSERVATION_FILE"
+      ],
+      "output_schema": "aws_c0_material_runtime_static_validation/v3",
+      "output_contains_own_publication_observation": false,
+      "authority_audit_input_wrapper_schema": "aws_c0_audit_static_handoff_authority_audit_input_observation/v1",
+      "publication_input_schema": "aws_c0_provisional_conditional_put_observation/v1",
+      "publication_input_claim": "STRUCTURAL_PROVISIONAL_COORDINATE_ONLY_NOT_AUTHENTICATED_OR_NONFABRICABLE",
+      "output_preserves_full_common_stage_and_ten_zero_science_fields": true
+    },
+    "argument_refusal": [
+      "UNKNOWN",
+      "DUPLICATE",
+      "MISSING",
+      "EMPTY",
+      "MODE_INAPPLICABLE",
+      "POSITIONAL",
+      "VALUE_REINTERPRETED_AS_FLAG"
+    ],
+    "path_refusal": [
+      "RELATIVE",
+      "NON_NORMALIZED",
+      "SYMLINK_SOURCE",
+      "SYMLINK_INPUT",
+      "SYMLINK_OUTPUT",
+      "PREEXISTING_OUTPUT",
+      "NON_DIRECTORY_PARENT"
+    ],
+    "output_protocol": {
+      "create": "EXCLUSIVE_REGULAR_TEMPORARY_FILE_IN_OUTPUT_DIRECTORY",
+      "write": "ONE_COMPLETE_CANONICAL_RECORD_NO_FINAL_LF",
+      "durability": [
+        "FSYNC_FILE",
+        "ATOMIC_INSTALL_NOREPLACE",
+        "FSYNC_DIRECTORY"
+      ],
+      "stdout": "EMPTY",
+      "failure": "NONZERO_NO_NEW_DESTINATION_NO_PARTIAL_OUTPUT_REMOVE_ONLY_OWN_TEMP",
+      "preexisting_destination": "REFUSE_AND_PRESERVE_UNCHANGED"
+    },
+    "deterministic_time": {
+      "source": "FINAL_IMPLEMENTATION_INTEGRATION_HEAD_COMMITTER_EPOCH_SECONDS_FROM_COMMIT_OBJECT",
+      "same_source_head_required_in_both_modes": true,
+      "environment_wall_clock_filesystem_mtime_or_runtime_now": "REFUSE",
+      "integer_domain": {
+        "minimum": -9223372036854775808,
+        "maximum": 9223372036854775807
+      },
+      "renderable_domain": {
+        "minimum": -62135596800,
+        "maximum": 253402300799
+      },
+      "conversion": "POSIX_UTC_PROLEPTIC_GREGORIAN_NO_LEAP_SECONDS_FLOOR_DIVISION_TO_YYYY-MM-DDTHH:MM:SSZ",
+      "frozen_conversion_steps_in_order": [
+        "PARSE_CANONICAL_BASE10_COMMITTER_EPOCH_AS_SIGNED_INT64_AND_IGNORE_COMMITTER_OFFSET_FOR_UTC_INSTANT",
+        "DAYS_SECONDS_EQUALS_DIVMOD_FLOOR_EPOCH_SECONDS_BY_86400_WITH_ZERO_LE_SECONDS_LT_86400",
+        "DATE_EQUALS_PROLEPTIC_GREGORIAN_CIVIL_FROM_DAYS_WITH_UNIX_DAY_ZERO_1970_01_01",
+        "TIME_EQUALS_SECONDS_DIVMOD_3600_THEN_60",
+        "FORMAT_EXACT_FOUR_DIGIT_YEAR_TWO_DIGIT_MONTH_DAY_HOUR_MINUTE_SECOND_AND_LITERAL_T_Z",
+        "ROUNDTRIP_RENDERED_FIELDS_TO_EPOCH_SECONDS_AND_REQUIRE_EQUAL"
+      ],
+      "civil_from_days_constants": {
+        "days_per_era": 146097,
+        "days_from_civil_epoch_offset": 719468,
+        "days_per_400_years": 146097,
+        "days_per_100_years_adjustment": 36524,
+        "days_per_4_years": 1461
+      },
+      "audit_field": "observed_utc",
+      "static_fields": [
+        "observed_utc",
+        "created_utc"
+      ],
+      "static_observed_equals_created": true,
+      "mismatch_or_out_of_renderable_range": "REFUSE"
+    }
+  },
+  "source_repository_contract": {
+    "head_role": "FINAL_CORRECTED_IMPLEMENTATION_INTEGRATION",
+    "head_parent_roles_in_order": [
+      "ACCEPTED_REACHABILITY_INTEGRATION",
+      "IMPLEMENTATION_CANDIDATE"
+    ],
+    "implementation_candidate_sole_parent_role": "ACCEPTED_REACHABILITY_INTEGRATION",
+    "authority_candidate_sole_parent": "ACCEPTED_BASE",
+    "authority_integration_parents_in_order": [
+      "ACCEPTED_BASE",
+      "AUTHORITY_CANDIDATE"
+    ],
+    "reachability_candidate_sole_parent": "AUTHORITY_INTEGRATION",
+    "reachability_integration_parents_in_order": [
+      "AUTHORITY_INTEGRATION",
+      "REACHABILITY_CANDIDATE"
+    ],
+    "exact_authority_paths": [
+      "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "aws_c0_audit_static_publication_handoff_correction_contract.json",
+      "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+      "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json",
+      "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json",
+      "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+    ],
+    "exact_reachability_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "exact_implementation_paths": [
+      ".github/workflows/aws-c0-static.yml",
+      "scripts/validate_aws_c0_static.py",
+      "aws/c0/README.md",
+      "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+      "aws/c0/state-machine/aws-c0.asl.json",
+      "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+      "aws/c0/controller/ebu_c0_controller.py",
+      "aws/c0/controller/ebu-c0@.service",
+      "aws/c0/finalizer/finalizer.py",
+      "aws/c0/container/Dockerfile",
+      "aws/c0/container/synthetic_worker.py",
+      "aws/c0/fixtures/launch-request.valid.json",
+      "aws/c0/fixtures/negative-cases.json",
+      "tests/aws/test_aws_c0_unattended_synthetic.py"
+    ],
+    "path_discovery": "LITERAL_CONSTANT_TUPLES_ONLY",
+    "glob_ignore_dynamic_manifest_or_filesystem_discovery": "REFUSE",
+    "nonaccepted_diagnostic": {
+      "commit": "475fc1f59e04bc4f76132acf8c37a4bfea2eafde",
+      "tree": "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb",
+      "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+      "classification": "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE",
+      "ancestor_parent_merge_cherry_pick_or_byte_source": false
+    }
+  },
+  "prior_material_authority_audit_v2_embedding_profile": {
+    "schema": "aws_c0_material_runtime_authority_audit/v2",
+    "schema_binding": {
+      "path": "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+      "mode": "100644",
+      "git_blob": "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+      "byte_count": 769841,
+      "sha256": "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99",
+      "json_pointer": "#/$defs/authority_audit_v2"
+    },
+    "do_not_redefine_shape": true,
+    "embedded_inside_audit_v3": true,
+    "separate_pre_live_publication_count": 0,
+    "accepted_base": {
+      "commit": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+      "tree": "75b8c651a12ba973c9c1ce81bd4355c463e306f5"
+    },
+    "accepted_diagnostic": {
+      "commit": "475fc1f59e04bc4f76132acf8c37a4bfea2eafde",
+      "tree": "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb",
+      "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+      "classification": "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE"
+    },
+    "full_common_required": [
+      "authority_id",
+      "correction_authority_id",
+      "closure_correction_authority_id",
+      "material_correction_authority_id",
+      "record_class",
+      "scientific_execution_authorized",
+      "stage_f_execution_authorized",
+      "stage_f_readiness_claimed",
+      "zero_science_counters",
+      "observed_utc",
+      "record_sha256"
+    ],
+    "zero_science_counter_count": 10,
+    "accepted_specific_fields": [
+      "schema",
+      "base",
+      "diagnostic",
+      "authority_candidate",
+      "authority_integration",
+      "reachability_candidate",
+      "reachability_integration",
+      "implementation_candidate",
+      "implementation_integration",
+      "authority_candidate_paths",
+      "authority_integration_paths",
+      "reachability_path",
+      "implementation_paths",
+      "ancestry_disposition",
+      "scientific_execution_count"
+    ],
+    "source_head_equals_implementation_integration": true,
+    "authority_path_count": 6,
+    "reachability_path_count": 1,
+    "implementation_path_count": 14,
+    "publication_observation_field_count": 0,
+    "publication_key_field_count": 0,
+    "publication_key_out_of_band_formula": "rehearsal/aws-c0/prelive/authority-audit/<record_sha256>.json"
+  },
+  "authority_audit_v3_profile": {
+    "schema": "aws_c0_audit_static_handoff_authority_audit/v3",
+    "semantic_category": "AUDIT",
+    "pre_live_slot_replaces_prior_audit_v2": true,
+    "base": {
+      "commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+      "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827"
+    },
+    "embedded_prior_material_audit": {
+      "kind": "aws_c0_material_runtime_authority_audit/v2",
+      "complete_canonical_bytes": true,
+      "identity_and_record_sha256_recomputed": true,
+      "validated_against_frozen_schema_hash_and_pointer": true,
+      "separate_pre_live_object": false
+    },
+    "runtime_filled_coordinate_groups_in_order": [
+      "HANDOFF_AUTHORITY_CANDIDATE",
+      "HANDOFF_AUTHORITY_INTEGRATION",
+      "HANDOFF_REACHABILITY_CANDIDATE",
+      "HANDOFF_REACHABILITY_INTEGRATION",
+      "FINAL_IMPLEMENTATION_CANDIDATE",
+      "FINAL_IMPLEMENTATION_INTEGRATION"
+    ],
+    "each_coordinate_requires_exact_commit_tree_and_complete_parent_array": true,
+    "path_groups": {
+      "handoff_authority_candidate": 6,
+      "handoff_authority_integration": 6,
+      "handoff_reachability_candidate": 1,
+      "handoff_reachability_integration": 1,
+      "final_implementation_candidate": 14,
+      "final_implementation_integration": 14
+    },
+    "each_path_row_requires_exact_literal_path_mode_git_blob_and_sha256": true,
+    "candidate_integration_tree_parent_path_and_ancestry_cross_checks": "REQUIRED",
+    "prospective_authority_must_not_predict_future_coordinates": true,
+    "mode_a_emits_only_after_final_implementation_integration": true,
+    "full_common_stage_and_ten_zero_science_fields": true,
+    "root_digest": "SHA256_CANONICAL_ROOT_OMITTING_ONLY_RECORD_SHA256"
+  },
+  "authority_audit_input_observation_contract": {
+    "schema": "aws_c0_audit_static_handoff_authority_audit_input_observation/v1",
+    "strict_decode_canonical_json_base64": true,
+    "validate_decoded_object_against_handoff_audit_v3_schema": true,
+    "validate_embedded_prior_v2_against_frozen_prior_schema_definition": true,
+    "recompute_record_sha256_omitting_only_record_sha256": true,
+    "audit_record_identity_kind": "aws_c0_audit_static_handoff_authority_audit/v3",
+    "audit_record_identity_value_equals_recomputed_record_sha256": true,
+    "audit_record_byte_count_and_raw_sha256_recomputed": true,
+    "decoded_observed_utc_equals_head_committer_epoch_conversion": true,
+    "source_head_equals_decoded_implementation_integration": true,
+    "fresh_mode_a_reconstruction_bytes_equal_declared_input": true,
+    "unknown_missing_duplicate_float_nonfinite_non_nfc_or_final_lf": "REFUSE"
+  },
+  "static_validation_v3": {
+    "schema": "aws_c0_material_runtime_static_validation/v3",
+    "record_class": "ROOT_OMIT_ONLY_RECORD_SHA256",
+    "validation_contracts_in_order": [
+      {
+        "path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+        "count": 66,
+        "id_prefix": "C0"
+      },
+      {
+        "path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+        "count": 84,
+        "id_prefix": "C0-LPC"
+      },
+      {
+        "path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+        "count": 108,
+        "id_prefix": "C0-CRT"
+      },
+      {
+        "path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+        "count": 66,
+        "id_prefix": "C0-MIRV"
+      },
+      {
+        "path": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
+        "count": 28,
+        "id_prefix": "C0-ASPH"
+      }
+    ],
+    "case_counts": {
+      "original": 66,
+      "live_preparation": 84,
+      "cost_runtime_retrieval": 108,
+      "material_runtime": 66,
+      "audit_static_handoff": 28,
+      "total": 352
+    },
+    "case_receipts": {
+      "exact_count": 352,
+      "exactly_once": true,
+      "ordered_by_contract_then_case_id": true,
+      "duplicates_skips_expected_failures_generic_helpers_or_marker_substitution": "REFUSE",
+      "aggregate": "SHA256_CANONICAL_ORDERED_352_CASE_RECEIPTS"
+    },
+    "identity_preimage_bindings": {
+      "validator_software_identity": "validator_software_preimage_v3",
+      "validator_configuration_identity": "validator_configuration_preimage_v3",
+      "output_protocol_identity": "validator_output_protocol_preimage_v3",
+      "each_validation_contract_identity": "validation_contract_file_preimage",
+      "each_case_constructor_identity": "validation_case_constructor_preimage",
+      "all_preimages_embedded_and_recomputed": true,
+      "opaque_identity_or_unknown_context": "REFUSE"
+    },
+    "authority_audit_binding": {
+      "identity_kind": "aws_c0_audit_static_handoff_authority_audit/v3",
+      "input_observation_schema": "aws_c0_audit_static_handoff_authority_audit_input_observation/v1",
+      "embedded_prior_v2_schema_exact_validation": true,
+      "record_bytes_exactly_reconstructed": true,
+      "record_digest_recomputed": true,
+      "provisional_put_observation_schema": "aws_c0_provisional_conditional_put_observation/v1",
+      "provisional_only_not_final_authentication": true
+    },
+    "exact_implementation_path_count": 14,
+    "scope_counts": {
+      "global_authority_only": 156,
+      "global_completed_implementation": 170,
+      "descendant_authority_only": 106,
+      "descendant_completed_implementation": 120,
+      "reachability_unique_paths_added": 0,
+      "implementation_paths_added": 14
+    },
+    "required_pass_gates": [
+      "SOURCE_HEAD",
+      "ANCESTRY",
+      "AUTHORITY_PATHS",
+      "REACHABILITY_PATH",
+      "IMPLEMENTATION_PATHS",
+      "AUDIT_RECORD",
+      "PROVISIONAL_AUDIT_PUT_OBSERVATION",
+      "ALL_352_CASES",
+      "OUTPUT_PROTOCOL",
+      "ZERO_SCIENCE"
+    ],
+    "deterministic_publication_key_formula": "rehearsal/aws-c0/prelive/static-validation/<record_sha256>.json",
+    "own_publication_observation_field_count": 0,
+    "full_common_required": [
+      "authority_id",
+      "correction_authority_id",
+      "closure_correction_authority_id",
+      "material_correction_authority_id",
+      "record_class",
+      "scientific_execution_authorized",
+      "stage_f_execution_authorized",
+      "stage_f_readiness_claimed",
+      "zero_science_counters",
+      "observed_utc",
+      "audit_static_handoff_authority_id",
+      "record_sha256"
+    ],
+    "zero_science_counter_count": 10,
+    "created_utc_derivation": "SAME_SOURCE_HEAD_COMMITTER_EPOCH_AS_AUDIT_OBSERVED_UTC"
+  },
+  "preparation_and_publication_chronology": {
+    "preapproval_packet_may_bind_only": [
+      "CLI_MODE_AND_ARGV_CONTRACTS",
+      "DERIVATION_AND_INPUT_SCHEMA_IDENTITIES",
+      "LOCAL_OUTPUT_PROTOCOL",
+      "DETERMINISTIC_S3_KEY_FORMULAS",
+      "ONCE_ONLY_STAGING_PLAN",
+      "ROLLBACK_PLAN"
+    ],
+    "preapproval_packet_must_not_bind": [
+      "AUTHORITY_AUDIT_BYTES",
+      "AUTHORITY_AUDIT_IDENTITY",
+      "AUTHORITY_AUDIT_PROVISIONAL_PUT_OBSERVATION",
+      "AUTHORITY_AUDIT_AUTHENTICATED_READBACK_OBSERVATION",
+      "AUTHORITY_AUDIT_VERSION_ID",
+      "STATIC_V3_BYTES",
+      "STATIC_V3_IDENTITY",
+      "STATIC_V3_PROVISIONAL_PUT_OBSERVATION",
+      "STATIC_V3_AUTHENTICATED_READBACK_OBSERVATION",
+      "STATIC_V3_VERSION_ID"
+    ],
+    "postapproval_steps_in_order": [
+      "RUN_AUTHORITY_AUDIT_MODE",
+      "CONDITIONAL_PUT_AUDIT_IF_NONE_MATCH_STAR",
+      "CAPTURE_PROVISIONAL_AUDIT_PUT_OBSERVATION",
+      "RUN_STATIC_VALIDATION_MODE_WITH_EXACT_AUDIT_BYTES_AND_PROVISIONAL_OBSERVATION",
+      "CONDITIONAL_PUT_STATIC_V3_IF_NONE_MATCH_STAR",
+      "CAPTURE_PROVISIONAL_STATIC_PUT_OBSERVATION",
+      "INDEPENDENT_EXACT_VERSION_GET_AND_VERSION_HISTORY_READBACK_FOR_AUDIT",
+      "INDEPENDENT_EXACT_VERSION_GET_AND_VERSION_HISTORY_READBACK_FOR_STATIC_V3",
+      "PREPARATION_CLOSURE_BINDS_BOTH_PROVISIONAL_AND_AUTHENTICATED_READBACK_OBSERVATIONS",
+      "LIVE_PACKET_BINDS_BOTH_PROVISIONAL_AND_AUTHENTICATED_READBACK_OBSERVATIONS"
+    ],
+    "self_publication_observation_or_cycle": "REFUSE",
+    "failed_publication": "TYPED_FAILURE_NO_FABRICATED_ROOT_PROVISIONAL_COORDINATE_OR_AUTHENTICATED_READBACK",
+    "provisional_observation_is_not_final_evidence": true,
+    "final_pass_requires_authenticated_readback_upgrade": true,
+    "exactly_once": "IF_NONE_MATCH_STAR_CONDITIONAL_PUT_PLUS_BOUNDED_ALL_PAGE_UNIQUE_VERSION_HISTORY_PROOF"
+  },
+  "version_and_kind_replacements": {
+    "pre_live_kinds_in_order": [
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_implementation_artifact/v1",
+      "aws_c0_operator_bootstrap_packet/v1",
+      "aws_c0_operator_bootstrap_authorization/v1",
+      "aws_c0_operator_bootstrap_closure/v1",
+      "aws_c0_preparation_packet/v2",
+      "aws_c0_preparation_authorization/v2",
+      "aws_c0_private_infrastructure_snapshot/v1",
+      "aws_c0_audit_static_handoff_authority_audit/v3",
+      "aws_c0_material_runtime_static_validation/v3",
+      "aws_c0_cost_model/v2",
+      "aws_c0_closure_seed/v1",
+      "aws_c0_launch_request/v3",
+      "aws_c0_preparation_closure/v2",
+      "aws_c0_live_packet/v3"
+    ],
+    "static_kind_context_overrides": {
+      "preparation_closure": "aws_c0_material_runtime_static_validation/v3",
+      "live_packet": "aws_c0_material_runtime_static_validation/v3",
+      "launch_v3": "aws_c0_material_runtime_static_validation/v3",
+      "retrieval_v3_root_1": "aws_c0_material_runtime_static_validation/v3",
+      "final_manifest_v3_root_1": "aws_c0_material_runtime_static_validation/v3"
+    },
+    "authority_audit_kind_all_contexts": "aws_c0_audit_static_handoff_authority_audit/v3",
+    "prior_material_authority_audit_v2_is_embedded_only": true,
+    "old_static_v2_in_new_packet": "REFUSE",
+    "ssm_dispatch_kind_all_runtime_contexts": "aws_c0_ssm_dispatch_request/v2",
+    "publication_evidence_context_overrides": {
+      "mode_b_input": "aws_c0_provisional_conditional_put_observation/v1",
+      "preparation_closure": "aws_c0_authenticated_exact_version_readback_observation/v1",
+      "live_packet": "aws_c0_authenticated_exact_version_readback_observation/v1",
+      "launch_v3": "aws_c0_authenticated_exact_version_readback_observation/v1",
+      "retrieval_v3": "aws_c0_authenticated_exact_version_readback_observation/v1",
+      "final_manifest_v3": "aws_c0_authenticated_exact_version_readback_observation/v1"
+    },
+    "wrong_bootstrap_kinds_refused": [
+      "aws_c0_operator_bootstrap_authority/v1",
+      "aws_c0_operator_bootstrap_policy/v1",
+      "aws_c0_operator_bootstrap_attestation/v1"
+    ]
+  },
+  "ssm_dispatch_v2": {
+    "schema": "aws_c0_ssm_dispatch_request/v2",
+    "document_name": "EBU-C0-Start-v1",
+    "document_version": "SEALED_EXACT_VERSION",
+    "target_instance_id": "i-048bac00bdb540a4e",
+    "semantic_parameters_in_order": [
+      "ArtifactBucket",
+      "ArtifactPrefix",
+      "LaunchRequestKey",
+      "LaunchRequestVersionId",
+      "LaunchRequestSha256",
+      "LaunchRequestBytes",
+      "LivePacketKey",
+      "LivePacketVersionId",
+      "LivePacketSha256",
+      "LivePacketBytes",
+      "LiveAuthorizationKey",
+      "LiveAuthorizationVersionId",
+      "LiveAuthorizationSha256",
+      "LiveAuthorizationBytes",
+      "RehearsalId",
+      "AttemptId",
+      "Region",
+      "WorkflowExecutionArn",
+      "SsmClientRequestToken",
+      "SsmExpectedCommandNotBeforeUtc",
+      "SsmExpectedCommandNotAfterUtc"
+    ],
+    "transport_parameters_in_order": [
+      "SsmDispatchRequestCanonicalJsonBase64",
+      "SsmDispatchRequestSha256"
+    ],
+    "semantic_preimage_fields": [
+      "schema",
+      "document_name",
+      "document_version",
+      "target_instance_id",
+      "attempt_identity",
+      "semantic_parameters"
+    ],
+    "semantic_preimage_excludes_exactly": [
+      "SsmDispatchRequestCanonicalJsonBase64",
+      "SsmDispatchRequestSha256"
+    ],
+    "actual_send_command_parameter_order": [
+      "ArtifactBucket",
+      "ArtifactPrefix",
+      "LaunchRequestKey",
+      "LaunchRequestVersionId",
+      "LaunchRequestSha256",
+      "LaunchRequestBytes",
+      "LivePacketKey",
+      "LivePacketVersionId",
+      "LivePacketSha256",
+      "LivePacketBytes",
+      "LiveAuthorizationKey",
+      "LiveAuthorizationVersionId",
+      "LiveAuthorizationSha256",
+      "LiveAuthorizationBytes",
+      "RehearsalId",
+      "AttemptId",
+      "Region",
+      "WorkflowExecutionArn",
+      "SsmClientRequestToken",
+      "SsmExpectedCommandNotBeforeUtc",
+      "SsmExpectedCommandNotAfterUtc",
+      "SsmDispatchRequestCanonicalJsonBase64",
+      "SsmDispatchRequestSha256"
+    ],
+    "transport_derivation": {
+      "SsmDispatchRequestCanonicalJsonBase64": "STRICT_BASE64_OF_CANONICAL_DISPATCH_V2_PREIMAGE_BYTES",
+      "SsmDispatchRequestSha256": "LOWERCASE_SHA256_OF_SAME_CANONICAL_PREIMAGE_BYTES"
+    },
+    "fixed_point_or_self_inclusion": "REFUSE",
+    "supervisor_completion_verification": [
+      "PROJECT_ACTUAL_PARAMETERS_TO_EXACT_21_FIELD_SEMANTIC_SUBSET",
+      "RECOMPUTE_DISPATCH_V2_IDENTITY",
+      "VERIFY_BASE64_TRANSPORT",
+      "VERIFY_SHA256_TRANSPORT",
+      "VERIFY_ALL_LAUNCH_LIVE_PACKET_LIVE_AUTHORIZATION_ATTEMPT_WORKFLOW_TOKEN_AND_TIME_CROSS_BINDINGS",
+      "VERIFY_NO_UNKNOWN_EXTRA_MISSING_OR_DUPLICATE_FIELDS"
+    ],
+    "controller_interface": {
+      "host_python": "/usr/bin/python3",
+      "controller": "/usr/local/libexec/ebu-c0/ebu_c0_controller.py",
+      "prepare_request_flags_in_order": [
+        "--bucket",
+        "ArtifactBucket",
+        "--artifact-prefix",
+        "ArtifactPrefix",
+        "--key",
+        "LaunchRequestKey",
+        "--version-id",
+        "LaunchRequestVersionId",
+        "--expected-sha256",
+        "LaunchRequestSha256",
+        "--expected-bytes",
+        "LaunchRequestBytes",
+        "--live-packet-key",
+        "LivePacketKey",
+        "--live-packet-version-id",
+        "LivePacketVersionId",
+        "--live-packet-expected-sha256",
+        "LivePacketSha256",
+        "--live-packet-expected-bytes",
+        "LivePacketBytes",
+        "--live-authorization-key",
+        "LiveAuthorizationKey",
+        "--live-authorization-version-id",
+        "LiveAuthorizationVersionId",
+        "--live-authorization-expected-sha256",
+        "LiveAuthorizationSha256",
+        "--live-authorization-expected-bytes",
+        "LiveAuthorizationBytes",
+        "--rehearsal-id",
+        "RehearsalId",
+        "--attempt-id",
+        "AttemptId",
+        "--region",
+        "Region",
+        "--workflow-execution-arn",
+        "WorkflowExecutionArn",
+        "--ssm-client-request-token",
+        "SsmClientRequestToken",
+        "--ssm-expected-command-not-before-utc",
+        "SsmExpectedCommandNotBeforeUtc",
+        "--ssm-expected-command-not-after-utc",
+        "SsmExpectedCommandNotAfterUtc",
+        "--ssm-dispatch-request-canonical-json-base64",
+        "SsmDispatchRequestCanonicalJsonBase64",
+        "--ssm-dispatch-request-sha256",
+        "SsmDispatchRequestSha256",
+        "--output",
+        "/var/lib/ebu-c0/requests/<AttemptId>.json"
+      ],
+      "systemctl_final_command": "/usr/bin/systemctl start --no-block ebu-c0@<AttemptId>.service",
+      "source_sidecar": {
+        "path": "/var/lib/ebu-c0/requests/<AttemptId>.source.json",
+        "owner": "root:root",
+        "mode": "0600",
+        "creation": "EXCLUSIVE_REGULAR_NO_SYMLINK",
+        "binds": [
+          "ALL_21_SEMANTIC_PARAMETERS",
+          "BOTH_TRANSPORT_PARAMETERS",
+          "DISPATCH_V2_IDENTITY",
+          "LAUNCH_LIVE_PACKET_LIVE_AUTHORIZATION_SOURCES",
+          "LAUNCH_LIVE_PACKET_LIVE_AUTHORIZATION_EXACT_CANONICAL_SOURCE_PREIMAGES",
+          "ATTEMPT_AND_WORKFLOW"
+        ]
+      },
+      "hidden_environment_file_metadata_socket_stdin_or_network_transport": "REFUSE"
+    },
+    "semantic_parameter_count": 21,
+    "outer_parameter_count": 23,
+    "inherited_coordinate_groups": {
+      "launch_v3": [
+        "KEY",
+        "VERSION_ID",
+        "SHA256",
+        "BYTES"
+      ],
+      "live_packet_v3": [
+        "KEY",
+        "VERSION_ID",
+        "SHA256",
+        "BYTES"
+      ],
+      "live_authorization_v3": [
+        "KEY",
+        "VERSION_ID",
+        "SHA256",
+        "BYTES"
+      ],
+      "attempt_workflow": [
+        "REHEARSAL_ID",
+        "ATTEMPT_ID",
+        "REGION",
+        "WORKFLOW_EXECUTION_ARN"
+      ],
+      "dispatch": [
+        "CLIENT_REQUEST_TOKEN",
+        "EXPECTED_NOT_BEFORE_UTC",
+        "EXPECTED_NOT_AFTER_UTC"
+      ]
+    }
+  },
+  "validation_case_arithmetic": {
+    "positive": 8,
+    "negative": 20,
+    "additive": 28,
+    "preserved": 324,
+    "combined": 352,
+    "independent_subcases": 104,
+    "subcase_uniqueness_fields": [
+      "subcase_id",
+      "operator_id",
+      "selector",
+      "expected_code"
+    ],
+    "each_subcase_has_separate_base_error_class": true,
+    "duplicate_subcase_coordinate_or_shared_callable": "REFUSE"
+  },
+  "future_reachability": {
+    "phases_in_order": [
+      "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+      "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
+    ],
+    "modified_paths": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "modified_path_count": 1,
+    "mode": "100644",
+    "unique_paths_added": 0,
+    "global_authority_only": 156,
+    "global_completed_implementation": 170,
+    "descendant_authority_only": 106,
+    "descendant_completed_implementation": 120,
+    "implementation_paths_added": 14,
+    "preserve_all_prior_phases_cases_scopes_hashes_and_three_public_test_methods": true
+  },
+  "completion_marker": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_COMPLETE",
+  "provisional_conditional_put_input": {
+    "schema": "aws_c0_provisional_conditional_put_observation/v1",
+    "request_schema": "aws_c0_sigv4_s3_conditional_put_request/v1",
+    "response_schema": "aws_c0_s3_conditional_put_response/v1",
+    "condition_header": {
+      "If-None-Match": "*"
+    },
+    "caller_kind": "aws_iam_role_session/v1",
+    "session_policy_kind": "aws_iam_session_policy/v1",
+    "required_structural_bindings": [
+      "EXACT_RECORD_IDENTITY",
+      "DETERMINISTIC_KEY",
+      "NONEMPTY_VERSION_ID",
+      "EXACT_BYTES",
+      "EXACT_RAW_SHA256",
+      "EXACT_CHECKSUM_SHA256_BASE64",
+      "EXACT_REQUEST_AND_RESPONSE_PREIMAGE_IDENTITIES",
+      "EXACT_APPROVED_PREPARATION_AUTHORIZATION_CALLER_SESSION_AND_SESSION_POLICY",
+      "HTTP_200",
+      "NO_DELETE_MARKER"
+    ],
+    "strict_request_preimage_rules": [
+      "BASE64_DECODE_STRICT_CANONICAL_JSON",
+      "VALIDATE_AGAINST_AWS_C0_SIGV4_S3_CONDITIONAL_PUT_REQUEST_V1",
+      "RECOMPUTE_REQUEST_SHA256_AND_REQUEST_IDENTITY",
+      "CROSS_BIND_CALLER_SESSION_POLICY_BUCKET_KEY_IF_NONE_MATCH_CONTENT_LENGTH_SHA256_AND_CHECKSUM"
+      ,"REQUIRE_TEMPORARY_ROLE_X_AMZ_SECURITY_TOKEN_IN_BOTH_EQUAL_SIGNED_HEADER_LISTS_WITHOUT_PERSISTING_RAW_TOKEN_OR_SECRET"
+      ,"REQUIRE_HOST_EQUALS_BUCKET_DOT_S3_DOT_US_EAST_1_DOT_AMAZONAWS_DOT_COM_AND_CANONICAL_NONSECRET_HEADER_VALUES_EQUAL_REQUEST"
+    ],
+    "strict_response_preimage_rules": [
+      "BASE64_DECODE_STRICT_CANONICAL_JSON",
+      "VALIDATE_AGAINST_AWS_C0_S3_CONDITIONAL_PUT_RESPONSE_V1",
+      "RECOMPUTE_RESPONSE_SHA256_AND_RESPONSE_IDENTITY",
+      "CROSS_BIND_HTTP_STATUS_REQUEST_ID_VERSION_ID_CHECKSUM_ETAG_DELETE_MARKER_AND_RESPONSE_HEADERS",
+      "CROSS_BIND_PUT_TLS_SERVER_NAME_TO_EXACT_SIGNED_HOST_AND_TLS_REQUEST_ID_TO_RESPONSE_REQUEST_ID"
+    ],
+    "claim_limit": "PROVISIONAL_STRUCTURAL_COORDINATE_ONLY_NOT_CRYPTOGRAPHICALLY_AUTHENTICATED_OR_NONFABRICABLE",
+    "fabricated_but_structurally_valid": "MAY_BUILD_STATIC_V3_BUT_CANNOT_SATISFY_FINAL_AUTHENTICATED_READBACK_GATE",
+    "exactly_once_rule": "CONDITIONAL_PUT_IF_NONE_MATCH_STAR_PLUS_LATER_COMPLETE_VERSION_HISTORY_PROOF"
+  },
+  "authenticated_readback_upgrade": {
+    "schema": "aws_c0_authenticated_exact_version_readback_observation/v1",
+    "performed_after_both_conditional_puts_and_before_preparation_closure_or_live_packet_pass": true,
+    "requirements": [
+      "INDEPENDENT_SIGV4_GET_OBJECT_BY_EXACT_VERSION_ID",
+      "EXACT_REQUESTED_AND_COMPLETED_UTC",
+      "APPROVED_PREPARATION_AUTHORIZATION_ROLE_SESSION_POLICY_CREDENTIAL_SOURCE_AND_EXPIRY",
+      "SIGV4_AWS4_HMAC_SHA256_CREDENTIAL_SCOPE_SIGNED_HEADERS_SIGNATURE_X_AMZ_DATE_CANONICAL_REQUEST_AND_STRING_TO_SIGN_HASHES",
+      "TLS_AUTHENTICATED_HOSTNAME_CERTIFICATE_CHAIN_PEER_CERTIFICATE_AND_RESPONSE_HEADERS",
+      "COMPLETE_CANONICAL_BYTES",
+      "BYTE_COUNT_SHA256_AND_CHECKSUM_MATCH",
+      "RECORD_IDENTITY_RECOMPUTED",
+      "ALL_BOUNDED_LIST_OBJECT_VERSIONS_PAGES",
+      "EXACTLY_ONE_MATCHING_VERSION",
+      "ZERO_MATCHING_DELETE_MARKERS",
+      "NO_LATEST_LOOKUP",
+      "INDEPENDENT_CALLER_SESSION"
+    ],
+    "get_preimage_schemas": {
+      "request": "aws_c0_sigv4_s3_get_object_exact_version_request/v1",
+      "response": "aws_c0_s3_get_object_exact_version_response/v1",
+      "strict_base64_canonical_decode_identity_and_cross_binding": true
+    },
+    "version_history_pagination": {
+      "maximum_pages": 1024,
+      "first_request_key_and_version_markers_are_null": true,
+      "each_next_request_markers_equal_prior_response_next_markers": true,
+      "nonterminal_pages_are_truncated_and_have_nonnull_next_marker_pair": true,
+      "terminal_page_is_not_truncated_and_has_null_next_marker_pair": true,
+      "every_page_has_independent_sigv4_request_and_success_response_preimages": true,
+      "every_page_has_exact_requested_completed_utc_and_tls_authenticated_response": true,
+      "page_count_equals_array_length": true,
+      "matching_version_count": 1,
+      "matching_record_sha256_count": 1,
+      "matching_delete_marker_count": 0
+    },
+    "authorization_cross_binding": {
+      "preparation_authorization_kind": "aws_c0_preparation_authorization/v2",
+      "put_caller_and_session_policy_equal_approved_authorization": true,
+      "readback_caller_is_independently_observed_and_allowed_by_same_approved_authorization": true,
+      "put_and_readback_times_within_approved_session_expiry": true,
+      "session_not_before_le_each_request_le_each_response_le_session_expiry": true,
+      "every_request_and_response_within_sealed_accounting_bounds": true,
+      "sigv4_scope_date_region_service_terminal_and_x_amz_date_recomputed": true,
+      "signed_headers_and_canonical_request_hash_recomputed": true,
+      "tls_request_id_and_response_header_hash_cross_bound": true,
+      "temporary_role_security_token_signed_for_put_get_and_list": true,
+      "top_level_and_nested_signed_headers_exactly_equal": true,
+      "security_token_evidence": "SHA256_AND_BYTE_COUNT_ONLY_RAW_TOKEN_AND_ACCESS_SECRET_NEVER_PERSISTED",
+      "runtime_recomputation": "WHILE_EPHEMERAL_CREDENTIAL_IS_IN_MEMORY_RECOMPUTE_CANONICAL_REQUEST_STRING_TO_SIGN_SCOPE_AND_AUTHORIZATION_SIGNATURE_THEN_ZEROIZE",
+      "offline_verification_limit": "CANNOT_REDERIVE_SECRET_SIGNATURE_VALIDATES_CONSTRAINED_RUNTIME_ATTESTATION_PLUS_EXACT_VERSION_TLS_RESPONSE_AND_COMPLETE_HISTORY_EVIDENCE_WITHOUT_CLAIMING_CRYPTOGRAPHIC_NONFABRICABILITY",
+      "exact_host_rule": "HOST_EQUALS_BUCKET_NAME_DOT_S3_DOT_US_EAST_1_DOT_AMAZONAWS_DOT_COM",
+      "tls_server_name_equals_exact_signed_host": true,
+      "canonical_host_and_x_amz_date_equal_signed_request_fields": true,
+      "put_content_length_checksum_and_if_none_match_equal_canonical_headers": true,
+      "get_checksum_mode_equals_canonical_header": true,
+      "role_session_policy_or_expiry_substitution": "REFUSE"
+    },
+    "publication_upgrade_binding": {
+      "embedded_observations_in_exact_order": [
+        "authority_audit_provisional_observation",
+        "authority_audit_authenticated_readback_observation",
+        "static_validation_provisional_observation",
+        "static_validation_authenticated_readback_observation"
+      ],
+      "embedded_observations_are_not_additional_pre_live_objects": true,
+      "identity_fields_equal_recomputed_embedded_observation_identities": true,
+      "authority_audit_provisional_and_readback_record_identity_equal_authority_audit_identity": true,
+      "static_validation_provisional_and_readback_record_identity_equal_static_validation_identity": true,
+      "each_readback_bucket_key_version_bytes_sha256_and_checksum_equal_its_provisional_coordinate": true,
+      "each_readback_complete_record_bytes_recompute_the_bound_root_identity": true,
+      "audit_and_static_coordinates_are_distinct": true,
+      "cross_wiring_substitution_or_identity_only_binding": "REFUSE"
+    },
+    "preparation_closure_binds_audit_and_static_readback": true,
+    "live_packet_binds_audit_and_static_readback": true,
+    "launch_retrieval_final_manifest_bind_upgrade": true,
+    "final_pass_without_upgrade": "REFUSE"
+  },
+  "numeric_domain": {
+    "signed_int64_minimum": -9223372036854775808,
+    "signed_int64_maximum": 9223372036854775807,
+    "signed_int64_maximum_plus_one_refused": "9223372036854775808",
+    "all_integer_fields_and_decimal_string_integer_parameters_recomputed_and_range_checked": true
+  }
+}

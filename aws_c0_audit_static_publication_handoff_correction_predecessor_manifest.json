@@ -1,0 +1,146 @@
+{
+  "authority_id": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION",
+  "status": "PROSPECTIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+    "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827",
+    "parents_in_order": [
+      "4d8011d03c0b7ceef1e19de93bbfea212e621487",
+      "2d2f3369e244d4a884446d5515b6ef60cce54a5d"
+    ]
+  },
+  "critical_base_rows": [
+    {
+      "path": "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "mode": "100644",
+      "git_blob": "f90c16efbf6e31544a11935191ba40ea5f8a6040",
+      "byte_count": 19204,
+      "sha256": "a4a85efc161792af066fa0b0a6ec1cb66dcabef0e26d8540d4d0b3fa85a09d36"
+    },
+    {
+      "path": "aws_c0_material_identity_runtime_validation_correction_contract.json",
+      "mode": "100644",
+      "git_blob": "69a45d94f3cc129c780544e4589583ac1657ee51",
+      "byte_count": 89852,
+      "sha256": "8ae16c96eb1ce4531686822d4564c114cbd9182aa600cf5ab2b04cd1b99ba438"
+    },
+    {
+      "path": "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+      "mode": "100644",
+      "git_blob": "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+      "byte_count": 769841,
+      "sha256": "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99"
+    },
+    {
+      "path": "aws_c0_material_identity_runtime_validation_correction_implementation_path_manifest.json",
+      "mode": "100644",
+      "git_blob": "8773f3dadf6d29dd5b01e543f8a882770408bffc",
+      "byte_count": 7284,
+      "sha256": "347293a9e87a1ae008331f2500f01cc8cdce7d2f4052f00e5e4488ec86d1e10f"
+    },
+    {
+      "path": "aws_c0_material_identity_runtime_validation_correction_predecessor_manifest.json",
+      "mode": "100644",
+      "git_blob": "ca9c0e10f9a6df0203c1e7523ea0421fe3a4ef81",
+      "byte_count": 5359,
+      "sha256": "fc31a28167fd07972660ebed7389c28e3439077f8e451cf3c43930f921820513"
+    },
+    {
+      "path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+      "mode": "100644",
+      "git_blob": "c32596aba41eb620f42b8d329a6a804edeeb95ba",
+      "byte_count": 205012,
+      "sha256": "46b403eed1e660a32b24e2962b6e465679ca0c986d63bf7b5e3bd4793a18ff68"
+    },
+    {
+      "path": "tests/framework/test_validation_reachability.py",
+      "mode": "100644",
+      "git_blob": "9a9cf8a03a8ba831f5daa085c3f6dd454f18f331",
+      "byte_count": 546081,
+      "sha256": "2692d1ac5ff66e38178ae76f4502e4e2611f817cd1e318dfbd57ea962dc04487"
+    }
+  ],
+  "preserved_authority_chain": {
+    "material_identity_authority_candidate": {
+      "commit": "9440290b716d0a605820b6a537172b158bd49e25",
+      "tree": "67eac70323698d3a50e32810b59d3cb6f5ee7fd4",
+      "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad"
+    },
+    "material_identity_authority_integration": {
+      "commit": "4d8011d03c0b7ceef1e19de93bbfea212e621487",
+      "tree": "67eac70323698d3a50e32810b59d3cb6f5ee7fd4",
+      "parents_in_order": [
+        "6eb39db6606159812b0995b7dbf2fb09948360ad",
+        "9440290b716d0a605820b6a537172b158bd49e25"
+      ]
+    },
+    "material_identity_reachability_candidate": {
+      "commit": "2d2f3369e244d4a884446d5515b6ef60cce54a5d",
+      "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827",
+      "sole_parent": "4d8011d03c0b7ceef1e19de93bbfea212e621487"
+    },
+    "material_identity_reachability_integration": {
+      "commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+      "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827",
+      "parents_in_order": [
+        "4d8011d03c0b7ceef1e19de93bbfea212e621487",
+        "2d2f3369e244d4a884446d5515b6ef60cce54a5d"
+      ]
+    }
+  },
+  "nonaccepted_diagnostic_design_source": {
+    "classification": "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE",
+    "commit": "475fc1f59e04bc4f76132acf8c37a4bfea2eafde",
+    "tree": "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb",
+    "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+    "is_accepted_predecessor": false,
+    "may_be_base_parent_ancestor_merge_input_cherry_pick_or_authoritative_source": false
+  },
+  "candidate_paths_at_base": {
+    "new_authority_paths_in_order": [
+      "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "aws_c0_audit_static_publication_handoff_correction_contract.json",
+      "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+      "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json",
+      "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json",
+      "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+    ],
+    "new_authority_paths_exist": false,
+    "future_fourteen_implementation_paths_exist": false,
+    "reachability_path_exists": true
+  },
+  "future_sequence": [
+    "ACCEPT_AND_INTEGRATE_EXACT_SIX_AUTHORITY_PATHS",
+    "ACCEPT_AND_INTEGRATE_ONE_PATH_REACHABILITY_CORRECTION",
+    "BUILD_AUDIT_STATIC_HANDOFF_CORRECTED_EXACT_FOURTEEN_PATH_IMPLEMENTATION",
+    "INDEPENDENT_STATIC_AUDIT",
+    "ACCEPT_IMPLEMENTATION_ONLY_IF_ALL_352_CASES_PASS",
+    "SEPARATE_PREPARATION_PACKET_APPROVAL_BEFORE_ANY_AWS_ACTION"
+  ],
+  "future_coordinate_rule": {
+    "authority_candidate_integration_reachability_candidate_integration_implementation_candidate_integration": "OBSERVE_AND_BIND_LATER_NEVER_PREDICT_IN_THIS_AUTHORITY",
+    "final_implementation_integration_source_head": "MUST_HAVE_REACHABILITY_INTEGRATION_AND_IMPLEMENTATION_CANDIDATE_AS_EXACT_PARENTS",
+    "audit_v3_output": "SOLE_AUDIT_CATEGORY_ROOT_EMBEDS_EXACT_PRIOR_V2_BYTES_AND_OBSERVES_ACTUAL_HANDOFF_AUTHORITY_REACHABILITY_IMPLEMENTATION_COORDINATES_NO_PUBLICATION_OBSERVATION",
+    "mode_b_input": "BINDS_PROVISIONAL_CONDITIONAL_PUT_COORDINATE_WITHOUT_AUTHENTICATION_CLAIM",
+    "static_v3_output": "BINDS_PROVISIONAL_AUDIT_COORDINATE_NO_SELF_PUBLICATION_OBSERVATION",
+    "later_upgrade": "PREPARATION_CLOSURE_AND_LIVE_PACKET_BIND_TEMPORARY_ROLE_RUNTIME_SIGV4_ATTESTATION_WITH_NO_RAW_SECRETS_PLUS_INDEPENDENT_EXACT_VERSION_TLS_RESPONSES_AND_COMPLETE_BOUNDED_HISTORY_BEFORE_FINAL_PASS_WITHOUT_OFFLINE_SECRET_SIGNATURE_REDERIVATION_CLAIM"
+  },
+  "future_reachability_scope_counts": {
+    "global_authority_only": 156,
+    "global_completed_implementation": 170,
+    "descendant_authority_only": 106,
+    "descendant_completed_implementation": 120,
+    "reachability_existing_paths_modified": 1,
+    "reachability_unique_paths_added": 0,
+    "implementation_paths_added": 14
+  },
+  "stage_boundary": {
+    "stage_e": "ACCEPTED_FINISHED_UNCHANGED",
+    "aws_c0": "NON_SCIENTIFIC_INFRASTRUCTURE_REHEARSAL",
+    "aws_c1": "LATER_SEPARATELY_AUTHORIZED_INFRASTRUCTURE_REHEARSAL",
+    "stage_f": "FROZEN_SEPARATE_AWS_LINUX_BINDING_SCIENTIFIC_PACKET_VALIDATION_AND_AUTHORIZATION_REQUIRED",
+    "scientific_execution_authorized": false,
+    "aws_execution_authorized": false
+  },
+  "completion_marker": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_COMPLETE"
+}

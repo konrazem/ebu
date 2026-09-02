@@ -1,0 +1,123 @@
+{
+  "authority_id": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION",
+  "status": "PROSPECTIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+    "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827"
+  },
+  "authority_path_count_before_integration": 24,
+  "new_authority_paths_in_order": [
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_audit_static_publication_handoff_correction_contract.json",
+    "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+    "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json",
+    "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json",
+    "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+  ],
+  "new_authority_path_count": 6,
+  "authority_path_count_after_integration": 30,
+  "new_authority_operation": "ADD",
+  "new_authority_mode": "100644",
+  "unknown_addition_modification_deletion_rename_symlink_glob_ignore_or_dynamic_scope": "REFUSE",
+  "future_reachability_correction": {
+    "authorized_only_after_exact_authority_acceptance_and_integration": true,
+    "operation": "MODIFY",
+    "path_count": 1,
+    "paths_in_order": [
+      "tests/framework/test_validation_reachability.py"
+    ],
+    "mode": "100644",
+    "unique_paths_added": 0,
+    "new_phases_in_order": [
+      "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+      "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
+    ],
+    "must_preserve_all_existing_phases_cases_scopes_hashes_and_three_public_test_methods": true,
+    "scope_derivation": "EXACT_LITERAL_FROZEN_PATH_TUPLES_ONLY",
+    "glob_ignore_directory_or_filesystem_discovery": "REFUSE"
+  },
+  "future_corrected_implementation": {
+    "authorized_only_after_authority_and_reachability_acceptance_and_integration": true,
+    "operation": "ADD",
+    "path_count": 14,
+    "mode": "100644",
+    "paths_in_order": [
+      ".github/workflows/aws-c0-static.yml",
+      "scripts/validate_aws_c0_static.py",
+      "aws/c0/README.md",
+      "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+      "aws/c0/state-machine/aws-c0.asl.json",
+      "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+      "aws/c0/controller/ebu_c0_controller.py",
+      "aws/c0/controller/ebu-c0@.service",
+      "aws/c0/finalizer/finalizer.py",
+      "aws/c0/container/Dockerfile",
+      "aws/c0/container/synthetic_worker.py",
+      "aws/c0/fixtures/launch-request.valid.json",
+      "aws/c0/fixtures/negative-cases.json",
+      "tests/aws/test_aws_c0_unattended_synthetic.py"
+    ],
+    "modified_path_count": 0,
+    "deleted_path_count": 0,
+    "renamed_path_count": 0,
+    "ignored_cache_or_generated_repository_addition": "REFUSE",
+    "source_rule": "REBUILD_FROM_ALL_ACCEPTED_AUTHORITIES_NEVER_FROM_NONACCEPTED_DIAGNOSTIC"
+  },
+  "required_future_content": [
+    "TWO_MODE_DETERMINISTIC_OFFLINE_CLI",
+    "AUDIT_V3_SOLE_AUDIT_CATEGORY_ROOT_EMBEDS_EXACT_ACCEPTED_PRIOR_AUTHORITY_AUDIT_V2_BYTES_WITHOUT_SEPARATE_PUBLICATION",
+    "HEAD_COMMITTER_EPOCH_DETERMINISTIC_UTC",
+    "AUTHORITY_AUDIT_V3_FINAL_COORDINATES_NO_PUBLICATION_OBSERVATION_OUTPUT",
+    "PROVISIONAL_IF_NONE_MATCH_STAR_PUT_OBSERVATION_INPUT",
+    "INDEPENDENT_EXACT_VERSION_GET_AND_ALL_PAGE_UNIQUE_HISTORY_UPGRADE",
+    "AUTHENTICATED_READBACK_EXACT_SIGV4_TLS_SESSION_ROLE_CREDENTIAL_SOURCE_EXPIRY_AND_TIME_ORDERING",
+    "TEMPORARY_ROLE_X_AMZ_SECURITY_TOKEN_SIGNED_WITH_HASH_ONLY_PERSISTENCE_RUNTIME_RECOMPUTATION_AND_ZEROIZATION",
+    "EXACT_BUCKET_REGION_HOST_CANONICAL_HEADER_TLS_SERVER_NAME_AND_OPERATION_HEADER_CROSS_BINDINGS",
+    "CLOSED_CANONICAL_PREIMAGES_FOR_EVERY_NOVEL_IDENTITY",
+    "STATIC_VALIDATION_V3_FULL_COMMON_STAGE_TEN_ZERO_FIELDS_AND_352_CASE_OUTPUT",
+    "ATOMIC_EXCLUSIVE_NO_PARTIAL_NO_FINAL_LF",
+    "PREAPPROVAL_NO_FUTURE_BYTES_IDENTITIES_OR_PUBLICATION_OBSERVATIONS",
+    "POSTAPPROVAL_TWO_CONDITIONAL_PUTS_TWO_INDEPENDENT_READBACKS_AND_HANDOFF",
+    "STATIC_V3_AND_AUTHENTICATED_READBACK_IN_CLOSURE_LIVE_LAUNCH_RETRIEVAL_FINAL_MANIFEST",
+    "EXACT_BOOTSTRAP_PACKET_AUTHORIZATION_CLOSURE_KINDS",
+    "EXACT_SIGNED_INT64_MAXIMUM_AND_PLUS_ONE_REFUSAL",
+    "SSM_DISPATCH_V2_EXACT_21_SEMANTIC_PLUS_TWO_TRANSPORT_ENVELOPE",
+    "CONTROLLER_SIDECAR_EXCLUSIVE_REGULAR_NO_SYMLINK_AND_SUPERVISOR_PROJECTION_VERIFICATION",
+    "ZERO_AWS_NETWORK_CONTAINER_AND_SCIENCE_DURING_AUTHORITY"
+  ],
+  "path_arithmetic": {
+    "base_global_unique_paths": 150,
+    "authority_paths_added": 6,
+    "global_authority_only": 156,
+    "reachability_existing_paths_modified": 1,
+    "reachability_unique_paths_added": 0,
+    "implementation_paths_added": 14,
+    "global_completed_implementation": 170,
+    "base_descendant_unique_paths": 100,
+    "descendant_authority_only": 106,
+    "descendant_completed_implementation": 120
+  },
+  "preserved_counts": {
+    "pre_live_objects": 21,
+    "evidence_roots": 12,
+    "cost_dimensions": 22,
+    "read_plan_rows": 63,
+    "prior_validation_cases": 324
+  },
+  "forbidden_operations_during_authority_work": [
+    "MODIFY_ACCEPTED_PATH",
+    "DELETE",
+    "RENAME",
+    "SYMLINK",
+    "COMMIT",
+    "PUSH",
+    "MERGE",
+    "AWS",
+    "NETWORK",
+    "DOCKER",
+    "SYSTEMD",
+    "DEPLOYMENT",
+    "MODEL_OR_SCIENTIFIC_EXECUTION"
+  ],
+  "completion_marker": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_COMPLETE"
+}
