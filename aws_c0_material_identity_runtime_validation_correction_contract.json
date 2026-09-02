@@ -1,0 +1,2547 @@
+{
+  "authority_id": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1",
+  "authority_version": 1,
+  "status": "PROSPECTIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+    "tree": "75b8c651a12ba973c9c1ce81bd4355c463e306f5"
+  },
+  "candidate_file_count": 6,
+  "candidate_mode": "100644",
+  "canonical_json": {
+    "encoding": "UTF-8",
+    "unicode_normalization": "NFC",
+    "object_keys": "LEXICOGRAPHIC",
+    "separators": "COMPACT",
+    "duplicate_keys": "REFUSE",
+    "floats_decimals_and_nonfinite": "REFUSE",
+    "integers_only_for_numeric_values": true,
+    "identity_value_equals_sha256": true
+  },
+  "preserved_invariants": {
+    "pre_live_object_count": 21,
+    "evidence_root_category_count": 12,
+    "cost_dimension_count": 22,
+    "prior_validation_case_count": 258,
+    "stage_e_status": "ACCEPTED_FINISHED_UNCHANGED",
+    "stage_f_status": "FROZEN_SEPARATE_BINDING_PACKET_VALIDATION_AND_AUTHORIZATION_REQUIRED",
+    "scientific_execution_authorized": false,
+    "aws_execution_authorized": false
+  },
+  "replacement_record_versions": {
+    "semantic_root_categories_in_order": [
+      "aws_c0_material_runtime_authority_audit/v2",
+      "aws_c0_material_runtime_static_validation/v2",
+      "aws_c0_private_infrastructure_snapshot/v1",
+      "aws_c0_launch_request/v3",
+      "aws_c0_start_receipt/v4",
+      "aws_c0_heartbeat/v1",
+      "aws_c0_checkpoint/v1",
+      "aws_c0_terminal_receipt/v1",
+      "aws_c0_finalizer_receipt/v2",
+      "aws_c0_retrieval_verification/v3",
+      "aws_c0_cost_closure/v2",
+      "aws_c0_final_manifest/v3"
+    ],
+    "semantic_root_category_count": 12,
+    "non_root_runtime_start_attestation": "aws_c0_runtime_start_attestation_bundle/v1",
+    "prior_replaced_kinds": [
+      "aws_c0_cost_runtime_closure_authority_audit/v1",
+      "aws_c0_cost_runtime_closure_static_validation/v1",
+      "aws_c0_start_receipt/v3",
+      "aws_c0_retrieval_verification/v2",
+      "aws_c0_final_manifest/v2",
+      "aws_c0_live_packet/v2",
+      "aws_c0_live_authorization/v2",
+      "aws_c0_safe_close_receipt/v1"
+    ],
+    "launch_v3_identity_kind_overrides": {
+      "authority_audit_identity": "aws_c0_material_runtime_authority_audit/v2",
+      "static_validation_identity": "aws_c0_material_runtime_static_validation/v2"
+    },
+    "retrieval_v3_identity_kind_overrides": {
+      "root_0_authority_audit_identity": "aws_c0_material_runtime_authority_audit/v2",
+      "root_1_static_validation_identity": "aws_c0_material_runtime_static_validation/v2",
+      "root_4_start_identity": "aws_c0_start_receipt/v4",
+      "live_authorization_identity": "aws_c0_live_authorization/v3",
+      "safe_close_identity": "aws_c0_safe_close_receipt/v2",
+      "ssm_completion_identity": "aws_c0_ssm_completion_observation/v1"
+    },
+    "final_manifest_v3_identity_kind_overrides": {
+      "root_0_authority_audit_identity": "aws_c0_material_runtime_authority_audit/v2",
+      "root_1_static_validation_identity": "aws_c0_material_runtime_static_validation/v2",
+      "root_4_start_identity": "aws_c0_start_receipt/v4",
+      "root_9_retrieval_identity": "aws_c0_retrieval_verification/v3",
+      "safe_close_identity": "aws_c0_safe_close_receipt/v2",
+      "ssm_completion_identity": "aws_c0_ssm_completion_observation/v1"
+    },
+    "non_root_replacements": {
+      "aws_c0_live_packet/v2": "aws_c0_live_packet/v3",
+      "aws_c0_live_authorization/v2": "aws_c0_live_authorization/v3",
+      "aws_c0_safe_close_receipt/v1": "aws_c0_safe_close_receipt/v2"
+    },
+    "new_non_root_kinds": [
+      "aws_c0_runtime_start_attestation_bundle/v1",
+      "aws_c0_ssm_completion_observation/v1"
+    ],
+    "launch_version_decision": "LAUNCH_V3_REMAINS_COMPLETE_AND_ACYCLIC; CONTEXTUAL AUDIT/STATIC/LIVE TARGET KIND MAPPINGS ARE UPDATED WITHOUT ADDING A FUTURE LIVE RECEIPT",
+    "live_packet_v3_identity_kind_overrides": {
+      "runtime_control_read_plan_identity": "aws_c0_runtime_control_read_plan/v1",
+      "runtime_control_reconstruction_set_identity": "aws_c0_runtime_control_reconstruction_set/v1"
+    },
+    "start_v4_identity_kind_overrides": {
+      "launch_request_identity": "aws_c0_launch_request/v3",
+      "live_packet_identity": "aws_c0_live_packet/v3",
+      "live_authorization_identity": "aws_c0_live_authorization/v3",
+      "closure_seed_identity": "aws_c0_closure_seed/v1",
+      "workflow_execution_identity": "aws_step_functions_standard_execution/v1",
+      "ssm_command_identity": "NULL_IN_START_V4_COMMAND_ID_NOT_YET_AVAILABLE",
+      "ssm_dispatch_request_identity": "aws_c0_ssm_dispatch_request/v1",
+      "systemd_invocation_identity": "systemd_unit_invocation/v1",
+      "container_identity": "oci_container_instance/v1",
+      "attempt_claim_identity": "aws_c0_attempt_claim/v1",
+      "runtime_start_attestation_bundle_identity": "aws_c0_runtime_start_attestation_bundle/v1"
+    }
+  },
+  "authority_audit_v2": {
+    "schema": "aws_c0_material_runtime_authority_audit/v2",
+    "record_class": "ROOT_OMIT_ONLY_RECORD_SHA256",
+    "fixed_base": {
+      "commit": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+      "tree": "75b8c651a12ba973c9c1ce81bd4355c463e306f5"
+    },
+    "fixed_rejected_diagnostic": {
+      "commit": "475fc1f59e04bc4f76132acf8c37a4bfea2eafde",
+      "tree": "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb",
+      "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+      "classification": "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE"
+    },
+    "later_observed_coordinates": [
+      "AUTHORITY_CANDIDATE_COMMIT_TREE_PARENT",
+      "AUTHORITY_INTEGRATION_COMMIT_TREE_PARENTS",
+      "REACHABILITY_CANDIDATE_COMMIT_TREE_PARENT",
+      "REACHABILITY_INTEGRATION_COMMIT_TREE_PARENTS",
+      "IMPLEMENTATION_CANDIDATE_COMMIT_TREE_PARENT",
+      "IMPLEMENTATION_INTEGRATION_COMMIT_TREE_PARENTS"
+    ],
+    "exact_path_rows": {
+      "authority": 6,
+      "reachability": 1,
+      "implementation": 14
+    },
+    "path_row_fields": [
+      "path",
+      "mode",
+      "git_blob",
+      "sha256"
+    ],
+    "ancestry_predicates": [
+      "BASE_IS_ANCESTOR",
+      "DIAGNOSTIC_IS_NOT_ANCESTOR",
+      "AUTHORITY_CANDIDATE_HAS_SOLE_BASE_PARENT",
+      "AUTHORITY_INTEGRATION_HAS_BASE_AND_CANDIDATE_PARENTS",
+      "REACHABILITY_MODIFIES_ONE_EXISTING_PATH",
+      "IMPLEMENTATION_ADDS_SAME_EXACT_FOURTEEN_PATHS"
+    ],
+    "future_coordinate_prediction": "FORBIDDEN"
+  },
+  "static_validation_v2": {
+    "schema": "aws_c0_material_runtime_static_validation/v2",
+    "record_class": "ROOT_OMIT_ONLY_RECORD_SHA256",
+    "validation_contracts_in_order": [
+      "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+      "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+      "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+      "aws_c0_material_identity_runtime_validation_correction_validation_contract.json"
+    ],
+    "case_counts": {
+      "original": 66,
+      "live_preparation": 84,
+      "cost_runtime_retrieval": 108,
+      "material_runtime": 66,
+      "total": 324
+    },
+    "per_case_receipt_count": 324,
+    "case_receipts_distinct": true,
+    "case_receipt_fields": [
+      "case_id",
+      "fixture_id",
+      "validator_function",
+      "expected_result",
+      "observed_result",
+      "witness_sha256",
+      "execution_spec_identity",
+      "base_fixture_sha256",
+      "constructed_fixture_sha256",
+      "expected_code",
+      "subcase_receipt_count",
+      "subcase_execution_disposition",
+      "subcase_receipt_aggregate_sha256"
+    ],
+    "aggregate_rule": "SHA256_CANONICAL_ORDERED_324_CASE_RECEIPTS",
+    "binds": [
+      "VALIDATOR_SOFTWARE_IDENTITY",
+      "VALIDATOR_CONFIGURATION_IDENTITY",
+      "FOUR_CONTRACT_IDENTITIES",
+      "EXACT_FOURTEEN_IMPLEMENTATION_PATH_HASH_MODE_ROWS",
+      "AUTHORITY_AUDIT_V2_IDENTITY_AND_RECEIPT",
+      "GLOBAL_150_AND_164",
+      "DESCENDANT_100_AND_114",
+      "ALL_PASS_PREDICATES",
+      "ZERO_SCIENCE"
+    ],
+    "output_interface": "EXACT_CANONICAL_EXCLUSIVE_OUTPUT_FILE_ONLY",
+    "pass_requires": [
+      "324_EXPECTED_EQUALS_OBSERVED",
+      "NO_DUPLICATE_SKIP_GENERIC_OR_MARKER_CASE",
+      "EXACT_PATH_MODE_HASH_GATE_PASS",
+      "ALL_ANCESTRY_PREDICATES_PASS",
+      "ALL_ZERO_SCIENCE_COUNTERS_ZERO"
+    ],
+    "ordered_contract_groups": [
+      {
+        "contract_path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+        "expected_count": 66,
+        "case_ids_in_order": [
+          "C0-P01",
+          "C0-P02",
+          "C0-P03",
+          "C0-P04",
+          "C0-P05",
+          "C0-P06",
+          "C0-P07",
+          "C0-P08",
+          "C0-P09",
+          "C0-P10",
+          "C0-P11",
+          "C0-P12",
+          "C0-P13",
+          "C0-P14",
+          "C0-P15",
+          "C0-P16",
+          "C0-P17",
+          "C0-P18",
+          "C0-N01",
+          "C0-N02",
+          "C0-N03",
+          "C0-N04",
+          "C0-N05",
+          "C0-N06",
+          "C0-N07",
+          "C0-N08",
+          "C0-N09",
+          "C0-N10",
+          "C0-N11",
+          "C0-N12",
+          "C0-N13",
+          "C0-N14",
+          "C0-N15",
+          "C0-N16",
+          "C0-N17",
+          "C0-N18",
+          "C0-N19",
+          "C0-N20",
+          "C0-N21",
+          "C0-N22",
+          "C0-N23",
+          "C0-N24",
+          "C0-N25",
+          "C0-N26",
+          "C0-N27",
+          "C0-N28",
+          "C0-N29",
+          "C0-N30",
+          "C0-N31",
+          "C0-N32",
+          "C0-N33",
+          "C0-N34",
+          "C0-N35",
+          "C0-N36",
+          "C0-N37",
+          "C0-N38",
+          "C0-N39",
+          "C0-N40",
+          "C0-N41",
+          "C0-N42",
+          "C0-N43",
+          "C0-N44",
+          "C0-N45",
+          "C0-N46",
+          "C0-N47",
+          "C0-N48"
+        ]
+      },
+      {
+        "contract_path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+        "expected_count": 84,
+        "case_ids_in_order": [
+          "C0-LPC-P01",
+          "C0-LPC-P02",
+          "C0-LPC-P03",
+          "C0-LPC-P04",
+          "C0-LPC-P05",
+          "C0-LPC-P06",
+          "C0-LPC-P07",
+          "C0-LPC-P08",
+          "C0-LPC-P09",
+          "C0-LPC-P10",
+          "C0-LPC-P11",
+          "C0-LPC-P12",
+          "C0-LPC-P13",
+          "C0-LPC-P14",
+          "C0-LPC-P15",
+          "C0-LPC-P16",
+          "C0-LPC-P17",
+          "C0-LPC-P18",
+          "C0-LPC-P19",
+          "C0-LPC-P20",
+          "C0-LPC-P21",
+          "C0-LPC-P22",
+          "C0-LPC-P23",
+          "C0-LPC-P24",
+          "C0-LPC-N01",
+          "C0-LPC-N02",
+          "C0-LPC-N03",
+          "C0-LPC-N04",
+          "C0-LPC-N05",
+          "C0-LPC-N06",
+          "C0-LPC-N07",
+          "C0-LPC-N08",
+          "C0-LPC-N09",
+          "C0-LPC-N10",
+          "C0-LPC-N11",
+          "C0-LPC-N12",
+          "C0-LPC-N13",
+          "C0-LPC-N14",
+          "C0-LPC-N15",
+          "C0-LPC-N16",
+          "C0-LPC-N17",
+          "C0-LPC-N18",
+          "C0-LPC-N19",
+          "C0-LPC-N20",
+          "C0-LPC-N21",
+          "C0-LPC-N22",
+          "C0-LPC-N23",
+          "C0-LPC-N24",
+          "C0-LPC-N25",
+          "C0-LPC-N26",
+          "C0-LPC-N27",
+          "C0-LPC-N28",
+          "C0-LPC-N29",
+          "C0-LPC-N30",
+          "C0-LPC-N31",
+          "C0-LPC-N32",
+          "C0-LPC-N33",
+          "C0-LPC-N34",
+          "C0-LPC-N35",
+          "C0-LPC-N36",
+          "C0-LPC-N37",
+          "C0-LPC-N38",
+          "C0-LPC-N39",
+          "C0-LPC-N40",
+          "C0-LPC-N41",
+          "C0-LPC-N42",
+          "C0-LPC-N43",
+          "C0-LPC-N44",
+          "C0-LPC-N45",
+          "C0-LPC-N46",
+          "C0-LPC-N47",
+          "C0-LPC-N48",
+          "C0-LPC-N49",
+          "C0-LPC-N50",
+          "C0-LPC-N51",
+          "C0-LPC-N52",
+          "C0-LPC-N53",
+          "C0-LPC-N54",
+          "C0-LPC-N55",
+          "C0-LPC-N56",
+          "C0-LPC-N57",
+          "C0-LPC-N58",
+          "C0-LPC-N59",
+          "C0-LPC-N60"
+        ]
+      },
+      {
+        "contract_path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+        "expected_count": 108,
+        "case_ids_in_order": [
+          "C0-CRT-P01",
+          "C0-CRT-P02",
+          "C0-CRT-P03",
+          "C0-CRT-P04",
+          "C0-CRT-P05",
+          "C0-CRT-P06",
+          "C0-CRT-P07",
+          "C0-CRT-P08",
+          "C0-CRT-P09",
+          "C0-CRT-P10",
+          "C0-CRT-P11",
+          "C0-CRT-P12",
+          "C0-CRT-P13",
+          "C0-CRT-P14",
+          "C0-CRT-P15",
+          "C0-CRT-P16",
+          "C0-CRT-P17",
+          "C0-CRT-P18",
+          "C0-CRT-P19",
+          "C0-CRT-P20",
+          "C0-CRT-P21",
+          "C0-CRT-P22",
+          "C0-CRT-P23",
+          "C0-CRT-P24",
+          "C0-CRT-P25",
+          "C0-CRT-P26",
+          "C0-CRT-P27",
+          "C0-CRT-P28",
+          "C0-CRT-P29",
+          "C0-CRT-P30",
+          "C0-CRT-P31",
+          "C0-CRT-P32",
+          "C0-CRT-P33",
+          "C0-CRT-P34",
+          "C0-CRT-P35",
+          "C0-CRT-P36",
+          "C0-CRT-N01",
+          "C0-CRT-N02",
+          "C0-CRT-N03",
+          "C0-CRT-N04",
+          "C0-CRT-N05",
+          "C0-CRT-N06",
+          "C0-CRT-N07",
+          "C0-CRT-N08",
+          "C0-CRT-N09",
+          "C0-CRT-N10",
+          "C0-CRT-N11",
+          "C0-CRT-N12",
+          "C0-CRT-N13",
+          "C0-CRT-N14",
+          "C0-CRT-N15",
+          "C0-CRT-N16",
+          "C0-CRT-N17",
+          "C0-CRT-N18",
+          "C0-CRT-N19",
+          "C0-CRT-N20",
+          "C0-CRT-N21",
+          "C0-CRT-N22",
+          "C0-CRT-N23",
+          "C0-CRT-N24",
+          "C0-CRT-N25",
+          "C0-CRT-N26",
+          "C0-CRT-N27",
+          "C0-CRT-N28",
+          "C0-CRT-N29",
+          "C0-CRT-N30",
+          "C0-CRT-N31",
+          "C0-CRT-N32",
+          "C0-CRT-N33",
+          "C0-CRT-N34",
+          "C0-CRT-N35",
+          "C0-CRT-N36",
+          "C0-CRT-N37",
+          "C0-CRT-N38",
+          "C0-CRT-N39",
+          "C0-CRT-N40",
+          "C0-CRT-N41",
+          "C0-CRT-N42",
+          "C0-CRT-N43",
+          "C0-CRT-N44",
+          "C0-CRT-N45",
+          "C0-CRT-N46",
+          "C0-CRT-N47",
+          "C0-CRT-N48",
+          "C0-CRT-N49",
+          "C0-CRT-N50",
+          "C0-CRT-N51",
+          "C0-CRT-N52",
+          "C0-CRT-N53",
+          "C0-CRT-N54",
+          "C0-CRT-N55",
+          "C0-CRT-N56",
+          "C0-CRT-N57",
+          "C0-CRT-N58",
+          "C0-CRT-N59",
+          "C0-CRT-N60",
+          "C0-CRT-N61",
+          "C0-CRT-N62",
+          "C0-CRT-N63",
+          "C0-CRT-N64",
+          "C0-CRT-N65",
+          "C0-CRT-N66",
+          "C0-CRT-N67",
+          "C0-CRT-N68",
+          "C0-CRT-N69",
+          "C0-CRT-N70",
+          "C0-CRT-N71",
+          "C0-CRT-N72"
+        ]
+      },
+      {
+        "contract_path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+        "expected_count": 66,
+        "case_ids_in_order": [
+          "C0-MIRV-P01",
+          "C0-MIRV-P02",
+          "C0-MIRV-P03",
+          "C0-MIRV-P04",
+          "C0-MIRV-P05",
+          "C0-MIRV-P06",
+          "C0-MIRV-P07",
+          "C0-MIRV-P08",
+          "C0-MIRV-P09",
+          "C0-MIRV-P10",
+          "C0-MIRV-P11",
+          "C0-MIRV-P12",
+          "C0-MIRV-P13",
+          "C0-MIRV-P14",
+          "C0-MIRV-P15",
+          "C0-MIRV-P16",
+          "C0-MIRV-P17",
+          "C0-MIRV-P18",
+          "C0-MIRV-P19",
+          "C0-MIRV-P20",
+          "C0-MIRV-N01",
+          "C0-MIRV-N02",
+          "C0-MIRV-N03",
+          "C0-MIRV-N04",
+          "C0-MIRV-N05",
+          "C0-MIRV-N06",
+          "C0-MIRV-N07",
+          "C0-MIRV-N08",
+          "C0-MIRV-N09",
+          "C0-MIRV-N10",
+          "C0-MIRV-N11",
+          "C0-MIRV-N12",
+          "C0-MIRV-N13",
+          "C0-MIRV-N14",
+          "C0-MIRV-N15",
+          "C0-MIRV-N16",
+          "C0-MIRV-N17",
+          "C0-MIRV-N18",
+          "C0-MIRV-N19",
+          "C0-MIRV-N20",
+          "C0-MIRV-N21",
+          "C0-MIRV-N22",
+          "C0-MIRV-N23",
+          "C0-MIRV-N24",
+          "C0-MIRV-N25",
+          "C0-MIRV-N26",
+          "C0-MIRV-N27",
+          "C0-MIRV-N28",
+          "C0-MIRV-N29",
+          "C0-MIRV-N30",
+          "C0-MIRV-N31",
+          "C0-MIRV-N32",
+          "C0-MIRV-N33",
+          "C0-MIRV-N34",
+          "C0-MIRV-N35",
+          "C0-MIRV-N36",
+          "C0-MIRV-N37",
+          "C0-MIRV-N38",
+          "C0-MIRV-N39",
+          "C0-MIRV-N40",
+          "C0-MIRV-N41",
+          "C0-MIRV-N42",
+          "C0-MIRV-N43",
+          "C0-MIRV-N44",
+          "C0-MIRV-N45",
+          "C0-MIRV-N46"
+        ]
+      }
+    ],
+    "flat_unordered_case_receipts": "FORBIDDEN"
+  },
+  "material_identity_extension": {
+    "implementation_artifact_identity_kind": "aws_c0_implementation_artifact/v1",
+    "implementation_artifact_preimage_schema": "aws_c0_implementation_artifact_preimage/v1",
+    "identity_digest_rule": "SHA256_CANONICAL_PREIMAGE_COMPLETE_BYTES",
+    "artifact_receipt_cross_binding": [
+      "publication_key_equals_object_receipt.key",
+      "artifact_byte_sha256_equals_object_receipt.sha256",
+      "artifact_byte_count_equals_object_receipt.bytes",
+      "checksum_sha256_base64_equals_base64_raw_sha256",
+      "bucket_identity_key_version_id_bytes_sha256_checksum_are_exact"
+    ],
+    "artifact_mode": "100644",
+    "implementation_artifacts_in_order": [
+      {
+        "position": 0,
+        "implementation_path": "artifacts/aws-c0/state-machine/aws-c0.asl.json",
+        "artifact_role": "STATE_MACHINE_DEFINITION"
+      },
+      {
+        "position": 1,
+        "implementation_path": "artifacts/aws-c0/ssm/EBU-C0-Start-v1.json",
+        "artifact_role": "SSM_DOCUMENT"
+      },
+      {
+        "position": 2,
+        "implementation_path": "artifacts/aws-c0/controller/ebu_c0_controller.py",
+        "artifact_role": "CONTROLLER"
+      },
+      {
+        "position": 3,
+        "implementation_path": "artifacts/aws-c0/controller/ebu-c0@.service",
+        "artifact_role": "SYSTEMD_UNIT"
+      },
+      {
+        "position": 4,
+        "implementation_path": "artifacts/aws-c0/finalizer/finalizer.zip",
+        "artifact_role": "FINALIZER_ZIP"
+      },
+      {
+        "position": 5,
+        "implementation_path": "artifacts/aws-c0/container/synthetic-image.oci.tar",
+        "artifact_role": "SYNTHETIC_IMAGE_ARCHIVE"
+      },
+      {
+        "position": 6,
+        "implementation_path": "artifacts/aws-c0/container/container-runtime-policy.json",
+        "artifact_role": "CONTAINER_RUNTIME_POLICY"
+      },
+      {
+        "position": 7,
+        "implementation_path": "artifacts/aws-c0/cloudformation/aws-c0-unattended-synthetic.json",
+        "artifact_role": "CLOUDFORMATION_TEMPLATE"
+      }
+    ],
+    "generated_artifact_derivation": "PRIOR_REPRODUCIBLE_BUILD_PACKET_AND_EXACT_SOURCE_COMMIT_TREE_REMAIN_REQUIRED",
+    "oci_identity_distinction": {
+      "manifest_digest_kind": "oci_image_manifest_digest/v1",
+      "config_identity_kind": "oci_image_config/v1",
+      "runtime_container_identity_kind": "oci_container_instance/v1",
+      "interchangeable": false
+    }
+  },
+  "bootstrap_material_extension": {
+    "canonical_preimage_schema": "aws_c0_bootstrap_material_preimage/v1",
+    "records_in_order": [
+      {
+        "position": 0,
+        "material_role": "OPERATOR_BOOTSTRAP_PACKET",
+        "identity_kind": "aws_c0_operator_bootstrap_packet/v1"
+      },
+      {
+        "position": 1,
+        "material_role": "OPERATOR_BOOTSTRAP_AUTHORIZATION",
+        "identity_kind": "aws_c0_operator_bootstrap_authorization/v1"
+      },
+      {
+        "position": 2,
+        "material_role": "OPERATOR_BOOTSTRAP_CLOSURE",
+        "identity_kind": "aws_c0_operator_bootstrap_closure/v1"
+      }
+    ],
+    "identity_digest_rule": "SHA256_COMPLETE_CANONICAL_RECORD_BYTES",
+    "generic_or_opaque_bootstrap_kind": "REFUSE"
+  },
+  "verified_object_allowed_kinds_additive": [
+    "aws_c0_material_runtime_authority_audit/v2",
+    "aws_c0_material_runtime_static_validation/v2",
+    "aws_c0_start_receipt/v4",
+    "aws_c0_runtime_start_attestation_bundle/v1",
+    "aws_c0_attempt_claim/v1",
+    "aws_c0_checkpoint_payload/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_operator_bootstrap_packet/v1",
+    "aws_c0_operator_bootstrap_authorization/v1",
+    "aws_c0_operator_bootstrap_closure/v1",
+    "aws_c0_ssm_completion_observation/v1"
+  ],
+  "verified_object_allowed_kinds_complete": [
+    "aws_c0_material_runtime_authority_audit/v2",
+    "aws_c0_material_runtime_static_validation/v2",
+    "aws_c0_private_infrastructure_snapshot/v1",
+    "aws_c0_launch_request/v3",
+    "aws_c0_start_receipt/v4",
+    "aws_c0_heartbeat/v1",
+    "aws_c0_checkpoint/v1",
+    "aws_c0_terminal_receipt/v1",
+    "aws_c0_finalizer_receipt/v2",
+    "aws_c0_cost_closure/v2",
+    "aws_c0_preparation_packet/v2",
+    "aws_c0_preparation_authorization/v2",
+    "aws_c0_cost_model/v2",
+    "aws_c0_closure_seed/v1",
+    "aws_c0_preparation_closure/v2",
+    "aws_c0_live_packet/v3",
+    "aws_c0_live_authorization/v3",
+    "aws_c0_safe_close_receipt/v2",
+    "aws_c0_resource_use_closure/v1",
+    "aws_c0_synthetic_manifest/v1",
+    "aws_c0_usage_observation/v1",
+    "aws_c0_runtime_start_attestation_bundle/v1",
+    "aws_c0_attempt_claim/v1",
+    "aws_c0_checkpoint_payload/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_operator_bootstrap_packet/v1",
+    "aws_c0_operator_bootstrap_authorization/v1",
+    "aws_c0_operator_bootstrap_closure/v1",
+    "aws_c0_ssm_completion_observation/v1"
+  ],
+  "pre_live_coverage": {
+    "exact_expected_count": 21,
+    "implementation_artifact_count": 8,
+    "bootstrap_record_count": 3,
+    "other_existing_pre_live_record_count": 10,
+    "other_existing_pre_live_record_kinds_in_order": [
+      "aws_c0_preparation_packet/v2",
+      "aws_c0_preparation_authorization/v2",
+      "aws_c0_private_infrastructure_snapshot/v1",
+      "aws_c0_material_runtime_authority_audit/v2",
+      "aws_c0_material_runtime_static_validation/v2",
+      "aws_c0_cost_model/v2",
+      "aws_c0_closure_seed/v1",
+      "aws_c0_launch_request/v3",
+      "aws_c0_preparation_closure/v2",
+      "aws_c0_live_packet/v3"
+    ],
+    "arithmetic": "8_PLUS_3_PLUS_10_EQUALS_21",
+    "exactly_once_each": true,
+    "unknown_duplicate_missing_or_extra": "REFUSE"
+  },
+  "retrieval_expected_count_algorithm": {
+    "coordinate_identity": [
+      "bucket_identity",
+      "key",
+      "version_id"
+    ],
+    "sets_in_order": [
+      "pre_live_set",
+      "additional_root_set",
+      "live_authorization_set",
+      "safe_close_set",
+      "ssm_completion_observation_set",
+      "resource_use_set",
+      "derived_usage_observation_set",
+      "synthetic_manifest_set",
+      "runtime_start_attestation_bundle_set",
+      "attempt_claim_set",
+      "checkpoint_payload_set",
+      "packet_declared_other_material_set"
+    ],
+    "pairwise_disjoint": true,
+    "each_array_length_equals_declared_count": true,
+    "identity_and_coordinate_unique_in_union": true,
+    "observed_verified_set_equals_expected_union": true,
+    "expected_equals_observed_length_assignment": "FORBIDDEN",
+    "pre_live_set": {
+      "count": 21,
+      "already_contains_root_kinds": [
+        "aws_c0_material_runtime_authority_audit/v2",
+        "aws_c0_material_runtime_static_validation/v2",
+        "aws_c0_private_infrastructure_snapshot/v1",
+        "aws_c0_launch_request/v3"
+      ]
+    },
+    "additional_root_set": {
+      "kinds": "START_V4_PLUS_ALL_HEARTBEATS_PLUS_ALL_CHECKPOINTS_PLUS_OPTIONAL_TERMINAL_PLUS_FINALIZER_PLUS_COST",
+      "count_formula": "H_PLUS_C_PLUS_3_PLUS_TERMINAL_PRESENT_WHERE_TERMINAL_PRESENT_IS_ZERO_OR_ONE",
+      "forbidden_overlap_with_prelive": true
+    },
+    "live_authorization_set": {
+      "count": 1,
+      "kind": "aws_c0_live_authorization/v3"
+    },
+    "safe_close_set": {
+      "FULL": 1,
+      "HISTORY_FALLBACK": 0,
+      "kind": "aws_c0_safe_close_receipt/v2"
+    },
+    "resource_use_set": {
+      "complete_attempt_count": 1,
+      "kind": "aws_c0_resource_use_closure/v1"
+    },
+    "synthetic_manifest_set": {
+      "SUCCESS": 1,
+      "FAIL_AFTER_CHECKPOINT": 0,
+      "TIMEOUT": 0,
+      "kind": "aws_c0_synthetic_manifest/v1",
+      "null_iff_count_zero": true
+    },
+    "attempt_claim_set": {
+      "complete_started_attempt_count": 1,
+      "kind": "aws_c0_attempt_claim/v1"
+    },
+    "checkpoint_payload_set": {
+      "count_formula": "C",
+      "kind": "aws_c0_checkpoint_payload/v1",
+      "one_per_checkpoint": true
+    },
+    "packet_declared_other_material_set": {
+      "coordinates_source": "EXACT_PACKET_DECLARED_OTHER_MATERIAL_COORDINATES_IN_LIVE_PACKET_V3",
+      "undefined_or_count_only_declaration": "REFUSE",
+      "all_exactly_once": true
+    },
+    "all_material_exact_version_complete_bytes": true,
+    "ssm_completion_observation_set": {
+      "FULL": 1,
+      "HISTORY_FALLBACK": "ZERO_OR_ONE_IF_PUBLISHED",
+      "kind": "aws_c0_ssm_completion_observation/v1"
+    },
+    "runtime_start_attestation_bundle_set": {
+      "started_attempt_count": 1,
+      "prestart_count": 0,
+      "kind": "aws_c0_runtime_start_attestation_bundle/v1"
+    },
+    "derived_usage_observation_set": {
+      "count_formula": "NUMBER_OF_NONNULL_USAGE_OBSERVATION_RECEIPTS_IN_RESOURCE_USE_CLOSURE",
+      "minimum": 0,
+      "maximum": 22,
+      "kind": "aws_c0_usage_observation/v1",
+      "future_prediction_forbidden": true
+    },
+    "minimal_FULL_counts_H1_C1_D0_other0": {
+      "SUCCESS": 35,
+      "FAIL_AFTER_CHECKPOINT": 34,
+      "TIMEOUT": 34
+    },
+    "FULL_count_formula": "PRELIVE_21_PLUS_H_PLUS_C_PLUS_START_TERMINAL_FINALIZER_COST_4_PLUS_LIVE_AUTH_1_PLUS_SAFE_CLOSE_1_PLUS_SSM_COMPLETION_1_PLUS_RESOURCE_USE_1_PLUS_DERIVED_USAGE_D_PLUS_SYNTHETIC_SUCCESS_ONLY_S_PLUS_RUNTIME_BUNDLE_1_PLUS_ATTEMPT_CLAIM_1_PLUS_CHECKPOINT_PAYLOADS_C_PLUS_PACKET_OTHER_O",
+    "HISTORY_FALLBACK_count_formula": "SAME_EXACT_PRESENT_COORDINATE_SETS_WITH_TERMINAL_SAFE_CLOSE_AND_OTHER_ABSENCES_ENUMERATED; NO FABRICATION"
+  },
+  "runtime_reconstruction": {
+    "sealed_read_plan_row_count": 63,
+    "decoded_output_schema_count": 11,
+    "decoded_output_schemas_in_control_order": [
+      "aws_c0_account_region_observation_preimage/v1",
+      "aws_c0_instance_profile_role_observation_preimage/v1",
+      "aws_c0_iam_policy_set_observation_preimage/v1",
+      "aws_c0_bucket_controls_observation_preimage/v1",
+      "aws_c0_vpc_network_observation_preimage/v1",
+      "aws_c0_service_quota_observation_preimage/v1",
+      "aws_c0_standard_workflow_observation_preimage/v1",
+      "aws_c0_ssm_control_observation_preimage/v1",
+      "aws_c0_software_image_observation_preimage/v1",
+      "aws_c0_change_set_effects_observation_preimage/v1",
+      "aws_c0_artifact_version_set_observation_preimage/v1"
+    ],
+    "decoded_output_rule": "STRICT_BASE64_DECODE_THEN_STRICT_CANONICAL_JSON_THEN_EXACT_NAMED_CLOSED_SCHEMA_THEN_RECOMPUTE_BYTE_SHA256_BYTE_COUNT_IDENTITY_KIND_AND_FRESHNESS",
+    "api_receipt_rule": "CALLED_REQUIRES_SIGNED_AUTHENTICATED_HTTP_200_API_SUCCESS_EXACT_REQUEST_RESPONSE_BYTES_AND_FRESH_TIMES",
+    "not_called_rule": "ONLY_DECLARED_FALSE_CONDITION_NULL_RECEIPT_NO_FABRICATED_ROW_OUTPUT; ALWAYS_MUST_BE_CALLED",
+    "freshness_rule": "RECOMPUTE_NONNEGATIVE_FRESHNESS_SECONDS_AND_REQUIRE_LESS_THAN_OR_EQUAL_TO_SEALED_MAX_FRESHNESS_SECONDS",
+    "all_63_rows_are_allowed_universe_not_unconditional_calls": true,
+    "required_control_to_action_resource_rows_mapping_is_closed": true,
+    "every_required_control_consumes_all_mapped_fresh_reads": true,
+    "every_bound_object_exact_version_fetched": true,
+    "stored_preimage_hash_only": "REFUSE",
+    "partial_stale_truncated_or_unmapped_control": "REFUSE"
+  },
+  "canonical_workflow_execution_identity": {
+    "kind": "aws_step_functions_standard_execution/v1",
+    "required_contexts": ["START_V4", "RUNTIME_START_BUNDLE", "SSM_COMPLETION", "SAFE_CLOSE_V2", "RETRIEVAL_V3", "FINAL_MANIFEST_V3"],
+    "other_workflow_execution_kind": "REFUSE"
+  },
+  "live_context_identity_kinds": {
+    "live_packet_v3": {
+      "preparation_closure_identity": "aws_c0_preparation_closure/v2",
+      "launch_request_identity": "aws_c0_launch_request/v3",
+      "change_set_identity": "aws_cloudformation_change_set/v1",
+      "change_set_observation_identity": "aws_cloudformation_change_set_observation/v1",
+      "effect_api_set_identity": "aws_c0_effect_api_set/v1",
+      "effect_resource_set_identity": "aws_c0_effect_resource_set/v1",
+      "live_session_assumer_identity": "aws_iam_principal/v1",
+      "execution_operator_role_identity": "aws_iam_role/v1",
+      "execution_session_policy_identity": "aws_iam_session_policy/v1",
+      "execution_session_policy_ceiling_identity": "aws_iam_policy_ceiling/v1",
+      "execution_session_policy_subset_proof_identity": "aws_iam_policy_subset_proof/v1",
+      "pass_role_scope_proof_identity": "aws_iam_passrole_scope_proof/v1",
+      "runtime_control_read_plan_identity": "aws_c0_runtime_control_read_plan/v1",
+      "runtime_control_reconstruction_set_identity": "aws_c0_runtime_control_reconstruction_set/v1"
+    },
+    "live_authorization_v3": {
+      "authenticated_source_identity": "aws_c0_operator_live_authorization_source/v1",
+      "live_packet_identity": "aws_c0_live_packet/v3",
+      "account_identity": "aws_account/v1",
+      "change_set_identity": "aws_cloudformation_change_set/v1",
+      "live_session_assumer_identity": "aws_iam_principal/v1",
+      "execution_operator_role_identity": "aws_iam_role/v1",
+      "execution_session_policy_identity": "aws_iam_session_policy/v1",
+      "execution_session_policy_ceiling_identity": "aws_iam_policy_ceiling/v1",
+      "execution_session_policy_subset_proof_identity": "aws_iam_policy_subset_proof/v1",
+      "pass_role_scope_proof_identity": "aws_iam_passrole_scope_proof/v1",
+      "execution_session_identity": "aws_sts_role_session/v1",
+      "execution_session_derivation_proof_identity": "aws_sts_session_derivation_proof/v1",
+      "runtime_control_reconstruction_set_identity": "aws_c0_runtime_control_reconstruction_set/v1"
+    },
+    "unknown_generic_or_wrong_context_kind": "REFUSE"
+  },
+  "sealed_read_plan": {
+    "schema": "aws_c0_runtime_control_read_plan/v1",
+    "plan_identity_kind": "aws_c0_runtime_control_read_plan/v1",
+    "row_count": 63,
+    "rows": [
+      {
+        "id": "R01",
+        "action": "sts:GetCallerIdentity",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "ACCOUNT_REGION",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 1
+        },
+        "reconstruction_output_kind": "aws_c0_account_region_observation/v1"
+      },
+      {
+        "id": "R02",
+        "action": "ec2:DescribeInstances",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "INSTANCE_PROFILE_SOLE_ROLE",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 4,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+      },
+      {
+        "id": "R03",
+        "action": "ec2:DescribeIamInstanceProfileAssociations",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "INSTANCE_PROFILE_SOLE_ROLE",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 4,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+      },
+      {
+        "id": "R04",
+        "action": "ec2:DescribeNetworkInterfaces",
+        "resource_selector": "*",
+        "use": "WHEN_INSTANCE_HAS_NETWORK_INTERFACE",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "WHEN_INSTANCE_HAS_NETWORK_INTERFACE",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R05",
+        "action": "ec2:DescribeSubnets",
+        "resource_selector": "*",
+        "use": "WHEN_INSTANCE_HAS_SUBNET",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "WHEN_INSTANCE_HAS_SUBNET",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R06",
+        "action": "ec2:DescribeRouteTables",
+        "resource_selector": "*",
+        "use": "WHEN_INSTANCE_HAS_SUBNET",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "WHEN_INSTANCE_HAS_SUBNET",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R07",
+        "action": "ec2:DescribeNatGateways",
+        "resource_selector": "*",
+        "use": "WHEN_ROUTE_USES_NAT",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "WHEN_ROUTE_USES_NAT",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R08",
+        "action": "ec2:DescribeVpcEndpoints",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R09",
+        "action": "ec2:DescribeImages",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R10",
+        "action": "ec2:DescribeVolumes",
+        "resource_selector": "*",
+        "use": "WHEN_INSTANCE_HAS_VOLUME",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "WHEN_INSTANCE_HAS_VOLUME",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R11",
+        "action": "ec2:DescribeSnapshots",
+        "resource_selector": "*",
+        "use": "WHEN_VOLUME_HAS_SNAPSHOT",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "WHEN_VOLUME_HAS_SNAPSHOT",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R12",
+        "action": "ec2:DescribeAddresses",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "VPC_NETWORK_PATH",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "id": "R13",
+        "action": "iam:GetInstanceProfile",
+        "resource_selector": "SEALED_INSTANCE_PROFILE_ARN",
+        "use": "ALWAYS",
+        "control": "INSTANCE_PROFILE_SOLE_ROLE",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 4,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+      },
+      {
+        "id": "R14",
+        "action": "iam:GetRole",
+        "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+        "use": "ALWAYS",
+        "control": "INSTANCE_PROFILE_SOLE_ROLE",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 4,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+      },
+      {
+        "id": "R15",
+        "action": "iam:GetRolePolicy",
+        "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+        "use": "FOR_EACH_SEALED_INLINE_POLICY",
+        "control": "IAM_POLICY_SET",
+        "condition": "FOR_EACH_SEALED_INLINE_POLICY",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_IAM_MAX_PAGES",
+          "max_items": "SEALED_IAM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+      },
+      {
+        "id": "R16",
+        "action": "iam:ListRolePolicies",
+        "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+        "use": "ALWAYS",
+        "control": "IAM_POLICY_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_IAM_MAX_PAGES",
+          "max_items": "SEALED_IAM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+      },
+      {
+        "id": "R17",
+        "action": "iam:ListAttachedRolePolicies",
+        "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+        "use": "ALWAYS",
+        "control": "IAM_POLICY_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_IAM_MAX_PAGES",
+          "max_items": "SEALED_IAM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+      },
+      {
+        "id": "R18",
+        "action": "iam:GetPolicy",
+        "resource_selector": "SEALED_ATTACHED_POLICY_ARN",
+        "use": "FOR_EACH_SEALED_ATTACHED_POLICY",
+        "control": "IAM_POLICY_SET",
+        "condition": "FOR_EACH_SEALED_ATTACHED_POLICY",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_IAM_MAX_PAGES",
+          "max_items": "SEALED_IAM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+      },
+      {
+        "id": "R19",
+        "action": "iam:GetPolicyVersion",
+        "resource_selector": "SEALED_ATTACHED_POLICY_ARN",
+        "use": "FOR_EACH_SEALED_ATTACHED_POLICY_DEFAULT_VERSION",
+        "control": "IAM_POLICY_SET",
+        "condition": "FOR_EACH_SEALED_ATTACHED_POLICY_DEFAULT_VERSION",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_IAM_MAX_PAGES",
+          "max_items": "SEALED_IAM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+      },
+      {
+        "id": "R20",
+        "action": "s3:GetBucketLocation",
+        "resource_selector": "SEALED_BUCKET_ARN",
+        "use": "ALWAYS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R21",
+        "action": "s3:GetBucketVersioning",
+        "resource_selector": "SEALED_BUCKET_ARN",
+        "use": "ALWAYS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R22",
+        "action": "s3:GetEncryptionConfiguration",
+        "resource_selector": "SEALED_BUCKET_ARN",
+        "use": "ALWAYS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R23",
+        "action": "s3:GetBucketPublicAccessBlock",
+        "resource_selector": "SEALED_BUCKET_ARN",
+        "use": "ALWAYS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R24",
+        "action": "s3:GetBucketPolicy",
+        "resource_selector": "SEALED_BUCKET_ARN",
+        "use": "ALWAYS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R25",
+        "action": "s3:GetBucketPolicyStatus",
+        "resource_selector": "SEALED_BUCKET_ARN",
+        "use": "ALWAYS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R26",
+        "action": "s3:ListBucket",
+        "resource_selector": "SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION",
+        "use": "ALWAYS",
+        "control": "ARTIFACT_VERSION_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_S3_MAX_PAGES",
+          "max_items": "SEALED_S3_MAX_VERSIONS"
+        },
+        "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+      },
+      {
+        "id": "R27",
+        "action": "s3:ListBucketVersions",
+        "resource_selector": "SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION",
+        "use": "ALWAYS",
+        "control": "ARTIFACT_VERSION_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_S3_MAX_PAGES",
+          "max_items": "SEALED_S3_MAX_VERSIONS"
+        },
+        "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+      },
+      {
+        "id": "R28",
+        "action": "s3:GetObject",
+        "resource_selector": "SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*",
+        "use": "WHEN_NONVERSIONED_METADATA_READ_IS_REQUIRED",
+        "control": "ARTIFACT_VERSION_SET",
+        "condition": "WHEN_NONVERSIONED_METADATA_READ_IS_REQUIRED",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_S3_MAX_PAGES",
+          "max_items": "SEALED_S3_MAX_VERSIONS"
+        },
+        "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+      },
+      {
+        "id": "R29",
+        "action": "s3:GetObjectVersion",
+        "resource_selector": "SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*",
+        "use": "FOR_EACH_EXACT_VERSION_OBJECT",
+        "control": "ARTIFACT_VERSION_SET",
+        "condition": "FOR_EACH_EXACT_VERSION_OBJECT",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_S3_MAX_PAGES",
+          "max_items": "SEALED_S3_MAX_VERSIONS"
+        },
+        "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+      },
+      {
+        "id": "R30",
+        "action": "s3:GetObjectAttributes",
+        "resource_selector": "SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*",
+        "use": "FOR_EACH_EXACT_VERSION_OBJECT",
+        "control": "ARTIFACT_VERSION_SET",
+        "condition": "FOR_EACH_EXACT_VERSION_OBJECT",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_S3_MAX_PAGES",
+          "max_items": "SEALED_S3_MAX_VERSIONS"
+        },
+        "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+      },
+      {
+        "id": "R31",
+        "action": "kms:DescribeKey",
+        "resource_selector": "SEALED_KMS_KEY_ARN",
+        "use": "WHEN_BUCKET_USES_KMS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "WHEN_BUCKET_USES_KMS",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R32",
+        "action": "kms:GetKeyPolicy",
+        "resource_selector": "SEALED_KMS_KEY_ARN",
+        "use": "WHEN_BUCKET_USES_KMS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "WHEN_BUCKET_USES_KMS",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R33",
+        "action": "kms:ListResourceTags",
+        "resource_selector": "SEALED_KMS_KEY_ARN",
+        "use": "WHEN_BUCKET_USES_KMS",
+        "control": "BUCKET_CONTROLS_KMS",
+        "condition": "WHEN_BUCKET_USES_KMS",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "id": "R34",
+        "action": "servicequotas:GetServiceQuota",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "SERVICE_QUOTA",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 2
+        },
+        "reconstruction_output_kind": "aws_c0_service_quota_observation/v1"
+      },
+      {
+        "id": "R35",
+        "action": "servicequotas:GetAWSDefaultServiceQuota",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "SERVICE_QUOTA",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": 1,
+          "max_items": 2
+        },
+        "reconstruction_output_kind": "aws_c0_service_quota_observation/v1"
+      },
+      {
+        "id": "R36",
+        "action": "states:DescribeStateMachine",
+        "resource_selector": "SEALED_STATE_MACHINE_ARN",
+        "use": "ALWAYS",
+        "control": "STANDARD_WORKFLOW",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_HISTORY_MAX_PAGES",
+          "max_items": "SEALED_HISTORY_MAX_EVENTS"
+        },
+        "reconstruction_output_kind": "aws_c0_standard_workflow_observation/v1"
+      },
+      {
+        "id": "R37",
+        "action": "states:DescribeExecution",
+        "resource_selector": "SEALED_EXECUTION_ARN",
+        "use": "ALWAYS",
+        "control": "STANDARD_WORKFLOW",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_HISTORY_MAX_PAGES",
+          "max_items": "SEALED_HISTORY_MAX_EVENTS"
+        },
+        "reconstruction_output_kind": "aws_c0_standard_workflow_observation/v1"
+      },
+      {
+        "id": "R38",
+        "action": "states:GetExecutionHistory",
+        "resource_selector": "SEALED_EXECUTION_ARN",
+        "use": "WHEN_HISTORY_FALLBACK_OR_HISTORY_CROSSCHECK",
+        "control": "STANDARD_WORKFLOW",
+        "condition": "WHEN_HISTORY_FALLBACK_OR_HISTORY_CROSSCHECK",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_HISTORY_MAX_PAGES",
+          "max_items": "SEALED_HISTORY_MAX_EVENTS"
+        },
+        "reconstruction_output_kind": "aws_c0_standard_workflow_observation/v1"
+      },
+      {
+        "id": "R39",
+        "action": "ssm:DescribeDocument",
+        "resource_selector": "SEALED_SSM_DOCUMENT_ARN",
+        "use": "ALWAYS",
+        "control": "SSM_DOCUMENT",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "id": "R40",
+        "action": "ssm:GetDocument",
+        "resource_selector": "SEALED_SSM_DOCUMENT_ARN",
+        "use": "ALWAYS",
+        "control": "SSM_DOCUMENT",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "id": "R41",
+        "action": "ssm:DescribeDocumentPermission",
+        "resource_selector": "SEALED_SSM_DOCUMENT_ARN",
+        "use": "ALWAYS",
+        "control": "SSM_DOCUMENT",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "id": "R42",
+        "action": "ssm:GetConnectionStatus",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "SSM_DOCUMENT",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "id": "R43",
+        "action": "ssm:DescribeInstanceInformation",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "SSM_DOCUMENT",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "id": "R44",
+        "action": "ssm:GetCommandInvocation",
+        "resource_selector": "*",
+        "use": "WHEN_COMMAND_WAS_SENT",
+        "control": "SSM_DOCUMENT",
+        "condition": "WHEN_COMMAND_WAS_SENT",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "id": "R45",
+        "action": "cloudformation:DescribeChangeSet",
+        "resource_selector": "SEALED_CHANGE_SET_ARN",
+        "use": "ALWAYS",
+        "control": "CHANGE_SET_AND_EFFECTS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_CFN_MAX_PAGES",
+          "max_items": "SEALED_CFN_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+      },
+      {
+        "id": "R46",
+        "action": "cloudformation:GetTemplate",
+        "resource_selector": "SEALED_STACK_ARN",
+        "use": "ALWAYS",
+        "control": "CHANGE_SET_AND_EFFECTS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_CFN_MAX_PAGES",
+          "max_items": "SEALED_CFN_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+      },
+      {
+        "id": "R47",
+        "action": "cloudformation:DescribeStacks",
+        "resource_selector": "SEALED_STACK_ARN",
+        "use": "ALWAYS",
+        "control": "CHANGE_SET_AND_EFFECTS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_CFN_MAX_PAGES",
+          "max_items": "SEALED_CFN_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+      },
+      {
+        "id": "R48",
+        "action": "cloudformation:DescribeStackEvents",
+        "resource_selector": "SEALED_STACK_ARN",
+        "use": "ALWAYS",
+        "control": "CHANGE_SET_AND_EFFECTS",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_CFN_MAX_PAGES",
+          "max_items": "SEALED_CFN_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+      },
+      {
+        "id": "R49",
+        "action": "lambda:GetFunction",
+        "resource_selector": "SEALED_FINALIZER_FUNCTION_ARN",
+        "use": "ALWAYS",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R50",
+        "action": "lambda:GetFunctionConfiguration",
+        "resource_selector": "SEALED_FINALIZER_FUNCTION_ARN",
+        "use": "ALWAYS",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R51",
+        "action": "lambda:GetPolicy",
+        "resource_selector": "SEALED_FINALIZER_FUNCTION_ARN",
+        "use": "ALWAYS",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R52",
+        "action": "logs:DescribeLogGroups",
+        "resource_selector": "*",
+        "use": "ALWAYS",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "ALWAYS",
+        "call_requirement": "ALWAYS",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R53",
+        "action": "logs:DescribeLogStreams",
+        "resource_selector": "SEALED_LOG_GROUP_ARN",
+        "use": "FOR_EACH_SEALED_LOG_GROUP",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "FOR_EACH_SEALED_LOG_GROUP",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R54",
+        "action": "logs:GetLogEvents",
+        "resource_selector": "SEALED_LOG_STREAM_ARN",
+        "use": "WHEN_LOG_EVENTS_ARE_ATTESTED",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_LOG_EVENTS_ARE_ATTESTED",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R55",
+        "action": "logs:GetLogRecord",
+        "resource_selector": "SEALED_LOG_GROUP_ARN",
+        "use": "WHEN_LOG_RECORD_POINTER_EXISTS",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_LOG_RECORD_POINTER_EXISTS",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R56",
+        "action": "logs:FilterLogEvents",
+        "resource_selector": "SEALED_LOG_GROUP_ARN",
+        "use": "WHEN_LOG_FILTER_ATTESTATION_IS_REQUIRED",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_LOG_FILTER_ATTESTATION_IS_REQUIRED",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R57",
+        "action": "cloudwatch:GetMetricData",
+        "resource_selector": "*",
+        "use": "WHEN_METRIC_ATTESTATION_IS_REQUIRED",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_METRIC_ATTESTATION_IS_REQUIRED",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R58",
+        "action": "cloudwatch:GetMetricStatistics",
+        "resource_selector": "*",
+        "use": "WHEN_METRIC_STATISTICS_ARE_REQUIRED",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_METRIC_STATISTICS_ARE_REQUIRED",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R59",
+        "action": "ecr:DescribeRepositories",
+        "resource_selector": "*",
+        "use": "WHEN_IMAGE_IS_IN_ECR",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_IMAGE_IS_IN_ECR",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R60",
+        "action": "ecr:DescribeImages",
+        "resource_selector": "SEALED_ECR_REPOSITORY_ARN",
+        "use": "WHEN_IMAGE_IS_IN_ECR",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_IMAGE_IS_IN_ECR",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R61",
+        "action": "ecr:ListImages",
+        "resource_selector": "SEALED_ECR_REPOSITORY_ARN",
+        "use": "WHEN_IMAGE_IS_IN_ECR",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_IMAGE_IS_IN_ECR",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R62",
+        "action": "ecr:GetRepositoryPolicy",
+        "resource_selector": "SEALED_ECR_REPOSITORY_ARN",
+        "use": "WHEN_IMAGE_IS_IN_ECR",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_IMAGE_IS_IN_ECR",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "id": "R63",
+        "action": "pricing:GetProducts",
+        "resource_selector": "*",
+        "use": "WHEN_REVALIDATING_COST_MODEL_PRICE_OBSERVATION",
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "condition": "WHEN_REVALIDATING_COST_MODEL_PRICE_OBSERVATION",
+        "call_requirement": "CONDITIONAL",
+        "pagination_bounds": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+      }
+    ],
+    "required_control_mapping": [
+      {
+        "control": "ACCOUNT_REGION",
+        "row_ids": [
+          "R01"
+        ],
+        "conditional_use": "ALWAYS",
+        "pagination": {
+          "max_pages": 1,
+          "max_items": 1
+        },
+        "output_schema": "aws_c0_account_region_observation/v1",
+        "output_kind": "aws_c0_account_region_observation/v1"
+      },
+      {
+        "control": "INSTANCE_PROFILE_SOLE_ROLE",
+        "row_ids": [
+          "R02",
+          "R03",
+          "R13",
+          "R14"
+        ],
+        "conditional_use": "ALWAYS",
+        "pagination": {
+          "max_pages": 4,
+          "max_items": 16
+        },
+        "output_schema": "aws_c0_instance_profile_role_observation/v1",
+        "output_kind": "aws_c0_instance_profile_role_observation/v1"
+      },
+      {
+        "control": "IAM_POLICY_SET",
+        "row_ids": [
+          "R15",
+          "R16",
+          "R17",
+          "R18",
+          "R19"
+        ],
+        "conditional_use": "ALWAYS_WITH_PER_POLICY_ROWS_CONDITIONAL_ON_LIST_RESULTS",
+        "pagination": {
+          "max_pages": "SEALED_IAM_MAX_PAGES",
+          "max_items": "SEALED_IAM_MAX_ITEMS"
+        },
+        "output_schema": "aws_c0_iam_policy_set_observation/v1",
+        "output_kind": "aws_c0_iam_policy_set_observation/v1"
+      },
+      {
+        "control": "BUCKET_CONTROLS_KMS",
+        "row_ids": [
+          "R20",
+          "R21",
+          "R22",
+          "R23",
+          "R24",
+          "R25",
+          "R31",
+          "R32",
+          "R33"
+        ],
+        "conditional_use": "KMS_ROWS_IFF_BUCKET_ENCRYPTION_IS_KMS",
+        "pagination": {
+          "max_pages": 1,
+          "max_items": 16
+        },
+        "output_schema": "aws_c0_bucket_controls_observation/v1",
+        "output_kind": "aws_c0_bucket_controls_observation/v1"
+      },
+      {
+        "control": "VPC_NETWORK_PATH",
+        "row_ids": [
+          "R04",
+          "R05",
+          "R06",
+          "R07",
+          "R08",
+          "R09",
+          "R10",
+          "R11",
+          "R12"
+        ],
+        "conditional_use": "TOPOLOGY_ROWS_IFF_REFERENCED_BY_INSTANCE_OR_ROUTE",
+        "pagination": {
+          "max_pages": "SEALED_EC2_MAX_PAGES",
+          "max_items": "SEALED_EC2_MAX_ITEMS"
+        },
+        "output_schema": "aws_c0_vpc_network_observation/v1",
+        "output_kind": "aws_c0_vpc_network_observation/v1"
+      },
+      {
+        "control": "SERVICE_QUOTA",
+        "row_ids": [
+          "R34",
+          "R35"
+        ],
+        "conditional_use": "ALWAYS",
+        "pagination": {
+          "max_pages": 1,
+          "max_items": 2
+        },
+        "output_schema": "aws_c0_service_quota_observation/v1",
+        "output_kind": "aws_c0_service_quota_observation/v1"
+      },
+      {
+        "control": "STANDARD_WORKFLOW",
+        "row_ids": [
+          "R36",
+          "R37",
+          "R38"
+        ],
+        "conditional_use": "R38_IFF_HISTORY_FALLBACK_OR_HISTORY_CROSSCHECK",
+        "pagination": {
+          "max_pages": "SEALED_HISTORY_MAX_PAGES",
+          "max_items": "SEALED_HISTORY_MAX_EVENTS"
+        },
+        "output_schema": "aws_c0_standard_workflow_observation/v1",
+        "output_kind": "aws_c0_standard_workflow_observation/v1"
+      },
+      {
+        "control": "SSM_DOCUMENT",
+        "row_ids": [
+          "R39",
+          "R40",
+          "R41",
+          "R42",
+          "R43",
+          "R44"
+        ],
+        "conditional_use": "R44_IFF_COMMAND_WAS_SENT",
+        "pagination": {
+          "max_pages": "SEALED_SSM_MAX_PAGES",
+          "max_items": "SEALED_SSM_MAX_ITEMS"
+        },
+        "output_schema": "aws_c0_ssm_control_observation/v1",
+        "output_kind": "aws_c0_ssm_control_observation/v1"
+      },
+      {
+        "control": "SOFTWARE_AND_IMAGE_SET",
+        "row_ids": [
+          "R49",
+          "R50",
+          "R51",
+          "R52",
+          "R53",
+          "R54",
+          "R55",
+          "R56",
+          "R57",
+          "R58",
+          "R59",
+          "R60",
+          "R61",
+          "R62",
+          "R63"
+        ],
+        "conditional_use": "LOG_METRIC_ECR_PRICING_ROWS_IFF_THE_SEALED_DEPLOYMENT_AND_COST_MODEL_REQUIRE_THEM",
+        "pagination": {
+          "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+          "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+        },
+        "output_schema": "aws_c0_software_image_observation/v1",
+        "output_kind": "aws_c0_software_image_observation/v1"
+      },
+      {
+        "control": "CHANGE_SET_AND_EFFECTS",
+        "row_ids": [
+          "R45",
+          "R46",
+          "R47",
+          "R48"
+        ],
+        "conditional_use": "ALWAYS",
+        "pagination": {
+          "max_pages": "SEALED_CFN_MAX_PAGES",
+          "max_items": "SEALED_CFN_MAX_ITEMS"
+        },
+        "output_schema": "aws_c0_change_set_effects_observation/v1",
+        "output_kind": "aws_c0_change_set_effects_observation/v1"
+      },
+      {
+        "control": "ARTIFACT_VERSION_SET",
+        "row_ids": [
+          "R26",
+          "R27",
+          "R28",
+          "R29",
+          "R30"
+        ],
+        "conditional_use": "R28_IFF_NONVERSIONED_METADATA_READ_REQUIRED_R29_R30_FOR_EACH_EXACT_VERSION",
+        "pagination": {
+          "max_pages": "SEALED_S3_MAX_PAGES",
+          "max_items": "SEALED_S3_MAX_VERSIONS"
+        },
+        "output_schema": "aws_c0_artifact_version_set_observation/v1",
+        "output_kind": "aws_c0_artifact_version_set_observation/v1"
+      }
+    ],
+    "map_invariants": [
+      "EXACT_ELEVEN_CONTROL_NAMES_ONCE",
+      "EVERY_ROW_R01_THROUGH_R63_MAPPED_AT_LEAST_ONCE",
+      "NO_ROW_OUTSIDE_R01_THROUGH_R63",
+      "ONLY_DECLARED_SHARED_ROWS_MAY_APPEAR_IN_MULTIPLE_CONTROLS",
+      "FALSE_CONDITIONAL_ROW_IS_RECORDED_NOT_CALLED",
+      "EVERY_TRUE_CONDITIONAL_ROW_HAS_AUTHENTICATED_REQUEST_RESPONSE_RECEIPT",
+      "NO_UNDECLARED_READ"
+    ]
+  },
+  "runtime_attestation_and_start": {
+    "live_packet_schema": "aws_c0_live_packet/v3",
+    "live_packet_binds": [
+      "COMPLETE_EXACT_R01_R63_PLAN",
+      "ELEVEN_PRESTART_RECONSTRUCTIONS",
+      "EXACT_RECONSTRUCTION_SET_IDENTITY",
+      "EXACT_PACKET_OTHER_MATERIAL_COORDINATES"
+    ],
+    "bundle_schema": "aws_c0_runtime_start_attestation_bundle/v1",
+    "bundle_record_class": "NONROOT_COMPLETE_CANONICAL_BYTES_NO_EMBEDDED_RECORD_SHA256_OR_SELF_RECEIPT",
+    "bundle_binds": [
+      "LIVE_PACKET_V3_IDENTITY_AND_RECEIPT",
+      "LIVE_PACKET_V3_RECONSTRUCTION_SET_IDENTITY",
+      "PREDECLARED_SSM_DISPATCH_REQUEST_IDENTITY_AND_COMPLETE_PREIMAGE_WITHOUT_AWS_COMMAND_ID",
+      "SYSTEMD_INVOCATION",
+      "OCI_MANIFEST_CONFIG_CONTAINER_AND_FIXED_HARDENING"
+    ],
+    "ssm_dispatch_request_schema": "aws_c0_ssm_dispatch_request_preimage/v1",
+    "ssm_dispatch_request_identity_kind": "aws_c0_ssm_dispatch_request/v1",
+    "ssm_dispatch_request_fields": [
+      "DOCUMENT_NAME_AND_VERSION",
+      "EXACT_TARGET",
+      "CANONICAL_PARAMETERS_AND_SHA256",
+      "ATTEMPT",
+      "CLIENT_REQUEST_TOKEN",
+      "EXPECTED_COMMAND_TIME_BOUNDS",
+      "CANONICAL_WORKFLOW_EXECUTION_IDENTITY_AND_ARN"
+    ],
+    "controller_forbidden_future_fields": ["AWS_COMMAND_ID", "SSM_TERMINAL_STATUS", "GET_COMMAND_INVOCATION_RESULT"],
+    "ssm_completion_schema": "aws_c0_ssm_completion_observation/v1",
+    "ssm_completion_publisher": "SUPERVISOR_AFTER_GET_COMMAND_INVOCATION_TERMINAL_RESULT",
+    "ssm_completion_binds": [
+      "PREDECLARED_DISPATCH_REQUEST_IDENTITY_AND_PREIMAGE",
+      "ACTUAL_SENDCOMMAND_COMMAND_ID_AND_AWS_SSM_COMMAND_IDENTITY",
+      "TERMINAL_GETCOMMANDINVOCATION_SUCCESS_OR_TYPED_FAILURE",
+      "AUTHENTICATED_API_SUCCESS_RECEIPT_AND_TIMESTAMPS",
+      "SAME_ATTEMPT_PREFIX_AND_CANONICAL_WORKFLOW_EXECUTION"
+    ],
+    "safe_close_schema": "aws_c0_safe_close_receipt/v2",
+    "safe_close_requires": [
+      "START_V4_ACCEPTED",
+      "FRESH_HEARTBEAT_SEQUENCE_ZERO_NULL_PREDECESSOR",
+      "SSM_COMPLETION_SUCCESS",
+      "SAME_PREDECLARED_DISPATCH_REQUEST_AND_ACTUAL_COMMAND_IDENTITY",
+      "SAME_ATTEMPT_WORKFLOW_PREFIX",
+      "EXACT_OBJECT_RECEIPTS"
+    ],
+    "start_schema": "aws_c0_start_receipt/v4",
+    "start_is_additive_replacement_of": "aws_c0_start_receipt/v3",
+    "accepted_union": "ALL_V3_SUCCESS_PREDICATES_EXCEPT_FUTURE_SSM_COMMAND_IDENTITY_IS_NULL_AND_REPLACED_BY_PREDECLARED_DISPATCH_REQUEST_PLUS_NON_NULL_RUNTIME_START_BUNDLE_AND_EXACT_RECEIPT",
+    "failed_or_refused_union": "TYPED_PHASE_AND_CODE; SUCCESS_ONLY_FIELDS_NULL; NO_ACCEPTED_CLAIM"
+  },
+  "ssm_controller_interface_correction": {
+    "supersedes_prior_prepare_request_argv_only_for_explicit_dispatch_request_transport": true,
+    "ssm_document_parameters_added": [
+      "WorkflowExecutionArn",
+      "SsmDispatchRequestCanonicalJsonBase64",
+      "SsmDispatchRequestSha256"
+    ],
+    "all_parameters_use_interpolation_type": "ENV_VAR",
+    "prepare_request_argv_in_order": [
+      "/usr/bin/python3",
+      "/usr/local/libexec/ebu-c0/ebu_c0_controller.py",
+      "prepare-request",
+      "--bucket", "ENV_ARTIFACT_BUCKET",
+      "--key", "ENV_LAUNCH_REQUEST_KEY",
+      "--version-id", "ENV_LAUNCH_REQUEST_VERSION_ID",
+      "--expected-sha256", "ENV_LAUNCH_REQUEST_SHA256",
+      "--rehearsal-id", "ENV_REHEARSAL_ID",
+      "--attempt-id", "ENV_ATTEMPT_ID",
+      "--workflow-execution-arn", "ENV_WORKFLOW_EXECUTION_ARN",
+      "--ssm-dispatch-request-canonical-json-base64", "ENV_SSM_DISPATCH_REQUEST_CANONICAL_JSON_BASE64",
+      "--ssm-dispatch-request-sha256", "ENV_SSM_DISPATCH_REQUEST_SHA256",
+      "--output", "/var/lib/ebu-c0/requests/<attempt>.json"
+    ],
+    "systemctl_final_command": "/usr/bin/systemctl start --no-block ebu-c0@<attempt>.service",
+    "source_sidecar": {
+      "path": "/var/lib/ebu-c0/requests/<attempt>.source.json",
+      "exclusive_regular_no_symlink": true,
+      "owner": "root:root",
+      "mode": "0600",
+      "binds": [
+        "BUCKET_KEY_VERSION_EXPECTED_LAUNCH_SHA",
+        "REHEARSAL_AND_ATTEMPT",
+        "CANONICAL_WORKFLOW_EXECUTION_ARN_AND_IDENTITY",
+        "COMPLETE_SSM_DISPATCH_REQUEST_CANONICAL_BYTES_SHA256_AND_IDENTITY"
+      ]
+    },
+    "controller_run_cross_binds_launch_request_source_sidecar_and_dispatch_request_before_runtime_start": true,
+    "environment_file_socket_metadata_service_or_other_hidden_transport": "REFUSE"
+  },
+  "closure_outcome_semantics": {
+    "fully_evidenced_failures": [
+      "FAIL_AFTER_CHECKPOINT",
+      "TIMEOUT"
+    ],
+    "full_failure": "ALL_MATERIAL_ROOTS_PRESENT_RETRIEVAL_COMPLETE_STOPPED_MISSING_CATEGORIES_EMPTY_FINAL_STATUS_AWS_C0_FINAL_FAIL_CLOSURE_RESPONSE_FULL",
+    "missing_terminal": "TERMINAL_COORDINATE_ABSENT_MISSING_TERMINAL_CATEGORY_ENUMERATED_CLOSURE_RESPONSE_HISTORY_FALLBACK_NO_FABRICATED_TERMINAL_IDENTITY",
+    "timeout_terminal_required_for_full": true,
+    "outcome_fail_is_not_missing_evidence": true
+  },
+  "mandatory_adversarial_runtime_rules": {
+    "cloudformation_future_output_or_self_arn_input": "REFUSE",
+    "execution_history_iam_resource": "EXACT_EXECUTION_ARN_OR_PROVEN_VALID_WILDCARD_WITH_EXACT_REQUEST_CONDITION",
+    "all_post_start_service_failures": "SINGLE_STOP_OBSERVATION_THEN_CONSTRUCTIBLE_CLOSURE",
+    "duplicate_logical_asl_output_field": "REFUSE_AFTER_DOT_DOLLAR_NORMALIZATION",
+    "safe_close": "ACCEPTED_NULL_FAILURE_SAME_ATTEMPT_START_AND_FRESH_SAME_ATTEMPT_HEARTBEAT_ZERO_NULL_PREDECESSOR_EXACT_RECEIPTS_RUNNING_EXECUTION",
+    "root_pass_validation": "COMPLETE_SCHEMA_AND_ALL_CROSS_BINDINGS",
+    "cost": "NONNEGATIVE_INTEGERS_POSITIVE_DENOMINATORS_RANGE_BOUNDS_AND_AUTHENTICATED_OBSERVED_PRICE_UPPER_BOUND",
+    "s3": "CHECKSUM_MODE_AUTHENTICATED_VERSION_AND_CHECKSUM_HEADERS_ALL_PAGES_UNIQUE_VERSION_NO_DELETE_MARKER_NO_LATEST",
+    "runtime_observations": "AUTHENTICATED_SSM_SYSTEMD_CONTAINER_AND_OCI_IDENTITIES",
+    "budget": "EVERY_REACHABLE_API_TRANSITION_REQUEST_DURATION_AND_RUNNING_PATH_FITS_LIMITS_AND_DEADLINES",
+    "ssm_timeout": "CONTAINS_COMPLETE_CONTROLLER_DOWNLOAD_VALIDATION_EXCLUSIVE_WRITE_AND_NONBLOCKING_HANDOFF"
+  },
+  "validator_output_contract": {
+    "argv": [
+      "--source",
+      "ABSOLUTE_OR_NORMALIZED_REPOSITORY_PATH",
+      "--output",
+      "OUTPUT_PATH"
+    ],
+    "unknown_missing_or_duplicate_argument": "REFUSE",
+    "output_creation": "EXCLUSIVE_REGULAR_FILE_NO_SYMLINK",
+    "output_bytes": "ONE_DETERMINISTIC_CANONICAL_STATIC_VALIDATION_RECEIPT_NO_FINAL_LF",
+    "stdout_substitute_for_output": "FORBIDDEN",
+    "failure": "NONZERO_NO_PASS_RECEIPT_AND_NO_PARTIAL_TEMPORARY_OR_DESTINATION_FILE",
+    "atomic_write": "CREATE_EXCLUSIVE_TEMP_IN_DESTINATION_DIRECTORY_FSYNC_FILE_RENAME_NOREPLACE_FSYNC_DIRECTORY_OR_EQUIVALENT_PROVEN_ATOMIC_PROTOCOL",
+    "failure_cleanup": "REMOVE_ONLY_OWN_EXCLUSIVE_TEMP; DESTINATION_AND_PARTIAL_FILES_ABSENT; NO_PASS_BYTES"
+  },
+  "case_execution_contract": {
+    "one_distinct_witness_or_falsifier_per_coordinate": true,
+    "independent_subcase_execution": "EVERY_NAMED_SUBCASE_HAS_A_DISTINCT_DETERMINISTIC_CALLABLE_AND_RECEIPT; THE TOP_LEVEL_CASE RECEIPT HASHES THE ORDERED SUBCASE RECEIPTS",
+    "generic_helper_substitution": "REFUSE",
+    "mandatory_expanded_axes": [
+      "START_BUNDLE_EXCLUDES_AWS_COMMAND_ID",
+      "START_BUNDLE_EXCLUDES_FUTURE_SSM_COMPLETION",
+      "SSM_COMPLETION_BINDS_DISPATCH_REQUEST_COMMAND_ID_STATUS_TIMES_AND_API_RECEIPT",
+      "SAFE_CLOSE_REQUIRES_SUCCESSFUL_COMPLETION_AND_CANONICAL_WORKFLOW_KIND",
+      "EACH_OBSERVED_USAGE_COORDINATE_EXACTLY_ONCE",
+      "SEALED_MAXIMUM_ROW_HAS_NO_USAGE_COORDINATE",
+      "DERIVED_USAGE_COUNT_HASH_AND_SET_MISMATCHES_EACH_REFUSE"
+    ],
+    "required_binding_fields": [
+      "case_id",
+      "fixture_id",
+      "validator_function",
+      "expected_result",
+      "observed_result"
+    ],
+    "marker_search_is_execution": false,
+    "coordinate_counting_is_execution": false,
+    "unrelated_generic_helper_is_execution": false,
+    "all_prior_258_cases_preserved": true,
+    "additive_positive_cases": 20,
+    "additive_negative_cases": 46,
+    "additive_total_cases": 66,
+    "combined_total_cases": 324,
+    "case_id_groups_in_order": [
+      {
+        "contract_path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+        "count": 66,
+        "case_ids_in_order": [
+          "C0-P01",
+          "C0-P02",
+          "C0-P03",
+          "C0-P04",
+          "C0-P05",
+          "C0-P06",
+          "C0-P07",
+          "C0-P08",
+          "C0-P09",
+          "C0-P10",
+          "C0-P11",
+          "C0-P12",
+          "C0-P13",
+          "C0-P14",
+          "C0-P15",
+          "C0-P16",
+          "C0-P17",
+          "C0-P18",
+          "C0-N01",
+          "C0-N02",
+          "C0-N03",
+          "C0-N04",
+          "C0-N05",
+          "C0-N06",
+          "C0-N07",
+          "C0-N08",
+          "C0-N09",
+          "C0-N10",
+          "C0-N11",
+          "C0-N12",
+          "C0-N13",
+          "C0-N14",
+          "C0-N15",
+          "C0-N16",
+          "C0-N17",
+          "C0-N18",
+          "C0-N19",
+          "C0-N20",
+          "C0-N21",
+          "C0-N22",
+          "C0-N23",
+          "C0-N24",
+          "C0-N25",
+          "C0-N26",
+          "C0-N27",
+          "C0-N28",
+          "C0-N29",
+          "C0-N30",
+          "C0-N31",
+          "C0-N32",
+          "C0-N33",
+          "C0-N34",
+          "C0-N35",
+          "C0-N36",
+          "C0-N37",
+          "C0-N38",
+          "C0-N39",
+          "C0-N40",
+          "C0-N41",
+          "C0-N42",
+          "C0-N43",
+          "C0-N44",
+          "C0-N45",
+          "C0-N46",
+          "C0-N47",
+          "C0-N48"
+        ]
+      },
+      {
+        "contract_path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+        "count": 84,
+        "case_ids_in_order": [
+          "C0-LPC-P01",
+          "C0-LPC-P02",
+          "C0-LPC-P03",
+          "C0-LPC-P04",
+          "C0-LPC-P05",
+          "C0-LPC-P06",
+          "C0-LPC-P07",
+          "C0-LPC-P08",
+          "C0-LPC-P09",
+          "C0-LPC-P10",
+          "C0-LPC-P11",
+          "C0-LPC-P12",
+          "C0-LPC-P13",
+          "C0-LPC-P14",
+          "C0-LPC-P15",
+          "C0-LPC-P16",
+          "C0-LPC-P17",
+          "C0-LPC-P18",
+          "C0-LPC-P19",
+          "C0-LPC-P20",
+          "C0-LPC-P21",
+          "C0-LPC-P22",
+          "C0-LPC-P23",
+          "C0-LPC-P24",
+          "C0-LPC-N01",
+          "C0-LPC-N02",
+          "C0-LPC-N03",
+          "C0-LPC-N04",
+          "C0-LPC-N05",
+          "C0-LPC-N06",
+          "C0-LPC-N07",
+          "C0-LPC-N08",
+          "C0-LPC-N09",
+          "C0-LPC-N10",
+          "C0-LPC-N11",
+          "C0-LPC-N12",
+          "C0-LPC-N13",
+          "C0-LPC-N14",
+          "C0-LPC-N15",
+          "C0-LPC-N16",
+          "C0-LPC-N17",
+          "C0-LPC-N18",
+          "C0-LPC-N19",
+          "C0-LPC-N20",
+          "C0-LPC-N21",
+          "C0-LPC-N22",
+          "C0-LPC-N23",
+          "C0-LPC-N24",
+          "C0-LPC-N25",
+          "C0-LPC-N26",
+          "C0-LPC-N27",
+          "C0-LPC-N28",
+          "C0-LPC-N29",
+          "C0-LPC-N30",
+          "C0-LPC-N31",
+          "C0-LPC-N32",
+          "C0-LPC-N33",
+          "C0-LPC-N34",
+          "C0-LPC-N35",
+          "C0-LPC-N36",
+          "C0-LPC-N37",
+          "C0-LPC-N38",
+          "C0-LPC-N39",
+          "C0-LPC-N40",
+          "C0-LPC-N41",
+          "C0-LPC-N42",
+          "C0-LPC-N43",
+          "C0-LPC-N44",
+          "C0-LPC-N45",
+          "C0-LPC-N46",
+          "C0-LPC-N47",
+          "C0-LPC-N48",
+          "C0-LPC-N49",
+          "C0-LPC-N50",
+          "C0-LPC-N51",
+          "C0-LPC-N52",
+          "C0-LPC-N53",
+          "C0-LPC-N54",
+          "C0-LPC-N55",
+          "C0-LPC-N56",
+          "C0-LPC-N57",
+          "C0-LPC-N58",
+          "C0-LPC-N59",
+          "C0-LPC-N60"
+        ]
+      },
+      {
+        "contract_path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+        "count": 108,
+        "case_ids_in_order": [
+          "C0-CRT-P01",
+          "C0-CRT-P02",
+          "C0-CRT-P03",
+          "C0-CRT-P04",
+          "C0-CRT-P05",
+          "C0-CRT-P06",
+          "C0-CRT-P07",
+          "C0-CRT-P08",
+          "C0-CRT-P09",
+          "C0-CRT-P10",
+          "C0-CRT-P11",
+          "C0-CRT-P12",
+          "C0-CRT-P13",
+          "C0-CRT-P14",
+          "C0-CRT-P15",
+          "C0-CRT-P16",
+          "C0-CRT-P17",
+          "C0-CRT-P18",
+          "C0-CRT-P19",
+          "C0-CRT-P20",
+          "C0-CRT-P21",
+          "C0-CRT-P22",
+          "C0-CRT-P23",
+          "C0-CRT-P24",
+          "C0-CRT-P25",
+          "C0-CRT-P26",
+          "C0-CRT-P27",
+          "C0-CRT-P28",
+          "C0-CRT-P29",
+          "C0-CRT-P30",
+          "C0-CRT-P31",
+          "C0-CRT-P32",
+          "C0-CRT-P33",
+          "C0-CRT-P34",
+          "C0-CRT-P35",
+          "C0-CRT-P36",
+          "C0-CRT-N01",
+          "C0-CRT-N02",
+          "C0-CRT-N03",
+          "C0-CRT-N04",
+          "C0-CRT-N05",
+          "C0-CRT-N06",
+          "C0-CRT-N07",
+          "C0-CRT-N08",
+          "C0-CRT-N09",
+          "C0-CRT-N10",
+          "C0-CRT-N11",
+          "C0-CRT-N12",
+          "C0-CRT-N13",
+          "C0-CRT-N14",
+          "C0-CRT-N15",
+          "C0-CRT-N16",
+          "C0-CRT-N17",
+          "C0-CRT-N18",
+          "C0-CRT-N19",
+          "C0-CRT-N20",
+          "C0-CRT-N21",
+          "C0-CRT-N22",
+          "C0-CRT-N23",
+          "C0-CRT-N24",
+          "C0-CRT-N25",
+          "C0-CRT-N26",
+          "C0-CRT-N27",
+          "C0-CRT-N28",
+          "C0-CRT-N29",
+          "C0-CRT-N30",
+          "C0-CRT-N31",
+          "C0-CRT-N32",
+          "C0-CRT-N33",
+          "C0-CRT-N34",
+          "C0-CRT-N35",
+          "C0-CRT-N36",
+          "C0-CRT-N37",
+          "C0-CRT-N38",
+          "C0-CRT-N39",
+          "C0-CRT-N40",
+          "C0-CRT-N41",
+          "C0-CRT-N42",
+          "C0-CRT-N43",
+          "C0-CRT-N44",
+          "C0-CRT-N45",
+          "C0-CRT-N46",
+          "C0-CRT-N47",
+          "C0-CRT-N48",
+          "C0-CRT-N49",
+          "C0-CRT-N50",
+          "C0-CRT-N51",
+          "C0-CRT-N52",
+          "C0-CRT-N53",
+          "C0-CRT-N54",
+          "C0-CRT-N55",
+          "C0-CRT-N56",
+          "C0-CRT-N57",
+          "C0-CRT-N58",
+          "C0-CRT-N59",
+          "C0-CRT-N60",
+          "C0-CRT-N61",
+          "C0-CRT-N62",
+          "C0-CRT-N63",
+          "C0-CRT-N64",
+          "C0-CRT-N65",
+          "C0-CRT-N66",
+          "C0-CRT-N67",
+          "C0-CRT-N68",
+          "C0-CRT-N69",
+          "C0-CRT-N70",
+          "C0-CRT-N71",
+          "C0-CRT-N72"
+        ]
+      },
+      {
+        "contract_path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+        "count": 66,
+        "case_ids_in_order": [
+          "C0-MIRV-P01",
+          "C0-MIRV-P02",
+          "C0-MIRV-P03",
+          "C0-MIRV-P04",
+          "C0-MIRV-P05",
+          "C0-MIRV-P06",
+          "C0-MIRV-P07",
+          "C0-MIRV-P08",
+          "C0-MIRV-P09",
+          "C0-MIRV-P10",
+          "C0-MIRV-P11",
+          "C0-MIRV-P12",
+          "C0-MIRV-P13",
+          "C0-MIRV-P14",
+          "C0-MIRV-P15",
+          "C0-MIRV-P16",
+          "C0-MIRV-P17",
+          "C0-MIRV-P18",
+          "C0-MIRV-P19",
+          "C0-MIRV-P20",
+          "C0-MIRV-N01",
+          "C0-MIRV-N02",
+          "C0-MIRV-N03",
+          "C0-MIRV-N04",
+          "C0-MIRV-N05",
+          "C0-MIRV-N06",
+          "C0-MIRV-N07",
+          "C0-MIRV-N08",
+          "C0-MIRV-N09",
+          "C0-MIRV-N10",
+          "C0-MIRV-N11",
+          "C0-MIRV-N12",
+          "C0-MIRV-N13",
+          "C0-MIRV-N14",
+          "C0-MIRV-N15",
+          "C0-MIRV-N16",
+          "C0-MIRV-N17",
+          "C0-MIRV-N18",
+          "C0-MIRV-N19",
+          "C0-MIRV-N20",
+          "C0-MIRV-N21",
+          "C0-MIRV-N22",
+          "C0-MIRV-N23",
+          "C0-MIRV-N24",
+          "C0-MIRV-N25",
+          "C0-MIRV-N26",
+          "C0-MIRV-N27",
+          "C0-MIRV-N28",
+          "C0-MIRV-N29",
+          "C0-MIRV-N30",
+          "C0-MIRV-N31",
+          "C0-MIRV-N32",
+          "C0-MIRV-N33",
+          "C0-MIRV-N34",
+          "C0-MIRV-N35",
+          "C0-MIRV-N36",
+          "C0-MIRV-N37",
+          "C0-MIRV-N38",
+          "C0-MIRV-N39",
+          "C0-MIRV-N40",
+          "C0-MIRV-N41",
+          "C0-MIRV-N42",
+          "C0-MIRV-N43",
+          "C0-MIRV-N44",
+          "C0-MIRV-N45",
+          "C0-MIRV-N46"
+        ]
+      }
+    ]
+  },
+  "nonaccepted_diagnostic_design_source": {
+    "classification": "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE",
+    "commit": "475fc1f59e04bc4f76132acf8c37a4bfea2eafde",
+    "tree": "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb",
+    "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+    "may_be_base_parent_ancestor_merge_or_cherry_pick_source": false
+  },
+  "future_reachability_scope_counts": {
+    "global_authority_only": 150,
+    "global_completed_implementation": 164,
+    "descendant_authority_only": 100,
+    "descendant_completed_implementation": 114,
+    "reachability_unique_paths_added": 0,
+    "implementation_paths_added": 14
+  },
+  "completion_marker": "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_COMPLETE",
+  "acyclic_runtime_chronology": [
+    "PRELIVE_21_INCLUDES_LIVE_PACKET_V3_WITH_PRESTART_READ_PLAN_AND_RECONSTRUCTION_EVIDENCE",
+    "LIVE_AUTHORIZATION_V3_BINDS_EXACT_PUBLISHED_LIVE_PACKET_V3",
+    "WORKFLOW_SEALS_DISPATCH_REQUEST_PREIMAGE_THEN_SENDCOMMAND_RETURNS_AWS_COMMAND_ID_OUTSIDE_CONTROLLER_INPUT",
+    "CONTROLLER_PUBLISHES_START_V4_AND_RUNTIME_START_BUNDLE_BINDING_ONLY_THE_PREDECLARED_DISPATCH_REQUEST_NEVER_AWS_COMMAND_ID_OR_FUTURE_COMPLETION",
+    "SUPERVISOR_BINDS_SENDCOMMAND_COMMAND_ID_TO_THE_PREDECLARED_REQUEST_OBSERVES_COMPLETION_AND_PUBLISHES_SSM_COMPLETION_OBSERVATION_V1",
+    "SAFE_CLOSE_V2_BINDS_ACCEPTED_START_V4_FRESH_HEARTBEAT_ZERO_AND_SUCCESSFUL_SSM_COMPLETION",
+    "COST_V2_PUBLISHED_BEFORE_RETRIEVAL_V3",
+    "RETRIEVAL_V3_VERIFIES_ALL_EXACT_PRESENT_MATERIAL",
+    "FINAL_MANIFEST_V3_BINDS_RETRIEVAL_THEN_COST_IN_SEMANTIC_ORDER",
+    "FINAL_MANIFEST_PUBLICATION_OBSERVATION_BINDS_THE_LATER_PUT_RECEIPT_OUT_OF_BAND"
+  ],
+  "acyclic_identity_preimages": {
+    "runtime_control_read_plan_identity": "SHA256_CANONICAL_PLAN_WITHOUT_ANY_RECONSTRUCTION_SET_IDENTITY",
+    "runtime_control_reconstruction_set_identity": "SHA256_CANONICAL_SET_THAT_BINDS_ALREADY_KNOWN_READ_PLAN_IDENTITY_AND_OMITS_ITS_OWN_IDENTITY",
+    "live_packet_v3_identity": "SHA256_COMPLETE_CANONICAL_LIVE_PACKET_BYTES_AFTER_PLAN_AND_RECONSTRUCTION_EXIST",
+    "runtime_start_attestation_bundle_identity": "SHA256_COMPLETE_CANONICAL_BUNDLE_BYTES; BUNDLE CONTAINS NO OWN IDENTITY RECORD_SHA256 OBJECT RECEIPT OR FUTURE SSM COMPLETION",
+    "ssm_completion_observation_identity": "SHA256_COMPLETE_CANONICAL_OBSERVATION_BYTES; OBSERVATION CONTAINS NO OWN IDENTITY OR OBJECT RECEIPT",
+    "safe_close_v2_identity": "SHA256_COMPLETE_CANONICAL_SAFE_CLOSE_BYTES; SAFE CLOSE CONTAINS NO OWN OBJECT RECEIPT",
+    "root_record_identity": "SHA256_CANONICAL_ROOT_OMITTING_ONLY_RECORD_SHA256",
+    "final_manifest_publication_observation_identity": "SHA256_COMPLETE_CANONICAL_OBSERVATION_BYTES_AFTER_FINAL_MANIFEST_PUT",
+    "cycles_self_receipts_future_status_or_mutual_plan_set_identity": "REFUSE"
+  },
+  "nested_observation_cross_equalities": [
+    "LIVE_PACKET_V3_PLAN_IDENTITY_EQUALS_SHA256_CANONICAL_EMBEDDED_PLAN",
+    "LIVE_PACKET_V3_RECONSTRUCTION_SET_IDENTITY_EQUALS_SHA256_CANONICAL_EMBEDDED_SET",
+    "EVERY_RECONSTRUCTION_READ_PLAN_IDENTITY_EQUALS_LIVE_PACKET_PLAN_IDENTITY",
+    "EVERY_ROW_OBSERVATION_ROW_ACTION_RESOURCE_CONDITION_BOUNDS_AND_OUTPUT_KIND_EQUALS_EXACT_R01_R63_ROW",
+    "CALLED_RECEIPT_ACTION_AND_RESOURCE_EQUALS_ROW_AND_AUTHENTICATED_HTTP_200_SUCCESS_REQUEST_RESPONSE_BYTES_HASHES_RECOMPUTE",
+    "NOT_CALLED_REQUIRES_FALSE_SEALED_CONDITION_NULL_RECEIPT_AND_NO_FABRICATED_ROW_OUTPUT; ALWAYS_ROW_NOT_CALLED_REFUSES",
+    "RECONSTRUCTION_OUTPUT_STRICT_BASE64_DECODE_EQUALS_STRICT_CANONICAL_DECODED_JSON_VALIDATES_EXACT_NAMED_CLOSED_SCHEMA_AND_RECOMPUTED_BYTE_SHA256_BYTE_COUNT_IDENTITY_KIND",
+    "RECONSTRUCTION_OUTPUT_FRESHNESS_SECONDS_RECOMPUTED_NONNEGATIVE_AND_LESS_THAN_OR_EQUAL_TO_SEALED_MAX_FRESHNESS_SECONDS",
+    "RUNTIME_BUNDLE_ATTEMPT_PREFIX_WORKFLOW_LIVE_PACKET_AND_RECONSTRUCTION_IDENTITIES_EQUAL_START_V4_INPUTS",
+    "START_V4_PREDECLARED_SSM_DISPATCH_REQUEST_SYSTEMD_INVOCATION_AND_CONTAINER_IDENTITIES_EQUAL_THE_EXACT_NESTED_BUNDLE_IDENTITIES",
+    "SSM_DISPATCH_REQUEST_DOCUMENT_VERSION_TARGET_CANONICAL_PARAMETERS_ATTEMPT_TOKEN_TIME_BOUNDS_AND_WORKFLOW_EQUAL_SEALED_WORKFLOW_INPUT",
+    "SSM_COMPLETION_DISPATCH_REQUEST_IDENTITY_ACTUAL_COMMAND_IDENTITY_DOCUMENT_VERSION_TARGET_PARAMETERS_STATUS_AND_TIMES_EQUAL_SENDCOMMAND_AND_GETCOMMANDINVOCATION",
+    "SAFE_CLOSE_ATTEMPT_PREFIX_WORKFLOW_START_HEARTBEAT_ZERO_AND_SSM_COMPLETION_EQUAL_EXACT_RECEIPTS",
+    "SYSTEMD_UNIT_INVOCATION_MAINPID_EXECSTART_ATTEMPT_STATES_TIMES_AND_SOURCE_BYTES_RECOMPUTE",
+    "OCI_MANIFEST_DIGEST_CONFIG_DIGEST_CONTAINER_ID_ARGV_FIXED_HARDENING_ATTEMPT_TIMES_AND_SOURCE_BYTES_RECOMPUTE"
+  ],
+  "complete_replacement_schema_contract": {
+    "root_common_required_for": [
+      "aws_c0_material_runtime_authority_audit/v2",
+      "aws_c0_material_runtime_static_validation/v2",
+      "aws_c0_start_receipt/v4",
+      "aws_c0_retrieval_verification/v3",
+      "aws_c0_final_manifest/v3"
+    ],
+    "full_additive_start_v3_field_preservation": true,
+    "retrieval_v3_is_full_root_not_fragment": true,
+    "final_manifest_v3_is_full_root_not_fragment": true,
+    "nonroot_complete_schemas": [
+      "aws_c0_live_packet/v3",
+      "aws_c0_live_authorization/v3",
+      "aws_c0_runtime_start_attestation_bundle/v1",
+      "aws_c0_ssm_completion_observation/v1",
+      "aws_c0_safe_close_receipt/v2",
+      "aws_c0_final_manifest_publication_observation/v1"
+    ],
+    "unknown_missing_extra_or_wrong_context_identity_kind": "REFUSE"
+  }
+}

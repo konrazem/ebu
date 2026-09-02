@@ -1,0 +1,92 @@
+{
+  "authority_id": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1",
+  "status": "PROSPECTIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+    "tree": "75b8c651a12ba973c9c1ce81bd4355c463e306f5"
+  },
+  "authority_path_count_after_integration": 24,
+  "new_authority_paths_in_order": [
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_material_identity_runtime_validation_correction_contract.json",
+    "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+    "aws_c0_material_identity_runtime_validation_correction_implementation_path_manifest.json",
+    "aws_c0_material_identity_runtime_validation_correction_predecessor_manifest.json",
+    "aws_c0_material_identity_runtime_validation_correction_validation_contract.json"
+  ],
+  "new_authority_path_count": 6,
+  "new_authority_operation": "ADD",
+  "new_authority_mode": "100644",
+  "unknown_addition_modification_deletion_rename_or_symlink": "REFUSE",
+  "future_reachability_correction": {
+    "authorized_only_after_exact_authority_acceptance_and_integration": true,
+    "operation": "MODIFY",
+    "path_count": 1,
+    "paths_in_order": ["tests/framework/test_validation_reachability.py"],
+    "mode": "100644",
+    "unique_paths_added": 0,
+    "must_preserve_all_existing_phases_cases_scopes_hashes_and_three_public_test_methods": true,
+    "new_phases_in_order": [
+      "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
+      "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
+    ]
+  },
+  "future_corrected_implementation": {
+    "authorized_only_after_authority_and_reachability_acceptance_and_integration": true,
+    "operation": "ADD",
+    "path_count": 14,
+    "mode": "100644",
+    "paths_in_order": [
+      ".github/workflows/aws-c0-static.yml",
+      "scripts/validate_aws_c0_static.py",
+      "aws/c0/README.md",
+      "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+      "aws/c0/state-machine/aws-c0.asl.json",
+      "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+      "aws/c0/controller/ebu_c0_controller.py",
+      "aws/c0/controller/ebu-c0@.service",
+      "aws/c0/finalizer/finalizer.py",
+      "aws/c0/container/Dockerfile",
+      "aws/c0/container/synthetic_worker.py",
+      "aws/c0/fixtures/launch-request.valid.json",
+      "aws/c0/fixtures/negative-cases.json",
+      "tests/aws/test_aws_c0_unattended_synthetic.py"
+    ],
+    "modified_path_count": 0,
+    "deleted_path_count": 0,
+    "renamed_path_count": 0,
+    "ignored_cache_or_generated_repository_addition": "REFUSE",
+    "source_rule": "REBUILD_FROM_ACCEPTED_AUTHORITIES_NEVER_FROM_NONACCEPTED_DIAGNOSTIC"
+  },
+  "required_future_content": {
+    ".github/workflows/aws-c0-static.yml": ["CREDENTIAL_FREE_CONTENTS_READ_OFFLINE_ONLY", "EXACT_VALIDATOR_OUTPUT_AND_UNIT_TARGET", "NO_AWS_OIDC_SECRET_DOCKER_OR_SCIENCE"],
+    "scripts/validate_aws_c0_static.py": ["EXACT_ORDERED_66_84_108_66_CASE_GROUPS", "EXACT_324_CASE_EXECUTION", "ADDITIVE_20_POSITIVE_46_NEGATIVE_EXACT_66", "ONE_DISTINCT_MACHINE_EXECUTABLE_WITNESS_OR_FALSIFIER_PER_COORDINATE", "ATOMIC_EXCLUSIVE_DETERMINISTIC_OUTPUT_RECEIPT", "NO_PARTIAL_FILE_ON_FAILURE", "NO_MARKER_OR_GENERIC_HELPER_SUBSTITUTION"],
+    "aws/c0/README.md": ["NO_EXECUTION_AUTHORITY", "EXACT_21_MATERIAL_IDENTITY_COVERAGE", "OPERATIONAL_FAILURE_AND_RECOVERY_BOUNDARIES", "STAGE_E_FINISHED_STAGE_F_FROZEN"],
+    "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml": ["NO_FUTURE_OUTPUT_OR_SELF_ARN_INPUT", "CORRECT_EXECUTION_ARN_HISTORY_IAM_SCOPE", "SEALED_EXACT_R01_R63_STRUCTURAL_READ_PLAN", "EXACT_11_CONTROL_RECONSTRUCTION_MAPPING", "NO_RUNTIME_MUTATION_EXPANSION"],
+    "aws/c0/state-machine/aws-c0.asl.json": ["ONE_STOP", "ALL_SERVICE_FAILURES_CONVERGE", "NO_RETRY", "NO_DUPLICATE_LOGICAL_PAYLOAD_FIELD", "PREDECLARE_SSM_DISPATCH_REQUEST_BEFORE_SENDCOMMAND", "SUPERVISOR_BINDS_SENDCOMMAND_COMMAND_ID_AND_PUBLISHES_SSM_COMPLETION_AFTER_TERMINAL_COMMAND_RESULT", "CONSTRUCTIBLE_COMPLETE_OR_FALLBACK_CLOSURE"],
+    "aws/c0/ssm/EBU-C0-Start-v1.yaml": ["THREE_EXPLICIT_WORKFLOW_AND_DISPATCH_REQUEST_ENV_VAR_PARAMETERS", "AUTHENTICATED_EXACT_PREDECLARED_DISPATCH_REQUEST_WITHOUT_COMMAND_ID", "EXACT_EXTENDED_PREPARE_REQUEST_ARGV", "TIMEOUT_CONTAINS_CONTROLLER_BOUND", "FIXED_NONBLOCKING_HANDOFF"],
+    "aws/c0/controller/ebu_c0_controller.py": ["LIVE_PACKET_V3_PRESTART_RECONSTRUCTION_IDENTITY", "PREDECLARED_SSM_DISPATCH_REQUEST_IDENTITY_AND_PREIMAGE", "EXACT_EXTENDED_PREPARE_REQUEST_ARGV", "EXCLUSIVE_ROOT_0600_SOURCE_SIDECAR_BINDS_WORKFLOW_AND_DISPATCH_REQUEST", "NO_HIDDEN_TRANSPORT", "NO_AWS_GENERATED_COMMAND_ID_OR_FUTURE_SSM_STATUS_INPUT", "AUTHENTICATED_SYSTEMD_AND_CONTAINER_OBSERVATIONS", "DURABLE_RUNTIME_START_ATTESTATION_BUNDLE_WITHOUT_SELF_DIGEST", "START_V4_ACYCLIC_ADDITIVE_REPLACEMENT", "TIMEOUT_TERMINAL_OR_TYPED_MISSING_TERMINAL_CLOSURE", "OCI_MANIFEST_CONFIG_RUNTIME_IDENTITY_DISTINCTION"],
+    "aws/c0/controller/ebu-c0@.service": ["EXACT_AUTHENTICATED_INVOCATION", "BOUNDED_RUNTIME", "NO_RESTART_OR_AMBIENT_CAPABILITY"],
+    "aws/c0/finalizer/finalizer.py": ["VERIFY_LIVE_PACKET_V3_EXACT_PRESTART_RECONSTRUCTION_AND_CLOSED_DECODED_OUTPUTS", "BIND_SENDCOMMAND_COMMAND_ID_TO_PREDECLARED_REQUEST_AND_PUBLISH_SSM_COMPLETION_OBSERVATION", "CANONICAL_WORKFLOW_EXECUTION_IDENTITY_KIND_EVERYWHERE", "COMPLETE_ROOT_SCHEMA_AND_CROSS_BINDING", "SAFE_CLOSE_V2_FULL_PREDICATES", "EXACT_PAIRWISE_DISJOINT_21_PLUS_LATER_MATERIAL_AND_DERIVED_USAGE_RETRIEVAL", "AUDIT_V2_STATIC_VALIDATION_V2_RETRIEVAL_V3_FINAL_MANIFEST_V3", "INTEGER_PRICE_UPPER_BOUND_PROOF", "CHECKSUM_AND_VERSION_PAGINATION", "TRUTHFUL_COMPLETE_AND_INCOMPLETE_CLOSURE"],
+    "aws/c0/container/Dockerfile": ["DIGEST_ONLY_BASE", "MANIFEST_DIGEST_NOT_CONFIG_ID", "NO_NETWORK_BUILD_STEP"],
+    "aws/c0/container/synthetic_worker.py": ["THREE_INERT_MODES", "DURABLE_TIMEOUT_FAILURE_SEMANTICS", "ZERO_SCIENCE"],
+    "aws/c0/fixtures/launch-request.valid.json": ["EXACT_MATERIAL_IDENTITIES_AND_VERSION_REPLACEMENTS", "LIVE_PACKET_V3_AND_READ_PLAN_BINDINGS", "NONNEGATIVE_INTEGER_COST_POSITIVE_DENOMINATORS", "BUDGET_AND_DEADLINE_CONTAINMENT"],
+    "aws/c0/fixtures/negative-cases.json": ["PRESERVED_258_COORDINATES", "ADDITIVE_EXACT_66_COORDINATES", "MACHINE_EXECUTABLE_BASE_OPERATOR_TARGET_SELECTOR_CONSTRUCTOR_EXPECTATION_BINDINGS"],
+    "tests/aws/test_aws_c0_unattended_synthetic.py": ["ADVERSARIAL_FAKE_BOUNDARIES", "ONE_CASE_ONE_WITNESS", "NO_NETWORK_AWS_DOCKER_SYSTEMD_OR_SCIENCE"]
+  },
+  "path_arithmetic": {
+    "base_global_unique_paths": 144,
+    "authority_paths_added": 6,
+    "global_authority_only": 150,
+    "reachability_existing_paths_modified": 1,
+    "reachability_unique_paths_added": 0,
+    "implementation_paths_added": 14,
+    "global_completed_implementation": 164,
+    "base_descendant_unique_paths": 94,
+    "descendant_authority_only": 100,
+    "descendant_completed_implementation": 114
+  },
+  "preserved_counts": {"pre_live_objects": 21, "evidence_roots": 12, "cost_dimensions": 22},
+  "forbidden_operations_during_authority_work": ["COMMIT", "PUSH", "NETWORK", "AWS", "DOCKER", "SYSTEMD", "CONTAINER", "SCIENCE"],
+  "completion_marker": "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_COMPLETE"
+}
