@@ -1173,6 +1173,79 @@ AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_ROWS = (
         "5bc9ed389973973c9c406a0917e8c9570ead1c210589fcc15dfb8ff91d4bc02c",
     ),
 )
+AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT = (
+    "6eb39db6606159812b0995b7dbf2fb09948360ad"
+)
+AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_TREE = (
+    "75b8c651a12ba973c9c1ce81bd4355c463e306f5"
+)
+AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE = (
+    "9440290b716d0a605820b6a537172b158bd49e25"
+)
+AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION = (
+    "4d8011d03c0b7ceef1e19de93bbfea212e621487"
+)
+AWS_C0_MATERIAL_IDENTITY_AUTHORITY_TREE = (
+    "67eac70323698d3a50e32810b59d3cb6f5ee7fd4"
+)
+AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC = (
+    "475fc1f59e04bc4f76132acf8c37a4bfea2eafde"
+)
+AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_TREE = (
+    "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb"
+)
+AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS = (
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_material_identity_runtime_validation_correction_contract.json",
+    "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+    "aws_c0_material_identity_runtime_validation_correction_implementation_path_manifest.json",
+    "aws_c0_material_identity_runtime_validation_correction_predecessor_manifest.json",
+    "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+)
+AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ROWS = (
+    (
+        "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "100644",
+        "f90c16efbf6e31544a11935191ba40ea5f8a6040",
+        19204,
+        "a4a85efc161792af066fa0b0a6ec1cb66dcabef0e26d8540d4d0b3fa85a09d36",
+    ),
+    (
+        "aws_c0_material_identity_runtime_validation_correction_contract.json",
+        "100644",
+        "69a45d94f3cc129c780544e4589583ac1657ee51",
+        89852,
+        "8ae16c96eb1ce4531686822d4564c114cbd9182aa600cf5ab2b04cd1b99ba438",
+    ),
+    (
+        "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+        "100644",
+        "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+        769841,
+        "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99",
+    ),
+    (
+        "aws_c0_material_identity_runtime_validation_correction_implementation_path_manifest.json",
+        "100644",
+        "8773f3dadf6d29dd5b01e543f8a882770408bffc",
+        7284,
+        "347293a9e87a1ae008331f2500f01cc8cdce7d2f4052f00e5e4488ec86d1e10f",
+    ),
+    (
+        "aws_c0_material_identity_runtime_validation_correction_predecessor_manifest.json",
+        "100644",
+        "ca9c0e10f9a6df0203c1e7523ea0421fe3a4ef81",
+        5359,
+        "fc31a28167fd07972660ebed7389c28e3439077f8e451cf3c43930f921820513",
+    ),
+    (
+        "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+        "100644",
+        "c32596aba41eb620f42b8d329a6a804edeeb95ba",
+        205012,
+        "46b403eed1e660a32b24e2962b6e465679ca0c986d63bf7b5e3bd4793a18ff68",
+    ),
+)
 AWS_C0_LIVE_PREPARATION_CORRECTION_PHASES = (
     "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
@@ -1180,6 +1253,12 @@ AWS_C0_LIVE_PREPARATION_CORRECTION_PHASES = (
 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_PHASES = (
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+)
+AWS_C0_MATERIAL_IDENTITY_PHASES = (
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_PHASES = (
     "AWS_C0_AUTHORITY_ONLY",
@@ -1188,17 +1267,22 @@ AWS_C0_PHASES = (
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_IMPLEMENTATION_PHASES = (
     "AWS_C0_COMPLETED_IMPLEMENTATION",
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_LIVE_PREPARATION_PHASES = (
     "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_SCOPE = (
     AWS_C0_AUTHORITY_SCOPE | frozenset(AWS_C0_LIVE_PREPARATION_AUTHORITY_PATHS)
@@ -1229,6 +1313,22 @@ AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_ONLY_DESCENDANT_PATHS = (
 )
 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_DESCENDANT_PATHS = (
     AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_ONLY_DESCENDANT_PATHS
+    + AWS_C0_IMPLEMENTATION_PATHS
+)
+AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE = (
+    AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS)
+)
+AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE = (
+    AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_IMPLEMENTATION_PATHS)
+)
+AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS = (
+    AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_ONLY_DESCENDANT_PATHS
+    + AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+)
+AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS = (
+    AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS
     + AWS_C0_IMPLEMENTATION_PATHS
 )
 STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
@@ -1401,7 +1501,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "69dfa214ea604b5a495776fc0b3f5648ca93ece93ea8aefb749ccc6cf59979b1"
+TEST_SELF_SEAL = "d0711a22ae38d9bd7bc3d461e261e1e2c97c683aeb5cce2a77790b7f26c479d3"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -2041,6 +2141,24 @@ def _git(*args: str) -> bytes:
                 "merge-base",
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_NONACCEPTED_DIAGNOSTIC,
             )
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or args
+        == (
+            "merge-base",
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE,
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == ("merge-base", AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == ("merge-base", AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC)
             and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
         )
         or args
@@ -2786,6 +2904,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             self._audit_aws_c0_cost_runtime_retrieval_closure_authority(
                 current_scope
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            self._audit_aws_c0_material_identity_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -3028,6 +3148,30 @@ class ValidationReachabilityTests(unittest.TestCase):
             aws_c0_phase = (
                 "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION"
             )
+        elif changed_paths == AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = (
+                "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY"
+            )
+        elif changed_paths == AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = (
+                "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
+            )
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
@@ -3046,7 +3190,10 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "live-preparation correction-authority-only, or AWS-C0 "
                 "live-preparation corrected-implementation, AWS-C0 "
                 "cost-runtime-retrieval-closure correction-authority-only, or "
-                "AWS-C0 cost-runtime-retrieval-closure closed-implementation "
+                "AWS-C0 cost-runtime-retrieval-closure closed-implementation, "
+                "AWS-C0 material-identity-runtime-validation correction-"
+                "authority-only, or AWS-C0 material-identity-runtime-validation "
+                "closed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -3096,6 +3243,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             len(AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION_SCOPE),
             158,
         )
+        self.assertEqual(len(AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE), 150)
+        self.assertEqual(len(AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE), 164)
         self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
         self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
         self.assertEqual(len(AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS), 82)
@@ -3138,6 +3287,17 @@ class ValidationReachabilityTests(unittest.TestCase):
                 set(AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_DESCENDANT_PATHS)
             ),
             108,
+        )
+        self.assertEqual(
+            len(AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS), 100
+        )
+        self.assertEqual(
+            len(set(AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS)),
+            100,
+        )
+        self.assertEqual(len(AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS), 114)
+        self.assertEqual(
+            len(set(AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS)), 114
         )
         for path in changed_paths:
             self.assertIn(path, head_entries)
@@ -3211,6 +3371,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             AWS_C0_AUTHORITY_INTEGRATION,
             AWS_C0_LIVE_PREPARATION_AUTHORITY_INTEGRATION,
             AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_INTEGRATION,
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION,
         ):
             self.assertNotEqual(normalized_checkout, test_blob)
         else:
@@ -3333,6 +3494,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_implementation_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -3619,6 +3784,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_implementation_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -4080,6 +4249,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_implementation_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -4641,6 +4814,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -5101,6 +5278,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_implementation_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -6831,6 +7012,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                     for path in AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
                 }
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {path: "A" for path in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS}
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -7362,6 +7550,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                     for path in AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
                 }
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {path: "A" for path in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS}
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -7854,6 +8049,13 @@ class ValidationReachabilityTests(unittest.TestCase):
                     for path in AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
                 }
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {path: "A" for path in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS}
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -8021,6 +8223,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_implementation_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -8304,11 +8510,21 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_descendant_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_descendant_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_descendant_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
         expected_descendant_count = (
-            108
+            114
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
+            else 100
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY"
+            else 108
             if current_scope["aws_c0_phase"]
             == "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION"
             else 94
@@ -9547,6 +9763,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             diagnostic_current_scope,
             AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION_SCOPE,
         )
+        self.assertNotEqual(
+            diagnostic_current_scope,
+            AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE,
+        )
+        self.assertNotEqual(
+            diagnostic_current_scope,
+            AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE,
+        )
 
         post_integration_delta = frozenset(
             path
@@ -9566,6 +9790,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_post_integration_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -9593,6 +9821,12 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
             "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION": (
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_DESCENDANT_PATHS
+            ),
+            "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY": (
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS
+            ),
+            "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION": (
+                AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS
             ),
         }[current_scope["aws_c0_phase"]]
         self.assertEqual(descendant_delta, frozenset(expected_descendant_paths))
@@ -10091,6 +10325,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         ):
             expected_post_integration_delta.update(
                 AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -10596,6 +10834,402 @@ class ValidationReachabilityTests(unittest.TestCase):
             actual_head
             != AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_INTEGRATION
         ):
+            expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
+        if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+        self.assertEqual(
+            post_integration_delta, frozenset(expected_post_integration_delta)
+        )
+
+    def _audit_aws_c0_material_identity_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertIn(
+            current_scope["aws_c0_phase"], AWS_C0_MATERIAL_IDENTITY_PHASES
+        )
+        actual_head = current_scope["actual_head"]
+        for commit in (
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE,
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION,
+            AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC,
+        ):
+            self.assertEqual(
+                _git("rev-parse", "--verify", f"{commit}^{{commit}}")
+                .decode()
+                .strip(),
+                commit,
+            )
+        self.assertEqual(
+            _git(
+                "rev-parse", f"{AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT}^{{tree}}"
+            )
+            .decode()
+            .strip(),
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_TREE,
+        )
+        for commit in (
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE,
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION,
+        ):
+            self.assertEqual(
+                _git("rev-parse", f"{commit}^{{tree}}").decode().strip(),
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_TREE,
+            )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_TREE,
+        )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,),
+        )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (
+                AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE,
+            ),
+        )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,),
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+                AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base", AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION, actual_head
+            )
+            .decode()
+            .strip(),
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base", AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC, actual_head
+            )
+            .decode()
+            .strip(),
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+        )
+
+        base_entries = _tree_entries(AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE)
+        integration_entries = _tree_entries(
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION
+        )
+        current_entries = _tree_entries(actual_head)
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS)
+        )
+        self.assertEqual(candidate_entries, integration_entries)
+        candidate_archive = _archive_members(
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_CANDIDATE
+        )
+        integration_archive = _archive_members(
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION
+        )
+        current_archive = _archive_members(actual_head)
+        documents = {}
+        for expected in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ROWS:
+            path, mode, git_object, byte_count, raw_sha256 = expected
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            integration_row, integration_raw = _object_row(
+                path, integration_entries, integration_archive
+            )
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(
+                (
+                    candidate_row["path"],
+                    candidate_row["mode"],
+                    candidate_row["git_object"],
+                    candidate_row["byte_count"],
+                    candidate_row["raw_sha256"],
+                ),
+                expected,
+                path,
+            )
+            self.assertEqual(mode, "100644", path)
+            self.assertEqual(git_object, candidate_entries[path]["git_object"], path)
+            self.assertEqual(len(candidate_raw), byte_count, path)
+            self.assertEqual(_sha256(candidate_raw), raw_sha256, path)
+            self.assertEqual(candidate_row, integration_row, path)
+            self.assertEqual(candidate_row, current_row, path)
+            self.assertEqual(candidate_raw, integration_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n")
+                and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", candidate_raw, path)
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(candidate_raw, path)
+
+        contract = documents[
+            "aws_c0_material_identity_runtime_validation_correction_contract.json"
+        ]
+        schema = documents[
+            "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json"
+        ]
+        implementation = documents[
+            "aws_c0_material_identity_runtime_validation_correction_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "aws_c0_material_identity_runtime_validation_correction_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "aws_c0_material_identity_runtime_validation_correction_validation_contract.json"
+        ]
+        accepted_base = {
+            "commit": AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+            "tree": AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_TREE,
+        }
+        for document in (contract, implementation):
+            self.assertEqual(document["accepted_base"], accepted_base)
+        self.assertEqual(
+            {
+                key: predecessor["accepted_base"][key]
+                for key in ("commit", "tree")
+            },
+            accepted_base,
+        )
+        self.assertEqual(
+            validation["accepted_base_commit"],
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            validation["accepted_base_tree"],
+            AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(contract["candidate_file_count"], 6)
+        self.assertEqual(contract["candidate_mode"], "100644")
+        self.assertEqual(implementation["new_authority_path_count"], 6)
+        self.assertEqual(implementation["new_authority_operation"], "ADD")
+        self.assertEqual(implementation["new_authority_mode"], "100644")
+        self.assertEqual(
+            tuple(implementation["new_authority_paths_in_order"]),
+            AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS,
+        )
+        self.assertEqual(implementation["authority_path_count_after_integration"], 24)
+        self.assertEqual(
+            implementation["unknown_addition_modification_deletion_rename_or_symlink"],
+            "REFUSE",
+        )
+
+        reachability = implementation["future_reachability_correction"]
+        self.assertTrue(
+            reachability["authorized_only_after_exact_authority_acceptance_and_integration"]
+        )
+        self.assertEqual(reachability["operation"], "MODIFY")
+        self.assertEqual(reachability["path_count"], 1)
+        self.assertEqual(reachability["mode"], "100644")
+        self.assertEqual(reachability["unique_paths_added"], 0)
+        self.assertEqual(
+            tuple(reachability["paths_in_order"]),
+            (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,),
+        )
+        self.assertEqual(
+            tuple(reachability["new_phases_in_order"]),
+            AWS_C0_MATERIAL_IDENTITY_PHASES,
+        )
+        self.assertTrue(
+            reachability[
+                "must_preserve_all_existing_phases_cases_scopes_hashes_and_three_public_test_methods"
+            ]
+        )
+
+        prospective = implementation["future_corrected_implementation"]
+        self.assertTrue(
+            prospective[
+                "authorized_only_after_authority_and_reachability_acceptance_and_integration"
+            ]
+        )
+        self.assertEqual(prospective["operation"], "ADD")
+        self.assertEqual(prospective["path_count"], 14)
+        self.assertEqual(prospective["mode"], "100644")
+        self.assertEqual(tuple(prospective["paths_in_order"]), AWS_C0_IMPLEMENTATION_PATHS)
+        self.assertEqual(prospective["modified_path_count"], 0)
+        self.assertEqual(prospective["deleted_path_count"], 0)
+        self.assertEqual(prospective["renamed_path_count"], 0)
+        self.assertEqual(
+            prospective["ignored_cache_or_generated_repository_addition"], "REFUSE"
+        )
+
+        expected_scopes = {
+            "global_authority_only": 150,
+            "global_completed_implementation": 164,
+            "descendant_authority_only": 100,
+            "descendant_completed_implementation": 114,
+            "reachability_unique_paths_added": 0,
+            "implementation_paths_added": 14,
+        }
+        self.assertEqual(contract["future_reachability_scope_counts"], expected_scopes)
+        self.assertEqual(
+            validation["future_reachability_scope_counts"],
+            {
+                key: expected_scopes[key]
+                for key in (
+                    "global_authority_only",
+                    "global_completed_implementation",
+                    "descendant_authority_only",
+                    "descendant_completed_implementation",
+                    "reachability_unique_paths_added",
+                )
+            },
+        )
+        self.assertEqual(
+            {
+                key: predecessor["future_reachability_scope_counts"][key]
+                for key in expected_scopes
+            },
+            expected_scopes,
+        )
+        arithmetic = implementation["path_arithmetic"]
+        self.assertEqual(
+            (
+                arithmetic["base_global_unique_paths"],
+                arithmetic["authority_paths_added"],
+                arithmetic["global_authority_only"],
+                arithmetic["reachability_existing_paths_modified"],
+                arithmetic["reachability_unique_paths_added"],
+                arithmetic["implementation_paths_added"],
+                arithmetic["global_completed_implementation"],
+                arithmetic["base_descendant_unique_paths"],
+                arithmetic["descendant_authority_only"],
+                arithmetic["descendant_completed_implementation"],
+            ),
+            (144, 6, 150, 1, 0, 14, 164, 94, 100, 114),
+        )
+        self.assertEqual(
+            implementation["preserved_counts"],
+            {"pre_live_objects": 21, "evidence_roots": 12, "cost_dimensions": 22},
+        )
+        self.assertEqual(len(schema["oneOf"]), 17)
+        self.assertEqual(
+            (
+                validation["positive_case_count"],
+                validation["negative_case_count"],
+                validation["additive_case_count"],
+                validation["preserved_prior_case_count"],
+                validation["combined_case_count"],
+            ),
+            (20, 46, 66, 258, 324),
+        )
+        self.assertEqual(validation["lane_count"], 8)
+
+        diagnostic = predecessor["nonaccepted_diagnostic_design_source"]
+        self.assertEqual(
+            diagnostic["classification"],
+            "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE",
+        )
+        self.assertEqual(
+            diagnostic["commit"], AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC
+        )
+        self.assertEqual(diagnostic["tree"], AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_TREE)
+        self.assertEqual(
+            diagnostic["sole_parent"], AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT
+        )
+        self.assertFalse(diagnostic["is_accepted_predecessor"])
+        self.assertFalse(
+            diagnostic[
+                "may_be_base_parent_ancestor_merge_input_cherry_pick_or_authoritative_source"
+            ]
+        )
+        self.assertEqual(
+            predecessor["stage_boundary"],
+            {
+                "stage_e": "ACCEPTED_FINISHED_UNCHANGED",
+                "stage_f": "FROZEN_SEPARATE_AWS_LINUX_BINDING_SCIENTIFIC_PACKET_VALIDATION_AND_AUTHORIZATION_REQUIRED",
+                "scientific_execution_authorized": False,
+                "aws_execution_authorized": False,
+            },
+        )
+
+        valid_scopes = (
+            AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE,
+            AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE,
+        )
+        authority_path = AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS[0]
+        implementation_path = AWS_C0_IMPLEMENTATION_PATHS[0]
+        invalid_scopes = (
+            AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE
+            | {"tests/framework/second_reachability.py"},
+            (AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE - {authority_path})
+            | {"aws_c0_material_identity_runtime_validation_correction_*"},
+            (AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE - {authority_path})
+            | {"aws_c0_material_identity_runtime_validation_correction/"},
+            AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE
+            | {"aws/c0/fifteenth-path.txt"},
+            (AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE
+            - {implementation_path})
+            | {"aws/c0/substituted-path.txt"},
+        )
+        for invalid_scope in invalid_scopes:
+            self.assertNotIn(frozenset(invalid_scope), valid_scopes)
+
+        post_integration_delta = frozenset(
+            path
+            for path in set(integration_entries) | set(current_entries)
+            if integration_entries.get(path) != current_entries.get(path)
+        )
+        expected_post_integration_delta = set()
+        if actual_head != AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION:
             expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
