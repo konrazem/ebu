@@ -1,0 +1,3833 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+  "title": "AWS-C0 audit/static publication handoff correction evidence",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/authority_audit_v3"
+    },
+    {
+      "$ref": "#/$defs/authority_audit_v3_input_observation"
+    },
+    {
+      "$ref": "#/$defs/provisional_conditional_put_observation"
+    },
+    {
+      "$ref": "#/$defs/authenticated_exact_version_readback_observation"
+    },
+    {
+      "$ref": "#/$defs/static_validation_v3"
+    },
+    {
+      "$ref": "#/$defs/ssm_dispatch_request_v2"
+    },
+    {
+      "$ref": "#/$defs/ssm_completion_projection"
+    },
+    {
+      "$ref": "#/$defs/source_sidecar_v2"
+    },
+    {
+      "$ref": "#/$defs/publication_upgrade_binding"
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "git_blob": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "signed_int64": {
+      "type": "integer",
+      "minimum": -9223372036854775808,
+      "maximum": 9223372036854775807
+    },
+    "nonnegative_int64": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "positive_int64": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    },
+    "positive_integer": {
+      "$ref": "#/$defs/positive_int64"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{4})-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+    },
+    "canonical_json_base64": {
+      "type": "string",
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "kind",
+        "sha256",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "value": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "zero_science_counters": {
+      "type": "object",
+      "required": [
+        "project_runner_import_count",
+        "ebu_framework_import_count",
+        "stage_e_harness_import_count",
+        "registered_configuration_count",
+        "simulation_or_gate_count",
+        "model_state_advance_count",
+        "trajectory_count",
+        "scientific_rng_draw_count",
+        "outcome_inspection_count",
+        "scientific_output_count"
+      ],
+      "properties": {
+        "project_runner_import_count": {
+          "const": 0
+        },
+        "ebu_framework_import_count": {
+          "const": 0
+        },
+        "stage_e_harness_import_count": {
+          "const": 0
+        },
+        "registered_configuration_count": {
+          "const": 0
+        },
+        "simulation_or_gate_count": {
+          "const": 0
+        },
+        "model_state_advance_count": {
+          "const": 0
+        },
+        "trajectory_count": {
+          "const": 0
+        },
+        "scientific_rng_draw_count": {
+          "const": 0
+        },
+        "outcome_inspection_count": {
+          "const": 0
+        },
+        "scientific_output_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "common": {
+      "type": "object",
+      "required": [
+        "schema",
+        "authority_id",
+        "correction_authority_id",
+        "closure_correction_authority_id",
+        "material_correction_authority_id",
+        "audit_static_handoff_authority_id",
+        "record_class",
+        "scientific_execution_authorized",
+        "stage_f_execution_authorized",
+        "stage_f_readiness_claimed",
+        "zero_science_counters",
+        "observed_utc"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority_id": {
+          "const": "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1"
+        },
+        "correction_authority_id": {
+          "const": "EBU-AWS-C0-LIVE-PREPARATION-CHOREOGRAPHY-CORRECTION-AUTHORITY-v1"
+        },
+        "closure_correction_authority_id": {
+          "const": "EBU-AWS-C0-COST-RUNTIME-RETRIEVAL-CLOSURE-CORRECTION-AUTHORITY-v1"
+        },
+        "material_correction_authority_id": {
+          "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+        },
+        "audit_static_handoff_authority_id": {
+          "const": "EBU-AWS-C0-AUDIT-STATIC-PUBLICATION-HANDOFF-CORRECTION-AUTHORITY-v1"
+        },
+        "record_class": {
+          "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+        },
+        "scientific_execution_authorized": {
+          "const": false
+        },
+        "stage_f_execution_authorized": {
+          "const": false
+        },
+        "stage_f_readiness_claimed": {
+          "const": false
+        },
+        "zero_science_counters": {
+          "$ref": "#/$defs/zero_science_counters"
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "root_common": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "record_sha256"
+          ],
+          "properties": {
+            "record_sha256": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        }
+      ]
+    },
+    "git_coordinate": {
+      "type": "object",
+      "required": [
+        "commit",
+        "tree",
+        "parents"
+      ],
+      "properties": {
+        "commit": {
+          "$ref": "#/$defs/git_blob"
+        },
+        "tree": {
+          "$ref": "#/$defs/git_blob"
+        },
+        "parents": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/git_blob"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "path_row": {
+      "type": "object",
+      "required": [
+        "path",
+        "mode",
+        "git_blob",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "const": "100644"
+        },
+        "git_blob": {
+          "$ref": "#/$defs/git_blob"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "prior_authority_audit_schema_binding": {
+      "const": {
+        "path": "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+        "mode": "100644",
+        "git_blob": "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+        "byte_count": 769841,
+        "sha256": "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99",
+        "json_pointer": "#/$defs/authority_audit_v2"
+      }
+    },
+    "prior_material_authority_audit_v2_input_observation": {
+      "type": "object",
+      "required": [
+        "schema",
+        "prior_schema_binding",
+        "source_head",
+        "audit_record_identity",
+        "audit_record_canonical_json_base64",
+        "audit_record_byte_count",
+        "audit_record_sha256",
+        "decoded_schema",
+        "decoded_record_sha256",
+        "decoded_observed_utc",
+        "prior_schema_validation_disposition",
+        "canonical_byte_validation_disposition",
+        "reconstruction_disposition",
+        "observation_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_material_runtime_authority_audit_input_observation/v1"
+        },
+        "prior_schema_binding": {
+          "$ref": "#/$defs/prior_authority_audit_schema_binding"
+        },
+        "source_head": {
+          "$ref": "#/$defs/git_coordinate"
+        },
+        "audit_record_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_material_runtime_authority_audit/v2"
+                }
+              }
+            }
+          ]
+        },
+        "audit_record_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "audit_record_byte_count": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "audit_record_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "decoded_schema": {
+          "const": "aws_c0_material_runtime_authority_audit/v2"
+        },
+        "decoded_record_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "decoded_observed_utc": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "prior_schema_validation_disposition": {
+          "const": "EXACT_ACCEPTED_SCHEMA_DEFINITION_PASS"
+        },
+        "canonical_byte_validation_disposition": {
+          "const": "UTF8_NFC_COMPACT_SORTED_NO_FINAL_LF_PASS"
+        },
+        "reconstruction_disposition": {
+          "const": "SOURCE_HEAD_RECONSTRUCTION_BYTE_EQUAL_PASS"
+        },
+        "observation_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "handoff_authority_path_rows": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "prefixItems": [
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md" } } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "aws_c0_audit_static_publication_handoff_correction_contract.json" } } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json" } } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json" } } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json" } } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json" } } }
+          ]
+        }
+      ],
+      "items": false
+    },
+    "handoff_reachability_path_rows": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "prefixItems": [
+        {
+          "allOf": [
+            { "$ref": "#/$defs/path_row" },
+            { "properties": { "path": { "const": "tests/framework/test_validation_reachability.py" } } }
+          ]
+        }
+      ],
+      "items": false
+    },
+    "authority_audit_v3": {
+      "allOf": [
+        { "$ref": "#/$defs/root_common" },
+        {
+          "type": "object",
+          "required": [
+            "schema",
+            "base",
+            "prior_material_audit_identity",
+            "prior_material_audit_input_observation",
+            "prior_material_audit_publication_count",
+            "handoff_authority_candidate",
+            "handoff_authority_integration",
+            "handoff_reachability_candidate",
+            "handoff_reachability_integration",
+            "final_implementation_candidate",
+            "final_implementation_integration",
+            "handoff_authority_candidate_paths",
+            "handoff_authority_integration_paths",
+            "handoff_reachability_candidate_paths",
+            "handoff_reachability_integration_paths",
+            "final_implementation_candidate_paths",
+            "final_implementation_integration_paths",
+            "prior_embedding_disposition",
+            "ancestry_disposition",
+            "path_disposition",
+            "scientific_execution_count"
+          ],
+          "properties": {
+            "schema": { "const": "aws_c0_audit_static_handoff_authority_audit/v3" },
+            "base": {
+              "const": {
+                "commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+                "tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827"
+              }
+            },
+            "prior_material_audit_identity": {
+              "allOf": [
+                { "$ref": "#/$defs/identity" },
+                { "properties": { "kind": { "const": "aws_c0_material_runtime_authority_audit/v2" } } }
+              ]
+            },
+            "prior_material_audit_input_observation": {
+              "$ref": "#/$defs/prior_material_authority_audit_v2_input_observation"
+            },
+            "prior_material_audit_publication_count": { "const": 0 },
+            "handoff_authority_candidate": { "$ref": "#/$defs/git_coordinate" },
+            "handoff_authority_integration": { "$ref": "#/$defs/git_coordinate" },
+            "handoff_reachability_candidate": { "$ref": "#/$defs/git_coordinate" },
+            "handoff_reachability_integration": { "$ref": "#/$defs/git_coordinate" },
+            "final_implementation_candidate": { "$ref": "#/$defs/git_coordinate" },
+            "final_implementation_integration": { "$ref": "#/$defs/git_coordinate" },
+            "handoff_authority_candidate_paths": { "$ref": "#/$defs/handoff_authority_path_rows" },
+            "handoff_authority_integration_paths": { "$ref": "#/$defs/handoff_authority_path_rows" },
+            "handoff_reachability_candidate_paths": { "$ref": "#/$defs/handoff_reachability_path_rows" },
+            "handoff_reachability_integration_paths": { "$ref": "#/$defs/handoff_reachability_path_rows" },
+            "final_implementation_candidate_paths": {
+              "$ref": "#/$defs/static_validation_v3/allOf/1/properties/implementation_paths"
+            },
+            "final_implementation_integration_paths": {
+              "$ref": "#/$defs/static_validation_v3/allOf/1/properties/implementation_paths"
+            },
+            "prior_embedding_disposition": {
+              "const": "PRIOR_V2_EXACT_CANONICAL_BYTES_SCHEMA_DIGEST_AND_IDENTITY_PASS_NOT_SEPARATELY_PUBLISHED"
+            },
+            "ancestry_disposition": {
+              "const": "BASE_THEN_EXACT_AUTHORITY_REACHABILITY_IMPLEMENTATION_CANDIDATE_AND_INTEGRATION_PARENT_CHAIN_PASS"
+            },
+            "path_disposition": {
+              "const": "EXACT_6_AUTHORITY_1_REACHABILITY_14_IMPLEMENTATION_PATHS_MODES_HASHES_AND_TREES_PASS"
+            },
+            "scientific_execution_count": { "const": 0 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "authority_audit_v3_input_observation": {
+      "type": "object",
+      "required": [
+        "schema",
+        "source_head",
+        "audit_record_identity",
+        "audit_record_canonical_json_base64",
+        "audit_record_byte_count",
+        "audit_record_sha256",
+        "decoded_schema",
+        "decoded_record_sha256",
+        "decoded_observed_utc",
+        "audit_v3_schema_validation_disposition",
+        "canonical_byte_validation_disposition",
+        "source_reconstruction_disposition",
+        "observation_sha256"
+      ],
+      "properties": {
+        "schema": { "const": "aws_c0_audit_static_handoff_authority_audit_input_observation/v1" },
+        "source_head": { "$ref": "#/$defs/git_coordinate" },
+        "audit_record_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_c0_audit_static_handoff_authority_audit/v3" } } }
+          ]
+        },
+        "audit_record_canonical_json_base64": { "$ref": "#/$defs/canonical_json_base64" },
+        "audit_record_byte_count": { "$ref": "#/$defs/positive_int64" },
+        "audit_record_sha256": { "$ref": "#/$defs/sha256" },
+        "decoded_schema": { "const": "aws_c0_audit_static_handoff_authority_audit/v3" },
+        "decoded_record_sha256": { "$ref": "#/$defs/sha256" },
+        "decoded_observed_utc": { "$ref": "#/$defs/timestamp" },
+        "audit_v3_schema_validation_disposition": { "const": "EXACT_HANDOFF_AUTHORITY_AUDIT_V3_SCHEMA_PASS" },
+        "canonical_byte_validation_disposition": { "const": "UTF8_NFC_COMPACT_SORTED_NO_FINAL_LF_PASS" },
+        "source_reconstruction_disposition": { "const": "FINAL_INTEGRATION_SOURCE_RECONSTRUCTION_BYTE_EQUAL_PASS" },
+        "observation_sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "conditional_put_request": {
+      "type": "object",
+      "required": [
+        "schema",
+        "service",
+        "action",
+        "region",
+        "bucket_identity",
+        "bucket_name",
+        "host",
+        "key",
+        "if_none_match",
+        "content_length",
+        "content_sha256",
+        "checksum_algorithm",
+        "checksum_sha256_base64",
+        "caller_session_identity",
+        "session_policy_identity",
+        "signed_headers",
+        "sigv4_authentication"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_sigv4_s3_conditional_put_request/v1"
+        },
+        "service": {
+          "const": "s3"
+        },
+        "action": {
+          "const": "PutObject"
+        },
+        "region": {
+          "const": "us-east-1"
+        },
+        "bucket_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_s3_versioned_bucket/v1"
+                }
+              }
+            }
+          ]
+        },
+        "bucket_name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]\\.s3\\.us-east-1\\.amazonaws\\.com$"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^rehearsal/aws-c0/prelive/(authority-audit|static-validation)/[0-9a-f]{64}\\.json$"
+        },
+        "if_none_match": {
+          "const": "*"
+        },
+        "content_length": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checksum_algorithm": {
+          "const": "SHA256"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "caller_session_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_role_session/v1"
+                }
+              }
+            }
+          ]
+        },
+        "session_policy_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_session_policy/v1"
+                }
+              }
+            }
+          ]
+        },
+        "signed_headers": {
+          "const": [
+            "content-length",
+            "host",
+            "if-none-match",
+            "x-amz-checksum-sha256",
+            "x-amz-content-sha256",
+            "x-amz-date",
+            "x-amz-security-token"
+          ]
+        },
+        "sigv4_authentication": {
+          "allOf": [
+            { "$ref": "#/$defs/sigv4_authentication_evidence" },
+            {
+              "properties": {
+                "signed_headers": {
+                  "const": ["content-length", "host", "if-none-match", "x-amz-checksum-sha256", "x-amz-content-sha256", "x-amz-date", "x-amz-security-token"]
+                },
+                "canonical_nonsecret_headers": {
+                  "properties": {
+                    "if-none-match": { "const": "*" },
+                    "content-length": { "type": "string" },
+                    "x-amz-checksum-sha256": { "type": "string" },
+                    "x-amz-checksum-mode": { "const": null }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "conditional_put_response": {
+      "type": "object",
+      "required": [
+        "schema",
+        "service",
+        "action",
+        "http_status",
+        "request_id",
+        "version_id",
+        "checksum_sha256_base64",
+        "etag",
+        "delete_marker",
+        "response_headers",
+        "tls_authenticated_response_identity",
+        "tls_authenticated_response"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_s3_conditional_put_response/v1"
+        },
+        "service": {
+          "const": "s3"
+        },
+        "action": {
+          "const": "PutObject"
+        },
+        "http_status": {
+          "const": 200
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "version_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._+~=/:-]{1,1024}$"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "etag": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 256
+        },
+        "delete_marker": {
+          "const": false
+        },
+        "response_headers": {
+          "type": "object",
+          "required": [
+            "x-amz-version-id",
+            "x-amz-checksum-sha256",
+            "x-amz-request-id"
+          ],
+          "properties": {
+            "x-amz-version-id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "x-amz-checksum-sha256": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]{43}=$"
+            },
+            "x-amz-request-id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "tls_authenticated_response_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_c0_tls_authenticated_response/v1" } } }
+          ]
+        },
+        "tls_authenticated_response": {
+          "$ref": "#/$defs/tls_authenticated_response_observation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provisional_conditional_put_observation": {
+      "type": "object",
+      "required": [
+        "schema",
+        "record_identity",
+        "approved_preparation_authorization_identity",
+        "approved_caller_session_identity",
+        "approved_session_policy_identity",
+        "bucket_identity",
+        "key",
+        "version_id",
+        "bytes",
+        "sha256",
+        "checksum_sha256_base64",
+        "request_identity",
+        "request_preimage",
+        "request_canonical_json_base64",
+        "request_sha256",
+        "response_identity",
+        "response_transcript",
+        "response_canonical_json_base64",
+        "response_sha256",
+        "requested_utc",
+        "completed_utc",
+        "conditional_create_disposition",
+        "structural_validation_disposition",
+        "non_authentication_notice",
+        "observation_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_provisional_conditional_put_observation/v1"
+        },
+        "record_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "approved_preparation_authorization_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_preparation_authorization/v2"
+                }
+              }
+            }
+          ]
+        },
+        "approved_caller_session_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_role_session/v1"
+                }
+              }
+            }
+          ]
+        },
+        "approved_session_policy_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_session_policy/v1"
+                }
+              }
+            }
+          ]
+        },
+        "bucket_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_s3_versioned_bucket/v1"
+                }
+              }
+            }
+          ]
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^rehearsal/aws-c0/prelive/(authority-audit|static-validation)/[0-9a-f]{64}\\.json$"
+        },
+        "version_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._+~=/:-]{1,1024}$"
+        },
+        "bytes": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "request_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_sigv4_s3_conditional_put_request/v1"
+                }
+              }
+            }
+          ]
+        },
+        "request_preimage": {
+          "$ref": "#/$defs/conditional_put_request"
+        },
+        "request_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "response_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_s3_conditional_put_response/v1"
+                }
+              }
+            }
+          ]
+        },
+        "response_transcript": {
+          "$ref": "#/$defs/conditional_put_response"
+        },
+        "response_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "response_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "requested_utc": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "completed_utc": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "conditional_create_disposition": {
+          "const": "IF_NONE_MATCH_STAR_CREATED_NEW_VERSION"
+        },
+        "structural_validation_disposition": {
+          "const": "PASS_PROVISIONAL_COORDINATE_ONLY"
+        },
+        "non_authentication_notice": {
+          "const": "NOT_CRYPTOGRAPHICALLY_AUTHENTICATED_OR_NONFABRICABLE"
+        },
+        "observation_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authority_audit_provisional_put_observation": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/provisional_conditional_put_observation"
+        },
+        {
+          "properties": {
+            "record_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_audit_static_handoff_authority_audit/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "key": {
+              "type": "string",
+              "pattern": "^rehearsal/aws-c0/prelive/authority-audit/[0-9a-f]{64}\\.json$"
+            }
+          }
+        }
+      ]
+    },
+    "static_validation_provisional_put_observation": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/provisional_conditional_put_observation"
+        },
+        {
+          "properties": {
+            "record_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_material_runtime_static_validation/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "key": {
+              "type": "string",
+              "pattern": "^rehearsal/aws-c0/prelive/static-validation/[0-9a-f]{64}\\.json$"
+            }
+          }
+        }
+      ]
+    },
+    "canonical_nonsecret_s3_headers": {
+      "type": "object",
+      "required": [
+        "host", "x-amz-date", "x-amz-content-sha256", "if-none-match",
+        "content-length", "x-amz-checksum-sha256", "x-amz-checksum-mode"
+      ],
+      "properties": {
+        "host": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]\\.s3\\.us-east-1\\.amazonaws\\.com$" },
+        "x-amz-date": { "type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z$" },
+        "x-amz-content-sha256": { "$ref": "#/$defs/sha256" },
+        "if-none-match": { "enum": ["*", null] },
+        "content-length": { "type": ["string", "null"], "pattern": "^[1-9][0-9]{0,18}$" },
+        "x-amz-checksum-sha256": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9+/]{43}=$" },
+        "x-amz-checksum-mode": { "enum": ["ENABLED", null] }
+      },
+      "additionalProperties": false
+    },
+    "sigv4_authentication_evidence": {
+      "type": "object",
+      "required": [
+        "schema",
+        "algorithm",
+        "credential_scope",
+        "signed_headers",
+        "canonical_nonsecret_headers",
+        "security_token_sha256",
+        "security_token_byte_count",
+        "approved_role_session_identity",
+        "session_policy_identity",
+        "authorization_signature",
+        "x_amz_date",
+        "canonical_request_sha256",
+        "string_to_sign_sha256",
+        "payload_sha256",
+        "credential_source_identity",
+        "request_id",
+        "raw_session_token_persisted",
+        "raw_access_secret_persisted",
+        "runtime_recomputation_disposition",
+        "credential_zeroization_disposition",
+        "offline_verification_disposition"
+      ],
+      "properties": {
+        "schema": { "const": "aws_c0_sigv4_authentication_evidence/v1" },
+        "algorithm": { "const": "AWS4-HMAC-SHA256" },
+        "credential_scope": { "type": "string", "pattern": "^[0-9]{8}/us-east-1/s3/aws4_request$" },
+        "signed_headers": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+        },
+        "canonical_nonsecret_headers": { "$ref": "#/$defs/canonical_nonsecret_s3_headers" },
+        "security_token_sha256": { "$ref": "#/$defs/sha256" },
+        "security_token_byte_count": { "$ref": "#/$defs/positive_int64" },
+        "approved_role_session_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_iam_role_session/v1" } } }
+          ]
+        },
+        "session_policy_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_iam_session_policy/v1" } } }
+          ]
+        },
+        "authorization_signature": { "$ref": "#/$defs/sha256" },
+        "x_amz_date": { "type": "string", "pattern": "^[0-9]{8}T[0-9]{6}Z$" },
+        "canonical_request_sha256": { "$ref": "#/$defs/sha256" },
+        "string_to_sign_sha256": { "$ref": "#/$defs/sha256" },
+        "payload_sha256": { "$ref": "#/$defs/sha256" },
+        "credential_source_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_credential_source/v1" } } }
+          ]
+        },
+        "request_id": { "type": "string", "minLength": 1 },
+        "raw_session_token_persisted": { "const": false },
+        "raw_access_secret_persisted": { "const": false },
+        "runtime_recomputation_disposition": { "const": "RECOMPUTED_WHILE_EPHEMERAL_CREDENTIAL_IN_MEMORY_PASS" },
+        "credential_zeroization_disposition": { "const": "EPHEMERAL_TOKEN_AND_SECRET_ZEROIZED_AFTER_REQUEST_ATTESTATION" },
+        "offline_verification_disposition": { "const": "VALIDATE_CONSTRAINED_RUNTIME_ATTESTATION_AND_AUTHENTICATED_EXACT_READ_HISTORY_NOT_SECRET_SIGNATURE_REDERIVATION" }
+      },
+      "additionalProperties": false
+    },
+    "tls_authenticated_response_observation": {
+      "type": "object",
+      "required": [
+        "schema",
+        "server_name",
+        "tls_protocol",
+        "peer_leaf_certificate_sha256",
+        "hostname_verification",
+        "certificate_chain_verification",
+        "response_headers_sha256",
+        "request_id",
+        "observed_utc",
+        "observation_sha256"
+      ],
+      "properties": {
+        "schema": { "const": "aws_c0_tls_authenticated_response/v1" },
+        "server_name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]\\.s3\\.us-east-1\\.amazonaws\\.com$" },
+        "tls_protocol": { "enum": ["TLSv1.2", "TLSv1.3"] },
+        "peer_leaf_certificate_sha256": { "$ref": "#/$defs/sha256" },
+        "hostname_verification": { "const": "PASS" },
+        "certificate_chain_verification": { "const": "PASS" },
+        "response_headers_sha256": { "$ref": "#/$defs/sha256" },
+        "request_id": { "type": "string", "minLength": 1 },
+        "observed_utc": { "$ref": "#/$defs/timestamp" },
+        "observation_sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "exact_version_get_request": {
+      "type": "object",
+      "required": [
+        "schema",
+        "service",
+        "action",
+        "region",
+        "bucket_identity",
+        "bucket_name",
+        "host",
+        "key",
+        "version_id",
+        "checksum_mode",
+        "caller_session_identity",
+        "session_policy_identity",
+        "signed_headers",
+        "sigv4_authentication"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_sigv4_s3_get_object_exact_version_request/v1"
+        },
+        "service": {
+          "const": "s3"
+        },
+        "action": {
+          "const": "GetObject"
+        },
+        "region": {
+          "const": "us-east-1"
+        },
+        "bucket_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_s3_versioned_bucket/v1"
+                }
+              }
+            }
+          ]
+        },
+        "bucket_name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]\\.s3\\.us-east-1\\.amazonaws\\.com$"
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^rehearsal/aws-c0/prelive/(authority-audit|static-validation)/[0-9a-f]{64}\\.json$"
+        },
+        "version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "checksum_mode": {
+          "const": "ENABLED"
+        },
+        "caller_session_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_role_session/v1"
+                }
+              }
+            }
+          ]
+        },
+        "session_policy_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_session_policy/v1"
+                }
+              }
+            }
+          ]
+        },
+        "signed_headers": {
+          "const": [
+            "host",
+            "x-amz-checksum-mode",
+            "x-amz-content-sha256",
+            "x-amz-date",
+            "x-amz-security-token"
+          ]
+        },
+        "sigv4_authentication": {
+          "allOf": [
+            { "$ref": "#/$defs/sigv4_authentication_evidence" },
+            {
+              "properties": {
+                "signed_headers": {
+                  "const": ["host", "x-amz-checksum-mode", "x-amz-content-sha256", "x-amz-date", "x-amz-security-token"]
+                },
+                "canonical_nonsecret_headers": {
+                  "properties": {
+                    "if-none-match": { "const": null },
+                    "content-length": { "const": null },
+                    "x-amz-checksum-sha256": { "const": null },
+                    "x-amz-checksum-mode": { "const": "ENABLED" }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "exact_version_get_response": {
+      "type": "object",
+      "required": [
+        "schema",
+        "service",
+        "action",
+        "http_status",
+        "request_id",
+        "key",
+        "version_id",
+        "bytes",
+        "sha256",
+        "checksum_sha256_base64",
+        "delete_marker",
+        "tls_authenticated_response_identity",
+        "tls_authenticated_response"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_s3_get_object_exact_version_response/v1"
+        },
+        "service": {
+          "const": "s3"
+        },
+        "action": {
+          "const": "GetObject"
+        },
+        "http_status": {
+          "const": 200
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bytes": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "delete_marker": {
+          "const": false
+        },
+        "tls_authenticated_response_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_c0_tls_authenticated_response/v1" } } }
+          ]
+        },
+        "tls_authenticated_response": {
+          "$ref": "#/$defs/tls_authenticated_response_observation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "version_history_entry": {
+      "type": "object",
+      "required": [
+        "key",
+        "version_id",
+        "is_latest",
+        "etag",
+        "size",
+        "last_modified_utc"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_latest": {
+          "type": "boolean"
+        },
+        "etag": {
+          "type": "string",
+          "minLength": 2
+        },
+        "size": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "last_modified_utc": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "delete_marker_entry": {
+      "type": "object",
+      "required": [
+        "key",
+        "version_id",
+        "is_latest",
+        "last_modified_utc"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_latest": {
+          "type": "boolean"
+        },
+        "last_modified_utc": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "list_object_versions_request": {
+      "type": "object",
+      "required": [
+        "schema",
+        "service",
+        "action",
+        "region",
+        "bucket_identity",
+        "bucket_name",
+        "host",
+        "prefix",
+        "key_marker",
+        "version_id_marker",
+        "max_keys",
+        "caller_session_identity",
+        "session_policy_identity",
+        "signed_headers",
+        "sigv4_authentication"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_sigv4_s3_list_object_versions_request/v1"
+        },
+        "service": {
+          "const": "s3"
+        },
+        "action": {
+          "const": "ListObjectVersions"
+        },
+        "region": {
+          "const": "us-east-1"
+        },
+        "bucket_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_s3_versioned_bucket/v1"
+                }
+              }
+            }
+          ]
+        },
+        "bucket_name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
+        },
+        "host": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]\\.s3\\.us-east-1\\.amazonaws\\.com$"
+        },
+        "prefix": {
+          "type": "string",
+          "pattern": "^rehearsal/aws-c0/prelive/(authority-audit|static-validation)/[0-9a-f]{64}\\.json$"
+        },
+        "key_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version_id_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "max_keys": {
+          "const": 1000
+        },
+        "caller_session_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_role_session/v1"
+                }
+              }
+            }
+          ]
+        },
+        "session_policy_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_session_policy/v1"
+                }
+              }
+            }
+          ]
+        },
+        "signed_headers": {
+          "const": [
+            "host",
+            "x-amz-content-sha256",
+            "x-amz-date",
+            "x-amz-security-token"
+          ]
+        },
+        "sigv4_authentication": {
+          "allOf": [
+            { "$ref": "#/$defs/sigv4_authentication_evidence" },
+            {
+              "properties": {
+                "signed_headers": {
+                  "const": ["host", "x-amz-content-sha256", "x-amz-date", "x-amz-security-token"]
+                },
+                "canonical_nonsecret_headers": {
+                  "properties": {
+                    "if-none-match": { "const": null },
+                    "content-length": { "const": null },
+                    "x-amz-checksum-sha256": { "const": null },
+                    "x-amz-checksum-mode": { "const": null }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "list_object_versions_response": {
+      "type": "object",
+      "required": [
+        "schema",
+        "service",
+        "action",
+        "http_status",
+        "request_id",
+        "is_truncated",
+        "next_key_marker",
+        "next_version_id_marker",
+        "versions",
+        "delete_markers",
+        "tls_authenticated_response_identity",
+        "tls_authenticated_response"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_s3_list_object_versions_response/v1"
+        },
+        "service": {
+          "const": "s3"
+        },
+        "action": {
+          "const": "ListObjectVersions"
+        },
+        "http_status": {
+          "const": 200
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_truncated": {
+          "type": "boolean"
+        },
+        "next_key_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "next_version_id_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "versions": {
+          "type": "array",
+          "maxItems": 1000,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/version_history_entry"
+          }
+        },
+        "delete_markers": {
+          "type": "array",
+          "maxItems": 1000,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/delete_marker_entry"
+          }
+        },
+        "tls_authenticated_response_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_c0_tls_authenticated_response/v1" } } }
+          ]
+        },
+        "tls_authenticated_response": {
+          "$ref": "#/$defs/tls_authenticated_response_observation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "version_history_page": {
+      "type": "object",
+      "required": [
+        "page_index",
+        "request_key_marker",
+        "request_version_id_marker",
+        "response_next_key_marker",
+        "response_next_version_id_marker",
+        "is_truncated",
+        "version_count",
+        "delete_marker_count",
+        "matching_version_count",
+        "request_identity",
+        "response_identity",
+        "request_preimage",
+        "response_transcript",
+        "request_canonical_json_base64",
+        "request_sha256",
+        "response_canonical_json_base64",
+        "response_sha256",
+        "caller_session_identity",
+        "requested_utc",
+        "completed_utc",
+        "http_status",
+        "authentication_disposition"
+      ],
+      "properties": {
+        "page_index": {
+          "$ref": "#/$defs/nonnegative_int64"
+        },
+        "request_key_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "request_version_id_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "response_next_key_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "response_next_version_id_marker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_truncated": {
+          "type": "boolean"
+        },
+        "version_count": {
+          "$ref": "#/$defs/nonnegative_int64"
+        },
+        "delete_marker_count": {
+          "$ref": "#/$defs/nonnegative_int64"
+        },
+        "matching_version_count": {
+          "$ref": "#/$defs/nonnegative_int64"
+        },
+        "request_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_sigv4_s3_list_object_versions_request/v1"
+                }
+              }
+            }
+          ]
+        },
+        "response_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_s3_list_object_versions_response/v1"
+                }
+              }
+            }
+          ]
+        },
+        "request_preimage": {
+          "$ref": "#/$defs/list_object_versions_request"
+        },
+        "response_transcript": {
+          "$ref": "#/$defs/list_object_versions_response"
+        },
+        "request_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "response_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "response_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "caller_session_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_role_session/v1"
+                }
+              }
+            }
+          ]
+        },
+        "requested_utc": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "completed_utc": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "http_status": {
+          "const": 200
+        },
+        "authentication_disposition": {
+          "const": "INDEPENDENT_SIGV4_LIST_OBJECT_VERSIONS_PAGE_PASS"
+        }
+      },
+      "additionalProperties": false
+    },
+    "authenticated_exact_version_readback_observation": {
+      "type": "object",
+      "required": [
+        "schema",
+        "record_identity",
+        "provisional_observation_identity",
+        "bucket_identity",
+        "key",
+        "version_id",
+        "bytes",
+        "sha256",
+        "checksum_sha256_base64",
+        "get_request_identity",
+        "get_response_identity",
+        "get_request",
+        "get_response",
+        "get_request_canonical_json_base64",
+        "get_response_canonical_json_base64",
+        "complete_record_canonical_json_base64",
+        "version_history_pages",
+        "page_count",
+        "matching_version_count",
+        "matching_record_sha256_count",
+        "delete_marker_count",
+        "latest_lookup_count",
+        "approved_preparation_authorization_identity",
+        "approved_preparation_role_identity",
+        "approved_session_policy_identity",
+        "approved_credential_source_identity",
+        "independent_caller_session_identity",
+        "session_not_before_utc",
+        "session_expires_utc",
+        "accounting_not_before_utc",
+        "accounting_not_after_utc",
+        "requested_utc",
+        "completed_utc",
+        "time_ordering_disposition",
+        "sigv4_scope_disposition",
+        "tls_authentication_disposition",
+        "authenticated_request_response_disposition",
+        "complete_byte_disposition",
+        "unique_version_disposition",
+        "observation_sha256"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_authenticated_exact_version_readback_observation/v1"
+        },
+        "record_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "provisional_observation_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_provisional_conditional_put_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "bucket_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_s3_versioned_bucket/v1"
+                }
+              }
+            }
+          ]
+        },
+        "key": {
+          "type": "string",
+          "pattern": "^rehearsal/aws-c0/prelive/(authority-audit|static-validation)/[0-9a-f]{64}\\.json$"
+        },
+        "version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bytes": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "get_request_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_sigv4_s3_get_object_exact_version_request/v1"
+                }
+              }
+            }
+          ]
+        },
+        "get_response_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_s3_get_object_exact_version_response/v1"
+                }
+              }
+            }
+          ]
+        },
+        "get_request": {
+          "$ref": "#/$defs/exact_version_get_request"
+        },
+        "get_response": {
+          "$ref": "#/$defs/exact_version_get_response"
+        },
+        "get_request_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "get_response_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "complete_record_canonical_json_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "version_history_pages": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1024,
+          "items": {
+            "$ref": "#/$defs/version_history_page"
+          }
+        },
+        "page_count": {
+          "$ref": "#/$defs/positive_int64"
+        },
+        "matching_version_count": {
+          "const": 1
+        },
+        "matching_record_sha256_count": {
+          "const": 1
+        },
+        "delete_marker_count": {
+          "const": 0
+        },
+        "latest_lookup_count": {
+          "const": 0
+        },
+        "approved_preparation_authorization_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_preparation_authorization/v2"
+                }
+              }
+            }
+          ]
+        },
+        "approved_preparation_role_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_iam_role/v1" } } }
+          ]
+        },
+        "approved_session_policy_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_iam_session_policy/v1" } } }
+          ]
+        },
+        "approved_credential_source_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_credential_source/v1" } } }
+          ]
+        },
+        "independent_caller_session_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_iam_role_session/v1"
+                }
+              }
+            }
+          ]
+        },
+        "session_not_before_utc": { "$ref": "#/$defs/timestamp" },
+        "session_expires_utc": { "$ref": "#/$defs/timestamp" },
+        "accounting_not_before_utc": { "$ref": "#/$defs/timestamp" },
+        "accounting_not_after_utc": { "$ref": "#/$defs/timestamp" },
+        "requested_utc": { "$ref": "#/$defs/timestamp" },
+        "completed_utc": { "$ref": "#/$defs/timestamp" },
+        "time_ordering_disposition": {
+          "const": "SESSION_NOT_BEFORE_LE_REQUESTED_LE_COMPLETED_LE_SESSION_EXPIRY_AND_ACCOUNTING_BOUNDS_PASS"
+        },
+        "sigv4_scope_disposition": {
+          "const": "ALGORITHM_SCOPE_SIGNED_HEADERS_SIGNATURE_DATE_AND_REQUEST_HASH_PASS"
+        },
+        "tls_authentication_disposition": {
+          "const": "ALL_GET_AND_LIST_RESPONSES_TLS_HOSTNAME_CHAIN_AND_HEADER_HASH_PASS"
+        },
+        "authenticated_request_response_disposition": {
+          "const": "INDEPENDENT_SIGV4_EXACT_VERSION_GET_PASS"
+        },
+        "complete_byte_disposition": {
+          "const": "EXACT_BYTES_SHA256_CHECKSUM_AND_RECORD_IDENTITY_PASS"
+        },
+        "unique_version_disposition": {
+          "const": "ALL_BOUNDED_PAGES_ONE_MATCH_NO_DELETE_MARKER_PASS"
+        },
+        "observation_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_contract_file_preimage": {
+      "type": "object",
+      "required": ["schema", "path", "mode", "byte_count", "sha256", "source_head"],
+      "properties": {
+        "schema": { "const": "aws_c0_validation_contract_file/v1" },
+        "path": { "type": "string", "pattern": "^[A-Za-z0-9_./-]+\\.json$" },
+        "mode": { "const": "100644" },
+        "byte_count": { "$ref": "#/$defs/positive_int64" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "source_head": { "$ref": "#/$defs/git_coordinate" }
+      },
+      "additionalProperties": false
+    },
+    "validation_case_constructor_preimage": {
+      "type": "object",
+      "required": [
+        "schema", "contract_identity", "case_id", "constructor_callable",
+        "source_path", "source_sha256", "fixture_pointer", "execution_spec_canonical_json_base64"
+      ],
+      "properties": {
+        "schema": { "const": "aws_c0_validation_case_constructor/v1" },
+        "contract_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_c0_validation_contract_file/v1" } } }
+          ]
+        },
+        "case_id": { "type": "string", "pattern": "^C0-[A-Z0-9-]+$" },
+        "constructor_callable": { "type": "string", "pattern": "^[a-z_][a-z0-9_]*$" },
+        "source_path": { "const": "scripts/validate_aws_c0_static.py" },
+        "source_sha256": { "$ref": "#/$defs/sha256" },
+        "fixture_pointer": { "type": "string", "pattern": "^aws/c0/fixtures/negative-cases\\.json#/cases/C0-[A-Z0-9-]+/base$" },
+        "execution_spec_canonical_json_base64": { "$ref": "#/$defs/canonical_json_base64" }
+      },
+      "additionalProperties": false
+    },
+    "validator_software_preimage_v3": {
+      "type": "object",
+      "required": ["schema", "path", "mode", "byte_count", "sha256", "git_blob", "implementation_integration", "interpreter", "dependency_policy"],
+      "properties": {
+        "schema": { "const": "aws_c0_static_validator_software/v3" },
+        "path": { "const": "scripts/validate_aws_c0_static.py" },
+        "mode": { "const": "100644" },
+        "byte_count": { "$ref": "#/$defs/positive_int64" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "git_blob": { "$ref": "#/$defs/git_blob" },
+        "implementation_integration": { "$ref": "#/$defs/git_coordinate" },
+        "interpreter": { "const": "/usr/bin/python3" },
+        "dependency_policy": { "const": "PYTHON_STANDARD_LIBRARY_ONLY" }
+      },
+      "additionalProperties": false
+    },
+    "validator_configuration_preimage_v3": {
+      "type": "object",
+      "required": ["schema", "source_head", "modes_in_order", "validation_contract_identities", "preserved_case_count", "additive_case_count", "combined_case_count", "input_policy"],
+      "properties": {
+        "schema": { "const": "aws_c0_static_validator_configuration/v3" },
+        "source_head": { "$ref": "#/$defs/git_coordinate" },
+        "modes_in_order": { "const": ["authority-audit", "static-validation"] },
+        "validation_contract_identities": {
+          "type": "array", "minItems": 5, "maxItems": 5, "uniqueItems": true,
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/identity" },
+              { "properties": { "kind": { "const": "aws_c0_validation_contract_file/v1" } } }
+            ]
+          }
+        },
+        "preserved_case_count": { "const": 324 },
+        "additive_case_count": { "const": 28 },
+        "combined_case_count": { "const": 352 },
+        "input_policy": { "const": "ARGV_AND_DECLARED_LOCAL_IMMUTABLE_BYTES_ONLY_NO_ENV_STDIN_NETWORK_METADATA_CREDENTIAL_PROVIDER" }
+      },
+      "additionalProperties": false
+    },
+    "validator_output_protocol_preimage_v3": {
+      "type": "object",
+      "required": ["schema", "encoding", "canonical_json", "final_lf", "output_path_class", "creation", "replacement", "partial_output_on_failure"],
+      "properties": {
+        "schema": { "const": "aws_c0_static_validator_output_protocol/v3" },
+        "encoding": { "const": "UTF-8" },
+        "canonical_json": { "const": "NFC_COMPACT_SORTED_KEYS_INTEGER_ONLY" },
+        "final_lf": { "const": false },
+        "output_path_class": { "const": "ABSOLUTE_NORMALIZED_REGULAR_FILE_WITH_EXISTING_NONSYMLINK_DIRECTORY_PARENT" },
+        "creation": { "const": "ATOMIC_EXCLUSIVE_CREATE" },
+        "replacement": { "const": "REFUSE" },
+        "partial_output_on_failure": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "versioned_s3_source_preimage": {
+      "type": "object",
+      "required": ["schema", "record_kind", "bucket_identity", "key", "version_id", "byte_count", "sha256", "rehearsal_id", "attempt_id"],
+      "properties": {
+        "schema": { "enum": ["aws_c0_launch_request_source/v1", "aws_c0_live_packet_source/v1", "aws_c0_live_authorization_source/v1"] },
+        "record_kind": { "enum": ["aws_c0_launch_request/v3", "aws_c0_live_packet/v3", "aws_c0_live_authorization/v3"] },
+        "bucket_identity": {
+          "allOf": [
+            { "$ref": "#/$defs/identity" },
+            { "properties": { "kind": { "const": "aws_s3_versioned_bucket/v1" } } }
+          ]
+        },
+        "key": { "type": "string", "pattern": "^rehearsal/aws-c0/.+$" },
+        "version_id": { "type": "string", "minLength": 1 },
+        "byte_count": { "$ref": "#/$defs/positive_int64" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "rehearsal_id": { "type": "string", "minLength": 1 },
+        "attempt_id": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "schema": { "const": "aws_c0_launch_request_source/v1" } } },
+          "then": { "properties": { "record_kind": { "const": "aws_c0_launch_request/v3" } } }
+        },
+        {
+          "if": { "properties": { "schema": { "const": "aws_c0_live_packet_source/v1" } } },
+          "then": { "properties": { "record_kind": { "const": "aws_c0_live_packet/v3" } } }
+        },
+        {
+          "if": { "properties": { "schema": { "const": "aws_c0_live_authorization_source/v1" } } },
+          "then": { "properties": { "record_kind": { "const": "aws_c0_live_authorization/v3" } } }
+        }
+      ]
+    },
+    "validation_contract_row": {
+      "type": "object",
+      "required": [
+        "path",
+        "mode",
+        "byte_count",
+        "sha256",
+        "identity",
+        "canonical_preimage"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "const": "100644"
+        },
+        "byte_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_validation_contract_file/v1"
+                }
+              }
+            }
+          ]
+        },
+        "canonical_preimage": {
+          "$ref": "#/$defs/validation_contract_file_preimage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "case_receipt": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "contract_identity",
+        "fixture_id",
+        "validator_function",
+        "constructor_identity",
+        "constructor_preimage",
+        "expected_result",
+        "observed_result",
+        "expected_code",
+        "observed_code",
+        "witness_sha256",
+        "subcase_count",
+        "subcase_aggregate_sha256",
+        "disposition"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "pattern": "^C0-[A-Z0-9-]+$"
+        },
+        "contract_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_validation_contract_file/v1"
+                }
+              }
+            }
+          ]
+        },
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validator_function": {
+          "type": "string",
+          "pattern": "^[a-z_][a-z0-9_]*$"
+        },
+        "constructor_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_validation_case_constructor/v1"
+                }
+              }
+            }
+          ]
+        },
+        "constructor_preimage": {
+          "$ref": "#/$defs/validation_case_constructor_preimage"
+        },
+        "expected_result": {
+          "enum": [
+            "PASS",
+            "REFUSE"
+          ]
+        },
+        "observed_result": {
+          "enum": [
+            "PASS",
+            "REFUSE"
+          ]
+        },
+        "expected_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "witness_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "subcase_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "subcase_aggregate_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "disposition": {
+          "const": "EXPECTED_EQUALS_OBSERVED_EXECUTED_EXACTLY_ONCE"
+        }
+      },
+      "additionalProperties": false
+    },
+    "case_group": {
+      "type": "object",
+      "required": [
+        "contract_path",
+        "contract_identity",
+        "expected_count",
+        "first_case_id",
+        "last_case_id",
+        "case_receipt_aggregate_sha256"
+      ],
+      "properties": {
+        "contract_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contract_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_validation_contract_file/v1"
+                }
+              }
+            }
+          ]
+        },
+        "expected_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "first_case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "last_case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_receipt_aggregate_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "static_validation_v3": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/root_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "authority_id",
+            "correction_authority_id",
+            "closure_correction_authority_id",
+            "material_correction_authority_id",
+            "audit_static_handoff_authority_id",
+            "record_class",
+            "scientific_execution_authorized",
+            "stage_f_execution_authorized",
+            "stage_f_readiness_claimed",
+            "zero_science_counters",
+            "observed_utc",
+            "record_sha256",
+            "schema",
+            "created_utc",
+            "created_utc_derivation_disposition",
+            "source_head",
+            "validator_software_identity",
+            "validator_software_preimage",
+            "validator_configuration_identity",
+            "validator_configuration_preimage",
+            "output_protocol_identity",
+            "output_protocol_preimage",
+            "validation_contracts",
+            "authority_audit_identity",
+            "authority_audit_input_observation",
+            "authority_audit_provisional_put_observation",
+            "implementation_paths",
+            "scope_counts",
+            "case_counts",
+            "case_receipts",
+            "case_groups",
+            "case_receipt_aggregate_sha256",
+            "source_head_gate",
+            "ancestry_gate",
+            "path_gate",
+            "audit_record_gate",
+            "provisional_coordinate_gate",
+            "case_gate",
+            "output_gate",
+            "zero_science_gate",
+            "output_path",
+            "output_encoding",
+            "output_final_lf",
+            "output_creation_disposition",
+            "partial_file_count"
+          ],
+          "properties": {
+            "authority_id": {
+              "const": "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1"
+            },
+            "correction_authority_id": {
+              "const": "EBU-AWS-C0-LIVE-PREPARATION-CHOREOGRAPHY-CORRECTION-AUTHORITY-v1"
+            },
+            "closure_correction_authority_id": {
+              "const": "EBU-AWS-C0-COST-RUNTIME-RETRIEVAL-CLOSURE-CORRECTION-AUTHORITY-v1"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
+            "audit_static_handoff_authority_id": {
+              "const": "EBU-AWS-C0-AUDIT-STATIC-PUBLICATION-HANDOFF-CORRECTION-AUTHORITY-v1"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "scientific_execution_authorized": {
+              "const": false
+            },
+            "stage_f_execution_authorized": {
+              "const": false
+            },
+            "stage_f_readiness_claimed": {
+              "const": false
+            },
+            "zero_science_counters": {
+              "$ref": "#/$defs/zero_science_counters"
+            },
+            "observed_utc": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "record_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "schema": {
+              "const": "aws_c0_material_runtime_static_validation/v3"
+            },
+            "created_utc": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "created_utc_derivation_disposition": {
+              "const": "HEAD_COMMITTER_EPOCH_TO_POSIX_UTC_RFC3339_PASS"
+            },
+            "source_head": {
+              "$ref": "#/$defs/git_coordinate"
+            },
+            "validator_software_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_static_validator_software/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "validator_software_preimage": {
+              "$ref": "#/$defs/validator_software_preimage_v3"
+            },
+            "validator_configuration_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_static_validator_configuration/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "validator_configuration_preimage": {
+              "$ref": "#/$defs/validator_configuration_preimage_v3"
+            },
+            "output_protocol_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_static_validator_output_protocol/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "output_protocol_preimage": {
+              "$ref": "#/$defs/validator_output_protocol_preimage_v3"
+            },
+            "validation_contracts": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "uniqueItems": true,
+              "prefixItems": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/validation_contract_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/validation_contract_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws_c0_live_preparation_choreography_correction_validation_contract.json"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/validation_contract_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/validation_contract_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/validation_contract_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "items": false
+            },
+            "authority_audit_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_audit_static_handoff_authority_audit/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "authority_audit_input_observation": {
+              "$ref": "#/$defs/authority_audit_v3_input_observation"
+            },
+            "authority_audit_provisional_put_observation": {
+              "$ref": "#/$defs/authority_audit_provisional_put_observation"
+            },
+            "implementation_paths": {
+              "type": "array",
+              "minItems": 14,
+              "maxItems": 14,
+              "uniqueItems": true,
+              "prefixItems": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": ".github/workflows/aws-c0-static.yml"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "scripts/validate_aws_c0_static.py"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/README.md"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/state-machine/aws-c0.asl.json"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/ssm/EBU-C0-Start-v1.yaml"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/controller/ebu_c0_controller.py"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/controller/ebu-c0@.service"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/finalizer/finalizer.py"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/container/Dockerfile"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/container/synthetic_worker.py"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/fixtures/launch-request.valid.json"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "aws/c0/fixtures/negative-cases.json"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/path_row"
+                    },
+                    {
+                      "properties": {
+                        "path": {
+                          "const": "tests/aws/test_aws_c0_unattended_synthetic.py"
+                        },
+                        "mode": {
+                          "const": "100644"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "items": false
+            },
+            "scope_counts": {
+              "const": {
+                "global_authority_only": 156,
+                "global_completed_implementation": 170,
+                "descendant_authority_only": 106,
+                "descendant_completed_implementation": 120,
+                "reachability_unique_paths_added": 0,
+                "implementation_paths_added": 14
+              }
+            },
+            "case_counts": {
+              "const": {
+                "original": 66,
+                "live_preparation": 84,
+                "cost_runtime_retrieval": 108,
+                "material_runtime": 66,
+                "audit_static_handoff": 28,
+                "total": 352
+              }
+            },
+            "case_receipts": {
+              "type": "array",
+              "minItems": 352,
+              "maxItems": 352,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/case_receipt"
+              }
+            },
+            "case_groups": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "uniqueItems": true,
+              "prefixItems": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/case_group"
+                    },
+                    {
+                      "properties": {
+                        "contract_path": {
+                          "const": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json"
+                        },
+                        "expected_count": {
+                          "const": 66
+                        },
+                        "first_case_id": {
+                          "const": "C0-P01"
+                        },
+                        "last_case_id": {
+                          "const": "C0-N48"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/case_group"
+                    },
+                    {
+                      "properties": {
+                        "contract_path": {
+                          "const": "aws_c0_live_preparation_choreography_correction_validation_contract.json"
+                        },
+                        "expected_count": {
+                          "const": 84
+                        },
+                        "first_case_id": {
+                          "const": "C0-LPC-P01"
+                        },
+                        "last_case_id": {
+                          "const": "C0-LPC-N60"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/case_group"
+                    },
+                    {
+                      "properties": {
+                        "contract_path": {
+                          "const": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json"
+                        },
+                        "expected_count": {
+                          "const": 108
+                        },
+                        "first_case_id": {
+                          "const": "C0-CRT-P01"
+                        },
+                        "last_case_id": {
+                          "const": "C0-CRT-N72"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/case_group"
+                    },
+                    {
+                      "properties": {
+                        "contract_path": {
+                          "const": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json"
+                        },
+                        "expected_count": {
+                          "const": 66
+                        },
+                        "first_case_id": {
+                          "const": "C0-MIRV-P01"
+                        },
+                        "last_case_id": {
+                          "const": "C0-MIRV-N46"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/case_group"
+                    },
+                    {
+                      "properties": {
+                        "contract_path": {
+                          "const": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+                        },
+                        "expected_count": {
+                          "const": 28
+                        },
+                        "first_case_id": {
+                          "const": "C0-ASPH-P01"
+                        },
+                        "last_case_id": {
+                          "const": "C0-ASPH-N20"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ],
+              "items": false
+            },
+            "case_receipt_aggregate_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "source_head_gate": {
+              "const": "PASS"
+            },
+            "ancestry_gate": {
+              "const": "PASS"
+            },
+            "path_gate": {
+              "const": "PASS"
+            },
+            "audit_record_gate": {
+              "const": "PASS"
+            },
+            "provisional_coordinate_gate": {
+              "const": "PASS_PROVISIONAL_NOT_FINAL_AUTHENTICATION"
+            },
+            "case_gate": {
+              "const": "PASS"
+            },
+            "output_gate": {
+              "const": "PASS"
+            },
+            "zero_science_gate": {
+              "const": "PASS"
+            },
+            "output_path": {
+              "type": "string",
+              "pattern": "^/[^\\u0000]+$"
+            },
+            "output_encoding": {
+              "const": "UTF-8_NFC_COMPACT_SORTED_CANONICAL_JSON"
+            },
+            "output_final_lf": {
+              "const": false
+            },
+            "output_creation_disposition": {
+              "const": "EXACT_REQUESTED_PATH_ATOMIC_EXCLUSIVE_COMPLETE_BYTES"
+            },
+            "partial_file_count": {
+              "const": 0
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "semantic_parameters": {
+      "type": "object",
+      "required": [
+        "ArtifactBucket",
+        "ArtifactPrefix",
+        "LaunchRequestKey",
+        "LaunchRequestVersionId",
+        "LaunchRequestSha256",
+        "LaunchRequestBytes",
+        "LivePacketKey",
+        "LivePacketVersionId",
+        "LivePacketSha256",
+        "LivePacketBytes",
+        "LiveAuthorizationKey",
+        "LiveAuthorizationVersionId",
+        "LiveAuthorizationSha256",
+        "LiveAuthorizationBytes",
+        "RehearsalId",
+        "AttemptId",
+        "Region",
+        "WorkflowExecutionArn",
+        "SsmClientRequestToken",
+        "SsmExpectedCommandNotBeforeUtc",
+        "SsmExpectedCommandNotAfterUtc"
+      ],
+      "properties": {
+        "ArtifactBucket": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ArtifactPrefix": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "LaunchRequestBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "LivePacketKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LivePacketVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LivePacketSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "LivePacketBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "LiveAuthorizationKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LiveAuthorizationVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LiveAuthorizationSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "LiveAuthorizationBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "RehearsalId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "AttemptId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "Region": {
+          "const": [
+            "us-east-1"
+          ]
+        },
+        "WorkflowExecutionArn": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^arn:aws:states:us-east-1:[0-9]{12}:execution:"
+          }
+        },
+        "SsmClientRequestToken": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{8,64}$"
+          }
+        },
+        "SsmExpectedCommandNotBeforeUtc": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/timestamp"
+          }
+        },
+        "SsmExpectedCommandNotAfterUtc": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/timestamp"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "send_command_parameter_envelope": {
+      "type": "object",
+      "required": [
+        "ArtifactBucket",
+        "ArtifactPrefix",
+        "LaunchRequestKey",
+        "LaunchRequestVersionId",
+        "LaunchRequestSha256",
+        "LaunchRequestBytes",
+        "LivePacketKey",
+        "LivePacketVersionId",
+        "LivePacketSha256",
+        "LivePacketBytes",
+        "LiveAuthorizationKey",
+        "LiveAuthorizationVersionId",
+        "LiveAuthorizationSha256",
+        "LiveAuthorizationBytes",
+        "RehearsalId",
+        "AttemptId",
+        "Region",
+        "WorkflowExecutionArn",
+        "SsmClientRequestToken",
+        "SsmExpectedCommandNotBeforeUtc",
+        "SsmExpectedCommandNotAfterUtc",
+        "SsmDispatchRequestCanonicalJsonBase64",
+        "SsmDispatchRequestSha256"
+      ],
+      "properties": {
+        "ArtifactBucket": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ArtifactPrefix": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "LaunchRequestBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "LivePacketKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LivePacketVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LivePacketSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "LivePacketBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "LiveAuthorizationKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LiveAuthorizationVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LiveAuthorizationSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "LiveAuthorizationBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "RehearsalId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "AttemptId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "Region": {
+          "const": [
+            "us-east-1"
+          ]
+        },
+        "WorkflowExecutionArn": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^arn:aws:states:us-east-1:[0-9]{12}:execution:"
+          }
+        },
+        "SsmClientRequestToken": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{8,64}$"
+          }
+        },
+        "SsmExpectedCommandNotBeforeUtc": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/timestamp"
+          }
+        },
+        "SsmExpectedCommandNotAfterUtc": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/timestamp"
+          }
+        },
+        "SsmDispatchRequestCanonicalJsonBase64": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/canonical_json_base64"
+          }
+        },
+        "SsmDispatchRequestSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ssm_dispatch_request_v2": {
+      "type": "object",
+      "required": [
+        "schema",
+        "document_name",
+        "document_version",
+        "target_instance_id",
+        "attempt_identity",
+        "semantic_parameters"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_ssm_dispatch_request/v2"
+        },
+        "document_name": {
+          "const": "EBU-C0-Start-v1"
+        },
+        "document_version": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "target_instance_id": {
+          "const": "i-048bac00bdb540a4e"
+        },
+        "attempt_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_attempt/v1"
+                }
+              }
+            }
+          ]
+        },
+        "semantic_parameters": {
+          "$ref": "#/$defs/semantic_parameters"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ssm_completion_projection": {
+      "type": "object",
+      "required": [
+        "dispatch_request_identity",
+        "actual_send_command_parameters",
+        "projected_semantic_parameters",
+        "canonical_preimage_base64",
+        "canonical_preimage_sha256",
+        "transport_base64_verified",
+        "transport_sha256_verified",
+        "all_inherited_coordinates_cross_bound",
+        "unknown_extra_missing_duplicate_field_count",
+        "command_id",
+        "status"
+      ],
+      "properties": {
+        "dispatch_request_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_ssm_dispatch_request/v2"
+                }
+              }
+            }
+          ]
+        },
+        "actual_send_command_parameters": {
+          "$ref": "#/$defs/send_command_parameter_envelope"
+        },
+        "projected_semantic_parameters": {
+          "$ref": "#/$defs/semantic_parameters"
+        },
+        "canonical_preimage_base64": {
+          "$ref": "#/$defs/canonical_json_base64"
+        },
+        "canonical_preimage_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "transport_base64_verified": {
+          "const": true
+        },
+        "transport_sha256_verified": {
+          "const": true
+        },
+        "all_inherited_coordinates_cross_bound": {
+          "const": true
+        },
+        "unknown_extra_missing_duplicate_field_count": {
+          "const": 0
+        },
+        "command_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "Success"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_sidecar_v2": {
+      "type": "object",
+      "required": [
+        "schema",
+        "owner",
+        "mode",
+        "creation",
+        "dispatch_request_identity",
+        "semantic_parameters",
+        "transport_parameters",
+        "attempt_identity",
+        "workflow_execution_identity",
+        "launch_source_identity",
+        "launch_source_preimage",
+        "live_packet_source_identity",
+        "live_packet_source_preimage",
+        "live_authorization_source_identity",
+        "live_authorization_source_preimage"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_source_sidecar/v2"
+        },
+        "owner": {
+          "const": "root:root"
+        },
+        "mode": {
+          "const": "0600"
+        },
+        "creation": {
+          "const": "EXCLUSIVE_REGULAR_NO_SYMLINK"
+        },
+        "dispatch_request_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_ssm_dispatch_request/v2"
+                }
+              }
+            }
+          ]
+        },
+        "semantic_parameters": {
+          "$ref": "#/$defs/semantic_parameters"
+        },
+        "transport_parameters": {
+          "type": "object",
+          "required": [
+            "SsmDispatchRequestCanonicalJsonBase64",
+            "SsmDispatchRequestSha256"
+          ],
+          "properties": {
+            "SsmDispatchRequestCanonicalJsonBase64": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "$ref": "#/$defs/canonical_json_base64"
+              }
+            },
+            "SsmDispatchRequestSha256": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "$ref": "#/$defs/sha256"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "attempt_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_attempt/v1"
+                }
+              }
+            }
+          ]
+        },
+        "workflow_execution_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_step_functions_standard_execution/v1"
+                }
+              }
+            }
+          ]
+        },
+        "launch_source_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_launch_request_source/v1"
+                }
+              }
+            }
+          ]
+        },
+        "launch_source_preimage": {
+          "allOf": [
+            { "$ref": "#/$defs/versioned_s3_source_preimage" },
+            { "properties": { "schema": { "const": "aws_c0_launch_request_source/v1" } } }
+          ]
+        },
+        "live_packet_source_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_live_packet_source/v1"
+                }
+              }
+            }
+          ]
+        },
+        "live_packet_source_preimage": {
+          "allOf": [
+            { "$ref": "#/$defs/versioned_s3_source_preimage" },
+            { "properties": { "schema": { "const": "aws_c0_live_packet_source/v1" } } }
+          ]
+        },
+        "live_authorization_source_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_live_authorization_source/v1"
+                }
+              }
+            }
+          ]
+        },
+        "live_authorization_source_preimage": {
+          "allOf": [
+            { "$ref": "#/$defs/versioned_s3_source_preimage" },
+            { "properties": { "schema": { "const": "aws_c0_live_authorization_source/v1" } } }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "publication_upgrade_binding": {
+      "type": "object",
+      "required": [
+        "authority_audit_identity",
+        "authority_audit_provisional_observation_identity",
+        "authority_audit_provisional_observation",
+        "authority_audit_authenticated_readback_identity",
+        "authority_audit_authenticated_readback_observation",
+        "static_validation_identity",
+        "static_validation_provisional_observation_identity",
+        "static_validation_provisional_observation",
+        "static_validation_authenticated_readback_identity",
+        "static_validation_authenticated_readback_observation",
+        "final_authentication_disposition"
+      ],
+      "properties": {
+        "authority_audit_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_audit_static_handoff_authority_audit/v3"
+                }
+              }
+            }
+          ]
+        },
+        "authority_audit_provisional_observation_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_provisional_conditional_put_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "authority_audit_provisional_observation": {
+          "$ref": "#/$defs/authority_audit_provisional_put_observation"
+        },
+        "authority_audit_authenticated_readback_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_authenticated_exact_version_readback_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "authority_audit_authenticated_readback_observation": {
+          "$ref": "#/$defs/authenticated_exact_version_readback_observation"
+        },
+        "static_validation_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_material_runtime_static_validation/v3"
+                }
+              }
+            }
+          ]
+        },
+        "static_validation_provisional_observation_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_provisional_conditional_put_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "static_validation_provisional_observation": {
+          "$ref": "#/$defs/static_validation_provisional_put_observation"
+        },
+        "static_validation_authenticated_readback_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_authenticated_exact_version_readback_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "static_validation_authenticated_readback_observation": {
+          "$ref": "#/$defs/authenticated_exact_version_readback_observation"
+        },
+        "final_authentication_disposition": {
+          "const": "BOTH_ROOTS_INDEPENDENTLY_READ_BACK_EXACT_VERSION_COMPLETE_BYTES_UNIQUE_HISTORY_PASS"
+        }
+      },
+      "additionalProperties": false
+    },
+    "preparation_closure_publication_binding": {
+      "$ref": "#/$defs/publication_upgrade_binding"
+    },
+    "live_packet_publication_binding": {
+      "$ref": "#/$defs/publication_upgrade_binding"
+    },
+    "launch_v3_static_binding": {
+      "$ref": "#/$defs/publication_upgrade_binding"
+    },
+    "retrieval_v3_static_binding": {
+      "type": "object",
+      "required": [
+        "root_0_authority_audit_identity",
+        "root_1_static_validation_identity",
+        "publication_upgrade_binding"
+      ],
+      "properties": {
+        "root_0_authority_audit_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_audit_static_handoff_authority_audit/v3"
+                }
+              }
+            }
+          ]
+        },
+        "root_1_static_validation_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_material_runtime_static_validation/v3"
+                }
+              }
+            }
+          ]
+        },
+        "publication_upgrade_binding": {
+          "$ref": "#/$defs/publication_upgrade_binding"
+        }
+      },
+      "additionalProperties": false
+    },
+    "final_manifest_v3_static_binding": {
+      "$ref": "#/$defs/retrieval_v3_static_binding"
+    }
+  }
+}

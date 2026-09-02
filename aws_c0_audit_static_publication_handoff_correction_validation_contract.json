@@ -1,0 +1,1833 @@
+{
+  "authority_id": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION",
+  "status": "PROSPECTIVE_AUTHORITY_VALIDATION_ONLY",
+  "validation_version": 1,
+  "accepted_base_commit": "6059cbdcd2ee03085c9c03b4f872b4a46241b775",
+  "accepted_base_tree": "5c84e633b590b5b84d0a8a85824db4e1addbb827",
+  "validation_scope": "OFFLINE_STANDARD_LIBRARY_STATIC_AND_FAKE_FILESYSTEM_GIT_FIXTURES_ONLY",
+  "permitted_operations": [
+    "READ_ACCEPTED_LOCAL_GIT_OBJECTS",
+    "STRICT_PARSE_LOCAL_FILES",
+    "AST_PARSE",
+    "HASH_BYTES",
+    "CREATE_AND_REMOVE_OWN_TEMPORARY_TEST_FIXTURES"
+  ],
+  "forbidden_operations": [
+    "NETWORK",
+    "AWS",
+    "DOCKER",
+    "SYSTEMD",
+    "DEPLOYMENT",
+    "CREDENTIAL_READ",
+    "MODEL_OR_SCIENTIFIC_EXECUTION",
+    "COMMIT",
+    "PUSH",
+    "MERGE"
+  ],
+  "lanes_in_order": [
+    "MODE_A_AUTHORITY_AUDIT",
+    "PUBLICATION_HANDOFF",
+    "MODE_B_STATIC_VALIDATION",
+    "CLI_AND_HIDDEN_INPUTS",
+    "SOURCE_AND_ANCESTRY",
+    "OUTPUT_PROTOCOL",
+    "SSM_DISPATCH_ENVELOPE"
+  ],
+  "lane_count": 7,
+  "positive_cases": [
+    {
+      "id": "C0-ASPH-P01",
+      "lane": "MODE_A_AUTHORITY_AUDIT",
+      "theme": "Mode A emits audit-v3 as the sole AUDIT root, embeds exact prior material audit-v2 bytes, and reconstructs the complete handoff authority/reachability/implementation chain",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P01/base",
+        "mode": "authority-audit",
+        "operator_id": "BUILD_AUDIT_V3_WITH_EMBEDDED_PRIOR_V2_AND_FINAL_CHAIN",
+        "target_file": "repository",
+        "json_path_or_ast_selector": "#/$defs/authority_audit_v3",
+        "deterministic_constructor": "construct_c0_asph_p01",
+        "constructor_arguments": {
+          "mutation_axis": "Mode A emits audit-v3 as the sole AUDIT root, embeds exact prior material audit-v2 bytes, and reconstructs the complete handoff authority/reachability/implementation chain"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "AUDIT_V3_EMBEDDED_PRIOR_AND_CHAIN_PASS",
+        "independent_subcases": [
+          {
+            "subcase_id": "P01_SCHEMA",
+            "operator_id": "VALIDATE_AUDIT_V3_CLOSED_SCHEMA__P01_SCHEMA",
+            "selector": "#/$defs/authority_audit_v3#P01_SCHEMA",
+            "expected_code": "AUDIT_V3_SCHEMA_PASS__P01_SCHEMA",
+            "base_error_class": "AUDIT_V3_SCHEMA_PASS"
+          },
+          {
+            "subcase_id": "P01_EMBEDDED_PRIOR",
+            "operator_id": "VALIDATE_EMBEDDED_PRIOR_V2_BYTES_AGAINST_FROZEN_SCHEMA__P01_EMBEDDED_PRIOR",
+            "selector": "/prior_material_audit_input_observation#P01_EMBEDDED_PRIOR",
+            "expected_code": "AUDIT_V3_PRIOR_V2_EMBEDDING_PASS__P01_EMBEDDED_PRIOR",
+            "base_error_class": "AUDIT_V3_PRIOR_V2_EMBEDDING_PASS"
+          },
+          {
+            "subcase_id": "P01_CHAIN",
+            "operator_id": "VALIDATE_AUDIT_V3_FULL_COMMON_AND_EXACT_6_6_1_1_14_14_CHAIN__P01_CHAIN",
+            "selector": "decoded-audit-v3-root/common-and-chain#P01_CHAIN",
+            "expected_code": "AUDIT_V3_FULL_COMMON_AND_CHAIN_PASS__P01_CHAIN",
+            "base_error_class": "AUDIT_V3_FULL_COMMON_AND_CHAIN_PASS"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-P02",
+      "lane": "MODE_A_AUTHORITY_AUDIT",
+      "theme": "Mode A derives observed_utc deterministically from final-integration HEAD committer epoch and emits canonical audit-v3 bytes",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P02/base",
+        "mode": "authority-audit",
+        "operator_id": "RUN_MODE_A_DETERMINISTIC_TIME",
+        "target_file": "scripts/validate_aws_c0_static.py",
+        "json_path_or_ast_selector": "HEAD:committer_epoch_seconds",
+        "deterministic_constructor": "construct_c0_asph_p02",
+        "constructor_arguments": {
+          "mutation_axis": "Mode A derives observed_utc deterministically from final-integration HEAD committer epoch and emits canonical audit-v3 bytes"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "AUDIT_V3_CANONICAL_TIME_PASS",
+        "independent_subcases": [
+          {
+            "subcase_id": "P02_EPOCH_ZERO",
+            "operator_id": "CONSTRUCT_HEAD_EPOCH_ZERO__P02_EPOCH_ZERO",
+            "selector": "HEAD:committer_epoch_seconds#P02_EPOCH_ZERO",
+            "expected_code": "TIME_1970_01_01_PASS__P02_EPOCH_ZERO",
+            "base_error_class": "TIME_1970_01_01_PASS"
+          },
+          {
+            "subcase_id": "P02_FIRST_SECOND",
+            "operator_id": "CONSTRUCT_HEAD_FIRST_RENDERABLE_EPOCH__P02_FIRST_SECOND",
+            "selector": "HEAD:committer_epoch_seconds#P02_FIRST_SECOND",
+            "expected_code": "TIME_0001_01_01_PASS__P02_FIRST_SECOND",
+            "base_error_class": "TIME_0001_01_01_PASS"
+          },
+          {
+            "subcase_id": "P02_LAST_SECOND",
+            "operator_id": "CONSTRUCT_HEAD_LAST_RENDERABLE_EPOCH__P02_LAST_SECOND",
+            "selector": "HEAD:committer_epoch_seconds#P02_LAST_SECOND",
+            "expected_code": "TIME_9999_12_31_PASS__P02_LAST_SECOND",
+            "base_error_class": "TIME_9999_12_31_PASS"
+          },
+          {
+            "subcase_id": "P02_NO_WALL_CLOCK",
+            "operator_id": "ASSERT_NO_WALL_CLOCK_OR_ENV_TIME__P02_NO_WALL_CLOCK",
+            "selector": "AST:time-sources#P02_NO_WALL_CLOCK",
+            "expected_code": "NO_AMBIENT_TIME_PASS__P02_NO_WALL_CLOCK",
+            "base_error_class": "NO_AMBIENT_TIME_PASS"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-P03",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Mode B accepts an exact structurally valid provisional conditional-Put observation without claiming authentication",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P03/base",
+        "mode": "static-validation",
+        "operator_id": "BUILD_PROVISIONAL_CONDITIONAL_PUT",
+        "target_file": "provisional-put-observation.json",
+        "json_path_or_ast_selector": "provisional-put-observation",
+        "deterministic_constructor": "construct_c0_asph_p03",
+        "constructor_arguments": {
+          "mutation_axis": "Mode B accepts an exact structurally valid provisional conditional-Put observation without claiming authentication"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "PROVISIONAL_PUT_STRUCTURAL_PASS",
+        "independent_subcases": [
+          {
+            "subcase_id": "P03_IF_NONE_MATCH",
+            "operator_id": "VERIFY_IF_NONE_MATCH_STAR__P03_IF_NONE_MATCH",
+            "selector": "/request/if_none_match#P03_IF_NONE_MATCH",
+            "expected_code": "CONDITIONAL_PUT_HEADER_PASS__P03_IF_NONE_MATCH",
+            "base_error_class": "CONDITIONAL_PUT_HEADER_PASS"
+          },
+          {
+            "subcase_id": "P03_BINDINGS",
+            "operator_id": "VERIFY_PROVISIONAL_COORDINATE_BINDINGS__P03_BINDINGS",
+            "selector": "/#P03_BINDINGS",
+            "expected_code": "PROVISIONAL_COORDINATE_PASS__P03_BINDINGS",
+            "base_error_class": "PROVISIONAL_COORDINATE_PASS"
+          },
+          {
+            "subcase_id": "P03_CLAIM_LIMIT",
+            "operator_id": "VERIFY_NO_AUTHENTICATION_CLAIM__P03_CLAIM_LIMIT",
+            "selector": "/non_authentication_notice#P03_CLAIM_LIMIT",
+            "expected_code": "PROVISIONAL_CLAIM_LIMIT_PASS__P03_CLAIM_LIMIT",
+            "base_error_class": "PROVISIONAL_CLAIM_LIMIT_PASS"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-P04",
+      "lane": "MODE_B_STATIC_VALIDATION",
+      "theme": "Mode B reruns 324 preserved plus 28 additive cases exactly once",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P04/base",
+        "mode": "static-validation",
+        "operator_id": "RUN_ALL_352_CASES",
+        "target_file": "scripts/validate_aws_c0_static.py",
+        "json_path_or_ast_selector": "static_validation.case_receipts",
+        "deterministic_constructor": "construct_c0_asph_p04",
+        "constructor_arguments": {
+          "mutation_axis": "Mode B reruns 324 preserved plus 28 additive cases exactly once"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "ALL_352_CASES_PASS",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-P05",
+      "lane": "MODE_B_STATIC_VALIDATION",
+      "theme": "Static-v3 preserves full common Stage and ten zero-science fields, binds audit input/provisional coordinate, exact groups, paths, scopes, and accepted bootstrap kinds",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P05/base",
+        "mode": "static-validation",
+        "operator_id": "BUILD_STATIC_V3_ROOT",
+        "target_file": "static-v3.json",
+        "json_path_or_ast_selector": "static-v3",
+        "deterministic_constructor": "construct_c0_asph_p05",
+        "constructor_arguments": {
+          "mutation_axis": "Static-v3 preserves full common Stage and ten zero-science fields, binds audit input/provisional coordinate, exact groups, paths, scopes, and accepted bootstrap kinds"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "STATIC_V3_FULL_BINDING_PASS",
+        "independent_subcases": [
+          {
+            "subcase_id": "P05_COMMON",
+            "operator_id": "VALIDATE_STATIC_FULL_COMMON__P05_COMMON",
+            "selector": "/#P05_COMMON",
+            "expected_code": "STATIC_FULL_COMMON_PASS__P05_COMMON",
+            "base_error_class": "STATIC_FULL_COMMON_PASS"
+          },
+          {
+            "subcase_id": "P05_BOOTSTRAP",
+            "operator_id": "VALIDATE_EXACT_BOOTSTRAP_KIND_TRIPLE__P05_BOOTSTRAP",
+            "selector": "pre-live[8:11]#P05_BOOTSTRAP",
+            "expected_code": "BOOTSTRAP_KINDS_PASS__P05_BOOTSTRAP",
+            "base_error_class": "BOOTSTRAP_KINDS_PASS"
+          },
+          {
+            "subcase_id": "P05_KINDS",
+            "operator_id": "VALIDATE_STATIC_V3_CONTEXT_KINDS__P05_KINDS",
+            "selector": "launch-retrieval-final#P05_KINDS",
+            "expected_code": "STATIC_V3_KIND_PASS__P05_KINDS",
+            "base_error_class": "STATIC_V3_KIND_PASS"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-P06",
+      "lane": "OUTPUT_PROTOCOL",
+      "theme": "Both modes create exclusive atomic canonical output with no partial file and no final LF",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P06/base",
+        "mode": "both",
+        "operator_id": "EXERCISE_ATOMIC_OUTPUT_SUCCESS",
+        "target_file": "scripts/validate_aws_c0_static.py",
+        "json_path_or_ast_selector": "write_output_atomic",
+        "deterministic_constructor": "construct_c0_asph_p06",
+        "constructor_arguments": {
+          "mutation_axis": "Both modes create exclusive atomic canonical output with no partial file and no final LF"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "ATOMIC_EXCLUSIVE_OUTPUT",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-P07",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Preapproval binds contracts only; postapproval conditionally puts both roots then independently readbacks exact versions before closure/live PASS",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P07/base",
+        "mode": "static-validation",
+        "operator_id": "BUILD_ACYCLIC_PROVISIONAL_AND_READBACK_TIMELINE",
+        "target_file": "preparation-packet-v2.json",
+        "json_path_or_ast_selector": "publication-timeline",
+        "deterministic_constructor": "construct_c0_asph_p07",
+        "constructor_arguments": {
+          "mutation_axis": "Preapproval binds contracts only; postapproval conditionally puts both roots then independently readbacks exact versions before closure/live PASS"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "PUBLICATION_UPGRADE_CHRONOLOGY_PASS",
+        "independent_subcases": [
+          {
+            "subcase_id": "P07_PREAPPROVAL",
+            "operator_id": "VERIFY_NO_FUTURE_ROOT_BYTES_OR_COORDINATES__P07_PREAPPROVAL",
+            "selector": "preapproval#P07_PREAPPROVAL",
+            "expected_code": "PREAPPROVAL_ACYCLIC_PASS__P07_PREAPPROVAL",
+            "base_error_class": "PREAPPROVAL_ACYCLIC_PASS"
+          },
+          {
+            "subcase_id": "P07_PROVISIONAL",
+            "operator_id": "VERIFY_TWO_CONDITIONAL_PUTS__P07_PROVISIONAL",
+            "selector": "provisional#P07_PROVISIONAL",
+            "expected_code": "CONDITIONAL_PUTS_PASS__P07_PROVISIONAL",
+            "base_error_class": "CONDITIONAL_PUTS_PASS"
+          },
+          {
+            "subcase_id": "P07_READBACK",
+            "operator_id": "VERIFY_TWO_INDEPENDENT_EXACT_VERSION_READBACKS__P07_READBACK",
+            "selector": "readback#P07_READBACK",
+            "expected_code": "AUTHENTICATED_READBACK_PASS__P07_READBACK",
+            "base_error_class": "AUTHENTICATED_READBACK_PASS"
+          },
+          {
+            "subcase_id": "P07_FINAL_GATE",
+            "operator_id": "VERIFY_CLOSURE_LIVE_LAUNCH_RETRIEVAL_FINAL_UPGRADE__P07_FINAL_GATE",
+            "selector": "final-gate#P07_FINAL_GATE",
+            "expected_code": "FINAL_AUTHENTICATION_GATE_PASS__P07_FINAL_GATE",
+            "base_error_class": "FINAL_AUTHENTICATION_GATE_PASS"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-P08",
+      "lane": "SSM_DISPATCH_ENVELOPE",
+      "theme": "Dispatch-v2 hashes the exact 21 inherited semantic coordinates and supervisor projects the exact 23-field outer envelope",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-P08/base",
+        "mode": "both",
+        "operator_id": "BUILD_ACYCLIC_SSM_DISPATCH_V2",
+        "target_file": "ssm-envelope.json",
+        "json_path_or_ast_selector": "semantic-21+transport-2",
+        "deterministic_constructor": "construct_c0_asph_p08",
+        "constructor_arguments": {
+          "mutation_axis": "Dispatch-v2 hashes the exact 21 inherited semantic coordinates and supervisor projects the exact 23-field outer envelope"
+        },
+        "expected_disposition": "PASS",
+        "expected_code": "SSM_DISPATCH_V2_ACYCLIC",
+        "independent_subcases": [
+          {
+            "subcase_id": "P08_COORDINATES",
+            "operator_id": "VERIFY_LAUNCH_LIVE_PACKET_LIVE_AUTH_COORDINATES__P08_COORDINATES",
+            "selector": "semantic_parameters#P08_COORDINATES",
+            "expected_code": "SSM_ALL_SOURCE_COORDINATES_PASS__P08_COORDINATES",
+            "base_error_class": "SSM_ALL_SOURCE_COORDINATES_PASS"
+          },
+          {
+            "subcase_id": "P08_ATTEMPT",
+            "operator_id": "VERIFY_ATTEMPT_WORKFLOW_TOKEN_TIME__P08_ATTEMPT",
+            "selector": "semantic_parameters#P08_ATTEMPT",
+            "expected_code": "SSM_ATTEMPT_WORKFLOW_DISPATCH_PASS__P08_ATTEMPT",
+            "base_error_class": "SSM_ATTEMPT_WORKFLOW_DISPATCH_PASS"
+          },
+          {
+            "subcase_id": "P08_TRANSPORT",
+            "operator_id": "VERIFY_EXACT_OUTER_TWO_FIELDS__P08_TRANSPORT",
+            "selector": "actual_send_command_parameters#P08_TRANSPORT",
+            "expected_code": "SSM_TRANSPORT_PROJECTION_PASS__P08_TRANSPORT",
+            "base_error_class": "SSM_TRANSPORT_PROJECTION_PASS"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "C0-ASPH-N01",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "Unknown argument refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N01/base",
+        "mode": "both",
+        "operator_id": "ADD_UNKNOWN_ARGUMENT",
+        "target_file": "argv",
+        "json_path_or_ast_selector": "--unknown",
+        "deterministic_constructor": "construct_c0_asph_n01",
+        "constructor_arguments": {
+          "mutation_axis": "Unknown argument refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "ARG_UNKNOWN",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N02",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "Duplicate argument refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N02/base",
+        "mode": "both",
+        "operator_id": "DUPLICATE_MODE_ARGUMENT",
+        "target_file": "argv",
+        "json_path_or_ast_selector": "--mode",
+        "deterministic_constructor": "construct_c0_asph_n02",
+        "constructor_arguments": {
+          "mutation_axis": "Duplicate argument refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "ARG_DUPLICATE",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N03",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "Missing required mode-specific argument refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N03/base",
+        "mode": "static-validation",
+        "operator_id": "REMOVE_PROVISIONAL_PUT_OBSERVATION_ARGUMENT",
+        "target_file": "argv",
+        "json_path_or_ast_selector": "--authority-audit-receipt",
+        "deterministic_constructor": "construct_c0_asph_n03",
+        "constructor_arguments": {
+          "mutation_axis": "Missing required mode-specific argument refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "ARG_MISSING",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N04",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "Unknown mode, mode-inapplicable option, empty value, positional token, or value reinterpreted as a flag independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N04/base",
+        "mode": "both",
+        "operator_id": "MUTATE_ARGV_GRAMMAR",
+        "target_file": "argv",
+        "json_path_or_ast_selector": "argv",
+        "deterministic_constructor": "construct_c0_asph_n04",
+        "constructor_arguments": {
+          "mutation_axis": "Unknown mode, mode-inapplicable option, empty value, positional token, or value reinterpreted as a flag independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "ARGV_GRAMMAR_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N04_MODE",
+            "operator_id": "SET_UNKNOWN_MODE__N04_MODE",
+            "selector": "--mode#N04_MODE",
+            "expected_code": "MODE_UNKNOWN__N04_MODE",
+            "base_error_class": "MODE_UNKNOWN"
+          },
+          {
+            "subcase_id": "N04_INAPPLICABLE",
+            "operator_id": "ADD_MODE_INAPPLICABLE_OPTION__N04_INAPPLICABLE",
+            "selector": "argv#N04_INAPPLICABLE",
+            "expected_code": "MODE_INAPPLICABLE_ARGUMENT__N04_INAPPLICABLE",
+            "base_error_class": "MODE_INAPPLICABLE_ARGUMENT"
+          },
+          {
+            "subcase_id": "N04_EMPTY",
+            "operator_id": "SET_REQUIRED_VALUE_EMPTY__N04_EMPTY",
+            "selector": "argv#N04_EMPTY",
+            "expected_code": "ARGUMENT_EMPTY__N04_EMPTY",
+            "base_error_class": "ARGUMENT_EMPTY"
+          },
+          {
+            "subcase_id": "N04_POSITIONAL",
+            "operator_id": "ADD_POSITIONAL_TOKEN__N04_POSITIONAL",
+            "selector": "argv#N04_POSITIONAL",
+            "expected_code": "POSITIONAL_ARGUMENT_FORBIDDEN__N04_POSITIONAL",
+            "base_error_class": "POSITIONAL_ARGUMENT_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N04_VALUE_FLAG",
+            "operator_id": "REPLACE_VALUE_WITH_FLAG_TOKEN__N04_VALUE_FLAG",
+            "selector": "argv#N04_VALUE_FLAG",
+            "expected_code": "VALUE_REINTERPRETED_AS_FLAG__N04_VALUE_FLAG",
+            "base_error_class": "VALUE_REINTERPRETED_AS_FLAG"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N05",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "Every environment, ambient time, credential-provider, or undeclared configuration input independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N05/base",
+        "mode": "both",
+        "operator_id": "INSERT_HIDDEN_AMBIENT_INPUT",
+        "target_file": "scripts/validate_aws_c0_static.py",
+        "json_path_or_ast_selector": "AST:input-sources",
+        "deterministic_constructor": "construct_c0_asph_n05",
+        "constructor_arguments": {
+          "mutation_axis": "Every environment, ambient time, credential-provider, or undeclared configuration input independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "HIDDEN_AMBIENT_INPUT_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N05_ENVIRON",
+            "operator_id": "INSERT_OS_ENVIRON_READ__N05_ENVIRON",
+            "selector": "AST:os.environ#N05_ENVIRON",
+            "expected_code": "ENVIRONMENT_READ_FORBIDDEN__N05_ENVIRON",
+            "base_error_class": "ENVIRONMENT_READ_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N05_GETENV",
+            "operator_id": "INSERT_OS_GETENV_READ__N05_GETENV",
+            "selector": "AST:os.getenv#N05_GETENV",
+            "expected_code": "ENVIRONMENT_READ_FORBIDDEN__N05_GETENV",
+            "base_error_class": "ENVIRONMENT_READ_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N05_CREDENTIAL",
+            "operator_id": "INSERT_CREDENTIAL_PROVIDER__N05_CREDENTIAL",
+            "selector": "AST:credential-provider#N05_CREDENTIAL",
+            "expected_code": "CREDENTIAL_PROVIDER_FORBIDDEN__N05_CREDENTIAL",
+            "base_error_class": "CREDENTIAL_PROVIDER_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N05_WALL_CLOCK",
+            "operator_id": "INSERT_WALL_CLOCK_READ__N05_WALL_CLOCK",
+            "selector": "AST:datetime.now|time.time#N05_WALL_CLOCK",
+            "expected_code": "WALL_CLOCK_FORBIDDEN__N05_WALL_CLOCK",
+            "base_error_class": "WALL_CLOCK_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N05_MTIME",
+            "operator_id": "INSERT_FILESYSTEM_MTIME_TIME_SOURCE__N05_MTIME",
+            "selector": "AST:stat.st_mtime#N05_MTIME",
+            "expected_code": "FILESYSTEM_TIME_FORBIDDEN__N05_MTIME",
+            "base_error_class": "FILESYSTEM_TIME_FORBIDDEN"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N06",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "stdin input refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N06/base",
+        "mode": "both",
+        "operator_id": "INSERT_STDIN_READ",
+        "target_file": "scripts/validate_aws_c0_static.py",
+        "json_path_or_ast_selector": "AST:sys.stdin|input",
+        "deterministic_constructor": "construct_c0_asph_n06",
+        "constructor_arguments": {
+          "mutation_axis": "stdin input refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "HIDDEN_STDIN_INPUT",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N07",
+      "lane": "CLI_AND_HIDDEN_INPUTS",
+      "theme": "Socket, network, metadata, AWS SDK, subprocess-AWS, or undeclared subprocess access independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N07/base",
+        "mode": "both",
+        "operator_id": "INSERT_EXTERNAL_ACCESS",
+        "target_file": "scripts/validate_aws_c0_static.py",
+        "json_path_or_ast_selector": "AST:external-access",
+        "deterministic_constructor": "construct_c0_asph_n07",
+        "constructor_arguments": {
+          "mutation_axis": "Socket, network, metadata, AWS SDK, subprocess-AWS, or undeclared subprocess access independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "EXTERNAL_ACCESS_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N07_SOCKET",
+            "operator_id": "INSERT_SOCKET_CALL__N07_SOCKET",
+            "selector": "AST:socket#N07_SOCKET",
+            "expected_code": "SOCKET_FORBIDDEN__N07_SOCKET",
+            "base_error_class": "SOCKET_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N07_NETWORK",
+            "operator_id": "INSERT_HTTP_CALL__N07_NETWORK",
+            "selector": "AST:http#N07_NETWORK",
+            "expected_code": "NETWORK_FORBIDDEN__N07_NETWORK",
+            "base_error_class": "NETWORK_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N07_METADATA",
+            "operator_id": "INSERT_METADATA_CALL__N07_METADATA",
+            "selector": "AST:169.254.169.254#N07_METADATA",
+            "expected_code": "METADATA_FORBIDDEN__N07_METADATA",
+            "base_error_class": "METADATA_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N07_SDK",
+            "operator_id": "INSERT_BOTO_CALL__N07_SDK",
+            "selector": "AST:boto3|botocore#N07_SDK",
+            "expected_code": "AWS_SDK_FORBIDDEN__N07_SDK",
+            "base_error_class": "AWS_SDK_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N07_AWSCLI",
+            "operator_id": "INSERT_SUBPROCESS_AWS__N07_AWSCLI",
+            "selector": "AST:subprocess/aws#N07_AWSCLI",
+            "expected_code": "AWS_SUBPROCESS_FORBIDDEN__N07_AWSCLI",
+            "base_error_class": "AWS_SUBPROCESS_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N07_OTHER_PROCESS",
+            "operator_id": "INSERT_UNDECLARED_SUBPROCESS__N07_OTHER_PROCESS",
+            "selector": "AST:subprocess#N07_OTHER_PROCESS",
+            "expected_code": "UNDECLARED_SUBPROCESS_FORBIDDEN__N07_OTHER_PROCESS",
+            "base_error_class": "UNDECLARED_SUBPROCESS_FORBIDDEN"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N08",
+      "lane": "SOURCE_AND_ANCESTRY",
+      "theme": "Source HEAD differs from declared implementation integration",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N08/base",
+        "mode": "both",
+        "operator_id": "REPLACE_SOURCE_HEAD",
+        "target_file": "repository",
+        "json_path_or_ast_selector": ".git/HEAD",
+        "deterministic_constructor": "construct_c0_asph_n08",
+        "constructor_arguments": {
+          "mutation_axis": "Source HEAD differs from declared implementation integration"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "SOURCE_HEAD_MISMATCH",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N09",
+      "lane": "SOURCE_AND_ANCESTRY",
+      "theme": "Source HEAD is implementation candidate instead of integration",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N09/base",
+        "mode": "both",
+        "operator_id": "CHECKOUT_IMPLEMENTATION_CANDIDATE",
+        "target_file": "repository",
+        "json_path_or_ast_selector": ".git/HEAD",
+        "deterministic_constructor": "construct_c0_asph_n09",
+        "constructor_arguments": {
+          "mutation_axis": "Source HEAD is implementation candidate instead of integration"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "SOURCE_NOT_INTEGRATION",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N10",
+      "lane": "SOURCE_AND_ANCESTRY",
+      "theme": "Implementation candidate is not exact second parent or has extra parent",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N10/base",
+        "mode": "both",
+        "operator_id": "MUTATE_IMPLEMENTATION_PARENT_GRAPH",
+        "target_file": "repository",
+        "json_path_or_ast_selector": "git.parents",
+        "deterministic_constructor": "construct_c0_asph_n10",
+        "constructor_arguments": {
+          "mutation_axis": "Implementation candidate is not exact second parent or has extra parent"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "ANCESTRY_MISMATCH",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N11",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Noncanonical audit/provisional files and every relative nonnormalized symlink or invalid-parent input path independently refuse",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N11/base",
+        "mode": "static-validation",
+        "operator_id": "MUTATE_CANONICAL_OR_PATH_INPUT",
+        "target_file": "audit-record-or-provisional-put-observation.json",
+        "json_path_or_ast_selector": "audit-record|provisional-observation|source|input|output-parent",
+        "deterministic_constructor": "construct_c0_asph_n11",
+        "constructor_arguments": {
+          "mutation_axis": "Noncanonical audit/provisional files and every relative nonnormalized symlink or invalid-parent input path independently refuse"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "INPUT_CANONICAL_OR_PATH_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N11_AUDIT_ORDER",
+            "operator_id": "REORDER_AUDIT_JSON_KEYS__N11_AUDIT_ORDER",
+            "selector": "audit-record#N11_AUDIT_ORDER",
+            "expected_code": "AUDIT_NONCANONICAL__N11_AUDIT_ORDER",
+            "base_error_class": "AUDIT_NONCANONICAL"
+          },
+          {
+            "subcase_id": "N11_PROVISIONAL_LF",
+            "operator_id": "ADD_PROVISIONAL_FINAL_LF__N11_PROVISIONAL_LF",
+            "selector": "provisional-observation#N11_PROVISIONAL_LF",
+            "expected_code": "PROVISIONAL_NONCANONICAL__N11_PROVISIONAL_LF",
+            "base_error_class": "PROVISIONAL_NONCANONICAL"
+          },
+          {
+            "subcase_id": "N11_DUPLICATE",
+            "operator_id": "INSERT_DUPLICATE_JSON_KEY__N11_DUPLICATE",
+            "selector": "raw-input#N11_DUPLICATE",
+            "expected_code": "JSON_DUPLICATE_KEY__N11_DUPLICATE",
+            "base_error_class": "JSON_DUPLICATE_KEY"
+          },
+          {
+            "subcase_id": "N11_FLOAT",
+            "operator_id": "INSERT_JSON_FLOAT__N11_FLOAT",
+            "selector": "raw-input#N11_FLOAT",
+            "expected_code": "JSON_FLOAT_FORBIDDEN__N11_FLOAT",
+            "base_error_class": "JSON_FLOAT_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N11_NONFINITE",
+            "operator_id": "INSERT_JSON_NONFINITE__N11_NONFINITE",
+            "selector": "raw-input#N11_NONFINITE",
+            "expected_code": "JSON_NONFINITE_FORBIDDEN__N11_NONFINITE",
+            "base_error_class": "JSON_NONFINITE_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N11_NFC",
+            "operator_id": "INSERT_NON_NFC_TEXT__N11_NFC",
+            "selector": "raw-input#N11_NFC",
+            "expected_code": "JSON_NON_NFC__N11_NFC",
+            "base_error_class": "JSON_NON_NFC"
+          },
+          {
+            "subcase_id": "N11_RELATIVE",
+            "operator_id": "SET_SOURCE_RELATIVE__N11_RELATIVE",
+            "selector": "--source#N11_RELATIVE",
+            "expected_code": "SOURCE_PATH_RELATIVE__N11_RELATIVE",
+            "base_error_class": "SOURCE_PATH_RELATIVE"
+          },
+          {
+            "subcase_id": "N11_NONNORMAL",
+            "operator_id": "SET_INPUT_NONNORMALIZED__N11_NONNORMAL",
+            "selector": "--authority-audit-record#N11_NONNORMAL",
+            "expected_code": "INPUT_PATH_NON_NORMALIZED__N11_NONNORMAL",
+            "base_error_class": "INPUT_PATH_NON_NORMALIZED"
+          },
+          {
+            "subcase_id": "N11_SOURCE_SYMLINK",
+            "operator_id": "MAKE_SOURCE_SYMLINK__N11_SOURCE_SYMLINK",
+            "selector": "--source#N11_SOURCE_SYMLINK",
+            "expected_code": "SOURCE_SYMLINK__N11_SOURCE_SYMLINK",
+            "base_error_class": "SOURCE_SYMLINK"
+          },
+          {
+            "subcase_id": "N11_INPUT_SYMLINK",
+            "operator_id": "MAKE_INPUT_SYMLINK__N11_INPUT_SYMLINK",
+            "selector": "--authority-audit-receipt#N11_INPUT_SYMLINK",
+            "expected_code": "INPUT_SYMLINK__N11_INPUT_SYMLINK",
+            "base_error_class": "INPUT_SYMLINK"
+          },
+          {
+            "subcase_id": "N11_PARENT",
+            "operator_id": "SET_OUTPUT_PARENT_NON_DIRECTORY__N11_PARENT",
+            "selector": "--output#N11_PARENT",
+            "expected_code": "OUTPUT_PARENT_NOT_DIRECTORY__N11_PARENT",
+            "base_error_class": "OUTPUT_PARENT_NOT_DIRECTORY"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N12",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Audit digest/reconstruction or deterministic HEAD-derived time mismatch and invalid epoch bounds independently refuse",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N12/base",
+        "mode": "static-validation",
+        "operator_id": "MUTATE_AUDIT_OR_TIME",
+        "target_file": "authority-audit.json",
+        "json_path_or_ast_selector": "audit-record|HEAD:committer_epoch_seconds",
+        "deterministic_constructor": "construct_c0_asph_n12",
+        "constructor_arguments": {
+          "mutation_axis": "Audit digest/reconstruction or deterministic HEAD-derived time mismatch and invalid epoch bounds independently refuse"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "AUDIT_RECONSTRUCTION_OR_TIME_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N12_DIGEST",
+            "operator_id": "REPLACE_RECORD_SHA256__N12_DIGEST",
+            "selector": "/record_sha256#N12_DIGEST",
+            "expected_code": "AUDIT_DIGEST_MISMATCH__N12_DIGEST",
+            "base_error_class": "AUDIT_DIGEST_MISMATCH"
+          },
+          {
+            "subcase_id": "N12_BYTES",
+            "operator_id": "FLIP_AUDIT_BYTE__N12_BYTES",
+            "selector": "audit-record#N12_BYTES",
+            "expected_code": "AUDIT_RECONSTRUCTION_MISMATCH__N12_BYTES",
+            "base_error_class": "AUDIT_RECONSTRUCTION_MISMATCH"
+          },
+          {
+            "subcase_id": "N12_TIME",
+            "operator_id": "REPLACE_OBSERVED_UTC__N12_TIME",
+            "selector": "/observed_utc#N12_TIME",
+            "expected_code": "AUDIT_HEAD_TIME_MISMATCH__N12_TIME",
+            "base_error_class": "AUDIT_HEAD_TIME_MISMATCH"
+          },
+          {
+            "subcase_id": "N12_SOURCE_HEAD",
+            "operator_id": "USE_DIFFERENT_MODE_B_SOURCE_HEAD__N12_SOURCE_HEAD",
+            "selector": "HEAD#N12_SOURCE_HEAD",
+            "expected_code": "MODE_SOURCE_HEAD_MISMATCH__N12_SOURCE_HEAD",
+            "base_error_class": "MODE_SOURCE_HEAD_MISMATCH"
+          },
+          {
+            "subcase_id": "N12_WALL_CLOCK",
+            "operator_id": "USE_WALL_CLOCK_TIMESTAMP__N12_WALL_CLOCK",
+            "selector": "/observed_utc#N12_WALL_CLOCK",
+            "expected_code": "AMBIENT_TIME_FORBIDDEN__N12_WALL_CLOCK",
+            "base_error_class": "AMBIENT_TIME_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N12_INT64_PLUS_ONE",
+            "operator_id": "SET_EPOCH_SIGNED_INT64_MAX_PLUS_ONE__N12_INT64_PLUS_ONE",
+            "selector": "HEAD:committer_epoch_seconds#N12_INT64_PLUS_ONE",
+            "expected_code": "SIGNED_INT64_OVERFLOW__N12_INT64_PLUS_ONE",
+            "base_error_class": "SIGNED_INT64_OVERFLOW"
+          },
+          {
+            "subcase_id": "N12_RENDER_RANGE",
+            "operator_id": "SET_EPOCH_OUTSIDE_YEAR_9999__N12_RENDER_RANGE",
+            "selector": "HEAD:committer_epoch_seconds#N12_RENDER_RANGE",
+            "expected_code": "TIMESTAMP_RENDER_RANGE__N12_RENDER_RANGE",
+            "base_error_class": "TIMESTAMP_RENDER_RANGE"
+          },
+          {
+            "subcase_id": "N12_RENDER_RANGE_LOW",
+            "operator_id": "SET_EPOCH_BEFORE_YEAR_0001__N12_RENDER_RANGE_LOW",
+            "selector": "HEAD:committer_epoch_seconds#N12_RENDER_RANGE_LOW",
+            "expected_code": "TIMESTAMP_RENDER_RANGE__N12_RENDER_RANGE_LOW",
+            "base_error_class": "TIMESTAMP_RENDER_RANGE"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N13",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Missing provisional audit Put observation refuses and cannot be inferred from S3 latest",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N13/base",
+        "mode": "static-validation",
+        "operator_id": "REMOVE_PROVISIONAL_PUT_OBSERVATION",
+        "target_file": "argv",
+        "json_path_or_ast_selector": "--authority-audit-receipt",
+        "deterministic_constructor": "construct_c0_asph_n13",
+        "constructor_arguments": {
+          "mutation_axis": "Missing provisional audit Put observation refuses and cannot be inferred from S3 latest"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "PROVISIONAL_PUT_OBSERVATION_MISSING",
+        "independent_subcases": [],
+        "subcase_aggregation": "ONE_DIRECT_EXECUTION_RECEIPT"
+      }
+    },
+    {
+      "id": "C0-ASPH-N14",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Temporary-role SigV4 evidence refuses an omitted security token, persisted raw token, token-hash/session substitution, unequal signed-header views, Host/TLS mismatch, or credential-scope mismatch",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N14/base",
+        "mode": "static-validation",
+        "operator_id": "FABRICATE_PROVISIONAL_THEN_READBACK",
+        "target_file": "provisional-put-and-readback-observations.json",
+        "json_path_or_ast_selector": "provisional-put|authenticated-readback",
+        "deterministic_constructor": "construct_c0_asph_n14",
+        "constructor_arguments": {
+          "mutation_axis": "Temporary-role SigV4 evidence refuses an omitted security token, persisted raw token, token-hash/session substitution, unequal signed-header views, Host/TLS mismatch, or credential-scope mismatch"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "AUTHENTICATED_READBACK_REQUIRED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N14_TOKEN_OMITTED",
+            "operator_id": "OMIT_X_AMZ_SECURITY_TOKEN_FROM_SIGNED_HEADERS__N14_TOKEN_OMITTED",
+            "selector": "/authenticated_readback/get_request/signed_headers#N14_TOKEN_OMITTED",
+            "expected_code": "SIGV4_SECURITY_TOKEN_HEADER_OMITTED__N14_TOKEN_OMITTED",
+            "base_error_class": "SIGV4_SECURITY_TOKEN_HEADER_OMITTED"
+          },
+          {
+            "subcase_id": "N14_RAW_TOKEN_PERSISTED",
+            "operator_id": "PERSIST_RAW_SESSION_TOKEN_OR_ACCESS_SECRET__N14_RAW_TOKEN_PERSISTED",
+            "selector": "/authenticated_readback/get_request/sigv4_authentication#N14_RAW_TOKEN_PERSISTED",
+            "expected_code": "RAW_TEMPORARY_CREDENTIAL_MATERIAL_PERSISTED__N14_RAW_TOKEN_PERSISTED",
+            "base_error_class": "RAW_TEMPORARY_CREDENTIAL_MATERIAL_PERSISTED"
+          },
+          {
+            "subcase_id": "N14_TOKEN_SESSION_MISMATCH",
+            "operator_id": "REPLACE_SECURITY_TOKEN_HASH_OR_APPROVED_ROLE_SESSION_IDENTITY__N14_TOKEN_SESSION_MISMATCH",
+            "selector": "/authenticated_readback/get_request/sigv4_authentication/security_token_sha256#N14_TOKEN_SESSION_MISMATCH",
+            "expected_code": "SECURITY_TOKEN_HASH_SESSION_MISMATCH__N14_TOKEN_SESSION_MISMATCH",
+            "base_error_class": "SECURITY_TOKEN_HASH_SESSION_MISMATCH"
+          },
+          {
+            "subcase_id": "N14_SIGNED_HEADERS_MISMATCH",
+            "operator_id": "DIVERGE_TOP_LEVEL_AND_NESTED_SIGNED_HEADERS__N14_SIGNED_HEADERS_MISMATCH",
+            "selector": "/authenticated_readback/get_request/sigv4_authentication/signed_headers#N14_SIGNED_HEADERS_MISMATCH",
+            "expected_code": "SIGNED_HEADERS_VIEW_MISMATCH__N14_SIGNED_HEADERS_MISMATCH",
+            "base_error_class": "SIGNED_HEADERS_VIEW_MISMATCH"
+          },
+          {
+            "subcase_id": "N14_HOST_TLS_MISMATCH",
+            "operator_id": "REPLACE_SIGNED_HOST_OR_TLS_SERVER_NAME__N14_HOST_TLS_MISMATCH",
+            "selector": "/authenticated_readback/get_response/tls_authenticated_response/server_name#N14_HOST_TLS_MISMATCH",
+            "expected_code": "SIGNED_HOST_TLS_SERVER_NAME_MISMATCH__N14_HOST_TLS_MISMATCH",
+            "base_error_class": "SIGNED_HOST_TLS_SERVER_NAME_MISMATCH"
+          },
+          {
+            "subcase_id": "N14_CREDENTIAL_SCOPE",
+            "operator_id": "REPLACE_SIGV4_CREDENTIAL_SCOPE_REGION_OR_SERVICE__N14_CREDENTIAL_SCOPE",
+            "selector": "/authenticated_readback/get_request/sigv4_authentication/credential_scope#N14_CREDENTIAL_SCOPE",
+            "expected_code": "SIGV4_CREDENTIAL_SCOPE_MISMATCH__N14_CREDENTIAL_SCOPE",
+            "base_error_class": "SIGV4_CREDENTIAL_SCOPE_MISMATCH"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N15",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Wrong deterministic key, empty VersionId, missing If-None-Match star, duplicate version, or delete marker independently refuses final publication evidence",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N15/base",
+        "mode": "static-validation",
+        "operator_id": "MUTATE_PROVISIONAL_OR_HISTORY_COORDINATE",
+        "target_file": "provisional-put-and-readback-observations.json",
+        "json_path_or_ast_selector": "key|version_id|if_none_match|history",
+        "deterministic_constructor": "construct_c0_asph_n15",
+        "constructor_arguments": {
+          "mutation_axis": "Wrong deterministic key, empty VersionId, missing If-None-Match star, duplicate version, or delete marker independently refuses final publication evidence"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "PUBLICATION_COORDINATE_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N15_KEY",
+            "operator_id": "MUTATE_PROVISIONAL_KEY__N15_KEY",
+            "selector": "/key#N15_KEY",
+            "expected_code": "PROVISIONAL_KEY_MISMATCH__N15_KEY",
+            "base_error_class": "PROVISIONAL_KEY_MISMATCH"
+          },
+          {
+            "subcase_id": "N15_VERSION",
+            "operator_id": "EMPTY_PROVISIONAL_VERSION__N15_VERSION",
+            "selector": "/version_id#N15_VERSION",
+            "expected_code": "PROVISIONAL_VERSION_MISSING__N15_VERSION",
+            "base_error_class": "PROVISIONAL_VERSION_MISSING"
+          },
+          {
+            "subcase_id": "N15_CONDITION",
+            "operator_id": "REMOVE_IF_NONE_MATCH_STAR__N15_CONDITION",
+            "selector": "/request/if_none_match#N15_CONDITION",
+            "expected_code": "CONDITIONAL_PUT_REQUIRED__N15_CONDITION",
+            "base_error_class": "CONDITIONAL_PUT_REQUIRED"
+          },
+          {
+            "subcase_id": "N15_DUP_VERSION",
+            "operator_id": "ADD_SECOND_MATCHING_VERSION__N15_DUP_VERSION",
+            "selector": "/readback/version_history#N15_DUP_VERSION",
+            "expected_code": "VERSION_HISTORY_NOT_UNIQUE__N15_DUP_VERSION",
+            "base_error_class": "VERSION_HISTORY_NOT_UNIQUE"
+          },
+          {
+            "subcase_id": "N15_DELETE",
+            "operator_id": "ADD_MATCHING_DELETE_MARKER__N15_DELETE",
+            "selector": "/readback/version_history#N15_DELETE",
+            "expected_code": "DELETE_MARKER_REFUSED__N15_DELETE",
+            "base_error_class": "DELETE_MARKER_REFUSED"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N16",
+      "lane": "PUBLICATION_HANDOFF",
+      "theme": "Provisional/readback content, transcript, checksum, identity, or signed-int64 range mismatch independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N16/base",
+        "mode": "static-validation",
+        "operator_id": "MUTATE_PUBLICATION_BINDING",
+        "target_file": "provisional-put-and-readback-observations.json",
+        "json_path_or_ast_selector": "provisional|readback",
+        "deterministic_constructor": "construct_c0_asph_n16",
+        "constructor_arguments": {
+          "mutation_axis": "Provisional/readback content, transcript, checksum, identity, or signed-int64 range mismatch independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "PUBLICATION_BINDING_MISMATCH",
+        "independent_subcases": [
+          {
+            "subcase_id": "N16_BYTES",
+            "operator_id": "INCREMENT_OBSERVED_BYTES__N16_BYTES",
+            "selector": "/bytes#N16_BYTES",
+            "expected_code": "READBACK_BYTES_MISMATCH__N16_BYTES",
+            "base_error_class": "READBACK_BYTES_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_SHA",
+            "operator_id": "REPLACE_OBSERVED_SHA256__N16_SHA",
+            "selector": "/sha256#N16_SHA",
+            "expected_code": "READBACK_SHA256_MISMATCH__N16_SHA",
+            "base_error_class": "READBACK_SHA256_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_CHECKSUM",
+            "operator_id": "REPLACE_OBSERVED_CHECKSUM__N16_CHECKSUM",
+            "selector": "/checksum_sha256_base64#N16_CHECKSUM",
+            "expected_code": "READBACK_CHECKSUM_MISMATCH__N16_CHECKSUM",
+            "base_error_class": "READBACK_CHECKSUM_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_IDENTITY",
+            "operator_id": "REPLACE_RECORD_IDENTITY__N16_IDENTITY",
+            "selector": "/record_identity#N16_IDENTITY",
+            "expected_code": "READBACK_IDENTITY_MISMATCH__N16_IDENTITY",
+            "base_error_class": "READBACK_IDENTITY_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_REQUEST_BYTES",
+            "operator_id": "REPLACE_REQUEST_CANONICAL_BYTES__N16_REQUEST_BYTES",
+            "selector": "/request_canonical_json_base64#N16_REQUEST_BYTES",
+            "expected_code": "REQUEST_PREIMAGE_MISMATCH__N16_REQUEST_BYTES",
+            "base_error_class": "REQUEST_PREIMAGE_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_REQUEST_SHA",
+            "operator_id": "REPLACE_REQUEST_SHA256__N16_REQUEST_SHA",
+            "selector": "/request_sha256#N16_REQUEST_SHA",
+            "expected_code": "REQUEST_SHA256_MISMATCH__N16_REQUEST_SHA",
+            "base_error_class": "REQUEST_SHA256_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_RESPONSE_BYTES",
+            "operator_id": "REPLACE_RESPONSE_CANONICAL_BYTES__N16_RESPONSE_BYTES",
+            "selector": "/response_canonical_json_base64#N16_RESPONSE_BYTES",
+            "expected_code": "RESPONSE_PREIMAGE_MISMATCH__N16_RESPONSE_BYTES",
+            "base_error_class": "RESPONSE_PREIMAGE_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_RESPONSE_SHA",
+            "operator_id": "REPLACE_RESPONSE_SHA256__N16_RESPONSE_SHA",
+            "selector": "/response_sha256#N16_RESPONSE_SHA",
+            "expected_code": "RESPONSE_SHA256_MISMATCH__N16_RESPONSE_SHA",
+            "base_error_class": "RESPONSE_SHA256_MISMATCH"
+          },
+          {
+            "subcase_id": "N16_INT64_MAX_PLUS_ONE",
+            "operator_id": "SET_BYTE_COUNT_TO_9223372036854775808__N16_INT64_MAX_PLUS_ONE",
+            "selector": "/bytes#N16_INT64_MAX_PLUS_ONE",
+            "expected_code": "SIGNED_INT64_OVERFLOW__N16_INT64_MAX_PLUS_ONE",
+            "base_error_class": "SIGNED_INT64_OVERFLOW"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N17",
+      "lane": "MODE_A_AUTHORITY_AUDIT",
+      "theme": "Audit output containing publication key, provisional observation, authenticated readback, VersionId, or self evidence independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N17/base",
+        "mode": "authority-audit",
+        "operator_id": "ADD_FUTURE_PUBLICATION_FIELD",
+        "target_file": "authority-audit.json",
+        "json_path_or_ast_selector": "publication_key|provisional|readback|version_id",
+        "deterministic_constructor": "construct_c0_asph_n17",
+        "constructor_arguments": {
+          "mutation_axis": "Audit output containing publication key, provisional observation, authenticated readback, VersionId, or self evidence independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "AUDIT_FUTURE_PUBLICATION_FIELD_FORBIDDEN",
+        "independent_subcases": [
+          {
+            "subcase_id": "N17_KEY",
+            "operator_id": "ADD_PUBLICATION_KEY_TO_ROOT__N17_KEY",
+            "selector": "/publication_key#N17_KEY",
+            "expected_code": "AUDIT_FUTURE_PUBLICATION_KEY_FORBIDDEN__N17_KEY",
+            "base_error_class": "AUDIT_FUTURE_PUBLICATION_KEY_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N17_PROVISIONAL",
+            "operator_id": "ADD_PROVISIONAL_OBSERVATION_TO_ROOT__N17_PROVISIONAL",
+            "selector": "/provisional_observation#N17_PROVISIONAL",
+            "expected_code": "AUDIT_FUTURE_PROVISIONAL_FORBIDDEN__N17_PROVISIONAL",
+            "base_error_class": "AUDIT_FUTURE_PROVISIONAL_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N17_READBACK",
+            "operator_id": "ADD_AUTHENTICATED_READBACK_TO_ROOT__N17_READBACK",
+            "selector": "/authenticated_readback#N17_READBACK",
+            "expected_code": "AUDIT_FUTURE_READBACK_FORBIDDEN__N17_READBACK",
+            "base_error_class": "AUDIT_FUTURE_READBACK_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N17_VERSION",
+            "operator_id": "ADD_VERSION_ID_TO_ROOT__N17_VERSION",
+            "selector": "/version_id#N17_VERSION",
+            "expected_code": "AUDIT_FUTURE_VERSION_FORBIDDEN__N17_VERSION",
+            "base_error_class": "AUDIT_FUTURE_VERSION_FORBIDDEN"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N18",
+      "lane": "MODE_B_STATIC_VALIDATION",
+      "theme": "Old static-v2 kind or any wrong bootstrap authority/policy/attestation alias in new contexts independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N18/base",
+        "mode": "static-validation",
+        "operator_id": "REPLACE_VERSIONED_KIND",
+        "target_file": "launch-retrieval-final.json",
+        "json_path_or_ast_selector": "prelive|closure|live|launch|retrieval|final",
+        "deterministic_constructor": "construct_c0_asph_n18",
+        "constructor_arguments": {
+          "mutation_axis": "Old static-v2 kind or any wrong bootstrap authority/policy/attestation alias in new contexts independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "VERSIONED_KIND_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N18_PRELIVE_STATIC",
+            "operator_id": "SET_PRELIVE_STATIC_V2__N18_PRELIVE_STATIC",
+            "selector": "prelive[15]#N18_PRELIVE_STATIC",
+            "expected_code": "STATIC_V2_KIND_REFUSED__N18_PRELIVE_STATIC",
+            "base_error_class": "STATIC_V2_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_CLOSURE_STATIC",
+            "operator_id": "SET_CLOSURE_STATIC_V2__N18_CLOSURE_STATIC",
+            "selector": "preparation-closure#N18_CLOSURE_STATIC",
+            "expected_code": "STATIC_V2_KIND_REFUSED__N18_CLOSURE_STATIC",
+            "base_error_class": "STATIC_V2_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_LIVE_STATIC",
+            "operator_id": "SET_LIVE_STATIC_V2__N18_LIVE_STATIC",
+            "selector": "live-packet#N18_LIVE_STATIC",
+            "expected_code": "STATIC_V2_KIND_REFUSED__N18_LIVE_STATIC",
+            "base_error_class": "STATIC_V2_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_LAUNCH_STATIC",
+            "operator_id": "SET_LAUNCH_STATIC_V2__N18_LAUNCH_STATIC",
+            "selector": "launch#N18_LAUNCH_STATIC",
+            "expected_code": "STATIC_V2_KIND_REFUSED__N18_LAUNCH_STATIC",
+            "base_error_class": "STATIC_V2_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_RETRIEVAL_STATIC",
+            "operator_id": "SET_RETRIEVAL_STATIC_V2__N18_RETRIEVAL_STATIC",
+            "selector": "retrieval#N18_RETRIEVAL_STATIC",
+            "expected_code": "STATIC_V2_KIND_REFUSED__N18_RETRIEVAL_STATIC",
+            "base_error_class": "STATIC_V2_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_FINAL_STATIC",
+            "operator_id": "SET_FINAL_STATIC_V2__N18_FINAL_STATIC",
+            "selector": "final-manifest#N18_FINAL_STATIC",
+            "expected_code": "STATIC_V2_KIND_REFUSED__N18_FINAL_STATIC",
+            "base_error_class": "STATIC_V2_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_BOOTSTRAP_AUTHORITY",
+            "operator_id": "SET_BOOTSTRAP_AUTHORITY_ALIAS__N18_BOOTSTRAP_AUTHORITY",
+            "selector": "prelive[8]#N18_BOOTSTRAP_AUTHORITY",
+            "expected_code": "BOOTSTRAP_KIND_REFUSED__N18_BOOTSTRAP_AUTHORITY",
+            "base_error_class": "BOOTSTRAP_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_BOOTSTRAP_POLICY",
+            "operator_id": "SET_BOOTSTRAP_POLICY_ALIAS__N18_BOOTSTRAP_POLICY",
+            "selector": "prelive[9]#N18_BOOTSTRAP_POLICY",
+            "expected_code": "BOOTSTRAP_KIND_REFUSED__N18_BOOTSTRAP_POLICY",
+            "base_error_class": "BOOTSTRAP_KIND_REFUSED"
+          },
+          {
+            "subcase_id": "N18_BOOTSTRAP_ATTESTATION",
+            "operator_id": "SET_BOOTSTRAP_ATTESTATION_ALIAS__N18_BOOTSTRAP_ATTESTATION",
+            "selector": "prelive[10]#N18_BOOTSTRAP_ATTESTATION",
+            "expected_code": "BOOTSTRAP_KIND_REFUSED__N18_BOOTSTRAP_ATTESTATION",
+            "base_error_class": "BOOTSTRAP_KIND_REFUSED"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N19",
+      "lane": "OUTPUT_PROTOCOL",
+      "theme": "Partial output overwrite symlink output or final LF refuses without new destination",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N19/base",
+        "mode": "both",
+        "operator_id": "FAIL_OUTPUT_PROTOCOL",
+        "target_file": "output",
+        "json_path_or_ast_selector": "filesystem_state",
+        "deterministic_constructor": "construct_c0_asph_n19",
+        "constructor_arguments": {
+          "mutation_axis": "Partial output overwrite symlink output or final LF refuses without new destination"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "OUTPUT_PROTOCOL_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N19_PARTIAL",
+            "operator_id": "RAISE_AFTER_PARTIAL_TEMP_WRITE__N19_PARTIAL",
+            "selector": "temporary_file#N19_PARTIAL",
+            "expected_code": "NO_PARTIAL_OUTPUT__N19_PARTIAL",
+            "base_error_class": "NO_PARTIAL_OUTPUT"
+          },
+          {
+            "subcase_id": "N19_PREEXISTING",
+            "operator_id": "PRECREATE_DESTINATION__N19_PREEXISTING",
+            "selector": "output_path#N19_PREEXISTING",
+            "expected_code": "OUTPUT_EXISTS__N19_PREEXISTING",
+            "base_error_class": "OUTPUT_EXISTS"
+          },
+          {
+            "subcase_id": "N19_SYMLINK",
+            "operator_id": "MAKE_OUTPUT_SYMLINK__N19_SYMLINK",
+            "selector": "output_path#N19_SYMLINK",
+            "expected_code": "OUTPUT_SYMLINK__N19_SYMLINK",
+            "base_error_class": "OUTPUT_SYMLINK"
+          },
+          {
+            "subcase_id": "N19_FINAL_LF",
+            "operator_id": "APPEND_FINAL_LF__N19_FINAL_LF",
+            "selector": "output_bytes#N19_FINAL_LF",
+            "expected_code": "OUTPUT_NONCANONICAL__N19_FINAL_LF",
+            "base_error_class": "OUTPUT_NONCANONICAL"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    },
+    {
+      "id": "C0-ASPH-N20",
+      "lane": "SSM_DISPATCH_ENVELOPE",
+      "theme": "SSM self-inclusion, fixpoint, unknown/extra/missing/duplicate, transport mismatch, or omission of any inherited coordinate independently refuses",
+      "execution_spec": {
+        "base_fixture": "aws/c0/fixtures/negative-cases.json#/cases/C0-ASPH-N20/base",
+        "mode": "both",
+        "operator_id": "MUTATE_SSM_DISPATCH_ENVELOPE",
+        "target_file": "ssm-envelope.json",
+        "json_path_or_ast_selector": "semantic-21|transport-2",
+        "deterministic_constructor": "construct_c0_asph_n20",
+        "constructor_arguments": {
+          "mutation_axis": "SSM self-inclusion, fixpoint, unknown/extra/missing/duplicate, transport mismatch, or omission of any inherited coordinate independently refuses"
+        },
+        "expected_disposition": "REFUSE",
+        "expected_code": "SSM_DISPATCH_V2_REFUSED",
+        "independent_subcases": [
+          {
+            "subcase_id": "N20_SELF_BASE64",
+            "operator_id": "INSERT_BASE64_IN_SEMANTIC_PARAMETERS__N20_SELF_BASE64",
+            "selector": "/semantic_parameters/SsmDispatchRequestCanonicalJsonBase64#N20_SELF_BASE64",
+            "expected_code": "SSM_SEMANTIC_SELF_REFERENCE__N20_SELF_BASE64",
+            "base_error_class": "SSM_SEMANTIC_SELF_REFERENCE"
+          },
+          {
+            "subcase_id": "N20_SELF_SHA",
+            "operator_id": "INSERT_SHA_IN_SEMANTIC_PARAMETERS__N20_SELF_SHA",
+            "selector": "/semantic_parameters/SsmDispatchRequestSha256#N20_SELF_SHA",
+            "expected_code": "SSM_SEMANTIC_SELF_REFERENCE__N20_SELF_SHA",
+            "base_error_class": "SSM_SEMANTIC_SELF_REFERENCE"
+          },
+          {
+            "subcase_id": "N20_FIXPOINT",
+            "operator_id": "ATTEMPT_DISPATCH_HASH_FIXPOINT__N20_FIXPOINT",
+            "selector": "canonical_preimage#N20_FIXPOINT",
+            "expected_code": "SSM_FIXPOINT_FORBIDDEN__N20_FIXPOINT",
+            "base_error_class": "SSM_FIXPOINT_FORBIDDEN"
+          },
+          {
+            "subcase_id": "N20_EXTRA",
+            "operator_id": "ADD_UNKNOWN_SENDCOMMAND_PARAMETER__N20_EXTRA",
+            "selector": "/actual_send_command_parameters/Extra#N20_EXTRA",
+            "expected_code": "SSM_PARAMETER_EXTRA__N20_EXTRA",
+            "base_error_class": "SSM_PARAMETER_EXTRA"
+          },
+          {
+            "subcase_id": "N20_MISSING_LAUNCH_BYTES",
+            "operator_id": "REMOVE_SEMANTIC_PARAMETER__N20_MISSING_LAUNCH_BYTES",
+            "selector": "/actual_send_command_parameters/LaunchRequestBytes#N20_MISSING_LAUNCH_BYTES",
+            "expected_code": "SSM_PARAMETER_MISSING__N20_MISSING_LAUNCH_BYTES",
+            "base_error_class": "SSM_PARAMETER_MISSING"
+          },
+          {
+            "subcase_id": "N20_MISSING_LIVE_PACKET",
+            "operator_id": "REMOVE_SEMANTIC_PARAMETER__N20_MISSING_LIVE_PACKET",
+            "selector": "/actual_send_command_parameters/LivePacketVersionId#N20_MISSING_LIVE_PACKET",
+            "expected_code": "SSM_PARAMETER_MISSING__N20_MISSING_LIVE_PACKET",
+            "base_error_class": "SSM_PARAMETER_MISSING"
+          },
+          {
+            "subcase_id": "N20_MISSING_LIVE_AUTH",
+            "operator_id": "REMOVE_SEMANTIC_PARAMETER__N20_MISSING_LIVE_AUTH",
+            "selector": "/actual_send_command_parameters/LiveAuthorizationSha256#N20_MISSING_LIVE_AUTH",
+            "expected_code": "SSM_PARAMETER_MISSING__N20_MISSING_LIVE_AUTH",
+            "base_error_class": "SSM_PARAMETER_MISSING"
+          },
+          {
+            "subcase_id": "N20_MISSING_TOKEN",
+            "operator_id": "REMOVE_SEMANTIC_PARAMETER__N20_MISSING_TOKEN",
+            "selector": "/actual_send_command_parameters/SsmClientRequestToken#N20_MISSING_TOKEN",
+            "expected_code": "SSM_PARAMETER_MISSING__N20_MISSING_TOKEN",
+            "base_error_class": "SSM_PARAMETER_MISSING"
+          },
+          {
+            "subcase_id": "N20_DUPLICATE",
+            "operator_id": "DUPLICATE_PARAMETER_JSON_KEY__N20_DUPLICATE",
+            "selector": "raw_parameters_json#N20_DUPLICATE",
+            "expected_code": "SSM_PARAMETER_DUPLICATE__N20_DUPLICATE",
+            "base_error_class": "SSM_PARAMETER_DUPLICATE"
+          },
+          {
+            "subcase_id": "N20_BASE64",
+            "operator_id": "MUTATE_TRANSPORT_BASE64__N20_BASE64",
+            "selector": "/actual_send_command_parameters/SsmDispatchRequestCanonicalJsonBase64#N20_BASE64",
+            "expected_code": "SSM_TRANSPORT_BASE64_MISMATCH__N20_BASE64",
+            "base_error_class": "SSM_TRANSPORT_BASE64_MISMATCH"
+          },
+          {
+            "subcase_id": "N20_SHA",
+            "operator_id": "MUTATE_TRANSPORT_SHA256__N20_SHA",
+            "selector": "/actual_send_command_parameters/SsmDispatchRequestSha256#N20_SHA",
+            "expected_code": "SSM_TRANSPORT_SHA256_MISMATCH__N20_SHA",
+            "base_error_class": "SSM_TRANSPORT_SHA256_MISMATCH"
+          },
+          {
+            "subcase_id": "N20_CROSS_BIND",
+            "operator_id": "MUTATE_LIVE_AUTHORIZATION_VERSION__N20_CROSS_BIND",
+            "selector": "/actual_send_command_parameters/LiveAuthorizationVersionId#N20_CROSS_BIND",
+            "expected_code": "SSM_INHERITED_COORDINATE_MISMATCH__N20_CROSS_BIND",
+            "base_error_class": "SSM_INHERITED_COORDINATE_MISMATCH"
+          }
+        ],
+        "subcase_aggregation": "SHA256_CANONICAL_ORDERED_SUBCASE_RECEIPTS"
+      }
+    }
+  ],
+  "positive_case_count": 8,
+  "negative_case_count": 20,
+  "additive_case_count": 28,
+  "preserved_prior_case_count": 324,
+  "combined_case_count": 352,
+  "case_execution_receipt_schema": {
+    "schema": "aws_c0_adversarial_validation_case_receipt/v2",
+    "required": [
+      "case_id",
+      "fixture_id",
+      "validator_function",
+      "constructor_identity",
+      "expected_result",
+      "observed_result",
+      "expected_code",
+      "observed_code",
+      "witness_sha256",
+      "subcase_count",
+      "subcase_receipt_aggregate_sha256",
+      "disposition"
+    ],
+    "one_receipt_per_top_level_coordinate": true,
+    "subcases_each_execute_independently": true,
+    "top_level_receipt_folds_ordered_subcase_receipts": true
+  },
+  "case_execution_rules": {
+    "all_352_case_ids_exactly_once": true,
+    "all_receipts_unique": true,
+    "expected_equals_observed": true,
+    "skip_expected_failure_unexpected_success_exception_swallow_or_generic_helper": "REFUSE",
+    "marker_search_or_coordinate_count_without_constructor_execution": "REFUSE",
+    "constructor_mutates_only_named_axis": true,
+    "output_failure_cases_assert_destination_absent_and_no_partial_files": true,
+    "fabricated_provisional_may_pass_only_structural_construction_but_final_authenticated_readback_must_refuse": true,
+    "all_independent_subcases_must_execute_and_fold_into_one_top_level_receipt": true,
+    "signed_int64_maximum": 9223372036854775807,
+    "signed_int64_maximum_plus_one_refused": "9223372036854775808"
+  },
+  "mandatory_future_validator_algorithms": [
+    "STRICT_CANONICAL_JSON_DUPLICATE_KEY_FLOAT_NONFINITE_NFC_AND_SIGNED_INT64_REFUSAL",
+    "EXACT_TWO_MODE_ARGV_AND_PATH_PARSER_WITH_ALL_REFUSALS",
+    "NO_ENV_STDIN_WALL_CLOCK_FILESYSTEM_TIME_SOCKET_NETWORK_AWS_CREDENTIAL_OR_HIDDEN_FILE_INPUT",
+    "EXACT_SOURCE_HEAD_CANDIDATE_INTEGRATION_PARENT_AND_PATH_RECONSTRUCTION",
+    "AUDIT_V3_SOLE_AUDIT_ROOT_EMBEDS_EXACT_PRIOR_V2_SCHEMA_AND_BYTES_AND_RECONSTRUCTS_HANDOFF_AUTHORITY_REACHABILITY_IMPLEMENTATION_CHAIN",
+    "HEAD_COMMITTER_EPOCH_DETERMINISTIC_POSIX_UTC_TIMESTAMP",
+    "PROVISIONAL_IF_NONE_MATCH_STAR_PUT_OBSERVATION_STRUCTURAL_VALIDATION_WITHOUT_AUTHENTICATION_CLAIM",
+    "INDEPENDENT_EXACT_VERSION_GET_COMPLETE_BYTE_CHECKSUM_AND_ALL_PAGE_UNIQUE_HISTORY_UPGRADE",
+    "READBACK_SIGV4_ALGORITHM_SCOPE_SIGNED_HEADERS_SIGNATURE_DATE_REQUEST_HASH_ROLE_SESSION_CREDENTIAL_SOURCE_EXPIRY_AND_ACCOUNTING_TIME_RECOMPUTATION",
+    "PUT_GET_LIST_TEMPORARY_ROLE_SECURITY_TOKEN_SIGNED_HEADER_EQUALITY_HASH_AND_BYTE_COUNT_ONLY_NO_RAW_SECRET_RUNTIME_RECOMPUTATION_AND_ZEROIZATION",
+    "EXACT_BUCKET_REGION_HOST_CANONICAL_HEADER_DATE_CONTENT_CHECKSUM_CONDITION_AND_TLS_SERVER_NAME_CROSS_BINDING",
+    "OFFLINE_VALIDATION_OF_CONSTRAINED_RUNTIME_ATTESTATION_AND_AUTHENTICATED_READ_HISTORY_WITHOUT_SECRET_SIGNATURE_REDERIVATION_OR_NONFABRICABILITY_OVERCLAIM",
+    "READBACK_TLS_HOSTNAME_CERTIFICATE_CHAIN_PEER_HASH_RESPONSE_HEADER_HASH_AND_REQUEST_ID_AUTHENTICATION",
+    "EVERY_NOVEL_IDENTITY_HAS_EXACT_CLOSED_CANONICAL_PREIMAGE_AND_CONTEXT_KIND",
+    "EXACT_104_SUBCASES_UNIQUE_BY_ID_CALLABLE_SELECTOR_AND_EXPECTED_CODE_WITH_BASE_ERROR_CLASS",
+    "STATIC_V3_FULL_COMMON_STAGE_TEN_ZERO_FIELDS_AND_352_EXECUTED_CASE_RECEIPTS",
+    "ATOMIC_EXCLUSIVE_OUTPUT_NO_FINAL_LF_NO_PARTIAL_FILE",
+    "PREAPPROVAL_NO_FUTURE_AUDIT_STATIC_BYTES_IDENTITIES_OR_PUBLICATION_OBSERVATIONS",
+    "POSTAPPROVAL_TWO_CONDITIONAL_PUTS_TWO_INDEPENDENT_READBACKS_AND_EXACT_HANDOFF",
+    "STATIC_V3_AND_AUTHENTICATED_READBACK_PROPAGATION_TO_CLOSURE_LIVE_LAUNCH_RETRIEVAL_FINAL_MANIFEST",
+    "EXACT_BOOTSTRAP_PACKET_AUTHORIZATION_CLOSURE_KINDS",
+    "SSM_DISPATCH_V2_EXACT_21_SEMANTIC_PLUS_TWO_TRANSPORT_PROJECTION_AND_NO_FIXPOINT",
+    "CONTROLLER_SOURCE_SIDECAR_EXCLUSIVE_REGULAR_NO_SYMLINK_AND_SUPERVISOR_COMPLETION_CROSS_BINDING",
+    "EXACT_156_170_106_120_SCOPE_AND_14_PATH_GATE",
+    "ZERO_SCIENCE_AND_NO_AWS_EXECUTION"
+  ],
+  "future_reachability_scope_counts": {
+    "global_authority_only": 156,
+    "global_completed_implementation": 170,
+    "descendant_authority_only": 106,
+    "descendant_completed_implementation": 120,
+    "reachability_unique_paths_added": 0,
+    "implementation_paths_added": 14
+  },
+  "case_id_groups_in_order": [
+    {
+      "contract_path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+      "expected_count": 66,
+      "case_ids_in_order": [
+        "C0-P01",
+        "C0-P02",
+        "C0-P03",
+        "C0-P04",
+        "C0-P05",
+        "C0-P06",
+        "C0-P07",
+        "C0-P08",
+        "C0-P09",
+        "C0-P10",
+        "C0-P11",
+        "C0-P12",
+        "C0-P13",
+        "C0-P14",
+        "C0-P15",
+        "C0-P16",
+        "C0-P17",
+        "C0-P18",
+        "C0-N01",
+        "C0-N02",
+        "C0-N03",
+        "C0-N04",
+        "C0-N05",
+        "C0-N06",
+        "C0-N07",
+        "C0-N08",
+        "C0-N09",
+        "C0-N10",
+        "C0-N11",
+        "C0-N12",
+        "C0-N13",
+        "C0-N14",
+        "C0-N15",
+        "C0-N16",
+        "C0-N17",
+        "C0-N18",
+        "C0-N19",
+        "C0-N20",
+        "C0-N21",
+        "C0-N22",
+        "C0-N23",
+        "C0-N24",
+        "C0-N25",
+        "C0-N26",
+        "C0-N27",
+        "C0-N28",
+        "C0-N29",
+        "C0-N30",
+        "C0-N31",
+        "C0-N32",
+        "C0-N33",
+        "C0-N34",
+        "C0-N35",
+        "C0-N36",
+        "C0-N37",
+        "C0-N38",
+        "C0-N39",
+        "C0-N40",
+        "C0-N41",
+        "C0-N42",
+        "C0-N43",
+        "C0-N44",
+        "C0-N45",
+        "C0-N46",
+        "C0-N47",
+        "C0-N48"
+      ]
+    },
+    {
+      "contract_path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+      "expected_count": 84,
+      "case_ids_in_order": [
+        "C0-LPC-P01",
+        "C0-LPC-P02",
+        "C0-LPC-P03",
+        "C0-LPC-P04",
+        "C0-LPC-P05",
+        "C0-LPC-P06",
+        "C0-LPC-P07",
+        "C0-LPC-P08",
+        "C0-LPC-P09",
+        "C0-LPC-P10",
+        "C0-LPC-P11",
+        "C0-LPC-P12",
+        "C0-LPC-P13",
+        "C0-LPC-P14",
+        "C0-LPC-P15",
+        "C0-LPC-P16",
+        "C0-LPC-P17",
+        "C0-LPC-P18",
+        "C0-LPC-P19",
+        "C0-LPC-P20",
+        "C0-LPC-P21",
+        "C0-LPC-P22",
+        "C0-LPC-P23",
+        "C0-LPC-P24",
+        "C0-LPC-N01",
+        "C0-LPC-N02",
+        "C0-LPC-N03",
+        "C0-LPC-N04",
+        "C0-LPC-N05",
+        "C0-LPC-N06",
+        "C0-LPC-N07",
+        "C0-LPC-N08",
+        "C0-LPC-N09",
+        "C0-LPC-N10",
+        "C0-LPC-N11",
+        "C0-LPC-N12",
+        "C0-LPC-N13",
+        "C0-LPC-N14",
+        "C0-LPC-N15",
+        "C0-LPC-N16",
+        "C0-LPC-N17",
+        "C0-LPC-N18",
+        "C0-LPC-N19",
+        "C0-LPC-N20",
+        "C0-LPC-N21",
+        "C0-LPC-N22",
+        "C0-LPC-N23",
+        "C0-LPC-N24",
+        "C0-LPC-N25",
+        "C0-LPC-N26",
+        "C0-LPC-N27",
+        "C0-LPC-N28",
+        "C0-LPC-N29",
+        "C0-LPC-N30",
+        "C0-LPC-N31",
+        "C0-LPC-N32",
+        "C0-LPC-N33",
+        "C0-LPC-N34",
+        "C0-LPC-N35",
+        "C0-LPC-N36",
+        "C0-LPC-N37",
+        "C0-LPC-N38",
+        "C0-LPC-N39",
+        "C0-LPC-N40",
+        "C0-LPC-N41",
+        "C0-LPC-N42",
+        "C0-LPC-N43",
+        "C0-LPC-N44",
+        "C0-LPC-N45",
+        "C0-LPC-N46",
+        "C0-LPC-N47",
+        "C0-LPC-N48",
+        "C0-LPC-N49",
+        "C0-LPC-N50",
+        "C0-LPC-N51",
+        "C0-LPC-N52",
+        "C0-LPC-N53",
+        "C0-LPC-N54",
+        "C0-LPC-N55",
+        "C0-LPC-N56",
+        "C0-LPC-N57",
+        "C0-LPC-N58",
+        "C0-LPC-N59",
+        "C0-LPC-N60"
+      ]
+    },
+    {
+      "contract_path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+      "expected_count": 108,
+      "case_ids_in_order": [
+        "C0-CRT-P01",
+        "C0-CRT-P02",
+        "C0-CRT-P03",
+        "C0-CRT-P04",
+        "C0-CRT-P05",
+        "C0-CRT-P06",
+        "C0-CRT-P07",
+        "C0-CRT-P08",
+        "C0-CRT-P09",
+        "C0-CRT-P10",
+        "C0-CRT-P11",
+        "C0-CRT-P12",
+        "C0-CRT-P13",
+        "C0-CRT-P14",
+        "C0-CRT-P15",
+        "C0-CRT-P16",
+        "C0-CRT-P17",
+        "C0-CRT-P18",
+        "C0-CRT-P19",
+        "C0-CRT-P20",
+        "C0-CRT-P21",
+        "C0-CRT-P22",
+        "C0-CRT-P23",
+        "C0-CRT-P24",
+        "C0-CRT-P25",
+        "C0-CRT-P26",
+        "C0-CRT-P27",
+        "C0-CRT-P28",
+        "C0-CRT-P29",
+        "C0-CRT-P30",
+        "C0-CRT-P31",
+        "C0-CRT-P32",
+        "C0-CRT-P33",
+        "C0-CRT-P34",
+        "C0-CRT-P35",
+        "C0-CRT-P36",
+        "C0-CRT-N01",
+        "C0-CRT-N02",
+        "C0-CRT-N03",
+        "C0-CRT-N04",
+        "C0-CRT-N05",
+        "C0-CRT-N06",
+        "C0-CRT-N07",
+        "C0-CRT-N08",
+        "C0-CRT-N09",
+        "C0-CRT-N10",
+        "C0-CRT-N11",
+        "C0-CRT-N12",
+        "C0-CRT-N13",
+        "C0-CRT-N14",
+        "C0-CRT-N15",
+        "C0-CRT-N16",
+        "C0-CRT-N17",
+        "C0-CRT-N18",
+        "C0-CRT-N19",
+        "C0-CRT-N20",
+        "C0-CRT-N21",
+        "C0-CRT-N22",
+        "C0-CRT-N23",
+        "C0-CRT-N24",
+        "C0-CRT-N25",
+        "C0-CRT-N26",
+        "C0-CRT-N27",
+        "C0-CRT-N28",
+        "C0-CRT-N29",
+        "C0-CRT-N30",
+        "C0-CRT-N31",
+        "C0-CRT-N32",
+        "C0-CRT-N33",
+        "C0-CRT-N34",
+        "C0-CRT-N35",
+        "C0-CRT-N36",
+        "C0-CRT-N37",
+        "C0-CRT-N38",
+        "C0-CRT-N39",
+        "C0-CRT-N40",
+        "C0-CRT-N41",
+        "C0-CRT-N42",
+        "C0-CRT-N43",
+        "C0-CRT-N44",
+        "C0-CRT-N45",
+        "C0-CRT-N46",
+        "C0-CRT-N47",
+        "C0-CRT-N48",
+        "C0-CRT-N49",
+        "C0-CRT-N50",
+        "C0-CRT-N51",
+        "C0-CRT-N52",
+        "C0-CRT-N53",
+        "C0-CRT-N54",
+        "C0-CRT-N55",
+        "C0-CRT-N56",
+        "C0-CRT-N57",
+        "C0-CRT-N58",
+        "C0-CRT-N59",
+        "C0-CRT-N60",
+        "C0-CRT-N61",
+        "C0-CRT-N62",
+        "C0-CRT-N63",
+        "C0-CRT-N64",
+        "C0-CRT-N65",
+        "C0-CRT-N66",
+        "C0-CRT-N67",
+        "C0-CRT-N68",
+        "C0-CRT-N69",
+        "C0-CRT-N70",
+        "C0-CRT-N71",
+        "C0-CRT-N72"
+      ]
+    },
+    {
+      "contract_path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+      "expected_count": 66,
+      "case_ids_in_order": [
+        "C0-MIRV-P01",
+        "C0-MIRV-P02",
+        "C0-MIRV-P03",
+        "C0-MIRV-P04",
+        "C0-MIRV-P05",
+        "C0-MIRV-P06",
+        "C0-MIRV-P07",
+        "C0-MIRV-P08",
+        "C0-MIRV-P09",
+        "C0-MIRV-P10",
+        "C0-MIRV-P11",
+        "C0-MIRV-P12",
+        "C0-MIRV-P13",
+        "C0-MIRV-P14",
+        "C0-MIRV-P15",
+        "C0-MIRV-P16",
+        "C0-MIRV-P17",
+        "C0-MIRV-P18",
+        "C0-MIRV-P19",
+        "C0-MIRV-P20",
+        "C0-MIRV-N01",
+        "C0-MIRV-N02",
+        "C0-MIRV-N03",
+        "C0-MIRV-N04",
+        "C0-MIRV-N05",
+        "C0-MIRV-N06",
+        "C0-MIRV-N07",
+        "C0-MIRV-N08",
+        "C0-MIRV-N09",
+        "C0-MIRV-N10",
+        "C0-MIRV-N11",
+        "C0-MIRV-N12",
+        "C0-MIRV-N13",
+        "C0-MIRV-N14",
+        "C0-MIRV-N15",
+        "C0-MIRV-N16",
+        "C0-MIRV-N17",
+        "C0-MIRV-N18",
+        "C0-MIRV-N19",
+        "C0-MIRV-N20",
+        "C0-MIRV-N21",
+        "C0-MIRV-N22",
+        "C0-MIRV-N23",
+        "C0-MIRV-N24",
+        "C0-MIRV-N25",
+        "C0-MIRV-N26",
+        "C0-MIRV-N27",
+        "C0-MIRV-N28",
+        "C0-MIRV-N29",
+        "C0-MIRV-N30",
+        "C0-MIRV-N31",
+        "C0-MIRV-N32",
+        "C0-MIRV-N33",
+        "C0-MIRV-N34",
+        "C0-MIRV-N35",
+        "C0-MIRV-N36",
+        "C0-MIRV-N37",
+        "C0-MIRV-N38",
+        "C0-MIRV-N39",
+        "C0-MIRV-N40",
+        "C0-MIRV-N41",
+        "C0-MIRV-N42",
+        "C0-MIRV-N43",
+        "C0-MIRV-N44",
+        "C0-MIRV-N45",
+        "C0-MIRV-N46"
+      ]
+    },
+    {
+      "contract_path": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
+      "expected_count": 28,
+      "case_ids_in_order": [
+        "C0-ASPH-P01",
+        "C0-ASPH-P02",
+        "C0-ASPH-P03",
+        "C0-ASPH-P04",
+        "C0-ASPH-P05",
+        "C0-ASPH-P06",
+        "C0-ASPH-P07",
+        "C0-ASPH-P08",
+        "C0-ASPH-N01",
+        "C0-ASPH-N02",
+        "C0-ASPH-N03",
+        "C0-ASPH-N04",
+        "C0-ASPH-N05",
+        "C0-ASPH-N06",
+        "C0-ASPH-N07",
+        "C0-ASPH-N08",
+        "C0-ASPH-N09",
+        "C0-ASPH-N10",
+        "C0-ASPH-N11",
+        "C0-ASPH-N12",
+        "C0-ASPH-N13",
+        "C0-ASPH-N14",
+        "C0-ASPH-N15",
+        "C0-ASPH-N16",
+        "C0-ASPH-N17",
+        "C0-ASPH-N18",
+        "C0-ASPH-N19",
+        "C0-ASPH-N20"
+      ]
+    }
+  ],
+  "all_352_case_ids_exactly_once": true,
+  "machine_executable_case_spec_contract": {
+    "required_fields": [
+      "base_fixture",
+      "mode",
+      "operator_id",
+      "target_file",
+      "json_path_or_ast_selector",
+      "deterministic_constructor",
+      "constructor_arguments",
+      "expected_disposition",
+      "expected_code",
+      "independent_subcases",
+      "subcase_aggregation"
+    ],
+    "constructor_must_exist_as_distinct_callable": true,
+    "before_and_after_bytes_hashed": true,
+    "each_subcase_has_distinct_operator_and_expected_code": true,
+    "generic_dispatch_for_multiple_axes": "REFUSE",
+    "receipt_aggregate": "SHA256_CANONICAL_ORDERED_RESULTS",
+    "fixture_and_output_paths": "OWN_TEMPORARY_DIRECTORY_ONLY",
+    "each_subcase_has_unique_subcase_id": true,
+    "each_subcase_has_unique_operator_id": true,
+    "each_subcase_has_unique_selector": true,
+    "each_subcase_has_unique_expected_code": true,
+    "each_subcase_has_base_error_class": true,
+    "exact_independent_subcase_count": 104
+  },
+  "completion_marker": "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_COMPLETE"
+}
