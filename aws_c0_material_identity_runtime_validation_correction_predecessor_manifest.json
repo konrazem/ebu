@@ -1,0 +1,80 @@
+{
+  "authority_id": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1",
+  "status": "PROSPECTIVE_AUTHORITY_ONLY",
+  "accepted_base": {
+    "commit": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+    "tree": "75b8c651a12ba973c9c1ce81bd4355c463e306f5",
+    "parents_in_order": ["d10c13f89d6985021f0cf32e19b174f8b0055eff", "aea81ea056a2c2a74281fae3159211c069d97c15"]
+  },
+  "critical_base_rows": [
+    {"path": "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CORRECTION_AUTHORITY_AMENDMENT.md", "mode": "100644", "git_blob": "17027cec487d967ef9a2ac83c26b07fab0ef6508", "sha256": "4db109776b6f53c6e6887b13b6b5e30ecaffd08a2e90d2c1d475e00cbffdfb6b"},
+    {"path": "aws_c0_cost_runtime_retrieval_closure_correction_contract.json", "mode": "100644", "git_blob": "113e9857124aead0fd0490c04f1d2f874395b4e8", "sha256": "bf881443a288381123da1ca9347eb362759eed8c602db4b8b67f0decb2f55df0"},
+    {"path": "aws_c0_cost_runtime_retrieval_closure_correction_evidence_schema.json", "mode": "100644", "git_blob": "ad4e8312a6833f03b2ca90d9bcb19830083ae270", "sha256": "271d2c44835616334aeae6e781b52466977730ee17a8c295fb47b09a6ffecb29"},
+    {"path": "aws_c0_cost_runtime_retrieval_closure_correction_implementation_path_manifest.json", "mode": "100644", "git_blob": "49679f303b3ae7f6b8841cb0d8b02c008668cb5e", "sha256": "30903466ef78a7971126077d9d8feb60689040b64db4beb56d9ad34be2fe9862"},
+    {"path": "aws_c0_cost_runtime_retrieval_closure_correction_predecessor_manifest.json", "mode": "100644", "git_blob": "2395e80f1b4d70e12b75bb2a9ffbd4b9323f70f6", "sha256": "be417dbe544a0b7b08ac6253a42e1ec52567b2bf9ebb71faf2c0a4b7c24f2342"},
+    {"path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json", "mode": "100644", "git_blob": "d8e1f5ca453681ee2280a925faf0357f17e6e76b", "sha256": "5bc9ed389973973c9c406a0917e8c9570ead1c210589fcc15dfb8ff91d4bc02c"},
+    {"path": "tests/framework/test_validation_reachability.py", "mode": "100644", "git_blob": "d0cac317ed5db8e2b2bc3679617de255f1aefdc9", "sha256": "b215aa48ac2bc2d555d8cb7c2519ca5c1c84ad9c1af97f0bccea4fd4abfd6fe1"}
+  ],
+  "preserved_authority_chain": {
+    "original_aws_c0_authority": "PRESENT_UNCHANGED",
+    "live_preparation_correction_authority": "PRESENT_UNCHANGED",
+    "cost_runtime_retrieval_closure_correction_authority": "PRESENT_UNCHANGED",
+    "all_prior_reachability_phases_cases_and_hashes": "PRESENT_UNCHANGED"
+  },
+  "nonaccepted_diagnostic_design_source": {
+    "classification": "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE",
+    "commit": "475fc1f59e04bc4f76132acf8c37a4bfea2eafde",
+    "tree": "3eb779aaf06b928c62e9d8081c25c9607bbdf6bb",
+    "sole_parent": "6eb39db6606159812b0995b7dbf2fb09948360ad",
+    "is_accepted_predecessor": false,
+    "may_be_base_parent_ancestor_merge_input_cherry_pick_or_authoritative_source": false,
+    "diagnostic_facts_only": [
+      "STATIC_CHECKS_PASSED_WHILE_SEMANTIC_RUNTIME_GAPS_REMAINED",
+      "MATERIAL_ARTIFACT_IDENTITIES_WERE_NOT_REPRESENTABLE_IN_VERIFIED_OBJECT_SET",
+      "RUNTIME_PREFLIGHT_DID_NOT_RECONSTRUCT_REQUIRED_CONTROLS",
+      "TIMEOUT_COMPLETE_FAIL_WAS_UNREACHABLE",
+      "SAFE_CLOSE_AND_ROOT_SCHEMA_FALSE_ACCEPTANCE_WAS_POSSIBLE",
+      "PRICE_UPPER_BOUND_FALSE_ACCEPTANCE_WAS_REPRODUCED",
+      "INDEPENDENT_AUDIT_FAIL"
+    ]
+  },
+  "candidate_paths_at_base": {
+    "new_six_authority_paths_exist": false,
+    "future_fourteen_implementation_paths_exist": false,
+    "reachability_path_exists": true
+  },
+  "future_sequence": [
+    "AUDIT_AND_ACCEPT_EXACT_SIX_AUTHORITY_FILES",
+    "INTEGRATE_EXACT_SIX_AUTHORITY_FILES",
+    "MODIFY_ONLY_EXISTING_REACHABILITY_PATH",
+    "AUDIT_AND_INTEGRATE_REACHABILITY_CORRECTION",
+    "BUILD_EXACT_SAME_FOURTEEN_IMPLEMENTATION_PATHS",
+    "AUDIT_WITHOUT_LIVE_EXECUTION"
+  ],
+  "future_coordinate_rule": {
+    "candidate_must_not_predict_future_commit_tree_or_receipt": true,
+    "later_authority_audit_v2_binds_exact_candidate_integration_reachability_and_implementation_coordinates_and_rows": true,
+    "later_static_validation_v2_binds_exact_ordered_66_84_108_66_case_groups_and_all_324_distinct_case_receipts": true,
+    "additive_case_distribution": {"positive":20,"negative":46,"total":66},
+    "later_implementation_audit_binds_exact_fourteen_path_hash_mode_rows": true,
+    "runtime_root_versions": ["aws_c0_start_receipt/v4","aws_c0_retrieval_verification/v3","aws_c0_final_manifest/v3"],
+    "runtime_nonroot_replacements": ["aws_c0_live_packet/v3","aws_c0_live_authorization/v3","aws_c0_safe_close_receipt/v2"],
+    "runtime_nonroot_additions": ["aws_c0_runtime_start_attestation_bundle/v1","aws_c0_ssm_completion_observation/v1"]
+  },
+  "future_reachability_scope_counts": {
+    "global_authority_only": 150,
+    "global_completed_implementation": 164,
+    "descendant_authority_only": 100,
+    "descendant_completed_implementation": 114,
+    "reachability_existing_paths_modified": 1,
+    "reachability_unique_paths_added": 0,
+    "implementation_paths_added": 14
+  },
+  "stage_boundary": {
+    "stage_e": "ACCEPTED_FINISHED_UNCHANGED",
+    "stage_f": "FROZEN_SEPARATE_AWS_LINUX_BINDING_SCIENTIFIC_PACKET_VALIDATION_AND_AUTHORIZATION_REQUIRED",
+    "scientific_execution_authorized": false,
+    "aws_execution_authorized": false
+  },
+  "completion_marker": "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_COMPLETE"
+}
