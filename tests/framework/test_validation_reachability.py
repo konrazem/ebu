@@ -1246,6 +1246,73 @@ AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ROWS = (
         "46b403eed1e660a32b24e2962b6e465679ca0c986d63bf7b5e3bd4793a18ff68",
     ),
 )
+AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT = (
+    "6059cbdcd2ee03085c9c03b4f872b4a46241b775"
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_TREE = (
+    "5c84e633b590b5b84d0a8a85824db4e1addbb827"
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE = (
+    "ea695dc146a89b06cf350aa2c5fb9cbaa659f873"
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION = (
+    "ed21ce88fe6ad90db06cc79e4673dbd0dc216b50"
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_TREE = (
+    "a269fc7cc15d2c2d2239465b2c3f81440fb66628"
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS = (
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_audit_static_publication_handoff_correction_contract.json",
+    "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+    "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json",
+    "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json",
+    "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ROWS = (
+    (
+        "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "100644",
+        "f4dea140f3d6f0e6dfdb5ae6ac2c19ecece46d9e",
+        16348,
+        "34a3610e7fa9fd6e84ce769db7969b2a67728247bb067addaabe4a8557beeb46",
+    ),
+    (
+        "aws_c0_audit_static_publication_handoff_correction_contract.json",
+        "100644",
+        "71c1cf9c7fb797e480fab231a98c65bdde8a1a6c",
+        41898,
+        "bdff21fbe63cd19fe06f75f9014b839a5064b0eba94322c0027505aa051848f9",
+    ),
+    (
+        "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+        "100644",
+        "65e05f9085af23c455954df43de68b95a51c85d2",
+        113583,
+        "915669f809d3a1727a933f5e91cdfded8de2bcc09e20205d7da075d040d5c763",
+    ),
+    (
+        "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json",
+        "100644",
+        "4a1223820815db80d7f54c313292a79569815854",
+        5428,
+        "5fff6134f2b8f21ade7fade19c295d57b7770b0ae4501b4066a457d308d1981b",
+    ),
+    (
+        "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json",
+        "100644",
+        "98d96d4259d054622178cdfefd17e7159610011b",
+        7011,
+        "84dad6b0a064f6ae889bbb087cdf5a08f574b0f9938835772fbb7e9d5a65a414",
+    ),
+    (
+        "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
+        "100644",
+        "59e42421f40e00fe2c19d583071bfa73a84eb573",
+        77694,
+        "5e8732d0debe695ab8eb5fca1a6e2cb2d7b259bcc8b0f8b0fb6053994c0d59a0",
+    ),
+)
 AWS_C0_LIVE_PREPARATION_CORRECTION_PHASES = (
     "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
@@ -1255,10 +1322,18 @@ AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_PHASES = (
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_MATERIAL_IDENTITY_PHASES = (
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_PHASES = (
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_PHASES = (
     "AWS_C0_AUTHORITY_ONLY",
@@ -1269,12 +1344,15 @@ AWS_C0_PHASES = (
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_IMPLEMENTATION_PHASES = (
     "AWS_C0_COMPLETED_IMPLEMENTATION",
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_LIVE_PREPARATION_PHASES = (
     "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_ONLY",
@@ -1283,6 +1361,8 @@ AWS_C0_LIVE_PREPARATION_PHASES = (
     "AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_CLOSED_IMPLEMENTATION",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
 )
 AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_SCOPE = (
     AWS_C0_AUTHORITY_SCOPE | frozenset(AWS_C0_LIVE_PREPARATION_AUTHORITY_PATHS)
@@ -1329,6 +1409,22 @@ AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS = (
 )
 AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS = (
     AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS
+    + AWS_C0_IMPLEMENTATION_PATHS
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE = (
+    AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS)
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE = (
+    AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_IMPLEMENTATION_PATHS)
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS = (
+    AWS_C0_MATERIAL_IDENTITY_AUTHORITY_ONLY_DESCENDANT_PATHS
+    + AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS = (
+    AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS
     + AWS_C0_IMPLEMENTATION_PATHS
 )
 STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
@@ -1501,7 +1597,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "d0711a22ae38d9bd7bc3d461e261e1e2c97c683aeb5cce2a77790b7f26c479d3"
+TEST_SELF_SEAL = "6d9edd4062b0c4eef9f90a8e0b3691d5ad94a311f73aa555ede7cf2c30a7c240"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -2159,6 +2255,18 @@ def _git(*args: str) -> bytes:
             len(args) == 3
             and args[:2]
             == ("merge-base", AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or args
+        == (
+            "merge-base",
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE,
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == ("merge-base", AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION)
             and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
         )
         or args
@@ -2906,6 +3014,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             )
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             self._audit_aws_c0_material_identity_authority(current_scope)
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            self._audit_aws_c0_audit_static_handoff_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -3172,6 +3282,30 @@ class ValidationReachabilityTests(unittest.TestCase):
             aws_c0_phase = (
                 "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
             )
+        elif changed_paths == AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = (
+                "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY"
+            )
+        elif changed_paths == AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = (
+                "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            )
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = (
+                "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
+            )
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
@@ -3193,7 +3327,9 @@ class ValidationReachabilityTests(unittest.TestCase):
                 "AWS-C0 cost-runtime-retrieval-closure closed-implementation, "
                 "AWS-C0 material-identity-runtime-validation correction-"
                 "authority-only, or AWS-C0 material-identity-runtime-validation "
-                "closed-implementation "
+                "closed-implementation, AWS-C0 audit-static-publication-handoff "
+                "correction-authority-only, or AWS-C0 audit-static-publication-"
+                "handoff closed-implementation "
                 f"phase: {sorted(changed_paths)!r}"
             )
         self.assertEqual(len(STAGE_C_AUTHORITY_SCOPE), 7)
@@ -3245,6 +3381,12 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         self.assertEqual(len(AWS_C0_MATERIAL_IDENTITY_CORRECTION_AUTHORITY_SCOPE), 150)
         self.assertEqual(len(AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE), 164)
+        self.assertEqual(
+            len(AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE), 156
+        )
+        self.assertEqual(
+            len(AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE), 170
+        )
         self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
         self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
         self.assertEqual(len(AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS), 82)
@@ -3298,6 +3440,20 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(len(AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS), 114)
         self.assertEqual(
             len(set(AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS)), 114
+        )
+        self.assertEqual(
+            len(AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS),
+            106,
+        )
+        self.assertEqual(
+            len(set(AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS)),
+            106,
+        )
+        self.assertEqual(
+            len(AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS), 120
+        )
+        self.assertEqual(
+            len(set(AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS)), 120
         )
         for path in changed_paths:
             self.assertIn(path, head_entries)
@@ -3372,6 +3528,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             AWS_C0_LIVE_PREPARATION_AUTHORITY_INTEGRATION,
             AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_INTEGRATION,
             AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION,
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION,
         ):
             self.assertNotEqual(normalized_checkout, test_blob)
         else:
@@ -3498,6 +3655,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_implementation_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -3788,6 +3949,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_implementation_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -4253,6 +4418,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_implementation_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -4818,6 +4987,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -5282,6 +5455,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_implementation_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -7019,6 +7196,13 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS}
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {path: "A" for path in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS}
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -7557,6 +7741,13 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS}
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {path: "A" for path in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS}
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -8056,6 +8247,13 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS}
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {path: "A" for path in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS}
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -8227,6 +8425,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_implementation_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -8514,11 +8716,21 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_descendant_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_descendant_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_descendant_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
         expected_descendant_count = (
-            114
+            120
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
+            else 106
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY"
+            else 114
             if current_scope["aws_c0_phase"]
             == "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
             else 100
@@ -9771,6 +9983,14 @@ class ValidationReachabilityTests(unittest.TestCase):
             diagnostic_current_scope,
             AWS_C0_MATERIAL_IDENTITY_CLOSED_IMPLEMENTATION_SCOPE,
         )
+        self.assertNotEqual(
+            diagnostic_current_scope,
+            AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE,
+        )
+        self.assertNotEqual(
+            diagnostic_current_scope,
+            AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE,
+        )
 
         post_integration_delta = frozenset(
             path
@@ -9794,6 +10014,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_post_integration_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -9827,6 +10051,12 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
             "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION": (
                 AWS_C0_MATERIAL_IDENTITY_CLOSED_DESCENDANT_PATHS
+            ),
+            "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY": (
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS
+            ),
+            "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION": (
+                AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS
             ),
         }[current_scope["aws_c0_phase"]]
         self.assertEqual(descendant_delta, frozenset(expected_descendant_paths))
@@ -10329,6 +10559,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_MATERIAL_IDENTITY_PHASES:
             expected_post_integration_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -10839,6 +11073,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_post_integration_delta.update(
                 AWS_C0_MATERIAL_IDENTITY_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -11086,7 +11324,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         self.assertEqual(
             tuple(reachability["new_phases_in_order"]),
-            AWS_C0_MATERIAL_IDENTITY_PHASES,
+            (
+                "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_AUTHORITY_ONLY",
+                "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
+            ),
         )
         self.assertTrue(
             reachability[
@@ -11230,6 +11471,392 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         expected_post_integration_delta = set()
         if actual_head != AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION:
+            expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
+        if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+        self.assertEqual(
+            post_integration_delta, frozenset(expected_post_integration_delta)
+        )
+
+    def _audit_aws_c0_audit_static_handoff_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertIn(
+            current_scope["aws_c0_phase"], AWS_C0_AUDIT_STATIC_HANDOFF_PHASES
+        )
+        actual_head = current_scope["actual_head"]
+        for commit in (
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE,
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION,
+        ):
+            self.assertEqual(
+                _git("rev-parse", "--verify", f"{commit}^{{commit}}")
+                .decode()
+                .strip(),
+                commit,
+            )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_TREE,
+        )
+        for commit in (
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE,
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION,
+        ):
+            self.assertEqual(
+                _git("rev-parse", f"{commit}^{{tree}}").decode().strip(),
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_TREE,
+            )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,),
+        )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (
+                AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE,
+            ),
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE,
+            )
+            .decode()
+            .strip(),
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION,
+                actual_head,
+            )
+            .decode()
+            .strip(),
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION,
+        )
+
+        base_entries = _tree_entries(AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT)
+        candidate_entries = _tree_entries(
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE
+        )
+        integration_entries = _tree_entries(
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION
+        )
+        current_entries = _tree_entries(actual_head)
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta, frozenset(AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS)
+        )
+        self.assertEqual(candidate_entries, integration_entries)
+        candidate_archive = _archive_members(
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_CANDIDATE
+        )
+        integration_archive = _archive_members(
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION
+        )
+        current_archive = _archive_members(actual_head)
+        documents = {}
+        for expected in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ROWS:
+            path, mode, git_object, byte_count, raw_sha256 = expected
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            integration_row, integration_raw = _object_row(
+                path, integration_entries, integration_archive
+            )
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(
+                (
+                    candidate_row["path"],
+                    candidate_row["mode"],
+                    candidate_row["git_object"],
+                    candidate_row["byte_count"],
+                    candidate_row["raw_sha256"],
+                ),
+                expected,
+                path,
+            )
+            self.assertEqual(mode, "100644", path)
+            self.assertEqual(git_object, candidate_entries[path]["git_object"], path)
+            self.assertEqual(len(candidate_raw), byte_count, path)
+            self.assertEqual(_sha256(candidate_raw), raw_sha256, path)
+            self.assertEqual(candidate_row, integration_row, path)
+            self.assertEqual(candidate_row, current_row, path)
+            self.assertEqual(candidate_raw, integration_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n")
+                and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", candidate_raw, path)
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(candidate_raw, path)
+
+        contract = documents[
+            "aws_c0_audit_static_publication_handoff_correction_contract.json"
+        ]
+        schema = documents[
+            "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json"
+        ]
+        implementation = documents[
+            "aws_c0_audit_static_publication_handoff_correction_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "aws_c0_audit_static_publication_handoff_correction_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "aws_c0_audit_static_publication_handoff_correction_validation_contract.json"
+        ]
+        accepted_base = {
+            "commit": AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+            "tree": AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_TREE,
+        }
+        for document in (contract, implementation):
+            self.assertEqual(document["accepted_base"], accepted_base)
+        self.assertEqual(
+            {key: predecessor["accepted_base"][key] for key in ("commit", "tree")},
+            accepted_base,
+        )
+        self.assertEqual(
+            validation["accepted_base_commit"],
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_COMMIT,
+        )
+        self.assertEqual(
+            validation["accepted_base_tree"],
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_BASE_TREE,
+        )
+        self.assertEqual(contract["candidate_file_count"], 6)
+        self.assertEqual(contract["candidate_mode"], "100644")
+        self.assertEqual(
+            tuple(contract["candidate_files_in_order"]),
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS,
+        )
+        self.assertEqual(implementation["new_authority_path_count"], 6)
+        self.assertEqual(implementation["new_authority_operation"], "ADD")
+        self.assertEqual(implementation["new_authority_mode"], "100644")
+        self.assertEqual(
+            tuple(implementation["new_authority_paths_in_order"]),
+            AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS,
+        )
+        self.assertEqual(implementation["authority_path_count_after_integration"], 30)
+        self.assertEqual(
+            implementation[
+                "unknown_addition_modification_deletion_rename_symlink_glob_ignore_or_dynamic_scope"
+            ],
+            "REFUSE",
+        )
+
+        reachability = implementation["future_reachability_correction"]
+        self.assertTrue(
+            reachability[
+                "authorized_only_after_exact_authority_acceptance_and_integration"
+            ]
+        )
+        self.assertEqual(reachability["operation"], "MODIFY")
+        self.assertEqual(reachability["path_count"], 1)
+        self.assertEqual(reachability["mode"], "100644")
+        self.assertEqual(reachability["unique_paths_added"], 0)
+        self.assertEqual(
+            tuple(reachability["paths_in_order"]),
+            (STAGE_F_LOCAL_BINDING_REACHABILITY_PATH,),
+        )
+        self.assertEqual(
+            tuple(reachability["new_phases_in_order"]),
+            AWS_C0_AUDIT_STATIC_HANDOFF_PHASES,
+        )
+        self.assertTrue(
+            reachability[
+                "must_preserve_all_existing_phases_cases_scopes_hashes_and_three_public_test_methods"
+            ]
+        )
+
+        prospective = implementation["future_corrected_implementation"]
+        self.assertTrue(
+            prospective[
+                "authorized_only_after_authority_and_reachability_acceptance_and_integration"
+            ]
+        )
+        self.assertEqual(prospective["operation"], "ADD")
+        self.assertEqual(prospective["path_count"], 14)
+        self.assertEqual(prospective["mode"], "100644")
+        self.assertEqual(tuple(prospective["paths_in_order"]), AWS_C0_IMPLEMENTATION_PATHS)
+        self.assertEqual(prospective["modified_path_count"], 0)
+        self.assertEqual(prospective["deleted_path_count"], 0)
+        self.assertEqual(prospective["renamed_path_count"], 0)
+        self.assertEqual(
+            prospective["ignored_cache_or_generated_repository_addition"], "REFUSE"
+        )
+
+        expected_scopes = {
+            "global_authority_only": 156,
+            "global_completed_implementation": 170,
+            "descendant_authority_only": 106,
+            "descendant_completed_implementation": 120,
+            "reachability_unique_paths_added": 0,
+            "implementation_paths_added": 14,
+        }
+        contract_reachability = contract["future_reachability"]
+        self.assertEqual(
+            (
+                contract_reachability["global_authority_only"],
+                contract_reachability["global_completed_implementation"],
+                contract_reachability["descendant_authority_only"],
+                contract_reachability["descendant_completed_implementation"],
+                contract_reachability["unique_paths_added"],
+                contract_reachability["implementation_paths_added"],
+            ),
+            (156, 170, 106, 120, 0, 14),
+        )
+        self.assertEqual(
+            validation["future_reachability_scope_counts"], expected_scopes
+        )
+        self.assertEqual(
+            {
+                key: predecessor["future_reachability_scope_counts"][key]
+                for key in expected_scopes
+            },
+            expected_scopes,
+        )
+        arithmetic = implementation["path_arithmetic"]
+        self.assertEqual(
+            (
+                arithmetic["base_global_unique_paths"],
+                arithmetic["authority_paths_added"],
+                arithmetic["global_authority_only"],
+                arithmetic["reachability_existing_paths_modified"],
+                arithmetic["reachability_unique_paths_added"],
+                arithmetic["implementation_paths_added"],
+                arithmetic["global_completed_implementation"],
+                arithmetic["base_descendant_unique_paths"],
+                arithmetic["descendant_authority_only"],
+                arithmetic["descendant_completed_implementation"],
+            ),
+            (150, 6, 156, 1, 0, 14, 170, 100, 106, 120),
+        )
+        self.assertEqual(
+            implementation["preserved_counts"],
+            {
+                "pre_live_objects": 21,
+                "evidence_roots": 12,
+                "cost_dimensions": 22,
+                "read_plan_rows": 63,
+                "prior_validation_cases": 324,
+            },
+        )
+        self.assertEqual(len(schema["oneOf"]), 9)
+        self.assertEqual(
+            (
+                validation["positive_case_count"],
+                validation["negative_case_count"],
+                validation["additive_case_count"],
+                validation["preserved_prior_case_count"],
+                validation["combined_case_count"],
+            ),
+            (8, 20, 28, 324, 352),
+        )
+        self.assertEqual(validation["lane_count"], 7)
+
+        diagnostic = predecessor["nonaccepted_diagnostic_design_source"]
+        self.assertEqual(
+            diagnostic["classification"],
+            "NONACCEPTED_MATERIAL_IDENTITY_RUNTIME_VALIDATION_BLOCKED_DESIGN_SOURCE",
+        )
+        self.assertEqual(
+            diagnostic["commit"], AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_DIAGNOSTIC
+        )
+        self.assertEqual(diagnostic["tree"], AWS_C0_MATERIAL_IDENTITY_NONACCEPTED_TREE)
+        self.assertEqual(
+            diagnostic["sole_parent"], AWS_C0_MATERIAL_IDENTITY_ACCEPTED_BASE_COMMIT
+        )
+        self.assertFalse(diagnostic["is_accepted_predecessor"])
+        self.assertFalse(
+            diagnostic[
+                "may_be_base_parent_ancestor_merge_input_cherry_pick_or_authoritative_source"
+            ]
+        )
+        self.assertEqual(
+            predecessor["stage_boundary"],
+            {
+                "stage_e": "ACCEPTED_FINISHED_UNCHANGED",
+                "aws_c0": "NON_SCIENTIFIC_INFRASTRUCTURE_REHEARSAL",
+                "aws_c1": "LATER_SEPARATELY_AUTHORIZED_INFRASTRUCTURE_REHEARSAL",
+                "stage_f": "FROZEN_SEPARATE_AWS_LINUX_BINDING_SCIENTIFIC_PACKET_VALIDATION_AND_AUTHORIZATION_REQUIRED",
+                "scientific_execution_authorized": False,
+                "aws_execution_authorized": False,
+            },
+        )
+
+        valid_scopes = (
+            AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE,
+            AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE,
+        )
+        authority_path = AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS[0]
+        implementation_path = AWS_C0_IMPLEMENTATION_PATHS[0]
+        invalid_scopes = (
+            AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE
+            | {"tests/framework/second_reachability.py"},
+            (AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE - {authority_path})
+            | {"aws_c0_audit_static_publication_handoff_correction_*"},
+            (AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE - {authority_path})
+            | {"aws_c0_audit_static_publication_handoff_correction/"},
+            AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE
+            | {"aws/c0/fifteenth-path.txt"},
+            (AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE
+            - {implementation_path})
+            | {"aws/c0/substituted-path.txt"},
+        )
+        for invalid_scope in invalid_scopes:
+            self.assertNotIn(frozenset(invalid_scope), valid_scopes)
+
+        post_integration_delta = frozenset(
+            path
+            for path in set(integration_entries) | set(current_entries)
+            if integration_entries.get(path) != current_entries.get(path)
+        )
+        expected_post_integration_delta = set()
+        if actual_head != AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION:
             expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
