@@ -23520,6 +23520,14 @@ def validate_sources() -> None:
             "aws_c0_capture_journal_readback_receipt/v1" in controller and
             "aws_c0_closed_pointer_comparison_execution_receipt/v1" in controller,
             "controller carrier does not embed the accepted typed receipt interfaces")
+    require("build_platform_smoke_known_case_local_binding" in controller and
+            "platform-smoke-known-case-v1" in controller and
+            "global_aggregate_payload_embedded" in controller,
+            "first platform-smoke capsule local binding is absent")
+    require("CONTROLLER_HANDOFF_COORDINATE_ROWS" in controller and
+            "CONTROLLER_HANDOFF_COORDINATE_ROWS" in finalizer and
+            "controller journal handoff fixed coordinate row refused" in finalizer,
+            "finalizer does not enforce the fixed controller handoff table")
     require("ListObjectVersions" in finalizer and "ListObjectsV2" not in finalizer, "exact-version pagination absent")
     require("compute_cost" in finalizer and "COST_UNAVAILABLE" not in finalizer, "cost closure absent")
     template = load_json("aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml")

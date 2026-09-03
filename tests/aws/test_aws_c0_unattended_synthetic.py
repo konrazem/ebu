@@ -141,6 +141,43 @@ class LaunchTests(unittest.TestCase):
         self.assertEqual(set(C.MODE_BY_SUFFIX.values()), {"SUCCESS", "FAIL_AFTER_CHECKPOINT", "TIMEOUT"})
         with self.assertRaises(C.Refusal): C._mode("ATTEMPT-X-OTHER")
 
+    def test_platform_smoke_first_capsule_binds_existing_success_launch_only(self):
+        current = reroot({**self.launch, "schema": "aws_c0_launch_request/v4"})
+        binding = C.build_platform_smoke_known_case_local_binding(current)
+        self.assertEqual(binding["capsule_id"], "platform-smoke-known-case-v1")
+        self.assertEqual(binding["test_case"], "SUCCESS_KNOWN_CASE")
+        self.assertEqual(binding["budget_binding"]["ceiling_minor_units"], 5000)
+        self.assertEqual(binding["budget_binding"]["currency"], "USD")
+        self.assertEqual(binding["common_receipt_fields_in_order"],
+                         list(C.PLATFORM_SMOKE_COMMON_RECEIPT_FIELDS))
+        self.assertEqual(binding["reused_foundation_capabilities_in_order"],
+                         list(C.PLATFORM_SMOKE_FOUNDATION_CAPABILITIES))
+        self.assertEqual(binding["expected_artifact_classes_in_order"], [
+            "ATTEMPT_CLAIM", "START_RECEIPT", "HEARTBEAT", "SAFE_CLOSE_RECEIPT",
+            "CHECKPOINT", "SYNTHETIC_MANIFEST", "TERMINAL_RECEIPT",
+            "CONTROLLER_CAPTURE_JOURNAL", "CONTROLLER_JOURNAL_HANDOFF",
+            "STOPPED_OBSERVATION", "RESOURCE_USE_CLOSURE", "FINALIZER_RECEIPT",
+            "FINALIZER_CAPTURE_JOURNAL", "COST_CLOSURE",
+            "RETRIEVAL_VERIFICATION", "FINAL_MANIFEST",
+        ])
+        self.assertFalse(binding["scientific_conclusion_authorized"])
+        self.assertFalse(binding["live_aws_execution_authorized"])
+        self.assertTrue(binding["separate_capsule_authority_required"])
+        self.assertFalse(binding["global_aggregate_payload_embedded"])
+        self.assertNotIn("final_s3_capture_aggregate", json.dumps(binding, sort_keys=True))
+
+    def test_platform_smoke_first_capsule_refuses_non_success_known_case(self):
+        changed = copy.deepcopy(self.launch)
+        changed["schema"] = "aws_c0_launch_request/v4"
+        changed["attempt_id"] = "ATTEMPT-CLOSURE-FAIL-AFTER-CHECKPOINT"
+        changed["artifact_prefix"] = (
+            "rehearsal/aws-c0/AWS-C0-CLOSURE/"
+            "ATTEMPT-CLOSURE-FAIL-AFTER-CHECKPOINT/"
+        )
+        changed = reroot(changed)
+        with self.assertRaises(C.Refusal):
+            C.build_platform_smoke_known_case_local_binding(changed)
+
 
 class PaginationTests(unittest.TestCase):
     def test_all_pages_and_token_transcript(self):
@@ -381,6 +418,44 @@ class RuntimeContractTests(unittest.TestCase):
             key="rehearsal/aws-c0/R/A/evidence/controller-capture-journal-handoff.json",
             attempt_identity=attempt)
         self.assertEqual(validated, handoff)
+        self.assertEqual(C.CONTROLLER_HANDOFF_COORDINATE_ROWS,
+                         F.CONTROLLER_HANDOFF_COORDINATE_ROWS)
+        tautology = copy.deepcopy(handoff)
+        tautology["controller_receipt_coordinate_execution_receipts_in_order"][0] = F._execution_receipt(
+            1, "ARBITRARY_TAUTOLOGY_001", "/attempt_identity/value",
+            "/attempt_identity/value", "STRING_EQUAL", attempt["value"], attempt["value"])
+        comparison_root = {
+            "attempt_identity": attempt,
+            "controller_journal_object": tautology["controller_journal_object"],
+            "controller_publication_receipt": tautology["controller_publication_receipt"],
+            "controller_readback_receipt": tautology["controller_readback_receipt"],
+            "controller_publication_receipt_identity": tautology["controller_publication_receipt_identity"],
+            "controller_readback_receipt_identity": tautology["controller_readback_receipt_identity"],
+        }
+        local_preimage = {
+            **comparison_root,
+            "coordinate_receipt_sha256s": [
+                row["receipt_sha256"] for row in
+                tautology["controller_receipt_coordinate_execution_receipts_in_order"]
+            ],
+        }
+        local_sha = F.digest(F.canonical_bytes(local_preimage))
+        tautology["controller_local_validation_receipt_sha256"] = local_sha
+        tautology["controller_local_validation_receipt_identity"] = F.identity(
+            "aws_c0_controller_journal_local_validation_receipt/v1", local_sha)
+        core = {name: item for name, item in tautology.items()
+                if name not in F.HANDOFF_EXCLUDED_FIELDS}
+        core_raw = F.canonical_bytes(core)
+        handoff_sha = F.digest(F.HANDOFF_HASH_DOMAIN.encode() + b"\0" + core_raw)
+        tautology["handoff_canonical_body_byte_count"] = len(core_raw)
+        tautology["handoff_canonical_sha256"] = handoff_sha
+        tautology["handoff_identity"] = F.identity(
+            "aws_c0_controller_journal_handoff/v1", handoff_sha)
+        with self.assertRaises(F.Refusal):
+            F.validate_controller_journal_handoff_v1(
+                tautology, bucket="valid-bucket",
+                key="rehearsal/aws-c0/R/A/evidence/controller-capture-journal-handoff.json",
+                attempt_identity=attempt)
         changed = copy.deepcopy(handoff)
         changed["controller_journal_object"]["version_id"] = "wrong-version"
         with self.assertRaises(F.Refusal):
