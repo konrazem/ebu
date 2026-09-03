@@ -1313,11 +1313,11 @@ AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ROWS = (
         "5e8732d0debe695ab8eb5fca1a6e2cb2d7b259bcc8b0f8b0fb6053994c0d59a0",
     ),
 )
-AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT = "3b185d9f770e525df645a2c6d2eda678e28554ef"
-AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_TREE = "aa7edcfcba250d6954de8c9ff42151cd7fb77ff3"
-AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE = "47be7aa933caab2cc2983ca77b78ccd4fd7f449c"
-AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION = "53e2b673cb58acd22ea17f5283817f2a27a493e8"
-AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_TREE = "defaa0db01f8a0284e700a1bdc76c55cbf70985c"
+AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT = "8c4349c4ea3fad0a016984be103c78df42989bdf"
+AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_TREE = "c1c0fc7c68cb06014e37dede383ff20c3e283211"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE = "bd27760fb4eefced92fb1d335e952250f193f133"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION = "528419b573bcc5d7f377beff7a2961581430a856"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_TREE = "e5da97a0219192c95bef004a6a7e4837ec831333"
 AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS = (
     "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_AMENDMENT.md",
     "aws_c0_audit_static_real_execution_registry_correction_contract.json",
@@ -1327,12 +1327,12 @@ AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS = (
     "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
 )
 AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ROWS = (
-    ("AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_AMENDMENT.md", "100644", "4e7f093b68fee77ace8f3983283475318632e2db", 39122, "993c1e3731c505dd2387259d24ebca43cda66d8e4784482d06076426d581772b"),
-    ("aws_c0_audit_static_real_execution_registry_correction_contract.json", "100644", "157446726a33268f36a9e97468ea1b951e5b1290", 51194, "c913d01778e0c33c5cc400e5a5bebdf1a9e62b0fe7922404d03192440093d632"),
-    ("aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json", "100644", "5af3aba0e799837aa7faf14d92d9fb4862de0bf7", 2182267, "6205e7b5330849465f4638a553dd7bdadc0a49e696bdc0b766469056b53a4a19"),
-    ("aws_c0_audit_static_real_execution_registry_correction_implementation_path_manifest.json", "100644", "9078f2890b6e4106266388e31ed13c7ab244aa5b", 9159, "14fcd633c736242bfd94d0430892f176d5fc2a31ab51863346256b4c7fb700d4"),
-    ("aws_c0_audit_static_real_execution_registry_correction_predecessor_manifest.json", "100644", "852ffca8bcf5f7348faa6f78a3910258aa674fe5", 7331, "78497ff7e89e085fe39fe6d1dc13d925c3790ef4a7ad3150cd6dd73d59234ca0"),
-    ("aws_c0_audit_static_real_execution_registry_correction_validation_contract.json", "100644", "d3f968b5df72457536fd4b433812fb5f77104d19", 736058, "5049f010300d092e2da6ed93db54631edf27d6d0044cc45c6a4d098086851a37"),
+    ("AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_AMENDMENT.md", "100644", "4f9a9197296ef2b40d6567ab98e7aa5e8fd890d2", 44156, "b88cf85aca998500933938d1d17fd749857931a3fb100f7472f67635baa0ebe7"),
+    ("aws_c0_audit_static_real_execution_registry_correction_contract.json", "100644", "47ae1dd2e94374bcf74b4ce812dadf6b9076d097", 55244, "7f2e1c3173fe9faf4759637bec18484130b09a8b8180ae1d28e4288494b3aef1"),
+    ("aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json", "100644", "ed3c72506d3969f44db3fdd7ed616585995ab8aa", 2354803, "5bc61f26c51019879b227223363d773adf9c3bff8625ace616910774da2821ad"),
+    ("aws_c0_audit_static_real_execution_registry_correction_implementation_path_manifest.json", "100644", "12ac0a9aedf6349f3360d2dc494a5d1139ebbaaa", 9552, "ed822f35ed4dff259d746ed6f8fb5209b47182dcca4f5d99b414e8086e8bad89"),
+    ("aws_c0_audit_static_real_execution_registry_correction_predecessor_manifest.json", "100644", "b2b6fe3f4857c03a6989118d9a68d4aa35d237af", 8338, "a8ca6a2699fa765ddc82053cde062e8432a99f526e827cf5e2177dad5532c40a"),
+    ("aws_c0_audit_static_real_execution_registry_correction_validation_contract.json", "100644", "ed9bc958556faed13f4fc541a6bb34929058a30e", 896046, "ee108326dcf58d4e0fd88558a42a77e3465e6daf70ff0bd431286bfdb2a34e16"),
 )
 AWS_C0_REAL_EXECUTION_REGISTRY_PHASES = (
     "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY",
@@ -1660,7 +1660,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "701bb99ab24a5a819ff903c308fa671eb8e0c47a5e957feb3d6eec6834697900"
+TEST_SELF_SEAL = "1a01378ab9158fc61980f0d6a6792aa077a7dc81d5ee4a2755bd4e58f6dde6f1"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -2330,6 +2330,15 @@ def _git(*args: str) -> bytes:
             len(args) == 3
             and args[:2]
             == ("merge-base", AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION)
+            and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
+        )
+        or (
+            len(args) == 3
+            and args[:2]
+            == (
+                "merge-base",
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION,
+            )
             and re.fullmatch(r"[0-9a-f]{40}", args[2]) is not None
         )
         or args
@@ -3079,6 +3088,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             self._audit_aws_c0_material_identity_authority(current_scope)
         if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
             self._audit_aws_c0_audit_static_handoff_authority(current_scope)
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            self._audit_aws_c0_real_execution_registry_authority(current_scope)
         clcd_contract = json.loads(
             (ROOT / "closed_loop_correction_diagnostics_contract.json").read_text(
                 encoding="utf-8"
@@ -3466,6 +3477,19 @@ class ValidationReachabilityTests(unittest.TestCase):
         self.assertEqual(
             len(AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_IMPLEMENTATION_SCOPE), 170
         )
+        self.assertEqual(
+            len(AWS_C0_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_SCOPE), 162
+        )
+        self.assertEqual(
+            len(AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_IMPLEMENTATION_SCOPE), 176
+        )
+        self.assertEqual(
+            len(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ONLY_DESCENDANT_PATHS), 112
+        )
+        self.assertEqual(
+            len(AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_DESCENDANT_PATHS), 126
+        )
+        self.assertEqual(len(AWS_C0_IMPLEMENTATION_PATHS), 14)
         self.assertEqual(len(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS), 88)
         self.assertEqual(len(set(STAGE_F_LOCAL_BINDING_DESCENDANT_PATHS)), 88)
         self.assertEqual(len(AWS_C0_AUTHORITY_ONLY_DESCENDANT_PATHS), 82)
@@ -12018,6 +12042,376 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_post_integration_delta.update(
                 AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
+            expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
+        self.assertEqual(
+            post_integration_delta, frozenset(expected_post_integration_delta)
+        )
+
+    def _audit_aws_c0_real_execution_registry_authority(
+        self, current_scope: dict[str, object]
+    ) -> None:
+        self.assertIn(
+            current_scope["aws_c0_phase"], AWS_C0_REAL_EXECUTION_REGISTRY_PHASES
+        )
+        actual_head = current_scope["actual_head"]
+        for commit in (
+            AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT,
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE,
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION,
+        ):
+            self.assertEqual(
+                _git("rev-parse", "--verify", f"{commit}^{{commit}}")
+                .decode()
+                .strip(),
+                commit,
+            )
+        self.assertEqual(
+            _git(
+                "rev-parse",
+                f"{AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT}^{{tree}}",
+            )
+            .decode()
+            .strip(),
+            AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_TREE,
+        )
+        for commit in (
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE,
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION,
+        ):
+            self.assertEqual(
+                _git("rev-parse", f"{commit}^{{tree}}").decode().strip(),
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_TREE,
+            )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT,),
+        )
+        self.assertEqual(
+            tuple(
+                _git(
+                    "rev-parse",
+                    f"{AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION}^@",
+                )
+                .decode()
+                .splitlines()
+            ),
+            (
+                AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT,
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE,
+            ),
+        )
+        self.assertEqual(
+            _git(
+                "merge-base",
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION,
+                actual_head,
+            )
+            .decode()
+            .strip(),
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION,
+        )
+
+        base_entries = _tree_entries(
+            AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT
+        )
+        candidate_entries = _tree_entries(
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE
+        )
+        integration_entries = _tree_entries(
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION
+        )
+        current_entries = _tree_entries(actual_head)
+        candidate_delta = frozenset(
+            path
+            for path in set(base_entries) | set(candidate_entries)
+            if base_entries.get(path) != candidate_entries.get(path)
+        )
+        self.assertEqual(
+            candidate_delta,
+            frozenset(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS),
+        )
+        self.assertEqual(candidate_entries, integration_entries)
+
+        candidate_archive = _archive_members(
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE
+        )
+        integration_archive = _archive_members(
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION
+        )
+        current_archive = _archive_members(actual_head)
+        documents = {}
+        for expected in AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ROWS:
+            path, mode, git_object, byte_count, raw_sha256 = expected
+            candidate_row, candidate_raw = _object_row(
+                path, candidate_entries, candidate_archive
+            )
+            integration_row, integration_raw = _object_row(
+                path, integration_entries, integration_archive
+            )
+            current_row, current_raw = _object_row(
+                path, current_entries, current_archive
+            )
+            self.assertEqual(
+                (
+                    candidate_row["path"],
+                    candidate_row["mode"],
+                    candidate_row["git_object"],
+                    candidate_row["byte_count"],
+                    candidate_row["raw_sha256"],
+                ),
+                expected,
+                path,
+            )
+            self.assertEqual(mode, "100644", path)
+            self.assertEqual(git_object, candidate_entries[path]["git_object"], path)
+            self.assertEqual(len(candidate_raw), byte_count, path)
+            self.assertEqual(_sha256(candidate_raw), raw_sha256, path)
+            self.assertEqual(candidate_row, integration_row, path)
+            self.assertEqual(candidate_row, current_row, path)
+            self.assertEqual(candidate_raw, integration_raw, path)
+            self.assertEqual(candidate_raw, current_raw, path)
+            self.assertEqual(
+                _assert_checkout_matches_blob(ROOT / path, candidate_raw, path),
+                candidate_raw,
+                path,
+            )
+            text = candidate_raw.decode("utf-8", "strict")
+            self.assertEqual(text, unicodedata.normalize("NFC", text), path)
+            self.assertTrue(
+                candidate_raw.endswith(b"\n")
+                and not candidate_raw.endswith(b"\n\n"),
+                path,
+            )
+            self.assertNotIn(b"\r", candidate_raw, path)
+            if path.endswith(".json"):
+                documents[path] = _strict_stage_d_json_bytes(candidate_raw, path)
+
+        contract = documents[
+            "aws_c0_audit_static_real_execution_registry_correction_contract.json"
+        ]
+        schema = documents[
+            "aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json"
+        ]
+        implementation = documents[
+            "aws_c0_audit_static_real_execution_registry_correction_implementation_path_manifest.json"
+        ]
+        predecessor = documents[
+            "aws_c0_audit_static_real_execution_registry_correction_predecessor_manifest.json"
+        ]
+        validation = documents[
+            "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json"
+        ]
+        accepted_base = {
+            "commit": AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT,
+            "tree": AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_TREE,
+        }
+        self.assertEqual(contract["accepted_base"], accepted_base)
+        self.assertEqual(implementation["accepted_base"], accepted_base)
+        self.assertEqual(
+            {key: predecessor["accepted_base"][key] for key in ("commit", "tree")},
+            accepted_base,
+        )
+        self.assertEqual(validation["accepted_base_commit"], accepted_base["commit"])
+        self.assertEqual(validation["accepted_base_tree"], accepted_base["tree"])
+        self.assertEqual(implementation["new_authority_path_count"], 6)
+        self.assertEqual(implementation["new_authority_operation"], "MODIFY")
+        self.assertEqual(implementation["new_authority_mode"], "100644")
+        self.assertEqual(
+            tuple(implementation["new_authority_paths_in_order"]),
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS,
+        )
+        self.assertEqual(
+            (
+                implementation["authority_path_count_before_integration"],
+                implementation["authority_path_count_after_integration"],
+            ),
+            (36, 36),
+        )
+
+        expected_counts = {
+            "global_authority_only": 162,
+            "global_completed_implementation": 176,
+            "descendant_authority_only": 112,
+            "descendant_completed_implementation": 126,
+            "reachability_unique_paths_added": 0,
+            "implementation_paths_added": 14,
+        }
+        contract_reachability = contract["future_reachability"]
+        self.assertEqual(
+            {
+                "global_authority_only": contract_reachability[
+                    "global_authority_only"
+                ],
+                "global_completed_implementation": contract_reachability[
+                    "global_completed_implementation"
+                ],
+                "descendant_authority_only": contract_reachability[
+                    "descendant_authority_only"
+                ],
+                "descendant_completed_implementation": contract_reachability[
+                    "descendant_completed_implementation"
+                ],
+                "reachability_unique_paths_added": contract_reachability[
+                    "unique_paths_added"
+                ],
+                "implementation_paths_added": contract_reachability[
+                    "implementation_paths_added"
+                ],
+            },
+            expected_counts,
+        )
+        self.assertEqual(validation["future_reachability_scope_counts"], expected_counts)
+        self.assertEqual(implementation["future_corrected_implementation"]["path_count"], 14)
+        self.assertEqual(
+            tuple(implementation["future_corrected_implementation"]["paths_in_order"]),
+            AWS_C0_IMPLEMENTATION_PATHS,
+        )
+
+        definitions = schema["$defs"]
+        aggregate = definitions["final_s3_capture_aggregate"]
+        aggregate_properties = aggregate["properties"]
+        external = aggregate_properties[
+            "controller_journal_handoff_external_publication_readback_proof"
+        ]["properties"]["binding_execution_receipts_in_order"]
+        handoff = definitions["controller_journal_handoff_v1"]["properties"][
+            "controller_receipt_coordinate_execution_receipts_in_order"
+        ]
+        bindings = aggregate_properties[
+            "fixed_size_identity_and_receipt_hash_binding_receipts_in_order"
+        ]
+        coordinates = aggregate_properties[
+            "journal_coordinate_receipt_equality_execution_receipts_in_order"
+        ]
+
+        def assert_fixed_receipts(
+            node: dict[str, object], count: int, *, ordered: bool = True
+        ) -> None:
+            self.assertEqual(
+                (node["minItems"], node["maxItems"], len(node["prefixItems"])),
+                (count, count, count),
+            )
+            self.assertFalse(node["items"])
+            self.assertTrue(node["uniqueItems"])
+            if ordered:
+                self.assertEqual(
+                    tuple(
+                        row["allOf"][1]["properties"]["order"]["const"]
+                        for row in node["prefixItems"]
+                    ),
+                    tuple(range(1, count + 1)),
+                )
+
+        assert_fixed_receipts(external, 46)
+        assert_fixed_receipts(handoff, 22)
+        assert_fixed_receipts(bindings, 24)
+        assert_fixed_receipts(coordinates, 3, ordered=False)
+        self.assertEqual(
+            tuple(
+                row["properties"]["journal_role"]["const"]
+                for row in coordinates["prefixItems"]
+            ),
+            ("CONTROLLER", "CARRIER", "FINALIZER"),
+        )
+        self.assertEqual(
+            tuple(
+                row["allOf"][1]["properties"]["descriptor_id"]["const"]
+                for row in external["prefixItems"][-2:]
+            ),
+            (
+                "CARRIER_EXTERNAL_DECODED_HANDOFF_FULL_BODY_BYTES_045",
+                "CARRIER_EXTERNAL_DECODED_HANDOFF_FULL_BODY_SHA256_046",
+            ),
+        )
+        self.assertEqual(
+            tuple(
+                row["allOf"][1]["properties"]["descriptor_id"]["const"]
+                for row in bindings["prefixItems"][-6:]
+            ),
+            (
+                "CARRIER_DECODED_HANDOFF_ATTEMPT_TO_AGGREGATE_019",
+                "CARRIER_DECODED_HANDOFF_CONTROLLER_COORDINATES_TO_AGGREGATE_020",
+                "CARRIER_DECODED_HANDOFF_CONTROLLER_PUBLICATION_RECEIPT_TO_AGGREGATE_021",
+                "CARRIER_DECODED_HANDOFF_CONTROLLER_READBACK_RECEIPT_TO_AGGREGATE_022",
+                "CARRIER_DECODED_HANDOFF_CONTROLLER_LOCAL_VALIDATION_RECEIPT_TO_AGGREGATE_023",
+                "CARRIER_EXTERNAL_PROOF_IDENTITY_DIGEST_TO_AGGREGATE_024",
+            ),
+        )
+        self.assertEqual(
+            tuple(
+                row["journal_role"]
+                for row in aggregate_properties[
+                    "journal_coordinate_receipt_equalities_in_order"
+                ]["const"]
+            ),
+            ("CONTROLLER", "CARRIER", "FINALIZER"),
+        )
+        exception_order = (
+            "PUT_CONTROLLER_CAPTURE_JOURNAL",
+            "GET_EXACT_CONTROLLER_CAPTURE_JOURNAL",
+            "PUT_CONTROLLER_JOURNAL_HANDOFF",
+            "PUT_FINALIZER_CAPTURE_JOURNAL",
+            "GET_EXACT_FINALIZER_CAPTURE_JOURNAL",
+        )
+        self.assertEqual(
+            tuple(
+                definitions["sigv4_tls_capture_obligation"]["properties"][
+                    "excluded_evidence_channel_operations_in_order"
+                ]["const"]
+            ),
+            exception_order,
+        )
+        self.assertEqual(
+            tuple(
+                aggregate_properties[
+                    "excluded_evidence_channel_operations_in_order"
+                ]["const"]
+            ),
+            exception_order,
+        )
+        self.assertEqual(
+            tuple(
+                contract["achievable_sigv4_tls_and_credential_evidence"][
+                    "substantive_s3_capture_scope"
+                ]["only_recursive_capture_exceptions_in_order"]
+            ),
+            exception_order,
+        )
+        validation_capture_scope = validation[
+            "noncounted_capture_chronology_and_authorization_context_contract"
+        ]["substantive_s3_capture_scope"]
+        self.assertEqual(
+            tuple(validation_capture_scope["only_finite_recursive_capture_exclusions_in_order"]),
+            exception_order,
+        )
+        self.assertEqual(
+            (
+                validation["combined_top_level_case_count"],
+                validation["combined_real_axis_count"],
+                validation["combined_member_execution_coordinate_count"],
+            ),
+            (352, 878, 1108),
+        )
+        self.assertFalse(contract["stage_and_execution_boundary"]["aws_action_authorized"])
+        self.assertFalse(
+            contract["stage_and_execution_boundary"]["scientific_execution_authorized"]
+        )
+
+        post_integration_delta = frozenset(
+            path
+            for path in set(integration_entries) | set(current_entries)
+            if integration_entries.get(path) != current_entries.get(path)
+        )
+        expected_post_integration_delta = set()
+        if actual_head != AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION:
+            expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
