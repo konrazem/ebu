@@ -1659,7 +1659,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "6634edb15c8e985036bcf1bf277a682ab4cf59b0225bc2ad1ec418dc9f8cae01"
+TEST_SELF_SEAL = "e2b4f1c50da2f2f15e19aaaa1ca30a51018b36eb19585da2cead31e8612887f5"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -8843,6 +8843,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_descendant_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_descendant_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_descendant_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
@@ -8850,9 +8854,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             120
             if current_scope["aws_c0_phase"]
             == "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
+            else 126
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION"
             else 106
             if current_scope["aws_c0_phase"]
             == "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY"
+            else 112
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY"
             else 114
             if current_scope["aws_c0_phase"]
             == "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
