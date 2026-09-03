@@ -1,0 +1,813 @@
+{
+  "Comment": "AWS-C0 closure-closed synthetic supervisor: no Retry, one start, one non-reentrant stop, safe close after start-v3 and heartbeat-zero.",
+  "StartAt": "Preflight",
+  "TimeoutSeconds": 43200,
+  "States": {
+    "Preflight": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizerFunctionArn}",
+        "Payload": {
+          "action": "preflight",
+          "live_authorization.$": "$.live_authorization",
+          "workflow_execution_arn.$": "$$.Execution.Id"
+        }
+      },
+      "ResultSelector": {
+        "value": {
+          "artifact_prefix.$": "$.Payload.artifact_prefix",
+          "attempt_identity.$": "$.Payload.attempt_identity",
+          "attempt_deadline_utc.$": "$.Payload.attempt_deadline_utc",
+          "heartbeat_interval_seconds.$": "$.Payload.heartbeat_interval_seconds",
+          "phase_timeouts_seconds.$": "$.Payload.phase_timeouts_seconds",
+          "launch_request_object.$": "$.Payload.launch_request_object",
+          "live_packet_object.$": "$.Payload.live_packet_object",
+          "live_authorization_object.$": "$.Payload.live_authorization_object",
+          "rehearsal_id.$": "$.Payload.launch.rehearsal_id",
+          "attempt_id.$": "$.Payload.launch.attempt_id"
+        }
+      },
+      "ResultPath": "$.preflight",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.preflight_error",
+          "Next": "PreflightFailureClosure"
+        }
+      ],
+      "Next": "CompactPreflight"
+    },
+    "PreflightFailureClosure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizerFunctionArn}",
+        "Payload": {
+          "action": "preflight_failure",
+          "workflow_execution_arn.$": "$$.Execution.Id"
+        }
+      },
+      "OutputPath": "$.Payload",
+      "End": true
+    },
+    "InitializeBudgets": {
+      "Type": "Pass",
+      "Parameters": {
+        "first_heartbeat_remaining.$": "$.context.phase_timeouts_seconds.heartbeat_stale",
+        "stop_remaining.$": "$.context.phase_timeouts_seconds.instance_stop",
+        "safe_close_done": false,
+        "boot_remaining.$": "$.context.phase_timeouts_seconds.boot",
+        "ssm_online_remaining.$": "$.context.phase_timeouts_seconds.ssm_online",
+        "ssm_delivery_remaining.$": "$.context.phase_timeouts_seconds.ssm_start_delivery"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "InitializePoll"
+    },
+    "CompactPreflight": {
+      "Type": "Pass",
+      "Parameters": {
+        "context": {
+          "artifact_prefix.$": "$.preflight.value.artifact_prefix",
+          "attempt_identity.$": "$.preflight.value.attempt_identity",
+          "attempt_deadline_utc.$": "$.preflight.value.attempt_deadline_utc",
+          "heartbeat_interval_seconds.$": "$.preflight.value.heartbeat_interval_seconds",
+          "phase_timeouts_seconds.$": "$.preflight.value.phase_timeouts_seconds",
+          "launch_request_object.$": "$.preflight.value.launch_request_object",
+          "live_packet_object.$": "$.preflight.value.live_packet_object",
+          "live_authorization_object.$": "$.preflight.value.live_authorization_object",
+          "rehearsal_id.$": "$.preflight.value.rehearsal_id",
+          "attempt_id.$": "$.preflight.value.attempt_id"
+        }
+      },
+      "ResultPath": "$",
+      "Next": "InitializeBudgets"
+    },
+    "StartExactInstance": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ec2:startInstances",
+      "Parameters": {
+        "InstanceIds": [
+          "${TargetInstanceId}"
+        ]
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.supervisor_error",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Next": "BootBudgetChoice"
+    },
+    "DescribeBootState": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ec2:describeInstances",
+      "Parameters": {
+        "InstanceIds": [
+          "${TargetInstanceId}"
+        ]
+      },
+      "ResultSelector": {
+        "state.$": "$.Reservations[0].Instances[0].State.Name"
+      },
+      "ResultPath": "$.instance",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.supervisor_error",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Next": "BootStateChoice"
+    },
+    "BootStateChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.instance.state",
+          "StringEquals": "running",
+          "Next": "SsmOnlineBudgetChoice"
+        },
+        {
+          "Variable": "$.budgets.boot_remaining",
+          "NumericEquals": 0,
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Default": "BootBudgetChoice"
+    },
+    "SendExactSsmHandoff": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ssm:sendCommand",
+      "Parameters": {
+        "DocumentName": "${SsmDocumentName}",
+        "DocumentVersion": "${SsmDocumentVersion}",
+        "InstanceIds": [
+          "${TargetInstanceId}"
+        ],
+        "Parameters": {
+          "ArtifactBucket": [
+            "${ArtifactBucketName}"
+          ],
+          "LaunchRequestKey.$": "States.Array($.context.launch_request_object.key)",
+          "LaunchRequestVersionId.$": "States.Array($.context.launch_request_object.version_id)",
+          "LaunchRequestSha256.$": "States.Array($.context.launch_request_object.sha256)",
+          "LaunchRequestBytes.$": "States.Array(States.Format('{}', $.context.launch_request_object.bytes))",
+          "LivePacketKey.$": "States.Array($.context.live_packet_object.key)",
+          "LivePacketVersionId.$": "States.Array($.context.live_packet_object.version_id)",
+          "LivePacketSha256.$": "States.Array($.context.live_packet_object.sha256)",
+          "LivePacketBytes.$": "States.Array(States.Format('{}', $.context.live_packet_object.bytes))",
+          "LiveAuthorizationKey.$": "States.Array($.context.live_authorization_object.key)",
+          "LiveAuthorizationVersionId.$": "States.Array($.context.live_authorization_object.version_id)",
+          "LiveAuthorizationSha256.$": "States.Array($.context.live_authorization_object.sha256)",
+          "LiveAuthorizationBytes.$": "States.Array(States.Format('{}', $.context.live_authorization_object.bytes))",
+          "RehearsalId.$": "States.Array($.context.rehearsal_id)",
+          "AttemptId.$": "States.Array($.context.attempt_id)",
+          "WorkflowExecutionArn.$": "States.Array($$.Execution.Id)",
+          "Region": [
+            "us-east-1"
+          ]
+        }
+      },
+      "ResultSelector": {
+        "command_id.$": "$.Command.CommandId"
+      },
+      "ResultPath": "$.ssm",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.supervisor_error",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Next": "SsmDeliveryBudgetChoice"
+    },
+    "FirstHeartbeatBudgetChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.budgets.first_heartbeat_remaining",
+          "NumericGreaterThan": 15,
+          "Next": "WaitFirstHeartbeat15"
+        }
+      ],
+      "Default": "WaitFirstHeartbeatRemainder"
+    },
+    "WaitFirstHeartbeat15": {
+      "Type": "Wait",
+      "Seconds": 15,
+      "Next": "SubtractFirstHeartbeat15"
+    },
+    "SubtractFirstHeartbeat15": {
+      "Type": "Pass",
+      "Parameters": {
+        "first_heartbeat_remaining.$": "States.MathAdd($.budgets.first_heartbeat_remaining, -15)",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "PollAttempt"
+    },
+    "WaitFirstHeartbeatRemainder": {
+      "Type": "Wait",
+      "SecondsPath": "$.budgets.first_heartbeat_remaining",
+      "Next": "ExhaustFirstHeartbeatBudget"
+    },
+    "ExhaustFirstHeartbeatBudget": {
+      "Type": "Pass",
+      "Parameters": {
+        "first_heartbeat_remaining": 0,
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "PollAttempt"
+    },
+    "PollAttempt": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizerFunctionArn}",
+        "Payload": {
+          "action": "poll",
+          "artifact_prefix.$": "$.context.artifact_prefix",
+          "attempt_identity.$": "$.context.attempt_identity",
+          "heartbeat_stale_seconds.$": "$.context.phase_timeouts_seconds.heartbeat_stale",
+          "workflow_execution_arn.$": "$$.Execution.Id"
+        }
+      },
+      "ResultSelector": {
+        "value": {
+          "state.$": "$.Payload.state",
+          "observed_utc.$": "$.Payload.observed_utc",
+          "start_receipt_identity.$": "$.Payload.start_receipt_identity",
+          "heartbeat_zero_identity.$": "$.Payload.heartbeat_zero_identity",
+          "terminal_receipt_identity.$": "$.Payload.terminal_receipt_identity"
+        }
+      },
+      "ResultPath": "$.poll",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.supervisor_error",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Next": "AttemptDeadlineChoice"
+    },
+    "AttemptDeadlineChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.poll.value.observed_utc",
+          "TimestampGreaterThanEqualsPath": "$.context.attempt_deadline_utc",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Default": "PollStateChoice"
+    },
+    "PollStateChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.poll.value.state",
+          "StringEquals": "TERMINAL",
+          "Next": "SingleStopInstances"
+        },
+        {
+          "Variable": "$.poll.value.state",
+          "StringEquals": "HEARTBEAT_STALE",
+          "Next": "SingleStopInstances"
+        },
+        {
+          "And": [
+            {
+              "Variable": "$.poll.value.state",
+              "StringEquals": "WAITING_FIRST_HEARTBEAT"
+            },
+            {
+              "Variable": "$.budgets.first_heartbeat_remaining",
+              "NumericEquals": 0
+            }
+          ],
+          "Next": "SingleStopInstances"
+        },
+        {
+          "Variable": "$.poll.value.state",
+          "StringEquals": "WAITING_FIRST_HEARTBEAT",
+          "Next": "FirstHeartbeatBudgetChoice"
+        },
+        {
+          "And": [
+            {
+              "Variable": "$.poll.value.state",
+              "StringEquals": "HEARTBEAT_FRESH"
+            },
+            {
+              "Variable": "$.budgets.safe_close_done",
+              "BooleanEquals": false
+            }
+          ],
+          "Next": "EmitSafeClose"
+        }
+      ],
+      "Default": "WaitHeartbeatInterval"
+    },
+    "EmitSafeClose": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizerFunctionArn}",
+        "Payload": {
+          "action": "safe_close",
+          "artifact_prefix.$": "$.context.artifact_prefix",
+          "attempt_identity.$": "$.context.attempt_identity",
+          "workflow_execution_arn.$": "$$.Execution.Id",
+          "start_receipt_identity.$": "$.poll.value.start_receipt_identity",
+          "heartbeat_zero_identity.$": "$.poll.value.heartbeat_zero_identity"
+        }
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.supervisor_error",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Next": "MarkSafeClose"
+    },
+    "MarkSafeClose": {
+      "Type": "Pass",
+      "Parameters": {
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done": true,
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "WaitHeartbeatInterval"
+    },
+    "WaitHeartbeatInterval": {
+      "Type": "Wait",
+      "SecondsPath": "$.context.heartbeat_interval_seconds",
+      "Next": "PollAttempt"
+    },
+    "SingleStopInstances": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ec2:stopInstances",
+      "Parameters": {
+        "InstanceIds": [
+          "${TargetInstanceId}"
+        ]
+      },
+      "ResultPath": null,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.stop_error",
+          "Next": "PrepareClosureStopFailed"
+        }
+      ],
+      "Next": "StopBudgetChoice"
+    },
+    "WaitStop15": {
+      "Type": "Wait",
+      "Seconds": 15,
+      "Next": "SubtractStopBudget"
+    },
+    "SubtractStopBudget": {
+      "Type": "Pass",
+      "Parameters": {
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "stop_remaining.$": "States.MathAdd($.budgets.stop_remaining, -15)",
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "DescribeStopped"
+    },
+    "DescribeStopped": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ec2:describeInstances",
+      "Parameters": {
+        "InstanceIds": [
+          "${TargetInstanceId}"
+        ]
+      },
+      "ResultSelector": {
+        "state.$": "$.Reservations[0].Instances[0].State.Name"
+      },
+      "ResultPath": "$.stopped",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.stop_observation_error",
+          "Next": "Closure"
+        }
+      ],
+      "Next": "StoppedChoice"
+    },
+    "StoppedChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.stopped.state",
+          "StringEquals": "stopped",
+          "Next": "PrepareClosureStopped"
+        },
+        {
+          "Variable": "$.budgets.stop_remaining",
+          "NumericEquals": 0,
+          "Next": "PrepareClosureNotStopped"
+        }
+      ],
+      "Default": "StopBudgetChoice"
+    },
+    "Closure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${FinalizerFunctionArn}",
+        "Payload": {
+          "action": "closure",
+          "workflow_execution_arn.$": "$$.Execution.Id",
+          "attempt_identity.$": "$.context.attempt_identity",
+          "artifact_prefix.$": "$.context.artifact_prefix",
+          "live_packet_object.$": "$.context.live_packet_object",
+          "live_authorization_object.$": "$.context.live_authorization_object",
+          "terminal_receipt_identity.$": "$.poll.value.terminal_receipt_identity",
+          "finalizer_execution_disposition.$": "$.closure_input.finalizer_execution_disposition",
+          "finalizer_failure_code.$": "$.closure_input.finalizer_failure_code",
+          "cleanup_disposition.$": "$.closure_input.cleanup_disposition",
+          "observed_instance_state.$": "$.closure_input.observed_instance_state",
+          "stop_failure_code.$": "$.closure_input.stop_failure_code",
+          "supervisor_failure_phase.$": "$.closure_input.supervisor_failure_phase",
+          "supervisor_failure_code.$": "$.closure_input.supervisor_failure_code"
+        }
+      },
+      "OutputPath": "$.Payload",
+      "End": true
+    },
+    "InitializePoll": {
+      "Type": "Pass",
+      "Result": {
+        "value": {
+          "terminal_receipt_identity": null
+        }
+      },
+      "ResultPath": "$.poll",
+      "Next": "StartExactInstance"
+    },
+    "PrepareClosureStopped": {
+      "Type": "Pass",
+      "Parameters": {
+        "finalizer_execution_disposition": "PASS",
+        "finalizer_failure_code": null,
+        "cleanup_disposition": "STOPPED_VERIFIED",
+        "observed_instance_state": "stopped",
+        "stop_failure_code": null,
+        "supervisor_failure_phase": null,
+        "supervisor_failure_code": null
+      },
+      "ResultPath": "$.closure_input",
+      "Next": "Closure"
+    },
+    "PrepareClosureStopFailed": {
+      "Type": "Pass",
+      "Parameters": {
+        "finalizer_execution_disposition": "FAIL",
+        "finalizer_failure_code": "STOP_REQUEST_FAILED",
+        "cleanup_disposition": "STOP_REQUEST_FAILED",
+        "observed_instance_state": "unknown",
+        "stop_failure_code": "STOP_REQUEST_FAILED",
+        "supervisor_failure_phase": "STOP",
+        "supervisor_failure_code": "STOP_REQUEST_FAILED"
+      },
+      "ResultPath": "$.closure_input",
+      "Next": "Closure"
+    },
+    "PrepareClosureNotStopped": {
+      "Type": "Pass",
+      "Parameters": {
+        "finalizer_execution_disposition": "FAIL",
+        "finalizer_failure_code": "STOPPED_POSTCONDITION_MISSING",
+        "cleanup_disposition": "STOPPED_POSTCONDITION_MISSING",
+        "observed_instance_state.$": "$.stopped.state",
+        "stop_failure_code": "STOP_TIMEOUT",
+        "supervisor_failure_phase": "STOP",
+        "supervisor_failure_code": "STOPPED_POSTCONDITION_MISSING"
+      },
+      "ResultPath": "$.closure_input",
+      "Next": "Closure"
+    },
+    "BootBudgetChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.budgets.boot_remaining",
+          "NumericGreaterThan": 15,
+          "Next": "WaitBoot15"
+        }
+      ],
+      "Default": "WaitBootRemainder"
+    },
+    "WaitBoot15": {
+      "Type": "Wait",
+      "Seconds": 15,
+      "Next": "SubtractBoot15"
+    },
+    "SubtractBoot15": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining.$": "States.MathAdd($.budgets.boot_remaining, -15)",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "DescribeBootState"
+    },
+    "WaitBootRemainder": {
+      "Type": "Wait",
+      "SecondsPath": "$.budgets.boot_remaining",
+      "Next": "ExhaustBootBudget"
+    },
+    "ExhaustBootBudget": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining": 0,
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "DescribeBootState"
+    },
+    "SsmOnlineBudgetChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.budgets.ssm_online_remaining",
+          "NumericGreaterThan": 15,
+          "Next": "WaitSsmOnline15"
+        }
+      ],
+      "Default": "WaitSsmOnlineRemainder"
+    },
+    "WaitSsmOnline15": {
+      "Type": "Wait",
+      "Seconds": 15,
+      "Next": "SubtractSsmOnline15"
+    },
+    "SubtractSsmOnline15": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "States.MathAdd($.budgets.ssm_online_remaining, -15)",
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "DescribeSsmOnline"
+    },
+    "WaitSsmOnlineRemainder": {
+      "Type": "Wait",
+      "SecondsPath": "$.budgets.ssm_online_remaining",
+      "Next": "ExhaustSsmOnlineBudget"
+    },
+    "ExhaustSsmOnlineBudget": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining": 0,
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "DescribeSsmOnline"
+    },
+    "DescribeSsmOnline": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ssm:describeInstanceInformation",
+      "Parameters": {
+        "Filters": [
+          {
+            "Key": "InstanceIds",
+            "Values": [
+              "${TargetInstanceId}"
+            ]
+          }
+        ]
+      },
+      "ResultSelector": {
+        "ping_status.$": "$.InstanceInformationList[0].PingStatus"
+      },
+      "ResultPath": "$.ssm_online",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.supervisor_error",
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Next": "SsmOnlineChoice"
+    },
+    "SsmOnlineChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.ssm_online.ping_status",
+          "StringEquals": "Online",
+          "Next": "SendExactSsmHandoff"
+        },
+        {
+          "Variable": "$.budgets.ssm_online_remaining",
+          "NumericEquals": 0,
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Default": "SsmOnlineBudgetChoice"
+    },
+    "StopBudgetChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.budgets.stop_remaining",
+          "NumericGreaterThan": 15,
+          "Next": "WaitStop15"
+        }
+      ],
+      "Default": "WaitStopRemainder"
+    },
+    "WaitStopRemainder": {
+      "Type": "Wait",
+      "SecondsPath": "$.budgets.stop_remaining",
+      "Next": "ExhaustStopBudget"
+    },
+    "ExhaustStopBudget": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done",
+        "stop_remaining": 0,
+        "ssm_delivery_remaining.$": "$.budgets.ssm_delivery_remaining"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "DescribeStopped"
+    },
+    "SsmDeliveryBudgetChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.budgets.ssm_delivery_remaining",
+          "NumericGreaterThan": 15,
+          "Next": "WaitSsmDelivery15"
+        }
+      ],
+      "Default": "WaitSsmDeliveryRemainder"
+    },
+    "WaitSsmDelivery15": {
+      "Type": "Wait",
+      "Seconds": 15,
+      "Next": "SubtractSsmDelivery15"
+    },
+    "SubtractSsmDelivery15": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "ssm_delivery_remaining.$": "States.MathAdd($.budgets.ssm_delivery_remaining, -15)",
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "GetSsmDelivery"
+    },
+    "WaitSsmDeliveryRemainder": {
+      "Type": "Wait",
+      "SecondsPath": "$.budgets.ssm_delivery_remaining",
+      "Next": "ExhaustSsmDeliveryBudget"
+    },
+    "ExhaustSsmDeliveryBudget": {
+      "Type": "Pass",
+      "Parameters": {
+        "boot_remaining.$": "$.budgets.boot_remaining",
+        "ssm_online_remaining.$": "$.budgets.ssm_online_remaining",
+        "ssm_delivery_remaining": 0,
+        "first_heartbeat_remaining.$": "$.budgets.first_heartbeat_remaining",
+        "stop_remaining.$": "$.budgets.stop_remaining",
+        "safe_close_done.$": "$.budgets.safe_close_done"
+      },
+      "ResultPath": "$.budgets",
+      "Next": "GetSsmDelivery"
+    },
+    "GetSsmDelivery": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:ssm:getCommandInvocation",
+      "Parameters": {
+        "CommandId.$": "$.ssm.command_id",
+        "InstanceId": "${TargetInstanceId}"
+      },
+      "ResultSelector": {
+        "status.$": "$.Status"
+      },
+      "ResultPath": "$.ssm_delivery",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.ssm_delivery_error",
+          "Next": "SsmDeliveryMissingChoice"
+        }
+      ],
+      "Next": "SsmDeliveryStatusChoice"
+    },
+    "SsmDeliveryMissingChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.budgets.ssm_delivery_remaining",
+          "NumericEquals": 0,
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Default": "SsmDeliveryBudgetChoice"
+    },
+    "SsmDeliveryStatusChoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.ssm_delivery.status",
+          "StringEquals": "Success",
+          "Next": "FirstHeartbeatBudgetChoice"
+        },
+        {
+          "Or": [
+            {
+              "Variable": "$.ssm_delivery.status",
+              "StringEquals": "Failed"
+            },
+            {
+              "Variable": "$.ssm_delivery.status",
+              "StringEquals": "Cancelled"
+            },
+            {
+              "Variable": "$.ssm_delivery.status",
+              "StringEquals": "TimedOut"
+            }
+          ],
+          "Next": "SingleStopInstances"
+        },
+        {
+          "Variable": "$.budgets.ssm_delivery_remaining",
+          "NumericEquals": 0,
+          "Next": "SingleStopInstances"
+        }
+      ],
+      "Default": "SsmDeliveryBudgetChoice"
+    }
+  }
+}

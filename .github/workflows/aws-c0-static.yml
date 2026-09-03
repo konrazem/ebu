@@ -1,0 +1,43 @@
+name: AWS-C0 closure-closed static validation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aws-c0-static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source without retaining credentials
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Select the standard-library validation runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Run the credential-free audit-v4 validator
+        env:
+          AWS_EC2_METADATA_DISABLED: "true"
+        run: >-
+          python -B -I scripts/validate_aws_c0_static.py --mode audit-v4
+
+      - name: Run the credential-free static-v4 validator
+        env:
+          AWS_EC2_METADATA_DISABLED: "true"
+        run: >-
+          python -B -I scripts/validate_aws_c0_static.py --mode static-v4
+
+      - name: Run the exact AWS-C0 static test target
+        env:
+          AWS_EC2_METADATA_DISABLED: "true"
+        run: >-
+          python -B -I tests/aws/test_aws_c0_unattended_synthetic.py

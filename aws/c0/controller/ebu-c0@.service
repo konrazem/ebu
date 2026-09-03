@@ -1,0 +1,57 @@
+[Unit]
+Description=EBU AWS-C0 bounded synthetic controller for %i
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+ConditionPathIsRegular=/var/lib/ebu-c0/requests/%i.json
+
+[Service]
+Type=exec
+User=root
+Group=root
+UMask=0077
+WorkingDirectory=/var/lib/ebu-c0
+Environment=PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1
+ExecStart=/usr/bin/python3 /usr/local/libexec/ebu-c0/ebu_c0_controller.py run --launch-request /var/lib/ebu-c0/requests/%i.json
+Restart=no
+RuntimeMaxSec=432000
+TimeoutStartSec=60
+TimeoutStopSec=60
+KillMode=mixed
+KillSignal=SIGTERM
+FinalKillSignal=SIGKILL
+OOMPolicy=stop
+TasksMax=64
+LimitNPROC=64
+LimitNOFILE=1024
+MemoryMax=512M
+NoNewPrivileges=true
+CapabilityBoundingSet=CAP_DAC_OVERRIDE
+AmbientCapabilities=
+PrivateTmp=true
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallArchitectures=native
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/ebu-c0 /run/ebu-c0
+StateDirectory=ebu-c0
+StateDirectoryMode=0700
+RuntimeDirectory=ebu-c0
+RuntimeDirectoryMode=0700
+
+[Install]
+WantedBy=multi-user.target
