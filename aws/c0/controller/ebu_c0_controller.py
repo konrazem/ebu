@@ -119,6 +119,44 @@ HANDOFF_EXCLUDED_FIELDS = (
     "handoff_canonical_body_byte_count", "handoff_body_excluded_fields_in_order",
     "handoff_body_projection_disposition",
 )
+PLATFORM_SMOKE_CAPSULE_ID = "platform-smoke-known-case-v1"
+PLATFORM_SMOKE_COMMON_RECEIPT_FIELDS = (
+    "schema", "capsule_id", "attempt_identity", "sequence", "event_type",
+    "payload_identity", "previous_receipt_sha256", "receipt_sha256",
+)
+PLATFORM_SMOKE_FOUNDATION_CAPABILITIES = (
+    "POST_TERMINAL_CONTROLLER_JOURNAL_SEAL",
+    "EXACT_VERSION_STORAGE_AND_READBACK",
+    "CONTROLLER_JOURNAL_VERSION_AND_TYPED_RECEIPT_HANDOFF",
+    "SINGLE_ATTEMPT_NO_RETRY",
+    "BOUNDED_STOP_AND_CLEANUP",
+    "INTEGER_COST_CEILING",
+    "ZERO_SCIENCE_GUARDS",
+)
+CONTROLLER_HANDOFF_COORDINATE_ROWS = (
+    ("HANDOFF_ATTEMPT_PUBLICATION_001", "/attempt_identity/value", "/controller_publication_receipt/attempt_identity/value", "STRING_EQUAL"),
+    ("HANDOFF_ATTEMPT_READBACK_002", "/attempt_identity/value", "/controller_readback_receipt/attempt_identity/value", "STRING_EQUAL"),
+    ("HANDOFF_ROLE_PUBLICATION_003", "/controller_publication_receipt/journal_role", "CONTROLLER", "LITERAL_EQUAL"),
+    ("HANDOFF_ROLE_READBACK_004", "/controller_readback_receipt/journal_role", "CONTROLLER", "LITERAL_EQUAL"),
+    ("HANDOFF_BUCKET_PUBLICATION_005", "/controller_publication_receipt/bucket_name", "/controller_journal_object/bucket", "STRING_EQUAL"),
+    ("HANDOFF_BUCKET_READBACK_006", "/controller_readback_receipt/bucket_name", "/controller_journal_object/bucket", "STRING_EQUAL"),
+    ("HANDOFF_KEY_PUBLICATION_007", "/controller_publication_receipt/key", "/controller_journal_object/key", "STRING_EQUAL"),
+    ("HANDOFF_KEY_READBACK_008", "/controller_readback_receipt/key", "/controller_journal_object/key", "STRING_EQUAL"),
+    ("HANDOFF_VERSION_PUBLICATION_009", "/controller_publication_receipt/version_id", "/controller_journal_object/version_id", "STRING_EQUAL"),
+    ("HANDOFF_VERSION_READBACK_010", "/controller_readback_receipt/version_id", "/controller_journal_object/version_id", "STRING_EQUAL"),
+    ("HANDOFF_ETAG_PUBLICATION_011", "/controller_publication_receipt/etag", "/controller_journal_object/etag", "STRING_EQUAL"),
+    ("HANDOFF_ETAG_READBACK_012", "/controller_readback_receipt/etag", "/controller_journal_object/etag", "STRING_EQUAL"),
+    ("HANDOFF_CHECKSUM_PUBLICATION_013", "/controller_publication_receipt/checksum_sha256_base64", "/controller_journal_object/checksum_sha256_base64", "STRING_EQUAL"),
+    ("HANDOFF_CHECKSUM_READBACK_014", "/controller_readback_receipt/checksum_sha256_base64", "/controller_journal_object/checksum_sha256_base64", "STRING_EQUAL"),
+    ("HANDOFF_BYTES_PUBLICATION_015", "/controller_publication_receipt/byte_count", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
+    ("HANDOFF_BYTES_READBACK_016", "/controller_readback_receipt/byte_count", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
+    ("HANDOFF_OBJECT_SHA_PUBLICATION_017", "/controller_publication_receipt/published_object_sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
+    ("HANDOFF_OBJECT_SHA_READBACK_018", "/controller_readback_receipt/published_object_sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
+    ("HANDOFF_CHAIN_PUBLICATION_019", "/controller_publication_receipt/content_chain_sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
+    ("HANDOFF_CHAIN_READBACK_020", "/controller_readback_receipt/content_chain_sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
+    ("HANDOFF_PUBLICATION_IDENTITY_021", "/controller_publication_receipt_identity/sha256,/controller_publication_receipt_identity/value", "/controller_publication_receipt/receipt_sha256", "BOTH_SHA256_EQUAL"),
+    ("HANDOFF_READBACK_IDENTITY_022", "/controller_readback_receipt_identity/sha256,/controller_readback_receipt_identity/value", "/controller_readback_receipt/receipt_sha256", "BOTH_SHA256_EQUAL"),
+)
 
 
 class Refusal(RuntimeError):
@@ -577,6 +615,65 @@ def validate_launch(record: Any, rehearsal: str, attempt: str) -> dict[str, Any]
     if _utc(window["start_inclusive_utc"]) > observed or _utc(window["end_exclusive_utc"]) < cleanup_deadline:
         raise Refusal("accounting window does not dominate attempt")
     return record
+
+
+def build_platform_smoke_known_case_local_binding(record: Any) -> dict[str, Any]:
+    """Bind the first non-scientific capsule to an existing valid SUCCESS launch.
+
+    This is a local planning/validation projection.  It does not authorize or
+    invoke AWS and deliberately carries no global aggregate or study payload.
+    """
+    if not isinstance(record, dict):
+        raise Refusal("platform smoke launch must be an object")
+    launch = validate_launch(record, record.get("rehearsal_id"), record.get("attempt_id"))
+    if _mode(launch["attempt_id"]) != "SUCCESS":
+        raise Refusal("platform smoke first capsule requires the SUCCESS known case")
+    inputs = (
+        ("LAUNCH_REQUEST", identity("aws_c0_launch_request/v4", launch["record_sha256"])),
+        ("PREPARATION_PACKET", launch["preparation_packet_identity"]),
+        ("PREPARATION_AUTHORIZATION", launch["preparation_authorization_identity"]),
+        ("COST_MODEL", launch["cost_model_identity"]),
+        ("CLOSURE_SEED", launch["closure_seed_identity"]),
+    )
+    return {
+        "schema": "aws_c0_platform_smoke_known_case_local_binding/v1",
+        "capsule_id": PLATFORM_SMOKE_CAPSULE_ID,
+        "test_case": "SUCCESS_KNOWN_CASE",
+        "attempt_identity": launch["attempt_identity"],
+        "input_identities_in_order": [
+            {"role": role, "identity": input_identity} for role, input_identity in inputs
+        ],
+        "expected_artifact_classes_in_order": [
+            "ATTEMPT_CLAIM", "START_RECEIPT", "HEARTBEAT", "CHECKPOINT",
+            "SYNTHETIC_MANIFEST", "TERMINAL_RECEIPT", "CONTROLLER_CAPTURE_JOURNAL",
+            "CONTROLLER_JOURNAL_HANDOFF", "STOPPED_OBSERVATION",
+            "FINALIZER_CAPTURE_JOURNAL", "COST_CLOSURE", "RETRIEVAL_VERIFICATION",
+            "FINAL_MANIFEST",
+        ],
+        "common_receipt_fields_in_order": list(PLATFORM_SMOKE_COMMON_RECEIPT_FIELDS),
+        "reused_foundation_capabilities_in_order": list(PLATFORM_SMOKE_FOUNDATION_CAPABILITIES),
+        "budget_binding": {
+            "currency": launch["cost_envelope"]["currency"],
+            "ceiling_minor_units": launch["cost_envelope"]["ceiling_minor_units"],
+            "cost_model_identity": launch["cost_model_identity"],
+            "resource_limits_sha256": digest(canonical_bytes(
+                launch["cost_envelope"]["resource_limits"])),
+            "accounting_window_sha256": digest(canonical_bytes(
+                launch["cost_envelope"]["accounting_window"])),
+        },
+        "termination_binding": {
+            "attempt_deadline_utc": launch["attempt_deadline_utc"],
+            "cleanup_deadline_utc": launch["cleanup_deadline_utc"],
+            "phase_timeouts_seconds": launch["phase_timeouts_seconds"],
+            "state_machine_timeout_seconds": launch["state_machine_timeout_seconds"],
+            "retry_attempts": launch["retry_attempts"],
+            "cleanup_path": launch["cleanup_path"],
+        },
+        "scientific_conclusion_authorized": False,
+        "live_aws_execution_authorized": False,
+        "separate_capsule_authority_required": True,
+        "global_aggregate_payload_embedded": False,
+    }
 
 
 def _run(argv: list[str], timeout: int, ok: tuple[int, ...] = (0,)) -> subprocess.CompletedProcess[bytes]:
@@ -1126,30 +1223,6 @@ def build_controller_journal_handoff_v1(*, attempt_identity: dict[str, str], buc
         "object_sha256": publication["published_object_sha256"],
         "content_chain_sha256": chain,
     }
-    coordinate_rows = (
-        ("HANDOFF_ATTEMPT_PUBLICATION_001", "/attempt_identity/value", "/controller_publication_receipt/attempt_identity/value", "STRING_EQUAL"),
-        ("HANDOFF_ATTEMPT_READBACK_002", "/attempt_identity/value", "/controller_readback_receipt/attempt_identity/value", "STRING_EQUAL"),
-        ("HANDOFF_ROLE_PUBLICATION_003", "/controller_publication_receipt/journal_role", "CONTROLLER", "LITERAL_EQUAL"),
-        ("HANDOFF_ROLE_READBACK_004", "/controller_readback_receipt/journal_role", "CONTROLLER", "LITERAL_EQUAL"),
-        ("HANDOFF_BUCKET_PUBLICATION_005", "/controller_publication_receipt/bucket_name", "/controller_journal_object/bucket", "STRING_EQUAL"),
-        ("HANDOFF_BUCKET_READBACK_006", "/controller_readback_receipt/bucket_name", "/controller_journal_object/bucket", "STRING_EQUAL"),
-        ("HANDOFF_KEY_PUBLICATION_007", "/controller_publication_receipt/key", "/controller_journal_object/key", "STRING_EQUAL"),
-        ("HANDOFF_KEY_READBACK_008", "/controller_readback_receipt/key", "/controller_journal_object/key", "STRING_EQUAL"),
-        ("HANDOFF_VERSION_PUBLICATION_009", "/controller_publication_receipt/version_id", "/controller_journal_object/version_id", "STRING_EQUAL"),
-        ("HANDOFF_VERSION_READBACK_010", "/controller_readback_receipt/version_id", "/controller_journal_object/version_id", "STRING_EQUAL"),
-        ("HANDOFF_ETAG_PUBLICATION_011", "/controller_publication_receipt/etag", "/controller_journal_object/etag", "STRING_EQUAL"),
-        ("HANDOFF_ETAG_READBACK_012", "/controller_readback_receipt/etag", "/controller_journal_object/etag", "STRING_EQUAL"),
-        ("HANDOFF_CHECKSUM_PUBLICATION_013", "/controller_publication_receipt/checksum_sha256_base64", "/controller_journal_object/checksum_sha256_base64", "STRING_EQUAL"),
-        ("HANDOFF_CHECKSUM_READBACK_014", "/controller_readback_receipt/checksum_sha256_base64", "/controller_journal_object/checksum_sha256_base64", "STRING_EQUAL"),
-        ("HANDOFF_BYTES_PUBLICATION_015", "/controller_publication_receipt/byte_count", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
-        ("HANDOFF_BYTES_READBACK_016", "/controller_readback_receipt/byte_count", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
-        ("HANDOFF_OBJECT_SHA_PUBLICATION_017", "/controller_publication_receipt/published_object_sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_OBJECT_SHA_READBACK_018", "/controller_readback_receipt/published_object_sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_CHAIN_PUBLICATION_019", "/controller_publication_receipt/content_chain_sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_CHAIN_READBACK_020", "/controller_readback_receipt/content_chain_sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_PUBLICATION_IDENTITY_021", "/controller_publication_receipt_identity/sha256,/controller_publication_receipt_identity/value", "/controller_publication_receipt/receipt_sha256", "BOTH_SHA256_EQUAL"),
-        ("HANDOFF_READBACK_IDENTITY_022", "/controller_readback_receipt_identity/sha256,/controller_readback_receipt_identity/value", "/controller_readback_receipt/receipt_sha256", "BOTH_SHA256_EQUAL"),
-    )
     comparison_root = {
         "attempt_identity": attempt_identity, "controller_journal_object": controller_object,
         "controller_publication_receipt": publication, "controller_readback_receipt": readback,
@@ -1159,7 +1232,7 @@ def build_controller_journal_handoff_v1(*, attempt_identity: dict[str, str], buc
     receipts = [_execution_receipt(index, *row,
                                    _pointer_value(comparison_root, row[1]),
                                    _pointer_value(comparison_root, row[2]))
-                for index, row in enumerate(coordinate_rows, 1)]
+                for index, row in enumerate(CONTROLLER_HANDOFF_COORDINATE_ROWS, 1)]
     local_preimage = {**comparison_root,
                       "coordinate_receipt_sha256s": [row["receipt_sha256"] for row in receipts]}
     local_sha = digest(canonical_bytes(local_preimage))

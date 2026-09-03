@@ -79,6 +79,16 @@ separate authority explicitly partitions or supersedes the current aggregate
 requirement; until then the complete existing 100-field requirement remains
 mandatory and no AWS launch is authorized.
 
+### Local gate ledger
+
+- G1 `COMPLETE`: partition frozen at `c3f3cd0`; independent Sol High review approved.
+- G2 `COMPLETE`: the schema count and both offline validator modes passed; the
+  single plan correction made the deferral conditional on separate authority.
+- G3 `COMPLETE`: the first SUCCESS known-case has a local-only capsule binding;
+  the finalizer also enforces the fixed 22-row journal-handoff table.
+- G4 `COMPLETE_ON_COMMIT`: candidate changes and focused negative controls are
+  committed together; G5-G7 remain pending review, integration, and packet work.
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
