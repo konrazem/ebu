@@ -23467,14 +23467,20 @@ def validate_sources() -> None:
     require("aws_c0_source_sidecar/v3" in controller and "reserve_for_operation" in controller,
             "controller capture reservation absent")
     prepare_calls = call_names(controller_functions["prepare_request"])
-    require(prepare_calls.count("publish_and_readback_controller_journal") == 1 and
-            prepare_calls.count("build_controller_journal_handoff_v1") == 1 and
-            prepare_calls.count("publish_controller_journal_handoff") == 1,
-            "controller journal carrier lifecycle is not exact")
-    require(controller.index("publish_and_readback_controller_journal(", controller.index("def prepare_request")) <
-            controller.index("build_controller_journal_handoff_v1(", controller.index("def prepare_request")) <
-            controller.index("publish_controller_journal_handoff(", controller.index("def prepare_request")),
-            "controller journal carrier causal order is inverted")
+    run_calls = call_names(controller_functions["run_attempt"])
+    require(all(prepare_calls.count(name) == 0 for name in (
+                "publish_and_readback_controller_journal", "build_controller_journal_handoff_v1",
+                "publish_controller_journal_handoff")) and
+            run_calls.count("publish_and_readback_controller_journal") == 1 and
+            run_calls.count("build_controller_journal_handoff_v1") == 1 and
+            run_calls.count("publish_controller_journal_handoff") == 1,
+            "controller journal carrier lifecycle is not terminal-attempt scoped")
+    run_source = ast.get_source_segment(controller, controller_functions["run_attempt"])
+    require(run_source.index("if code != expected_exit or not terminal_seen") <
+            run_source.index("publish_and_readback_controller_journal(") <
+            run_source.index("build_controller_journal_handoff_v1(") <
+            run_source.index("publish_controller_journal_handoff("),
+            "controller terminal, journal, and carrier causal order is inverted")
     require("CaptureJournal" in finalizer and "failure envelope" in finalizer,
             "finalizer failure journal absent")
     closure_calls = call_names(finalizer_functions["closure"])
@@ -23486,11 +23492,26 @@ def validate_sources() -> None:
             discovery_calls.count("_aws_request") == 2,
             "finalizer carrier must perform one bounded List and two exact Gets")
     closure_source = ast.get_source_segment(finalizer, finalizer_functions["closure"])
+    terminal_manifest_put = closure_source.index('"evidence/final-manifest"')
     require(closure_source.index("_discover_controller_journal_handoff(") <
-            closure_source.index('"aws_c0_final_manifest/v4"') <
+            terminal_manifest_put <
             closure_source.index("publish_and_readback_finalizer_journal(") <
             closure_source.index("build_three_coordinate_capture_aggregate("),
             "carrier/controller Get, final-manifest Put, journal seal, and aggregate order is inverted")
+    require("_put_record(" not in closure_source[terminal_manifest_put + 1:] and
+            '"aws_c0_final_manifest_publication_observation/v2"' in closure_source[terminal_manifest_put:] and
+            '"final_manifest_publication_observation_object": None' in closure_source[terminal_manifest_put:],
+            "a substantive finalizer Put follows the designated terminal manifest Put")
+    aggregate_assignment = next(node for node in finalizer_tree.body if isinstance(node, ast.Assign) and
+                                any(isinstance(target, ast.Name) and
+                                    target.id == "FINAL_CAPTURE_AGGREGATE_FIELDS" for target in node.targets))
+    implemented_aggregate_fields = set(ast.literal_eval(aggregate_assignment.value))
+    accepted_aggregate_fields = set(load_json(
+        "aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json"
+    )["$defs"]["final_s3_capture_aggregate"]["required"])
+    require(len(implemented_aggregate_fields) == 100 and
+            implemented_aggregate_fields == accepted_aggregate_fields,
+            "final capture aggregate does not match the accepted 100-field interface")
     require("controller_journal_version_id" in finalizer and
             "controller_publication_receipt_identity" in finalizer and
             "PUT_CONTROLLER_JOURNAL_HANDOFF" in finalizer,

@@ -370,11 +370,15 @@ def sigv4_exact_version_get(bucket: str, key: str, version_id: str, expected_sha
         raw, observed = transport(host, uri, query, headers)
     finally:
         for i in range(len(secret)): secret[i] = 0
-    if observed.get("version_id") != version_id or observed.get("checksum_sha256") != base64.b64encode(hashlib.sha256(raw).digest()).decode() or digest(raw) != expected_sha256:
+    if (observed.get("version_id") != version_id or
+            observed.get("checksum_sha256") != base64.b64encode(hashlib.sha256(raw).digest()).decode() or
+            not isinstance(observed.get("etag"), str) or not observed["etag"] or
+            digest(raw) != expected_sha256):
         raise Refusal("authenticated exact-version response refused")
     return raw, {"canonical_request_sha256": digest(canonical.encode()), "string_to_sign_sha256": digest(to_sign.encode()),
                  "response_sha256": digest(raw), "version_id": version_id, "checksum_sha256": observed["checksum_sha256"],
-                 "tls_certificate_sha256": observed.get("tls_certificate_sha256"), "request_id": observed.get("request_id")}
+                 "etag": observed["etag"], "tls_certificate_sha256": observed.get("tls_certificate_sha256"),
+                 "request_id": observed.get("request_id")}
 
 
 def https_exact_version_transport(host: str, uri: str, query: str,
@@ -627,15 +631,21 @@ def _download(bucket: str, key: str, version: str, expected: str,
     """
     if not BUCKET.fullmatch(bucket) or not VERSION.fullmatch(version) or not SHA.fullmatch(expected):
         raise Refusal("invalid S3 coordinate")
+    timestamp = now or dt.datetime.now(dt.timezone.utc)
+    if timestamp.tzinfo is None:
+        raise Refusal("SigV4 timestamp must be timezone-aware")
+    requested_utc = timestamp.astimezone(dt.timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")
     capture = {"source_role": source_role, "bucket": bucket, "key": key,
                "version_id": version, "expected_sha256": expected,
-               "operation": "S3_GET_OBJECT_EXACT_VERSION"}
+               "operation": "S3_GET_OBJECT_EXACT_VERSION",
+               "operation_requested_utc": requested_utc,
+               "request_envelope_sha256": digest(canonical_bytes({
+                   "method": "GET", "bucket": bucket, "key": key,
+                   "version_id": version, "checksum_mode": "ENABLED"})),
+               "source_object_identity": identity("aws_c0_s3_object/v1", expected)}
     if journal is not None:
         journal.reserve_for_operation(capture)
     try:
-        timestamp = now or dt.datetime.now(dt.timezone.utc)
-        if timestamp.tzinfo is None:
-            raise Refusal("SigV4 timestamp must be timezone-aware")
         raw, metadata = sigv4_exact_version_get(bucket, key, version, expected,
                                                   credential_provider(), transport,
                                                   timestamp.astimezone(dt.timezone.utc))
@@ -643,6 +653,9 @@ def _download(bucket: str, key: str, version: str, expected: str,
         capture["observed_sha256"] = digest(raw)
         capture["observed_version_id"] = metadata["version_id"]
         capture["observed_checksum_sha256"] = metadata["checksum_sha256"]
+        capture["observed_etag"] = metadata["etag"]
+        capture["observed_request_id"] = metadata["request_id"]
+        capture["operation_completed_utc"] = (now or dt.datetime.now(dt.timezone.utc)).astimezone(dt.timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")
         if journal is not None:
             journal.complete("S3_GET_OBJECT_EXACT_VERSION", "EC2_INSTANCE_PROFILE", capture)
         return raw, metadata
@@ -703,8 +716,7 @@ def _ssm_request_identity(launch_id: str, live_packet_id: str,
 
 def prepare_request(args: argparse.Namespace, *, credential_provider: Any = bootstrap_imdsv2_credentials,
                     transport: Any = https_exact_version_transport,
-                    now: dt.datetime | None = None, journal_publisher: Any | None = None,
-                    journal_readback: Any | None = None) -> None:
+                    now: dt.datetime | None = None) -> None:
     semantic = validate_ssm_dispatch_v2(args)
     if not REHEARSAL.fullmatch(args.rehearsal_id) or not ATTEMPT.fullmatch(args.attempt_id):
         raise Refusal("invalid attempt coordinates")
@@ -749,37 +761,6 @@ def prepare_request(args: argparse.Namespace, *, credential_provider: Any = boot
         "checksum_sha256_base64": base64.b64encode(bytes.fromhex(args.live_packet_sha256)).decode()}
     if not isinstance(live_auth, dict) or live_auth.get("schema") != "aws_c0_live_authorization/v4" or "record_sha256" in live_auth or live_auth.get("live_packet_identity") != identity("aws_c0_live_packet/v4", args.live_packet_sha256) or live_auth.get("live_packet_object") != packet_receipt or live_auth.get("attempt_identity") != launch["attempt_identity"]:
         raise Refusal("live authorization does not bind exact packet/attempt")
-    if (journal_publisher is None) != (journal_readback is None):
-        raise Refusal("controller journal publisher/readback pair required")
-    if journal_publisher is None:
-        # The default production pair is still locally signed and bounded.  It
-        # shares the single IMDSv2 credential set with the three source GETs.
-        journal_bytes: dict[str, bytes] = {}
-        timestamp = (now or dt.datetime.now(dt.timezone.utc)).astimezone(dt.timezone.utc)
-        def journal_publisher(publish_bucket: str, publish_key: str, publish_raw: bytes) -> dict[str, Any]:
-            journal_bytes["raw"] = publish_raw
-            return sigv4_conditional_journal_put(publish_bucket, publish_key, publish_raw, credentials, timestamp)
-        def journal_readback(read_bucket: str, read_key: str, read_version: str) -> tuple[bytes, dict[str, Any]]:
-            expected_raw = journal_bytes.get("raw")
-            if expected_raw is None:
-                raise Refusal("journal readback before publication")
-            returned_raw, metadata = sigv4_exact_version_get(read_bucket, read_key, read_version,
-                digest(expected_raw), credentials, transport, timestamp)
-            return returned_raw, {"key": read_key, "version_id": metadata["version_id"],
-                                  "etag": metadata["etag"], "bytes": len(returned_raw),
-                                  "sha256": digest(returned_raw),
-                                  "checksum_sha256_base64": metadata["checksum_sha256"], "request_id": metadata["request_id"]}
-    journal_identity, journal_readback_receipt = publish_and_readback_controller_journal(
-        journal=journal, bucket=args.bucket,
-        key=launch["artifact_prefix"] + CONTROLLER_JOURNAL_SUFFIX,
-        publisher=journal_publisher, readback=journal_readback)
-    handoff = build_controller_journal_handoff_v1(
-        attempt_identity=launch["attempt_identity"], bucket=args.bucket,
-        journal_identity=journal_identity, authenticated_readback=journal_readback_receipt)
-    publish_controller_journal_handoff(
-        bucket=args.bucket,
-        key=launch["artifact_prefix"] + CONTROLLER_JOURNAL_HANDOFF_SUFFIX,
-        handoff=handoff, publisher=journal_publisher)
     workflow_id = _workflow_identity(args.workflow_execution_arn)
     ssm_id = _ssm_request_identity(launch_id, args.live_packet_sha256,
                                    args.live_authorization_sha256, workflow_id,
@@ -806,8 +787,6 @@ def prepare_request(args: argparse.Namespace, *, credential_provider: Any = boot
         "rehearsal_id": args.rehearsal_id, "attempt_id": args.attempt_id,
         "artifact_prefix": launch["artifact_prefix"],
         "declared_exact_version_source_get_captures_in_order": journal.envelopes,
-        "controller_capture_journal_identity": journal_identity,
-        "controller_capture_journal_authenticated_readback": journal_readback_receipt,
         "zero_science_counters": ZERO,
         "ssm_dispatch_semantic21": semantic,
         "ssm_dispatch_transport2": {name: getattr(args, name) for name in TRANSPORT2},
@@ -849,6 +828,39 @@ class CaptureJournal:
     def __init__(self, producer: str) -> None:
         self.producer, self.envelopes, self._bytes, self._previous = producer, [], 0, None
         self._sealed = False
+
+    @classmethod
+    def restore(cls, producer: str, envelopes: Any) -> "CaptureJournal":
+        """Resume the three authenticated preparation captures in ``run``."""
+        if not isinstance(envelopes, list) or len(envelopes) != 3:
+            raise Refusal("controller journal preparation prefix refused")
+        journal = cls(producer)
+        previous: str | None = None
+        expected_roles = ("LAUNCH_REQUEST_V4", "LIVE_PACKET_V4", "LIVE_AUTHORIZATION_V4")
+        for role, envelope in zip(expected_roles, envelopes):
+            required = {"schema", "producer", "operation", "authorization_context",
+                        "operation_capture_preimage", "body_sha256", "disposition",
+                        "previous_envelope_sha256"}
+            if (not isinstance(envelope, dict) or set(envelope) != required or
+                    envelope["schema"] != "aws_c0_capture_journal_envelope/v1" or
+                    envelope["producer"] != producer or
+                    envelope["operation"] != "S3_GET_OBJECT_EXACT_VERSION" or
+                    envelope["authorization_context"] != "EC2_INSTANCE_PROFILE" or
+                    envelope["disposition"] != "OBSERVED_COMPLETE" or
+                    envelope["previous_envelope_sha256"] != previous):
+                raise Refusal("controller journal preparation envelope refused")
+            capture = envelope["operation_capture_preimage"]
+            if (not isinstance(capture, dict) or capture.get("source_role") != role or
+                    envelope["body_sha256"] != digest(canonical_bytes(capture))):
+                raise Refusal("controller journal preparation capture refused")
+            raw = canonical_bytes(envelope)
+            journal.envelopes.append(envelope)
+            journal._bytes += len(raw)
+            previous = digest(raw)
+        if journal._bytes > journal.MAX_BYTES:
+            raise Refusal("controller journal preparation prefix too large")
+        journal._previous = previous
+        return journal
     def reserve(self, estimated_bytes: int) -> None:
         if len(self.envelopes) + 2 > self.MAX_ENVELOPES or self._bytes + estimated_bytes > self.MAX_BYTES:
             raise Refusal("journal capture capacity exhausted before S3 operation")
@@ -1156,7 +1168,7 @@ def run_attempt(args: argparse.Namespace) -> None:
         "live_packet_key", "live_packet_version_id", "live_packet_sha256", "live_packet_bytes",
         "live_authorization_key", "live_authorization_version_id", "live_authorization_sha256", "live_authorization_bytes",
         "live_authorization_identity", "workflow_execution_identity", "workflow_execution_arn", "ssm_command_identity",
-        "rehearsal_id", "attempt_id", "artifact_prefix", "declared_exact_version_source_get_captures_in_order", "controller_capture_journal_identity", "controller_capture_journal_authenticated_readback", "zero_science_counters",
+        "rehearsal_id", "attempt_id", "artifact_prefix", "declared_exact_version_source_get_captures_in_order", "zero_science_counters",
         "ssm_dispatch_semantic21", "ssm_dispatch_transport2"}
     if not isinstance(source, dict) or set(source) != source_fields or source.get("schema") != "aws_c0_source_sidecar/v3":
         raise Refusal("invalid source sidecar")
@@ -1170,9 +1182,19 @@ def run_attempt(args: argparse.Namespace) -> None:
     prefix = launch["artifact_prefix"]
     launch_id = root_digest(launch)
     limits = launch["cost_envelope"]["resource_limits"]
-    exact_launch, _ = _download(bucket, source["launch_key"], source["launch_version_id"], source["launch_sha256"])
-    live_raw, _ = _download(bucket, source["live_packet_key"], source["live_packet_version_id"], source["live_packet_sha256"])
-    auth_raw, _ = _download(bucket, source["live_authorization_key"], source["live_authorization_version_id"], source["live_authorization_sha256"])
+    journal = CaptureJournal.restore("EC2_INSTANCE_PROFILE_CONTROLLER",
+                                     source["declared_exact_version_source_get_captures_in_order"])
+    credentials = bootstrap_imdsv2_credentials()
+    credential_provider = lambda: credentials
+    exact_launch, _ = _download(bucket, source["launch_key"], source["launch_version_id"], source["launch_sha256"],
+                                journal=journal, source_role="RUNTIME_LAUNCH_REQUEST_V4",
+                                credential_provider=credential_provider)
+    live_raw, _ = _download(bucket, source["live_packet_key"], source["live_packet_version_id"], source["live_packet_sha256"],
+                            journal=journal, source_role="RUNTIME_LIVE_PACKET_V4",
+                            credential_provider=credential_provider)
+    auth_raw, _ = _download(bucket, source["live_authorization_key"], source["live_authorization_version_id"], source["live_authorization_sha256"],
+                            journal=journal, source_role="RUNTIME_LIVE_AUTHORIZATION_V4",
+                            credential_provider=credential_provider)
     if exact_launch != launch_raw or len(live_raw) != source["live_packet_bytes"] or len(auth_raw) != source["live_authorization_bytes"]:
         raise Refusal("exact-version replay bytes mismatch")
     live_packet = strict_json(live_raw); live_auth = strict_json(auth_raw)
@@ -1184,9 +1206,30 @@ def run_attempt(args: argparse.Namespace) -> None:
         nonlocal put_count
         if put_count + 1 > limits["s3_put_requests"]:
             raise Refusal("sealed S3 put maximum exceeded")
-        receipt = _s3_put(bucket, key, raw)
-        put_count += 1
-        return receipt
+        requested = dt.datetime.now(dt.timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")
+        capture = {"operation": "S3_PUT_OBJECT", "bucket": bucket, "key": key,
+                   "payload_byte_count": len(raw), "payload_sha256": digest(raw),
+                   "source_object_identity": identity("aws_c0_s3_object/v1", digest(raw)),
+                   "operation_requested_utc": requested,
+                   "request_envelope_sha256": digest(canonical_bytes({
+                       "method": "PUT", "bucket": bucket, "key": key,
+                       "if_none_match": "*", "payload_sha256": digest(raw)}))}
+        journal.reserve_for_operation(capture)
+        try:
+            receipt = _s3_put(bucket, key, raw)
+            capture.update({"observed_version_id": receipt["version_id"],
+                            "observed_checksum_sha256": receipt["checksum_sha256_base64"],
+                            "observed_sha256": receipt["sha256"],
+                            "observed_bytes": receipt["bytes"],
+                            "operation_completed_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")})
+            journal.complete("S3_PUT_OBJECT", "EC2_INSTANCE_PROFILE", capture)
+            put_count += 1
+            return receipt
+        except Exception as exc:
+            capture.update({"failure_class": type(exc).__name__,
+                            "operation_completed_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z")})
+            journal.failed("S3_PUT_OBJECT", "EC2_INSTANCE_PROFILE", capture)
+            raise
     claim = {
         "schema": "aws_c0_attempt_claim/v1",
         "attempt_identity": launch["attempt_identity"],
@@ -1371,6 +1414,35 @@ def run_attempt(args: argparse.Namespace) -> None:
     expected_exit = 0 if terminal_disposition == "AWS_C0_SYNTHETIC_PASS" else 23
     if code != expected_exit or not terminal_seen:
         raise Refusal("worker failed without durable terminal receipt")
+    # The terminal result Put above is the last substantive controller S3
+    # operation. These three calls are the finite publication exceptions.
+    journal_bytes: dict[str, bytes] = {}
+    def journal_publisher(publish_bucket: str, publish_key: str, publish_raw: bytes) -> dict[str, Any]:
+        journal_bytes[publish_key] = publish_raw
+        return sigv4_conditional_journal_put(publish_bucket, publish_key, publish_raw,
+                                              credentials, dt.datetime.now(dt.timezone.utc))
+    def journal_readback(read_bucket: str, read_key: str,
+                         read_version: str) -> tuple[bytes, dict[str, Any]]:
+        expected_raw = journal_bytes.get(read_key)
+        if expected_raw is None:
+            raise Refusal("journal readback before publication")
+        returned_raw, metadata = sigv4_exact_version_get(
+            read_bucket, read_key, read_version, digest(expected_raw), credentials,
+            https_exact_version_transport, dt.datetime.now(dt.timezone.utc))
+        return returned_raw, {"key": read_key, "version_id": metadata["version_id"],
+                              "etag": metadata["etag"], "bytes": len(returned_raw),
+                              "sha256": digest(returned_raw),
+                              "checksum_sha256_base64": metadata["checksum_sha256"],
+                              "request_id": metadata["request_id"]}
+    journal_identity, journal_readback_receipt = publish_and_readback_controller_journal(
+        journal=journal, bucket=bucket, key=prefix + CONTROLLER_JOURNAL_SUFFIX,
+        publisher=journal_publisher, readback=journal_readback)
+    handoff = build_controller_journal_handoff_v1(
+        attempt_identity=launch["attempt_identity"], bucket=bucket,
+        journal_identity=journal_identity, authenticated_readback=journal_readback_receipt)
+    publish_controller_journal_handoff(
+        bucket=bucket, key=prefix + CONTROLLER_JOURNAL_HANDOFF_SUFFIX,
+        handoff=handoff, publisher=journal_publisher)
     _publish_status(STATUS / f"{attempt}.json", {
         "schema": "aws_c0_controller_status/v1", "state": "TERMINAL_PUBLISHED",
         "attempt_id": attempt, "zero_science_counters": ZERO,

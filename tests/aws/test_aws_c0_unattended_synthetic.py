@@ -200,7 +200,8 @@ class RuntimeContractTests(unittest.TestCase):
         def transport(host, uri, query, headers):
             calls.append((host, uri, query, headers))
             return raw, {"version_id": "v1", "checksum_sha256": base64.b64encode(hashlib.sha256(raw).digest()).decode(),
-                         "request_id": "request-1", "tls_certificate_sha256": "a" * 64}
+                         "etag": '"source-etag"', "request_id": "request-1",
+                         "tls_certificate_sha256": "a" * 64}
 
         received, receipt = C._download("valid-bucket", "frozen/key.json", "v1", expected,
                                         credential_provider=credentials, transport=transport,
@@ -314,16 +315,24 @@ class RuntimeContractTests(unittest.TestCase):
                     "checksum_sha256_base64": base64.b64encode(b"0" * 32).decode(),
                     "request_id": "request-1"}))
 
-    def test_controller_journal_lifecycle_is_in_preparation_callgraph(self):
+    def test_controller_journal_seals_only_after_terminal_attempt_completion(self):
         source = (ROOT / "aws/c0/controller/ebu_c0_controller.py").read_text()
         tree = ast.parse(source)
         functions = {node.name: node for node in tree.body if isinstance(node, ast.FunctionDef)}
         prepare = ast.get_source_segment(source, functions["prepare_request"])
+        run = ast.get_source_segment(source, functions["run_attempt"])
         self.assertIn("CaptureJournal", prepare)
-        self.assertIn("publish_and_readback_controller_journal", prepare)
-        self.assertIn("build_controller_journal_handoff_v1", prepare)
-        self.assertIn("publish_controller_journal_handoff", prepare)
-        self.assertIn("CONTROLLER_JOURNAL_HANDOFF_SUFFIX", prepare)
+        self.assertNotIn("publish_and_readback_controller_journal", prepare)
+        self.assertNotIn("build_controller_journal_handoff_v1", prepare)
+        self.assertNotIn("publish_controller_journal_handoff", prepare)
+        self.assertIn("CaptureJournal.restore", run)
+        terminal = run.index('if code != expected_exit or not terminal_seen')
+        journal_put = run.index("publish_and_readback_controller_journal")
+        carrier_build = run.index("build_controller_journal_handoff_v1")
+        carrier_put = run.index("publish_controller_journal_handoff")
+        self.assertLess(terminal, journal_put)
+        self.assertLess(journal_put, carrier_build)
+        self.assertLess(carrier_build, carrier_put)
         self.assertEqual(prepare.count("source_role=\""), 3)
 
     def test_fixed_carrier_passes_controller_version_and_publication_receipt_reference(self):
@@ -402,82 +411,87 @@ class RuntimeContractTests(unittest.TestCase):
         def request(service, method, host, path, query, body, headers=None):
             calls.append((service, method, path, tuple(query)))
             if path == "/":
-                return listing_raw, {}
-            if path == "/" + carrier_key:
-                return carrier_raw, {"x-amz-version-id": "carrier-v1", "etag": '"carrier-etag"',
-                                     "x-amz-checksum-sha256": base64.b64encode(hashlib.sha256(carrier_raw).digest()).decode()}
-            if path == "/" + journal_key:
+                raw, observed, operation = listing_raw, {}, "LIST_OBJECT_VERSIONS"
+            elif path == "/" + carrier_key:
+                raw, observed, operation = carrier_raw, {
+                    "x-amz-version-id": "carrier-v1", "etag": '"carrier-etag"',
+                    "x-amz-checksum-sha256": base64.b64encode(hashlib.sha256(carrier_raw).digest()).decode(),
+                }, "GET_OBJECT_EXACT_VERSION"
+            elif path == "/" + journal_key:
                 raw = stored["journal"]
-                return raw, {"x-amz-version-id": "controller-v1", "etag": '"controller-etag"',
-                             "x-amz-checksum-sha256": base64.b64encode(hashlib.sha256(raw).digest()).decode()}
-            raise AssertionError(path)
+                observed, operation = {
+                    "x-amz-version-id": "controller-v1", "etag": '"controller-etag"',
+                    "x-amz-checksum-sha256": base64.b64encode(hashlib.sha256(raw).digest()).decode(),
+                }, "GET_OBJECT_EXACT_VERSION"
+            else:
+                raise AssertionError(path)
+            capture = {
+                "path": path, "operation": operation,
+                "operation_requested_utc": "2026-09-03T00:00:00.000000Z",
+                "operation_completed_utc": "2026-09-03T00:00:00.000001Z",
+                "request_envelope_sha256": hashlib.sha256(repr((path, query)).encode()).hexdigest(),
+                "observed_request_id": "request-1",
+            }
+            if operation == "LIST_OBJECT_VERSIONS":
+                capture["response_body_base64"] = base64.b64encode(raw).decode()
+            assert F._ACTIVE_JOURNAL is not None
+            F._ACTIVE_JOURNAL.reserve(capture)
+            F._ACTIVE_JOURNAL.append(operation, capture, "OBSERVED_COMPLETE")
+            return raw, observed
         original = F._aws_request
+        original_journal = F._ACTIVE_JOURNAL
         F._aws_request = request
+        F._ACTIVE_JOURNAL = F.CaptureJournal()
         try:
             with mock.patch.dict(os.environ, {"AWS_C0_BUCKET_IDENTITY_SHA256": "a" * 64}):
                 decoded, observation = F._discover_controller_journal_handoff(
                     "valid-bucket", prefix, attempt)
         finally:
             F._aws_request = original
+            F._ACTIVE_JOURNAL = original_journal
         self.assertEqual([row[2] for row in calls], ["/", "/" + carrier_key, "/" + journal_key])
         self.assertEqual(decoded["controller_journal_object"]["version_id"], "controller-v1")
         self.assertEqual(observation["controller_publication_receipt_identity"],
                          authenticated["publication_receipt_identity"])
 
-    def test_three_coordinate_aggregate_binds_distinct_keys_and_carrier_observation(self):
-        attempt = {"kind": "aws_c0_attempt/v1", "sha256": "a" * 64, "value": "a" * 64}
-        handoff = {
-            "attempt_identity": attempt,
-            "controller_journal_object": {"bucket": "valid-bucket",
-                                            "key": "prefix/evidence/controller-capture-journal.json",
-                                            "version_id": "controller-v1", "etag": '"controller-etag"',
-                                            "checksum_sha256_base64": base64.b64encode(bytes.fromhex("b" * 64)).decode(),
-                                            "byte_count": 200, "object_sha256": "b" * 64,
-                                            "content_chain_sha256": "6" * 64},
-            "controller_publication_receipt_identity": {"kind": "aws_c0_capture_journal_publication_receipt/v1", "sha256": "c" * 64, "value": "c" * 64},
-            "controller_readback_receipt_identity": {"kind": "aws_c0_capture_journal_readback_receipt/v1", "sha256": "d" * 64, "value": "d" * 64},
-            "controller_local_validation_receipt_identity": {"kind": "aws_c0_controller_journal_local_validation_receipt/v1", "sha256": "7" * 64, "value": "7" * 64},
-            "controller_local_validation_receipt_sha256": "7" * 64,
-            "handoff_identity": {"kind": "aws_c0_controller_journal_handoff/v1", "sha256": "e" * 64, "value": "e" * 64},
-            "handoff_canonical_sha256": "e" * 64,
+    def test_final_aggregate_exactly_matches_accepted_one_hundred_field_interface(self):
+        schema = load("aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json")
+        required = set(schema["$defs"]["final_s3_capture_aggregate"]["required"])
+        self.assertEqual(len(required), 100)
+        self.assertEqual(F.FINAL_CAPTURE_AGGREGATE_FIELDS, required)
+        source = (ROOT / "aws/c0/finalizer/finalizer.py").read_text()
+        tree = ast.parse(source)
+        function = {node.name: node for node in tree.body if isinstance(node, ast.FunctionDef)}[
+            "_build_accepted_capture_aggregate"
+        ]
+        aggregate_assignment = next(
+            node for node in ast.walk(function)
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "aggregate" for target in node.targets)
+            and isinstance(node.value, ast.Dict)
+        )
+        literal_fields = {
+            key.value for key in aggregate_assignment.value.keys
+            if isinstance(key, ast.Constant) and isinstance(key.value, str)
         }
-        carrier = {"key": "prefix/evidence/controller-capture-journal-handoff.json",
-                   "schema": "aws_c0_controller_journal_handoff_external_proof/v1",
-                   "version_id": "carrier-v1", "etag": '"carrier-etag"',
-                   "checksum_sha256_base64": base64.b64encode(bytes.fromhex("f" * 64)).decode(),
-                   "bytes": 300, "sha256": "f" * 64,
-                   "list_transcript_identity": {"kind": "aws_c0_pagination_transcript/v1", "sha256": "1" * 64, "value": "1" * 64},
-                   "handoff_identity": handoff["handoff_identity"],
-                   "handoff_canonical_sha256": handoff["handoff_identity"]["sha256"],
-                   "controller_journal_version_id": "controller-v1",
-                   "controller_publication_receipt_identity": handoff["controller_publication_receipt_identity"],
-                   "controller_envelope_count": 3}
-        finalizer = F.CaptureJournal()
-        finalizer.reserve({"operation": "S3_GET_OBJECT_EXACT_VERSION"})
-        finalizer.append("S3_GET_OBJECT_EXACT_VERSION", {"response_sha256": "2" * 64}, "OBSERVED_COMPLETE")
-        projection = finalizer.aggregate()
-        _, finalizer_identity = finalizer.seal()
-        publication = {"key": "prefix/evidence/finalizer-capture-journal.json", "version_id": "finalizer-v1",
-                       "etag": '"finalizer-etag"', "bytes": 100, "sha256": "3" * 64,
-                       "checksum_sha256_base64": base64.b64encode(bytes.fromhex("3" * 64)).decode()}
-        publication_sha = F.digest(F.canonical_bytes({"bucket_name": "valid-bucket", **publication}))
-        readback_receipt = {**publication, "request_id": "finalizer-request-1"}
-        readback_sha = F.digest(F.canonical_bytes({"bucket_name": "valid-bucket", **readback_receipt}))
-        publication_identity = F.identity("aws_c0_capture_journal_publication_receipt/v1", publication_sha)
-        readback_identity = F.identity("aws_c0_capture_journal_readback_receipt/v1", readback_sha)
-        finalizer_readback = {"schema": "aws_c0_journal_authenticated_readback/v1",
-                              "content_chain_sha256": "2" * 64,
-                              "publication_receipt": publication,
-                              "publication_receipt_identity": publication_identity,
-                              "readback_receipt": readback_receipt,
-                              "readback_receipt_identity": readback_identity}
-        aggregate = F.build_three_coordinate_capture_aggregate(
-            attempt_identity=attempt, handoff=handoff, carrier_observation=carrier,
-            finalizer_journal_identity=finalizer_identity,
-            finalizer_readback=finalizer_readback, finalizer_projection=projection)
-        self.assertEqual(aggregate["controller_journal_version_id"], "controller-v1")
-        self.assertEqual(aggregate["controller_publication_receipt_identity"], handoff["controller_publication_receipt_identity"])
-        self.assertEqual(aggregate["total_envelope_count"], 4)
+        post_assignment_fields = {
+            node.slice.value for node in ast.walk(function)
+            if isinstance(node, ast.Subscript)
+            and isinstance(node.value, ast.Name) and node.value.id == "aggregate"
+            and isinstance(node.ctx, ast.Store)
+            and isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, str)
+        }
+        self.assertEqual(literal_fields | post_assignment_fields, required)
+
+    def test_final_manifest_put_is_the_last_substantive_finalizer_put(self):
+        source = (ROOT / "aws/c0/finalizer/finalizer.py").read_text()
+        functions = {node.name: node for node in ast.parse(source).body if isinstance(node, ast.FunctionDef)}
+        closure = ast.get_source_segment(source, functions["closure"])
+        terminal_put = closure.index('"evidence/final-manifest"')
+        self.assertEqual(closure.count('"evidence/final-manifest"'), 1)
+        self.assertNotIn("_put_record(", closure[terminal_put + 1:])
+        self.assertIn('"aws_c0_final_manifest_publication_observation/v2"', closure[terminal_put:])
+        self.assertIn('"final_manifest_publication_observation_object": None', closure[terminal_put:])
 
     def test_finalizer_journal_conditional_publish_and_exact_readback_are_injected(self):
         journal = F.CaptureJournal()
