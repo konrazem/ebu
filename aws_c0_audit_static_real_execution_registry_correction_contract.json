@@ -1,0 +1,992 @@
+{
+  "accepted_base": {
+    "commit": "3b185d9f770e525df645a2c6d2eda678e28554ef",
+    "tree": "aa7edcfcba250d6954de8c9ff42151cd7fb77ff3"
+  },
+  "authority_id": "EBU-AWS-C0-AUDIT-STATIC-REAL-EXECUTION-REGISTRY-CORRECTION-AUTHORITY-v1",
+  "authority_version": 1,
+  "status": "PROSPECTIVE_AUTHORITY_ONLY_NO_IMPLEMENTATION_AWS_CONTAINER_OR_SCIENCE",
+  "completion_marker": "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CONTRACT_COMPLETE",
+  "correction_boundary": {
+    "defect": "STATIC_V3_COLLAPSES_DISTINCT_VALIDATION_COORDINATES_INTO_GENERIC_SEMANTIC_LANES_AND_COUNTS_PARENT_CASES_OR_AN_INCOMPLETE_SUBCASE_SET_AS_REAL_EXECUTIONS",
+    "audit_root_replacement": {
+      "from": "aws_c0_audit_static_handoff_authority_audit/v3",
+      "to": "aws_c0_audit_static_handoff_authority_audit/v4"
+    },
+    "static_root_replacement": {
+      "from": "aws_c0_material_runtime_static_validation/v3",
+      "to": "aws_c0_material_runtime_static_validation/v4"
+    },
+    "never_emitted_v3_root_bytes": "MUST_NOT_BE_FABRICATED_EMBEDDED_PREDICTED_OR_REQUIRED",
+    "preserved": [
+      "TWO_MODE_DETERMINISTIC_LOCAL_CLI",
+      "ACYCLIC_AUDIT_THEN_STATIC_PUBLICATION_CHRONOLOGY",
+      "CONDITIONAL_PUT_THEN_AUTHENTICATED_EXACT_VERSION_READBACK",
+      "SEMANTIC21_PLUS_TRANSPORT2_SSM_ENVELOPE",
+      "EXACT_FOURTEEN_IMPLEMENTATION_PATHS",
+      "STAGE_E_ACCEPTED",
+      "STAGE_F_FROZEN",
+      "ZERO_SCIENCE"
+    ],
+    "forbidden_widening": [
+      "SIXTH_ACTIVE_CASE_GROUP",
+      "FIFTEENTH_IMPLEMENTATION_PATH",
+      "OUTER_RECORD_VERSION_CHANGE_BEYOND_THE_EXACT_TEN_OB_ROWS_AND_EIGHT_ANCILLARY_DEFINITION_BUMPS",
+      "AWS_ACTION",
+      "DOCKER_OR_NETWORK_EXECUTION",
+      "SCIENTIFIC_CONFIGURATION_OR_EXECUTION"
+    ]
+  },
+  "fixed_programme_counts": {
+    "pre_live_objects": 21,
+    "semantic_evidence_root_categories": 12,
+    "cost_dimensions": 22,
+    "sealed_read_plan_rows": 63,
+    "implementation_paths": 14,
+    "zero_science_counters": 10,
+    "bound_validation_contract_files": 6,
+    "active_case_groups": 5,
+    "top_level_case_receipts": 352,
+    "real_execution_axis_receipts": 878,
+    "positive_real_execution_axes": 167,
+    "negative_real_execution_axes": 711
+    ,"member_execution_coordinates": 1108
+  },
+  "validation_contract_file_registry": {
+    "bound_files_in_order": [
+      {
+        "path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+        "active_case_group": true,
+        "top_level_cases": 66,
+        "real_execution_axes": 66,
+        "group_id": "ORIGINAL"
+      },
+      {
+        "path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+        "active_case_group": true,
+        "top_level_cases": 84,
+        "real_execution_axes": 99,
+        "axis_arithmetic": "84-3+18=99",
+        "group_id": "LPC"
+      },
+      {
+        "path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+        "active_case_group": true,
+        "top_level_cases": 108,
+        "real_execution_axes": 222,
+        "axis_arithmetic": "108-17+131=222",
+        "group_id": "CRT"
+      },
+      {
+        "path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+        "active_case_group": true,
+        "top_level_cases": 66,
+        "real_execution_axes": 197,
+        "axis_arithmetic": "LITERAL_197",
+        "group_id": "MIRV"
+      },
+      {
+        "path": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
+        "active_case_group": false,
+        "historical_top_level_cases": 28,
+        "historical_independent_subcases": 104,
+        "historical_direct_cases": 10,
+        "historical_literal_axes": 114,
+        "group_id": "AUDIT_STATIC_HANDOFF_SUPERSEDED",
+        "disposition": "BOUND_AS_ACCEPTED_AUTHORITY_HISTORY_NOT_EXECUTED_NOT_COUNTED_IN_ACTIVE_TOTALS"
+      },
+      {
+        "path": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
+        "active_case_group": true,
+        "top_level_cases": 28,
+        "real_execution_axes": 294,
+        "independent_subcases": 285,
+        "direct_cases": 9,
+        "positive_axes": 23,
+        "negative_axes": 271,
+        "group_id": "ASPH"
+      }
+    ],
+    "active_group_top_level_arithmetic": "66+84+108+66+28=352",
+    "active_group_axis_arithmetic": "66+99+222+197+294=878",
+    "supersession": {
+      "old_contract": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
+      "replacement_contract": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
+      "old_contract_is_sixth_active_group": false,
+      "old_and_new_cases_execute_together": false,
+      "top_level_ids_preserved": true,
+      "subcase_ids_versioned_and_replaced": true
+    }
+  },
+  "corrected_asph_axis_arithmetic": {
+    "positive_cases": {
+      "C0-ASPH-P01": 3,
+      "C0-ASPH-P02": 4,
+      "C0-ASPH-P03": 3,
+      "C0-ASPH-P04": 1,
+      "C0-ASPH-P05": 3,
+      "C0-ASPH-P06": 1,
+      "C0-ASPH-P07": 5,
+      "C0-ASPH-P08": 3
+    },
+    "negative_cases": {
+      "C0-ASPH-N01": 1,
+      "C0-ASPH-N02": 1,
+      "C0-ASPH-N03": 1,
+      "C0-ASPH-N04": 5,
+      "C0-ASPH-N05": 7,
+      "C0-ASPH-N06": 1,
+      "C0-ASPH-N07": 6,
+      "C0-ASPH-N08": 1,
+      "C0-ASPH-N09": 1,
+      "C0-ASPH-N10": 2,
+      "C0-ASPH-N11": 11,
+      "C0-ASPH-N12": 8,
+      "C0-ASPH-N13": 1,
+      "C0-ASPH-N14": 155,
+      "C0-ASPH-N15": 5,
+      "C0-ASPH-N16": 9,
+      "C0-ASPH-N17": 5,
+      "C0-ASPH-N18": 9,
+      "C0-ASPH-N19": 4,
+      "C0-ASPH-N20": 38
+    },
+    "direct_case_ids_in_order": [
+      "C0-ASPH-P04",
+      "C0-ASPH-P06",
+      "C0-ASPH-N01",
+      "C0-ASPH-N02",
+      "C0-ASPH-N03",
+      "C0-ASPH-N06",
+      "C0-ASPH-N08",
+      "C0-ASPH-N09",
+      "C0-ASPH-N13"
+    ],
+    "independent_subcase_count": 285,
+    "direct_case_count": 9,
+    "total": 294,
+    "member_execution_coordinates_by_group": [66, 99, 222, 197, 524],
+    "member_multiplicity_distribution": {
+      "single_member_axis_count": 763,
+      "three_member_axis_count": 115,
+      "other_member_multiplicity_axis_count": 0
+    },
+    "member_execution_coordinate_arithmetic": "66+99+222+197+(179*1+115*3)=1108"
+    ,"new_n14_axes_in_order": [
+      "N14_ACCESS_KEY_ID_SOURCE_CROSSBIND_MISMATCH",
+      "N14_ACCESS_SECRET_SOURCE_COPY_CROSSBIND_MISMATCH",
+      "N14_CREDENTIAL_COPY_IDENTITY_PREIMAGE_MISMATCH",
+      "N14_LAMBDA_CREDENTIAL_VALIDITY_OVERCLAIM",
+      "N14_ACCESS_KEY_ID_EXTRACTION_IDENTITY_PREIMAGE_MISMATCH"
+    ]
+    ,"new_n14_members_in_order": [
+      ["PUT_OBJECT", "GET_OBJECT_EXACT_VERSION", "LIST_OBJECT_VERSIONS_EACH_PAGE"],
+      ["PUT_OBJECT", "GET_OBJECT_EXACT_VERSION", "LIST_OBJECT_VERSIONS_EACH_PAGE"],
+      ["PUT_OBJECT", "GET_OBJECT_EXACT_VERSION", "LIST_OBJECT_VERSIONS_EACH_PAGE"],
+      ["CLOSURE_LAMBDA_CREDENTIAL_VALIDITY"],
+      ["PUT_OBJECT", "GET_OBJECT_EXACT_VERSION", "LIST_OBJECT_VERSIONS_EACH_PAGE"]
+    ]
+  },
+  "preserved_direct_parent_semantics": [
+    { "case_id": "C0-ASPH-P04", "theme": "MODE_B_RERUNS_324_PRESERVED_PLUS_28_ADDITIVE_CASES_EXACTLY_ONCE", "expected_code": "ALL_352_CASES_PASS" },
+    { "case_id": "C0-ASPH-P06", "theme": "BOTH_MODES_CREATE_EXCLUSIVE_ATOMIC_CANONICAL_OUTPUT_WITH_NO_PARTIAL_FILE_AND_NO_FINAL_LF", "expected_code": "ATOMIC_EXCLUSIVE_OUTPUT" },
+    { "case_id": "C0-ASPH-N01", "theme": "UNKNOWN_ARGUMENT_REFUSES", "expected_code": "ARG_UNKNOWN" },
+    { "case_id": "C0-ASPH-N02", "theme": "DUPLICATE_ARGUMENT_REFUSES", "expected_code": "ARG_DUPLICATE" },
+    { "case_id": "C0-ASPH-N03", "theme": "MISSING_REQUIRED_MODE_SPECIFIC_ARGUMENT_REFUSES", "expected_code": "ARG_MISSING" },
+    { "case_id": "C0-ASPH-N06", "theme": "STDIN_INPUT_REFUSES", "expected_code": "HIDDEN_STDIN_INPUT" },
+    { "case_id": "C0-ASPH-N08", "theme": "SOURCE_HEAD_DIFFERS_FROM_DECLARED_IMPLEMENTATION_INTEGRATION_REFUSES", "expected_code": "SOURCE_HEAD_MISMATCH" },
+    { "case_id": "C0-ASPH-N09", "theme": "SOURCE_HEAD_IS_IMPLEMENTATION_CANDIDATE_INSTEAD_OF_INTEGRATION_REFUSES", "expected_code": "SOURCE_NOT_INTEGRATION" },
+    { "case_id": "C0-ASPH-N13", "theme": "MISSING_PROVISIONAL_AUDIT_PUT_OBSERVATION_REFUSES_AND_CANNOT_BE_INFERRED_FROM_S3_LATEST", "expected_code": "PROVISIONAL_PUT_OBSERVATION_MISSING" }
+  ],
+  "real_execution_registry": {
+    "identity_kind": "aws_c0_static_real_execution_registry/v1",
+    "fixture_envelope_kind": "aws_c0_static_case_fixtures/v4",
+    "axis_receipt_kind": "aws_c0_validation_axis_execution_receipt/v1",
+    "ordered_axis_derivation_tables": [
+      {
+        "group_id": "ORIGINAL",
+        "contract_path": "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
+        "parent_count": 66,
+        "axis_count": 66,
+        "rule": "LITERAL_ACCEPTED_PARENT_CASE_ORDER_ONE_DIRECT_AXIS_PER_PARENT"
+      },
+      {
+        "group_id": "LPC",
+        "contract_path": "aws_c0_live_preparation_choreography_correction_validation_contract.json",
+        "parent_count": 84,
+        "axis_count": 99,
+        "rule": "LITERAL_ACCEPTED_PARENT_ORDER_REPLACE_EXACT_3_EXPANDED_PARENTS_BY_THEIR_EXACT_ORDERED_18_AXIS_ROWS"
+      },
+      {
+        "group_id": "CRT",
+        "contract_path": "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
+        "parent_count": 108,
+        "axis_count": 222,
+        "rule": "LITERAL_ACCEPTED_PARENT_ORDER_REPLACE_EXACT_17_EXPANDED_PARENTS_BY_THEIR_EXACT_ORDERED_131_AXIS_ROWS"
+      },
+      {
+        "group_id": "MIRV",
+        "contract_path": "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
+        "parent_count": 66,
+        "axis_count": 197,
+        "rule": "LITERAL_ACCEPTED_197_AXIS_REGISTRY_ORDER"
+      },
+      {
+        "group_id": "ASPH",
+        "contract_path": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
+        "parent_count": 28,
+        "axis_count": 294,
+        "rule": "C0-ASPH-V2::<TOP_LEVEL_CASE_ID>::<VERSIONED_SEMANTIC_AXIS_NAME_OR_DIRECT_IN_FROZEN_REPLACEMENT_ORDER>"
+      }
+    ],
+    "global_axis_order_rule": "CONCATENATE_THE_FIVE_COMPLETE_GROUP_AXIS_ID_LISTS_IN_THE_FROZEN_GROUP_ORDER_66_99_222_197_294",
+    "mechanical_uniqueness_shape": "UNIQUE_878_AXIS_ID_ARRAY_PLUS_878_KEY_MAP_PLUS_878_ORDERED_ROWS_WITH_ALL_THREE_VIEWS_CROSS_BOUND",
+    "required_axis_row_fields": [
+      "global_order",
+      "axis_id",
+      "group_id",
+      "contract_binding_id",
+      "semantic_axis_name",
+      "parent_case_id",
+      "parent_order_within_group",
+      "contract_identity",
+      "contract_path",
+      "polarity",
+      "execution_kind",
+      "members_in_order",
+      "operator_id",
+      "constructor_callable",
+      "validator_callable",
+      "predicate_leaf_callable",
+      "selector",
+      "fixture_pointer",
+      "fixture_hash_derivation_rule_id",
+      "fixture_sha256",
+      "predicate_identity",
+      "predicate_source_hash_derivation_rule_id",
+      "predicate_source_sha256",
+      "base_error_class",
+      "expected_disposition",
+      "expected_code",
+      "negative_mutated_member",
+      "equivalence_class_id",
+      "literal_tuple_canonical_json_base64",
+      "literal_tuple_sha256",
+      "literal_tuple_cross_binding_disposition",
+      "propagation_proof"
+    ],
+    "required_receipt_fields": [
+      "schema",
+      "axis_id",
+      "axis_registry_entry_identity",
+      "axis_registry_entry_preimage",
+      "literal_tuple_canonical_json_base64",
+      "literal_tuple_sha256",
+      "contract_identity",
+      "parent_case_id",
+      "operator_id",
+      "constructor_identity",
+      "validator_identity",
+      "fixture_sha256",
+      "before_sha256",
+      "after_sha256",
+      "invocation_count",
+      "expected_disposition",
+      "expected_code",
+      "observed_disposition",
+      "observed_code",
+      "observed_error_class",
+      "member_receipts",
+      "member_receipt_aggregate_sha256",
+      "member_order_count_content_and_uniqueness_cross_binding_disposition",
+      "literal_tuple_and_receipt_cross_binding_disposition",
+      "zero_science_counters",
+      "receipt_sha256",
+      "literal_tuple_columns_in_order",
+      "registry_member_count",
+      "member_receipt_count",
+      "registry_members_in_order_canonical_json_base64",
+      "receipt_members_in_order_canonical_json_base64",
+      "registry_members_in_order_sha256",
+      "receipt_members_in_order_sha256",
+      "negative_mutated_member",
+      "equivalence_class_id",
+      "polarity"
+    ],
+    "execution_rules": [
+      "EVERY_ACTIVE_AXIS_REGISTRY_ENTRY_EXECUTES_EXACTLY_ONCE",
+      "POSITIVE_AXIS_EXECUTES_EVERY_MEMBER_AND_RECORDS_ORDERED_MEMBER_RECEIPTS",
+      "NEGATIVE_AXIS_MUTATES_ONE_FROZEN_NAMED_MEMBER_OR_FIELD_AND_INVOKES_THE_REAL_VALIDATOR",
+      "OBSERVED_DISPOSITION_CODE_AND_ERROR_CLASS_COME_ONLY_FROM_ACTUAL_CALLABLE_RETURN_OR_TYPED_REFUSAL",
+      "EXPECTED_VALUES_MUST_NOT_BE_COPIED_INTO_OBSERVED_VALUES",
+      "GENERIC_SEMANTIC_LANE_DISPATCH_MARKER_ONLY_RECEIPT_OR_UNEXECUTED_MEMBER_REFUSES",
+      "PARSED_AST_AND_CALL_GRAPH_BIND_EVERY_AXIS_TO_EXACT_CONSTRUCTOR_AND_VALIDATOR_SOURCE_BYTES",
+      "EXPECTED_LITERAL_READ_OR_EXPECTED_TO_OBSERVED_DATAFLOW_REFUSES",
+      "PARENT_CASE_RECEIPT_AGGREGATES_ONLY_ITS_EXACT_ORDERED_AXIS_RECEIPTS",
+      "SIX_BOUND_CONTRACT_IDENTITIES_AND_FIVE_ACTIVE_GROUP_IDENTITIES_ARE_SEPARATE_CLOSED_LISTS",
+      "352_UNIQUE_PARENT_IDS_MAP_ROWS_AND_ORDERED_RECEIPTS_CROSS_BIND",
+      "878_UNIQUE_AXIS_IDS_MAP_ROWS_REGISTRY_ROWS_AND_ORDERED_RECEIPTS_CROSS_BIND",
+      "NO_RECEIPT_FROM_THE_SUPERSEDED_ASPH_CONTRACT_IS_ACTIVE"
+    ],
+    "ordered_literal_registry_row_columns": [
+      "global_order",
+      "axis_id",
+      "group_id",
+      "contract_binding_id",
+      "parent_case_id",
+      "parent_order_within_group",
+      "execution_kind",
+      "members_in_order",
+      "operator_id",
+      "constructor_callable",
+      "validator_callable",
+      "predicate_leaf_callable",
+      "selector",
+      "fixture_pointer",
+      "fixture_hash_derivation_rule_id",
+      "predicate_source_hash_derivation_rule_id",
+      "polarity",
+      "expected_disposition",
+      "expected_code",
+      "base_error_class",
+      "negative_mutated_member",
+      "equivalence_class_id"
+    ],
+    "required_member_receipt_fields": [
+      "axis_id",
+      "member",
+      "member_order",
+      "fixture_pointer",
+      "fixture_sha256",
+      "before_sha256",
+      "after_sha256",
+      "constructor_callable",
+      "constructor_identity",
+      "constructor_source_sha256",
+      "validator_callable",
+      "validator_identity",
+      "validator_source_sha256",
+      "predicate_leaf_callable",
+      "predicate_leaf_identity",
+      "predicate_leaf_ast_pointer",
+      "predicate_leaf_source_sha256",
+      "call_graph_binding_identity",
+      "call_graph_binding_preimage",
+      "invocation_count",
+      "expected_disposition",
+      "expected_code",
+      "observed_disposition",
+      "observed_code",
+      "observed_error_class",
+      "registry_member_and_callable_cross_binding_disposition",
+      "receipt_sha256"
+    ],
+    "literal_tuple_rule": "CANONICAL_ARRAY_OF_ALL_22_ORDERED_LITERAL_REGISTRY_COLUMNS_EXACTLY_EQUAL_VALIDATION_CONTRACT_ROW_AND_RECOMPUTED_SHA256",
+    "member_receipt_rule": "EXACT_MEMBER_COUNT_ORDER_UNIQUENESS_AND_CONTENT_EQUAL_REGISTRY_MEMBERS_WITH_FIXTURE_BEFORE_AFTER_CONSTRUCTOR_VALIDATOR_PREDICATE_LEAF_AND_CALLGRAPH_BINDINGS"
+  },
+  "equivalence_class_soundness": {
+    "shared_axis_permitted_only_if": [
+      "MEMBER_SET_IS_CLOSED_EXPLICIT_AND_ORDERED",
+      "VALIDATOR_PREDICATE_IS_IDENTICAL_AND_BRANCHLESS_FOR_EVERY_MEMBER",
+      "BASE_ERROR_CLASS_IS_IDENTICAL_FOR_EVERY_MEMBER",
+      "VALIDATOR_SOURCE_HASH_IS_IDENTICAL_FOR_EVERY_MEMBER",
+      "POSITIVE_EXECUTION_INVOKES_EVERY_MEMBER_AND_RECORDS_AN_ORDERED_AGGREGATE",
+      "NEGATIVE_EXECUTION_MUTATES_ONE_FROZEN_NAMED_MEMBER_OR_FIELD",
+      "EXPLICIT_PROPAGATION_PROOF_COVERS_EVERY_MEMBER"
+    ],
+    "mandatory_split_if": [
+      "KIND_DIFFERS",
+      "BRANCH_DIFFERS",
+      "SCHEMA_DIFFERS",
+      "SELECTOR_DIFFERS",
+      "EXPECTED_CODE_DIFFERS",
+      "BASE_ERROR_CLASS_DIFFERS",
+      "SOURCE_HASH_DIFFERS"
+    ],
+    "no_representative_loophole": "A_REPRESENTATIVE_ONLY_EXECUTION_NEVER_PROVES_AN_EQUIVALENCE_CLASS",
+    "refuse": [
+      "GENERIC_DISPATCHER",
+      "MARKER_ONLY_PASS",
+      "REPRESENTATIVE_ONLY_PASS",
+      "UNEXECUTED_MEMBER",
+      "OPEN_OR_COMPUTED_MEMBER_SET",
+      "PROPAGATION_ASSERTION_WITHOUT_MEMBER_RECEIPTS"
+    ]
+  },
+  "constructible_split_preimage_replacement": {
+    "axis": "N20_SPLIT_PREIMAGE_TRANSPORT_PAIR",
+    "construction": "OUTER_BASE64_EQUALS_STRICT_BASE64_OF_CANONICAL_PREIMAGE_A_AND_OUTER_SHA256_EQUALS_LOWERCASE_SHA256_OF_DISTINCT_CANONICAL_PREIMAGE_B",
+    "required_fixture_fact": "PREIMAGE_A_BYTES_NOT_EQUAL_PREIMAGE_B_BYTES",
+    "validator_recomputes": [
+      "DECODED_BASE64_BYTES_EQUAL_DECLARED_SEMANTIC_REQUEST_PREIMAGE",
+      "SHA256_OF_THE_SAME_DECODED_BYTES_EQUALS_OUTER_SHA256",
+      "SEMANTIC_REQUEST_EXCLUDES_BOTH_TRANSPORT_FIELDS"
+    ],
+    "expected_code": "SSM_TRANSPORT_PAIR_DERIVATION_MISMATCH",
+    "fixed_point_claim": false
+  },
+  "controller_prepare_request_provenance": {
+    "entry_point": "aws/c0/controller/ebu_c0_controller.py prepare-request",
+    "semantic_parameter_source": "EXPLICIT_ARGV_FLAGS_IN_FROZEN_ORDER_ONLY",
+    "declared_content_retrieval": {
+      "exact_get_count": 3,
+      "sources_in_order": [
+        "LAUNCH_REQUEST_V4",
+        "LIVE_PACKET_V4",
+        "LIVE_AUTHORIZATION_V4"
+      ],
+      "each_get_derived_only_from_explicit_argv": [
+        "BUCKET",
+        "KEY",
+        "VERSION_ID",
+        "EXPECTED_BYTE_COUNT",
+        "EXPECTED_SHA256"
+      ],
+      "each_get_requires": [
+        "SIGV4_REQUEST_CAPTURE",
+        "TLS_AUTHENTICATED_RESPONSE",
+        "EXACT_VERSION_MATCH",
+        "BYTE_COUNT_MATCH",
+      "SHA256_MATCH",
+      "CANONICAL_RECORD_SCHEMA_AND_IDENTITY_MATCH",
+      "TYPED_AUTHENTICATED_S3_OPERATION_CAPTURE_IDENTITY_AND_COMPLETE_PROJECTED_BODY_PREIMAGE",
+      "ALL_25_EXECUTED_REQUEST_RESPONSE_BASE64_HASH_IDENTITY_CONTENT_SOURCE_ROLE_BUCKET_KEY_VERSION_OPERATION_SIGV4_TLS_CROSS_BIND_CHECKS"
+      ],
+      "retrieved_bytes_may_supply_semantic_parameter_values": false,
+      "other_semantic_source_network_call_count": 0
+    },
+    "forbidden_alternate_semantic_parameter_sources": [
+      "ENVIRONMENT",
+      "UNDECLARED_FILE",
+      "METADATA",
+      "SOCKET",
+      "STDIN",
+      "NETWORK_RESPONSE_CONTENT"
+    ],
+    "source_sidecar": "ROOT_OWNED_EXCLUSIVE_0600_REGULAR_NO_SYMLINK",
+    "source_sidecar_binds": [
+      "EXACT_21_FIELD_SEMANTIC_REQUEST",
+      "EXACT_TWO_FIELD_TRANSPORT_PAIR",
+      "LAUNCH_V4_EXACT_VERSION_GET_REQUEST_RESPONSE_SOURCE_PREIMAGE_SIGV4_AND_TLS",
+      "LIVE_PACKET_V4_EXACT_VERSION_GET_REQUEST_RESPONSE_SOURCE_PREIMAGE_SIGV4_AND_TLS",
+      "LIVE_AUTHORIZATION_V4_EXACT_VERSION_GET_REQUEST_RESPONSE_SOURCE_PREIMAGE_SIGV4_AND_TLS",
+      "EXACT_IMDSV2_CREDENTIAL_BOOTSTRAP_AND_METADATA_NETWORK_ATTESTATION",
+      "STATIC_SIGV4_TLS_CAPTURE_OBLIGATION"
+    ],
+    "credential_bootstrap": {
+      "semantic_input": false,
+      "context": "LIVE_EC2_INSTANCE_PROFILE",
+      "channel": "IMDSV2_LINK_LOCAL_INSTANCE_ROLE_ONLY",
+      "exact_network_call_count": 3,
+      "exchanges_in_order": [
+        "PUT_TOKEN_WITH_TTL_HEADER",
+        "GET_APPROVED_ROLE_NAME_WITH_TOKEN_HEADER",
+        "GET_CREDENTIAL_DOCUMENT_WITH_TOKEN_HEADER"
+      ],
+      "proxy": false,
+      "redirect": false,
+      "other_metadata_or_credential_source_used": false,
+      "sealed_ec2_role_context_kind": "aws_c0_sealed_ec2_role_context/v1",
+      "sealed_ec2_role_context_source": "LAUNCH_V4_LITERAL_IDENTITY_AND_COMPLETE_PREIMAGE_DERIVED_DURING_PREPARATION_FROM_ACCEPTED_R02_R03_R13_R14_INSTANCE_PROFILE_ROLE_CONTROL_RECONSTRUCTION_AND_PRIVATE_SNAPSHOT_IDENTITY_HASH",
+      "assumed_role_session_arn_derivation": "arn:aws:sts::<account_id>:assumed-role/<role_name>/<ec2_instance_id>",
+      "ec2_role_principal_derivation": "<role_id>:<ec2_instance_id>",
+      "runtime_sts_get_caller_identity_call_count": 0,
+      "executed_equality_derivation_receipt_count": 64,
+      "complete_identity_preimages_in_order": [
+        "IMDS_CREDENTIAL_DOCUMENT_FIELD_EXTRACTION",
+        "APPROVED_IAM_ROLE",
+        "APPROVED_IAM_ROLE_SESSION",
+        "IMDSV2_CREDENTIAL_SOURCE",
+        "SEALED_EC2_ROLE_CONTEXT"
+      ],
+      "identity_hash_rule": "IDENTITY_SHA256_AND_VALUE_BOTH_EQUAL_SHA256_OF_RFC8785_CANONICAL_COMPLETE_CLOSED_PREIMAGE_UTF8",
+      "leaf_projection_rule": "ROLE_NAME_SHA256_SESSION_ARN_SHA256_AND_SOURCE_DOCUMENT_SHA256_BIND_ONLY_TO_EXPLICIT_FIELDS_INSIDE_THEIR_VALIDATED_COMPLETE_PREIMAGES",
+      "identity_digest_equals_leaf_hash_claimed": false,
+      "required_instance_metadata_options": {
+        "HttpEndpoint": "enabled",
+        "HttpTokens": "required",
+        "HttpPutResponseHopLimit": [
+          1,
+          2
+        ],
+        "HttpProtocolIpv6": "disabled"
+      },
+      "ssm_carries_credentials": false
+    },
+    "forward_only_binding_chronology_in_order": [
+      "STATIC_V4_BINDS_SOURCE_AST_CAPABILITY_CAPTURE_SCHEMAS_AND_OBLIGATION_ONLY",
+      "LAUNCH_V4_BINDS_EXACT_TWO_PRODUCER_JOURNAL_CAPTURE_BUDGET_EVALUATION_AND_REFUSES_BEFORE_LIVE_AWS_IF_COUNT_OR_CANONICAL_BYTE_BOUND_FAILS",
+      "SOURCE_SIDECAR_V3_STORES_THREE_ACTUAL_GET_CAPTURES_AND_BOOTSTRAP_ATTESTATION_WITHOUT_SELF_REFERENTIAL_PROVENANCE",
+      "RUNTIME_START_ATTESTATION_BUNDLE_V2_BINDS_COMPLETE_SIDECAR_IDENTITY_BYTES_HASH_AND_THEN_COMPLETE_PROVENANCE_PROOF",
+      "START_RECEIPT_V5_PERSISTS_RUNTIME_BUNDLE_SIDECAR_AND_THREE_GET_AGGREGATE_IDENTITIES",
+      "RETRIEVAL_V4_AND_FINAL_V4_BIND_ONLY_PREDECLARED_CAPTURE_OBLIGATION_NOT_FUTURE_AGGREGATE",
+      "CONTROLLER_JOURNAL_IS_CONSTRUCTED_SEALED_AND_CONDITIONALLY_PUBLISHED_AFTER_CONTROLLER_TERMINAL_PUT_RESPONSE",
+      "FINALIZER_JOURNAL_IS_CONSTRUCTED_SEALED_AND_CONDITIONALLY_PUBLISHED_AFTER_FINAL_MANIFEST_PUBLICATION_PUT_RESPONSE",
+      "BOTH_JOURNALS_ARE_READ_BACK_BY_EXACT_VERSION_ID_AND_COMPLETE_KEYS_VERSIONS_ETAGS_CHECKSUMS_BYTES_HASH_CHAINS_COUNTS_AND_OPERATION_SEQUENCES_VERIFY",
+      "CLOSURE_RESPONSE_V3_BINDS_FIXED_SIZE_FINAL_TWO_JOURNAL_AGGREGATE_IN_NON_S3_RESPONSE",
+      "NO_SUBSTANTIVE_S3_OPERATION_OCCURS_AFTER_FINALIZER_JOURNAL_CUTOFF_OR_CLOSURE_VERIFICATION"
+    ]
+  },
+  "achievable_sigv4_tls_and_credential_evidence": {
+    "runtime_scope": "THREE_EXACT_CLOSED_AUTHORIZATION_CONTEXTS_MATCHING_ACTUAL_OPERATION_OWNER",
+    "required_for_put_get_and_list": [
+      "AWS4_HMAC_SHA256",
+      "EXACT_CREDENTIAL_SCOPE_DATE_REGION_SERVICE_TERMINAL",
+      "X_AMZ_SECURITY_TOKEN_IN_BOTH_SIGNED_HEADER_VIEWS",
+      "CANONICAL_NONSECRET_HEADER_MAP",
+      "SECURITY_TOKEN_SHA256_AND_BYTE_COUNT",
+    "OPERATION_OWNER_AUTHORIZATION_CONTEXT_APPROVED_ROLE_SESSION_POLICY_CREDENTIAL_SOURCE_CONTEXT_SPECIFIC_EXPIRY_EVIDENCE_AND_PREPARATION_AUTHORIZATION_IDENTITIES",
+    "REQUEST_ENVELOPE_AUTHORIZATION_HEADER_EXACT_SINGLETON_PARSE_TO_CREDENTIAL_ACCESS_KEY_ID_UTF8_BYTES_COUNT_AND_SHA256_WITH_TYPED_COMPLETE_EXTRACTION_PREIMAGE_IDENTITY_AND_11_EXECUTED_EXTRACTION_RECEIPTS",
+    "EXACT_23_AUTHENTICATED_OPERATION_PREIMAGE_EQUALITIES_BIND_EXTRACTED_AUTHORIZATION_CREDENTIAL_ACCESS_KEY_ID_BYTES_COUNT_AND_SHA256_TO_REQUEST_BYTES_SIGV4_TRANSCRIPT_SELECTED_SOURCE_PER_OPERATION_COPY_AND_CREDENTIAL_SCOPE",
+    "ACCESS_SECRET_HASH_AND_BYTE_COUNT_SELECTED_SOURCE_TO_APPLICATION_OWNED_PER_OPERATION_COPY_EQUALITY",
+    "REQUESTED_UTC_COMPLETED_UTC_PREPARATION_OR_EC2_SESSION_EXPIRY_OR_LAMBDA_INVOCATION_BOUND_AND_ACCOUNTING_BOUNDS",
+      "CANONICAL_REQUEST_HASH_STRING_TO_SIGN_HASH_PAYLOAD_HASH_AND_AUTHORIZATION_SIGNATURE",
+      "CLOSED_NONSECRET_RUNTIME_RECOMPUTATION_TRANSCRIPT_IDENTITY_COMPLETE_CANONICAL_PREIMAGE_BYTES_COUNT_SHA256_AND_LITERAL_CROSS_FIELD_EXECUTION_RECEIPTS",
+      "RUNTIME_RECOMPUTATION_SUCCESS_BEFORE_PER_OPERATION_CREDENTIAL_COPY_ZEROIZATION",
+      "BEST_EFFORT_APPLICATION_OWNED_MUTABLE_BUFFER_ZEROIZATION_PROOF_AFTER_EACH_OPERATION_CREDENTIAL_COPY_LAST_USE"
+    ],
+  "tls_response_scope": [
+    "MECHANICALLY_DERIVE_NO_DOT_BUCKET_VIRTUAL_HOST_EXTRACT_EXACT_SINGLE_CANONICAL_HOST_FROM_SIGV4_HEADERS_AND_EQUAL_SIGNED_HOST_CANONICAL_HOST_TLS_SERVER_NAME",
+      "TLS_PROTOCOL",
+      "PEER_CERTIFICATE_SHA256",
+      "HOSTNAME_VERIFICATION_SUCCESS",
+      "CERTIFICATE_CHAIN_VERIFICATION_SUCCESS",
+      "RESPONSE_HEADERS_SHA256",
+    "MECHANICALLY_EXTRACT_X_AMZ_REQUEST_ID_FROM_AUTHENTICATED_RESPONSE_AND_EQUAL_TLS_AND_SIGV4_REQUEST_ID"
+    ],
+    "secret_persistence": "RAW_TOKEN_ACCESS_SECRET_AND_SECRET_DERIVED_KEYS_FORBIDDEN_FROM_PERSISTENT_OUTPUTS",
+    "owned_buffer_zeroization_scope": {
+      "buffers_in_order": [
+        "SESSION_TOKEN_UTF8",
+        "ACCESS_SECRET_UTF8",
+        "DATE_KEY",
+        "REGION_KEY",
+        "SERVICE_KEY",
+        "SIGNING_KEY"
+      ],
+      "proof": "TYPED_PER_OPERATION_CREDENTIAL_COPY_IDENTITY_SHA256_AND_VALUE_EQUAL_CANONICAL_COMPLETE_PREIMAGE_WITH_SELECTED_SOURCE_ACCESS_KEY_TOKEN_AND_AUTHORIZED_SECRET HASHES_AND_COUNTS_THEN_REQUEST_ENVELOPE_CROSS_BINDING_IN_PLACE_ZERO_FILL_POST_OVERWRITE_ZERO_BYTES_SHA256_AND_REFERENCE_RELEASE_AFTER_THAT_COPY_LAST_USE",
+      "best_effort_only": true,
+      "python_immutable_copy_erasure_claimed": false,
+      "sdk_internal_copy_erasure_claimed": false,
+      "tls_library_copy_erasure_claimed": false,
+      "operating_system_copy_erasure_claimed": false
+    },
+    "offline_claim_limit": "LATER_OFFLINE_VALIDATION_RECHECKS_CLOSED_RUNTIME_ATTESTATION_AND_AUTHENTICATED_RESPONSES_BUT_DOES_NOT_CLAIM_TO_REDERIVE_A_SECRET_SIGNATURE",
+  "achievability_rule": "NO_FIELD_REQUIRES_A_SECRET_AFTER_RECORDED_RUNTIME_RECOMPUTATION_AND_BEST_EFFORT_OWNED_BUFFER_WIPE_AND_REFERENCE_RELEASE",
+  "capture_identity_hashing": "SIGV4_TLS_AND_AUTHENTICATED_OPERATION_CAPTURE_IDENTITIES_BIND_DOMAIN_SEPARATED_SHA256_OF_EXACT_RFC8785_CANONICAL_PROJECTED_BODY_BYTES_WITH_EXACT_DERIVED_BODY_AND_HASH_FIELDS_EXCLUDED_NO_SELF_HASH",
+    "authorization_contexts_in_order": [
+      {
+        "owner": "PREPARATION_OPERATOR",
+        "context": "PREPARATION_OPERATOR",
+        "bootstrap": "EXACT_PREPARATION_SESSION_DERIVATION",
+        "evidence_channel": "ACCEPTED_PROVISIONAL_PUT_PLUS_AUTHENTICATED_READBACK_OBSERVATION_CONTRACT_PRESERVING_N14_NOT_EITHER_RUNTIME_JOURNAL"
+      },
+      {
+        "owner": "CONTROLLER_EC2",
+        "context": "LIVE_EC2_INSTANCE_PROFILE",
+        "bootstrap": "EXACT_BOUNDED_IMDSV2_LINK_LOCAL_FLOW",
+        "evidence_channel": "CONTROLLER_RUNTIME_JOURNAL"
+      },
+      {
+        "owner": "CLOSURE_LAMBDA",
+        "context": "CLOSURE_LAMBDA_EXECUTION_ROLE",
+        "bootstrap": "STANDARD_LAMBDA_RUNTIME_ENVIRONMENT_ACCESS_KEY_SECRET_AND_SESSION_TOKEN_WITH_NO_EXACT_EXPIRY_SOURCE_OR_CLAIM",
+        "credential_validity": "NULL_EXPIRY_PLUS_INVOCATION_START_DEADLINE_MAX_900_SECONDS_REQUEST_COMPLETION_INSIDE_BOUND_AND_AUTHENTICATED_OPERATION_RESPONSE_WITHOUT_EXPIRY_OR_SIGNATURE_REJECTION",
+        "evidence_channel": "FINALIZER_RUNTIME_JOURNAL"
+      }
+    ],
+    "artifact_bucket_name_rule": "LOWERCASE_DNS_SAFE_NO_DOT_BUCKET_ONLY_VIRTUAL_HOST_STYLE",
+    "substantive_s3_capture_scope": {
+      "included": [
+        "EVERY_SUBSTANTIVE_LIVE_EC2_INSTANCE_PROFILE_PUT_GET_AND_LIST_OBJECT_VERSIONS_PAGE",
+        "EVERY_SUBSTANTIVE_CLOSURE_LAMBDA_EXECUTION_ROLE_PUT_GET_AND_LIST_OBJECT_VERSIONS_PAGE"
+      ],
+      "preparation_operator_handling": "ACCEPTED_PROVISIONAL_PUT_PLUS_AUTHENTICATED_READBACK_OBSERVATION_CONTRACT_ONLY_PRESERVING_N14_AND_NOT_INCLUDED_IN_EITHER_RUNTIME_JOURNAL",
+      "only_recursive_capture_exceptions_in_order": [
+        "PUT_CONTROLLER_CAPTURE_JOURNAL",
+        "PUT_FINALIZER_CAPTURE_JOURNAL",
+        "GET_EXACT_CONTROLLER_CAPTURE_JOURNAL",
+        "GET_EXACT_FINALIZER_CAPTURE_JOURNAL"
+      ],
+      "other_s3_exception": "REFUSE"
+    },
+    "finite_capture_channel": {
+      "controller_journal": "ROOT_OWNED_LOCAL_BOUNDED_ACYCLIC_ENVELOPE_BODY_HASH_AND_CHAIN_LINK_WITH_EVERY_ENVELOPE_OPERATION_OWNER_AND_AUTHORIZATION_CONTEXT_STRUCTURALLY_FIXED_TO_LIVE_EC2_INSTANCE_PROFILE_THROUGH_TERMINAL_PUT_RESPONSE_THEN_ONE_CONDITIONAL_EXACT_KEY_VERSIONED_PUBLICATION",
+      "finalizer_journal": "BOUNDED_ACYCLIC_ENVELOPE_BODY_HASH_AND_CHAIN_LINK_WITH_EVERY_ENVELOPE_OPERATION_OWNER_AND_AUTHORIZATION_CONTEXT_STRUCTURALLY_FIXED_TO_CLOSURE_LAMBDA_EXECUTION_ROLE_THROUGH_FINAL_MANIFEST_PUBLICATION_PUT_RESPONSE_THEN_ONE_CONDITIONAL_EXACT_KEY_VERSIONED_PUBLICATION",
+      "journal_keys_in_order": [
+        "controller-capture-journal.json",
+        "finalizer-capture-journal.json"
+      ],
+      "controller_key_rule": "EXACT_ATTEMPT_PREFIX_PLUS_evidence/controller-capture-journal.json",
+      "finalizer_key_rule": "EXACT_ATTEMPT_PREFIX_PLUS_evidence/finalizer-capture-journal.json",
+      "key_distinctness": "MECHANICALLY_EXECUTED_UTF8_BYTEWISE_NOT_EQUAL_PASS",
+      "final_aggregate_coordinate_binding": "EXACT_TWO_EXECUTION_RECEIPTS_CROSS_BIND_ROLE_SPECIFIC_BUCKET_KEY_VERSION_ETAG_CHECKSUM_PUBLISHED_OBJECT_SHA256_AND_CONTENT_CHAIN_SHA256_TO_CORRESPONDING_PUBLICATION_AND_READBACK_PREIMAGES",
+      "journal_max_bytes_each": 1048576,
+      "journal_max_envelopes_each": 512,
+      "closure_reads": "EXACT_KEY_AND_VERSION_ID_FOR_BOTH_WITH_ETAG_CHECKSUM_BYTE_COUNT_EXTERNAL_PUBLISHED_OBJECT_SHA256_EMBEDDED_CONTENT_CHAIN_SHA256_AND_CANONICAL_JOURNAL_VALIDATION",
+      "step_functions_carries_full_history": false,
+      "closure_response_embeds_full_history": false,
+      "closure_response": "FIXED_SIZE_FINAL_AGGREGATE_AFTER_LAST_SUBSTANTIVE_S3_OPERATION",
+      "new_implementation_path_required": false,
+      "programme_count_class": "TWO_NON_SEMANTIC_CAPTURE_CHANNEL_AUXILIARY_OBJECTS",
+      "preserved_count_effect": {
+        "pre_live_objects_21": "UNCHANGED",
+        "semantic_evidence_root_categories_12": "UNCHANGED",
+        "sealed_read_plan_rows_63": "UNCHANGED",
+        "parent_receipts_352": "UNCHANGED",
+        "axis_receipts_878": "UNCHANGED"
+      },
+      "retrieval_rule": "EXACT_TWO_JOURNAL_KEYS_EXCLUDED_FROM_SEMANTIC_OBJECT_COUNTS_AND_VALIDATED_SEPARATELY_ONLY_BY_CLOSURE",
+      "hash_constructibility": "ENVELOPE_BODY_HASH_EXCLUDES_DERIVED_BODY_AND_CHAIN_FIELDS_CHAIN_LINK_USES_DOMAIN_SEQUENCE_PREVIOUS_LINK_AND_BODY_HASH_JOURNAL_EMBEDS_ONLY_CONTENT_CHAIN_SHA256_AND_COMPLETE_PUBLISHED_OBJECT_SHA256_EXISTS_ONLY_IN_EXTERNAL_PUBLICATION_AND_READBACK_RECEIPTS_NO_FIXED_POINT",
+      "pre_operation_capacity_guard": "RESERVE_ONE_FAILURE_ENVELOPE_AND_REFUSE_BEFORE_ANY_SUBSTANTIVE_S3_REQUEST_IF_SUCCESS_PLUS_FAILURE_CANNOT_FIT"
+    },
+    "journal_capture_budget": {
+      "capability_kind": "aws_c0_journal_capture_budget_capability/v1",
+      "capability_binding": "STATIC_V4_BINDS_EXACT_CONTROLLER_AND_FINALIZER_SOURCE_BYTES_AST_CALLGRAPH_SCHEDULE_FIXED_LIST_AND_FINITE_PER_CATEGORY_CANONICAL_ENVELOPE_MAXIMA_WITH_NO_FUTURE_LAUNCH_VALUES",
+      "capability_identity_binding": "CAPABILITY_EXPECTED_IDENTITY_VALUE_EQUALS_CAPABILITY_BODY_SHA256_AND_STATIC_V4_JOURNAL_CAPTURE_BUDGET_CAPABILITY_IDENTITY_SHA256_AND_VALUE",
+      "source_proof_binding": "EACH_PRODUCER_BINDS_AST_AND_CALLGRAPH_PROOF_IDENTITIES_COMPLETE_CLOSED_PREIMAGES_CANONICAL_BYTES_COUNTS_SHA256_AND_EXACT_SOURCE_IDENTITY_HASH",
+      "maximum_witness_binding": "EACH_SCHEDULED_FIXED_LIST_AND_RESERVED_CATEGORY_HAS_EXACTLY_ONE_ORDERED_WITNESS_IDENTITY_COMPLETE_CANONICAL_PREIMAGE_AND_FINITE_MAXIMUM_EQUAL_TO_EXACT_FIXTURE_BYTE_COUNT_OR_RECOMPUTED_PARAMETERIZED_FORMULA",
+      "evaluation_kind": "aws_c0_journal_capture_budget_evaluation/v1",
+      "evaluation_binding": "LAUNCH_V4_BINDS_ACTUAL_FROZEN_DURATIONS_INTERVALS_BOUNDARIES_MULTIPLICITIES_PAGE_MAXIMA_AND_EXACT_TWO_PRODUCER_ARITHMETIC_BEFORE_ANY_LIVE_AWS_ACTION",
+      "evaluation_identity_binding": "LAUNCH_V4_JOURNAL_CAPTURE_BUDGET_EVALUATION_IDENTITY_SHA256_AND_VALUE_EQUAL_COMPLETE_EVALUATION_PREIMAGE_EXPECTED_IDENTITY_VALUE_AND_BODY_SHA256_AND_CAPABILITY_IDENTITY_EQUALS_STATIC_V4_CAPABILITY_IDENTITY",
+      "producer_order": ["CONTROLLER", "FINALIZER"],
+      "maximum_envelope_count_per_producer": 512,
+      "maximum_canonical_journal_byte_count_per_producer": 1048576,
+      "reserved_fail_closed_capture_count_per_producer": 1,
+      "interval_zero_rule": "ZERO_INTERVAL_IF_AND_ONLY_IF_NOT_APPLICABLE_WITH_ZERO_MULTIPLICITY_OFFSET_AND_DERIVED_COUNT;POSITIVE_INTERVAL_REQUIRES_POSITIVE_MULTIPLICITY_AND_EXACT_FIRST_OFFSET_AND_END_BOUNDARY_BOOLEAN;INCLUDED_BOUNDARY_DERIVES_ZERO_WHEN_DURATION_LT_FIRST_OFFSET;EXCLUDED_BOUNDARY_DERIVES_ZERO_WHEN_DURATION_LTE_FIRST_OFFSET",
+      "scheduled_event_occurrence_formula": "IF_NOT_APPLICABLE_THEN_0;ELSE_IF_END_BOUNDARY_INCLUDED_THEN_(0_IF_DURATION_SECONDS_LT_FIRST_EVENT_OFFSET_SECONDS_ELSE_1_PLUS_FLOOR((DURATION_SECONDS_MINUS_FIRST_EVENT_OFFSET_SECONDS)/INTERVAL_SECONDS));ELSE_(0_IF_DURATION_SECONDS_LTE_FIRST_EVENT_OFFSET_SECONDS_ELSE_1_PLUS_FLOOR((DURATION_SECONDS_MINUS_FIRST_EVENT_OFFSET_SECONDS_MINUS_1)/INTERVAL_SECONDS))",
+      "worst_case_envelope_count_formula": "FIXED_PLUS_HEARTBEAT_PLUS_CHECKPOINT_PLUS_POLL_PLUS_ONE_RESERVED_FAILURE",
+      "worst_case_canonical_byte_formula": "EMPTY_ARRAY_WRAPPER_PLUS_SUM_CATEGORY_COUNT_TIMES_FINITE_CATEGORY_ENVELOPE_MAXIMUM_PLUS_N_MINUS_ONE_COMMAS",
+      "failure": "REFUSE_LAUNCH_BEFORE_ANY_LIVE_AWS_ACTION"
+    }
+  },
+  "root_versions": {
+    "audit": "aws_c0_audit_static_handoff_authority_audit/v4",
+    "static": "aws_c0_material_runtime_static_validation/v4",
+    "audit_input_observation": "aws_c0_audit_static_handoff_authority_audit_input_observation/v2",
+    "validator_software": "aws_c0_static_validator_software/v4",
+    "validator_configuration": "aws_c0_static_validator_configuration/v4",
+    "validator_output_protocol": "aws_c0_static_validator_output_protocol/v3",
+    "provisional_put_observation": "aws_c0_provisional_conditional_put_observation/v1",
+    "authenticated_readback_observation": "aws_c0_authenticated_exact_version_readback_observation/v1",
+    "publication_upgrade_binding": "aws_c0_publication_upgrade_binding/v4",
+    "preparation_packet": "aws_c0_preparation_packet/v3",
+    "preparation_authorization": "aws_c0_preparation_authorization/v2",
+    "preparation_closure": "aws_c0_preparation_closure/v3",
+    "live_packet": "aws_c0_live_packet/v4",
+    "live_authorization": "aws_c0_live_authorization/v4",
+    "launch_request": "aws_c0_launch_request/v4",
+    "start_receipt": "aws_c0_start_receipt/v5",
+    "safe_close_receipt": "aws_c0_safe_close_receipt/v3",
+    "retrieval_verification": "aws_c0_retrieval_verification/v4",
+    "final_manifest": "aws_c0_final_manifest/v4",
+    "ssm_dispatch_request": "aws_c0_ssm_dispatch_request/v2",
+    "journal_capture_budget_capability": "aws_c0_journal_capture_budget_capability/v1",
+    "journal_capture_budget_evaluation": "aws_c0_journal_capture_budget_evaluation/v1",
+    "outer_record_upgrade_catalog": "aws_c0_outer_record_upgrade_catalog/v1",
+    "outer_record_upgrade_execution_proof": "aws_c0_outer_record_upgrade_execution_proof/v1"
+  },
+  "audit_v4_profile": {
+    "semantic_category": "AUDIT",
+    "embedded_prior_record": "aws_c0_material_runtime_authority_audit/v2",
+    "embedded_prior_record_schema_binding": {
+      "path": "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+      "mode": "100644",
+      "git_blob": "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+      "byte_count": 769841,
+      "sha256": "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99",
+      "json_pointer": "#/$defs/authority_audit_v2"
+    },
+    "embedded_prior_record_requires": [
+      "COMPLETE_CANONICAL_JSON_BASE64",
+      "BYTE_COUNT_AND_RAW_SHA256",
+      "EXACT_V2_KIND_AND_DECODED_SCHEMA",
+      "DECODED_RECORD_SHA256_AND_OBSERVED_UTC",
+      "KIND_SHA256_VALUE_ROOT_IDENTITY_RECOMPUTATION",
+      "SOURCE_HEAD_RECONSTRUCTION_BYTE_EQUALITY",
+      "ZERO_SEPARATE_PUBLICATIONS"
+    ],
+    "embedded_prior_v3_record": null,
+    "binds_coordinate_groups_in_order": [
+      "HANDOFF_AUTHORITY_CANDIDATE",
+      "HANDOFF_AUTHORITY_INTEGRATION",
+      "HANDOFF_REACHABILITY_CANDIDATE",
+      "HANDOFF_REACHABILITY_INTEGRATION",
+      "REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE",
+      "REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION",
+      "REAL_EXECUTION_REGISTRY_REACHABILITY_CANDIDATE",
+      "REAL_EXECUTION_REGISTRY_REACHABILITY_INTEGRATION",
+      "FINAL_IMPLEMENTATION_CANDIDATE",
+      "FINAL_IMPLEMENTATION_INTEGRATION"
+    ],
+    "path_group_counts_in_order": [6, 6, 1, 1, 6, 6, 1, 1, 14, 14],
+    "path_group_rows": "EXACT_PREFIX_ORDERED_LITERAL_PATHS_MODE_100644_BYTE_COUNT_GIT_BLOB_AND_SHA256_WITH_NO_DUPLICATES",
+    "coordinate_parent_cardinalities_in_order": [1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+    "contains_publication_observation": false,
+    "future_coordinates_predicted": false,
+    "root_digest": "SHA256_CANONICAL_ROOT_OMITTING_ONLY_RECORD_SHA256"
+  },
+  "static_v4_profile": {
+    "semantic_category": "STATIC_VALIDATION",
+    "bound_validation_contract_file_count": 6,
+    "active_case_group_count": 5,
+    "superseded_contract_count": 1,
+    "top_level_case_receipt_count": 352,
+    "real_execution_axis_receipt_count": 878,
+    "member_execution_coordinate_count": 1108,
+    "corrected_asph_subcase_count": 285,
+    "corrected_asph_direct_count": 9,
+    "corrected_asph_axis_count": 294,
+    "validator_configuration_binds": [
+      "SIX_BOUND_CONTRACT_FILE_IDENTITIES",
+      "FIVE_ACTIVE_CASE_GROUP_IDENTITIES",
+      "ONE_SUPERSESSION_MAPPING",
+      "REAL_EXECUTION_REGISTRY_IDENTITY_AND_COMPLETE_PREIMAGE",
+      "352_285_9_294_584_878_AXES_AND_1108_MEMBER_EXECUTION_COORDINATES_ARITHMETIC",
+      "COMPLETE_66_99_222_197_294_ORDERED_AXIS_DERIVATION_TABLES",
+      "ANTI_GENERIC_AST_AND_CALL_GRAPH_PROOF",
+      "PRE_EXECUTION_PREPARE_REQUEST_AST_CAPABILITY_AND_EXACT_THREE_GET_PLAN",
+      "PRE_EXECUTION_SIGV4_TLS_CAPTURE_SCHEMA_PROFILE_AND_TWO_JOURNAL_OBLIGATION",
+      "IMMUTABLE_OUTER_RECORD_UPGRADE_CATALOG_AND_SEPARATE_18_RECEIPT_EXECUTION_PROOF",
+      "TWO_PRODUCER_JOURNAL_CAPTURE_BUDGET_CAPABILITY_WITH_NO_FUTURE_VALUES"
+    ],
+    "contains_own_publication_observation": false,
+    "required_pass_gates": [
+      "SOURCE_HEAD",
+      "ANCESTRY",
+      "AUTHORITY_PATHS",
+      "REACHABILITY_PATH",
+      "IMPLEMENTATION_PATHS",
+      "AUDIT_V4_RECORD",
+      "PROVISIONAL_AUDIT_PUT_OBSERVATION",
+      "SIX_CONTRACT_FILE_IDENTITIES",
+      "FIVE_ACTIVE_GROUPS",
+      "ALL_352_TOP_LEVEL_CASE_RECEIPTS",
+      "ALL_878_REAL_AXIS_RECEIPTS",
+      "ALL_1108_MEMBER_EXECUTION_RECEIPTS",
+      "RECEIPT_REGISTRY_ORDER_MAP_AND_SUPERSESSION_CROSS_BINDING",
+      "ANTI_GENERIC_AST_AND_CALL_GRAPH",
+      "PREPARE_REQUEST_CAPABILITY_AND_RUNTIME_PROVENANCE_CHRONOLOGY",
+      "SIGV4_TLS_CONTEXT_EXPIRY_SCOPED_WIPE_AND_TWO_JOURNAL_CLOSURE",
+      "JOURNAL_CAPTURE_BUDGET_CAPABILITY",
+      "OUTER_RECORD_VERSION_UPGRADES",
+      "EQUIVALENCE_CLASS_SOUNDNESS",
+      "OUTPUT_PROTOCOL",
+      "ZERO_SCIENCE"
+    ]
+  },
+  "outer_record_version_upgrades": {
+    "rule": "ACCEPTED_CLOSED_CONSTS_AND_LITERAL_PUBLICATION_OBJECT_EMBEDDING_REQUIRE_EXPLICIT_VERSION_BUMPS_NOT_COMPANION_OVERLAYS",
+    "structure": {
+      "catalog": "IMMUTABLE_AWS_C0_OUTER_RECORD_UPGRADE_CATALOG_V1_CONTAINS_ONLY_ACCEPTED_SCHEMA_COORDINATES_OB_AR_DEFINITIONS_FIELD_MAPS_AND_HASHED_ACYCLIC_BODY_NO_EXECUTION_RECEIPTS",
+      "execution_proof": "SEPARATE_AWS_C0_OUTER_RECORD_UPGRADE_EXECUTION_PROOF_V1_BINDS_PREEXISTING_CATALOG_IDENTITY_EXACT_10_OB_PLUS_8_AR_COMPLETE_IMMUTABLE_RECEIPT_PREIMAGES_AND_IDENTITIES_AND_AGGREGATES_WITHOUT_ROW_SELF_HASH_OR_DUPLICATE_GENERIC_IDENTITY_ARRAY",
+    "embedded_identity_binding_rule": "CATALOG_AND_EXECUTION_PROOF_EXPECTED_IDENTITY_VALUES_EQUAL_THEIR_RESPECTIVE_BODY_SHA256_VALUES_AND_THE_SHA256_AND_VALUE_OF_THEIR_EXACT_PAIRED_STATIC_V4_OUTER_RECORD_UPGRADE_CATALOG_OR_EXECUTION_PROOF_IDENTITIES_NEVER_THE_STATIC_V4_ROOT_IDENTITY",
+    "synthetic_fixture_cycle_rule": "OB02_OB03_OB08_OB09_AR04_AND_AR07_COMPLETE_LOCAL_SYNTHETIC_FIXTURES_USE PREFIX_ORDERED DIRECT_OR_BASE64_DECODED STATIC_V4 IDENTITY EXTRACTION RECEIPTS AND EXACT STATIC_READBACK_COMPLETE_RECORD_BYTE_POINTERS WITH CURRENT_ENCLOSING_STATIC_CROSS_BINDING_AND_PREIMAGE_CLAIM_FALSE;THEY_PROVE_ONLY_INTERNAL_PROJECTION_FIXTURE_EQUALITY_AND_NEVER_CLAIM PREIMAGE_OR_EQUALITY TO ENCLOSING STATIC_V4",
+    "future_runtime_rule": "ACTUAL_LATER RUNTIME RECORDS_BIND_ALREADY_PUBLISHED_CURRENT_STATIC_V4_THROUGH_AUTHENTICATED_PUBLICATION_OBSERVATIONS_OUTSIDE_THE_STATIC_EMBEDDED_SYNTHETIC_EXECUTION_PROOF",
+    "ar04_cycle_rule": "AR04_LOCAL_FIXTURE_USES_INDEPENDENT_SYNTHETIC_STATIC_COORDINATE_AND_NULL_POST_PUBLICATION_OBSERVATION;REAL_POST_PUBLICATION_CLOSURE_BINDS_ACTUAL_STATIC_V4_AND_OBSERVATION",
+    "future_closure_rule": "REAL_CLOSURE_RESPONSE_V3_BINDS_ALREADY_PUBLISHED_STATIC_V4_CATALOG_IDENTITY_AND_INDEPENDENT_OB_AR_AGGREGATES"
+    },
+    "accepted_schema_sources": {
+      "C": {
+        "path": "aws_c0_cost_runtime_retrieval_closure_correction_evidence_schema.json",
+        "git_blob": "ad4e8312a6833f03b2ca90d9bcb19830083ae270",
+        "byte_count": 102327,
+        "sha256": "271d2c44835616334aeae6e781b52466977730ee17a8c295fb47b09a6ffecb29"
+      },
+      "M": {
+        "path": "aws_c0_material_identity_runtime_validation_correction_evidence_schema.json",
+        "git_blob": "fe9a08b2e93a9e50094c57b3b6d41f3b82082098",
+        "byte_count": 769841,
+        "sha256": "c8edb270401e0edd740a4eb4fa6da0c10410d28c0b891e0c38b03148c097fe99"
+      },
+      "H": {
+        "path": "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json",
+        "git_blob": "65e05f9085af23c455954df43de68b95a51c85d2",
+        "byte_count": 113583,
+        "sha256": "915669f809d3a1727a933f5e91cdfded8de2bcc09e20205d7da075d040d5c763"
+      }
+    },
+    "outer_binding_rows_in_order": [
+      {
+        "row": "OB00_PREPARATION_PACKET_DIRECT_PLAN",
+        "old": "aws_c0_preparation_packet/v2",
+        "new": "aws_c0_preparation_packet/v3",
+        "binding": "EXACT_21_PLANNED_KINDS_WITH_AUDIT_V4_STATIC_V4_LAUNCH_V4_CLOSURE_V3_LIVE_V4"
+      },
+      {
+        "row": "OB01_PREPARATION_AUTHORIZATION_PACKET_BIND",
+        "old": "aws_c0_preparation_authorization/v2",
+        "new": "aws_c0_preparation_authorization/v2",
+        "binding": "UNCHANGED_GENERIC_IDENTITY_FIELD_CONSTRAINED_TO_PREPARATION_PACKET_V3"
+      },
+      {
+        "row": "OB02_LAUNCH_DIRECT_ROOT_PUBLICATION",
+        "old": "aws_c0_launch_request/v3",
+        "new": "aws_c0_launch_request/v4",
+        "binding": "PREPARATION_PACKET_V3_DIRECT_V4_ROOTS_OBJECTS_LITERAL_PUBLICATION_UPGRADE_V4_PRELIVE_SEALED_EC2_ROLE_CONTEXT_IDENTITY_COMPLETE_PREIMAGE_AND_CROSS_BINDING_AND_PRELIVE_JOURNAL_CAPTURE_BUDGET_EVALUATION_IDENTITY_COMPLETE_PREIMAGE_AND_CROSS_BINDING"
+      },
+      {
+        "row": "OB03_PREPARATION_CLOSURE_DIRECT_ROOT_PUBLICATION",
+        "old": "aws_c0_preparation_closure/v2",
+        "new": "aws_c0_preparation_closure/v3",
+        "binding": "DIRECT_V4_ROOTS_OBJECTS_AND_LITERAL_PUBLICATION_UPGRADE_V4"
+      },
+      {
+        "row": "OB04_LIVE_PACKET_DIRECT_ROOT_PUBLICATION",
+        "old": "aws_c0_live_packet/v3",
+        "new": "aws_c0_live_packet/v4",
+        "binding": "CLOSURE_V3_LAUNCH_V4_DIRECT_V4_ROOTS_AND_LITERAL_PUBLICATION_UPGRADE_V4"
+      },
+      {
+        "row": "OB05_LIVE_AUTHORIZATION_TRANSITIVE_RECONSTRUCTION",
+        "old": "aws_c0_live_authorization/v3",
+        "new": "aws_c0_live_authorization/v4",
+        "binding": "LIVE_PACKET_V4_IDENTITY_AND_OBJECT"
+      },
+      {
+        "row": "OB06_START_TRANSITIVE_RECONSTRUCTION",
+        "old": "aws_c0_start_receipt/v4",
+        "new": "aws_c0_start_receipt/v5",
+        "binding": "LAUNCH_V4_LIVE_V4_AUTH_V4_DISPATCH_V2_RUNTIME_BUNDLE_V2"
+      },
+      {
+        "row": "OB07_SAFE_CLOSE_TRANSITIVE_RECONSTRUCTION",
+        "old": "aws_c0_safe_close_receipt/v2",
+        "new": "aws_c0_safe_close_receipt/v3",
+        "binding": "START_V5_DISPATCH_V2_COMPLETION_V2"
+      },
+      {
+        "row": "OB08_RETRIEVAL_DIRECT_ROOT_PUBLICATION",
+        "old": "aws_c0_retrieval_verification/v3",
+        "new": "aws_c0_retrieval_verification/v4",
+        "binding": "VERIFIED_OBJECT_V2_ROOT0_AUDIT_V4_ROOT1_STATIC_V4_SLOT3_LAUNCH_V4_AND_LITERAL_PUBLICATION_UPGRADE_V4"
+      },
+      {
+        "row": "OB09_FINAL_DIRECT_ROOT_PUBLICATION",
+        "old": "aws_c0_final_manifest/v3",
+        "new": "aws_c0_final_manifest/v4",
+        "binding": "ORDERED_V4_ROOTS_LAUNCH_V4_START_V5_SAFE_V3_RETRIEVAL_V4_AND_LITERAL_PUBLICATION_UPGRADE_V4"
+      }
+    ],
+    "ancillary_bumps_in_order": [
+      {
+        "old": "aws_c0_source_sidecar/v2",
+        "new": "aws_c0_source_sidecar/v3",
+        "reason": "V4_SOURCE_PREIMAGES_THREE_ACTUAL_GET_CAPTURES_IMDSV2_BOOTSTRAP_NETWORK_ATTESTATION_AND_CAPTURE_OBLIGATION"
+      },
+      {
+        "old": "runtime_start_attestation_bundle",
+        "new": "aws_c0_runtime_start_attestation_bundle/v2",
+        "reason": "LIVE_PACKET_V4_DISPATCH_V2_COMPLETE_SIDECAR_PROVENANCE_AND_THREE_GET_AGGREGATE"
+      },
+      {
+        "old": "ssm_completion_observation",
+        "new": "aws_c0_ssm_completion_observation/v2",
+        "reason": "DISPATCH_V2"
+      },
+      {
+        "old": "aws_c0_final_manifest_publication_observation/v1",
+        "new": "aws_c0_final_manifest_publication_observation/v2",
+        "reason": "FINAL_V4_AND_RETRIEVAL_V4"
+      },
+      {
+        "old": "aws_c0_closure_response/v2",
+        "new": "aws_c0_closure_response/v3",
+        "reason": "FINAL_V4_RETRIEVAL_V4_PUBLICATION_OBSERVATION_V2_FINAL_CAPTURE_AGGREGATE_AND_PROJECTION_REVALIDATION"
+      },
+      {
+        "old": "verified_object",
+        "new": "verified_object_v2",
+        "reason": "V4_ROOT_AND_BUMPED_OUTER_KIND_ENUM"
+      },
+      {
+        "old": "ssm_dispatch_request_attestation",
+        "new": "ssm_dispatch_request_attestation_v2",
+        "reason": "REQUEST_KIND_IS_DISPATCH_V2_NOT_V1"
+      },
+      {
+        "old": "publication_upgrade_binding",
+        "new": "aws_c0_publication_upgrade_binding/v4",
+      "reason": "ACCEPTED_H_SHAPE_PROJECTS_AFTER_EXACT_FOUR_V3_TO_V4_REWRITES_FOR_ROOT_AND_PROVISIONAL_OBSERVATION_RECORD_IDENTITIES;LOCAL_V4_PROVISIONAL_AND_AUTHENTICATED_READBACK_OVERLAYS_CONSTRAIN_ALL_NESTED_ROOTS;COMPLETE_ORDERED_OBSERVATIONS_CROSS_BOUND"
+      }
+    ],
+    "unchanged": [
+      "aws_c0_preparation_authorization/v2",
+      "aws_c0_ssm_dispatch_request/v2"
+    ],
+    "projection_validation": "REJECT_UNKNOWN_KEYS_REMOVE_ONLY_DECLARED_ADDITIONS_REWRITE_ONLY_DECLARED_NEW_VALUES_VALIDATE_ACCEPTED_C_M_H_POINTERS_REAPPLY_NEW_FIELD_RULES_AND_RECOMPUTE_COMPLETE_CANONICAL_IDENTITY",
+    "old_root_or_outer_kind_in_new_context": "REFUSE",
+    "execution_receipts": {
+      "outer_rows_in_order": "OB00_THROUGH_OB09",
+      "outer_row_count": 10,
+      "ancillary_rows_in_order": "AR00_THROUGH_AR07",
+      "ancillary_row_count": 8,
+      "each_row_requires": [
+        "LOCAL_SYNTHETIC_COMPLETE_SCHEMA_PROJECTION_FIXTURE_NOT_A_FUTURE_AWS_RUNTIME_RECORD",
+        "COMPLETE_NEW_CANONICAL_RECORD_BYTES_AND_RECOMPUTED_IDENTITY",
+        "EXACT_NEW_SCHEMA_BYTES_IDENTITY_HASH_AND_LOCAL_POINTER",
+        "EXACT_ACCEPTED_C_M_OR_H_SCHEMA_COORDINATE_AND_POINTER",
+        "DECLARED_FIELD_MAP_AND_LITERAL_ADDITIONS_ONLY",
+        "EXECUTABLE_ACCEPTED_PROJECTION_VALIDATION_PASS",
+        "NEW_SCHEMA_VALIDATION_PASS",
+        "ROOT_OBJECT_AND_PREDECESSOR_EQUALITY_PASS",
+      "EXECUTION_RECEIPT_IDENTITY_SHA256_AND_VALUE_EQUAL_SHA256_OF_RFC8785_CANONICAL_COMPLETE_IMMUTABLE_ROW_PREIMAGE"
+      ,"AFFECTED_STATIC_V4_IDENTITIES_ARE_EXTRACTED_FROM_EXACT_LOCAL_FIXTURE_POINTERS_WITH_INTERNAL_EQUALITY_ONLY_AND_ENCLOSING_CURRENT_STATIC_IDENTITY_CLAIM_FALSE"
+      ],
+      "outer_and_ancillary_aggregates_required": true,
+      "row_self_hash_field_present": false,
+      "aggregate_input": "DIRECT_PREFIX_ORDERED_OB00_THROUGH_OB09_THEN_AR00_THROUGH_AR07_EXECUTION_RECEIPT_IDENTITIES_AND_COMPLETE_PREIMAGES_NO_DUPLICATE_GENERIC_IDENTITY_ARRAY"
+    }
+  },
+  "cli_and_publication_chronology": {
+    "modes_in_order": [
+      "authority-audit",
+      "static-validation"
+    ],
+    "inputs": "ARGV_AND_DECLARED_LOCAL_IMMUTABLE_BYTES_ONLY_FOR_AUDIT_STATIC_MODES",
+    "environment_stdin_socket_metadata_credential_provider_network_or_undeclared_file": "REFUSE_IN_LOCAL_AUDIT_STATIC_VALIDATOR_PROCESS",
+    "output": "ABSOLUTE_NORMALIZED_EXCLUSIVE_ATOMIC_CANONICAL_UTF8_NFC_NO_FINAL_LF",
+    "mode_a_output": "aws_c0_audit_static_handoff_authority_audit/v4",
+    "mode_b_output": "aws_c0_material_runtime_static_validation/v4",
+    "chronology_in_order": [
+      "MODE_A_BUILD_AUDIT_V4_AFTER_FINAL_IMPLEMENTATION_INTEGRATION",
+      "CONDITIONAL_PUT_AUDIT_V4",
+      "MODE_B_CONSUME_EXACT_AUDIT_V4_AND_PROVISIONAL_PUT_OBSERVATION",
+      "CONDITIONAL_PUT_STATIC_V4",
+      "AUTHENTICATED_EXACT_VERSION_READBACK_AND_COMPLETE_BOUNDED_VERSION_HISTORY_FOR_BOTH",
+      "CLOSURE_AND_LIVE_BIND_BOTH_PROVISIONAL_AND_AUTHENTICATED_OBSERVATIONS"
+    ],
+    "static_v4_runtime_scope": "SOURCE_AST_CAPABILITY_CAPTURE_SCHEMA_AND_OBLIGATION_ONLY_NO_FUTURE_RUNTIME_CAPTURE_BYTES",
+    "post_static_runtime_chronology_in_order": [
+      "STATIC_V4_BINDS_SOURCE_AST_CAPABILITY_CAPTURE_SCHEMAS_AND_OBLIGATION_ONLY",
+      "LAUNCH_V4_BINDS_EXACT_TWO_PRODUCER_JOURNAL_CAPTURE_BUDGET_EVALUATION_AND_REFUSES_BEFORE_LIVE_AWS_IF_COUNT_OR_CANONICAL_BYTE_BOUND_FAILS",
+      "SOURCE_SIDECAR_V3_STORES_THREE_ACTUAL_GET_CAPTURES_AND_BOOTSTRAP_ATTESTATION_WITHOUT_SELF_REFERENTIAL_PROVENANCE",
+      "RUNTIME_START_ATTESTATION_BUNDLE_V2_BINDS_COMPLETE_SIDECAR_IDENTITY_BYTES_HASH_AND_THEN_COMPLETE_PROVENANCE_PROOF",
+      "START_RECEIPT_V5_PERSISTS_RUNTIME_BUNDLE_SIDECAR_AND_THREE_GET_AGGREGATE_IDENTITIES",
+      "RETRIEVAL_V4_AND_FINAL_V4_BIND_ONLY_PREDECLARED_CAPTURE_OBLIGATION_NOT_FUTURE_AGGREGATE",
+      "CONTROLLER_JOURNAL_IS_CONSTRUCTED_SEALED_AND_CONDITIONALLY_PUBLISHED_AFTER_CONTROLLER_TERMINAL_PUT_RESPONSE",
+      "FINALIZER_JOURNAL_IS_CONSTRUCTED_SEALED_AND_CONDITIONALLY_PUBLISHED_AFTER_FINAL_MANIFEST_PUBLICATION_PUT_RESPONSE",
+      "BOTH_JOURNALS_ARE_READ_BACK_BY_EXACT_VERSION_ID_AND_COMPLETE_KEYS_VERSIONS_ETAGS_CHECKSUMS_BYTES_HASH_CHAINS_COUNTS_AND_OPERATION_SEQUENCES_VERIFY",
+      "CLOSURE_RESPONSE_V3_BINDS_FIXED_SIZE_FINAL_TWO_JOURNAL_AGGREGATE_IN_NON_S3_RESPONSE",
+      "NO_SUBSTANTIVE_S3_OPERATION_OCCURS_AFTER_FINALIZER_JOURNAL_CUTOFF_OR_CLOSURE_VERIFICATION"
+    ]
+  },
+  "future_reachability": {
+    "modified_path": "tests/framework/test_validation_reachability.py",
+    "unique_paths_added": 0,
+    "global_authority_only": 162,
+    "global_completed_implementation": 176,
+    "descendant_authority_only": 112,
+    "descendant_completed_implementation": 126,
+    "implementation_paths_added": 14
+  },
+  "stage_and_execution_boundary": {
+    "stage_e": "ACCEPTED_FINISHED_NO_RERUN",
+    "stage_f": "FROZEN_REQUIRES_SEPARATE_LINUX_BINDING_SCIENTIFIC_PACKET_VALIDATION_AND_EXECUTION_AUTHORITY",
+    "scientific_execution_authorized": false,
+    "stage_f_execution_authorized": false,
+    "stage_f_readiness_claimed": false,
+    "aws_action_authorized": false,
+    "container_execution_authorized": false
+  }
+}
