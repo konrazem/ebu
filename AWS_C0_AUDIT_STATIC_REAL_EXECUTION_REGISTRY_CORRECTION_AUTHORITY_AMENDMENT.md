@@ -59,7 +59,7 @@ Static-v4 binds exact file identities for six validation contracts, in order:
 4. material/runtime correction, 66 parent cases and 197 real axes;
 5. the accepted audit/static handoff contract, retained only as superseded
    authority history; and
-6. this real-execution-registry correction contract, 28 parent cases and 189
+6. this real-execution-registry correction contract, 28 parent cases and 294
    real axes.
 
 There are exactly five active case groups: entries 1, 2, 3, 4, and 6. Entry 5
@@ -68,7 +68,7 @@ replacement. Static-v4 carries three closed lists: six bound contract-file
 identities, five active group identities, and one explicit supersession row.
 The active parent arithmetic remains
 `66 + 84 + 108 + 66 + 28 = 352`. The real-axis arithmetic is
-`66 + 99 + 222 + 197 + 189 = 773`.
+`66 + 99 + 222 + 197 + 294 = 878`.
 
 The preserved expansions are exact: live preparation is `84 - 3 + 18 = 99`,
 cost/runtime/retrieval is `108 - 17 + 131 = 222`, and material/runtime is the
@@ -85,14 +85,14 @@ exclusive atomic-output execution, N01/N02/N03 remain unknown/duplicate/
 missing-argument refusals, N06 remains stdin refusal, N08/N09 remain the two
 source-HEAD integration checks, and N13 remains missing-provisional-observation
 refusal with no S3-latest inference. New correction-meta gates do not steal
-those coordinates and are validated outside the 189 active ASPH axes.
+those coordinates and are validated outside the 294 active ASPH axes.
 
 ## 3. Exact corrected ASPH arithmetic
 
-The replacement fifth group contains exactly 180 independent subcases and nine
-direct cases, hence 189 real axes. Positive axes total 23 and negative axes
-total 166. Across all five active groups, positive axes total 167 and negative
-axes total 606.
+The replacement fifth group contains exactly 285 independent subcases and nine
+direct cases, hence 294 real axes. Positive axes total 23 and negative axes
+total 271. Across all five active groups, positive axes total 167 and negative
+axes total 711.
 
 Positive per-case counts are exactly:
 
@@ -112,9 +112,9 @@ N18=9 N19=4 N20=38
 The nine direct cases are P04, P06, N01, N02, N03, N06, N08, N09, and N13.
 All other fifth-group cases aggregate their exact ordered subcase receipts.
 Static-v4 contains exactly 352 parent case receipts, a separate exact array of
-773 real-axis receipts, and exactly 849 member-execution receipts obtained by
+878 real-axis receipts, and exactly 1108 member-execution receipts obtained by
 prefix-ordered summation of every registry row's `members_in_order`. It never
-describes 352 as the real-execution count or 773 as the member-execution count.
+describes 352 as the real-execution count or 878 as the member-execution count.
 
 ## 4. Closed real-execution registry
 
@@ -129,13 +129,13 @@ disposition and code, and a closed propagation proof.
 
 The axis namespace is not globally ASPH-specific. The registry binds five
 complete deterministic derivation tables in the frozen group order. They
-produce 66, 99, 222, 197, and 189 ordered IDs respectively; only the fifth
+produce 66, 99, 222, 197, and 294 ordered IDs respectively; only the fifth
 table uses the `C0-ASPH-V2::<parent>::<versioned semantic name>` formula. The
-registry carries a unique 773-ID order, a 773-key map, and 773 ordered rows.
+registry carries a unique 878-ID order, a 878-key map, and 878 ordered rows.
 All three views must agree on every ID, contract, group, parent, row identity,
-and the `66+99+222+197+189` partition. Summing each row's exact ordered member
-set produces exactly 849 member-execution coordinates: group totals
-`66+99+222+197+265` and multiplicities 735 singleton plus 38 triple-member
+and the `66+99+222+197+294` partition. Summing each row's exact ordered member
+set produces exactly 1108 member-execution coordinates: group totals
+`66+99+222+197+524` and multiplicities 763 singleton plus 115 triple-member
 axes.
 
 Every active axis executes exactly once. A positive axis invokes every frozen
@@ -150,11 +150,11 @@ parent, operator, constructor and validator identities, fixture hash,
 before/after hashes, invocation count one, actual observed disposition/code/
 error class, ordered member receipts and aggregate, and its own closed digest.
 Each parent receipt aggregates only its exact ordered axes. Static-v4 separately
-aggregates all 352 parent receipts, all 773 atomic receipts, and all 849 exact
+aggregates all 352 parent receipts, all 878 atomic receipts, and all 1108 exact
 member receipts nested in their registry order.
 
 Counts alone are insufficient. Static-v4 also binds unique ordered ID lists,
-keyed receipt maps, and ordered receipt arrays for all 352 parents and all 773
+keyed receipt maps, and ordered receipt arrays for all 352 parents and all 878
 axes. A recomputed cross-binding gate proves equality among list IDs, map keys,
 embedded row IDs, registry rows, group partitions, aggregates, and the five
 active contract identities, and proves that no receipt belongs to the
@@ -389,7 +389,7 @@ The two journal objects are closed nonsemantic capture-channel auxiliaries.
 Only their two exact keys are excluded from semantic retrieval counts and they
 are validated separately by closure. They do not alter the frozen 21 pre-live
 objects, 12 semantic root categories, 63 sealed read-plan rows, 352 parent
-receipts, or 773 real-axis receipts; any other auxiliary key or count exclusion
+receipts, or 878 real-axis receipts; any other auxiliary key or count exclusion
 refuses.
 
 N14 therefore has exactly 50 independently executable SigV4/TLS/credential
@@ -411,7 +411,7 @@ the fifth execute exact Put/Get/List members; the fourth executes
 from source cross-binding because it invokes the typed extraction
 identity/preimage validator over the captured Authorization header; a claimed
 AccessKeyId scalar cannot substitute for that execution. The complete registry
-therefore binds 849 member-execution coordinates while retaining 773
+therefore binds 1108 member-execution coordinates while retaining 878
 independent axes.
 
 ## 9. Audit-v4 and static-v4
@@ -447,8 +447,8 @@ Static-v4 binds:
 - validator software-v4 and configuration-v4;
 - unchanged output-protocol-v3;
 - the complete registry identity and preimage;
-- complete five-group axis derivation tables, 352/773 unique order/map/row
-  cross-bindings, the exact 849-member ordered sum and receipts, and the
+- complete five-group axis derivation tables, 352/878 unique order/map/row
+  cross-bindings, the exact 1108-member ordered sum and receipts, and the
   anti-generic AST/call-graph proof;
 - the controller source/AST capability proof, exact three-GET plan, closed
   SigV4/TLS capture schemas, credential-context profiles, and two-journal
@@ -458,9 +458,9 @@ Static-v4 binds:
 - the immutable outer-record upgrade catalog and separate 18-receipt execution
   proof described below;
 - exact 14 implementation rows and scopes 162/176/112/126;
-- exactly 352 parent, 773 atomic-axis, and 849 member-execution receipts with
+- exactly 352 parent, 878 atomic-axis, and 1108 member-execution receipts with
   separate exact order and aggregate checks;
-- exact `180 + 9 = 189` fifth-group arithmetic; and
+- exact `285 + 9 = 294` fifth-group arithmetic; and
 - all source, ancestry, path, audit, registry, case, output, equivalence, and
   zero-science PASS gates.
 
@@ -601,7 +601,7 @@ canonical UTF-8 NFC JSON with no final LF and no partial file.
 Mode A emits audit-v4 only after the final implementation integration exists.
 The operator then conditionally puts those exact bytes. Mode B consumes the
 exact local audit-v4 bytes and its provisional Put observation, executes all
-five active groups, all 773 axes, and all 849 member executions required by
+five active groups, all 878 axes, and all 1108 member executions required by
 those axes, and emits static-v4. The operator
 conditionally puts static-v4 and independently reads both roots by exact
 VersionId with authenticated complete bounded version-history evidence.

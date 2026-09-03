@@ -1797,15 +1797,15 @@
                   "const": 28
                 },
                 "real_axis_count": {
-                  "const": 189
+                  "const": 294
                 },
                 "top_level_case_ids_in_order": {
                   "minItems": 28,
                   "maxItems": 28
                 },
                 "axis_ids_in_order": {
-                  "minItems": 189,
-                  "maxItems": 189
+                  "minItems": 294,
+                  "maxItems": 294
                 }
               }
             }
@@ -2278,8 +2278,8 @@
         },
         "axis_ids_in_order": {
           "type": "array",
-          "minItems": 773,
-          "maxItems": 773,
+          "minItems": 878,
+          "maxItems": 878,
           "uniqueItems": true,
           "items": {
             "type": "string",
@@ -2288,8 +2288,8 @@
         },
         "axis_callable_bindings_by_id": {
           "type": "object",
-          "minProperties": 773,
-          "maxProperties": 773,
+          "minProperties": 878,
+          "maxProperties": 878,
           "propertyNames": {
             "type": "string",
             "minLength": 1
@@ -2301,8 +2301,8 @@
         },
         "axis_callable_bindings_in_order": {
           "type": "array",
-          "minItems": 773,
-          "maxItems": 773,
+          "minItems": 878,
+          "maxItems": 878,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/axis_callable_binding"
@@ -36861,7 +36861,7 @@
           "pattern": "^[A-Za-z0-9+/]{43}=$"
         },
         "preserved_programme_count_disposition": {
-          "const": "JOURNALS_ARE_TWO_NON_SEMANTIC_AUXILIARIES_AND_DO_NOT_CHANGE_21_PRELIVE_12_ROOT_63_READ_PLAN_352_PARENT_OR_773_AXIS_COUNTS"
+          "const": "JOURNALS_ARE_TWO_NON_SEMANTIC_AUXILIARIES_AND_DO_NOT_CHANGE_21_PRELIVE_12_ROOT_63_READ_PLAN_352_PARENT_OR_878_AXIS_COUNTS"
         }
       },
       "additionalProperties": false
@@ -36969,7 +36969,7 @@
         "global_order": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 773
+          "maximum": 878
         },
         "axis_id": {
           "type": "string",
@@ -37246,28 +37246,28 @@
           "const": 352
         },
         "real_axis_count": {
-          "const": 773
+          "const": 878
         },
         "member_execution_coordinate_count": {
-          "const": 849
+          "const": 1108
         },
         "preserved_real_axis_count": {
           "const": 584
         },
         "asph_independent_subcase_count": {
-          "const": 180
+          "const": 285
         },
         "asph_direct_case_count": {
           "const": 9
         },
         "asph_real_axis_count": {
-          "const": 189
+          "const": 294
         },
         "asph_positive_axis_count": {
           "const": 23
         },
         "asph_negative_axis_count": {
-          "const": 166
+          "const": 271
         },
         "ordered_registry_row_columns": {
           "const": [
@@ -37297,8 +37297,8 @@
         },
         "axis_ids_in_order": {
           "type": "array",
-          "minItems": 773,
-          "maxItems": 773,
+          "minItems": 878,
+          "maxItems": 878,
           "uniqueItems": true,
           "items": {
             "type": "string",
@@ -37307,8 +37307,8 @@
         },
         "axis_rows_by_id": {
           "type": "object",
-          "minProperties": 773,
-          "maxProperties": 773,
+          "minProperties": 878,
+          "maxProperties": 878,
           "propertyNames": {
             "type": "string",
             "minLength": 1
@@ -37320,8 +37320,8 @@
         },
         "axes_in_order": {
           "type": "array",
-          "minItems": 773,
-          "maxItems": 773,
+          "minItems": 878,
+          "maxItems": 878,
           "uniqueItems": true,
           "items": {
             "$ref": "#/$defs/axis_registry_row"
@@ -37992,16 +37992,16 @@
           "const": 584
         },
         "replacement_independent_subcase_count": {
-          "const": 180
+          "const": 285
         },
         "replacement_direct_case_count": {
           "const": 9
         },
         "replacement_real_axis_count": {
-          "const": 189
+          "const": 294
         },
         "combined_real_axis_count": {
-          "const": 773
+          "const": 878
         },
         "input_policy": {
           "const": "ARGV_AND_DECLARED_LOCAL_IMMUTABLE_BYTES_ONLY_NO_ENV_STDIN_NETWORK_METADATA_CREDENTIAL_PROVIDER_OR_UNDECLARED_FILE"
@@ -38330,26 +38330,26 @@
                 "active_case_groups": 5,
                 "top_level_cases": 352,
                 "preserved_real_axes": 584,
-                "asph_independent_subcases": 180,
+                "asph_independent_subcases": 285,
                 "asph_direct_cases": 9,
-                "asph_real_axes": 189,
-                "combined_real_axes": 773,
+                "asph_real_axes": 294,
+                "combined_real_axes": 878,
                 "combined_positive_real_axes": 167,
-                "combined_negative_real_axes": 606,
-                "member_execution_coordinates": 849,
+                "combined_negative_real_axes": 711,
+                "member_execution_coordinates": 1108,
                 "member_execution_coordinates_by_group": [
                   66,
                   99,
                   222,
                   197,
-                  265
+                  524
                 ],
                 "member_multiplicity_distribution": {
-                  "single_member_axis_count": 735,
-                  "three_member_axis_count": 38,
+                  "single_member_axis_count": 763,
+                  "three_member_axis_count": 115,
                   "other_member_multiplicity_axis_count": 0
                 },
-                "member_execution_coordinate_arithmetic": "66+99+222+197+(151*1+38*3)=849"
+                "member_execution_coordinate_arithmetic": "66+99+222+197+(179*1+115*3)=1108"
               }
             },
             "parent_case_ids_in_order": {
@@ -38388,8 +38388,8 @@
             },
             "axis_ids_in_order": {
               "type": "array",
-              "minItems": 773,
-              "maxItems": 773,
+              "minItems": 878,
+              "maxItems": 878,
               "uniqueItems": true,
               "items": {
                 "type": "string",
@@ -38398,8 +38398,8 @@
             },
             "axis_execution_receipts_by_id": {
               "type": "object",
-              "minProperties": 773,
-              "maxProperties": 773,
+              "minProperties": 878,
+              "maxProperties": 878,
               "propertyNames": {
                 "type": "string",
                 "minLength": 1
@@ -38411,8 +38411,8 @@
             },
             "axis_execution_receipts": {
               "type": "array",
-              "minItems": 773,
-              "maxItems": 773,
+              "minItems": 878,
+              "maxItems": 878,
               "uniqueItems": true,
               "items": {
                 "$ref": "#/$defs/axis_execution_receipt"
@@ -38436,8 +38436,8 @@
                 "six_contract_files": "PASS",
                 "five_active_groups": "PASS",
                 "all_352_parent_receipts": "PASS",
-                "all_773_axis_receipts": "PASS",
-                "all_849_member_execution_receipts": "PASS",
+                "all_878_axis_receipts": "PASS",
+                "all_1108_member_execution_receipts": "PASS",
                 "receipt_registry_cross_binding": "PASS",
                 "equivalence_classes": "PASS",
                 "anti_generic_ast_and_callgraph": "PASS",

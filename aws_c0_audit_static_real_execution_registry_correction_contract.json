@@ -47,10 +47,10 @@
     "bound_validation_contract_files": 6,
     "active_case_groups": 5,
     "top_level_case_receipts": 352,
-    "real_execution_axis_receipts": 773,
+    "real_execution_axis_receipts": 878,
     "positive_real_execution_axes": 167,
-    "negative_real_execution_axes": 606
-    ,"member_execution_coordinates": 849
+    "negative_real_execution_axes": 711
+    ,"member_execution_coordinates": 1108
   },
   "validation_contract_file_registry": {
     "bound_files_in_order": [
@@ -99,16 +99,16 @@
         "path": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
         "active_case_group": true,
         "top_level_cases": 28,
-        "real_execution_axes": 189,
-        "independent_subcases": 180,
+        "real_execution_axes": 294,
+        "independent_subcases": 285,
         "direct_cases": 9,
         "positive_axes": 23,
-        "negative_axes": 166,
+        "negative_axes": 271,
         "group_id": "ASPH"
       }
     ],
     "active_group_top_level_arithmetic": "66+84+108+66+28=352",
-    "active_group_axis_arithmetic": "66+99+222+197+189=773",
+    "active_group_axis_arithmetic": "66+99+222+197+294=878",
     "supersession": {
       "old_contract": "aws_c0_audit_static_publication_handoff_correction_validation_contract.json",
       "replacement_contract": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
@@ -162,16 +162,16 @@
       "C0-ASPH-N09",
       "C0-ASPH-N13"
     ],
-    "independent_subcase_count": 180,
+    "independent_subcase_count": 285,
     "direct_case_count": 9,
-    "total": 189,
-    "member_execution_coordinates_by_group": [66, 99, 222, 197, 265],
+    "total": 294,
+    "member_execution_coordinates_by_group": [66, 99, 222, 197, 524],
     "member_multiplicity_distribution": {
-      "single_member_axis_count": 735,
-      "three_member_axis_count": 38,
+      "single_member_axis_count": 763,
+      "three_member_axis_count": 115,
       "other_member_multiplicity_axis_count": 0
     },
-    "member_execution_coordinate_arithmetic": "66+99+222+197+(151*1+38*3)=849"
+    "member_execution_coordinate_arithmetic": "66+99+222+197+(179*1+115*3)=1108"
     ,"new_n14_axes_in_order": [
       "N14_ACCESS_KEY_ID_SOURCE_CROSSBIND_MISMATCH",
       "N14_ACCESS_SECRET_SOURCE_COPY_CROSSBIND_MISMATCH",
@@ -235,12 +235,12 @@
         "group_id": "ASPH",
         "contract_path": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
         "parent_count": 28,
-        "axis_count": 189,
+        "axis_count": 294,
         "rule": "C0-ASPH-V2::<TOP_LEVEL_CASE_ID>::<VERSIONED_SEMANTIC_AXIS_NAME_OR_DIRECT_IN_FROZEN_REPLACEMENT_ORDER>"
       }
     ],
-    "global_axis_order_rule": "CONCATENATE_THE_FIVE_COMPLETE_GROUP_AXIS_ID_LISTS_IN_THE_FROZEN_GROUP_ORDER_66_99_222_197_189",
-    "mechanical_uniqueness_shape": "UNIQUE_773_AXIS_ID_ARRAY_PLUS_773_KEY_MAP_PLUS_773_ORDERED_ROWS_WITH_ALL_THREE_VIEWS_CROSS_BOUND",
+    "global_axis_order_rule": "CONCATENATE_THE_FIVE_COMPLETE_GROUP_AXIS_ID_LISTS_IN_THE_FROZEN_GROUP_ORDER_66_99_222_197_294",
+    "mechanical_uniqueness_shape": "UNIQUE_878_AXIS_ID_ARRAY_PLUS_878_KEY_MAP_PLUS_878_ORDERED_ROWS_WITH_ALL_THREE_VIEWS_CROSS_BOUND",
     "required_axis_row_fields": [
       "global_order",
       "axis_id",
@@ -325,7 +325,7 @@
       "PARENT_CASE_RECEIPT_AGGREGATES_ONLY_ITS_EXACT_ORDERED_AXIS_RECEIPTS",
       "SIX_BOUND_CONTRACT_IDENTITIES_AND_FIVE_ACTIVE_GROUP_IDENTITIES_ARE_SEPARATE_CLOSED_LISTS",
       "352_UNIQUE_PARENT_IDS_MAP_ROWS_AND_ORDERED_RECEIPTS_CROSS_BIND",
-      "773_UNIQUE_AXIS_IDS_MAP_ROWS_REGISTRY_ROWS_AND_ORDERED_RECEIPTS_CROSS_BIND",
+      "878_UNIQUE_AXIS_IDS_MAP_ROWS_REGISTRY_ROWS_AND_ORDERED_RECEIPTS_CROSS_BIND",
       "NO_RECEIPT_FROM_THE_SUPERSEDED_ASPH_CONTRACT_IS_ACTIVE"
     ],
     "ordered_literal_registry_row_columns": [
@@ -634,7 +634,7 @@
         "semantic_evidence_root_categories_12": "UNCHANGED",
         "sealed_read_plan_rows_63": "UNCHANGED",
         "parent_receipts_352": "UNCHANGED",
-        "axis_receipts_773": "UNCHANGED"
+        "axis_receipts_878": "UNCHANGED"
       },
       "retrieval_rule": "EXACT_TWO_JOURNAL_KEYS_EXCLUDED_FROM_SEMANTIC_OBJECT_COUNTS_AND_VALIDATED_SEPARATELY_ONLY_BY_CLOSURE",
       "hash_constructibility": "ENVELOPE_BODY_HASH_EXCLUDES_DERIVED_BODY_AND_CHAIN_FIELDS_CHAIN_LINK_USES_DOMAIN_SEQUENCE_PREVIOUS_LINK_AND_BODY_HASH_JOURNAL_EMBEDS_ONLY_CONTENT_CHAIN_SHA256_AND_COMPLETE_PUBLISHED_OBJECT_SHA256_EXISTS_ONLY_IN_EXTERNAL_PUBLICATION_AND_READBACK_RECEIPTS_NO_FIXED_POINT",
@@ -732,18 +732,18 @@
     "active_case_group_count": 5,
     "superseded_contract_count": 1,
     "top_level_case_receipt_count": 352,
-    "real_execution_axis_receipt_count": 773,
-    "member_execution_coordinate_count": 849,
-    "corrected_asph_subcase_count": 180,
+    "real_execution_axis_receipt_count": 878,
+    "member_execution_coordinate_count": 1108,
+    "corrected_asph_subcase_count": 285,
     "corrected_asph_direct_count": 9,
-    "corrected_asph_axis_count": 189,
+    "corrected_asph_axis_count": 294,
     "validator_configuration_binds": [
       "SIX_BOUND_CONTRACT_FILE_IDENTITIES",
       "FIVE_ACTIVE_CASE_GROUP_IDENTITIES",
       "ONE_SUPERSESSION_MAPPING",
       "REAL_EXECUTION_REGISTRY_IDENTITY_AND_COMPLETE_PREIMAGE",
-      "352_180_9_189_584_773_AXES_AND_849_MEMBER_EXECUTION_COORDINATES_ARITHMETIC",
-      "COMPLETE_66_99_222_197_189_ORDERED_AXIS_DERIVATION_TABLES",
+      "352_285_9_294_584_878_AXES_AND_1108_MEMBER_EXECUTION_COORDINATES_ARITHMETIC",
+      "COMPLETE_66_99_222_197_294_ORDERED_AXIS_DERIVATION_TABLES",
       "ANTI_GENERIC_AST_AND_CALL_GRAPH_PROOF",
       "PRE_EXECUTION_PREPARE_REQUEST_AST_CAPABILITY_AND_EXACT_THREE_GET_PLAN",
       "PRE_EXECUTION_SIGV4_TLS_CAPTURE_SCHEMA_PROFILE_AND_TWO_JOURNAL_OBLIGATION",
@@ -762,8 +762,8 @@
       "SIX_CONTRACT_FILE_IDENTITIES",
       "FIVE_ACTIVE_GROUPS",
       "ALL_352_TOP_LEVEL_CASE_RECEIPTS",
-      "ALL_773_REAL_AXIS_RECEIPTS",
-      "ALL_849_MEMBER_EXECUTION_RECEIPTS",
+      "ALL_878_REAL_AXIS_RECEIPTS",
+      "ALL_1108_MEMBER_EXECUTION_RECEIPTS",
       "RECEIPT_REGISTRY_ORDER_MAP_AND_SUPERSESSION_CROSS_BINDING",
       "ANTI_GENERIC_AST_AND_CALL_GRAPH",
       "PREPARE_REQUEST_CAPABILITY_AND_RUNTIME_PROVENANCE_CHRONOLOGY",
