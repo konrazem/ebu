@@ -152,6 +152,14 @@ class LaunchTests(unittest.TestCase):
                          list(C.PLATFORM_SMOKE_COMMON_RECEIPT_FIELDS))
         self.assertEqual(binding["reused_foundation_capabilities_in_order"],
                          list(C.PLATFORM_SMOKE_FOUNDATION_CAPABILITIES))
+        self.assertEqual(binding["expected_artifact_classes_in_order"], [
+            "ATTEMPT_CLAIM", "START_RECEIPT", "HEARTBEAT", "SAFE_CLOSE_RECEIPT",
+            "CHECKPOINT", "SYNTHETIC_MANIFEST", "TERMINAL_RECEIPT",
+            "CONTROLLER_CAPTURE_JOURNAL", "CONTROLLER_JOURNAL_HANDOFF",
+            "STOPPED_OBSERVATION", "RESOURCE_USE_CLOSURE", "FINALIZER_RECEIPT",
+            "FINALIZER_CAPTURE_JOURNAL", "COST_CLOSURE",
+            "RETRIEVAL_VERIFICATION", "FINAL_MANIFEST",
+        ])
         self.assertFalse(binding["scientific_conclusion_authorized"])
         self.assertFalse(binding["live_aws_execution_authorized"])
         self.assertTrue(binding["separate_capsule_authority_required"])

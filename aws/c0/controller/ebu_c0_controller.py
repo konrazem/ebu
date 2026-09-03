@@ -644,11 +644,12 @@ def build_platform_smoke_known_case_local_binding(record: Any) -> dict[str, Any]
             {"role": role, "identity": input_identity} for role, input_identity in inputs
         ],
         "expected_artifact_classes_in_order": [
-            "ATTEMPT_CLAIM", "START_RECEIPT", "HEARTBEAT", "CHECKPOINT",
-            "SYNTHETIC_MANIFEST", "TERMINAL_RECEIPT", "CONTROLLER_CAPTURE_JOURNAL",
-            "CONTROLLER_JOURNAL_HANDOFF", "STOPPED_OBSERVATION",
-            "FINALIZER_CAPTURE_JOURNAL", "COST_CLOSURE", "RETRIEVAL_VERIFICATION",
-            "FINAL_MANIFEST",
+            "ATTEMPT_CLAIM", "START_RECEIPT", "HEARTBEAT", "SAFE_CLOSE_RECEIPT",
+            "CHECKPOINT", "SYNTHETIC_MANIFEST", "TERMINAL_RECEIPT",
+            "CONTROLLER_CAPTURE_JOURNAL", "CONTROLLER_JOURNAL_HANDOFF",
+            "STOPPED_OBSERVATION", "RESOURCE_USE_CLOSURE", "FINALIZER_RECEIPT",
+            "FINALIZER_CAPTURE_JOURNAL", "COST_CLOSURE",
+            "RETRIEVAL_VERIFICATION", "FINAL_MANIFEST",
         ],
         "common_receipt_fields_in_order": list(PLATFORM_SMOKE_COMMON_RECEIPT_FIELDS),
         "reused_foundation_capabilities_in_order": list(PLATFORM_SMOKE_FOUNDATION_CAPABILITIES),
