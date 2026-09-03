@@ -1,10 +1,10 @@
 {
   "accepted_base": {
-    "commit": "3b185d9f770e525df645a2c6d2eda678e28554ef",
-    "tree": "aa7edcfcba250d6954de8c9ff42151cd7fb77ff3",
+    "commit": "8c4349c4ea3fad0a016984be103c78df42989bdf",
+    "tree": "c1c0fc7c68cb06014e37dede383ff20c3e283211",
     "parents_in_order": [
-      "ed21ce88fe6ad90db06cc79e4673dbd0dc216b50",
-      "944238287416b3b1be1d5712caf53066f9b323b8"
+      "53e2b673cb58acd22ea17f5283817f2a27a493e8",
+      "9114d1fc2bbb318e87d889f2fef8dded41056cbe"
     ]
   },
   "authority_id": "EBU-AWS-C0-AUDIT-STATIC-REAL-EXECUTION-REGISTRY-CORRECTION-AUTHORITY-v1",
@@ -97,9 +97,9 @@
     {
       "path": "tests/framework/test_validation_reachability.py",
       "mode": "100644",
-      "git_blob": "5044a47a851f5918bc61742756b9ca696a9a6dbf",
-      "byte_count": 573592,
-      "sha256": "896c5569d7635f1917f9b853381ef0a8092ed734a9ca14792db8635b3a05baff"
+      "git_blob": "ce91b5647d74a2247503da1570f895c99ce7fcfe",
+      "byte_count": 583395,
+      "sha256": "9407ffb59b082f395079c7fe859ab00a8a88866a57e06440bd9d22ecfdb7665e"
     }
   ],
   "accepted_outer_schema_coordinate_labels": {
@@ -108,9 +108,18 @@
     "H": "aws_c0_audit_static_publication_handoff_correction_evidence_schema.json@65e05f9085af23c455954df43de68b95a51c85d2/915669f809d3a1727a933f5e91cdfded8de2bcc09e20205d7da075d040d5c763"
   },
   "candidate_paths_at_base": {
-    "new_authority_paths_exist": false,
+    "all_six_authority_paths_exist_at_accepted_base": true,
     "future_fourteen_implementation_paths_exist": false,
     "reachability_path_exists": true
+  },
+  "carrier_authority_predecessor_boundary": {
+    "accepted_source_base": "8c4349c4ea3fad0a016984be103c78df42989bdf",
+    "accepted_source_tree": "c1c0fc7c68cb06014e37dede383ff20c3e283211",
+    "scope": "NARROW_PROSPECTIVE_FIXED_KEY_CONTROLLER_JOURNAL_HANDOFF_CARRIER_WITH_EMBEDDED_EXISTING_RECEIPT_PREIMAGES_ONLY",
+    "nonaccepted_conversation_or_diagnostic_bytes_are_a_source": false,
+    "future_runtime_identity_or_receipt_values_predicted": false,
+    "new_path_or_implementation_authority": false,
+    "candidate_parentage_and_scope": "THE_PROSPECTIVE_CONSOLIDATED_CARRIER_AUTHORITY_CANDIDATE_WILL_HAVE_THE_ACCEPTED_BASE_AS_SOLE_PARENT_AND_MODIFY_EXACTLY_THE_SIX_ALREADY_EXISTING_AUTHORITY_PATHS;THE_CURRENT_STAGING_REPAIR_HISTORY_IS_NOT_ASSERTED_TO_HAVE_THAT_PARENTAGE"
   },
   "superseded_design": {
     "audit_kind": "aws_c0_audit_static_handoff_authority_audit/v3",
@@ -141,7 +150,7 @@
     "SEPARATE_LIVE_SYNTHETIC_APPROVAL_BEFORE_ANY_START_OR_SPEND"
   ],
   "future_coordinate_rule": {
-    "authority_candidate": "SOLE_PARENT_ACCEPTED_BASE_EXACT_SIX_ADDITIONS",
+    "authority_candidate": "SOLE_PARENT_ACCEPTED_BASE_EXACT_SIX_MODIFICATIONS",
     "authority_integration": "PARENTS_ACCEPTED_BASE_THEN_AUTHORITY_CANDIDATE_SAME_TREE",
     "reachability_candidate": "SOLE_PARENT_AUTHORITY_INTEGRATION_EXACT_ONE_PATH_MODIFICATION",
     "reachability_integration": "PARENTS_AUTHORITY_INTEGRATION_THEN_REACHABILITY_CANDIDATE_SAME_TREE",
@@ -155,5 +164,6 @@
     "scientific_execution_authorized": false,
     "aws_action_authorized": false
   },
+  "carrier_mechanical_closure_repair": "PRESERVED_STAGING_ADDITIVE_REPAIR_REQUIRES_THREE_COORDINATE_CAPTURE_CHANNEL_AGGREGATE_AND_EXCLUDES_CONTROLLER_HANDOFF_PUT_FROM_CAPTURED_FIXED_OPERATION_COUNT",
   "completion_marker": "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_PREDECESSOR_MANIFEST_COMPLETE"
 }
