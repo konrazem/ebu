@@ -105,7 +105,7 @@ Negative per-case counts are exactly:
 ```text
 N01=1-direct N02=1-direct N03=1-direct N04=5 N05=7
 N06=1-direct N07=6 N08=1-direct N09=1-direct N10=2
-N11=11 N12=8 N13=1-direct N14=50 N15=5 N16=9 N17=5
+N11=11 N12=8 N13=1-direct N14=155 N15=5 N16=9 N17=5
 N18=9 N19=4 N20=38
 ```
 
@@ -392,7 +392,7 @@ objects, 12 semantic root categories, 63 sealed read-plan rows, 352 parent
 receipts, or 878 real-axis receipts; any other auxiliary key or count exclusion
 refuses.
 
-N14 therefore has exactly 50 independently executable SigV4/TLS/credential
+N14 therefore has exactly 155 independently executable SigV4/TLS/credential
 axes. It separates Put/Get/List security-token omissions; raw token, access
 secret, and derived-key persistence; token hash and length; signed-header and
 canonical-header views; role/session/policy/source/authorization identities;
