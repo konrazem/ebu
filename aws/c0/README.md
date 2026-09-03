@@ -70,10 +70,14 @@ The complete 100-field requirement at
 including every referenced nested authenticated-operation capture, carrier
 external proof, fixed-size binding, terminal binding, arithmetic/time/hash,
 journal-equality, and final-manifest-observation payload, is deferred in full.
-No part of that aggregate is a launch gate or conformance claim for the first
-smoke capsule. Later study capsules may adopt only their separately reviewed
-study-specific evidence contract; the accepted 100-field authority is neither
-edited nor weakened by this planning boundary.
+Under a future separately accepted capsule authority, no part of that aggregate
+is a launch gate or conformance claim for the first smoke capsule. Later study
+capsules may adopt only their separately reviewed study-specific evidence
+contract; the accepted 100-field authority is neither edited nor weakened by
+this planning boundary. This deferral is non-operative unless and until that
+separate authority explicitly partitions or supersedes the current aggregate
+requirement; until then the complete existing 100-field requirement remains
+mandatory and no AWS launch is authorized.
 
 ## Frozen arithmetic
 
