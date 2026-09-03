@@ -1659,7 +1659,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "e2b4f1c50da2f2f15e19aaaa1ca30a51018b36eb19585da2cead31e8612887f5"
+TEST_SELF_SEAL = "c4539591130f60c6223844e2db0eb2bc7ce0c9be71f9b26bcc102387bc1f4f95"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -10194,6 +10194,12 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
             "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION": (
                 AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS
+            ),
+            "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY": (
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ONLY_DESCENDANT_PATHS
+            ),
+            "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION": (
+                AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_DESCENDANT_PATHS
             ),
         }[current_scope["aws_c0_phase"]]
         self.assertEqual(descendant_delta, frozenset(expected_descendant_paths))
