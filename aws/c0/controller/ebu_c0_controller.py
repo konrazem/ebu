@@ -904,8 +904,115 @@ class CaptureJournal:
         return raw, identity("aws_c0_controller_capture_journal/v1", digest(raw))
 
 
+def _execution_receipt(order: int, descriptor_id: str, left: str, right: str,
+                       comparison: str, left_value: Any, right_value: Any) -> dict[str, Any]:
+    def equal(lhs: Any, rhs: Any) -> bool:
+        if isinstance(lhs, list) and not isinstance(rhs, list):
+            return bool(lhs) and all(equal(item, rhs) for item in lhs)
+        if isinstance(rhs, list) and not isinstance(lhs, list):
+            return bool(rhs) and all(equal(lhs, item) for item in rhs)
+        return lhs == rhs
+    if not equal(left_value, right_value):
+        raise Refusal(f"comparison failed: {descriptor_id}")
+    left_raw, right_raw = canonical_bytes(left_value), canonical_bytes(right_value)
+    domain = "AWS_C0_CLOSED_POINTER_COMPARISON_EXECUTION_RECEIPT_V1_NUL"
+    preimage = (domain.encode() + b"\0" + order.to_bytes(8, "big") + descriptor_id.encode() +
+                left.encode() + right.encode() + comparison.encode() + len(left_raw).to_bytes(8, "big") +
+                bytes.fromhex(digest(left_raw)) + len(right_raw).to_bytes(8, "big") +
+                bytes.fromhex(digest(right_raw)) + b"\x01")
+    return {
+        "schema": "aws_c0_closed_pointer_comparison_execution_receipt/v1",
+        "order": order, "descriptor_id": descriptor_id, "left": left, "right": right,
+        "comparison": comparison,
+        "left_resolved_nonsecret_value_byte_count": len(left_raw),
+        "left_resolved_nonsecret_value_sha256": digest(left_raw),
+        "right_resolved_nonsecret_value_byte_count": len(right_raw),
+        "right_resolved_nonsecret_value_sha256": digest(right_raw),
+        "raw_secret_or_bearer_token_bytes_present": False, "comparison_result": True,
+        "receipt_hash_domain": domain,
+        "receipt_hash_formula": "SHA256(DOMAIN_UTF8_CONCAT_ORDER_INT64BE_CONCAT_DESCRIPTOR_ID_UTF8_CONCAT_LEFT_POINTER_EXPRESSION_UTF8_CONCAT_RIGHT_POINTER_EXPRESSION_UTF8_CONCAT_COMPARISON_ALGORITHM_UTF8_CONCAT_LEFT_RESOLVED_RFC8785_CANONICAL_NONSECRET_VALUE_BYTE_COUNT_INT64BE_CONCAT_LEFT_RESOLVED_RFC8785_CANONICAL_NONSECRET_VALUE_SHA256_CONCAT_RIGHT_RESOLVED_RFC8785_CANONICAL_NONSECRET_VALUE_BYTE_COUNT_INT64BE_CONCAT_RIGHT_RESOLVED_RFC8785_CANONICAL_NONSECRET_VALUE_SHA256_CONCAT_COMPARISON_RESULT_BYTE)",
+        "receipt_sha256": digest(preimage),
+        "receipt_disposition": "POINTER_EXPRESSIONS_RESOLVED_AGAINST_THE_DECLARED_COMPLETE_ENCLOSING_PREIMAGE_OR_RECORD_SECRET_OPERANDS_RESOLVED_ONLY_AS_AUTHORIZED_HASH_AND_COUNT_VALUES_COMPARISON_EXECUTED_TRUE_AND_DOMAIN_SEPARATED_RECEIPT_RECOMPUTED_PASS",
+    }
+
+
+def _attempt_prefix_for_journal(key: str) -> str:
+    if not key.endswith(CONTROLLER_JOURNAL_SUFFIX):
+        raise Refusal("controller journal key refused")
+    prefix = key[:-len(CONTROLLER_JOURNAL_SUFFIX)]
+    if not re.fullmatch(r"rehearsal/aws-c0/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/", prefix):
+        raise Refusal("controller journal attempt prefix refused")
+    return prefix
+
+
+def _typed_publication_receipt(*, attempt_identity: dict[str, str], bucket: str, key: str,
+                               raw: bytes, content_chain_sha256: str,
+                               observed: dict[str, Any]) -> dict[str, Any]:
+    object_receipt = {
+        "key": key, "version_id": observed["version_id"], "etag": observed["etag"],
+        "checksum_sha256_base64": observed["checksum_sha256_base64"],
+        "byte_count": len(raw), "sha256": digest(raw),
+    }
+    serialization = _execution_receipt(
+        1, "JOURNAL_PREPUBLICATION_EXACT_SERIALIZATION_001",
+        "AUTHENTICATED_JOURNAL_BODY_/journal_content_projection_byte_count,/journal_content_projection_sha256,/journal_content_projection_hash_domain,/journal_content_projection_hash_formula,/journal_prepublication_size_guard_receipts_in_order,RUNTIME_PREPUBLICATION_EPHEMERAL_RFC8785_SERIALIZATION_BUFFER_/byte_count,/sha256",
+        "/byte_count,/published_object_sha256,/object_receipt/byte_count,/object_receipt/sha256",
+        "RUNTIME_GUARD_EXECUTED_BEFORE_PUT;EXACT_COMPLETE_RFC8785_JOURNAL_BYTES_SERIALIZED_ONCE;ACTUAL_BYTE_COUNT_LTE_1048576;EXACT_BUFFER_SHA256_AND_BYTE_COUNT_EQUAL_SIGNED_PUT_PAYLOAD_AND_AUTHENTICATED_VERSIONED_OBJECT_RECEIPT",
+        [len(raw), digest(raw)], [len(raw), digest(raw)])
+    domain = "AWS_C0_CAPTURE_JOURNAL_PUBLICATION_RECEIPT_BODY_V1_NUL"
+    core = {
+        "schema": "aws_c0_capture_journal_publication_receipt/v1", "journal_role": "CONTROLLER",
+        "bucket_name": bucket, "key": key, "if_none_match": "*",
+        "version_id": observed["version_id"], "etag": observed["etag"],
+        "checksum_sha256_base64": observed["checksum_sha256_base64"],
+        "byte_count": len(raw), "published_object_sha256": digest(raw),
+        "content_chain_sha256": content_chain_sha256,
+        "object_receipt_identity": identity("aws_c0_s3_object_receipt/v1", digest(canonical_bytes(object_receipt))),
+        "object_receipt": object_receipt, "excluded_from_recursive_capture_scope": True,
+        "publication_disposition": "ONE_EXACT_KEY_CONDITIONAL_NO_REPLACE_VERSIONED_JOURNAL_PUBLICATION_BOUND_PASS",
+        "attempt_identity": attempt_identity, "attempt_prefix": _attempt_prefix_for_journal(key),
+        "attempt_role_key_cross_binding_disposition": "ATTEMPT_IDENTITY_PREFIX_ROLE_AND_EXACT_DERIVED_JOURNAL_KEY_EQUAL_PASS",
+        "programme_count_class": "NON_SEMANTIC_CAPTURE_CHANNEL_AUXILIARY",
+        "published_object_cross_binding_disposition": "AUTHENTICATED_EXACT_VERSION_OBJECT_BYTES_HAVE_ACTUAL_COMPLETE_RAW_BYTE_COUNT_LTE_1048576_AND_RAW_SHA256_EQUAL_PUBLISHED_OBJECT_SHA256;ETAG_CHECKSUM_VERSION_KEY_ROLE_AND_CONTENT_CHAIN_COORDINATES_MATCH_PASS",
+        "prepublication_exact_serialization_execution_receipt": serialization,
+        "receipt_hash_domain": domain,
+        "receipt_hash_formula": "SHA256(DOMAIN_UTF8_CONCAT_RFC8785_CANONICAL_COMPLETE_CAPTURE_JOURNAL_PUBLICATION_RECEIPT_WITH_RECEIPT_SHA256_RECEIPT_BODY_BYTE_COUNT_RECEIPT_BODY_EXCLUDED_FIELDS_IN_ORDER_AND_RECEIPT_BODY_PROJECTION_DISPOSITION_REMOVED)",
+    }
+    body = canonical_bytes(core)
+    return {**core, "receipt_sha256": digest(domain.encode() + b"\0" + body),
+            "receipt_body_byte_count": len(body),
+            "receipt_body_excluded_fields_in_order": ["receipt_sha256", "receipt_body_byte_count", "receipt_body_excluded_fields_in_order", "receipt_body_projection_disposition"],
+            "receipt_body_projection_disposition": "DIRECT_RFC8785_CANONICAL_BODY_IS_COMPLETE_CAPTURE_JOURNAL_PUBLICATION_RECEIPT_WITH_EXACT_FOUR_DERIVED_BODY_FIELDS_REMOVED;DIRECT_BODY_BYTE_COUNT_AND_DOMAIN_SEPARATED_RECEIPT_SHA256_RECOMPUTE_PASS"}
+
+
+def _typed_readback_receipt(*, attempt_identity: dict[str, str], bucket: str, key: str,
+                            raw: bytes, content_chain_sha256: str,
+                            observed: dict[str, Any]) -> dict[str, Any]:
+    domain = "AWS_C0_CAPTURE_JOURNAL_READBACK_RECEIPT_BODY_V1_NUL"
+    core = {
+        "schema": "aws_c0_capture_journal_readback_receipt/v1", "journal_role": "CONTROLLER",
+        "bucket_name": bucket, "key": key, "version_id": observed["version_id"],
+        "etag": observed["etag"], "checksum_sha256_base64": observed["checksum_sha256_base64"],
+        "byte_count": len(raw), "published_object_sha256": digest(raw),
+        "content_chain_sha256": content_chain_sha256, "excluded_from_recursive_capture_scope": True,
+        "exact_version_and_content_disposition": "EXACT_KEY_VERSION_ETAG_CHECKSUM_BYTES_AND_SHA_MATCH_PUBLICATION_RECEIPT_PASS",
+        "attempt_identity": attempt_identity, "attempt_prefix": _attempt_prefix_for_journal(key),
+        "attempt_role_key_cross_binding_disposition": "ATTEMPT_IDENTITY_PREFIX_ROLE_AND_EXACT_DERIVED_JOURNAL_KEY_EQUAL_PASS",
+        "programme_count_class": "NON_SEMANTIC_CAPTURE_CHANNEL_AUXILIARY",
+        "published_object_cross_binding_disposition": "AUTHENTICATED_EXACT_VERSION_OBJECT_BYTES_HAVE_ACTUAL_COMPLETE_RAW_BYTE_COUNT_LTE_1048576_AND_RAW_SHA256_EQUAL_PUBLISHED_OBJECT_SHA256;ETAG_CHECKSUM_VERSION_KEY_ROLE_AND_CONTENT_CHAIN_COORDINATES_MATCH_PASS",
+        "receipt_hash_domain": domain,
+        "receipt_hash_formula": "SHA256(DOMAIN_UTF8_CONCAT_RFC8785_CANONICAL_COMPLETE_CAPTURE_JOURNAL_READBACK_RECEIPT_WITH_RECEIPT_SHA256_RECEIPT_BODY_BYTE_COUNT_RECEIPT_BODY_EXCLUDED_FIELDS_IN_ORDER_AND_RECEIPT_BODY_PROJECTION_DISPOSITION_REMOVED)",
+    }
+    body = canonical_bytes(core)
+    return {**core, "receipt_sha256": digest(domain.encode() + b"\0" + body),
+            "receipt_body_byte_count": len(body),
+            "receipt_body_excluded_fields_in_order": ["receipt_sha256", "receipt_body_byte_count", "receipt_body_excluded_fields_in_order", "receipt_body_projection_disposition"],
+            "receipt_body_projection_disposition": "DIRECT_RFC8785_CANONICAL_BODY_IS_COMPLETE_CAPTURE_JOURNAL_READBACK_RECEIPT_WITH_EXACT_FOUR_DERIVED_BODY_FIELDS_REMOVED;DIRECT_BODY_BYTE_COUNT_AND_DOMAIN_SEPARATED_RECEIPT_SHA256_RECOMPUTE_PASS"}
+
+
 def publish_and_readback_controller_journal(*, journal: CaptureJournal, bucket: str, key: str,
-                                            publisher: Any, readback: Any) -> tuple[dict[str, str], dict[str, Any]]:
+                                            attempt_identity: dict[str, str], publisher: Any,
+                                            readback: Any) -> tuple[dict[str, str], dict[str, Any]]:
     """Publish exactly one sealed journal and verify its exact-version readback.
 
     Publisher/readback are explicit injected SigV4 operation seams.  Their
@@ -928,27 +1035,38 @@ def publish_and_readback_controller_journal(*, journal: CaptureJournal, bucket: 
             read_receipt["sha256"] != digest(raw) or
             read_receipt["checksum_sha256_base64"] != receipt["checksum_sha256_base64"]):
         raise Refusal("controller journal exact-version readback refused")
-    publication_identity = identity(
-        "aws_c0_capture_journal_publication_receipt/v1",
-        digest(canonical_bytes({"bucket_name": bucket, **receipt})),
-    )
-    readback_identity = identity(
-        "aws_c0_capture_journal_readback_receipt/v1",
-        digest(canonical_bytes({"bucket_name": bucket, **read_receipt})),
-    )
+    journal_body = strict_json(raw)
+    publication = _typed_publication_receipt(
+        attempt_identity=attempt_identity, bucket=bucket, key=key, raw=raw,
+        content_chain_sha256=journal_body["content_chain_sha256"], observed=receipt)
+    typed_readback = _typed_readback_receipt(
+        attempt_identity=attempt_identity, bucket=bucket, key=key, raw=read_raw,
+        content_chain_sha256=journal_body["content_chain_sha256"], observed=read_receipt)
+    publication_identity = identity("aws_c0_capture_journal_publication_receipt/v1",
+                                    publication["receipt_sha256"])
+    readback_identity = identity("aws_c0_capture_journal_readback_receipt/v1",
+                                 typed_readback["receipt_sha256"])
     return journal_identity, {"schema": "aws_c0_controller_journal_authenticated_readback/v1",
-                              "content_chain_sha256": strict_json(raw)["content_chain_sha256"],
-                              "publication_receipt": receipt,
+                              "content_chain_sha256": journal_body["content_chain_sha256"],
+                              "publication_receipt": publication,
                               "publication_receipt_identity": publication_identity,
-                              "readback_receipt": read_receipt,
+                              "readback_receipt": typed_readback,
                               "readback_receipt_identity": readback_identity}
 
 
-def _comparison_receipt(order: int, descriptor_id: str, left: str,
-                        right: str, comparison: str) -> dict[str, Any]:
-    preimage = {"order": order, "descriptor_id": descriptor_id, "left": left,
-                "right": right, "comparison": comparison}
-    return {**preimage, "receipt_sha256": digest(canonical_bytes(preimage))}
+def _pointer_value(record: dict[str, Any], expression: str) -> Any:
+    values: list[Any] = []
+    for pointer in expression.split(","):
+        if not pointer.startswith("/"):
+            values.append(pointer)
+            continue
+        value: Any = record
+        for token in pointer[1:].split("/"):
+            if not isinstance(value, dict) or token not in value:
+                raise Refusal(f"unresolved comparison pointer: {pointer}")
+            value = value[token]
+        values.append(value)
+    return values[0] if len(values) == 1 else values
 
 
 def build_controller_journal_handoff_v1(*, attempt_identity: dict[str, str], bucket: str,
@@ -977,23 +1095,24 @@ def build_controller_journal_handoff_v1(*, attempt_identity: dict[str, str], buc
     publication_identity = authenticated_readback["publication_receipt_identity"]
     readback_identity = authenticated_readback["readback_receipt_identity"]
     if (not isinstance(publication, dict) or not isinstance(readback, dict) or
+            publication.get("schema") != "aws_c0_capture_journal_publication_receipt/v1" or
+            readback.get("schema") != "aws_c0_capture_journal_readback_receipt/v1" or
+            publication.get("journal_role") != "CONTROLLER" or readback.get("journal_role") != "CONTROLLER" or
+            publication.get("attempt_identity") != attempt_identity or readback.get("attempt_identity") != attempt_identity or
             publication.get("version_id") != readback.get("version_id") or
             publication.get("key") != readback.get("key") or
             publication.get("etag") != readback.get("etag") or
-            publication.get("bytes") != readback.get("bytes") or
-            publication.get("sha256") != readback.get("sha256") or
+            publication.get("byte_count") != readback.get("byte_count") or
+            publication.get("published_object_sha256") != readback.get("published_object_sha256") or
+            publication.get("content_chain_sha256") != readback.get("content_chain_sha256") or
             publication.get("checksum_sha256_base64") != readback.get("checksum_sha256_base64") or
             not VERSION.fullmatch(str(publication.get("version_id", ""))) or
-            not SHA.fullmatch(str(publication.get("sha256", "")))):
+            not SHA.fullmatch(str(publication.get("published_object_sha256", "")))):
         raise Refusal("controller handoff publication/readback coordinates refused")
-    expected_publication_identity = identity(
-        "aws_c0_capture_journal_publication_receipt/v1",
-        digest(canonical_bytes({"bucket_name": bucket, **publication})),
-    )
-    expected_readback_identity = identity(
-        "aws_c0_capture_journal_readback_receipt/v1",
-        digest(canonical_bytes({"bucket_name": bucket, **readback})),
-    )
+    expected_publication_identity = identity("aws_c0_capture_journal_publication_receipt/v1",
+                                             publication["receipt_sha256"])
+    expected_readback_identity = identity("aws_c0_capture_journal_readback_receipt/v1",
+                                          readback["receipt_sha256"])
     if publication_identity != expected_publication_identity or readback_identity != expected_readback_identity:
         raise Refusal("controller handoff receipt reference refused")
     chain = authenticated_readback["content_chain_sha256"]
@@ -1003,7 +1122,8 @@ def build_controller_journal_handoff_v1(*, attempt_identity: dict[str, str], buc
         "bucket": bucket, "key": publication["key"],
         "version_id": publication["version_id"], "etag": publication["etag"],
         "checksum_sha256_base64": publication["checksum_sha256_base64"],
-        "byte_count": publication["bytes"], "object_sha256": publication["sha256"],
+        "byte_count": publication["byte_count"],
+        "object_sha256": publication["published_object_sha256"],
         "content_chain_sha256": chain,
     }
     coordinate_rows = (
@@ -1021,22 +1141,27 @@ def build_controller_journal_handoff_v1(*, attempt_identity: dict[str, str], buc
         ("HANDOFF_ETAG_READBACK_012", "/controller_readback_receipt/etag", "/controller_journal_object/etag", "STRING_EQUAL"),
         ("HANDOFF_CHECKSUM_PUBLICATION_013", "/controller_publication_receipt/checksum_sha256_base64", "/controller_journal_object/checksum_sha256_base64", "STRING_EQUAL"),
         ("HANDOFF_CHECKSUM_READBACK_014", "/controller_readback_receipt/checksum_sha256_base64", "/controller_journal_object/checksum_sha256_base64", "STRING_EQUAL"),
-        ("HANDOFF_BYTES_PUBLICATION_015", "/controller_publication_receipt/bytes", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
-        ("HANDOFF_BYTES_READBACK_016", "/controller_readback_receipt/bytes", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
-        ("HANDOFF_OBJECT_SHA_PUBLICATION_017", "/controller_publication_receipt/sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_OBJECT_SHA_READBACK_018", "/controller_readback_receipt/sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_CHAIN_PUBLICATION_019", "/controller_publication_receipt/sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_CHAIN_READBACK_020", "/controller_readback_receipt/sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
-        ("HANDOFF_PUBLICATION_IDENTITY_021", "/controller_publication_receipt_identity", "/controller_publication_receipt", "IDENTITY_PREIMAGE_EQUAL"),
-        ("HANDOFF_READBACK_IDENTITY_022", "/controller_readback_receipt_identity", "/controller_readback_receipt", "IDENTITY_PREIMAGE_EQUAL"),
+        ("HANDOFF_BYTES_PUBLICATION_015", "/controller_publication_receipt/byte_count", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
+        ("HANDOFF_BYTES_READBACK_016", "/controller_readback_receipt/byte_count", "/controller_journal_object/byte_count", "INTEGER_EQUAL"),
+        ("HANDOFF_OBJECT_SHA_PUBLICATION_017", "/controller_publication_receipt/published_object_sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
+        ("HANDOFF_OBJECT_SHA_READBACK_018", "/controller_readback_receipt/published_object_sha256", "/controller_journal_object/object_sha256", "SHA256_EQUAL"),
+        ("HANDOFF_CHAIN_PUBLICATION_019", "/controller_publication_receipt/content_chain_sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
+        ("HANDOFF_CHAIN_READBACK_020", "/controller_readback_receipt/content_chain_sha256", "/controller_journal_object/content_chain_sha256", "SHA256_EQUAL"),
+        ("HANDOFF_PUBLICATION_IDENTITY_021", "/controller_publication_receipt_identity/sha256,/controller_publication_receipt_identity/value", "/controller_publication_receipt/receipt_sha256", "BOTH_SHA256_EQUAL"),
+        ("HANDOFF_READBACK_IDENTITY_022", "/controller_readback_receipt_identity/sha256,/controller_readback_receipt_identity/value", "/controller_readback_receipt/receipt_sha256", "BOTH_SHA256_EQUAL"),
     )
-    receipts = [_comparison_receipt(index, *row) for index, row in enumerate(coordinate_rows, 1)]
-    local_preimage = {
+    comparison_root = {
         "attempt_identity": attempt_identity, "controller_journal_object": controller_object,
+        "controller_publication_receipt": publication, "controller_readback_receipt": readback,
         "controller_publication_receipt_identity": publication_identity,
         "controller_readback_receipt_identity": readback_identity,
-        "coordinate_receipt_sha256s": [row["receipt_sha256"] for row in receipts],
     }
+    receipts = [_execution_receipt(index, *row,
+                                   _pointer_value(comparison_root, row[1]),
+                                   _pointer_value(comparison_root, row[2]))
+                for index, row in enumerate(coordinate_rows, 1)]
+    local_preimage = {**comparison_root,
+                      "coordinate_receipt_sha256s": [row["receipt_sha256"] for row in receipts]}
     local_sha = digest(canonical_bytes(local_preimage))
     core = {
         "schema": "controller_journal_handoff_v1", "attempt_identity": attempt_identity,
@@ -1436,6 +1561,7 @@ def run_attempt(args: argparse.Namespace) -> None:
                               "request_id": metadata["request_id"]}
     journal_identity, journal_readback_receipt = publish_and_readback_controller_journal(
         journal=journal, bucket=bucket, key=prefix + CONTROLLER_JOURNAL_SUFFIX,
+        attempt_identity=launch["attempt_identity"],
         publisher=journal_publisher, readback=journal_readback)
     handoff = build_controller_journal_handoff_v1(
         attempt_identity=launch["attempt_identity"], bucket=bucket,

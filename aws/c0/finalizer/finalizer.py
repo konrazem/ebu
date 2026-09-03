@@ -340,7 +340,7 @@ def _pointer_value(record: dict[str, Any], expression: str) -> Any:
 def _execution_receipt(order: int, descriptor_id: str, left: str, right: str,
                        comparison: str, left_value: Any, right_value: Any,
                        *, comparison_result: bool | None = None) -> dict[str, Any]:
-    result = left_value == right_value if comparison_result is None else comparison_result
+    result = _equal_values(left_value, right_value) if comparison_result is None else comparison_result
     if not result:
         raise Refusal(f"comparison failed: {descriptor_id}")
     left_raw, right_raw = canonical_bytes(left_value), canonical_bytes(right_value)
@@ -363,6 +363,21 @@ def _execution_receipt(order: int, descriptor_id: str, left: str, right: str,
         "receipt_sha256": digest(preimage),
         "receipt_disposition": "POINTER_EXPRESSIONS_RESOLVED_AGAINST_THE_DECLARED_COMPLETE_ENCLOSING_PREIMAGE_OR_RECORD_SECRET_OPERANDS_RESOLVED_ONLY_AS_AUTHORIZED_HASH_AND_COUNT_VALUES_COMPARISON_EXECUTED_TRUE_AND_DOMAIN_SEPARATED_RECEIPT_RECOMPUTED_PASS",
     }
+
+
+def _validate_execution_receipt(receipt: Any, order: int, root: dict[str, Any]) -> None:
+    fields = {"schema", "order", "descriptor_id", "left", "right", "comparison",
+              "left_resolved_nonsecret_value_byte_count", "left_resolved_nonsecret_value_sha256",
+              "right_resolved_nonsecret_value_byte_count", "right_resolved_nonsecret_value_sha256",
+              "raw_secret_or_bearer_token_bytes_present", "comparison_result", "receipt_hash_domain",
+              "receipt_hash_formula", "receipt_sha256", "receipt_disposition"}
+    if not isinstance(receipt, dict) or set(receipt) != fields or receipt.get("order") != order:
+        raise Refusal("comparison execution receipt fields refused")
+    expected = _execution_receipt(order, receipt["descriptor_id"], receipt["left"], receipt["right"],
+                                  receipt["comparison"], _pointer_value(root, receipt["left"]),
+                                  _pointer_value(root, receipt["right"]))
+    if receipt != expected:
+        raise Refusal("comparison execution receipt recomputation refused")
 
 
 def _membership_receipt(*, journal_role: str, journal_object_sha256: str,
@@ -1322,19 +1337,23 @@ def validate_controller_journal_handoff_v1(value: Any, *, bucket: str,
         raise Refusal("controller journal handoff identity refused")
     publication = value["controller_publication_receipt"]
     readback = value["controller_readback_receipt"]
-    publication_required = {"key", "version_id", "etag", "bytes", "sha256", "checksum_sha256_base64"}
-    if (not isinstance(publication, dict) or set(publication) != publication_required or
-            not isinstance(readback, dict) or set(readback) != publication_required | {"request_id"} or
-            any(publication[name] != readback[name] for name in publication_required)):
+    coordinate_fields = ("key", "version_id", "etag", "byte_count", "published_object_sha256",
+                         "checksum_sha256_base64", "content_chain_sha256")
+    if (not isinstance(publication, dict) or
+            publication.get("schema") != "aws_c0_capture_journal_publication_receipt/v1" or
+            publication.get("journal_role") != "CONTROLLER" or
+            publication.get("bucket_name") != bucket or
+            publication.get("attempt_identity") != attempt_identity or
+            not isinstance(readback, dict) or
+            readback.get("schema") != "aws_c0_capture_journal_readback_receipt/v1" or
+            readback.get("journal_role") != "CONTROLLER" or readback.get("bucket_name") != bucket or
+            readback.get("attempt_identity") != attempt_identity or
+            any(publication.get(name) != readback.get(name) for name in coordinate_fields)):
         raise Refusal("controller journal handoff receipt preimages refused")
-    publication_identity = identity(
-        "aws_c0_capture_journal_publication_receipt/v1",
-        digest(canonical_bytes({"bucket_name": bucket, **publication})),
-    )
-    readback_identity = identity(
-        "aws_c0_capture_journal_readback_receipt/v1",
-        digest(canonical_bytes({"bucket_name": bucket, **readback})),
-    )
+    publication_identity = identity("aws_c0_capture_journal_publication_receipt/v1",
+                                    publication.get("receipt_sha256", ""))
+    readback_identity = identity("aws_c0_capture_journal_readback_receipt/v1",
+                                 readback.get("receipt_sha256", ""))
     if (value["controller_publication_receipt_identity"] != publication_identity or
             value["controller_readback_receipt_identity"] != readback_identity):
         raise Refusal("controller journal handoff receipt identity refused")
@@ -1348,29 +1367,27 @@ def validate_controller_journal_handoff_v1(value: Any, *, bucket: str,
             journal_object["version_id"] != publication["version_id"] or
             journal_object["etag"] != publication["etag"] or
             journal_object["checksum_sha256_base64"] != publication["checksum_sha256_base64"] or
-            journal_object["byte_count"] != publication["bytes"] or
-            journal_object["object_sha256"] != publication["sha256"] or
+            journal_object["byte_count"] != publication["byte_count"] or
+            journal_object["object_sha256"] != publication["published_object_sha256"] or
+            journal_object["content_chain_sha256"] != publication["content_chain_sha256"] or
             not SHA.fullmatch(str(journal_object["content_chain_sha256"]))):
         raise Refusal("controller journal handoff object coordinate refused")
     receipts = value["controller_receipt_coordinate_execution_receipts_in_order"]
     if not isinstance(receipts, list) or len(receipts) != 22:
         raise Refusal("controller journal handoff coordinate receipts refused")
+    comparison_root = {
+        "attempt_identity": attempt_identity, "controller_journal_object": journal_object,
+        "controller_publication_receipt": publication, "controller_readback_receipt": readback,
+        "controller_publication_receipt_identity": publication_identity,
+        "controller_readback_receipt_identity": readback_identity,
+    }
     for order, receipt in enumerate(receipts, 1):
-        if (not isinstance(receipt, dict) or set(receipt) != {
-                "order", "descriptor_id", "left", "right", "comparison", "receipt_sha256"} or
-                receipt["order"] != order):
-            raise Refusal("controller journal handoff receipt order refused")
-        preimage = {name: receipt[name] for name in
-                    ("order", "descriptor_id", "left", "right", "comparison")}
-        if receipt["receipt_sha256"] != digest(canonical_bytes(preimage)):
-            raise Refusal("controller journal handoff receipt digest refused")
+        _validate_execution_receipt(receipt, order, comparison_root)
     if ([receipts[-2]["descriptor_id"], receipts[-1]["descriptor_id"]] !=
             ["HANDOFF_PUBLICATION_IDENTITY_021", "HANDOFF_READBACK_IDENTITY_022"]):
         raise Refusal("controller journal handoff receipt tail refused")
     local_preimage = {
-        "attempt_identity": attempt_identity, "controller_journal_object": journal_object,
-        "controller_publication_receipt_identity": publication_identity,
-        "controller_readback_receipt_identity": readback_identity,
+        **comparison_root,
         "coordinate_receipt_sha256s": [row["receipt_sha256"] for row in receipts],
     }
     local_sha = digest(canonical_bytes(local_preimage))

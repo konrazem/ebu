@@ -23516,6 +23516,10 @@ def validate_sources() -> None:
             "controller_publication_receipt_identity" in finalizer and
             "PUT_CONTROLLER_JOURNAL_HANDOFF" in finalizer,
             "finalizer does not bind the controller version and publication-receipt reference")
+    require("aws_c0_capture_journal_publication_receipt/v1" in controller and
+            "aws_c0_capture_journal_readback_receipt/v1" in controller and
+            "aws_c0_closed_pointer_comparison_execution_receipt/v1" in controller,
+            "controller carrier does not embed the accepted typed receipt interfaces")
     require("ListObjectVersions" in finalizer and "ListObjectsV2" not in finalizer, "exact-version pagination absent")
     require("compute_cost" in finalizer and "COST_UNAVAILABLE" not in finalizer, "cost closure absent")
     template = load_json("aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml")

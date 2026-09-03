@@ -274,6 +274,8 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(F.CaptureJournal().aggregate()["envelope_count"], 0)
 
     def test_controller_journal_seals_publishes_and_exact_version_readbacks_offline(self):
+        attempt = C.identity("aws_c0_attempt/v1", "b" * 64)
+        journal_key = "rehearsal/aws-c0/R/A/evidence/controller-capture-journal.json"
         journal = C.CaptureJournal("EC2_INSTANCE_PROFILE_CONTROLLER")
         journal.reserve_for_operation({"operation": "S3_GET_OBJECT_EXACT_VERSION"})
         journal.complete("S3_GET_OBJECT_EXACT_VERSION", "EC2_INSTANCE_PROFILE",
@@ -285,20 +287,22 @@ class RuntimeContractTests(unittest.TestCase):
                     "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(),
                     "checksum_sha256_base64": base64.b64encode(hashlib.sha256(raw).digest()).decode()}
         def readback(bucket, key, version):
-            self.assertEqual((bucket, key, version), ("valid-bucket", "journal", "v1"))
+            self.assertEqual((bucket, key, version), ("valid-bucket", journal_key, "v1"))
             raw = published[0][2]
             return raw, {"key": key, "version_id": "v1", "etag": '"journal-etag"',
                          "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(),
                          "checksum_sha256_base64": base64.b64encode(hashlib.sha256(raw).digest()).decode(),
                          "request_id": "request-1"}
         journal_identity, receipt = C.publish_and_readback_controller_journal(
-            journal=journal, bucket="valid-bucket", key="journal", publisher=publisher, readback=readback)
+            journal=journal, bucket="valid-bucket", key=journal_key,
+            attempt_identity=attempt, publisher=publisher, readback=readback)
         self.assertEqual(len(published), 1)
         self.assertEqual(journal_identity["kind"], "aws_c0_controller_capture_journal/v1")
         self.assertEqual(receipt["readback_receipt"]["version_id"], "v1")
         with self.assertRaises(C.Refusal): journal.seal()
 
     def test_controller_journal_refuses_bad_exact_version_readback(self):
+        attempt = C.identity("aws_c0_attempt/v1", "b" * 64)
         journal = C.CaptureJournal("EC2_INSTANCE_PROFILE_CONTROLLER")
         journal.reserve_for_operation({"operation": "S3_GET_OBJECT_EXACT_VERSION"})
         journal.complete("S3_GET_OBJECT_EXACT_VERSION", "EC2_INSTANCE_PROFILE", {})
@@ -308,7 +312,9 @@ class RuntimeContractTests(unittest.TestCase):
                     "checksum_sha256_base64": base64.b64encode(hashlib.sha256(raw).digest()).decode()}
         with self.assertRaises(C.Refusal):
             C.publish_and_readback_controller_journal(
-                journal=journal, bucket="valid-bucket", key="journal", publisher=publisher,
+                journal=journal, bucket="valid-bucket",
+                key="rehearsal/aws-c0/R/A/evidence/controller-capture-journal.json",
+                attempt_identity=attempt, publisher=publisher,
                 readback=lambda bucket, key, version: (b"wrong", {
                     "key": key, "version_id": version, "etag": '"journal-etag"',
                     "bytes": 5, "sha256": "0" * 64,
@@ -351,17 +357,25 @@ class RuntimeContractTests(unittest.TestCase):
                          "bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest(),
                          "checksum_sha256_base64": base64.b64encode(hashlib.sha256(raw).digest()).decode(),
                          "request_id": "controller-request-1"}
+        attempt = {"kind": "aws_c0_attempt/v1", "sha256": "b" * 64, "value": "b" * 64}
         controller_identity, authenticated = C.publish_and_readback_controller_journal(
             journal=controller, bucket="valid-bucket",
             key="rehearsal/aws-c0/R/A/evidence/controller-capture-journal.json",
-            publisher=publisher, readback=readback)
-        attempt = {"kind": "aws_c0_attempt/v1", "sha256": "b" * 64, "value": "b" * 64}
+            attempt_identity=attempt, publisher=publisher, readback=readback)
         handoff = C.build_controller_journal_handoff_v1(
             attempt_identity=attempt, bucket="valid-bucket",
             journal_identity=controller_identity, authenticated_readback=authenticated)
         self.assertEqual(handoff["controller_journal_object"]["version_id"], "controller-version-1")
         self.assertEqual(handoff["controller_publication_receipt_identity"], authenticated["publication_receipt_identity"])
         self.assertEqual(len(handoff["controller_receipt_coordinate_execution_receipts_in_order"]), 22)
+        accepted = load("aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json")["$defs"]
+        self.assertEqual(set(handoff["controller_publication_receipt"]),
+                         set(accepted["capture_journal_publication_receipt"]["required"]))
+        self.assertEqual(set(handoff["controller_readback_receipt"]),
+                         set(accepted["capture_journal_readback_receipt"]["required"]))
+        receipt_fields = set(accepted["closed_pointer_comparison_execution_receipt"]["required"])
+        self.assertTrue(all(set(row) == receipt_fields for row in
+                            handoff["controller_receipt_coordinate_execution_receipts_in_order"]))
         validated = F.validate_controller_journal_handoff_v1(
             handoff, bucket="valid-bucket",
             key="rehearsal/aws-c0/R/A/evidence/controller-capture-journal-handoff.json",
@@ -397,7 +411,7 @@ class RuntimeContractTests(unittest.TestCase):
                          "request_id": "controller-request-2"}
         journal_identity, authenticated = C.publish_and_readback_controller_journal(
             journal=controller, bucket="valid-bucket", key=journal_key,
-            publisher=publisher, readback=readback)
+            attempt_identity=attempt, publisher=publisher, readback=readback)
         handoff = C.build_controller_journal_handoff_v1(
             attempt_identity=attempt, bucket="valid-bucket",
             journal_identity=journal_identity, authenticated_readback=authenticated)
