@@ -1313,6 +1313,31 @@ AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ROWS = (
         "5e8732d0debe695ab8eb5fca1a6e2cb2d7b259bcc8b0f8b0fb6053994c0d59a0",
     ),
 )
+AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_COMMIT = "3b185d9f770e525df645a2c6d2eda678e28554ef"
+AWS_C0_REAL_EXECUTION_REGISTRY_ACCEPTED_BASE_TREE = "aa7edcfcba250d6954de8c9ff42151cd7fb77ff3"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_CANDIDATE = "47be7aa933caab2cc2983ca77b78ccd4fd7f449c"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION = "53e2b673cb58acd22ea17f5283817f2a27a493e8"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_TREE = "defaa0db01f8a0284e700a1bdc76c55cbf70985c"
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS = (
+    "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_audit_static_real_execution_registry_correction_contract.json",
+    "aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json",
+    "aws_c0_audit_static_real_execution_registry_correction_implementation_path_manifest.json",
+    "aws_c0_audit_static_real_execution_registry_correction_predecessor_manifest.json",
+    "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
+)
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ROWS = (
+    ("AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_AMENDMENT.md", "100644", "4e7f093b68fee77ace8f3983283475318632e2db", 39122, "993c1e3731c505dd2387259d24ebca43cda66d8e4784482d06076426d581772b"),
+    ("aws_c0_audit_static_real_execution_registry_correction_contract.json", "100644", "157446726a33268f36a9e97468ea1b951e5b1290", 51194, "c913d01778e0c33c5cc400e5a5bebdf1a9e62b0fe7922404d03192440093d632"),
+    ("aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json", "100644", "5af3aba0e799837aa7faf14d92d9fb4862de0bf7", 2182267, "6205e7b5330849465f4638a553dd7bdadc0a49e696bdc0b766469056b53a4a19"),
+    ("aws_c0_audit_static_real_execution_registry_correction_implementation_path_manifest.json", "100644", "9078f2890b6e4106266388e31ed13c7ab244aa5b", 9159, "14fcd633c736242bfd94d0430892f176d5fc2a31ab51863346256b4c7fb700d4"),
+    ("aws_c0_audit_static_real_execution_registry_correction_predecessor_manifest.json", "100644", "852ffca8bcf5f7348faa6f78a3910258aa674fe5", 7331, "78497ff7e89e085fe39fe6d1dc13d925c3790ef4a7ad3150cd6dd73d59234ca0"),
+    ("aws_c0_audit_static_real_execution_registry_correction_validation_contract.json", "100644", "d3f968b5df72457536fd4b433812fb5f77104d19", 736058, "5049f010300d092e2da6ed93db54631edf27d6d0044cc45c6a4d098086851a37"),
+)
+AWS_C0_REAL_EXECUTION_REGISTRY_PHASES = (
+    "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY",
+    "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION",
+)
 AWS_C0_LIVE_PREPARATION_CORRECTION_PHASES = (
     "AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_LIVE_PREPARATION_CORRECTED_IMPLEMENTATION",
@@ -1335,6 +1360,7 @@ AWS_C0_AUDIT_STATIC_HANDOFF_PHASES = (
     "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
 )
+AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_PHASES = AWS_C0_AUDIT_STATIC_HANDOFF_PHASES
 AWS_C0_PHASES = (
     "AWS_C0_AUTHORITY_ONLY",
     "AWS_C0_COMPLETED_IMPLEMENTATION",
@@ -1363,6 +1389,27 @@ AWS_C0_LIVE_PREPARATION_PHASES = (
     "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION",
     "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY",
     "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION",
+)
+AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_PHASES = (
+    *AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_PHASES,
+    *AWS_C0_REAL_EXECUTION_REGISTRY_PHASES,
+)
+AWS_C0_MATERIAL_IDENTITY_PHASES = (
+    *AWS_C0_MATERIAL_IDENTITY_PHASES,
+    *AWS_C0_REAL_EXECUTION_REGISTRY_PHASES,
+)
+AWS_C0_AUDIT_STATIC_HANDOFF_PHASES = (
+    *AWS_C0_AUDIT_STATIC_HANDOFF_PHASES,
+    *AWS_C0_REAL_EXECUTION_REGISTRY_PHASES,
+)
+AWS_C0_PHASES = (*AWS_C0_PHASES, *AWS_C0_REAL_EXECUTION_REGISTRY_PHASES)
+AWS_C0_IMPLEMENTATION_PHASES = (
+    *AWS_C0_IMPLEMENTATION_PHASES,
+    "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION",
+)
+AWS_C0_LIVE_PREPARATION_PHASES = (
+    *AWS_C0_LIVE_PREPARATION_PHASES,
+    *AWS_C0_REAL_EXECUTION_REGISTRY_PHASES,
 )
 AWS_C0_LIVE_PREPARATION_CORRECTION_AUTHORITY_SCOPE = (
     AWS_C0_AUTHORITY_SCOPE | frozenset(AWS_C0_LIVE_PREPARATION_AUTHORITY_PATHS)
@@ -1425,6 +1472,22 @@ AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS = (
 )
 AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS = (
     AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS
+    + AWS_C0_IMPLEMENTATION_PATHS
+)
+AWS_C0_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_SCOPE = (
+    AWS_C0_AUDIT_STATIC_HANDOFF_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS)
+)
+AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_IMPLEMENTATION_SCOPE = (
+    AWS_C0_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_SCOPE
+    | frozenset(AWS_C0_IMPLEMENTATION_PATHS)
+)
+AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ONLY_DESCENDANT_PATHS = (
+    AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_ONLY_DESCENDANT_PATHS
+    + AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+)
+AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_DESCENDANT_PATHS = (
+    AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ONLY_DESCENDANT_PATHS
     + AWS_C0_IMPLEMENTATION_PATHS
 )
 STAGE_F_VALIDATOR_AUTHORITY_LANE_SCOPE_BLOCK = """manifest = strict_load(source / "stage_e_dynamic_growth_harness_reconciliation_implementation_path_manifest.json")
@@ -1597,7 +1660,7 @@ LATER_DOCUMENTATION_PATHS = (
     "EBU_FUTURE_BOOKS_STRUCTURE.md",
     "coupled_interaction_inference_feedback_book_traceability_manifest.json",
 )
-TEST_SELF_SEAL = "6d9edd4062b0c4eef9f90a8e0b3691d5ad94a311f73aa555ede7cf2c30a7c240"
+TEST_SELF_SEAL = "701bb99ab24a5a819ff903c308fa671eb8e0c47a5e957feb3d6eec6834697900"
 WORKFLOW_ROUTING_BLOCK = b"""    env:
       EBU_I9_AUTHORITY_BASE: 4ab6f9ca32e32a3801c6a4b6872b34b206e6da7e
       EBU_I9_AUTHORITY_CANDIDATE: 15c721cf745d79fabeda749badbac35a7fda9993
@@ -3306,6 +3369,22 @@ class ValidationReachabilityTests(unittest.TestCase):
             aws_c0_phase = (
                 "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
             )
+        elif changed_paths == AWS_C0_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY"
+        elif changed_paths == AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_IMPLEMENTATION_SCOPE:
+            stage_c_phase = "COMPLETED_IMPLEMENTATION"
+            stage_d_phase = "STAGE_D_CONTINUATION_AUTHORITY_ONLY"
+            stage_e_phase = "STAGE_E_HARNESS_COMPLETED_IMPLEMENTATION"
+            stage_d_dynamic_growth_phase = "STAGE_D_DYNAMIC_GROWTH_AUTHORITY_ONLY"
+            stage_e_reconciliation_phase = "STAGE_E_DYNAMIC_GROWTH_HARNESS_RECONCILIATION_COMPLETED_IMPLEMENTATION"
+            stage_f_local_binding_phase = "STAGE_F_LOCAL_BINDING_AUTHORITY_ONLY"
+            aws_c0_phase = "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION"
         else:
             self.fail(
                 "current HEAD is neither the exact Stage C authority phase nor "
@@ -3529,6 +3608,7 @@ class ValidationReachabilityTests(unittest.TestCase):
             AWS_C0_COST_RUNTIME_RETRIEVAL_CLOSURE_AUTHORITY_INTEGRATION,
             AWS_C0_MATERIAL_IDENTITY_AUTHORITY_INTEGRATION,
             AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION,
+            AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_INTEGRATION,
         ):
             self.assertNotEqual(normalized_checkout, test_blob)
         else:
@@ -3659,6 +3739,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
             expected_implementation_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_implementation_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -3954,6 +4038,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_implementation_delta.update(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -4423,6 +4509,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_implementation_delta.update(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -4991,6 +5079,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_implementation_delta.update(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -5460,6 +5550,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_implementation_delta.update(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -7203,6 +7295,16 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS}
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {
+                    path: "A"
+                    for path in AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+                }
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -7748,6 +7850,16 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS}
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {
+                    path: "A"
+                    for path in AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+                }
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -8254,6 +8366,16 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_status.update(
                 {path: "A" for path in AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS}
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
+            expected_status.update(
+                {
+                    path: "A"
+                    for path in AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+                }
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
             expected_status.update(
@@ -8430,6 +8552,8 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_implementation_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_implementation_delta.update(AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS)
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_implementation_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -8720,6 +8844,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_descendant_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_descendant_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_descendant_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(descendant_delta, frozenset(expected_descendant_delta))
@@ -8727,9 +8855,15 @@ class ValidationReachabilityTests(unittest.TestCase):
             120
             if current_scope["aws_c0_phase"]
             == "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION"
+            else 126
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION"
             else 106
             if current_scope["aws_c0_phase"]
             == "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_AUTHORITY_ONLY"
+            else 112
+            if current_scope["aws_c0_phase"]
+            == "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY"
             else 114
             if current_scope["aws_c0_phase"]
             == "AWS_C0_MATERIAL_IDENTITY_RUNTIME_VALIDATION_CORRECTION_CLOSED_IMPLEMENTATION"
@@ -10019,6 +10153,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_post_integration_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -10057,6 +10195,12 @@ class ValidationReachabilityTests(unittest.TestCase):
             ),
             "AWS_C0_AUDIT_STATIC_PUBLICATION_HANDOFF_CORRECTION_CLOSED_IMPLEMENTATION": (
                 AWS_C0_AUDIT_STATIC_HANDOFF_CLOSED_DESCENDANT_PATHS
+            ),
+            "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_ONLY": (
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_ONLY_DESCENDANT_PATHS
+            ),
+            "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_CLOSED_IMPLEMENTATION": (
+                AWS_C0_REAL_EXECUTION_REGISTRY_CLOSED_DESCENDANT_PATHS
             ),
         }[current_scope["aws_c0_phase"]]
         self.assertEqual(descendant_delta, frozenset(expected_descendant_paths))
@@ -10563,6 +10707,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         if current_scope["aws_c0_phase"] in AWS_C0_AUDIT_STATIC_HANDOFF_PHASES:
             expected_post_integration_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
+            )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
             )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
@@ -11077,6 +11225,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_post_integration_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -11476,6 +11628,10 @@ class ValidationReachabilityTests(unittest.TestCase):
             expected_post_integration_delta.update(
                 AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_PATHS
             )
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
@@ -11704,7 +11860,7 @@ class ValidationReachabilityTests(unittest.TestCase):
         )
         self.assertEqual(
             tuple(reachability["new_phases_in_order"]),
-            AWS_C0_AUDIT_STATIC_HANDOFF_PHASES,
+            AWS_C0_AUDIT_STATIC_HANDOFF_ACCEPTED_PHASES,
         )
         self.assertTrue(
             reachability[
@@ -11858,6 +12014,10 @@ class ValidationReachabilityTests(unittest.TestCase):
         expected_post_integration_delta = set()
         if actual_head != AWS_C0_AUDIT_STATIC_HANDOFF_AUTHORITY_INTEGRATION:
             expected_post_integration_delta.add(STAGE_F_LOCAL_BINDING_REACHABILITY_PATH)
+        if current_scope["aws_c0_phase"] in AWS_C0_REAL_EXECUTION_REGISTRY_PHASES:
+            expected_post_integration_delta.update(
+                AWS_C0_REAL_EXECUTION_REGISTRY_AUTHORITY_PATHS
+            )
         if current_scope["aws_c0_phase"] in AWS_C0_IMPLEMENTATION_PHASES:
             expected_post_integration_delta.update(AWS_C0_IMPLEMENTATION_PATHS)
         self.assertEqual(
