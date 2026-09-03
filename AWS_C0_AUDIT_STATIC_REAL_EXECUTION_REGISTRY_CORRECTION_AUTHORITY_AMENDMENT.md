@@ -7,8 +7,8 @@ Authority identifier:
 `EBU-AWS-C0-AUDIT-STATIC-REAL-EXECUTION-REGISTRY-CORRECTION-AUTHORITY-v1`.
 
 The exact accepted base is commit
-`3b185d9f770e525df645a2c6d2eda678e28554ef`, tree
-`aa7edcfcba250d6954de8c9ff42151cd7fb77ff3`. This amendment adds exactly
+`8c4349c4ea3fad0a016984be103c78df42989bdf`, tree
+`c1c0fc7c68cb06014e37dede383ff20c3e283211`. This amendment modifies exactly
 the six mode-`100644` authority paths named by its implementation-path
 manifest. It predicts no future commit, tree, blob, S3 VersionId, receipt, or
 root bytes and authorizes no commit, merge, push, AWS call, Docker call,
@@ -24,6 +24,18 @@ disposition and code without running the declared constructor and real
 validator predicate. Its `352` count is the number of parent case coordinates,
 not the number of real validation axes. Its `104` count omits direct cases and
 required split axes. Neither number proves complete real execution.
+
+### Additive third authority repair
+
+This additive repair makes the carrier proof fail closed: finalizer-owned ListObjectVersions, exact-VersionId carrier Get, and exact-VersionId controller-journal Get captures, their complete typed preimages and membership receipts, must be the source of the carrier observation; a self-asserted carrier proof is not evidence. The fixed three-coordinate capture-channel aggregate inventory is controller journal, narrow fixed-key carrier, finalizer journal. The finalizer List, carrier Get/validation, and exact controller-journal Get/validation precede final-v4 construction and its terminal final-manifest Put; no later substantive Put is permitted. The carrier full key is the sealed attempt-prefixed fixed-key path throughout List discovery, Get request, membership, and aggregate coordinates. List discovery binds its authenticated response body SHA-256 and canonical parse identity, byte count, and SHA-256, with exactly one live version, zero deletes, and zero ambiguity. The complete RFC 8785 serialization of the decoded handoff must equal the carrier Get response byte count and SHA-256; the decoded handoff attempt identity, controller coordinates, embedded publication/readback receipt identities and hashes, and controller-local validation receipt identity and hash must equal the enclosing final aggregate controller fields; and the externally validated carrier identity and digest must equal the aggregate carrier identity and digest. The aggregate has exactly 24 fixed identity-and-receipt rows and typed ordered three-pair key-distinctness receipts. The handoff Put remains a finite recursion exception but is excluded from captured-operation budget multiplicities: controller delta is zero, finalizer delta is exactly three (List, carrier Get, retimed controller-journal Get), operation delta is +3, and the finite exception total remains five.
+
+The discovery proof retains one bounded nonsecret Base64 copy of the exact
+authenticated ListObjectVersions response body. Closure strictly decodes that
+copy, recomputes its byte count and SHA-256 against the captured response-body
+SHA-256, and reparses those bytes into the canonical one-live-version,
+zero-delete-marker, zero-ambiguity result. Each operation-membership receipt
+binds request and completion UTC; the controller-journal Get must complete no
+later than the terminal final-manifest Put request, not merely its response.
 
 This authority replaces the never-emitted AUDIT-category root with
 `aws_c0_audit_static_handoff_authority_audit/v4` and the never-emitted
@@ -331,15 +343,42 @@ live EC2 instance profile or closure Lambda execution role is recorded as a
 complete canonical capture envelope. The controller keeps a root-owned bounded
 hash-chained journal through the
 terminal Put response and publishes it once, conditionally without replacement,
-at the exact controller-journal key. The finalizer keeps a second bounded
+at the exact controller-journal key. After its terminal Put, the controller
+reads that journal back by the exact returned VersionId and validates it. It
+then conditionally writes exactly one fixed-key versioned
+`controller_journal_handoff_v1` object at the exact sealed-attempt key
+`evidence/controller-capture-journal-handoff.json`. Its closed canonical
+handoff contains attempt identity; controller journal bucket/key/exact
+VersionId/ETag/checksum/bytes/object SHA-256/content-chain SHA-256; typed
+embedded controller publication and readback receipt identity/hash/complete
+canonical preimage; controller local-validation receipt identity/hash; the
+frozen ten zero-science counters; and its own acyclic canonical
+identity/digest. These are not S3 receipt coordinates: no separately persisted
+receipt object or receipt Put/Get exists. The finalizer derives that fixed key
+only from the already-sealed attempt prefix, uses one bounded exact-key
+ListObjectVersions page requiring one live version, no delete marker, and no
+ambiguity, gets the handoff by its discovered exact VersionId, validates the
+embedded receipt preimages, then gets the controller journal by the exact
+VersionId carried in the handoff. Every finalizer discovery/Get is captured in
+the finalizer journal before seal.
+The finalizer keeps a second bounded
 hash-chained journal through the final-manifest publication Put response and
-publishes it once at the exact finalizer-journal key. The two journal Puts and
-their two exact-VersionId readbacks are the only operations excluded from
-recursive capture; they remain bound by exact key, VersionId, ETag, checksum,
-byte count, SHA-256, and object receipt. Controller and finalizer keys have
+publishes it once at the exact finalizer-journal key. The controller-journal
+Put, its exact-VersionId readback, the controller handoff Put, the
+finalizer-journal Put, and its exact-VersionId readback are the exactly five
+finite recursive-capture exceptions, in that causal order. The handoff Put is
+the sole newly authorized recursion exception: its fixed key, conditional Put
+obligation, canonical carrier identity, and digest are bound prospectively;
+its actual publication observation is bound later and externally by finalizer
+List/Get. It cannot embed its own post-Put receipt, VersionId, ETag, checksum,
+or object SHA-256 without a causal fixed point. The finalizer bounded List,
+carrier Get, and retimed controller-journal Get are captured. The final
+aggregate binds the captured carrier proof (bucket, key, VersionId, ETag,
+checksum, bytes, object SHA-256 and carrier identity/digest). Controller,
+carrier, and finalizer keys have
 literal distinct suffixes, are mechanically unequal, and the final aggregate
-executes exact role-specific coordinate equalities against both corresponding
-publication and readback preimages. Any fifth exception refuses.
+executes exact role-specific coordinate equalities against corresponding
+publication and readback preimages. Any sixth exception refuses.
 
 Envelope hashing is acyclic. The body hash covers exact RFC 8785 canonical body
 bytes with only the enumerated derived body/hash fields removed. Each chain
@@ -385,8 +424,10 @@ objects remain the only full-history carrier. This finite channel uses the
 already authorized controller/finalizer/CloudFormation paths and adds no
 fifteenth implementation path.
 
-The two journal objects are closed nonsemantic capture-channel auxiliaries.
-Only their two exact keys are excluded from semantic retrieval counts and they
+The two journal objects remain closed nonsemantic capture-channel auxiliaries;
+the fixed-key handoff is the sole narrow carrier and cannot be generalized into
+a third arbitrary auxiliary object.
+Only the two journal keys plus one fixed carrier key are excluded from semantic retrieval counts and they
 are validated separately by closure. They do not alter the frozen 21 pre-live
 objects, 12 semantic root categories, 63 sealed read-plan rows, 352 parent
 receipts, or 878 real-axis receipts; any other auxiliary key or count exclusion
@@ -622,12 +663,21 @@ in request and response; SigV4 and TLS identity/preimage hashes; and exact
 equality with the nested complete operation capture; source-role to controller
 owner; bucket equality across request, SigV4, and TLS; and exact key/version
 extraction from the canonical URI/query. Parallel identity or
-Base64 fields without those executed equalities do not pass. The
-controller and finalizer subsequently seal and publish their two capture
-journals. Only after the finalizer journal is published does closure read both
-exact versions, verify the complete capture sequence and projection aggregates,
+Base64 fields without those executed equalities do not pass. The controller
+subsequently seals, publishes, reads back, validates, and publishes the one
+fixed-key handoff; the finalizer captures its bounded discovery and
+authenticated exact-version reads before sealing and publishing its journal.
+Only after the finalizer journal is published does closure read its exact
+version, verify the complete capture sequence and projection aggregates,
 and return closure-response-v3. Retrieval-v4 and final-v4 bind the earlier
 capture obligation only; neither fabricates the later journal aggregate.
+
+The fixed-size closure artifact is a three-coordinate capture-channel
+aggregate (controller journal, fixed-key carrier, finalizer journal), never a
+three-channel aggregate.  The carrier is externally observed before finalizer
+seal by a finalizer ListObjectVersions discovery followed by an exact-version
+GetObject; the conditional carrier Put remains a recursive exception and is
+not counted as a captured fixed operation.
 
 ## 12. Future path and reachability scope
 

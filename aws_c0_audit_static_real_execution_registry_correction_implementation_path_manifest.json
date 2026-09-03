@@ -1,11 +1,11 @@
 {
   "accepted_base": {
-    "commit": "3b185d9f770e525df645a2c6d2eda678e28554ef",
-    "tree": "aa7edcfcba250d6954de8c9ff42151cd7fb77ff3"
+    "commit": "8c4349c4ea3fad0a016984be103c78df42989bdf",
+    "tree": "c1c0fc7c68cb06014e37dede383ff20c3e283211"
   },
   "authority_id": "EBU-AWS-C0-AUDIT-STATIC-REAL-EXECUTION-REGISTRY-CORRECTION-AUTHORITY-v1",
   "status": "PROSPECTIVE_AUTHORITY_ONLY",
-  "new_authority_operation": "ADD",
+  "new_authority_operation": "MODIFY",
   "new_authority_mode": "100644",
   "new_authority_path_count": 6,
   "new_authority_paths_in_order": [
@@ -16,11 +16,12 @@
     "aws_c0_audit_static_real_execution_registry_correction_predecessor_manifest.json",
     "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json"
   ],
-  "authority_path_count_before_integration": 30,
+  "authority_path_count_before_integration": 36,
   "authority_path_count_after_integration": 36,
   "path_arithmetic": {
-    "base_global_unique_paths": 156,
-    "authority_paths_added": 6,
+    "base_global_unique_paths": 162,
+    "authority_paths_added": 0,
+    "authority_paths_modified": 6,
     "global_authority_only": 162,
     "reachability_existing_paths_modified": 1,
     "reachability_unique_paths_added": 0,
@@ -82,7 +83,13 @@
     "corrected_asph_direct_cases": 9,
     "corrected_asph_execution_axes": 294,
     "member_execution_coordinates": 1108,
-    "member_execution_coordinates_by_group": [66, 99, 222, 197, 524],
+    "member_execution_coordinates_by_group": [
+      66,
+      99,
+      222,
+      197,
+      524
+    ],
     "member_multiplicity_distribution": {
       "single_member_axis_count": 763,
       "three_member_axis_count": 115,
@@ -104,8 +111,8 @@
     "STATIC_V4_BINDS_SOURCE_AST_CAPABILITY_CAPTURE_SCHEMAS_AND_OBLIGATION_WITHOUT_FUTURE_RUNTIME_BYTES",
     "CONTROLLER_SEMANTIC21_ARGV_ONLY_PROVENANCE_WITH_EXACTLY_THREE_DECLARED_EXACT_VERSION_GETS_ZERO_ALTERNATE_SEMANTIC_NETWORK_AND_EXACT_THREE_CALL_NONSEMANTIC_IMDSV2_BOOTSTRAP",
     "THREE_DISCRIMINATED_AUTHORIZATION_CONTEXTS_NO_DOT_BUCKET_SIGV4_TLS_EXPIRY_AND_SCOPED_APPLICATION_OWNED_MUTABLE_BUFFER_WIPE",
-    "TWO_BOUNDED_VERSIONED_S3_CAPTURE_JOURNALS_WITH_EXACTLY_FOUR_FINITE_RECURSION_EXCEPTIONS_AND_FIXED_SIZE_NON_S3_CLOSURE_AGGREGATE",
-    "EXACT_TWO_NON_SEMANTIC_JOURNAL_AUXILIARIES_EXCLUDED_ONLY_FROM_SEMANTIC_RETRIEVAL_COUNTS_WITH_21_12_63_352_878_1108_UNCHANGED",
+    "TWO_BOUNDED_VERSIONED_S3_CAPTURE_JOURNALS_PLUS_ONE_FIXED_KEY_CONTROLLER_JOURNAL_HANDOFF_V1_WITH_EXACTLY_FIVE_FINITE_RECURSION_EXCEPTIONS_AND_CLOSED_FINALIZER_DERIVED_LIST_EXACT_VERSION_GET_EXTERNAL_OBSERVATION_PROOF_NO_IN_OBJECT_POST_PUT_RECEIPT_AND_FIXED_SIZE_NON_S3_CAPTURE_CHANNEL_CLOSURE_AGGREGATE",
+    "EXACT_TWO_NON_SEMANTIC_JOURNAL_AUXILIARIES_PLUS_ONE_NARROW_CARRIER_EXCLUDED_ONLY_FROM_SEMANTIC_RETRIEVAL_COUNTS_WITH_21_12_63_352_878_1108_UNCHANGED",
     "EXACT_TEN_OUTER_AND_EIGHT_ANCILLARY_EXECUTABLE_ACCEPTED_PROJECTION_RECEIPTS_WITH_LITERAL_PUBLICATION_UPGRADE_V4",
     "STAGE_E_ACCEPTED_STAGE_F_FROZEN_ZERO_SCIENCE"
   ],
@@ -158,7 +165,8 @@
     ],
     "capture_channel_within_existing_fourteen_paths": {
       "controller_local_journal_and_single_publication": "aws/c0/controller/ebu_c0_controller.py",
-      "finalizer_journal_exact_readbacks_and_fixed_size_closure": "aws/c0/finalizer/finalizer.py",
+      "controller_local_journal_handoff_after_terminal_put": "aws/c0/controller/ebu_c0_controller.py",
+      "finalizer_journal_exact_readbacks_handoff_discovery_and_fixed_size_closure": "aws/c0/finalizer/finalizer.py",
       "no_dot_bucket_imdsv2_required_and_s3_allowance": "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
       "static_capability_and_projection_receipts": [
         "scripts/validate_aws_c0_static.py",
