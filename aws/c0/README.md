@@ -34,6 +34,47 @@ No ambient mode override exists. There is no automatic Retry or attempt replay.
 Stage E remains `ACCEPTED_FINISHED_UNCHANGED`. Stage F remains frozen and needs
 a separate AWS/Linux scientific binding packet and a separate authorization.
 
+## Phased AWS/Stage F execution plan
+
+AWS-C0 is the reusable platform foundation, not a monolithic first scientific
+run. Its foundation boundary is limited to journal lifecycle, deterministic
+restart/reproducibility coordinates, exact-version storage, cost and security
+controls, and a minimal common receipt envelope. The planned common envelope
+contains only `schema`, `capsule_id`, `attempt_identity`, `sequence`,
+`event_type`, `payload_identity`, `previous_receipt_sha256`, and
+`receipt_sha256`; a capsule owns its separate typed payload.
+
+Every later study is an independently registered capsule. Its registration
+must seal its own inputs, outputs, controls, evidence payloads, budget, and
+independent review before separate execution authorization. Adding a capsule
+must not change the foundation envelope or make another capsule's evidence a
+prerequisite.
+
+The first executable capsule is `platform-smoke-known-case-v1`. It is bounded
+to the existing inert success/failure/timeout known cases, zero scientific
+imports and counters, a sealed duration/request/storage/currency ceiling, and
+foundation lifecycle and exact-version receipt evidence. Its only conclusion
+is platform operability for that sealed case. It must not claim a scientific
+result and must not emit every future study's nested evidence payload.
+
+The reusable local work is exact: `75985d2` supplies carrier reachability,
+`6f79b58` binds the controller journal carrier, `d1d36fb` supplies the two
+independently accepted lifecycle-ordering fixes, and `8e83a73` carries the
+journal VersionId plus typed publication/readback receipt references. The
+fixed 22-row handoff-table enforcement rejected in review remains a required
+local foundation correction before any live authorization; none of these
+checkpoints authorizes AWS use.
+
+The complete 100-field requirement at
+`aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json#/$defs/final_s3_capture_aggregate/required`,
+including every referenced nested authenticated-operation capture, carrier
+external proof, fixed-size binding, terminal binding, arithmetic/time/hash,
+journal-equality, and final-manifest-observation payload, is deferred in full.
+No part of that aggregate is a launch gate or conformance claim for the first
+smoke capsule. Later study capsules may adopt only their separately reviewed
+study-specific evidence contract; the accepted 100-field authority is neither
+edited nor weakened by this planning boundary.
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
