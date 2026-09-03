@@ -86,8 +86,74 @@ mandatory and no AWS launch is authorized.
   single plan correction made the deferral conditional on separate authority.
 - G3 `COMPLETE`: the first SUCCESS known-case has a local-only capsule binding;
   the finalizer also enforces the fixed 22-row journal-handoff table.
-- G4 `COMPLETE_ON_COMMIT`: candidate changes and focused negative controls are
-  committed together; G5-G7 remain pending review, integration, and packet work.
+- G4 `COMPLETE`: candidate `af95ab5` and focused correction `6f37375` are
+  committed without rewriting earlier checkpoints.
+- G5 `COMPLETE`: one Sol High review rejected an incomplete artifact list; its
+  one permitted re-review approved `6f37375` after the focused correction.
+- G6 `COMPLETE`: reviewed candidate merged locally at `7cee7d3`; three focused
+  tests, all 66 AWS-C0 tests, compilation, `audit-v4`, and `static-v4` passed.
+- G7 `COMPLETE_LOCAL_ONLY`: the launch packet below is prepared; execution is
+  stopped at the separate-authority and live-AWS authorization boundary.
+
+### First capsule AWS launch packet — authorization required
+
+Status is `LOCAL_PACKET_COMPLETE_LIVE_EXECUTION_FORBIDDEN`. The implementation
+coordinate is merge `7cee7d3`; the capsule is `platform-smoke-known-case-v1` and
+its exact first case is `SUCCESS_KNOWN_CASE` (`-SUCCESS`). It runs the inert,
+networkless, read-only synthetic worker to two checkpoints, emits no scientific
+output or conclusion, performs no retry, and must finish with one verified stop.
+
+The closed runtime input set is exactly launch-request-v4, live-packet-v4,
+live-authorization-v4, their exact S3 key/VersionId/SHA-256/byte/checksum
+receipts, the sealed bucket and attempt identities, and the Standard execution
+ARN. Fresh absolute deadlines and every AWS coordinate are deliberately
+unfilled: the committed fixture contains non-live placeholders and past sample
+timestamps. Preparation must return those values for review, and a separate
+accepted capsule authority plus explicit live authorization must bind them
+before execution. An unversioned, latest, inferred, or placeholder input stops.
+
+The expected artifact classes are exactly: attempt claim; start receipt;
+heartbeat; safe-close receipt; checkpoint; synthetic manifest; terminal
+receipt; controller capture journal; controller journal handoff; stopped
+observation; resource-use closure; finalizer receipt; finalizer capture journal;
+cost closure; retrieval verification; and final manifest. Every S3 readback is
+by its returned VersionId.
+
+The committed candidate ceiling is USD 5,000 minor units (USD 50.00), with the
+22 integer resource limits and accounting window bound by the launch request's
+cost envelope. Before authorization, the packet must replace its sample window
+with a fresh window that dominates the attempt and retained-resource horizon;
+it may lower but never raise the ceiling or any resource limit without review.
+
+Termination is fail-closed on any identity, checksum, VersionId, receipt,
+journal, heartbeat-staleness, timeout, cost, or stopped-state mismatch. Sealed
+phase bounds are boot 300 s, SSM-online 300 s, SSM delivery 120 s, heartbeat
+staleness 120 s, worker 900 s, finalizer 300 s, instance stop 300 s, and overall
+3,600 s; the Standard workflow bound is 43,200 s. Cleanup is the existing
+`STEP_FUNCTIONS_SINGLE_STOP_THEN_FINALIZER_VERIFY` path: never replay the
+attempt, request at most one non-reentrant stop, verify `stopped`, preserve
+versioned evidence for the sealed horizon, and treat incomplete cleanup as a
+failed capsule rather than a scientific result.
+
+Run these local verification commands from the integration worktree before
+presenting any live authorization packet:
+
+```sh
+python3 -m py_compile aws/c0/controller/ebu_c0_controller.py aws/c0/finalizer/finalizer.py scripts/validate_aws_c0_static.py tests/aws/test_aws_c0_unattended_synthetic.py
+python3 -m unittest tests.aws.test_aws_c0_unattended_synthetic
+python3 scripts/validate_aws_c0_static.py --mode audit-v4
+python3 scripts/validate_aws_c0_static.py --mode static-v4
+git status --short --branch
+```
+
+After a separately authorized execution, verify only the sealed execution and
+exact returned object versions; do not run these templates before authorization:
+
+```sh
+aws stepfunctions describe-execution --execution-arn "$AWS_C0_SEALED_EXECUTION_ARN"
+aws s3api get-object --bucket "$AWS_C0_SEALED_BUCKET" --key "$AWS_C0_FINAL_MANIFEST_KEY" --version-id "$AWS_C0_FINAL_MANIFEST_VERSION_ID" --checksum-mode ENABLED /private/tmp/aws-c0-final-manifest.json
+aws ec2 describe-instances --instance-ids "$AWS_C0_SEALED_INSTANCE_ID"
+```
 
 ## Frozen arithmetic
 
