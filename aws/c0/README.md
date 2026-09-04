@@ -346,6 +346,66 @@ remains unchanged.
 
 `AWS_C0_SSO_BOOTSTRAP_IDENTITY_CORRECTION_V1_CANDIDATE_COMPLETE`
 
+## Prospective SSO Gate 0 source-identity capability correction
+
+Status: **PROSPECTIVE LOCAL AUTHORITY AND EXACT MATERIAL SCHEMA; NON-OPERATIVE
+UNTIL ONE SOL HIGH APPROVAL AND NON-FAST-FORWARD INTEGRATION**. Authority ID:
+`EBU-AWS-C0-SSO-SOURCE-IDENTITY-CAPABILITY-CORRECTION-v1`. Its exact
+predecessor is commit `835fd1077c1fa1459755bda1355ae8fa56a8c7a8`, tree
+`82b97634ddbefdfb68adb3800196ad50679d104e`.
+
+The first SSO Gate 0 packet
+`b76fa34cb3ca58c7fbf72e284d455cd4ab798a19cf39be832005afd458ecee08`
+is exhausted and must never be reused. Its sole `sts:AssumeRole` request
+failed before credentials were issued because `sts:SetSourceIdentity` was
+denied. Closure
+`5250c649ca14685f46f627504c7014793b479e4b5c43d4bda8246ad8ebc27d4b`
+records the failure, exact inverse rollback, final absent role, zero
+preparation actions, and zero scientific actions.
+
+This correction supersedes only the Gate 0 STS source-identity capability
+binding. The exact material is
+`gate0/sso-operator-bootstrap-v2.template.json`, validated by
+`gate0/sso-operator-bootstrap-v2.schema.json`. For the exact sealed
+`ebu-admin` SSO role principal, the role trust has separate allow statements
+for `sts:AssumeRole` and `sts:SetSourceIdentity`. The AssumeRole statement
+requires the exact preparation session name and source identity `konrad`; the
+SetSourceIdentity statement requires exactly source identity `konrad` and has
+no session-name condition. No other principal, role, session, or source
+identity is accepted.
+
+The same split is mandatory for the later exact-role self-assumption into the
+live session. The operator role's inline base policy authorizes both
+`sts:AssumeRole` and `sts:SetSourceIdentity` only on
+`arn:aws:iam::623609441658:role/EBU-C0-Operator-492a4f1`, and the preparation
+session policy carries both actions through its closed NotAction ceiling.
+`sts:SetSourceIdentity` is an authorization action evaluated as part of the
+single AssumeRole request; a separate SetSourceIdentity API request is not
+permitted and does not increase the one-request or one-attempt maximum.
+
+Every earlier constraint remains unchanged: exact account, caller, profile,
+Region, role and session names; fresh IAM Identity Center MFA; source identity
+`konrad`; 3,600-second maximum; one role; one attempt; one inline role policy;
+no permissions boundary or managed policy; three-call inverse rollback; no
+access keys; no wildcard principal or action; and no preparation, live,
+scientific, push, or publication authority.
+
+A fresh packet must bind the complete exact v2 material, a new deadline, the
+same canonical SSO caller preimage, and the exact statement below. UTF-8 NFC,
+ASCII field order, and no final line feed remain mandatory:
+
+```text
+AUTHORIZE_AWS_C0_SSO_OPERATOR_BOOTSTRAP_V2 packet_sha256={packet_sha256} account_identity_sha256={account_identity_sha256} sso_caller_identity_sha256=a0d1085809ca4efde1a0cfdfbbbeffb2b0d207cb4e17acf3155c40b02689d48a operator_role_identity_sha256={operator_role_identity_sha256} material_sha256={material_sha256} deadline_utc={deadline_utc} allow=CREATE_OR_VERIFY_ONE_CONSTRAINED_OPERATOR_ROLE,ASSUME_ONE_PREPARATION_SESSION_WITH_EXACT_SOURCE_IDENTITY deny=C0_PREPARATION_ACTIONS,C0_LIVE_ACTIONS,OTHER_ROLE,OTHER_SESSION,ROOT_CREDENTIALS,SCIENTIFIC_EXECUTION
+```
+
+Literal placeholders are not authorization. This local correction and a
+fresh read-only packet permit no AWS mutation. Any second bootstrap attempt
+requires the exact newly rendered statement and must stop on a coordinate,
+caller, deadline, policy, capability, MFA, source-identity, request-count, or
+role-state mismatch.
+
+`AWS_C0_SSO_SOURCE_IDENTITY_CAPABILITY_CORRECTION_V1_CANDIDATE_COMPLETE`
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
