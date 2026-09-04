@@ -1,0 +1,393 @@
+{
+  "authority_id": "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1",
+  "validation_version": 1,
+  "accepted_base_commit": "22d0aff12b5f9c091b84ebf6918f1180c142bf50",
+  "accepted_base_tree": "8c89835043c870b45f01961cdf7b6c229e065549",
+  "validation_scope": "OFFLINE_LOCAL_TWELVE_PATH_CORRECTION_ONLY",
+  "permitted_operations": [
+    "READ_ACCEPTED_REPOSITORY_BYTES",
+    "READ_SEALED_V5_AND_V6_EVIDENCE_BYTES",
+    "STRICT_PARSE_JSON",
+    "VALIDATE_DRAFT_2020_12_SCHEMA",
+    "RECOMPUTE_LOCAL_SHA256_AND_BYTE_COUNTS",
+    "INSPECT_GIT_OBJECTS_AND_STATUS",
+    "RUN_CREDENTIAL_FREE_LOCAL_VALIDATION"
+  ],
+  "forbidden_operations": [
+    "NETWORK",
+    "AWS",
+    "CREDENTIAL_RESOLUTION_OR_SESSION_USE",
+    "CLOUDFORMATION",
+    "SCIENTIFIC_OR_MODEL_EXECUTION",
+    "COMMIT",
+    "PUSH",
+    "MERGE",
+    "PUBLISH",
+    "DEPLOY",
+    "RELEASE"
+  ],
+  "canonical_json_requirements": {
+    "duplicate_keys": "REFUSE",
+    "encoding": "UTF-8",
+    "numbers": "INTEGER_ONLY_FINITE",
+    "recursive_key_order": "LEXICOGRAPHIC_UNICODE_CODE_POINT_ORDER",
+    "separators": "COMPACT_COMMA_COLON",
+    "trailing_data": "REFUSE",
+    "unicode_normalization": "NFC"
+  },
+  "required_lineage_in_order": [
+    {
+      "kind": "aws_c0_operator_bootstrap_packet/v4",
+      "sha256": "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"
+    },
+    {
+      "kind": "aws_c0_operator_bootstrap_authorization/v5",
+      "sha256": "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"
+    },
+    {
+      "kind": "aws_c0_operator_bootstrap_closure/v5",
+      "sha256": "0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f"
+    },
+    {
+      "kind": "aws_c0_operator_session_renewal_packet/v1",
+      "sha256": "7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7"
+    },
+    {
+      "kind": "aws_c0_operator_session_renewal_authorization/v1",
+      "sha256": "7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0"
+    },
+    {
+      "kind": "aws_c0_operator_session_renewal_closure/v1",
+      "sha256": "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b"
+    }
+  ],
+  "sealed_v6_closure_proof": {
+    "complete_byte_sha256": "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b",
+    "credentials_issued": true,
+    "operator_session_renewal_disposition": "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS",
+    "predecessor_closure_sha256": "1391085e39d1809e67ed4b3139634764d87d5824c28e7c517ff940a2ec7b428f",
+    "schema": "aws_c0_operator_session_renewal_closure/v1"
+  },
+  "required_pre_live_arithmetic": {
+    "object_count": 24,
+    "predecessor_receipt_count": 23,
+    "lineage_candidate_count": 6,
+    "implementation_artifact_count": 8
+  },
+  "required_change_scope": {
+    "added_path_count": 6,
+    "modified_path_count": 6,
+    "total_path_count": 12,
+    "deletion_count": 0,
+    "rename_count": 0
+  },
+  "required_version_upgrades": [
+    {
+      "from": "aws_c0_preparation_packet/v3",
+      "to": "aws_c0_preparation_packet/v4"
+    },
+    {
+      "from": "aws_c0_preparation_authorization/v2",
+      "to": "aws_c0_preparation_authorization/v3"
+    },
+    {
+      "from": "aws_c0_launch_request/v4",
+      "to": "aws_c0_launch_request/v5"
+    },
+    {
+      "from": "aws_c0_preparation_closure/v3",
+      "to": "aws_c0_preparation_closure/v4"
+    },
+    {
+      "from": "aws_c0_live_packet/v4",
+      "to": "aws_c0_live_packet/v5"
+    }
+  ],
+  "required_transitive_version_upgrades": [
+    {
+      "from": "aws_c0_live_authorization/v4",
+      "to": "aws_c0_live_authorization/v5"
+    },
+    {
+      "from": "aws_c0_platform_smoke_known_case_local_binding/v1",
+      "to": "aws_c0_platform_smoke_known_case_local_binding/v2"
+    },
+    {
+      "from": "aws_c0_ssm_command_request/v1",
+      "to": "aws_c0_ssm_command_request/v2"
+    },
+    {
+      "from": "aws_ssm_command/v1",
+      "to": "aws_ssm_command/v2"
+    },
+    {
+      "from": "aws_c0_source_sidecar/v3",
+      "to": "aws_c0_source_sidecar/v4"
+    },
+    {
+      "from": "aws_c0_runtime_start_attestation_bundle/v2",
+      "to": "aws_c0_runtime_start_attestation_bundle/v3"
+    },
+    {
+      "from": "aws_c0_attempt_claim/v1",
+      "to": "aws_c0_attempt_claim/v2"
+    },
+    {
+      "from": "aws_c0_start_receipt/v5",
+      "to": "aws_c0_start_receipt/v6"
+    },
+    {
+      "from": "aws_c0_safe_close_receipt/v1",
+      "to": "aws_c0_safe_close_receipt/v4"
+    },
+    {
+      "from": "aws_c0_resource_use_closure/v1",
+      "to": "aws_c0_resource_use_closure/v2"
+    },
+    {
+      "from": "aws_c0_finalizer_receipt/v2",
+      "to": "aws_c0_finalizer_receipt/v3"
+    },
+    {
+      "from": "aws_c0_cost_closure/v2",
+      "to": "aws_c0_cost_closure/v3"
+    },
+    {
+      "from": "aws_c0_retrieval_verification/v4",
+      "to": "aws_c0_retrieval_verification/v5"
+    },
+    {
+      "from": "aws_c0_final_manifest/v4",
+      "to": "aws_c0_final_manifest/v5"
+    },
+    {
+      "from": "aws_c0_final_manifest_publication_observation/v2",
+      "to": "aws_c0_final_manifest_publication_observation/v3"
+    },
+    {
+      "from": "aws_c0_final_s3_capture_aggregate/v1",
+      "to": "aws_c0_final_s3_capture_aggregate/v2"
+    },
+    {
+      "from": "aws_c0_closure_response/v3",
+      "to": "aws_c0_closure_response/v4"
+    },
+    {
+      "from": "aws_c0_publication_upgrade_binding/v4",
+      "to": "aws_c0_publication_upgrade_binding/v5"
+    }
+  ],
+  "additive_runtime_negative_lane": {
+    "historical_case_count": 352,
+    "correction_case_count": 6,
+    "total_case_count": 358,
+    "registry_schema": "aws_c0_static_negative_case_execution/v5",
+    "cases_in_order": [
+      {
+        "id": "C0-G1-LINEAGE-N01",
+        "theme": "stale aws_c0_launch_request/v4 refused"
+      },
+      {
+        "id": "C0-G1-LINEAGE-N02",
+        "theme": "stale aws_c0_live_packet/v4 refused"
+      },
+      {
+        "id": "C0-G1-LINEAGE-N03",
+        "theme": "stale aws_c0_live_authorization/v4 refused"
+      },
+      {
+        "id": "C0-G1-LINEAGE-N04",
+        "theme": "pre_live_object_count 21 refused"
+      },
+      {
+        "id": "C0-G1-LINEAGE-N05",
+        "theme": "pre_live_predecessor_object_receipts count 20 refused"
+      },
+      {
+        "id": "C0-G1-LINEAGE-N06",
+        "theme": "stale bootstrap-only or absent V6 renewal lineage refused"
+      }
+    ],
+    "historical_registry_arithmetic": "PRESERVED_UNCHANGED"
+  },
+  "mandatory_validation_algorithms": {
+    "authority_path_scope": "REQUIRE_EXACTLY_SIX_ADDITIVE_AUTHORITY_PACKAGE_PATHS_PLUS_SIX_MODIFIED_IMPLEMENTATION_PATHS_WITH_NO_OTHER_ADDITION_MODIFICATION_DELETION_OR_RENAME",
+    "candidate_bytes": "BASE64_DECODE_STRICT_PARSE_CANONICALIZE_AND_REQUIRE_COMPLETE_BYTE_SHA256_EQUALS_IDENTITY_SHA256_AND_VALUE",
+    "candidate_kind": "REQUIRE_DECODED_RECORD_SCHEMA_EQUALS_EXACT_POSITIONAL_IDENTITY_KIND_WITH_NO_RELABELING",
+    "candidate_target": "REQUIRE_TARGET_BYTE_SHA256_CHECKSUM_AND_CONTENT_ADDRESSED_KEY_EQUAL_DECODED_BYTES_AND_FORBID_VERSION_ID_OR_PUT_RECEIPT",
+    "failed_v1": "REQUIRE_FAILURE_DISPOSITION_FAILURE_CODE_AND_NULL_PREPARATION_OPERATOR_IDENTITY_AND_REFUSE_AS_GATE1_LINEAGE",
+    "historical_preservation": "RECOMPUTE_ACCEPTED_BASE_BLOB_SHA256_BYTE_MODE_ROWS_AND_REFUSE_ANY_SCHEMA_REWRITE",
+    "lineage": "REQUIRE_EXACT_SIX_KIND_SHA256_ORDER_WITH_V5_PASS_AND_SEALED_V6_CREDENTIAL_ISSUANCE",
+    "pre_live_arithmetic": "RECOMPUTE_EIGHT_PLUS_THREE_PLUS_THREE_PLUS_TWO_PLUS_THREE_PLUS_ONE_PLUS_ONE_PLUS_THREE_EQUALS_24_AND_REQUIRE_23_PREDECESSORS",
+    "sealed_v6": "HASH_COMPLETE_SEALED_CLOSURE_BYTES_AS_C9A8_AND_REQUIRE_ITS_PREDECESSOR_IDENTITY_EQUALS_139108",
+    "versioning": "REQUIRE_FIVE_DIRECT_VERSION_UPGRADES_PLUS_EIGHTEEN_EXACT_DOWNSTREAM_VERSION_UPGRADES_AND_VERSION_BUMP_EVERY_LATER_SCHEMA_THAT_CONSTRAINS_AN_UPGRADED_KIND",
+    "negative_registry": "REQUIRE_EXACT_ADDITIVE_C0_G1_LINEAGE_N01_THROUGH_N06_ORDER_SCHEMA_V5_AND_352_PLUS_6_EQUALS_358_WITH_HISTORICAL_ARITHMETIC_UNCHANGED",
+    "zero_science": "REQUIRE_ALL_TEN_SCIENCE_COUNTERS_ZERO_AND NO_PROJECT_RUNNER_FRAMEWORK_HARNESS_MODEL_OR_SIMULATION_REACHABILITY"
+  },
+  "positive_cases": [
+    {
+      "id": "C0-G1BL-P01",
+      "theme": "exact accepted base commit and tree"
+    },
+    {
+      "id": "C0-G1BL-P02",
+      "theme": "exact six additive authority package paths and no attributed seventh path"
+    },
+    {
+      "id": "C0-G1BL-P03",
+      "theme": "failed v1 closure preserved as failure evidence"
+    },
+    {
+      "id": "C0-G1BL-P04",
+      "theme": "exact successful V5 packet authorization and PASS closure complete-byte identities"
+    },
+    {
+      "id": "C0-G1BL-P05",
+      "theme": "exact V6 renewal packet authorization and independently approved sealed closure identities"
+    },
+    {
+      "id": "C0-G1BL-P06",
+      "theme": "sealed V6 closure binds predecessor closure 139108 while its own identity is c9a8"
+    },
+    {
+      "id": "C0-G1BL-P07",
+      "theme": "six canonical candidate bytes kinds identities and prospective targets close"
+    },
+    {
+      "id": "C0-G1BL-P08",
+      "theme": "exact 24 object kind sequence and 23 predecessor receipts"
+    },
+    {
+      "id": "C0-G1BL-P09",
+      "theme": "exact five direct version upgrades and transitive version rule"
+    },
+    {
+      "id": "C0-G1BL-P10",
+      "theme": "authority directly permits exact six additions and six modifications for local implementation and validation"
+    },
+    {
+      "id": "C0-G1BL-P11",
+      "theme": "exact six implementation paths are modified and CloudFormation remains excluded"
+    },
+    {
+      "id": "C0-G1BL-P12",
+      "theme": "zero AWS credential session scientific commit push publish deploy and release actions"
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "C0-G1BL-N01",
+      "theme": "failed v1 closure substituted as successful Gate 1 lineage"
+    },
+    {
+      "id": "C0-G1BL-N02",
+      "theme": "V5 or V6 record relabeled to an earlier schema kind"
+    },
+    {
+      "id": "C0-G1BL-N03",
+      "theme": "lineage record omitted duplicated reordered or unknown"
+    },
+    {
+      "id": "C0-G1BL-N04",
+      "theme": "candidate identity sha256 value or decoded complete-byte digest mismatch"
+    },
+    {
+      "id": "C0-G1BL-N05",
+      "theme": "candidate decoded schema differs from positional identity kind"
+    },
+    {
+      "id": "C0-G1BL-N06",
+      "theme": "candidate contains or predicts VersionId or PutObject receipt"
+    },
+    {
+      "id": "C0-G1BL-N07",
+      "theme": "unsealed V6 predecessor closure 139108 used as canonical candidate identity"
+    },
+    {
+      "id": "C0-G1BL-N08",
+      "theme": "sealed V6 closure c9a8 lacks exact 139108 predecessor binding or credential issuance"
+    },
+    {
+      "id": "C0-G1BL-N09",
+      "theme": "21 object or 20 predecessor compatibility arithmetic"
+    },
+    {
+      "id": "C0-G1BL-N10",
+      "theme": "hidden lineage capsule or uncounted object"
+    },
+    {
+      "id": "C0-G1BL-N11",
+      "theme": "preparation packet v3 reused for six-lineage meaning"
+    },
+    {
+      "id": "C0-G1BL-N12",
+      "theme": "preparation authorization v2 launch v4 closure v3 or live packet v4 reused for upgraded meaning"
+    },
+    {
+      "id": "C0-G1BL-N13",
+      "theme": "later constraining schema omits required transitive version bump"
+    },
+    {
+      "id": "C0-G1BL-N14",
+      "theme": "historical authority schema packet authorization closure or failure evidence bytes modified"
+    },
+    {
+      "id": "C0-G1BL-N15",
+      "theme": "duplicate key trailing data final line feed non-NFC float nonfinite or unsorted control JSON"
+    },
+    {
+      "id": "C0-G1BL-N16",
+      "theme": "unknown seventh authority-package path attributed to bounded implementation"
+    },
+    {
+      "id": "C0-G1BL-N17",
+      "theme": "unlisted implementation path modified or one of the exact six modifications omitted"
+    },
+    {
+      "id": "C0-G1BL-N18",
+      "theme": "CloudFormation self-reference or unrelated infrastructure modification introduced"
+    },
+    {
+      "id": "C0-G1BL-N19",
+      "theme": "AWS credential session network scientific or model execution attempted"
+    },
+    {
+      "id": "C0-G1BL-N20",
+      "theme": "commit push merge publish deploy or release attempted"
+    }
+  ],
+  "required_preparation_authorization_statement": {
+    "statement_version": "AUTHORIZE_AWS_C0_PREPARATION_V3",
+    "preparation_packet_schema": "aws_c0_preparation_packet/v4",
+    "preparation_authorization_schema": "aws_c0_preparation_authorization/v3",
+    "required_literal_bindings": [
+      "region=us-east-1",
+      "instance_id=i-048bac00bdb540a4e",
+      "pre_live_object_count=24",
+      "allow=RECHECK_READ_ONLY_PREFLIGHT,APPLY_EXACT_IAM_REMEDIATION,STAGE_EXACT_PRE_LIVE_OBJECTS,BOOTSTRAP_EXACT_STOPPED_INSTANCE,CREATE_ONE_UNEXECUTED_CHANGE_SET,FINALIZE_EXACT_LIVE_PACKET",
+      "deny=LIVE_EXECUTION,REPLAY,DELETE,TERMINATE,SCIENTIFIC_EXECUTION"
+    ],
+    "required_placeholders_in_order": [
+      "preparation_packet_sha256",
+      "implementation_commit",
+      "implementation_tree",
+      "account_identity_sha256",
+      "preparation_session_assumer_identity_sha256",
+      "operator_role_identity_sha256",
+      "preparation_session_policy_identity_sha256",
+      "preparation_policy_ceiling_identity_sha256",
+      "preparation_policy_subset_proof_identity_sha256",
+      "preparation_pass_role_scope_proof_identity_sha256",
+      "preparation_session_max_duration_seconds",
+      "preparation_session_expires_utc",
+      "artifact_bucket_identity_sha256",
+      "accounting_end_utc",
+      "cost_ceiling_minor_units"
+    ]
+  },
+  "positive_case_count": 12,
+  "negative_case_count": 20,
+  "total_case_count": 32,
+  "required_disposition": "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_LOCAL_PASS",
+  "completion_marker": "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_VALIDATION_CONTRACT_COMPLETE"
+}

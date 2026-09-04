@@ -1,0 +1,563 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ebu.invalid/schema/aws-c0-gate1-bootstrap-lineage-correction-v1.json",
+  "title": "AWS-C0 Gate 1 bootstrap-lineage correction evidence",
+  "type": "object",
+  "required": [
+    "schema",
+    "authority_id",
+    "record_class",
+    "accepted_predecessor_commit",
+    "accepted_predecessor_tree",
+    "added_paths",
+    "modified_paths",
+    "lineage_candidates",
+    "planned_pre_live_object_count",
+    "planned_pre_live_predecessor_count",
+    "planned_pre_live_record_kinds",
+    "version_upgrades",
+    "transitive_version_upgrades",
+    "negative_case_registry",
+    "historical_records_modified",
+    "aws_actions_executed",
+    "credential_or_session_use",
+    "scientific_execution_authorized",
+    "zero_science_counters",
+    "validation_disposition"
+  ],
+  "properties": {
+    "schema": {
+      "const": "aws_c0_gate1_bootstrap_lineage_correction_evidence/v1"
+    },
+    "authority_id": {
+      "const": "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1"
+    },
+    "record_class": {
+      "const": "NON_SCIENTIFIC_LOCAL_CORRECTION_EVIDENCE"
+    },
+    "accepted_predecessor_commit": {
+      "const": "22d0aff12b5f9c091b84ebf6918f1180c142bf50"
+    },
+    "accepted_predecessor_tree": {
+      "const": "8c89835043c870b45f01961cdf7b6c229e065549"
+    },
+    "added_paths": {
+      "$ref": "#/$defs/exact_added_paths"
+    },
+    "modified_paths": {
+      "$ref": "#/$defs/exact_modified_paths"
+    },
+    "lineage_candidates": {
+      "$ref": "#/$defs/exact_lineage_candidates"
+    },
+    "planned_pre_live_object_count": {
+      "const": 24
+    },
+    "planned_pre_live_predecessor_count": {
+      "const": 23
+    },
+    "planned_pre_live_record_kinds": {
+      "$ref": "#/$defs/exact_pre_live_kinds"
+    },
+    "version_upgrades": {
+      "$ref": "#/$defs/exact_version_upgrades"
+    },
+    "transitive_version_upgrades": {
+      "$ref": "#/$defs/exact_transitive_version_upgrades"
+    },
+    "negative_case_registry": {
+      "$ref": "#/$defs/exact_negative_case_registry"
+    },
+    "historical_records_modified": {
+      "const": false
+    },
+    "aws_actions_executed": {
+      "const": 0
+    },
+    "credential_or_session_use": {
+      "const": false
+    },
+    "scientific_execution_authorized": {
+      "const": false
+    },
+    "zero_science_counters": {
+      "$ref": "#/$defs/zero_science_counters"
+    },
+    "validation_disposition": {
+      "const": "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_LOCAL_PASS"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "kind",
+        "sha256",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "value": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "publication_target": {
+      "type": "object",
+      "required": [
+        "bucket_identity",
+        "key",
+        "bytes",
+        "sha256",
+        "checksum_sha256_base64",
+        "if_none_match"
+      ],
+      "properties": {
+        "bucket_identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4194304
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "if_none_match": {
+          "const": "*"
+        }
+      },
+      "additionalProperties": false
+    },
+    "canonical_candidate": {
+      "type": "object",
+      "required": [
+        "identity",
+        "target",
+        "canonical_json_base64"
+      ],
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "target": {
+          "$ref": "#/$defs/publication_target"
+        },
+        "canonical_json_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+          "minLength": 4,
+          "maxLength": 4194304
+        }
+      },
+      "additionalProperties": false
+    },
+    "candidate_0": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/canonical_candidate"
+        },
+        {
+          "properties": {
+            "identity": {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_operator_bootstrap_packet/v4"
+                },
+                "sha256": {
+                  "const": "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"
+                },
+                "value": {
+                  "const": "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate_1": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/canonical_candidate"
+        },
+        {
+          "properties": {
+            "identity": {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_operator_bootstrap_authorization/v5"
+                },
+                "sha256": {
+                  "const": "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"
+                },
+                "value": {
+                  "const": "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate_2": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/canonical_candidate"
+        },
+        {
+          "properties": {
+            "identity": {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_operator_bootstrap_closure/v5"
+                },
+                "sha256": {
+                  "const": "0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f"
+                },
+                "value": {
+                  "const": "0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate_3": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/canonical_candidate"
+        },
+        {
+          "properties": {
+            "identity": {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_operator_session_renewal_packet/v1"
+                },
+                "sha256": {
+                  "const": "7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7"
+                },
+                "value": {
+                  "const": "7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate_4": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/canonical_candidate"
+        },
+        {
+          "properties": {
+            "identity": {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_operator_session_renewal_authorization/v1"
+                },
+                "sha256": {
+                  "const": "7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0"
+                },
+                "value": {
+                  "const": "7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate_5": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/canonical_candidate"
+        },
+        {
+          "properties": {
+            "identity": {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_operator_session_renewal_closure/v1"
+                },
+                "sha256": {
+                  "const": "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b"
+                },
+                "value": {
+                  "const": "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "exact_lineage_candidates": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/candidate_0"
+        },
+        {
+          "$ref": "#/$defs/candidate_1"
+        },
+        {
+          "$ref": "#/$defs/candidate_2"
+        },
+        {
+          "$ref": "#/$defs/candidate_3"
+        },
+        {
+          "$ref": "#/$defs/candidate_4"
+        },
+        {
+          "$ref": "#/$defs/candidate_5"
+        }
+      ],
+      "items": false
+    },
+    "exact_added_paths": {
+      "const": [
+        "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_AUTHORITY_AMENDMENT.md",
+        "aws_c0_gate1_bootstrap_lineage_correction_contract.json",
+        "aws_c0_gate1_bootstrap_lineage_correction_evidence_schema.json",
+        "aws_c0_gate1_bootstrap_lineage_correction_implementation_path_manifest.json",
+        "aws_c0_gate1_bootstrap_lineage_correction_predecessor_manifest.json",
+        "aws_c0_gate1_bootstrap_lineage_correction_validation_contract.json"
+      ]
+    },
+    "exact_modified_paths": {
+      "const": [
+        "aws/c0/README.md",
+        "aws/c0/controller/ebu_c0_controller.py",
+        "aws/c0/finalizer/finalizer.py",
+        "aws/c0/fixtures/negative-cases.json",
+        "scripts/validate_aws_c0_static.py",
+        "tests/aws/test_aws_c0_unattended_synthetic.py"
+      ]
+    },
+    "exact_pre_live_kinds": {
+      "const": [
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_implementation_artifact/v1",
+        "aws_c0_operator_bootstrap_packet/v4",
+        "aws_c0_operator_bootstrap_authorization/v5",
+        "aws_c0_operator_bootstrap_closure/v5",
+        "aws_c0_operator_session_renewal_packet/v1",
+        "aws_c0_operator_session_renewal_authorization/v1",
+        "aws_c0_operator_session_renewal_closure/v1",
+        "aws_c0_preparation_packet/v4",
+        "aws_c0_preparation_authorization/v3",
+        "aws_c0_private_infrastructure_snapshot/v1",
+        "aws_c0_audit_static_handoff_authority_audit/v4",
+        "aws_c0_material_runtime_static_validation/v4",
+        "aws_c0_cost_model/v2",
+        "aws_c0_closure_seed/v1",
+        "aws_c0_launch_request/v5",
+        "aws_c0_preparation_closure/v4",
+        "aws_c0_live_packet/v5"
+      ]
+    },
+    "exact_version_upgrades": {
+      "const": [
+        {
+          "from": "aws_c0_preparation_packet/v3",
+          "to": "aws_c0_preparation_packet/v4"
+        },
+        {
+          "from": "aws_c0_preparation_authorization/v2",
+          "to": "aws_c0_preparation_authorization/v3"
+        },
+        {
+          "from": "aws_c0_launch_request/v4",
+          "to": "aws_c0_launch_request/v5"
+        },
+        {
+          "from": "aws_c0_preparation_closure/v3",
+          "to": "aws_c0_preparation_closure/v4"
+        },
+        {
+          "from": "aws_c0_live_packet/v4",
+          "to": "aws_c0_live_packet/v5"
+        }
+      ]
+    },
+    "exact_transitive_version_upgrades": {
+      "const": [
+        {
+          "from": "aws_c0_live_authorization/v4",
+          "to": "aws_c0_live_authorization/v5"
+        },
+        {
+          "from": "aws_c0_platform_smoke_known_case_local_binding/v1",
+          "to": "aws_c0_platform_smoke_known_case_local_binding/v2"
+        },
+        {
+          "from": "aws_c0_ssm_command_request/v1",
+          "to": "aws_c0_ssm_command_request/v2"
+        },
+        {
+          "from": "aws_ssm_command/v1",
+          "to": "aws_ssm_command/v2"
+        },
+        {
+          "from": "aws_c0_source_sidecar/v3",
+          "to": "aws_c0_source_sidecar/v4"
+        },
+        {
+          "from": "aws_c0_runtime_start_attestation_bundle/v2",
+          "to": "aws_c0_runtime_start_attestation_bundle/v3"
+        },
+        {
+          "from": "aws_c0_attempt_claim/v1",
+          "to": "aws_c0_attempt_claim/v2"
+        },
+        {
+          "from": "aws_c0_start_receipt/v5",
+          "to": "aws_c0_start_receipt/v6"
+        },
+        {
+          "from": "aws_c0_safe_close_receipt/v1",
+          "to": "aws_c0_safe_close_receipt/v4"
+        },
+        {
+          "from": "aws_c0_resource_use_closure/v1",
+          "to": "aws_c0_resource_use_closure/v2"
+        },
+        {
+          "from": "aws_c0_finalizer_receipt/v2",
+          "to": "aws_c0_finalizer_receipt/v3"
+        },
+        {
+          "from": "aws_c0_cost_closure/v2",
+          "to": "aws_c0_cost_closure/v3"
+        },
+        {
+          "from": "aws_c0_retrieval_verification/v4",
+          "to": "aws_c0_retrieval_verification/v5"
+        },
+        {
+          "from": "aws_c0_final_manifest/v4",
+          "to": "aws_c0_final_manifest/v5"
+        },
+        {
+          "from": "aws_c0_final_manifest_publication_observation/v2",
+          "to": "aws_c0_final_manifest_publication_observation/v3"
+        },
+        {
+          "from": "aws_c0_final_s3_capture_aggregate/v1",
+          "to": "aws_c0_final_s3_capture_aggregate/v2"
+        },
+        {
+          "from": "aws_c0_closure_response/v3",
+          "to": "aws_c0_closure_response/v4"
+        },
+        {
+          "from": "aws_c0_publication_upgrade_binding/v4",
+          "to": "aws_c0_publication_upgrade_binding/v5"
+        }
+      ]
+    },
+    "exact_negative_case_registry": {
+      "const": {
+        "schema": "aws_c0_static_negative_case_execution/v5",
+        "historical_case_count": 352,
+        "correction_case_ids": [
+          "C0-G1-LINEAGE-N01",
+          "C0-G1-LINEAGE-N02",
+          "C0-G1-LINEAGE-N03",
+          "C0-G1-LINEAGE-N04",
+          "C0-G1-LINEAGE-N05",
+          "C0-G1-LINEAGE-N06"
+        ],
+        "correction_case_count": 6,
+        "total_case_count": 358,
+        "historical_registry_arithmetic": "PRESERVED_UNCHANGED"
+      }
+    },
+    "zero_science_counters": {
+      "type": "object",
+      "required": [
+        "project_runner_import_count",
+        "ebu_framework_import_count",
+        "stage_e_harness_import_count",
+        "registered_configuration_count",
+        "simulation_or_gate_count",
+        "model_state_advance_count",
+        "trajectory_count",
+        "scientific_rng_draw_count",
+        "outcome_inspection_count",
+        "scientific_output_count"
+      ],
+      "properties": {
+        "project_runner_import_count": {
+          "const": 0
+        },
+        "ebu_framework_import_count": {
+          "const": 0
+        },
+        "stage_e_harness_import_count": {
+          "const": 0
+        },
+        "registered_configuration_count": {
+          "const": 0
+        },
+        "simulation_or_gate_count": {
+          "const": 0
+        },
+        "model_state_advance_count": {
+          "const": 0
+        },
+        "trajectory_count": {
+          "const": 0
+        },
+        "scientific_rng_draw_count": {
+          "const": 0
+        },
+        "outcome_inspection_count": {
+          "const": 0
+        },
+        "scientific_output_count": {
+          "const": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

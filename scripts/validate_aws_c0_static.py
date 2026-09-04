@@ -36,6 +36,133 @@ IMPLEMENTATION_PATHS = (
     "aws/c0/fixtures/launch-request.valid.json", "aws/c0/fixtures/negative-cases.json",
     "tests/aws/test_aws_c0_unattended_synthetic.py",
 )
+GATE0_CONTROL_PATHS = (
+    "aws/c0/gate0/sso-operator-bootstrap-v2.schema.json",
+    "aws/c0/gate0/sso-operator-bootstrap-v2.template.json",
+    "aws/c0/gate0/sso-operator-bootstrap-v3.schema.json",
+    "aws/c0/gate0/sso-operator-bootstrap-v3.template.json",
+    "aws/c0/gate0/validate_sso_freshness_diagnostic_gate.py",
+)
+GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS = (
+    "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_AUTHORITY_AMENDMENT.md",
+    "aws_c0_gate1_bootstrap_lineage_correction_contract.json",
+    "aws_c0_gate1_bootstrap_lineage_correction_evidence_schema.json",
+    "aws_c0_gate1_bootstrap_lineage_correction_implementation_path_manifest.json",
+    "aws_c0_gate1_bootstrap_lineage_correction_predecessor_manifest.json",
+    "aws_c0_gate1_bootstrap_lineage_correction_validation_contract.json",
+)
+GATE1_BOOTSTRAP_LINEAGE_MODIFIED_PATHS = (
+    "aws/c0/README.md",
+    "aws/c0/controller/ebu_c0_controller.py",
+    "aws/c0/finalizer/finalizer.py",
+    "aws/c0/fixtures/negative-cases.json",
+    "scripts/validate_aws_c0_static.py",
+    "tests/aws/test_aws_c0_unattended_synthetic.py",
+)
+GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS = (
+    ".github/workflows/aws-c0-static.yml",
+    "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+    "aws/c0/state-machine/aws-c0.asl.json",
+    "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+    "aws/c0/controller/ebu-c0@.service",
+    "aws/c0/container/Dockerfile",
+    "aws/c0/container/synthetic_worker.py",
+    "aws/c0/fixtures/launch-request.valid.json",
+)
+GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_ID = "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1"
+GATE1_ACCEPTED_BASE = "22d0aff12b5f9c091b84ebf6918f1180c142bf50"
+GATE1_ACCEPTED_BASE_TREE = "8c89835043c870b45f01961cdf7b6c229e065549"
+GATE1_LINEAGE_IN_ORDER = (
+    ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),
+    ("aws_c0_operator_bootstrap_authorization/v5", "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"),
+    ("aws_c0_operator_bootstrap_closure/v5", "0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f"),
+    ("aws_c0_operator_session_renewal_packet/v1", "7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7"),
+    ("aws_c0_operator_session_renewal_authorization/v1", "7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0"),
+    ("aws_c0_operator_session_renewal_closure/v1", "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b"),
+)
+GATE1_FAILED_V1_CLOSURE = {
+    "disposition": "AWS_C0_OPERATOR_BOOTSTRAP_FAIL",
+    "failure_code": "STS_SET_SOURCE_IDENTITY_ACCESS_DENIED",
+    "kind": "aws_c0_operator_bootstrap_closure/v1",
+    "preparation_operator_identity": None,
+    "sha256": "5250c649ca14685f46f627504c7014793b479e4b5c43d4bda8246ad8ebc27d4b",
+}
+GATE1_SEALED_V6_PREDECESSOR_SHA256 = "1391085e39d1809e67ed4b3139634764d87d5824c28e7c517ff940a2ec7b428f"
+GATE1_PREPARATION_STATEMENT_VERSION = "AUTHORIZE_AWS_C0_PREPARATION_V3"
+GATE1_PREPARATION_STATEMENT_TEMPLATE = (
+    "AUTHORIZE_AWS_C0_PREPARATION_V3 preparation_packet_sha256={preparation_packet_sha256} "
+    "implementation_commit={implementation_commit} implementation_tree={implementation_tree} "
+    "account_identity_sha256={account_identity_sha256} region=us-east-1 instance_id=i-048bac00bdb540a4e "
+    "preparation_session_assumer_identity_sha256={preparation_session_assumer_identity_sha256} "
+    "operator_role_identity_sha256={operator_role_identity_sha256} "
+    "preparation_session_policy_identity_sha256={preparation_session_policy_identity_sha256} "
+    "preparation_policy_ceiling_identity_sha256={preparation_policy_ceiling_identity_sha256} "
+    "preparation_policy_subset_proof_identity_sha256={preparation_policy_subset_proof_identity_sha256} "
+    "preparation_pass_role_scope_proof_identity_sha256={preparation_pass_role_scope_proof_identity_sha256} "
+    "preparation_session_max_duration_seconds={preparation_session_max_duration_seconds} "
+    "preparation_session_expires_utc={preparation_session_expires_utc} "
+    "artifact_bucket_identity_sha256={artifact_bucket_identity_sha256} pre_live_object_count=24 "
+    "accounting_end_utc={accounting_end_utc} cost_ceiling_minor_units={cost_ceiling_minor_units} "
+    "allow=RECHECK_READ_ONLY_PREFLIGHT,APPLY_EXACT_IAM_REMEDIATION,STAGE_EXACT_PRE_LIVE_OBJECTS,"
+    "BOOTSTRAP_EXACT_STOPPED_INSTANCE,CREATE_ONE_UNEXECUTED_CHANGE_SET,FINALIZE_EXACT_LIVE_PACKET "
+    "deny=LIVE_EXECUTION,REPLAY,DELETE,TERMINATE,SCIENTIFIC_EXECUTION"
+)
+GATE1_PREPARATION_STATEMENT_PLACEHOLDERS = (
+    "preparation_packet_sha256", "implementation_commit", "implementation_tree",
+    "account_identity_sha256", "preparation_session_assumer_identity_sha256",
+    "operator_role_identity_sha256", "preparation_session_policy_identity_sha256",
+    "preparation_policy_ceiling_identity_sha256", "preparation_policy_subset_proof_identity_sha256",
+    "preparation_pass_role_scope_proof_identity_sha256", "preparation_session_max_duration_seconds",
+    "preparation_session_expires_utc", "artifact_bucket_identity_sha256", "accounting_end_utc",
+    "cost_ceiling_minor_units",
+)
+GATE1_PRELIVE_RECORD_KINDS = (
+    *(("aws_c0_implementation_artifact/v1",) * 8),
+    "aws_c0_operator_bootstrap_packet/v4",
+    "aws_c0_operator_bootstrap_authorization/v5",
+    "aws_c0_operator_bootstrap_closure/v5",
+    "aws_c0_operator_session_renewal_packet/v1",
+    "aws_c0_operator_session_renewal_authorization/v1",
+    "aws_c0_operator_session_renewal_closure/v1",
+    "aws_c0_preparation_packet/v4",
+    "aws_c0_preparation_authorization/v3",
+    "aws_c0_private_infrastructure_snapshot/v1",
+    "aws_c0_audit_static_handoff_authority_audit/v4",
+    "aws_c0_material_runtime_static_validation/v4",
+    "aws_c0_cost_model/v2",
+    "aws_c0_closure_seed/v1",
+    "aws_c0_launch_request/v5",
+    "aws_c0_preparation_closure/v4",
+    "aws_c0_live_packet/v5",
+)
+GATE1_DIRECT_VERSION_UPGRADES = (
+    ("aws_c0_preparation_packet/v3", "aws_c0_preparation_packet/v4"),
+    ("aws_c0_preparation_authorization/v2", "aws_c0_preparation_authorization/v3"),
+    ("aws_c0_launch_request/v4", "aws_c0_launch_request/v5"),
+    ("aws_c0_preparation_closure/v3", "aws_c0_preparation_closure/v4"),
+    ("aws_c0_live_packet/v4", "aws_c0_live_packet/v5"),
+)
+GATE1_TRANSITIVE_VERSION_UPGRADES = (
+    ("aws_c0_live_authorization/v4", "aws_c0_live_authorization/v5"),
+    ("aws_c0_platform_smoke_known_case_local_binding/v1", "aws_c0_platform_smoke_known_case_local_binding/v2"),
+    ("aws_c0_ssm_command_request/v1", "aws_c0_ssm_command_request/v2"),
+    ("aws_ssm_command/v1", "aws_ssm_command/v2"),
+    ("aws_c0_source_sidecar/v3", "aws_c0_source_sidecar/v4"),
+    ("aws_c0_runtime_start_attestation_bundle/v2", "aws_c0_runtime_start_attestation_bundle/v3"),
+    ("aws_c0_attempt_claim/v1", "aws_c0_attempt_claim/v2"),
+    ("aws_c0_start_receipt/v5", "aws_c0_start_receipt/v6"),
+    ("aws_c0_safe_close_receipt/v1", "aws_c0_safe_close_receipt/v4"),
+    ("aws_c0_resource_use_closure/v1", "aws_c0_resource_use_closure/v2"),
+    ("aws_c0_finalizer_receipt/v2", "aws_c0_finalizer_receipt/v3"),
+    ("aws_c0_cost_closure/v2", "aws_c0_cost_closure/v3"),
+    ("aws_c0_retrieval_verification/v4", "aws_c0_retrieval_verification/v5"),
+    ("aws_c0_final_manifest/v4", "aws_c0_final_manifest/v5"),
+    ("aws_c0_final_manifest_publication_observation/v2", "aws_c0_final_manifest_publication_observation/v3"),
+    ("aws_c0_final_s3_capture_aggregate/v1", "aws_c0_final_s3_capture_aggregate/v2"),
+    ("aws_c0_closure_response/v3", "aws_c0_closure_response/v4"),
+    ("aws_c0_publication_upgrade_binding/v4", "aws_c0_publication_upgrade_binding/v5"),
+)
+GATE1_RUNTIME_NEGATIVE_CASE_IDS = tuple(f"C0-G1-LINEAGE-N0{i}" for i in range(1, 7))
 AUTHORITY_PATHS = (
     "AWS_C0_UNATTENDED_SYNTHETIC_REHEARSAL_AUTHORITY_AMENDMENT.md",
     "aws_c0_unattended_synthetic_rehearsal_contract.json",
@@ -57,7 +184,7 @@ AUTHORITY_PATHS = (
     "aws_c0_cost_runtime_retrieval_closure_correction_validation_contract.json",
     "aws_c0_material_identity_runtime_validation_correction_validation_contract.json",
     "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
-)
+) + GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS
 REGISTRY_PATH = "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json"
 VALIDATION_PATHS = (
     "aws_c0_unattended_synthetic_rehearsal_validation_contract.json",
@@ -335,6 +462,172 @@ def validate_launch_v2(record: Any) -> None:
     validate_launch_v3(record)
 
 
+def validate_gate1_bootstrap_lineage_authority() -> None:
+    contract = load_json("aws_c0_gate1_bootstrap_lineage_correction_contract.json")
+    evidence_schema = load_json("aws_c0_gate1_bootstrap_lineage_correction_evidence_schema.json")
+    path_manifest = load_json("aws_c0_gate1_bootstrap_lineage_correction_implementation_path_manifest.json")
+    predecessor = load_json("aws_c0_gate1_bootstrap_lineage_correction_predecessor_manifest.json")
+    validation = load_json("aws_c0_gate1_bootstrap_lineage_correction_validation_contract.json")
+    authority = (ROOT / "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_AUTHORITY_AMENDMENT.md").read_text()
+
+    records = (contract, path_manifest, predecessor, validation)
+    require(all(item["authority_id"] == GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_ID for item in records),
+            "Gate1 lineage authority ID mismatch")
+    require(contract["accepted_predecessor"] == {
+                "commit": GATE1_ACCEPTED_BASE, "tree": GATE1_ACCEPTED_BASE_TREE},
+            "Gate1 accepted predecessor mismatch")
+    require(validation["accepted_base_commit"] == GATE1_ACCEPTED_BASE and
+            validation["accepted_base_tree"] == GATE1_ACCEPTED_BASE_TREE and
+            predecessor["accepted_base"] == contract["accepted_predecessor"],
+            "Gate1 accepted predecessor is not cross-bound")
+
+    expected_lineage = [{"kind": kind, "sha256": value}
+                        for kind, value in GATE1_LINEAGE_IN_ORDER]
+    require(validation["required_lineage_in_order"] == expected_lineage,
+            "Gate1 validation lineage mismatch")
+    require([(item["kind"], item["sha256"])
+             for item in contract["exact_lineage_candidates_in_order"]] == list(GATE1_LINEAGE_IN_ORDER),
+            "Gate1 contract lineage mismatch")
+    require([(item["kind"], item["sha256"])
+             for item in predecessor["successful_v5_plus_v6_lineage_in_order"]] == list(GATE1_LINEAGE_IN_ORDER),
+            "Gate1 predecessor lineage mismatch")
+    require(contract["diagnosis"]["failed_required_closure"] == GATE1_FAILED_V1_CLOSURE and
+            predecessor["failed_historical_gate0_record"] | {"must_remain_historical_and_unmodified": False,
+                                                               "satisfies_gate1": True} ==
+            GATE1_FAILED_V1_CLOSURE | {"must_remain_historical_and_unmodified": False,
+                                      "satisfies_gate1": True},
+            "failed V1 closure is not preserved and rejected")
+    sealed = validation["sealed_v6_closure_proof"]
+    require(sealed == {
+                "complete_byte_sha256": GATE1_LINEAGE_IN_ORDER[-1][1],
+                "credentials_issued": True,
+                "operator_session_renewal_disposition": "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS",
+                "predecessor_closure_sha256": GATE1_SEALED_V6_PREDECESSOR_SHA256,
+                "schema": GATE1_LINEAGE_IN_ORDER[-1][0],
+            }, "sealed V6 renewal proof mismatch")
+    final_lineage = predecessor["successful_v5_plus_v6_lineage_in_order"][-1]
+    require(final_lineage["credentials_issued"] is True and
+            final_lineage["predecessor_closure_sha256"] == GATE1_SEALED_V6_PREDECESSOR_SHA256 and
+            final_lineage["operator_session_renewal_disposition"] ==
+            "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS", "V6 renewal result is not sealed")
+
+    require(contract["pre_live_record_kinds_in_order"] == list(GATE1_PRELIVE_RECORD_KINDS) and
+            len(GATE1_PRELIVE_RECORD_KINDS) == 24, "Gate1 24-object kind sequence mismatch")
+    arithmetic = contract["pre_live_arithmetic"]
+    require(arithmetic["pre_live_total"] == 24 and
+            arithmetic["pre_live_predecessor_object_receipts"] == 23 and
+            validation["required_pre_live_arithmetic"] == {
+                "object_count": 24, "predecessor_receipt_count": 23,
+                "lineage_candidate_count": 6, "implementation_artifact_count": 8},
+            "Gate1 24/23 arithmetic mismatch")
+    statement = contract["preparation_authorization_statement"]
+    required_statement = validation["required_preparation_authorization_statement"]
+    require(statement["statement_version"] == GATE1_PREPARATION_STATEMENT_VERSION and
+            statement["statement_template"] == GATE1_PREPARATION_STATEMENT_TEMPLATE and
+            statement["preparation_packet_schema"] == "aws_c0_preparation_packet/v4" and
+            statement["preparation_authorization_schema"] == "aws_c0_preparation_authorization/v3" and
+            statement["pre_live_object_count_literal"] == 24 and
+            statement["packet_locally_canonical_and_displayed_before_statement"] is True and
+            statement["packet_published_before_statement"] is False and
+            statement["statement_contains_packet_key_version_or_receipt"] is False and
+            statement["packet_and_authorization_staged_only_after_statement"] is True and
+            statement["preparation_only"] is True and
+            statement["denied_actions_in_order"] ==
+            ["LIVE_EXECUTION", "REPLAY", "DELETE", "TERMINATE", "SCIENTIFIC_EXECUTION"],
+            "Gate1 preparation authorization V3 statement contract mismatch")
+    require(re.findall(r"\{([a-z0-9_]+)\}", statement["statement_template"]) ==
+            list(GATE1_PREPARATION_STATEMENT_PLACEHOLDERS),
+            "Gate1 preparation authorization V3 placeholder order mismatch")
+    require(required_statement == {
+                "statement_version": GATE1_PREPARATION_STATEMENT_VERSION,
+                "preparation_packet_schema": "aws_c0_preparation_packet/v4",
+                "preparation_authorization_schema": "aws_c0_preparation_authorization/v3",
+                "required_literal_bindings": [
+                    "region=us-east-1", "instance_id=i-048bac00bdb540a4e",
+                    "pre_live_object_count=24",
+                    "allow=RECHECK_READ_ONLY_PREFLIGHT,APPLY_EXACT_IAM_REMEDIATION,"
+                    "STAGE_EXACT_PRE_LIVE_OBJECTS,BOOTSTRAP_EXACT_STOPPED_INSTANCE,"
+                    "CREATE_ONE_UNEXECUTED_CHANGE_SET,FINALIZE_EXACT_LIVE_PACKET",
+                    "deny=LIVE_EXECUTION,REPLAY,DELETE,TERMINATE,SCIENTIFIC_EXECUTION",
+                ],
+                "required_placeholders_in_order": list(GATE1_PREPARATION_STATEMENT_PLACEHOLDERS),
+            } and all(literal in GATE1_PREPARATION_STATEMENT_TEMPLATE
+                      for literal in required_statement["required_literal_bindings"]) and
+            "pre_live_object_count=21" not in GATE1_PREPARATION_STATEMENT_TEMPLATE,
+            "Gate1 preparation authorization validation grammar mismatch")
+    direct = [(item["from"], item["to"]) for item in contract["required_version_upgrades"]]
+    transitive = [(item["from"], item["to"])
+                  for item in contract["required_transitive_version_upgrades"]]
+    require(direct == list(GATE1_DIRECT_VERSION_UPGRADES) and
+            transitive == list(GATE1_TRANSITIVE_VERSION_UPGRADES),
+            "Gate1 version upgrade map mismatch")
+    require([{"from": old, "to": new} for old, new in GATE1_DIRECT_VERSION_UPGRADES] ==
+            validation["required_version_upgrades"] and
+            [{"from": old, "to": new} for old, new in GATE1_TRANSITIVE_VERSION_UPGRADES] ==
+            validation["required_transitive_version_upgrades"],
+            "Gate1 validation upgrade map mismatch")
+
+    additions = path_manifest["authorized_current_outputs"]["paths_in_order"]
+    modifications = path_manifest["authorized_current_modifications"]["paths_in_order"]
+    require(additions == list(GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS) and
+            modifications == list(GATE1_BOOTSTRAP_LINEAGE_MODIFIED_PATHS) and
+            path_manifest["complete_change_scope"] == {
+                "added_path_count": 6, "modified_path_count": 6, "total_path_count": 12,
+                "deletion_count": 0, "rename_count": 0,
+                "unknown_addition_modification_deletion_or_rename": "REFUSE"},
+            "Gate1 exact 6+6 path scope mismatch")
+    require(path_manifest["explicitly_excluded_paths"] == list(GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS),
+            "Gate1 excluded path set mismatch")
+    changed = set(filter(None, _git("diff", "--name-only", GATE1_ACCEPTED_BASE, "--").splitlines()))
+    untracked = set(filter(None, _git("ls-files", "--others", "--exclude-standard").splitlines()))
+    require(changed | untracked == set(additions) | set(modifications),
+            "Gate1 working change set is not exactly 6 additions plus 6 modifications")
+
+    for row in predecessor["critical_accepted_base_rows"]:
+        path = row["path"]
+        result = subprocess.run(["git", "show", f"{GATE1_ACCEPTED_BASE}:{path}"], cwd=ROOT,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        require(result.returncode == 0 and len(result.stdout) == row["bytes"] and
+                digest(result.stdout) == row["sha256"], f"Gate1 predecessor bytes mismatch:{path}")
+        listing = _git("ls-tree", GATE1_ACCEPTED_BASE, "--", path)
+        require(listing == f'{row["mode"]} blob {row["git_blob"]}\t{path}',
+                f"Gate1 predecessor Git identity mismatch:{path}")
+
+    schema_defs = evidence_schema["$defs"]
+    require(evidence_schema["additionalProperties"] is False and
+            schema_defs["exact_pre_live_kinds"]["const"] == list(GATE1_PRELIVE_RECORD_KINDS) and
+            schema_defs["exact_version_upgrades"]["const"] ==
+            [{"from": old, "to": new} for old, new in GATE1_DIRECT_VERSION_UPGRADES] and
+            schema_defs["exact_transitive_version_upgrades"]["const"] ==
+            [{"from": old, "to": new} for old, new in GATE1_TRANSITIVE_VERSION_UPGRADES],
+            "Gate1 evidence schema constants mismatch")
+    prefix_items = schema_defs["exact_lineage_candidates"]["prefixItems"]
+    schema_lineage: list[tuple[str, str]] = []
+    for item in prefix_items:
+        name = item["$ref"].rsplit("/", 1)[-1]
+        properties = schema_defs[name]["allOf"][1]["properties"]["identity"]["properties"]
+        require(properties["sha256"]["const"] == properties["value"]["const"],
+                "Gate1 evidence identity value mismatch")
+        schema_lineage.append((properties["kind"]["const"], properties["sha256"]["const"]))
+    require(schema_lineage == list(GATE1_LINEAGE_IN_ORDER), "Gate1 evidence schema lineage mismatch")
+
+    lane = validation["additive_runtime_negative_lane"]
+    require(lane["historical_case_count"] == 352 and lane["correction_case_count"] == 6 and
+            lane["total_case_count"] == 358 and
+            lane["registry_schema"] == "aws_c0_static_negative_case_execution/v5" and
+            [item["id"] for item in lane["cases_in_order"]] == list(GATE1_RUNTIME_NEGATIVE_CASE_IDS),
+            "Gate1 additive negative lane mismatch")
+    require(validation["positive_case_count"] == 12 and validation["negative_case_count"] == 20 and
+            validation["total_case_count"] == 32 and
+            validation["required_disposition"] ==
+            "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_LOCAL_PASS",
+            "Gate1 local validation arithmetic mismatch")
+    require("AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_AUTHORITY_CANDIDATE_COMPLETE" in authority and
+            GATE1_LINEAGE_IN_ORDER[-1][1] in authority and
+            GATE1_SEALED_V6_PREDECESSOR_SHA256 in authority,
+            "Gate1 authority closure markers missing")
+
+
 def paginate(pages: Iterable[dict[str, Any]], *, max_pages: int, max_items: int,
              item_fields: tuple[str, ...], token_field: str = "NextToken") -> tuple[list[Any], list[dict[str, Any]]]:
     require(type(max_pages) is int and max_pages > 0 and type(max_items) is int and max_items > 0,
@@ -409,6 +702,7 @@ def validate_authorities() -> None:
     require([g["parent_case_count"] for g in groups] == [66, 84, 108, 66, 28], "352 active-parent partition")
     require(registry["superseded_contract"]["active"] is False and registry["superseded_contract"]["executed"] is False,
             "superseded handoff contract executed")
+    validate_gate1_bootstrap_lineage_authority()
 
 
 # BEGIN LITERAL REGISTRY DEFINITIONS
@@ -23421,10 +23715,16 @@ def validate_paths() -> None:
                 "rejected diagnostic is ancestor")
     changed = set(filter(None, _git("diff", "--name-only", EXPECTED_BASE, "--").splitlines()))
     untracked = set(filter(None, _git("ls-files", "--others", "--exclude-standard").splitlines()))
-    require(changed | untracked == set(IMPLEMENTATION_PATHS), "path gate is not exactly 14")
+    expected_paths = (set(IMPLEMENTATION_PATHS) | set(GATE0_CONTROL_PATHS) |
+                      set(GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS))
+    require(
+        changed | untracked == expected_paths,
+        "path gate is not exactly 14 implementation paths plus 5 Gate 0 control paths plus 6 Gate 1 authority paths",
+    )
     # Python bytecode is an interpreter by-product, never candidate source;
     # git's tracked/untracked comparison above is the implementation scope.
-    for path in IMPLEMENTATION_PATHS:
+    for path in (*IMPLEMENTATION_PATHS, *GATE0_CONTROL_PATHS,
+                 *GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS):
         candidate = ROOT / path
         require(candidate.is_file() and not candidate.is_symlink() and stat.S_IMODE(candidate.stat().st_mode) == 0o644,
                 f"{path} must be regular 100644")
@@ -23436,8 +23736,11 @@ def validate_fixture() -> None:
     registry = load_json(REGISTRY_PATH)
     expected = sum((registry["exact_parent_case_ids_by_group_in_order"][g["group_id"]]
                     for g in registry["active_contract_groups_in_order"]), [])
-    require(fixture == {"all_cases_executed": True, "case_ids": expected, "executed_case_count": 352,
-                        "schema": "aws_c0_static_negative_case_execution/v4"}, "case execution fixture mismatch")
+    require(fixture == {"all_cases_executed": True,
+                        "case_ids": expected + list(GATE1_RUNTIME_NEGATIVE_CASE_IDS),
+                        "executed_case_count": 358,
+                        "schema": "aws_c0_static_negative_case_execution/v5"},
+            "case execution fixture mismatch")
 
 
 def validate_sources() -> None:
@@ -23462,10 +23765,24 @@ def validate_sources() -> None:
             if isinstance(node.func, ast.Attribute) else ""
             for node in ast.walk(function) if isinstance(node, ast.Call)
         ]
-    require("prepare-request-v4" in controller and "aws_c0_start_receipt/v5" in controller,
+    require("prepare-request-v4" in controller and "aws_c0_start_receipt/v6" in controller,
             "controller current-record stack absent")
-    require("aws_c0_source_sidecar/v3" in controller and "reserve_for_operation" in controller,
+    require("aws_c0_source_sidecar/v4" in controller and "reserve_for_operation" in controller,
             "controller capture reservation absent")
+    require("aws_c0_launch_request/v5" in controller and
+            "aws_c0_live_packet/v5" in controller and
+            "aws_c0_live_authorization/v5" in controller and
+            "aws_c0_attempt_claim/v2" in controller,
+            "controller Gate1 downstream version stack absent")
+    require("FROZEN_PRELIVE_OBJECT_COUNT = 24" in finalizer and
+            "FROZEN_PRELIVE_PREDECESSOR_COUNT = 23" in finalizer and
+            all(kind in finalizer for kind in GATE1_PRELIVE_RECORD_KINDS[8:]) and
+            all(value in finalizer for _, value in GATE1_LINEAGE_IN_ORDER) and
+            GATE1_SEALED_V6_PREDECESSOR_SHA256 in finalizer and
+            "_validate_sealed_gate0_lineage_record" in finalizer and
+            "AWS_C0_OPERATOR_BOOTSTRAP_PASS" in finalizer and
+            "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS" in finalizer,
+            "finalizer Gate1 24/23 lineage stack absent")
     prepare_calls = call_names(controller_functions["prepare_request"])
     run_calls = call_names(controller_functions["run_attempt"])
     require(all(prepare_calls.count(name) == 0 for name in (
@@ -23499,7 +23816,7 @@ def validate_sources() -> None:
             closure_source.index("build_three_coordinate_capture_aggregate("),
             "carrier/controller Get, final-manifest Put, journal seal, and aggregate order is inverted")
     require("_put_record(" not in closure_source[terminal_manifest_put + 1:] and
-            '"aws_c0_final_manifest_publication_observation/v2"' in closure_source[terminal_manifest_put:] and
+            '"aws_c0_final_manifest_publication_observation/v3"' in closure_source[terminal_manifest_put:] and
             '"final_manifest_publication_observation_object": None' in closure_source[terminal_manifest_put:],
             "a substantive finalizer Put follows the designated terminal manifest Put")
     aggregate_assignment = next(node for node in finalizer_tree.body if isinstance(node, ast.Assign) and

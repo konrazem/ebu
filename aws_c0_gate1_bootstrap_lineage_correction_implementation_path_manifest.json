@@ -1,0 +1,118 @@
+{
+  "authority_id": "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1",
+  "status": "AUTHORIZED_LOCAL_TWELVE_PATH_CORRECTION",
+  "accepted_base": {
+    "commit": "22d0aff12b5f9c091b84ebf6918f1180c142bf50",
+    "tree": "8c89835043c870b45f01961cdf7b6c229e065549"
+  },
+  "authorized_current_outputs": {
+    "operation": "ADD",
+    "count": 6,
+    "mode": "100644",
+    "paths_in_order": [
+      "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "aws_c0_gate1_bootstrap_lineage_correction_contract.json",
+      "aws_c0_gate1_bootstrap_lineage_correction_evidence_schema.json",
+      "aws_c0_gate1_bootstrap_lineage_correction_implementation_path_manifest.json",
+      "aws_c0_gate1_bootstrap_lineage_correction_predecessor_manifest.json",
+      "aws_c0_gate1_bootstrap_lineage_correction_validation_contract.json"
+    ],
+    "permitted_operations": [
+      "WRITE_EXACT_SIX_ADDITIVE_AUTHORITY_PACKAGE_FILES",
+      "OFFLINE_LOCAL_VALIDATION_OF_EXACT_SIX_FILES",
+      "READ_ONLY_INSPECTION_OF_ACCEPTED_PREDECESSOR"
+    ],
+    "unknown_addition_modification_deletion_or_rename": "REFUSE"
+  },
+  "authorized_current_modifications": {
+    "authorized_by_this_package": true,
+    "operation": "MODIFY",
+    "count": 6,
+    "paths_in_order": [
+      "aws/c0/README.md",
+      "aws/c0/controller/ebu_c0_controller.py",
+      "aws/c0/finalizer/finalizer.py",
+      "aws/c0/fixtures/negative-cases.json",
+      "scripts/validate_aws_c0_static.py",
+      "tests/aws/test_aws_c0_unattended_synthetic.py"
+    ],
+    "required_definitions": {
+      "aws/c0/README.md": [
+        "EXACT_V5_PLUS_V6_SIX_RECORD_LINEAGE",
+        "EXACT_24_OBJECT_AND_23_PREDECESSOR_ARITHMETIC",
+        "VERSION_UPGRADED_STATEMENT_AND_RECORD_KINDS"
+      ],
+      "aws/c0/controller/ebu_c0_controller.py": [
+        "LAUNCH_REQUEST_V5_WITH_PREPARATION_PACKET_V4_AND_PREPARATION_AUTHORIZATION_V3_BINDINGS",
+        "LIVE_PACKET_V5_AND_LIVE_AUTHORIZATION_V5_EXACT_VERSION_BINDINGS",
+        "PLATFORM_SMOKE_LOCAL_BINDING_V2",
+        "SSM_COMMAND_REQUEST_V2_AND_AWS_SSM_COMMAND_V2",
+        "SOURCE_SIDECAR_V4_AND_RUNTIME_START_ATTESTATION_BUNDLE_V3",
+        "ATTEMPT_CLAIM_V2_AND_START_RECEIPT_V6"
+      ],
+      "aws/c0/finalizer/finalizer.py": [
+        "FROZEN_PRELIVE_OBJECT_COUNT_24",
+        "FROZEN_PRELIVE_PREDECESSOR_COUNT_23",
+        "EXACT_VERSION_UPGRADED_KIND_VALIDATION_AND_RETRIEVAL",
+        "SAFE_CLOSE_RECEIPT_V4_AND_RESOURCE_USE_CLOSURE_V2",
+        "FINALIZER_RECEIPT_V3_COST_CLOSURE_V3_AND_RETRIEVAL_VERIFICATION_V5",
+        "FINAL_MANIFEST_V5_AND_FINAL_MANIFEST_PUBLICATION_OBSERVATION_V3",
+        "FINAL_S3_CAPTURE_AGGREGATE_V2_AND_CLOSURE_RESPONSE_V4",
+        "PUBLICATION_UPGRADE_BINDING_V5"
+      ],
+      "aws/c0/fixtures/negative-cases.json": [
+        "FAILED_V1_CLOSURE_REFUSAL",
+        "LINEAGE_RELABEL_OMIT_DUPLICATE_REORDER_AND_DIGEST_REFUSALS",
+        "OLD_21_20_ARITHMETIC_AND_HIDDEN_CAPSULE_REFUSALS",
+        "EXACT_C0_G1_LINEAGE_N01_THROUGH_N06_ADDITIVE_LANE",
+        "NEGATIVE_CASE_REGISTRY_SCHEMA_V5_AND_358_TOTAL"
+      ],
+      "scripts/validate_aws_c0_static.py": [
+        "STRICT_V4_V3_V5_V4_V5_SCHEMA_VALIDATION",
+        "V5_PASS_AND_SEALED_V6_PREDECESSOR_PROOF",
+        "EXACT_24_23_KIND_AND_RECEIPT_ARITHMETIC",
+        "LIVE_AUTHORIZATION_V5_TRANSITIVE_VERSION_VALIDATION",
+        "EXACT_SIX_ADDITIVE_NEGATIVE_CASES_AND_358_TOTAL"
+      ],
+      "tests/aws/test_aws_c0_unattended_synthetic.py": [
+        "POSITIVE_V5_PLUS_V6_GATE1_LINEAGE_TESTS",
+        "EXACT_C0_G1_LINEAGE_N01_THROUGH_N06_EXECUTION",
+        "HISTORICAL_352_CASE_REGISTRY_ARITHMETIC_PRESERVED",
+        "TOTAL_358_CASE_REGISTRY_ARITHMETIC",
+        "ZERO_AWS_AND_ZERO_SCIENCE_LOCAL_TEST_BOUNDARY"
+      ]
+    },
+    "unknown_or_additional_path": "REFUSE"
+  },
+  "complete_change_scope": {
+    "added_path_count": 6,
+    "modified_path_count": 6,
+    "total_path_count": 12,
+    "deletion_count": 0,
+    "rename_count": 0,
+    "unknown_addition_modification_deletion_or_rename": "REFUSE"
+  },
+  "explicitly_excluded_paths": [
+    ".github/workflows/aws-c0-static.yml",
+    "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+    "aws/c0/state-machine/aws-c0.asl.json",
+    "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+    "aws/c0/controller/ebu-c0@.service",
+    "aws/c0/container/Dockerfile",
+    "aws/c0/container/synthetic_worker.py",
+    "aws/c0/fixtures/launch-request.valid.json"
+  ],
+  "cloudformation_boundary": "NO_CLOUDFORMATION_PATH_OR_SELF_REFERENCE_IS_NEEDED_FOR_THIS_BOOTSTRAP_LINEAGE_ONLY_CORRECTION",
+  "forbidden_operations": [
+    "AWS",
+    "CREDENTIAL_OR_SESSION_USE",
+    "SCIENTIFIC_EXECUTION",
+    "COMMIT",
+    "PUSH",
+    "MERGE",
+    "PUBLISH",
+    "DEPLOY",
+    "RELEASE"
+  ],
+  "all_unlisted_paths": "UNCHANGED"
+}

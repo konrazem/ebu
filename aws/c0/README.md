@@ -108,8 +108,8 @@ inert, networkless, read-only synthetic worker to two checkpoints, emits no
 scientific output or conclusion, performs no retry, and must finish with one
 verified stop.
 
-The sealed launch-control set is exactly launch-request-v4, live-packet-v4,
-live-authorization-v4, their exact S3 key/VersionId/SHA-256/byte/checksum
+The sealed launch-control set is exactly launch-request-v5, live-packet-v5,
+live-authorization-v5, their exact S3 key/VersionId/SHA-256/byte/checksum
 receipts, the sealed bucket and attempt identities, and the Standard execution
 ARN. The Standard execution input itself is only the one closed
 `live_authorization` receipt shown below. Fresh absolute deadlines and every
@@ -163,7 +163,7 @@ AWS_C0_SEALED_ATTEMPT_ID
 AWS_C0_SEALED_EXECUTION_INPUT_JSON
 ```
 
-The value of `AWS_C0_SEALED_ATTEMPT_ID` must equal the fresh launch-v4 attempt
+The value of `AWS_C0_SEALED_ATTEMPT_ID` must equal the fresh launch-v5 attempt
 ID and end in `-SUCCESS`. `AWS_C0_SEALED_EXECUTION_INPUT_JSON` must be canonical
 JSON containing exactly one top-level `live_authorization` member. That receipt
 must contain exactly `bucket_identity`, `key`, `version_id`, `bytes`, `sha256`,
@@ -176,7 +176,7 @@ below is true in one fresh packet:
 1. implementation merge `7cee7d3` has tree
    `51a9fe231419408136079b0a28674144d19cc3d1`, and authority merge `34820a3`
    is an ancestor of the local launch-packet commit;
-2. launch-v4, live-packet-v4, and live-authorization-v4 bytes are canonical and
+2. launch-v5, live-packet-v5, and live-authorization-v5 bytes are canonical and
    their authenticated key, VersionId, byte count, SHA-256, and checksum
    readbacks agree exactly, with no placeholder, latest, or inferred value;
 3. the attempt ID, sealed bucket identity, artifact prefix, Standard state
@@ -189,7 +189,7 @@ below is true in one fresh packet:
    are present and no higher than reviewed, phase/overall/workflow bounds match
    this packet, attempt count is one, and the state machine contains no Retry;
 6. the reviewed change set is terminally deployed, its exact outputs and
-   definitions match live-packet-v4, the retained instance is freshly observed
+   definitions match live-packet-v5, the retained instance is freshly observed
    `stopped`, and the stop/finalizer path remains
    `STEP_FUNCTIONS_SINGLE_STOP_THEN_FINALIZER_VERIFY`; and
 7. the execution input passes the closed shape above and the exact launch
@@ -244,7 +244,7 @@ lifecycle, restart discipline, exact-version storage, fixed 22-row carrier
 validation, cost/security controls, cleanup, and zero-science guards unchanged.
 
 For this capsule only, the complete 100-field
-`aws_c0_final_s3_capture_aggregate/v1` and every nested payload referenced by
+`aws_c0_final_s3_capture_aggregate/v2` and every nested payload referenced by
 `aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json#/$defs/final_s3_capture_aggregate/required`
 are not execution, completion, or PASS gates. This capsule-only supersession
 does not claim that producer conforms and changes no other AWS-C0 control. Later
@@ -268,7 +268,7 @@ platform completion of the sealed synthetic known case. Scientific execution,
 Stage F readiness, model correctness, replay, extrapolation, interpretation,
 and publication remain forbidden.
 
-Fresh launch-v4, live-packet-v4, and live-authorization-v4 exact-version
+Fresh launch-v5, live-packet-v5, and live-authorization-v5 exact-version
 coordinates remain mandatory. This local authority permits no AWS contact,
 mutation, spending, or execution. One later explicit live-AWS authorization
 must bind those coordinates, the exact command, budget, cleanup, and
@@ -500,52 +500,83 @@ python3 aws/c0/gate0/validate_sso_freshness_diagnostic_gate.py --self-test --equ
 
 `AWS_C0_SSO_ASSUME_CONTEXT_CORRECTION_V1_CANDIDATE_COMPLETE`
 
+## Gate 1 bootstrap-lineage correction
+
+The additive Gate 1 correction preserves every earlier Gate 0 record, including
+the failed v1 closure, and uses the successful evidence without relabeling or
+rewriting it.  The exact lineage is:
+
+1. bootstrap packet v4, `d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c`;
+2. bootstrap authorization v5, `7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109`;
+3. bootstrap closure v5, `0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f`;
+4. renewal packet v1, `7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7`;
+5. renewal authorization v1, `7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0`;
+6. sealed renewal closure v1, `c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b`.
+
+The sealed renewal closure retains preliminary closure
+`1391085e39d1809e67ed4b3139634764d87d5824c28e7c517ff940a2ec7b428f`
+as its exact predecessor.  The failed bootstrap closure v1 remains failure
+evidence and cannot satisfy Gate 1.  Lineage candidates bind complete canonical
+bytes and prospective content-addressed targets only; a predicted VersionId or
+PutObject receipt is forbidden.
+
+The next preparation authorization uses the exact
+`AUTHORIZE_AWS_C0_PREPARATION_V3` statement template in the correction
+contract. It binds preparation-packet-v4, the implementation commit and tree,
+the exact session and role controls, the 24-object count, accounting end, and
+cost ceiling while continuing to deny live execution, replay, deletion,
+termination, and scientific execution.
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
 manifest. Static validation keeps the original 66 cases, preparation 84 cases,
 and closure 108 cases separate: 258 coordinates total.
 
-The third authority adds 18 closed record schemas. The pre-live packet contains
-exactly 21 immutable objects:
+The historical 352-case registry remains unchanged.  Six additive Gate 1
+lineage cases produce a 358-case local fixture.  The corrected pre-live packet
+contains exactly 24 immutable objects:
 
 | Class | Count |
 |---|---:|
 | implementation artifacts | 8 |
-| operator bootstrap packet, authorization, closure; preparation packet-v2 and authorization-v2 | 5 |
+| successful bootstrap packet-v4, authorization-v5, closure-v5 | 3 |
+| renewal packet-v1, authorization-v1, sealed closure-v1 | 3 |
+| preparation packet-v4 and authorization-v3 | 2 |
 | private infrastructure snapshot root | 1 |
-| closure authority audit root | 1 |
-| closure static-validation root | 1 |
+| authority-audit-v4 root | 1 |
+| material-runtime-static-validation-v4 root | 1 |
 | cost-model-v2 | 1 |
 | closure-seed-v1 | 1 |
-| launch-request-v3 root | 1 |
-| preparation-closure-v2 | 1 |
-| live-packet-v2 | 1 |
-| **total** | **21** |
+| launch-request-v5 root | 1 |
+| preparation-closure-v4 | 1 |
+| live-packet-v5 | 1 |
+| **total** | **24** |
 
-The live authorization is later and is not object 22 of preparation. A hidden
+The live packet is object 24 and binds exactly 23 predecessor receipts.  The
+live authorization is later and is not object 25 of preparation. A hidden
 runtime-control bundle is forbidden: the six initial controls are canonical
-preimages inside preparation-packet-v2, and the eleven fresh final controls are
-canonical preimages inside preparation-closure-v2 and live-packet-v2.
+preimages inside preparation-packet-v4, and the fresh final controls are
+canonical preimages inside preparation-closure-v4 and live-packet-v5.
 
 The final semantic root order is exactly:
 
-1. closure authority audit v1;
-2. closure static validation v1;
+1. authority audit v4;
+2. material/runtime static validation v4;
 3. private infrastructure snapshot v1;
-4. launch request v3;
-5. start receipt v3;
+4. launch request v5;
+5. start receipt v6;
 6. heartbeat roots;
 7. checkpoint roots;
 8. terminal root;
-9. finalizer receipt v2;
-10. retrieval verification v2;
-11. cost closure v2; and
-12. final manifest v2.
+9. finalizer receipt v3;
+10. retrieval verification v5;
+11. cost closure v3; and
+12. final manifest v5.
 
 Publication after terminal is intentionally different: stopped observation,
 resource-use closure, finalizer, cost, retrieval, final manifest, then the
-non-root final-manifest-publication observation. Retrieval verifies the already
+non-root final-manifest-publication observation v3. Retrieval verifies the already
 published cost root but the final manifest restores semantic retrieval-before-
 cost order. The final manifest never self-attests its future S3 receipt.
 
@@ -616,8 +647,8 @@ One explicit preparation approval may authorize only:
   installation; Docker 29.7.2 and AWS CLI 2.36.36 are historical expectations
   only and must be freshly verified);
 - creation, but not execution, of one exact CloudFormation change set; and
-- staging snapshot, audit, static-validation, cost model, seed, launch-v3,
-  preparation-closure-v2, and live-packet-v2.
+- staging snapshot, audit-v4, static-validation-v4, cost model, seed, launch-v5,
+  preparation-closure-v4, and live-packet-v5.
 
 The preparation session may not execute the change set, start the workflow,
 start the rehearsal attempt, publish live authorization, replay, or run science.
@@ -625,16 +656,17 @@ It ends with the instance stopped and the change set unexecuted.
 
 ### Gate 2 — live approval
 
-The returned VersionIds, checksums, byte counts, bootstrap evidence, current
-control preimages, exact change-set diff, and 21-object receipt set feed a final
-live-packet-v2. Only after reviewing that complete packet may the user sign the
-exact live-authorization-v2 statement. The constrained live session may publish
+The returned VersionIds, checksums, byte counts, bootstrap and renewal evidence,
+current control preimages, exact change-set diff, and 24-object/23-predecessor
+receipt set feed a final live-packet-v5. Only after reviewing that complete
+packet may the user sign the exact live-authorization-v5 record using the
+preserved live-approval grammar. The constrained live session may publish
 that one authorization, execute that one change set, wait for completion,
 retrieve its outputs, and start one exact Standard execution. It denies replay,
 other change sets, other attempts, and science.
 
 The Standard execution input is closed and contains only the exact
-live-authorization-v2 object receipt:
+live-authorization-v5 object receipt:
 
 ```json
 {"live_authorization":{"bucket_identity":{"kind":"aws_s3_bucket/v1","sha256":"<sealed-bucket-identity>","value":"<same>"},"bytes":1234,"checksum_sha256_base64":"<checksum>","key":"<exact-attempt-prefix>/live-authorization.json","sha256":"<full-byte-sha256>","version_id":"<exact-version-id>"}}
@@ -668,26 +700,26 @@ pull an image, or repair in place without new authority.
 3. Read exact stack outputs and re-check the state-machine definition, role,
    logging, Lambda configuration, SSM document content/version/permissions,
    IAM pagination, bucket/KMS controls, network path, quota, artifacts, seed,
-   model, and stopped instance against live-packet-v2.
-4. Publish live-authorization-v2 once with a fresh conditional key and verify
+   model, and stopped instance against live-packet-v5.
+4. Publish live-authorization-v5 once with a fresh conditional key and verify
    its exact version.
 5. Start one execution whose name equals the attempt ID and whose input is the
    one receipt shown above.
 
 The workflow performs one `StartInstances`, a bounded SSM no-block handoff,
 bounded first-heartbeat polling (15-second chunks plus an exact final
-remainder), safe-close after accepted start-v3 and heartbeat sequence zero,
+remainder), safe-close after accepted start-v6 and heartbeat sequence zero,
 bounded heartbeat/attempt polling, one non-reentrant `StopInstances`, stopped
 readback, and closure. Every started path converges on stop and closure. There
 is no `Retry` field.
 
-The SSM document runs exactly two commands: controller `prepare-request-v3`
-with exact key/VersionId/SHA/bytes for launch-v3, live-packet-v2, and live-
-authorization-v2 plus the workflow ARN; then `systemctl start --no-block` for
+The SSM document runs exactly two commands: controller `prepare-request-v4`
+with exact key/VersionId/SHA/bytes for launch-v5, live-packet-v5, and live-
+authorization-v5 plus the workflow ARN; then `systemctl start --no-block` for
 the exact attempt unit. The root-owned exclusive `0600` sidecar binds those
 coordinates. The controller re-fetches all three exact versions, claims the
 attempt with a deterministic non-root conditional S3 object, publishes
-start-v3, and only then starts the networkless read-only container.
+start-v6, and only then starts the networkless read-only container.
 
 You may close the laptop after `StartExecution` returns and the safe-close
 receipt exists. Step Functions, EC2, Lambda, SSM, S3, and systemd continue in

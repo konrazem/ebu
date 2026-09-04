@@ -1,0 +1,298 @@
+{
+  "authority_id": "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1",
+  "authority_path": "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_AUTHORITY_AMENDMENT.md",
+  "authority_status": "AUTHORIZED_LOCAL_CORRECTION_IMPLEMENTATION",
+  "accepted_predecessor": {
+    "commit": "22d0aff12b5f9c091b84ebf6918f1180c142bf50",
+    "tree": "8c89835043c870b45f01961cdf7b6c229e065549"
+  },
+  "canonical_json": {
+    "duplicate_keys": "REFUSE",
+    "encoding": "UTF-8",
+    "final_line_feed_for_control_records": "FORBIDDEN",
+    "numbers": "INTEGER_ONLY_FINITE",
+    "recursive_key_order": "LEXICOGRAPHIC_UNICODE_CODE_POINT_ORDER",
+    "separators": "COMPACT_COMMA_COLON",
+    "trailing_data": "REFUSE",
+    "unicode_normalization": "NFC"
+  },
+  "candidate_binding": {
+    "candidate_fields": [
+      "identity",
+      "target",
+      "canonical_json_base64"
+    ],
+    "decoded_record_schema_equals_identity_kind": true,
+    "identity_digest_rule": "SHA256_COMPLETE_DECODED_CANONICAL_RECORD_BYTES",
+    "identity_fields_exact": [
+      "kind",
+      "sha256",
+      "value"
+    ],
+    "identity_value_equals_sha256": true,
+    "predicted_put_receipt": "FORBIDDEN",
+    "predicted_version_id": "FORBIDDEN",
+    "relabeling": "FORBIDDEN"
+  },
+  "authorized_change_scope": {
+    "added_path_count": 6,
+    "modified_path_count": 6,
+    "total_path_count": 12,
+    "unknown_addition_modification_deletion_or_rename": "REFUSE"
+  },
+  "diagnosis": {
+    "failed_required_closure": {
+      "disposition": "AWS_C0_OPERATOR_BOOTSTRAP_FAIL",
+      "failure_code": "STS_SET_SOURCE_IDENTITY_ACCESS_DENIED",
+      "kind": "aws_c0_operator_bootstrap_closure/v1",
+      "preparation_operator_identity": null,
+      "sha256": "5250c649ca14685f46f627504c7014793b479e4b5c43d4bda8246ad8ebc27d4b"
+    },
+    "finding": "COMMITTED_GATE1_V3_REQUIRES_FAILED_V1_LINEAGE_WHILE_ACTUAL_PASS_AND_ISSUED_SESSION_ARE_V5_PLUS_V6",
+    "in_place_historical_record_rewrite": "FORBIDDEN",
+    "old_three_candidate_plan_satisfies_gate1": false
+  },
+  "exact_lineage_candidates_in_order": [
+    {
+      "disposition_constraint": null,
+      "kind": "aws_c0_operator_bootstrap_packet/v4",
+      "ordinal": 0,
+      "sha256": "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"
+    },
+    {
+      "disposition_constraint": null,
+      "kind": "aws_c0_operator_bootstrap_authorization/v5",
+      "ordinal": 1,
+      "sha256": "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"
+    },
+    {
+      "disposition_constraint": "AWS_C0_OPERATOR_BOOTSTRAP_PASS",
+      "kind": "aws_c0_operator_bootstrap_closure/v5",
+      "ordinal": 2,
+      "sha256": "0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f"
+    },
+    {
+      "disposition_constraint": null,
+      "kind": "aws_c0_operator_session_renewal_packet/v1",
+      "ordinal": 3,
+      "sha256": "7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7"
+    },
+    {
+      "disposition_constraint": null,
+      "kind": "aws_c0_operator_session_renewal_authorization/v1",
+      "ordinal": 4,
+      "sha256": "7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0"
+    },
+    {
+      "credentials_issued_constraint": true,
+      "disposition_constraint": "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS",
+      "kind": "aws_c0_operator_session_renewal_closure/v1",
+      "ordinal": 5,
+      "predecessor_closure_sha256": "1391085e39d1809e67ed4b3139634764d87d5824c28e7c517ff940a2ec7b428f",
+      "sha256": "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b"
+    }
+  ],
+  "pre_live_arithmetic": {
+    "bootstrap_v5_records": 3,
+    "closure_seed": 1,
+    "cost_model": 1,
+    "implementation_artifacts": 8,
+    "launch_preparation_closure_and_live_packet": 3,
+    "pre_live_predecessor_object_receipts": 23,
+    "pre_live_total": 24,
+    "preparation_packet_and_authorization": 2,
+    "renewal_v6_records": 3,
+    "snapshot_audit_and_static": 3,
+    "sum": "8+3+3+2+3+1+1+3=24"
+  },
+  "pre_live_record_kinds_in_order": [
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_implementation_artifact/v1",
+    "aws_c0_operator_bootstrap_packet/v4",
+    "aws_c0_operator_bootstrap_authorization/v5",
+    "aws_c0_operator_bootstrap_closure/v5",
+    "aws_c0_operator_session_renewal_packet/v1",
+    "aws_c0_operator_session_renewal_authorization/v1",
+    "aws_c0_operator_session_renewal_closure/v1",
+    "aws_c0_preparation_packet/v4",
+    "aws_c0_preparation_authorization/v3",
+    "aws_c0_private_infrastructure_snapshot/v1",
+    "aws_c0_audit_static_handoff_authority_audit/v4",
+    "aws_c0_material_runtime_static_validation/v4",
+    "aws_c0_cost_model/v2",
+    "aws_c0_closure_seed/v1",
+    "aws_c0_launch_request/v5",
+    "aws_c0_preparation_closure/v4",
+    "aws_c0_live_packet/v5"
+  ],
+  "preserved_boundaries": {
+    "aws_access_or_mutation": "DENIED",
+    "cloudformation_change": "DENIED",
+    "commit_push_merge_publish_deploy_release": "DENIED",
+    "credential_or_session_use": "DENIED",
+    "historical_authority_or_schema_mutation": "DENIED",
+    "scientific_execution": "DENIED"
+  },
+  "required_version_upgrades": [
+    {
+      "from": "aws_c0_preparation_packet/v3",
+      "reason": "SIX_EXACT_LINEAGE_CANDIDATES_AND_24_KIND_PLAN",
+      "to": "aws_c0_preparation_packet/v4"
+    },
+    {
+      "from": "aws_c0_preparation_authorization/v2",
+      "reason": "PACKET_V4_IDENTITY_AND_PRE_LIVE_COUNT_24",
+      "to": "aws_c0_preparation_authorization/v3"
+    },
+    {
+      "from": "aws_c0_launch_request/v4",
+      "reason": "PREPARATION_PACKET_V4_AND_AUTHORIZATION_V3_BINDINGS",
+      "to": "aws_c0_launch_request/v5"
+    },
+    {
+      "from": "aws_c0_preparation_closure/v3",
+      "reason": "PACKET_AUTHORIZATION_LAUNCH_UPGRADES_AND_COUNT_24",
+      "to": "aws_c0_preparation_closure/v4"
+    },
+    {
+      "from": "aws_c0_live_packet/v4",
+      "reason": "CLOSURE_LAUNCH_UPGRADES_AND_EXACT_23_PREDECESSORS",
+      "to": "aws_c0_live_packet/v5"
+    }
+  ],
+  "required_transitive_version_upgrades": [
+    {
+      "from": "aws_c0_live_authorization/v4",
+      "reason": "DIRECTLY_CONSTRAINS_LIVE_PACKET_V5",
+      "to": "aws_c0_live_authorization/v5"
+    },
+    {
+      "from": "aws_c0_platform_smoke_known_case_local_binding/v1",
+      "reason": "DIRECTLY_BINDS_LAUNCH_REQUEST_V5",
+      "to": "aws_c0_platform_smoke_known_case_local_binding/v2"
+    },
+    {
+      "from": "aws_c0_ssm_command_request/v1",
+      "reason": "DIRECTLY_BINDS_LAUNCH_V5_LIVE_PACKET_V5_AND_LIVE_AUTHORIZATION_V5",
+      "to": "aws_c0_ssm_command_request/v2"
+    },
+    {
+      "from": "aws_ssm_command/v1",
+      "reason": "IDENTIFIES_SSM_COMMAND_REQUEST_V2_PREIMAGE",
+      "to": "aws_ssm_command/v2"
+    },
+    {
+      "from": "aws_c0_source_sidecar/v3",
+      "reason": "DIRECTLY_BINDS_LIVE_AUTHORIZATION_V5_AND_AWS_SSM_COMMAND_V2",
+      "to": "aws_c0_source_sidecar/v4"
+    },
+    {
+      "from": "aws_c0_runtime_start_attestation_bundle/v2",
+      "reason": "DIRECTLY_BINDS_SOURCE_SIDECAR_V4",
+      "to": "aws_c0_runtime_start_attestation_bundle/v3"
+    },
+    {
+      "from": "aws_c0_attempt_claim/v1",
+      "reason": "DIRECTLY_BINDS_LAUNCH_V5_LIVE_PACKET_V5_AND_LIVE_AUTHORIZATION_V5",
+      "to": "aws_c0_attempt_claim/v2"
+    },
+    {
+      "from": "aws_c0_start_receipt/v5",
+      "reason": "DIRECTLY_BINDS_LAUNCH_V5_LIVE_PACKET_V5_LIVE_AUTHORIZATION_V5_AND_ATTEMPT_CLAIM_V2",
+      "to": "aws_c0_start_receipt/v6"
+    },
+    {
+      "from": "aws_c0_safe_close_receipt/v1",
+      "reason": "DIRECTLY_BINDS_START_RECEIPT_V6",
+      "to": "aws_c0_safe_close_receipt/v4"
+    },
+    {
+      "from": "aws_c0_resource_use_closure/v1",
+      "reason": "DIRECTLY_BINDS_LAUNCH_REQUEST_V5",
+      "to": "aws_c0_resource_use_closure/v2"
+    },
+    {
+      "from": "aws_c0_finalizer_receipt/v2",
+      "reason": "DIRECTLY_BINDS_LAUNCH_REQUEST_V5_AND_RESOURCE_USE_CLOSURE_V2",
+      "to": "aws_c0_finalizer_receipt/v3"
+    },
+    {
+      "from": "aws_c0_cost_closure/v2",
+      "reason": "DIRECTLY_BINDS_LAUNCH_REQUEST_V5_RESOURCE_USE_CLOSURE_V2_AND_FINALIZER_RECEIPT_V3",
+      "to": "aws_c0_cost_closure/v3"
+    },
+    {
+      "from": "aws_c0_retrieval_verification/v4",
+      "reason": "DIRECTLY_VALIDATES_THE_24_OBJECT_V5_LINEAGE_AND_DOWNSTREAM_VERSIONS",
+      "to": "aws_c0_retrieval_verification/v5"
+    },
+    {
+      "from": "aws_c0_final_manifest/v4",
+      "reason": "DIRECTLY_BINDS_LAUNCH_V5_SAFE_CLOSE_V4_FINALIZER_V3_RETRIEVAL_V5_AND_COST_V3",
+      "to": "aws_c0_final_manifest/v5"
+    },
+    {
+      "from": "aws_c0_final_manifest_publication_observation/v2",
+      "reason": "DIRECTLY_BINDS_FINAL_MANIFEST_V5",
+      "to": "aws_c0_final_manifest_publication_observation/v3"
+    },
+    {
+      "from": "aws_c0_final_s3_capture_aggregate/v1",
+      "reason": "DIRECTLY_BINDS_FINAL_MANIFEST_V5_AND_PUBLICATION_OBSERVATION_V3",
+      "to": "aws_c0_final_s3_capture_aggregate/v2"
+    },
+    {
+      "from": "aws_c0_closure_response/v3",
+      "reason": "DIRECTLY_BINDS_FINAL_MANIFEST_V5_PUBLICATION_OBSERVATION_V3_AND_FINAL_S3_CAPTURE_AGGREGATE_V2",
+      "to": "aws_c0_closure_response/v4"
+    },
+    {
+      "from": "aws_c0_publication_upgrade_binding/v4",
+      "reason": "DIRECTLY_BINDS_FINAL_MANIFEST_V5",
+      "to": "aws_c0_publication_upgrade_binding/v5"
+    }
+  ],
+  "additive_runtime_negative_lane": {
+    "historical_case_count": 352,
+    "correction_case_count": 6,
+    "total_case_count": 358,
+    "registry_schema": "aws_c0_static_negative_case_execution/v5",
+    "case_ids_in_order": [
+      "C0-G1-LINEAGE-N01",
+      "C0-G1-LINEAGE-N02",
+      "C0-G1-LINEAGE-N03",
+      "C0-G1-LINEAGE-N04",
+      "C0-G1-LINEAGE-N05",
+      "C0-G1-LINEAGE-N06"
+    ],
+    "historical_registry_arithmetic": "PRESERVED_UNCHANGED"
+  },
+  "preparation_authorization_statement": {
+    "statement_version": "AUTHORIZE_AWS_C0_PREPARATION_V3",
+    "statement_template": "AUTHORIZE_AWS_C0_PREPARATION_V3 preparation_packet_sha256={preparation_packet_sha256} implementation_commit={implementation_commit} implementation_tree={implementation_tree} account_identity_sha256={account_identity_sha256} region=us-east-1 instance_id=i-048bac00bdb540a4e preparation_session_assumer_identity_sha256={preparation_session_assumer_identity_sha256} operator_role_identity_sha256={operator_role_identity_sha256} preparation_session_policy_identity_sha256={preparation_session_policy_identity_sha256} preparation_policy_ceiling_identity_sha256={preparation_policy_ceiling_identity_sha256} preparation_policy_subset_proof_identity_sha256={preparation_policy_subset_proof_identity_sha256} preparation_pass_role_scope_proof_identity_sha256={preparation_pass_role_scope_proof_identity_sha256} preparation_session_max_duration_seconds={preparation_session_max_duration_seconds} preparation_session_expires_utc={preparation_session_expires_utc} artifact_bucket_identity_sha256={artifact_bucket_identity_sha256} pre_live_object_count=24 accounting_end_utc={accounting_end_utc} cost_ceiling_minor_units={cost_ceiling_minor_units} allow=RECHECK_READ_ONLY_PREFLIGHT,APPLY_EXACT_IAM_REMEDIATION,STAGE_EXACT_PRE_LIVE_OBJECTS,BOOTSTRAP_EXACT_STOPPED_INSTANCE,CREATE_ONE_UNEXECUTED_CHANGE_SET,FINALIZE_EXACT_LIVE_PACKET deny=LIVE_EXECUTION,REPLAY,DELETE,TERMINATE,SCIENTIFIC_EXECUTION",
+    "preparation_packet_schema": "aws_c0_preparation_packet/v4",
+    "preparation_authorization_schema": "aws_c0_preparation_authorization/v3",
+    "pre_live_object_count_literal": 24,
+    "packet_locally_canonical_and_displayed_before_statement": true,
+    "packet_published_before_statement": false,
+    "statement_contains_packet_key_version_or_receipt": false,
+    "packet_and_authorization_staged_only_after_statement": true,
+    "preparation_only": true,
+    "denied_actions_in_order": [
+      "LIVE_EXECUTION",
+      "REPLAY",
+      "DELETE",
+      "TERMINATE",
+      "SCIENTIFIC_EXECUTION"
+    ]
+  },
+  "transitive_version_rule": "EVERY_LATER_SCHEMA_THAT_CONSTRAINS_AN_UPGRADED_KIND_MUST_RECEIVE_A_NEW_VERSION_BEFORE_USE",
+  "validation_contract": "aws_c0_gate1_bootstrap_lineage_correction_validation_contract.json",
+  "version": "1.0.0"
+}

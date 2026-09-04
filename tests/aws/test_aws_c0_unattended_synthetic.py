@@ -39,6 +39,16 @@ def reroot(record):
     result["record_sha256"] = hashlib.sha256(V.canonical_bytes(result)).hexdigest(); return result
 
 
+def current_launch(record):
+    result = copy.deepcopy(record)
+    result["schema"] = "aws_c0_launch_request/v5"
+    result["preparation_packet_identity"]["kind"] = "aws_c0_preparation_packet/v4"
+    result["preparation_authorization_identity"]["kind"] = "aws_c0_preparation_authorization/v3"
+    result["authority_audit_identity"]["kind"] = "aws_c0_audit_static_handoff_authority_audit/v4"
+    result["static_validation_identity"]["kind"] = "aws_c0_material_runtime_static_validation/v4"
+    return reroot(result)
+
+
 class CanonicalTests(unittest.TestCase):
     def test_duplicate_refused(self):
         with self.assertRaises(V.ValidationError): V.strict_json_bytes(b'{"x":1,"x":2}')
@@ -88,6 +98,25 @@ class AuthorityTests(unittest.TestCase):
         self.assertEqual(contract["stage_boundary"]["stage_e_status"], "ACCEPTED_FINISHED_UNCHANGED")
         self.assertEqual(contract["stage_boundary"]["stage_f"], "FROZEN_SEPARATE_AWS_LINUX_BINDING_SCIENTIFIC_PACKET_AND_AUTHORIZATION_REQUIRED")
 
+    def test_gate1_lineage_lane_is_additive_to_historical_registry(self):
+        fixture = load("aws/c0/fixtures/negative-cases.json")
+        self.assertEqual(fixture["schema"], "aws_c0_static_negative_case_execution/v5")
+        self.assertEqual(fixture["executed_case_count"], 358)
+        self.assertEqual(fixture["case_ids"][-6:], [
+            "C0-G1-LINEAGE-N01", "C0-G1-LINEAGE-N02", "C0-G1-LINEAGE-N03",
+            "C0-G1-LINEAGE-N04", "C0-G1-LINEAGE-N05", "C0-G1-LINEAGE-N06",
+        ])
+
+    def test_gate1_preparation_authorization_v3_statement_is_exact(self):
+        contract = load("aws_c0_gate1_bootstrap_lineage_correction_contract.json")
+        statement = contract["preparation_authorization_statement"]
+        self.assertEqual(statement["statement_version"], "AUTHORIZE_AWS_C0_PREPARATION_V3")
+        self.assertEqual(statement["statement_template"], V.GATE1_PREPARATION_STATEMENT_TEMPLATE)
+        self.assertIn("pre_live_object_count=24", statement["statement_template"])
+        self.assertNotIn("pre_live_object_count=21", statement["statement_template"])
+        self.assertIn("deny=LIVE_EXECUTION,REPLAY,DELETE,TERMINATE,SCIENTIFIC_EXECUTION",
+                      statement["statement_template"])
+
     def test_audit_and_static_v4_modes_are_distinct_and_offline(self):
         self.assertEqual(V.main(["--mode", "audit-v4"]), 0)
         self.assertEqual(V.main(["--mode", "static-v4"]), 0)
@@ -114,7 +143,7 @@ class LaunchTests(unittest.TestCase):
     def setUp(self): self.launch = load("aws/c0/fixtures/launch-request.valid.json")
     def test_valid_in_static_and_controller(self):
         V.validate_launch_v3(self.launch)
-        current = reroot({**self.launch, "schema": "aws_c0_launch_request/v4"})
+        current = current_launch(self.launch)
         C.validate_launch(current, current["rehearsal_id"], current["attempt_id"])
 
     def test_extra_field_refused(self):
@@ -142,8 +171,9 @@ class LaunchTests(unittest.TestCase):
         with self.assertRaises(C.Refusal): C._mode("ATTEMPT-X-OTHER")
 
     def test_platform_smoke_first_capsule_binds_existing_success_launch_only(self):
-        current = reroot({**self.launch, "schema": "aws_c0_launch_request/v4"})
+        current = current_launch(self.launch)
         binding = C.build_platform_smoke_known_case_local_binding(current)
+        self.assertEqual(binding["schema"], "aws_c0_platform_smoke_known_case_local_binding/v2")
         self.assertEqual(binding["capsule_id"], "platform-smoke-known-case-v1")
         self.assertEqual(binding["test_case"], "SUCCESS_KNOWN_CASE")
         self.assertEqual(binding["budget_binding"]["ceiling_minor_units"], 5000)
@@ -168,7 +198,7 @@ class LaunchTests(unittest.TestCase):
 
     def test_platform_smoke_first_capsule_refuses_non_success_known_case(self):
         changed = copy.deepcopy(self.launch)
-        changed["schema"] = "aws_c0_launch_request/v4"
+        changed = current_launch(changed)
         changed["attempt_id"] = "ATTEMPT-CLOSURE-FAIL-AFTER-CHECKPOINT"
         changed["artifact_prefix"] = (
             "rehearsal/aws-c0/AWS-C0-CLOSURE/"
@@ -177,6 +207,125 @@ class LaunchTests(unittest.TestCase):
         changed = reroot(changed)
         with self.assertRaises(C.Refusal):
             C.build_platform_smoke_known_case_local_binding(changed)
+
+
+class Gate1LineageCorrectionTests(unittest.TestCase):
+    @staticmethod
+    def packet(*, schema="aws_c0_live_packet/v5", count=24, predecessors=23):
+        packet = {field: None for field in F.LIVE_PACKET_V5_FIELDS}
+        packet.update({
+            "schema": schema,
+            "packet_disposition": "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED",
+            "final_instance_state": "stopped",
+            "pre_live_object_count": count,
+            "pre_live_predecessor_object_receipts": [object() for _ in range(predecessors)],
+            "preparation_closure_identity": C.identity("aws_c0_preparation_closure/v4", "a" * 64),
+            "launch_request_identity": C.identity("aws_c0_launch_request/v5", "b" * 64),
+            "observed_utc": "2026-09-04T00:00:00Z",
+            "live_session_assumer_expires_utc": "2026-09-04T01:00:00Z",
+        })
+        return packet
+
+    @staticmethod
+    def validate_packet(packet):
+        with (mock.patch.object(F, "_common"), mock.patch.object(F, "_identity"),
+              mock.patch.object(F, "_bound_base64")):
+            F._validate_live_packet_v5(packet)
+
+    def test_c0_g1_lineage_n01_stale_launch_version_refused(self):
+        launch = current_launch(load("aws/c0/fixtures/launch-request.valid.json"))
+        launch["schema"] = "aws_c0_launch_request/v4"
+        launch = reroot(launch)
+        with self.assertRaises(C.Refusal):
+            C.validate_launch(launch, launch["rehearsal_id"], launch["attempt_id"])
+
+    def test_c0_g1_lineage_n02_stale_live_packet_version_refused(self):
+        with self.assertRaises(F.Refusal):
+            self.validate_packet(self.packet(schema="aws_c0_live_packet/v4"))
+
+    def test_c0_g1_lineage_n03_stale_live_authorization_version_refused(self):
+        auth = {field: None for field in F.LIVE_AUTH_V5_FIELDS}
+        auth["schema"] = "aws_c0_live_authorization/v4"
+        with self.assertRaises(F.Refusal):
+            F._validate_live_authorization_v5(auth)
+
+    def test_c0_g1_lineage_n04_stale_21_object_count_refused(self):
+        with self.assertRaises(F.Refusal):
+            self.validate_packet(self.packet(count=21))
+
+    def test_c0_g1_lineage_n05_stale_20_predecessor_count_refused(self):
+        with self.assertRaises(F.Refusal):
+            self.validate_packet(self.packet(predecessors=20))
+
+    def test_c0_g1_lineage_n06_same_kind_wrong_hash_refused(self):
+        self.assertEqual(F.FROZEN_PRELIVE_OBJECT_COUNT, 24)
+        self.assertEqual(F.FROZEN_PRELIVE_PREDECESSOR_COUNT, 23)
+        self.assertEqual(len(F.FROZEN_PRELIVE_RECORD_KINDS), 15)
+        self.assertEqual(F.FROZEN_PRELIVE_RECORD_KINDS[:6], (
+            "aws_c0_operator_bootstrap_packet/v4",
+            "aws_c0_operator_bootstrap_authorization/v5",
+            "aws_c0_operator_bootstrap_closure/v5",
+            "aws_c0_operator_session_renewal_packet/v1",
+            "aws_c0_operator_session_renewal_authorization/v1",
+            "aws_c0_operator_session_renewal_closure/v1",
+        ))
+        coordinates = [{"key": f"object-{index}", "version_id": f"v-{index}",
+                        "sha256": f"{index:064x}", "bytes": 1}
+                       for index in range(23)]
+        artifacts = coordinates[:8]
+        records = coordinates[8:]
+        packet = self.packet()
+        packet["pre_live_predecessor_object_receipts"] = artifacts + records
+        auth = {"live_packet_identity": C.identity("aws_c0_live_packet/v5", "c" * 64)}
+        stale = V.canonical_bytes({"schema": "aws_c0_operator_bootstrap_packet/v4"})
+        with (mock.patch.object(F, "_fetch_receipt", side_effect=[
+                  (packet, b"", "c" * 64), (auth, b"", "d" * 64)]),
+              mock.patch.object(F, "_validate_live_packet_v5"),
+              mock.patch.object(F, "_validate_live_authorization_v5"),
+              mock.patch.object(F, "_receipt", side_effect=lambda value: value),
+              mock.patch.object(F, "_bucket_from_receipt", return_value="bucket"),
+              mock.patch.object(F, "_s3_get", return_value=stale)):
+            with self.assertRaisesRegex(F.Refusal, "complete-byte SHA-256 mismatch"):
+                F._verify_prelive_objects({}, {}, {"artifact_version_receipts": artifacts})
+
+    def test_sealed_gate0_lineage_semantics_are_explicitly_enforced(self):
+        bootstrap = {
+            "schema": "aws_c0_operator_bootstrap_closure/v5",
+            "operator_bootstrap_disposition": "AWS_C0_OPERATOR_BOOTSTRAP_FAIL",
+        }
+        bootstrap_raw = V.canonical_bytes(bootstrap)
+        bootstrap_hashes = list(F.FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256)
+        bootstrap_hashes[2] = F.digest(bootstrap_raw)
+        with mock.patch.object(F, "FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256", tuple(bootstrap_hashes)):
+            with self.assertRaisesRegex(F.Refusal, "V5 bootstrap closure is not PASS"):
+                F._validate_sealed_gate0_lineage_record(
+                    2, "aws_c0_operator_bootstrap_closure/v5", bootstrap_raw, bootstrap)
+
+        predecessor = {
+            "kind": "aws_c0_operator_session_renewal_closure/v1",
+            "sha256": F.FROZEN_GATE0_RENEWAL_PREDECESSOR_SHA256,
+            "value": F.FROZEN_GATE0_RENEWAL_PREDECESSOR_SHA256,
+        }
+        base_renewal = {
+            "schema": "aws_c0_operator_session_renewal_closure/v1",
+            "operator_session_renewal_disposition": "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS",
+            "credentials_issued": True,
+            "predecessor_closure_identity": predecessor,
+        }
+        mutations = (
+            {**base_renewal, "credentials_issued": False},
+            {**base_renewal, "predecessor_closure_identity": C.identity(
+                "aws_c0_operator_session_renewal_closure/v1", "0" * 64)},
+        )
+        for renewal in mutations:
+            with self.subTest(renewal=renewal):
+                renewal_raw = V.canonical_bytes(renewal)
+                renewal_hashes = list(F.FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256)
+                renewal_hashes[5] = F.digest(renewal_raw)
+                with mock.patch.object(F, "FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256", tuple(renewal_hashes)):
+                    with self.assertRaisesRegex(F.Refusal, "V6 renewal closure semantics mismatch"):
+                        F._validate_sealed_gate0_lineage_record(
+                            5, "aws_c0_operator_session_renewal_closure/v1", renewal_raw, renewal)
 
 
 class PaginationTests(unittest.TestCase):
@@ -259,7 +408,7 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("sigv4_exact_version_get", download)
         self.assertNotIn('"s3api", "get-object"', source)
         self.assertEqual(prepare.count("source_role=\""), 3)
-        for role in ("LAUNCH_REQUEST_V4", "LIVE_PACKET_V4", "LIVE_AUTHORIZATION_V4"):
+        for role in ("LAUNCH_REQUEST_V5", "LIVE_PACKET_V5", "LIVE_AUTHORIZATION_V5"):
             self.assertIn(role, prepare)
 
     def test_ssm_completion_v2_is_closed_and_refuses_non_success(self):
@@ -287,7 +436,8 @@ class RuntimeContractTests(unittest.TestCase):
 
     def test_retrieval_expected_count_is_frozen_not_observed(self):
         source = (ROOT / "aws/c0/finalizer/finalizer.py").read_text()
-        self.assertIn("FROZEN_PRELIVE_OBJECT_COUNT = 21", source)
+        self.assertIn("FROZEN_PRELIVE_OBJECT_COUNT = 24", source)
+        self.assertIn("FROZEN_PRELIVE_PREDECESSOR_COUNT = 23", source)
         self.assertIn('"expected_object_count": FROZEN_PRELIVE_OBJECT_COUNT', source)
         self.assertNotIn('"expected_object_count": len(verified)', source)
 
@@ -579,7 +729,7 @@ class RuntimeContractTests(unittest.TestCase):
         terminal_put = closure.index('"evidence/final-manifest"')
         self.assertEqual(closure.count('"evidence/final-manifest"'), 1)
         self.assertNotIn("_put_record(", closure[terminal_put + 1:])
-        self.assertIn('"aws_c0_final_manifest_publication_observation/v2"', closure[terminal_put:])
+        self.assertIn('"aws_c0_final_manifest_publication_observation/v3"', closure[terminal_put:])
         self.assertIn('"final_manifest_publication_observation_object": None', closure[terminal_put:])
 
     def test_finalizer_journal_conditional_publish_and_exact_readback_are_injected(self):
@@ -623,7 +773,7 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("OBSERVED_FAILURE", request)
 
     def test_runtime_bundle_binds_sealed_controller_journal_and_readback(self):
-        sidecar = {"kind": "aws_c0_source_sidecar/v3", "sha256": "a" * 64, "value": "a" * 64}
+        sidecar = {"kind": "aws_c0_source_sidecar/v4", "sha256": "a" * 64, "value": "a" * 64}
         dispatch = {"kind": "aws_c0_ssm_dispatch_request/v2", "sha256": "b" * 64, "value": "b" * 64}
         journal = {"kind": "aws_c0_controller_capture_journal/v1", "sha256": "c" * 64, "value": "c" * 64}
         readback = {"schema": "aws_c0_controller_journal_authenticated_readback/v1",
@@ -632,10 +782,11 @@ class RuntimeContractTests(unittest.TestCase):
                     "publication_receipt_identity": {"kind": "aws_c0_capture_journal_publication_receipt/v1", "sha256": "e" * 64, "value": "e" * 64},
                     "readback_receipt": {},
                     "readback_receipt_identity": {"kind": "aws_c0_capture_journal_readback_receipt/v1", "sha256": "f" * 64, "value": "f" * 64}}
-        bundle = C.build_runtime_start_attestation_bundle_v2(
+        bundle = C.build_runtime_start_attestation_bundle_v3(
             source_sidecar_identity=sidecar, source_sidecar_bytes=b"sidecar", dispatch_identity=dispatch,
             controller_capture_journal_identity=journal,
             controller_capture_journal_authenticated_readback=readback)
+        self.assertEqual(bundle["schema"], "aws_c0_runtime_start_attestation_bundle/v3")
         self.assertEqual(bundle["controller_capture_journal_identity"], journal)
 
     def test_ssm_embedded_is_structurally_identical(self):
@@ -676,7 +827,7 @@ class RuntimeContractTests(unittest.TestCase):
     def test_controller_claim_precedes_start(self):
         source=(ROOT/"aws/c0/controller/ebu_c0_controller.py").read_text()
         claim=source.index("attempt-claim-")
-        self.assertLess(claim,source.index('aws_c0_start_receipt/v5',claim))
+        self.assertLess(claim,source.index('aws_c0_start_receipt/v6',claim))
 
     def test_service_has_only_needed_dac_capability(self):
         unit=(ROOT/"aws/c0/controller/ebu-c0@.service").read_text()

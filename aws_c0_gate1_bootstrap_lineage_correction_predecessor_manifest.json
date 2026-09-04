@@ -1,0 +1,133 @@
+{
+  "authority_id": "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1",
+  "status": "ACCEPTED_PREDECESSOR_AND_SEALED_EXTERNAL_LINEAGE",
+  "accepted_base": {
+    "commit": "22d0aff12b5f9c091b84ebf6918f1180c142bf50",
+    "tree": "8c89835043c870b45f01961cdf7b6c229e065549"
+  },
+  "failed_historical_gate0_record": {
+    "disposition": "AWS_C0_OPERATOR_BOOTSTRAP_FAIL",
+    "failure_code": "STS_SET_SOURCE_IDENTITY_ACCESS_DENIED",
+    "kind": "aws_c0_operator_bootstrap_closure/v1",
+    "preparation_operator_identity": null,
+    "sha256": "5250c649ca14685f46f627504c7014793b479e4b5c43d4bda8246ad8ebc27d4b",
+    "must_remain_historical_and_unmodified": true,
+    "satisfies_gate1": false
+  },
+  "successful_v5_plus_v6_lineage_in_order": [
+    {
+      "kind": "aws_c0_operator_bootstrap_packet/v4",
+      "ordinal": 0,
+      "sha256": "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"
+    },
+    {
+      "kind": "aws_c0_operator_bootstrap_authorization/v5",
+      "ordinal": 1,
+      "sha256": "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"
+    },
+    {
+      "disposition": "AWS_C0_OPERATOR_BOOTSTRAP_PASS",
+      "kind": "aws_c0_operator_bootstrap_closure/v5",
+      "ordinal": 2,
+      "sha256": "0a1b93360e8b0ae685e33bfa5f45924dee6f1ebe2e1905ff388690c5182d2f5f"
+    },
+    {
+      "kind": "aws_c0_operator_session_renewal_packet/v1",
+      "ordinal": 3,
+      "sha256": "7866fb59d3eb31a6c13c294102d291ab4fbe483030b49970a66b146fcf45f4e7"
+    },
+    {
+      "kind": "aws_c0_operator_session_renewal_authorization/v1",
+      "ordinal": 4,
+      "sha256": "7030750a6cd3db5120baeae48bb85c1259cc2169758c75d898e6a83d53c1b9a0"
+    },
+    {
+      "credentials_issued": true,
+      "independent_approval_status": "SEALED_APPROVED",
+      "kind": "aws_c0_operator_session_renewal_closure/v1",
+      "ordinal": 5,
+      "operator_session_renewal_disposition": "AWS_C0_OPERATOR_SESSION_RENEWAL_PASS",
+      "predecessor_closure_sha256": "1391085e39d1809e67ed4b3139634764d87d5824c28e7c517ff940a2ec7b428f",
+      "sha256": "c9a8eaf846569363cb4f405670b48ee85a891498f48f690f5145601ccde5388b"
+    }
+  ],
+  "critical_accepted_base_rows": [
+    {
+      "bytes": 44156,
+      "git_blob": "4f9a9197296ef2b40d6567ab98e7aa5e8fd890d2",
+      "mode": "100644",
+      "path": "AWS_C0_AUDIT_STATIC_REAL_EXECUTION_REGISTRY_CORRECTION_AUTHORITY_AMENDMENT.md",
+      "sha256": "b88cf85aca998500933938d1d17fd749857931a3fb100f7472f67635baa0ebe7"
+    },
+    {
+      "bytes": 55244,
+      "git_blob": "47ae1dd2e94374bcf74b4ce812dadf6b9076d097",
+      "mode": "100644",
+      "path": "aws_c0_audit_static_real_execution_registry_correction_contract.json",
+      "sha256": "7f2e1c3173fe9faf4759637bec18484130b09a8b8180ae1d28e4288494b3aef1"
+    },
+    {
+      "bytes": 2354803,
+      "git_blob": "ed3c72506d3969f44db3fdd7ed616585995ab8aa",
+      "mode": "100644",
+      "path": "aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json",
+      "sha256": "5bc61f26c51019879b227223363d773adf9c3bff8625ace616910774da2821ad"
+    },
+    {
+      "bytes": 896046,
+      "git_blob": "ed9bc958556faed13f4fc541a6bb34929058a30e",
+      "mode": "100644",
+      "path": "aws_c0_audit_static_real_execution_registry_correction_validation_contract.json",
+      "sha256": "ee108326dcf58d4e0fd88558a42a77e3465e6daf70ff0bd431286bfdb2a34e16"
+    },
+    {
+      "bytes": 47425,
+      "git_blob": "d46711f29d81cd5f5883b98f94b340d3b4f66001",
+      "mode": "100644",
+      "path": "aws/c0/README.md",
+      "sha256": "b78bd0fb3317a8a992306c2e3c2fd652846b5fe4c7ae47e25de9a4d391a788a4"
+    },
+    {
+      "bytes": 104682,
+      "git_blob": "85e69cc4489580cfa1f1b794da8b74a4e98a23df",
+      "mode": "100644",
+      "path": "aws/c0/controller/ebu_c0_controller.py",
+      "sha256": "534a0c735809dc3becd164458b010dafb477411f65edbe0d485f7e90a7503710"
+    },
+    {
+      "bytes": 203740,
+      "git_blob": "4f4c85fa30bea38b1637468fabb5052a8bb5a25a",
+      "mode": "100644",
+      "path": "aws/c0/finalizer/finalizer.py",
+      "sha256": "f0d0abb3bf11f4f431a1a600ffd6decb5172c4dd2cfb374079a0749603075f5a"
+    },
+    {
+      "bytes": 4524,
+      "git_blob": "224e6bdb605f279e8e8cee02e229c978f867c08b",
+      "mode": "100644",
+      "path": "aws/c0/fixtures/negative-cases.json",
+      "sha256": "c028777ffd37d6c4b88c1dab79d0c1c5cadf53dddbdd4f819da141767d8a9b6e"
+    },
+    {
+      "bytes": 2261294,
+      "git_blob": "9b499c63cb13f1afa879d0439701c9033c170f76",
+      "mode": "100644",
+      "path": "scripts/validate_aws_c0_static.py",
+      "sha256": "e4c10805f727e9cc2fe38d8aa22f82b9ceafdfef6c8626b7f3b8484938a5ddaf"
+    },
+    {
+      "bytes": 47940,
+      "git_blob": "c97e0fc55218286432f6b3161564862b3ac2667a",
+      "mode": "100644",
+      "path": "tests/aws/test_aws_c0_unattended_synthetic.py",
+      "sha256": "aa649d835aada0512bc6df7febe35931b42da65252e587df044bb102be1b1194"
+    }
+  ],
+  "historical_preservation": {
+    "accepted_authority_bytes": "UNCHANGED",
+    "accepted_schema_bytes": "UNCHANGED",
+    "failed_attempt_records": "PRESERVED_AS_FAILURE_EVIDENCE",
+    "successful_v5_and_v6_record_kinds": "PRESERVED_WITHOUT_RELABELING"
+  },
+  "completion_marker": "AWS_C0_GATE1_BOOTSTRAP_LINEAGE_CORRECTION_PREDECESSOR_MANIFEST_COMPLETE"
+}
