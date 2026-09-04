@@ -535,6 +535,62 @@ and safe-close exists. If this repository task is interrupted locally, all work
 is ordinary Git worktree state and can be resumed; interruption itself grants
 no AWS action.
 
+## Separate long-run compute-sizing and provisioning gate
+
+The ready `platform-smoke-known-case-v1` capsule stays on the existing verified
+instance as the first low-cost platform check. Its PASS can establish only the
+sealed smoke case's operability; it does not establish CPU, memory, storage,
+throughput, checkpoint, runtime, or cost fitness for a homeostasis or other
+long-run study.
+
+Every later long-run study must first be registered with an immutable declared
+scale. From that declaration, a local sizing record must derive and bind:
+
+- maximum worker/process/thread parallelism and CPU cores per worker, plus an
+  explicit orchestration and operating-system reserve;
+- peak resident bytes per worker, shared/model bytes, cache and operating-system
+  bytes, and bounded headroom, with swap forbidden unless separately sealed;
+- immutable inputs and image bytes, peak scratch and log bytes, checkpoint bytes
+  times retained checkpoint count, restore reserve, volume throughput/IOPS, and
+  the exact checkpoint-retention horizon;
+- declared work units, evidenced throughput assumption, maximum runtime,
+  checkpoint interval, recovery allowance, attempt deadline, cleanup deadline,
+  and retained-resource horizon;
+- a closed parallelism policy with no inferred autoscaling, replay, Spot use, or
+  concurrent study unless the study registration expressly authorizes it; and
+- default-deny network isolation, exact required endpoints and DNS/TLS controls,
+  and a prohibition on package installation, image pulls, or unregistered
+  external traffic during the study.
+
+The sizing record must compare at least one compatible candidate instance
+profile by exact architecture, vCPU, RAM, storage type/size/throughput/IOPS,
+image digest, operating-system identity, and placement constraints. Selection
+is the smallest profile that satisfies every derived maximum and reserve; an
+unsatisfied dimension refuses rather than borrowing capacity from the smoke
+instance or weakening the study scale.
+
+A separate provisioning packet must then bind that selected profile, exact
+infrastructure changes and rollback, IAM role/policy, storage encryption and
+retention, network isolation, checkpoint recovery test, monitoring, one-start
+and one-stop bounds, cleanup ownership, and a study-specific integer cost
+ceiling. Its upper bound must cover compute runtime, storage and retained
+versions, requests, logs, KMS, networking, addresses, and the complete retained
+horizon using fresh list-price evidence; discounts, credits, and a successful
+smoke result are not capacity or cost assumptions.
+
+No provisioning or long-run execution is locally authorized. After independent
+review and separate user authorization, a fresh AWS verification must confirm
+the selected type's availability and quota, current price and billing units,
+exact AMI/image and instance profile, volumes and encryption, endpoints/routes,
+bucket/KMS controls, SSM reachability, deadlines, cost ceiling, and initial
+`stopped` state. Any mismatch returns to local sizing. A later provisioning
+authorization may create or resize only the sealed resources, verify them while
+stopped, and finish stopped; a still later study-execution authorization is
+required for one start, bounded checkpoints/runtime, one non-reentrant stop,
+exact stopped readback, evidence retention, and cleanup reconciliation.
+
+`AWS_C0_LONG_RUN_COMPUTE_PROVISIONING_GATE_LOCAL_PLAN_COMPLETE`
+
 ## More rehearsals and a real experiment
 
 Each additional AWS-C0 attempt needs a new attempt ID with one supported suffix,
