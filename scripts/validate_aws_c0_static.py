@@ -80,6 +80,9 @@ CLOUDFORMATION_READINESS_MODIFIED_PATHS = (
     "scripts/validate_aws_c0_static.py",
     "tests/aws/test_aws_c0_unattended_synthetic.py",
 )
+LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
+    "scripts/build_aws_c0_deployment_manifest.py",
+)
 GATE1_LINEAGE_IN_ORDER = (
     ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),
     ("aws_c0_operator_bootstrap_authorization/v5", "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"),
@@ -23728,19 +23731,20 @@ def validate_paths() -> None:
     changed = set(filter(None, _git("diff", "--name-only", EXPECTED_BASE, "--").splitlines()))
     untracked = set(filter(None, _git("ls-files", "--others", "--exclude-standard").splitlines()))
     expected_paths = (set(IMPLEMENTATION_PATHS) | set(GATE0_CONTROL_PATHS) |
-                      set(GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS))
+                      set(GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS) |
+                      set(LOCAL_DEPLOYMENT_READINESS_PATHS))
     require(
         changed | untracked == expected_paths,
         "path gate is not exactly 14 implementation paths plus 5 Gate 0 control paths plus 6 Gate 1 authority paths",
     )
     readiness_changed = set(filter(None, _git(
         "diff", "--name-only", GATE1_CORRECTION_COMMIT, "--").splitlines()))
-    require(readiness_changed | untracked == set(CLOUDFORMATION_READINESS_MODIFIED_PATHS),
-            "CloudFormation readiness checkpoint is not exactly four modified local paths")
+    require(readiness_changed | untracked == set(LOCAL_DEPLOYMENT_READINESS_PATHS),
+            "local deployment-readiness checkpoint is not exactly the four CloudFormation paths plus its offline builder")
     # Python bytecode is an interpreter by-product, never candidate source;
     # git's tracked/untracked comparison above is the implementation scope.
     for path in (*IMPLEMENTATION_PATHS, *GATE0_CONTROL_PATHS,
-                 *GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS):
+                 *GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_PATHS, *LOCAL_DEPLOYMENT_READINESS_PATHS):
         candidate = ROOT / path
         require(candidate.is_file() and not candidate.is_symlink() and stat.S_IMODE(candidate.stat().st_mode) == 0o644,
                 f"{path} must be regular 100644")

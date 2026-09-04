@@ -700,6 +700,38 @@ root ownership, `0600` request directory policy, and the Docker daemon. Any
 mismatch stops and rolls the host back to `stopped`; do not download a package,
 pull an image, or repair in place without new authority.
 
+### Local deployment-readiness manifest
+
+When the retained account has no `EBU-C0-492a4f1` stack, that is a deployment
+precondition—not a reason to start the instance or run a workload.  Generate
+the repository-byte portion of the preparation packet with:
+
+```sh
+python3 scripts/build_aws_c0_deployment_manifest.py \
+  --output /private/tmp/aws-c0-local-deployment-manifest.json
+```
+
+The manifest uses a deterministic, stored ZIP archive containing only
+`finalizer.py` at the Lambda archive root and records the SHA-256 and byte
+count of every locally knowable deployable source.  It intentionally leaves
+the bucket identity, S3 VersionIds and receipts, current pricing observations,
+retained-host image digest, and change-set identity unresolved.  Those are
+authenticated AWS observations and must never be replaced by local defaults.
+
+The first external authority required to create the missing stack is a fresh
+Gate 1 preparation authorization using the exact preserved grammar below,
+after a fresh constrained preparation session and read-only inventory have
+bound every placeholder to observed values:
+
+```text
+AUTHORIZE_AWS_C0_PREPARATION_V3 preparation_packet_sha256={preparation_packet_sha256} implementation_commit={implementation_commit} implementation_tree={implementation_tree} account_identity_sha256={account_identity_sha256} region=us-east-1 instance_id=i-048bac00bdb540a4e preparation_session_assumer_identity_sha256={preparation_session_assumer_identity_sha256} operator_role_identity_sha256={operator_role_identity_sha256} preparation_session_policy_identity_sha256={preparation_session_policy_identity_sha256} preparation_policy_ceiling_identity_sha256={preparation_policy_ceiling_identity_sha256} preparation_policy_subset_proof_identity_sha256={preparation_policy_subset_proof_identity_sha256} preparation_pass_role_scope_proof_identity_sha256={preparation_pass_role_scope_proof_identity_sha256} preparation_session_max_duration_seconds={preparation_session_max_duration_seconds} preparation_session_expires_utc={preparation_session_expires_utc} artifact_bucket_identity_sha256={artifact_bucket_identity_sha256} pre_live_object_count=24 accounting_end_utc={accounting_end_utc} cost_ceiling_minor_units=5000 allow=RECHECK_READ_ONLY_PREFLIGHT,APPLY_EXACT_IAM_REMEDIATION,STAGE_EXACT_PRE_LIVE_OBJECTS,BOOTSTRAP_EXACT_STOPPED_INSTANCE,CREATE_ONE_UNEXECUTED_CHANGE_SET,FINALIZE_EXACT_LIVE_PACKET deny=LIVE_EXECUTION,REPLAY,DELETE,TERMINATE,SCIENTIFIC_EXECUTION
+```
+
+That authority permits exactly one unexecuted change set, not stack execution,
+workflow start, container execution, or scientific work.  Its preparation
+closure must leave the retained instance stopped.  A separate Gate 2 live
+authorization remains required before executing that exact change set.
+
 ## Deployment and launch (only after Gate 2)
 
 1. Execute the reviewed CloudFormation change set once.

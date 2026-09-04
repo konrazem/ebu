@@ -28,6 +28,7 @@ V = module("scripts/validate_aws_c0_static.py", "aws_c0_validator")
 C = module("aws/c0/controller/ebu_c0_controller.py", "aws_c0_controller")
 F = module("aws/c0/finalizer/finalizer.py", "aws_c0_finalizer")
 W = module("aws/c0/container/synthetic_worker.py", "aws_c0_worker")
+D = module("scripts/build_aws_c0_deployment_manifest.py", "aws_c0_deployment_manifest")
 
 
 def load(path: str):
@@ -122,6 +123,20 @@ class AuthorityTests(unittest.TestCase):
         self.assertEqual(V.main(["--mode", "static-v4"]), 0)
         with self.assertRaises(SystemExit):
             V.main(["--mode", "static-v3"])
+
+    def test_local_deployment_manifest_is_deterministic_and_leaves_aws_values_unresolved(self):
+        first = D.build(ROOT)
+        second = D.build(ROOT)
+        self.assertEqual(first, second)
+        self.assertTrue(first["offline_only"])
+        self.assertEqual(first["schema"], "aws_c0_local_deployment_material_manifest/v1")
+        artifacts = {artifact["kind"]: artifact for artifact in first["artifacts"]}
+        finalizer = artifacts["finalizer_zip"]
+        self.assertEqual(finalizer["handler"], "finalizer.lambda_handler")
+        self.assertEqual(finalizer["zip_member_order"], ["finalizer.py"])
+        self.assertEqual(finalizer["zip_compression"], "stored")
+        self.assertEqual(len(finalizer["sha256"]), 64)
+        self.assertEqual(first["unresolved_external_inputs"], list(D.UNRESOLVED_EXTERNAL_INPUTS))
 
     def test_public_cli_writes_only_an_exclusive_canonical_output(self):
         with tempfile.TemporaryDirectory() as directory:
