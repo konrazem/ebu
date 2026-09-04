@@ -1,0 +1,193 @@
+{
+  "$id": "urn:ebu:aws-c0:sso-operator-bootstrap-material:v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority_id": {
+      "const": "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1"
+    },
+    "correction_authority_id": {
+      "const": "EBU-AWS-C0-SSO-SOURCE-IDENTITY-CAPABILITY-CORRECTION-v1"
+    },
+    "denied_actions": {
+      "const": [
+        "C0_PREPARATION_ACTIONS",
+        "C0_LIVE_ACTIONS",
+        "OTHER_ROLE",
+        "OTHER_SESSION",
+        "ROOT_CREDENTIALS",
+        "SCIENTIFIC_EXECUTION"
+      ]
+    },
+    "exact_sso_caller": {
+      "const": {
+        "account_id": "623609441658",
+        "arn": "arn:aws:sts::623609441658:assumed-role/AWSReservedSSO_AdministratorAccess_64c4d6b6ee31634c/konrad",
+        "iam_role_arn": "arn:aws:iam::623609441658:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_64c4d6b6ee31634c",
+        "profile": "ebu-admin",
+        "region": "us-east-1",
+        "schema": "aws_iam_identity_center_sso_assumed_role_session/v1",
+        "user_id": "AROAZCMQE5V5EVWXO56VA:konrad"
+      }
+    },
+    "gate0_packet_requirements": {
+      "const": {
+        "fresh_iam_identity_center_mfa_required": true,
+        "maximum_assume_role_api_requests": 1,
+        "maximum_operator_roles": 1,
+        "maximum_retry_attempts": 1,
+        "separate_set_source_identity_api_request_permitted": false,
+        "source_identity": "konrad",
+        "sts_authorization_actions_for_single_assume_role_request": [
+          "sts:AssumeRole",
+          "sts:SetSourceIdentity"
+        ]
+      }
+    },
+    "operator_base_policy_exact_live_self_assume_statement": {
+      "const": {
+        "Action": [
+          "sts:AssumeRole",
+          "sts:SetSourceIdentity"
+        ],
+        "Effect": "Allow",
+        "Resource": "arn:aws:iam::623609441658:role/EBU-C0-Operator-492a4f1",
+        "Sid": "AssumeOnlyExactLiveSessionRole"
+      }
+    },
+    "operator_role": {
+      "const": {
+        "arn": "arn:aws:iam::623609441658:role/EBU-C0-Operator-492a4f1",
+        "base_role_policy_name": "EBU-C0-Bounded-492a4f1",
+        "max_session_duration_seconds": 3600,
+        "name": "EBU-C0-Operator-492a4f1",
+        "permissions_boundary_disposition": "NOT_USED_INLINE_AND_SESSION_POLICY_INTERSECTION"
+      }
+    },
+    "preparation_session_policy_requirements": {
+      "const": {
+        "explicitly_denied_live_actions": [
+          "cloudformation:ExecuteChangeSet",
+          "states:StartExecution"
+        ],
+        "required_not_action_members": [
+          "sts:AssumeRole",
+          "sts:GetCallerIdentity",
+          "sts:SetSourceIdentity"
+        ]
+      }
+    },
+    "rollback": {
+      "const": {
+        "applies_only_to_role_created_by_this_gate": true,
+        "maximum_requests": 3,
+        "ordered_actions": [
+          "iam:DeleteRolePolicy",
+          "iam:UntagRole",
+          "iam:DeleteRole"
+        ]
+      }
+    },
+    "schema": {
+      "const": "aws_c0_sso_operator_bootstrap_material/v2"
+    },
+    "sessions": {
+      "const": {
+        "live_session_name": "AWS-C0-LIVE-492a4f1",
+        "preparation_session_name": "AWS-C0-PREP-492a4f1",
+        "source_identity": "konrad"
+      }
+    },
+    "superseded_gate0_packet_sha256": {
+      "const": "b76fa34cb3ca58c7fbf72e284d455cd4ab798a19cf39be832005afd458ecee08"
+    },
+    "supersedes_only": {
+      "const": "GATE_0_STS_SOURCE_IDENTITY_CAPABILITY_BINDING"
+    },
+    "trust_policy": {
+      "const": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "StringEquals": {
+                "sts:RoleSessionName": "AWS-C0-PREP-492a4f1",
+                "sts:SourceIdentity": "konrad"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::623609441658:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_64c4d6b6ee31634c"
+            },
+            "Sid": "ExactSsoBootstrapAssumePreparation"
+          },
+          {
+            "Action": "sts:SetSourceIdentity",
+            "Condition": {
+              "StringEquals": {
+                "sts:SourceIdentity": "konrad"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::623609441658:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_64c4d6b6ee31634c"
+            },
+            "Sid": "ExactSsoBootstrapSetPreparationSourceIdentity"
+          },
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnEquals": {
+                "aws:PrincipalArn": "arn:aws:iam::623609441658:role/EBU-C0-Operator-492a4f1"
+              },
+              "StringEquals": {
+                "sts:RoleSessionName": "AWS-C0-LIVE-492a4f1",
+                "sts:SourceIdentity": "konrad"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::623609441658:root"
+            },
+            "Sid": "ExactPreparationSessionAssumeLive"
+          },
+          {
+            "Action": "sts:SetSourceIdentity",
+            "Condition": {
+              "ArnEquals": {
+                "aws:PrincipalArn": "arn:aws:iam::623609441658:role/EBU-C0-Operator-492a4f1"
+              },
+              "StringEquals": {
+                "sts:SourceIdentity": "konrad"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::623609441658:root"
+            },
+            "Sid": "ExactPreparationSessionSetLiveSourceIdentity"
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    }
+  },
+  "required": [
+    "authority_id",
+    "correction_authority_id",
+    "denied_actions",
+    "exact_sso_caller",
+    "gate0_packet_requirements",
+    "operator_base_policy_exact_live_self_assume_statement",
+    "operator_role",
+    "preparation_session_policy_requirements",
+    "rollback",
+    "schema",
+    "sessions",
+    "superseded_gate0_packet_sha256",
+    "supersedes_only",
+    "trust_policy"
+  ],
+  "title": "EBU AWS-C0 exact SSO source-identity bootstrap material v2",
+  "type": "object"
+}
