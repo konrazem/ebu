@@ -9,8 +9,14 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
+
+_spec = importlib.util.spec_from_file_location('aws_c0_pricing_collector', Path(__file__).with_name('collect_aws_c0_pricing.py'))
+_pricing = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_pricing)
+validate_model, maximum_cost = _pricing.validate_model, _pricing.maximum_cost
 
 
 REQUIRED = (
@@ -55,21 +61,16 @@ def build(manifest: dict, observations: dict) -> dict:
         raise ValueError("missing required authenticated observations: " + ", ".join(missing))
     if observations.get("instance_preimage", {}).get("state") != "stopped":
         raise ValueError("initial instance state must be stopped")
-    if observations.get("cost_model", {}).get("ceiling_minor_units") != 5000:
+    if observations.get("cost_ceiling_minor_units") != 5000:
         raise ValueError("cost ceiling must equal 5000 minor units")
     cost_model = observations["cost_model"]
-    dimensions = cost_model.get("dimensions")
-    if not isinstance(dimensions, list) or tuple(row.get("dimension") for row in dimensions if isinstance(row, dict)) != COST_DIMENSIONS:
-        raise ValueError("cost model must contain the exact ordered 22-dimension set")
-    if any(not isinstance(row.get("rate_observation_sha256"), str) or len(row["rate_observation_sha256"]) != 64
-           for row in dimensions):
-        raise ValueError("every cost dimension needs an exact rate-observation digest")
-    pages = cost_model.get("pagination_receipts")
-    if not isinstance(pages, list) or not pages or pages[-1].get("next_token") is not None:
-        raise ValueError("cost evidence pagination must be complete with a terminal null token")
-    if any(not isinstance(page, dict) or not isinstance(page.get("response_sha256"), str) or len(page["response_sha256"]) != 64
-           for page in pages):
-        raise ValueError("each price page needs an exact response digest")
+    evidence = observations.get("pricing_evidence", {})
+    # Canonical JSON orders object keys lexically; restore the frozen dimension
+    # order explicitly while rejecting missing or extra evidence dimensions.
+    if set(evidence) != set(COST_DIMENSIONS):
+        raise ValueError("complete 22-dimension pricing evidence required")
+    validate_model(cost_model, {d: evidence[d] for d in COST_DIMENSIONS})
+    cost_bound = maximum_cost(cost_model, observations.get("resource_limits", {}))
     if observations.get("change_set_plan", {}).get("change_set_type") != "CREATE":
         raise ValueError("change-set plan must be CREATE only")
     return {
@@ -79,6 +80,7 @@ def build(manifest: dict, observations: dict) -> dict:
         "repository_commit": manifest["repository_commit"],
         "repository_tree": manifest["repository_tree"],
         "observations": observations,
+        "computed_cost_bound_minor_units": cost_bound,
         "planned_actions": list(PLANNED_ACTIONS),
         "denied_actions": list(DENIED_ACTIONS),
         "disposition": "DRAFT_REQUIRES_FRESH_EXACT_GATE1_AUTHORIZATION",
@@ -91,7 +93,9 @@ def main() -> int:
     parser.add_argument("--observations", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    args.output.write_bytes(canonical(build(load(args.manifest), load(args.observations))) + b"\n")
+    raw = canonical(build(load(args.manifest), load(args.observations)))
+    with args.output.open('xb') as stream:
+        stream.write(raw)
     return 0
 
 

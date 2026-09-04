@@ -702,6 +702,62 @@ pull an image, or repair in place without new authority.
 
 ### Local deployment-readiness manifest
 
+The pricing collector is `scripts/collect_aws_c0_pricing.py`. Install its local
+dependencies from `aws/c0/pricing-requirements.txt` in a virtual environment.
+The existing audit/static validator remains standard-library-only; the pricing
+tests additionally use JSON Schema validation against the committed evidence
+schema. Live collection uses a constrained preparation session supplied through
+the SDK credential chain, requires the exact account/role/session, and calls
+only `GetCallerIdentity` and `GetProducts`. It does not renew a session itself.
+
+Each query writes exclusive local page files including raw response bytes,
+canonical request/response preimages, hashes, caller identity, request ID, and
+timestamp. Pagination is bounded to 128 pages/10,000 products. Every page is
+saved before advancing; a failure preserves the partial evidence and does not
+write a completion record. This pricing transcript is local evidence; it does
+not misuse the frozen S3/IAM/workflow pagination schema for a Pricing API.
+
+Offline `--build-spec` and `--evidence-dir` build the exact 22-row
+`aws_c0_cost_model/v2`, replay every OnDemand tier, and compute the sealed
+resource-limit ceiling using integer rational arithmetic. The proof takes the
+maximum applicable tier, uses the committed 256-MiB Lambda memory, and applies
+conservative decimal-GB/28-day-minimum-month conversions. It rounds a rational
+rate upward if its denominator would exceed the frozen integer bound. Missing
+tiers, unsupported units, receipt alteration, truncated pagination, and cost
+above 5,000 USD minor units refuse. Zero usage still requires source rates.
+
+The model builder accepts an explicit accounting validity window, but a price
+response alone does not guarantee future prices. Before Gate 1, the selected
+products, conversion assumptions, resource limits, full accounting horizon,
+and validity evidence must be reviewed and bound to the preparation packet.
+The six-field convenience packet remains a **draft**, not the authoritative
+`aws_c0_preparation_packet/v4`; passing its cost check is not deployment approval.
+
+Local checkpoint ledger (2026-09-04 22:45 UTC): started at `f283f16`; implemented
+SDK collection and schema/runtime replay in this change. The first SDK caller
+request failed because its SSO login token could not refresh. Subsequent
+collection used valid cached SSO role credentials and constrained preparation
+sessions; all 22 rows now have authenticated live pricing response evidence.
+The schema-valid candidate model SHA-256 is
+`c624641a0881620f34bb852de89221cd58c41dfeb3879d60645381e9b64e16db`.
+Its 175-cent result uses **fixture resource limits**, not verified deployment
+maxima: this is not a launch-eligible aggregate cost bound. Resource coverage,
+SKU applicability, accounting-window validity and prior-cost coverage remain
+required. No resources were deployed or started during this collection.
+The earlier EC2 CLI page without request-ID evidence is not substituted.
+Raw pages, failed query evidence, build specification, model and replay proof
+remain privately under the coordinator's `private/aws-c0/`, including
+`pricing-model-candidate-20260904T224534Z/`. Credentials are never stored by the
+pricing collector. The proof's product filter and excluded-SKU list must be
+reviewed for applicability; complete pagination alone does not prove that the
+selected product covers the intended resources.
+
+Local validation after the final product-selection and GiBps-month regression
+additions: 88/88 tests passed, including all frozen authority coordinates;
+`audit-v4`, `static-v4`, and `git diff --check` passed. A fresh read-only EC2
+check at 22:54 UTC confirmed the exact retained instance is still stopped and
+`t3.small`. This checkpoint does not certify complete Gate 1 readiness.
+
 When the retained account has no `EBU-C0-492a4f1` stack, that is a deployment
 precondition—not a reason to start the instance or run a workload.  Generate
 the repository-byte portion of the preparation packet with:

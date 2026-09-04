@@ -36,7 +36,15 @@ jobs:
         run: >-
           python -B -I scripts/validate_aws_c0_static.py --mode static-v4
 
-      - name: Run the exact AWS-C0 static test target
+      - name: Install local pricing schema test dependencies
+        # Schema replay uses the committed JSON Schema through jsonschema.
+        # The test transport is synthetic and never obtains AWS credentials.
+        env:
+          AWS_EC2_METADATA_DISABLED: "true"
+        run: >-
+          python -m pip install -r aws/c0/pricing-requirements.txt
+
+      - name: Run AWS-C0 tests with offline pricing receipt replay
         env:
           AWS_EC2_METADATA_DISABLED: "true"
         run: >-

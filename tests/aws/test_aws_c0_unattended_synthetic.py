@@ -29,6 +29,200 @@ C = module("aws/c0/controller/ebu_c0_controller.py", "aws_c0_controller")
 F = module("aws/c0/finalizer/finalizer.py", "aws_c0_finalizer")
 W = module("aws/c0/container/synthetic_worker.py", "aws_c0_worker")
 D = module("scripts/build_aws_c0_deployment_manifest.py", "aws_c0_deployment_manifest")
+P = module("scripts/collect_aws_c0_pricing.py", "aws_c0_pricing")
+
+
+class PricingCollectorTests(unittest.TestCase):
+    """Synthetic API responses exercise transport-independent proof replay."""
+    def pages(self, source_unit="Hrs", prices=("0.0208000000",), tokens=None):
+        request = P.request_for("AmazonEC2", {"regionCode": "us-east-1"})
+        responses = []
+        for index, price in enumerate(prices):
+            sku = f"SYNTHETIC-SKU-{index}"
+            rate_code = sku + ".TERM.RATE"
+            product = {"product": {"sku": sku, "attributes": {"regionCode": "us-east-1"}},
+                       "serviceCode": "AmazonEC2", "version": "SYNTHETIC-TEST",
+                       "publicationDate": "2026-09-01T00:00:00Z", "terms": {"OnDemand": {
+                           sku + ".TERM": {"sku": sku, "effectiveDate": "2026-09-01T00:00:00Z",
+                           "priceDimensions": {rate_code: {"rateCode": rate_code, "unit": source_unit,
+                             "beginRange": "0", "endRange": "Inf", "appliesTo": [],
+                             "pricePerUnit": {"USD": price}}}}}}}
+            body = {"FormatVersion": "aws_v1", "PriceList": [P.canonical(product).decode()]}
+            if tokens is not None and tokens[index] is not None:
+                body["NextToken"] = tokens[index]
+            responses.append(body)
+        iterator = iter(responses)
+        def fetch(request):
+            body = next(iterator)
+            return body, P.canonical(body), "synthetic-request-id"
+        self.saved = []
+        with mock.patch.object(P, 'now', return_value="2026-09-04T22:00:00Z"):
+            return P.collect_pages(fetch, request, P.identity("aws_c0_constrained_operator_session/v1", {}), self.saved.append)
+
+    def row(self, dimension="instance_running_seconds", unit="SECOND", source_unit="Hrs"):
+        fraction = P.CONVERSIONS[unit][source_unit]
+        return P.rate_row(dimension, unit, self.pages(source_unit),
+                          {source_unit: [fraction.numerator, fraction.denominator]},
+                          "2026-09-04T22:00:00Z", "2026-09-04T23:00:00Z")
+
+    def test_receipts_paginate_and_replay_every_page(self):
+        pages = self.pages(prices=("0.0208", "0.04"), tokens=("next", None))
+        self.assertEqual(pages[1]['request']['NextToken'], 'next')
+        self.assertEqual(len(P.validate_pages(pages)), 2)
+        row = P.rate_row('instance_running_seconds', 'SECOND', pages, {'Hrs': [1, 36]},
+                         '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z')
+        self.assertEqual((row['numerator_minor_units'], row['denominator_units']), (1, 900))
+        self.assertEqual(len(row['pricing_observations']), 2)
+
+    def test_truncated_repeated_and_altered_pages_refused(self):
+        pages = self.pages(prices=("0.02", "0.03"), tokens=("next", None))
+        with self.assertRaisesRegex(P.Refusal, 'terminal'):
+            P.validate_pages(pages[:1])
+        pages[0]['response']['PriceList'] = []
+        with self.assertRaisesRegex(P.Refusal, 'receipt mismatch'):
+            P.validate_pages(pages)
+        with self.assertRaisesRegex(P.Refusal, 'repeated'):
+            self.pages(prices=("0.02", "0.03"), tokens=("next", "next"))
+        self.assertEqual(len(self.saved), 2)
+
+    def test_empty_page_missing_request_id_and_wrong_filters_refused(self):
+        with self.assertRaisesRegex(P.Refusal, 'request id'):
+            P.collect_pages(lambda r: ({}, b'{}', ''), {}, P.identity('test/v1', {}), lambda p: None)
+        pages = self.pages()
+        pages[0]['request']['Filters'][0]['Value'] = 'eu-west-1'
+        pages[0]['receipt']['request_sha256'] = P.digest(P.canonical(pages[0]['request']))
+        with self.assertRaisesRegex(P.Refusal, 'violates filter'):
+            P.validate_pages(pages)
+
+    def test_units_decimal_and_tier_coverage_refused(self):
+        pages = self.pages()
+        with self.assertRaisesRegex(P.Refusal, 'unit conversion'):
+            P.rate_row('instance_running_seconds', 'SECOND', pages, {'Hrs': [1, 360000]},
+                       '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z')
+        for price in ('NaN', '-1', '1e-6'):
+            with self.assertRaises(P.Refusal):
+                P.decimal_parts(price)
+        body = pages[0]['response']
+        product = P.strict(body['PriceList'][0])
+        next(iter(next(iter(product['terms']['OnDemand'].values()))['priceDimensions'].values()))['beginRange'] = '1'
+        body['PriceList'] = [P.canonical(product).decode()]
+        raw = P.canonical(body)
+        pages[0]['wire_response_base64'] = base64.b64encode(raw).decode()
+        pages[0]['wire_response_sha256'] = P.digest(raw)
+        pages[0]['receipt']['response_sha256'] = P.digest(raw)
+        with self.assertRaisesRegex(P.Refusal, 'tier gap'):
+            P.rate_row('instance_running_seconds', 'SECOND', pages, {'Hrs': [1, 36]},
+                       '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z')
+
+    def test_schema_valid_22_row_model_and_runtime_validator(self):
+        contract = load('aws_c0_cost_runtime_retrieval_closure_correction_contract.json')
+        rows, evidence = [], {}
+        for dimension in contract['resource_dimensions_in_order']:
+            unit = contract['resource_dimension_units'][dimension]
+            source_unit = next(iter(P.CONVERSIONS[unit]))
+            ratio = P.CONVERSIONS[unit][source_unit]
+            pages = self.pages(source_unit)
+            conversion = {source_unit: [ratio.numerator, ratio.denominator]}
+            rows.append(P.rate_row(dimension, unit, pages, conversion, '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z'))
+            evidence[dimension] = {'pages': pages, 'conversion': conversion}
+        model = P.cost_model(rows, '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z', '2026-09-04T22:00:00Z')
+        self.assertEqual(P.validate_model(model, evidence), model)
+        model_id = P.digest(P.canonical(model))
+        launch = {'cost_model_identity': F.identity('aws_c0_cost_model/v2', model_id),
+                  'cost_envelope': {'accounting_window': {'start_inclusive_utc': model['valid_from_utc'],
+                                                         'end_exclusive_utc': model['valid_until_utc']}}}
+        self.assertEqual(F._validate_cost_model(model, model_id, launch), model)
+        limits = {d: 0 for d in evidence}
+        self.assertEqual(P.maximum_cost(model, limits), 0)
+        limits['instance_running_seconds'] = 10000000
+        with self.assertRaisesRegex(P.Refusal, 'USD 50'):
+            P.maximum_cost(model, limits)
+        changed = copy.deepcopy(model)
+        changed['rates'][0]['numerator_minor_units'] = 0
+        with self.assertRaisesRegex(P.Refusal, 'replayed'):
+            P.validate_model(changed, evidence)
+        with self.assertRaisesRegex(P.Refusal, '22 dimensions'):
+            P.cost_model(rows[:-1], model['valid_from_utc'], model['valid_until_utc'], model['observed_utc'])
+
+    def test_duplicate_json_and_float_refused(self):
+        for raw in (b'{"x":1,"x":2}', b'{"x":1.1}', b'{"x":NaN}'):
+            with self.assertRaises(P.Refusal):
+                P.strict(raw)
+
+    def test_sealed_product_selection_keeps_exclusion_proof(self):
+        pages = self.pages(prices=('0.02', '0.04'), tokens=('next', None))
+        row = P.rate_row('instance_running_seconds', 'SECOND', pages, {'Hrs': [1, 36]},
+                         '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z',
+                         {'sku': 'SYNTHETIC-SKU-0'})
+        proof = P.strict(base64.b64decode(row['selected_rate_upper_bound_proof_canonical_json_base64']))
+        self.assertEqual(proof['excluded_skus'], ['SYNTHETIC-SKU-1'])
+        self.assertEqual(proof['product_filter'], {'sku': 'SYNTHETIC-SKU-0'})
+        self.assertEqual(len(proof['pages']), 2)
+        self.assertEqual((row['numerator_minor_units'], row['denominator_units']), (1, 1800))
+        with self.assertRaisesRegex(P.Refusal, 'rate observation bound'):
+            P.rate_row('instance_running_seconds', 'SECOND', pages, {'Hrs': [1, 36]},
+                       '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z', {'sku': 'ABSENT'})
+
+    def test_gibps_month_converts_to_mibps_seconds(self):
+        ratio = P.CONVERSIONS['MIBPS_SECOND']['GiBps-mo']
+        row = P.rate_row('ebs_provisioned_throughput_mibps_seconds', 'MIBPS_SECOND',
+                         self.pages('GiBps-mo', ('40.96',)),
+                         {'GiBps-mo': [ratio.numerator, ratio.denominator]},
+                         '2026-09-04T22:00:00Z', '2026-09-04T23:00:00Z')
+        self.assertEqual((row['numerator_minor_units'], row['denominator_units']), (1, 604800))
+
+    def test_page_and_item_bounds_and_empty_result(self):
+        body = {'FormatVersion': 'aws_v1', 'PriceList': [], 'NextToken': 'more'}
+        with self.assertRaisesRegex(P.Refusal, 'page bound'):
+            P.collect_pages(lambda r: (body, P.canonical(body), 'request-id'), {},
+                            P.identity('test/v1', {}), lambda p: None, max_pages=1)
+        body = {'FormatVersion': 'aws_v1', 'PriceList': ['{}', '{}']}
+        with self.assertRaisesRegex(P.Refusal, 'item bound'):
+            P.collect_pages(lambda r: (body, P.canonical(body), 'request-id'), {},
+                            P.identity('test/v1', {}), lambda p: None, max_items=1)
+        pages = self.pages()
+        body = {'FormatVersion': 'aws_v1', 'PriceList': []}
+        pages = P.collect_pages(lambda r: (body, P.canonical(body), 'request-id'), pages[0]['request'],
+                                pages[0]['receipt']['caller_identity'], lambda p: None)
+        with self.assertRaisesRegex(P.Refusal, 'empty pricing'):
+            P.validate_pages(pages)
+
+    def test_offline_collection_build_and_exclusive_files(self):
+        contract = load('aws_c0_cost_runtime_retrieval_closure_correction_contract.json')
+        spec = {'rows': [], 'valid_from_utc': '2026-09-04T22:00:00Z', 'valid_until_utc': '2026-09-04T23:00:00Z',
+                'observed_utc': '2026-09-04T22:00:00Z', 'fixed_minor_units': 0,
+                'resource_limits': {d: 0 for d in contract['resource_dimensions_in_order']}}
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            for dimension in contract['resource_dimensions_in_order']:
+                unit = contract['resource_dimension_units'][dimension]
+                source_unit = next(iter(P.CONVERSIONS[unit]))
+                ratio = P.CONVERSIONS[unit][source_unit]
+                pages = self.pages(source_unit)
+                collection = directory / dimension
+                collection.mkdir()
+                for page in pages:
+                    P.save(collection, f'page-{page["page_index"]:04d}.json', page)
+                P.save(collection, 'completion.json', {'terminal': True, 'page_count': len(pages),
+                    'page_sha256': [P.digest(P.canonical(p)) for p in pages]})
+                spec['rows'].append({'dimension': dimension, 'collection': dimension,
+                                    'conversion': {source_unit: [ratio.numerator, ratio.denominator]}})
+            model, evidence, bound = P.build_from_collections(spec, directory)
+            self.assertEqual(bound, 0)
+            self.assertEqual(len(model['rates']), 22)
+            with self.assertRaises(FileExistsError):
+                P.save(collection, 'completion.json', {})
+            (collection / 'page-0000.json').unlink()
+            with self.assertRaisesRegex(P.Refusal, 'completion mismatch'):
+                P.build_from_collections(spec, directory)
+
+    def test_old_digest_only_packet_model_is_refused(self):
+        builder = module('scripts/build_aws_c0_gate1_packet.py', 'aws_c0_gate1_builder')
+        observations = {k: {'synthetic': True} for k in builder.REQUIRED}
+        observations.update(instance_preimage={'state': 'stopped'}, cost_ceiling_minor_units=5000,
+                            pricing_evidence={d: {} for d in builder.COST_DIMENSIONS})
+        with self.assertRaisesRegex(ValueError, 'cost_model'):
+            builder.build({'repository_commit': 'test', 'repository_tree': 'test'}, observations)
 
 
 def load(path: str):

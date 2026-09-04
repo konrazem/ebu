@@ -83,6 +83,9 @@ CLOUDFORMATION_READINESS_MODIFIED_PATHS = (
 LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "scripts/build_aws_c0_deployment_manifest.py",
     "scripts/build_aws_c0_gate1_packet.py",
+    "scripts/collect_aws_c0_pricing.py",
+    "aws/c0/pricing-requirements.txt",
+    ".github/workflows/aws-c0-static.yml",
 )
 GATE1_LINEAGE_IN_ORDER = (
     ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),
@@ -23736,12 +23739,12 @@ def validate_paths() -> None:
                       set(LOCAL_DEPLOYMENT_READINESS_PATHS))
     require(
         changed | untracked == expected_paths,
-        "path gate is not exactly 14 implementation paths plus 5 Gate 0 control paths plus 6 Gate 1 authority paths",
+        "path gate differs from the exact implementation, Gate 0, Gate 1, and local deployment-readiness paths",
     )
     readiness_changed = set(filter(None, _git(
         "diff", "--name-only", GATE1_CORRECTION_COMMIT, "--").splitlines()))
     require(readiness_changed | untracked == set(LOCAL_DEPLOYMENT_READINESS_PATHS),
-            "local deployment-readiness checkpoint is not exactly the four CloudFormation paths plus its offline builder")
+            "local deployment-readiness checkpoint differs from its exact enumerated path set")
     # Python bytecode is an interpreter by-product, never candidate source;
     # git's tracked/untracked comparison above is the implementation scope.
     for path in (*IMPLEMENTATION_PATHS, *GATE0_CONTROL_PATHS,
