@@ -23,6 +23,14 @@ PLANNED_ACTIONS = (
     "CREATE_ONE_UNEXECUTED_CHANGE_SET", "FINALIZE_EXACT_LIVE_PACKET",
 )
 DENIED_ACTIONS = ("LIVE_EXECUTION", "REPLAY", "DELETE", "TERMINATE", "SCIENTIFIC_EXECUTION")
+COST_DIMENSIONS = (
+    "instance_running_seconds", "public_ipv4_seconds", "nat_gateway_seconds", "vpc_endpoint_seconds",
+    "s3_put_requests", "s3_get_requests", "s3_head_requests", "s3_list_requests", "step_functions_transitions",
+    "lambda_invocations", "lambda_duration_milliseconds", "kms_requests", "kms_key_seconds", "data_transfer_bytes",
+    "cloudwatch_ingested_bytes", "ebs_volume_gib_seconds", "ebs_provisioned_iops_seconds",
+    "ebs_provisioned_throughput_mibps_seconds", "s3_version_byte_seconds", "cloudwatch_log_byte_seconds",
+    "ecr_byte_seconds", "snapshot_gib_seconds",
+)
 
 
 def canonical(value: object) -> bytes:
@@ -49,6 +57,19 @@ def build(manifest: dict, observations: dict) -> dict:
         raise ValueError("initial instance state must be stopped")
     if observations.get("cost_model", {}).get("ceiling_minor_units") != 5000:
         raise ValueError("cost ceiling must equal 5000 minor units")
+    cost_model = observations["cost_model"]
+    dimensions = cost_model.get("dimensions")
+    if not isinstance(dimensions, list) or tuple(row.get("dimension") for row in dimensions if isinstance(row, dict)) != COST_DIMENSIONS:
+        raise ValueError("cost model must contain the exact ordered 22-dimension set")
+    if any(not isinstance(row.get("rate_observation_sha256"), str) or len(row["rate_observation_sha256"]) != 64
+           for row in dimensions):
+        raise ValueError("every cost dimension needs an exact rate-observation digest")
+    pages = cost_model.get("pagination_receipts")
+    if not isinstance(pages, list) or not pages or pages[-1].get("next_token") is not None:
+        raise ValueError("cost evidence pagination must be complete with a terminal null token")
+    if any(not isinstance(page, dict) or not isinstance(page.get("response_sha256"), str) or len(page["response_sha256"]) != 64
+           for page in pages):
+        raise ValueError("each price page needs an exact response digest")
     if observations.get("change_set_plan", {}).get("change_set_type") != "CREATE":
         raise ValueError("change-set plan must be CREATE only")
     return {
