@@ -282,6 +282,70 @@ integrated it over predecessor `749c5fd` on 2026-09-04. The activation changes
 only local eligibility for a future separately authorized live session and
 does not itself permit AWS contact or execution.
 
+## Prospective SSO Gate 0 identity correction
+
+Status: **PROSPECTIVE LOCAL AUTHORITY AND SCHEMA OVERLAY; NON-OPERATIVE UNTIL
+ONE SOL HIGH APPROVAL AND NON-FAST-FORWARD INTEGRATION**. Authority ID:
+`EBU-AWS-C0-SSO-BOOTSTRAP-IDENTITY-CORRECTION-v1`. Its exact predecessor is
+commit `b8745ad293ca5d14483897dcae186514953778b9`, tree
+`61c6ea16b3d99b468b983febce82538aa8ba1ada`.
+
+This correction supersedes only the Gate 0 temporary-root caller constraint.
+AWS root credentials must not be requested, modelled, or used. The legitimate
+human bootstrap caller is the exact observed IAM Identity Center session:
+
+```json
+{"account_id":"623609441658","arn":"arn:aws:sts::623609441658:assumed-role/AWSReservedSSO_AdministratorAccess_64c4d6b6ee31634c/konrad","profile":"ebu-admin","region":"us-east-1","schema":"aws_iam_identity_center_sso_assumed_role_session/v1","user_id":"AROAZCMQE5V5EVWXO56VA:konrad"}
+```
+
+The canonical caller-preimage SHA-256 is
+`a0d1085809ca4efde1a0cfdfbbbeffb2b0d207cb4e17acf3155c40b02689d48a`.
+For Gate 0 only, the schema kind `aws_root_caller_identity/v1`, caller type
+`TEMPORARY_AWS_ROOT_SESSION`, and `operator_bootstrap_caller_is_root=true` are
+replaced respectively by
+`aws_iam_identity_center_sso_assumed_role_session/v1`,
+`IAM_IDENTITY_CENTER_SSO_ASSUMED_ROLE_SESSION`, and
+`operator_bootstrap_caller_is_root=false`. The packet must additionally bind
+the exact `account_id`, `arn`, `profile`, `region`, and `user_id` above; another
+SSO permission set, role suffix, session name, account, Region, profile, IAM
+user, long-lived key, or root caller refuses.
+
+The sole proposed role is `EBU-C0-Operator-492a4f1`, observed `ABSENT`. The
+preparation session is `AWS-C0-PREP-492a4f1`, the later live-session name is
+`AWS-C0-LIVE-492a4f1`, maximum session duration is 3,600 seconds, retry count is
+one, and fresh IAM Identity Center MFA plus STS source identity `konrad` are
+mandatory. The boundary disposition remains
+`NOT_USED_INLINE_AND_SESSION_POLICY_INTERSECTION`; no permissions boundary or
+managed policy is created.
+
+Every permission and call maximum is unchanged. The read set is exactly
+`sts:GetCallerIdentity`, `iam:GetRole`, `iam:GetRolePolicy`,
+`iam:ListRolePolicies`, `iam:ListAttachedRolePolicies`, `iam:GetPolicy`, and
+`iam:GetPolicyVersion`, with at most 32 reads. The mutation sequence is at most
+one each of `iam:CreateRole`, `iam:PutRolePolicy`, `iam:TagRole`, and
+`sts:AssumeRole`, only for the exact role and preparation session above. The
+rollback sequence is at most one each of `iam:DeleteRolePolicy`,
+`iam:UntagRole`, and `iam:DeleteRole`, only for that newly created role and only
+in inverse order. Every resource is exact; wildcard resources, another role or
+session, trust-policy updates, managed-policy creation/versioning, access-key
+creation, preparation actions, live execution, and science remain forbidden.
+
+The corrected approval is UTF-8 NFC with no final line feed and exactly this
+ASCII field order:
+
+```text
+AUTHORIZE_AWS_C0_SSO_OPERATOR_BOOTSTRAP_V1 packet_sha256={packet_sha256} account_identity_sha256={account_identity_sha256} sso_caller_identity_sha256=a0d1085809ca4efde1a0cfdfbbbeffb2b0d207cb4e17acf3155c40b02689d48a operator_role_identity_sha256={operator_role_identity_sha256} deadline_utc={deadline_utc} allow=CREATE_OR_VERIFY_ONE_CONSTRAINED_OPERATOR_ROLE,ASSUME_ONE_PREPARATION_SESSION deny=C0_PREPARATION_ACTIONS,C0_LIVE_ACTIONS,OTHER_ROLE,OTHER_SESSION,ROOT_CREDENTIALS,SCIENTIFIC_EXECUTION
+```
+
+All brace tokens must be deterministically rendered from the complete reviewed
+packet; literal placeholders are not authorization. This correction itself
+permits no AWS call, IAM mutation, instance start, deployment, spending,
+workflow execution, scientific work, push, or publication. Every Gate 1, live,
+budget, cleanup, exact-version, zero-science, and independent-review boundary
+remains unchanged.
+
+`AWS_C0_SSO_BOOTSTRAP_IDENTITY_CORRECTION_V1_CANDIDATE_COMPLETE`
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
@@ -370,11 +434,14 @@ direct state-machine substitute for the carrier refuses.
 
 ### Gate 0 — constrained operator bootstrap
 
-If read-only inventory observes only temporary root, stop. Root may perform
-only the separately approved, narrowly bounded operator-role bootstrap. Its
-packet, approval, and closure are private local control evidence at first;
-their S3 receipts are not presupposed. After bootstrap, root is barred from all
-preparation and live actions. A constrained assumed-role session is mandatory.
+After activation of the SSO identity correction above, Gate 0 accepts only its
+exact `ebu-admin` IAM Identity Center session; root credentials are forbidden.
+That session may perform only the separately approved, narrowly bounded
+operator-role bootstrap. Its packet, approval, and closure are private local
+control evidence at first; their S3 receipts are not presupposed. After the one
+preparation-session assumption, the SSO bootstrap session is barred from all
+preparation and live actions. A constrained assumed-role session remains
+mandatory.
 
 ### Gate 1 — preparation approval
 
