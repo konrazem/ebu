@@ -406,6 +406,100 @@ role-state mismatch.
 
 `AWS_C0_SSO_SOURCE_IDENTITY_CAPABILITY_CORRECTION_V1_CANDIDATE_COMPLETE`
 
+## Prospective SSO Gate 0 assume-context correction
+
+Status: **PROSPECTIVE LOCAL AUTHORITY AND EXACT MATERIAL SCHEMA; NON-OPERATIVE
+UNTIL ONE INDEPENDENT READ-ONLY APPROVAL AND LATER EXPLICIT AWS MUTATION
+AUTHORIZATION**. Authority ID:
+`EBU-AWS-C0-SSO-ASSUME-CONTEXT-CORRECTION-v1`. Its exact predecessor is
+integration commit `37d1d529d0735fa9caed25fa35eb1bd69b3dd53b`, tree
+`75b9c0949bbff08d3f20a35a629550341249637e`.
+
+The v2 packet
+`02416e8abda759ee0c915e010617cf63cd92a3dc1d3c2e09552dbaba2355dc1b`
+is exhausted and must never be reused. Its sole AssumeRole request received
+`AccessDenied` for `sts:AssumeRole`; no credentials were issued. Closure
+`964c8c7d7270b1be1bc1a02ab4a711083a6e05e26b39999650a471b9abf6b01e`
+binds the exact inverse rollback, final absent role, zero preparation actions,
+and zero scientific actions.
+
+Read-only diagnosis proved that the exact SSO role has only the AWS managed
+`AdministratorAccess` policy, no inline policy, and that IAM principal
+simulation allows both `sts:AssumeRole` and `sts:SetSourceIdentity` on only the
+sealed operator-role ARN. It did **not** prove a causal trust-condition
+mismatch: both v2 and v3 made their attempt seven seconds after role creation,
+and the sealed audit records that IAM-to-STS propagation risk was strongly
+indicated. A later bounded replay retained the reviewed v3 trust material,
+waited 240 seconds, and reached the separate STS packed-policy validator. The
+same replay passed only after the preparation-session policy was compacted from
+1,792 to 397 canonical bytes (49% packed-policy size). This establishes that
+the reviewed trust material is compatible with the successful request; it does
+not license another trust-policy change or claim a unique trust-layer cause.
+
+CloudTrail's normal federated-session attribute `mfaAuthenticated=false` must
+not be converted into an `aws:MultiFactorAuthPresent=true` trust condition for
+IAM Identity Center. Fresh IAM Identity Center login and its configured MFA
+remain mandatory external bootstrap preconditions.
+
+The exact prospective material is
+`gate0/sso-operator-bootstrap-v3.template.json`, validated by
+`gate0/sso-operator-bootstrap-v3.schema.json`. Before any attempt state or AWS
+mutation, `gate0/validate_sso_freshness_diagnostic_gate.py` must validate a
+local evidence record: a newly created `ebu-admin` SSO credential must be at
+or after login completion, the caller must be exact, the 240-second
+IAM-to-STS hold must be complete, the prior diagnosis must remain causally
+unproven, and no trust-policy change may be proposed. The gate also requires
+the reviewed compact 17-pattern preparation-session ceiling and the sealed
+effective-permissions equivalence record (its exact digest, 93-action
+comparison, and unchanged base-policy/resource/condition bindings); a
+caller-supplied equivalence assertion is insufficient.
+
+For preparation assumption, the IAM account principal is only delegation
+syntax and is constrained by `aws:PrincipalArn` equal to the exact sealed SSO
+IAM role. Root credentials do not satisfy that condition. The
+`sts:AssumeRole` statement requires only the exact preparation role-session
+name; the separate `sts:SetSourceIdentity` statement requires only source
+identity `konrad`. Because both permissions are required by the one AssumeRole
+request, another source identity, role, session, principal, or separate
+SetSourceIdentity request refuses.
+
+The same action-context split applies to later live-session self-assumption,
+with `aws:PrincipalArn` equal to only the sealed operator role and the exact
+live role-session name. The inline base policy and compact preparation-session
+ceiling continue to carry both STS permissions only for that role chain. The
+compact policy is an allow-only representation whose effective permissions are
+required to equal the former closed ceiling when intersected with the unchanged
+base policy; it cannot broaden resources, conditions, live transitions, or
+scientific authority. One role, one session, one API request, one attempt,
+3,600 seconds, fresh Identity Center login/MFA, source identity `konrad`, exact
+inline policy, no managed policy or permissions boundary, exact three-call
+inverse rollback, and all preparation, live, root-credential, and scientific
+denials remain unchanged.
+
+A fresh packet must bind the v3 material and schema hashes, the v2 failure
+closure, a fresh read-only inventory, a successful freshness/diagnostic-gate
+record, an effective-permissions equivalence record, and a new deadline. Its
+approval line is UTF-8 NFC, ASCII in exactly this field order, without a final
+line feed:
+
+```text
+AUTHORIZE_AWS_C0_SSO_OPERATOR_BOOTSTRAP_V3 packet_sha256={packet_sha256} account_identity_sha256={account_identity_sha256} sso_caller_identity_sha256=a0d1085809ca4efde1a0cfdfbbbeffb2b0d207cb4e17acf3155c40b02689d48a operator_role_identity_sha256={operator_role_identity_sha256} material_sha256={material_sha256} deadline_utc={deadline_utc} allow=CREATE_OR_VERIFY_ONE_CONSTRAINED_OPERATOR_ROLE,ASSUME_ONE_PREPARATION_SESSION_WITH_EXACT_SOURCE_IDENTITY deny=C0_PREPARATION_ACTIONS,C0_LIVE_ACTIONS,OTHER_ROLE,OTHER_SESSION,ROOT_CREDENTIALS,SCIENTIFIC_EXECUTION
+```
+
+Literal placeholders are not authorization. This correction and packet
+construction permit read-only diagnosis and local evidence only. They do not
+permit another role creation, policy or tag mutation, session assumption,
+preparation, deployment, instance start, live execution, science, push, or
+publication.
+
+The gate's local mechanics may be checked without credentials or network:
+
+```text
+python3 aws/c0/gate0/validate_sso_freshness_diagnostic_gate.py --self-test --equivalence-record /absolute/path/to/effective-permissions-equivalence.json
+```
+
+`AWS_C0_SSO_ASSUME_CONTEXT_CORRECTION_V1_CANDIDATE_COMPLETE`
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
