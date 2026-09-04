@@ -92,25 +92,32 @@ mandatory and no AWS launch is authorized.
   one permitted re-review approved `6f37375` after the focused correction.
 - G6 `COMPLETE`: reviewed candidate merged locally at `7cee7d3`; three focused
   tests, all 66 AWS-C0 tests, compilation, `audit-v4`, and `static-v4` passed.
-- G7 `COMPLETE_LOCAL_ONLY`: the launch packet below is prepared; execution is
-  stopped at the separate-authority and live-AWS authorization boundary.
+- G7 `COMPLETE_LOCAL_ONLY`: authority candidate `8254e9d` received one Sol High
+  approval and was integrated without rewriting history at merge `34820a3`.
+- G8 `READY_AT_AWS_BOUNDARY`: the launch packet below is prepared; all local
+  checks pass, and work is stopped before fresh AWS coordinates, deployment,
+  live authorization, spending, or execution.
 
 ### First capsule AWS launch packet — authorization required
 
 Status is `LOCAL_PACKET_COMPLETE_LIVE_EXECUTION_FORBIDDEN`. The implementation
-coordinate is merge `7cee7d3`; the capsule is `platform-smoke-known-case-v1` and
-its exact first case is `SUCCESS_KNOWN_CASE` (`-SUCCESS`). It runs the inert,
-networkless, read-only synthetic worker to two checkpoints, emits no scientific
-output or conclusion, performs no retry, and must finish with one verified stop.
+coordinate is merge `7cee7d3`, and the locally activated capsule-authority
+coordinate is merge `34820a3`. The capsule is `platform-smoke-known-case-v1`
+and its exact first case is `SUCCESS_KNOWN_CASE` (`-SUCCESS`). It runs the
+inert, networkless, read-only synthetic worker to two checkpoints, emits no
+scientific output or conclusion, performs no retry, and must finish with one
+verified stop.
 
-The closed runtime input set is exactly launch-request-v4, live-packet-v4,
+The sealed launch-control set is exactly launch-request-v4, live-packet-v4,
 live-authorization-v4, their exact S3 key/VersionId/SHA-256/byte/checksum
 receipts, the sealed bucket and attempt identities, and the Standard execution
-ARN. Fresh absolute deadlines and every AWS coordinate are deliberately
-unfilled: the committed fixture contains non-live placeholders and past sample
-timestamps. Preparation must return those values for review, and a separate
-accepted capsule authority plus explicit live authorization must bind them
-before execution. An unversioned, latest, inferred, or placeholder input stops.
+ARN. The Standard execution input itself is only the one closed
+`live_authorization` receipt shown below. Fresh absolute deadlines and every
+AWS coordinate are deliberately unfilled: the committed fixture contains
+non-live placeholders and past sample timestamps. A separately authorized
+live session must return those values for final comparison and bind them in an
+explicit live authorization before execution. An unversioned, latest,
+inferred, stale, or placeholder input stops.
 
 The expected artifact classes are exactly: attempt claim; start receipt;
 heartbeat; safe-close receipt; checkpoint; synthetic manifest; terminal
@@ -145,6 +152,66 @@ python3 scripts/validate_aws_c0_static.py --mode audit-v4
 python3 scripts/validate_aws_c0_static.py --mode static-v4
 git status --short --branch
 ```
+
+The local-to-live handoff has no defaults. A later separately authorized live
+session must bind these variables from one reviewed packet and its authenticated
+exact-version readbacks:
+
+```text
+AWS_C0_SEALED_STATE_MACHINE_ARN
+AWS_C0_SEALED_ATTEMPT_ID
+AWS_C0_SEALED_EXECUTION_INPUT_JSON
+```
+
+The value of `AWS_C0_SEALED_ATTEMPT_ID` must equal the fresh launch-v4 attempt
+ID and end in `-SUCCESS`. `AWS_C0_SEALED_EXECUTION_INPUT_JSON` must be canonical
+JSON containing exactly one top-level `live_authorization` member. That receipt
+must contain exactly `bucket_identity`, `key`, `version_id`, `bytes`, `sha256`,
+and `checksum_sha256_base64`; its bucket identity must contain exactly `kind`,
+`sha256`, and `value`, with kind `aws_s3_bucket/v1` and equal SHA/value.
+
+Before the first real test, the live operator must fail closed unless every item
+below is true in one fresh packet:
+
+1. implementation merge `7cee7d3` has tree
+   `51a9fe231419408136079b0a28674144d19cc3d1`, and authority merge `34820a3`
+   is an ancestor of the local launch-packet commit;
+2. launch-v4, live-packet-v4, and live-authorization-v4 bytes are canonical and
+   their authenticated key, VersionId, byte count, SHA-256, and checksum
+   readbacks agree exactly, with no placeholder, latest, or inferred value;
+3. the attempt ID, sealed bucket identity, artifact prefix, Standard state
+   machine ARN, workflow execution identity, and single-use authorization all
+   cross-bind to the same fresh `SUCCESS_KNOWN_CASE` attempt;
+4. absolute attempt, cleanup, authorization, credential, pricing-validity, and
+   accounting-window times are still current and ordered, and the accounting
+   window covers the complete retained-resource horizon;
+5. the ceiling is at most 5,000 USD minor units, all 22 integer resource limits
+   are present and no higher than reviewed, phase/overall/workflow bounds match
+   this packet, attempt count is one, and the state machine contains no Retry;
+6. the reviewed change set is terminally deployed, its exact outputs and
+   definitions match live-packet-v4, the retained instance is freshly observed
+   `stopped`, and the stop/finalizer path remains
+   `STEP_FUNCTIONS_SINGLE_STOP_THEN_FINALIZER_VERIFY`; and
+7. the execution input passes the closed shape above and the exact launch
+   command below has not previously been issued for this attempt ID.
+
+After those checks and a separate explicit live-AWS authorization, the sole
+launch command is exactly the following. It is a template until the three
+sealed variables above are populated and must not be run during local
+preparation:
+
+```sh
+aws stepfunctions start-execution \
+  --state-machine-arn "$AWS_C0_SEALED_STATE_MACHINE_ARN" \
+  --name "$AWS_C0_SEALED_ATTEMPT_ID" \
+  --input "$AWS_C0_SEALED_EXECUTION_INPUT_JSON"
+```
+
+Abort before `StartExecution` on any mismatch. After it returns, abort the
+handoff unless the returned execution ARN is the sealed ARN, the execution is
+`RUNNING`, and the safe-close receipt exists. A started path is never replayed:
+it converges on the one stop/finalizer path, and any incomplete stop or evidence
+closure is a failed capsule requiring recovery under separate authority.
 
 After a separately authorized execution, verify only the sealed execution and
 exact returned object versions; do not run these templates before authorization:
@@ -208,6 +275,12 @@ must bind those coordinates, the exact command, budget, cleanup, and
 verification commands before one `StartExecution`.
 
 `AWS_C0_PLATFORM_SMOKE_CAPSULE_AUTHORITY_V1_COMPLETE`
+
+Activation record: one read-only Sol High review approved candidate `8254e9d`;
+non-fast-forward merge `34820a350e2aaa4c815d37da08c871178d7138f8`
+integrated it over predecessor `749c5fd` on 2026-09-04. The activation changes
+only local eligibility for a future separately authorized live session and
+does not itself permit AWS contact or execution.
 
 ## Frozen arithmetic
 
