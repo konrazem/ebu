@@ -155,6 +155,60 @@ aws s3api get-object --bucket "$AWS_C0_SEALED_BUCKET" --key "$AWS_C0_FINAL_MANIF
 aws ec2 describe-instances --instance-ids "$AWS_C0_SEALED_INSTANCE_ID"
 ```
 
+## Additive platform-smoke capsule authority
+
+Status: **PROSPECTIVE NON-SCIENTIFIC CAPSULE AUTHORITY; ACTIVATES LOCALLY ONLY
+AFTER ONE SOL HIGH APPROVAL AND NON-FAST-FORWARD INTEGRATION**. Authority ID:
+`EBU-AWS-C0-PLATFORM-SMOKE-CAPSULE-AUTHORITY-v1`. Its exact predecessor is
+commit `749c5fddd686bb243c1b7f41d6b6c76f867658e3`, tree
+`a91711bee5eb883bf7dd437d24d181f9b4019511`.
+
+This authority becomes locally accepted only after its candidate commit receives
+one independent Sol High `APPROVED` result and is merged without rewriting
+history into the predecessor branch. Before both conditions it is non-operative.
+After activation it makes one capsule eligible for a separate live-AWS
+authorization; it never supplies that live authorization itself.
+
+The sole capsule is `platform-smoke-known-case-v1`; its sole first execution is
+`SUCCESS_KNOWN_CASE` selected by `-SUCCESS`. It binds implementation merge
+`7cee7d330f8068400fa4f9c21116e9338781449b`, tree
+`51a9fe231419408136079b0a28674144d19cc3d1`, and reuses the existing journal
+lifecycle, restart discipline, exact-version storage, fixed 22-row carrier
+validation, cost/security controls, cleanup, and zero-science guards unchanged.
+
+For this capsule only, the complete 100-field
+`aws_c0_final_s3_capture_aggregate/v1` and every nested payload referenced by
+`aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json#/$defs/final_s3_capture_aggregate/required`
+are not execution, completion, or PASS gates. This capsule-only supersession
+does not claim that producer conforms and changes no other AWS-C0 control. Later
+study capsules receive no authority from this exception and must separately
+seal and review their inputs, outputs, controls, evidence, budget, scientific
+interpretation, and execution authorization.
+
+The common receipt envelope is exactly `schema`, `capsule_id`,
+`attempt_identity`, `sequence`, `event_type`, `payload_identity`,
+`previous_receipt_sha256`, and `receipt_sha256`. SUCCESS still requires all 16
+artifact classes, exact identities, order, VersionId readbacks, checksums,
+journals, timeouts, cost closure, retrieval, and stopped-state verification
+listed in the launch packet above; future study payloads are neither embedded
+nor inferred.
+
+The maximum cost remains USD 5,000 minor units (USD 50.00), with all 22 resource
+limits and the sealed time bounds unchanged. There is one attempt, no Retry,
+and one non-reentrant stop through
+`STEP_FUNCTIONS_SINGLE_STOP_THEN_FINALIZER_VERIFY`. The only positive claim is
+platform completion of the sealed synthetic known case. Scientific execution,
+Stage F readiness, model correctness, replay, extrapolation, interpretation,
+and publication remain forbidden.
+
+Fresh launch-v4, live-packet-v4, and live-authorization-v4 exact-version
+coordinates remain mandatory. This local authority permits no AWS contact,
+mutation, spending, or execution. One later explicit live-AWS authorization
+must bind those coordinates, the exact command, budget, cleanup, and
+verification commands before one `StartExecution`.
+
+`AWS_C0_PLATFORM_SMOKE_CAPSULE_AUTHORITY_V1_COMPLETE`
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation
