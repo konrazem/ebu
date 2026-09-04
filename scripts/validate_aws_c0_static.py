@@ -72,6 +72,14 @@ GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS = (
 GATE1_BOOTSTRAP_LINEAGE_AUTHORITY_ID = "EBU-AWS-C0-GATE1-BOOTSTRAP-LINEAGE-CORRECTION-AUTHORITY-v1"
 GATE1_ACCEPTED_BASE = "22d0aff12b5f9c091b84ebf6918f1180c142bf50"
 GATE1_ACCEPTED_BASE_TREE = "8c89835043c870b45f01961cdf7b6c229e065549"
+GATE1_CORRECTION_COMMIT = "4f883c2d5534094c058fd61ad7acaafb4785b894"
+GATE1_CORRECTION_TREE = "e261334e8637bead6dd771d17c553f18bf2cc129"
+CLOUDFORMATION_READINESS_MODIFIED_PATHS = (
+    "aws/c0/README.md",
+    "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+    "scripts/validate_aws_c0_static.py",
+    "tests/aws/test_aws_c0_unattended_synthetic.py",
+)
 GATE1_LINEAGE_IN_ORDER = (
     ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),
     ("aws_c0_operator_bootstrap_authorization/v5", "7905547086c37e44d7c3d6f1c55ca99cf97acc73a157a3e15580e6187e1ae109"),
@@ -578,10 +586,14 @@ def validate_gate1_bootstrap_lineage_authority() -> None:
             "Gate1 exact 6+6 path scope mismatch")
     require(path_manifest["explicitly_excluded_paths"] == list(GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS),
             "Gate1 excluded path set mismatch")
-    changed = set(filter(None, _git("diff", "--name-only", GATE1_ACCEPTED_BASE, "--").splitlines()))
-    untracked = set(filter(None, _git("ls-files", "--others", "--exclude-standard").splitlines()))
-    require(changed | untracked == set(additions) | set(modifications),
-            "Gate1 working change set is not exactly 6 additions plus 6 modifications")
+    require(_git("rev-parse", f"{GATE1_CORRECTION_COMMIT}^{{tree}}") == GATE1_CORRECTION_TREE and
+            subprocess.run(["git", "merge-base", "--is-ancestor", GATE1_CORRECTION_COMMIT, "HEAD"],
+                           cwd=ROOT).returncode == 0,
+            "approved Gate1 correction commit or tree mismatch")
+    gate1_paths = set(filter(None, _git(
+        "diff-tree", "--no-commit-id", "--name-only", "-r", GATE1_CORRECTION_COMMIT).splitlines()))
+    require(gate1_paths == set(additions) | set(modifications),
+            "approved Gate1 commit is not exactly 6 additions plus 6 modifications")
 
     for row in predecessor["critical_accepted_base_rows"]:
         path = row["path"]
@@ -23721,6 +23733,10 @@ def validate_paths() -> None:
         changed | untracked == expected_paths,
         "path gate is not exactly 14 implementation paths plus 5 Gate 0 control paths plus 6 Gate 1 authority paths",
     )
+    readiness_changed = set(filter(None, _git(
+        "diff", "--name-only", GATE1_CORRECTION_COMMIT, "--").splitlines()))
+    require(readiness_changed | untracked == set(CLOUDFORMATION_READINESS_MODIFIED_PATHS),
+            "CloudFormation readiness checkpoint is not exactly four modified local paths")
     # Python bytecode is an interpreter by-product, never candidate source;
     # git's tracked/untracked comparison above is the implementation scope.
     for path in (*IMPLEMENTATION_PATHS, *GATE0_CONTROL_PATHS,
@@ -23862,11 +23878,45 @@ def validate_sources() -> None:
     execution_resource = executions["Resource"]["Fn::Sub"]
     require(execution_resource == "arn:aws:states:us-east-1:${AWS::AccountId}:execution:ebu-c0-closure-synthetic-v1:*",
             "execution reads must use the sealed state-machine execution ARN namespace")
+    parameters = template["Parameters"]
+    require("ChangeSetArn" not in parameters and "StackArn" not in parameters and
+            parameters.get("ExpectedChangeSetName") == {
+                "Type": "String", "AllowedPattern": "^[A-Za-z][-A-Za-z0-9]{0,127}$"},
+            "CloudFormation creation-time inputs require an unavailable future ARN")
+    change_set = by_sid.get("ClosureReadChangeSet")
+    stack = by_sid.get("ClosureReadStack")
+    require(change_set is not None and
+            change_set.get("Resource", {}).get("Fn::Sub") ==
+            "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:"
+            "changeSet/${ExpectedChangeSetName}/*",
+            "DescribeChangeSet is not scoped to the predetermined change-set name")
+    require(stack is not None and
+            stack.get("Resource", {}).get("Fn::Sub") ==
+            "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:"
+            "stack/${AWS::StackName}/*",
+            "stack reads are not scoped to the current stack name")
+    cloudformation_read_actions = {
+        "cloudformation:DescribeChangeSet", "cloudformation:GetTemplate",
+        "cloudformation:DescribeStacks", "cloudformation:DescribeStackEvents",
+    }
+    expected_cloudformation_statements = {
+        "ClosureReadChangeSet": {"cloudformation:DescribeChangeSet"},
+        "ClosureReadStack": {
+            "cloudformation:GetTemplate", "cloudformation:DescribeStacks",
+            "cloudformation:DescribeStackEvents",
+        },
+    }
     for statement in finalizer_statements:
         actions = statement.get("Action", []) if isinstance(statement, dict) else []
         if isinstance(actions, str): actions = [actions]
         require(not ({"states:DescribeExecution", "states:GetExecutionHistory"} & set(actions)) or statement is executions,
                 "execution read action appears outside sealed execution statement")
+        cloudformation_actions = cloudformation_read_actions & set(actions)
+        if cloudformation_actions:
+            require(statement.get("Sid") in expected_cloudformation_statements and
+                    set(actions) == expected_cloudformation_statements[statement["Sid"]] and
+                    statement.get("Resource") != "*",
+                    "CloudFormation read action appears outside its name-scoped statement")
 
     states = load_json("aws/c0/state-machine/aws-c0.asl.json")["States"]
     require(all("Retry" not in state for state in states.values()), "Retry forbidden")

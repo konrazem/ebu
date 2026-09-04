@@ -232,15 +232,9 @@
       "MinValue": 1,
       "MaxValue": 10000
     },
-    "ChangeSetArn": {
+    "ExpectedChangeSetName": {
       "Type": "String",
-      "AllowedPattern": "^arn:aws:cloudformation:us-east-1:[0-9]{12}:changeSet/.+$",
-      "NoEcho": true
-    },
-    "StackArn": {
-      "Type": "String",
-      "AllowedPattern": "^arn:aws:cloudformation:us-east-1:[0-9]{12}:stack/.+$",
-      "NoEcho": true
+      "AllowedPattern": "^[A-Za-z][-A-Za-z0-9]{0,127}$"
     },
     "EcrRepositoryArn": {
       "Type": "String",
@@ -768,17 +762,6 @@
                   }
                 },
                 {
-                  "Sid": "ReadChangeSet",
-                  "Effect": "Allow",
-                  "Action": [
-                    "cloudformation:DescribeChangeSet",
-                    "cloudformation:GetTemplate",
-                    "cloudformation:DescribeStacks",
-                    "cloudformation:DescribeStackEvents"
-                  ],
-                  "Resource": "*"
-                },
-                {
                   "Sid": "WriteLogs",
                   "Effect": "Allow",
                   "Action": [
@@ -868,7 +851,7 @@
                   "Effect": "Allow",
                   "Action": "cloudformation:DescribeChangeSet",
                   "Resource": {
-                    "Ref": "ChangeSetArn"
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:changeSet/${ExpectedChangeSetName}/*"
                   }
                 },
                 {
@@ -880,7 +863,7 @@
                     "cloudformation:DescribeStackEvents"
                   ],
                   "Resource": {
-                    "Ref": "StackArn"
+                    "Fn::Sub": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*"
                   }
                 },
                 {

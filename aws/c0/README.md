@@ -527,6 +527,13 @@ the exact session and role controls, the 24-object count, accounting end, and
 cost ceiling while continuing to deny live execution, replay, deletion,
 termination, and scientific execution.
 
+The CloudFormation template no longer requires creation-time stack or change-
+set ARNs that do not yet exist. The caller supplies the predetermined change-
+set name, while the template derives the two IAM resource namespaces from that
+name and `AWS::StackName`; the generated ARN suffixes remain wildcarded only
+for AWS-assigned identifiers. This is an offline readiness correction, not
+authority to create or execute a change set.
+
 ## Frozen arithmetic
 
 The implementation adds exactly the 14 files in the accepted implementation

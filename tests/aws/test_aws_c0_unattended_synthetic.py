@@ -824,6 +824,41 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(execution["Resource"]["Fn::Sub"],"arn:aws:states:us-east-1:${AWS::AccountId}:execution:ebu-c0-closure-synthetic-v1:*")
         self.assertEqual(entries["ClosureReadExactStateMachine"]["Action"],"states:DescribeStateMachine")
 
+    def test_cloudformation_creation_time_arns_use_only_known_names(self):
+        template = V.load_json("aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml")
+        parameters = template["Parameters"]
+        self.assertNotIn("ChangeSetArn", parameters)
+        self.assertNotIn("StackArn", parameters)
+        self.assertEqual(parameters["ExpectedChangeSetName"], {
+            "Type": "String", "AllowedPattern": "^[A-Za-z][-A-Za-z0-9]{0,127}$",
+        })
+        statements = template["Resources"]["FinalizerRole"]["Properties"]["Policies"][0]["PolicyDocument"]["Statement"]
+        entries = {entry.get("Sid"): entry for entry in statements if isinstance(entry, dict)}
+        self.assertEqual(
+            entries["ClosureReadChangeSet"]["Resource"]["Fn::Sub"],
+            "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:changeSet/${ExpectedChangeSetName}/*",
+        )
+        self.assertEqual(
+            entries["ClosureReadStack"]["Resource"]["Fn::Sub"],
+            "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${AWS::StackName}/*",
+        )
+        expected_actions = {
+            "ClosureReadChangeSet": {"cloudformation:DescribeChangeSet"},
+            "ClosureReadStack": {
+                "cloudformation:GetTemplate", "cloudformation:DescribeStacks",
+                "cloudformation:DescribeStackEvents",
+            },
+        }
+        observed = {}
+        for statement in statements:
+            actions = statement.get("Action", [])
+            actions = [actions] if isinstance(actions, str) else actions
+            selected = {action for action in actions if action.startswith("cloudformation:")}
+            if selected:
+                self.assertNotEqual(statement.get("Resource"), "*")
+                observed[statement["Sid"]] = selected
+        self.assertEqual(observed, expected_actions)
+
     def test_controller_claim_precedes_start(self):
         source=(ROOT/"aws/c0/controller/ebu_c0_controller.py").read_text()
         claim=source.index("attempt-claim-")
