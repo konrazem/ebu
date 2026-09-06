@@ -823,6 +823,23 @@ The initial command gathers host facts only; it is not a smoke, installation,
 or launch approval. No instance start is permitted without its fresh cost bound
 and verified stop/cleanup path.
 
+The 2026-09-06 authorized inventory subsequently succeeded: one start, one
+fixed command, one stop, with stopped state verified after 48 seconds and exact
+temporary-policy/document cleanup. Docker and AWS CLI are present; the reviewed
+image, controller and unit are absent. The user then requested continuation
+through the one bounded platform-smoke path, preserving the USD50 aggregate
+ceiling and no-science boundary. Local staging preparation found an image
+binding defect: Docker's `.Id` is the configuration digest, whereas
+`oci_image_digest/v1` binds the immutable repository manifest digest. The
+controller now verifies the exact reference in local `RepoDigests` plus a valid
+configuration ID and linux/amd64 platform. It never pulls an image or substitutes
+a configuration digest for the manifest identity. A load that does not preserve
+the exact repository digest still refuses; a tag alone is not evidence.
+This changes controller bytes only, not the verified LF image/worker or frozen
+record kinds. Staging must bind the new committed controller bytes. See the
+[OCI ImageID definition](https://github.com/opencontainers/image-spec/blob/main/config.md)
+and [Docker image identity columns](https://docs.docker.com/reference/cli/docker/image/ls/).
+
 1. Execute the reviewed CloudFormation change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.
 3. Read exact stack outputs and re-check the state-machine definition, role,

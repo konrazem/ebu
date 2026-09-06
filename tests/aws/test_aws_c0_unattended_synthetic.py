@@ -33,6 +33,45 @@ P = module("scripts/collect_aws_c0_pricing.py", "aws_c0_pricing")
 B = module("aws/c0/bootstrap/bootstrap_transport.py", "aws_c0_bootstrap_transport")
 
 
+class ImageManifestBindingTests(unittest.TestCase):
+    def verify(self, inspection):
+        reference = 'ebu-aws-c0@sha256:' + '1' * 64
+        contract = {
+            'controller_identity': C.identity('aws_c0_controller_software/v1', C.digest(b'controller')),
+            'service_identity': C.identity('aws_c0_service_unit/v1', C.digest(b'service')),
+            'container_runtime_policy_identity': C.identity('aws_c0_container_runtime_policy/v1', C.digest(C.canonical_bytes(C.RUNTIME_POLICY))),
+            'image_reference': reference, 'image_identity': C.identity('oci_image_digest/v1', '1' * 64),
+        }
+        with mock.patch.object(C, '_software_contract', return_value=contract), \
+             mock.patch.object(C, '_file_secure', side_effect=[b'controller', b'service']), \
+             mock.patch.object(C, '_run', return_value=mock.Mock(stdout=json.dumps(inspection).encode())) as command:
+            result = C._verify_software({})
+            command.assert_called_once_with([C.DOCKER, 'image', 'inspect', reference], 30)
+            return result
+
+    def inspection(self):
+        return [{'Id': 'sha256:' + '2' * 64, 'RepoDigests': ['ebu-aws-c0@sha256:' + '1' * 64],
+                 'Os': 'linux', 'Architecture': 'amd64'}]
+
+    def test_manifest_and_configuration_digests_must_be_distinguished(self):
+        self.assertEqual(self.verify(self.inspection())['image_identity']['sha256'], '1' * 64)
+
+    def test_matching_configuration_id_cannot_replace_repository_digest(self):
+        value = self.inspection(); value[0]['Id'] = 'sha256:' + '1' * 64
+        for references in ([], None, ['other@sha256:' + '1' * 64], ['ebu-aws-c0@sha256:' + '3' * 64]):
+            value[0]['RepoDigests'] = references
+            with self.subTest(references=references), self.assertRaises(C.Refusal): self.verify(value)
+
+    def test_local_image_configuration_and_platform_are_closed(self):
+        for field, bad in [('Id', 'mutable-tag'), ('Os', 'windows'), ('Architecture', 'arm64')]:
+            value = self.inspection(); value[0][field] = bad
+            with self.subTest(field=field), self.assertRaises(C.Refusal): self.verify(value)
+
+    def test_image_inspection_must_be_singular(self):
+        for value in ([], self.inspection() * 2, {}, [None]):
+            with self.subTest(value=value), self.assertRaises(C.Refusal): self.verify(value)
+
+
 class BootstrapTransportTests(unittest.TestCase):
     def plan(self):
         return B.plan('AROAAAAAAAAAAAAAAAAAA', '2026-09-06T16:00:00Z', '2026-09-06T15:00:00Z')

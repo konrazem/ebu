@@ -1348,10 +1348,27 @@ def _verify_software(live_packet: dict[str, Any]) -> dict[str, Any]:
         raise Refusal("image reference is not immutable")
     if contract["image_identity"] != identity("oci_image_digest/v1", image_reference.rsplit(":", 1)[-1]):
         raise Refusal("image identity mismatch")
-    inspected = _run([DOCKER, "image", "inspect", "--format", "{{.Id}}",
-                      image_reference], 30).stdout.strip().decode("ascii", "strict")
-    if inspected != "sha256:" + contract["image_identity"]["sha256"]:
-        raise Refusal("preloaded image ID digest not exact")
+    # Docker .Id is the image configuration digest, not the repository's OCI
+    # manifest digest. Preserve the immutable reference binding through the
+    # local RepoDigests mapping; never substitute an ID for a manifest digest.
+    raw_inspection = _run([DOCKER, "image", "inspect", image_reference], 30).stdout
+    if len(raw_inspection) > MAX_OBJECT_BYTES:
+        raise Refusal("preloaded image inspection exceeds bound")
+    try:
+        inspected = json.loads(raw_inspection, object_pairs_hook=_pairs,
+                               parse_constant=lambda _: (_ for _ in ()).throw(Refusal("nonfinite image metadata")))
+    except (json.JSONDecodeError, UnicodeError) as exc:
+        raise Refusal("invalid image inspection JSON") from exc
+    if not isinstance(inspected, list) or len(inspected) != 1 or not isinstance(inspected[0], dict):
+        raise Refusal("preloaded image inspection is not singular")
+    image = inspected[0]
+    references = image.get("RepoDigests")
+    if (not isinstance(references, list) or not all(isinstance(item, str) for item in references)
+            or image_reference not in references):
+        raise Refusal("preloaded repository manifest digest not exact")
+    if (not isinstance(image.get("Id"), str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", image["Id"])
+            or image.get("Os") != "linux" or image.get("Architecture") != "amd64"):
+        raise Refusal("preloaded image configuration or platform mismatch")
     return contract
 
 
