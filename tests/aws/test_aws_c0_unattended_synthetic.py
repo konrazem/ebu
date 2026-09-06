@@ -30,6 +30,60 @@ F = module("aws/c0/finalizer/finalizer.py", "aws_c0_finalizer")
 W = module("aws/c0/container/synthetic_worker.py", "aws_c0_worker")
 D = module("scripts/build_aws_c0_deployment_manifest.py", "aws_c0_deployment_manifest")
 P = module("scripts/collect_aws_c0_pricing.py", "aws_c0_pricing")
+B = module("aws/c0/bootstrap/bootstrap_transport.py", "aws_c0_bootstrap_transport")
+
+
+class BootstrapTransportTests(unittest.TestCase):
+    def plan(self):
+        return B.plan('AROAAAAAAAAAAAAAAAAAA', '2026-09-06T16:00:00Z', '2026-09-06T15:00:00Z')
+
+    def test_exact_material_and_no_user_command_parameters(self):
+        p = self.plan()
+        self.assertEqual(B.validate_plan(p), p)
+        self.assertEqual(p['document']['parameters'], {})
+        self.assertEqual(p['document']['mainSteps'][0]['inputs']['timeoutSeconds'], '60')
+        compile(B.PROBE, '<nonexecuted-bootstrap-probe>', 'exec')
+        self.assertNotIn('shell=True', B.PROBE)
+        self.assertNotIn('{{', B.PROBE)
+        for forbidden in ('docker load', 'docker run', 'systemctl start', 'aws s3', 'pip install'):
+            self.assertNotIn(forbidden, B.PROBE)
+
+    def test_policy_has_only_exact_document_instance_and_preparation_context(self):
+        statements = self.plan()['temporary_policy']['Statement']
+        self.assertEqual(statements[0]['Resource'], B.DOCUMENT_ARN)
+        self.assertEqual(statements[1]['Resource'], [B.DOCUMENT_ARN, B.INSTANCE_ARN])
+        for row in statements:
+            self.assertEqual(row['Condition']['StringEquals']['aws:SourceIdentity'], 'konrad')
+            self.assertTrue(row['Condition']['StringEquals']['aws:userid'].endswith(':'+B.SESSION))
+            self.assertNotIn('*', B.canonical(row).decode())
+
+    def test_expired_or_overlong_policy_refused(self):
+        for expiry in ('2026-09-06T15:00:00Z', '2026-09-06T17:00:01Z'):
+            with self.assertRaises(ValueError):
+                B.policy('AROAAAAAAAAAAAAAAAAAA', expiry, '2026-09-06T15:00:00Z')
+
+    def test_modified_document_policy_target_or_bounds_refused(self):
+        for key, value in [('instance_id','i-other'), ('maximum_send_commands',2),
+                           ('aggregate_cost_ceiling_minor_units',5001), ('scientific_execution',True)]:
+            p=self.plan(); p[key]=value
+            with self.assertRaises(ValueError):
+                B.validate_plan(p)
+        p=self.plan(); p['document']['parameters']['Commands']={}
+        with self.assertRaises(ValueError):
+            B.validate_plan(p)
+        p=self.plan(); p['temporary_policy']['Statement'][1]['Resource']=['*']
+        with self.assertRaises(ValueError):
+            B.validate_plan(p)
+
+    def test_dispatch_exact_version_hash_single_instance(self):
+        p=self.plan(); request=B.dispatch_request(p)
+        self.assertEqual(request['DocumentName'], B.DOCUMENT)
+        self.assertNotEqual(request['DocumentName'], 'EBU-C0-Start-v1')
+        self.assertEqual(request['DocumentVersion'], '1')
+        self.assertEqual(request['DocumentHash'], B.digest(p['document']))
+        self.assertEqual(request['InstanceIds'], [B.INSTANCE])
+        self.assertEqual(request['Parameters'], {})
+        self.assertTrue(p['instance_start_requires_separate_fresh_bound'])
 
 
 class PricingCollectorTests(unittest.TestCase):

@@ -86,6 +86,8 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "scripts/collect_aws_c0_pricing.py",
     "aws/c0/pricing-requirements.txt",
     ".github/workflows/aws-c0-static.yml",
+    "aws/c0/bootstrap/BOOTSTRAP_PATH_CORRECTION.md",
+    "aws/c0/bootstrap/bootstrap_transport.py",
 )
 GATE1_LINEAGE_IN_ORDER = (
     ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),

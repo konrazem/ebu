@@ -814,6 +814,15 @@ the stack-absence receipt SHA-256 is
 `ca4e4d8ca8a47aeda155e2e5f68e02323feb39088247a70b68f3c9f123a8bd1d`.
 An exact bootstrap-path correction must resolve this before the steps below.
 
+The user subsequently authorized the narrow correction documented in
+`bootstrap/BOOTSTRAP_PATH_CORRECTION.md`. Its offline material builder is
+`bootstrap/bootstrap_transport.py`: a distinct temporary bootstrap document
+and an expiring, exact-target preparation-session policy. The original base
+policy, V5 session policy, smoke document and historical evidence are unchanged.
+The initial command gathers host facts only; it is not a smoke, installation,
+or launch approval. No instance start is permitted without its fresh cost bound
+and verified stop/cleanup path.
+
 1. Execute the reviewed CloudFormation change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.
 3. Read exact stack outputs and re-check the state-machine definition, role,
