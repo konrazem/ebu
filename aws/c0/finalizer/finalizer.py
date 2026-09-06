@@ -1928,6 +1928,121 @@ def _deployment_inputs(value: Any) -> dict[str, Any]:
     return value
 
 
+R51_TARGET = 'arn:aws:lambda:us-east-1:623609441658:function:ebu-c0-corrected-finalizer-v1'
+R51_RECEIPT_KIND = 'aws_c0_r51_api_request_response_receipt/v2'
+R51_RESULT_KIND = 'aws_c0_lambda_resource_policy_observation/v2'
+API_OBSERVATION_FIELDS = {'row_id','action','resource_selector','caller_identity','authentication_source_identity',
+    'request_canonical_json_base64','request_sha256','response_canonical_json_base64','response_sha256',
+    'http_status','request_id','requested_utc','completed_utc','pagination_page','pagination_item_count',
+    'authentication_disposition','api_success_disposition'}
+
+
+def _r51_api_observation(receipt: Any, row: str, action: str, *, caller: dict[str,str],
+                         channel: dict[str,str], seal: str, freshness: int) -> dict[str,Any]:
+    expected_fields=API_OBSERVATION_FIELDS | ({'schema'} if row=='R51' else set())
+    if not isinstance(receipt,dict) or set(receipt)!=expected_fields:
+        raise Refusal('R51 evidence receipt field closure failed')
+    if type(receipt['http_status']) is not int:
+        raise Refusal('R51 HTTP status must be an integer')
+    if row=='R51' and receipt['schema']!=R51_RECEIPT_KIND:
+        raise Refusal('prospective R51 receipt kind required')
+    for key,wanted in [('row_id',row),('action','lambda:'+action),('resource_selector','SEALED_FINALIZER_FUNCTION_ARN'),
+                       ('caller_identity',caller),('authentication_source_identity',channel),
+                       ('authentication_disposition','SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS'),
+                       ('pagination_page',1),('pagination_item_count',1)]:
+        if receipt[key]!=wanted or (key.startswith('pagination_') and type(receipt[key]) is not int):
+            raise Refusal('R51 authenticated evidence binding mismatch: '+key)
+    for key in ('caller_identity','authentication_source_identity'):
+        item=receipt[key]
+        if not isinstance(item,dict) or not isinstance(item.get('kind'),str) or not item['kind']:
+            raise Refusal('R51 authenticated identity missing')
+        _identity(receipt,key,item['kind'])
+    start,end,at=_utc(receipt['requested_utc']),_utc(receipt['completed_utc']),_utc(seal)
+    if not start<=end<=at or not 0<=(at-start).total_seconds()<=freshness:
+        raise Refusal('R51 evidence is stale, future or unordered')
+    if not isinstance(receipt['request_id'],str) or not re.fullmatch(r'[A-Za-z0-9-]{8,128}',receipt['request_id']):
+        raise Refusal('R51 authenticated request ID missing')
+    decoded={}
+    for stem in ('request','response'):
+        try:raw=base64.b64decode(receipt[stem+'_canonical_json_base64'],validate=True)
+        except (ValueError,TypeError) as exc:raise Refusal('R51 evidence bytes missing') from exc
+        decoded[stem]=strict_json(raw)
+        if not isinstance(decoded[stem],dict) or digest(raw)!=receipt[stem+'_sha256']:
+            raise Refusal('R51 evidence bytes/hash mismatch')
+    if decoded['request']!={'FunctionName':R51_TARGET}:
+        raise Refusal('R51 request is not the exact unqualified function')
+    response=decoded['response'];metadata=response.get('ResponseMetadata')
+    if not isinstance(metadata,dict) or metadata.get('RequestId')!=receipt['request_id'] or \
+            type(metadata.get('HTTPStatusCode')) is not int or metadata['HTTPStatusCode']!=receipt['http_status']:
+        raise Refusal('R51 authenticated response metadata mismatch')
+    if row!='R51' and (receipt['http_status']!=200 or receipt['api_success_disposition']!='AWS_API_CALL_SUCCESS' or 'Error' in response):
+        raise Refusal('R51 function existence witness failed')
+    return response
+
+
+def validate_r51_policy_observation(record: Any, *, caller_identity: dict[str,str],
+                                     authentication_source_identity: dict[str,str],
+                                     expected_policy: dict[str,Any] | None,
+                                     observed_utc: str, freshness_max_seconds: int) -> dict[str,Any]:
+    """Shared pure producer/runtime gate. Never turns absence into API success.
+
+    Authenticity originates in the accepted collector; hashes do not themselves
+    authenticate arbitrary supplied JSON. Callers must bind that collector and
+    caller identity to their separately verified session/control evidence.
+    """
+    fields={'schema','target_function_arn','observed_utc','freshness_max_seconds','outcome',
+            'policy','policy_receipt','function_existence_receipts_in_order'}
+    if not isinstance(record,dict) or set(record)!=fields or record.get('schema')!=R51_RESULT_KIND:
+        raise Refusal('R51 result kind/field closure failed')
+    canonical_bytes(record)
+    if type(freshness_max_seconds) is not int or not 1<=freshness_max_seconds<=300 or \
+            record['freshness_max_seconds']!=freshness_max_seconds or type(record['freshness_max_seconds']) is not int or \
+            record['observed_utc']!=observed_utc or record['target_function_arn']!=R51_TARGET:
+        raise Refusal('R51 sealed target/freshness mismatch')
+    witnesses=record['function_existence_receipts_in_order']
+    if not isinstance(witnesses,list) or len(witnesses)!=2:
+        raise Refusal('both R51 existence witnesses required')
+    kwargs=dict(caller=caller_identity,channel=authentication_source_identity,seal=observed_utc,freshness=freshness_max_seconds)
+    first=_r51_api_observation(witnesses[0],'R49','GetFunction',**kwargs)
+    middle=_r51_api_observation(record['policy_receipt'],'R51','GetPolicy',**kwargs)
+    last=_r51_api_observation(witnesses[1],'R50','GetFunctionConfiguration',**kwargs)
+    receipt=record['policy_receipt']
+    if not _utc(witnesses[0]['completed_utc'])<=_utc(receipt['requested_utc'])<=_utc(receipt['completed_utc'])<=_utc(witnesses[1]['requested_utc']):
+        raise Refusal('R51 existence witnesses must bookend the policy read')
+    config=first.get('Configuration')
+    if not isinstance(config,dict):raise Refusal('R49 function configuration absent')
+    for key in ('FunctionArn','FunctionName','Version','RevisionId','CodeSha256','LastModified'):
+        if not isinstance(config.get(key),str) or not config[key] or config[key]!=last.get(key):
+            raise Refusal('R51 function revision/existence mismatch: '+key)
+    if config['FunctionArn']!=R51_TARGET or config['FunctionName']!=R51_TARGET.rsplit(':',1)[-1] or config['Version']!='$LATEST':
+        raise Refusal('R51 existence witness target mismatch')
+    try:code_hash=base64.b64decode(config['CodeSha256'],validate=True)
+    except (ValueError,TypeError) as exc:raise Refusal('R51 function code hash invalid') from exc
+    if len(code_hash)!=32:raise Refusal('R51 function code hash invalid')
+    if receipt['http_status']==200:
+        if receipt['api_success_disposition']!='AWS_API_CALL_SUCCESS' or 'Error' in middle or record['outcome']!='POLICY_PRESENT':
+            raise Refusal('R51 policy-present result mismatch')
+        if not isinstance(middle.get('Policy'),str) or not isinstance(middle.get('RevisionId'),str) or not middle['RevisionId']:
+            raise Refusal('R51 actual policy bytes/revision absent')
+        policy=_source_json(middle['Policy'].encode())
+        if not isinstance(policy,dict) or set(policy)-{'Version','Id','Statement'} or policy.get('Version')!='2012-10-17' or \
+                not isinstance(policy.get('Statement'),list) or not policy['Statement']:
+            raise Refusal('R51 policy is not a complete actual policy')
+        if expected_policy is None or policy!=expected_policy or record['policy']!=policy:
+            raise Refusal('R51 policy differs from separately reviewed expected policy')
+    elif receipt['http_status']==404:
+        error=middle.get('Error');headers=middle['ResponseMetadata'].get('HTTPHeaders',{})
+        if receipt['api_success_disposition']!='AWS_API_RESOURCE_NOT_FOUND' or record['outcome']!='POLICY_ABSENT' or \
+                record['policy'] is not None or expected_policy is not None or 'Policy' in middle or \
+                not isinstance(error,dict) or error.get('Code')!='ResourceNotFoundException' or \
+                not isinstance(error.get('Message'),str) or not error['Message'] or \
+                not isinstance(headers,dict) or headers.get('x-amzn-errortype')!='ResourceNotFoundException' or \
+                headers.get('x-amzn-requestid')!=receipt['request_id']:
+            raise Refusal('R51 absence requires exact authenticated ResourceNotFoundException')
+    else:raise Refusal('R51 denied, generic error or transport failure is not policy absence')
+    return record
+
+
 def _seed_deployment_inputs(seed: dict[str, Any]) -> dict[str, Any]:
     if seed.get('schema') != 'aws_c0_closure_seed/v2' or 'state_machine_identity' in seed:
         raise Refusal("seed requires planned inputs, never a premature workflow identity")

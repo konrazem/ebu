@@ -55,6 +55,18 @@ previous full-public-entry regression remains failing and unskipped.
 
 ### R51 cannot be repaired solely by moving its phase
 
+Subsequent explicit user authority on 2026-09-06 now permits the prospective
+POLICY_ABSENT amendment described below. That supersedes the pending-decision
+status of the historical proposal, not the historical HTTP200 receipt meaning.
+The new pure producer/finalizer validator and new result schema preserve exact
+R49/R51/R50 call order, function ARN, revision/code identity, source/caller,
+request/response bytes, error type and sealed freshness. Old receipt schemas
+remain unchanged. The v2 phase producer binds the same R49/R50 receipt objects
+to the R51 result, and distinguishes CALLED_POLICY_ABSENT from API success.
+No credentials, cloud APIs, deployment or permission changes are authorized.
+This amendment alone does not complete the broader runtime/publication
+attachment work or establish readiness.
+
 The accepted R51 row is ALWAYS lambda:GetPolicy for the exact finalizer function;
 its called receipt requires HTTP 200. The template creates that function but no
 AWS::Lambda::Permission or other resource-policy producer. Thus the local design

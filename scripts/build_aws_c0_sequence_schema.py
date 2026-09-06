@@ -87,10 +87,38 @@ def build(root=ROOT):
             add('post_deployment_control_preimages',{'type':'array','minItems':11,'maxItems':11,'items':{'$ref':control_ref}})
             props['authorized_actions']['const']=['EXECUTE_EXACT_CHANGE_SET','PUBLISH_EXACT_LIVE_AUTHORIZATION','START_ONE_EXACT_EXECUTION']
         definitions[alias]={'$ref':target}
+    # Prospective R51 result: clone, never relax the accepted HTTP200 receipt.
+    original=next(v for k,v in definitions.items() if k.endswith('_api_request_response_receipt'))
+    receipt=copy.deepcopy(original)
+    receipt['required'].append('schema')
+    receipt['properties'].update(schema={'const':'aws_c0_r51_api_request_response_receipt/v2'},
+        row_id={'const':'R51'},action={'const':'lambda:GetPolicy'},resource_selector={'const':'SEALED_FINALIZER_FUNCTION_ARN'},
+        http_status={'enum':[200,404]},api_success_disposition={'enum':['AWS_API_CALL_SUCCESS','AWS_API_RESOURCE_NOT_FOUND']})
+    receipt['allOf']=[{'if':{'properties':{'http_status':{'const':200}}},
+        'then':{'properties':{'api_success_disposition':{'const':'AWS_API_CALL_SUCCESS'}}},
+        'else':{'properties':{'api_success_disposition':{'const':'AWS_API_RESOURCE_NOT_FOUND'}}}}]
+    definitions['r51_receipt_v2']=receipt
+    existence=[]
+    for row,action in [('R49','GetFunction'),('R50','GetFunctionConfiguration')]:
+        item=copy.deepcopy(original)
+        item['properties'].update(row_id={'const':row},action={'const':'lambda:'+action},
+                                  resource_selector={'const':'SEALED_FINALIZER_FUNCTION_ARN'})
+        existence.append(item)
+    fields={'schema':{'const':'aws_c0_lambda_resource_policy_observation/v2'},
+        'target_function_arn':{'const':'arn:aws:lambda:us-east-1:623609441658:function:ebu-c0-corrected-finalizer-v1'},
+        'observed_utc':{'$ref':time_ref},'freshness_max_seconds':{'type':'integer','minimum':1,'maximum':300},
+        'outcome':{'enum':['POLICY_PRESENT','POLICY_ABSENT']},'policy':{'type':['object','null']},
+        'policy_receipt':{'$ref':'#/$defs/r51_receipt_v2'},
+        'function_existence_receipts_in_order':{'type':'array','minItems':2,'maxItems':2,'prefixItems':existence,'items':False}}
+    definitions['r51_policy_result_v2']={'type':'object','required':list(fields),'properties':fields,'additionalProperties':False,
+        'allOf':[{'if':{'properties':{'outcome':{'const':'POLICY_ABSENT'}}},
+                  'then':{'properties':{'policy':{'type':'null'},'policy_receipt':{'properties':{'http_status':{'const':404}}}}},
+                  'else':{'properties':{'policy':{'type':'object'},'policy_receipt':{'properties':{'http_status':{'const':200}}}}}}]}
+    definitions['r51_result']={'$ref':'#/$defs/r51_policy_result_v2'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in records], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

@@ -76,6 +76,31 @@ def build_phase_obligation_plan(root):
             'earliest_producer_phase_in_order':[obligation_phase(r['id']) for r in rows],
             'planned_inputs_are_observed_receipts':False}
 
+def build_phase_obligation_plan_v2(root):
+    plan=build_phase_obligation_plan(root)
+    plan.update(schema='aws_c0_runtime_control_phase_obligation_plan/v2',
+                r51_result_kind='aws_c0_lambda_resource_policy_observation/v2',
+                r51_existence_bookend_call_order=['R49','R51','R50'])
+    return plan
+
+def build_r51_policy_observation(root,policy_receipt,function_receipts,*,expected_policy,
+                                 caller_identity,authentication_source_identity,observed_utc,freshness_max_seconds):
+    f=finalizer(root)
+    # The new receipt kind must come from the prospective collector. Historical
+    # receipts are not retagged, modified or promoted to a new result.
+    if policy_receipt.get('schema')!=f.R51_RECEIPT_KIND:
+        raise ValueError('new R51 receipt kind required; historical receipt unchanged')
+    result={'schema':f.R51_RESULT_KIND,'target_function_arn':f.R51_TARGET,'observed_utc':observed_utc,
+        'freshness_max_seconds':freshness_max_seconds,
+        'outcome':'POLICY_PRESENT' if policy_receipt.get('http_status')==200 else 'POLICY_ABSENT',
+        'policy':copy.deepcopy(expected_policy),'policy_receipt':copy.deepcopy(policy_receipt),
+        'function_existence_receipts_in_order':copy.deepcopy(function_receipts)}
+    validate_record(root,'r51_result',result)
+    f.validate_r51_policy_observation(result,caller_identity=caller_identity,
+        authentication_source_identity=authentication_source_identity,expected_policy=expected_policy,
+        observed_utc=observed_utc,freshness_max_seconds=freshness_max_seconds)
+    return result
+
 def validate_phase_api_receipt(root,receipt,row,*,earliest,latest,caller_identity,authentication_source_identity):
     """Validate accepted API evidence bytes, not just its PASS labels.
 
@@ -105,14 +130,15 @@ def validate_phase_api_receipt(root,receipt,row,*,earliest,latest,caller_identit
     return copy.deepcopy(receipt)
 
 def build_phase_observation_set(root,plan,phase,observations,conditions,*,earliest,latest,
-                                caller_identity,authentication_source_identity):
+                                caller_identity,authentication_source_identity,_r51_context=None):
     """Account for all obligations without mislabelling future rows as PASS.
 
     This low-level producer deliberately does NOT certify reconstruction,
     resource resolution, pagination closure, or launch readiness. Those require
     the complete phase attachment verifier. It retains all supplied receipts.
     """
-    if plan!=build_phase_obligation_plan(root) or phase not in PHASES:
+    expected_plan=build_phase_obligation_plan(root) if _r51_context is None else build_phase_obligation_plan_v2(root)
+    if plan!=expected_plan or phase not in PHASES:
         raise ValueError('exact phased obligation plan required')
     ids={r['id'] for r in plan['rows']}
     if set(conditions)!=ids or set(observations)-ids or any(type(v) is not bool for v in conditions.values()):
@@ -130,14 +156,30 @@ def build_phase_observation_set(root,plan,phase,observations,conditions,*,earlie
             state='NOT_CALLED'
         else:
             if receipt is None:raise ValueError('due required observation missing: '+row_id)
-            receipt=validate_phase_api_receipt(root,receipt,row,earliest=earliest,latest=latest,
-                caller_identity=caller_identity,authentication_source_identity=authentication_source_identity)
-            state='CALLED'
+            if row_id=='R51' and _r51_context is not None:
+                validate_record(root,'r51_result',receipt)
+                f=finalizer(root)
+                f.validate_r51_policy_observation(receipt,caller_identity=caller_identity,
+                    authentication_source_identity=authentication_source_identity,observed_utc=latest,**_r51_context)
+                if receipt['function_existence_receipts_in_order']!=[observations.get('R49'),observations.get('R50')]:
+                    raise ValueError('R51 existence witnesses differ from phase R49/R50 observations')
+                if f._utc(receipt['policy_receipt']['requested_utc'])<f._utc(earliest):
+                    raise ValueError('R51 receipt precedes phase interval')
+                state='CALLED_POLICY_ABSENT' if receipt['outcome']=='POLICY_ABSENT' else 'CALLED_POLICY_PRESENT'
+            else:
+                receipt=validate_phase_api_receipt(root,receipt,row,earliest=earliest,latest=latest,
+                    caller_identity=caller_identity,authentication_source_identity=authentication_source_identity)
+                state='CALLED'
         entries.append({'row_id':row_id,'earliest_producer_phase':producer,'state':state,
                         'condition_evaluated':None if state=='NOT_YET_PRODUCED' else condition,'called_receipt':receipt})
-    return {'schema':'aws_c0_runtime_control_phase_observation_set/v1',
+    return {'schema':'aws_c0_runtime_control_phase_observation_set/v1' if _r51_context is None else 'aws_c0_runtime_control_phase_observation_set/v2',
             'obligation_plan_identity':identity(plan['schema'],plan),'phase':phase,'observed_utc':latest,
             'rows_in_order':entries,'complete_reconstruction_claimed':False}
+
+def build_phase_observation_set_v2(root,plan,phase,observations,conditions,*,expected_lambda_policy,
+                                   freshness_max_seconds,**context):
+    return build_phase_observation_set(root,plan,phase,observations,conditions,
+        _r51_context={'expected_policy':expected_lambda_policy,'freshness_max_seconds':freshness_max_seconds},**context)
 
 def record_schema(root,name):
     bundle=json.loads((root/'aws_c0_deployment_sequence_evidence_schema.json').read_bytes())

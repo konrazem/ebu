@@ -23,6 +23,9 @@
     },
     {
       "$ref": "#/$defs/live_authorization"
+    },
+    {
+      "$ref": "#/$defs/r51_result"
     }
   ],
   "$defs": {
@@ -48478,6 +48481,376 @@
     },
     "live_authorization": {
       "$ref": "#/$defs/d240_live_authorization_v4"
+    },
+    "r51_receipt_v2": {
+      "type": "object",
+      "required": [
+        "row_id",
+        "action",
+        "resource_selector",
+        "caller_identity",
+        "authentication_source_identity",
+        "request_canonical_json_base64",
+        "request_sha256",
+        "response_canonical_json_base64",
+        "response_sha256",
+        "http_status",
+        "request_id",
+        "requested_utc",
+        "completed_utc",
+        "pagination_page",
+        "pagination_item_count",
+        "authentication_disposition",
+        "api_success_disposition",
+        "schema"
+      ],
+      "properties": {
+        "row_id": {
+          "const": "R51"
+        },
+        "action": {
+          "const": "lambda:GetPolicy"
+        },
+        "resource_selector": {
+          "const": "SEALED_FINALIZER_FUNCTION_ARN"
+        },
+        "caller_identity": {
+          "$ref": "#/$defs/d65_identity"
+        },
+        "authentication_source_identity": {
+          "$ref": "#/$defs/d65_identity"
+        },
+        "request_canonical_json_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "response_canonical_json_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+        },
+        "response_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "http_status": {
+          "enum": [
+            200,
+            404
+          ]
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "requested_utc": {
+          "$ref": "#/$defs/d67_timestamp"
+        },
+        "completed_utc": {
+          "$ref": "#/$defs/d67_timestamp"
+        },
+        "pagination_page": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "pagination_item_count": {
+          "$ref": "#/$defs/d69_bounded_integer"
+        },
+        "authentication_disposition": {
+          "const": "SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS"
+        },
+        "api_success_disposition": {
+          "enum": [
+            "AWS_API_CALL_SUCCESS",
+            "AWS_API_RESOURCE_NOT_FOUND"
+          ]
+        },
+        "schema": {
+          "const": "aws_c0_r51_api_request_response_receipt/v2"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "http_status": {
+                "const": 200
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "api_success_disposition": {
+                "const": "AWS_API_CALL_SUCCESS"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "api_success_disposition": {
+                "const": "AWS_API_RESOURCE_NOT_FOUND"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "r51_policy_result_v2": {
+      "type": "object",
+      "required": [
+        "schema",
+        "target_function_arn",
+        "observed_utc",
+        "freshness_max_seconds",
+        "outcome",
+        "policy",
+        "policy_receipt",
+        "function_existence_receipts_in_order"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_lambda_resource_policy_observation/v2"
+        },
+        "target_function_arn": {
+          "const": "arn:aws:lambda:us-east-1:623609441658:function:ebu-c0-corrected-finalizer-v1"
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/d4_timestamp"
+        },
+        "freshness_max_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        },
+        "outcome": {
+          "enum": [
+            "POLICY_PRESENT",
+            "POLICY_ABSENT"
+          ]
+        },
+        "policy": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "policy_receipt": {
+          "$ref": "#/$defs/r51_receipt_v2"
+        },
+        "function_existence_receipts_in_order": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {
+              "type": "object",
+              "required": [
+                "row_id",
+                "action",
+                "resource_selector",
+                "caller_identity",
+                "authentication_source_identity",
+                "request_canonical_json_base64",
+                "request_sha256",
+                "response_canonical_json_base64",
+                "response_sha256",
+                "http_status",
+                "request_id",
+                "requested_utc",
+                "completed_utc",
+                "pagination_page",
+                "pagination_item_count",
+                "authentication_disposition",
+                "api_success_disposition"
+              ],
+              "properties": {
+                "row_id": {
+                  "const": "R49"
+                },
+                "action": {
+                  "const": "lambda:GetFunction"
+                },
+                "resource_selector": {
+                  "const": "SEALED_FINALIZER_FUNCTION_ARN"
+                },
+                "caller_identity": {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                "authentication_source_identity": {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                "request_canonical_json_base64": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+                },
+                "request_sha256": {
+                  "$ref": "#/$defs/d66_sha256"
+                },
+                "response_canonical_json_base64": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+                },
+                "response_sha256": {
+                  "$ref": "#/$defs/d66_sha256"
+                },
+                "http_status": {
+                  "const": 200
+                },
+                "request_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "requested_utc": {
+                  "$ref": "#/$defs/d67_timestamp"
+                },
+                "completed_utc": {
+                  "$ref": "#/$defs/d67_timestamp"
+                },
+                "pagination_page": {
+                  "$ref": "#/$defs/d68_positive_integer"
+                },
+                "pagination_item_count": {
+                  "$ref": "#/$defs/d69_bounded_integer"
+                },
+                "authentication_disposition": {
+                  "const": "SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS"
+                },
+                "api_success_disposition": {
+                  "const": "AWS_API_CALL_SUCCESS"
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "row_id",
+                "action",
+                "resource_selector",
+                "caller_identity",
+                "authentication_source_identity",
+                "request_canonical_json_base64",
+                "request_sha256",
+                "response_canonical_json_base64",
+                "response_sha256",
+                "http_status",
+                "request_id",
+                "requested_utc",
+                "completed_utc",
+                "pagination_page",
+                "pagination_item_count",
+                "authentication_disposition",
+                "api_success_disposition"
+              ],
+              "properties": {
+                "row_id": {
+                  "const": "R50"
+                },
+                "action": {
+                  "const": "lambda:GetFunctionConfiguration"
+                },
+                "resource_selector": {
+                  "const": "SEALED_FINALIZER_FUNCTION_ARN"
+                },
+                "caller_identity": {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                "authentication_source_identity": {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                "request_canonical_json_base64": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+                },
+                "request_sha256": {
+                  "$ref": "#/$defs/d66_sha256"
+                },
+                "response_canonical_json_base64": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+                },
+                "response_sha256": {
+                  "$ref": "#/$defs/d66_sha256"
+                },
+                "http_status": {
+                  "const": 200
+                },
+                "request_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "requested_utc": {
+                  "$ref": "#/$defs/d67_timestamp"
+                },
+                "completed_utc": {
+                  "$ref": "#/$defs/d67_timestamp"
+                },
+                "pagination_page": {
+                  "$ref": "#/$defs/d68_positive_integer"
+                },
+                "pagination_item_count": {
+                  "$ref": "#/$defs/d69_bounded_integer"
+                },
+                "authentication_disposition": {
+                  "const": "SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS"
+                },
+                "api_success_disposition": {
+                  "const": "AWS_API_CALL_SUCCESS"
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "items": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "POLICY_ABSENT"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "policy": {
+                "type": "null"
+              },
+              "policy_receipt": {
+                "properties": {
+                  "http_status": {
+                    "const": 404
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "policy": {
+                "type": "object"
+              },
+              "policy_receipt": {
+                "properties": {
+                  "http_status": {
+                    "const": 200
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "r51_result": {
+      "$ref": "#/$defs/r51_policy_result_v2"
     }
   }
 }

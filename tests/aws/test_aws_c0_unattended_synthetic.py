@@ -147,6 +147,127 @@ class PhaseObligationProducerTests(unittest.TestCase):
         self.assertNotIn('AWS::Lambda::Permission',[r['Type'] for r in template['Resources'].values()])
 
 
+class R51ProspectiveAmendmentTests(unittest.TestCase):
+    """The same pure validator used by the producer; all API bytes are offline."""
+    @staticmethod
+    def encode(receipt,stem,value):
+        raw=F.canonical_bytes(value)
+        receipt[stem+'_canonical_json_base64']=base64.b64encode(raw).decode()
+        receipt[stem+'_sha256']=F.digest(raw)
+
+    @staticmethod
+    def decode(receipt,stem='response'):
+        return F.strict_json(base64.b64decode(receipt[stem+'_canonical_json_base64']))
+
+    def material(self,present=False):
+        values=PhaseObligationProducerTests().material('POSTDEPLOYMENT')
+        observations=values[2];interval=values[4]
+        config={'FunctionArn':F.R51_TARGET,'FunctionName':F.R51_TARGET.rsplit(':',1)[-1],
+                'Version':'$LATEST','RevisionId':'offline-function-revision',
+                'CodeSha256':base64.b64encode(b'x'*32).decode(),'LastModified':'2026-09-06T17:00:00.000+0000'}
+        policy={'Version':'2012-10-17','Statement':[{'Effect':'Allow','Action':'lambda:InvokeFunction',
+            'Resource':F.R51_TARGET,'Principal':{'AWS':'arn:aws:iam::623609441658:role/EBU-C0-Corrected-StepFunctions-v1'}}]}
+        for row,start,end in [('R49',1,2),('R51',3,4),('R50',5,6)]:
+            receipt=observations[row]
+            receipt.update(requested_utc='2026-09-06T18:00:%02dZ'%start,completed_utc='2026-09-06T18:00:%02dZ'%end)
+            self.encode(receipt,'request',{'FunctionName':F.R51_TARGET})
+            metadata={'HTTPStatusCode':200,'RequestId':receipt['request_id']}
+            if row=='R49':response={'Configuration':copy.deepcopy(config),'ResponseMetadata':metadata}
+            elif row=='R50':response={**copy.deepcopy(config),'ResponseMetadata':metadata}
+            else:
+                receipt['schema']=F.R51_RECEIPT_KIND
+                if present:
+                    response={'Policy':json.dumps(policy,indent=2),'RevisionId':'offline-policy-revision','ResponseMetadata':metadata}
+                else:
+                    receipt.update(http_status=404,api_success_disposition='AWS_API_RESOURCE_NOT_FOUND')
+                    metadata.update(HTTPStatusCode=404,HTTPHeaders={'x-amzn-errortype':'ResourceNotFoundException',
+                                                               'x-amzn-requestid':receipt['request_id']})
+                    response={'Error':{'Code':'ResourceNotFoundException','Message':'Offline policy absent fixture'},'ResponseMetadata':metadata}
+            self.encode(receipt,'response',response)
+        context=dict(caller_identity=interval['caller_identity'],authentication_source_identity=interval['authentication_source_identity'],
+                     expected_policy=policy if present else None,observed_utc=interval['latest'],freshness_max_seconds=60)
+        result=G.build_r51_policy_observation(ROOT,observations['R51'],[observations['R49'],observations['R50']],**context)
+        return result,context,values
+
+    def test_absence_and_present_pass_shared_validator_and_new_schema(self):
+        for present in (False,True):
+            result,context,_=self.material(present)
+            self.assertEqual(F.validate_r51_policy_observation(result,**context),result)
+            self.assertEqual(G.validate_record(ROOT,'r51_result',result),result)
+            self.assertEqual(result['outcome'],'POLICY_PRESENT' if present else 'POLICY_ABSENT')
+            if not present:
+                self.assertIsNone(result['policy'])
+                self.assertNotEqual(result['policy_receipt']['api_success_disposition'],'AWS_API_CALL_SUCCESS')
+
+    def test_new_phase_binds_exact_witnesses_and_distinct_absence_result(self):
+        result,context,values=self.material()
+        observations=copy.deepcopy(values[2]);observations['R51']=result
+        plan=G.build_phase_obligation_plan_v2(ROOT)
+        self.assertEqual(plan['rows'],G.build_phase_obligation_plan(ROOT)['rows'])
+        self.assertEqual(plan['r51_existence_bookend_call_order'],['R49','R51','R50'])
+        actual=G.build_phase_observation_set_v2(ROOT,plan,values[1],observations,values[3],
+            expected_lambda_policy=None,freshness_max_seconds=60,**values[4])
+        self.assertEqual(actual['schema'],'aws_c0_runtime_control_phase_observation_set/v2')
+        self.assertEqual(actual['rows_in_order'][50]['state'],'CALLED_POLICY_ABSENT')
+        self.assertFalse(actual['complete_reconstruction_claimed'])
+        observations['R49']=copy.deepcopy(observations['R49']);observations['R49']['request_id']='different-offline-id'
+        with self.assertRaisesRegex(ValueError,'differ from phase'):
+            G.build_phase_observation_set_v2(ROOT,plan,values[1],observations,values[3],
+                expected_lambda_policy=None,freshness_max_seconds=60,**values[4])
+
+    def test_http_errors_float_bool_and_old_success_label_refused(self):
+        for value in (403,429,500,0,404.0,True):
+            record,context,_=self.material();record['policy_receipt']['http_status']=value
+            with self.subTest(value=value),self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+        for key,value in [('schema','aws_c0_api_request_response_receipt/v1'),('api_success_disposition','AWS_API_CALL_SUCCESS'),
+                          ('request_id',''),('action','lambda:AddPermission'),('resource_selector','*')]:
+            record,context,_=self.material();record['policy_receipt'][key]=value
+            with self.subTest(key=key),self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+
+    def test_generic_404_access_denied_code_and_missing_response_evidence_refused(self):
+        for mutate in (lambda r:r['Error'].update(Code='AccessDeniedException'),lambda r:r['Error'].pop('Code'),
+                       lambda r:r.pop('Error'),lambda r:r['ResponseMetadata'].pop('HTTPHeaders'),
+                       lambda r:r['ResponseMetadata']['HTTPHeaders'].update({'x-amzn-errortype':'Unknown'}),
+                       lambda r:r['ResponseMetadata'].update(RequestId='other-request'),
+                       lambda r:r.update(Policy='{}')):
+            record,context,_=self.material();receipt=record['policy_receipt'];response=self.decode(receipt);mutate(response)
+            self.encode(receipt,'response',response)
+            with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+        record,context,_=self.material();record['policy_receipt']['response_sha256']='0'*64
+        with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+
+    def test_missing_stale_future_failed_and_non_bookend_witness_refused(self):
+        for mutate in (lambda r:r['function_existence_receipts_in_order'].pop(),
+                       lambda r:r['function_existence_receipts_in_order'].reverse(),
+                       lambda r:r['function_existence_receipts_in_order'][0].update(requested_utc='2026-09-06T17:59:00Z'),
+                       lambda r:r['function_existence_receipts_in_order'][1].update(completed_utc='2026-09-06T18:02:00Z'),
+                       lambda r:r['function_existence_receipts_in_order'][0].update(http_status=404),
+                       lambda r:r['function_existence_receipts_in_order'][1].update(requested_utc='2026-09-06T18:00:00Z')):
+            record,context,_=self.material();mutate(record)
+            with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+
+    def test_exact_function_account_region_qualifier_and_revision_required(self):
+        for target in (F.R51_TARGET+':alias',F.R51_TARGET.replace('us-east-1','us-west-2'),
+                       F.R51_TARGET.replace('623609441658','111111111111'),F.R51_TARGET+'other'):
+            record,context,_=self.material();self.encode(record['policy_receipt'],'request',{'FunctionName':target})
+            with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+        for field in ('FunctionArn','RevisionId','CodeSha256','LastModified'):
+            record,context,_=self.material();receipt=record['function_existence_receipts_in_order'][1]
+            response=self.decode(receipt);response[field]='changed';self.encode(receipt,'response',response)
+            with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+
+    def test_caller_channel_missing_policy_and_no_historical_retagging(self):
+        for field in ('caller_identity','authentication_source_identity'):
+            record,context,_=self.material();context[field]=F.identity(context[field]['kind'],'c'*64)
+            with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+        record,context,values=self.material(True);context['expected_policy']=None
+        with self.assertRaises(F.Refusal):F.validate_r51_policy_observation(record,**context)
+        original=copy.deepcopy(values[2]['R51']);del original['schema']
+        with self.assertRaisesRegex(ValueError,'historical receipt unchanged'):
+            G.build_r51_policy_observation(ROOT,original,[values[2]['R49'],values[2]['R50']],**context)
+        self.assertNotIn('schema',original)
+
+
 class ByteBoundStagingTests(unittest.TestCase):
     def material(self):
         plan = S.plan('a' * 40, b'controller\n', b'unit\n')
