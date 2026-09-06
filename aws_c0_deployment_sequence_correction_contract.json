@@ -3,6 +3,18 @@
   "readiness_disposition": "NOT_READY_FULL_PUBLIC_ENTRY_SCHEMA_GATE_FAILS",
   "independent_review_disposition": "NOT_APPROVED",
   "aws_continuation_permitted_by_validation": false,
+  "prospective_local_operational_status": {
+    "kind": "aws_c0_controller_operational_status/v2",
+    "directory": "/var/lib/ebu-c0/status",
+    "maximum_bytes": 16384,
+    "persistent_state_directory_required": true,
+    "root_identity_distinct_from_stored_byte_hash": true,
+    "root_publication_precedes_cache_update": true,
+    "terminal_is_not_journal_handoff_completion": true,
+    "authenticated_evidence_root_claimed": false,
+    "helper_runtime_attachment_complete": false,
+    "cloud_readiness_claimed": false
+  },
   "prospective_local_helper_transport": {
     "kind": "aws_c0_controller_local_helper_request/v1",
     "operations": ["STATUS", "SAFE_CLOSE"],

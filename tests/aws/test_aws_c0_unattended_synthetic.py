@@ -492,6 +492,143 @@ class LocalHelperTransportTests(unittest.TestCase):
             with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(record,**context)
 
 
+class LocalOperationalStatusTests(unittest.TestCase):
+    def material(self):
+        launch=current_launch(load('aws/c0/fixtures/launch-request.valid.json'))
+        workflow='arn:aws:states:us-east-1:623609441658:execution:EBU-C0-492a4f1:'+launch['attempt_id']
+        context={'launch':launch,'workflow_execution_arn':workflow}
+        return C.new_local_operational_status(**context),context
+
+    def publication(self,status,context,kind,**changes):
+        common={'attempt_identity':status['attempt_identity'],'observed_utc':'2026-09-06T18:02:00Z'}
+        if kind=='start':
+            schema='aws_c0_start_receipt/v7'
+            common.update(start_disposition='AWS_C0_START_ACCEPTED',failure_phase=None,failure_code=None,
+                workflow_execution_identity=status['workflow_execution_identity'],workflow_execution_arn=context['workflow_execution_arn'],
+                launch_request_identity=status['launch_request_identity'])
+        elif kind=='heartbeat':
+            schema='aws_c0_heartbeat/v1';last=status['latest_heartbeat']
+            common.update(sequence=0 if last is None else last['sequence']+1,
+                          previous_heartbeat_identity=None if last is None else last['identity'])
+        else:
+            schema='aws_c0_terminal_receipt/v1'
+            common.update(last_heartbeat_sequence=status['latest_heartbeat']['sequence'],disposition='AWS_C0_SYNTHETIC_PASS')
+        common.update(changes)
+        record,raw,rid=C._root_record(schema,common)
+        receipt={'key':status['artifact_prefix']+'evidence/'+kind+'-'+rid+'.json','version_id':'offline-exact-version',
+                 'bytes':len(raw),'sha256':C.digest(raw),'checksum_sha256_base64':base64.b64encode(hashlib.sha256(raw).digest()).decode()}
+        return raw,receipt
+
+    def advance(self,status,context,kind,**changes):
+        return C.advance_local_operational_status(status,*self.publication(status,context,kind,**changes),**context)
+
+    def test_published_start_heartbeat_zero_chain_and_terminal_bindings(self):
+        status,context=self.material()
+        status=self.advance(status,context,'start')
+        status=self.advance(status,context,'heartbeat');zero=copy.deepcopy(status['heartbeat_zero'])
+        status=self.advance(status,context,'heartbeat',observed_utc='2026-09-06T18:02:30Z')
+        self.assertEqual(status['heartbeat_zero'],zero)
+        self.assertEqual(status['latest_heartbeat']['sequence'],1)
+        self.assertNotEqual(status['start']['identity']['sha256'],status['start']['object']['sha256'])
+        status=self.advance(status,context,'terminal',observed_utc='2026-09-06T18:03:00Z')
+        self.assertFalse(status['controller_journal_handoff_complete'])
+        status['controller_journal_handoff_complete']=True
+        self.assertEqual(C.validate_local_operational_status(status,**context),status)
+        self.assertLess(len(C.canonical_bytes(status)),16384)
+
+    def test_missing_replayed_or_out_of_order_roots_are_refused(self):
+        status,context=self.material()
+        with self.assertRaises(C.Refusal):self.advance(status,context,'heartbeat')
+        status=self.advance(status,context,'start')
+        with self.assertRaises(C.Refusal):self.advance(status,context,'start')
+        with self.assertRaises(C.Refusal):self.advance(status,context,'heartbeat',sequence=1)
+        status=self.advance(status,context,'heartbeat')
+        for changes in ({'sequence':0},{'sequence':2},{'sequence':True},{'previous_heartbeat_identity':None},
+                        {'observed_utc':'2026-09-06T18:01:00Z'}):
+            with self.assertRaises(C.Refusal):self.advance(status,context,'heartbeat',**changes)
+        with self.assertRaises(C.Refusal):self.advance(status,context,'terminal',last_heartbeat_sequence=2)
+        status=self.advance(status,context,'heartbeat',observed_utc='2026-09-06T18:04:00Z')
+        with self.assertRaises(C.Refusal):self.advance(status,context,'heartbeat',observed_utc='2026-09-06T18:03:00Z')
+        spliced=copy.deepcopy(status)
+        spliced['latest_heartbeat']=copy.deepcopy(spliced['heartbeat_zero'])
+        spliced['latest_heartbeat']['sequence']=1
+        with self.assertRaises(C.Refusal):C.validate_local_operational_status(spliced,**context)
+
+    def test_wrong_publication_bytes_version_and_attempt_are_refused(self):
+        status,context=self.material();raw,receipt=self.publication(status,context,'start')
+        with self.assertRaises(C.Refusal):C.advance_local_operational_status(status,raw,None,**context)
+        with self.assertRaises(C.Refusal):C.advance_local_operational_status(status,b'[]',receipt,**context)
+        for field,value in (('key','different'),('sha256','b'*64),('bytes',1),('version_id',''),('checksum_sha256_base64','bad')):
+            with self.assertRaises(C.Refusal):C.advance_local_operational_status(status,raw,{**receipt,field:value},**context)
+        for changes in ({'attempt_identity':C.identity('aws_c0_attempt/v1','b'*64)},
+                        {'scientific_execution_authorized':True},{'zero_science_counters':{**C.ZERO,'trajectory_count':False}}):
+            with self.assertRaises(C.Refusal):self.advance(status,context,'start',**changes)
+
+    def test_local_cache_cannot_change_workflow_or_claim_early_handoff(self):
+        status,context=self.material()
+        for changes in ({'workflow_execution_arn':'other'},{'attempt_id':'OTHER'},
+                        {'controller_journal_handoff_complete':True},{'extra':True},
+                        {'zero_science_counters':{**C.ZERO,'trajectory_count':False}}):
+            with self.assertRaises(C.Refusal):C.validate_local_operational_status({**status,**changes},**context)
+
+    def test_producer_is_wired_after_successful_put_and_after_journal_handoff(self):
+        source=(ROOT/'aws/c0/controller/ebu_c0_controller.py').read_text()
+        run=ast.get_source_segment(source,next(n for n in ast.parse(source).body if isinstance(n,ast.FunctionDef) and n.name=='run_attempt'))
+        self.assertLess(run.index('start_publication = put('),run.index('operational_status = advance_local_operational_status('))
+        self.assertLess(run.index('root_publication = put('),run.index('advance_local_operational_status(operational_status,raw,root_publication'))
+        self.assertLess(run.index('publish_controller_journal_handoff('),run.index("operational_status['controller_journal_handoff_complete'] = True"))
+        self.assertNotIn('aws_c0_controller_status/v1',run)
+
+    def test_status_storage_survives_runtime_directory_removal(self):
+        service=(ROOT/'aws/c0/controller/ebu-c0@.service').read_text()
+        self.assertIn('StateDirectory=ebu-c0\n',service)
+        self.assertIn('StateDirectoryMode=0700\n',service)
+        self.assertEqual(C.STATUS,Path('/var/lib/ebu-c0/status'))
+        actual_fstat=os.fstat
+        def root_owned(fd):
+            # Offline filesystem model only; never run the service or use root.
+            fields=list(actual_fstat(fd));fields[4]=0
+            return os.stat_result(fields)
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder);state=base/'state';state.mkdir(mode=0o700)
+            runtime=base/'run';runtime.mkdir(mode=0o700)
+            with mock.patch.object(C,'STATUS',state/'status'),mock.patch.object(C.os,'geteuid',return_value=0),mock.patch.object(C.os,'fstat',side_effect=root_owned):
+                status,context=self.material()
+                for kind in ('start','heartbeat','terminal'):status=self.advance(status,context,kind)
+                status['controller_journal_handoff_complete']=True
+                destination=C.STATUS/(status['attempt_id']+'.json')
+                C._publish_status(destination,status)
+                runtime.rmdir()  # Model systemd's RuntimeDirectory cleanup.
+                self.assertEqual(C.strict_json(destination.read_bytes()),status)
+                self.assertEqual(destination.stat().st_mode & 0o777,0o600)
+                self.assertEqual(list(C.STATUS.iterdir()),[destination])
+                with self.assertRaises(C.Refusal):C._publish_status(state/'wrong.json',status)
+                C.STATUS.chmod(0o777)
+                with self.assertRaises(C.Refusal):C._publish_status(destination,status)
+                C.STATUS.chmod(0o700)
+
+    def test_status_directory_refuses_nonroot_owner_mode_and_symlink(self):
+        actual_fstat=os.fstat
+        def fake_owner(fd,uid=0):
+            fields=list(actual_fstat(fd));fields[4]=uid
+            return os.stat_result(fields)
+        with mock.patch.object(C.os,'geteuid',return_value=501),mock.patch.object(C.os,'open') as opening:
+            with self.assertRaises(C.Refusal):C._status_directory_fd(create=True)
+            opening.assert_not_called()
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder);state=base/'state';state.mkdir(mode=0o700)
+            target=base/'target';target.mkdir(mode=0o700)
+            with mock.patch.object(C,'STATUS',state/'status'),mock.patch.object(C.os,'geteuid',return_value=0):
+                with mock.patch.object(C.os,'fstat',side_effect=lambda fd:fake_owner(fd,501)):
+                    with self.assertRaises(C.Refusal):C._status_directory_fd(create=True)
+                with mock.patch.object(C.os,'fstat',side_effect=fake_owner):
+                    state.chmod(0o755)
+                    with self.assertRaises(C.Refusal):C._status_directory_fd(create=True)
+                    state.chmod(0o700);C.STATUS.symlink_to(target,target_is_directory=True)
+                    with self.assertRaises(OSError):C._status_directory_fd(create=True)
+                    self.assertEqual(list(target.iterdir()),[])
+
+
 class JournalSourceContractDiagnosticTests(unittest.TestCase):
     def material(self):
         schema=load('aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json')

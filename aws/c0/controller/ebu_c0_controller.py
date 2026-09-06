@@ -47,7 +47,7 @@ CONTROLLER = Path("/usr/local/libexec/ebu-c0/ebu_c0_controller.py")
 UNIT = Path("/etc/systemd/system/ebu-c0@.service")
 REQUESTS = Path("/var/lib/ebu-c0/requests")
 ATTEMPTS = Path("/var/lib/ebu-c0/attempts")
-STATUS = Path("/run/ebu-c0")
+STATUS = Path("/var/lib/ebu-c0/status")
 MAX_OBJECT_BYTES = 4_194_304
 SHA = re.compile(r"^[0-9a-f]{64}$")
 VERSION = re.compile(r"^[A-Za-z0-9._+~=/:-]{1,1024}$")
@@ -1437,17 +1437,194 @@ def _root_record(schema: str, fields: dict[str, Any]) -> tuple[dict[str, Any], b
     return record, raw, record_id
 
 
-def _publish_status(path: Path, payload: dict[str, Any]) -> None:
-    raw = canonical_bytes(payload)
-    path.parent.mkdir(parents=True, mode=0o700, exist_ok=True)
-    fd, tmp = tempfile.mkstemp(prefix=path.name + ".", dir=str(path.parent))
+def _status_directory_fd(*, create: bool = False) -> int:
+    """Pin the existing root-owned state directory and its private status child.
+
+    StateDirectory survives service exit; RuntimeDirectory does not. Descriptor
+    relative operations refuse symlink substitution and never chmod a target.
+    """
+    if os.geteuid() != 0:
+        raise Refusal("local status access requires root")
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    parent = os.open(STATUS.parent, flags)
     try:
-        os.write(fd, raw)
-        os.fsync(fd)
+        info = os.fstat(parent)
+        if not stat.S_ISDIR(info.st_mode) or info.st_uid != 0 or stat.S_IMODE(info.st_mode) != 0o700:
+            raise Refusal("state directory must be root-owned mode 0700")
+        if create:
+            try: os.mkdir(STATUS.name, mode=0o700, dir_fd=parent)
+            except FileExistsError: pass
+        child = os.open(STATUS.name, flags, dir_fd=parent)
+        try:
+            info = os.fstat(child)
+            if not stat.S_ISDIR(info.st_mode) or info.st_uid != 0 or stat.S_IMODE(info.st_mode) != 0o700:
+                raise Refusal("status directory must be root-owned mode 0700")
+        except BaseException:
+            os.close(child)
+            raise
+        return child
     finally:
-        os.close(fd)
-    os.chmod(tmp, 0o600)
-    os.replace(tmp, path)
+        os.close(parent)
+
+
+def _publish_status(path: Path, payload: dict[str, Any]) -> None:
+    if path.parent != STATUS or path.suffix != '.json' or not ATTEMPT.fullmatch(path.stem):
+        raise Refusal("local status path is not exact")
+    raw = canonical_bytes(payload)
+    if len(raw) > 16384:
+        raise Refusal("local status publication exceeds bound")
+    temporary = path.name + '.' + os.urandom(16).hex()
+    directory = _status_directory_fd(create=True)
+    created = False
+    try:
+        fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                     0o600, dir_fd=directory)
+        created = True
+        with os.fdopen(fd, 'wb') as handle:
+            handle.write(raw)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path.name, src_dir_fd=directory, dst_dir_fd=directory)
+        created = False
+        os.fsync(directory)
+    finally:
+        try:
+            if created: os.unlink(temporary, dir_fd=directory)
+        finally:
+            os.close(directory)
+
+
+LOCAL_STATUS_FIELDS = {'schema', 'attempt_id', 'attempt_identity', 'workflow_execution_arn',
+    'workflow_execution_identity', 'launch_request_identity', 'artifact_prefix', 'start',
+    'heartbeat_zero', 'latest_heartbeat', 'terminal', 'controller_journal_handoff_complete', 'zero_science_counters'}
+
+
+def new_local_operational_status(launch: dict[str, Any], workflow_execution_arn: str) -> dict[str, Any]:
+    """An operational cache, not an authenticated root or extra S3 object."""
+    if launch.get('schema') != 'aws_c0_launch_request/v6':
+        raise Refusal("local status requires the current validated launch kind")
+    launch_id = root_digest(launch)
+    _identity_field(launch, 'attempt_identity', 'aws_c0_attempt/v1')
+    if (not ATTEMPT.fullmatch(launch['attempt_id']) or not REHEARSAL.fullmatch(launch['rehearsal_id'])
+            or launch['artifact_prefix'] != 'rehearsal/aws-c0/' + launch['rehearsal_id'] + '/' + launch['attempt_id'] + '/'):
+        raise Refusal("local status attempt coordinates invalid")
+    if (not workflow_execution_arn.startswith('arn:aws:states:us-east-1:623609441658:execution:')
+            or not workflow_execution_arn.endswith(':' + launch['attempt_id'])):
+        raise Refusal("local status workflow/attempt mismatch")
+    return {'schema':'aws_c0_controller_operational_status/v2','attempt_id':launch['attempt_id'],
+        'attempt_identity':launch['attempt_identity'],'workflow_execution_arn':workflow_execution_arn,
+        'workflow_execution_identity':_workflow_identity(workflow_execution_arn),
+        'launch_request_identity':identity('aws_c0_launch_request/v6',launch_id),'artifact_prefix':launch['artifact_prefix'],
+        'start':None,'heartbeat_zero':None,'latest_heartbeat':None,'terminal':None,
+        'controller_journal_handoff_complete':False,'zero_science_counters':dict(ZERO)}
+
+
+def validate_local_operational_status(value: Any, *, launch: dict[str, Any], workflow_execution_arn: str) -> dict[str, Any]:
+    expected = new_local_operational_status(launch, workflow_execution_arn)
+    if not isinstance(value, dict) or set(value) != LOCAL_STATUS_FIELDS or len(canonical_bytes(value)) > 16384:
+        raise Refusal("closed bounded local operational status required")
+    variable = {'start','heartbeat_zero','latest_heartbeat','terminal','controller_journal_handoff_complete'}
+    if any(value[k] != expected[k] for k in LOCAL_STATUS_FIELDS - variable):
+        raise Refusal("local operational status source binding mismatch")
+    if any(type(x) is not int for x in value['zero_science_counters'].values()):
+        raise Refusal("local status counters must be exact integer zeros")
+    if type(value['controller_journal_handoff_complete']) is not bool:
+        raise Refusal("local status handoff flag must be boolean")
+    roles = {'start':('aws_c0_start_receipt/v7','start'),
+        'heartbeat_zero':('aws_c0_heartbeat/v1','heartbeat'),'latest_heartbeat':('aws_c0_heartbeat/v1','heartbeat'),
+        'terminal':('aws_c0_terminal_receipt/v1','terminal')}
+    for field,(kind,category) in roles.items():
+        item = value[field]
+        if item is None: continue
+        if not isinstance(item,dict) or set(item) != {'identity','object','observed_utc','sequence'}:
+            raise Refusal("local status root projection not closed")
+        rid = _identity_field(item,'identity',kind)
+        obj = item['object']
+        if (not isinstance(obj,dict) or set(obj) != {'key','version_id','bytes','sha256','checksum_sha256_base64'}
+                or obj['key'] != value['artifact_prefix']+'evidence/'+category+'-'+rid+'.json'
+                or not isinstance(obj['version_id'],str) or not VERSION.fullmatch(obj['version_id'])
+                or type(obj['bytes']) is not int or not 1 <= obj['bytes'] <= MAX_OBJECT_BYTES
+                or not isinstance(obj['sha256'],str) or not SHA.fullmatch(obj['sha256'])
+                or obj['checksum_sha256_base64'] != base64.b64encode(bytes.fromhex(obj['sha256'])).decode()):
+            raise Refusal("local status exact publication coordinate invalid")
+        if not isinstance(item['observed_utc'],str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z',item['observed_utc']):
+            raise Refusal("local status exact UTC required")
+        _utc(item['observed_utc'])
+        if category == 'heartbeat':
+            if type(item['sequence']) is not int or not 0 <= item['sequence'] < 512:
+                raise Refusal("local heartbeat sequence outside capture bound")
+        elif item['sequence'] is not None: raise Refusal("non-heartbeat local sequence must be null")
+    start,zero,last,terminal=(value[k] for k in ('start','heartbeat_zero','latest_heartbeat','terminal'))
+    if start is None and any(x is not None for x in (zero,last,terminal)):
+        raise Refusal("local status roots precede accepted start")
+    if (zero is None) != (last is None) or zero is not None and (zero['sequence'] != 0
+            or _utc(zero['observed_utc']) < _utc(start['observed_utc'])
+            or _utc(last['observed_utc']) < _utc(zero['observed_utc'])
+            or last['sequence'] == 0 and last != zero
+            or last['sequence'] > 0 and last['identity'] == zero['identity']):
+        raise Refusal("local status heartbeat-zero/last binding invalid")
+    if terminal is not None and (last is None or _utc(terminal['observed_utc']) < _utc(last['observed_utc'])):
+        raise Refusal("local terminal precedes heartbeat evidence")
+    if value['controller_journal_handoff_complete'] and terminal is None:
+        raise Refusal("local journal handoff cannot precede terminal")
+    return value
+
+
+def advance_local_operational_status(status: dict[str, Any], root_bytes: bytes, publication: dict[str, Any], *,
+                                     launch: dict[str, Any], workflow_execution_arn: str) -> dict[str, Any]:
+    """Called only after a successful persistent-controller root publication.
+
+    It binds root identity separately from published-byte hash, retains heartbeat
+    zero, and accepts only the next published heartbeat or one terminal root.
+    It performs no I/O and makes no independent authentication claim.
+    """
+    validate_local_operational_status(status,launch=launch,workflow_execution_arn=workflow_execution_arn)
+    if status['terminal'] is not None: raise Refusal("local status already has terminal publication")
+    record = strict_json(root_bytes)
+    if not isinstance(record, dict) or not isinstance(publication, dict):
+        raise Refusal("published root and publication receipt must be objects")
+    rid = root_digest(record)
+    if (record.get('attempt_identity') != status['attempt_identity'] or record.get('zero_science_counters') != ZERO
+            or record.get('authority_id') != AUTHORITY_ID or record.get('record_class') != 'NON_SCIENTIFIC_AWS_C0_EVIDENCE'
+            or record.get('scientific_execution_authorized') is not False or record.get('stage_f_readiness_claimed') is not False):
+        raise Refusal("published local status root attempt/science mismatch")
+    if any(type(x) is not int for x in record['zero_science_counters'].values()):
+        raise Refusal("published root counters must be integer zeros")
+    kind = record.get('schema')
+    if kind == 'aws_c0_start_receipt/v7':
+        if (status['start'] is not None or record.get('start_disposition') != 'AWS_C0_START_ACCEPTED'
+                or record.get('failure_phase') is not None or record.get('failure_code') is not None
+                or record.get('workflow_execution_identity') != status['workflow_execution_identity']
+                or record.get('workflow_execution_arn') != workflow_execution_arn
+                or record.get('launch_request_identity') != status['launch_request_identity']):
+            raise Refusal("local accepted start binding invalid")
+        field,category,sequence='start','start',None
+    elif kind == 'aws_c0_heartbeat/v1':
+        last=status['latest_heartbeat']
+        if (status['start'] is None or type(record.get('sequence')) is not int
+                or record['sequence'] != (0 if last is None else last['sequence']+1)
+                or record.get('previous_heartbeat_identity') != (None if last is None else last['identity'])
+                or last is not None and _utc(record['observed_utc']) < _utc(last['observed_utc'])):
+            raise Refusal("local heartbeat publication chain invalid")
+        field,category,sequence='latest_heartbeat','heartbeat',record['sequence']
+    elif kind == 'aws_c0_terminal_receipt/v1':
+        last=status['latest_heartbeat']
+        if (last is None or type(record.get('last_heartbeat_sequence')) is not int
+                or record['last_heartbeat_sequence'] != last['sequence']
+                or record.get('disposition') not in ('AWS_C0_SYNTHETIC_PASS','AWS_C0_SYNTHETIC_FAIL')):
+            raise Refusal("local terminal publication sequence invalid")
+        field,category,sequence='terminal','terminal',None
+    else: raise Refusal("unsupported local operational status root")
+    expected_key=status['artifact_prefix']+'evidence/'+category+'-'+rid+'.json'
+    if (publication.get('key') != expected_key or publication.get('sha256') != digest(root_bytes)
+            or publication.get('bytes') != len(root_bytes)
+            or publication.get('checksum_sha256_base64') != base64.b64encode(hashlib.sha256(root_bytes).digest()).decode()):
+        raise Refusal("local status does not bind actual published root bytes")
+    result=json.loads(canonical_bytes(status))
+    result[field]={'identity':identity(kind,rid),'object':{k:publication[k] for k in
+        ('key','version_id','bytes','sha256','checksum_sha256_base64')},'observed_utc':record['observed_utc'],'sequence':sequence}
+    if field == 'latest_heartbeat' and sequence == 0: result['heartbeat_zero']=result[field]
+    return validate_local_operational_status(result,launch=launch,workflow_execution_arn=workflow_execution_arn)
 
 
 def _software_contract(live_packet: dict[str, Any]) -> dict[str, Any]:
@@ -1637,12 +1814,11 @@ def run_attempt(args: argparse.Namespace) -> None:
         "start_disposition": "AWS_C0_START_ACCEPTED",
         "failure_phase": None, "failure_code": None,
     })
-    put(f"{prefix}evidence/start-{start_id}.json", start_raw)
-    _publish_status(STATUS / f"{attempt}.json", {
-        "schema": "aws_c0_controller_status/v1", "state": "START_RECEIPT_PUBLISHED",
-        "attempt_id": attempt, "start_receipt_sha256": digest(start_raw),
-        "zero_science_counters": ZERO,
-    })
+    start_publication = put(f"{prefix}evidence/start-{start_id}.json", start_raw)
+    operational_status = advance_local_operational_status(
+        new_local_operational_status(launch,source['workflow_execution_arn']),start_raw,start_publication,
+        launch=launch,workflow_execution_arn=source['workflow_execution_arn'])
+    _publish_status(STATUS / f"{attempt}.json", operational_status)
     max_runtime = min(launch["phase_timeouts_seconds"]["worker_runtime"], limits["instance_running_seconds"])
     cidfile = ATTEMPTS / f"{attempt}.cid"
     ATTEMPTS.mkdir(parents=True, mode=0o700, exist_ok=True)
@@ -1744,7 +1920,11 @@ def run_attempt(args: argparse.Namespace) -> None:
             else:
                 raise Refusal("worker emitted unsupported event")
             _, raw, record_id = _root_record(schema, fields)
-            put(f"{prefix}evidence/{category}-{record_id}.json", raw)
+            root_publication = put(f"{prefix}evidence/{category}-{record_id}.json", raw)
+            if schema != 'aws_c0_checkpoint/v1':
+                operational_status = advance_local_operational_status(operational_status,raw,root_publication,
+                    launch=launch,workflow_execution_arn=source['workflow_execution_arn'])
+                _publish_status(STATUS / f"{attempt}.json", operational_status)
             if schema == "aws_c0_heartbeat/v1":
                 previous_heartbeat = identity(schema, record_id)
                 heartbeat_count += 1
@@ -1796,10 +1976,9 @@ def run_attempt(args: argparse.Namespace) -> None:
     publish_controller_journal_handoff(
         bucket=bucket, key=prefix + CONTROLLER_JOURNAL_HANDOFF_SUFFIX,
         handoff=handoff, publisher=journal_publisher)
-    _publish_status(STATUS / f"{attempt}.json", {
-        "schema": "aws_c0_controller_status/v1", "state": "TERMINAL_PUBLISHED",
-        "attempt_id": attempt, "zero_science_counters": ZERO,
-    })
+    operational_status['controller_journal_handoff_complete'] = True
+    validate_local_operational_status(operational_status,launch=launch,workflow_execution_arn=source['workflow_execution_arn'])
+    _publish_status(STATUS / f"{attempt}.json", operational_status)
 
 
 def parser() -> argparse.ArgumentParser:

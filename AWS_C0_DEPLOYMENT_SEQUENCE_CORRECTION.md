@@ -238,6 +238,34 @@ loading, local status/marker actions, SSM branches and ASL wiring are still
 required. No helper has been sent or executed, no credential flow invoked, no
 AWS resource touched, and no historical schema changed.
 
+### Persistent local operational status component
+
+The controller now projects successful START, heartbeat-zero/latest-heartbeat,
+and terminal publications into a closed 16 KiB local operational cache. Each
+projection keeps the root identity separate from the complete stored-byte hash
+and actual publication version/checksum. Heartbeats must advance exactly once
+and cannot move backwards in observed time; the terminal flag does not imply
+journal handoff completion. The handoff flag is set only after successful worker
+exit validation and controller-journal handoff publication.
+
+Status lives beneath the existing persistent StateDirectory, not the ephemeral
+RuntimeDirectory removed at service exit. Root-owned mode-0700 directories are
+opened without following symlinks, and mode-0600 status replacement is atomic
+and synchronized through directory-relative operations. No service settings,
+permissions, cloud objects, scientific boundaries or historical schemas change.
+Seven focused tests pass, including a filesystem model of runtime-directory
+removal, unsafe ownership/mode/symlink refusals, chronology and publication-byte
+bindings. These tests do not execute the service or the synthetic worker.
+The existing independent reviewer inspected both fixes and APPROVED this
+component only for a partial NOT_READY commit; the reviewer did not claim to
+execute the parent-run tests or approve the remaining integration.
+
+This is a local operational cache, not an authenticated evidence root or a
+successful independent readback claim. Actual helper decoding, bound-source
+loading, SSM/ASL attachment, full proof bindings and the complete public gate
+remain unfinished. The broader correction remains NOT_READY; AWS and credential
+access remain prohibited during this local-only amendment.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits
