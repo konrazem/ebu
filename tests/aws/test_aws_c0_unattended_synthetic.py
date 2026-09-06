@@ -492,6 +492,47 @@ class LocalHelperTransportTests(unittest.TestCase):
             with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(record,**context)
 
 
+class LocalHelperDecodeTests(unittest.TestCase):
+    def material(self,operation='STATUS'):
+        args,helper,context=LocalHelperTransportTests().material(operation)
+        args.ssm_dispatch_request_canonical_json_base64=helper['transport_parameters']['SsmDispatchRequestCanonicalJsonBase64'][0]
+        args.ssm_dispatch_request_sha256=helper['transport_parameters']['SsmDispatchRequestSha256'][0]
+        del context['semantic_parameters']
+        return args,helper,context
+
+    def test_helper_decode_requires_separate_expected_context_and_no_effects(self):
+        for operation in ('STATUS','SAFE_CLOSE'):
+            args,helper,context=self.material(operation)
+            with (mock.patch.object(C,'bootstrap_imdsv2_credentials',side_effect=AssertionError('no credentials')),
+                  mock.patch.object(C,'_download',side_effect=AssertionError('no network')),
+                  mock.patch.object(C,'prepare_request',side_effect=AssertionError('no preparation')),
+                  mock.patch.object(C,'_run',side_effect=AssertionError('no command')),
+                  mock.patch.object(C.os,'open',side_effect=AssertionError('no filesystem'))):
+                self.assertEqual(C.validate_local_helper_transport_v1(args,**context),helper['helper_request'])
+            context['expected_start_dispatch']=copy.deepcopy(context['expected_start_dispatch'])
+            context['expected_start_dispatch']['document_version']='2'
+            with self.assertRaises(C.Refusal):C.validate_local_helper_transport_v1(args,**context)
+        args,_,context=self.material();args.launch_bytes+=1
+        with self.assertRaises(C.Refusal):C.validate_local_helper_transport_v1(args,**context)
+
+    def test_encoded_bound_split_hash_noncanonical_and_start_refusals(self):
+        for encoded in ('A'*21849,None,123,'!notbase64!'):
+            args,_,context=self.material();args.ssm_dispatch_request_canonical_json_base64=encoded
+            with self.assertRaises(C.Refusal):C.validate_local_helper_transport_v1(args,**context)
+        args,_,context=self.material();args.ssm_dispatch_request_sha256='0'*64
+        with self.assertRaises(C.Refusal):C.validate_local_helper_transport_v1(args,**context)
+        for raw in (b'{}\n',b'{"a":1,"a":1}',b'[]',b' '*16385):
+            args,_,context=self.material();args.ssm_dispatch_request_canonical_json_base64=base64.b64encode(raw).decode()
+            args.ssm_dispatch_request_sha256=C.digest(raw)
+            with self.assertRaises(C.Refusal):C.validate_local_helper_transport_v1(args,**context)
+        args,_,_=SsmDispatchInterfaceTests().material();_,_,context=self.material()
+        with self.assertRaises(C.Refusal):C.validate_local_helper_transport_v1(args,**context)
+        # Nonzero base64 pad bits decode identically, but are not canonical.
+        args,_,_=self.material();args.ssm_dispatch_request_canonical_json_base64='e31='
+        args.ssm_dispatch_request_sha256=C.digest(b'{}')
+        with self.assertRaisesRegex(C.Refusal,'pair derivation'):C._decode_ssm_transport(args)
+
+
 class LocalOperationalStatusTests(unittest.TestCase):
     def material(self):
         launch=current_launch(load('aws/c0/fixtures/launch-request.valid.json'))
@@ -600,6 +641,7 @@ class LocalOperationalStatusTests(unittest.TestCase):
                 C._publish_status(destination,status)
                 runtime.rmdir()  # Model systemd's RuntimeDirectory cleanup.
                 self.assertEqual(C.strict_json(destination.read_bytes()),status)
+                self.assertEqual(C.read_local_operational_status(**context),status)
                 self.assertEqual(destination.stat().st_mode & 0o777,0o600)
                 self.assertEqual(list(C.STATUS.iterdir()),[destination])
                 with self.assertRaises(C.Refusal):C._publish_status(state/'wrong.json',status)
@@ -627,6 +669,60 @@ class LocalOperationalStatusTests(unittest.TestCase):
                     state.chmod(0o700);C.STATUS.symlink_to(target,target_is_directory=True)
                     with self.assertRaises(OSError):C._status_directory_fd(create=True)
                     self.assertEqual(list(target.iterdir()),[])
+
+
+class LocalOperationalReadTests(unittest.TestCase):
+    def test_reader_refuses_missing_unsafe_and_nonregular_status(self):
+        actual_fstat=os.fstat
+        def root_owned(fd):
+            fields=list(actual_fstat(fd));fields[4]=0
+            return os.stat_result(fields)
+        with tempfile.TemporaryDirectory() as folder:
+            state=Path(folder)/'state';state.mkdir(mode=0o700)
+            with mock.patch.object(C,'STATUS',state/'status'),mock.patch.object(C.os,'geteuid',return_value=0),mock.patch.object(C.os,'fstat',side_effect=root_owned):
+                fixture=LocalOperationalStatusTests();status,context=fixture.material()
+                with self.assertRaises(FileNotFoundError):C.read_local_operational_status(**context)
+                self.assertFalse(C.STATUS.exists())  # The reader cannot create status.
+                destination=C.STATUS/(status['attempt_id']+'.json')
+                C._publish_status(destination,status)
+                self.assertFalse(C.read_local_operational_status(**context)['controller_journal_handoff_complete'])
+                destination.chmod(0o644)
+                with self.assertRaises(C.Refusal):C.read_local_operational_status(**context)
+                destination.chmod(0o600);linked=C.STATUS/'second-link';os.link(destination,linked)
+                with self.assertRaises(C.Refusal):C.read_local_operational_status(**context)
+                linked.unlink();destination.unlink()
+                destination.symlink_to(state/'nonexistent')
+                with self.assertRaises(OSError):C.read_local_operational_status(**context)
+                destination.unlink();os.mkfifo(destination,0o600)
+                with self.assertRaises(C.Refusal):C.read_local_operational_status(**context)
+                destination.unlink();destination.mkdir(mode=0o700)
+                with self.assertRaises(C.Refusal):C.read_local_operational_status(**context)
+
+    def test_reader_checks_complete_bytes_bindings_and_concurrent_changes(self):
+        actual_fstat=os.fstat
+        reads=0;change=False;wrong_owner=False
+        def observed(fd):
+            nonlocal reads
+            actual=actual_fstat(fd);fields=list(actual);fields[4]=0
+            if C.stat.S_ISREG(actual.st_mode):
+                reads+=1
+                if wrong_owner:fields[4]=501
+                if change and reads%2==0:fields[6]+=1
+            return os.stat_result(fields)
+        with tempfile.TemporaryDirectory() as folder:
+            state=Path(folder)/'state';state.mkdir(mode=0o700)
+            with mock.patch.object(C,'STATUS',state/'status'),mock.patch.object(C.os,'geteuid',return_value=0),mock.patch.object(C.os,'fstat',side_effect=observed):
+                fixture=LocalOperationalStatusTests();status,context=fixture.material()
+                destination=C.STATUS/(status['attempt_id']+'.json')
+                C._publish_status(destination,status)
+                change=True
+                with self.assertRaisesRegex(C.Refusal,'changed during'):C.read_local_operational_status(**context)
+                change=False;wrong_owner=True
+                with self.assertRaises(C.Refusal):C.read_local_operational_status(**context)
+                wrong_owner=False
+                for raw in (b'',b' '*16385,b'{}\n',C.canonical_bytes({**status,'attempt_id':'OTHER'})):
+                    destination.write_bytes(raw)
+                    with self.assertRaises(C.Refusal):C.read_local_operational_status(**context)
 
 
 class JournalSourceContractDiagnosticTests(unittest.TestCase):

@@ -12,6 +12,10 @@
     "root_publication_precedes_cache_update": true,
     "terminal_is_not_journal_handoff_completion": true,
     "authenticated_evidence_root_claimed": false,
+    "bounded_canonical_transport_decoder_implemented": true,
+    "secure_descriptor_pinned_status_reader_implemented": true,
+    "independently_bound_source_loader_implemented": false,
+    "clock_freshness_is_required_caller_obligation": true,
     "helper_runtime_attachment_complete": false,
     "cloud_readiness_claimed": false
   },

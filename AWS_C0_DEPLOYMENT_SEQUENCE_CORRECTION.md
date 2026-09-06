@@ -261,10 +261,28 @@ component only for a partial NOT_READY commit; the reviewer did not claim to
 execute the parent-run tests or approve the remaining integration.
 
 This is a local operational cache, not an authenticated evidence root or a
-successful independent readback claim. Actual helper decoding, bound-source
-loading, SSM/ASL attachment, full proof bindings and the complete public gate
+successful independent readback claim. Bound-source loading, SSM/ASL attachment,
+full proof bindings and the complete public gate
 remain unfinished. The broader correction remains NOT_READY; AWS and credential
 access remain prohibited during this local-only amendment.
+
+The subsequent decoder/status-reader component bounds encoded transport before
+decoding and requires canonical base64, canonical JSON and the exact same-byte
+digest. Helper validation still requires separately supplied expected START and
+deadline; the helper cannot supply its own trusted context. The status reader
+opens the exact file relative to the pinned private directory, refuses symlinks,
+nonregular files, multiple hard links, wrong ownership/modes and oversized input,
+then checks stable metadata and the closed source-bound cache. It never creates
+a missing directory/file, obtains credentials, issues a command or declares
+missing/incomplete status complete. Clock freshness remains an explicit future
+caller obligation, not an assumption that a consistent older snapshot is fresh.
+
+The four new decoder/reader tests and the earlier sixteen START/helper/status
+tests pass (20/20). The same independent reviewer APPROVED this component only,
+after inspecting code/tests; these are parent-run offline tests, not AWS or
+service execution. The full suite at preceding commit `de49024` ran 159 tests:
+158 passed, one existing full-entry schema error, no skips or expected failures.
+The error is not waived and does not authorize any cloud continuation.
 
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole

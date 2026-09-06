@@ -345,16 +345,39 @@ def validate_ssm_dispatch_record_v2(record: Any, *, semantic_parameters: dict[st
     return record
 
 
+def _decode_ssm_transport(args: argparse.Namespace) -> Any:
+    """Bound encoded input before allocation; require one canonical transport."""
+    encoded = getattr(args, 'ssm_dispatch_request_canonical_json_base64', None)
+    claimed = getattr(args, 'ssm_dispatch_request_sha256', None)
+    if (not isinstance(encoded, str) or not 1 <= len(encoded) <= 4*((16384+2)//3)
+            or not isinstance(claimed, str) or not SHA.fullmatch(claimed)):
+        raise Refusal("SSM transport pair derivation mismatch")
+    try:
+        decoded = base64.b64decode(encoded, validate=True)
+    except (ValueError, TypeError) as exc:
+        raise Refusal("SSM transport base64 invalid") from exc
+    if (len(decoded) > 16384 or claimed != digest(decoded)
+            or base64.b64encode(decoded).decode('ascii') != encoded):
+        raise Refusal("SSM transport pair derivation mismatch")
+    return strict_json(decoded)
+
+
 def validate_ssm_dispatch_v2(args: argparse.Namespace) -> dict[str, Any]:
     """Verify semantic21 against the complete envelope and its transport2."""
     semantic = ssm_semantic_parameters_from_argv(args)
-    try:
-        decoded = base64.b64decode(args.ssm_dispatch_request_canonical_json_base64, validate=True)
-    except (ValueError, TypeError) as exc:
-        raise Refusal("SSM transport base64 invalid") from exc
-    if len(decoded) > 16384 or args.ssm_dispatch_request_sha256 != digest(decoded):
-        raise Refusal("SSM transport pair derivation mismatch")
-    return validate_ssm_dispatch_record_v2(strict_json(decoded), semantic_parameters=semantic)
+    return validate_ssm_dispatch_record_v2(_decode_ssm_transport(args), semantic_parameters=semantic)
+
+
+def validate_local_helper_transport_v1(args: argparse.Namespace, *, expected_start_dispatch: dict[str, Any],
+                                       attempt_deadline_utc: str, now: dt.datetime) -> dict[str, Any]:
+    """Decode helper argv, but never obtain trusted START/deadline from it.
+
+    The independently bound local-source loader is a required caller boundary.
+    This routine performs no file, credential, network or command operation.
+    """
+    semantic = ssm_semantic_parameters_from_argv(args)
+    return validate_local_helper_request_v1(_decode_ssm_transport(args), semantic_parameters=semantic,
+        expected_start_dispatch=expected_start_dispatch, attempt_deadline_utc=attempt_deadline_utc, now=now)
 
 
 def validate_local_helper_request_v1(record: Any, *, semantic_parameters: dict[str, list[str]],
@@ -1492,6 +1515,37 @@ def _publish_status(path: Path, payload: dict[str, Any]) -> None:
             if created: os.unlink(temporary, dir_fd=directory)
         finally:
             os.close(directory)
+
+
+def read_local_operational_status(*, launch: dict[str, Any], workflow_execution_arn: str) -> dict[str, Any]:
+    """Read one pinned private status file, not evidence authentication.
+
+    Missing status is not successful completion. Callers must separately bind
+    the launch/workflow, validate helper authority/freshness, and authenticate
+    actual published evidence during closure. No directory is created here.
+    """
+    expected = new_local_operational_status(launch, workflow_execution_arn)
+    directory = _status_directory_fd()
+    try:
+        fd = os.open(expected['attempt_id'] + '.json', os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK,
+                     dir_fd=directory)
+        try:
+            before = os.fstat(fd)
+            if (not stat.S_ISREG(before.st_mode) or before.st_uid != 0
+                    or stat.S_IMODE(before.st_mode) != 0o600 or before.st_nlink != 1
+                    or not 1 <= before.st_size <= 16384):
+                raise Refusal("local status requires one private bounded regular file")
+            with os.fdopen(fd, 'rb', closefd=False) as handle:
+                raw = handle.read(16385)
+            after = os.fstat(fd)
+            attributes = ('st_dev','st_ino','st_mode','st_uid','st_nlink','st_size','st_mtime_ns','st_ctime_ns')
+            if len(raw) != before.st_size or any(getattr(before,k) != getattr(after,k) for k in attributes):
+                raise Refusal("local status changed during bounded read")
+        finally:
+            os.close(fd)
+    finally:
+        os.close(directory)
+    return validate_local_operational_status(strict_json(raw), launch=launch, workflow_execution_arn=workflow_execution_arn)
 
 
 LOCAL_STATUS_FIELDS = {'schema', 'attempt_id', 'attempt_identity', 'workflow_execution_arn',
