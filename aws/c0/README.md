@@ -797,6 +797,23 @@ authorization remains required before executing that exact change set.
 
 ## Deployment and launch (only after Gate 2)
 
+First-deployment checkpoint (2026-09-06): the replacement LF image and its
+pinned-base ancestry verified. A fresh SSO login and one exact compact-V5
+preparation-session renewal succeeded without changing the operator role.
+Authenticated inventory found the retained `t3.small` stopped, but both stack
+`EBU-C0-492a4f1` and document `EBU-C0-Start-v1` absent. The current preparation
+role permits SendCommand only for that document and the retained instance;
+the template creates that document only at deployment. Gate 1 orders SSM
+bootstrap before the unexecuted change set and forbids CreateDocument and
+ExecuteChangeSet. This is an unresolved first-deployment bootstrap dependency,
+not authority to use a different document, elevate to SSO admin, create a
+document outside CloudFormation, or execute Gate 2 early. No staging, instance
+start, deployment or smoke was performed. The document-absence receipt SHA-256
+is `c13f611e1deeb12c4242bbb3e9153020e05562fb796d6564b30536d79b462b73`;
+the stack-absence receipt SHA-256 is
+`ca4e4d8ca8a47aeda155e2e5f68e02323feb39088247a70b68f3c9f123a8bd1d`.
+An exact bootstrap-path correction must resolve this before the steps below.
+
 1. Execute the reviewed CloudFormation change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.
 3. Read exact stack outputs and re-check the state-machine definition, role,
