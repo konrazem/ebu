@@ -846,6 +846,16 @@ documented in `bootstrap/BOUNDED_SMOKE_CONTINUATION.md`. The offline
 only after conditional publication/readback; its fixed command cannot start a
 service or container. Local generation is not evidence that staging happened.
 
+`scripts/build_aws_c0_preparation_records.py` constructs the complete preparation
+record only from all required supplied fields. It resolves schemas locally,
+applies the preserved six-candidate/24-object upgrade, verifies exact historical
+candidate bytes and bound preimages, and refuses the six-field convenience draft.
+The candidate instance policy removes unrelated rehearsal/ECR access and grants
+only the fixed C0 input prefixes and the one attempt's outputs, including exact-
+version reads. Its generation is not an IAM mutation or proof of deployment
+readiness: complete fresh observations, cost coverage and before/after/rollback
+bindings remain required before use.
+
 1. Execute the reviewed CloudFormation change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.
 3. Read exact stack outputs and re-check the state-machine definition, role,

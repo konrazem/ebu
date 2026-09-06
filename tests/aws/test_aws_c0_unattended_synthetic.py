@@ -32,6 +32,42 @@ D = module("scripts/build_aws_c0_deployment_manifest.py", "aws_c0_deployment_man
 P = module("scripts/collect_aws_c0_pricing.py", "aws_c0_pricing")
 B = module("aws/c0/bootstrap/bootstrap_transport.py", "aws_c0_bootstrap_transport")
 S = module("aws/c0/bootstrap/staging_transport.py", "aws_c0_staging_transport")
+G = module("scripts/build_aws_c0_preparation_records.py", "aws_c0_preparation_records")
+
+
+class CompletePreparationBuilderTests(unittest.TestCase):
+    def test_schema_upgrade_is_narrow_and_uses_exact_existing_lineage(self):
+        schema, _ = G.schema(ROOT)
+        p = schema['allOf'][1]['properties']
+        self.assertEqual(p['schema']['const'], 'aws_c0_preparation_packet/v4')
+        self.assertEqual(p['bootstrap_control_candidates']['minItems'], 6)
+        self.assertEqual(p['bootstrap_control_candidates']['maxItems'], 6)
+        self.assertEqual(p['planned_pre_live_object_count']['const'], 24)
+        self.assertEqual(p['planned_pre_live_record_kinds']['const'], list(V.GATE1_PRELIVE_RECORD_KINDS))
+        original = json.loads((ROOT / G.REGISTRY).read_bytes())['$defs']['preparation_packet_v3']
+        self.assertEqual(schema['allOf'][1]['required'], original['allOf'][1]['required'])
+
+    def test_complete_builder_refuses_convenience_draft_or_missing_observations(self):
+        for value in ({}, {'schema': 'aws_c0_gate1_preparation_packet_draft/v1'},
+                      {'schema': 'aws_c0_preparation_packet/v4', 'instance_id': 'i-048bac00bdb540a4e'}):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'complete packet field set'):
+                G.build(ROOT, value)
+
+    def test_control_material_rejects_floating_point_and_noncanonical_unicode(self):
+        for value in ({'amount': 1.5}, {'amount': float('inf')}, {'text': 'e\u0301'}):
+            with self.subTest(value=value), self.assertRaises(ValueError): G.canonical(value)
+        self.assertEqual(G.canonical({'b': 2, 'a': 1}), b'{"a":1,"b":2}')
+
+    def test_instance_policy_is_confined_to_exact_c0_inputs_and_one_attempt(self):
+        p = G.instance_policy()
+        self.assertEqual(len(p['Statement']), 4)
+        text = json.dumps(p)
+        for forbidden in ('ecr:', 'DeleteObject', 'PutBucketPolicy', 'iam:', 'rehearsal/*'):
+            self.assertNotIn(forbidden, text)
+        self.assertIn('s3:GetObjectVersion', text)
+        put = [s for s in p['Statement'] if s['Action'] == 's3:PutObject']
+        self.assertEqual(len(put), 1)
+        self.assertTrue(put[0]['Resource'].endswith('/ATTEMPT-PLATFORM-SMOKE-492A4F1-SUCCESS/*'))
 
 
 class ByteBoundStagingTests(unittest.TestCase):
