@@ -94,6 +94,7 @@ LAUNCH_REQUIRED = {
     "deployed_lambda_timeout_seconds", "state_machine_timeout_seconds", "iam_pagination_bounds",
     "heartbeat_interval_seconds", "checkpoint_interval_seconds", "cost_envelope",
     "retry_attempts", "cleanup_path",
+    "material_correction_authority_id",
 }
 RUNTIME_POLICY = {
     "schema": "aws_c0_container_runtime_policy/v1",
@@ -509,6 +510,7 @@ def validate_launch(record: Any, rehearsal: str, attempt: str) -> dict[str, Any]
         "schema": "aws_c0_launch_request/v6", "authority_id": AUTHORITY_ID,
         "correction_authority_id": CORRECTION_ID,
         "closure_correction_authority_id": CLOSURE_ID,
+        "material_correction_authority_id": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1",
         "record_class": "NON_SCIENTIFIC_AWS_C0_EVIDENCE",
         "scientific_execution_authorized": False,
         "stage_f_execution_authorized": False, "stage_f_readiness_claimed": False,

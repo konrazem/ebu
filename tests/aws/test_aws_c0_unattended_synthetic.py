@@ -45,7 +45,7 @@ class CompletePreparationBuilderTests(unittest.TestCase):
         self.assertEqual(p['planned_pre_live_object_count']['const'], 24)
         self.assertEqual(p['planned_pre_live_record_kinds']['const'], list(V.SEQUENCE_PRELIVE_RECORD_KINDS))
         original = json.loads((ROOT / G.REGISTRY).read_bytes())['$defs']['preparation_packet_v3']
-        self.assertEqual(schema['allOf'][1]['required'], original['allOf'][1]['required'])
+        self.assertEqual(schema['allOf'][1]['required'], original['allOf'][1]['required']+['material_correction_authority_id'])
 
     def test_complete_builder_refuses_convenience_draft_or_missing_observations(self):
         for value in ({}, {'schema': 'aws_c0_gate1_preparation_packet_draft/v1'},
@@ -461,6 +461,7 @@ def current_launch(record):
     result["authority_audit_identity"]["kind"] = "aws_c0_audit_static_handoff_authority_audit/v4"
     result["static_validation_identity"]["kind"] = "aws_c0_material_runtime_static_validation/v4"
     result["closure_seed_identity"]["kind"] = "aws_c0_closure_seed/v2"
+    result['material_correction_authority_id']=F.MATERIAL_AUTHORITY_ID
     return reroot(result)
 
 
@@ -508,6 +509,7 @@ class DeploymentSequenceTests(unittest.TestCase):
         input_raw=F.canonical_bytes(inputs);input_id=F.identity('aws_c0_deployment_inputs/v1',F.digest(input_raw))
         launch=current_launch(load('aws/c0/fixtures/launch-request.valid.json'))
         seed={'schema':'aws_c0_closure_seed/v2','deployment_inputs_identity':input_id,
+              'material_correction_authority_id':F.MATERIAL_AUTHORITY_ID,
               'deployment_inputs_canonical_json_base64':base64.b64encode(input_raw).decode(),
               'state_machine_arn':inputs['state_machine_arn'],'attempt_identity':launch['attempt_identity']}
         for index,sha in ((0,inputs['definition_source']['sha256']),(1,inputs['document_source']['sha256']),(7,inputs['template_sha256'])):
@@ -569,6 +571,65 @@ class DeploymentSequenceTests(unittest.TestCase):
         self.assertEqual(len(values[0]['runtime_control_preimages']),9)
         self.assertEqual(len(values[1]['post_deployment_control_preimages']),11)
         self.assertNotIn('ASSUME_EXACT_LIVE_SESSION',F._live_statement(values[1]))
+
+    def complete_material(self):
+        """Candidate OFFLINE chain; the public gate exposes missing bindings.
+
+        This is not authenticated evidence or a claimed schema-valid fixture.
+        Keep its positive-path regression red until the accepted inherited
+        producer/runtime attachments are implemented; do not weaken the schema.
+        """
+        packet,auth,seed,launch=self.material()
+        for record in (packet,auth,seed):
+            for key,value in F._control_record(record['schema'],{}).items():record.setdefault(key,value)
+        seed['observed_utc']='2026-09-06T17:58:00Z'
+        launch.update(observed_utc='2026-09-06T17:59:00Z',attempt_deadline_utc='2026-09-06T18:20:00Z',cleanup_deadline_utc='2026-09-06T18:30:00Z')
+        seed.update({key:copy.deepcopy(launch[key]) for key in ('region','instance_id','artifact_prefix','attempt_identity',
+                     'iam_pagination_bounds','attempt_deadline_utc','cleanup_deadline_utc')})
+        seed.update(account_identity=F.identity('aws_account/v1','1'*64),artifact_bucket_identity=self.receipt({},'x')['bucket_identity'],
+            execution_name_prefix='AWS-C0-PLATFORM-SMOKE-492A4F1',closure_state_name='EmitSupervisorClosure',
+            finalizer_software_identity=F.identity('aws_c0_finalizer_software/v1','2'*64),
+            s3_version_max_pages=10,s3_version_max_items=200,history_max_pages=10,history_max_events=1000,
+            malformed_input_disposition='AWS_C0_FINAL_INCONCLUSIVE')
+        proof_raw=F.canonical_bytes({'offline_fixture':'not-authenticated-AWS-evidence'})
+        encoded=base64.b64encode(proof_raw).decode()
+        for stem,kind in [('execution_name_derivation','aws_c0_execution_name_derivation/v1'),('history_retrieval_contract','aws_c0_history_retrieval_contract/v1')]:
+            seed[stem+'_identity']=F.identity(kind,F.digest(proof_raw));seed[stem+'_canonical_json_base64']=encoded
+        seed['cost_envelope']={k:copy.deepcopy(launch['cost_envelope'][k]) for k in
+            ('currency','ceiling_minor_units','cost_model_identity','accounting_window','resource_limits','iam_pagination_bounds')}
+        seed['cost_envelope'].update(cost_model_key=launch['cost_model_object']['key'],cost_model_sha256=launch['cost_model_object']['sha256'])
+        packet.update(packet_disposition='AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED',
+            preparation_closure_identity=F.identity('aws_c0_preparation_closure/v5','4'*64),
+            preparation_closure_object=self.receipt({},'preparation-closure'),
+            pre_live_predecessor_object_receipts=[self.receipt({'offline_index':i},'predecessor-'+str(i)) for i in range(23)],
+            live_authorization_key_target={'bucket_identity':self.receipt({},'x')['bucket_identity'],
+                'key':launch['artifact_prefix']+'live-authorization.json','if_none_match':'*'},
+            change_set_observation_identity=F.identity('aws_c0_change_set_observation/v1',packet['change_set_identity']['sha256']),
+            iam_pagination_bounds=launch['iam_pagination_bounds'],final_preflight_observed_utc=packet['observed_utc'],
+            final_instance_state='stopped',pre_live_object_count=24)
+        for record in (packet,auth):
+            record['live_session_assumer_identity']=F.identity('aws_iam_principal/v1','5'*64)
+            record['execution_operator_role_identity']=F.identity('aws_iam_role/v1','6'*64)
+            for stem,kind in [('execution_session_policy','aws_iam_session_policy/v1'),
+                              ('execution_session_policy_ceiling','aws_iam_policy_ceiling/v1'),
+                              ('execution_session_policy_subset_proof','aws_iam_policy_subset_proof/v1'),
+                              ('pass_role_scope_proof','aws_iam_passrole_scope_proof/v1')]:
+                record[stem+'_identity']=F.identity(kind,F.digest(proof_raw));record[stem+'_canonical_json_base64']=encoded
+        auth.update(live_authorization_key=launch['artifact_prefix']+'live-authorization.json',
+            execution_session_identity=F.identity('aws_sts_role_session/v1','7'*64),
+            execution_session_derivation_proof_identity=F.identity('aws_sts_session_derivation_proof/v1',F.digest(proof_raw)),
+            execution_session_derivation_proof_canonical_json_base64=encoded,
+            authorized_actions=['EXECUTE_EXACT_CHANGE_SET','PUBLISH_EXACT_LIVE_AUTHORIZATION','START_ONE_EXACT_EXECUTION'],
+            denied_actions=['REPLAY','OTHER_CHANGE_SET','OTHER_ATTEMPT','SCIENTIFIC_EXECUTION'])
+        self.rebind(packet,auth,seed,launch)
+        return packet,auth,seed,launch
+
+    def test_complete_schema_valid_chain_through_public_prepublication_gate(self):
+        values=self.complete_material()
+        self.assertEqual(G.validate_postdeployment_authorization(ROOT,*values),values[1])
+        values[0]['final_preflight_observed_utc']='2026-09-06T17:59:59Z'
+        with self.assertRaisesRegex(RuntimeError,'deployment phase record identity mismatch'):
+            G.validate_postdeployment_authorization(ROOT,*values)
 
     def test_deployed_definition_role_logging_and_document_drift_refused(self):
         mutations=[('STANDARD_WORKFLOW',lambda v:v.update(type='EXPRESS')),

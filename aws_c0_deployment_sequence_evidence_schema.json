@@ -136,6 +136,7 @@
             "attempt_deadline_utc",
             "cleanup_deadline_utc",
             "malformed_input_disposition",
+            "material_correction_authority_id",
             "deployment_inputs_identity",
             "deployment_inputs_canonical_json_base64"
           ],
@@ -217,6 +218,9 @@
             },
             "malformed_input_disposition": {
               "const": "AWS_C0_FINAL_INCONCLUSIVE"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
             },
             "deployment_inputs_identity": {
               "$ref": "#/$defs/d0_identity"
@@ -608,7 +612,8 @@
             "cost_envelope",
             "launch_construction_contract_identity",
             "preparation_closure_contract_identity",
-            "live_packet_contract_identity"
+            "live_packet_contract_identity",
+            "material_correction_authority_id"
           ],
           "properties": {
             "schema": {
@@ -810,6 +815,9 @@
             },
             "live_packet_contract_identity": {
               "$ref": "#/$defs/d0_identity"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
             }
           }
         }
@@ -1093,7 +1101,8 @@
             "accounting_end_utc",
             "cost_ceiling_minor_units",
             "authorized_actions",
-            "denied_actions"
+            "denied_actions",
+            "material_correction_authority_id"
           ],
           "properties": {
             "schema": {
@@ -1203,6 +1212,9 @@
                 "TERMINATE",
                 "SCIENTIFIC_EXECUTION"
               ]
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
             }
           }
         }
@@ -1262,7 +1274,8 @@
             "sealed_ec2_role_context_cross_binding_disposition",
             "journal_capture_budget_evaluation_identity",
             "journal_capture_budget_evaluation_preimage",
-            "journal_capture_budget_evaluation_cross_binding_disposition"
+            "journal_capture_budget_evaluation_cross_binding_disposition",
+            "material_correction_authority_id"
           ],
           "properties": {
             "schema": {
@@ -1490,6 +1503,9 @@
             },
             "journal_capture_budget_evaluation_cross_binding_disposition": {
               "const": "JOURNAL_CAPTURE_BUDGET_EVALUATION_IDENTITY_SHA256_AND_VALUE_EQUAL_COMPLETE_EVALUATION_PREIMAGE_EXPECTED_IDENTITY_VALUE_AND_BODY_SHA256_AND_CAPABILITY_IDENTITY_EQUALS_STATIC_V4_CAPABILITY_IDENTITY_PASS"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
             }
           }
         }
@@ -35237,6 +35253,7 @@
             "preparation_failure_phase",
             "preparation_failure_code",
             "publication_upgrade_binding",
+            "material_correction_authority_id",
             "deployment_inputs_identity"
           ],
           "properties": {
@@ -35448,6 +35465,9 @@
             "publication_upgrade_binding": {
               "$ref": "#/$defs/d30_publication_upgrade_binding_v4"
             },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
             "deployment_inputs_identity": {
               "$ref": "#/$defs/d0_identity"
             }
@@ -35617,6 +35637,7 @@
             "runtime_control_reconstruction_set",
             "packet_declared_other_material_coordinates",
             "publication_upgrade_binding",
+            "material_correction_authority_id",
             "deployment_inputs_identity"
           ],
           "properties": {
@@ -35899,6 +35920,9 @@
             },
             "publication_upgrade_binding": {
               "$ref": "#/$defs/d30_publication_upgrade_binding_v4"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
             },
             "deployment_inputs_identity": {
               "$ref": "#/$defs/d0_identity"
@@ -48162,6 +48186,7 @@
             "authorized_actions",
             "denied_actions",
             "runtime_control_reconstruction_set_identity",
+            "material_correction_authority_id",
             "deployment_inputs_identity",
             "deployment_authorized_utc",
             "deployment_started_utc",
@@ -48408,6 +48433,9 @@
                   }
                 }
               ]
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
             },
             "deployment_inputs_identity": {
               "$ref": "#/$defs/d0_identity"

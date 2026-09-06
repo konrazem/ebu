@@ -1,5 +1,34 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
+## Checkpoint status: NOT_READY — independent review NOT APPROVED
+
+The implementation below is a local candidate, not an approved deployment
+path. The original 119-test pass did not cover the complete public schema gate.
+The new full-entry regression is intentionally retained as a failing test, not
+skipped or marked expected-failure. It demonstrates that accepted inherited
+requirements remain unimplemented; no AWS continuation is permitted on the
+strength of this candidate.
+
+The narrow read-only reviewer confirmed three blockers:
+
+- The inherited live-packet reconstruction set still requires all eleven
+  controls, including workflow and SSM observations before their deployment.
+  Moving only the lightweight control preimages does not remove this cycle.
+- Launch requires the existing audit/static publication evidence, sealed EC2
+  role context, and journal-capture budget evaluation, which are absent from
+  the runtime's closed input interface.
+- The current similarly named publication helper binds a future final manifest.
+  It is not the accepted earlier audit/static publication binding and must not
+  be substituted into launch.
+
+The historical schemas and their requirements are preserved. A separately
+scoped producer/runtime attachment and phase repair must implement the accepted
+bindings, version the affected reconstruction phases, and demonstrate a complete
+schema-valid positive path plus negative cases before independent approval.
+No credentials, AWS calls, staging, deployment, instance start, smoke, or science
+were used in this local correction. The completed host-inventory authorization
+is exhausted and cannot be reused.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits

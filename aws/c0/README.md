@@ -870,6 +870,13 @@ remain required. It does not resolve the separate seed/deployment ordering cycle
 
 ### Current first-deployment sequence (local correction)
 
+Status: **NOT_READY; independent review NOT APPROVED.** This is a candidate
+sequence only. The complete public-entry regression fails on inherited evidence
+requirements; the lightweight phase tests do not establish deployment readiness.
+See the correction document for the unresolved reconstruction, publication,
+sealed-role and journal-budget attachments. Do not use this checkpoint for AWS
+continuation or remove schema requirements to make the regression pass.
+
 `AWS_C0_DEPLOYMENT_SEQUENCE_CORRECTION.md` supersedes only the premature
 deployed-object bindings in the earlier packet examples above. Current kinds are
 seed-v2, preparation-packet-v5, preparation-authorization-v4, launch-v6,

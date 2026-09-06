@@ -1,5 +1,8 @@
 {
   "schema": "aws_c0_deployment_sequence_correction_contract/v1",
+  "readiness_disposition": "NOT_READY_FULL_PUBLIC_ENTRY_SCHEMA_GATE_FAILS",
+  "independent_review_disposition": "NOT_APPROVED",
+  "aws_continuation_permitted_by_validation": false,
   "base_commit": "87ad27cc59a11b861a56ad3ec34632a0b10a3fc8",
   "authority_scope": "LOCAL_ONLY_IMPLEMENT_VALIDATE_COMMIT_AND_ONE_NARROW_REVIEW",
   "source_task": "01a011df-5b07-7693-a117-731908097325",

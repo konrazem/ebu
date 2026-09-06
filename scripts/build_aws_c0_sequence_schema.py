@@ -75,6 +75,7 @@ def build(root=ROOT):
         def add(field,value):
             if field not in body['required']:body['required'].append(field)
             props[field]=value
+        add('material_correction_authority_id',{'const':'EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1'})
         if alias=='closure_seed':
             body['required'].remove('state_machine_identity');del props['state_machine_identity']
             add('deployment_inputs_identity',{'$ref':identity_ref})

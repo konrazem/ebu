@@ -1650,7 +1650,10 @@ ROOT_KINDS = (
     "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1", "aws_c0_finalizer_receipt/v4",
     "aws_c0_retrieval_verification/v6", "aws_c0_cost_closure/v4", "aws_c0_final_manifest/v6",
 )
-COMMON_FIELDS = {"schema", "authority_id", "correction_authority_id", "closure_correction_authority_id",
+MATERIAL_AUTHORITY_ID = 'EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1'
+CURRENT_PHASE_KINDS = {'aws_c0_closure_seed/v2','aws_c0_preparation_packet/v5','aws_c0_preparation_authorization/v4',
+                       'aws_c0_launch_request/v6','aws_c0_preparation_closure/v5','aws_c0_live_packet/v6','aws_c0_live_authorization/v6'}
+COMMON_FIELDS = {"schema", "authority_id", "correction_authority_id", "closure_correction_authority_id", "material_correction_authority_id",
     "record_class", "scientific_execution_authorized", "stage_f_execution_authorized", "stage_f_readiness_claimed",
     "zero_science_counters", "observed_utc"}
 LIVE_PACKET_V6_FIELDS = COMMON_FIELDS | {"packet_disposition", "preparation_closure_identity", "preparation_closure_object",
@@ -1699,6 +1702,8 @@ def _common(record: dict[str, Any], schema: str, *, root: bool) -> str:
         "scientific_execution_authorized": False, "stage_f_execution_authorized": False,
         "stage_f_readiness_claimed": False, "zero_science_counters": ZERO,
     }
+    if schema in CURRENT_PHASE_KINDS:
+        expected['material_correction_authority_id'] = MATERIAL_AUTHORITY_ID
     for field, value in expected.items():
         if record.get(field) != value:
             raise Refusal(f"common field mismatch:{schema}:{field}")
@@ -1736,6 +1741,7 @@ def _root_record(schema: str, fields: dict[str, Any]) -> dict[str, Any]:
         "observed_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
         **fields,
     }
+    if schema in CURRENT_PHASE_KINDS: record['material_correction_authority_id'] = MATERIAL_AUTHORITY_ID
     record["record_sha256"] = digest(canonical_bytes(record))
     return record
 
@@ -1748,6 +1754,7 @@ def _control_record(schema: str, fields: dict[str, Any]) -> dict[str, Any]:
         "scientific_execution_authorized": False, "stage_f_execution_authorized": False,
         "stage_f_readiness_claimed": False, "zero_science_counters": ZERO,
         "observed_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+        **({'material_correction_authority_id': MATERIAL_AUTHORITY_ID} if schema in CURRENT_PHASE_KINDS else {}),
         **fields,
     }
 
@@ -1924,6 +1931,8 @@ def _deployment_inputs(value: Any) -> dict[str, Any]:
 def _seed_deployment_inputs(seed: dict[str, Any]) -> dict[str, Any]:
     if seed.get('schema') != 'aws_c0_closure_seed/v2' or 'state_machine_identity' in seed:
         raise Refusal("seed requires planned inputs, never a premature workflow identity")
+    if seed.get('material_correction_authority_id') != MATERIAL_AUTHORITY_ID:
+        raise Refusal('seed material authority provenance missing')
     raw = _bound_base64(seed, 'deployment_inputs_identity', 'deployment_inputs_canonical_json_base64',
                         'aws_c0_deployment_inputs/v1')
     inputs = _deployment_inputs(strict_json(raw))
