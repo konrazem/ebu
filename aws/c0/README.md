@@ -850,11 +850,23 @@ service or container. Local generation is not evidence that staging happened.
 record only from all required supplied fields. It resolves schemas locally,
 applies the preserved six-candidate/24-object upgrade, verifies exact historical
 candidate bytes and bound preimages, and refuses the six-field convenience draft.
-The candidate instance policy removes unrelated rehearsal/ECR access and grants
-only the fixed C0 input prefixes and the one attempt's outputs, including exact-
-version reads. Its generation is not an IAM mutation or proof of deployment
-readiness: complete fresh observations, cost coverage and before/after/rollback
-bindings remain required before use.
+The earlier prefix-wide instance-policy proposal was never applied and has been
+removed. `bootstrap/staging_transport.py:instance_read_policy` instead builds
+only a temporary additive grant: three separate `s3:GetObjectVersion` statements,
+each binding one exact staged object to its own observed VersionId, expected
+bucket owner, TLS and an expiry within one hour. It grants no listing, writing,
+wildcard data access or unversioned reads. See the
+[AWS S3 version condition documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/security_iam_service-with-iam.html).
+The exact temporary inline policy `EBU-C0-Staging-Exact-Version-Read-v1` targets
+only `EBU-Rehearsal-EC2-Role`; no existing role policy may be replaced. Its absence
+and the complete existing policy set must be recorded before attachment, then
+the exact added bytes and unchanged existing policies verified after attachment.
+Cleanup must remove only this verified temporary policy and verify restoration
+of the before-state; an unexpected existing policy or drift refuses the action.
+This additive grant does not remove permissions the instance already has.
+Generation is offline only, not an IAM mutation or proof of staging/readiness.
+Authenticated receipts, fresh observations, cost coverage and cleanup bindings
+remain required. It does not resolve the separate seed/deployment ordering cycle.
 
 1. Execute the reviewed CloudFormation change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.

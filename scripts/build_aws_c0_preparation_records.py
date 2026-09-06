@@ -104,16 +104,3 @@ def build(root,fields):
         raise ValueError('complete packet field set required; missing='+','.join(sorted(required-set(fields)))+
                          '; extra='+','.join(sorted(set(fields)-required)))
     return validate_packet(root,copy.deepcopy(fields))
-
-def instance_policy():
-    bucket='arn:aws:s3:::ebu-stage-f-results-k7m4p2'
-    preparation='rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/'
-    attempt='rehearsal/aws-c0/AWS-C0-PLATFORM-SMOKE-492A4F1/ATTEMPT-PLATFORM-SMOKE-492A4F1-SUCCESS/'
-    return {'Version':'2012-10-17','Statement':[
-        {'Sid':'ReadExactC0BucketLocation','Effect':'Allow','Action':'s3:GetBucketLocation','Resource':bucket},
-        {'Sid':'ListOnlyExactC0Prefixes','Effect':'Allow','Action':['s3:ListBucket','s3:ListBucketVersions'],
-         'Resource':bucket,'Condition':{'StringLike':{'s3:prefix':[preparation+'*',attempt+'*']}}},
-        {'Sid':'ReadOnlyC0VersionedInputsAndReceipts','Effect':'Allow',
-         'Action':['s3:GetObject','s3:GetObjectVersion','s3:GetObjectAttributes'],
-         'Resource':[bucket+'/'+preparation+'*',bucket+'/'+attempt+'*']},
-        {'Sid':'WriteOnlyOneC0Attempt','Effect':'Allow','Action':'s3:PutObject','Resource':bucket+'/'+attempt+'*'}]}

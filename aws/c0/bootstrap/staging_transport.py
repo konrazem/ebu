@@ -14,6 +14,8 @@ DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
 ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
 POLICY = 'EBU-C0-Staging-Transport-v1'
+INSTANCE_READ_POLICY = 'EBU-C0-Staging-Exact-Version-Read-v1'
+INSTANCE_ROLE = 'EBU-Rehearsal-EC2-Role'
 ARCHIVE_SHA = '4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef'
 ARCHIVE_BYTES = 414462464
 MANIFEST_SHA = '130f80c15eb32be6d22e47e0b149b81ffa0ff04a6f69eb92bb35a8e683fe3641'
@@ -73,6 +75,30 @@ def validate_receipts(value,receipts):
         if not all(isinstance(receipt[k],str) and receipt[k] for k in ('etag','request_id')):
             raise ValueError('authenticated write receipt metadata required')
     return receipts
+
+def instance_read_policy(value,receipts,controller_bytes,unit_bytes,observed_utc,expires_utc):
+    """Additional temporary grant only; never replace an existing role policy.
+
+    Each statement binds one key to its own VersionId, not a Cartesian product.
+    Authenticated receipts and before/after role snapshots remain executor gates.
+    """
+    validate_plan(value,controller_bytes,unit_bytes)
+    validate_receipts(value,receipts)
+    if not all(isinstance(v,str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',v)
+               for v in (observed_utc,expires_utc)):
+        raise ValueError('exact UTC observation and expiry required')
+    try:
+        timestamps=[datetime.strptime(v,'%Y-%m-%dT%H:%M:%SZ') for v in (observed_utc,expires_utc)]
+    except (TypeError,ValueError) as exc:
+        raise ValueError('exact UTC observation and expiry required') from exc
+    if not 0<(timestamps[1]-timestamps[0]).total_seconds()<=3600:
+        raise ValueError('temporary read grant must expire within one hour')
+    return {'Version':'2012-10-17','Statement':[
+        {'Sid':'ReadExactStagingVersion'+str(i+1),'Effect':'Allow','Action':'s3:GetObjectVersion',
+         'Resource':'arn:aws:s3:::'+BUCKET+'/'+receipt['key'],
+         'Condition':{'StringEquals':{'s3:VersionId':receipt['version_id'],'s3:ResourceAccount':ACCOUNT},
+                      'Bool':{'aws:SecureTransport':'true'},'DateLessThan':{'aws:CurrentTime':expires_utc}}}
+        for i,receipt in enumerate(receipts)]}
 
 # Fixed command body, instantiated only with closed, exact-version receipts.
 # It stages bytes and loads an image; it NEVER runs the image or starts a unit.
@@ -179,4 +205,3 @@ def temporary_policy(role_id,observed_utc,expires_utc):
     return {'Version':'2012-10-17','Statement':[
         {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
         {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
-

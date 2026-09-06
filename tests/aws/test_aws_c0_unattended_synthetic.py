@@ -58,18 +58,6 @@ class CompletePreparationBuilderTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(ValueError): G.canonical(value)
         self.assertEqual(G.canonical({'b': 2, 'a': 1}), b'{"a":1,"b":2}')
 
-    def test_instance_policy_is_confined_to_exact_c0_inputs_and_one_attempt(self):
-        p = G.instance_policy()
-        self.assertEqual(len(p['Statement']), 4)
-        text = json.dumps(p)
-        for forbidden in ('ecr:', 'DeleteObject', 'PutBucketPolicy', 'iam:', 'rehearsal/*'):
-            self.assertNotIn(forbidden, text)
-        self.assertIn('s3:GetObjectVersion', text)
-        put = [s for s in p['Statement'] if s['Action'] == 's3:PutObject']
-        self.assertEqual(len(put), 1)
-        self.assertTrue(put[0]['Resource'].endswith('/ATTEMPT-PLATFORM-SMOKE-492A4F1-SUCCESS/*'))
-
-
 class ByteBoundStagingTests(unittest.TestCase):
     def material(self):
         plan = S.plan('a' * 40, b'controller\n', b'unit\n')
@@ -126,6 +114,49 @@ class ByteBoundStagingTests(unittest.TestCase):
             self.assertEqual(s['Condition']['StringEquals']['aws:SourceIdentity'], 'konrad')
             self.assertTrue(s['Condition']['StringEquals']['aws:userid'].endswith(':' + S.SESSION))
         with self.assertRaises(ValueError): S.temporary_policy('AROAAAAAAAAAAAAAAAAAA', '2026-09-06T15:00:00Z', '2026-09-06T17:00:01Z')
+
+    def test_instance_read_policy_binds_each_exact_object_to_its_own_version(self):
+        p, receipts = self.material()
+        policy = S.instance_read_policy(p, receipts, b'controller\n', b'unit\n',
+                                       '2026-09-06T15:00:00Z', '2026-09-06T16:00:00Z')
+        self.assertEqual(len(policy['Statement']), 3)
+        self.assertNotIn('*', json.dumps(policy))
+        for statement, receipt in zip(policy['Statement'], receipts):
+            self.assertEqual(set(statement), {'Sid', 'Effect', 'Action', 'Resource', 'Condition'})
+            self.assertEqual(statement['Effect'], 'Allow')
+            self.assertEqual(statement['Action'], 's3:GetObjectVersion')
+            self.assertEqual(statement['Resource'], 'arn:aws:s3:::' + S.BUCKET + '/' + receipt['key'])
+            self.assertEqual(statement['Condition'], {
+                'StringEquals': {'s3:VersionId': receipt['version_id'], 's3:ResourceAccount': S.ACCOUNT},
+                'Bool': {'aws:SecureTransport': 'true'},
+                'DateLessThan': {'aws:CurrentTime': '2026-09-06T16:00:00Z'}})
+        # No statement admits another object's version: avoid a cross-product grant.
+        for i, receipt in enumerate(receipts):
+            for j, other in enumerate(receipts):
+                matching = [s for s in policy['Statement']
+                            if s['Resource'].endswith('/' + receipt['key'])
+                            and s['Condition']['StringEquals']['s3:VersionId'] == other['version_id']]
+                self.assertEqual(len(matching), int(i == j))
+
+    def test_instance_read_policy_refuses_unbound_material_or_unobserved_versions(self):
+        p, receipts = self.material()
+        for field, bad in [('version_id', 'null'), ('version_id', '*'), ('key', 'other/key'),
+                           ('bucket', 'other-bucket'), ('sha256', '0' * 64), ('request_id', '')]:
+            changed = copy.deepcopy(receipts); changed[0][field] = bad
+            with self.subTest(field=field, bad=bad), self.assertRaises(ValueError):
+                S.instance_read_policy(p, changed, b'controller\n', b'unit\n',
+                                       '2026-09-06T15:00:00Z', '2026-09-06T16:00:00Z')
+        with self.assertRaises(ValueError):
+            S.instance_read_policy(p, receipts, b'other\n', b'unit\n',
+                                   '2026-09-06T15:00:00Z', '2026-09-06T16:00:00Z')
+
+    def test_instance_read_policy_refuses_unbounded_or_noncanonical_expiry(self):
+        p, receipts = self.material()
+        for expiry in ['2026-09-06T16:00:01Z', '2026-09-06T15:00:00Z', '2026-09-06T14:59:59Z',
+                       '2026-9-6T16:00:00Z', '2026-09-06T16:00:00+00:00', None]:
+            with self.subTest(expiry=expiry), self.assertRaises(ValueError):
+                S.instance_read_policy(p, receipts, b'controller\n', b'unit\n',
+                                       '2026-09-06T15:00:00Z', expiry)
 
 
 class ImageManifestBindingTests(unittest.TestCase):
