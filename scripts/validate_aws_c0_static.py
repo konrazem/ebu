@@ -89,6 +89,8 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "aws/c0/bootstrap/BOOTSTRAP_PATH_CORRECTION.md",
     "aws/c0/bootstrap/bootstrap_transport.py",
     "aws/c0/controller/ebu_c0_controller.py",
+    "aws/c0/bootstrap/staging_transport.py",
+    "aws/c0/bootstrap/BOUNDED_SMOKE_CONTINUATION.md",
 )
 GATE1_LINEAGE_IN_ORDER = (
     ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),

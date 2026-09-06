@@ -840,6 +840,12 @@ record kinds. Staging must bind the new committed controller bytes. See the
 [OCI ImageID definition](https://github.com/opencontainers/image-spec/blob/main/config.md)
 and [Docker image identity columns](https://docs.docker.com/reference/cli/docker/image/ls/).
 
+The bounded continuation and separate byte-bound staging prerequisite are
+documented in `bootstrap/BOUNDED_SMOKE_CONTINUATION.md`. The offline
+`bootstrap/staging_transport.py` generator accepts actual artifact VersionIds
+only after conditional publication/readback; its fixed command cannot start a
+service or container. Local generation is not evidence that staging happened.
+
 1. Execute the reviewed CloudFormation change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.
 3. Read exact stack outputs and re-check the state-machine definition, role,

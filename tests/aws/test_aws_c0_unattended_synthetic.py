@@ -31,6 +31,65 @@ W = module("aws/c0/container/synthetic_worker.py", "aws_c0_worker")
 D = module("scripts/build_aws_c0_deployment_manifest.py", "aws_c0_deployment_manifest")
 P = module("scripts/collect_aws_c0_pricing.py", "aws_c0_pricing")
 B = module("aws/c0/bootstrap/bootstrap_transport.py", "aws_c0_bootstrap_transport")
+S = module("aws/c0/bootstrap/staging_transport.py", "aws_c0_staging_transport")
+
+
+class ByteBoundStagingTests(unittest.TestCase):
+    def material(self):
+        plan = S.plan('a' * 40, b'controller\n', b'unit\n')
+        receipts = [{k: obj[k] for k in ['role', 'key', 'sha256', 'bytes', 'checksum_sha256_base64']}
+                    for obj in plan['objects']]
+        for i, receipt in enumerate(receipts):
+            receipt.update(bucket=S.BUCKET, version_id='observed-version-' + str(i), etag='"etag"', request_id='request-id')
+        return plan, receipts
+
+    def test_plan_has_no_guessed_aws_version_and_preserves_verified_archive(self):
+        p, _ = self.material()
+        self.assertEqual(S.validate_plan(p, b'controller\n', b'unit\n'), p)
+        self.assertEqual(p['objects'][2]['sha256'], S.ARCHIVE_SHA)
+        self.assertEqual(p['objects'][2]['bytes'], 414462464)
+        self.assertNotIn('version_id', S.canonical(p).decode())
+        for bad in (b'controller\r\n', b'', 'not bytes'):
+            with self.assertRaises(ValueError): S.plan('a' * 40, bad, b'unit\n')
+
+    def test_document_is_closed_fixed_and_cannot_execute_a_container_or_service(self):
+        p, receipts = self.material()
+        d = S.document(p, receipts, b'controller\n', b'unit\n')
+        self.assertEqual(d['parameters'], {})
+        self.assertEqual(len(d['mainSteps']), 1)
+        self.assertEqual(d['mainSteps'][0]['inputs']['timeoutSeconds'], '360')
+        body = d['mainSteps'][0]['inputs']['runCommand'][0]
+        self.assertNotIn('{{', body)
+        for forbidden in ('shell=True', "'docker','run'", "'systemctl','start'", "'systemctl','enable'", 'pip install', 'apt-get', "'pull'"):
+            self.assertNotIn(forbidden, body)
+        self.assertIn("'--version-id'", body)
+        self.assertIn('os.O_EXCL|os.O_NOFOLLOW', body)
+        self.assertIn("'image','load'", body)
+        compile(S.HOST_BODY, '<nonexecuted-staging-body>', 'exec')
+
+    def test_each_staging_receipt_is_exact_and_closed(self):
+        p, original = self.material()
+        for field, bad in [('version_id', 'null'), ('bucket', 'other-bucket'), ('key', 'other-key'),
+                           ('sha256', '0' * 64), ('bytes', 0), ('request_id', ''), ('extra', True)]:
+            receipts = copy.deepcopy(original); receipts[0][field] = bad
+            with self.subTest(field=field), self.assertRaises(ValueError): S.validate_receipts(p, receipts)
+        with self.assertRaises(ValueError): S.validate_receipts(p, original[::-1])
+
+    def test_material_or_destination_changes_refuse(self):
+        p, receipts = self.material()
+        for field, bad in [('instance_id', 'i-other'), ('maximum_staging_commands', 2), ('container_execution', True)]:
+            changed = copy.deepcopy(p); changed[field] = bad
+            with self.subTest(field=field), self.assertRaises(ValueError): S.document(changed, receipts, b'controller\n', b'unit\n')
+        p['objects'][0]['destination'] = '/etc/passwd'
+        with self.assertRaises(ValueError): S.document(p, receipts, b'controller\n', b'unit\n')
+
+    def test_staging_permission_is_expiring_and_has_only_exact_targets(self):
+        p = S.temporary_policy('AROAAAAAAAAAAAAAAAAAA', '2026-09-06T15:00:00Z', '2026-09-06T16:00:00Z')
+        self.assertNotIn('*', S.canonical(p).decode())
+        for s in p['Statement']:
+            self.assertEqual(s['Condition']['StringEquals']['aws:SourceIdentity'], 'konrad')
+            self.assertTrue(s['Condition']['StringEquals']['aws:userid'].endswith(':' + S.SESSION))
+        with self.assertRaises(ValueError): S.temporary_policy('AROAAAAAAAAAAAAAAAAAA', '2026-09-06T15:00:00Z', '2026-09-06T17:00:01Z')
 
 
 class ImageManifestBindingTests(unittest.TestCase):
