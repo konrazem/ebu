@@ -284,6 +284,32 @@ service execution. The full suite at preceding commit `de49024` ran 159 tests:
 158 passed, one existing full-entry schema error, no skips or expected failures.
 The error is not waived and does not authorize any cloud continuation.
 
+### Validated local checkpoint at `d67a644`
+
+The complete suite ran 163 tests in 86.613 seconds: 162 passed, zero assertion
+failures, one existing error, zero skips and zero expected failures. The error
+remains `DeploymentSequenceTests.test_complete_schema_valid_chain_through_public_prepublication_gate`,
+whose first missing live-packet field is `runtime_control_read_plan_identity`.
+The audit-v4/static-v4 and exclusive-output regression tests pass within this
+suite; this does not make their synthetic receipt fixtures production evidence.
+All six directly involved Python files compile under the pinned CPython 3.12.10,
+and the deterministic derived-schema check passes.
+
+A local inspection of the same failing candidate confirms further missing read
+plan/reconstruction, publication, sealed-role and journal-budget bindings, plus
+incorrect candidate identity kinds. The seed passes its shape check, but shape
+alone is not an authenticated observation or completion claim. No accepted
+schema has been weakened and the full-entry regression is intentionally neither
+skipped nor reclassified as an expected failure.
+
+Remaining local integration order: independently bound source loading and
+freshness/completion handling; actual SSM/ASL helper attachment with the frozen
+zero-S3 behavior; complete publication, phase-reconstruction and source-journal
+proof producers with real full-entry positive/negative coverage. These are
+unfinished implementation requirements, not a request for wider AWS permissions.
+No AWS access, credentials, deployment, instance start, smoke, science, push or
+publication was performed while making or validating this checkpoint.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits
