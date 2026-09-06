@@ -200,10 +200,6 @@
       "Type": "String",
       "AllowedPattern": "^[0-9a-f]{64}$"
     },
-    "StateMachineSha256": {
-      "Type": "String",
-      "AllowedPattern": "^[0-9a-f]{64}$"
-    },
     "ReadOnlyPreflightAllowlistSha256": {
       "Type": "String",
       "AllowedPattern": "^[0-9a-f]{64}$"
@@ -1054,8 +1050,8 @@
             "AWS_C0_STATE_MACHINE_ARN": {
               "Fn::Sub": "arn:aws:states:us-east-1:${AWS::AccountId}:stateMachine:ebu-c0-closure-synthetic-v1"
             },
-            "AWS_C0_STATE_MACHINE_SHA256": {
-              "Ref": "StateMachineSha256"
+            "AWS_C0_STATE_MACHINE_DEFINITION_SHA256": {
+              "Ref": "StateMachineDefinitionSha256"
             },
             "AWS_C0_EXECUTION_NAME_PREFIX": "ATTEMPT-",
             "AWS_C0_HISTORY_MAX_PAGES": {

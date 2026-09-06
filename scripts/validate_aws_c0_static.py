@@ -11,6 +11,7 @@ import ast
 import argparse
 import datetime as dt
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -92,6 +93,11 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "aws/c0/bootstrap/staging_transport.py",
     "aws/c0/bootstrap/BOUNDED_SMOKE_CONTINUATION.md",
     "scripts/build_aws_c0_preparation_records.py",
+    "aws/c0/finalizer/finalizer.py",
+    "AWS_C0_DEPLOYMENT_SEQUENCE_CORRECTION.md",
+    "aws_c0_deployment_sequence_correction_contract.json",
+    "aws_c0_deployment_sequence_evidence_schema.json",
+    "scripts/build_aws_c0_sequence_schema.py",
 )
 GATE1_LINEAGE_IN_ORDER = (
     ("aws_c0_operator_bootstrap_packet/v4", "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c"),
@@ -163,6 +169,8 @@ GATE1_DIRECT_VERSION_UPGRADES = (
     ("aws_c0_preparation_closure/v3", "aws_c0_preparation_closure/v4"),
     ("aws_c0_live_packet/v4", "aws_c0_live_packet/v5"),
 )
+SEQUENCE_VERSION_UPGRADES = json.loads((ROOT / "aws_c0_deployment_sequence_correction_contract.json").read_bytes())["version_upgrades"]
+SEQUENCE_PRELIVE_RECORD_KINDS = tuple(SEQUENCE_VERSION_UPGRADES.get(kind, kind) for kind in GATE1_PRELIVE_RECORD_KINDS)
 GATE1_TRANSITIVE_VERSION_UPGRADES = (
     ("aws_c0_live_authorization/v4", "aws_c0_live_authorization/v5"),
     ("aws_c0_platform_smoke_known_case_local_binding/v1", "aws_c0_platform_smoke_known_case_local_binding/v2"),
@@ -23773,7 +23781,25 @@ def validate_fixture() -> None:
             "case execution fixture mismatch")
 
 
+def validate_sequence_authority() -> None:
+    contract = load_json('aws_c0_deployment_sequence_correction_contract.json')
+    previous = [new for _, new in GATE1_DIRECT_VERSION_UPGRADES + GATE1_TRANSITIVE_VERSION_UPGRADES]
+    expected = {kind: kind.rsplit('/v', 1)[0] + '/v' + str(int(kind.rsplit('/v', 1)[1]) + 1) for kind in previous}
+    expected['aws_c0_closure_seed/v1'] = 'aws_c0_closure_seed/v2'
+    require(contract['version_upgrades'] == expected, 'sequencing upgrade map differs from exact directly affected stack')
+    require(contract['pre_live_object_count'] == 24 and contract['pre_live_predecessor_count'] == 23 and
+            contract['preparation_input_control_count'] == 6 and contract['predeployment_observed_control_count'] == 9 and
+            contract['postdeployment_observed_control_count'] == 11 and
+            contract['historical_records_modified'] is False and contract['aws_calls_authorized_by_this_correction'] is False,
+            'sequencing arithmetic/history/scope changed')
+    spec = importlib.util.spec_from_file_location('aws_c0_local_sequence_schema', ROOT / 'scripts/build_aws_c0_sequence_schema.py')
+    builder = importlib.util.module_from_spec(spec); spec.loader.exec_module(builder)
+    require(builder.build(ROOT) == load_json('aws_c0_deployment_sequence_evidence_schema.json'), 'new sequencing schema derivation drift')
+    require(SEQUENCE_PRELIVE_RECORD_KINDS[8:14] == GATE1_PRELIVE_RECORD_KINDS[8:14], 'historical bootstrap/renewal kinds changed')
+
+
 def validate_sources() -> None:
+    validate_sequence_authority()
     for path in ("scripts/validate_aws_c0_static.py", "aws/c0/controller/ebu_c0_controller.py",
                  "aws/c0/finalizer/finalizer.py", "aws/c0/container/synthetic_worker.py",
                  "tests/aws/test_aws_c0_unattended_synthetic.py"):
@@ -23795,18 +23821,18 @@ def validate_sources() -> None:
             if isinstance(node.func, ast.Attribute) else ""
             for node in ast.walk(function) if isinstance(node, ast.Call)
         ]
-    require("prepare-request-v4" in controller and "aws_c0_start_receipt/v6" in controller,
+    require("prepare-request-v4" in controller and "aws_c0_start_receipt/v7" in controller,
             "controller current-record stack absent")
-    require("aws_c0_source_sidecar/v4" in controller and "reserve_for_operation" in controller,
+    require("aws_c0_source_sidecar/v5" in controller and "reserve_for_operation" in controller,
             "controller capture reservation absent")
-    require("aws_c0_launch_request/v5" in controller and
-            "aws_c0_live_packet/v5" in controller and
-            "aws_c0_live_authorization/v5" in controller and
-            "aws_c0_attempt_claim/v2" in controller,
+    require("aws_c0_launch_request/v6" in controller and
+            "aws_c0_live_packet/v6" in controller and
+            "aws_c0_live_authorization/v6" in controller and
+            "aws_c0_attempt_claim/v3" in controller,
             "controller Gate1 downstream version stack absent")
     require("FROZEN_PRELIVE_OBJECT_COUNT = 24" in finalizer and
             "FROZEN_PRELIVE_PREDECESSOR_COUNT = 23" in finalizer and
-            all(kind in finalizer for kind in GATE1_PRELIVE_RECORD_KINDS[8:]) and
+            all(kind in finalizer for kind in SEQUENCE_PRELIVE_RECORD_KINDS[8:]) and
             all(value in finalizer for _, value in GATE1_LINEAGE_IN_ORDER) and
             GATE1_SEALED_V6_PREDECESSOR_SHA256 in finalizer and
             "_validate_sealed_gate0_lineage_record" in finalizer and
@@ -23846,7 +23872,7 @@ def validate_sources() -> None:
             closure_source.index("build_three_coordinate_capture_aggregate("),
             "carrier/controller Get, final-manifest Put, journal seal, and aggregate order is inverted")
     require("_put_record(" not in closure_source[terminal_manifest_put + 1:] and
-            '"aws_c0_final_manifest_publication_observation/v3"' in closure_source[terminal_manifest_put:] and
+            '"aws_c0_final_manifest_publication_observation/v4"' in closure_source[terminal_manifest_put:] and
             '"final_manifest_publication_observation_object": None' in closure_source[terminal_manifest_put:],
             "a substantive finalizer Put follows the designated terminal manifest Put")
     aggregate_assignment = next(node for node in finalizer_tree.body if isinstance(node, ast.Assign) and

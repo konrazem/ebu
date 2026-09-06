@@ -200,15 +200,15 @@ FROZEN_PRELIVE_RECORD_KINDS = (
     "aws_c0_operator_session_renewal_packet/v1",
     "aws_c0_operator_session_renewal_authorization/v1",
     "aws_c0_operator_session_renewal_closure/v1",
-    "aws_c0_preparation_packet/v4",
-    "aws_c0_preparation_authorization/v3",
+    "aws_c0_preparation_packet/v5",
+    "aws_c0_preparation_authorization/v4",
     "aws_c0_private_infrastructure_snapshot/v1",
     "aws_c0_audit_static_handoff_authority_audit/v4",
     "aws_c0_material_runtime_static_validation/v4",
     "aws_c0_cost_model/v2",
-    "aws_c0_closure_seed/v1",
-    "aws_c0_launch_request/v5",
-    "aws_c0_preparation_closure/v4",
+    "aws_c0_closure_seed/v2",
+    "aws_c0_launch_request/v6",
+    "aws_c0_preparation_closure/v5",
 )
 FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256 = (
     "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c",
@@ -587,7 +587,7 @@ def _build_accepted_capture_aggregate(*, attempt_identity: dict[str, str],
             finalizer_readback["content_chain_sha256"] != finalizer_journal._previous):
         raise Refusal("capture aggregate finalizer journal identity mismatch")
     manifest_raw = canonical_bytes(final_manifest_preimage)
-    if (final_manifest_identity != identity("aws_c0_final_manifest/v5", _root_digest(final_manifest_preimage)) or
+    if (final_manifest_identity != identity("aws_c0_final_manifest/v6", _root_digest(final_manifest_preimage)) or
             final_manifest_receipt["bytes"] != len(manifest_raw) or
             final_manifest_receipt["sha256"] != digest(manifest_raw) or
             any(final_manifest_put_response[name] != final_manifest_receipt[name] for name in
@@ -830,7 +830,7 @@ def _build_accepted_capture_aggregate(*, attempt_identity: dict[str, str],
     proof_domain = "AWS_C0_FINAL_S3_CAPTURE_AGGREGATE_FIXED_SIZE_BODY_V1_NUL"
     observation_raw = canonical_bytes(publication_observation)
     aggregate = {
-        "schema": "aws_c0_final_s3_capture_aggregate/v2", "attempt_identity": attempt_identity,
+        "schema": "aws_c0_final_s3_capture_aggregate/v3", "attempt_identity": attempt_identity,
         "controller_journal_identity": identity("aws_c0_controller_capture_journal/v1", controller_object["object_sha256"]),
         "controller_journal_byte_count": controller_object["byte_count"],
         "controller_published_object_sha256": controller_object["object_sha256"],
@@ -1646,14 +1646,14 @@ ROOT_KINDS = (
     "aws_c0_audit_static_handoff_authority_audit/v4",
     "aws_c0_material_runtime_static_validation/v4",
     "aws_c0_private_infrastructure_snapshot/v1",
-    "aws_c0_launch_request/v5", "aws_c0_start_receipt/v6", "aws_c0_heartbeat/v1",
-    "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1", "aws_c0_finalizer_receipt/v3",
-    "aws_c0_retrieval_verification/v5", "aws_c0_cost_closure/v3", "aws_c0_final_manifest/v5",
+    "aws_c0_launch_request/v6", "aws_c0_start_receipt/v7", "aws_c0_heartbeat/v1",
+    "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1", "aws_c0_finalizer_receipt/v4",
+    "aws_c0_retrieval_verification/v6", "aws_c0_cost_closure/v4", "aws_c0_final_manifest/v6",
 )
 COMMON_FIELDS = {"schema", "authority_id", "correction_authority_id", "closure_correction_authority_id",
     "record_class", "scientific_execution_authorized", "stage_f_execution_authorized", "stage_f_readiness_claimed",
     "zero_science_counters", "observed_utc"}
-LIVE_PACKET_V5_FIELDS = COMMON_FIELDS | {"packet_disposition", "preparation_closure_identity", "preparation_closure_object",
+LIVE_PACKET_V6_FIELDS = COMMON_FIELDS | {"packet_disposition", "preparation_closure_identity", "preparation_closure_object",
     "launch_request_identity", "launch_request_object", "pre_live_predecessor_object_receipts", "live_authorization_key_target",
     "runtime_control_preimages", "change_set_identity", "change_set_observation_identity", "effect_api_set_identity",
     "effect_resource_set_identity", "live_session_assumer_identity", "execution_operator_role_identity",
@@ -1662,8 +1662,8 @@ LIVE_PACKET_V5_FIELDS = COMMON_FIELDS | {"packet_disposition", "preparation_clos
     "execution_session_policy_subset_proof_identity", "execution_session_policy_subset_proof_canonical_json_base64",
     "pass_role_scope_proof_identity", "pass_role_scope_proof_canonical_json_base64", "execution_session_max_duration_seconds",
     "live_session_assumer_expires_utc", "iam_pagination_bounds", "final_preflight_observed_utc", "final_instance_state",
-    "pre_live_object_count"}
-LIVE_AUTH_V5_FIELDS = COMMON_FIELDS | {"statement_sha256", "authenticated_source_identity", "live_packet_identity",
+    "pre_live_object_count", "deployment_inputs_identity"}
+LIVE_AUTH_V6_FIELDS = COMMON_FIELDS | {"statement_sha256", "authenticated_source_identity", "live_packet_identity",
     "live_packet_object", "live_authorization_key", "account_identity", "attempt_identity", "change_set_identity",
     "live_session_assumer_identity", "execution_operator_role_identity", "execution_session_policy_identity",
     "execution_session_policy_canonical_json_base64", "execution_session_policy_ceiling_identity",
@@ -1671,8 +1671,10 @@ LIVE_AUTH_V5_FIELDS = COMMON_FIELDS | {"statement_sha256", "authenticated_source
     "execution_session_policy_subset_proof_canonical_json_base64", "pass_role_scope_proof_identity",
     "pass_role_scope_proof_canonical_json_base64", "execution_session_max_duration_seconds", "execution_session_identity",
     "execution_session_derivation_proof_identity", "execution_session_derivation_proof_canonical_json_base64",
-    "execution_session_expires_utc", "authorized_actions", "denied_actions"}
-LAUNCH_V5_FIELDS = COMMON_FIELDS | {"record_sha256", "rehearsal_id", "attempt_id", "attempt_identity", "region",
+    "execution_session_expires_utc", "authorized_actions", "denied_actions",
+    "deployment_authorized_utc", "deployment_started_utc", "deployment_completed_utc",
+    "deployment_inputs_identity", "post_deployment_control_preimages"}
+LAUNCH_V6_FIELDS = COMMON_FIELDS | {"record_sha256", "rehearsal_id", "attempt_id", "attempt_identity", "region",
     "instance_id", "required_initial_instance_state", "artifact_prefix", "preparation_packet_identity",
     "preparation_packet_object", "preparation_authorization_identity", "preparation_authorization_object",
     "authority_audit_identity", "authority_audit_object", "static_validation_identity", "static_validation_object",
@@ -1761,10 +1763,10 @@ def _fetch_receipt(receipt: Any, expected_schema: str, *, root: bool) -> tuple[d
     return record, raw, record_id
 
 
-def _validate_launch_v5(record: Any) -> dict[str, Any]:
-    if not isinstance(record, dict) or set(record) != LAUNCH_V5_FIELDS:
+def _validate_launch_v6(record: Any) -> dict[str, Any]:
+    if not isinstance(record, dict) or set(record) != LAUNCH_V6_FIELDS:
         raise Refusal("launch-v5 field closure failed")
-    _common(record, "aws_c0_launch_request/v5", root=True)
+    _common(record, "aws_c0_launch_request/v6", root=True)
     if record.get("region") != REGION or record.get("instance_id") != INSTANCE_ID:
         raise Refusal("launch target mismatch")
     if record.get("required_initial_instance_state") != "stopped" or record.get("retry_attempts") != 1:
@@ -1777,10 +1779,10 @@ def _validate_launch_v5(record: Any) -> dict[str, Any]:
     if record.get("artifact_prefix") != f"rehearsal/aws-c0/{record.get('rehearsal_id')}/{attempt}/":
         raise Refusal("launch prefix mismatch")
     _identity(record, "attempt_identity", "aws_c0_attempt/v1")
-    _identity(record, "preparation_packet_identity", "aws_c0_preparation_packet/v4")
-    _identity(record, "preparation_authorization_identity", "aws_c0_preparation_authorization/v3")
+    _identity(record, "preparation_packet_identity", "aws_c0_preparation_packet/v5")
+    _identity(record, "preparation_authorization_identity", "aws_c0_preparation_authorization/v4")
     _identity(record, "cost_model_identity", "aws_c0_cost_model/v2")
-    _identity(record, "closure_seed_identity", "aws_c0_closure_seed/v1")
+    _identity(record, "closure_seed_identity", "aws_c0_closure_seed/v2")
     if len(record.get("artifact_version_receipts", [])) != 8:
         raise Refusal("launch artifact receipt arithmetic")
     timeouts = record.get("phase_timeouts_seconds", {})
@@ -1853,7 +1855,257 @@ def _exact_environment_record(prefix: str, schema: str, *, root: bool) -> tuple[
         "checksum_sha256_base64": base64.b64encode(bytes.fromhex(_env(f"AWS_C0_{prefix}_SHA256", SHA))).decode(),
     }
     record, _, record_id = _fetch_receipt(receipt, schema, root=root)
+    if schema == "aws_c0_closure_seed/v2":
+        _seed_deployment_inputs(record)
     return record, receipt, record_id
+
+
+POST_DEPLOYMENT_CONTROLS = (
+    "ACCOUNT_REGION", "INSTANCE_PROFILE_SOLE_ROLE", "IAM_POLICY_SET", "BUCKET_CONTROLS_KMS",
+    "VPC_NETWORK_PATH", "SERVICE_QUOTA", "STANDARD_WORKFLOW", "SSM_DOCUMENT",
+    "SOFTWARE_AND_IMAGE_SET", "CHANGE_SET_AND_EFFECTS", "ARTIFACT_VERSION_SET")
+PREDEPLOYMENT_CONTROLS = tuple(k for k in POST_DEPLOYMENT_CONTROLS if k not in {"STANDARD_WORKFLOW", "SSM_DOCUMENT"})
+CONTROL_IDENTITY_KINDS = dict(zip(POST_DEPLOYMENT_CONTROLS, (
+    'aws_account_region_observation/v1', 'aws_instance_profile_sole_role_observation/v1', 'aws_iam_policy_set/v1',
+    'aws_bucket_controls_kms_observation/v1', 'aws_vpc_network_path_observation/v1', 'aws_service_quota_observation/v1',
+    'aws_step_functions_standard_state_machine/v1', 'aws_ssm_document_observation/v1',
+    'aws_c0_software_image_set/v1', 'aws_cloudformation_change_set/v1', 'aws_c0_artifact_version_set/v1')))
+CONTROL_SOURCE_KINDS = dict(zip(POST_DEPLOYMENT_CONTROLS, (
+    'aws_account_region_observation_source/v1', 'aws_instance_profile_sole_role_observation_source/v1',
+    'aws_iam_policy_set_observation_source/v1', 'aws_bucket_controls_kms_observation_source/v1',
+    'aws_vpc_network_path_observation_source/v1', 'aws_service_quota_observation_source/v1',
+    'aws_step_functions_state_machine_observation_source/v1', 'aws_ssm_document_observation_source/v1',
+    'aws_c0_software_image_observation_source/v1', 'aws_cloudformation_change_set_observation_source/v1',
+    'aws_s3_artifact_version_observation_source/v1')))
+
+
+def _source_json(raw: bytes) -> Any:
+    """Source/API JSON may be formatted; evidence envelopes remain canonical."""
+    if not isinstance(raw, bytes) or not 0 < len(raw) <= MAX_BYTES:
+        raise Refusal("bounded deployment source bytes required")
+    try:
+        value = json.loads(raw, object_pairs_hook=_pairs,
+                           parse_float=lambda _: (_ for _ in ()).throw(Refusal("float forbidden")),
+                           parse_constant=lambda _: (_ for _ in ()).throw(Refusal("nonfinite forbidden")))
+        strict_json(canonical_bytes(value))
+        return value
+    except (UnicodeError, json.JSONDecodeError) as exc:
+        raise Refusal("invalid deployment source JSON") from exc
+
+
+def _deployment_inputs(value: Any) -> dict[str, Any]:
+    fixed = {"schema": "aws_c0_deployment_inputs/v1", "account_id": "623609441658",
+             "region": REGION, "instance_id": INSTANCE_ID, "stack_name": "EBU-C0-492a4f1",
+             "change_set_name": "EBU-C0-492a4f1", "artifact_bucket_name": "ebu-stage-f-results-k7m4p2",
+             "state_machine_arn": "arn:aws:states:us-east-1:623609441658:stateMachine:ebu-c0-closure-synthetic-v1",
+             "workflow_role_arn": "arn:aws:iam::623609441658:role/EBU-C0-Corrected-StepFunctions-v1",
+             "finalizer_function_arn": "arn:aws:lambda:us-east-1:623609441658:function:ebu-c0-corrected-finalizer-v1",
+             "ssm_document_name": "EBU-C0-Start-v1", "observed_deployed_resources": False,
+             "logging_configuration": {"level": "ERROR", "includeExecutionData": False, "destinations": [
+                 {"cloudWatchLogsLogGroup": {"logGroupArn": "arn:aws:logs:us-east-1:623609441658:log-group:/aws/vendedlogs/states/ebu-c0-corrected-synthetic-v1:*"}}]},
+             "tracing_configuration": {"enabled": False}}
+    if not isinstance(value, dict) or set(value) != set(fixed) | {"definition_source", "document_source", "template_sha256"}:
+        raise Refusal("deployment inputs field closure failed")
+    for key, expected in fixed.items():
+        if value[key] != expected: raise Refusal("deployment input coordinate/control mismatch:" + key)
+    if not SHA.fullmatch(str(value['template_sha256'])):
+        raise Refusal("template input hash required")
+    for key in ('definition_source', 'document_source'):
+        source = value[key]
+        if not isinstance(source, dict) or set(source) != {'sha256', 'bytes_base64'}:
+            raise Refusal("deployment source fields not closed")
+        try: raw = base64.b64decode(source['bytes_base64'], validate=True)
+        except (ValueError, TypeError) as exc: raise Refusal("deployment source base64 invalid") from exc
+        _source_json(raw)
+        if source['sha256'] != digest(raw): raise Refusal("deployment source hash mismatch")
+    return value
+
+
+def _seed_deployment_inputs(seed: dict[str, Any]) -> dict[str, Any]:
+    if seed.get('schema') != 'aws_c0_closure_seed/v2' or 'state_machine_identity' in seed:
+        raise Refusal("seed requires planned inputs, never a premature workflow identity")
+    raw = _bound_base64(seed, 'deployment_inputs_identity', 'deployment_inputs_canonical_json_base64',
+                        'aws_c0_deployment_inputs/v1')
+    inputs = _deployment_inputs(strict_json(raw))
+    if seed.get('state_machine_arn') != inputs['state_machine_arn']:
+        raise Refusal("seed intended workflow ARN mismatch")
+    return inputs
+
+
+def _deployment_control_values(preimages: Any, kinds: tuple[str, ...], earliest: str, latest: str) -> dict[str, Any]:
+    if not isinstance(preimages, list) or [p.get('control_kind') for p in preimages if isinstance(p, dict)] != list(kinds):
+        raise Refusal("deployment control count/order mismatch")
+    values = {}
+    for item in preimages:
+        if set(item) != {'control_kind', 'identity', 'canonical_json_base64', 'observed_utc', 'authenticated_source_identity'}:
+            raise Refusal("deployment control fields not closed")
+        source = item['authenticated_source_identity']
+        if (not isinstance(source, dict) or set(source) != {'kind', 'value', 'sha256'} or
+                source['value'] != source['sha256'] or not SHA.fullmatch(str(source['sha256'])) or
+                source['kind'] != CONTROL_SOURCE_KINDS[item['control_kind']]):
+            raise Refusal("authenticated deployment observation source required")
+        if not _utc(earliest) <= _utc(item['observed_utc']) <= _utc(latest):
+            raise Refusal("observation precedes producer or occurs after seal")
+        try: raw = base64.b64decode(item['canonical_json_base64'], validate=True)
+        except (ValueError, TypeError) as exc: raise Refusal("deployment preimage encoding invalid") from exc
+        value = strict_json(raw)
+        ident = item['identity']
+        if not isinstance(ident, dict) or ident != identity(CONTROL_IDENTITY_KINDS[item['control_kind']], digest(raw)):
+            raise Refusal("deployment observation identity mismatch")
+        values[item['control_kind']] = value
+    return values
+
+
+def _iam_configuration(value: Any, *, after: bool) -> dict[str, Any]:
+    """Policy bytes and intended ARNs, never future RoleIds or creation receipts."""
+    if not isinstance(value, dict) or set(value) != {'schema', 'roles'} or value['schema'] != 'aws_c0_iam_policy_configuration/v1':
+        raise Refusal('closed IAM policy configuration required')
+    names = ['EBU-C0-Operator-492a4f1', 'EBU-Rehearsal-EC2-Role']
+    if after: names += ['EBU-C0-Corrected-StepFunctions-v1', 'EBU-C0-Corrected-Finalizer-v1']
+    wanted = sorted('arn:aws:iam::623609441658:role/' + n for n in names)
+    roles = value['roles']
+    if not isinstance(roles, list) or [r.get('role_arn') for r in roles if isinstance(r, dict)] != wanted:
+        raise Refusal('IAM configuration exact role set/order mismatch')
+    for role in roles:
+        if set(role) != {'role_arn', 'trust_policy', 'inline_policies', 'attached_managed_policies', 'permissions_boundary', 'tags', 'max_session_duration'}:
+            raise Refusal('IAM planned configuration contains observation metadata or unknown fields')
+        if not isinstance(role['trust_policy'], dict) or not isinstance(role['inline_policies'], dict):
+            raise Refusal('complete IAM policy documents required')
+        policies = [role['trust_policy'], *role['inline_policies'].values()]
+        managed = role['attached_managed_policies']
+        if not isinstance(managed, list): raise Refusal('managed policy list required')
+        for policy in managed + ([] if role['permissions_boundary'] is None else [role['permissions_boundary']]):
+            if not isinstance(policy, dict) or set(policy) != {'arn', 'version_id', 'document'}:
+                raise Refusal('complete managed policy configuration required')
+            if not re.fullmatch(r'arn:aws:iam::(?:aws|623609441658):policy/[A-Za-z0-9+=,.@_/-]+', str(policy['arn'])) or not re.fullmatch(r'v[1-9][0-9]*', str(policy['version_id'])):
+                raise Refusal('observed existing managed policy version required')
+            policies.append(policy['document'])
+        if len({p['arn'] for p in managed}) != len(managed): raise Refusal('duplicate managed policy')
+        for policy in policies:
+            if not isinstance(policy, dict) or policy.get('Version') != '2012-10-17' or not isinstance(policy.get('Statement'), list):
+                raise Refusal('complete canonical IAM policy JSON required')
+        if not isinstance(role['tags'], dict) or not all(isinstance(k,str) and isinstance(v,str) for k,v in role['tags'].items()):
+            raise Refusal('complete role tags required')
+        if type(role['max_session_duration']) is not int or role['max_session_duration'] != 3600:
+            raise Refusal('IAM role session duration changed')
+    return {r['role_arn']: r for r in roles}
+
+
+def _expected_deployed_controls(inputs: dict[str, Any], document_version: str) -> tuple[dict[str, Any], dict[str, Any]]:
+    if not isinstance(document_version, str) or not re.fullmatch(r'[1-9][0-9]{0,9}', document_version):
+        raise Refusal("actual numeric SSM document version required")
+    substitutions = {'ArtifactBucketName': inputs['artifact_bucket_name'], 'FinalizerFunctionArn': inputs['finalizer_function_arn'],
+                     'SsmDocumentName': inputs['ssm_document_name'], 'SsmDocumentVersion': document_version,
+                     'TargetInstanceId': inputs['instance_id']}
+    def resolve(v):
+        if isinstance(v, str):
+            for name, replacement in substitutions.items(): v = v.replace('${' + name + '}', replacement)
+            if '${' in v: raise Refusal("unresolved workflow substitution")
+            return v
+        if isinstance(v, list): return [resolve(x) for x in v]
+        if isinstance(v, dict): return {k: resolve(x) for k, x in v.items()}
+        return v
+    definition = resolve(_source_json(base64.b64decode(inputs['definition_source']['bytes_base64'], validate=True)))
+    content = _source_json(base64.b64decode(inputs['document_source']['bytes_base64'], validate=True))
+    return ({'stateMachineArn': inputs['state_machine_arn'], 'type': 'STANDARD', 'status': 'ACTIVE',
+             'definition': definition, 'roleArn': inputs['workflow_role_arn'],
+             'loggingConfiguration': inputs['logging_configuration'], 'tracingConfiguration': inputs['tracing_configuration']},
+            {'Name': inputs['ssm_document_name'], 'DocumentVersion': document_version, 'Status': 'Active',
+             'DocumentType': 'Command', 'DocumentFormat': 'JSON', 'Content': content})
+
+
+def validate_deployment_sequence(packet: dict[str, Any], auth: dict[str, Any], seed: dict[str, Any],
+                                 launch: dict[str, Any]) -> dict[str, Any]:
+    """Pure local gate; call before publishing authorization or StartExecution."""
+    for parent, child, id_field, receipt_field, kind, root in (
+        (auth, packet, 'live_packet_identity', 'live_packet_object', 'aws_c0_live_packet/v6', False),
+        (packet, launch, 'launch_request_identity', 'launch_request_object', 'aws_c0_launch_request/v6', True),
+        (launch, seed, 'closure_seed_identity', 'closure_seed_object', 'aws_c0_closure_seed/v2', False)):
+        raw = canonical_bytes(child)
+        child_id = _root_digest(child) if root else digest(raw)
+        if child.get('schema') != kind or parent.get(id_field) != identity(kind, child_id):
+            raise Refusal('deployment phase record identity mismatch:' + id_field)
+        receipt = parent.get(receipt_field)
+        _receipt(receipt)
+        if receipt['sha256'] != digest(raw) or receipt['bytes'] != len(raw) or receipt['checksum_sha256_base64'] != base64.b64encode(hashlib.sha256(raw).digest()).decode():
+            raise Refusal('deployment phase exact receipt mismatch:' + receipt_field)
+    if auth.get('attempt_identity') != launch.get('attempt_identity') or seed.get('attempt_identity') != launch.get('attempt_identity'):
+        raise Refusal('deployment phase attempt mismatch')
+    for field in ('live_session_assumer_identity', 'execution_operator_role_identity', 'execution_session_policy_identity',
+                  'execution_session_policy_ceiling_identity', 'execution_session_policy_subset_proof_identity', 'pass_role_scope_proof_identity',
+                  'execution_session_max_duration_seconds'):
+        if field not in packet or auth.get(field) != packet[field]: raise Refusal('deployment phase session mismatch:' + field)
+    if _utc(auth['execution_session_expires_utc']) > _utc(packet['live_session_assumer_expires_utc']):
+        raise Refusal('deployment session exceeds prior assumer expiry')
+    inputs = _seed_deployment_inputs(seed)
+    wanted = seed['deployment_inputs_identity']
+    if packet.get('deployment_inputs_identity') != wanted or auth.get('deployment_inputs_identity') != wanted:
+        raise Refusal("packet/authorization intended-input binding mismatch")
+    stamps = [packet['observed_utc'], auth['deployment_authorized_utc'], auth['deployment_started_utc'],
+              auth['deployment_completed_utc'], auth['observed_utc']]
+    if any(_utc(a) > _utc(b) for a, b in zip(stamps, stamps[1:])):
+        raise Refusal("prior authority/deployment/result chronology invalid")
+    if auth['deployment_authorized_utc'] == auth['deployment_started_utc']:
+        raise Refusal("prior authority must be recorded before execution")
+    if auth.get('statement_sha256') != digest(_live_statement(auth).encode()):
+        raise Refusal("prior exact authority statement binding mismatch")
+    if auth.get('authenticated_source_identity', {}).get('kind') != 'aws_c0_operator_live_authorization_source/v1':
+        raise Refusal("prior authenticated authorization source missing")
+    before = _deployment_control_values(packet['runtime_control_preimages'], PREDEPLOYMENT_CONTROLS,
+                                        '1970-01-01T00:00:00Z', packet['observed_utc'])
+    after = _deployment_control_values(auth['post_deployment_control_preimages'], POST_DEPLOYMENT_CONTROLS,
+                                       auth['deployment_completed_utc'], auth['observed_utc'])
+    pre = before['CHANGE_SET_AND_EFFECTS']; post = after['CHANGE_SET_AND_EFFECTS']
+    stable_fields = {'change_set_arn', 'stack_name', 'template_sha256', 'parameters_identity',
+                     'effect_api_set_identity', 'effect_resource_set_identity'}
+    if (set(pre) != stable_fields | {'status', 'execution_status', 'expected_iam_after_identity', 'observed_utc', 'request_id'} or
+            set(post) != stable_fields | {'execution_status', 'stack_status', 'execution_count', 'execute_request_id',
+                'stack_observation_request_id', 'execute_started_utc', 'execute_completed_utc', 'observed_utc'}):
+        raise Refusal('change-set producer/result fields not closed')
+    for image, fields in ((pre, ['request_id']), (post, ['execute_request_id', 'stack_observation_request_id'])):
+        if any(not re.fullmatch(r'[A-Za-z0-9-]{8,128}', str(image[k])) for k in fields):
+            raise Refusal('authenticated producing request IDs required')
+    pre_wrapper = next(p for p in packet['runtime_control_preimages'] if p['control_kind'] == 'CHANGE_SET_AND_EFFECTS')
+    post_wrapper = next(p for p in auth['post_deployment_control_preimages'] if p['control_kind'] == 'CHANGE_SET_AND_EFFECTS')
+    if (pre['observed_utc'] != pre_wrapper['observed_utc'] or post['observed_utc'] != post_wrapper['observed_utc'] or
+            post['execute_started_utc'] != auth['deployment_started_utc'] or post['execute_completed_utc'] != auth['deployment_completed_utc']):
+        raise Refusal('deployment timestamps differ from authenticated producer/result')
+    arn_pattern = r'arn:aws:cloudformation:us-east-1:623609441658:changeSet/EBU-C0-492a4f1/[A-Za-z0-9-]+'
+    if (pre.get('status') != 'CREATE_COMPLETE' or pre.get('execution_status') != 'AVAILABLE' or
+            not re.fullmatch(arn_pattern, str(pre.get('change_set_arn'))) or
+            pre.get('stack_name') != inputs['stack_name'] or
+            post.get('execution_status') != 'EXECUTE_COMPLETE' or post.get('stack_status') != 'CREATE_COMPLETE' or
+            type(post.get('execution_count')) is not int or post['execution_count'] != 1 or
+            not post.get('execute_request_id') or not post.get('stack_observation_request_id')):
+        raise Refusal("one exact successful CREATE deployment observation required")
+    for field in ('change_set_arn', 'stack_name', 'template_sha256', 'parameters_identity', 'effect_api_set_identity', 'effect_resource_set_identity'):
+        if field not in pre or post.get(field) != pre[field]: raise Refusal("deployment input/effect drift:" + field)
+    if pre['template_sha256'] != inputs['template_sha256']:
+        raise Refusal("change set does not bind intended template")
+    for field in ('effect_api_set_identity', 'effect_resource_set_identity'):
+        if packet.get(field) != pre[field]: raise Refusal("packet effect binding mismatch")
+    if auth.get('change_set_identity') != packet.get('change_set_identity'):
+        raise Refusal("prior authorized change set identity mismatch")
+    if packet.get('change_set_identity') != identity('aws_cloudformation_change_set/v1', digest(canonical_bytes(pre))):
+        raise Refusal("prior authorized change set preimage mismatch")
+    before_roles = _iam_configuration(before['IAM_POLICY_SET'], after=False)
+    after_roles = _iam_configuration(after['IAM_POLICY_SET'], after=True)
+    if any(after_roles[k] != v for k, v in before_roles.items()):
+        raise Refusal('deployment changed existing operator or instance role')
+    for role in ('ACCOUNT_REGION', 'INSTANCE_PROFILE_SOLE_ROLE', 'BUCKET_CONTROLS_KMS', 'VPC_NETWORK_PATH',
+                 'SERVICE_QUOTA', 'SOFTWARE_AND_IMAGE_SET', 'ARTIFACT_VERSION_SET'):
+        if before[role] != after[role]: raise Refusal("undeclared deployment control drift:" + role)
+    # The planned IAM after-set must already be bound by the reviewed change set.
+    if 'expected_iam_after_identity' not in pre or pre['expected_iam_after_identity'] != identity('aws_c0_planned_iam_policy_set/v1', digest(canonical_bytes(after['IAM_POLICY_SET']))):
+        raise Refusal("deployed IAM policies differ from reviewed effect plan")
+    for index, sha in ((0, inputs['definition_source']['sha256']), (1, inputs['document_source']['sha256']), (7, inputs['template_sha256'])):
+        if len(launch.get('artifact_version_receipts', [])) != 8 or launch['artifact_version_receipts'][index]['sha256'] != sha:
+            raise Refusal("intended deployment bytes differ from published artifact")
+    document = after['SSM_DOCUMENT']; workflow = after['STANDARD_WORKFLOW']
+    expected_workflow, expected_document = _expected_deployed_controls(inputs, document.get('DocumentVersion'))
+    if document != expected_document or workflow != expected_workflow:
+        raise Refusal("deployed workflow/role/logging/document differs from intended inputs")
+    return inputs
 
 
 def _workflow_identity(arn: str) -> dict[str, str]:
@@ -1871,23 +2123,9 @@ def _instance_state() -> str:
     return state
 
 
-def _runtime_preflight(packet: dict[str, Any], launch: dict[str, Any],
-                       execution_arn: str) -> None:
-    preimages = packet.get("runtime_control_preimages")
-    kinds = ["ACCOUNT_REGION", "INSTANCE_PROFILE_SOLE_ROLE", "IAM_POLICY_SET", "BUCKET_CONTROLS_KMS",
-             "VPC_NETWORK_PATH", "SERVICE_QUOTA", "STANDARD_WORKFLOW", "SSM_DOCUMENT",
-             "SOFTWARE_AND_IMAGE_SET", "CHANGE_SET_AND_EFFECTS", "ARTIFACT_VERSION_SET"]
-    if not isinstance(preimages, list) or [item.get("control_kind") for item in preimages] != kinds:
-        raise Refusal("fresh eleven runtime control preimages absent")
-    for item in preimages:
-        if set(item) != {"control_kind", "identity", "canonical_json_base64", "observed_utc", "authenticated_source_identity"}:
-            raise Refusal("runtime preimage not closed")
-        raw = base64.b64decode(item["canonical_json_base64"], validate=True)
-        strict_json(raw)
-        if item["identity"]["sha256"] != digest(raw):
-            raise Refusal("runtime preimage identity mismatch")
-        if _utc(item["observed_utc"]) > _utc(packet["observed_utc"]):
-            raise Refusal("runtime preimage occurs after packet")
+def _runtime_preflight(packet: dict[str, Any], launch: dict[str, Any], execution_arn: str,
+                       auth: dict[str, Any], seed: dict[str, Any]) -> None:
+    inputs = validate_deployment_sequence(packet, auth, seed, launch)
     sts = _query("sts", "GetCallerIdentity", {})
     if _xml_text(sts, "Account") != _env("AWS_C0_EXPECTED_ACCOUNT_ID", re.compile(r"[0-9]{12}")):
         raise Refusal("current account mismatch")
@@ -1897,15 +2135,24 @@ def _runtime_preflight(packet: dict[str, Any], launch: dict[str, Any],
     # these direct reads make the target, workflow and document freshness current.
     state_machine = _env("AWS_C0_STATE_MACHINE_ARN")
     described = _json_api("states", "AWSStepFunctions.DescribeStateMachine", {"stateMachineArn": state_machine})
-    if described.get("type") != "STANDARD":
-        raise Refusal("workflow is not STANDARD")
     document = _json_api("ssm", "AmazonSSM.GetDocument", {
         "Name": _env("AWS_C0_SSM_DOCUMENT_NAME"), "DocumentVersion": _env("AWS_C0_SSM_DOCUMENT_VERSION"),
         "DocumentFormat": "JSON",
     })
-    content = document.get("Content", "")
-    if digest(content.encode()) != _env("AWS_C0_SSM_DOCUMENT_SHA256", SHA):
-        raise Refusal("SSM document content mismatch")
+    if (state_machine != inputs['state_machine_arn'] or
+            _env('AWS_C0_STATE_MACHINE_DEFINITION_SHA256', SHA) != inputs['definition_source']['sha256'] or
+            _env('AWS_C0_SSM_DOCUMENT_SHA256', SHA) != inputs['document_source']['sha256']):
+        raise Refusal('deployed environment differs from source input hashes')
+    expected_workflow, expected_document = _expected_deployed_controls(inputs, document.get('DocumentVersion'))
+    workflow_projection = {k: described.get(k) for k in expected_workflow}
+    document_projection = {k: document.get(k) for k in expected_document}
+    workflow_projection['definition'] = _source_json(str(described.get('definition', '')).encode())
+    document_projection['Content'] = _source_json(str(document.get('Content', '')).encode())
+    observed_document = next(item for item in auth['post_deployment_control_preimages'] if item['control_kind'] == 'SSM_DOCUMENT')
+    sealed_document = strict_json(base64.b64decode(observed_document['canonical_json_base64'], validate=True))
+    if (workflow_projection != expected_workflow or document_projection != expected_document or
+            sealed_document != document_projection):
+        raise Refusal('fresh workflow/role/logging/document drift after deployment seal')
     if packet.get("iam_pagination_bounds") != launch.get("iam_pagination_bounds"):
         raise Refusal("IAM pagination bounds drift")
     if not execution_arn.endswith(":" + launch["attempt_id"]):
@@ -1922,16 +2169,19 @@ def _bound_base64(record: dict[str, Any], identity_field: str, bytes_field: str,
     return raw
 
 
-def _validate_live_packet_v5(packet: dict[str, Any]) -> None:
-    if set(packet) != LIVE_PACKET_V5_FIELDS or packet.get("schema") != "aws_c0_live_packet/v5":
+def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
+    if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")
-    _common(packet, "aws_c0_live_packet/v5", root=False)
-    _identity(packet, "preparation_closure_identity", "aws_c0_preparation_closure/v4")
-    _identity(packet, "launch_request_identity", "aws_c0_launch_request/v5")
+    _common(packet, "aws_c0_live_packet/v6", root=False)
+    _identity(packet, "preparation_closure_identity", "aws_c0_preparation_closure/v5")
+    _identity(packet, "launch_request_identity", "aws_c0_launch_request/v6")
     if packet["packet_disposition"] != "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED" or packet["final_instance_state"] != "stopped" or packet["pre_live_object_count"] != FROZEN_PRELIVE_OBJECT_COUNT:
         raise Refusal("live packet disposition/count/state mismatch")
     if len(packet["pre_live_predecessor_object_receipts"]) != FROZEN_PRELIVE_PREDECESSOR_COUNT:
         raise Refusal("live packet predecessor receipt count mismatch")
+    _identity(packet, 'deployment_inputs_identity', 'aws_c0_deployment_inputs/v1')
+    _deployment_control_values(packet['runtime_control_preimages'], PREDEPLOYMENT_CONTROLS,
+                               '1970-01-01T00:00:00Z', packet['observed_utc'])
     for identity_field, bytes_field, kind in (
         ("execution_session_policy_identity", "execution_session_policy_canonical_json_base64", "aws_iam_session_policy/v1"),
         ("execution_session_policy_ceiling_identity", "execution_session_policy_ceiling_canonical_json_base64", "aws_iam_policy_ceiling/v1"),
@@ -1944,7 +2194,7 @@ def _validate_live_packet_v5(packet: dict[str, Any]) -> None:
 
 def _live_statement(auth: dict[str, Any]) -> str:
     return (
-        "AUTHORIZE_AWS_C0_LIVE_V2 "
+        "AUTHORIZE_AWS_C0_LIVE_V3 "
         f"live_packet_sha256={auth['live_packet_identity']['sha256']} live_packet_key={auth['live_packet_object']['key']} "
         f"live_packet_version_id={auth['live_packet_object']['version_id']} change_set_identity_sha256={auth['change_set_identity']['sha256']} "
         f"account_identity_sha256={auth['account_identity']['sha256']} region=us-east-1 instance_id=i-048bac00bdb540a4e "
@@ -1956,16 +2206,18 @@ def _live_statement(auth: dict[str, Any]) -> str:
         f"pass_role_scope_proof_identity_sha256={auth['pass_role_scope_proof_identity']['sha256']} "
         f"execution_session_max_duration_seconds={auth['execution_session_max_duration_seconds']} "
         f"live_session_assumer_expires_utc={auth['execution_session_expires_utc']} "
-        "allow=ASSUME_EXACT_LIVE_SESSION,PUBLISH_EXACT_LIVE_AUTHORIZATION,EXECUTE_EXACT_CHANGE_SET,START_ONE_EXACT_EXECUTION "
+        f"deployment_inputs_sha256={auth['deployment_inputs_identity']['sha256']} "
+        f"deployment_authorized_utc={auth['deployment_authorized_utc']} "
+        "allow=EXECUTE_EXACT_CHANGE_SET,PUBLISH_EXACT_LIVE_AUTHORIZATION,START_ONE_EXACT_EXECUTION "
         "deny=REPLAY,OTHER_CHANGE_SET,OTHER_ATTEMPT,SCIENTIFIC_EXECUTION"
     )
 
 
-def _validate_live_authorization_v5(auth: dict[str, Any]) -> None:
-    if set(auth) != LIVE_AUTH_V5_FIELDS or auth.get("schema") != "aws_c0_live_authorization/v5":
+def _validate_live_authorization_v6(auth: dict[str, Any]) -> None:
+    if set(auth) != LIVE_AUTH_V6_FIELDS or auth.get("schema") != "aws_c0_live_authorization/v6":
         raise Refusal("live-authorization-v5 field closure failed")
-    _common(auth, "aws_c0_live_authorization/v5", root=False)
-    _identity(auth, "live_packet_identity", "aws_c0_live_packet/v5")
+    _common(auth, "aws_c0_live_authorization/v6", root=False)
+    _identity(auth, "live_packet_identity", "aws_c0_live_packet/v6")
     for identity_field, bytes_field, kind in (
         ("execution_session_policy_identity", "execution_session_policy_canonical_json_base64", "aws_iam_session_policy/v1"),
         ("execution_session_policy_ceiling_identity", "execution_session_policy_ceiling_canonical_json_base64", "aws_iam_policy_ceiling/v1"),
@@ -1974,6 +2226,8 @@ def _validate_live_authorization_v5(auth: dict[str, Any]) -> None:
         ("execution_session_derivation_proof_identity", "execution_session_derivation_proof_canonical_json_base64", "aws_sts_session_derivation_proof/v1"),
     ): _bound_base64(auth, identity_field, bytes_field, kind)
     _identity(auth, "execution_session_identity", "aws_sts_role_session/v1")
+    _identity(auth, 'deployment_inputs_identity', 'aws_c0_deployment_inputs/v1')
+    _identity(auth, 'authenticated_source_identity', 'aws_c0_operator_live_authorization_source/v1')
     if auth["statement_sha256"] != digest(_live_statement(auth).encode()):
         raise Refusal("live authorization statement digest mismatch")
     if not _utc(auth["observed_utc"]) < _utc(auth["execution_session_expires_utc"]):
@@ -1984,20 +2238,20 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
     if set(event) != {"action", "live_authorization", "workflow_execution_arn"} or event["action"] != "preflight":
         raise Refusal("preflight event not closed")
     execution_arn = event["workflow_execution_arn"]
-    auth, _, auth_id = _fetch_receipt(event["live_authorization"], "aws_c0_live_authorization/v5", root=False)
-    _validate_live_authorization_v5(auth)
+    auth, _, auth_id = _fetch_receipt(event["live_authorization"], "aws_c0_live_authorization/v6", root=False)
+    _validate_live_authorization_v6(auth)
     if auth["live_authorization_key"] != event["live_authorization"]["key"]:
         raise Refusal("live authorization key mismatch")
-    if auth.get("authorized_actions") != ["ASSUME_EXACT_LIVE_SESSION", "PUBLISH_EXACT_LIVE_AUTHORIZATION",
-                                          "EXECUTE_EXACT_CHANGE_SET", "START_ONE_EXACT_EXECUTION"]:
+    if auth.get("authorized_actions") != ["EXECUTE_EXACT_CHANGE_SET",
+                                          "PUBLISH_EXACT_LIVE_AUTHORIZATION", "START_ONE_EXACT_EXECUTION"]:
         raise Refusal("live action set mismatch")
     if auth.get("denied_actions") != ["REPLAY", "OTHER_CHANGE_SET", "OTHER_ATTEMPT", "SCIENTIFIC_EXECUTION"]:
         raise Refusal("live denial set mismatch")
     if _utc(auth["execution_session_expires_utc"]) <= dt.datetime.now(dt.timezone.utc):
         raise Refusal("live session expired")
-    packet, _, packet_id = _fetch_receipt(auth["live_packet_object"], "aws_c0_live_packet/v5", root=False)
-    _validate_live_packet_v5(packet)
-    if auth.get("live_packet_identity") != identity("aws_c0_live_packet/v5", packet_id):
+    packet, _, packet_id = _fetch_receipt(auth["live_packet_object"], "aws_c0_live_packet/v6", root=False)
+    _validate_live_packet_v6(packet)
+    if auth.get("live_packet_identity") != identity("aws_c0_live_packet/v6", packet_id):
         raise Refusal("live authorization packet identity mismatch")
     for field in ("change_set_identity", "live_session_assumer_identity", "execution_operator_role_identity",
                   "execution_session_policy_identity", "execution_session_policy_ceiling_identity",
@@ -2007,12 +2261,12 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
         raise Refusal("live session duration mismatch")
     if _utc(auth["execution_session_expires_utc"]) > _utc(packet["live_session_assumer_expires_utc"]):
         raise Refusal("derived live session exceeds assumer expiry")
-    launch, launch_receipt, launch_id = _fetch_receipt(packet["launch_request_object"], "aws_c0_launch_request/v5", root=True)
-    _validate_launch_v5(launch)
-    if packet.get("launch_request_identity") != identity("aws_c0_launch_request/v5", launch_id):
+    launch, launch_receipt, launch_id = _fetch_receipt(packet["launch_request_object"], "aws_c0_launch_request/v6", root=True)
+    _validate_launch_v6(launch)
+    if packet.get("launch_request_identity") != identity("aws_c0_launch_request/v6", launch_id):
         raise Refusal("packet launch identity mismatch")
-    seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v1", root=False)
-    if launch.get("closure_seed_identity") != identity("aws_c0_closure_seed/v1", seed_id) or launch.get("closure_seed_object") != seed_receipt:
+    seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v2", root=False)
+    if launch.get("closure_seed_identity") != identity("aws_c0_closure_seed/v2", seed_id) or launch.get("closure_seed_object") != seed_receipt:
         raise Refusal("launch seed binding mismatch")
     model, model_receipt, model_id = _exact_environment_record("COST_MODEL", "aws_c0_cost_model/v2", root=False)
     if launch.get("cost_model_identity") != identity("aws_c0_cost_model/v2", model_id) or launch.get("cost_model_object") != model_receipt:
@@ -2021,16 +2275,16 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
     if (len(packet.get("pre_live_predecessor_object_receipts", [])) != FROZEN_PRELIVE_PREDECESSOR_COUNT or
             packet.get("pre_live_object_count") != FROZEN_PRELIVE_OBJECT_COUNT):
         raise Refusal("prelive 24-object arithmetic mismatch")
-    _runtime_preflight(packet, launch, execution_arn)
+    _runtime_preflight(packet, launch, execution_arn, auth, seed)
     return {
         "preflight_disposition": "AWS_C0_PREFLIGHT_PASS", "launch": launch,
-        "launch_request_identity": identity("aws_c0_launch_request/v5", launch_id),
+        "launch_request_identity": identity("aws_c0_launch_request/v6", launch_id),
         "launch_request_object": launch_receipt,
-        "live_packet_identity": identity("aws_c0_live_packet/v5", packet_id),
+        "live_packet_identity": identity("aws_c0_live_packet/v6", packet_id),
         "live_packet_object": auth["live_packet_object"],
-        "live_authorization_identity": identity("aws_c0_live_authorization/v5", auth_id),
+        "live_authorization_identity": identity("aws_c0_live_authorization/v6", auth_id),
         "live_authorization_object": event["live_authorization"],
-        "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id),
+        "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
         "closure_seed_object": seed_receipt,
         "cost_model_identity": identity("aws_c0_cost_model/v2", model_id),
         "cost_model_object": model_receipt,
@@ -2071,7 +2325,7 @@ def _find_roots(bucket: str, prefix: str, max_pages: int, max_items: int) -> tup
         except Refusal:
             continue
         schema = record.get("schema")
-        if schema in ROOT_KINDS or schema == "aws_c0_safe_close_receipt/v4":
+        if schema in ROOT_KINDS or schema == "aws_c0_safe_close_receipt/v5":
             record_id = _root_digest(record) if schema in ROOT_KINDS else digest(got)
             receipt = _full_receipt({"key": coordinate["key"], "version_id": coordinate["version_id"],
                                      "bytes": len(got), "sha256": digest(got), "checksum_sha256_base64": checksum})
@@ -2098,14 +2352,14 @@ def poll(event: dict[str, Any]) -> dict[str, Any]:
         return {"state": "WAITING_FIRST_HEARTBEAT", "observed_utc": now, "terminal_receipt_identity": None}
     newest = max(heartbeats, key=lambda r: r["sequence"])
     age = (dt.datetime.now(dt.timezone.utc) - _utc(newest["observed_utc"])).total_seconds()
-    starts = [(r, i) for r, _, i in roots if r["schema"] == "aws_c0_start_receipt/v6"]
+    starts = [(r, i) for r, _, i in roots if r["schema"] == "aws_c0_start_receipt/v7"]
     heartbeat_zero = [(r, i) for r, _, i in roots if r["schema"] == "aws_c0_heartbeat/v1" and r.get("sequence") == 0]
     if len(starts) != 1 or len(heartbeat_zero) != 1:
         raise Refusal("start/heartbeat-zero identity ambiguity")
     return {"state": "HEARTBEAT_FRESH" if age <= event["heartbeat_stale_seconds"] else "HEARTBEAT_STALE",
             "last_heartbeat_sequence": newest["sequence"], "observed_utc": now,
             "terminal_receipt_identity": None,
-            "start_receipt_identity": identity("aws_c0_start_receipt/v6", starts[0][1]),
+            "start_receipt_identity": identity("aws_c0_start_receipt/v7", starts[0][1]),
             "heartbeat_zero_identity": identity("aws_c0_heartbeat/v1", heartbeat_zero[0][1])}
 
 
@@ -2118,15 +2372,15 @@ def safe_close(event: dict[str, Any]) -> dict[str, Any]:
     roots, _, _ = _find_roots(bucket, event["artifact_prefix"], int(_env("AWS_C0_S3_VERSION_MAX_PAGES")),
                               int(_env("AWS_C0_S3_VERSION_MAX_ITEMS")))
     by_id = {root_id: (record, receipt) for record, receipt, root_id in roots}
-    start_id = _identity(event, "start_receipt_identity", "aws_c0_start_receipt/v6")
+    start_id = _identity(event, "start_receipt_identity", "aws_c0_start_receipt/v7")
     heartbeat_id = _identity(event, "heartbeat_zero_identity", "aws_c0_heartbeat/v1")
     if start_id not in by_id or heartbeat_id not in by_id or by_id[heartbeat_id][0].get("sequence") != 0:
         raise Refusal("safe-close start/heartbeat-zero missing")
     execution = _json_api("states", "AWSStepFunctions.DescribeExecution", {"executionArn": event["workflow_execution_arn"]})
     if execution.get("status") != "RUNNING":
         raise Refusal("safe-close execution is not RUNNING")
-    seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v1", root=False)
-    record = _control_record("aws_c0_safe_close_receipt/v4", {
+    seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v2", root=False)
+    record = _control_record("aws_c0_safe_close_receipt/v5", {
         "attempt_identity": event["attempt_identity"], "workflow_execution_identity": _workflow_identity(event["workflow_execution_arn"]),
         "workflow_execution_arn": event["workflow_execution_arn"], "workflow_execution_status": "RUNNING",
         "start_receipt_identity": event["start_receipt_identity"], "start_object": by_id[start_id][1],
@@ -2135,7 +2389,7 @@ def safe_close(event: dict[str, Any]) -> dict[str, Any]:
     })
     safe_id, safe_receipt = _put_record(bucket, event["artifact_prefix"], "control/safe-close", record, root=False)
     return {"safe_close_receipt_identity": safe_id, "safe_close_object": safe_receipt,
-            "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id), "closure_seed_object": seed_receipt}
+            "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id), "closure_seed_object": seed_receipt}
 
 
 def _resource_use(launch: dict[str, Any], seed_id: str, seed_receipt: dict[str, Any],
@@ -2144,11 +2398,11 @@ def _resource_use(launch: dict[str, Any], seed_id: str, seed_receipt: dict[str, 
     rows = [{"dimension": name, "unit": UNITS[name], "observation_disposition": "SEALED_MAXIMUM_SUBSTITUTION",
              "observed_units": None, "charged_units": limits[name], "limit_units": limits[name],
              "usage_observation_identity": None, "usage_observation": None, "usage_observation_object": None,
-             "maximum_substitution_source_identity": identity("aws_c0_launch_request/v5", launch_id)}
+             "maximum_substitution_source_identity": identity("aws_c0_launch_request/v6", launch_id)}
             for name in DIMENSIONS]
-    return _control_record("aws_c0_resource_use_closure/v2", {
-        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id),
-        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v5", launch_id),
+    return _control_record("aws_c0_resource_use_closure/v3", {
+        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
+        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v6", launch_id),
         "cost_model_identity": launch["cost_model_identity"], "accounting_window": launch["cost_envelope"]["accounting_window"],
         "dimensions": rows, "all_limits_respected": True, "resource_use_disposition": "AWS_C0_RESOURCE_USE_CLOSED",
         "failure_phase": None, "failure_code": None,
@@ -2192,10 +2446,10 @@ def _semantic_roots(launch: dict[str, Any], launch_receipt: dict[str, Any], laun
         if launch[identity_field] != expected:
             raise Refusal(f"launch predecessor identity mismatch:{schema}")
         roots.append((expected, launch[object_field]))
-    roots.append((identity("aws_c0_launch_request/v5", launch_id), launch_receipt))
-    for schema in ("aws_c0_start_receipt/v6", "aws_c0_heartbeat/v1", "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1"):
+    roots.append((identity("aws_c0_launch_request/v6", launch_id), launch_receipt))
+    for schema in ("aws_c0_start_receipt/v7", "aws_c0_heartbeat/v1", "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1"):
         rows = [(record, receipt, item_id) for record, receipt, item_id in dynamic if record["schema"] == schema]
-        if not rows or (schema in {"aws_c0_start_receipt/v6", "aws_c0_terminal_receipt/v1"} and len(rows) != 1):
+        if not rows or (schema in {"aws_c0_start_receipt/v7", "aws_c0_terminal_receipt/v1"} and len(rows) != 1):
             raise Refusal(f"missing/ambiguous predecessor root:{schema}")
         if schema in {"aws_c0_heartbeat/v1", "aws_c0_checkpoint/v1"}:
             rows.sort(key=lambda row: row[0].get("sequence", -1))
@@ -2235,10 +2489,10 @@ def _validate_sealed_gate0_lineage_record(position: int, expected_schema: str,
 def _verify_prelive_objects(packet_receipt: dict[str, Any], auth_receipt: dict[str, Any],
                             launch: dict[str, Any]) -> list[dict[str, Any]]:
     """Exact-version-read the closed 24-object pre-live set and later live auth."""
-    packet, _, packet_id = _fetch_receipt(packet_receipt, "aws_c0_live_packet/v5", root=False)
-    auth, _, auth_id = _fetch_receipt(auth_receipt, "aws_c0_live_authorization/v5", root=False)
-    _validate_live_packet_v5(packet); _validate_live_authorization_v5(auth)
-    if auth["live_packet_identity"] != identity("aws_c0_live_packet/v5", packet_id):
+    packet, _, packet_id = _fetch_receipt(packet_receipt, "aws_c0_live_packet/v6", root=False)
+    auth, _, auth_id = _fetch_receipt(auth_receipt, "aws_c0_live_authorization/v6", root=False)
+    _validate_live_packet_v6(packet); _validate_live_authorization_v6(auth)
+    if auth["live_packet_identity"] != identity("aws_c0_live_packet/v6", packet_id):
         raise Refusal("retrieval live-packet authorization binding mismatch")
     predecessors = packet["pre_live_predecessor_object_receipts"]
     if (len(predecessors) != FROZEN_PRELIVE_PREDECESSOR_COUNT or
@@ -2278,9 +2532,9 @@ def _verify_prelive_objects(packet_receipt: dict[str, Any], auth_receipt: dict[s
             packet["preparation_closure_identity"] != verified[-1]["record_or_object_identity"]):
         raise Refusal("live packet does not bind the terminal launch/closure predecessors")
     verified.extend([
-        {"record_or_object_identity": identity("aws_c0_live_packet/v5", packet_id), "object": packet_receipt,
+        {"record_or_object_identity": identity("aws_c0_live_packet/v6", packet_id), "object": packet_receipt,
          "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"},
-        {"record_or_object_identity": identity("aws_c0_live_authorization/v5", auth_id), "object": auth_receipt,
+        {"record_or_object_identity": identity("aws_c0_live_authorization/v6", auth_id), "object": auth_receipt,
          "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"},
     ])
     return verified
@@ -2319,10 +2573,10 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
         raise Refusal("nested closure journal")
     _ACTIVE_JOURNAL = CaptureJournal()
     bucket = _env("AWS_C0_ARTIFACT_BUCKET", BUCKET); prefix = event["artifact_prefix"]
-    seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v1", root=False)
+    seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v2", root=False)
     model, model_receipt, model_id = _exact_environment_record("COST_MODEL", "aws_c0_cost_model/v2", root=False)
-    launch, launch_receipt, launch_id = _exact_environment_record("LAUNCH", "aws_c0_launch_request/v5", root=True)
-    _validate_launch_v5(launch)
+    launch, launch_receipt, launch_id = _exact_environment_record("LAUNCH", "aws_c0_launch_request/v6", root=True)
+    _validate_launch_v6(launch)
     _validate_cost_model(model, model_id, launch)
     prelive_verified = _verify_prelive_objects(event["live_packet_object"], event["live_authorization_object"], launch)
     if event["attempt_identity"] != launch["attempt_identity"]:
@@ -2347,8 +2601,8 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
         raise Refusal("terminal sequence closure mismatch")
     terminal_identity = identity("aws_c0_terminal_receipt/v1", _root_digest(terminal[0]))
     finalizer_pass = event["cleanup_disposition"] == "STOPPED_VERIFIED" and event["finalizer_execution_disposition"] == "PASS"
-    finalizer_record = _root_record("aws_c0_finalizer_receipt/v3", {
-        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id),
+    finalizer_record = _root_record("aws_c0_finalizer_receipt/v4", {
+        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
         "closure_seed_object": seed_receipt, "terminal_receipt_identity": terminal_identity,
         "resource_use_closure_identity": use_id, "resource_use_object": use_receipt,
         "cleanup_requested": True, "cleanup_disposition": "AWS_C0_STOPPED",
@@ -2362,9 +2616,9 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
     finalizer_id, finalizer_receipt = _put_record(bucket, prefix, "evidence/finalizer", finalizer_record, root=True)
     charges, total = compute_cost(model, resource_use)
     within = total <= launch["cost_envelope"]["ceiling_minor_units"]
-    cost_record = _root_record("aws_c0_cost_closure/v3", {
-        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id),
-        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v5", launch_id),
+    cost_record = _root_record("aws_c0_cost_closure/v4", {
+        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
+        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v6", launch_id),
         "finalizer_receipt_identity": finalizer_id, "cost_model_identity": identity("aws_c0_cost_model/v2", model_id),
         "cost_model_object": model_receipt, "resource_use_closure_identity": use_id, "resource_use_object": use_receipt,
         "currency": "USD", "accounting_window": launch["cost_envelope"]["accounting_window"],
@@ -2393,15 +2647,15 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
     for item in prelive_verified:
         if item not in verified: verified.append(item)
     safe_rows = [(record, receipt, item_id) for record, receipt, item_id in dynamic
-                 if record["schema"] == "aws_c0_safe_close_receipt/v4"]
+                 if record["schema"] == "aws_c0_safe_close_receipt/v5"]
     if len(safe_rows) != 1:
         raise Refusal("safe-close receipt missing or ambiguous")
     safe_record, safe_receipt, safe_digest = safe_rows[0]
-    verified.append({"record_or_object_identity": identity("aws_c0_safe_close_receipt/v4", safe_digest),
+    verified.append({"record_or_object_identity": identity("aws_c0_safe_close_receipt/v5", safe_digest),
                      "object": safe_receipt,
                      "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"})
-    _, _, verified_use_id = _fetch_receipt(use_receipt, "aws_c0_resource_use_closure/v2", root=False)
-    if identity("aws_c0_resource_use_closure/v2", verified_use_id) != use_id:
+    _, _, verified_use_id = _fetch_receipt(use_receipt, "aws_c0_resource_use_closure/v3", root=False)
+    if identity("aws_c0_resource_use_closure/v3", verified_use_id) != use_id:
         raise Refusal("resource-use readback identity mismatch")
     verified.append({"record_or_object_identity": use_id, "object": use_receipt,
                      "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"})
@@ -2424,8 +2678,8 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
                          "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"})
     s3_transcript_id = s3_transcript["identity"]
     terminal_pass = terminal[0].get("disposition") == "AWS_C0_SYNTHETIC_PASS"
-    retrieval_record = _root_record("aws_c0_retrieval_verification/v5", {
-        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id),
+    retrieval_record = _root_record("aws_c0_retrieval_verification/v6", {
+        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
         "closure_seed_object": seed_receipt,
         "semantic_category_order": ["AUTHORITY_AUDIT", "STATIC_VALIDATION", "SNAPSHOT", "LAUNCH", "START",
                                     "HEARTBEAT", "CHECKPOINT", "TERMINAL", "FINALIZER", "RETRIEVAL", "COST"],
@@ -2456,9 +2710,9 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
         None if terminal_pass else terminal[0].get("failure_code", "TERMINAL_FAIL"),
         None if finalizer_pass else finalizer_record["failure_code"],
         None if within else "COST_CEILING_EXCEEDED") if code]
-    safe_identity = identity("aws_c0_safe_close_receipt/v4", safe_digest)
-    manifest_record = _root_record("aws_c0_final_manifest/v5", {
-        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id),
+    safe_identity = identity("aws_c0_safe_close_receipt/v5", safe_digest)
+    manifest_record = _root_record("aws_c0_final_manifest/v6", {
+        "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
         "closure_seed_object": seed_receipt, "ordered_record_identities": ordered, "category_offsets": offsets,
         "record_count": len(ordered), "terminal_receipt_identity": terminal_identity,
         "finalizer_receipt_identity": finalizer_id, "retrieval_verification_identity": retrieval_id,
@@ -2472,15 +2726,15 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
         include_response=True)
     # The v3 observation is derived in memory from the terminal Put response;
     # it is not another S3 object and therefore cannot follow the terminal Put.
-    observation = _control_record("aws_c0_final_manifest_publication_observation/v3", {
+    observation = _control_record("aws_c0_final_manifest_publication_observation/v4", {
         "attempt_identity": launch["attempt_identity"], "workflow_execution_identity": _workflow_identity(event["workflow_execution_arn"]),
-        "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id), "closure_seed_object": seed_receipt,
+        "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id), "closure_seed_object": seed_receipt,
         "final_manifest_identity": manifest_id, "final_manifest_object": manifest_receipt,
         "retrieval_verification_identity": retrieval_id, "retrieval_object": retrieval_receipt,
         "publication_disposition": "AWS_C0_FINAL_MANIFEST_PUBLISHED", "failure_phase": None, "failure_code": None,
     })
     observation_raw = canonical_bytes(observation)
-    observation_id = identity("aws_c0_final_manifest_publication_observation/v3",
+    observation_id = identity("aws_c0_final_manifest_publication_observation/v4",
                               digest(b"AWS_C0_FINAL_MANIFEST_PUBLICATION_OBSERVATION_V3_NUL\0" + observation_raw))
     # Journal publication and its exact-version readback are the only finite
     # recursion exclusions: the sealed journal never captures its own Put/Get.
@@ -2512,11 +2766,11 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
         retrieval_identity=retrieval_id,
         retrieval_receipt=retrieval_receipt)
     response = {
-        "schema": "aws_c0_closure_response/v4",
+        "schema": "aws_c0_closure_response/v5",
         "action": "closure", "response_variant": "FULL", "artifact_bucket_identity": _bucket_identity(),
         "final_status": final_status, "evidence_completeness": "COMPLETE",
         "workflow_execution_identity": _workflow_identity(event["workflow_execution_arn"]),
-        "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id), "closure_seed_object": seed_receipt,
+        "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id), "closure_seed_object": seed_receipt,
         "history_retrieval_contract_identity": seed["history_retrieval_contract_identity"],
         "final_manifest_identity": manifest_id, "final_manifest_object": manifest_receipt,
         "retrieval_verification_identity": retrieval_id, "retrieval_object": retrieval_receipt,
@@ -2541,12 +2795,12 @@ def validate_closure_response_v4(record: Any) -> dict[str, Any]:
                 "final_manifest_publication_observation_identity", "final_manifest_publication_observation_object",
                 "history_pagination_transcript_identity", "history_pagination_transcript", "missing_root_categories",
                 "failure_phase", "failure_code", "finalizer_journal_aggregate"}
-    if not isinstance(record, dict) or set(record) != required or record.get("schema") != "aws_c0_closure_response/v4":
+    if not isinstance(record, dict) or set(record) != required or record.get("schema") != "aws_c0_closure_response/v5":
         raise Refusal("closure response v4 fields refused")
     aggregate = record["finalizer_journal_aggregate"]
     if record["action"] != "closure" or record["response_variant"] != "FULL" or not isinstance(aggregate, dict):
         raise Refusal("closure response v4 content refused")
-    if set(aggregate) != FINAL_CAPTURE_AGGREGATE_FIELDS or aggregate["schema"] != "aws_c0_final_s3_capture_aggregate/v2":
+    if set(aggregate) != FINAL_CAPTURE_AGGREGATE_FIELDS or aggregate["schema"] != "aws_c0_final_s3_capture_aggregate/v3":
         raise Refusal("closure response journal aggregate refused")
     excluded = ["proof_sha256", "proof_body_byte_count", "proof_body_excluded_fields_in_order",
                 "proof_body_projection_disposition"]
@@ -2579,7 +2833,7 @@ def validate_closure_response_v4(record: Any) -> dict[str, Any]:
 
 def build_publication_binding_v5(*, final_manifest_identity: dict[str, str], final_manifest_object: dict[str, Any],
                                  readback_identity: dict[str, str]) -> dict[str, Any]:
-    record = {"schema": "aws_c0_publication_upgrade_binding/v5",
+    record = {"schema": "aws_c0_publication_upgrade_binding/v6",
               "final_manifest_identity": final_manifest_identity,
               "final_manifest_object": final_manifest_object,
               "authenticated_readback_identity": readback_identity,
@@ -2589,9 +2843,9 @@ def build_publication_binding_v5(*, final_manifest_identity: dict[str, str], fin
 
 def validate_publication_binding_v5(record: Any) -> dict[str, Any]:
     required = {"schema", "final_manifest_identity", "final_manifest_object", "authenticated_readback_identity", "zero_science_counters"}
-    if not isinstance(record, dict) or set(record) != required or record["schema"] != "aws_c0_publication_upgrade_binding/v5":
+    if not isinstance(record, dict) or set(record) != required or record["schema"] != "aws_c0_publication_upgrade_binding/v6":
         raise Refusal("publication binding v5 fields refused")
-    _identity(record, "final_manifest_identity", "aws_c0_final_manifest/v5")
+    _identity(record, "final_manifest_identity", "aws_c0_final_manifest/v6")
     if not isinstance(record["final_manifest_object"], dict) or record["zero_science_counters"] != ZERO:
         raise Refusal("publication binding v5 content refused")
     return record
@@ -2599,12 +2853,12 @@ def validate_publication_binding_v5(record: Any) -> dict[str, Any]:
 
 def _history_fallback(execution_arn: str, phase: str, code: str,
                       missing: list[str]) -> dict[str, Any]:
-    seed, receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v1", root=False)
+    seed, receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v2", root=False)
     return {
         "action": "closure", "response_variant": "HISTORY_FALLBACK",
         "artifact_bucket_identity": _bucket_identity(), "final_status": "AWS_C0_FINAL_INCONCLUSIVE",
         "evidence_completeness": "INCOMPLETE", "workflow_execution_identity": _workflow_identity(execution_arn),
-        "closure_seed_identity": identity("aws_c0_closure_seed/v1", seed_id), "closure_seed_object": receipt,
+        "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id), "closure_seed_object": receipt,
         "history_retrieval_contract_identity": seed["history_retrieval_contract_identity"],
         "final_manifest_identity": None, "final_manifest_object": None,
         "retrieval_verification_identity": None, "retrieval_object": None,

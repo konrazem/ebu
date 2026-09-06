@@ -868,7 +868,42 @@ Generation is offline only, not an IAM mutation or proof of staging/readiness.
 Authenticated receipts, fresh observations, cost coverage and cleanup bindings
 remain required. It does not resolve the separate seed/deployment ordering cycle.
 
-1. Execute the reviewed CloudFormation change set once.
+### Current first-deployment sequence (local correction)
+
+`AWS_C0_DEPLOYMENT_SEQUENCE_CORRECTION.md` supersedes only the premature
+deployed-object bindings in the earlier packet examples above. Current kinds are
+seed-v2, preparation-packet-v5, preparation-authorization-v4, launch-v6,
+preparation-closure-v5, live-packet-v6 and live-authorization-v6; the exact
+downstream map is machine-readable in the correction contract. Earlier examples
+and historical records are not current execution packets.
+
+The seed binds source input bytes and intended coordinates, never an invented
+workflow identity. The actual 8 artifact receipts remain earlier than launch;
+the generic template artifact never becomes the later resolved-parameter
+manifest. Preparation closure/live packet carry 9 existing-resource controls.
+They do not claim the future workflow or document has been observed. The later
+authorization carries 11 authenticated postdeployment controls, after successful
+execution and before launch. Prior exact deployment authority must precede that
+execution. The LIVE_V3 statement uses an already separately authorized, issued
+session; it does not retroactively authorize its own assumption.
+
+`build_aws_c0_sequence_schema.py --check` verifies the explicitly new, self-contained
+schema bundle without changing any historical schema. The preparation builder
+uses this bundle and the finalizer's pure `validate_deployment_sequence` gate.
+Invoke `validate_postdeployment_authorization` before publishing the later
+authorization or calling StartExecution. It verifies exact packet/launch/seed
+byte receipts, chronological producers, stable reviewed change-set inputs/effects,
+the expected IAM policy configuration, and actual workflow/role/logging/document
+agreement. The new identity `aws_c0_planned_iam_policy_set/v1` binds policy
+configuration only: observed RoleIds/creation dates are forbidden in that plan.
+Runtime independently rechecks workflow and document before starting the instance.
+
+The template's existing `StateMachineDefinitionSha256` now supplies the explicitly
+named source-definition hash environment variable; the unused ambiguous
+`StateMachineSha256` parameter is removed. No IAM policy, trust, ASL, SSM command,
+scientific payload, transport arity or instance size changes in this correction.
+
+1. Record prior exact deployment authority, then execute the reviewed change set once.
 2. Wait for a terminal stack status; a pending or failed stack is not launchable.
 3. Read exact stack outputs and re-check the state-machine definition, role,
    logging, Lambda configuration, SSM document content/version/permissions,

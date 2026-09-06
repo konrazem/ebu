@@ -39,17 +39,17 @@ class CompletePreparationBuilderTests(unittest.TestCase):
     def test_schema_upgrade_is_narrow_and_uses_exact_existing_lineage(self):
         schema, _ = G.schema(ROOT)
         p = schema['allOf'][1]['properties']
-        self.assertEqual(p['schema']['const'], 'aws_c0_preparation_packet/v4')
+        self.assertEqual(p['schema']['const'], 'aws_c0_preparation_packet/v5')
         self.assertEqual(p['bootstrap_control_candidates']['minItems'], 6)
         self.assertEqual(p['bootstrap_control_candidates']['maxItems'], 6)
         self.assertEqual(p['planned_pre_live_object_count']['const'], 24)
-        self.assertEqual(p['planned_pre_live_record_kinds']['const'], list(V.GATE1_PRELIVE_RECORD_KINDS))
+        self.assertEqual(p['planned_pre_live_record_kinds']['const'], list(V.SEQUENCE_PRELIVE_RECORD_KINDS))
         original = json.loads((ROOT / G.REGISTRY).read_bytes())['$defs']['preparation_packet_v3']
         self.assertEqual(schema['allOf'][1]['required'], original['allOf'][1]['required'])
 
     def test_complete_builder_refuses_convenience_draft_or_missing_observations(self):
         for value in ({}, {'schema': 'aws_c0_gate1_preparation_packet_draft/v1'},
-                      {'schema': 'aws_c0_preparation_packet/v4', 'instance_id': 'i-048bac00bdb540a4e'}):
+                      {'schema': 'aws_c0_preparation_packet/v5', 'instance_id': 'i-048bac00bdb540a4e'}):
             with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'complete packet field set'):
                 G.build(ROOT, value)
 
@@ -455,12 +455,232 @@ def reroot(record):
 
 def current_launch(record):
     result = copy.deepcopy(record)
-    result["schema"] = "aws_c0_launch_request/v5"
-    result["preparation_packet_identity"]["kind"] = "aws_c0_preparation_packet/v4"
-    result["preparation_authorization_identity"]["kind"] = "aws_c0_preparation_authorization/v3"
+    result["schema"] = "aws_c0_launch_request/v6"
+    result["preparation_packet_identity"]["kind"] = "aws_c0_preparation_packet/v5"
+    result["preparation_authorization_identity"]["kind"] = "aws_c0_preparation_authorization/v4"
     result["authority_audit_identity"]["kind"] = "aws_c0_audit_static_handoff_authority_audit/v4"
     result["static_validation_identity"]["kind"] = "aws_c0_material_runtime_static_validation/v4"
+    result["closure_seed_identity"]["kind"] = "aws_c0_closure_seed/v2"
     return reroot(result)
+
+
+class DeploymentSequenceTests(unittest.TestCase):
+    """Simulated observations only: these fixtures are never AWS evidence."""
+    @staticmethod
+    def control(kind, value, when):
+        raw=F.canonical_bytes(value)
+        return {'control_kind':kind,'identity':F.identity(F.CONTROL_IDENTITY_KINDS[kind],F.digest(raw)),
+                'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':when,
+                'authenticated_source_identity':F.identity(F.CONTROL_SOURCE_KINDS[kind],'a'*64)}
+
+    @staticmethod
+    def receipt(value, name):
+        raw=F.canonical_bytes(value)
+        return {'bucket_identity':F.identity('aws_s3_bucket/v1','b'*64),
+                'key':'rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/'+name+'.json',
+                'version_id':'offline-fixture-version-'+name,'bytes':len(raw),'sha256':F.digest(raw),
+                'checksum_sha256_base64':base64.b64encode(hashlib.sha256(raw).digest()).decode()}
+
+    @staticmethod
+    def iam(after):
+        names=['EBU-C0-Operator-492a4f1','EBU-Rehearsal-EC2-Role']
+        if after:names+=['EBU-C0-Corrected-StepFunctions-v1','EBU-C0-Corrected-Finalizer-v1']
+        return {'schema':'aws_c0_iam_policy_configuration/v1','roles':[
+            {'role_arn':'arn:aws:iam::623609441658:role/'+name,'trust_policy':{'Version':'2012-10-17','Statement':[]},
+             'inline_policies':{},'attached_managed_policies':[],'permissions_boundary':None,'tags':{},'max_session_duration':3600}
+            for name in sorted(names)]}
+
+    @staticmethod
+    def rebind(packet,auth,seed,launch):
+        launch['closure_seed_identity']=F.identity('aws_c0_closure_seed/v2',F.digest(F.canonical_bytes(seed)))
+        launch['closure_seed_object']=DeploymentSequenceTests.receipt(seed,'seed')
+        rooted=reroot(launch);launch.clear();launch.update(rooted)
+        packet['launch_request_identity']=F.identity('aws_c0_launch_request/v6',launch['record_sha256'])
+        packet['launch_request_object']=DeploymentSequenceTests.receipt(launch,'launch')
+        auth['live_packet_identity']=F.identity('aws_c0_live_packet/v6',F.digest(F.canonical_bytes(packet)))
+        auth['live_packet_object']=DeploymentSequenceTests.receipt(packet,'packet')
+        auth['statement_sha256']=F.digest(F._live_statement(auth).encode())
+
+    def material(self):
+        inputs=G.build_deployment_inputs(ROOT,(ROOT/'aws/c0/state-machine/aws-c0.asl.json').read_bytes(),
+            (ROOT/'aws/c0/ssm/EBU-C0-Start-v1.yaml').read_bytes(),
+            (ROOT/'aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml').read_bytes())
+        input_raw=F.canonical_bytes(inputs);input_id=F.identity('aws_c0_deployment_inputs/v1',F.digest(input_raw))
+        launch=current_launch(load('aws/c0/fixtures/launch-request.valid.json'))
+        seed={'schema':'aws_c0_closure_seed/v2','deployment_inputs_identity':input_id,
+              'deployment_inputs_canonical_json_base64':base64.b64encode(input_raw).decode(),
+              'state_machine_arn':inputs['state_machine_arn'],'attempt_identity':launch['attempt_identity']}
+        for index,sha in ((0,inputs['definition_source']['sha256']),(1,inputs['document_source']['sha256']),(7,inputs['template_sha256'])):
+            launch['artifact_version_receipts'][index]['sha256']=sha
+            launch['artifact_version_receipts'][index]['checksum_sha256_base64']=base64.b64encode(bytes.fromhex(sha)).decode()
+        pre={'change_set_arn':'arn:aws:cloudformation:us-east-1:623609441658:changeSet/EBU-C0-492a4f1/offline-fixture',
+             'stack_name':'EBU-C0-492a4f1','status':'CREATE_COMPLETE','execution_status':'AVAILABLE',
+             'template_sha256':inputs['template_sha256'],'parameters_identity':F.identity('aws_c0_parameters/v1','c'*64),
+             'effect_api_set_identity':F.identity('aws_c0_change_set_effect_api_set/v1','d'*64),
+             'effect_resource_set_identity':F.identity('aws_c0_change_set_effect_resource_set/v1','e'*64),
+             'expected_iam_after_identity':F.identity('aws_c0_planned_iam_policy_set/v1',F.digest(F.canonical_bytes(self.iam(True)))),
+             'observed_utc':'2026-09-06T18:00:00Z','request_id':'offline-pre-request'}
+        stable=['change_set_arn','stack_name','template_sha256','parameters_identity','effect_api_set_identity','effect_resource_set_identity']
+        post={k:pre[k] for k in stable}
+        post.update(execution_status='EXECUTE_COMPLETE',stack_status='CREATE_COMPLETE',execution_count=1,
+                    execute_request_id='offline-execute-request',stack_observation_request_id='offline-stack-request',
+                    execute_started_utc='2026-09-06T18:02:00Z',execute_completed_utc='2026-09-06T18:03:00Z',
+                    observed_utc='2026-09-06T18:04:00Z')
+        observed_workflow,observed_document=F._expected_deployed_controls(inputs,'1')
+        before={k:{'offline_fixture':k} for k in F.PREDEPLOYMENT_CONTROLS}
+        before.update(IAM_POLICY_SET=self.iam(False),CHANGE_SET_AND_EFFECTS=pre)
+        after=copy.deepcopy(before);after.update(IAM_POLICY_SET=self.iam(True),CHANGE_SET_AND_EFFECTS=post,
+            STANDARD_WORKFLOW=observed_workflow,SSM_DOCUMENT=observed_document)
+        packet={'schema':'aws_c0_live_packet/v6','observed_utc':'2026-09-06T18:00:00Z',
+                'deployment_inputs_identity':input_id,
+                'runtime_control_preimages':[self.control(k,before[k],'2026-09-06T18:00:00Z') for k in F.PREDEPLOYMENT_CONTROLS],
+                'change_set_identity':F.identity('aws_cloudformation_change_set/v1',F.digest(F.canonical_bytes(pre))),
+                'live_session_assumer_expires_utc':'2026-09-06T19:00:00Z',
+                'effect_api_set_identity':pre['effect_api_set_identity'],'effect_resource_set_identity':pre['effect_resource_set_identity']}
+        auth={'schema':'aws_c0_live_authorization/v6','observed_utc':'2026-09-06T18:05:00Z',
+              'deployment_inputs_identity':input_id,'deployment_authorized_utc':'2026-09-06T18:01:00Z',
+              'deployment_started_utc':'2026-09-06T18:02:00Z','deployment_completed_utc':'2026-09-06T18:03:00Z',
+              'execution_session_expires_utc':'2026-09-06T18:59:00Z',
+              'post_deployment_control_preimages':[self.control(k,after[k],'2026-09-06T18:04:00Z') for k in F.POST_DEPLOYMENT_CONTROLS],
+              'change_set_identity':packet['change_set_identity'],'account_identity':F.identity('aws_account/v1','1'*64),
+              'attempt_identity':launch['attempt_identity'],
+              'authenticated_source_identity':F.identity('aws_c0_operator_live_authorization_source/v1','2'*64)}
+        for field in ('live_session_assumer_identity','execution_operator_role_identity','execution_session_policy_identity',
+                      'execution_session_policy_ceiling_identity','execution_session_policy_subset_proof_identity','pass_role_scope_proof_identity'):
+            packet[field]=auth[field]=F.identity('offline_test_identity/v1','3'*64)
+        packet['execution_session_max_duration_seconds']=auth['execution_session_max_duration_seconds']=3600
+        self.rebind(packet,auth,seed,launch)
+        return packet,auth,seed,launch
+
+    def change_control(self,packet,auth,seed,launch,kind,mutate,post=True):
+        rows=auth['post_deployment_control_preimages'] if post else packet['runtime_control_preimages']
+        for i,row in enumerate(rows):
+            if row['control_kind']==kind:
+                value=F.strict_json(base64.b64decode(row['canonical_json_base64']))
+                mutate(value);rows[i]=self.control(kind,value,row['observed_utc'])
+                break
+        self.rebind(packet,auth,seed,launch)
+
+    def test_truthful_local_three_phase_positive_flow(self):
+        values=self.material()
+        result=F.validate_deployment_sequence(*values)
+        self.assertFalse(result['observed_deployed_resources'])
+        self.assertNotIn('state_machine_identity',values[2])
+        self.assertEqual(len(values[0]['runtime_control_preimages']),9)
+        self.assertEqual(len(values[1]['post_deployment_control_preimages']),11)
+        self.assertNotIn('ASSUME_EXACT_LIVE_SESSION',F._live_statement(values[1]))
+
+    def test_deployed_definition_role_logging_and_document_drift_refused(self):
+        mutations=[('STANDARD_WORKFLOW',lambda v:v.update(type='EXPRESS')),
+                   ('STANDARD_WORKFLOW',lambda v:v.update(roleArn='arn:aws:iam::623609441658:role/other')),
+                   ('STANDARD_WORKFLOW',lambda v:v['definition'].update(StartAt='other')),
+                   ('STANDARD_WORKFLOW',lambda v:v['loggingConfiguration'].update(level='OFF')),
+                   ('SSM_DOCUMENT',lambda v:v.update(DocumentVersion='planned-version')),
+                   ('SSM_DOCUMENT',lambda v:v['Content'].update(description='changed'))]
+        for kind,mutation in mutations:
+            values=self.material();self.change_control(*values,kind,mutation)
+            with self.subTest(kind=kind),self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+
+    def test_observations_must_follow_successful_exact_deployment(self):
+        for field,bad in [('change_set_arn','arn:aws:cloudformation:us-east-1:623609441658:changeSet/other/id'),
+                          ('execution_status','AVAILABLE'),('stack_status','ROLLBACK_COMPLETE'),('execution_count',2),
+                          ('execute_request_id',''),('template_sha256','0'*64),('execute_started_utc','2026-09-06T18:00:00Z')]:
+            values=self.material();self.change_control(*values,'CHANGE_SET_AND_EFFECTS',lambda v:v.update({field:bad}))
+            with self.subTest(field=field),self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+        for when in ('2026-09-06T18:02:00Z','2026-09-06T18:06:00Z'):
+            values=self.material();values[1]['post_deployment_control_preimages'][6]['observed_utc']=when
+            with self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+
+    def test_no_future_resource_receipt_or_retroactive_authority(self):
+        for mutation in (lambda p,a,s,l:s.update(state_machine_identity=F.identity('aws_step_functions_standard_state_machine/v1','4'*64)),
+                         lambda p,a,s,l:a.update(deployment_authorized_utc='2026-09-06T18:04:00Z'),
+                         lambda p,a,s,l:a['post_deployment_control_preimages'].pop(),
+                         lambda p,a,s,l:p['runtime_control_preimages'].append(a['post_deployment_control_preimages'][6])):
+            values=self.material();mutation(*values);self.rebind(*values)
+            with self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+
+    def test_wrong_source_kind_or_fabricated_digest_refused(self):
+        for field,bad in [('authenticated_source_identity',F.identity('made_up_observation_source/v1','a'*64)),
+                          ('identity',F.identity('aws_iam_policy_set/v1','a'*64)),
+                          ('identity',F.identity('', 'a'*64))]:
+            values=self.material();values[1]['post_deployment_control_preimages'][6][field]=bad
+            with self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+
+    def test_iam_plan_cannot_contain_future_role_id_or_change_existing_role(self):
+        for mutation in (lambda v:v['roles'][0].update(RoleId='not-yet-created'),
+                         lambda v:v['roles'][-1].update(tags={'changed':'yes'})):
+            values=self.material();self.change_control(*values,'IAM_POLICY_SET',mutation)
+            with self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+
+    def test_cross_record_and_exact_receipt_mismatch_refused_before_start(self):
+        for mutate in (lambda p,a,s,l:p.update(observed_utc='2026-09-06T18:00:01Z'),
+                       lambda p,a,s,l:a['live_packet_object'].update(version_id=''),
+                       lambda p,a,s,l:s.update(state_machine_arn='other'),
+                       lambda p,a,s,l:a.update(deployment_inputs_identity=F.identity('aws_c0_deployment_inputs/v1','f'*64))):
+            values=self.material();mutate(*values)
+            with self.assertRaises(F.Refusal):F.validate_deployment_sequence(*values)
+
+    def test_new_schema_derivation_is_offline_deterministic_and_keeps_history(self):
+        generator=module('scripts/build_aws_c0_sequence_schema.py','aws_c0_sequence_schema_builder')
+        self.assertEqual(generator.build(ROOT),load(generator.OUTPUT))
+        self.assertEqual(F.FROZEN_PRELIVE_OBJECT_COUNT,24);self.assertEqual(F.FROZEN_PRELIVE_PREDECESSOR_COUNT,23)
+        self.assertEqual(tuple(F.FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256),tuple(v for _,v in V.GATE1_LINEAGE_IN_ORDER))
+        self.assertEqual(F.FROZEN_PRELIVE_RECORD_KINDS[:6],tuple(k for k,_ in V.GATE1_LINEAGE_IN_ORDER))
+        seed_schema=G.record_schema(ROOT,'closure_seed')['allOf'][1]
+        self.assertNotIn('state_machine_identity',seed_schema['required'])
+        self.assertIn('deployment_inputs_identity',seed_schema['required'])
+        closure=G.record_schema(ROOT,'preparation_closure')['allOf'][1]
+        self.assertEqual(closure['properties']['final_runtime_control_preimages']['maxItems'],9)
+        self.assertEqual(G.record_schema(ROOT,'live_authorization')['allOf'][1]['properties']['post_deployment_control_preimages']['minItems'],11)
+
+    def test_runtime_rechecks_real_definition_and_document_before_instance_start(self):
+        packet,auth,seed,launch=self.material()
+        packet['iam_pagination_bounds']=launch['iam_pagination_bounds'];self.rebind(packet,auth,seed,launch)
+        inputs=F._seed_deployment_inputs(seed)
+        workflow,document=F._expected_deployed_controls(inputs,'1')
+        workflow['definition']=json.dumps(workflow['definition'],indent=2)+'\n'
+        document['Content']=json.dumps(document['Content'],indent=2)+'\n'
+        environment={'AWS_C0_EXPECTED_ACCOUNT_ID':'623609441658','AWS_C0_STATE_MACHINE_ARN':inputs['state_machine_arn'],
+            'AWS_C0_SSM_DOCUMENT_NAME':inputs['ssm_document_name'],'AWS_C0_SSM_DOCUMENT_VERSION':'1',
+            'AWS_C0_STATE_MACHINE_DEFINITION_SHA256':inputs['definition_source']['sha256'],
+            'AWS_C0_SSM_DOCUMENT_SHA256':inputs['document_source']['sha256']}
+        execution='arn:aws:states:us-east-1:623609441658:execution:ebu-c0-closure-synthetic-v1:'+launch['attempt_id']
+        for changed in (False,True):
+            current=copy.deepcopy(workflow)
+            if changed:current['roleArn']='arn:aws:iam::623609441658:role/unapproved'
+            with (mock.patch.object(F,'_env',side_effect=lambda name,*args:environment[name]),
+                  mock.patch.object(F,'_query',return_value=F.ET.fromstring('<Response><Account>623609441658</Account></Response>')),
+                  mock.patch.object(F,'_instance_state',return_value='stopped') as stopped,
+                  mock.patch.object(F,'_json_api',side_effect=[current,document]) as reads,
+                  mock.patch.object(F,'_aws_request',side_effect=AssertionError('no AWS allowed in local test'))):
+                if changed:
+                    with self.assertRaises(F.Refusal):F._runtime_preflight(packet,launch,execution,auth,seed)
+                else:F._runtime_preflight(packet,launch,execution,auth,seed)
+                stopped.assert_called_once();self.assertEqual(reads.call_count,2)
+
+    def test_active_template_and_record_producers_form_acyclic_sequence(self):
+        from graphlib import TopologicalSorter
+        template=load('aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml')
+        env=template['Resources']['FinalizerFunction']['Properties']['Environment']['Variables']
+        self.assertEqual(env['AWS_C0_CLOSURE_SEED_VERSION_ID'],{'Ref':'ClosureSeedVersionId'})
+        self.assertEqual(env['AWS_C0_LAUNCH_VERSION_ID'],{'Ref':'LaunchRequestVersionId'})
+        self.assertNotIn('StateMachineSha256',template['Parameters'])
+        self.assertEqual(env['AWS_C0_STATE_MACHINE_DEFINITION_SHA256'],{'Ref':'StateMachineDefinitionSha256'})
+        self.assertEqual(template['Resources']['StateMachine']['Properties']['DefinitionSubstitutions']['FinalizerFunctionArn'],
+                         {'Fn::GetAtt':['FinalizerFunction','Arn']})
+        inputs=G.build_deployment_inputs(ROOT,(ROOT/'aws/c0/state-machine/aws-c0.asl.json').read_bytes(),
+            (ROOT/'aws/c0/ssm/EBU-C0-Start-v1.yaml').read_bytes(),
+            (ROOT/'aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml').read_bytes())
+        self.assertFalse(inputs['observed_deployed_resources'])
+        graph={'input_artifacts':set(),'seed':{'input_artifacts'},'launch':{'seed','input_artifacts'},
+               'change_set':{'launch','seed'},'live_packet':{'change_set','launch'},'prior_authority':{'live_packet'},
+               'finalizer':{'prior_authority','launch','seed'},'workflow':{'finalizer'},
+               'observations':{'workflow'},'post_authorization':{'observations','live_packet','prior_authority'},
+               'start':{'post_authorization'}}
+        ordered=list(TopologicalSorter(graph).static_order())
+        self.assertLess(ordered.index('seed'),ordered.index('workflow'))
+        self.assertLess(ordered.index('observations'),ordered.index('post_authorization'))
+        G.jsonschema.Draft202012Validator.check_schema(load('aws_c0_deployment_sequence_evidence_schema.json'))
 
 
 class CanonicalTests(unittest.TestCase):
@@ -479,7 +699,7 @@ class CanonicalTests(unittest.TestCase):
         self.assertNotEqual(root_id, V.digest(V.canonical_bytes(launch)))
 
     def test_nonroot_self_digest_refused(self):
-        record = {"schema": "aws_c0_closure_seed/v1", "record_sha256": "0" * 64}
+        record = {"schema": "aws_c0_closure_seed/v2", "record_sha256": "0" * 64}
         with self.assertRaises(V.ValidationError): V.validate_nonroot(record, V.canonical_bytes(record), record["schema"])
 
     def test_identity_is_closed(self):
@@ -613,7 +833,7 @@ class LaunchTests(unittest.TestCase):
     def test_platform_smoke_first_capsule_binds_existing_success_launch_only(self):
         current = current_launch(self.launch)
         binding = C.build_platform_smoke_known_case_local_binding(current)
-        self.assertEqual(binding["schema"], "aws_c0_platform_smoke_known_case_local_binding/v2")
+        self.assertEqual(binding["schema"], "aws_c0_platform_smoke_known_case_local_binding/v3")
         self.assertEqual(binding["capsule_id"], "platform-smoke-known-case-v1")
         self.assertEqual(binding["test_case"], "SUCCESS_KNOWN_CASE")
         self.assertEqual(binding["budget_binding"]["ceiling_minor_units"], 5000)
@@ -651,16 +871,16 @@ class LaunchTests(unittest.TestCase):
 
 class Gate1LineageCorrectionTests(unittest.TestCase):
     @staticmethod
-    def packet(*, schema="aws_c0_live_packet/v5", count=24, predecessors=23):
-        packet = {field: None for field in F.LIVE_PACKET_V5_FIELDS}
+    def packet(*, schema="aws_c0_live_packet/v6", count=24, predecessors=23):
+        packet = {field: None for field in F.LIVE_PACKET_V6_FIELDS}
         packet.update({
             "schema": schema,
             "packet_disposition": "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED",
             "final_instance_state": "stopped",
             "pre_live_object_count": count,
             "pre_live_predecessor_object_receipts": [object() for _ in range(predecessors)],
-            "preparation_closure_identity": C.identity("aws_c0_preparation_closure/v4", "a" * 64),
-            "launch_request_identity": C.identity("aws_c0_launch_request/v5", "b" * 64),
+            "preparation_closure_identity": C.identity("aws_c0_preparation_closure/v5", "a" * 64),
+            "launch_request_identity": C.identity("aws_c0_launch_request/v6", "b" * 64),
             "observed_utc": "2026-09-04T00:00:00Z",
             "live_session_assumer_expires_utc": "2026-09-04T01:00:00Z",
         })
@@ -670,7 +890,7 @@ class Gate1LineageCorrectionTests(unittest.TestCase):
     def validate_packet(packet):
         with (mock.patch.object(F, "_common"), mock.patch.object(F, "_identity"),
               mock.patch.object(F, "_bound_base64")):
-            F._validate_live_packet_v5(packet)
+            F._validate_live_packet_v6(packet)
 
     def test_c0_g1_lineage_n01_stale_launch_version_refused(self):
         launch = current_launch(load("aws/c0/fixtures/launch-request.valid.json"))
@@ -684,10 +904,10 @@ class Gate1LineageCorrectionTests(unittest.TestCase):
             self.validate_packet(self.packet(schema="aws_c0_live_packet/v4"))
 
     def test_c0_g1_lineage_n03_stale_live_authorization_version_refused(self):
-        auth = {field: None for field in F.LIVE_AUTH_V5_FIELDS}
+        auth = {field: None for field in F.LIVE_AUTH_V6_FIELDS}
         auth["schema"] = "aws_c0_live_authorization/v4"
         with self.assertRaises(F.Refusal):
-            F._validate_live_authorization_v5(auth)
+            F._validate_live_authorization_v6(auth)
 
     def test_c0_g1_lineage_n04_stale_21_object_count_refused(self):
         with self.assertRaises(F.Refusal):
@@ -716,12 +936,12 @@ class Gate1LineageCorrectionTests(unittest.TestCase):
         records = coordinates[8:]
         packet = self.packet()
         packet["pre_live_predecessor_object_receipts"] = artifacts + records
-        auth = {"live_packet_identity": C.identity("aws_c0_live_packet/v5", "c" * 64)}
+        auth = {"live_packet_identity": C.identity("aws_c0_live_packet/v6", "c" * 64)}
         stale = V.canonical_bytes({"schema": "aws_c0_operator_bootstrap_packet/v4"})
         with (mock.patch.object(F, "_fetch_receipt", side_effect=[
                   (packet, b"", "c" * 64), (auth, b"", "d" * 64)]),
-              mock.patch.object(F, "_validate_live_packet_v5"),
-              mock.patch.object(F, "_validate_live_authorization_v5"),
+              mock.patch.object(F, "_validate_live_packet_v6"),
+              mock.patch.object(F, "_validate_live_authorization_v6"),
               mock.patch.object(F, "_receipt", side_effect=lambda value: value),
               mock.patch.object(F, "_bucket_from_receipt", return_value="bucket"),
               mock.patch.object(F, "_s3_get", return_value=stale)):
@@ -1169,7 +1389,7 @@ class RuntimeContractTests(unittest.TestCase):
         terminal_put = closure.index('"evidence/final-manifest"')
         self.assertEqual(closure.count('"evidence/final-manifest"'), 1)
         self.assertNotIn("_put_record(", closure[terminal_put + 1:])
-        self.assertIn('"aws_c0_final_manifest_publication_observation/v3"', closure[terminal_put:])
+        self.assertIn('"aws_c0_final_manifest_publication_observation/v4"', closure[terminal_put:])
         self.assertIn('"final_manifest_publication_observation_object": None', closure[terminal_put:])
 
     def test_finalizer_journal_conditional_publish_and_exact_readback_are_injected(self):
@@ -1213,7 +1433,7 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertIn("OBSERVED_FAILURE", request)
 
     def test_runtime_bundle_binds_sealed_controller_journal_and_readback(self):
-        sidecar = {"kind": "aws_c0_source_sidecar/v4", "sha256": "a" * 64, "value": "a" * 64}
+        sidecar = {"kind": "aws_c0_source_sidecar/v5", "sha256": "a" * 64, "value": "a" * 64}
         dispatch = {"kind": "aws_c0_ssm_dispatch_request/v2", "sha256": "b" * 64, "value": "b" * 64}
         journal = {"kind": "aws_c0_controller_capture_journal/v1", "sha256": "c" * 64, "value": "c" * 64}
         readback = {"schema": "aws_c0_controller_journal_authenticated_readback/v1",
@@ -1226,7 +1446,7 @@ class RuntimeContractTests(unittest.TestCase):
             source_sidecar_identity=sidecar, source_sidecar_bytes=b"sidecar", dispatch_identity=dispatch,
             controller_capture_journal_identity=journal,
             controller_capture_journal_authenticated_readback=readback)
-        self.assertEqual(bundle["schema"], "aws_c0_runtime_start_attestation_bundle/v3")
+        self.assertEqual(bundle["schema"], "aws_c0_runtime_start_attestation_bundle/v4")
         self.assertEqual(bundle["controller_capture_journal_identity"], journal)
 
     def test_ssm_embedded_is_structurally_identical(self):
@@ -1302,7 +1522,7 @@ class RuntimeContractTests(unittest.TestCase):
     def test_controller_claim_precedes_start(self):
         source=(ROOT/"aws/c0/controller/ebu_c0_controller.py").read_text()
         claim=source.index("attempt-claim-")
-        self.assertLess(claim,source.index('aws_c0_start_receipt/v6',claim))
+        self.assertLess(claim,source.index('aws_c0_start_receipt/v7',claim))
 
     def test_service_has_only_needed_dac_capability(self):
         unit=(ROOT/"aws/c0/controller/ebu-c0@.service").read_text()
