@@ -115,10 +115,17 @@ def build(root=ROOT):
                   'then':{'properties':{'policy':{'type':'null'},'policy_receipt':{'properties':{'http_status':{'const':404}}}}},
                   'else':{'properties':{'policy':{'type':'object'},'policy_receipt':{'properties':{'http_status':{'const':200}}}}}}]}
     definitions['r51_result']={'$ref':'#/$defs/r51_policy_result_v2'}
+    helper_fields={'schema':{'const':'aws_c0_controller_local_helper_request/v1'},
+        'operation':{'enum':['STATUS','SAFE_CLOSE']},
+        'start_dispatch_request':{'$ref':include('aws_c0_audit_static_publication_handoff_correction_evidence_schema.json','ssm_dispatch_request_v2')},
+        'attempt_deadline_utc':{'$ref':time_ref}}
+    definitions['local_helper_request_v1']={'type':'object','required':list(helper_fields),
+        'properties':helper_fields,'additionalProperties':False}
+    definitions['ssm_local_helper_request']={'$ref':'#/$defs/local_helper_request_v1'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

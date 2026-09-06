@@ -3,6 +3,17 @@
   "readiness_disposition": "NOT_READY_FULL_PUBLIC_ENTRY_SCHEMA_GATE_FAILS",
   "independent_review_disposition": "NOT_APPROVED",
   "aws_continuation_permitted_by_validation": false,
+  "prospective_local_helper_transport": {
+    "kind": "aws_c0_controller_local_helper_request/v1",
+    "operations": ["STATUS", "SAFE_CLOSE"],
+    "embedded_start_kind": "aws_c0_ssm_dispatch_request/v2",
+    "semantic_parameter_count": 21,
+    "transport_parameter_count": 2,
+    "independent_local_source_and_launch_deadline_required": true,
+    "shorter_launch_and_instance_limits_preserved": true,
+    "runtime_attachment_complete": false,
+    "cloud_readiness_claimed": false
+  },
   "overnight_start_interface_scope": {
     "verified_source_user_turn": "01a0788e-15f2-79d3-a26b-66c0cd65fff5",
     "additional_local_readiness_path": "aws/c0/ssm/EBU-C0-Start-v1.yaml",

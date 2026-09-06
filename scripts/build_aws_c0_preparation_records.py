@@ -236,6 +236,30 @@ def build_ssm_dispatch_transport_v2(root,semantic_parameters,attempt_identity,do
             'semantic_parameters':copy.deepcopy(semantic_parameters),'transport_parameters':transport,
             'send_command_parameters':parameters}
 
+def build_local_helper_transport_v1(root,start_dispatch_request,operation,attempt_deadline_utc):
+    """Plan helper-only transport within the original 21+2 parameter slots.
+
+    No SSM delivery, local status or safe-close success is asserted by a plan.
+    The runtime must independently compare the embedded START with its bound
+    local source and check the actual clock/deadline before using this request.
+    """
+    validate_start=build_ssm_dispatch_transport_v2(root,start_dispatch_request['semantic_parameters'],
+        start_dispatch_request['attempt_identity'],start_dispatch_request['document_version'])
+    if validate_start['dispatch_request_preimage']!=start_dispatch_request:
+        raise ValueError('exact accepted START request required for helper plan')
+    record={'schema':'aws_c0_controller_local_helper_request/v1','operation':operation,
+        'start_dispatch_request':copy.deepcopy(start_dispatch_request),'attempt_deadline_utc':attempt_deadline_utc}
+    validate_record(root,'ssm_local_helper_request',record)
+    f=finalizer(root);earliest=f._utc(start_dispatch_request['semantic_parameters']['SsmExpectedCommandNotBeforeUtc'][0])
+    if not 0<(f._utc(attempt_deadline_utc)-earliest).total_seconds()<=43200:
+        raise ValueError('helper plan must remain inside bounded attempt interval')
+    raw=canonical(record)
+    if len(raw)>16384:raise ValueError('helper plan exceeds transport bound')
+    transport={'SsmDispatchRequestCanonicalJsonBase64':[base64.b64encode(raw).decode()],
+               'SsmDispatchRequestSha256':[sha(raw)]}
+    return {'helper_request':record,'helper_request_identity':identity(record['schema'],record),
+            'transport_parameters':transport,'send_command_parameters':{**copy.deepcopy(start_dispatch_request['semantic_parameters']),**transport}}
+
 def build_sealed_role_launch_fields(root,snapshot_bytes,receipts,*,earliest,latest,
                                    caller_identity,authentication_source_identity):
     """Construct the accepted role context from real, existing-resource reads.

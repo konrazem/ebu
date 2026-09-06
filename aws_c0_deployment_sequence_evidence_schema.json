@@ -26,6 +26,9 @@
     },
     {
       "$ref": "#/$defs/r51_result"
+    },
+    {
+      "$ref": "#/$defs/ssm_local_helper_request"
     }
   ],
   "$defs": {
@@ -48851,6 +48854,289 @@
     },
     "r51_result": {
       "$ref": "#/$defs/r51_policy_result_v2"
+    },
+    "d242_ssm_dispatch_request_v2": {
+      "type": "object",
+      "required": [
+        "schema",
+        "document_name",
+        "document_version",
+        "target_instance_id",
+        "attempt_identity",
+        "semantic_parameters"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_ssm_dispatch_request/v2"
+        },
+        "document_name": {
+          "const": "EBU-C0-Start-v1"
+        },
+        "document_version": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "target_instance_id": {
+          "const": "i-048bac00bdb540a4e"
+        },
+        "attempt_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d35_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_attempt/v1"
+                }
+              }
+            }
+          ]
+        },
+        "semantic_parameters": {
+          "$ref": "#/$defs/d243_semantic_parameters"
+        }
+      },
+      "additionalProperties": false
+    },
+    "d243_semantic_parameters": {
+      "type": "object",
+      "required": [
+        "ArtifactBucket",
+        "ArtifactPrefix",
+        "LaunchRequestKey",
+        "LaunchRequestVersionId",
+        "LaunchRequestSha256",
+        "LaunchRequestBytes",
+        "LivePacketKey",
+        "LivePacketVersionId",
+        "LivePacketSha256",
+        "LivePacketBytes",
+        "LiveAuthorizationKey",
+        "LiveAuthorizationVersionId",
+        "LiveAuthorizationSha256",
+        "LiveAuthorizationBytes",
+        "RehearsalId",
+        "AttemptId",
+        "Region",
+        "WorkflowExecutionArn",
+        "SsmClientRequestToken",
+        "SsmExpectedCommandNotBeforeUtc",
+        "SsmExpectedCommandNotAfterUtc"
+      ],
+      "properties": {
+        "ArtifactBucket": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ArtifactPrefix": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LaunchRequestSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/d36_sha256"
+          }
+        },
+        "LaunchRequestBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "LivePacketKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LivePacketVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LivePacketSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/d36_sha256"
+          }
+        },
+        "LivePacketBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "LiveAuthorizationKey": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LiveAuthorizationVersionId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "LiveAuthorizationSha256": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/d36_sha256"
+          }
+        },
+        "LiveAuthorizationBytes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          }
+        },
+        "RehearsalId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "AttemptId": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "Region": {
+          "const": [
+            "us-east-1"
+          ]
+        },
+        "WorkflowExecutionArn": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^arn:aws:states:us-east-1:[0-9]{12}:execution:"
+          }
+        },
+        "SsmClientRequestToken": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{8,64}$"
+          }
+        },
+        "SsmExpectedCommandNotBeforeUtc": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/d44_timestamp"
+          }
+        },
+        "SsmExpectedCommandNotAfterUtc": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/d44_timestamp"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "local_helper_request_v1": {
+      "type": "object",
+      "required": [
+        "schema",
+        "operation",
+        "start_dispatch_request",
+        "attempt_deadline_utc"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_controller_local_helper_request/v1"
+        },
+        "operation": {
+          "enum": [
+            "STATUS",
+            "SAFE_CLOSE"
+          ]
+        },
+        "start_dispatch_request": {
+          "$ref": "#/$defs/d242_ssm_dispatch_request_v2"
+        },
+        "attempt_deadline_utc": {
+          "$ref": "#/$defs/d4_timestamp"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ssm_local_helper_request": {
+      "$ref": "#/$defs/local_helper_request_v1"
     }
   }
 }

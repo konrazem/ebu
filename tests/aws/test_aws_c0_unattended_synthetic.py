@@ -434,6 +434,64 @@ class SsmDispatchInterfaceTests(unittest.TestCase):
         self.assertEqual(C.validate_ssm_dispatch_v2(parsed),result['dispatch_request_preimage'])
 
 
+class LocalHelperTransportTests(unittest.TestCase):
+    def material(self,operation='STATUS'):
+        args,start,_=SsmDispatchInterfaceTests().material()
+        deadline='2026-09-06T18:15:00Z'
+        helper=G.build_local_helper_transport_v1(ROOT,start['dispatch_request_preimage'],operation,deadline)
+        context={'semantic_parameters':start['semantic_parameters'],'expected_start_dispatch':start['dispatch_request_preimage'],
+            'attempt_deadline_utc':deadline,'now':C.dt.datetime(2026,9,6,18,2,tzinfo=C.dt.timezone.utc)}
+        return args,helper,context
+
+    def test_helper_plan_is_distinct_closed_and_has_no_start_or_aws_effect(self):
+        for operation in ('STATUS','SAFE_CLOSE'):
+            args,helper,context=self.material(operation)
+            with (mock.patch.object(C,'bootstrap_imdsv2_credentials',side_effect=AssertionError('no credentials')),
+                  mock.patch.object(C,'_download',side_effect=AssertionError('no network')),
+                  mock.patch.object(C,'prepare_request',side_effect=AssertionError('no preparation')),
+                  mock.patch.object(C,'_run',side_effect=AssertionError('no external command'))):
+                self.assertEqual(C.validate_local_helper_request_v1(helper['helper_request'],**context),helper['helper_request'])
+            self.assertEqual(len(helper['send_command_parameters']),23)
+            self.assertEqual(helper['send_command_parameters'].keys(),{*context['semantic_parameters'],*helper['transport_parameters']})
+            G.validate_record(ROOT,'ssm_local_helper_request',helper['helper_request'])
+            args.ssm_dispatch_request_canonical_json_base64=helper['transport_parameters']['SsmDispatchRequestCanonicalJsonBase64'][0]
+            args.ssm_dispatch_request_sha256=helper['transport_parameters']['SsmDispatchRequestSha256'][0]
+            with self.assertRaisesRegex(C.Refusal,'full SSM dispatch'):C.validate_ssm_dispatch_v2(args)
+
+    def test_unknown_start_extra_fields_and_cross_attempt_refused(self):
+        for mutate in (lambda d:d.update(operation='START'),lambda d:d.update(operation='RUN_SCIENCE'),
+                       lambda d:d.update(schema='aws_c0_ssm_dispatch_request/v2'),lambda d:d.update(extra=True),
+                       lambda d:d['start_dispatch_request'].update(document_version='2'),
+                       lambda d:d['start_dispatch_request'].update(attempt_identity=C.identity('aws_c0_attempt/v1','c'*64))):
+            _,helper,context=self.material();record=helper['helper_request'];mutate(record)
+            with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(record,**context)
+
+    def test_expired_early_extended_and_noncanonical_deadlines_refused(self):
+        _,helper,context=self.material()
+        for now in (C.dt.datetime(2026,9,6,17,59,tzinfo=C.dt.timezone.utc),
+                    C.dt.datetime(2026,9,6,18,15,tzinfo=C.dt.timezone.utc),
+                    C.dt.datetime(2026,9,6,18,16,tzinfo=C.dt.timezone.utc),C.dt.datetime(2026,9,6,18,2)):
+            with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(helper['helper_request'],**{**context,'now':now})
+        for deadline in ('2026-09-06T18:16:00Z','2026-09-06T18:15:00.0Z'):
+            record={**helper['helper_request'],'attempt_deadline_utc':deadline}
+            with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(record,**context)
+        for deadline in ('2026-09-07T18:15:00Z','2026-09-06T17:00:00Z'):
+            with self.assertRaises(ValueError):
+                G.build_local_helper_transport_v1(ROOT,context['expected_start_dispatch'],'STATUS',deadline)
+
+    def test_invalid_expected_semantics_cannot_validate_themselves(self):
+        for bad in ({}, {'ArtifactBucket':['valid-bucket']}):
+            _,helper,context=self.material();record=helper['helper_request']
+            record['start_dispatch_request']['semantic_parameters']=bad
+            context['expected_start_dispatch']['semantic_parameters']=bad;context['semantic_parameters']=bad
+            with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(record,**context)
+        for value in ([1234],['01234'],['1','2'],[True]):
+            _,helper,context=self.material();record=helper['helper_request']
+            for params in (record['start_dispatch_request']['semantic_parameters'],context['expected_start_dispatch']['semantic_parameters'],context['semantic_parameters']):
+                params['LaunchRequestBytes']=value
+            with self.assertRaises(C.Refusal):C.validate_local_helper_request_v1(record,**context)
+
+
 class JournalSourceContractDiagnosticTests(unittest.TestCase):
     def material(self):
         schema=load('aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json')

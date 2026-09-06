@@ -219,6 +219,25 @@ unrelated path is still refused. Both targeted path tests and both affected
 audit-v4/static-v4 public-entry tests pass after this scope-binding correction.
 This does not convert the unresolved complete-public-gate error to a pass.
 
+### Separate helper request transport component
+
+The prospective `aws_c0_controller_local_helper_request/v1` is now a pure local
+plan/validator for STATUS or SAFE_CLOSE only, never START. It embeds the exact
+unchanged dispatch/v2 START request and a launch-bound attempt deadline. The
+runtime validator requires separate expected START/deadline inputs, validates
+the complete singleton-array semantics, and refuses early, expired, extended,
+noncanonical or cross-attempt requests. The maximum interval is the existing
+43200-second workflow bound, not a relaxation of any shorter launch or instance
+budget. Helper envelopes reuse the existing two transport slots; all 21 semantic
+parameters remain unchanged and the START validator rejects helper types.
+
+Four helper tests plus the five START tests pass (9/9). The existing reviewer
+APPROVED this pure component for a partial NOT_READY commit, not runtime use.
+Actual base64/hash decoding from helper argv, independently bound local-source
+loading, local status/marker actions, SSM branches and ASL wiring are still
+required. No helper has been sent or executed, no credential flow invoked, no
+AWS resource touched, and no historical schema changed.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits

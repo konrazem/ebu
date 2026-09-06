@@ -310,6 +310,25 @@ def ssm_semantic_parameters_from_argv(args: argparse.Namespace) -> dict[str, lis
     return {aws_name: [str(values[name])] for name, aws_name in zip(SEMANTIC21, SSM_SEMANTIC_NAMES)}
 
 
+def validate_ssm_semantic_parameters(parameters: Any) -> dict[str, list[str]]:
+    if not isinstance(parameters, dict) or set(parameters) != set(SSM_SEMANTIC_NAMES):
+        raise Refusal("exact 21 SSM semantic parameter names required")
+    arguments = {}
+    for name, aws_name in zip(SEMANTIC21, SSM_SEMANTIC_NAMES):
+        values = parameters[aws_name]
+        if not isinstance(values, list) or len(values) != 1 or not isinstance(values[0], str) or not values[0]:
+            raise Refusal("SSM parameters must be nonempty singleton string arrays")
+        value = values[0]
+        if name.endswith('_bytes'):
+            if not re.fullmatch(r'[1-9][0-9]{0,18}', value):
+                raise Refusal("SSM byte count must be a canonical positive integer string")
+            value = int(value)
+        arguments['bucket' if name == 'artifact_bucket' else name] = value
+    if ssm_semantic_parameters_from_argv(argparse.Namespace(**arguments)) != parameters:
+        raise Refusal("SSM semantic normalization mismatch")
+    return parameters
+
+
 def validate_ssm_dispatch_record_v2(record: Any, *, semantic_parameters: dict[str, list[str]]) -> dict[str, Any]:
     """Validate the complete accepted START envelope, not a bare scalar map."""
     required = {'schema', 'document_name', 'document_version', 'target_instance_id', 'attempt_identity', 'semantic_parameters'}
@@ -318,6 +337,7 @@ def validate_ssm_dispatch_record_v2(record: Any, *, semantic_parameters: dict[st
     if (record['document_name'] != 'EBU-C0-Start-v1' or record['target_instance_id'] != INSTANCE_ID
             or not isinstance(record['document_version'], str) or not re.fullmatch(r'[1-9][0-9]{0,9}', record['document_version'])):
         raise Refusal("SSM exact document/version/instance mismatch")
+    validate_ssm_semantic_parameters(semantic_parameters)
     _identity_field(record, 'attempt_identity', 'aws_c0_attempt/v1')
     if record['semantic_parameters'] != semantic_parameters:
         raise Refusal("SSM transport semantics differ from explicit argv")
@@ -335,6 +355,37 @@ def validate_ssm_dispatch_v2(args: argparse.Namespace) -> dict[str, Any]:
     if len(decoded) > 16384 or args.ssm_dispatch_request_sha256 != digest(decoded):
         raise Refusal("SSM transport pair derivation mismatch")
     return validate_ssm_dispatch_record_v2(strict_json(decoded), semantic_parameters=semantic)
+
+
+def validate_local_helper_request_v1(record: Any, *, semantic_parameters: dict[str, list[str]],
+                                     expected_start_dispatch: dict[str, Any], attempt_deadline_utc: str,
+                                     now: dt.datetime) -> dict[str, Any]:
+    """Pure helper-only validation; no preparation, credentials or execution.
+
+    STATUS and SAFE_CLOSE inherit the exact already accepted START coordinates.
+    The caller must obtain expected_start_dispatch and the deadline from the
+    bound local source/launch, not from the helper request being checked.
+    """
+    fields = {'schema', 'operation', 'start_dispatch_request', 'attempt_deadline_utc'}
+    if (not isinstance(record, dict) or set(record) != fields
+            or record['schema'] != 'aws_c0_controller_local_helper_request/v1'
+            or record['operation'] not in ('STATUS', 'SAFE_CLOSE')):
+        raise Refusal("closed helper-only request required; START is not a helper")
+    if len(canonical_bytes(record)) > 16384:
+        raise Refusal("local helper request exceeds bounded transport")
+    validate_ssm_dispatch_record_v2(expected_start_dispatch, semantic_parameters=semantic_parameters)
+    if record['start_dispatch_request'] != expected_start_dispatch:
+        raise Refusal("helper does not bind exact accepted START request")
+    deadline = record['attempt_deadline_utc']
+    if (not isinstance(deadline, str) or deadline != attempt_deadline_utc
+            or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z', deadline)):
+        raise Refusal("helper attempt deadline differs from bound launch")
+    earliest = _utc(semantic_parameters['SsmExpectedCommandNotBeforeUtc'][0])
+    end = _utc(deadline)
+    if (not isinstance(now, dt.datetime) or now.tzinfo != dt.timezone.utc
+            or not earliest <= now < end or not 0 < (end - earliest).total_seconds() <= 43200):
+        raise Refusal("helper outside bounded attempt interval")
+    return record
 
 
 def bind_ssm_dispatch_to_authenticated_sources(dispatch: dict[str, Any], launch: dict[str, Any],
