@@ -209,6 +209,16 @@ The source-sidecar, short local helpers, ASL architecture, full publication and
 journal proof attachments and complete public gate remain NOT_READY. The
 controller does not treat this component approval as smoke readiness.
 
+Post-commit validation at `6e658fa` ran 147 tests: 143 passed, two failed and two
+errored, with zero skips/expected failures. Three failures shared the exact-path
+gate's older omission of the newly authorized SSM-document repair; the fourth
+was the existing complete-public-gate error. The prospective path enumeration
+now adds only that exact SSM path under the verified overnight source authority.
+Historical Gate 1 exclusions remain unchanged, and a negative test proves an
+unrelated path is still refused. Both targeted path tests and both affected
+audit-v4/static-v4 public-entry tests pass after this scope-binding correction.
+This does not convert the unresolved complete-public-gate error to a pass.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits

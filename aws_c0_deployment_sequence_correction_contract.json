@@ -3,6 +3,16 @@
   "readiness_disposition": "NOT_READY_FULL_PUBLIC_ENTRY_SCHEMA_GATE_FAILS",
   "independent_review_disposition": "NOT_APPROVED",
   "aws_continuation_permitted_by_validation": false,
+  "overnight_start_interface_scope": {
+    "verified_source_user_turn": "01a0788e-15f2-79d3-a26b-66c0cd65fff5",
+    "additional_local_readiness_path": "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+    "historical_gate1_scope_changed": false,
+    "semantic_parameter_count": 21,
+    "transport_parameter_count": 2,
+    "initial_start_envelope_kind": "aws_c0_ssm_dispatch_request/v2",
+    "historical_schema_changed": false,
+    "cloud_readiness_claimed": false
+  },
   "local_source_proof_blocker": {
     "disposition": "NOT_READY_CONFIRMED_ASL_HELPER_ARCHITECTURE_CONFLICT",
     "r51_component_disposition": "INDEPENDENTLY_APPROVED_AT_4449418",

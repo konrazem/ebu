@@ -1197,6 +1197,17 @@ class AuthorityTests(unittest.TestCase):
     def test_frozen_arithmetic(self): V.validate_authorities()
     def test_exact_paths_and_modes(self): V.validate_paths()
 
+    def test_overnight_scope_addition_remains_exact_and_refuses_unrelated_paths(self):
+        self.assertIn('aws/c0/ssm/EBU-C0-Start-v1.yaml',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
+        self.assertIn('aws/c0/ssm/EBU-C0-Start-v1.yaml',V.GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS)
+        original=V._git
+        def injected(*args,**kwargs):
+            value=original(*args,**kwargs)
+            if args[:2]==('diff','--name-only'):return value+'\nunauthorized-local-path.py'
+            return value
+        with mock.patch.object(V,'_git',side_effect=injected):
+            with self.assertRaisesRegex(V.ValidationError,'path gate differs'):V.validate_paths()
+
     def test_66_84_108(self):
         counts = []
         for path in V.VALIDATION_PATHS:
