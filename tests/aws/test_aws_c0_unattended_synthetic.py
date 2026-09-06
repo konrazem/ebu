@@ -318,6 +318,18 @@ class AuthorityTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             V.main(["--mode", "static-v3"])
 
+    def test_local_deployment_manifest_refuses_checkout_byte_conversion(self):
+        original_read = Path.read_bytes
+        targets = [path for _, path in D.ARTIFACTS] + [D.FINALIZER_SOURCE]
+        for target in targets:
+            with self.subTest(target=target):
+                def converted(path):
+                    data = original_read(path)
+                    return data.replace(b'\n', b'\r\n') if path == ROOT / target else data
+                with mock.patch.object(Path, 'read_bytes', autospec=True, side_effect=converted):
+                    with self.assertRaisesRegex(ValueError, 'exact committed bytes'):
+                        D.build(ROOT)
+
     def test_local_deployment_manifest_is_deterministic_and_leaves_aws_values_unresolved(self):
         first = D.build(ROOT)
         second = D.build(ROOT)

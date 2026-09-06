@@ -72,11 +72,25 @@ def finalizer_zip_bytes(source: bytes) -> bytes:
 
 
 def build(root: Path) -> dict[str, object]:
+    commit = git(root, "rev-parse", "HEAD")
+    tree = git(root, "rev-parse", commit + "^{tree}")
+
+    def source_bytes(relative_path: str) -> bytes:
+        result = subprocess.run(["git", "show", f"{commit}:{relative_path}"], cwd=root,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode:
+            raise ValueError(f"cannot read committed artifact: {relative_path}")
+        data = (root / relative_path).read_bytes()
+        if data != result.stdout:
+            raise ValueError(f"artifact must match exact committed bytes: {relative_path}; "
+                             "checkout conversion or edits detected")
+        return data
+
     records = []
     for kind, relative_path in ARTIFACTS:
-        data = (root / relative_path).read_bytes()
+        data = source_bytes(relative_path)
         records.append({"kind": kind, "path": relative_path, "byte_count": len(data), "sha256": sha256(data)})
-    source = (root / FINALIZER_SOURCE).read_bytes()
+    source = source_bytes(FINALIZER_SOURCE)
     archive = finalizer_zip_bytes(source)
     records.append({
         "kind": "finalizer_zip", "path": "finalizer.zip", "source_path": FINALIZER_SOURCE,
@@ -85,8 +99,8 @@ def build(root: Path) -> dict[str, object]:
     })
     return {
         "schema": "aws_c0_local_deployment_material_manifest/v1",
-        "repository_commit": git(root, "rev-parse", "HEAD"),
-        "repository_tree": git(root, "rev-parse", "HEAD^{tree}"),
+        "repository_commit": commit,
+        "repository_tree": tree,
         "offline_only": True,
         "artifacts": records,
         "unresolved_external_inputs": list(UNRESOLVED_EXTERNAL_INPUTS),

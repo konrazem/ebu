@@ -774,6 +774,13 @@ the bucket identity, S3 VersionIds and receipts, current pricing observations,
 retained-host image digest, and change-set identity unresolved.  Those are
 authenticated AWS observations and must never be replaced by local defaults.
 
+Every deployable source must also match the raw Git blob at the manifest's
+single captured commit. A clean Windows worktree with automatic LF-to-CRLF
+checkout conversion is not sufficient: converted bytes refuse before a
+manifest is emitted. Build image inputs from exact Git bytes, and compare the
+archived worker to that Git blob before staging. Preserve rejected packages;
+rebuilding requires new archive/image digests, not relabeling old bytes.
+
 The first external authority required to create the missing stack is a fresh
 Gate 1 preparation authorization using the exact preserved grammar below,
 after a fresh constrained preparation session and read-only inventory have
