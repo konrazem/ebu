@@ -58,6 +58,95 @@ class CompletePreparationBuilderTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(ValueError): G.canonical(value)
         self.assertEqual(G.canonical({'b': 2, 'a': 1}), b'{"a":1,"b":2}')
 
+class PhaseObligationProducerTests(unittest.TestCase):
+    """Explicit offline API-shaped fixtures; never actual AWS observations."""
+    def material(self,phase='PREDEPLOYMENT'):
+        plan=G.build_phase_obligation_plan(ROOT)
+        caller=F.identity('aws_sts_role_session/v1','a'*64)
+        source=F.identity('aws_authenticated_api_source/v1','b'*64)
+        interval=dict(earliest='2026-09-06T18:00:00Z',latest='2026-09-06T18:01:00Z',
+                      caller_identity=caller,authentication_source_identity=source)
+        observations={};conditions={}
+        for row in plan['rows']:
+            row_id=row['id'];conditions[row_id]=row['call_requirement']=='ALWAYS'
+            if G.PHASES.index(phase)<G.PHASES.index(G.obligation_phase(row_id)) or not conditions[row_id]:continue
+            raw=F.canonical_bytes({'offline_fixture':True,'row_id':row_id})
+            observations[row_id]={'row_id':row_id,'action':row['action'],'resource_selector':row['resource_selector'],
+                'caller_identity':caller,'authentication_source_identity':source,
+                'request_canonical_json_base64':base64.b64encode(raw).decode(),'request_sha256':F.digest(raw),
+                'response_canonical_json_base64':base64.b64encode(raw).decode(),'response_sha256':F.digest(raw),
+                'http_status':200,'request_id':'offline-'+row_id,'requested_utc':interval['earliest'],
+                'completed_utc':interval['latest'],'pagination_page':1,'pagination_item_count':1,
+                'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+                'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+        return plan,phase,observations,conditions,interval
+
+    def build(self,values):
+        return G.build_phase_observation_set(ROOT,*values[:4],**values[4])
+
+    def test_plan_preserves_all_63_actions_resources_conditions_and_order(self):
+        source=json.loads((ROOT/'aws_c0_material_identity_runtime_validation_correction_contract.json').read_bytes())
+        plan=G.build_phase_obligation_plan(ROOT)
+        self.assertEqual(plan['rows'],source['sealed_read_plan']['rows'])
+        self.assertFalse(plan['planned_inputs_are_observed_receipts'])
+        self.assertEqual(len(plan['rows']),63)
+
+    def test_partial_phase_is_never_a_complete_reconstruction(self):
+        for phase in G.PHASES:
+            result=self.build(self.material(phase))
+            self.assertEqual(len(result['rows_in_order']),63)
+            self.assertFalse(result['complete_reconstruction_claimed'])
+            r37=result['rows_in_order'][36]
+            expected='NOT_YET_PRODUCED' if G.PHASES.index(phase)<2 else 'CALLED'
+            self.assertEqual(r37['state'],expected)
+            if expected=='NOT_YET_PRODUCED':
+                self.assertIsNone(r37['called_receipt']);self.assertIsNone(r37['condition_evaluated'])
+
+    def test_future_receipt_and_disabled_always_obligation_refused(self):
+        values=self.material();later=self.material('EXECUTION_PREFLIGHT')
+        values[2]['R37']=later[2]['R37']
+        with self.assertRaisesRegex(ValueError,'precedes required producer'):self.build(values)
+        values=self.material();values[3]['R37']=False
+        with self.assertRaisesRegex(ValueError,'ALWAYS obligation'):self.build(values)
+
+    def test_every_ssm_document_object_read_requires_document_creation(self):
+        values=self.material();result=self.build(values)
+        document_rows=[r for r in values[0]['rows'] if r['resource_selector']=='SEALED_SSM_DOCUMENT_ARN']
+        self.assertEqual([r['id'] for r in document_rows],['R39','R40','R41'])
+        entries={r['row_id']:r for r in result['rows_in_order']}
+        for row in document_rows:
+            self.assertEqual(G.obligation_phase(row['id']),'POSTDEPLOYMENT')
+            self.assertEqual(entries[row['id']]['state'],'NOT_YET_PRODUCED')
+
+    def test_missing_due_receipt_and_wrong_row_or_tampered_bytes_refused(self):
+        for change in (lambda v:v[2].pop('R01'),lambda v:v[2]['R01'].update(action='sts:AssumeRole'),
+                       lambda v:v[2]['R01'].update(response_sha256='0'*64),
+                       lambda v:v[2]['R01'].update(completed_utc='2026-09-06T18:02:00Z'),
+                       lambda v:v[2]['R01'].update(pagination_page=2)):
+            values=self.material();change(values)
+            with self.assertRaises(ValueError):self.build(values)
+
+    def test_unknown_rows_condition_false_receipt_and_plan_drift_refused(self):
+        values=self.material();values[2]['R64']=values[2]['R01']
+        with self.assertRaises(ValueError):self.build(values)
+        values=self.material();values[0]['rows'][0]['resource_selector']='other'
+        with self.assertRaises(ValueError):self.build(values)
+        values=self.material();conditional=next(r['id'] for r in values[0]['rows']
+            if r['call_requirement']!='ALWAYS' and G.obligation_phase(r['id'])=='PREDEPLOYMENT')
+        values[2][conditional]=values[2]['R01']
+        with self.assertRaisesRegex(ValueError,'condition-false'):self.build(values)
+
+    def test_r51_absence_is_not_success_under_unchanged_accepted_contract(self):
+        values=self.material('POSTDEPLOYMENT')
+        row=values[0]['rows'][50]
+        self.assertEqual((row['id'],row['action'],row['call_requirement']),('R51','lambda:GetPolicy','ALWAYS'))
+        values[2]['R51']['http_status']=404
+        with self.assertRaises(G.jsonschema.ValidationError):self.build(values)
+        template=json.loads((ROOT/'aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml').read_bytes())
+        self.assertEqual(template['Resources']['FinalizerFunction']['Type'],'AWS::Lambda::Function')
+        self.assertNotIn('AWS::Lambda::Permission',[r['Type'] for r in template['Resources'].values()])
+
+
 class ByteBoundStagingTests(unittest.TestCase):
     def material(self):
         plan = S.plan('a' * 40, b'controller\n', b'unit\n')

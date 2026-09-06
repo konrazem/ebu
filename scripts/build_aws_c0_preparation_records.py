@@ -11,6 +11,12 @@ REGISTRY='aws_c0_audit_static_real_execution_registry_correction_evidence_schema
 LINEAGE='aws_c0_gate1_bootstrap_lineage_correction_contract.json'
 SCHEMA_URI='https://ebu.invalid/local/preparation-packet-v5.json'
 SEQUENCE='aws_c0_deployment_sequence_correction_contract.json'
+PHASES=('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
+# These are producer boundaries, not exemptions from the frozen 63 obligations.
+# In particular DescribeExecution is ALWAYS, but its producer is StartExecution.
+POSTDEPLOYMENT_ROWS=frozenset(('R36','R39','R40','R41','R46','R47','R48','R49','R50','R51','R52','R53'))
+EXECUTION_ROWS=frozenset(('R37',))
+COMPLETION_ROWS=frozenset(('R38','R44','R54','R55','R56','R57','R58'))
 
 def sequence(root):return json.loads((root/SEQUENCE).read_bytes())
 
@@ -46,6 +52,92 @@ def identity(kind,value):
     return {'kind':kind,'value':digest,'sha256':digest}
 def preimage(kind,value):
     return {'identity':identity(kind,value),'canonical_json_base64':base64.b64encode(canonical(value)).decode()}
+
+def obligation_phase(row_id):
+    if row_id in COMPLETION_ROWS:return 'COMPLETION'
+    if row_id in EXECUTION_ROWS:return 'EXECUTION_PREFLIGHT'
+    if row_id in POSTDEPLOYMENT_ROWS:return 'POSTDEPLOYMENT'
+    return 'PREDEPLOYMENT'
+
+def build_phase_obligation_plan(root):
+    """Preserve every accepted action/resource/condition; add producer order.
+
+    This is only an input plan, never an authenticated read observation. No
+    version, request ID, caller identity or future receipt is invented here.
+    """
+    source=(root/'aws_c0_material_identity_runtime_validation_correction_contract.json').read_bytes()
+    contract=json.loads(source)
+    rows=copy.deepcopy(contract['sealed_read_plan']['rows'])
+    if [r['id'] for r in rows]!=['R%02d'%i for i in range(1,64)]:
+        raise ValueError('exact accepted 63-row obligation order required')
+    return {'schema':'aws_c0_runtime_control_phase_obligation_plan/v1',
+            'source_contract_sha256':sha(source),'accepted_obligations_sha256':sha(canonical(rows)),
+            'rows':rows,'phases_in_order':list(PHASES),
+            'earliest_producer_phase_in_order':[obligation_phase(r['id']) for r in rows],
+            'planned_inputs_are_observed_receipts':False}
+
+def validate_phase_api_receipt(root,receipt,row,*,earliest,latest,caller_identity,authentication_source_identity):
+    """Validate accepted API evidence bytes, not just its PASS labels.
+
+    The collector supplies authenticated observations. This pure function never
+    performs a request or upgrades unsigned/planned values to authenticated ones.
+    """
+    bundle=json.loads((root/'aws_c0_deployment_sequence_evidence_schema.json').read_bytes())
+    aliases=[k for k in bundle['$defs'] if k.endswith('_api_request_response_receipt')]
+    if not aliases:raise ValueError('accepted receipt schema absent')
+    definition={'$ref':'#/$defs/'+aliases[0],'$defs':bundle['$defs']}
+    jsonschema.Draft202012Validator(definition,registry=Registry()).validate(receipt)
+    for key,wanted in [('row_id',row['id']),('action',row['action']),('resource_selector',row['resource_selector']),
+                       ('caller_identity',caller_identity),('authentication_source_identity',authentication_source_identity)]:
+        if receipt[key]!=wanted:raise ValueError('API observation binding mismatch: '+key)
+    f=finalizer(root)
+    if not f._utc(earliest)<=f._utc(receipt['requested_utc'])<=f._utc(receipt['completed_utc'])<=f._utc(latest):
+        raise ValueError('API observation outside producer interval')
+    for name,field in [('max_pages','pagination_page'),('max_items','pagination_item_count')]:
+        bound=row['pagination_bounds'][name]
+        if type(bound) is int and receipt[field]>bound:
+            raise ValueError('API observation exceeds fixed pagination bound')
+    for stem in ('request','response'):
+        raw=base64.b64decode(receipt[stem+'_canonical_json_base64'],validate=True)
+        value=f.strict_json(raw)
+        if not isinstance(value,dict) or sha(raw)!=receipt[stem+'_sha256']:
+            raise ValueError('API '+stem+' bytes/hash mismatch')
+    return copy.deepcopy(receipt)
+
+def build_phase_observation_set(root,plan,phase,observations,conditions,*,earliest,latest,
+                                caller_identity,authentication_source_identity):
+    """Account for all obligations without mislabelling future rows as PASS.
+
+    This low-level producer deliberately does NOT certify reconstruction,
+    resource resolution, pagination closure, or launch readiness. Those require
+    the complete phase attachment verifier. It retains all supplied receipts.
+    """
+    if plan!=build_phase_obligation_plan(root) or phase not in PHASES:
+        raise ValueError('exact phased obligation plan required')
+    ids={r['id'] for r in plan['rows']}
+    if set(conditions)!=ids or set(observations)-ids or any(type(v) is not bool for v in conditions.values()):
+        raise ValueError('closed boolean condition inventory required')
+    rank=PHASES.index(phase);entries=[]
+    for row,producer in zip(plan['rows'],plan['earliest_producer_phase_in_order']):
+        row_id=row['id'];condition=conditions[row_id];receipt=observations.get(row_id)
+        if row['call_requirement']=='ALWAYS' and not condition:
+            raise ValueError('ALWAYS obligation cannot be disabled: '+row_id)
+        if rank<PHASES.index(producer):
+            if receipt is not None:raise ValueError('receipt precedes required producer: '+row_id)
+            state='NOT_YET_PRODUCED'
+        elif not condition:
+            if receipt is not None:raise ValueError('condition-false row has fabricated receipt: '+row_id)
+            state='NOT_CALLED'
+        else:
+            if receipt is None:raise ValueError('due required observation missing: '+row_id)
+            receipt=validate_phase_api_receipt(root,receipt,row,earliest=earliest,latest=latest,
+                caller_identity=caller_identity,authentication_source_identity=authentication_source_identity)
+            state='CALLED'
+        entries.append({'row_id':row_id,'earliest_producer_phase':producer,'state':state,
+                        'condition_evaluated':None if state=='NOT_YET_PRODUCED' else condition,'called_receipt':receipt})
+    return {'schema':'aws_c0_runtime_control_phase_observation_set/v1',
+            'obligation_plan_identity':identity(plan['schema'],plan),'phase':phase,'observed_utc':latest,
+            'rows_in_order':entries,'complete_reconstruction_claimed':False}
 
 def record_schema(root,name):
     bundle=json.loads((root/'aws_c0_deployment_sequence_evidence_schema.json').read_bytes())

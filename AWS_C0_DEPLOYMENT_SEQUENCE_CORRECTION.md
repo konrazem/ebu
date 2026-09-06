@@ -29,6 +29,61 @@ No credentials, AWS calls, staging, deployment, instance start, smoke, or scienc
 were used in this local correction. The completed host-inventory authorization
 is exhausted and cannot be reused.
 
+## Broader local repair: phase producers and a result-contract boundary
+
+The subsequent AUDITOR delegation (source turn
+`01a0783b-9e1e-7ba0-bf20-8e551f9d338c`) requests the broader local attachment
+repair under standing local-work authority while expressly preserving accepted
+semantics. It does not supply an exact user amendment of a frozen response rule.
+
+Draft pure local producers now retain the exact 63 accepted action/resource/
+condition obligations and bind their source bytes. Four producer phases separate
+predeployment, deployed resources, current-execution preflight, and completion.
+R37 DescribeExecution remains ALWAYS but cannot have a receipt before execution
+exists. Future rows are explicitly NOT_YET_PRODUCED with no receipt or evaluated
+condition; they are never labelled NOT_CALLED or PASS. Actual due receipt
+validation checks the accepted closed shape, source/caller/row/action bindings,
+canonical request/response hashes, chronology and fixed pagination bounds.
+
+These are low-level draft producers, not a complete reconstruction or runtime
+attachment. They explicitly return complete_reconstruction_claimed=false. They
+do not certify resource-selector resolution, full pagination closure, source
+authentication by themselves, publication bindings or launch readiness. Seven
+focused offline tests cover preservation, chronology, omitted observations,
+false ALWAYS conditions, drift, tampering and the R51 boundary below. The
+previous full-public-entry regression remains failing and unskipped.
+
+### R51 cannot be repaired solely by moving its phase
+
+The accepted R51 row is ALWAYS lambda:GetPolicy for the exact finalizer function;
+its called receipt requires HTTP 200. The template creates that function but no
+AWS::Lambda::Permission or other resource-policy producer. Thus the local design
+does not supply the policy whose successful retrieval the contract requires.
+This is a predicted contract incompatibility, not an observed AWS failure.
+
+AWS documents GetPolicy as reading the resource-based policy and documents
+ResourceNotFoundException/404. Its EventBridge troubleshooting also treats that
+GetPolicy error as a reason to add a resource-policy permission. Reading these
+public documents did not access the account or use credentials:
+
+- https://docs.aws.amazon.com/lambda/latest/api/API_GetPolicy.html
+- https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-troubleshooting.html
+- https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-lambda-permission.html
+
+No permission is added merely to satisfy the evidence check. Nor is a 404
+relabeled as an old-contract HTTP200 success. Both would exceed the instruction
+to preserve accepted semantics in this evidence-only repair.
+
+The proposed no-permission-change resolution requires an explicit prospective
+R51 result-contract amendment: retain the exact mandatory call and authenticated
+request/response capture; accept either the existing exact-policy/HTTP200 branch
+or a distinct POLICY_ABSENT branch only for authenticated
+ResourceNotFoundException, with matching R49/R50 proof of the exact function's
+existence. AccessDenied, generic404, timeout, missing bytes, wrong function,
+transport failure or missing existence evidence must still refuse. Historical
+records stay unchanged; absence must never be presented as policy success.
+That amendment has NOT been implemented or authorized by this document.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits
