@@ -17,11 +17,97 @@ import os
 import re
 import stat
 import subprocess
+import sys
 import unicodedata
 from pathlib import Path
 from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def inspect_journal_zero_s3_obligations(source: bytes, asl_bytes: bytes,
+                                      proof_schema: dict[str, Any]) -> dict[str, Any]:
+    """Find concrete source-contract counterexamples without executing code.
+
+    This is a refusal diagnostic, not the accepted complete callgraph proof.
+    In particular, no discovered counterexample is NOT a zero-S3 proof: dynamic
+    dispatch, multiplicities and the complete inventory remain unproved here.
+    Nested definitions are not treated as executed by their enclosing callable.
+    """
+    tree = ast.parse(source)
+    workflow = json.loads(asl_bytes)
+    states = workflow['States']
+    required_rows = proof_schema['allOf'][1]['then']['properties']['zero_s3_helpers_in_order']['prefixItems']
+    functions = {node.name: node for node in tree.body if isinstance(node, ast.FunctionDef)}
+    if len(functions) != sum(isinstance(node, ast.FunctionDef) for node in tree.body):
+        raise ValueError('duplicate top-level functions cannot establish a call-path witness')
+
+    def calls(node):
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)):
+                continue
+            if isinstance(child, ast.Call):
+                yield child
+            yield from calls(child)
+
+    outgoing = {name: list(calls(node)) for name, node in functions.items()}
+    dispatch = {}
+    handler = functions.get('lambda_handler')
+    if handler is not None:
+        for node in ast.walk(handler):
+            if not isinstance(node, ast.If) or not isinstance(node.test, ast.Compare):
+                continue
+            test = node.test
+            if (isinstance(test.left, ast.Name) and test.left.id == 'action' and len(test.ops) == 1
+                    and isinstance(test.ops[0], ast.Eq) and len(test.comparators) == 1
+                    and isinstance(test.comparators[0], ast.Constant) and isinstance(test.comparators[0].value, str)
+                    and len(node.body) == 1 and isinstance(node.body[0], ast.Return)):
+                value = node.body[0].value
+                if isinstance(value, ast.Call) and isinstance(value.func, ast.Name):
+                    dispatch[test.comparators[0].value] = value.func.id
+
+    findings = []
+    for row in required_rows:
+        properties = row['properties']
+        branch = properties['helper_branch_id']['const']
+        pointer = properties['source_json_pointer']['const']
+        action = branch.lower()
+        matches = [name for name, state in states.items()
+                   if state.get('Parameters', {}).get('Payload', {}).get('action') == action]
+        start = dispatch.get(action)
+        queue = [(start, [start])] if start in functions else []
+        seen = set()
+        witnesses = []
+        while queue:
+            name, path = queue.pop(0)
+            if name in seen:
+                continue
+            seen.add(name)
+            for call in outgoing[name]:
+                if not isinstance(call.func, ast.Name):
+                    continue
+                callee = call.func.id
+                if (callee == '_aws_request' and call.args and isinstance(call.args[0], ast.Constant)
+                        and call.args[0].value == 's3'):
+                    witnesses.append({'call_path': path + [callee], 'call_line': call.lineno,
+                                      'call_ast_sha256': hashlib.sha256(ast.dump(call, include_attributes=False).encode()).hexdigest()})
+                elif callee in functions:
+                    queue.append((callee, path + [callee]))
+        findings.append({'helper_branch_id': branch, 'required_source_pointer': pointer,
+                         'required_pointer_exists': pointer.removeprefix('/States/') in states,
+                         'actual_lambda_action_states': matches,
+                         'resolved_literal_handler': start,
+                         'literal_s3_call_path_counterexamples': witnesses})
+    refuted = any(not row['required_pointer_exists'] or row['literal_s3_call_path_counterexamples'] for row in findings)
+    return {'diagnostic': 'AWS_C0_JOURNAL_ZERO_S3_SOURCE_CONTRACT',
+            'disposition': 'REFUSE_CONCRETE_COUNTEREXAMPLE' if refuted else 'INCOMPLETE_NOT_A_PROOF',
+            'parser_version': '.'.join(map(str, sys.version_info[:3])),
+            'source_raw_sha256': hashlib.sha256(source).hexdigest(),
+            'asl_raw_sha256': hashlib.sha256(asl_bytes).hexdigest(),
+            'proof_schema_sha256': hashlib.sha256(json.dumps(proof_schema, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
+            'findings': findings, 'complete_callgraph_claimed': False, 'readiness_claimed': False}
+
+
 AUTHORITY_ID = "EBU-AWS-C0-UNATTENDED-SYNTHETIC-REHEARSAL-AUTHORITY-v1"
 CORRECTION_ID = "EBU-AWS-C0-LIVE-PREPARATION-CHOREOGRAPHY-CORRECTION-AUTHORITY-v1"
 CLOSURE_AUTHORITY_ID = "EBU-AWS-C0-COST-RUNTIME-RETRIEVAL-CLOSURE-CORRECTION-AUTHORITY-v1"

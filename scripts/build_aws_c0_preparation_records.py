@@ -195,6 +195,102 @@ def validate_record(root,name,value):
     canonical(value)
     return value
 
+def named_definition(root,suffix):
+    bundle=json.loads((root/'aws_c0_deployment_sequence_evidence_schema.json').read_bytes())
+    names=[k for k in bundle['$defs'] if k.endswith('_'+suffix)]
+    if len(names)!=1:raise ValueError('unique accepted evidence definition required: '+suffix)
+    return copy.deepcopy(bundle['$defs'][names[0]]),bundle['$defs']
+
+def validate_named_definition(root,suffix,value):
+    definition,definitions=named_definition(root,suffix)
+    definition['$defs']=definitions
+    jsonschema.Draft202012Validator(definition,registry=Registry()).validate(value)
+    canonical(value)
+    return value
+
+def build_sealed_role_launch_fields(root,snapshot_bytes,receipts,*,earliest,latest,
+                                   caller_identity,authentication_source_identity):
+    """Construct the accepted role context from real, existing-resource reads.
+
+    No caller-supplied role/profile/RoleId scalar can replace an API observation.
+    All four source receipts must also be carried by the phase reconstruction;
+    the accepted nested context itself carries the exact R14 read observation.
+    """
+    f=finalizer(root);snapshot=f.strict_json(snapshot_bytes)
+    if not isinstance(snapshot,dict) or snapshot.get('schema')!='aws_c0_private_infrastructure_snapshot/v1':
+        raise ValueError('exact existing private snapshot root required')
+    snapshot_id={'kind':snapshot['schema'],'value':f._root_digest(snapshot),'sha256':f._root_digest(snapshot)}
+    snapshot_schema=json.loads((root/'aws_c0_unattended_synthetic_rehearsal_evidence_schema.json').read_bytes())
+    jsonschema.Draft202012Validator({'$ref':'#/$defs/aws_c0_private_infrastructure_snapshot',
+        '$defs':snapshot_schema['$defs']},registry=Registry()).validate(snapshot)
+    if snapshot['instance_state']!='stopped' or not snapshot['quota_fact_verified']:
+        raise ValueError('stopped instance and verified quota snapshot required')
+    if not f._utc(earliest)<=f._utc(snapshot['observed_utc'])<=f._utc(latest):
+        raise ValueError('snapshot outside the sealed producer interval')
+    row_ids=('R02','R03','R13','R14')
+    if set(receipts)!=set(row_ids):raise ValueError('exact four role/profile source receipts required')
+    plan=build_phase_obligation_plan(root);rows={r['id']:r for r in plan['rows']}
+    data={};requests={}
+    for row_id in row_ids:
+        receipt=validate_phase_api_receipt(root,receipts[row_id],rows[row_id],earliest=earliest,latest=latest,
+            caller_identity=caller_identity,authentication_source_identity=authentication_source_identity)
+        requests[row_id]=f.strict_json(base64.b64decode(receipt['request_canonical_json_base64'],validate=True))
+        data[row_id]=f.strict_json(base64.b64decode(receipt['response_canonical_json_base64'],validate=True))
+        response=data[row_id];metadata=response.get('ResponseMetadata')
+        if not isinstance(metadata,dict) or metadata.get('RequestId')!=receipt['request_id'] or metadata.get('HTTPStatusCode')!=200 or \
+                'Error' in response or any(response.get(k) for k in ('NextToken','Marker','IsTruncated')):
+            raise ValueError('complete authenticated role/profile response required')
+        if receipt['pagination_page']!=1:raise ValueError('unaccounted earlier role/profile page')
+    role_name='EBU-Rehearsal-EC2-Role';role_arn='arn:aws:iam::623609441658:role/'+role_name
+    profile_arn='arn:aws:iam::623609441658:instance-profile/'+role_name
+    expected_requests={'R02':{'InstanceIds':[f.INSTANCE_ID]},
+        'R03':{'Filters':[{'Name':'instance-id','Values':[f.INSTANCE_ID]}]},
+        'R13':{'InstanceProfileName':role_name},'R14':{'RoleName':role_name}}
+    if requests!=expected_requests:raise ValueError('role/profile request coordinate mismatch')
+    reservations=data['R02'].get('Reservations')
+    if not isinstance(reservations,list) or len(reservations)!=1 or len(reservations[0].get('Instances',[]))!=1:
+        raise ValueError('exactly one observed instance required')
+    instance=reservations[0]['Instances'][0]
+    if instance.get('InstanceId')!=f.INSTANCE_ID or instance.get('IamInstanceProfile',{}).get('Arn')!=profile_arn:
+        raise ValueError('observed instance/profile mismatch')
+    if instance.get('State',{}).get('Name')!=snapshot['instance_state']:
+        raise ValueError('snapshot and authenticated instance state disagree')
+    if any(f._utc(r['completed_utc'])>f._utc(snapshot['observed_utc']) for r in receipts.values()):
+        raise ValueError('snapshot predates its role/profile source observations')
+    associations=data['R03'].get('IamInstanceProfileAssociations')
+    if not isinstance(associations,list) or len(associations)!=1 or associations[0].get('InstanceId')!=f.INSTANCE_ID or \
+            associations[0].get('State')!='associated' or associations[0].get('IamInstanceProfile',{}).get('Arn')!=profile_arn:
+        raise ValueError('exact associated instance profile required')
+    profile=data['R13'].get('InstanceProfile');role=data['R14'].get('Role')
+    if not isinstance(profile,dict) or profile.get('Arn')!=profile_arn or profile.get('InstanceProfileName')!=role_name or \
+            not isinstance(role,dict) or role.get('Arn')!=role_arn or role.get('RoleName')!=role_name or \
+            not isinstance(profile.get('Roles'),list) or len(profile['Roles'])!=1:
+        raise ValueError('exact sole observed role/profile required')
+    if any(profile['Roles'][0].get(key)!=role.get(key) for key in ('RoleId','Arn','RoleName')):
+        raise ValueError('profile role and GetRole disagree')
+    observed={'schema':'aws_c0_instance_profile_role_observation_preimage/v1','instance_id':f.INSTANCE_ID,
+        'instance_profile_arn':profile_arn,'instance_profile_name':role_name,'role_arn':role_arn,
+        'attached_role_count':1,'source_row_ids':list(row_ids)}
+    definition,_=named_definition(root,'sealed_ec2_role_context_preimage')
+    context={k:copy.deepcopy(v['const']) for k,v in definition['properties'].items() if 'const' in v}
+    context.update(account_id='623609441658',role_id=role['RoleId'],role_name_utf8=role_name,
+        role_arn_utf8=role_arn,instance_profile_arn_utf8=profile_arn,
+        private_infrastructure_snapshot_identity=snapshot_id,private_infrastructure_snapshot_sha256=snapshot_id['sha256'],
+        instance_profile_role_observation_identity=identity('aws_c0_instance_profile_role_observation/v1',observed),
+        instance_profile_role_observation_preimage=observed,
+        instance_profile_role_observation_canonical_json_base64=base64.b64encode(canonical(observed)).decode(),
+        instance_profile_role_observation_byte_count=len(canonical(observed)),instance_profile_role_observation_sha256=sha(canonical(observed)),
+        r14_get_role_observation={'row':rows['R14'],'call_disposition':'CALLED','condition_evaluated':True,
+                                 'called_receipt':copy.deepcopy(receipts['R14']),'not_called_reason':None})
+    validate_named_definition(root,'sealed_ec2_role_context_preimage',context)
+    launch_schema=record_schema(root,'launch')['allOf'][1]['properties']
+    return {'sealed_ec2_role_context_identity':identity('aws_c0_sealed_ec2_role_context/v1',context),
+        'sealed_ec2_role_context_preimage':context,
+        'sealed_ec2_role_context_preimage_canonical_json_base64':base64.b64encode(canonical(context)).decode(),
+        'sealed_ec2_role_context_preimage_byte_count':len(canonical(context)),
+        'sealed_ec2_role_context_preimage_sha256':sha(canonical(context)),
+        'sealed_ec2_role_context_cross_binding_disposition':launch_schema['sealed_ec2_role_context_cross_binding_disposition']['const']}
+
 def validate_packet(root,value):
     definition,registry=schema(root)
     jsonschema.Draft202012Validator(definition,registry=registry).validate(value)

@@ -3,6 +3,25 @@
   "readiness_disposition": "NOT_READY_FULL_PUBLIC_ENTRY_SCHEMA_GATE_FAILS",
   "independent_review_disposition": "NOT_APPROVED",
   "aws_continuation_permitted_by_validation": false,
+  "local_source_proof_blocker": {
+    "disposition": "NOT_READY_CONFIRMED_ASL_HELPER_ARCHITECTURE_CONFLICT",
+    "r51_component_disposition": "INDEPENDENTLY_APPROVED_AT_4449418",
+    "finalizer_source_sha256": "a552c28e14dc40a36e7f742b0d47a3f49522f604a72ab598eb4f4618cea23d52",
+    "asl_source_sha256": "86b4d877b2b99fce37e92360637e06fd905d9ad6ebc5c43b897768dc1631e936",
+    "missing_frozen_state_pointers": [
+      "/States/PreflightTaskFailed",
+      "/States/ObserveSsmCompletion",
+      "/States/PollController",
+      "/States/SafeClose"
+    ],
+    "nonzero_s3_helper_branches": ["PREFLIGHT_FAILURE", "POLL", "SAFE_CLOSE"],
+    "diagnostic_callable": "inspect_journal_zero_s3_obligations",
+    "diagnostic_is_complete_proof": false,
+    "required_scope_decision": "RECEIVED_NEWER_OVERNIGHT_AUTHORITY_FOR_PROSPECTIVE_LOCAL_ASL_HELPER_ARCHITECTURE_CORRECTION_PRESERVING_FROZEN_ZERO_S3_SEMANTICS",
+    "newer_verified_source_user_turn": "01a0788e-15f2-79d3-a26b-66c0cd65fff5",
+    "historical_proof_semantics_changed": false,
+    "aws_authorization_granted": false
+  },
   "r51_prospective_amendment": {
     "authority": "EXPLICIT_USER_LOCAL_ONLY_R51_AMENDMENT_2026_09_06",
     "result_kind": "aws_c0_lambda_resource_policy_observation/v2",

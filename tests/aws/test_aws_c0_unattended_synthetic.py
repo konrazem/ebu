@@ -268,6 +268,127 @@ class R51ProspectiveAmendmentTests(unittest.TestCase):
         self.assertNotIn('schema',original)
 
 
+class SealedRoleProducerTests(unittest.TestCase):
+    def material(self):
+        values=PhaseObligationProducerTests().material();receipts={k:values[2][k] for k in ('R02','R03','R13','R14')}
+        name='EBU-Rehearsal-EC2-Role';role={'Arn':'arn:aws:iam::623609441658:role/'+name,'RoleName':name,'RoleId':'AROA'+'A'*16}
+        profile={'Arn':'arn:aws:iam::623609441658:instance-profile/'+name,'InstanceProfileName':name,'Roles':[role]}
+        requests={'R02':{'InstanceIds':[F.INSTANCE_ID]},'R03':{'Filters':[{'Name':'instance-id','Values':[F.INSTANCE_ID]}]},
+                  'R13':{'InstanceProfileName':name},'R14':{'RoleName':name}}
+        responses={'R02':{'Reservations':[{'Instances':[{'InstanceId':F.INSTANCE_ID,'State':{'Name':'stopped'},'IamInstanceProfile':{'Arn':profile['Arn']}}]}]},
+            'R03':{'IamInstanceProfileAssociations':[{'InstanceId':F.INSTANCE_ID,'State':'associated','IamInstanceProfile':{'Arn':profile['Arn']}}]},
+            'R13':{'InstanceProfile':profile},'R14':{'Role':role}}
+        for row,receipt in receipts.items():
+            responses[row]['ResponseMetadata']={'RequestId':receipt['request_id'],'HTTPStatusCode':200}
+            R51ProspectiveAmendmentTests.encode(receipt,'request',requests[row])
+            R51ProspectiveAmendmentTests.encode(receipt,'response',responses[row])
+        # Complete schema-shaped offline snapshot, not actual AWS evidence.
+        snapshot={'schema':'aws_c0_private_infrastructure_snapshot/v1','authority_id':F.AUTHORITY_ID,
+            'record_class':'NON_SCIENTIFIC_AWS_C0_EVIDENCE','scientific_execution_authorized':False,
+            'stage_f_readiness_claimed':False,'zero_science_counters':copy.deepcopy(F.ZERO),
+            'observed_utc':values[4]['latest'],'account_identity':F.identity('aws_account_identity/v1','a'*64),
+            'region':F.REGION,'instance_id':F.INSTANCE_ID,'instance_state':'stopped','workflow_type':'STANDARD',
+            'workflow_identity':F.identity('aws_step_functions_standard_workflow/v1','b'*64),
+            'iam_policy_set_identity':F.identity('aws_iam_policy_set/v1','c'*64),
+            'ssm_document_sha256':'d'*64,'quota_observation_identity':F.identity('aws_service_quota_observation/v1','e'*64),
+            'quota_fact_verified':True,'snapshot_sha256':'f'*64}
+        snapshot['record_sha256']=F.digest(F.canonical_bytes(snapshot))
+        return F.canonical_bytes(snapshot),receipts,values[4]
+
+    def test_real_constructor_derives_role_id_and_accepted_closed_context(self):
+        raw,receipts,context=self.material()
+        result=G.build_sealed_role_launch_fields(ROOT,raw,receipts,**context)
+        nested=result['sealed_ec2_role_context_preimage']
+        self.assertEqual(nested['role_id'],'AROA'+'A'*16)
+        self.assertEqual(nested['private_infrastructure_snapshot_sha256'],F._root_digest(F.strict_json(raw)))
+        self.assertNotEqual(nested['private_infrastructure_snapshot_sha256'],F.digest(raw))
+        self.assertEqual(nested['instance_profile_role_observation_preimage']['source_row_ids'],['R02','R03','R13','R14'])
+        self.assertEqual(G.validate_named_definition(ROOT,'sealed_ec2_role_context_preimage',nested),nested)
+        self.assertEqual(result['sealed_ec2_role_context_identity'],G.identity('aws_c0_sealed_ec2_role_context/v1',nested))
+
+    def test_actual_response_drift_and_incomplete_role_inventory_refused(self):
+        for row,mutate in [('R02',lambda d:d['Reservations'][0]['Instances'][0].update(InstanceId='i-other')),
+                           ('R03',lambda d:d['IamInstanceProfileAssociations'][0].update(State='disassociating')),
+                           ('R13',lambda d:d['InstanceProfile']['Roles'].append(copy.deepcopy(d['InstanceProfile']['Roles'][0]))),
+                           ('R14',lambda d:d['Role'].update(RoleId='AROA'+'B'*16)),
+                           ('R13',lambda d:d.update(NextToken='more'))]:
+            raw,receipts,context=self.material();response=R51ProspectiveAmendmentTests.decode(receipts[row]);mutate(response)
+            R51ProspectiveAmendmentTests.encode(receipts[row],'response',response)
+            with self.assertRaises(ValueError):G.build_sealed_role_launch_fields(ROOT,raw,receipts,**context)
+
+    def test_snapshot_digest_source_identity_and_missing_source_refused(self):
+        raw,receipts,context=self.material();snapshot=F.strict_json(raw);snapshot['quota_fact_verified']=False
+        with self.assertRaises(RuntimeError):G.build_sealed_role_launch_fields(ROOT,F.canonical_bytes(snapshot),receipts,**context)
+        raw,receipts,context=self.material();receipts.pop('R13')
+        with self.assertRaises(ValueError):G.build_sealed_role_launch_fields(ROOT,raw,receipts,**context)
+        raw,receipts,context=self.material();receipts['R02']['caller_identity']=F.identity('aws_sts_role_session/v1','c'*64)
+        with self.assertRaises(ValueError):G.build_sealed_role_launch_fields(ROOT,raw,receipts,**context)
+
+    def test_complete_snapshot_shape_state_and_chronology_are_required(self):
+        for mutate in (lambda d:d.pop('workflow_identity'),lambda d:d.update(instance_state='running'),
+                       lambda d:d.update(quota_fact_verified=False),lambda d:d.update(observed_utc='2026-09-06T17:59:59Z'),
+                       lambda d:d.update(observed_utc='2026-09-06T18:00:30Z'),lambda d:d.update(extra='not accepted')):
+            raw,receipts,context=self.material();snapshot=F.strict_json(raw);mutate(snapshot)
+            snapshot.pop('record_sha256');snapshot['record_sha256']=F.digest(F.canonical_bytes(snapshot))
+            with self.assertRaises((ValueError,G.jsonschema.ValidationError)):
+                G.build_sealed_role_launch_fields(ROOT,F.canonical_bytes(snapshot),receipts,**context)
+        raw,receipts,context=self.material();response=R51ProspectiveAmendmentTests.decode(receipts['R02'])
+        response['Reservations'][0]['Instances'][0]['State']['Name']='running'
+        R51ProspectiveAmendmentTests.encode(receipts['R02'],'response',response)
+        with self.assertRaisesRegex(ValueError,'instance state disagree'):
+            G.build_sealed_role_launch_fields(ROOT,raw,receipts,**context)
+
+
+class JournalSourceContractDiagnosticTests(unittest.TestCase):
+    def material(self):
+        schema=load('aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json')
+        return ((ROOT/'aws/c0/finalizer/finalizer.py').read_bytes(),
+                (ROOT/'aws/c0/state-machine/aws-c0.asl.json').read_bytes(),
+                schema['$defs']['journal_capture_source_structure_proof_preimage'])
+
+    def test_exact_current_source_refutes_frozen_zero_s3_obligations(self):
+        source,asl,schema=self.material()
+        result=V.inspect_journal_zero_s3_obligations(source,asl,schema)
+        self.assertEqual(result['disposition'],'REFUSE_CONCRETE_COUNTEREXAMPLE')
+        self.assertEqual(result['source_raw_sha256'],hashlib.sha256(source).hexdigest())
+        self.assertEqual(result['asl_raw_sha256'],hashlib.sha256(asl).hexdigest())
+        self.assertEqual(result['parser_version'],'.'.join(map(str,sys.version_info[:3])))
+        self.assertFalse(result['complete_callgraph_claimed']);self.assertFalse(result['readiness_claimed'])
+        rows={r['helper_branch_id']:r for r in result['findings']}
+        self.assertEqual([r['required_pointer_exists'] for r in rows.values()],[False]*4)
+        for branch in ('PREFLIGHT_FAILURE','POLL','SAFE_CLOSE'):
+            self.assertTrue(rows[branch]['literal_s3_call_path_counterexamples'])
+        self.assertIsNone(rows['SSM_COMPLETION']['resolved_literal_handler'])
+
+    def test_state_aliases_do_not_fix_s3_calls(self):
+        source,asl,schema=self.material();workflow=json.loads(asl)
+        for row in V.inspect_journal_zero_s3_obligations(source,asl,schema)['findings']:
+            workflow['States'][row['required_source_pointer'].split('/')[-1]]={'Type':'Pass','End':True}
+        result=V.inspect_journal_zero_s3_obligations(source,F.canonical_bytes(workflow),schema)
+        self.assertTrue(all(r['required_pointer_exists'] for r in result['findings']))
+        self.assertEqual(result['disposition'],'REFUSE_CONCRETE_COUNTEREXAMPLE')
+
+    def test_no_counterexample_never_becomes_a_complete_proof(self):
+        _,_,schema=self.material()
+        workflow={'States':{row['properties']['source_json_pointer']['const'].split('/')[-1]:{'Type':'Pass','End':True}
+            for row in schema['allOf'][1]['then']['properties']['zero_s3_helpers_in_order']['prefixItems']}}
+        result=V.inspect_journal_zero_s3_obligations(b'def unused():\n    return None\n',F.canonical_bytes(workflow),schema)
+        self.assertEqual(result['disposition'],'INCOMPLETE_NOT_A_PROOF')
+
+    def test_unused_nested_call_is_not_an_executed_edge(self):
+        _,_,schema=self.material()
+        source=b'''def preflight_failure(event):
+    def unused():
+        return _aws_request('s3', 'GET')
+    return None
+def lambda_handler(event, context):
+    action=event['action']
+    if action == 'preflight_failure': return preflight_failure(event)
+'''
+        result=V.inspect_journal_zero_s3_obligations(source,b'{"States":{}}',schema)
+        self.assertFalse(result['findings'][0]['literal_s3_call_path_counterexamples'])
+
+
 class ByteBoundStagingTests(unittest.TestCase):
     def material(self):
         plan = S.plan('a' * 40, b'controller\n', b'unit\n')

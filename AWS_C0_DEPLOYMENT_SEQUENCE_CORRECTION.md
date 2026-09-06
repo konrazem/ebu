@@ -94,7 +94,94 @@ ResourceNotFoundException, with matching R49/R50 proof of the exact function's
 existence. AccessDenied, generic404, timeout, missing bytes, wrong function,
 transport failure or missing existence evidence must still refuse. Historical
 records stay unchanged; absence must never be presented as policy success.
-That amendment has NOT been implemented or authorized by this document.
+That was the historical proposal, not authority granted by this document.
+The subsequent explicit user amendment above authorized its implementation;
+commit `4449418` implements it and the narrow reviewer APPROVED that component.
+
+## Local source-proof checkpoint after the R51 amendment
+
+R51 is resolved locally, not by an AWS retry. Its seven focused tests pass.
+The broader path remains NOT_READY and has a separate confirmed architecture
+boundary. These facts must not be presented as an R51 failure or a policy-change
+request.
+
+The accepted source-structure proof requires four exact state-machine pointers:
+`/States/PreflightTaskFailed`, `/States/ObserveSsmCompletion`,
+`/States/PollController`, and `/States/SafeClose`. None exists in the current
+ASL source. Its actual `PreflightFailureClosure`, `PollAttempt`, and
+`EmitSafeClose` states invoke Lambda helpers with reachable S3 operations:
+
+- `preflight_failure` -> `_history_fallback` -> `_exact_environment_record`
+  -> `_fetch_receipt` -> `_s3_get` -> `_aws_request("s3", ...)`.
+- `poll` -> `_find_roots` -> S3 exact-version Get and ListObjectVersions.
+- `safe_close` -> `_find_roots`, `_put_record`, and
+  `_exact_environment_record` -> S3 reads/listing/publication.
+
+The new `inspect_journal_zero_s3_obligations` diagnostic parses exact source
+bytes and records concrete counterexamples. It never returns a complete proof
+or readiness PASS, even when it finds no counterexample. Four tests cover the
+actual conflict, ineffective state aliases, non-proof status, and unexecuted
+nested definitions. The same diagnostic was run using actual CPython 3.12.10
+built in an isolated temporary directory; the installed interpreter was not
+changed. No scientific source or workload was executed.
+
+The narrow reviewer independently confirmed that no producer can truthfully
+emit the frozen zero-S3 certificate while preserving both this ASL behavior and
+the certificate semantics. Attaching fields, aliases, or increasing a numeric
+budget does not repair it. The R37 execution-observation carrier is a separate
+attachment task: a bounded Preflight result/history carrier is a candidate,
+not an implemented or verified readiness claim. Preflight's five source reads
+remain a complete budget-inventory obligation, not an independently proved
+contradiction of its narrower three-read branch.
+
+The safe role-context producer is also now implemented as a partial utility.
+It requires the complete unchanged private snapshot schema and root digest,
+stopped-state and source chronology, and the four exact R02/R03/R13/R14
+authenticated receipt shapes. Actual sole role/profile/RoleId data must agree.
+Four tests include drift, pagination, missing sources, snapshot shape/state/time,
+and root-identity versus stored-byte hash separation. The caller must still
+provide the fully derived and bound snapshot and phase evidence: this utility
+does not independently certify workflow, quota, IAM-set derivation, or runtime
+attachment. The reviewer found no blocker to committing these explicitly
+partial NOT_READY utilities.
+
+The minimum next scope decision is a prospective local ASL/helper architecture
+correction that implements the frozen zero-S3 design. The current correction
+explicitly preserves ASL behavior, so that change is not inferred here. A
+different choice to allow nonzero helper S3 would instead require an explicit
+semantic amendment with complete capture, capacity and cost proofs; it is not
+silently substituted. Historical records, permissions, science boundaries,
+24/23 counts, capture channels, 512-envelope/1MiB bounds, and AWS prohibition
+remain unchanged. Full-public-entry validation remains mandatory and failing;
+none of the component passes authorizes deployment or execution.
+
+Validation at this partial checkpoint: 142 tests ran, 141 passed, one errored;
+zero skips or expected failures. The complete public prepublication regression
+still refuses the missing `runtime_control_read_plan_identity`. The 15 focused
+R51/role/diagnostic tests pass. Schema determinism, compilation under actual
+CPython 3.12.10, and whitespace checks pass. Audit-v4/static-v4 entry-point tests
+ran in the full suite; their component success is not full readiness.
+
+### Subsequent overnight authority: local architecture repair may continue
+
+Before this checkpoint was sealed, a newer delegation arrived from AUDITOR.
+The actual source user message was read and verified in turn
+`01a0788e-15f2-79d3-a26b-66c0cd65fff5` of the same source task: the user asks
+for overnight takeover, smoke if possible, and authorizes "all necessary work
+including running AWS instances." The delegation preserves the existing USD50
+cap, retained small instance, one platform smoke, cleanup and no science or
+larger instance. This is not an exact future packet approval invented by the
+controller.
+
+That newer broad implementation authority permits the necessary prospective
+local ASL/helper architecture correction, including directly affected transport
+and evidence bindings, to implement the frozen zero-S3 design. It supersedes
+the earlier local file/ASL-behavior limitation for this bounded repair, not any
+historical evidence meaning. No zero-S3, authentication, resource/cost bound,
+24/23 count, permission-ceiling or scientific requirement is relaxed. The
+partial utilities are committed first; architecture repair continues locally.
+AWS remains untouched at this checkpoint and cannot proceed on component tests
+or the standing instruction alone without complete gate validation and review.
 
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
