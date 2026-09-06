@@ -183,6 +183,32 @@ partial utilities are committed first; architecture repair continues locally.
 AWS remains untouched at this checkpoint and cannot proceed on component tests
 or the standing instruction alone without complete gate validation and review.
 
+### START dispatch interface component
+
+The next local component restores the accepted full
+`aws_c0_ssm_dispatch_request/v2` envelope: document name/version, exact instance,
+attempt identity, and exactly 21 singleton-array semantic parameters. The
+generator validates the unchanged historical schema and the runtime independently
+matches those semantics against explicit argv. The transport pair names now
+match the accepted `SsmDispatchRequestCanonicalJsonBase64` and
+`SsmDispatchRequestSha256`; the standalone and embedded SSM document still have
+exactly 23 parameters. The missing explicit region argument and bucket/argument
+name mismatch are corrected. Downloaded sources can verify attempt and deployed
+document/version bindings but cannot supply semantic argument values.
+
+Five focused tests pass, including complete construction/schema/runtime/CLI
+round trips, split/unknown/extra envelopes, explicit-argument disagreement,
+cross-source drift, refusal before credentials, and the actual isolated token
+regex guard. The reviewer found and then verified fixes for underscore-token
+and exact second-resolution UTC handling, and APPROVED this component only.
+Historical schema files and IAM policies are unchanged. No command document,
+systemd service, container, credential flow or AWS operation was executed.
+
+This is START parsing/construction, not complete source-sidecar attachment.
+The source-sidecar, short local helpers, ASL architecture, full publication and
+journal proof attachments and complete public gate remain NOT_READY. The
+controller does not treat this component approval as smoke readiness.
+
 This is the bounded local-only correction requested in the existing AUDITOR
 task, user turn `01a077f4-71f5-7421-a5c3-c178e8c7c9a1`, delegated to the sole
 controller. It permits implementation, local validation, normal local commits

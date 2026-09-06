@@ -90,10 +90,10 @@
       "interpolationType": "ENV_VAR"
     },
     "ArtifactPrefix": {"type": "String", "allowedPattern": "^rehearsal/aws-c0/AWS-C0-[A-Z0-9-]{1,64}/ATTEMPT-[A-Z0-9-]{1,64}-(SUCCESS|FAIL-AFTER-CHECKPOINT|TIMEOUT)/$", "interpolationType": "ENV_VAR"},
-    "SsmClientRequestToken": {"type": "String", "allowedPattern": "^[A-Za-z0-9-]{1,64}$", "interpolationType": "ENV_VAR"},
+    "SsmClientRequestToken": {"type": "String", "allowedPattern": "^[A-Za-z0-9_-]{8,64}$", "interpolationType": "ENV_VAR"},
     "SsmExpectedCommandNotBeforeUtc": {"type": "String", "allowedPattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "interpolationType": "ENV_VAR"},
     "SsmExpectedCommandNotAfterUtc": {"type": "String", "allowedPattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "interpolationType": "ENV_VAR"},
-    "SsmDispatchRequestBase64": {"type": "String", "allowedPattern": "^[A-Za-z0-9+/]+={0,2}$", "interpolationType": "ENV_VAR"},
+    "SsmDispatchRequestCanonicalJsonBase64": {"type": "String", "allowedPattern": "^[A-Za-z0-9+/]+={0,2}$", "interpolationType": "ENV_VAR"},
     "SsmDispatchRequestSha256": {"type": "String", "allowedPattern": "^[0-9a-f]{64}$", "interpolationType": "ENV_VAR"}
   },
   "mainSteps": [
@@ -129,10 +129,10 @@
           "/usr/bin/printf '%s\\n' \"${SSM_AttemptId-}\" | /usr/bin/grep -Eq '^ATTEMPT-[A-Z0-9-]{1,64}-(SUCCESS|FAIL-AFTER-CHECKPOINT|TIMEOUT)$'",
           "/usr/bin/printf '%s\\n' \"${SSM_WorkflowExecutionArn-}\" | /usr/bin/grep -Eq '^arn:aws:states:us-east-1:[0-9]{12}:execution:[A-Za-z0-9+=,.@_-]{1,80}:[A-Za-z0-9+=,.@_-]{1,80}$'",
           "/usr/bin/printf '%s\\n' \"${SSM_ArtifactPrefix-}\" | /usr/bin/grep -Eq '^rehearsal/aws-c0/AWS-C0-[A-Z0-9-]{1,64}/ATTEMPT-[A-Z0-9-]{1,64}-(SUCCESS|FAIL-AFTER-CHECKPOINT|TIMEOUT)/$'",
-          "/usr/bin/printf '%s\\n' \"${SSM_SsmClientRequestToken-}\" | /usr/bin/grep -Eq '^[A-Za-z0-9-]{1,64}$'",
+          "/usr/bin/printf '%s\\n' \"${SSM_SsmClientRequestToken-}\" | /usr/bin/grep -Eq '^[A-Za-z0-9_-]{8,64}$'",
           "/usr/bin/printf '%s\\n' \"${SSM_SsmExpectedCommandNotBeforeUtc-}\" | /usr/bin/grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'",
           "/usr/bin/printf '%s\\n' \"${SSM_SsmExpectedCommandNotAfterUtc-}\" | /usr/bin/grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$'",
-          "/usr/bin/printf '%s\\n' \"${SSM_SsmDispatchRequestBase64-}\" | /usr/bin/grep -Eq '^[A-Za-z0-9+/]+={0,2}$'",
+          "/usr/bin/printf '%s\\n' \"${SSM_SsmDispatchRequestCanonicalJsonBase64-}\" | /usr/bin/grep -Eq '^[A-Za-z0-9+/]+={0,2}$'",
           "/usr/bin/printf '%s\\n' \"${SSM_SsmDispatchRequestSha256-}\" | /usr/bin/grep -Eq '^[0-9a-f]{64}$'",
           "/usr/bin/test \"${SSM_Region-}\" = 'us-east-1'",
           "/usr/bin/test \"${SSM_LaunchRequestKey-}\" = \"rehearsal/aws-c0/${SSM_RehearsalId}/${SSM_AttemptId}/launch-request.json\"",
@@ -149,7 +149,7 @@
           "/usr/bin/test ! -L \"$request_file\"",
           "/usr/bin/test ! -e \"$source_file\"",
           "/usr/bin/test ! -L \"$source_file\"",
-          "/usr/bin/python3 /usr/local/libexec/ebu-c0/ebu_c0_controller.py prepare-request-v4 --bucket=\"$SSM_ArtifactBucket\" --artifact-prefix=\"$SSM_ArtifactPrefix\" --launch-key=\"$SSM_LaunchRequestKey\" --launch-version-id=\"$SSM_LaunchRequestVersionId\" --launch-sha256=\"$SSM_LaunchRequestSha256\" --launch-bytes=\"$SSM_LaunchRequestBytes\" --live-packet-key=\"$SSM_LivePacketKey\" --live-packet-version-id=\"$SSM_LivePacketVersionId\" --live-packet-sha256=\"$SSM_LivePacketSha256\" --live-packet-bytes=\"$SSM_LivePacketBytes\" --live-authorization-key=\"$SSM_LiveAuthorizationKey\" --live-authorization-version-id=\"$SSM_LiveAuthorizationVersionId\" --live-authorization-sha256=\"$SSM_LiveAuthorizationSha256\" --live-authorization-bytes=\"$SSM_LiveAuthorizationBytes\" --workflow-execution-arn=\"$SSM_WorkflowExecutionArn\" --ssm-client-request-token=\"$SSM_SsmClientRequestToken\" --ssm-expected-command-not-before-utc=\"$SSM_SsmExpectedCommandNotBeforeUtc\" --ssm-expected-command-not-after-utc=\"$SSM_SsmExpectedCommandNotAfterUtc\" --ssm-dispatch-request-base64=\"$SSM_SsmDispatchRequestBase64\" --ssm-dispatch-request-sha256=\"$SSM_SsmDispatchRequestSha256\" --rehearsal-id=\"$SSM_RehearsalId\" --attempt-id=\"$SSM_AttemptId\" --output=\"$request_file\"",
+          "/usr/bin/python3 /usr/local/libexec/ebu-c0/ebu_c0_controller.py prepare-request-v4 --region=us-east-1 --bucket=\"$SSM_ArtifactBucket\" --artifact-prefix=\"$SSM_ArtifactPrefix\" --launch-key=\"$SSM_LaunchRequestKey\" --launch-version-id=\"$SSM_LaunchRequestVersionId\" --launch-sha256=\"$SSM_LaunchRequestSha256\" --launch-bytes=\"$SSM_LaunchRequestBytes\" --live-packet-key=\"$SSM_LivePacketKey\" --live-packet-version-id=\"$SSM_LivePacketVersionId\" --live-packet-sha256=\"$SSM_LivePacketSha256\" --live-packet-bytes=\"$SSM_LivePacketBytes\" --live-authorization-key=\"$SSM_LiveAuthorizationKey\" --live-authorization-version-id=\"$SSM_LiveAuthorizationVersionId\" --live-authorization-sha256=\"$SSM_LiveAuthorizationSha256\" --live-authorization-bytes=\"$SSM_LiveAuthorizationBytes\" --workflow-execution-arn=\"$SSM_WorkflowExecutionArn\" --ssm-client-request-token=\"$SSM_SsmClientRequestToken\" --ssm-expected-command-not-before-utc=\"$SSM_SsmExpectedCommandNotBeforeUtc\" --ssm-expected-command-not-after-utc=\"$SSM_SsmExpectedCommandNotAfterUtc\" --ssm-dispatch-request-canonical-json-base64=\"$SSM_SsmDispatchRequestCanonicalJsonBase64\" --ssm-dispatch-request-sha256=\"$SSM_SsmDispatchRequestSha256\" --rehearsal-id=\"$SSM_RehearsalId\" --attempt-id=\"$SSM_AttemptId\" --output=\"$request_file\"",
           "/usr/bin/test \"$(/usr/bin/stat -c '%u:%g:%a' \"$request_file\")\" = '0:0:600'",
           "/usr/bin/test \"$(/usr/bin/stat -c '%u:%g:%a' \"$source_file\")\" = '0:0:600'",
           "/usr/bin/systemctl start --no-block \"ebu-c0@${SSM_AttemptId}.service\""

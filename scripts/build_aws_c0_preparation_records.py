@@ -1,6 +1,6 @@
 """Offline complete Gate 1 record construction with local-only schema resolution."""
 from __future__ import annotations
-import base64,copy,hashlib,importlib.util,json,re,unicodedata
+import base64,copy,hashlib,importlib.util,json,re,types,unicodedata
 from pathlib import Path
 import jsonschema
 from referencing import Registry
@@ -207,6 +207,34 @@ def validate_named_definition(root,suffix,value):
     jsonschema.Draft202012Validator(definition,registry=Registry()).validate(value)
     canonical(value)
     return value
+
+def build_ssm_dispatch_transport_v2(root,semantic_parameters,attempt_identity,document_version):
+    """Construct the unchanged accepted full START envelope and transport pair.
+
+    Pure local data construction; it sends no command and observes no delivery.
+    The semantic21 is an explicit input, not derived from downloaded objects.
+    """
+    record={'schema':'aws_c0_ssm_dispatch_request/v2','document_name':'EBU-C0-Start-v1',
+        'document_version':document_version,'target_instance_id':'i-048bac00bdb540a4e',
+        'attempt_identity':copy.deepcopy(attempt_identity),'semantic_parameters':copy.deepcopy(semantic_parameters)}
+    definitions=json.loads((root/'aws_c0_audit_static_publication_handoff_correction_evidence_schema.json').read_bytes())['$defs']
+    jsonschema.Draft202012Validator({'$ref':'#/$defs/ssm_dispatch_request_v2','$defs':definitions},registry=Registry()).validate(record)
+    spec=importlib.util.spec_from_file_location('aws_c0_dispatch_verifier',root/'aws/c0/controller/ebu_c0_controller.py')
+    controller=importlib.util.module_from_spec(spec);spec.loader.exec_module(controller)
+    arguments={}
+    for name,aws_name in zip(controller.SEMANTIC21,controller.SSM_SEMANTIC_NAMES):
+        value=semantic_parameters[aws_name][0]
+        arguments['bucket' if name=='artifact_bucket' else name]=int(value) if name.endswith('_bytes') else value
+    raw=canonical(record)
+    arguments.update(ssm_dispatch_request_canonical_json_base64=base64.b64encode(raw).decode(),ssm_dispatch_request_sha256=sha(raw))
+    controller.validate_ssm_dispatch_v2(types.SimpleNamespace(**arguments))
+    transport={'SsmDispatchRequestCanonicalJsonBase64':[arguments['ssm_dispatch_request_canonical_json_base64']],
+               'SsmDispatchRequestSha256':[arguments['ssm_dispatch_request_sha256']]}
+    parameters={**copy.deepcopy(semantic_parameters),**transport}
+    jsonschema.Draft202012Validator({'$ref':'#/$defs/send_command_parameter_envelope','$defs':definitions},registry=Registry()).validate(parameters)
+    return {'dispatch_request_preimage':record,'dispatch_request_identity':identity(record['schema'],record),
+            'semantic_parameters':copy.deepcopy(semantic_parameters),'transport_parameters':transport,
+            'send_command_parameters':parameters}
 
 def build_sealed_role_launch_fields(root,snapshot_bytes,receipts,*,earliest,latest,
                                    caller_identity,authentication_source_identity):

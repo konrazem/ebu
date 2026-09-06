@@ -111,7 +111,13 @@ SEMANTIC21 = ("artifact_bucket", "artifact_prefix", "launch_key", "launch_versio
               "live_authorization_key", "live_authorization_version_id", "live_authorization_sha256",
               "live_authorization_bytes", "rehearsal_id", "attempt_id", "region", "workflow_execution_arn",
               "ssm_client_request_token", "ssm_expected_command_not_before_utc", "ssm_expected_command_not_after_utc")
-TRANSPORT2 = ("ssm_dispatch_request_base64", "ssm_dispatch_request_sha256")
+TRANSPORT2 = ("ssm_dispatch_request_canonical_json_base64", "ssm_dispatch_request_sha256")
+SSM_SEMANTIC_NAMES = (
+    "ArtifactBucket", "ArtifactPrefix", "LaunchRequestKey", "LaunchRequestVersionId", "LaunchRequestSha256", "LaunchRequestBytes",
+    "LivePacketKey", "LivePacketVersionId", "LivePacketSha256", "LivePacketBytes",
+    "LiveAuthorizationKey", "LiveAuthorizationVersionId", "LiveAuthorizationSha256", "LiveAuthorizationBytes",
+    "RehearsalId", "AttemptId", "Region", "WorkflowExecutionArn", "SsmClientRequestToken",
+    "SsmExpectedCommandNotBeforeUtc", "SsmExpectedCommandNotAfterUtc")
 CONTROLLER_JOURNAL_SUFFIX = "evidence/controller-capture-journal.json"
 CONTROLLER_JOURNAL_HANDOFF_SUFFIX = "evidence/controller-capture-journal-handoff.json"
 HANDOFF_HASH_DOMAIN = "AWS_C0_CONTROLLER_JOURNAL_HANDOFF_V1_BODY_NUL"
@@ -267,23 +273,95 @@ def _mode(attempt_id: str) -> str:
     return matches[0]
 
 
-def validate_ssm_dispatch_v2(args: argparse.Namespace) -> dict[str, Any]:
-    """Verify the exact semantic21 plus independently supplied transport2 pair."""
-    semantic = {name: getattr(args, name) for name in SEMANTIC21}
-    if set(semantic) != set(SEMANTIC21) or semantic["region"] != REGION:
-        raise Refusal("SSM dispatch semantic21 closure failed")
-    if not semantic["artifact_prefix"].endswith("/") or not semantic["ssm_client_request_token"]:
-        raise Refusal("SSM dispatch semantic value invalid")
-    _utc(semantic["ssm_expected_command_not_before_utc"])
-    _utc(semantic["ssm_expected_command_not_after_utc"])
-    raw = canonical_bytes(semantic)
+def ssm_semantic_parameters_from_argv(args: argparse.Namespace) -> dict[str, list[str]]:
+    """The 21 semantic values come only from explicit argv, never a download."""
     try:
-        decoded = base64.b64decode(args.ssm_dispatch_request_base64, validate=True)
+        values = {name: getattr(args, 'bucket' if name == 'artifact_bucket' else name) for name in SEMANTIC21}
+    except AttributeError as exc:
+        raise Refusal("all 21 explicit SSM semantic arguments required") from exc
+    for name, value in values.items():
+        if name.endswith('_bytes'):
+            if type(value) is not int or not 1 <= value <= MAX_OBJECT_BYTES:
+                raise Refusal("SSM source byte count outside bound")
+        elif not isinstance(value, str) or not value:
+            raise Refusal("SSM semantic string required")
+    if values['region'] != REGION or not BUCKET.fullmatch(values['artifact_bucket']):
+        raise Refusal("SSM region/bucket mismatch")
+    if not REHEARSAL.fullmatch(values['rehearsal_id']) or not ATTEMPT.fullmatch(values['attempt_id']):
+        raise Refusal("SSM attempt coordinate invalid")
+    prefix = 'rehearsal/aws-c0/' + values['rehearsal_id'] + '/' + values['attempt_id'] + '/'
+    if values['artifact_prefix'] != prefix:
+        raise Refusal("SSM attempt prefix mismatch")
+    for stem, suffix in (('launch', 'launch-request'), ('live_packet', 'live-packet'), ('live_authorization', 'live-authorization')):
+        if (values[stem + '_key'] != prefix + suffix + '.json' or not VERSION.fullmatch(values[stem + '_version_id'])
+                or not SHA.fullmatch(values[stem + '_sha256'])):
+            raise Refusal("SSM exact source coordinate invalid")
+    arn = values['workflow_execution_arn']
+    if (not EXECUTION_ARN.fullmatch(arn) or not arn.startswith('arn:aws:states:us-east-1:623609441658:execution:')
+            or not arn.endswith(':' + values['attempt_id'])):
+        raise Refusal("SSM workflow coordinate mismatch")
+    if not re.fullmatch(r'[A-Za-z0-9_-]{8,64}', values['ssm_client_request_token']):
+        raise Refusal("SSM request token invalid")
+    for field in ('ssm_expected_command_not_before_utc', 'ssm_expected_command_not_after_utc'):
+        if not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z', values[field]):
+            raise Refusal("SSM exact second-resolution UTC timestamp required")
+    if _utc(values['ssm_expected_command_not_before_utc']) >= _utc(values['ssm_expected_command_not_after_utc']):
+        raise Refusal("SSM command time interval invalid")
+    return {aws_name: [str(values[name])] for name, aws_name in zip(SEMANTIC21, SSM_SEMANTIC_NAMES)}
+
+
+def validate_ssm_dispatch_record_v2(record: Any, *, semantic_parameters: dict[str, list[str]]) -> dict[str, Any]:
+    """Validate the complete accepted START envelope, not a bare scalar map."""
+    required = {'schema', 'document_name', 'document_version', 'target_instance_id', 'attempt_identity', 'semantic_parameters'}
+    if not isinstance(record, dict) or set(record) != required or record['schema'] != 'aws_c0_ssm_dispatch_request/v2':
+        raise Refusal("closed full SSM dispatch/v2 envelope required")
+    if (record['document_name'] != 'EBU-C0-Start-v1' or record['target_instance_id'] != INSTANCE_ID
+            or not isinstance(record['document_version'], str) or not re.fullmatch(r'[1-9][0-9]{0,9}', record['document_version'])):
+        raise Refusal("SSM exact document/version/instance mismatch")
+    _identity_field(record, 'attempt_identity', 'aws_c0_attempt/v1')
+    if record['semantic_parameters'] != semantic_parameters:
+        raise Refusal("SSM transport semantics differ from explicit argv")
+    canonical_bytes(record)
+    return record
+
+
+def validate_ssm_dispatch_v2(args: argparse.Namespace) -> dict[str, Any]:
+    """Verify semantic21 against the complete envelope and its transport2."""
+    semantic = ssm_semantic_parameters_from_argv(args)
+    try:
+        decoded = base64.b64decode(args.ssm_dispatch_request_canonical_json_base64, validate=True)
     except (ValueError, TypeError) as exc:
         raise Refusal("SSM transport base64 invalid") from exc
-    if decoded != raw or args.ssm_dispatch_request_sha256 != digest(decoded):
+    if len(decoded) > 16384 or args.ssm_dispatch_request_sha256 != digest(decoded):
         raise Refusal("SSM transport pair derivation mismatch")
-    return semantic
+    return validate_ssm_dispatch_record_v2(strict_json(decoded), semantic_parameters=semantic)
+
+
+def bind_ssm_dispatch_to_authenticated_sources(dispatch: dict[str, Any], launch: dict[str, Any],
+                                               live_auth: dict[str, Any]) -> None:
+    """Downloaded records may verify, but never supply, argv semantic values."""
+    if dispatch['attempt_identity'] != launch['attempt_identity']:
+        raise Refusal("SSM dispatch attempt differs from authenticated launch")
+    rows = [row for row in live_auth.get('post_deployment_control_preimages', [])
+            if isinstance(row, dict) and row.get('control_kind') == 'SSM_DOCUMENT']
+    if len(rows) != 1:
+        raise Refusal("one authenticated deployed SSM document observation required")
+    try:
+        raw = base64.b64decode(rows[0]['canonical_json_base64'], validate=True)
+    except (KeyError, ValueError, TypeError) as exc:
+        raise Refusal("SSM document observation bytes absent") from exc
+    observation = strict_json(raw)
+    if set(rows[0]) != {'control_kind', 'identity', 'canonical_json_base64', 'observed_utc', 'authenticated_source_identity'}:
+        raise Refusal("SSM document observation fields not closed")
+    _identity_field(rows[0], 'identity', 'aws_ssm_document_observation/v1')
+    _identity_field(rows[0], 'authenticated_source_identity', 'aws_ssm_document_observation_source/v1')
+    if not _utc(live_auth['deployment_completed_utc']) <= _utc(rows[0]['observed_utc']) <= _utc(live_auth['observed_utc']):
+        raise Refusal("SSM document observation outside authenticated deployment interval")
+    if rows[0]['identity']['sha256'] != digest(raw):
+        raise Refusal("SSM observed document digest mismatch")
+    if (observation.get('Name') != dispatch['document_name'] or observation.get('DocumentVersion') != dispatch['document_version']
+            or observation.get('Status') != 'Active' or observation.get('DocumentType') != 'Command'):
+        raise Refusal("SSM dispatch does not match authenticated deployed document")
 
 
 def build_ssm_completion_v2(*, attempt_identity: dict[str, str], dispatch_identity: dict[str, str],
@@ -817,7 +895,11 @@ def _ssm_request_identity(launch_id: str, live_packet_id: str,
 def prepare_request(args: argparse.Namespace, *, credential_provider: Any = bootstrap_imdsv2_credentials,
                     transport: Any = https_exact_version_transport,
                     now: dt.datetime | None = None) -> None:
-    semantic = validate_ssm_dispatch_v2(args)
+    dispatch = validate_ssm_dispatch_v2(args)
+    semantic = dispatch['semantic_parameters']
+    current = now or dt.datetime.now(dt.timezone.utc)
+    if not _utc(args.ssm_expected_command_not_before_utc) <= current <= _utc(args.ssm_expected_command_not_after_utc):
+        raise Refusal("SSM command outside explicit authorized time interval")
     if not REHEARSAL.fullmatch(args.rehearsal_id) or not ATTEMPT.fullmatch(args.attempt_id):
         raise Refusal("invalid attempt coordinates")
     journal = CaptureJournal("EC2_INSTANCE_PROFILE_CONTROLLER")
@@ -861,6 +943,7 @@ def prepare_request(args: argparse.Namespace, *, credential_provider: Any = boot
         "checksum_sha256_base64": base64.b64encode(bytes.fromhex(args.live_packet_sha256)).decode()}
     if not isinstance(live_auth, dict) or live_auth.get("schema") != "aws_c0_live_authorization/v6" or "record_sha256" in live_auth or live_auth.get("live_packet_identity") != identity("aws_c0_live_packet/v6", args.live_packet_sha256) or live_auth.get("live_packet_object") != packet_receipt or live_auth.get("attempt_identity") != launch["attempt_identity"]:
         raise Refusal("live authorization does not bind exact packet/attempt")
+    bind_ssm_dispatch_to_authenticated_sources(dispatch, launch, live_auth)
     workflow_id = _workflow_identity(args.workflow_execution_arn)
     ssm_id = _ssm_request_identity(launch_id, args.live_packet_sha256,
                                    args.live_authorization_sha256, workflow_id,
@@ -1673,12 +1756,12 @@ def parser() -> argparse.ArgumentParser:
     commands = top.add_subparsers(dest="command", required=True)
     prep = commands.add_parser("prepare-request-v4")
     legacy = commands.add_parser("prepare-request-v3")
-    for flag in ("bucket", "artifact-prefix", "launch-key", "launch-version-id", "launch-sha256",
+    for flag in ("bucket", "region", "artifact-prefix", "launch-key", "launch-version-id", "launch-sha256",
                  "live-packet-key", "live-packet-version-id", "live-packet-sha256",
                  "live-authorization-key", "live-authorization-version-id", "live-authorization-sha256",
                  "rehearsal-id", "attempt-id",
                  "workflow-execution-arn", "ssm-client-request-token", "ssm-expected-command-not-before-utc",
-                 "ssm-expected-command-not-after-utc", "ssm-dispatch-request-base64", "ssm-dispatch-request-sha256", "output"):
+                 "ssm-expected-command-not-after-utc", "ssm-dispatch-request-canonical-json-base64", "ssm-dispatch-request-sha256", "output"):
         prep.add_argument("--" + flag, required=True); legacy.add_argument("--" + flag, required=True)
     for flag in ("launch-bytes", "live-packet-bytes", "live-authorization-bytes"):
         prep.add_argument("--" + flag, required=True, type=int); legacy.add_argument("--" + flag, required=True, type=int)

@@ -339,6 +339,101 @@ class SealedRoleProducerTests(unittest.TestCase):
             G.build_sealed_role_launch_fields(ROOT,raw,receipts,**context)
 
 
+class SsmDispatchInterfaceTests(unittest.TestCase):
+    def material(self):
+        launch=load('aws/c0/fixtures/launch-request.valid.json');prefix=launch['artifact_prefix']
+        args=C.argparse.Namespace(bucket='valid-bucket',artifact_prefix=prefix,
+            rehearsal_id=launch['rehearsal_id'],attempt_id=launch['attempt_id'],region='us-east-1',
+            workflow_execution_arn='arn:aws:states:us-east-1:623609441658:execution:EBU-C0-492a4f1:'+launch['attempt_id'],
+            ssm_client_request_token='OFFLINE_START_0001',ssm_expected_command_not_before_utc='2026-09-06T18:00:00Z',
+            ssm_expected_command_not_after_utc='2026-09-06T18:01:00Z',output='/var/lib/ebu-c0/requests/'+launch['attempt_id']+'.json')
+        for stem,suffix in (('launch','launch-request'),('live_packet','live-packet'),('live_authorization','live-authorization')):
+            for key,value in {'key':prefix+suffix+'.json','version_id':'observed-offline-version','sha256':'a'*64,'bytes':1234}.items():
+                setattr(args,stem+'_'+key,value)
+        semantic=C.ssm_semantic_parameters_from_argv(args)
+        result=G.build_ssm_dispatch_transport_v2(ROOT,semantic,launch['attempt_identity'],'1')
+        args.ssm_dispatch_request_canonical_json_base64=result['transport_parameters']['SsmDispatchRequestCanonicalJsonBase64'][0]
+        args.ssm_dispatch_request_sha256=result['transport_parameters']['SsmDispatchRequestSha256'][0]
+        return args,result,launch
+
+    def test_complete_accepted_start_envelope_and_exact_transport_arity(self):
+        args,result,_=self.material()
+        self.assertEqual(C.validate_ssm_dispatch_v2(args),result['dispatch_request_preimage'])
+        self.assertEqual(len(result['semantic_parameters']),21)
+        self.assertEqual(len(result['transport_parameters']),2)
+        self.assertEqual(len(result['send_command_parameters']),23)
+        self.assertEqual(result['dispatch_request_identity'],G.identity('aws_c0_ssm_dispatch_request/v2',result['dispatch_request_preimage']))
+        document=load('aws/c0/ssm/EBU-C0-Start-v1.yaml')
+        self.assertEqual(set(document['parameters']),set(result['send_command_parameters']))
+        self.assertEqual(document,load('aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml')['Resources']['EBUC0StartDocument']['Properties']['Content'])
+        self.assertNotIn('SsmDispatchRequestBase64',document['parameters'])
+        token=args.ssm_client_request_token
+        self.assertIsNotNone(C.re.fullmatch(document['parameters']['SsmClientRequestToken']['allowedPattern'],token))
+        guards=[line for line in document['mainSteps'][0]['inputs']['runCommand']
+                if 'SSM_SsmClientRequestToken-' in line and 'grep -Eq' in line]
+        self.assertEqual(len(guards),1)
+        # Execute only this fixed string-format/regex guard, never the document.
+        for candidate,expected in ((token,0),('short',1),('A'*65,1),('bad token',1)):
+            tested=C.subprocess.run(['/bin/sh','-c',guards[0]],env={'SSM_SsmClientRequestToken':candidate},
+                                    stdout=C.subprocess.PIPE,stderr=C.subprocess.PIPE,timeout=5)
+            self.assertEqual(tested.returncode,expected)
+
+    def test_bare_map_unknown_kind_extra_field_and_split_transport_refused(self):
+        for mutate in (lambda d:d['semantic_parameters'],lambda d:{**d,'schema':'aws_c0_controller_local_helper_request/v1'},
+                       lambda d:{**d,'extra':True},lambda d:{**d,'target_instance_id':'i-other'},
+                       lambda d:{**d,'document_version':'$LATEST'},lambda d:{**d,'document_name':'AWS-RunShellScript'}):
+            args,result,_=self.material();raw=C.canonical_bytes(mutate(result['dispatch_request_preimage']))
+            args.ssm_dispatch_request_canonical_json_base64=base64.b64encode(raw).decode();args.ssm_dispatch_request_sha256=C.digest(raw)
+            with self.assertRaises(C.Refusal):C.validate_ssm_dispatch_v2(args)
+        args,_,_=self.material();args.ssm_dispatch_request_sha256='0'*64
+        with self.assertRaisesRegex(C.Refusal,'pair derivation'):C.validate_ssm_dispatch_v2(args)
+        args,_,_=self.material();args.ssm_dispatch_request_canonical_json_base64+='!'
+        with self.assertRaises(C.Refusal):C.validate_ssm_dispatch_v2(args)
+
+    def test_semantics_are_explicit_argv_and_mismatch_refuses_before_credentials(self):
+        for key,value in (('region','us-west-2'),('bucket','dot.bucket'),('launch_bytes',True),('launch_bytes',0),
+                          ('launch_key','other-prefix/launch.json'),('launch_version_id',''),
+                          ('workflow_execution_arn','arn:aws:states:us-east-1:111111111111:execution:W:ATTEMPT-CLOSURE-SUCCESS'),
+                          ('ssm_expected_command_not_before_utc','2026-09-06T18:00:00.1Z'),
+                          ('ssm_expected_command_not_before_utc','20260906T180000Z'),
+                          ('ssm_expected_command_not_before_utc','2026-09-06 18:00:00Z'),
+                          ('ssm_expected_command_not_after_utc','2026-09-06T17:00:00Z')):
+            args,_,_=self.material();setattr(args,key,value)
+            provider=mock.Mock(side_effect=AssertionError('credentials must not be requested'))
+            with self.assertRaises(C.Refusal):C.prepare_request(args,credential_provider=provider)
+            provider.assert_not_called()
+        args,_,_=self.material();args.launch_bytes=1235
+        with self.assertRaisesRegex(C.Refusal,'explicit argv'):C.validate_ssm_dispatch_v2(args)
+        args,_,_=self.material();del args.region
+        with self.assertRaisesRegex(C.Refusal,'21 explicit'):C.validate_ssm_dispatch_v2(args)
+
+    def test_actual_document_and_attempt_must_match_authenticated_sources(self):
+        _,result,launch=self.material();dispatch=result['dispatch_request_preimage']
+        observed={'Name':'EBU-C0-Start-v1','DocumentVersion':'1','Status':'Active','DocumentType':'Command'}
+        def auth(value):
+            return {'deployment_completed_utc':'2026-09-06T17:58:00Z','observed_utc':'2026-09-06T18:00:00Z',
+                'post_deployment_control_preimages':[DeploymentSequenceTests.control('SSM_DOCUMENT',value,'2026-09-06T17:59:00Z')]}
+        C.bind_ssm_dispatch_to_authenticated_sources(dispatch,launch,auth(observed))
+        for field,value in (('Name','other'),('DocumentVersion','2'),('Status','Creating'),('DocumentType','Automation')):
+            with self.assertRaises(C.Refusal):C.bind_ssm_dispatch_to_authenticated_sources(dispatch,launch,auth({**observed,field:value}))
+        with self.assertRaises(C.Refusal):
+            C.bind_ssm_dispatch_to_authenticated_sources(dispatch,{**launch,'attempt_identity':C.identity('aws_c0_attempt/v1','b'*64)},auth(observed))
+        a=auth(observed);a['post_deployment_control_preimages']*=2
+        with self.assertRaises(C.Refusal):C.bind_ssm_dispatch_to_authenticated_sources(dispatch,launch,a)
+        a=auth(observed);a['post_deployment_control_preimages'][0]['identity']['sha256']='0'*64
+        with self.assertRaises(C.Refusal):C.bind_ssm_dispatch_to_authenticated_sources(dispatch,launch,a)
+
+    def test_parser_supplies_region_and_all_semantics_from_flags(self):
+        args,result,_=self.material();argv=['prepare-request-v4']
+        for name in C.SEMANTIC21:
+            flag='bucket' if name=='artifact_bucket' else name.replace('_','-')
+            argv.append('--'+flag+'='+str(getattr(args,'bucket' if name=='artifact_bucket' else name)))
+        for name in C.TRANSPORT2:argv.append('--'+name.replace('_','-')+'='+getattr(args,name))
+        argv.append('--output='+args.output)
+        parsed=C.parser().parse_args(argv)
+        self.assertEqual(C.validate_ssm_dispatch_v2(parsed),result['dispatch_request_preimage'])
+
+
 class JournalSourceContractDiagnosticTests(unittest.TestCase):
     def material(self):
         schema=load('aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json')
