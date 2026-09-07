@@ -1,6 +1,30 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: NOT_READY — independent review NOT APPROVED
+## Checkpoint status: RECOVERY AUTHORIZED — failed R64 preflight preserved; continuation not yet ready
+
+On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
+AWS `UnauthorizedOperation` because the deployed
+`EBU-C0-Operator-492a4f1` inline policy did not allow
+`ec2:DescribeSecurityGroups`. The failed append-only ledger is preserved as a
+terminal attempt and must not be reset, retried, or replayed. The retained
+instance was freshly verified `stopped`, no cloud mutation or smoke occurred,
+and the failed preparation credentials were disposed.
+
+The user subsequently authorized one recovery correction. It permits a fresh
+replacement preflight identity and only the already specified temporary
+`ec2:DescribeSecurityGroups`, `Resource: "*"`, `ec2:Region=us-east-1` IAM delta
+for the named constrained AWS-C0 roles as required. The permission must be
+removed during verified cleanup. This recovery does not authorize a second
+actual smoke, another permission, security-group mutation, scientific
+execution, or public release. Full AWS continuation remains false until the
+replacement read passes and the readiness record is updated from actual
+evidence. The exact UTF-8 recovery statement has SHA-256
+`3532ac7f30849e1e90c54ea6f160a8b8eda94aed1ef3156dfee9466ffbe59ee3`.
+
+The original NOT_READY checkpoint below is retained as historical diagnosis;
+it is not the current recovery disposition.
+
+## Historical checkpoint: NOT_READY — independent review NOT APPROVED
 
 The implementation below is a local candidate, not an approved deployment
 path. The original 119-test pass did not cover the complete public schema gate.
