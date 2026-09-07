@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: BUCKET REMEDIATION PASSED — FRESH PREFLIGHT AUTHORIZED
+## Checkpoint status: R64 EFFECTIVE-POLICY PROPAGATION REPAIR AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -219,6 +219,26 @@ SHA-256 values are respectively
 `5fc18c3019df9bebe2d502b95bbf745944abca1449074b0f479c903af696d7b3`,
 and `697c9526a3f02cb231376eff1279375d62d2676b5818e689ffa28bf6972dd19f`.
 The authorized fresh no-replay atomic full-preflight is not yet begun.
+
+That fresh attempt was reserved at `2026-09-07T18:13:10Z` under identity
+`ccb9918407378490ea7b7cde0afdf81f9c9eda9e1b116b33d22c9ffbbce01b90`.
+It collected 26 successful authenticated receipts through R35, including the
+now-passing R24 and R25 bucket controls, then reserved its sole R64 budget. R64
+returned `UnauthorizedOperation`. The temporary role policy had been written
+and read back, but the constrained session was assumed in the same second with
+no effective-policy propagation proof. The fixed preparation session policy
+already permits `ec2:*`; the missing guard is therefore a confirmed-allow IAM
+simulation before issuing the constrained session. This attempt is terminal
+and will not be replayed. Reservation, failure, R64 reservation, and cleanup
+SHA-256 values are respectively
+`c90c8dd09a86c3ccd762af594776a0cfdaa2ecb3ae0457b184fdddcd8cc2385a`,
+`8fb268bd65a1ad7c9226337facd0a1b8422b762a7bfe1616fc9e0e2369c5e989`,
+`217a8cc96f3a27b7016bf219f0ebfaa1e3676e069faf0a6c797082e7d8a517ee`,
+and `594e4568e2130d35d5af8898e4f3ea462b66057e935892e1759d1f637a56a1a3`.
+Cleanup removed the temporary permission, disposed credentials, retained the
+non-public bucket remediation, and reverified the stopped `t3.small`. Under the
+standing all-required-steps authority, one fresh attempt after adding the
+effective-policy propagation guard is authorized and not begun.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
