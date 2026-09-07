@@ -3295,6 +3295,21 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertEqual(execution["Resource"]["Fn::Sub"],"arn:aws:states:us-east-1:${AWS::AccountId}:execution:ebu-c0-closure-synthetic-v1:*")
         self.assertEqual(entries["ClosureReadExactStateMachine"]["Action"],"states:DescribeStateMachine")
 
+    def test_r64_finalizer_policy_delta_is_one_region_bound_read_only(self):
+        template=V.load_json("aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml")
+        statements=template["Resources"]["FinalizerRole"]["Properties"]["Policies"][0]["PolicyDocument"]["Statement"]
+        entries={entry.get("Sid"):entry for entry in statements if isinstance(entry,dict)}
+        self.assertEqual(entries["ReadExactIngressGroupsOnlyInUsEast1"],{
+            "Sid":"ReadExactIngressGroupsOnlyInUsEast1","Effect":"Allow",
+            "Action":"ec2:DescribeSecurityGroups","Resource":"*",
+            "Condition":{"StringEquals":{"ec2:Region":"us-east-1"}}})
+        self.assertNotIn("ec2:DescribeSecurityGroups",entries["ClosureReadUnscopedApis"]["Action"])
+        # The successful V5 operator ceiling already grants ec2:*; do not alter
+        # its historical packet merely to add an action it already contains.
+        gate0=V.load_json("aws/c0/gate0/sso-operator-bootstrap-v3.template.json")
+        actions=gate0["preparation_session_policy_requirements"]["policy"]["Statement"][0]["Action"]
+        self.assertIn("ec2:*",actions)
+
     def test_cloudformation_creation_time_arns_use_only_known_names(self):
         template = V.load_json("aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml")
         parameters = template["Parameters"]

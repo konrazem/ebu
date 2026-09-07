@@ -799,6 +799,17 @@
                   ]
                 },
                 {
+                  "Sid": "ReadExactIngressGroupsOnlyInUsEast1",
+                  "Effect": "Allow",
+                  "Action": "ec2:DescribeSecurityGroups",
+                  "Resource": "*",
+                  "Condition": {
+                    "StringEquals": {
+                      "ec2:Region": "us-east-1"
+                    }
+                  }
+                },
+                {
                   "Sid": "ClosureReadUnscopedApis",
                   "Effect": "Allow",
                   "Action": [
