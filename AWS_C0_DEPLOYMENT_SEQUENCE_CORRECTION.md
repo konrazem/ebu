@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: R64 EFFECTIVE-POLICY PROPAGATION REPAIR AUTHORIZED
+## Checkpoint status: POST-R64 PACKET CONSTRUCTION FAILED — NOT READY
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -253,6 +253,19 @@ propagation-proof, failure, and cleanup SHA-256 values are respectively
 `904db40e9c127655610ce07cf634af29c56d1a1cd7a9256597bf51ff177f7e65`,
 and `79d6bc1a9f57e7c52b52b9ba19b2354841a98e6c6a6a30bdca5c9c76c1693c6f`.
 One fresh attempt after that correction remains authorized and not begun.
+
+The 60-second-propagated attempt was reserved at `2026-09-07T18:19:59Z`
+under identity `6a745471e62c587c8ba092e9ead1f661f6dfe6fe75c96111091ab7e83cd7b78e`.
+R64 succeeded and its authenticated receipt, ingress observation, completed
+budget, and phase binding were durably written. Packet construction then
+stopped on a local VPC-builder context mismatch: the collector passed
+`freshness_max_seconds` to `validate_r64_phase_binding`, whose freshness is
+already sealed in the read plan. The attempt is terminal and cleanup passed.
+Reservation, failure, and cleanup SHA-256 values are
+`6b133bdebb7481ec07f3a2dbf56b2cd8c56c98a1b16d0fb9caf950bc370ce1d7`,
+`7441a81a195ddfa06beaef71c48725363080c59a76e0759532161558a23ffb99`,
+and `8815e4fc065fec7f313d74e1951633b317a56292d28cfc8ab1cda3ba6c7931fd`.
+No further fresh attempt is authorized by the consumed authority.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
