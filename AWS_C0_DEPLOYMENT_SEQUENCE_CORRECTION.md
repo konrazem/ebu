@@ -133,6 +133,19 @@ operator session ceiling already contains `ec2:*`; it is therefore preserved
 byte-for-byte rather than rewritten. This is only a local template binding:
 there has been no IAM mutation, credential use, AWS call, or claim that the
 regional condition substitutes for the exact attached-group request guard.
+
+### Partial reconstruction progress boundary
+
+A separate `aws_c0_runtime_control_reconstruction_progress/v2` envelope now
+binds the exact v2 read-plan identity and all eleven ordered control slots. It
+can carry canonical candidates only for the three currently implemented output
+kinds: ACCOUNT_REGION, INSTANCE_PROFILE_SOLE_ROLE, and VPC_NETWORK_PATH. It does
+not revalidate original source receipts, freshness, attempt or collector
+context; a later source-bound attachment must do that before any pass claim.
+The remaining eight slots are neutral explicit unresolved states with null outputs. Its fixed
+`PARTIAL_NOT_READY` disposition and false completion flag prevent it from being
+used as, or confused with, the historical v1 complete-reconstruction pass gate.
+No live packet or cloud action consumes this partial envelope.
 The address request uses its documented
 [network-interface-id filter](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html).
 Missing association state is conservatively refused rather than inferred.

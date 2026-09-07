@@ -190,6 +190,33 @@ def build_instance_profile_output(root,receipts,**context):
     validate_record(root,'instance_profile_output',output)
     return output
 
+def build_runtime_control_reconstruction_progress_v2(root,outputs,*,phase,validation_utc,
+        freshness_max_seconds=300):
+    """Bind only reconstructed controls; this cannot claim the v1 PASS gate."""
+    if not isinstance(outputs,dict) or set(outputs)-set(finalizer(root).RECONSTRUCTION_PROGRESS_OUTPUT_KINDS):
+        raise ValueError('only implemented reconstruction outputs may be supplied')
+    plan_fields=build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=freshness_max_seconds)
+    plan=plan_fields['runtime_control_read_plan'];f=finalizer(root);entries=[]
+    for mapping in plan['required_control_mapping']:
+        control=mapping['control'];output=outputs.get(control)
+        if output is not None:
+            state='CANONICAL_OUTPUT_CANDIDATE';output_id=copy.deepcopy(output['identity'])
+        else:
+            state='UNRESOLVED'
+            output_id=None
+        entries.append({'control':control,'mapped_row_ids':copy.deepcopy(mapping['row_ids']),
+            'state':state,'output':copy.deepcopy(output),'output_identity':output_id})
+    record={'schema':'aws_c0_runtime_control_reconstruction_progress/v2',
+        'read_plan_identity':copy.deepcopy(plan_fields['runtime_control_read_plan_identity']),
+        'phase':phase,'observed_utc':validation_utc,'controls_in_order':entries,
+        'candidate_control_ids_in_order':[x['control'] for x in entries if x['state']=='CANONICAL_OUTPUT_CANDIDATE'],
+        'unresolved_control_ids_in_order':[x['control'] for x in entries if x['state']!='CANONICAL_OUTPUT_CANDIDATE'],
+        'source_revalidation_performed':False,'complete_reconstruction_claimed':False,'disposition':'PARTIAL_NOT_READY'}
+    f.validate_runtime_control_reconstruction_progress_v2(record,read_plan=plan,
+        read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase=phase,validation_utc=validation_utc)
+    validate_record(root,'runtime_reconstruction_progress_v2',record)
+    return record
+
 class R64LocalCallBudgetStore:
     """Append-only local reservation snapshots for one exact attempt.
 

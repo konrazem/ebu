@@ -893,6 +893,40 @@ class InstanceProfileReconstructionTests(unittest.TestCase):
         with self.assertRaises(F.Refusal):F.build_instance_profile_reconstruction_output(receipts,**context)
 
 
+class ReconstructionProgressV2Tests(unittest.TestCase):
+    """The partial envelope remains offline and cannot become a v1 PASS."""
+    def material(self):
+        receipt,account_context=AccountRegionReconstructionTests().material()
+        account=G.build_account_region_output(ROOT,receipt,**account_context)
+        receipts,profile_context=InstanceProfileReconstructionTests().material()
+        profile=G.build_instance_profile_output(ROOT,receipts,**profile_context)
+        receipts,binding,vpc_context=VpcNetworkReconstructionV2Tests().material()
+        vpc=G.build_vpc_network_output_v2(ROOT,receipts,binding,**vpc_context)
+        return {'ACCOUNT_REGION':account,'INSTANCE_PROFILE_SOLE_ROLE':profile,'VPC_NETWORK_PATH':vpc}
+
+    def test_three_canonical_candidates_bind_without_claiming_complete_set(self):
+        record=G.build_runtime_control_reconstruction_progress_v2(ROOT,self.material(),
+            phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
+        self.assertFalse(record['complete_reconstruction_claimed'])
+        self.assertEqual(record['disposition'],'PARTIAL_NOT_READY')
+        self.assertFalse(record['source_revalidation_performed'])
+        self.assertEqual(record['candidate_control_ids_in_order'],
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH'])
+        self.assertEqual(len(record['unresolved_control_ids_in_order']),8)
+        G.validate_record(ROOT,'runtime_reconstruction_progress_v2',record)
+
+    def test_unknown_output_and_rehashed_slot_mapping_refuse(self):
+        with self.assertRaises(ValueError):G.build_runtime_control_reconstruction_progress_v2(ROOT,
+            {'SERVICE_QUOTA':{}},phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
+        record=G.build_runtime_control_reconstruction_progress_v2(ROOT,self.material(),
+            phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
+        plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        record['controls_in_order'][4]['mapped_row_ids'].pop()
+        with self.assertRaises(F.Refusal):F.validate_runtime_control_reconstruction_progress_v2(record,
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
+
+
 class R64LocalBudgetStoreTests(unittest.TestCase):
     """Real private temporary files, offline synthetic observations, no AWS."""
     def setUp(self):

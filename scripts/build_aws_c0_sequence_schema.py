@@ -239,10 +239,26 @@ def build(root=ROOT):
         identity=typed_identity('aws_c0_vpc_network_observation/v2'),decoded_json={'$ref':'#/$defs/vpc_network_decoded_v2'})
     definitions['vpc_network_reconstruction_output_v2']=output_vpc
     definitions['vpc_network_output_v2']={'$ref':'#/$defs/vpc_network_reconstruction_output_v2'}
+    progress_slot={'type':'object','required':['control','mapped_row_ids','state','output','output_identity'],
+        'properties':{'control':{'type':'string'},'mapped_row_ids':{'type':'array','minItems':1,'maxItems':16,
+            'items':{'type':'string','pattern':'^R[0-9]{2}$'}},
+            'state':{'enum':['CANONICAL_OUTPUT_CANDIDATE','UNRESOLVED']},
+            'output':{'type':['object','null']},'output_identity':{'type':['object','null']}},'additionalProperties':False}
+    progress_fields={'schema':{'const':'aws_c0_runtime_control_reconstruction_progress/v2'},
+        'read_plan_identity':typed_identity('aws_c0_runtime_control_read_plan/v2'),
+        'phase':{'enum':['PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION']},
+        'observed_utc':{'$ref':time_ref},'controls_in_order':{'type':'array','minItems':11,'maxItems':11,
+            'prefixItems':[copy.deepcopy(progress_slot) for _ in range(11)],'items':False},
+        'candidate_control_ids_in_order':{'type':'array','maxItems':3,'uniqueItems':True,'items':{'type':'string'}},
+        'unresolved_control_ids_in_order':{'type':'array','minItems':1,'maxItems':11,'uniqueItems':True,'items':{'type':'string'}},
+        'source_revalidation_performed':{'const':False},'complete_reconstruction_claimed':{'const':False},'disposition':{'const':'PARTIAL_NOT_READY'}}
+    definitions['runtime_reconstruction_progress_v2_definition']={'type':'object','required':list(progress_fields),
+        'properties':progress_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_progress_v2']={'$ref':'#/$defs/runtime_reconstruction_progress_v2_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','runtime_reconstruction_progress_v2']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

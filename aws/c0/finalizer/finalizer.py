@@ -3002,6 +3002,77 @@ def validate_instance_profile_reconstruction_output(output: Any, receipts: Any, 
     return output
 
 
+RECONSTRUCTION_PROGRESS_CONTROLS=(
+    'ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
+    'VPC_NETWORK_PATH','SERVICE_QUOTA','STANDARD_WORKFLOW','SSM_DOCUMENT',
+    'SOFTWARE_AND_IMAGE_SET','CHANGE_SET_AND_EFFECTS','ARTIFACT_VERSION_SET')
+RECONSTRUCTION_PROGRESS_OUTPUT_KINDS={
+    'ACCOUNT_REGION':'aws_c0_account_region_observation/v1',
+    'INSTANCE_PROFILE_SOLE_ROLE':'aws_c0_instance_profile_role_observation/v1',
+    'VPC_NETWORK_PATH':'aws_c0_vpc_network_observation/v2'}
+
+
+def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str) -> dict[str,Any]:
+    """Validate a truthful partial reconstruction envelope.
+
+    It is deliberately unable to satisfy the historical all-controls v1 gate:
+    no unavailable control may acquire a substitute output or a PASS label.
+    This envelope validates canonical candidate forms only; a later source-bound
+    attachment must rerun the specific constructors before any pass claim.
+    """
+    fields={'schema','read_plan_identity','phase','observed_utc','controls_in_order',
+        'candidate_control_ids_in_order','unresolved_control_ids_in_order',
+        'source_revalidation_performed','complete_reconstruction_claimed','disposition'}
+    if (not isinstance(record,dict) or set(record)!=fields
+            or record.get('schema')!='aws_c0_runtime_control_reconstruction_progress/v2'
+            or phase not in ('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
+            or record['phase']!=phase or record['observed_utc']!=validation_utc
+            or record['read_plan_identity']!=read_plan_identity
+            or record['source_revalidation_performed'] is not False or record['complete_reconstruction_claimed'] is not False
+            or record['disposition']!='PARTIAL_NOT_READY'):
+        raise Refusal('closed partial reconstruction progress envelope required')
+    validate_runtime_control_read_plan_v2(read_plan,read_plan_identity)
+    rows=read_plan['required_control_mapping']
+    if [x.get('control') if isinstance(x,dict) else None for x in rows]!=list(RECONSTRUCTION_PROGRESS_CONTROLS):
+        raise Refusal('exact eleven-control v2 plan ordering required')
+    entries=record['controls_in_order']
+    if not isinstance(entries,list) or len(entries)!=len(rows):
+        raise Refusal('exact eleven partial reconstruction slots required')
+    completed=[];unresolved=[]
+    for plan_entry,entry in zip(rows,entries):
+        if not isinstance(entry,dict) or set(entry)!={'control','mapped_row_ids','state','output','output_identity'}:
+            raise Refusal('partial reconstruction slot field closure failed')
+        control=plan_entry['control']
+        if entry['control']!=control or entry['mapped_row_ids']!=plan_entry['row_ids']:
+            raise Refusal('partial reconstruction control mapping drift')
+        known=control in RECONSTRUCTION_PROGRESS_OUTPUT_KINDS
+        if entry['state']=='CANONICAL_OUTPUT_CANDIDATE':
+            output=entry['output'];kind=RECONSTRUCTION_PROGRESS_OUTPUT_KINDS.get(control)
+            if not known or not isinstance(output,dict) or output.get('schema')!=kind or output.get('kind')!=kind:
+                raise Refusal('unsupported or malformed completed partial output')
+            decoded=output.get('decoded_json');raw=canonical_bytes(decoded)
+            if (output.get('identity')!=identity(kind,digest(raw))
+                    or output.get('canonical_json_base64')!=base64.b64encode(raw).decode()
+                    or output.get('canonical_byte_sha256')!=digest(raw)
+                    or output.get('canonical_byte_count')!=len(raw)
+                    or entry['output_identity']!=output['identity']
+                    or decoded.get('source_row_ids')!=plan_entry['row_ids']):
+                raise Refusal('partial output canonical/source binding differs')
+            completed.append(control)
+        elif entry['state']=='UNRESOLVED':
+            if entry['output'] is not None or entry['output_identity'] is not None:
+                raise Refusal('unresolved partial slot cannot claim output')
+            unresolved.append(control)
+        else:
+            raise Refusal('partial reconstruction slot state refused')
+    if (record['candidate_control_ids_in_order']!=completed
+            or record['unresolved_control_ids_in_order']!=unresolved
+            or not unresolved):
+        raise Refusal('partial reconstruction completion inventory differs')
+    return record
+
+
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
     if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")
