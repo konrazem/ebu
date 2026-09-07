@@ -393,6 +393,26 @@ occurred. Preparation is authorized but fail-closed pending AWS
 reauthentication; the exact approval does not authorize live execution,
 science, replay, delete, or terminate.
 
+The later IAM Identity Center recheck at `2026-09-07T20:40:56Z` succeeded for
+profile `ebu-admin` as
+`arn:aws:sts::623609441658:assumed-role/AWSReservedSSO_AdministratorAccess_64c4d6b6ee31634c/konrad`.
+This is the expected non-root bootstrap identity, and the mistaken default
+root-login flow was cancelled without using it for a preparation action.
+
+That successful login does not recover the packet's exact constrained
+preparation session. Its public receipt has SHA-256
+`f3d936f903033b7de7c67bb9be9306a84e889f2d35fe9a2b88e84ca394183b34`
+and binds the original STS request ID and `2026-09-07T21:23:06Z` expiry. The
+attempt's already-preserved cleanup record, SHA-256
+`2f089d73820e4e0979a0d36f10cc76ff5a19d6a1d8a028a11cac028a15fcc3cc`,
+proves those temporary credentials were disposed. Re-assuming the same role
+and session name would create a replacement session, which the frozen
+choreography requires to have a fresh packet and approval. Therefore packet
+`51c57d0efe0444ebf1cc4ef8634878703f123da069eebac75a13bbf3fba7bf46`
+and its accepted authorization remain historical evidence but cannot be used
+for a mutation. No AWS preparation action, instance start, deployment, smoke,
+or science occurred.
+
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
 
