@@ -33,6 +33,10 @@
     "target_control": "IAM_POLICY_SET",
     "allowed_fields": ["role_arn", "instance_profile_arn", "assume_role_policy_sha256"],
     "iam_direct_source_row_ids_unchanged": ["R15", "R16", "R17", "R18", "R19"],
+    "prospective_progress": "aws_c0_runtime_control_reconstruction_progress/v3",
+    "prospective_source_attachment": "aws_c0_runtime_control_reconstruction_source_attachment/v2",
+    "source_attachment_predecessor": "aws_c0_runtime_control_reconstruction_source_attachment/v1",
+    "prospective_sealed_context": "aws_c0_predeployment_reconstruction_context/v2",
     "new_aws_actions_or_calls_authorized": false,
     "permissions_science_cost_or_publication_changed": false,
     "historical_schemas_changed": false

@@ -296,6 +296,17 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v1_definition']={'type':'object',
         'required':list(attachment_fields),'properties':attachment_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v1']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v1_definition'}
+    progress_v3_fields=copy.deepcopy(progress_fields)
+    progress_v3_fields.update(schema={'const':'aws_c0_runtime_control_reconstruction_progress/v3'},
+        read_plan_identity=typed_identity('aws_c0_runtime_control_read_plan/v3'))
+    progress_v3_fields['candidate_control_ids_in_order']['maxItems']=5
+    attachment_v2_fields=copy.deepcopy(attachment_fields)
+    attachment_v2_fields.update(schema={'const':'aws_c0_runtime_control_reconstruction_source_attachment/v2'},
+        read_plan_identity=typed_identity('aws_c0_runtime_control_read_plan/v3'),
+        previous_source_attachment_identity=typed_identity('aws_c0_runtime_control_reconstruction_source_attachment/v1'),
+        sealed_context_identity=typed_identity('aws_c0_predeployment_reconstruction_context/v2'))
+    for field in ('source_bundles_in_order','outputs_in_order'):
+        attachment_v2_fields[field]['minItems']=attachment_v2_fields[field]['maxItems']=5
     include(CRT,'pagination_transcript')
     # Append prospective definitions so regenerating the ordered registry does
     # not reorder any historical definition.
@@ -307,10 +318,16 @@ def build(root=ROOT):
     definitions['iam_role_context_binding_v1_definition']={'type':'object',
         'required':list(iam_binding_fields),'properties':iam_binding_fields,'additionalProperties':False}
     definitions['iam_role_context_binding']={'$ref':'#/$defs/iam_role_context_binding_v1_definition'}
+    definitions['runtime_reconstruction_progress_v3_definition']={'type':'object',
+        'required':list(progress_v3_fields),'properties':progress_v3_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_progress_v3']={'$ref':'#/$defs/runtime_reconstruction_progress_v3_definition'}
+    definitions['runtime_reconstruction_source_attachment_v2_definition']={'type':'object',
+        'required':list(attachment_v2_fields),'properties':attachment_v2_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_source_attachment_v2']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v2_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

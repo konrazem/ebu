@@ -208,6 +208,14 @@ not change any historical schema, action, permission, scientific boundary,
 cost ceiling or publication authority. IAM list pagination remains closed and
 bounded by the already sealed IAM pagination limits.
 
+The dependent partial progress/v3 and source attachment/v2 are prospective
+extensions only. They bind read-plan/v3, insert IAM in the original eleven-
+control order, carry the sealed IAM pagination limits, and recompute the exact
+four-control attachment/v1 predecessor before accepting the fifth output.
+They remain `PARTIAL_NOT_READY` and `PARTIAL_SOURCE_BOUND_NOT_READY`: five
+source-bound predeployment controls leave six controls unresolved and cannot
+claim the historical complete reconstruction set.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

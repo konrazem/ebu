@@ -1176,6 +1176,115 @@ class ReconstructionProgressV2Tests(unittest.TestCase):
             phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
 
 
+class ReconstructionV3IntegrationTests(unittest.TestCase):
+    def material(self):
+        validation,sealed,_,account,profile,vpc,quota=ReconstructionSourceAttachmentTests().material()
+        profile=copy.deepcopy(profile);response=F.strict_json(base64.b64decode(
+            profile['receipts']['R14']['response_canonical_json_base64']))
+        trust={'Version':'2012-10-17','Statement':[{'Effect':'Allow','Action':'sts:AssumeRole',
+            'Principal':{'Service':'ec2.amazonaws.com'}}]}
+        response['Role']['AssumeRolePolicyDocument']=trust
+        R51ProspectiveAmendmentTests.encode(profile['receipts']['R14'],'response',response)
+        profile['candidate']=G.build_instance_profile_output(ROOT,profile['receipts'],**profile['context'])
+        iam_receipts,_,_,fixture_context,_=IamPolicySetReconstructionTests().material()
+        plan_fields=G.build_runtime_control_read_plan_fields_v3(ROOT)
+        plan=plan_fields['runtime_control_read_plan'];plan_id=plan_fields['runtime_control_read_plan_identity']
+        binding=G.build_iam_role_context_binding(ROOT,plan,plan_id,profile)
+        iam_context={'caller_identity':sealed['caller_identity'],
+            'authentication_source_identity':sealed['authentication_source_identity'],
+            'phase_not_before_utc':sealed['phase_not_before_utc'],'validation_utc':validation,
+            'freshness_max_seconds':sealed['freshness_max_seconds'],
+            'iam_pagination_bounds':fixture_context['iam_pagination_bounds'],
+            'read_plan':plan,'read_plan_identity':plan_id}
+        iam=G.build_iam_policy_set_output_v2(ROOT,iam_receipts,binding,profile,**iam_context)
+        iam_bundle={'candidate':iam,'receipts':iam_receipts,'role_context_binding':binding,'context':iam_context}
+        sealed=copy.deepcopy(sealed);sealed['schema']='aws_c0_predeployment_reconstruction_context/v2'
+        sealed['iam_pagination_bounds']=copy.deepcopy(fixture_context['iam_pagination_bounds'])
+        sealed_id=F.identity(sealed['schema'],F.digest(F.canonical_bytes(sealed)))
+        bundles=(account,profile,iam_bundle,vpc,quota)
+        outputs={'ACCOUNT_REGION':account['candidate'],'INSTANCE_PROFILE_SOLE_ROLE':profile['candidate'],
+            'IAM_POLICY_SET':iam,'VPC_NETWORK_PATH':vpc['candidate'],'SERVICE_QUOTA':quota['candidate']}
+        return validation,sealed,sealed_id,bundles,outputs,plan_fields
+
+    def test_progress_v3_binds_five_candidates_and_leaves_six_unresolved(self):
+        validation,_,_,_,outputs,plan_fields=self.material()
+        record=G.build_runtime_control_reconstruction_progress_v3(ROOT,outputs,
+            phase='PREDEPLOYMENT',validation_utc=validation)
+        self.assertEqual(record['read_plan_identity'],plan_fields['runtime_control_read_plan_identity'])
+        self.assertEqual(record['candidate_control_ids_in_order'],
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','VPC_NETWORK_PATH','SERVICE_QUOTA'])
+        self.assertEqual(len(record['unresolved_control_ids_in_order']),6)
+        self.assertFalse(record['complete_reconstruction_claimed'])
+        self.assertEqual(F.validate_runtime_control_reconstruction_progress_v3(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation),record)
+        G.validate_record(ROOT,'runtime_reconstruction_progress_v3',record)
+
+    def test_progress_v3_refuses_iam_mapping_or_output_retagging(self):
+        validation,_,_,_,outputs,plan_fields=self.material()
+        for mutate in (lambda slot:slot['mapped_row_ids'].append('R20'),
+                lambda slot:slot['output'].update(schema='aws_c0_iam_policy_set_observation/v1')):
+            record=G.build_runtime_control_reconstruction_progress_v3(ROOT,outputs,
+                phase='PREDEPLOYMENT',validation_utc=validation)
+            slot=next(item for item in record['controls_in_order'] if item['control']=='IAM_POLICY_SET')
+            mutate(slot)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.validate_runtime_control_reconstruction_progress_v3(record,
+                    read_plan=plan_fields['runtime_control_read_plan'],
+                    read_plan_identity=plan_fields['runtime_control_read_plan_identity'],
+                    phase='PREDEPLOYMENT',validation_utc=validation)
+
+    def test_source_attachment_v2_reruns_all_five_and_binds_v1_predecessor(self):
+        validation,sealed,sealed_id,bundles,_,plan_fields=self.material()
+        account,profile,iam,vpc,quota=bundles
+        record=G.build_runtime_control_reconstruction_source_attachment_v2(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,vpc_bundle=vpc,
+            service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id,
+            validation_utc=validation)
+        self.assertEqual([item['control'] for item in record['outputs_in_order']],
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','VPC_NETWORK_PATH','SERVICE_QUOTA'])
+        self.assertEqual(record['previous_source_attachment_identity']['kind'],
+            'aws_c0_runtime_control_reconstruction_source_attachment/v1')
+        self.assertEqual(record['read_plan_identity'],plan_fields['runtime_control_read_plan_identity'])
+        self.assertFalse(record['complete_reconstruction_claimed'])
+        self.assertEqual(F.validate_runtime_control_reconstruction_source_attachment_v2(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+            validation_utc=validation,expected_sealed_context_identity=sealed_id),record)
+        G.validate_record(ROOT,'runtime_reconstruction_source_attachment_v2',record)
+
+    def test_attachment_refuses_trust_bounds_candidate_or_predecessor_substitution(self):
+        for mutate in ('trust','bounds','candidate'):
+            validation,sealed,sealed_id,bundles,_,_=self.material()
+            account,profile,iam,vpc,quota=copy.deepcopy(bundles)
+            if mutate=='trust':
+                response=F.strict_json(base64.b64decode(profile['receipts']['R14']['response_canonical_json_base64']))
+                response['Role']['AssumeRolePolicyDocument']['Statement']=[]
+                R51ProspectiveAmendmentTests.encode(profile['receipts']['R14'],'response',response)
+            elif mutate=='bounds':
+                sealed['iam_pagination_bounds']['aggregate_iam_max_items']=9
+                sealed_id=F.identity(sealed['schema'],F.digest(F.canonical_bytes(sealed)))
+            else:
+                iam['candidate']['decoded_json']['inline_policy_names']=[]
+            with self.subTest(mutate=mutate),self.assertRaisesRegex(Exception,'IAM (role-context|source bundle|source attachment)'):
+                G.build_runtime_control_reconstruction_source_attachment_v2(ROOT,
+                    account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,vpc_bundle=vpc,
+                    service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id,
+                    validation_utc=validation)
+        validation,sealed,sealed_id,bundles,_,plan_fields=self.material()
+        account,profile,iam,vpc,quota=bundles
+        record=G.build_runtime_control_reconstruction_source_attachment_v2(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,vpc_bundle=vpc,
+            service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id,
+            validation_utc=validation)
+        record['previous_source_attachment_identity']['value']='0'*64
+        with self.assertRaises(F.Refusal):F.validate_runtime_control_reconstruction_source_attachment_v2(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+            validation_utc=validation,expected_sealed_context_identity=sealed_id)
+
+
 class ReconstructionSourceAttachmentTests(unittest.TestCase):
     """Offline receipt bundles must be revalidated, not merely named."""
     def material(self):

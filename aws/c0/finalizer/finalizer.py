@@ -3322,6 +3322,8 @@ RECONSTRUCTION_PROGRESS_OUTPUT_KINDS={
     'INSTANCE_PROFILE_SOLE_ROLE':'aws_c0_instance_profile_role_observation/v1',
     'VPC_NETWORK_PATH':'aws_c0_vpc_network_observation/v2',
     'SERVICE_QUOTA':'aws_c0_service_quota_observation/v1'}
+RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V3={**RECONSTRUCTION_PROGRESS_OUTPUT_KINDS,
+    'IAM_POLICY_SET':'aws_c0_iam_policy_set_observation/v2'}
 
 
 def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_plan: Any,
@@ -3382,6 +3384,59 @@ def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_pla
             or record['unresolved_control_ids_in_order']!=unresolved
             or not unresolved):
         raise Refusal('partial reconstruction completion inventory differs')
+    return record
+
+
+def validate_runtime_control_reconstruction_progress_v3(record: Any, *, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str) -> dict[str,Any]:
+    """Validate the five-candidate envelope bound to read-plan/v3."""
+    fields={'schema','read_plan_identity','phase','observed_utc','controls_in_order',
+        'candidate_control_ids_in_order','unresolved_control_ids_in_order',
+        'source_revalidation_performed','complete_reconstruction_claimed','disposition'}
+    if (not isinstance(record,dict) or set(record)!=fields
+            or record.get('schema')!='aws_c0_runtime_control_reconstruction_progress/v3'
+            or phase not in ('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
+            or record.get('phase')!=phase or record.get('observed_utc')!=validation_utc
+            or record.get('read_plan_identity')!=read_plan_identity
+            or record.get('source_revalidation_performed') is not False
+            or record.get('complete_reconstruction_claimed') is not False
+            or record.get('disposition')!='PARTIAL_NOT_READY'):
+        raise Refusal('closed v3 partial reconstruction progress envelope required')
+    validate_runtime_control_read_plan_v3(read_plan,read_plan_identity)
+    rows=read_plan['required_control_mapping']
+    if [item.get('control') if isinstance(item,dict) else None for item in rows]!=list(RECONSTRUCTION_PROGRESS_CONTROLS):
+        raise Refusal('exact eleven-control v3 plan ordering required')
+    entries=record['controls_in_order']
+    if not isinstance(entries,list) or len(entries)!=len(rows):
+        raise Refusal('exact eleven v3 partial reconstruction slots required')
+    completed=[];unresolved=[]
+    for plan_entry,entry in zip(rows,entries):
+        if not isinstance(entry,dict) or set(entry)!={'control','mapped_row_ids','state','output','output_identity'}:
+            raise Refusal('v3 partial reconstruction slot field closure failed')
+        control=plan_entry['control'];kind=RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V3.get(control)
+        if entry['control']!=control or entry['mapped_row_ids']!=plan_entry['row_ids']:
+            raise Refusal('v3 partial reconstruction control mapping drift')
+        if entry['state']=='CANONICAL_OUTPUT_CANDIDATE':
+            output=entry['output']
+            if not kind or not isinstance(output,dict) or output.get('schema')!=kind or output.get('kind')!=kind:
+                raise Refusal('unsupported or malformed v3 partial output')
+            decoded=output.get('decoded_json');raw=canonical_bytes(decoded)
+            if (output.get('identity')!=identity(kind,digest(raw))
+                    or output.get('canonical_json_base64')!=base64.b64encode(raw).decode()
+                    or output.get('canonical_byte_sha256')!=digest(raw)
+                    or output.get('canonical_byte_count')!=len(raw)
+                    or entry.get('output_identity')!=output['identity']
+                    or decoded.get('source_row_ids')!=plan_entry['row_ids']):
+                raise Refusal('v3 partial output canonical/source binding differs')
+            completed.append(control)
+        elif entry['state']=='UNRESOLVED':
+            if entry.get('output') is not None or entry.get('output_identity') is not None:
+                raise Refusal('v3 unresolved partial slot cannot claim output')
+            unresolved.append(control)
+        else:raise Refusal('v3 partial reconstruction slot state refused')
+    if (record['candidate_control_ids_in_order']!=completed
+            or record['unresolved_control_ids_in_order']!=unresolved or not unresolved):
+        raise Refusal('v3 partial reconstruction completion inventory differs')
     return record
 
 
@@ -3462,6 +3517,104 @@ def build_runtime_control_reconstruction_source_attachment_v1(*, read_plan: Any,
         'disposition':'PARTIAL_SOURCE_BOUND_NOT_READY'}
     if [item.get('control') for item in record['outputs_in_order']]!=list(controls):
         raise Refusal('source attachment output control order differs')
+    return record
+
+
+def _read_plan_v3_predecessor(read_plan: Any, read_plan_identity: dict[str,str]) -> tuple[dict[str,Any],dict[str,str]]:
+    validate_runtime_control_read_plan_v3(read_plan,read_plan_identity)
+    fields={'schema','rows','row_ids','required_control_mapping','shared_row_ids','map_sha256',
+        'plan_contract_identity','freshness_max_seconds','original_read_plan_identity','amendment_packet_identity'}
+    mapping=strict_json(canonical_bytes(read_plan['required_control_mapping']))
+    target=next(item for item in mapping if item.get('control')=='IAM_POLICY_SET')
+    target['output_schema']=target['output_kind']='aws_c0_iam_policy_set_observation/v1'
+    prior={key:read_plan[key] for key in fields}
+    prior.update(schema='aws_c0_runtime_control_read_plan/v2',required_control_mapping=mapping,
+        map_sha256=digest(canonical_bytes(mapping)))
+    validate_runtime_control_read_plan_v2(prior,read_plan['previous_read_plan_identity'])
+    return prior,read_plan['previous_read_plan_identity']
+
+
+def build_runtime_control_reconstruction_source_attachment_v2(*, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str,
+        sealed_context: Any, sealed_context_identity: dict[str,str], account_bundle: Any,
+        instance_profile_bundle: Any, iam_bundle: Any, vpc_bundle: Any,
+        service_quota_bundle: Any) -> dict[str,Any]:
+    """Extend the exact v1 attachment with authenticated IAM reconstruction."""
+    if phase!='PREDEPLOYMENT':raise Refusal('only five implemented predeployment controls may attach')
+    prior_plan,prior_plan_identity=_read_plan_v3_predecessor(read_plan,read_plan_identity)
+    context_fields={'schema','phase_not_before_utc','validation_utc','freshness_max_seconds',
+        'caller_identity','authentication_source_identity','expected_caller_arn','expected_caller_user_id',
+        'expected_role_id','attempt_identity','previous_budget_identity','ec2_pagination_bounds','iam_pagination_bounds'}
+    if (not isinstance(sealed_context,dict) or set(sealed_context)!=context_fields
+            or sealed_context.get('schema')!='aws_c0_predeployment_reconstruction_context/v2'
+            or sealed_context.get('validation_utc')!=validation_utc
+            or sealed_context.get('freshness_max_seconds')!=read_plan['freshness_max_seconds']
+            or sealed_context_identity!=identity(sealed_context['schema'],digest(canonical_bytes(sealed_context)))):
+        raise Refusal('v2 independently supplied sealed reconstruction context required')
+    prior_context=strict_json(canonical_bytes(sealed_context));prior_context['schema']='aws_c0_predeployment_reconstruction_context/v1'
+    del prior_context['iam_pagination_bounds']
+    prior_context_identity=identity(prior_context['schema'],digest(canonical_bytes(prior_context)))
+    prior=build_runtime_control_reconstruction_source_attachment_v1(read_plan=prior_plan,
+        read_plan_identity=prior_plan_identity,phase=phase,validation_utc=validation_utc,
+        sealed_context=prior_context,sealed_context_identity=prior_context_identity,
+        account_bundle=account_bundle,instance_profile_bundle=instance_profile_bundle,
+        vpc_bundle=vpc_bundle,service_quota_bundle=service_quota_bundle)
+    if not isinstance(iam_bundle,dict) or set(iam_bundle)!={'candidate','receipts','role_context_binding','context'}:
+        raise Refusal('IAM source bundle field closure failed')
+    context=iam_bundle['context']
+    if (not isinstance(context,dict)
+            or context.get('caller_identity')!=sealed_context['caller_identity']
+            or context.get('authentication_source_identity')!=sealed_context['authentication_source_identity']
+            or context.get('phase_not_before_utc')!=sealed_context['phase_not_before_utc']
+            or context.get('validation_utc')!=validation_utc
+            or context.get('freshness_max_seconds')!=sealed_context['freshness_max_seconds']
+            or context.get('iam_pagination_bounds')!=sealed_context['iam_pagination_bounds']
+            or context.get('read_plan')!=read_plan or context.get('read_plan_identity')!=read_plan_identity):
+        raise Refusal('IAM source bundle context differs from sealed v2 context')
+    expected_iam=build_iam_policy_set_reconstruction_output_v2(iam_bundle['receipts'],
+        iam_bundle['role_context_binding'],instance_profile_bundle,**context)
+    if canonical_bytes(iam_bundle['candidate'])!=canonical_bytes(expected_iam):
+        raise Refusal('IAM source attachment candidate differs from rerun reconstruction')
+    outputs=list(prior['outputs_in_order']);outputs.insert(2,expected_iam)
+    bundles=list(prior['source_bundles_in_order']);bundles.insert(2,iam_bundle)
+    record={'schema':'aws_c0_runtime_control_reconstruction_source_attachment/v2',
+        'read_plan_identity':read_plan_identity,'previous_source_attachment_identity':identity(
+            prior['schema'],digest(canonical_bytes(prior))),
+        'phase':phase,'validation_utc':validation_utc,'sealed_context':sealed_context,
+        'sealed_context_identity':sealed_context_identity,'source_bundles_in_order':bundles,
+        'outputs_in_order':outputs,'source_revalidation_performed':True,
+        'complete_reconstruction_claimed':False,'disposition':'PARTIAL_SOURCE_BOUND_NOT_READY'}
+    controls=('ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','VPC_NETWORK_PATH','SERVICE_QUOTA')
+    if [item.get('control') for item in outputs]!=list(controls):
+        raise Refusal('v2 source attachment output control order differs')
+    return record
+
+
+def validate_runtime_control_reconstruction_source_attachment_v2(record: Any, *, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str,
+        expected_sealed_context_identity: dict[str,str]) -> dict[str,Any]:
+    fields={'schema','read_plan_identity','previous_source_attachment_identity','phase','validation_utc',
+        'sealed_context','sealed_context_identity','source_bundles_in_order','outputs_in_order',
+        'source_revalidation_performed','complete_reconstruction_claimed','disposition'}
+    if (not isinstance(record,dict) or set(record)!=fields
+            or record.get('schema')!='aws_c0_runtime_control_reconstruction_source_attachment/v2'
+            or record.get('read_plan_identity')!=read_plan_identity or record.get('phase')!=phase
+            or record.get('validation_utc')!=validation_utc
+            or record.get('sealed_context_identity')!=expected_sealed_context_identity
+            or record.get('source_revalidation_performed') is not True
+            or record.get('complete_reconstruction_claimed') is not False
+            or record.get('disposition')!='PARTIAL_SOURCE_BOUND_NOT_READY'
+            or not isinstance(record.get('source_bundles_in_order'),list)
+            or len(record['source_bundles_in_order'])!=5):
+        raise Refusal('closed v2 source-bound partial attachment required')
+    bundles=record['source_bundles_in_order']
+    expected=build_runtime_control_reconstruction_source_attachment_v2(read_plan=read_plan,
+        read_plan_identity=read_plan_identity,phase=phase,validation_utc=validation_utc,
+        sealed_context=record['sealed_context'],sealed_context_identity=record['sealed_context_identity'],
+        account_bundle=bundles[0],instance_profile_bundle=bundles[1],iam_bundle=bundles[2],
+        vpc_bundle=bundles[3],service_quota_bundle=bundles[4])
+    if canonical_bytes(record)!=canonical_bytes(expected):
+        raise Refusal('v2 source-bound attachment differs from rerun exact reconstruction')
     return record
 
 
