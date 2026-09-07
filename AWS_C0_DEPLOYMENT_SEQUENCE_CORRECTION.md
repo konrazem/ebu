@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: BUCKET REMEDIATION AND FRESH PREFLIGHT AUTHORIZED
+## Checkpoint status: BUCKET REMEDIATION PASSED — FRESH PREFLIGHT AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -206,6 +206,19 @@ packet must still be bound by the frozen packet-specific Gate 1 mechanism
 before instance start, deployment, or smoke; no future packet identity is
 predicted here. Scientific execution, push, merge, publication, and release
 remain prohibited.
+
+The exact bucket remediation completed at `2026-09-07T18:09:47Z`. Before the
+write, authenticated reads reconfirmed the sealed bucket in `us-east-1`,
+versioning enabled, AES256 default encryption, all four public-access-block
+controls true, and no bucket policy. AWS then accepted the exact 240-byte
+deny-only TLS policy and returned that policy byte-equivalent on readback with
+`PolicyStatus.IsPublic=false`. No grant, rollback, instance start, deployment,
+smoke, science, or publication occurred. Reservation, prestate, and completion
+SHA-256 values are respectively
+`2eb78b503b30d1cec39453b9c63a1ecf5fd1ceb465a54202177fff0f23e0b869`,
+`5fc18c3019df9bebe2d502b95bbf745944abca1449074b0f479c903af696d7b3`,
+and `697c9526a3f02cb231376eff1279375d62d2676b5818e689ffa28bf6972dd19f`.
+The authorized fresh no-replay atomic full-preflight is not yet begun.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
