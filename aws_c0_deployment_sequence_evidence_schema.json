@@ -41,6 +41,9 @@
     },
     {
       "$ref": "#/$defs/network_ingress_call_budget"
+    },
+    {
+      "$ref": "#/$defs/network_ingress_phase_binding"
     }
   ],
   "$defs": {
@@ -51024,6 +51027,112 @@
     },
     "network_ingress_call_budget": {
       "$ref": "#/$defs/network_ingress_call_budget_v1"
+    },
+    "network_ingress_phase_binding_v1": {
+      "type": "object",
+      "required": [
+        "schema",
+        "phase",
+        "attempt_identity",
+        "read_plan_identity",
+        "previous_call_budget_identity",
+        "call_budget",
+        "call_budget_identity",
+        "ingress_observation",
+        "ingress_observation_identity"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_network_ingress_phase_binding/v1"
+        },
+        "phase": {
+          "enum": [
+            "PREDEPLOYMENT",
+            "POSTDEPLOYMENT",
+            "EXECUTION_PREFLIGHT"
+          ]
+        },
+        "attempt_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_attempt/v1"
+                }
+              }
+            }
+          ]
+        },
+        "read_plan_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan/v2"
+                }
+              }
+            }
+          ]
+        },
+        "previous_call_budget_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_network_ingress_call_budget/v1"
+                }
+              }
+            }
+          ]
+        },
+        "call_budget": {
+          "$ref": "#/$defs/network_ingress_call_budget_v1"
+        },
+        "call_budget_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_network_ingress_call_budget/v1"
+                }
+              }
+            }
+          ]
+        },
+        "ingress_observation": {
+          "$ref": "#/$defs/network_ingress_observation_v1"
+        },
+        "ingress_observation_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_network_ingress_observation/v1"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "network_ingress_phase_binding": {
+      "$ref": "#/$defs/network_ingress_phase_binding_v1"
     }
   }
 }

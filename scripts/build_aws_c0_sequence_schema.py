@@ -204,10 +204,21 @@ def build(root=ROOT):
     definitions['network_ingress_call_budget_v1']={'type':'object','required':list(budget_fields),
         'properties':budget_fields,'additionalProperties':False}
     definitions['network_ingress_call_budget']={'$ref':'#/$defs/network_ingress_call_budget_v1'}
+    binding_fields={'schema':{'const':'aws_c0_network_ingress_phase_binding/v1'},
+        'phase':{'enum':['PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT']},
+        'attempt_identity':typed_identity('aws_c0_attempt/v1'),'read_plan_identity':typed_identity('aws_c0_runtime_control_read_plan/v2'),
+        'previous_call_budget_identity':typed_identity('aws_c0_network_ingress_call_budget/v1'),
+        'call_budget':{'$ref':'#/$defs/network_ingress_call_budget_v1'},
+        'call_budget_identity':typed_identity('aws_c0_network_ingress_call_budget/v1'),
+        'ingress_observation':{'$ref':'#/$defs/network_ingress_observation_v1'},
+        'ingress_observation_identity':typed_identity('aws_c0_network_ingress_observation/v1')}
+    definitions['network_ingress_phase_binding_v1']={'type':'object','required':list(binding_fields),
+        'properties':binding_fields,'additionalProperties':False}
+    definitions['network_ingress_phase_binding']={'$ref':'#/$defs/network_ingress_phase_binding_v1'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

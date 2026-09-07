@@ -2679,6 +2679,63 @@ def fail_r64_call(budget: Any, expected_identity: dict[str,str], *, attempt_iden
     return candidate
 
 
+def validate_r64_phase_binding(record: Any, *, phase: str, attempt_identity: dict[str,str],
+        read_plan: Any, read_plan_identity: dict[str,str], previous_budget: Any,
+        previous_budget_identity: dict[str,str], caller_identity: dict[str,str],
+        authentication_source_identity: dict[str,str], phase_not_before_utc: str,
+        validation_utc: str) -> dict[str,Any]:
+    """Bind the phase's actual ingress proof to its non-reset call history.
+
+    All context arguments must come from the independently verified enclosing
+    phase, not fields copied from the candidate. Earlier successful observations
+    are historical, not a substitute for the new phase's fresh result. Closure
+    can verify the recorded protected cut but cannot turn it into a fourth read
+    or claim that old observations were newly collected at closure.
+    """
+    fields={'schema','phase','attempt_identity','read_plan_identity','previous_call_budget_identity',
+        'call_budget','call_budget_identity','ingress_observation','ingress_observation_identity'}
+    if (not isinstance(record,dict) or set(record)!=fields or record['schema']!='aws_c0_network_ingress_phase_binding/v1'
+            or phase not in R64_READ_PHASES or record['phase']!=phase
+            or record['attempt_identity']!=attempt_identity or record['read_plan_identity']!=read_plan_identity
+            or record['previous_call_budget_identity']!=previous_budget_identity or len(canonical_bytes(record))>274432):
+        raise Refusal('R64 exact phase/attempt/plan/prior binding required')
+    validate_runtime_control_read_plan_v2(read_plan,read_plan_identity)
+    validate_r64_call_budget(previous_budget,previous_budget_identity,attempt_identity=attempt_identity)
+    current=record['call_budget']
+    validate_r64_call_budget(current,record['call_budget_identity'],attempt_identity=attempt_identity)
+    index=R64_READ_PHASES.index(phase);before=previous_budget['reservations_in_order'];after=current['reservations_in_order']
+    if (len(before)!=index or len(after)!=index+1 or after[:-1]!=before
+            or after[-1]['phase']!=phase or after[-1]['state']!='OBSERVED_SUCCESS'):
+        raise Refusal('R64 phase cannot skip/reset/replace the prior call history')
+    observation=record['ingress_observation'];tail=after[-1]
+    if (tail['caller_identity']!=caller_identity or tail['authentication_source_identity']!=authentication_source_identity
+            or record['ingress_observation_identity']!=tail['observation_identity']
+            or record['ingress_observation_identity']!=identity('aws_c0_network_ingress_observation/v1',digest(canonical_bytes(observation)))):
+        raise Refusal('R64 phase observation differs from reserved collector/outcome')
+    freshness=read_plan['freshness_max_seconds']
+    validate_r64_ingress_observation(observation,attempt_identity=attempt_identity,caller_identity=caller_identity,
+        authentication_source_identity=authentication_source_identity,observed_utc=observation['observed_utc'],
+        freshness_max_seconds=freshness)
+    if before and _r64_utc(observation['source_receipts_in_order'][0]['requested_utc'])<_r64_utc(before[-1]['finished_utc']):
+        raise Refusal('R64 phase source collection predates prior phase completion')
+    if (tail['finished_utc']!=observation['observed_utc'] or tail['request']!={'GroupIds':observation['security_group_ids']}
+            or tail['request_id']!=observation['rule_receipt']['request_id']
+            or tail['source_receipt_identities_in_order']!=[
+                identity('aws_c0_api_request_response_receipt/v1',digest(canonical_bytes(r))) for r in observation['source_receipts_in_order']]
+            or not _r64_utc(phase_not_before_utc)<=_r64_utc(observation['source_receipts_in_order'][0]['requested_utc'])
+                <=_r64_utc(observation['source_receipts_in_order'][1]['completed_utc'])
+                <=_r64_utc(tail['reserved_utc'])<=_r64_utc(observation['rule_receipt']['requested_utc'])
+                <=_r64_utc(tail['finished_utc'])<=_r64_utc(validation_utc)):
+        raise Refusal('R64 phase reservation/source chronology differs from the actual result')
+    # Recompute freshness at consumption, not merely at the observation's own
+    # timestamp. Never relabel the observation to make an old sample fresh.
+    derive_r64_exact_request(observation['source_receipts_in_order'],caller_identity=caller_identity,
+        authentication_source_identity=authentication_source_identity,observed_utc=validation_utc,freshness_max_seconds=freshness)
+    _r64_api_material(observation['rule_receipt'],'R64','ec2:DescribeSecurityGroups',caller=caller_identity,
+        channel=authentication_source_identity,observed_utc=validation_utc,freshness=freshness)
+    return record
+
+
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
     if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")

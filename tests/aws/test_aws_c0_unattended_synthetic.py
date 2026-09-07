@@ -556,6 +556,73 @@ class R64CallBudgetTests(unittest.TestCase):
             attempt_identity=attempt,phase='POSTDEPLOYMENT',**context)
 
 
+class R64PhaseBindingTests(unittest.TestCase):
+    def material(self,index=0):
+        fixture=R64CallBudgetTests();budget=fixture.empty()
+        for n in range(index):budget=fixture.complete(fixture.reserve(budget,n),n)
+        previous=copy.deepcopy(budget);budget=fixture.complete(fixture.reserve(budget,index),index)
+        sources,receipt,attempt,context=fixture.material(index)
+        observation=G.build_r64_ingress_observation(ROOT,sources,receipt,attempt_identity=attempt,**context)['network_ingress_observation']
+        read=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        args={'phase':F.R64_READ_PHASES[index],'attempt_identity':attempt,
+            'read_plan':read['runtime_control_read_plan'],'read_plan_identity':read['runtime_control_read_plan_identity'],
+            'previous_budget':previous,'previous_budget_identity':G.identity(F.R64_BUDGET_KIND,previous),
+            'caller_identity':context['caller_identity'],'authentication_source_identity':context['authentication_source_identity'],
+            'phase_not_before_utc':'2026-09-06T18:%02d:00Z'%index,'validation_utc':context['observed_utc']}
+        fields=G.build_r64_phase_binding(ROOT,observation,budget,**args)
+        return fields['network_ingress_phase_binding'],args
+
+    def test_three_distinct_phase_results_bind_history_and_actual_source(self):
+        for index in range(3):
+            record,args=self.material(index)
+            self.assertEqual(F.validate_r64_phase_binding(record,**args),record)
+            G.validate_record(ROOT,'network_ingress_phase_binding',record)
+            self.assertEqual(len(record['call_budget']['reservations_in_order']),index+1)
+            self.assertEqual(record['call_budget']['reservations_in_order'][:-1],args['previous_budget']['reservations_in_order'])
+
+    def test_wrong_phase_previous_attempt_plan_collector_and_anchor_refuse(self):
+        for field,value in [('phase','COMPLETION'),('phase','POSTDEPLOYMENT'),
+            ('attempt_identity',F.identity('aws_c0_attempt/v1','0'*64)),
+            ('previous_budget_identity',F.identity(F.R64_BUDGET_KIND,'0'*64)),
+            ('caller_identity',F.identity('aws_sts_role_session/v1','0'*64)),
+            ('authentication_source_identity',F.identity('aws_authenticated_api_source/v1','0'*64)),
+            ('read_plan_identity',F.identity('aws_c0_runtime_control_read_plan/v2','0'*64))]:
+            record,args=self.material();args[field]=value
+            with self.assertRaises(F.Refusal):F.validate_r64_phase_binding(record,**args)
+
+    def test_fresh_at_collection_is_not_fresh_at_late_consumption(self):
+        record,args=self.material()
+        for field,value in [('validation_utc','2026-09-06T18:05:02Z'),
+            ('validation_utc','2026-09-06T18:00:06Z'),
+            ('phase_not_before_utc','2026-09-06T18:00:02Z')]:
+            bad=copy.deepcopy(args);bad[field]=value
+            with self.assertRaises(F.Refusal):F.validate_r64_phase_binding(record,**bad)
+        args['validation_utc']='2026-09-06T18:05:01Z'
+        self.assertEqual(F.validate_r64_phase_binding(record,**args),record)
+
+    def test_rehashed_budget_cannot_replace_current_or_prior_evidence(self):
+        for mutate in (lambda b:b['reservations_in_order'][-1].update(request_id='offline-other-id'),
+            lambda b:b['reservations_in_order'][-1].update(reserved_utc='2026-09-06T18:01:01Z'),
+            lambda b:b['reservations_in_order'][-1].update(reserved_utc='2026-09-06T18:01:06Z'),
+            lambda b:b['reservations_in_order'][-1].update(observation_identity=F.identity('aws_c0_network_ingress_observation/v1','d'*64)),
+            lambda b:b['reservations_in_order'][0].update(request_id='offline-other-id'),
+            lambda b:b['reservations_in_order'][-1]['request'].update(GroupIds=['sg-01234567'])):
+            record,args=self.material(1);mutate(record['call_budget'])
+            record['call_budget_identity']=G.identity(F.R64_BUDGET_KIND,record['call_budget'])
+            with self.assertRaises(F.Refusal):F.validate_r64_phase_binding(record,**args)
+
+    def test_reset_budget_and_pending_tail_cannot_replace_phase_success(self):
+        record,args=self.material(1)
+        reset=R64CallBudgetTests().empty()
+        record['previous_call_budget_identity']=args['previous_budget_identity']=G.identity(F.R64_BUDGET_KIND,reset)
+        args['previous_budget']=reset
+        with self.assertRaises(F.Refusal):F.validate_r64_phase_binding(record,**args)
+        record,args=self.material()
+        record['call_budget']=R64CallBudgetTests().reserve(R64CallBudgetTests().empty())
+        record['call_budget_identity']=G.identity(F.R64_BUDGET_KIND,record['call_budget'])
+        with self.assertRaises(F.Refusal):F.validate_r64_phase_binding(record,**args)
+
+
 class R64LocalBudgetStoreTests(unittest.TestCase):
     """Real private temporary files, offline synthetic observations, no AWS."""
     def setUp(self):

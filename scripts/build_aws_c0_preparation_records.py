@@ -161,6 +161,20 @@ def r64_call_budget_fields(root,budget,attempt_identity):
     validate_record(root,'network_ingress_call_budget',budget)
     return {'network_ingress_call_budget':copy.deepcopy(budget),'network_ingress_call_budget_identity':budget_id}
 
+def build_r64_phase_binding(root,observation,call_budget,*,phase,attempt_identity,read_plan,
+        read_plan_identity,previous_budget,previous_budget_identity,**context):
+    f=finalizer(root)
+    record={'schema':'aws_c0_network_ingress_phase_binding/v1','phase':phase,
+        'attempt_identity':copy.deepcopy(attempt_identity),'read_plan_identity':copy.deepcopy(read_plan_identity),
+        'previous_call_budget_identity':copy.deepcopy(previous_budget_identity),
+        'call_budget':copy.deepcopy(call_budget),'call_budget_identity':identity(f.R64_BUDGET_KIND,call_budget),
+        'ingress_observation':copy.deepcopy(observation),
+        'ingress_observation_identity':identity('aws_c0_network_ingress_observation/v1',observation)}
+    f.validate_r64_phase_binding(record,phase=phase,attempt_identity=attempt_identity,read_plan=read_plan,
+        read_plan_identity=read_plan_identity,previous_budget=previous_budget,previous_budget_identity=previous_budget_identity,**context)
+    validate_record(root,'network_ingress_phase_binding',record)
+    return {'network_ingress_phase_binding':record,'network_ingress_phase_binding_identity':identity(record['schema'],record)}
+
 class R64LocalCallBudgetStore:
     """Append-only local reservation snapshots for one exact attempt.
 

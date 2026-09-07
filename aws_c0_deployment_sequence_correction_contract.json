@@ -23,6 +23,9 @@
     "local_exclusive_durable_reservation_implemented": true,
     "torn_write_repair_or_automatic_reset_permitted": false,
     "pure_transition_and_local_store_component_review": "APPROVED",
+    "phase_binding_kind": "aws_c0_network_ingress_phase_binding/v1",
+    "phase_binding_component_review": "APPROVED_AFTER_R04_COMPLETION_BEFORE_RESERVATION_FIX",
+    "freshness_rechecked_at_consumption": true,
     "authenticated_collector_attached": false,
     "phase_reconstruction_attachment_complete": false,
     "global_cloud_enforcement_claimed": false,
@@ -78,9 +81,9 @@
     "deny": ["SECURITY_GROUP_RULE_MUTATION", "CALLER_KONRAD_PERMISSION_CHANGE", "ADMINISTRATORACCESS_CHANGE", "TRUST_PRINCIPAL_CHANGE", "SOURCE_IDENTITY_CHANGE", "MFA_SETTING_CHANGE", "SESSION_DURATION_CHANGE", "ANY_OTHER_PERMISSION_ADDITION", "OTHER_ROLE", "ROOT_CREDENTIALS", "LARGER_OR_ADDITIONAL_COMPUTE", "SCIENTIFIC_EXECUTION", "PUSH", "RELEASE", "PUBLIC_PUBLICATION", "HISTORY_REWRITING", "FABRICATED_OR_DEFAULTED_ZERO_INGRESS"]
   },
   "latest_local_validation_checkpoint": {
-    "code_commit": "0a0c35f",
-    "tests_run": 181,
-    "tests_passed": 180,
+    "code_commit": "5d31093",
+    "tests_run": 200,
+    "tests_passed": 199,
     "assertion_failures": 0,
     "errors": 1,
     "skipped": 0,

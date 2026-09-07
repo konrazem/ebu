@@ -87,6 +87,18 @@ attached to it yet. Nineteen focused ingress/budget/store tests and pinned
 compilation pass; the existing reviewer independently APPROVED both the pure
 transitions and the local store as components only. Overall NOT_READY remains.
 
+The prospective phase-binding record now joins a successful ingress observation
+to its reserved slot, exact 64-row plan and independently anchored prior budget.
+It preserves the complete prior history, requires the current phase's own fresh
+sources and collector, and recomputes freshness at consumption. R04 must finish
+before reservation; the later R64 call cannot retrospectively justify an early
+reservation. A reviewer-found omission of that ordering was fixed with a
+rehashed-ledger negative regression, and the component was then APPROVED.
+Twenty-four focused ingress/budget/store/phase tests pass. The complete suite at
+`5d31093` ran 200 tests: 199 passed, one public-entry reconstruction-binding error,
+zero assertion failures, skipped tests or expected failures. These new records
+are not yet the complete eleven-control reconstruction set or a cloud gate pass.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set
