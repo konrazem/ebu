@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: VPC-CONTEXT-CORRECTED FRESH PREFLIGHT AUTHORIZED
+## Checkpoint status: COMPLETE PREPARATION PACKET READY — GATE 1 REQUIRED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -281,6 +281,37 @@ one fresh R64 must be bound and the complete packet constructed and validated.
 The exact 823-byte UTF-8 statement has SHA-256
 `b9b59a8f9c357ad53ac3fcb7f015803d9b903f57ef6439bf71db559f50324040`.
 Science, push, merge, publication, and release remain prohibited.
+
+The single authorized corrected attempt completed at
+`2026-09-07T19:09:40Z` under fresh identity
+`03a1179d756d119f66a87c30d14bd13ab637a3ece9101cbe7fcbb2ab6479dbca`.
+All six predeployment control outputs were reconstructed from authenticated
+receipts in the frozen order, R64 read exactly security group
+`sg-0d3be0dc4769f9f44` and derived zero ingress rules, and the complete control
+window was 7 seconds against the unchanged 300-second maximum. The source
+attachment SHA-256 is
+`b918f8378c99225cca6ad8de28bb90c6363cbd6e2ff44bcb409d7b7766018413`.
+
+The complete 465,749-byte `aws_c0_preparation_packet/v6` has identity and
+complete-byte SHA-256
+`9ebb5af1f13a6b13f66ec15748613b13dc170b02507677773aa7038920815231`.
+It binds implementation commit `6f7df4852f7eb9a1590d4db283ec49624eb2a251`,
+tree `f679eb997a6d2cc3870b2158ef1e2eee03b332ff`, read-plan/v3 identity
+`c9d2abf122a8b48828ce40fe4b8beb1346c7e7c19bfc85a1268d1747bb3d3bf7`,
+and a USD1.75 maximum against the USD50 cap. Independent schema and semantic
+validation passed. No publication occurred.
+
+Cleanup removed only `EBU-C0-Temporary-VpcContext-Preflight-20260907`,
+disposed the temporary credentials, proved the unchanged sole base policy and
+no attached policies, retained the non-public deny-only bucket policy, and
+reverified the existing `t3.small` stopped. Reservation, R64 phase binding,
+completion, and cleanup SHA-256 values are respectively
+`c3c8d495edddfc317987e856c672d19d2f7ba1ee78981e56fc17073516774e44`,
+`caece59b2ae16125c07047d3c60ba25d79a2524c49d3247d32b16a9004d8e268`,
+`737dba1be1520b0d31cd5d1f5d062626cdbdba317ba4bf5955d17cf4f86a77d0`,
+and `438e0d1045b155b3d1ea689c0ca4a04c038191613a8dc62072f72e6db8da6413`.
+The one platform smoke remains unspent. Instance start, deployment, and smoke
+remain blocked until the exact packet-bound Gate 1 statement is supplied.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
