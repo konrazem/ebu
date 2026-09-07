@@ -150,18 +150,6 @@ def build(root=ROOT):
         required_control_mapping={'const':mapping_v3},
         previous_read_plan_identity=typed_identity('aws_c0_runtime_control_read_plan/v2'),
         iam_source_mapping_authority_id={'const':'EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1'})
-    read_v4=copy.deepcopy(read_v3);mapping_v4=copy.deepcopy(mapping_v3)
-    change_owner=next(v for v in mapping_v4 if v['control']=='CHANGE_SET_AND_EFFECTS')
-    change_owner['conditional_use']='R47_R48_ONLY_WHEN_STACK_EXISTS_IN_CURRENT_PHASE'
-    rows_v4=copy.deepcopy(read_contract['rows'])+[r64]
-    for row in rows_v4:
-        if row['id'] in ('R47','R48'):
-            row.update(use='CONDITIONAL',condition='WHEN_STACK_EXISTS_IN_CURRENT_PHASE',call_requirement='CONDITIONAL')
-    read_v4['required']+=['chronology_predecessor_identity','change_set_phase_chronology_authority_id']
-    read_v4['properties'].update(schema={'const':'aws_c0_runtime_control_read_plan/v4'},rows={'const':rows_v4},
-        required_control_mapping={'const':mapping_v4},
-        chronology_predecessor_identity=typed_identity('aws_c0_runtime_control_read_plan/v3'),
-        change_set_phase_chronology_authority_id={'const':'EBU-AWS-C0-CHANGE-SET-PHASE-CHRONOLOGY-AUTHORITY-v1'})
     current_packet=definitions[definitions['live_packet']['$ref'].rsplit('/',1)[-1]]['allOf'][1]['properties']
     current_packet['runtime_control_read_plan']={'$ref':'#/$defs/read_plan_r64_v2'}
     current_packet['runtime_control_read_plan_identity']=typed_identity('aws_c0_runtime_control_read_plan/v2')
@@ -385,12 +373,10 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v4_definition']={'type':'object',
         'required':list(attachment_v4_fields),'properties':attachment_v4_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v4']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v4_definition'}
-    definitions['read_plan_change_set_chronology_v4']=read_v4
-    definitions['runtime_read_plan_v4']={'$ref':'#/$defs/read_plan_change_set_chronology_v4'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_read_plan_v4']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

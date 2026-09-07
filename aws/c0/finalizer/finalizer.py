@@ -2299,8 +2299,6 @@ READ_PLAN_MAPPING_SHA256 = '27d362e40c48a55963f9936adea4249ec672d0a47f381e88e576
 INGRESS_AMENDMENT_SHA256 = '97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f'
 IAM_SOURCE_MAPPING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1'
 IAM_CROSS_CONTROL_BINDING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-CROSS-CONTROL-SOURCE-BINDING-AUTHORITY-v1'
-CHANGE_SET_PHASE_CHRONOLOGY_AUTHORITY_ID = 'EBU-AWS-C0-CHANGE-SET-PHASE-CHRONOLOGY-AUTHORITY-v1'
-CHANGE_SET_PHASE_CONDITION = 'WHEN_STACK_EXISTS_IN_CURRENT_PHASE'
 R64_ROW = {'id':'R64','action':'ec2:DescribeSecurityGroups','resource_selector':'*',
     'use':'ALWAYS','control':'VPC_NETWORK_PATH','condition':'ALWAYS','call_requirement':'ALWAYS',
     'pagination_bounds':{'max_pages':1,'max_items':16},
@@ -2393,43 +2391,6 @@ def validate_runtime_control_read_plan_v3(plan: Any, plan_identity: Any) -> dict
     if (plan['map_sha256']!=digest(canonical_bytes(plan['required_control_mapping']))
             or plan_identity!=identity('aws_c0_runtime_control_read_plan/v3',digest(raw))):
         raise Refusal('IAM corrected complete plan/map hash mismatch')
-    return plan
-
-
-def validate_runtime_control_read_plan_v4(plan: Any, plan_identity: Any) -> dict[str, Any]:
-    """Prospective R47/R48 phase chronology correction layered on v3."""
-    prior_fields={'schema','rows','row_ids','required_control_mapping','shared_row_ids','map_sha256',
-        'plan_contract_identity','freshness_max_seconds','original_read_plan_identity','amendment_packet_identity',
-        'previous_read_plan_identity','iam_source_mapping_authority_id'}
-    fields=prior_fields|{'chronology_predecessor_identity','change_set_phase_chronology_authority_id'}
-    if (not isinstance(plan,dict) or set(plan)!=fields or plan.get('schema')!='aws_c0_runtime_control_read_plan/v4'
-            or plan.get('change_set_phase_chronology_authority_id')!=CHANGE_SET_PHASE_CHRONOLOGY_AUTHORITY_ID):
-        raise Refusal('closed prospective change-set chronology read plan required')
-    raw=canonical_bytes(plan)
-    rows=strict_json(canonical_bytes(plan['rows']))
-    if not isinstance(rows,list) or len(rows)!=64:
-        raise Refusal('change-set chronology exact row universe required')
-    by_id={row.get('id'):row for row in rows if isinstance(row,dict)}
-    if set(by_id)!=set(plan['row_ids']) or len(by_id)!=len(rows):
-        raise Refusal('change-set chronology unique rows required')
-    for row_id in ('R47','R48'):
-        row=by_id.get(row_id,{})
-        if (row.get('use')!='CONDITIONAL' or row.get('condition')!=CHANGE_SET_PHASE_CONDITION
-                or row.get('call_requirement')!='CONDITIONAL'):
-            raise Refusal('R47/R48 exact stack-existence condition required')
-        row.update(use='ALWAYS',condition='ALWAYS',call_requirement='ALWAYS')
-    mapping=strict_json(canonical_bytes(plan['required_control_mapping']))
-    matches=[item for item in mapping if isinstance(item,dict) and item.get('control')=='CHANGE_SET_AND_EFFECTS']
-    if len(matches)!=1 or matches[0].get('conditional_use')!='R47_R48_ONLY_WHEN_STACK_EXISTS_IN_CURRENT_PHASE':
-        raise Refusal('change-set chronology sole control mapping required')
-    matches[0]['conditional_use']='ALWAYS'
-    prior={k:plan[k] for k in prior_fields}
-    prior.update(schema='aws_c0_runtime_control_read_plan/v3',rows=rows,
-        required_control_mapping=mapping,map_sha256=digest(canonical_bytes(mapping)))
-    validate_runtime_control_read_plan_v3(prior,plan['chronology_predecessor_identity'])
-    if (plan['map_sha256']!=digest(canonical_bytes(plan['required_control_mapping']))
-            or plan_identity!=identity('aws_c0_runtime_control_read_plan/v4',digest(raw))):
-        raise Refusal('change-set chronology complete plan/map hash mismatch')
     return plan
 
 

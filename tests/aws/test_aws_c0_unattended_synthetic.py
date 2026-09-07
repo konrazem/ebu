@@ -364,44 +364,6 @@ class IamSourceMappingAmendmentTests(unittest.TestCase):
             G.validate_record(ROOT,'iam_policy_set_output_v2',output)
 
 
-class ChangeSetPhaseChronologyAmendmentTests(unittest.TestCase):
-    def test_v4_changes_only_r47_r48_phase_condition_and_preserves_v3(self):
-        old=G.build_runtime_control_read_plan_fields_v3(ROOT)
-        current=G.build_runtime_control_read_plan_fields_v4(ROOT)
-        prior=old['runtime_control_read_plan'];plan=current['runtime_control_read_plan']
-        self.assertEqual(plan['chronology_predecessor_identity'],old['runtime_control_read_plan_identity'])
-        self.assertEqual(F.validate_runtime_control_read_plan_v4(
-            plan,current['runtime_control_read_plan_identity']),plan)
-        G.validate_record(ROOT,'runtime_read_plan_v4',plan)
-        expected=copy.deepcopy(prior);expected['schema']='aws_c0_runtime_control_read_plan/v4'
-        expected['chronology_predecessor_identity']=old['runtime_control_read_plan_identity']
-        expected['change_set_phase_chronology_authority_id']=F.CHANGE_SET_PHASE_CHRONOLOGY_AUTHORITY_ID
-        for row in expected['rows']:
-            if row['id'] in ('R47','R48'):
-                row.update(use='CONDITIONAL',condition=F.CHANGE_SET_PHASE_CONDITION,call_requirement='CONDITIONAL')
-        owner=next(x for x in expected['required_control_mapping'] if x['control']=='CHANGE_SET_AND_EFFECTS')
-        owner['conditional_use']='R47_R48_ONLY_WHEN_STACK_EXISTS_IN_CURRENT_PHASE'
-        expected['map_sha256']=G.sha(G.canonical(expected['required_control_mapping']))
-        self.assertEqual(plan,expected)
-        for row_id in ('R47','R48'):
-            row=next(x for x in plan['rows'] if x['id']==row_id)
-            self.assertEqual((row['action'],row['resource_selector'],row['control'],row['reconstruction_output_kind']),
-                next((x['action'],x['resource_selector'],x['control'],x['reconstruction_output_kind'])
-                     for x in prior['rows'] if x['id']==row_id))
-
-    def test_v4_refuses_authority_predecessor_row_action_or_other_mapping_change(self):
-        mutations=(lambda p:p.update(change_set_phase_chronology_authority_id='other'),
-            lambda p:p['chronology_predecessor_identity'].update(value='0'*64),
-            lambda p:next(x for x in p['rows'] if x['id']=='R47').update(condition='ALWAYS'),
-            lambda p:next(x for x in p['rows'] if x['id']=='R48').update(action='cloudformation:DescribeStacks'),
-            lambda p:next(x for x in p['required_control_mapping'] if x['control']=='CHANGE_SET_AND_EFFECTS').update(conditional_use='ALWAYS'),
-            lambda p:next(x for x in p['required_control_mapping'] if x['control']=='BUCKET_CONTROLS_KMS')['row_ids'].pop())
-        for mutate in mutations:
-            result=G.build_runtime_control_read_plan_fields_v4(ROOT);plan=result['runtime_control_read_plan']
-            mutate(plan);plan['map_sha256']=G.sha(G.canonical(plan['required_control_mapping']))
-            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
-                F.validate_runtime_control_read_plan_v4(plan,G.identity(plan['schema'],plan))
-
 class R64IngressAmendmentTests(unittest.TestCase):
     """API-shaped offline evidence only; no transport, AWS, service or science."""
     def material(self):
