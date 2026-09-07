@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: COMPLETE PREPARATION PACKET READY — GATE 1 REQUIRED
+## Checkpoint status: GATE 1 PACKET SESSION EXPIRED BEFORE MUTATION
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -312,6 +312,24 @@ completion, and cleanup SHA-256 values are respectively
 and `438e0d1045b155b3d1ea689c0ca4a04c038191613a8dc62072f72e6db8da6413`.
 The one platform smoke remains unspent. Instance start, deployment, and smoke
 remain blocked until the exact packet-bound Gate 1 statement is supplied.
+
+The packet-bound Gate 1 statement was received through a Markdown-escaped
+transport form no later than `2026-09-07T20:04:37Z`. That 1,649-byte form has
+SHA-256 `b88356331e0c03192d574eb758aa06a158f6ebcf89239c7c1f2e351c9de9885f`.
+The user's explicit direction to remove those presentation escapes was observed
+no earlier than `2026-09-07T20:10:36Z`. Removing the 77 escape characters
+produces the exact required 1,572-byte statement with SHA-256
+`0255ae0b12910e8548660c8302f3c9eb4f2a4456da47d2382d68d413d2028e89`,
+but the packet's exact preparation session had expired at
+`2026-09-07T20:09:33Z` before that ambiguity was resolved.
+
+The frozen choreography requires the packet's exact unexpired caller before
+every mutation and requires a fresh preparation identity and approval after
+session replacement. Therefore no Gate 1 AWS call, mutation, instance start,
+deployment, platform smoke, or science occurred. The expired packet and both
+authorization messages remain historical evidence and cannot be replayed. The
+next permissible recovery is a fresh preparation identity, packet, and exact
+packet-bound approval.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
