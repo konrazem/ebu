@@ -146,6 +146,13 @@ The remaining eight slots are neutral explicit unresolved states with null outpu
 `PARTIAL_NOT_READY` disposition and false completion flag prevent it from being
 used as, or confused with, the historical v1 complete-reconstruction pass gate.
 No live packet or cloud action consumes this partial envelope.
+
+The next local attachment reruns those three constructors from retained source
+receipt bundles. It requires an independently supplied predeployment-context
+identity, a common phase start/freshness/session context, the independently
+sealed EC2 pagination bounds, and the exact same R02 receipt for the profile
+and VPC paths. Its output remains `PARTIAL_SOURCE_BOUND_NOT_READY`; it neither
+fills the other eight controls nor changes the historical/live gates.
 The address request uses its documented
 [network-interface-id filter](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html).
 Missing association state is conservatively refused rather than inferred.

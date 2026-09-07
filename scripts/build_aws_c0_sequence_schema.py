@@ -255,10 +255,21 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_progress_v2_definition']={'type':'object','required':list(progress_fields),
         'properties':progress_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_progress_v2']={'$ref':'#/$defs/runtime_reconstruction_progress_v2_definition'}
+    attachment_fields={'schema':{'const':'aws_c0_runtime_control_reconstruction_source_attachment/v1'},
+        'read_plan_identity':typed_identity('aws_c0_runtime_control_read_plan/v2'),
+        'phase':{'const':'PREDEPLOYMENT'},'validation_utc':{'$ref':time_ref},
+        'sealed_context':{'type':'object'},'sealed_context_identity':typed_identity('aws_c0_predeployment_reconstruction_context/v1'),
+        'source_bundles_in_order':{'type':'array','minItems':3,'maxItems':3,'items':{'type':'object'}},
+        'outputs_in_order':{'type':'array','minItems':3,'maxItems':3,'items':{'type':'object'}},
+        'source_revalidation_performed':{'const':True},'complete_reconstruction_claimed':{'const':False},
+        'disposition':{'const':'PARTIAL_SOURCE_BOUND_NOT_READY'}}
+    definitions['runtime_reconstruction_source_attachment_v1_definition']={'type':'object',
+        'required':list(attachment_fields),'properties':attachment_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_source_attachment_v1']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v1_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','runtime_reconstruction_progress_v2']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

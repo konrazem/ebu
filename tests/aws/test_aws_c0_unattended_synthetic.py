@@ -632,7 +632,8 @@ class VpcNetworkReconstructionV2Tests(unittest.TestCase):
         instance=instance_response['Reservations'][0]['Instances'][0]
         subnet_ids=['subnet-01234567','subnet-89abcdef']
         instance.update(SubnetId=subnet_ids[primary_subnet_index],ImageId='ami-01234567',
-            BlockDeviceMappings=[{'DeviceName':'/dev/xvda','Ebs':{'VolumeId':'vol-01234567'}}])
+            BlockDeviceMappings=[{'DeviceName':'/dev/xvda','Ebs':{'VolumeId':'vol-01234567'}}],
+            IamInstanceProfile={'Arn':'arn:aws:iam::623609441658:instance-profile/EBU-Rehearsal-EC2-Role'})
         for index in range(2):
             instance['NetworkInterfaces'][index]['SubnetId']=subnet_ids[index]
             interface_response['NetworkInterfaces'][index]['SubnetId']=subnet_ids[index]
@@ -925,6 +926,94 @@ class ReconstructionProgressV2Tests(unittest.TestCase):
         with self.assertRaises(F.Refusal):F.validate_runtime_control_reconstruction_progress_v2(record,
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
+
+
+class ReconstructionSourceAttachmentTests(unittest.TestCase):
+    """Offline receipt bundles must be revalidated, not merely named."""
+    def material(self):
+        validation='2026-09-06T18:00:50Z'
+        receipt,account_context=AccountRegionReconstructionTests().material()
+        account_context={**account_context,'validation_utc':validation}
+        account=G.build_account_region_output(ROOT,receipt,**account_context)
+        receipts,profile_context=InstanceProfileReconstructionTests().material()
+        profile_context={**profile_context,'validation_utc':validation}
+        vpc_receipts,binding,vpc_context=VpcNetworkReconstructionV2Tests().material()
+        receipts['R02']=copy.deepcopy(binding['ingress_observation']['source_receipts_in_order'][0])
+        profile=G.build_instance_profile_output(ROOT,receipts,**profile_context)
+        vpc=G.build_vpc_network_output_v2(ROOT,vpc_receipts,binding,**vpc_context)
+        sealed={'schema':'aws_c0_predeployment_reconstruction_context/v1',
+            'phase_not_before_utc':vpc_context['phase_not_before_utc'],'validation_utc':validation,
+            'freshness_max_seconds':vpc_context['read_plan']['freshness_max_seconds'],
+            'caller_identity':vpc_context['caller_identity'],'authentication_source_identity':vpc_context['authentication_source_identity'],
+            'expected_caller_arn':account_context['expected_caller_arn'],'expected_caller_user_id':account_context['expected_caller_user_id'],
+            'expected_role_id':profile_context['expected_role_id'],'attempt_identity':vpc_context['attempt_identity'],
+            'previous_budget_identity':binding['previous_call_budget_identity'],
+            'ec2_pagination_bounds':vpc_context['ec2_pagination_bounds']}
+        sealed_id=F.identity(sealed['schema'],F.digest(F.canonical_bytes(sealed)))
+        return validation,sealed,sealed_id,{'candidate':account,'receipt':receipt,'context':account_context}, \
+            {'candidate':profile,'receipts':receipts,'context':profile_context}, \
+            {'candidate':vpc,'receipts':vpc_receipts,'ingress_binding':binding,'context':vpc_context}
+
+    def test_source_attachment_reruns_all_three_reconstructors(self):
+        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        record=G.build_runtime_control_reconstruction_source_attachment_v1(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,
+            sealed_context_identity=sealed_id,validation_utc=validation)
+        self.assertTrue(record['source_revalidation_performed'])
+        self.assertFalse(record['complete_reconstruction_claimed'])
+        self.assertEqual(record['disposition'],'PARTIAL_SOURCE_BOUND_NOT_READY')
+        self.assertEqual([x['control'] for x in record['outputs_in_order']],
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH'])
+        plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        self.assertEqual(F.validate_runtime_control_reconstruction_source_attachment_v1(record,
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,expected_sealed_context_identity=sealed_id),record)
+
+    def test_rehashed_candidate_or_source_context_refuses(self):
+        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        account['candidate']=copy.deepcopy(account['candidate'])
+        account['candidate']['decoded_json']['account_id']='111111111111'
+        raw=G.canonical(account['candidate']['decoded_json'])
+        account['candidate'].update(identity=G.identity(account['candidate']['schema'],account['candidate']['decoded_json']),
+            canonical_json_base64=base64.b64encode(raw).decode(),canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
+            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
+
+    def test_sealed_context_and_shared_r02_cannot_be_substituted(self):
+        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        profile['context']=copy.deepcopy(profile['context']);profile['context']['expected_role_id']='AROA'+'B'*16
+        with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
+            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
+
+    def test_public_validator_rejects_rehashed_replacement_context(self):
+        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        record=G.build_runtime_control_reconstruction_source_attachment_v1(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,
+            sealed_context_identity=sealed_id,validation_utc=validation)
+        record=copy.deepcopy(record);record['sealed_context']['ec2_pagination_bounds']['max_pages']=3
+        record['sealed_context_identity']=F.identity(record['sealed_context']['schema'],F.digest(F.canonical_bytes(record['sealed_context'])))
+        plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        with self.assertRaises(F.Refusal):F.validate_runtime_control_reconstruction_source_attachment_v1(record,
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,expected_sealed_context_identity=sealed_id)
+        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        profile['receipts']=copy.deepcopy(profile['receipts']);profile['receipts']['R02']['request_id']='different-r02-receipt'
+        with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
+            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
+        validation,sealed,sealed_id,account,profile,vpc=self.material();vpc['context']=copy.deepcopy(vpc['context'])
+        vpc['context']['read_plan_identity']=F.identity('aws_c0_runtime_control_read_plan/v2','0'*64)
+        with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
+            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
 
 
 class R64LocalBudgetStoreTests(unittest.TestCase):

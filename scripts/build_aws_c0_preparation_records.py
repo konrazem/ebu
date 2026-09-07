@@ -217,6 +217,23 @@ def build_runtime_control_reconstruction_progress_v2(root,outputs,*,phase,valida
     validate_record(root,'runtime_reconstruction_progress_v2',record)
     return record
 
+def build_runtime_control_reconstruction_source_attachment_v1(root,*,account_bundle,
+        instance_profile_bundle,vpc_bundle,sealed_context,sealed_context_identity,validation_utc,freshness_max_seconds=300):
+    """Construct the partial attachment only by rerunning its source validators."""
+    plan_fields=build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=freshness_max_seconds)
+    f=finalizer(root)
+    record=f.build_runtime_control_reconstruction_source_attachment_v1(
+        read_plan=plan_fields['runtime_control_read_plan'],
+        read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+        validation_utc=validation_utc,sealed_context=sealed_context,sealed_context_identity=sealed_context_identity,account_bundle=account_bundle,
+        instance_profile_bundle=instance_profile_bundle,vpc_bundle=vpc_bundle)
+    f.validate_runtime_control_reconstruction_source_attachment_v1(record,
+        read_plan=plan_fields['runtime_control_read_plan'],
+        read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+        validation_utc=validation_utc,expected_sealed_context_identity=sealed_context_identity)
+    validate_record(root,'runtime_reconstruction_source_attachment_v1',record)
+    return record
+
 class R64LocalCallBudgetStore:
     """Append-only local reservation snapshots for one exact attempt.
 

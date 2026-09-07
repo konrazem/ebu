@@ -3073,6 +3073,106 @@ def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_pla
     return record
 
 
+def build_runtime_control_reconstruction_source_attachment_v1(*, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str,
+        sealed_context: Any, sealed_context_identity: dict[str,str], account_bundle: Any,
+        instance_profile_bundle: Any, vpc_bundle: Any) -> dict[str,Any]:
+    """Rerun the three available reconstructors before binding their outputs.
+
+    This is a source-bearing local record. It deliberately remains partial and
+    cannot replace the historical eleven-control reconstruction-set/v1.
+    """
+    if phase!='PREDEPLOYMENT':
+        raise Refusal('only the three implemented predeployment controls may attach')
+    validate_runtime_control_read_plan_v2(read_plan,read_plan_identity)
+    context_fields={'schema','phase_not_before_utc','validation_utc','freshness_max_seconds',
+        'caller_identity','authentication_source_identity','expected_caller_arn','expected_caller_user_id',
+        'expected_role_id','attempt_identity','previous_budget_identity','ec2_pagination_bounds'}
+    if (not isinstance(sealed_context,dict) or set(sealed_context)!=context_fields
+            or sealed_context.get('schema')!='aws_c0_predeployment_reconstruction_context/v1'
+            or sealed_context.get('validation_utc')!=validation_utc
+            or sealed_context.get('freshness_max_seconds')!=read_plan['freshness_max_seconds']
+            or sealed_context_identity!=identity(sealed_context['schema'],digest(canonical_bytes(sealed_context)))):
+        raise Refusal('independently supplied sealed reconstruction context required')
+    _r64_utc(sealed_context['phase_not_before_utc']);_r64_utc(validation_utc)
+    _identity({'caller':sealed_context['caller_identity']},'caller',sealed_context['caller_identity'].get('kind',''))
+    _identity({'source':sealed_context['authentication_source_identity']},'source',sealed_context['authentication_source_identity'].get('kind',''))
+    _identity({'attempt':sealed_context['attempt_identity']},'attempt','aws_c0_attempt/v1')
+    _identity({'budget':sealed_context['previous_budget_identity']},'budget','aws_c0_network_ingress_call_budget/v1')
+    def bundle(value, name, fields):
+        if not isinstance(value,dict) or set(value)!=fields:
+            raise Refusal(name+' source bundle field closure failed')
+        return value
+    account=bundle(account_bundle,'account',{'candidate','receipt','context'})
+    profile=bundle(instance_profile_bundle,'instance/profile',{'candidate','receipts','context'})
+    vpc=bundle(vpc_bundle,'vpc',{'candidate','receipts','ingress_binding','context'})
+    account_context=account['context'];profile_context=profile['context'];vpc_context=vpc['context']
+    if (not isinstance(account_context,dict) or not isinstance(profile_context,dict) or not isinstance(vpc_context,dict)
+            or account_context.get('validation_utc')!=validation_utc
+            or profile_context.get('validation_utc')!=validation_utc
+            or vpc_context.get('validation_utc')!=validation_utc
+            or any(context.get('freshness_max_seconds')!=sealed_context['freshness_max_seconds']
+                   or context.get('phase_not_before_utc')!=sealed_context['phase_not_before_utc']
+                   or context.get('caller_identity')!=sealed_context['caller_identity']
+                   or context.get('authentication_source_identity')!=sealed_context['authentication_source_identity']
+                   for context in (account_context,profile_context))
+            or vpc_context.get('phase_not_before_utc')!=sealed_context['phase_not_before_utc']
+            or vpc_context.get('caller_identity')!=sealed_context['caller_identity']
+            or vpc_context.get('authentication_source_identity')!=sealed_context['authentication_source_identity']
+            or vpc_context.get('read_plan',{}).get('freshness_max_seconds')!=sealed_context['freshness_max_seconds']
+            or vpc_context.get('ec2_pagination_bounds')!=sealed_context['ec2_pagination_bounds']
+            or account_context.get('expected_caller_arn')!=sealed_context['expected_caller_arn']
+            or account_context.get('expected_caller_user_id')!=sealed_context['expected_caller_user_id']
+            or profile_context.get('expected_role_id')!=sealed_context['expected_role_id']
+            or vpc.get('ingress_binding',{}).get('attempt_identity')!=sealed_context['attempt_identity']
+            or vpc.get('ingress_binding',{}).get('previous_call_budget_identity')!=sealed_context['previous_budget_identity']
+            or vpc_context.get('phase')!=phase or vpc_context.get('read_plan')!=read_plan
+            or vpc_context.get('read_plan_identity')!=read_plan_identity
+            or profile.get('receipts',{}).get('R02')!=vpc.get('ingress_binding',{}).get('ingress_observation',{}).get('source_receipts_in_order',[None])[0]):
+        raise Refusal('source attachment context/plan/validation binding differs')
+    expected_account=build_account_region_reconstruction_output(account['receipt'],**account_context)
+    expected_profile=build_instance_profile_reconstruction_output(profile['receipts'],**profile_context)
+    expected_vpc=build_vpc_network_reconstruction_output_v2(vpc['receipts'],vpc['ingress_binding'],**vpc_context)
+    expected=(expected_account,expected_profile,expected_vpc)
+    candidates=(account['candidate'],profile['candidate'],vpc['candidate'])
+    if any(canonical_bytes(found)!=canonical_bytes(wanted) for found,wanted in zip(candidates,expected)):
+        raise Refusal('source attachment candidate differs from rerun reconstruction')
+    controls=('ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH')
+    record={'schema':'aws_c0_runtime_control_reconstruction_source_attachment/v1',
+        'read_plan_identity':read_plan_identity,'phase':phase,'validation_utc':validation_utc,
+        'sealed_context':sealed_context,'sealed_context_identity':sealed_context_identity,
+        'source_bundles_in_order':[account,profile,vpc],'outputs_in_order':list(expected),
+        'source_revalidation_performed':True,'complete_reconstruction_claimed':False,
+        'disposition':'PARTIAL_SOURCE_BOUND_NOT_READY'}
+    if [item.get('control') for item in record['outputs_in_order']]!=list(controls):
+        raise Refusal('source attachment output control order differs')
+    return record
+
+
+def validate_runtime_control_reconstruction_source_attachment_v1(record: Any, *, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str,
+        expected_sealed_context_identity: dict[str,str]) -> dict[str,Any]:
+    fields={'schema','read_plan_identity','phase','validation_utc','sealed_context','sealed_context_identity','source_bundles_in_order','outputs_in_order',
+        'source_revalidation_performed','complete_reconstruction_claimed','disposition'}
+    if (not isinstance(record,dict) or set(record)!=fields
+            or record.get('schema')!='aws_c0_runtime_control_reconstruction_source_attachment/v1'
+            or record.get('read_plan_identity')!=read_plan_identity or record.get('phase')!=phase
+            or record.get('validation_utc')!=validation_utc or record.get('source_revalidation_performed') is not True
+            or record.get('sealed_context_identity')!=expected_sealed_context_identity
+            or record.get('complete_reconstruction_claimed') is not False
+            or record.get('disposition')!='PARTIAL_SOURCE_BOUND_NOT_READY'
+            or not isinstance(record.get('source_bundles_in_order'),list) or len(record['source_bundles_in_order'])!=3):
+        raise Refusal('closed source-bound partial attachment required')
+    bundles=record['source_bundles_in_order']
+    expected=build_runtime_control_reconstruction_source_attachment_v1(read_plan=read_plan,
+        read_plan_identity=read_plan_identity,phase=phase,validation_utc=validation_utc,
+        sealed_context=record['sealed_context'],sealed_context_identity=record['sealed_context_identity'],
+        account_bundle=bundles[0],instance_profile_bundle=bundles[1],vpc_bundle=bundles[2])
+    if canonical_bytes(record)!=canonical_bytes(expected):
+        raise Refusal('source-bound attachment differs from rerun exact reconstruction')
+    return record
+
+
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
     if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")

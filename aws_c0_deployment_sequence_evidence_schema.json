@@ -56,6 +56,9 @@
     },
     {
       "$ref": "#/$defs/runtime_reconstruction_progress_v2"
+    },
+    {
+      "$ref": "#/$defs/runtime_reconstruction_source_attachment_v1"
     }
   ],
   "$defs": {
@@ -52088,6 +52091,93 @@
     },
     "runtime_reconstruction_progress_v2": {
       "$ref": "#/$defs/runtime_reconstruction_progress_v2_definition"
+    },
+    "runtime_reconstruction_source_attachment_v1_definition": {
+      "type": "object",
+      "required": [
+        "schema",
+        "read_plan_identity",
+        "phase",
+        "validation_utc",
+        "sealed_context",
+        "sealed_context_identity",
+        "source_bundles_in_order",
+        "outputs_in_order",
+        "source_revalidation_performed",
+        "complete_reconstruction_claimed",
+        "disposition"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_runtime_control_reconstruction_source_attachment/v1"
+        },
+        "read_plan_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan/v2"
+                }
+              }
+            }
+          ]
+        },
+        "phase": {
+          "const": "PREDEPLOYMENT"
+        },
+        "validation_utc": {
+          "$ref": "#/$defs/d4_timestamp"
+        },
+        "sealed_context": {
+          "type": "object"
+        },
+        "sealed_context_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_predeployment_reconstruction_context/v1"
+                }
+              }
+            }
+          ]
+        },
+        "source_bundles_in_order": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object"
+          }
+        },
+        "outputs_in_order": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object"
+          }
+        },
+        "source_revalidation_performed": {
+          "const": true
+        },
+        "complete_reconstruction_claimed": {
+          "const": false
+        },
+        "disposition": {
+          "const": "PARTIAL_SOURCE_BOUND_NOT_READY"
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime_reconstruction_source_attachment_v1": {
+      "$ref": "#/$defs/runtime_reconstruction_source_attachment_v1_definition"
     }
   }
 }
