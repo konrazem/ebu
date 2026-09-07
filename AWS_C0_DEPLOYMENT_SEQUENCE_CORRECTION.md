@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: EXPIRED-PACKET REPLACEMENT PREFLIGHT AUTHORIZED
+## Checkpoint status: FRESH REPLACEMENT PACKET READY — GATE 1 REQUIRED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -347,6 +347,31 @@ The controller will remove Markdown presentation escapes itself without asking
 the user to retype a statement. The new packet's exact Gate 1 approval remains
 a cryptographic boundary that can only be rendered after that packet exists;
 this goal authorization does not invent or preauthorize an unknown digest.
+
+The single authorized expired-packet recovery attempt completed successfully at
+`2026-09-07T20:23:14Z` under fresh attempt identity
+`d0f00f06a9d8008b5971694a55d8c29ae6810ac10a5e829fd9662fc5fcef9746`.
+All six controls were reconstructed in the frozen order in 7 seconds under the
+unchanged 300-second maximum. R64 read exactly security group
+`sg-0d3be0dc4769f9f44` and derived zero ingress rules. The source-attachment
+SHA-256 is `3817962f52503a8307f73838c5bdae63091133f0ff6e969255bd186d422d9ece`.
+
+The new 465,749-byte `aws_c0_preparation_packet/v6` has identity and
+complete-byte SHA-256
+`51c57d0efe0444ebf1cc4ef8634878703f123da069eebac75a13bbf3fba7bf46`.
+It binds implementation commit `71c9db01fa1102ae38803b109603d734c91cb9b9`,
+tree `46deae7d70681c9655893156399541c9a05a684c`, and preparation-session
+expiry `2026-09-07T21:23:06Z`. Independent local schema and semantic validation
+passed. Cost remains USD1.75 under the USD50 cap. No publication occurred.
+
+Attempt cleanup removed only
+`EBU-C0-Temporary-ExpiredPacket-Recovery-20260907`, proved the base policy
+unchanged, disposed temporary credentials, and verified the existing
+`t3.small` stopped. The cleanup record is complete with no errors. A later
+independent AWS recheck could not authenticate because the local AWS login had
+expired; this does not replace or weaken the successful authenticated cleanup
+evidence. No deployment, instance start, smoke, or science occurred. The one
+platform smoke remains unspent pending exact packet-bound Gate 1 authority.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
