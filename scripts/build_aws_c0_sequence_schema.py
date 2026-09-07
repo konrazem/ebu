@@ -122,10 +122,61 @@ def build(root=ROOT):
     definitions['local_helper_request_v1']={'type':'object','required':list(helper_fields),
         'properties':helper_fields,'additionalProperties':False}
     definitions['ssm_local_helper_request']={'$ref':'#/$defs/local_helper_request_v1'}
+    # A new read-plan kind, never a global upgrade of the historical v1 plan.
+    read_contract=json.loads((root/'aws_c0_material_identity_runtime_validation_correction_contract.json').read_bytes())['sealed_read_plan']
+    r64={'id':'R64','action':'ec2:DescribeSecurityGroups','resource_selector':'*',
+        'use':'ALWAYS','control':'VPC_NETWORK_PATH','condition':'ALWAYS','call_requirement':'ALWAYS',
+        'pagination_bounds':{'max_pages':1,'max_items':16},
+        'reconstruction_output_kind':'aws_c0_vpc_network_observation/v2'}
+    read_v2=copy.deepcopy(next(v for k,v in definitions.items() if k.endswith('_runtime_control_read_plan')))
+    mapping=copy.deepcopy(read_contract['required_control_mapping'])
+    owner=next(v for v in mapping if v['control']=='VPC_NETWORK_PATH')
+    owner['row_ids'].append('R64');owner['output_schema']=owner['output_kind']='aws_c0_vpc_network_observation/v2'
+    read_v2['required']+=['original_read_plan_identity','amendment_packet_identity']
+    def typed_identity(kind):return {'allOf':[{'$ref':identity_ref},{'properties':{'kind':{'const':kind}}}]}
+    read_v2['properties'].update(schema={'const':'aws_c0_runtime_control_read_plan/v2'},
+        rows={'const':copy.deepcopy(read_contract['rows'])+[r64]},
+        row_ids={'const':['R%02d'%i for i in range(1,65)]},required_control_mapping={'const':mapping},
+        original_read_plan_identity=typed_identity('aws_c0_runtime_control_read_plan/v1'),
+        amendment_packet_identity=typed_identity('aws_c0_network_ingress_source_authority_amendment_packet/v1'))
+    definitions['read_plan_r64_v2']=read_v2
+    definitions['runtime_read_plan_v2']={'$ref':'#/$defs/read_plan_r64_v2'}
+    current_packet=definitions[definitions['live_packet']['$ref'].rsplit('/',1)[-1]]['allOf'][1]['properties']
+    current_packet['runtime_control_read_plan']={'$ref':'#/$defs/read_plan_r64_v2'}
+    current_packet['runtime_control_read_plan_identity']=typed_identity('aws_c0_runtime_control_read_plan/v2')
+    r64_receipt=copy.deepcopy(original)
+    r64_receipt['required'].append('schema')
+    r64_receipt['properties'].update(schema={'const':'aws_c0_r64_api_request_response_receipt/v1'},
+        row_id={'const':'R64'},action={'const':'ec2:DescribeSecurityGroups'},resource_selector={'const':'*'},
+        pagination_page={'const':1},pagination_item_count={'type':'integer','minimum':1,'maximum':16})
+    definitions['r64_receipt_v1']=r64_receipt
+    definitions['r64_receipt']={'$ref':'#/$defs/r64_receipt_v1'}
+    source_receipts=[]
+    for row,action in [('R02','DescribeInstances'),('R04','DescribeNetworkInterfaces')]:
+        source=copy.deepcopy(original)
+        source['properties'].update(row_id={'const':row},action={'const':'ec2:'+action},resource_selector={'const':'*'},
+            pagination_page={'const':1},pagination_item_count={'type':'integer','minimum':1,'maximum':16})
+        source_receipts.append(source)
+    zero_science=copy.deepcopy(definitions[definitions['live_packet']['$ref'].rsplit('/',1)[-1]])
+    # Resolve common only to copy the fixed science-counter contract.
+    common=definitions[zero_science['allOf'][0]['$ref'].rsplit('/',1)[-1]]
+    ingress_fields={'schema':{'const':'aws_c0_network_ingress_observation/v1'},
+        'amendment_packet_identity':typed_identity('aws_c0_network_ingress_source_authority_amendment_packet/v1'),
+        'attempt_identity':typed_identity('aws_c0_attempt/v1'),'observed_utc':{'$ref':time_ref},
+        'freshness_max_seconds':{'type':'integer','minimum':1,'maximum':300},
+        'instance_id':{'const':'i-048bac00bdb540a4e'},'vpc_id':{'type':'string','pattern':'^vpc-[0-9a-f]{8,17}$'},
+        'security_group_ids':{'type':'array','minItems':1,'maxItems':16,'uniqueItems':True,
+                              'items':{'type':'string','pattern':'^sg-[0-9a-f]{8,17}$'}},
+        'ingress_rule_count':{'type':'integer','const':0},
+        'source_receipts_in_order':{'type':'array','minItems':2,'maxItems':2,'prefixItems':source_receipts,'items':False},
+        'rule_receipt':{'$ref':'#/$defs/r64_receipt_v1'},'zero_science_counters':copy.deepcopy(common['properties']['zero_science_counters'])}
+    definitions['network_ingress_observation_v1']={'type':'object','required':list(ingress_fields),
+        'properties':ingress_fields,'additionalProperties':False}
+    definitions['network_ingress_observation']={'$ref':'#/$defs/network_ingress_observation_v1'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

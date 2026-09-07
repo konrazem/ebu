@@ -3,6 +3,16 @@
   "readiness_disposition": "NOT_READY_FULL_PUBLIC_ENTRY_SCHEMA_GATE_FAILS",
   "independent_review_disposition": "NOT_APPROVED",
   "aws_continuation_permitted_by_validation": false,
+  "network_ingress_amendment_authorization": {
+    "schema": "aws_c0_explicit_packet_authority_reference/v1",
+    "packet_sha256": "97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f",
+    "source": "EXPLICIT_USER_AUTHORIZATION_OF_THE_COMPLETE_EXACT_PACKET_2026_09_07",
+    "action_from_authorized_packet": "ec2:DescribeSecurityGroups",
+    "historical_proposal_object_preserved": true,
+    "cloud_gates_waived": false,
+    "permissions_changed": false,
+    "aws_calls_performed": 0
+  },
   "pending_network_ingress_amendment_packet": {
     "schema": "aws_c0_network_ingress_source_authority_amendment_packet/v1",
     "disposition": "PROPOSED_REQUIRES_EXPLICIT_NEW_AUTHORITY",

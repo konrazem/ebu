@@ -2296,6 +2296,11 @@ def _bound_base64(record: dict[str, Any], identity_field: str, bytes_field: str,
 READ_PLAN_CONTRACT_SHA256 = 'fb5cd0b72d5190034f5de5afbd8f4b775e7171a8560a8c05e17e890ae916ce97'
 READ_PLAN_ROWS_SHA256 = '429e128c60fd89eb87d82a88b3a4e1676825cb9fe49d134087d9072b9916b380'
 READ_PLAN_MAPPING_SHA256 = '27d362e40c48a55963f9936adea4249ec672d0a47f381e88e57697df86973c89'
+INGRESS_AMENDMENT_SHA256 = '97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f'
+R64_ROW = {'id':'R64','action':'ec2:DescribeSecurityGroups','resource_selector':'*',
+    'use':'ALWAYS','control':'VPC_NETWORK_PATH','condition':'ALWAYS','call_requirement':'ALWAYS',
+    'pagination_bounds':{'max_pages':1,'max_items':16},
+    'reconstruction_output_kind':'aws_c0_vpc_network_observation/v2'}
 
 
 def validate_runtime_control_read_plan(plan: Any, plan_identity: Any) -> dict[str, Any]:
@@ -2323,11 +2328,214 @@ def validate_runtime_control_read_plan(plan: Any, plan_identity: Any) -> dict[st
     return plan
 
 
+def validate_runtime_control_read_plan_v2(plan: Any, plan_identity: Any) -> dict[str, Any]:
+    """Prospective R64 only; reconstruct and verify the unchanged v1 prefix."""
+    fields={'schema','rows','row_ids','required_control_mapping','shared_row_ids','map_sha256',
+        'plan_contract_identity','freshness_max_seconds','original_read_plan_identity','amendment_packet_identity'}
+    if not isinstance(plan,dict) or set(plan)!=fields or plan['schema']!='aws_c0_runtime_control_read_plan/v2':
+        raise Refusal('closed prospective R64 read plan required')
+    raw=canonical_bytes(plan)
+    if len(raw)>65536 or plan['amendment_packet_identity']!=identity(
+            'aws_c0_network_ingress_source_authority_amendment_packet/v1',INGRESS_AMENDMENT_SHA256):
+        raise Refusal('R64 amendment identity/bound mismatch')
+    if (not isinstance(plan['rows'],list) or len(plan['rows'])!=64 or plan['rows'][-1]!=R64_ROW
+            or plan['row_ids']!=['R%02d'%i for i in range(1,65)]):
+        raise Refusal('R64 exact row universe required')
+    mapping=strict_json(canonical_bytes(plan['required_control_mapping']))
+    if not isinstance(mapping,list) or len(mapping)!=11:
+        raise Refusal('R64 eleven-control mapping required')
+    matches=[v for v in mapping if isinstance(v,dict) and v.get('control')=='VPC_NETWORK_PATH']
+    if len(matches)!=1:
+        raise Refusal('R64 sole VPC owner required')
+    target=matches[0]
+    if (target.get('row_ids')!=['R%02d'%i for i in range(4,13)]+['R64']
+            or target.get('output_schema')!='aws_c0_vpc_network_observation/v2'
+            or target.get('output_kind')!='aws_c0_vpc_network_observation/v2'):
+        raise Refusal('R64 VPC mapping/output mismatch')
+    target['row_ids']=target['row_ids'][:-1]
+    target['output_schema']=target['output_kind']='aws_c0_vpc_network_observation/v1'
+    original={k:plan[k] for k in fields-{'original_read_plan_identity','amendment_packet_identity'}}
+    original.update(schema='aws_c0_runtime_control_read_plan/v1',rows=plan['rows'][:-1],
+        row_ids=plan['row_ids'][:-1],required_control_mapping=mapping,map_sha256=READ_PLAN_MAPPING_SHA256)
+    validate_runtime_control_read_plan(original,plan['original_read_plan_identity'])
+    if (plan['map_sha256']!=digest(canonical_bytes(plan['required_control_mapping']))
+            or plan_identity!=identity('aws_c0_runtime_control_read_plan/v2',digest(raw))):
+        raise Refusal('R64 complete plan/map hash mismatch')
+    return plan
+
+
+def _r64_utc(value: Any) -> dt.datetime:
+    if not isinstance(value,str) or not re.fullmatch(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z',value):
+        raise Refusal('R64 exact second-resolution UTC required')
+    return _utc(value)
+
+
+def _r64_api_material(receipt: Any, row: str, action: str, *, caller: dict[str,str],
+                       channel: dict[str,str], observed_utc: str, freshness: int) -> tuple[dict[str,Any],dict[str,Any]]:
+    """Validate already authenticated collector material; JSON is not a signer.
+
+    The enclosing caller must establish the collector/channel identities. This
+    pure gate neither obtains credentials nor claims that hashes authenticate
+    arbitrary supplied API-shaped JSON.
+    """
+    fields=API_OBSERVATION_FIELDS|({'schema'} if row=='R64' else set())
+    if not isinstance(receipt,dict) or set(receipt)!=fields:
+        raise Refusal('R64 source API field closure failed')
+    if row=='R64' and receipt['schema']!='aws_c0_r64_api_request_response_receipt/v1':
+        raise Refusal('R64 prospective receipt kind required')
+    expected={'row_id':row,'action':action,'resource_selector':'*','caller_identity':caller,
+        'authentication_source_identity':channel,'http_status':200,'pagination_page':1,
+        'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+        'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+    if any(receipt[k]!=v for k,v in expected.items()) or any(type(receipt[k]) is not int for k in
+            ('http_status','pagination_page','pagination_item_count')) or not 1<=receipt['pagination_item_count']<=16:
+        raise Refusal('R64 source action/caller/status/count mismatch')
+    for field in ('caller_identity','authentication_source_identity'):
+        value=receipt[field]
+        if not isinstance(value,dict) or not isinstance(value.get('kind'),str):
+            raise Refusal('R64 source identity absent')
+        _identity(receipt,field,value['kind'])
+    if type(freshness) is not int or not 1<=freshness<=300:
+        raise Refusal('R64 freshness ceiling invalid')
+    start,end,at=tuple(_r64_utc(receipt[k]) for k in ('requested_utc','completed_utc'))+(_r64_utc(observed_utc),)
+    if not start<=end<=at or not 0<=(at-start).total_seconds()<=freshness:
+        raise Refusal('R64 source observation stale/future/unordered')
+    if not isinstance(receipt['request_id'],str) or not re.fullmatch(r'[A-Za-z0-9-]{8,128}',receipt['request_id']):
+        raise Refusal('R64 source request ID absent')
+    values=[]
+    for stem in ('request','response'):
+        encoded=receipt[stem+'_canonical_json_base64']
+        if not isinstance(encoded,str) or not 0<len(encoded)<=87384:
+            raise Refusal('R64 bounded source bytes absent')
+        try:raw=base64.b64decode(encoded,validate=True)
+        except (ValueError,TypeError) as exc:raise Refusal('R64 source base64 invalid') from exc
+        if len(raw)>65536 or base64.b64encode(raw).decode()!=encoded or digest(raw)!=receipt[stem+'_sha256']:
+            raise Refusal('R64 source bytes/hash bound mismatch')
+        value=strict_json(raw)
+        if not isinstance(value,dict):raise Refusal('R64 source object required')
+        values.append(value)
+    request,response=values;metadata=response.get('ResponseMetadata')
+    if (not isinstance(metadata,dict) or metadata.get('RequestId')!=receipt['request_id']
+            or type(metadata.get('HTTPStatusCode')) is not int or metadata['HTTPStatusCode']!=200
+            or type(metadata.get('RetryAttempts')) is not int or metadata['RetryAttempts']!=0
+            or not isinstance(metadata.get('HTTPHeaders'),dict) or 'Error' in response or '__type' in response):
+        raise Refusal('R64 complete authenticated success metadata required without retries')
+    request_ids=[v for k,v in metadata['HTTPHeaders'].items()
+                 if k.lower() in ('x-amzn-requestid','x-amzn-request-id','x-amz-request-id')]
+    if not request_ids or any(x!=receipt['request_id'] for x in request_ids):
+        raise Refusal('R64 response request-ID headers differ')
+    if any(response.get(k) not in (None,'') for k in ('NextToken','nextToken','Marker','NextMarker')) or response.get('IsTruncated',False) is not False:
+        raise Refusal('R64 incomplete paginated source refused')
+    return request,response
+
+
+def derive_r64_exact_request(source_receipts: Any, *, caller_identity: dict[str,str],
+                             authentication_source_identity: dict[str,str], observed_utc: str,
+                             freshness_max_seconds: int) -> dict[str,Any]:
+    """Derive, never accept, GroupIds from the exact complete R02/R04 sources."""
+    if not isinstance(source_receipts,list) or len(source_receipts)!=2:
+        raise Refusal('R64 requires exact R02/R04 source pair')
+    context={'caller':caller_identity,'channel':authentication_source_identity,
+             'observed_utc':observed_utc,'freshness':freshness_max_seconds}
+    req2,res2=_r64_api_material(source_receipts[0],'R02','ec2:DescribeInstances',**context)
+    req4,res4=_r64_api_material(source_receipts[1],'R04','ec2:DescribeNetworkInterfaces',**context)
+    if req2!={'InstanceIds':[INSTANCE_ID]} or req4!={'Filters':[{'Name':'attachment.instance-id','Values':[INSTANCE_ID]}]}:
+        raise Refusal('R64 source requests are not the exact instance')
+    if _utc(source_receipts[0]['completed_utc'])>_utc(source_receipts[1]['requested_utc']):
+        raise Refusal('R64 R02/R04 source order invalid')
+    reservations=res2.get('Reservations')
+    if not isinstance(reservations,list) or len(reservations)!=1 or not isinstance(reservations[0],dict):
+        raise Refusal('R64 exact instance reservation required')
+    reservation=reservations[0];instances=reservation.get('Instances')
+    if reservation.get('OwnerId')!='623609441658' or not isinstance(instances,list) or len(instances)!=1 or not isinstance(instances[0],dict):
+        raise Refusal('R64 instance ownership/count mismatch')
+    instance=instances[0];vpc=instance.get('VpcId')
+    if (instance.get('InstanceId')!=INSTANCE_ID or instance.get('InstanceType')!='t3.small'
+            or not isinstance(instance.get('State'),dict) or instance['State'].get('Name')!='stopped'
+            or not isinstance(vpc,str) or not re.fullmatch(r'vpc-[0-9a-f]{8,17}',vpc)):
+        raise Refusal('R64 stopped exact small instance/VPC required')
+    def groups(values):
+        if not isinstance(values,list) or not 1<=len(values)<=16:
+            raise Refusal('R64 nonempty bounded groups required')
+        ids=[x.get('GroupId') if isinstance(x,dict) else None for x in values]
+        if any(not isinstance(x,str) or not re.fullmatch(r'sg-[0-9a-f]{8,17}',x) for x in ids) or len(set(ids))!=len(ids):
+            raise Refusal('R64 exact unique group identifiers required')
+        return sorted(ids)
+    def interfaces(values,*,described):
+        if not isinstance(values,list) or not 1<=len(values)<=16:
+            raise Refusal('R64 complete bounded interface set required')
+        result={}
+        for eni in values:
+            if not isinstance(eni,dict):raise Refusal('R64 interface object required')
+            eni_id=eni.get('NetworkInterfaceId');attachment=eni.get('Attachment')
+            if (not isinstance(eni_id,str) or not re.fullmatch(r'eni-[0-9a-f]{8,17}',eni_id)
+                    or eni_id in result or eni.get('VpcId')!=vpc or not isinstance(attachment,dict)
+                    or type(attachment.get('DeviceIndex')) is not int or attachment['DeviceIndex']<0
+                    or attachment.get('Status')!='attached'):
+                raise Refusal('R64 interface identity/VPC/attachment mismatch')
+            if described and (eni.get('OwnerId')!='623609441658' or attachment.get('InstanceId')!=INSTANCE_ID):
+                raise Refusal('R64 described interface belongs to another instance/account')
+            result[eni_id]={'groups':groups(eni.get('Groups')),'device':attachment['DeviceIndex']}
+        if len({v['device'] for v in result.values()})!=len(result):
+            raise Refusal('R64 duplicate interface device index')
+        return result
+    declared=interfaces(instance.get('NetworkInterfaces'),described=False)
+    described=interfaces(res4.get('NetworkInterfaces'),described=True)
+    if (declared!=described or source_receipts[0]['pagination_item_count']!=1
+            or source_receipts[1]['pagination_item_count']!=len(described)):
+        raise Refusal('R64 R02/R04 interface coverage differs')
+    primary=[x for x in declared.values() if x['device']==0]
+    if len(primary)!=1 or groups(instance.get('SecurityGroups'))!=primary[0]['groups']:
+        raise Refusal('R64 primary group association differs')
+    all_groups=sorted({group for eni in declared.values() for group in eni['groups']})
+    if not 1<=len(all_groups)<=16:raise Refusal('R64 group fan-out exceeds packet bound')
+    return {'request':{'GroupIds':all_groups},'vpc_id':vpc,'security_group_ids':all_groups}
+
+
+def validate_r64_ingress_observation(record: Any, *, attempt_identity: dict[str,str],
+                                     caller_identity: dict[str,str], authentication_source_identity: dict[str,str],
+                                     observed_utc: str, freshness_max_seconds: int) -> dict[str,Any]:
+    fields={'schema','amendment_packet_identity','attempt_identity','observed_utc','freshness_max_seconds',
+        'instance_id','vpc_id','security_group_ids','ingress_rule_count','source_receipts_in_order','rule_receipt',
+        'zero_science_counters'}
+    if not isinstance(record,dict) or set(record)!=fields or record.get('schema')!='aws_c0_network_ingress_observation/v1':
+        raise Refusal('R64 ingress observation field closure failed')
+    if (record['amendment_packet_identity']!=identity('aws_c0_network_ingress_source_authority_amendment_packet/v1',INGRESS_AMENDMENT_SHA256)
+            or record['attempt_identity']!=attempt_identity or record['observed_utc']!=observed_utc
+            or record['freshness_max_seconds']!=freshness_max_seconds or type(record['freshness_max_seconds']) is not int
+            or record['instance_id']!=INSTANCE_ID or record['zero_science_counters']!=ZERO
+            or any(type(x) is not int for x in record['zero_science_counters'].values())
+            or len(canonical_bytes(record))>262144):
+        raise Refusal('R64 observation authority/attempt/time/bound mismatch')
+    _identity(record,'attempt_identity','aws_c0_attempt/v1')
+    context={'caller_identity':caller_identity,'authentication_source_identity':authentication_source_identity,
+             'observed_utc':observed_utc,'freshness_max_seconds':freshness_max_seconds}
+    targets=derive_r64_exact_request(record['source_receipts_in_order'],**context)
+    request,response=_r64_api_material(record['rule_receipt'],'R64','ec2:DescribeSecurityGroups',
+        caller=caller_identity,channel=authentication_source_identity,observed_utc=observed_utc,freshness=freshness_max_seconds)
+    if (request!=targets['request'] or record['vpc_id']!=targets['vpc_id'] or record['security_group_ids']!=targets['security_group_ids']
+            or _utc(record['source_receipts_in_order'][1]['completed_utc'])>_utc(record['rule_receipt']['requested_utc'])):
+        raise Refusal('R64 rule request/observation differs from fresh derived targets')
+    observed=response.get('SecurityGroups')
+    if not isinstance(observed,list) or len(observed)!=len(targets['security_group_ids']):
+        raise Refusal('R64 complete rule group set missing')
+    found=[];rule_count=0
+    for group in observed:
+        if (not isinstance(group,dict) or group.get('OwnerId')!='623609441658' or group.get('VpcId')!=targets['vpc_id']
+                or not isinstance(group.get('GroupId'),str) or not isinstance(group.get('IpPermissions'),list)):
+            raise Refusal('R64 exact group account/VPC/explicit ingress array required')
+        found.append(group['GroupId']);rule_count+=len(group['IpPermissions'])
+    if (sorted(found)!=targets['security_group_ids'] or record['rule_receipt']['pagination_item_count']!=len(found)
+            or rule_count!=0 or type(record['ingress_rule_count']) is not int or record['ingress_rule_count']!=rule_count):
+        raise Refusal('R64 observed ingress is nonzero or complete group/count binding differs')
+    return record
+
+
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
     if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")
     _common(packet, "aws_c0_live_packet/v6", root=False)
-    validate_runtime_control_read_plan(packet['runtime_control_read_plan'],packet['runtime_control_read_plan_identity'])
+    validate_runtime_control_read_plan_v2(packet['runtime_control_read_plan'],packet['runtime_control_read_plan_identity'])
     _identity(packet, "preparation_closure_identity", "aws_c0_preparation_closure/v5")
     _identity(packet, "launch_request_identity", "aws_c0_launch_request/v6")
     if packet["packet_disposition"] != "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED" or packet["final_instance_state"] != "stopped" or packet["pre_live_object_count"] != FROZEN_PRELIVE_OBJECT_COUNT:

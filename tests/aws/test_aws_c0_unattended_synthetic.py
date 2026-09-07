@@ -303,7 +303,155 @@ class RuntimeControlReadPlanTests(unittest.TestCase):
         source=(ROOT/'aws/c0/finalizer/finalizer.py').read_text()
         fn=next(n for n in ast.parse(source).body if isinstance(n,ast.FunctionDef) and n.name=='_validate_live_packet_v6')
         body=ast.get_source_segment(source,fn)
-        self.assertLess(body.index('validate_runtime_control_read_plan('),body.index('_deployment_control_values('))
+        self.assertLess(body.index('validate_runtime_control_read_plan_v2('),body.index('_deployment_control_values('))
+
+
+class R64IngressAmendmentTests(unittest.TestCase):
+    """API-shaped offline evidence only; no transport, AWS, service or science."""
+    def material(self):
+        caller=F.identity('aws_sts_role_session/v1','a'*64)
+        channel=F.identity('aws_authenticated_api_source/v1','b'*64)
+        attempt=F.identity('aws_c0_attempt/v1','c'*64)
+        context={'caller_identity':caller,'authentication_source_identity':channel,
+                 'observed_utc':'2026-09-06T18:00:07Z','freshness_max_seconds':300}
+        vpc='vpc-01234567';group_ids=['sg-01234567','sg-89abcdef']
+        interfaces=[]
+        for n,gid in enumerate(group_ids):
+            interfaces.append({'NetworkInterfaceId':['eni-01234567','eni-89abcdef'][n],'VpcId':vpc,
+                'Groups':[{'GroupId':gid,'GroupName':'offline-fixture'}],
+                'Attachment':{'DeviceIndex':n,'Status':'attached'}})
+        instance={'InstanceId':F.INSTANCE_ID,'InstanceType':'t3.small','State':{'Name':'stopped'},'VpcId':vpc,
+            'NetworkInterfaces':copy.deepcopy(interfaces),'SecurityGroups':copy.deepcopy(interfaces[0]['Groups'])}
+        described=copy.deepcopy(interfaces)
+        for eni in described:eni.update(OwnerId='623609441658');eni['Attachment']['InstanceId']=F.INSTANCE_ID
+        requests=[{'InstanceIds':[F.INSTANCE_ID]},
+                  {'Filters':[{'Name':'attachment.instance-id','Values':[F.INSTANCE_ID]}]},
+                  {'GroupIds':group_ids}]
+        responses=[{'Reservations':[{'OwnerId':'623609441658','Instances':[instance]}]},
+                   {'NetworkInterfaces':described},
+                   {'SecurityGroups':[{'GroupId':gid,'OwnerId':'623609441658','VpcId':vpc,'IpPermissions':[]} for gid in group_ids]}]
+        receipts=[]
+        for index,(row,action,count) in enumerate([('R02','DescribeInstances',1),('R04','DescribeNetworkInterfaces',2),('R64','DescribeSecurityGroups',2)]):
+            request_id='offline-request-'+row
+            responses[index]['ResponseMetadata']={'RequestId':request_id,'HTTPStatusCode':200,'RetryAttempts':0,
+                'HTTPHeaders':{'x-amzn-requestid':request_id}}
+            receipt={'row_id':row,'action':'ec2:'+action,'resource_selector':'*','caller_identity':caller,
+                'authentication_source_identity':channel,'http_status':200,'request_id':request_id,
+                'requested_utc':'2026-09-06T18:00:%02dZ'%(index*2+1),
+                'completed_utc':'2026-09-06T18:00:%02dZ'%(index*2+2),
+                'pagination_page':1,'pagination_item_count':count,
+                'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+                'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+            for stem,value in [('request',requests[index]),('response',responses[index])]:
+                R51ProspectiveAmendmentTests.encode(receipt,stem,value)
+            if row=='R64':receipt['schema']='aws_c0_r64_api_request_response_receipt/v1'
+            receipts.append(receipt)
+        return receipts[:2],receipts[2],attempt,context
+
+    def result(self):
+        sources,receipt,attempt,context=self.material()
+        result=G.build_r64_ingress_observation(ROOT,sources,receipt,attempt_identity=attempt,**context)
+        return result['network_ingress_observation'],attempt,context
+
+    def mutate_api(self,receipt,stem,mutate):
+        value=F.strict_json(base64.b64decode(receipt[stem+'_canonical_json_base64']))
+        mutate(value);R51ProspectiveAmendmentTests.encode(receipt,stem,value)
+
+    def test_distinct_64_plan_preserves_all_original_rows_and_history(self):
+        original=G.build_runtime_control_read_plan_fields(ROOT)
+        current=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        old=original['runtime_control_read_plan'];new=current['runtime_control_read_plan']
+        self.assertEqual(new['rows'][:-1],old['rows'])
+        self.assertEqual(new['rows'][-1],F.R64_ROW)
+        self.assertEqual(new['original_read_plan_identity'],original['runtime_control_read_plan_identity'])
+        self.assertEqual(F.validate_runtime_control_read_plan_v2(new,current['runtime_control_read_plan_identity']),new)
+        self.assertEqual(F.validate_runtime_control_read_plan(old,original['runtime_control_read_plan_identity']),old)
+        G.validate_record(ROOT,'runtime_read_plan_v2',new)
+        for mutate in (lambda p:p['rows'][0].update(action='sts:AssumeRole'),
+                       lambda p:p['rows'][-1].update(action='ec2:AuthorizeSecurityGroupIngress'),
+                       lambda p:p['required_control_mapping'][4]['row_ids'].pop(),
+                       lambda p:p.update(amendment_packet_identity=F.identity('aws_c0_network_ingress_source_authority_amendment_packet/v1','0'*64))):
+            bad=copy.deepcopy(new);mutate(bad);bad['map_sha256']=G.sha(G.canonical(bad['required_control_mapping']))
+            with self.assertRaises(F.Refusal):F.validate_runtime_control_read_plan_v2(bad,G.identity(bad['schema'],bad))
+
+    def test_actual_complete_group_union_and_empty_rule_arrays_produce_zero(self):
+        sources,receipt,attempt,context=self.material()
+        self.assertEqual(G.build_r64_exact_request(ROOT,sources,**context),{'GroupIds':['sg-01234567','sg-89abcdef']})
+        result=G.build_r64_ingress_observation(ROOT,sources,receipt,attempt_identity=attempt,**context)
+        value=result['network_ingress_observation']
+        self.assertEqual(value['ingress_rule_count'],0)
+        self.assertEqual(result['network_ingress_observation_identity'],G.identity(value['schema'],value))
+        self.assertEqual(F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context),value)
+        self.assertEqual(value['source_receipts_in_order'],sources)
+        self.assertEqual(value['rule_receipt'],receipt)
+
+    def test_rehashed_missing_extra_duplicate_wrong_owner_vpc_or_nonempty_rules_refuse(self):
+        mutations=[lambda v:v['SecurityGroups'].pop(),
+            lambda v:v['SecurityGroups'].append(copy.deepcopy(v['SecurityGroups'][0])),
+            lambda v:v['SecurityGroups'][1].update(GroupId=v['SecurityGroups'][0]['GroupId']),
+            lambda v:v['SecurityGroups'][0].update(OwnerId='111111111111'),
+            lambda v:v['SecurityGroups'][0].update(VpcId='vpc-89abcdef'),
+            lambda v:v['SecurityGroups'][0].pop('IpPermissions'),
+            lambda v:v['SecurityGroups'][0].update(IpPermissions=None),
+            lambda v:v['SecurityGroups'][0].update(IpPermissions=[{'IpProtocol':'-1'}]),
+            lambda v:v.update(NextToken='another-page')]
+        for mutate in mutations:
+            value,attempt,context=self.result();self.mutate_api(value['rule_receipt'],'response',mutate)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
+
+    def test_request_guard_rejects_incomplete_or_cross_instance_sources(self):
+        mutations=[(0,'request',lambda v:v.update(InstanceIds=['i-other'])),
+            (1,'request',lambda v:v.clear()),
+            (1,'response',lambda v:v['NetworkInterfaces'].pop()),
+            (1,'response',lambda v:v['NetworkInterfaces'][0]['Attachment'].update(InstanceId='i-other')),
+            (1,'response',lambda v:v['NetworkInterfaces'][0]['Groups'][0].update(GroupId='sg-11111111')),
+            (0,'response',lambda v:v['Reservations'][0]['Instances'][0].update(InstanceType='t3.large')),
+            (0,'response',lambda v:v['Reservations'][0]['Instances'][0]['State'].update(Name='running')),
+            (0,'response',lambda v:v['Reservations'][0]['Instances'][0].pop('NetworkInterfaces'))]
+        for index,stem,mutate in mutations:
+            sources,_,_,context=self.material();self.mutate_api(sources[index],stem,mutate)
+            with self.assertRaises(F.Refusal):F.derive_r64_exact_request(sources,**context)
+        value,attempt,context=self.result()
+        self.mutate_api(value['rule_receipt'],'request',lambda v:v.update(GroupIds=['sg-11111111']))
+        with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
+
+    def test_authentication_retry_freshness_and_response_bounds_are_mandatory(self):
+        for mutate in (lambda v:v['ResponseMetadata'].update(HTTPStatusCode=403),
+                       lambda v:v['ResponseMetadata'].update(RetryAttempts=1),
+                       lambda v:v['ResponseMetadata'].pop('RetryAttempts'),
+                       lambda v:v['ResponseMetadata']['HTTPHeaders'].update({'x-amzn-requestid':'other-id'}),
+                       lambda v:v.update(Error={'Code':'AccessDenied'})):
+            value,attempt,context=self.result();self.mutate_api(value['rule_receipt'],'response',mutate)
+            with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
+        for mutate in (lambda r:r.update(requested_utc='2026-09-06T17:50:00Z'),
+                       lambda r:r.update(completed_utc='2026-09-06T18:00:08Z'),
+                       lambda r:r.update(caller_identity=F.identity('aws_sts_role_session/v1','d'*64)),
+                       lambda r:r.update(response_canonical_json_base64='A'*87385),
+                       lambda r:r.update(pagination_page=2),lambda r:r.update(pagination_item_count=True)):
+            value,attempt,context=self.result();mutate(value['rule_receipt'])
+            with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
+
+    def test_supplied_zero_or_schema_constant_cannot_replace_actual_source_arrays(self):
+        value,attempt,context=self.result()
+        for mutate in (lambda v:v.update(ingress_rule_count=True),lambda v:v.update(source_receipts_in_order=[]),
+                       lambda v:v.update(security_group_ids=[]),lambda v:v.update(rule_receipt={}),
+                       lambda v:v.update(zero_science_counters={**F.ZERO,'scientific_runs':1})):
+            bad=copy.deepcopy(value);mutate(bad)
+            with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(bad,attempt_identity=attempt,**context)
+
+    def test_runtime_rejects_schema_invalid_iso_variants_without_loosening_history(self):
+        variants=('2026-09-06 18:00:07Z','20260906T180007Z','2026-09-06T18:00:07.000Z')
+        for when in variants:
+            value,attempt,context=self.result();value['observed_utc']=context['observed_utc']=when
+            with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
+        for index in range(3):
+            for field in ('requested_utc','completed_utc'):
+                for transform in (lambda s:s.replace('T',' '),lambda s:s.replace('-','').replace(':',''),lambda s:s.replace('Z','.000Z')):
+                    value,attempt,context=self.result()
+                    receipt=(value['source_receipts_in_order']+[value['rule_receipt']])[index]
+                    receipt[field]=transform(receipt[field])
+                    with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
 
 
 class SealedRoleProducerTests(unittest.TestCase):
@@ -1654,7 +1802,7 @@ class DeploymentSequenceTests(unittest.TestCase):
             change_set_observation_identity=F.identity('aws_c0_change_set_observation/v1',packet['change_set_identity']['sha256']),
             iam_pagination_bounds=launch['iam_pagination_bounds'],final_preflight_observed_utc=packet['observed_utc'],
             final_instance_state='stopped',pre_live_object_count=24)
-        packet.update(G.build_runtime_control_read_plan_fields(ROOT))
+        packet.update(G.build_runtime_control_read_plan_fields_v2(ROOT))
         for record in (packet,auth):
             record['live_session_assumer_identity']=F.identity('aws_iam_principal/v1','5'*64)
             record['execution_operator_role_identity']=F.identity('aws_iam_role/v1','6'*64)

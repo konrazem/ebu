@@ -100,6 +100,52 @@ def build_runtime_control_read_plan_fields(root,*,freshness_max_seconds=300):
     f.validate_runtime_control_read_plan(plan,plan_id)
     return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
 
+def build_runtime_control_read_plan_fields_v2(root,*,freshness_max_seconds=300):
+    f=finalizer(root);authority=sequence(root)
+    packet=authority['pending_network_ingress_amendment_packet']
+    if (sha(canonical(packet))!=f.INGRESS_AMENDMENT_SHA256 or
+            authority.get('network_ingress_amendment_authorization',{}).get('packet_sha256')!=f.INGRESS_AMENDMENT_SHA256):
+        raise ValueError('exact authorized R64 amendment required')
+    old=build_runtime_control_read_plan_fields(root,freshness_max_seconds=freshness_max_seconds)
+    plan=copy.deepcopy(old['runtime_control_read_plan']);plan['schema']='aws_c0_runtime_control_read_plan/v2'
+    plan['original_read_plan_identity']=old['runtime_control_read_plan_identity']
+    plan['amendment_packet_identity']=identity(packet['schema'],packet)
+    plan['rows'].append(copy.deepcopy(f.R64_ROW));plan['row_ids'].append('R64')
+    target=next(x for x in plan['required_control_mapping'] if x['control']=='VPC_NETWORK_PATH')
+    target['row_ids'].append('R64')
+    target['output_kind']=target['output_schema']='aws_c0_vpc_network_observation/v2'
+    plan['map_sha256']=sha(canonical(plan['required_control_mapping']))
+    plan_id=identity(plan['schema'],plan)
+    f.validate_runtime_control_read_plan_v2(plan,plan_id)
+    validate_record(root,'runtime_read_plan_v2',plan)
+    return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
+
+def build_r64_exact_request(root,source_receipts,**context):
+    # Gate the new action by the exact authorized packet before deriving IDs.
+    build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=context['freshness_max_seconds'])
+    return finalizer(root).derive_r64_exact_request(source_receipts,**context)['request']
+
+def build_r64_ingress_observation(root,source_receipts,rule_receipt,*,attempt_identity,**context):
+    f=finalizer(root)
+    build_r64_exact_request(root,source_receipts,**context)
+    targets=f.derive_r64_exact_request(source_receipts,**context)
+    validate_record(root,'r64_receipt',rule_receipt)
+    response=f.strict_json(base64.b64decode(rule_receipt['response_canonical_json_base64'],validate=True))
+    groups=response.get('SecurityGroups')
+    if not isinstance(groups,list) or any(not isinstance(g,dict) or not isinstance(g.get('IpPermissions'),list) for g in groups):
+        raise ValueError('R64 actual explicit ingress arrays required before deriving count')
+    observed_count=sum(len(g['IpPermissions']) for g in groups)
+    record={'schema':'aws_c0_network_ingress_observation/v1',
+        'amendment_packet_identity':f.identity('aws_c0_network_ingress_source_authority_amendment_packet/v1',f.INGRESS_AMENDMENT_SHA256),
+        'attempt_identity':copy.deepcopy(attempt_identity),'instance_id':f.INSTANCE_ID,
+        'observed_utc':context['observed_utc'],'freshness_max_seconds':context['freshness_max_seconds'],
+        'vpc_id':targets['vpc_id'],'security_group_ids':targets['security_group_ids'],
+        'ingress_rule_count':observed_count,'source_receipts_in_order':copy.deepcopy(source_receipts),
+        'rule_receipt':copy.deepcopy(rule_receipt),'zero_science_counters':dict(f.ZERO)}
+    f.validate_r64_ingress_observation(record,attempt_identity=attempt_identity,**context)
+    validate_record(root,'network_ingress_observation',record)
+    return {'network_ingress_observation':record,'network_ingress_observation_identity':identity(record['schema'],record)}
+
 def build_r51_policy_observation(root,policy_receipt,function_receipts,*,expected_policy,
                                  caller_identity,authentication_source_identity,observed_utc,freshness_max_seconds):
     f=finalizer(root)

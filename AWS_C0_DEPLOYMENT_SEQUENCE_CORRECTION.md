@@ -31,6 +31,42 @@ is exhausted and cannot be reused.
 
 ## New authority boundary found while implementing reconstruction
 
+### Subsequent exact user authorization and local R64 implementation
+
+The user subsequently authorized packet
+`97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f`
+in full on 2026-09-07. That packet identifies the exact action as
+`ec2:DescribeSecurityGroups`; its identity resolves the shortened "R64 ec2"
+phrase in the accompanying message. The proposal and its original status are
+preserved below and in the contract; a separate authorization reference records
+the later decision. This authorizes the prospective correction, not waiver of
+any gate or inference that AWS has been contacted.
+
+A distinct read-plan/v2 now adds only R64. Its producer and runtime reconstruct
+and verify the original 63-row v1 prefix and mapping against the unchanged pins,
+bind the exact amendment and original-plan identities, retain eleven controls,
+and add R64 only to the VPC mapping. Only the current unpublished packet/v6
+schema/body is attached to the new plan; historical definitions are unchanged.
+
+The new supplemental ingress producer and consumer derive the sorted union of
+group IDs from complete, fresh R02/R04 responses for the exact stopped t3.small
+instance. They cross-check owner, VPC, interface inventory, primary and secondary
+group associations, request targets, chronology and actual item counts. R64
+must return every requested group exactly once, with explicit empty
+IpPermissions arrays. The count is computed from those arrays, not supplied
+from a schema constant. Exact response metadata/request IDs, HTTP200, zero
+reported retries, no continuation token and 64KiB per-source bounds are required.
+These functions consume authenticated collector material; API-shaped JSON and
+hashes alone are expressly not treated as authentication.
+
+Ten focused tests pass, including rehashed target/source/response mutations and
+exact UTC variants. Pinned CPython3.12.10 compilation and whitespace checks pass.
+The existing read-only reviewer APPROVED this component after its timestamp
+syntax fix. The global three-call reservation/collector, phased reconstruction
+attachment and workflow integration are still required and are not covered by
+that component approval. No IAM policy, credentials or AWS resources changed.
+Work continues through those obligations; this is not a completion checkpoint.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set
