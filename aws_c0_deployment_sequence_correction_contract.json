@@ -34,6 +34,12 @@
     "freshness_rechecked_at_consumption": true,
     "authenticated_collector_attached": false,
     "phase_reconstruction_attachment_complete": false,
+    "finalizer_template_r64_policy_prepared": true,
+    "finalizer_template_r64_policy_shape": "ONE_ec2_DescribeSecurityGroups_RESOURCE_STAR_us-east-1_ONLY",
+    "operator_v5_session_ceiling_delta_required": false,
+    "operator_v5_historical_ceiling_preserved": true,
+    "template_policy_component_review": "APPROVED_LOCAL_ONLY",
+    "aws_iam_mutation_performed": false,
     "global_cloud_enforcement_claimed": false,
     "cloud_readiness_claimed": false
   },

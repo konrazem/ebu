@@ -122,6 +122,17 @@ eleven-control attachment and authenticated collector are still unfinished.
 
 The route-table fallback and lack of a subnet ID for an implicit association
 follow the [AWS DescribeRouteTables API](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRouteTables.html).
+
+### Local constrained-role policy preparation
+
+The reviewed local CloudFormation template now prepares the single prospective
+finalizer-policy delta required for R64: `ec2:DescribeSecurityGroups` with
+`Resource: "*"` and an `ec2:Region` equality condition for `us-east-1`. The
+action is not folded into a generic read statement. The compact historical V5
+operator session ceiling already contains `ec2:*`; it is therefore preserved
+byte-for-byte rather than rewritten. This is only a local template binding:
+there has been no IAM mutation, credential use, AWS call, or claim that the
+regional condition substitutes for the exact attached-group request guard.
 The address request uses its documented
 [network-interface-id filter](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html).
 Missing association state is conservatively refused rather than inferred.
