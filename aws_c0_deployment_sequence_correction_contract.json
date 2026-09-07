@@ -13,6 +13,18 @@
     "permissions_changed": false,
     "aws_calls_performed": 0
   },
+  "iam_source_mapping_amendment_authorization": {
+    "authority_id": "EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1",
+    "source": "EXPLICIT_USER_AUTHORIZATION_2026_09_07",
+    "historical_output_preserved": "aws_c0_iam_policy_set_observation/v1",
+    "prospective_output": "aws_c0_iam_policy_set_observation/v2",
+    "corrected_source_row_ids": ["R15", "R16", "R17", "R18", "R19"],
+    "read_plan_predecessor": "aws_c0_runtime_control_read_plan/v2",
+    "prospective_read_plan": "aws_c0_runtime_control_read_plan/v3",
+    "rows_actions_resources_conditions_changed": false,
+    "other_control_mappings_changed": false,
+    "aws_authority_permissions_science_cost_or_publication_changed": false
+  },
   "prospective_r64_call_budget": {
     "kind": "aws_c0_network_ingress_call_budget/v1",
     "maximum_reserved_calls": 3,

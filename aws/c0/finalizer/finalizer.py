@@ -2297,6 +2297,7 @@ READ_PLAN_CONTRACT_SHA256 = 'fb5cd0b72d5190034f5de5afbd8f4b775e7171a8560a8c05e17
 READ_PLAN_ROWS_SHA256 = '429e128c60fd89eb87d82a88b3a4e1676825cb9fe49d134087d9072b9916b380'
 READ_PLAN_MAPPING_SHA256 = '27d362e40c48a55963f9936adea4249ec672d0a47f381e88e57697df86973c89'
 INGRESS_AMENDMENT_SHA256 = '97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f'
+IAM_SOURCE_MAPPING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1'
 R64_ROW = {'id':'R64','action':'ec2:DescribeSecurityGroups','resource_selector':'*',
     'use':'ALWAYS','control':'VPC_NETWORK_PATH','condition':'ALWAYS','call_requirement':'ALWAYS',
     'pagination_bounds':{'max_pages':1,'max_items':16},
@@ -2361,6 +2362,34 @@ def validate_runtime_control_read_plan_v2(plan: Any, plan_identity: Any) -> dict
     if (plan['map_sha256']!=digest(canonical_bytes(plan['required_control_mapping']))
             or plan_identity!=identity('aws_c0_runtime_control_read_plan/v2',digest(raw))):
         raise Refusal('R64 complete plan/map hash mismatch')
+    return plan
+
+
+def validate_runtime_control_read_plan_v3(plan: Any, plan_identity: Any) -> dict[str, Any]:
+    """Prospective IAM-output correction layered exactly on read-plan/v2."""
+    prior_fields={'schema','rows','row_ids','required_control_mapping','shared_row_ids','map_sha256',
+        'plan_contract_identity','freshness_max_seconds','original_read_plan_identity','amendment_packet_identity'}
+    fields=prior_fields|{'previous_read_plan_identity','iam_source_mapping_authority_id'}
+    if (not isinstance(plan,dict) or set(plan)!=fields or plan.get('schema')!='aws_c0_runtime_control_read_plan/v3'
+            or plan.get('iam_source_mapping_authority_id')!=IAM_SOURCE_MAPPING_AUTHORITY_ID):
+        raise Refusal('closed prospective IAM source-mapping read plan required')
+    raw=canonical_bytes(plan);mapping=strict_json(canonical_bytes(plan['required_control_mapping']))
+    matches=[item for item in mapping if isinstance(item,dict) and item.get('control')=='IAM_POLICY_SET']
+    if len(matches)!=1:
+        raise Refusal('IAM source-mapping sole control required')
+    target=matches[0]
+    if (target.get('row_ids')!=['R15','R16','R17','R18','R19']
+            or target.get('output_schema')!='aws_c0_iam_policy_set_observation/v2'
+            or target.get('output_kind')!='aws_c0_iam_policy_set_observation/v2'):
+        raise Refusal('IAM corrected exact output binding required')
+    target['output_schema']=target['output_kind']='aws_c0_iam_policy_set_observation/v1'
+    prior={k:plan[k] for k in prior_fields}
+    prior.update(schema='aws_c0_runtime_control_read_plan/v2',required_control_mapping=mapping,
+        map_sha256=digest(canonical_bytes(mapping)))
+    validate_runtime_control_read_plan_v2(prior,plan['previous_read_plan_identity'])
+    if (plan['map_sha256']!=digest(canonical_bytes(plan['required_control_mapping']))
+            or plan_identity!=identity('aws_c0_runtime_control_read_plan/v3',digest(raw))):
+        raise Refusal('IAM corrected complete plan/map hash mismatch')
     return plan
 
 

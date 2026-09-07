@@ -188,6 +188,16 @@ The account producer follows the actual fields documented by
 Its role-ID syntax follows the already accepted local context schema, rather
 than assuming every AWS unique identifier has one fixed length.
 
+### Prospective IAM source-mapping correction
+
+The user explicitly authorized a prospective IAM reconstruction output/v2 and
+corresponding read-plan/v3 whose only semantic correction is `source_row_ids`
+R15–R19. Historical output/v1 and read-plan/v1/v2 remain unchanged. Plan/v3
+reconstructs and validates the complete v2 predecessor, preserves all 64 rows,
+actions, resources, conditions and every other control mapping, and changes
+only the IAM output kind/schema binding. This grants no AWS action, permission,
+scientific execution, cost increase or publication authority.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

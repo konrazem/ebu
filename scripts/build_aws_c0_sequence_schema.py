@@ -141,6 +141,14 @@ def build(root=ROOT):
         amendment_packet_identity=typed_identity('aws_c0_network_ingress_source_authority_amendment_packet/v1'))
     definitions['read_plan_r64_v2']=read_v2
     definitions['runtime_read_plan_v2']={'$ref':'#/$defs/read_plan_r64_v2'}
+    read_v3=copy.deepcopy(read_v2);mapping_v3=copy.deepcopy(mapping)
+    iam_owner=next(v for v in mapping_v3 if v['control']=='IAM_POLICY_SET')
+    iam_owner['output_schema']=iam_owner['output_kind']='aws_c0_iam_policy_set_observation/v2'
+    read_v3['required']+=['previous_read_plan_identity','iam_source_mapping_authority_id']
+    read_v3['properties'].update(schema={'const':'aws_c0_runtime_control_read_plan/v3'},
+        required_control_mapping={'const':mapping_v3},
+        previous_read_plan_identity=typed_identity('aws_c0_runtime_control_read_plan/v2'),
+        iam_source_mapping_authority_id={'const':'EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1'})
     current_packet=definitions[definitions['live_packet']['$ref'].rsplit('/',1)[-1]]['allOf'][1]['properties']
     current_packet['runtime_control_read_plan']={'$ref':'#/$defs/read_plan_r64_v2'}
     current_packet['runtime_control_read_plan_identity']=typed_identity('aws_c0_runtime_control_read_plan/v2')
@@ -237,6 +245,14 @@ def build(root=ROOT):
     definitions['service_quota_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
         if v['properties']['control']['const']=='SERVICE_QUOTA'))
     definitions['service_quota_output']={'$ref':'#/$defs/service_quota_reconstruction_output'}
+    decoded_iam=copy.deepcopy(next(v for k,v in definitions.items() if k.endswith('_decoded_iam_policy_set_observation')))
+    decoded_iam['properties'].update(schema={'const':'aws_c0_iam_policy_set_observation_preimage/v2'},
+        source_row_ids={'const':['R15','R16','R17','R18','R19']})
+    output_iam=copy.deepcopy(next(v for v in output_union['oneOf'] if v['properties']['control']['const']=='IAM_POLICY_SET'))
+    output_iam['properties'].update(schema={'const':'aws_c0_iam_policy_set_observation/v2'},
+        kind={'const':'aws_c0_iam_policy_set_observation/v2'},
+        identity=typed_identity('aws_c0_iam_policy_set_observation/v2'),
+        decoded_json={'$ref':'#/$defs/iam_policy_set_decoded_v2'})
     output_vpc=copy.deepcopy(next(v for v in output_union['oneOf'] if v['properties']['control']['const']=='VPC_NETWORK_PATH'))
     output_vpc['properties'].update(schema={'const':'aws_c0_vpc_network_observation/v2'},kind={'const':'aws_c0_vpc_network_observation/v2'},
         identity=typed_identity('aws_c0_vpc_network_observation/v2'),decoded_json={'$ref':'#/$defs/vpc_network_decoded_v2'})
@@ -269,10 +285,17 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v1_definition']={'type':'object',
         'required':list(attachment_fields),'properties':attachment_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v1']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v1_definition'}
+    # Append prospective definitions so regenerating the ordered registry does
+    # not reorder any historical definition.
+    definitions['read_plan_iam_v3']=read_v3
+    definitions['runtime_read_plan_v3']={'$ref':'#/$defs/read_plan_iam_v3'}
+    definitions['iam_policy_set_decoded_v2']=decoded_iam
+    definitions['iam_policy_set_reconstruction_output_v2']=output_iam
+    definitions['iam_policy_set_output_v2']={'$ref':'#/$defs/iam_policy_set_reconstruction_output_v2'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

@@ -34,6 +34,9 @@
       "$ref": "#/$defs/runtime_read_plan_v2"
     },
     {
+      "$ref": "#/$defs/runtime_read_plan_v3"
+    },
+    {
       "$ref": "#/$defs/r64_receipt"
     },
     {
@@ -56,6 +59,9 @@
     },
     {
       "$ref": "#/$defs/service_quota_output"
+    },
+    {
+      "$ref": "#/$defs/iam_policy_set_output_v2"
     },
     {
       "$ref": "#/$defs/runtime_reconstruction_progress_v2"
@@ -52259,6 +52265,1427 @@
     },
     "runtime_reconstruction_source_attachment_v1": {
       "$ref": "#/$defs/runtime_reconstruction_source_attachment_v1_definition"
+    },
+    "read_plan_iam_v3": {
+      "type": "object",
+      "required": [
+        "schema",
+        "rows",
+        "row_ids",
+        "required_control_mapping",
+        "shared_row_ids",
+        "map_sha256",
+        "plan_contract_identity",
+        "freshness_max_seconds",
+        "original_read_plan_identity",
+        "amendment_packet_identity",
+        "previous_read_plan_identity",
+        "iam_source_mapping_authority_id"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_runtime_control_read_plan/v3"
+        },
+        "rows": {
+          "const": [
+            {
+              "id": "R01",
+              "action": "sts:GetCallerIdentity",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "ACCOUNT_REGION",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 1
+              },
+              "reconstruction_output_kind": "aws_c0_account_region_observation/v1"
+            },
+            {
+              "id": "R02",
+              "action": "ec2:DescribeInstances",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "INSTANCE_PROFILE_SOLE_ROLE",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 4,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+            },
+            {
+              "id": "R03",
+              "action": "ec2:DescribeIamInstanceProfileAssociations",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "INSTANCE_PROFILE_SOLE_ROLE",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 4,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+            },
+            {
+              "id": "R04",
+              "action": "ec2:DescribeNetworkInterfaces",
+              "resource_selector": "*",
+              "use": "WHEN_INSTANCE_HAS_NETWORK_INTERFACE",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "WHEN_INSTANCE_HAS_NETWORK_INTERFACE",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R05",
+              "action": "ec2:DescribeSubnets",
+              "resource_selector": "*",
+              "use": "WHEN_INSTANCE_HAS_SUBNET",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "WHEN_INSTANCE_HAS_SUBNET",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R06",
+              "action": "ec2:DescribeRouteTables",
+              "resource_selector": "*",
+              "use": "WHEN_INSTANCE_HAS_SUBNET",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "WHEN_INSTANCE_HAS_SUBNET",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R07",
+              "action": "ec2:DescribeNatGateways",
+              "resource_selector": "*",
+              "use": "WHEN_ROUTE_USES_NAT",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "WHEN_ROUTE_USES_NAT",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R08",
+              "action": "ec2:DescribeVpcEndpoints",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R09",
+              "action": "ec2:DescribeImages",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R10",
+              "action": "ec2:DescribeVolumes",
+              "resource_selector": "*",
+              "use": "WHEN_INSTANCE_HAS_VOLUME",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "WHEN_INSTANCE_HAS_VOLUME",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R11",
+              "action": "ec2:DescribeSnapshots",
+              "resource_selector": "*",
+              "use": "WHEN_VOLUME_HAS_SNAPSHOT",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "WHEN_VOLUME_HAS_SNAPSHOT",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R12",
+              "action": "ec2:DescribeAddresses",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v1"
+            },
+            {
+              "id": "R13",
+              "action": "iam:GetInstanceProfile",
+              "resource_selector": "SEALED_INSTANCE_PROFILE_ARN",
+              "use": "ALWAYS",
+              "control": "INSTANCE_PROFILE_SOLE_ROLE",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 4,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+            },
+            {
+              "id": "R14",
+              "action": "iam:GetRole",
+              "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+              "use": "ALWAYS",
+              "control": "INSTANCE_PROFILE_SOLE_ROLE",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 4,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_instance_profile_role_observation/v1"
+            },
+            {
+              "id": "R15",
+              "action": "iam:GetRolePolicy",
+              "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+              "use": "FOR_EACH_SEALED_INLINE_POLICY",
+              "control": "IAM_POLICY_SET",
+              "condition": "FOR_EACH_SEALED_INLINE_POLICY",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_IAM_MAX_PAGES",
+                "max_items": "SEALED_IAM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+            },
+            {
+              "id": "R16",
+              "action": "iam:ListRolePolicies",
+              "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+              "use": "ALWAYS",
+              "control": "IAM_POLICY_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_IAM_MAX_PAGES",
+                "max_items": "SEALED_IAM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+            },
+            {
+              "id": "R17",
+              "action": "iam:ListAttachedRolePolicies",
+              "resource_selector": "SEALED_INSTANCE_ROLE_ARN",
+              "use": "ALWAYS",
+              "control": "IAM_POLICY_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_IAM_MAX_PAGES",
+                "max_items": "SEALED_IAM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+            },
+            {
+              "id": "R18",
+              "action": "iam:GetPolicy",
+              "resource_selector": "SEALED_ATTACHED_POLICY_ARN",
+              "use": "FOR_EACH_SEALED_ATTACHED_POLICY",
+              "control": "IAM_POLICY_SET",
+              "condition": "FOR_EACH_SEALED_ATTACHED_POLICY",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_IAM_MAX_PAGES",
+                "max_items": "SEALED_IAM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+            },
+            {
+              "id": "R19",
+              "action": "iam:GetPolicyVersion",
+              "resource_selector": "SEALED_ATTACHED_POLICY_ARN",
+              "use": "FOR_EACH_SEALED_ATTACHED_POLICY_DEFAULT_VERSION",
+              "control": "IAM_POLICY_SET",
+              "condition": "FOR_EACH_SEALED_ATTACHED_POLICY_DEFAULT_VERSION",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_IAM_MAX_PAGES",
+                "max_items": "SEALED_IAM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_iam_policy_set_observation/v1"
+            },
+            {
+              "id": "R20",
+              "action": "s3:GetBucketLocation",
+              "resource_selector": "SEALED_BUCKET_ARN",
+              "use": "ALWAYS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R21",
+              "action": "s3:GetBucketVersioning",
+              "resource_selector": "SEALED_BUCKET_ARN",
+              "use": "ALWAYS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R22",
+              "action": "s3:GetEncryptionConfiguration",
+              "resource_selector": "SEALED_BUCKET_ARN",
+              "use": "ALWAYS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R23",
+              "action": "s3:GetBucketPublicAccessBlock",
+              "resource_selector": "SEALED_BUCKET_ARN",
+              "use": "ALWAYS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R24",
+              "action": "s3:GetBucketPolicy",
+              "resource_selector": "SEALED_BUCKET_ARN",
+              "use": "ALWAYS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R25",
+              "action": "s3:GetBucketPolicyStatus",
+              "resource_selector": "SEALED_BUCKET_ARN",
+              "use": "ALWAYS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R26",
+              "action": "s3:ListBucket",
+              "resource_selector": "SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION",
+              "use": "ALWAYS",
+              "control": "ARTIFACT_VERSION_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_S3_MAX_PAGES",
+                "max_items": "SEALED_S3_MAX_VERSIONS"
+              },
+              "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+            },
+            {
+              "id": "R27",
+              "action": "s3:ListBucketVersions",
+              "resource_selector": "SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION",
+              "use": "ALWAYS",
+              "control": "ARTIFACT_VERSION_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_S3_MAX_PAGES",
+                "max_items": "SEALED_S3_MAX_VERSIONS"
+              },
+              "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+            },
+            {
+              "id": "R28",
+              "action": "s3:GetObject",
+              "resource_selector": "SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*",
+              "use": "WHEN_NONVERSIONED_METADATA_READ_IS_REQUIRED",
+              "control": "ARTIFACT_VERSION_SET",
+              "condition": "WHEN_NONVERSIONED_METADATA_READ_IS_REQUIRED",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_S3_MAX_PAGES",
+                "max_items": "SEALED_S3_MAX_VERSIONS"
+              },
+              "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+            },
+            {
+              "id": "R29",
+              "action": "s3:GetObjectVersion",
+              "resource_selector": "SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*",
+              "use": "FOR_EACH_EXACT_VERSION_OBJECT",
+              "control": "ARTIFACT_VERSION_SET",
+              "condition": "FOR_EACH_EXACT_VERSION_OBJECT",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_S3_MAX_PAGES",
+                "max_items": "SEALED_S3_MAX_VERSIONS"
+              },
+              "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+            },
+            {
+              "id": "R30",
+              "action": "s3:GetObjectAttributes",
+              "resource_selector": "SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*",
+              "use": "FOR_EACH_EXACT_VERSION_OBJECT",
+              "control": "ARTIFACT_VERSION_SET",
+              "condition": "FOR_EACH_EXACT_VERSION_OBJECT",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_S3_MAX_PAGES",
+                "max_items": "SEALED_S3_MAX_VERSIONS"
+              },
+              "reconstruction_output_kind": "aws_c0_artifact_version_set_observation/v1"
+            },
+            {
+              "id": "R31",
+              "action": "kms:DescribeKey",
+              "resource_selector": "SEALED_KMS_KEY_ARN",
+              "use": "WHEN_BUCKET_USES_KMS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "WHEN_BUCKET_USES_KMS",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R32",
+              "action": "kms:GetKeyPolicy",
+              "resource_selector": "SEALED_KMS_KEY_ARN",
+              "use": "WHEN_BUCKET_USES_KMS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "WHEN_BUCKET_USES_KMS",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R33",
+              "action": "kms:ListResourceTags",
+              "resource_selector": "SEALED_KMS_KEY_ARN",
+              "use": "WHEN_BUCKET_USES_KMS",
+              "control": "BUCKET_CONTROLS_KMS",
+              "condition": "WHEN_BUCKET_USES_KMS",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "id": "R34",
+              "action": "servicequotas:GetServiceQuota",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "SERVICE_QUOTA",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 2
+              },
+              "reconstruction_output_kind": "aws_c0_service_quota_observation/v1"
+            },
+            {
+              "id": "R35",
+              "action": "servicequotas:GetAWSDefaultServiceQuota",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "SERVICE_QUOTA",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 2
+              },
+              "reconstruction_output_kind": "aws_c0_service_quota_observation/v1"
+            },
+            {
+              "id": "R36",
+              "action": "states:DescribeStateMachine",
+              "resource_selector": "SEALED_STATE_MACHINE_ARN",
+              "use": "ALWAYS",
+              "control": "STANDARD_WORKFLOW",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_HISTORY_MAX_PAGES",
+                "max_items": "SEALED_HISTORY_MAX_EVENTS"
+              },
+              "reconstruction_output_kind": "aws_c0_standard_workflow_observation/v1"
+            },
+            {
+              "id": "R37",
+              "action": "states:DescribeExecution",
+              "resource_selector": "SEALED_EXECUTION_ARN",
+              "use": "ALWAYS",
+              "control": "STANDARD_WORKFLOW",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_HISTORY_MAX_PAGES",
+                "max_items": "SEALED_HISTORY_MAX_EVENTS"
+              },
+              "reconstruction_output_kind": "aws_c0_standard_workflow_observation/v1"
+            },
+            {
+              "id": "R38",
+              "action": "states:GetExecutionHistory",
+              "resource_selector": "SEALED_EXECUTION_ARN",
+              "use": "WHEN_HISTORY_FALLBACK_OR_HISTORY_CROSSCHECK",
+              "control": "STANDARD_WORKFLOW",
+              "condition": "WHEN_HISTORY_FALLBACK_OR_HISTORY_CROSSCHECK",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_HISTORY_MAX_PAGES",
+                "max_items": "SEALED_HISTORY_MAX_EVENTS"
+              },
+              "reconstruction_output_kind": "aws_c0_standard_workflow_observation/v1"
+            },
+            {
+              "id": "R39",
+              "action": "ssm:DescribeDocument",
+              "resource_selector": "SEALED_SSM_DOCUMENT_ARN",
+              "use": "ALWAYS",
+              "control": "SSM_DOCUMENT",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "id": "R40",
+              "action": "ssm:GetDocument",
+              "resource_selector": "SEALED_SSM_DOCUMENT_ARN",
+              "use": "ALWAYS",
+              "control": "SSM_DOCUMENT",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "id": "R41",
+              "action": "ssm:DescribeDocumentPermission",
+              "resource_selector": "SEALED_SSM_DOCUMENT_ARN",
+              "use": "ALWAYS",
+              "control": "SSM_DOCUMENT",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "id": "R42",
+              "action": "ssm:GetConnectionStatus",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "SSM_DOCUMENT",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "id": "R43",
+              "action": "ssm:DescribeInstanceInformation",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "SSM_DOCUMENT",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "id": "R44",
+              "action": "ssm:GetCommandInvocation",
+              "resource_selector": "*",
+              "use": "WHEN_COMMAND_WAS_SENT",
+              "control": "SSM_DOCUMENT",
+              "condition": "WHEN_COMMAND_WAS_SENT",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "id": "R45",
+              "action": "cloudformation:DescribeChangeSet",
+              "resource_selector": "SEALED_CHANGE_SET_ARN",
+              "use": "ALWAYS",
+              "control": "CHANGE_SET_AND_EFFECTS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_CFN_MAX_PAGES",
+                "max_items": "SEALED_CFN_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+            },
+            {
+              "id": "R46",
+              "action": "cloudformation:GetTemplate",
+              "resource_selector": "SEALED_STACK_ARN",
+              "use": "ALWAYS",
+              "control": "CHANGE_SET_AND_EFFECTS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_CFN_MAX_PAGES",
+                "max_items": "SEALED_CFN_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+            },
+            {
+              "id": "R47",
+              "action": "cloudformation:DescribeStacks",
+              "resource_selector": "SEALED_STACK_ARN",
+              "use": "ALWAYS",
+              "control": "CHANGE_SET_AND_EFFECTS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_CFN_MAX_PAGES",
+                "max_items": "SEALED_CFN_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+            },
+            {
+              "id": "R48",
+              "action": "cloudformation:DescribeStackEvents",
+              "resource_selector": "SEALED_STACK_ARN",
+              "use": "ALWAYS",
+              "control": "CHANGE_SET_AND_EFFECTS",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_CFN_MAX_PAGES",
+                "max_items": "SEALED_CFN_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_change_set_effects_observation/v1"
+            },
+            {
+              "id": "R49",
+              "action": "lambda:GetFunction",
+              "resource_selector": "SEALED_FINALIZER_FUNCTION_ARN",
+              "use": "ALWAYS",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R50",
+              "action": "lambda:GetFunctionConfiguration",
+              "resource_selector": "SEALED_FINALIZER_FUNCTION_ARN",
+              "use": "ALWAYS",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R51",
+              "action": "lambda:GetPolicy",
+              "resource_selector": "SEALED_FINALIZER_FUNCTION_ARN",
+              "use": "ALWAYS",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R52",
+              "action": "logs:DescribeLogGroups",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R53",
+              "action": "logs:DescribeLogStreams",
+              "resource_selector": "SEALED_LOG_GROUP_ARN",
+              "use": "FOR_EACH_SEALED_LOG_GROUP",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "FOR_EACH_SEALED_LOG_GROUP",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R54",
+              "action": "logs:GetLogEvents",
+              "resource_selector": "SEALED_LOG_STREAM_ARN",
+              "use": "WHEN_LOG_EVENTS_ARE_ATTESTED",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_LOG_EVENTS_ARE_ATTESTED",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R55",
+              "action": "logs:GetLogRecord",
+              "resource_selector": "SEALED_LOG_GROUP_ARN",
+              "use": "WHEN_LOG_RECORD_POINTER_EXISTS",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_LOG_RECORD_POINTER_EXISTS",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R56",
+              "action": "logs:FilterLogEvents",
+              "resource_selector": "SEALED_LOG_GROUP_ARN",
+              "use": "WHEN_LOG_FILTER_ATTESTATION_IS_REQUIRED",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_LOG_FILTER_ATTESTATION_IS_REQUIRED",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R57",
+              "action": "cloudwatch:GetMetricData",
+              "resource_selector": "*",
+              "use": "WHEN_METRIC_ATTESTATION_IS_REQUIRED",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_METRIC_ATTESTATION_IS_REQUIRED",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R58",
+              "action": "cloudwatch:GetMetricStatistics",
+              "resource_selector": "*",
+              "use": "WHEN_METRIC_STATISTICS_ARE_REQUIRED",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_METRIC_STATISTICS_ARE_REQUIRED",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R59",
+              "action": "ecr:DescribeRepositories",
+              "resource_selector": "*",
+              "use": "WHEN_IMAGE_IS_IN_ECR",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_IMAGE_IS_IN_ECR",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R60",
+              "action": "ecr:DescribeImages",
+              "resource_selector": "SEALED_ECR_REPOSITORY_ARN",
+              "use": "WHEN_IMAGE_IS_IN_ECR",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_IMAGE_IS_IN_ECR",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R61",
+              "action": "ecr:ListImages",
+              "resource_selector": "SEALED_ECR_REPOSITORY_ARN",
+              "use": "WHEN_IMAGE_IS_IN_ECR",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_IMAGE_IS_IN_ECR",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R62",
+              "action": "ecr:GetRepositoryPolicy",
+              "resource_selector": "SEALED_ECR_REPOSITORY_ARN",
+              "use": "WHEN_IMAGE_IS_IN_ECR",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_IMAGE_IS_IN_ECR",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R63",
+              "action": "pricing:GetProducts",
+              "resource_selector": "*",
+              "use": "WHEN_REVALIDATING_COST_MODEL_PRICE_OBSERVATION",
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "condition": "WHEN_REVALIDATING_COST_MODEL_PRICE_OBSERVATION",
+              "call_requirement": "CONDITIONAL",
+              "pagination_bounds": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "reconstruction_output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "id": "R64",
+              "action": "ec2:DescribeSecurityGroups",
+              "resource_selector": "*",
+              "use": "ALWAYS",
+              "control": "VPC_NETWORK_PATH",
+              "condition": "ALWAYS",
+              "call_requirement": "ALWAYS",
+              "pagination_bounds": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "reconstruction_output_kind": "aws_c0_vpc_network_observation/v2"
+            }
+          ]
+        },
+        "row_ids": {
+          "const": [
+            "R01",
+            "R02",
+            "R03",
+            "R04",
+            "R05",
+            "R06",
+            "R07",
+            "R08",
+            "R09",
+            "R10",
+            "R11",
+            "R12",
+            "R13",
+            "R14",
+            "R15",
+            "R16",
+            "R17",
+            "R18",
+            "R19",
+            "R20",
+            "R21",
+            "R22",
+            "R23",
+            "R24",
+            "R25",
+            "R26",
+            "R27",
+            "R28",
+            "R29",
+            "R30",
+            "R31",
+            "R32",
+            "R33",
+            "R34",
+            "R35",
+            "R36",
+            "R37",
+            "R38",
+            "R39",
+            "R40",
+            "R41",
+            "R42",
+            "R43",
+            "R44",
+            "R45",
+            "R46",
+            "R47",
+            "R48",
+            "R49",
+            "R50",
+            "R51",
+            "R52",
+            "R53",
+            "R54",
+            "R55",
+            "R56",
+            "R57",
+            "R58",
+            "R59",
+            "R60",
+            "R61",
+            "R62",
+            "R63",
+            "R64"
+          ]
+        },
+        "required_control_mapping": {
+          "const": [
+            {
+              "control": "ACCOUNT_REGION",
+              "row_ids": [
+                "R01"
+              ],
+              "conditional_use": "ALWAYS",
+              "pagination": {
+                "max_pages": 1,
+                "max_items": 1
+              },
+              "output_schema": "aws_c0_account_region_observation/v1",
+              "output_kind": "aws_c0_account_region_observation/v1"
+            },
+            {
+              "control": "INSTANCE_PROFILE_SOLE_ROLE",
+              "row_ids": [
+                "R02",
+                "R03",
+                "R13",
+                "R14"
+              ],
+              "conditional_use": "ALWAYS",
+              "pagination": {
+                "max_pages": 4,
+                "max_items": 16
+              },
+              "output_schema": "aws_c0_instance_profile_role_observation/v1",
+              "output_kind": "aws_c0_instance_profile_role_observation/v1"
+            },
+            {
+              "control": "IAM_POLICY_SET",
+              "row_ids": [
+                "R15",
+                "R16",
+                "R17",
+                "R18",
+                "R19"
+              ],
+              "conditional_use": "ALWAYS_WITH_PER_POLICY_ROWS_CONDITIONAL_ON_LIST_RESULTS",
+              "pagination": {
+                "max_pages": "SEALED_IAM_MAX_PAGES",
+                "max_items": "SEALED_IAM_MAX_ITEMS"
+              },
+              "output_schema": "aws_c0_iam_policy_set_observation/v2",
+              "output_kind": "aws_c0_iam_policy_set_observation/v2"
+            },
+            {
+              "control": "BUCKET_CONTROLS_KMS",
+              "row_ids": [
+                "R20",
+                "R21",
+                "R22",
+                "R23",
+                "R24",
+                "R25",
+                "R31",
+                "R32",
+                "R33"
+              ],
+              "conditional_use": "KMS_ROWS_IFF_BUCKET_ENCRYPTION_IS_KMS",
+              "pagination": {
+                "max_pages": 1,
+                "max_items": 16
+              },
+              "output_schema": "aws_c0_bucket_controls_observation/v1",
+              "output_kind": "aws_c0_bucket_controls_observation/v1"
+            },
+            {
+              "control": "VPC_NETWORK_PATH",
+              "row_ids": [
+                "R04",
+                "R05",
+                "R06",
+                "R07",
+                "R08",
+                "R09",
+                "R10",
+                "R11",
+                "R12",
+                "R64"
+              ],
+              "conditional_use": "TOPOLOGY_ROWS_IFF_REFERENCED_BY_INSTANCE_OR_ROUTE",
+              "pagination": {
+                "max_pages": "SEALED_EC2_MAX_PAGES",
+                "max_items": "SEALED_EC2_MAX_ITEMS"
+              },
+              "output_schema": "aws_c0_vpc_network_observation/v2",
+              "output_kind": "aws_c0_vpc_network_observation/v2"
+            },
+            {
+              "control": "SERVICE_QUOTA",
+              "row_ids": [
+                "R34",
+                "R35"
+              ],
+              "conditional_use": "ALWAYS",
+              "pagination": {
+                "max_pages": 1,
+                "max_items": 2
+              },
+              "output_schema": "aws_c0_service_quota_observation/v1",
+              "output_kind": "aws_c0_service_quota_observation/v1"
+            },
+            {
+              "control": "STANDARD_WORKFLOW",
+              "row_ids": [
+                "R36",
+                "R37",
+                "R38"
+              ],
+              "conditional_use": "R38_IFF_HISTORY_FALLBACK_OR_HISTORY_CROSSCHECK",
+              "pagination": {
+                "max_pages": "SEALED_HISTORY_MAX_PAGES",
+                "max_items": "SEALED_HISTORY_MAX_EVENTS"
+              },
+              "output_schema": "aws_c0_standard_workflow_observation/v1",
+              "output_kind": "aws_c0_standard_workflow_observation/v1"
+            },
+            {
+              "control": "SSM_DOCUMENT",
+              "row_ids": [
+                "R39",
+                "R40",
+                "R41",
+                "R42",
+                "R43",
+                "R44"
+              ],
+              "conditional_use": "R44_IFF_COMMAND_WAS_SENT",
+              "pagination": {
+                "max_pages": "SEALED_SSM_MAX_PAGES",
+                "max_items": "SEALED_SSM_MAX_ITEMS"
+              },
+              "output_schema": "aws_c0_ssm_control_observation/v1",
+              "output_kind": "aws_c0_ssm_control_observation/v1"
+            },
+            {
+              "control": "SOFTWARE_AND_IMAGE_SET",
+              "row_ids": [
+                "R49",
+                "R50",
+                "R51",
+                "R52",
+                "R53",
+                "R54",
+                "R55",
+                "R56",
+                "R57",
+                "R58",
+                "R59",
+                "R60",
+                "R61",
+                "R62",
+                "R63"
+              ],
+              "conditional_use": "LOG_METRIC_ECR_PRICING_ROWS_IFF_THE_SEALED_DEPLOYMENT_AND_COST_MODEL_REQUIRE_THEM",
+              "pagination": {
+                "max_pages": "SEALED_SOFTWARE_OBSERVATION_MAX_PAGES",
+                "max_items": "SEALED_SOFTWARE_OBSERVATION_MAX_ITEMS"
+              },
+              "output_schema": "aws_c0_software_image_observation/v1",
+              "output_kind": "aws_c0_software_image_observation/v1"
+            },
+            {
+              "control": "CHANGE_SET_AND_EFFECTS",
+              "row_ids": [
+                "R45",
+                "R46",
+                "R47",
+                "R48"
+              ],
+              "conditional_use": "ALWAYS",
+              "pagination": {
+                "max_pages": "SEALED_CFN_MAX_PAGES",
+                "max_items": "SEALED_CFN_MAX_ITEMS"
+              },
+              "output_schema": "aws_c0_change_set_effects_observation/v1",
+              "output_kind": "aws_c0_change_set_effects_observation/v1"
+            },
+            {
+              "control": "ARTIFACT_VERSION_SET",
+              "row_ids": [
+                "R26",
+                "R27",
+                "R28",
+                "R29",
+                "R30"
+              ],
+              "conditional_use": "R28_IFF_NONVERSIONED_METADATA_READ_REQUIRED_R29_R30_FOR_EACH_EXACT_VERSION",
+              "pagination": {
+                "max_pages": "SEALED_S3_MAX_PAGES",
+                "max_items": "SEALED_S3_MAX_VERSIONS"
+              },
+              "output_schema": "aws_c0_artifact_version_set_observation/v1",
+              "output_kind": "aws_c0_artifact_version_set_observation/v1"
+            }
+          ]
+        },
+        "shared_row_ids": {
+          "const": []
+        },
+        "map_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "plan_contract_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d65_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan_contract/v1"
+                }
+              }
+            }
+          ]
+        },
+        "freshness_max_seconds": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "original_read_plan_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan/v1"
+                }
+              }
+            }
+          ]
+        },
+        "amendment_packet_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_network_ingress_source_authority_amendment_packet/v1"
+                }
+              }
+            }
+          ]
+        },
+        "previous_read_plan_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan/v2"
+                }
+              }
+            }
+          ]
+        },
+        "iam_source_mapping_authority_id": {
+          "const": "EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1"
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime_read_plan_v3": {
+      "$ref": "#/$defs/read_plan_iam_v3"
+    },
+    "iam_policy_set_decoded_v2": {
+      "type": "object",
+      "required": [
+        "schema",
+        "role_arn",
+        "instance_profile_arn",
+        "assume_role_policy_sha256",
+        "inline_policy_names",
+        "attached_policy_arns",
+        "policy_document_sha256s",
+        "pagination_transcript_identities",
+        "source_row_ids"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_iam_policy_set_observation_preimage/v2"
+        },
+        "role_arn": {
+          "type": "string",
+          "pattern": "^arn:aws:"
+        },
+        "instance_profile_arn": {
+          "type": "string",
+          "pattern": "^arn:aws:"
+        },
+        "assume_role_policy_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "inline_policy_names": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "attached_policy_arns": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^arn:aws:"
+          }
+        },
+        "policy_document_sha256s": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/d66_sha256"
+          }
+        },
+        "pagination_transcript_identities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/d65_identity"
+              },
+              {
+                "properties": {
+                  "kind": {
+                    "const": "aws_c0_pagination_transcript/v1"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "source_row_ids": {
+          "const": [
+            "R15",
+            "R16",
+            "R17",
+            "R18",
+            "R19"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "iam_policy_set_reconstruction_output_v2": {
+      "type": "object",
+      "required": [
+        "schema",
+        "kind",
+        "control",
+        "identity",
+        "canonical_json_base64",
+        "observed_utc",
+        "freshness_seconds",
+        "max_freshness_seconds",
+        "disposition",
+        "decoded_json",
+        "canonical_byte_sha256",
+        "canonical_byte_count",
+        "canonical_decode_validation_disposition",
+        "freshness_within_bound"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_iam_policy_set_observation/v2"
+        },
+        "kind": {
+          "const": "aws_c0_iam_policy_set_observation/v2"
+        },
+        "control": {
+          "const": "IAM_POLICY_SET"
+        },
+        "identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_iam_policy_set_observation/v2"
+                }
+              }
+            }
+          ]
+        },
+        "canonical_json_base64": {
+          "$ref": "#/$defs/d150_canonical_json_base64"
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/d67_timestamp"
+        },
+        "freshness_seconds": {
+          "$ref": "#/$defs/d69_bounded_integer"
+        },
+        "max_freshness_seconds": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "disposition": {
+          "const": "FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS"
+        },
+        "decoded_json": {
+          "$ref": "#/$defs/iam_policy_set_decoded_v2"
+        },
+        "canonical_byte_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "canonical_byte_count": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "canonical_decode_validation_disposition": {
+          "const": "STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS"
+        },
+        "freshness_within_bound": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "iam_policy_set_output_v2": {
+      "$ref": "#/$defs/iam_policy_set_reconstruction_output_v2"
     }
   }
 }

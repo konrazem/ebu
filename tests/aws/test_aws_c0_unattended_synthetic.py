@@ -306,6 +306,64 @@ class RuntimeControlReadPlanTests(unittest.TestCase):
         self.assertLess(body.index('validate_runtime_control_read_plan_v2('),body.index('_deployment_control_values('))
 
 
+class IamSourceMappingAmendmentTests(unittest.TestCase):
+    def test_v3_changes_only_iam_output_binding_and_preserves_exact_v2_predecessor(self):
+        old=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        current=G.build_runtime_control_read_plan_fields_v3(ROOT)
+        prior=old['runtime_control_read_plan'];plan=current['runtime_control_read_plan']
+        self.assertEqual(plan['previous_read_plan_identity'],old['runtime_control_read_plan_identity'])
+        self.assertEqual(F.validate_runtime_control_read_plan_v3(
+            plan,current['runtime_control_read_plan_identity']),plan)
+        G.validate_record(ROOT,'runtime_read_plan_v3',plan)
+        expected=copy.deepcopy(prior);expected['schema']='aws_c0_runtime_control_read_plan/v3'
+        expected['previous_read_plan_identity']=old['runtime_control_read_plan_identity']
+        expected['iam_source_mapping_authority_id']=F.IAM_SOURCE_MAPPING_AUTHORITY_ID
+        iam=next(x for x in expected['required_control_mapping'] if x['control']=='IAM_POLICY_SET')
+        iam['output_kind']=iam['output_schema']='aws_c0_iam_policy_set_observation/v2'
+        expected['map_sha256']=G.sha(G.canonical(expected['required_control_mapping']))
+        self.assertEqual(plan,expected)
+        self.assertEqual(iam['row_ids'],['R15','R16','R17','R18','R19'])
+
+    def test_v3_refuses_authority_predecessor_rows_or_any_other_mapping_change(self):
+        mutations=(lambda p:p.update(iam_source_mapping_authority_id='other'),
+            lambda p:p['previous_read_plan_identity'].update(value='0'*64),
+            lambda p:next(x for x in p['required_control_mapping'] if x['control']=='IAM_POLICY_SET')['row_ids'].append('R20'),
+            lambda p:next(x for x in p['required_control_mapping'] if x['control']=='BUCKET_CONTROLS_KMS')['row_ids'].pop(),
+            lambda p:p['rows'][14].update(action='iam:GetRole'))
+        for mutate in mutations:
+            result=G.build_runtime_control_read_plan_fields_v3(ROOT);plan=result['runtime_control_read_plan']
+            mutate(plan);plan['map_sha256']=G.sha(G.canonical(plan['required_control_mapping']))
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.validate_runtime_control_read_plan_v3(plan,G.identity(plan['schema'],plan))
+
+    def test_iam_output_v2_accepts_only_corrected_source_rows_and_preserves_v1_fields(self):
+        historical,_=G.named_definition(ROOT,'decoded_iam_policy_set_observation')
+        self.assertEqual(historical['properties']['schema']['const'],'aws_c0_iam_policy_set_observation_preimage/v1')
+        self.assertEqual(historical['properties']['source_row_ids']['const'],
+            ['R15','R16','R17','R18','R19','R20','R21','R22','R23','R24','R25','R31','R32','R33'])
+        decoded={'schema':'aws_c0_iam_policy_set_observation_preimage/v2',
+            'role_arn':'arn:aws:iam::623609441658:role/EBU-C0-Role',
+            'instance_profile_arn':'arn:aws:iam::623609441658:instance-profile/EBU-C0-Role',
+            'assume_role_policy_sha256':'a'*64,'inline_policy_names':['inline-policy'],
+            'attached_policy_arns':['arn:aws:iam::623609441658:policy/EBU-C0-Policy'],
+            'policy_document_sha256s':['b'*64],
+            'pagination_transcript_identities':[F.identity('aws_c0_pagination_transcript/v1','c'*64)],
+            'source_row_ids':['R15','R16','R17','R18','R19']}
+        raw=G.canonical(decoded);output={'schema':'aws_c0_iam_policy_set_observation/v2',
+            'kind':'aws_c0_iam_policy_set_observation/v2','control':'IAM_POLICY_SET',
+            'identity':G.identity('aws_c0_iam_policy_set_observation/v2',decoded),
+            'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':'2026-09-06T18:00:00Z',
+            'freshness_seconds':1,'max_freshness_seconds':300,
+            'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+            'canonical_byte_sha256':G.sha(raw),'canonical_byte_count':len(raw),
+            'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+            'freshness_within_bound':True}
+        self.assertEqual(G.validate_record(ROOT,'iam_policy_set_output_v2',output),output)
+        output['decoded_json']['source_row_ids']+=['R20','R21','R22','R23','R24','R25','R31','R32','R33']
+        with self.assertRaises(G.jsonschema.ValidationError):
+            G.validate_record(ROOT,'iam_policy_set_output_v2',output)
+
+
 class R64IngressAmendmentTests(unittest.TestCase):
     """API-shaped offline evidence only; no transport, AWS, service or science."""
     def material(self):

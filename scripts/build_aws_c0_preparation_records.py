@@ -120,6 +120,34 @@ def build_runtime_control_read_plan_fields_v2(root,*,freshness_max_seconds=300):
     validate_record(root,'runtime_read_plan_v2',plan)
     return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
 
+def build_runtime_control_read_plan_fields_v3(root,*,freshness_max_seconds=300):
+    """Bind the authorized IAM output/v2 correction without changing any read."""
+    f=finalizer(root);authority=sequence(root)
+    amendment=authority.get('iam_source_mapping_amendment_authorization')
+    expected={'authority_id':f.IAM_SOURCE_MAPPING_AUTHORITY_ID,
+        'source':'EXPLICIT_USER_AUTHORIZATION_2026_09_07',
+        'historical_output_preserved':'aws_c0_iam_policy_set_observation/v1',
+        'prospective_output':'aws_c0_iam_policy_set_observation/v2',
+        'corrected_source_row_ids':['R15','R16','R17','R18','R19'],
+        'read_plan_predecessor':'aws_c0_runtime_control_read_plan/v2',
+        'prospective_read_plan':'aws_c0_runtime_control_read_plan/v3',
+        'rows_actions_resources_conditions_changed':False,
+        'other_control_mappings_changed':False,
+        'aws_authority_permissions_science_cost_or_publication_changed':False}
+    if amendment!=expected:
+        raise ValueError('exact authorized IAM source-mapping amendment required')
+    old=build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=freshness_max_seconds)
+    plan=copy.deepcopy(old['runtime_control_read_plan']);plan['schema']='aws_c0_runtime_control_read_plan/v3'
+    plan['previous_read_plan_identity']=old['runtime_control_read_plan_identity']
+    plan['iam_source_mapping_authority_id']=f.IAM_SOURCE_MAPPING_AUTHORITY_ID
+    target=next(x for x in plan['required_control_mapping'] if x['control']=='IAM_POLICY_SET')
+    target['output_kind']=target['output_schema']='aws_c0_iam_policy_set_observation/v2'
+    plan['map_sha256']=sha(canonical(plan['required_control_mapping']))
+    plan_id=identity(plan['schema'],plan)
+    f.validate_runtime_control_read_plan_v3(plan,plan_id)
+    validate_record(root,'runtime_read_plan_v3',plan)
+    return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
+
 def build_r64_exact_request(root,source_receipts,**context):
     # Gate the new action by the exact authorized packet before deriving IDs.
     build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=context['freshness_max_seconds'])
