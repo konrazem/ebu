@@ -240,6 +240,20 @@ non-public bucket remediation, and reverified the stopped `t3.small`. Under the
 standing all-required-steps authority, one fresh attempt after adding the
 effective-policy propagation guard is authorized and not begun.
 
+That guarded attempt was reserved at `2026-09-07T18:16:27Z` under identity
+`58c4cfa9a461e1b0eb074a50ac5638f5cc8ca8d9b46ce8911ff0189ecf1c7651`.
+IAM simulation returned `allowed`, but the constrained session issued only five
+seconds later still received R64 `UnauthorizedOperation`. The official EC2
+authorization reference confirms `ec2:Region` is supported for this action;
+the remaining correction is a 60-second STS propagation interval after the
+confirmed simulation. This attempt is terminal and cleanup passed. Reservation,
+propagation-proof, failure, and cleanup SHA-256 values are respectively
+`ad454d11dd9f4de0e548f6ebceb7c278fe16eca1e5562439d52de9f2e478d21b`,
+`6301863402bf1d0f867f3ace840aa3063c16b945989ddce13b5f459fc66101fc`,
+`904db40e9c127655610ce07cf634af29c56d1a1cd7a9256597bf51ff177f7e65`,
+and `79d6bc1a9f57e7c52b52b9ba19b2354841a98e6c6a6a30bdca5c9c76c1693c6f`.
+One fresh attempt after that correction remains authorized and not begun.
+
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
 
