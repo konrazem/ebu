@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: GATE 1 PACKET SESSION EXPIRED BEFORE MUTATION
+## Checkpoint status: EXPIRED-PACKET REPLACEMENT PREFLIGHT AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -330,6 +330,23 @@ deployment, platform smoke, or science occurred. The expired packet and both
 authorization messages remain historical evidence and cannot be replayed. The
 next permissible recovery is a fresh preparation identity, packet, and exact
 packet-bound approval.
+
+The user then explicitly authorized all steps required to perform the platform
+smoke. The exact 104-byte UTF-8 statement has SHA-256
+`43bae506aa510764e33a1a95df768ac5031d0bd2181be1d03cef05859c262908`.
+Within the existing frozen boundaries, this authorizes exactly one fresh
+replacement atomic preflight to construct a new preparation identity and
+packet after the expired packet. The expired packet and every prior attempt
+remain historical and cannot be replayed. The collector retains the exact
+session name, 60-second IAM propagation interval, 300-second freshness bound,
+sole temporary regional `ec2:DescribeSecurityGroups` permission, mandatory
+cleanup, stopped `t3.small`, one-smoke limit, and USD50 cap. Scientific
+execution, push, merge, publication, and release remain prohibited.
+
+The controller will remove Markdown presentation escapes itself without asking
+the user to retype a statement. The new packet's exact Gate 1 approval remains
+a cryptographic boundary that can only be rendered after that packet exists;
+this goal authorization does not invent or preauthorize an unknown digest.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
