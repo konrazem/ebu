@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: SDK-CORRECTED FRESH REPLACEMENT PREFLIGHT AUTHORIZED
+## Checkpoint status: SDK-CORRECTED PREFLIGHT FAILED AND CLEANED — NOT READY
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -152,6 +152,38 @@ authorization statement is 913 bytes and has SHA-256
 The stopped `t3.small`, one unspent smoke, USD50 cap, schemas, permissions, and
 scientific content remain fixed. Instance start, deployment, smoke, science,
 push, merge, publication, and release remain prohibited.
+
+The one SDK-corrected replacement was durably reserved at
+`2026-09-07T17:38:00Z` under fresh attempt identity
+`aa4fb7ab315f4ad86bf92fd7c0ee773723d38e8eeca8578d7ad5ef1aff2c6c08`.
+The exact preparation session was issued, the validated USD1.75 pricing model
+was reused, and 22 authenticated control receipts through R23 were collected
+inside the new window. R20 confirmed the sealed bucket is in `us-east-1`, R21
+confirmed versioning enabled, R22 confirmed AES256 default encryption, and R23
+confirmed all four public-access-block controls true. The required R24
+`s3:GetBucketPolicy` call then returned AWS `NoSuchBucketPolicy` because the
+sealed bucket has no resource policy.
+
+This is a real fail-closed bucket-control precondition, not another local SDK
+coordinate error: the frozen `BUCKET_CONTROLS_KMS` producer requires R20-R25 to
+be successful authenticated reads and requires a bounded strict-JSON bucket
+policy with non-public policy status. R25, R31-R35, and R64 were not called; no
+R64 budget was created and no preparation packet was constructed. The attempt
+is terminal and will not be retried or replayed. Its reservation and failure
+file SHA-256 values are respectively
+`7a66d9e1340ff3042196c6e2125b707254dea7ad37b62c1b5ba13ce20fcd6271`
+and `bb465855f63bc69818ece9fbdf850fa83c5d2fa2f5a2022814440b391d0772f2`.
+
+Verified cleanup removed only
+`EBU-C0-Temporary-SDK-Corrected-Preflight-20260907`, disposed the issued
+temporary credentials, proved that the sole remaining inline policy is the
+unchanged base policy and no managed policy is attached, and reverified the
+existing `t3.small` stopped. Cleanup SHA-256 is
+`01167e906856982ac894de69df947daa5d9612e52b1733b5baeaa6ca3ba54b0c`.
+The one actual platform smoke remains unspent. Continuation now requires a
+separate exact authority for the required sealed-bucket policy remediation and,
+after verified remediation, one separately authorized fresh atomic full-
+preflight. No such remediation or later attempt has begun.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
