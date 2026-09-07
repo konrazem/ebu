@@ -265,6 +265,24 @@ def build_bucket_controls_kms_output(root,receipts,**context):
     validate_record(root,'bucket_controls_kms_output',output)
     return output
 
+def build_artifact_version_set_output(root,receipts,**context):
+    authority=sequence(root).get('artifact_version_set_reconstruction_authorization')
+    expected={'authority_id':'EBU-AWS-C0-ARTIFACT-VERSION-SET-RECONSTRUCTION-AUTHORITY-v1',
+        'source':'EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS',
+        'output':'aws_c0_artifact_version_set_observation/v1',
+        'source_row_ids':['R26','R27','R28','R29','R30'],
+        'exact_version_content_binding':'aws_c0_s3_exact_version_content_binding/v1',
+        'artifact_count':8,'r28_nonversioned_read_performed':False,
+        'supported_s3_max_pages':1,'supported_s3_max_items':16,
+        'body_digest_must_equal_r29_and_r30_checksum':True,
+        'new_aws_actions_or_permissions_authorized':False,
+        'science_cost_or_publication_changed':False,'historical_schemas_changed':False}
+    if authority!=expected:raise ValueError('exact authorized artifact-version reconstruction required')
+    f=finalizer(root);output=f.build_artifact_version_set_reconstruction_output(receipts,**context)
+    f.validate_artifact_version_set_reconstruction_output(output,receipts,**context)
+    validate_record(root,'artifact_version_set_output',output)
+    return output
+
 def build_service_quota_output(root,receipts,**context):
     output=finalizer(root).build_service_quota_reconstruction_output(receipts,**context)
     validate_record(root,'service_quota_output',output)

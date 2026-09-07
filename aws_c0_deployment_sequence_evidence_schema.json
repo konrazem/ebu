@@ -86,6 +86,12 @@
     },
     {
       "$ref": "#/$defs/runtime_reconstruction_source_attachment_v3"
+    },
+    {
+      "$ref": "#/$defs/artifact_version_set_output"
+    },
+    {
+      "$ref": "#/$defs/s3_exact_version_content_binding"
     }
   ],
   "$defs": {
@@ -55316,6 +55322,141 @@
     },
     "runtime_reconstruction_source_attachment_v3": {
       "$ref": "#/$defs/runtime_reconstruction_source_attachment_v3_definition"
+    },
+    "artifact_version_set_reconstruction_output": {
+      "type": "object",
+      "required": [
+        "schema",
+        "kind",
+        "control",
+        "identity",
+        "canonical_json_base64",
+        "observed_utc",
+        "freshness_seconds",
+        "max_freshness_seconds",
+        "disposition",
+        "decoded_json",
+        "canonical_byte_sha256",
+        "canonical_byte_count",
+        "canonical_decode_validation_disposition",
+        "freshness_within_bound"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_artifact_version_set_observation/v1"
+        },
+        "kind": {
+          "const": "aws_c0_artifact_version_set_observation/v1"
+        },
+        "control": {
+          "const": "ARTIFACT_VERSION_SET"
+        },
+        "identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d65_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_artifact_version_set_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "canonical_json_base64": {
+          "$ref": "#/$defs/d150_canonical_json_base64"
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/d67_timestamp"
+        },
+        "freshness_seconds": {
+          "$ref": "#/$defs/d69_bounded_integer"
+        },
+        "max_freshness_seconds": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "disposition": {
+          "const": "FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS"
+        },
+        "decoded_json": {
+          "$ref": "#/$defs/d167_decoded_artifact_version_set_observation"
+        },
+        "canonical_byte_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "canonical_byte_count": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "canonical_decode_validation_disposition": {
+          "const": "STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS"
+        },
+        "freshness_within_bound": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifact_version_set_output": {
+      "$ref": "#/$defs/artifact_version_set_reconstruction_output"
+    },
+    "s3_exact_version_content_binding_v1_definition": {
+      "type": "object",
+      "required": [
+        "schema",
+        "api_receipt",
+        "api_receipt_identity",
+        "body_byte_count",
+        "body_sha256",
+        "body_checksum_sha256_base64",
+        "body_fully_consumed",
+        "disposition"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_s3_exact_version_content_binding/v1"
+        },
+        "api_receipt": {
+          "$ref": "#/$defs/d64_api_request_response_receipt"
+        },
+        "api_receipt_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_api_request_response_receipt/v1"
+                }
+              }
+            }
+          ]
+        },
+        "body_byte_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "body_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "body_checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        },
+        "body_fully_consumed": {
+          "const": true
+        },
+        "disposition": {
+          "const": "EXACT_VERSION_BODY_FULLY_CONSUMED_SHA256_AND_SERVER_CHECKSUM_BOUND"
+        }
+      },
+      "additionalProperties": false
+    },
+    "s3_exact_version_content_binding": {
+      "$ref": "#/$defs/s3_exact_version_content_binding_v1_definition"
     }
   }
 }

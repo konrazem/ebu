@@ -233,6 +233,16 @@ and recompute the exact five-control attachment/v2 predecessor. Six source-
 bound predeployment controls leave five controls unresolved, so both records
 remain explicitly partial and not ready.
 
+`ARTIFACT_VERSION_SET` is reconstructed from the frozen R26–R30 reads under a
+stricter one-page, sixteen-item local implementation bound. R26 and R27 must
+enumerate exactly the same eight current versioned objects under the sealed
+prefix; R28 is not called because every accepted read is version-pinned. Each
+R29 exact-version body is fully consumed into a versioned content binding whose
+byte count and SHA-256 must equal the R29 checksum and independent R30 object-
+attributes checksum. Large bodies are never embedded in JSON. The output/v1
+schema, actions, permissions, scientific content, cost ceiling and publication
+scope are unchanged.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

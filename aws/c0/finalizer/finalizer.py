@@ -3389,6 +3389,162 @@ def validate_bucket_controls_kms_reconstruction_output(output: Any, receipts: An
     return output
 
 
+def _exact_version_content_binding(value: Any, *, receipt: Any, validation_utc: str,
+        freshness_max_seconds: int, caller_identity: dict[str,str],
+        authentication_source_identity: dict[str,str]) -> tuple[dict[str,Any],dict[str,Any]]:
+    fields={'schema','api_receipt','api_receipt_identity','body_byte_count','body_sha256',
+        'body_checksum_sha256_base64','body_fully_consumed','disposition'}
+    if (not isinstance(value,dict) or set(value)!=fields
+            or value.get('schema')!='aws_c0_s3_exact_version_content_binding/v1'
+            or value.get('api_receipt')!=receipt
+            or value.get('api_receipt_identity')!=identity(
+                'aws_c0_api_request_response_receipt/v1',digest(canonical_bytes(receipt)))
+            or type(value.get('body_byte_count')) is not int or value['body_byte_count']<1
+            or not isinstance(value.get('body_sha256'),str) or not re.fullmatch(r'[0-9a-f]{64}',value['body_sha256'])
+            or value.get('body_fully_consumed') is not True
+            or value.get('disposition')!='EXACT_VERSION_BODY_FULLY_CONSUMED_SHA256_AND_SERVER_CHECKSUM_BOUND'):
+        raise Refusal('closed exact-version content binding required')
+    try:checksum=base64.b64decode(value['body_checksum_sha256_base64'],validate=True)
+    except (ValueError,TypeError) as exc:raise Refusal('exact-version body checksum base64 invalid') from exc
+    if len(checksum)!=32 or checksum.hex()!=value['body_sha256']:
+        raise Refusal('exact-version body digest/checksum binding differs')
+    request,response=_iam_api_material(receipt,'R29','s3:GetObjectVersion',
+        'SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*',maximum_items=1,
+        caller_identity=caller_identity,authentication_source_identity=authentication_source_identity,
+        phase_not_before_utc=receipt['requested_utc'],validation_utc=validation_utc,
+        freshness_max_seconds=freshness_max_seconds)
+    if (receipt['pagination_page']!=1 or receipt['pagination_item_count']!=1
+            or response.get('ContentLength')!=value['body_byte_count']
+            or response.get('ChecksumSHA256')!=value['body_checksum_sha256_base64']):
+        raise Refusal('exact-version read length/checksum differs from consumed body')
+    return request,response
+
+
+def build_artifact_version_set_reconstruction_output(receipts: Any, *,
+        caller_identity: dict[str,str], authentication_source_identity: dict[str,str],
+        expected_bucket_name: str, expected_bucket_identity: dict[str,str],
+        expected_prefix: str, phase_not_before_utc: str, validation_utc: str,
+        freshness_max_seconds: int, s3_pagination_bounds: Any) -> dict[str,Any]:
+    """Reconstruct eight exact versioned artifacts with two independent checksum witnesses."""
+    fields={'R26','R27','R28','R29','R30'}
+    if (not isinstance(receipts,dict) or set(receipts)!=fields or receipts['R28'] is not None
+            or not isinstance(receipts['R29'],list) or len(receipts['R29'])!=8
+            or not isinstance(receipts['R30'],list) or len(receipts['R30'])!=8
+            or not isinstance(expected_bucket_name,str) or not expected_bucket_name
+            or not isinstance(expected_prefix,str) or not expected_prefix.endswith('/')
+            or len(expected_prefix.encode())>512
+            or s3_pagination_bounds!={'max_pages':1,'max_items':16}):
+        raise Refusal('artifact exact source slots, prefix and one-page sealed bounds required')
+    _identity({'bucket':expected_bucket_identity},'bucket','aws_s3_bucket/v1')
+    context={'caller_identity':caller_identity,
+        'authentication_source_identity':authentication_source_identity,
+        'phase_not_before_utc':phase_not_before_utc,'validation_utc':validation_utc,
+        'freshness_max_seconds':freshness_max_seconds}
+    request={'Bucket':expected_bucket_name,'Prefix':expected_prefix,'MaxKeys':16,
+        'ExpectedBucketOwner':'623609441658'}
+    list_objects_response=None;versions_response=None;previous=_r64_utc(phase_not_before_utc)
+    for row,action,selector in (('R26','s3:ListBucket','SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION'),
+            ('R27','s3:ListBucketVersions','SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION')):
+        found,response=_iam_api_material(receipts[row],row,action,selector,maximum_items=16,**context)
+        if (found!=request or receipts[row]['pagination_page']!=1
+                or _r64_utc(receipts[row]['requested_utc'])<previous
+                or response.get('Name')!=expected_bucket_name or response.get('Prefix')!=expected_prefix
+                or response.get('MaxKeys')!=16 or response.get('IsTruncated') is not False):
+            raise Refusal('artifact list request/terminal response/order mismatch: '+row)
+        previous=_r64_utc(receipts[row]['completed_utc'])
+        if row=='R26':list_objects_response=response
+        else:versions_response=response
+    contents=list_objects_response.get('Contents');versions=versions_response.get('Versions')
+    if (not isinstance(contents,list) or not isinstance(versions,list)
+            or list_objects_response.get('KeyCount')!=8
+            or len(contents)!=8 or len(versions)!=8
+            or receipts['R26']['pagination_item_count']!=8 or receipts['R27']['pagination_item_count']!=8
+            or list_objects_response.get('NextContinuationToken') not in (None,'')
+            or versions_response.get('NextKeyMarker') not in (None,'')
+            or versions_response.get('NextVersionIdMarker') not in (None,'')
+            or versions_response.get('DeleteMarkers',[])!=[]):
+        raise Refusal('artifact complete eight-object/current-version inventory required')
+    object_index={}
+    for item in contents:
+        if (not isinstance(item,dict) or not isinstance(item.get('Key'),str)
+                or not item['Key'].startswith(expected_prefix) or type(item.get('Size')) is not int
+                or item['Size']<1 or item['Key'] in object_index):
+            raise Refusal('artifact unique bounded listed object required')
+        object_index[item['Key']]={'size':item['Size']}
+    version_index={}
+    for item in versions:
+        if (not isinstance(item,dict) or not isinstance(item.get('Key'),str)
+                or not isinstance(item.get('VersionId'),str) or not item['VersionId']
+                or item.get('IsLatest') is not True or type(item.get('Size')) is not int
+                or item.get('Size')!=object_index.get(item['Key'],{}).get('size')
+                or item['Key'] in version_index):
+            raise Refusal('artifact sole current exact version inventory required')
+        version_index[item['Key']]=item
+    if sorted(object_index)!=sorted(version_index):
+        raise Refusal('artifact object and version key sets differ')
+    by_key={};sources=[receipts['R26'],receipts['R27']]
+    for binding,attribute_receipt in zip(receipts['R29'],receipts['R30']):
+        if not isinstance(binding,dict) or not isinstance(attribute_receipt,dict):
+            raise Refusal('artifact exact version content/attribute pairs required')
+        api_receipt=binding.get('api_receipt')
+        get_request,get_response=_exact_version_content_binding(binding,receipt=api_receipt,
+            validation_utc=validation_utc,freshness_max_seconds=freshness_max_seconds,
+            caller_identity=caller_identity,authentication_source_identity=authentication_source_identity)
+        key=get_request.get('Key');version_id=get_request.get('VersionId')
+        wanted=version_index.get(key)
+        if (get_request!={'Bucket':expected_bucket_name,'Key':key,'VersionId':version_id,
+                'ExpectedBucketOwner':'623609441658','ChecksumMode':'ENABLED'}
+                or not wanted or wanted['VersionId']!=version_id or wanted['Size']!=binding['body_byte_count']
+                or get_response.get('VersionId')!=version_id or key in by_key
+                or _r64_utc(api_receipt['requested_utc'])<previous):
+            raise Refusal('artifact exact version read/list/order binding differs')
+        previous=_r64_utc(api_receipt['completed_utc'])
+        attribute_request,attribute_response=_iam_api_material(attribute_receipt,'R30',
+            's3:GetObjectAttributes','SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*',
+            maximum_items=1,**context)
+        expected_attribute_request={'Bucket':expected_bucket_name,'Key':key,'VersionId':version_id,
+            'ExpectedBucketOwner':'623609441658','ObjectAttributes':['Checksum','ObjectSize']}
+        if (attribute_request!=expected_attribute_request or attribute_receipt['pagination_page']!=1
+                or attribute_receipt['pagination_item_count']!=1
+                or _r64_utc(attribute_receipt['requested_utc'])<previous
+                or attribute_response.get('VersionId')!=version_id
+                or attribute_response.get('ObjectSize')!=binding['body_byte_count']
+                or attribute_response.get('Checksum')!={'ChecksumSHA256':binding['body_checksum_sha256_base64']}):
+            raise Refusal('artifact exact version attribute/checksum binding differs')
+        previous=_r64_utc(attribute_receipt['completed_utc'])
+        by_key[key]={'bucket_identity':expected_bucket_identity,'key':key,'version_id':version_id,
+            'bytes':binding['body_byte_count'],'sha256':binding['body_sha256'],
+            'checksum_sha256_base64':binding['body_checksum_sha256_base64']}
+        sources.extend((api_receipt,attribute_receipt))
+    if sorted(by_key)!=sorted(version_index):
+        raise Refusal('artifact exact version detail coverage differs')
+    if (len({item['request_id'] for item in sources})!=len(sources)
+            or len({digest(canonical_bytes(item)) for item in sources})!=len(sources)):
+        raise Refusal('artifact source receipts must have unique request IDs and bytes')
+    artifacts=[by_key[key] for key in sorted(by_key)]
+    decoded={'schema':'aws_c0_artifact_version_set_observation_preimage/v1',
+        'bucket_identity':expected_bucket_identity,'artifact_objects':artifacts,'artifact_count':8,
+        'all_exact_version_checksum_pass':True,'source_row_ids':['R26','R27','R28','R29','R30']}
+    raw=canonical_bytes(decoded);kind='aws_c0_artifact_version_set_observation/v1'
+    observed=receipts['R26']['requested_utc']
+    age=int((_r64_utc(validation_utc)-_r64_utc(observed)).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'ARTIFACT_VERSION_SET',
+        'identity':identity(kind,digest(raw)),'canonical_json_base64':base64.b64encode(raw).decode(),
+        'observed_utc':observed,'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_artifact_version_set_reconstruction_output(output: Any, receipts: Any,
+        **context: Any) -> dict[str,Any]:
+    expected=build_artifact_version_set_reconstruction_output(receipts,**context)
+    if canonical_bytes(output)!=canonical_bytes(expected):
+        raise Refusal('artifact version output differs from exact authenticated source reconstruction')
+    return output
+
+
 def build_service_quota_reconstruction_output(receipts: Any, *, caller_identity: dict[str,str],
         authentication_source_identity: dict[str,str], phase_not_before_utc: str,
         validation_utc: str, freshness_max_seconds: int) -> dict[str,Any]:

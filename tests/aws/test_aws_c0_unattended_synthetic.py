@@ -1272,6 +1272,105 @@ class ReconstructionV4IntegrationTests(unittest.TestCase):
                 validation_utc=validation,expected_sealed_context_identity=sealed_id)
 
 
+class ArtifactVersionSetReconstructionTests(unittest.TestCase):
+    def material(self):
+        profile_receipts,profile_context=InstanceProfileReconstructionTests().material()
+        caller=profile_context['caller_identity'];channel=profile_context['authentication_source_identity']
+        bucket='ebu-c0-offline-artifacts';prefix='prelive/offline-attempt/'
+        bucket_identity=F.identity('aws_s3_bucket/v1','b'*64)
+        keys=[prefix+'artifact-%d.bin'%index for index in range(8)]
+        bodies={key:('exact-offline-object-%d'%index).encode() for index,key in enumerate(keys)}
+        versions={key:'version-%d'%index for index,key in enumerate(keys)}
+        def receipt(row,action,selector,request,response,second,count=1):
+            request_id='offline-artifact-'+row+'-'+str(second)
+            response={**copy.deepcopy(response),'ResponseMetadata':{'RequestId':request_id,
+                'HTTPStatusCode':200,'RetryAttempts':0,'HTTPHeaders':{'x-amz-request-id':request_id}}}
+            value={'row_id':row,'action':action,'resource_selector':selector,'caller_identity':caller,
+                'authentication_source_identity':channel,'http_status':200,'request_id':request_id,
+                'requested_utc':'2026-09-06T18:00:%02dZ'%second,
+                'completed_utc':'2026-09-06T18:00:%02dZ'%(second+1),'pagination_page':1,
+                'pagination_item_count':count,'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+                'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+            R51ProspectiveAmendmentTests.encode(value,'request',request)
+            R51ProspectiveAmendmentTests.encode(value,'response',response)
+            return value
+        list_request={'Bucket':bucket,'Prefix':prefix,'MaxKeys':16,'ExpectedBucketOwner':'623609441658'}
+        contents=[{'Key':key,'Size':len(bodies[key])} for key in keys]
+        listed_versions=[{'Key':key,'VersionId':versions[key],'Size':len(bodies[key]),'IsLatest':True} for key in keys]
+        r26=receipt('R26','s3:ListBucket','SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION',list_request,
+            {'Name':bucket,'Prefix':prefix,'MaxKeys':16,'KeyCount':8,'IsTruncated':False,'Contents':contents},1,8)
+        r27=receipt('R27','s3:ListBucketVersions','SEALED_BUCKET_ARN_WITH_EXACT_PREFIX_CONDITION',list_request,
+            {'Name':bucket,'Prefix':prefix,'MaxKeys':16,'IsTruncated':False,
+                'Versions':listed_versions,'DeleteMarkers':[]},3,8)
+        r29=[];r30=[]
+        for index,key in enumerate(keys):
+            raw=bodies[key];sha=hashlib.sha256(raw).hexdigest();checksum=base64.b64encode(bytes.fromhex(sha)).decode()
+            second=5+index*4;version=versions[key]
+            get_request={'Bucket':bucket,'Key':key,'VersionId':version,
+                'ExpectedBucketOwner':'623609441658','ChecksumMode':'ENABLED'}
+            api=receipt('R29','s3:GetObjectVersion','SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*',
+                get_request,{'VersionId':version,'ContentLength':len(raw),'ChecksumSHA256':checksum},second)
+            binding={'schema':'aws_c0_s3_exact_version_content_binding/v1','api_receipt':api,
+                'api_receipt_identity':F.identity('aws_c0_api_request_response_receipt/v1',
+                    F.digest(F.canonical_bytes(api))),
+                'body_byte_count':len(raw),'body_sha256':sha,'body_checksum_sha256_base64':checksum,
+                'body_fully_consumed':True,
+                'disposition':'EXACT_VERSION_BODY_FULLY_CONSUMED_SHA256_AND_SERVER_CHECKSUM_BOUND'}
+            r29.append(binding)
+            attribute_request={'Bucket':bucket,'Key':key,'VersionId':version,
+                'ExpectedBucketOwner':'623609441658','ObjectAttributes':['Checksum','ObjectSize']}
+            r30.append(receipt('R30','s3:GetObjectAttributes',
+                'SEALED_BUCKET_ARN/SEALED_ARTIFACT_AND_EVIDENCE_PREFIX/*',attribute_request,
+                {'VersionId':version,'ObjectSize':len(raw),'Checksum':{'ChecksumSHA256':checksum}},second+2))
+        receipts={'R26':r26,'R27':r27,'R28':None,'R29':r29,'R30':r30}
+        context={'caller_identity':caller,'authentication_source_identity':channel,
+            'expected_bucket_name':bucket,'expected_bucket_identity':bucket_identity,'expected_prefix':prefix,
+            'phase_not_before_utc':'2026-09-06T18:00:00Z','validation_utc':'2026-09-06T18:00:50Z',
+            'freshness_max_seconds':300,'s3_pagination_bounds':{'max_pages':1,'max_items':16}}
+        return receipts,context,bodies,versions
+
+    def test_eight_exact_versions_bind_list_body_and_attributes(self):
+        receipts,context,bodies,versions=self.material()
+        output=G.build_artifact_version_set_output(ROOT,receipts,**context)
+        self.assertEqual(output['decoded_json']['artifact_count'],8)
+        self.assertEqual([item['key'] for item in output['decoded_json']['artifact_objects']],sorted(bodies))
+        for item in output['decoded_json']['artifact_objects']:
+            self.assertEqual(item['version_id'],versions[item['key']])
+            self.assertEqual(item['sha256'],hashlib.sha256(bodies[item['key']]).hexdigest())
+        self.assertEqual(F.validate_artifact_version_set_reconstruction_output(output,receipts,**context),output)
+        G.validate_record(ROOT,'artifact_version_set_output',output)
+        G.validate_record(ROOT,'s3_exact_version_content_binding',receipts['R29'][0])
+
+    def test_listing_truncation_missing_detail_or_nonversioned_read_refuses(self):
+        for mutate in (lambda r:R64IngressAmendmentTests().mutate_api(r['R26'],'response',
+                    lambda v:v.update(IsTruncated=True,NextContinuationToken='next')),
+                lambda r:r['R30'].pop(),lambda r:r.update(R28=copy.deepcopy(r['R29'][0]['api_receipt']))):
+            receipts,context,_,_=self.material();mutate(receipts)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.build_artifact_version_set_reconstruction_output(receipts,**context)
+
+    def test_body_list_and_attribute_substitutions_refuse(self):
+        for mutate in (lambda r:r['R29'][0].update(body_sha256='f'*64),
+                lambda r:R64IngressAmendmentTests().mutate_api(r['R30'][0],'response',
+                    lambda v:v.update(ObjectSize=v['ObjectSize']+1)),
+                lambda r:R64IngressAmendmentTests().mutate_api(r['R27'],'response',
+                    lambda v:v['Versions'][0].update(VersionId='substituted'))):
+            receipts,context,_,_=self.material();mutate(receipts)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.build_artifact_version_set_reconstruction_output(receipts,**context)
+
+    def test_rehashed_output_or_authority_drift_refuses(self):
+        receipts,context,_,_=self.material();output=G.build_artifact_version_set_output(ROOT,receipts,**context)
+        output['decoded_json']['artifact_objects'][0]['bytes']+=1;raw=G.canonical(output['decoded_json'])
+        output.update(identity=G.identity(output['schema'],output['decoded_json']),
+            canonical_json_base64=base64.b64encode(raw).decode(),canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        with self.assertRaises(F.Refusal):
+            F.validate_artifact_version_set_reconstruction_output(output,receipts,**context)
+        authority=G.sequence(ROOT);authority['artifact_version_set_reconstruction_authorization']['artifact_count']=7
+        with mock.patch.object(G,'sequence',return_value=authority),self.assertRaises(ValueError):
+            G.build_artifact_version_set_output(ROOT,receipts,**context)
+
+
 class ServiceQuotaReconstructionTests(unittest.TestCase):
     def material(self):
         sources,_,_,base=R64CallBudgetTests().material();receipts={}

@@ -89,6 +89,7 @@ def build(root=ROOT):
         definitions[alias]={'$ref':target}
     # Prospective R51 result: clone, never relax the accepted HTTP200 receipt.
     original=next(v for k,v in definitions.items() if k.endswith('_api_request_response_receipt'))
+    original_ref='#/$defs/'+next(k for k in definitions if k.endswith('_api_request_response_receipt'))
     receipt=copy.deepcopy(original)
     receipt['required'].append('schema')
     receipt['properties'].update(schema={'const':'aws_c0_r51_api_request_response_receipt/v2'},
@@ -248,6 +249,8 @@ def build(root=ROOT):
     definitions['bucket_controls_kms_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
         if v['properties']['control']['const']=='BUCKET_CONTROLS_KMS'))
     definitions['bucket_controls_kms_output']={'$ref':'#/$defs/bucket_controls_kms_reconstruction_output'}
+    output_artifact=copy.deepcopy(next(v for v in output_union['oneOf']
+        if v['properties']['control']['const']=='ARTIFACT_VERSION_SET'))
     decoded_iam=copy.deepcopy(next(v for k,v in definitions.items() if k.endswith('_decoded_iam_policy_set_observation')))
     decoded_iam['properties'].update(schema={'const':'aws_c0_iam_policy_set_observation_preimage/v2'},
         source_row_ids={'const':['R15','R16','R17','R18','R19']})
@@ -342,10 +345,23 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v3_definition']={'type':'object',
         'required':list(attachment_v3_fields),'properties':attachment_v3_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v3']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v3_definition'}
+    definitions['artifact_version_set_reconstruction_output']=output_artifact
+    definitions['artifact_version_set_output']={'$ref':'#/$defs/artifact_version_set_reconstruction_output'}
+    content_binding_fields={'schema':{'const':'aws_c0_s3_exact_version_content_binding/v1'},
+        'api_receipt':{'$ref':original_ref},
+        'api_receipt_identity':typed_identity('aws_c0_api_request_response_receipt/v1'),
+        'body_byte_count':{'type':'integer','minimum':1},
+        'body_sha256':{'type':'string','pattern':'^[0-9a-f]{64}$'},
+        'body_checksum_sha256_base64':{'type':'string','pattern':'^[A-Za-z0-9+/]{43}=$'},
+        'body_fully_consumed':{'const':True},
+        'disposition':{'const':'EXACT_VERSION_BODY_FULLY_CONSUMED_SHA256_AND_SERVER_CHECKSUM_BOUND'}}
+    definitions['s3_exact_version_content_binding_v1_definition']={'type':'object',
+        'required':list(content_binding_fields),'properties':content_binding_fields,'additionalProperties':False}
+    definitions['s3_exact_version_content_binding']={'$ref':'#/$defs/s3_exact_version_content_binding_v1_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
