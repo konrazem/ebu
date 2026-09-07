@@ -286,6 +286,28 @@ The error is not waived and does not authorize any cloud continuation.
 
 ### Validated local checkpoint at `d67a644`
 
+The later source instruction `01a07a46-d7cd-7970-b7bd-677f9a2ba25f` requires
+continuation through all necessary engineering to the bounded platform smoke,
+not termination at this historical local checkpoint. It does not waive any
+readiness proof or authorize scientific work. Runtime/cloud work remains gated
+on completed local integration and fresh bounded account/cost/session checks.
+
+The next integrated component constructs the complete accepted read-plan/v1,
+retaining all 63 exact actions, resource selectors, conditions and pagination
+bounds. The constructor and runtime independently check pinned SHA-256 hashes of
+the canonical accepted sealed_read_plan, its rows and its control mapping. The
+map hash is the canonical complete required_control_mapping hash; the contract
+identity is the canonical complete sealed_read_plan hash. The complete plan
+identity includes the selected freshness interval (an exact integer 1–300s).
+This is an input plan, not a claim that R37 or any future action has happened.
+
+Three focused tests pass, including independently rehashed action/resource/map
+mutations and runtime-gate attachment. The same reviewer independently recomputed
+the three source pins and APPROVED this component only. The full-entry candidate
+now supplies this real constructor output and advances to the missing
+runtime_control_reconstruction_set_identity error. No missing reconstruction is
+treated as a pass, and the following earlier checkpoint counts remain historical.
+
 The complete suite ran 163 tests in 86.613 seconds: 162 passed, zero assertion
 failures, one existing error, zero skips and zero expected failures. The error
 remains `DeploymentSequenceTests.test_complete_schema_valid_chain_through_public_prepublication_gate`,

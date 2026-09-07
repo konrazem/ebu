@@ -268,6 +268,43 @@ class R51ProspectiveAmendmentTests(unittest.TestCase):
         self.assertNotIn('schema',original)
 
 
+class RuntimeControlReadPlanTests(unittest.TestCase):
+    def test_constructor_schema_and_runtime_bind_actual_complete_frozen_plan(self):
+        result=G.build_runtime_control_read_plan_fields(ROOT)
+        plan=result['runtime_control_read_plan'];plan_id=result['runtime_control_read_plan_identity']
+        contract=load('aws_c0_material_identity_runtime_validation_correction_contract.json')['sealed_read_plan']
+        self.assertEqual(plan['rows'],contract['rows'])
+        self.assertEqual(plan['required_control_mapping'],contract['required_control_mapping'])
+        self.assertEqual(plan['plan_contract_identity'],G.identity('aws_c0_runtime_control_read_plan_contract/v1',contract))
+        self.assertEqual(F.validate_runtime_control_read_plan(plan,plan_id),plan)
+        self.assertEqual(G.validate_named_definition(ROOT,'runtime_control_read_plan',plan),plan)
+        self.assertEqual(plan['rows'][36]['call_requirement'],'ALWAYS')
+        self.assertEqual(G.obligation_phase('R37'),'EXECUTION_PREFLIGHT')
+        self.assertNotIn('called_receipts',plan)
+
+    def test_changed_actions_resources_map_or_identity_fail_even_when_rehashed(self):
+        for mutate in (lambda p:p['rows'][50].update(action='lambda:AddPermission'),
+                       lambda p:p['rows'][50].update(resource_selector='*'),
+                       lambda p:p['rows'][36].update(call_requirement='CONDITIONAL'),
+                       lambda p:p['rows'].reverse(),lambda p:p['required_control_mapping'][0]['row_ids'].append('R02'),
+                       lambda p:p.update(shared_row_ids=['R02']),lambda p:p.update(row_ids=['R01']),
+                       lambda p:p.update(map_sha256='a'*64),lambda p:p['plan_contract_identity'].update(value='b'*64),
+                       lambda p:p.update(extra=True)):
+            plan=G.build_runtime_control_read_plan_fields(ROOT)['runtime_control_read_plan'];mutate(plan)
+            with self.assertRaises(F.Refusal):F.validate_runtime_control_read_plan(plan,G.identity(plan['schema'],plan))
+        result=G.build_runtime_control_read_plan_fields(ROOT)
+        with self.assertRaises(F.Refusal):F.validate_runtime_control_read_plan(result['runtime_control_read_plan'],F.identity('aws_c0_runtime_control_read_plan/v1','c'*64))
+
+    def test_freshness_is_exact_bounded_and_runtime_gate_attaches_before_controls(self):
+        for bound in (True,0,301,1.0):
+            with self.assertRaises((RuntimeError,ValueError,G.jsonschema.ValidationError)):
+                G.build_runtime_control_read_plan_fields(ROOT,freshness_max_seconds=bound)
+        source=(ROOT/'aws/c0/finalizer/finalizer.py').read_text()
+        fn=next(n for n in ast.parse(source).body if isinstance(n,ast.FunctionDef) and n.name=='_validate_live_packet_v6')
+        body=ast.get_source_segment(source,fn)
+        self.assertLess(body.index('validate_runtime_control_read_plan('),body.index('_deployment_control_values('))
+
+
 class SealedRoleProducerTests(unittest.TestCase):
     def material(self):
         values=PhaseObligationProducerTests().material();receipts={k:values[2][k] for k in ('R02','R03','R13','R14')}
@@ -1324,6 +1361,7 @@ class DeploymentSequenceTests(unittest.TestCase):
             change_set_observation_identity=F.identity('aws_c0_change_set_observation/v1',packet['change_set_identity']['sha256']),
             iam_pagination_bounds=launch['iam_pagination_bounds'],final_preflight_observed_utc=packet['observed_utc'],
             final_instance_state='stopped',pre_live_object_count=24)
+        packet.update(G.build_runtime_control_read_plan_fields(ROOT))
         for record in (packet,auth):
             record['live_session_assumer_identity']=F.identity('aws_iam_principal/v1','5'*64)
             record['execution_operator_role_identity']=F.identity('aws_iam_role/v1','6'*64)

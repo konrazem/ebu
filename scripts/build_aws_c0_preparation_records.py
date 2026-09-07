@@ -83,6 +83,23 @@ def build_phase_obligation_plan_v2(root):
                 r51_existence_bookend_call_order=['R49','R51','R50'])
     return plan
 
+def build_runtime_control_read_plan_fields(root,*,freshness_max_seconds=300):
+    """Construct the accepted complete plan; no called/readback claims."""
+    f=finalizer(root)
+    contract=json.loads((root/'aws_c0_material_identity_runtime_validation_correction_contract.json').read_bytes())['sealed_read_plan']
+    if sha(canonical(contract))!=f.READ_PLAN_CONTRACT_SHA256:
+        raise ValueError('runtime read plan contract drift refused')
+    plan={'schema':'aws_c0_runtime_control_read_plan/v1','rows':copy.deepcopy(contract['rows']),
+        'row_ids':[r['id'] for r in contract['rows']],
+        'required_control_mapping':copy.deepcopy(contract['required_control_mapping']),'shared_row_ids':[],
+        'map_sha256':sha(canonical(contract['required_control_mapping'])),
+        'plan_contract_identity':identity('aws_c0_runtime_control_read_plan_contract/v1',contract),
+        'freshness_max_seconds':freshness_max_seconds}
+    plan_id=identity(plan['schema'],plan)
+    validate_named_definition(root,'runtime_control_read_plan',plan)
+    f.validate_runtime_control_read_plan(plan,plan_id)
+    return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
+
 def build_r51_policy_observation(root,policy_receipt,function_receipts,*,expected_policy,
                                  caller_identity,authentication_source_identity,observed_utc,freshness_max_seconds):
     f=finalizer(root)

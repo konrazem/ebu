@@ -1665,7 +1665,7 @@ LIVE_PACKET_V6_FIELDS = COMMON_FIELDS | {"packet_disposition", "preparation_clos
     "execution_session_policy_subset_proof_identity", "execution_session_policy_subset_proof_canonical_json_base64",
     "pass_role_scope_proof_identity", "pass_role_scope_proof_canonical_json_base64", "execution_session_max_duration_seconds",
     "live_session_assumer_expires_utc", "iam_pagination_bounds", "final_preflight_observed_utc", "final_instance_state",
-    "pre_live_object_count", "deployment_inputs_identity"}
+    "pre_live_object_count", "deployment_inputs_identity", "runtime_control_read_plan_identity", "runtime_control_read_plan"}
 LIVE_AUTH_V6_FIELDS = COMMON_FIELDS | {"statement_sha256", "authenticated_source_identity", "live_packet_identity",
     "live_packet_object", "live_authorization_key", "account_identity", "attempt_identity", "change_set_identity",
     "live_session_assumer_identity", "execution_operator_role_identity", "execution_session_policy_identity",
@@ -2293,10 +2293,41 @@ def _bound_base64(record: dict[str, Any], identity_field: str, bytes_field: str,
     return raw
 
 
+READ_PLAN_CONTRACT_SHA256 = 'fb5cd0b72d5190034f5de5afbd8f4b775e7171a8560a8c05e17e890ae916ce97'
+READ_PLAN_ROWS_SHA256 = '429e128c60fd89eb87d82a88b3a4e1676825cb9fe49d134087d9072b9916b380'
+READ_PLAN_MAPPING_SHA256 = '27d362e40c48a55963f9936adea4249ec672d0a47f381e88e57697df86973c89'
+
+
+def validate_runtime_control_read_plan(plan: Any, plan_identity: Any) -> dict[str, Any]:
+    """Validate the frozen 63 reads as an input plan, never as observations.
+
+    Pins are hashes of the canonical accepted sealed_read_plan, its rows, and
+    its required_control_mapping respectively. They do not authorize calls or
+    turn deferred producer phases into completed evidence.
+    """
+    fields = {'schema','rows','row_ids','required_control_mapping','shared_row_ids',
+              'map_sha256','plan_contract_identity','freshness_max_seconds'}
+    if not isinstance(plan, dict) or set(plan) != fields or plan['schema'] != 'aws_c0_runtime_control_read_plan/v1':
+        raise Refusal('closed runtime control read plan required')
+    raw = canonical_bytes(plan)
+    if len(raw) > 65536 or type(plan['freshness_max_seconds']) is not int or not 1 <= plan['freshness_max_seconds'] <= 300:
+        raise Refusal('runtime read plan byte/freshness bound refused')
+    if (plan['row_ids'] != ['R%02d'%i for i in range(1,64)] or plan['shared_row_ids'] != []
+            or digest(canonical_bytes(plan['rows'])) != READ_PLAN_ROWS_SHA256
+            or digest(canonical_bytes(plan['required_control_mapping'])) != READ_PLAN_MAPPING_SHA256
+            or plan['map_sha256'] != READ_PLAN_MAPPING_SHA256
+            or plan['plan_contract_identity'] != identity('aws_c0_runtime_control_read_plan_contract/v1',READ_PLAN_CONTRACT_SHA256)):
+        raise Refusal('runtime read plan differs from frozen exact actions/resources/mapping')
+    if plan_identity != identity('aws_c0_runtime_control_read_plan/v1',digest(raw)):
+        raise Refusal('runtime read plan complete preimage identity mismatch')
+    return plan
+
+
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
     if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")
     _common(packet, "aws_c0_live_packet/v6", root=False)
+    validate_runtime_control_read_plan(packet['runtime_control_read_plan'],packet['runtime_control_read_plan_identity'])
     _identity(packet, "preparation_closure_identity", "aws_c0_preparation_closure/v5")
     _identity(packet, "launch_request_identity", "aws_c0_launch_request/v6")
     if packet["packet_disposition"] != "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED" or packet["final_instance_state"] != "stopped" or packet["pre_live_object_count"] != FROZEN_PRELIVE_OBJECT_COUNT:
