@@ -730,3 +730,21 @@ The correction does not change trust, caller permissions, compact V5 policy,
 scientific payload, controller transport arity, SSM command body or ASL behavior.
 Any AWS continuation must use fresh actual observations and separately valid
 bounded authority; local tests are not deployed readiness.
+
+## Prospective CREATE-stack read chronology correction
+
+The broad repair authority of 2026-09-07 permits a new read-plan/v4 layered on
+the preserved read-plan/v3. A CREATE change set exists before its target stack,
+so predeployment cannot truthfully claim successful `DescribeStacks` or
+`DescribeStackEvents` observations for that not-yet-created stack. Read-plan/v4
+makes only R47 and R48 conditional on the stack existing in the phase being
+reconstructed. They are not called for the predeployment CREATE phase and are
+called after the stack exists in the postdeployment phase.
+
+R45 `DescribeChangeSet` and R46 `GetTemplate` remain mandatory. R47/R48 retain
+their exact actions, resource selectors, control ownership, pagination bounds,
+output kind and source-row identity. All other rows and mappings are byte-for-
+byte inherited after reconstructing the exact read-plan/v3 predecessor. The
+amendment changes no AWS permission, call ceiling, scientific content, cost
+boundary, deployment authority, publication authority, or historical schema.
+It does not itself perform any AWS call or establish that the stack exists.

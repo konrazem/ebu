@@ -78,6 +78,22 @@
     "science_cost_or_publication_changed": false,
     "historical_schemas_changed": false
   },
+  "change_set_phase_chronology_authorization": {
+    "authority_id": "EBU-AWS-C0-CHANGE-SET-PHASE-CHRONOLOGY-AUTHORITY-v1",
+    "source": "EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS",
+    "read_plan_predecessor": "aws_c0_runtime_control_read_plan/v3",
+    "prospective_read_plan": "aws_c0_runtime_control_read_plan/v4",
+    "changed_row_ids": ["R47", "R48"],
+    "predecessor_use_condition_and_call_requirement": "ALWAYS",
+    "prospective_use_and_call_requirement": "CONDITIONAL",
+    "prospective_condition": "WHEN_STACK_EXISTS_IN_CURRENT_PHASE",
+    "predeployment_create_stack_disposition": "R47_R48_NOT_CALLED_BECAUSE_STACK_DOES_NOT_YET_EXIST",
+    "postdeployment_create_stack_disposition": "R47_R48_CALLED_AFTER_STACK_EXISTS",
+    "actions_resources_controls_outputs_and_source_row_ids_changed": false,
+    "other_rows_or_control_mappings_changed": false,
+    "aws_authority_permissions_science_cost_or_publication_changed": false,
+    "historical_schemas_changed": false
+  },
   "prospective_r64_call_budget": {
     "kind": "aws_c0_network_ingress_call_budget/v1",
     "maximum_reserved_calls": 3,

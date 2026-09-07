@@ -148,6 +148,41 @@ def build_runtime_control_read_plan_fields_v3(root,*,freshness_max_seconds=300):
     validate_record(root,'runtime_read_plan_v3',plan)
     return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
 
+def build_runtime_control_read_plan_fields_v4(root,*,freshness_max_seconds=300):
+    """Make only stack reads R47/R48 conditional on phase-local existence."""
+    f=finalizer(root);authority=sequence(root)
+    amendment=authority.get('change_set_phase_chronology_authorization')
+    expected={'authority_id':f.CHANGE_SET_PHASE_CHRONOLOGY_AUTHORITY_ID,
+        'source':'EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS',
+        'read_plan_predecessor':'aws_c0_runtime_control_read_plan/v3',
+        'prospective_read_plan':'aws_c0_runtime_control_read_plan/v4',
+        'changed_row_ids':['R47','R48'],
+        'predecessor_use_condition_and_call_requirement':'ALWAYS',
+        'prospective_use_and_call_requirement':'CONDITIONAL',
+        'prospective_condition':f.CHANGE_SET_PHASE_CONDITION,
+        'predeployment_create_stack_disposition':'R47_R48_NOT_CALLED_BECAUSE_STACK_DOES_NOT_YET_EXIST',
+        'postdeployment_create_stack_disposition':'R47_R48_CALLED_AFTER_STACK_EXISTS',
+        'actions_resources_controls_outputs_and_source_row_ids_changed':False,
+        'other_rows_or_control_mappings_changed':False,
+        'aws_authority_permissions_science_cost_or_publication_changed':False,
+        'historical_schemas_changed':False}
+    if amendment!=expected:
+        raise ValueError('exact authorized change-set chronology amendment required')
+    old=build_runtime_control_read_plan_fields_v3(root,freshness_max_seconds=freshness_max_seconds)
+    plan=copy.deepcopy(old['runtime_control_read_plan']);plan['schema']='aws_c0_runtime_control_read_plan/v4'
+    plan['chronology_predecessor_identity']=old['runtime_control_read_plan_identity']
+    plan['change_set_phase_chronology_authority_id']=f.CHANGE_SET_PHASE_CHRONOLOGY_AUTHORITY_ID
+    for row in plan['rows']:
+        if row['id'] in ('R47','R48'):
+            row.update(use='CONDITIONAL',condition=f.CHANGE_SET_PHASE_CONDITION,call_requirement='CONDITIONAL')
+    target=next(x for x in plan['required_control_mapping'] if x['control']=='CHANGE_SET_AND_EFFECTS')
+    target['conditional_use']='R47_R48_ONLY_WHEN_STACK_EXISTS_IN_CURRENT_PHASE'
+    plan['map_sha256']=sha(canonical(plan['required_control_mapping']))
+    plan_id=identity(plan['schema'],plan)
+    f.validate_runtime_control_read_plan_v4(plan,plan_id)
+    validate_record(root,'runtime_read_plan_v4',plan)
+    return {'runtime_control_read_plan':plan,'runtime_control_read_plan_identity':plan_id}
+
 def build_r64_exact_request(root,source_receipts,**context):
     # Gate the new action by the exact authorized packet before deriving IDs.
     build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=context['freshness_max_seconds'])
