@@ -623,6 +623,153 @@ class R64PhaseBindingTests(unittest.TestCase):
         with self.assertRaises(F.Refusal):F.validate_r64_phase_binding(record,**args)
 
 
+class VpcNetworkReconstructionV2Tests(unittest.TestCase):
+    """Complete offline network source material; never real cloud evidence."""
+    def material(self,nat=True,snapshot=True,primary_subnet_index=0):
+        sources,rule,attempt,context=R64CallBudgetTests().material()
+        instance_response=F.strict_json(base64.b64decode(sources[0]['response_canonical_json_base64']))
+        interface_response=F.strict_json(base64.b64decode(sources[1]['response_canonical_json_base64']))
+        instance=instance_response['Reservations'][0]['Instances'][0]
+        subnet_ids=['subnet-01234567','subnet-89abcdef']
+        instance.update(SubnetId=subnet_ids[primary_subnet_index],ImageId='ami-01234567',
+            BlockDeviceMappings=[{'DeviceName':'/dev/xvda','Ebs':{'VolumeId':'vol-01234567'}}])
+        for index in range(2):
+            instance['NetworkInterfaces'][index]['SubnetId']=subnet_ids[index]
+            interface_response['NetworkInterfaces'][index]['SubnetId']=subnet_ids[index]
+        R51ProspectiveAmendmentTests.encode(sources[0],'response',instance_response)
+        R51ProspectiveAmendmentTests.encode(sources[1],'response',interface_response)
+        observed=G.build_r64_ingress_observation(ROOT,sources,rule,attempt_identity=attempt,**context)['network_ingress_observation']
+        initial=G.build_r64_initial_call_budget(ROOT,attempt)['network_ingress_call_budget']
+        before_call={**context,'observed_utc':'2026-09-06T18:00:04Z'}
+        reserved=F.reserve_r64_call(initial,G.identity(F.R64_BUDGET_KIND,initial),sources,
+            attempt_identity=attempt,phase='PREDEPLOYMENT',**before_call)
+        budget=F.complete_r64_call(reserved,G.identity(F.R64_BUDGET_KIND,reserved),observed,
+            attempt_identity=attempt,phase='PREDEPLOYMENT',**context)
+        plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
+        args={'phase':'PREDEPLOYMENT','attempt_identity':attempt,'read_plan':plan['runtime_control_read_plan'],
+            'read_plan_identity':plan['runtime_control_read_plan_identity'],'previous_budget':initial,
+            'previous_budget_identity':G.identity(F.R64_BUDGET_KIND,initial),
+            'caller_identity':context['caller_identity'],'authentication_source_identity':context['authentication_source_identity'],
+            'phase_not_before_utc':'2026-09-06T18:00:00Z','validation_utc':'2026-09-06T18:00:50Z'}
+        binding=G.build_r64_phase_binding(ROOT,observed,budget,**args)['network_ingress_phase_binding']
+        vpc='vpc-01234567';owner='623609441658'
+        local={'DestinationCidrBlock':'172.31.0.0/16','GatewayId':'local','State':'active'}
+        tables=[{'RouteTableId':'rtb-01234567','VpcId':vpc,'OwnerId':owner,
+            'Associations':[{'Main':True,'AssociationState':{'State':'associated'}}],
+            'Routes':[copy.deepcopy(local)]+([{'DestinationCidrBlock':'0.0.0.0/0','NatGatewayId':'nat-01234567','State':'active'}] if nat else [])},
+            {'RouteTableId':'rtb-89abcdef','VpcId':vpc,'OwnerId':owner,
+            'Associations':[{'Main':False,'SubnetId':subnet_ids[1],'AssociationState':{'State':'associated'}}],
+            'Routes':[copy.deepcopy(local)]}]
+        vf={'Filters':[{'Name':'vpc-id','Values':[vpc]}]}
+        materials={
+            'R05':('DescribeSubnets',{'SubnetIds':subnet_ids},'Subnets',[
+                {'SubnetId':s,'VpcId':vpc,'OwnerId':owner,'State':'available'} for s in subnet_ids]),
+            'R06':('DescribeRouteTables',vf,'RouteTables',tables),
+            'R07':('DescribeNatGateways',{'NatGatewayIds':['nat-01234567']},'NatGateways',[
+                {'NatGatewayId':'nat-01234567','VpcId':vpc,'State':'available'}]),
+            'R08':('DescribeVpcEndpoints',vf,'VpcEndpoints',[]),
+            'R09':('DescribeImages',{'ImageIds':['ami-01234567']},'Images',[{'ImageId':'ami-01234567','State':'available'}]),
+            'R10':('DescribeVolumes',{'VolumeIds':['vol-01234567']},'Volumes',[
+                {'VolumeId':'vol-01234567','State':'in-use','SnapshotId':'snap-01234567' if snapshot else '',
+                 'Attachments':[{'InstanceId':F.INSTANCE_ID,'State':'attached'}]}]),
+            'R11':('DescribeSnapshots',{'SnapshotIds':['snap-01234567']},'Snapshots',[{'SnapshotId':'snap-01234567','State':'completed'}]),
+            'R12':('DescribeAddresses',{'Filters':[{'Name':'network-interface-id','Values':['eni-01234567','eni-89abcdef']}]},'Addresses',[])}
+        receipts={'R04':copy.deepcopy(sources[1])}
+        for index,(row,(action,request,key,items)) in enumerate(materials.items()):
+            if (row=='R07' and not nat) or (row=='R11' and not snapshot):receipts[row]=None;continue
+            receipt=copy.deepcopy(sources[1]);request_id='offline-network-'+row
+            receipt.update(row_id=row,action='ec2:'+action,request_id=request_id,pagination_item_count=len(items),
+                requested_utc='2026-09-06T18:00:%02dZ'%(8+2*index),completed_utc='2026-09-06T18:00:%02dZ'%(9+2*index))
+            response={key:items,'ResponseMetadata':{'RequestId':request_id,'HTTPStatusCode':200,'RetryAttempts':0,
+                'HTTPHeaders':{'x-amzn-requestid':request_id}}}
+            R51ProspectiveAmendmentTests.encode(receipt,'request',request)
+            R51ProspectiveAmendmentTests.encode(receipt,'response',response)
+            receipts[row]=receipt
+        args['ec2_pagination_bounds']={'max_pages':4,'max_items':16}
+        return receipts,binding,args
+
+    def test_complete_network_reconstruction_derives_rules_routes_and_dependencies(self):
+        receipts,binding,args=self.material()
+        output=G.build_vpc_network_output_v2(ROOT,receipts,binding,**args)
+        self.assertEqual(F.validate_vpc_network_reconstruction_output_v2(output,receipts,binding,**args),output)
+        self.assertEqual(output['decoded_json']['route_table_ids'],['rtb-01234567','rtb-89abcdef'])
+        self.assertEqual(output['decoded_json']['attached_subnet_ids'],['subnet-01234567','subnet-89abcdef'])
+        self.assertEqual(output['decoded_json']['nat_gateway_ids'],['nat-01234567'])
+        self.assertEqual(output['decoded_json']['ingress_rule_count'],0)
+        self.assertEqual(output['freshness_seconds'],49)
+        self.assertEqual(output['identity'],G.identity(output['schema'],output['decoded_json']))
+        G.validate_record(ROOT,'vpc_network_output_v2',output)
+
+    def test_false_conditions_come_from_actual_routes_and_volumes(self):
+        receipts,binding,args=self.material(nat=False,snapshot=False)
+        output=G.build_vpc_network_output_v2(ROOT,receipts,binding,**args)
+        self.assertEqual(output['decoded_json']['nat_gateway_ids'],[])
+        self.assertIsNone(receipts['R07']);self.assertIsNone(receipts['R11'])
+        other=self.material()[0]
+        for row in ('R07','R11'):
+            bad=copy.deepcopy(receipts);bad[row]=other[row]
+            with self.assertRaises(F.Refusal):F.derive_vpc_network_observation_v2(bad,binding,**args)
+        for row in ('R07','R11'):
+            required,binding,args=self.material();required[row]=None
+            with self.assertRaises(F.Refusal):F.derive_vpc_network_observation_v2(required,binding,**args)
+
+    def test_rehashed_wrong_target_resource_and_conditional_coverage_refuse(self):
+        mutations=[('R05','request',lambda v:v.update(SubnetIds=['subnet-11111111'])),
+            ('R05','response',lambda v:v['Subnets'].pop()),
+            ('R05','response',lambda v:v['Subnets'][0].update(OwnerId='111111111111')),
+            ('R06','response',lambda v:v['RouteTables'][0].update(VpcId='vpc-11111111')),
+            ('R06','response',lambda v:v['RouteTables'][0]['Associations'][0].update(Main=False)),
+            ('R06','response',lambda v:v['RouteTables'][0]['Routes'][0].update(State='blackhole')),
+            ('R07','response',lambda v:v['NatGateways'][0].update(NatGatewayId='nat-11111111')),
+            ('R08','request',lambda v:v.clear()),
+            ('R08','response',lambda v:v.pop('VpcEndpoints')),
+            ('R09','response',lambda v:v['Images'][0].update(ImageId='ami-11111111')),
+            ('R10','response',lambda v:v['Volumes'][0]['Attachments'][0].update(InstanceId='i-other')),
+            ('R11','response',lambda v:v['Snapshots'][0].update(State='pending')),
+            ('R12','response',lambda v:v.pop('Addresses')),
+            ('R12','response',lambda v:v.update(NextToken='unread-page'))]
+        for row,stem,mutate in mutations:
+            receipts,binding,args=self.material()
+            R64IngressAmendmentTests().mutate_api(receipts[row],stem,mutate)
+            with self.subTest(row=row,stem=stem),self.assertRaises(F.Refusal):
+                F.derive_vpc_network_observation_v2(receipts,binding,**args)
+
+    def test_stale_extra_missing_interface_and_bad_pagination_refuse(self):
+        for mutate in (lambda r:r.pop('R08'),lambda r:r.update(R65=r['R08']),
+            lambda r:r['R04'].update(completed_utc='2026-09-06T18:00:05Z'),
+            lambda r:r['R05'].update(requested_utc='2026-09-06T18:00:02Z'),
+            lambda r:r['R08'].update(pagination_item_count=True),lambda r:r['R06'].update(pagination_page=2),
+            lambda r:r['R11'].update(requested_utc='2026-09-06T18:00:08Z')):
+            receipts,binding,args=self.material();mutate(receipts)
+            with self.assertRaises(F.Refusal):F.derive_vpc_network_observation_v2(receipts,binding,**args)
+        receipts,binding,args=self.material();args['validation_utc']='2026-09-06T18:05:02Z'
+        with self.assertRaises(F.Refusal):F.derive_vpc_network_observation_v2(receipts,binding,**args)
+
+    def test_rehashed_output_cannot_replace_source_derived_facts(self):
+        receipts,binding,args=self.material();output=G.build_vpc_network_output_v2(ROOT,receipts,binding,**args)
+        for field,value in [('ingress_rule_count',1),('nat_gateway_ids',[]),('route_table_ids',['rtb-11111111']),
+            ('attached_subnet_ids',['subnet-11111111']),('security_group_ids',['sg-11111111'])]:
+            bad=copy.deepcopy(output);bad['decoded_json'][field]=value
+            raw=G.canonical(bad['decoded_json']);bad.update(identity=G.identity(bad['schema'],bad['decoded_json']),
+                canonical_json_base64=base64.b64encode(raw).decode(),canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+            with self.assertRaises(F.Refusal):F.validate_vpc_network_reconstruction_output_v2(bad,receipts,binding,**args)
+
+    def test_rebuilt_r02_r64_phase_cannot_substitute_secondary_for_primary_subnet(self):
+        receipts,binding,args=self.material(primary_subnet_index=1)
+        # The receipt hashes, request reservations and complete R64 phase binding
+        # have all been rebuilt: rejection must come from primary subnet facts.
+        self.assertEqual(F.validate_r64_phase_binding(binding,**{k:v for k,v in args.items() if k!='ec2_pagination_bounds'}),binding)
+        with self.assertRaisesRegex(F.Refusal,'primary/attached subnet'):
+            F.derive_vpc_network_observation_v2(receipts,binding,**args)
+
+    def test_independently_sealed_ec2_bounds_are_not_replaced_with_local_maximum(self):
+        receipts,binding,args=self.material()
+        for bounds in ({'max_pages':1,'max_items':1},{'max_pages':0,'max_items':16},
+                       {'max_pages':True,'max_items':16},{'max_pages':4,'max_items':16,'extra':1}):
+            with self.assertRaises(F.Refusal):F.derive_vpc_network_observation_v2(receipts,binding,
+                **{**args,'ec2_pagination_bounds':bounds})
+
+
 class R64LocalBudgetStoreTests(unittest.TestCase):
     """Real private temporary files, offline synthetic observations, no AWS."""
     def setUp(self):

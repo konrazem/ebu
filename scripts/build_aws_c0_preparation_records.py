@@ -175,6 +175,11 @@ def build_r64_phase_binding(root,observation,call_budget,*,phase,attempt_identit
     validate_record(root,'network_ingress_phase_binding',record)
     return {'network_ingress_phase_binding':record,'network_ingress_phase_binding_identity':identity(record['schema'],record)}
 
+def build_vpc_network_output_v2(root,receipts,ingress_binding,**phase_context):
+    output=finalizer(root).build_vpc_network_reconstruction_output_v2(receipts,ingress_binding,**phase_context)
+    validate_record(root,'vpc_network_output_v2',output)
+    return output
+
 class R64LocalCallBudgetStore:
     """Append-only local reservation snapshots for one exact attempt.
 

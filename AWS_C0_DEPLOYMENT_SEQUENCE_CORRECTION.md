@@ -99,6 +99,33 @@ Twenty-four focused ingress/budget/store/phase tests pass. The complete suite at
 zero assertion failures, skipped tests or expected failures. These new records
 are not yet the complete eleven-control reconstruction set or a cloud gate pass.
 
+The VPC output/v2 component now derives the original network facts from the
+complete R04–R12 API responses, with explicit R02 dependency and the new R64
+phase proof. It cross-checks all attached subnets, the unique primary subnet,
+subnet ownership, route-table selection/main fallback, conditional NAT routes,
+image/volume/snapshot targets, endpoints and interface-scoped Elastic IPs.
+Conditional NAT and snapshot absence comes from actual dependency responses;
+an empty response collection must be explicitly present. The returned output,
+canonical bytes, hashes and conservative freshness age are regenerated from
+those sources and compared in full by the consumer.
+
+This implementation accepts one complete page and no more than sixteen items
+per ancillary EC2 response, and also enforces the independently sealed EC2
+limits when they are stricter. A continuation token or an incomplete/oversized
+set refuses; generic multipage support is not claimed. R02/R04/R64 remain
+nonempty. Ancillary R05–R12 may carry actual empty collections when semantically
+valid. Historical v1 decoded/output schemas remain untouched. Seven VPC tests
+and thirty-one combined focused tests pass. Review found and verified a fix
+for primary-versus-secondary subnet substitution; independent sealed-bound
+checks were also added and reviewed. The component is APPROVED; the complete
+eleven-control attachment and authenticated collector are still unfinished.
+
+The route-table fallback and lack of a subnet ID for an implicit association
+follow the [AWS DescribeRouteTables API](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeRouteTables.html).
+The address request uses its documented
+[network-interface-id filter](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html).
+Missing association state is conservatively refused rather than inferred.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

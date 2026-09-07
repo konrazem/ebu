@@ -215,10 +215,28 @@ def build(root=ROOT):
     definitions['network_ingress_phase_binding_v1']={'type':'object','required':list(binding_fields),
         'properties':binding_fields,'additionalProperties':False}
     definitions['network_ingress_phase_binding']={'$ref':'#/$defs/network_ingress_phase_binding_v1'}
+    decoded_vpc=copy.deepcopy(next(v for k,v in definitions.items() if k.endswith('_decoded_vpc_network_observation')))
+    decoded_vpc['required']+=['attached_subnet_ids','instance_source_receipt_identity','ingress_phase_binding_identity','ec2_pagination_bounds']
+    decoded_vpc['properties'].update(schema={'const':'aws_c0_vpc_network_observation_preimage/v2'},
+        source_row_ids={'const':['R%02d'%i for i in range(4,13)]+['R64']},
+        attached_subnet_ids={'type':'array','minItems':1,'maxItems':16,'uniqueItems':True,
+            'items':copy.deepcopy(decoded_vpc['properties']['subnet_id'])},
+        instance_source_receipt_identity=typed_identity('aws_c0_api_request_response_receipt/v1'),
+        ec2_pagination_bounds={'type':'object','required':['max_pages','max_items'],'additionalProperties':False,
+            'properties':{k:{'type':'integer','minimum':1} for k in ('max_pages','max_items')}},
+        ingress_phase_binding_identity=typed_identity('aws_c0_network_ingress_phase_binding/v1'))
+    decoded_vpc['properties']['ingress_rule_count']={'type':'integer','const':0}
+    definitions['vpc_network_decoded_v2']=decoded_vpc
+    output_union=next(v for k,v in definitions.items() if k.endswith('_reconstruction_output_tagged_union'))
+    output_vpc=copy.deepcopy(next(v for v in output_union['oneOf'] if v['properties']['control']['const']=='VPC_NETWORK_PATH'))
+    output_vpc['properties'].update(schema={'const':'aws_c0_vpc_network_observation/v2'},kind={'const':'aws_c0_vpc_network_observation/v2'},
+        identity=typed_identity('aws_c0_vpc_network_observation/v2'),decoded_json={'$ref':'#/$defs/vpc_network_decoded_v2'})
+    definitions['vpc_network_reconstruction_output_v2']=output_vpc
+    definitions['vpc_network_output_v2']={'$ref':'#/$defs/vpc_network_reconstruction_output_v2'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

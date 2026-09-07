@@ -2387,8 +2387,11 @@ def _r64_api_material(receipt: Any, row: str, action: str, *, caller: dict[str,s
         'authentication_source_identity':channel,'http_status':200,'pagination_page':1,
         'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
         'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+    # Empty complete collections are possible for ancillary VPC rows. The R64
+    # instance/interface/group source rows retain their nonempty requirement.
+    minimum=0 if row in ('R05','R06','R07','R08','R09','R10','R11','R12') else 1
     if any(receipt[k]!=v for k,v in expected.items()) or any(type(receipt[k]) is not int for k in
-            ('http_status','pagination_page','pagination_item_count')) or not 1<=receipt['pagination_item_count']<=16:
+            ('http_status','pagination_page','pagination_item_count')) or not minimum<=receipt['pagination_item_count']<=16:
         raise Refusal('R64 source action/caller/status/count mismatch')
     for field in ('caller_identity','authentication_source_identity'):
         value=receipt[field]
@@ -2734,6 +2737,164 @@ def validate_r64_phase_binding(record: Any, *, phase: str, attempt_identity: dic
     _r64_api_material(observation['rule_receipt'],'R64','ec2:DescribeSecurityGroups',caller=caller_identity,
         channel=authentication_source_identity,observed_utc=validation_utc,freshness=freshness)
     return record
+
+
+def derive_vpc_network_observation_v2(receipts: Any, ingress_binding: Any, *,
+                                     ec2_pagination_bounds: dict[str,int], **phase_context: Any) -> dict[str,Any]:
+    """Derive network facts from complete exact-target API observations.
+
+    This bounded implementation accepts one complete page (at most 16 items)
+    per network read. An incomplete collection refuses; it is never silently
+    truncated. Conditional NAT/volume/snapshot rows are derived from actual
+    dependency responses, not a caller-supplied boolean inventory.
+    """
+    validate_r64_phase_binding(ingress_binding,**phase_context)
+    if not isinstance(receipts,dict) or set(receipts)!={'R%02d'%i for i in range(4,13)}:
+        raise Refusal('VPC exact original R04 through R12 source slots required')
+    if (not isinstance(ec2_pagination_bounds,dict) or set(ec2_pagination_bounds)!={'max_pages','max_items'}
+            or any(type(v) is not int or v<1 for v in ec2_pagination_bounds.values())):
+        raise Refusal('VPC independently sealed positive EC2 bounds required')
+    for receipt in receipts.values():
+        if receipt is not None and (not isinstance(receipt,dict)
+                or type(receipt.get('pagination_page')) is not int or type(receipt.get('pagination_item_count')) is not int
+                or receipt['pagination_page']>ec2_pagination_bounds['max_pages']
+                or receipt['pagination_item_count']>ec2_pagination_bounds['max_items']):
+            raise Refusal('VPC source exceeds independently sealed EC2 bounds')
+    ingress=ingress_binding['ingress_observation'];source2,source4=ingress['source_receipts_in_order']
+    if receipts['R04']!=source4:raise Refusal('VPC and R64 interface observations differ')
+    instance=strict_json(base64.b64decode(source2['response_canonical_json_base64'],validate=True))['Reservations'][0]['Instances'][0]
+    interfaces=strict_json(base64.b64decode(source4['response_canonical_json_base64'],validate=True))['NetworkInterfaces']
+    vpc=ingress['vpc_id'];at=phase_context['validation_utc'];freshness=phase_context['read_plan']['freshness_max_seconds']
+    def named(value,prefix):
+        if not isinstance(value,str) or not re.fullmatch(prefix+r'-[0-9a-f]{8,17}',value):
+            raise Refusal('VPC complete typed resource identifier required')
+        return value
+    subnet=named(instance.get('SubnetId'),'subnet');image_id=named(instance.get('ImageId'),'ami')
+    source_eni={e['NetworkInterfaceId']:named(e.get('SubnetId'),'subnet') for e in interfaces}
+    declared_eni={e['NetworkInterfaceId']:named(e.get('SubnetId'),'subnet') for e in instance['NetworkInterfaces']}
+    primary_subnets=[e.get('SubnetId') for e in interfaces if e['Attachment']['DeviceIndex']==0]
+    if source_eni!=declared_eni or primary_subnets!=[subnet]:
+        raise Refusal('VPC complete primary/attached subnet associations differ')
+    subnet_ids=sorted(set(source_eni.values()))
+    actions={'R05':'DescribeSubnets','R06':'DescribeRouteTables','R07':'DescribeNatGateways','R08':'DescribeVpcEndpoints',
+        'R09':'DescribeImages','R10':'DescribeVolumes','R11':'DescribeSnapshots','R12':'DescribeAddresses'}
+    def collection(row,request,field,identifier,*,after_receipt=source4,expected_ids=None):
+        receipt=receipts[row]
+        req,response=_r64_api_material(receipt,row,'ec2:'+actions[row],caller=phase_context['caller_identity'],
+            channel=phase_context['authentication_source_identity'],observed_utc=at,freshness=freshness)
+        values=response.get(field)
+        if (req!=request or not isinstance(values,list) or len(values)!=receipt['pagination_item_count']
+                or _r64_utc(receipt['requested_utc'])<_r64_utc(after_receipt['completed_utc'])):
+            raise Refusal('VPC exact request/complete response/dependency chronology mismatch: '+row)
+        if any(not isinstance(v,dict) or not isinstance(v.get(identifier),str) for v in values):
+            raise Refusal('VPC complete resource objects required: '+row)
+        ids=[v[identifier] for v in values]
+        if len(ids)!=len(set(ids)) or (expected_ids is not None and sorted(ids)!=expected_ids):
+            raise Refusal('VPC duplicate/missing/additional resource refused: '+row)
+        return values
+    subnets=collection('R05',{'SubnetIds':subnet_ids},'Subnets','SubnetId',expected_ids=subnet_ids)
+    if any(s.get('VpcId')!=vpc or s.get('OwnerId')!='623609441658' or s.get('State')!='available' for s in subnets):
+        raise Refusal('VPC subnet owner/VPC/availability mismatch')
+    vpc_filter={'Filters':[{'Name':'vpc-id','Values':[vpc]}]}
+    tables=collection('R06',vpc_filter,'RouteTables','RouteTableId')
+    for table in tables:
+        named(table['RouteTableId'],'rtb')
+        if table.get('VpcId')!=vpc or table.get('OwnerId')!='623609441658' or not isinstance(table.get('Associations'),list):
+            raise Refusal('VPC complete same-owner route tables required')
+        for association in table['Associations']:
+            if (not isinstance(association,dict) or type(association.get('Main')) is not bool
+                    or association.get('AssociationState',{}).get('State')!='associated'):
+                raise Refusal('VPC complete active route association required')
+    selected={}
+    for sid in subnet_ids:
+        explicit=[t for t in tables if any(a.get('SubnetId')==sid for a in t['Associations'])]
+        matching=explicit or [t for t in tables if any(a['Main'] for a in t['Associations'])]
+        if len(matching)!=1:raise Refusal('VPC exact subnet route table/main fallback required')
+        selected[matching[0]['RouteTableId']]=matching[0]
+    nat_ids=set()
+    for table in selected.values():
+        routes=table.get('Routes')
+        if not isinstance(routes,list) or not routes:raise Refusal('VPC explicit nonempty route set required')
+        for route in routes:
+            if not isinstance(route,dict) or route.get('State')!='active':
+                raise Refusal('VPC inactive or incomplete route refused')
+            if 'NatGatewayId' in route:nat_ids.add(named(route['NatGatewayId'],'nat'))
+    if nat_ids:
+        nats=collection('R07',{'NatGatewayIds':sorted(nat_ids)},'NatGateways','NatGatewayId',
+            expected_ids=sorted(nat_ids),after_receipt=receipts['R06'])
+        if any(n.get('VpcId')!=vpc or n.get('State')!='available' for n in nats):
+            raise Refusal('VPC exact available route NAT gateways required')
+    elif receipts['R07'] is not None:raise Refusal('VPC no NAT route requires null R07, not fabricated evidence')
+    endpoints=collection('R08',vpc_filter,'VpcEndpoints','VpcEndpointId')
+    for endpoint in endpoints:
+        named(endpoint['VpcEndpointId'],'vpce')
+        if endpoint.get('VpcId')!=vpc or endpoint.get('State')!='available':
+            raise Refusal('VPC endpoint scope/availability mismatch')
+    images=collection('R09',{'ImageIds':[image_id]},'Images','ImageId',expected_ids=[image_id])
+    if images[0].get('State')!='available':raise Refusal('VPC actual instance image unavailable')
+    mappings=instance.get('BlockDeviceMappings')
+    if not isinstance(mappings,list):raise Refusal('VPC explicit instance block-device inventory required')
+    volume_ids=[]
+    for mapping in mappings:
+        if not isinstance(mapping,dict) or not isinstance(mapping.get('Ebs'),dict):
+            raise Refusal('VPC exact small-host EBS mapping required')
+        volume_ids.append(named(mapping['Ebs'].get('VolumeId'),'vol'))
+    if len(volume_ids)!=len(set(volume_ids)) or len(volume_ids)>16:raise Refusal('VPC bounded unique volume set required')
+    snapshot_ids=set()
+    if volume_ids:
+        volumes=collection('R10',{'VolumeIds':sorted(volume_ids)},'Volumes','VolumeId',expected_ids=sorted(volume_ids))
+        for volume in volumes:
+            attachments=volume.get('Attachments');snapshot_id=volume.get('SnapshotId')
+            if (volume.get('State')!='in-use' or not isinstance(attachments,list) or len(attachments)!=1
+                    or not isinstance(attachments[0],dict) or attachments[0].get('InstanceId')!=INSTANCE_ID
+                    or attachments[0].get('State')!='attached' or not isinstance(snapshot_id,str)):
+                raise Refusal('VPC complete exact-instance volume attachment/snapshot required')
+            if snapshot_id:snapshot_ids.add(named(snapshot_id,'snap'))
+    elif receipts['R10'] is not None:raise Refusal('VPC no volume requires null R10')
+    if snapshot_ids:
+        snapshots=collection('R11',{'SnapshotIds':sorted(snapshot_ids)},'Snapshots','SnapshotId',
+            expected_ids=sorted(snapshot_ids),after_receipt=receipts['R10'])
+        if any(s.get('State')!='completed' for s in snapshots):raise Refusal('VPC incomplete volume snapshot refused')
+    elif receipts['R11'] is not None:raise Refusal('VPC no snapshot requires null R11')
+    addresses=collection('R12',{'Filters':[{'Name':'network-interface-id','Values':sorted(source_eni)}]},'Addresses','AllocationId')
+    for address in addresses:
+        named(address['AllocationId'],'eipalloc')
+        if address.get('NetworkInterfaceId') not in source_eni or address.get('InstanceId',INSTANCE_ID)!=INSTANCE_ID:
+            raise Refusal('VPC public address belongs to another interface/instance')
+    return {'schema':'aws_c0_vpc_network_observation_preimage/v2','instance_id':INSTANCE_ID,'vpc_id':vpc,'subnet_id':subnet,
+        'attached_subnet_ids':subnet_ids,'security_group_ids':ingress['security_group_ids'],
+        'route_table_ids':sorted(selected),'nat_gateway_ids':sorted(nat_ids),
+        'vpc_endpoint_ids':sorted(e['VpcEndpointId'] for e in endpoints),
+        'public_ipv4_allocation_ids':sorted(a['AllocationId'] for a in addresses),
+        'ingress_rule_count':ingress['ingress_rule_count'],'source_row_ids':['R%02d'%i for i in range(4,13)]+['R64'],
+        'ec2_pagination_bounds':strict_json(canonical_bytes(ec2_pagination_bounds)),
+        'instance_source_receipt_identity':identity('aws_c0_api_request_response_receipt/v1',digest(canonical_bytes(source2))),
+        'ingress_phase_binding_identity':identity('aws_c0_network_ingress_phase_binding/v1',digest(canonical_bytes(ingress_binding)))}
+
+
+def build_vpc_network_reconstruction_output_v2(receipts: Any, ingress_binding: Any, **phase_context: Any) -> dict[str,Any]:
+    decoded=derive_vpc_network_observation_v2(receipts,ingress_binding,**phase_context)
+    raw=canonical_bytes(decoded);kind='aws_c0_vpc_network_observation/v2'
+    ingress=ingress_binding['ingress_observation']
+    sources=[r for r in receipts.values() if r is not None]+ingress['source_receipts_in_order']+[ingress['rule_receipt']]
+    # Conservatively date the combined sample from its oldest request, rather
+    # than moving that clock to the last response or to output construction.
+    observed=min(r['requested_utc'] for r in sources)
+    age=int((_r64_utc(phase_context['validation_utc'])-_r64_utc(observed)).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'VPC_NETWORK_PATH','identity':identity(kind,digest(raw)),
+        'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':observed,
+        'freshness_seconds':age,'max_freshness_seconds':phase_context['read_plan']['freshness_max_seconds'],
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_vpc_network_reconstruction_output_v2(output: Any, receipts: Any, ingress_binding: Any, **phase_context: Any) -> dict[str,Any]:
+    expected=build_vpc_network_reconstruction_output_v2(receipts,ingress_binding,**phase_context)
+    if canonical_bytes(output)!=canonical_bytes(expected):
+        raise Refusal('VPC complete output differs from actual row-source reconstruction')
+    return output
 
 
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
