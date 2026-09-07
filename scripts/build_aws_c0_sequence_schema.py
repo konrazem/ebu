@@ -253,6 +253,17 @@ def build(root=ROOT):
         kind={'const':'aws_c0_iam_policy_set_observation/v2'},
         identity=typed_identity('aws_c0_iam_policy_set_observation/v2'),
         decoded_json={'$ref':'#/$defs/iam_policy_set_decoded_v2'})
+    iam_binding_fields={'schema':{'const':'aws_c0_iam_role_context_binding/v1'},
+        'authority_id':{'const':'EBU-AWS-C0-IAM-CROSS-CONTROL-SOURCE-BINDING-AUTHORITY-v1'},
+        'read_plan_identity':typed_identity('aws_c0_runtime_control_read_plan/v3'),
+        'source_control':{'const':'INSTANCE_PROFILE_SOLE_ROLE'},'source_row_id':{'const':'R14'},
+        'target_control':{'const':'IAM_POLICY_SET'},
+        'instance_profile_output_identity':typed_identity('aws_c0_instance_profile_role_observation/v1'),
+        'r14_receipt_identity':typed_identity('aws_c0_api_request_response_receipt/v1'),
+        'role_arn':{'type':'string','pattern':'^arn:aws:'},
+        'instance_profile_arn':{'type':'string','pattern':'^arn:aws:'},
+        'assume_role_policy_sha256':copy.deepcopy(decoded_iam['properties']['assume_role_policy_sha256']),
+        'disposition':{'const':'AUTHENTICATED_EXISTING_R14_CROSS_CONTROL_BINDING_PASS'}}
     output_vpc=copy.deepcopy(next(v for v in output_union['oneOf'] if v['properties']['control']['const']=='VPC_NETWORK_PATH'))
     output_vpc['properties'].update(schema={'const':'aws_c0_vpc_network_observation/v2'},kind={'const':'aws_c0_vpc_network_observation/v2'},
         identity=typed_identity('aws_c0_vpc_network_observation/v2'),decoded_json={'$ref':'#/$defs/vpc_network_decoded_v2'})
@@ -285,6 +296,7 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v1_definition']={'type':'object',
         'required':list(attachment_fields),'properties':attachment_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v1']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v1_definition'}
+    include(CRT,'pagination_transcript')
     # Append prospective definitions so regenerating the ordered registry does
     # not reorder any historical definition.
     definitions['read_plan_iam_v3']=read_v3
@@ -292,10 +304,13 @@ def build(root=ROOT):
     definitions['iam_policy_set_decoded_v2']=decoded_iam
     definitions['iam_policy_set_reconstruction_output_v2']=output_iam
     definitions['iam_policy_set_output_v2']={'$ref':'#/$defs/iam_policy_set_reconstruction_output_v2'}
+    definitions['iam_role_context_binding_v1_definition']={'type':'object',
+        'required':list(iam_binding_fields),'properties':iam_binding_fields,'additionalProperties':False}
+    definitions['iam_role_context_binding']={'$ref':'#/$defs/iam_role_context_binding_v1_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

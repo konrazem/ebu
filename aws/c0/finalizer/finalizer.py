@@ -2298,6 +2298,7 @@ READ_PLAN_ROWS_SHA256 = '429e128c60fd89eb87d82a88b3a4e1676825cb9fe49d134087d9072
 READ_PLAN_MAPPING_SHA256 = '27d362e40c48a55963f9936adea4249ec672d0a47f381e88e57697df86973c89'
 INGRESS_AMENDMENT_SHA256 = '97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f'
 IAM_SOURCE_MAPPING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1'
+IAM_CROSS_CONTROL_BINDING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-CROSS-CONTROL-SOURCE-BINDING-AUTHORITY-v1'
 R64_ROW = {'id':'R64','action':'ec2:DescribeSecurityGroups','resource_selector':'*',
     'use':'ALWAYS','control':'VPC_NETWORK_PATH','condition':'ALWAYS','call_requirement':'ALWAYS',
     'pagination_bounds':{'max_pages':1,'max_items':16},
@@ -3028,6 +3029,240 @@ def build_instance_profile_reconstruction_output(receipts: Any, *, caller_identi
 def validate_instance_profile_reconstruction_output(output: Any, receipts: Any, **context: Any) -> dict[str,Any]:
     if canonical_bytes(output)!=canonical_bytes(build_instance_profile_reconstruction_output(receipts,**context)):
         raise Refusal('instance/profile reconstruction differs from actual source and sealed role')
+    return output
+
+
+def _iam_api_material(receipt: Any, row: str, action: str, selector: str, *,
+        caller_identity: dict[str,str], authentication_source_identity: dict[str,str],
+        phase_not_before_utc: str, validation_utc: str, freshness_max_seconds: int,
+        maximum_items: int) -> tuple[dict[str,Any],dict[str,Any]]:
+    """Validate one authenticated IAM page without assuming terminal pagination."""
+    if not isinstance(receipt,dict) or set(receipt)!=API_OBSERVATION_FIELDS:
+        raise Refusal('IAM source receipt field closure failed')
+    expected={'row_id':row,'action':action,'resource_selector':selector,'caller_identity':caller_identity,
+        'authentication_source_identity':authentication_source_identity,'http_status':200,
+        'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+        'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+    if (any(receipt.get(k)!=v for k,v in expected.items())
+            or type(receipt.get('pagination_page')) is not int or receipt['pagination_page']<1
+            or type(receipt.get('pagination_item_count')) is not int
+            or not 0<=receipt['pagination_item_count']<=maximum_items
+            or type(freshness_max_seconds) is not int or not 1<=freshness_max_seconds<=300):
+        raise Refusal('IAM source action/context/status/page/count mismatch')
+    for field in ('caller_identity','authentication_source_identity'):
+        value=receipt[field]
+        if not isinstance(value,dict) or not isinstance(value.get('kind'),str):
+            raise Refusal('IAM source identity absent')
+        _identity(receipt,field,value['kind'])
+    start,end,not_before,at=(_r64_utc(receipt['requested_utc']),_r64_utc(receipt['completed_utc']),
+        _r64_utc(phase_not_before_utc),_r64_utc(validation_utc))
+    if not not_before<=start<=end<=at or not 0<=(at-start).total_seconds()<=freshness_max_seconds:
+        raise Refusal('IAM source stale/future/outside phase')
+    if not isinstance(receipt.get('request_id'),str) or not re.fullmatch(r'[A-Za-z0-9-]{8,128}',receipt['request_id']):
+        raise Refusal('IAM source request ID absent')
+    values=[]
+    for stem in ('request','response'):
+        encoded=receipt.get(stem+'_canonical_json_base64')
+        if not isinstance(encoded,str) or not 0<len(encoded)<=87384:
+            raise Refusal('IAM bounded source bytes absent')
+        try:raw=base64.b64decode(encoded,validate=True)
+        except (ValueError,TypeError) as exc:raise Refusal('IAM source base64 invalid') from exc
+        if (len(raw)>65536 or base64.b64encode(raw).decode()!=encoded
+                or digest(raw)!=receipt.get(stem+'_sha256')):
+            raise Refusal('IAM source bytes/hash mismatch')
+        value=strict_json(raw)
+        if not isinstance(value,dict):raise Refusal('IAM source object required')
+        values.append(value)
+    request,response=values;metadata=response.get('ResponseMetadata')
+    if (not isinstance(metadata,dict) or metadata.get('RequestId')!=receipt['request_id']
+            or type(metadata.get('HTTPStatusCode')) is not int or metadata['HTTPStatusCode']!=200
+            or type(metadata.get('RetryAttempts')) is not int or metadata['RetryAttempts']!=0
+            or not isinstance(metadata.get('HTTPHeaders'),dict) or 'Error' in response or '__type' in response):
+        raise Refusal('IAM authenticated success metadata required without retries')
+    request_ids=[v for k,v in metadata['HTTPHeaders'].items()
+        if k.lower() in ('x-amzn-requestid','x-amzn-request-id','x-amz-request-id')]
+    if not request_ids or any(value!=receipt['request_id'] for value in request_ids):
+        raise Refusal('IAM response request-ID headers differ')
+    return request,response
+
+
+def build_iam_role_context_binding(*, read_plan: Any, read_plan_identity: dict[str,str],
+        instance_profile_bundle: Any) -> dict[str,Any]:
+    """Explicitly bind IAM reconstruction to the existing authenticated R14 fact."""
+    validate_runtime_control_read_plan_v3(read_plan,read_plan_identity)
+    if (not isinstance(instance_profile_bundle,dict)
+            or set(instance_profile_bundle)!={'candidate','receipts','context'}):
+        raise Refusal('IAM role-context exact instance/profile bundle required')
+    candidate=instance_profile_bundle['candidate'];receipts=instance_profile_bundle['receipts']
+    context=instance_profile_bundle['context']
+    expected=build_instance_profile_reconstruction_output(receipts,**context)
+    if canonical_bytes(candidate)!=canonical_bytes(expected):
+        raise Refusal('IAM role-context instance/profile candidate differs from sources')
+    _,response=_r64_api_material(receipts['R14'],'R14','iam:GetRole',caller=context['caller_identity'],
+        channel=context['authentication_source_identity'],observed_utc=context['validation_utc'],
+        freshness=context['freshness_max_seconds'])
+    role=response.get('Role');trust=role.get('AssumeRolePolicyDocument') if isinstance(role,dict) else None
+    if not isinstance(trust,dict):raise Refusal('IAM role-context authenticated trust policy required')
+    decoded=expected['decoded_json']
+    return {'schema':'aws_c0_iam_role_context_binding/v1',
+        'authority_id':IAM_CROSS_CONTROL_BINDING_AUTHORITY_ID,
+        'read_plan_identity':read_plan_identity,'source_control':'INSTANCE_PROFILE_SOLE_ROLE',
+        'source_row_id':'R14','target_control':'IAM_POLICY_SET',
+        'instance_profile_output_identity':expected['identity'],
+        'r14_receipt_identity':identity('aws_c0_api_request_response_receipt/v1',digest(canonical_bytes(receipts['R14']))),
+        'role_arn':decoded['role_arn'],'instance_profile_arn':decoded['instance_profile_arn'],
+        'assume_role_policy_sha256':digest(canonical_bytes(trust)),
+        'disposition':'AUTHENTICATED_EXISTING_R14_CROSS_CONTROL_BINDING_PASS'}
+
+
+def _iam_pagination(receipts: Any, *, row: str, action: str, item_field: str,
+        maximum_pages: int, maximum_items: int, context: dict[str,Any]) -> tuple[list[Any],dict[str,Any]]:
+    if not isinstance(receipts,list) or not 1<=len(receipts)<=maximum_pages:
+        raise Refusal('IAM complete bounded pagination receipt list required')
+    name='EBU-Rehearsal-EC2-Role';marker=None;items=[];pages=[];seen=set();previous=None
+    for index,receipt in enumerate(receipts,1):
+        if receipt.get('pagination_page')!=index or (previous is not None
+                and _r64_utc(receipt['requested_utc'])<_r64_utc(previous['completed_utc'])):
+            raise Refusal('IAM pagination page/time order mismatch')
+        request,response=_iam_api_material(receipt,row,action,'SEALED_INSTANCE_ROLE_ARN',
+            maximum_items=maximum_items,**context)
+        expected={'RoleName':name,'MaxItems':maximum_items}
+        if marker is not None:expected['Marker']=marker
+        if request!=expected:raise Refusal('IAM pagination request/token differs')
+        found=response.get(item_field);truncated=response.get('IsTruncated')
+        if not isinstance(found,list) or receipt['pagination_item_count']!=len(found) or type(truncated) is not bool:
+            raise Refusal('IAM pagination item/count/terminal fields invalid')
+        outgoing=response.get('Marker')
+        if truncated:
+            if not isinstance(outgoing,str) or not outgoing or outgoing in seen:
+                raise Refusal('IAM pagination missing/repeated outgoing marker')
+            seen.add(outgoing)
+        elif outgoing not in (None,''):
+            raise Refusal('IAM terminal page carries an outgoing marker')
+        pages.append({'page_index':index,'request_sha256':receipt['request_sha256'],
+            'response_sha256':receipt['response_sha256'],
+            'incoming_token_sha256':None if marker is None else digest(canonical_bytes(marker)),
+            'outgoing_token_sha256':None if not truncated else digest(canonical_bytes(outgoing)),
+            'terminal':not truncated})
+        items.extend(found);marker=outgoing if truncated else None;previous=receipt
+        if not truncated and index!=len(receipts):raise Refusal('IAM receipts continue after terminal page')
+    if marker is not None or len(items)>maximum_items:
+        raise Refusal('IAM pagination lacks terminal page or exceeds item bound')
+    preimage={'schema':'aws_c0_pagination_transcript/v1','source_api':action,'pages':pages,
+        'page_count':len(pages),'version_count':0,'delete_marker_count':0,
+        'duplicate_coordinate_count':0,'event_count':0,'sealed_max_pages':maximum_pages,
+        'sealed_max_items':maximum_items,'sealed_max_events':maximum_items,
+        'all_pages_consumed':True,'terminal_marker_observed':True,'repeated_token_observed':False}
+    transcript={**preimage,'identity':identity('aws_c0_pagination_transcript/v1',digest(canonical_bytes(preimage)))}
+    return items,transcript
+
+
+def build_iam_policy_set_reconstruction_output_v2(receipts: Any, role_context_binding: Any,
+        instance_profile_bundle: Any, *, caller_identity: dict[str,str],
+        authentication_source_identity: dict[str,str], phase_not_before_utc: str,
+        validation_utc: str, freshness_max_seconds: int, iam_pagination_bounds: Any,
+        read_plan: Any, read_plan_identity: dict[str,str]) -> dict[str,Any]:
+    """Reconstruct IAM policies from R15-R19 plus the explicit R14 context binding."""
+    validate_runtime_control_read_plan_v3(read_plan,read_plan_identity)
+    expected_binding=build_iam_role_context_binding(read_plan=read_plan,
+        read_plan_identity=read_plan_identity,instance_profile_bundle=instance_profile_bundle)
+    if canonical_bytes(role_context_binding)!=canonical_bytes(expected_binding):
+        raise Refusal('IAM role-context binding differs from authenticated R14 source')
+    bound_fields={'list_attached_role_policies_max_pages','list_attached_role_policies_max_items',
+        'list_role_policies_max_pages','list_role_policies_max_items','aggregate_iam_max_pages','aggregate_iam_max_items'}
+    if (not isinstance(iam_pagination_bounds,dict) or set(iam_pagination_bounds)!=bound_fields
+            or any(type(value) is not int or value<1 for value in iam_pagination_bounds.values())
+            or iam_pagination_bounds['aggregate_iam_max_pages']!=
+                iam_pagination_bounds['list_attached_role_policies_max_pages']+iam_pagination_bounds['list_role_policies_max_pages']
+            or iam_pagination_bounds['aggregate_iam_max_items']!=
+                iam_pagination_bounds['list_attached_role_policies_max_items']+iam_pagination_bounds['list_role_policies_max_items']):
+        raise Refusal('IAM exact sealed pagination bounds required')
+    if (not isinstance(receipts,dict) or set(receipts)!={'R15','R16','R17','R18','R19'}
+            or any(not isinstance(value,list) for value in receipts.values())):
+        raise Refusal('IAM exact R15-R19 receipt collections required')
+    context={'caller_identity':caller_identity,'authentication_source_identity':authentication_source_identity,
+        'phase_not_before_utc':phase_not_before_utc,'validation_utc':validation_utc,
+        'freshness_max_seconds':freshness_max_seconds}
+    inline_names,inline_transcript=_iam_pagination(receipts['R16'],row='R16',action='iam:ListRolePolicies',
+        item_field='PolicyNames',maximum_pages=iam_pagination_bounds['list_role_policies_max_pages'],
+        maximum_items=iam_pagination_bounds['list_role_policies_max_items'],context=context)
+    attached,attached_transcript=_iam_pagination(receipts['R17'],row='R17',action='iam:ListAttachedRolePolicies',
+        item_field='AttachedPolicies',maximum_pages=iam_pagination_bounds['list_attached_role_policies_max_pages'],
+        maximum_items=iam_pagination_bounds['list_attached_role_policies_max_items'],context=context)
+    if (any(not isinstance(name,str) or not name for name in inline_names)
+            or len(inline_names)!=len(set(inline_names))):
+        raise Refusal('IAM complete unique inline policy names required')
+    policies={}
+    for item in attached:
+        if (not isinstance(item,dict) or set(item)!={'PolicyName','PolicyArn'}
+                or not isinstance(item['PolicyName'],str) or not item['PolicyName']
+                or not isinstance(item['PolicyArn'],str)
+                or not re.fullmatch(r'arn:aws:iam::(?:aws|623609441658):policy/.+',item['PolicyArn'])
+                or item['PolicyArn'] in policies):
+            raise Refusal('IAM complete unique attached policy inventory required')
+        policies[item['PolicyArn']]=item['PolicyName']
+    name='EBU-Rehearsal-EC2-Role';hashes=[]
+    if len(receipts['R15'])!=len(inline_names):raise Refusal('IAM inline policy detail coverage differs')
+    for expected_name,receipt in zip(sorted(inline_names),receipts['R15']):
+        request,response=_iam_api_material(receipt,'R15','iam:GetRolePolicy','SEALED_INSTANCE_ROLE_ARN',
+            maximum_items=1,**context)
+        document=response.get('PolicyDocument')
+        if (request!={'RoleName':name,'PolicyName':expected_name} or receipt['pagination_page']!=1
+                or receipt['pagination_item_count']!=1 or response.get('RoleName')!=name
+                or response.get('PolicyName')!=expected_name or not isinstance(document,dict)
+                or _r64_utc(receipt['requested_utc'])<_r64_utc(receipts['R16'][-1]['completed_utc'])):
+            raise Refusal('IAM inline policy exact detail/source order mismatch')
+        hashes.append(digest(canonical_bytes(document)))
+    if len(receipts['R18'])!=len(policies) or len(receipts['R19'])!=len(policies):
+        raise Refusal('IAM attached policy metadata/version coverage differs')
+    for arn,metadata_receipt,version_receipt in zip(sorted(policies),receipts['R18'],receipts['R19']):
+        request,response=_iam_api_material(metadata_receipt,'R18','iam:GetPolicy','SEALED_ATTACHED_POLICY_ARN',
+            maximum_items=1,**context);policy=response.get('Policy')
+        if (request!={'PolicyArn':arn} or metadata_receipt['pagination_page']!=1
+                or metadata_receipt['pagination_item_count']!=1 or not isinstance(policy,dict)
+                or policy.get('Arn')!=arn or policy.get('PolicyName')!=policies[arn]
+                or not isinstance(policy.get('DefaultVersionId'),str)
+                or _r64_utc(metadata_receipt['requested_utc'])<_r64_utc(receipts['R17'][-1]['completed_utc'])):
+            raise Refusal('IAM attached policy exact metadata/source order mismatch')
+        request,response=_iam_api_material(version_receipt,'R19','iam:GetPolicyVersion','SEALED_ATTACHED_POLICY_ARN',
+            maximum_items=1,**context);version=response.get('PolicyVersion')
+        if (request!={'PolicyArn':arn,'VersionId':policy['DefaultVersionId']}
+                or version_receipt['pagination_page']!=1 or version_receipt['pagination_item_count']!=1
+                or not isinstance(version,dict) or version.get('VersionId')!=policy['DefaultVersionId']
+                or version.get('IsDefaultVersion') is not True or not isinstance(version.get('Document'),dict)
+                or _r64_utc(version_receipt['requested_utc'])<_r64_utc(metadata_receipt['completed_utc'])):
+            raise Refusal('IAM attached policy exact default-version detail mismatch')
+        hashes.append(digest(canonical_bytes(version['Document'])))
+    sources=[item for row in ('R15','R16','R17','R18','R19') for item in receipts[row]]
+    request_ids=[item['request_id'] for item in sources]
+    source_identities=[digest(canonical_bytes(item)) for item in sources]
+    if len(request_ids)!=len(set(request_ids)) or len(source_identities)!=len(set(source_identities)):
+        raise Refusal('IAM source receipts must have unique request IDs and bytes')
+    decoded={'schema':'aws_c0_iam_policy_set_observation_preimage/v2',
+        'role_arn':role_context_binding['role_arn'],'instance_profile_arn':role_context_binding['instance_profile_arn'],
+        'assume_role_policy_sha256':role_context_binding['assume_role_policy_sha256'],
+        'inline_policy_names':sorted(inline_names),'attached_policy_arns':sorted(policies),
+        'policy_document_sha256s':sorted(set(hashes)),
+        'pagination_transcript_identities':[inline_transcript['identity'],attached_transcript['identity']],
+        'source_row_ids':['R15','R16','R17','R18','R19']}
+    raw=canonical_bytes(decoded);kind='aws_c0_iam_policy_set_observation/v2'
+    observed=min(item['requested_utc'] for item in sources)
+    age=int((_r64_utc(validation_utc)-_r64_utc(observed)).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'IAM_POLICY_SET','identity':identity(kind,digest(raw)),
+        'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':observed,
+        'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_iam_policy_set_reconstruction_output_v2(output: Any, receipts: Any,
+        role_context_binding: Any, instance_profile_bundle: Any, **context: Any) -> dict[str,Any]:
+    expected=build_iam_policy_set_reconstruction_output_v2(receipts,role_context_binding,
+        instance_profile_bundle,**context)
+    if canonical_bytes(output)!=canonical_bytes(expected):
+        raise Refusal('IAM output differs from exact authenticated source reconstruction')
     return output
 
 

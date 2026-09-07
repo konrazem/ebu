@@ -218,6 +218,27 @@ def build_instance_profile_output(root,receipts,**context):
     validate_record(root,'instance_profile_output',output)
     return output
 
+def build_iam_role_context_binding(root,read_plan,read_plan_identity,instance_profile_bundle):
+    authority=sequence(root).get('iam_cross_control_binding_authorization')
+    expected={'authority_id':finalizer(root).IAM_CROSS_CONTROL_BINDING_AUTHORITY_ID,
+        'source':'EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS',
+        'source_control':'INSTANCE_PROFILE_SOLE_ROLE','source_row_id':'R14','target_control':'IAM_POLICY_SET',
+        'allowed_fields':['role_arn','instance_profile_arn','assume_role_policy_sha256'],
+        'iam_direct_source_row_ids_unchanged':['R15','R16','R17','R18','R19'],
+        'new_aws_actions_or_calls_authorized':False,
+        'permissions_science_cost_or_publication_changed':False,'historical_schemas_changed':False}
+    if authority!=expected:raise ValueError('exact authorized IAM cross-control binding required')
+    binding=finalizer(root).build_iam_role_context_binding(read_plan=read_plan,
+        read_plan_identity=read_plan_identity,instance_profile_bundle=instance_profile_bundle)
+    validate_record(root,'iam_role_context_binding',binding)
+    return binding
+
+def build_iam_policy_set_output_v2(root,receipts,role_context_binding,instance_profile_bundle,**context):
+    output=finalizer(root).build_iam_policy_set_reconstruction_output_v2(receipts,
+        role_context_binding,instance_profile_bundle,**context)
+    validate_record(root,'iam_policy_set_output_v2',output)
+    return output
+
 def build_service_quota_output(root,receipts,**context):
     output=finalizer(root).build_service_quota_reconstruction_output(receipts,**context)
     validate_record(root,'service_quota_output',output)

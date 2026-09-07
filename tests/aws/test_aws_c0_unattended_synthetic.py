@@ -952,6 +952,143 @@ class InstanceProfileReconstructionTests(unittest.TestCase):
         with self.assertRaises(F.Refusal):F.build_instance_profile_reconstruction_output(receipts,**context)
 
 
+class IamPolicySetReconstructionTests(unittest.TestCase):
+    def material(self):
+        profile_receipts,profile_context=InstanceProfileReconstructionTests().material()
+        trust={'Version':'2012-10-17','Statement':[{'Effect':'Allow','Action':'sts:AssumeRole',
+            'Principal':{'Service':'ec2.amazonaws.com'}}]}
+        role_response=F.strict_json(base64.b64decode(profile_receipts['R14']['response_canonical_json_base64']))
+        role_response['Role']['AssumeRolePolicyDocument']=trust
+        R51ProspectiveAmendmentTests.encode(profile_receipts['R14'],'response',role_response)
+        profile=G.build_instance_profile_output(ROOT,profile_receipts,**profile_context)
+        profile_bundle={'candidate':profile,'receipts':profile_receipts,'context':profile_context}
+        plan_fields=G.build_runtime_control_read_plan_fields_v3(ROOT)
+        plan=plan_fields['runtime_control_read_plan'];plan_id=plan_fields['runtime_control_read_plan_identity']
+        binding=G.build_iam_role_context_binding(ROOT,plan,plan_id,profile_bundle)
+        caller=profile_context['caller_identity'];channel=profile_context['authentication_source_identity']
+        def receipt(row,action,selector,request,response,second,count=1):
+            request_id='offline-iam-'+row
+            response={**copy.deepcopy(response),'ResponseMetadata':{'RequestId':request_id,'HTTPStatusCode':200,
+                'RetryAttempts':0,'HTTPHeaders':{'x-amzn-requestid':request_id}}}
+            value={'row_id':row,'action':action,'resource_selector':selector,'caller_identity':caller,
+                'authentication_source_identity':channel,'http_status':200,'request_id':request_id,
+                'requested_utc':'2026-09-06T18:00:%02dZ'%second,
+                'completed_utc':'2026-09-06T18:00:%02dZ'%(second+1),'pagination_page':1,
+                'pagination_item_count':count,'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+                'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+            R51ProspectiveAmendmentTests.encode(value,'request',request)
+            R51ProspectiveAmendmentTests.encode(value,'response',response)
+            return value
+        role='EBU-Rehearsal-EC2-Role';arn='arn:aws:iam::623609441658:policy/OfflinePolicy'
+        bounds={'list_attached_role_policies_max_pages':2,'list_attached_role_policies_max_items':4,
+            'list_role_policies_max_pages':2,'list_role_policies_max_items':4,
+            'aggregate_iam_max_pages':4,'aggregate_iam_max_items':8}
+        receipts={'R16':[receipt('R16','iam:ListRolePolicies','SEALED_INSTANCE_ROLE_ARN',
+                {'RoleName':role,'MaxItems':4},{'PolicyNames':['InlinePolicy'],'IsTruncated':False},9)],
+            'R15':[receipt('R15','iam:GetRolePolicy','SEALED_INSTANCE_ROLE_ARN',
+                {'RoleName':role,'PolicyName':'InlinePolicy'},
+                {'RoleName':role,'PolicyName':'InlinePolicy','PolicyDocument':{'Version':'2012-10-17','Statement':[]}},11)],
+            'R17':[receipt('R17','iam:ListAttachedRolePolicies','SEALED_INSTANCE_ROLE_ARN',
+                {'RoleName':role,'MaxItems':4},{'AttachedPolicies':[{'PolicyName':'OfflinePolicy','PolicyArn':arn}],
+                'IsTruncated':False},13)],
+            'R18':[receipt('R18','iam:GetPolicy','SEALED_ATTACHED_POLICY_ARN',{'PolicyArn':arn},
+                {'Policy':{'PolicyName':'OfflinePolicy','Arn':arn,'DefaultVersionId':'v1'}},15)],
+            'R19':[receipt('R19','iam:GetPolicyVersion','SEALED_ATTACHED_POLICY_ARN',
+                {'PolicyArn':arn,'VersionId':'v1'},
+                {'PolicyVersion':{'VersionId':'v1','IsDefaultVersion':True,
+                    'Document':{'Version':'2012-10-17','Statement':[{'Effect':'Allow','Action':'s3:GetObject','Resource':'*'}]}}},17)]}
+        context={'caller_identity':caller,'authentication_source_identity':channel,
+            'phase_not_before_utc':profile_context['phase_not_before_utc'],
+            'validation_utc':profile_context['validation_utc'],'freshness_max_seconds':300,
+            'iam_pagination_bounds':bounds,'read_plan':plan,'read_plan_identity':plan_id}
+        return receipts,binding,profile_bundle,context,trust
+
+    def test_exact_r15_r19_and_authenticated_r14_binding_build_iam_v2(self):
+        receipts,binding,profile,context,trust=self.material()
+        output=G.build_iam_policy_set_output_v2(ROOT,receipts,binding,profile,**context)
+        self.assertEqual(F.validate_iam_policy_set_reconstruction_output_v2(
+            output,receipts,binding,profile,**context),output)
+        self.assertEqual(output['decoded_json']['source_row_ids'],['R15','R16','R17','R18','R19'])
+        self.assertEqual(output['decoded_json']['assume_role_policy_sha256'],G.sha(G.canonical(trust)))
+        self.assertEqual(output['decoded_json']['inline_policy_names'],['InlinePolicy'])
+        self.assertEqual(output['decoded_json']['attached_policy_arns'],
+            ['arn:aws:iam::623609441658:policy/OfflinePolicy'])
+        self.assertEqual(len(output['decoded_json']['pagination_transcript_identities']),2)
+        self.assertEqual(binding['source_row_id'],'R14')
+        G.validate_record(ROOT,'iam_role_context_binding',binding)
+        G.validate_record(ROOT,'iam_policy_set_output_v2',output)
+
+    def test_r14_trust_substitution_and_binding_retagging_refuse(self):
+        receipts,binding,profile,context,_=self.material()
+        profile=copy.deepcopy(profile);response=F.strict_json(base64.b64decode(
+            profile['receipts']['R14']['response_canonical_json_base64']))
+        response['Role']['AssumeRolePolicyDocument']['Statement']=[]
+        R51ProspectiveAmendmentTests.encode(profile['receipts']['R14'],'response',response)
+        with self.assertRaises(F.Refusal):
+            F.build_iam_policy_set_reconstruction_output_v2(receipts,binding,profile,**context)
+        authority=G.sequence(ROOT);authority['iam_cross_control_binding_authorization']['new_aws_actions_or_calls_authorized']=True
+        with mock.patch.object(G,'sequence',return_value=authority),self.assertRaises(ValueError):
+            G.build_iam_role_context_binding(ROOT,context['read_plan'],context['read_plan_identity'],profile)
+        receipts,binding,profile,context,_=self.material();binding=copy.deepcopy(binding)
+        binding['source_row_id']='R13'
+        with self.assertRaises(F.Refusal):
+            F.build_iam_policy_set_reconstruction_output_v2(receipts,binding,profile,**context)
+
+    def test_incomplete_pagination_or_policy_detail_coverage_refuses(self):
+        mutations=(lambda r:r['R16'][0].update(pagination_page=2),
+            lambda r:r['R15'].clear(),lambda r:r['R18'].clear(),
+            lambda r:R64IngressAmendmentTests().mutate_api(r['R16'][0],'request',lambda v:v.update(MaxItems=3)),
+            lambda r:R64IngressAmendmentTests().mutate_api(r['R17'][0],'response',lambda v:v.update(IsTruncated=True,Marker='next')),
+            lambda r:R64IngressAmendmentTests().mutate_api(r['R19'][0],'request',lambda v:v.update(VersionId='v2')))
+        for mutate in mutations:
+            receipts,binding,profile,context,_=self.material();mutate(receipts)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.build_iam_policy_set_reconstruction_output_v2(receipts,binding,profile,**context)
+
+    def test_two_page_list_binds_complete_terminal_transcript(self):
+        receipts,binding,profile,context,_=self.material();first=receipts['R16'][0]
+        R64IngressAmendmentTests().mutate_api(first,'response',
+            lambda value:value.update(IsTruncated=True,Marker='offline-next-marker'))
+        second=copy.deepcopy(first);second.update(request_id='offline-iam-R16-page2',pagination_page=2,
+            pagination_item_count=0,requested_utc='2026-09-06T18:00:10Z',completed_utc='2026-09-06T18:00:11Z')
+        R51ProspectiveAmendmentTests.encode(second,'request',
+            {'RoleName':'EBU-Rehearsal-EC2-Role','MaxItems':4,'Marker':'offline-next-marker'})
+        R51ProspectiveAmendmentTests.encode(second,'response',{'PolicyNames':[],'IsTruncated':False,
+            'ResponseMetadata':{'RequestId':second['request_id'],'HTTPStatusCode':200,'RetryAttempts':0,
+                'HTTPHeaders':{'x-amzn-requestid':second['request_id']}}})
+        receipts['R16'].append(second)
+        output=G.build_iam_policy_set_output_v2(ROOT,receipts,binding,profile,**context)
+        items,transcript=F._iam_pagination(receipts['R16'],row='R16',action='iam:ListRolePolicies',
+            item_field='PolicyNames',maximum_pages=2,maximum_items=4,
+            context={k:context[k] for k in ('caller_identity','authentication_source_identity',
+                'phase_not_before_utc','validation_utc','freshness_max_seconds')})
+        self.assertEqual(items,['InlinePolicy']);self.assertEqual(transcript['page_count'],2)
+        self.assertTrue(transcript['pages'][-1]['terminal'])
+        self.assertEqual(output['decoded_json']['pagination_transcript_identities'][0],transcript['identity'])
+        G.validate_named_definition(ROOT,'pagination_transcript',transcript)
+
+    def test_changed_bounds_context_or_rehashed_output_refuse(self):
+        receipts,binding,profile,context,_=self.material();context=copy.deepcopy(context)
+        context['iam_pagination_bounds']['aggregate_iam_max_items']=9
+        with self.assertRaises(F.Refusal):
+            F.build_iam_policy_set_reconstruction_output_v2(receipts,binding,profile,**context)
+        receipts,binding,profile,context,_=self.material();duplicate=receipts['R16'][0]['request_id']
+        receipts['R15'][0]['request_id']=duplicate
+        response=F.strict_json(base64.b64decode(receipts['R15'][0]['response_canonical_json_base64']))
+        response['ResponseMetadata']['RequestId']=duplicate
+        response['ResponseMetadata']['HTTPHeaders']={'x-amzn-requestid':duplicate}
+        R51ProspectiveAmendmentTests.encode(receipts['R15'][0],'response',response)
+        with self.assertRaises(F.Refusal):
+            F.build_iam_policy_set_reconstruction_output_v2(receipts,binding,profile,**context)
+        receipts,binding,profile,context,_=self.material()
+        output=G.build_iam_policy_set_output_v2(ROOT,receipts,binding,profile,**context)
+        output['decoded_json']['inline_policy_names']=[];raw=G.canonical(output['decoded_json'])
+        output.update(identity=G.identity(output['schema'],output['decoded_json']),
+            canonical_json_base64=base64.b64encode(raw).decode(),canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        with self.assertRaises(F.Refusal):
+            F.validate_iam_policy_set_reconstruction_output_v2(output,receipts,binding,profile,**context)
+
+
 class ServiceQuotaReconstructionTests(unittest.TestCase):
     def material(self):
         sources,_,_,base=R64CallBudgetTests().material();receipts={}

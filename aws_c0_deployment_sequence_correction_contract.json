@@ -25,6 +25,18 @@
     "other_control_mappings_changed": false,
     "aws_authority_permissions_science_cost_or_publication_changed": false
   },
+  "iam_cross_control_binding_authorization": {
+    "authority_id": "EBU-AWS-C0-IAM-CROSS-CONTROL-SOURCE-BINDING-AUTHORITY-v1",
+    "source": "EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS",
+    "source_control": "INSTANCE_PROFILE_SOLE_ROLE",
+    "source_row_id": "R14",
+    "target_control": "IAM_POLICY_SET",
+    "allowed_fields": ["role_arn", "instance_profile_arn", "assume_role_policy_sha256"],
+    "iam_direct_source_row_ids_unchanged": ["R15", "R16", "R17", "R18", "R19"],
+    "new_aws_actions_or_calls_authorized": false,
+    "permissions_science_cost_or_publication_changed": false,
+    "historical_schemas_changed": false
+  },
   "prospective_r64_call_budget": {
     "kind": "aws_c0_network_ingress_call_budget/v1",
     "maximum_reserved_calls": 3,

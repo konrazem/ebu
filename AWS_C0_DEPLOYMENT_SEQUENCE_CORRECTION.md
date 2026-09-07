@@ -198,6 +198,16 @@ actions, resources, conditions and every other control mapping, and changes
 only the IAM output kind/schema binding. This grants no AWS action, permission,
 scientific execution, cost increase or publication authority.
 
+The user's subsequent authorization to fix every necessary AWS-C0 stage permits
+one explicit evidence-only cross-control binding from the already required R14
+`iam:GetRole` observation to IAM output/v2. The binding carries only the role
+ARN, instance-profile ARN and canonical trust-policy SHA-256. Direct IAM policy
+sources remain exactly R15–R19; R14 remains owned by
+`INSTANCE_PROFILE_SOLE_ROLE`. The binding adds no AWS read or mutation and does
+not change any historical schema, action, permission, scientific boundary,
+cost ceiling or publication authority. IAM list pagination remains closed and
+bounded by the already sealed IAM pagination limits.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set
