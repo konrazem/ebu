@@ -413,6 +413,21 @@ and its accepted authorization remain historical evidence but cannot be used
 for a mutation. No AWS preparation action, instance start, deployment, smoke,
 or science occurred.
 
+The user then explicitly authorized all necessary steps for the platform smoke
+and later scientific run. The exact 104-byte UTF-8 statement has SHA-256
+`36f5adfcf58ce2e47ee9421823eac7a8ce30979aa37a428e7727582b78a67846`.
+Within the existing frozen boundaries, this authorizes one controller-lifecycle
+recovery attempt that constructs a fresh packet while retaining its exact
+constrained session only through the Gate 1 decision. The attempt must use
+profile `ebu-admin` as the verified non-root `konrad` Identity Center caller,
+remove the sole temporary regional `ec2:DescribeSecurityGroups` permission
+before waiting, and dispose the credentials on rejection, expiry, or failure.
+All prior ledgers, the stopped `t3.small`, one unspent platform smoke, USD50
+cap, historical schemas, permissions, and scientific content remain preserved.
+This recovery authority does not itself authorize instance start, deployment,
+live execution, platform smoke, or scientific execution; their exact frozen
+gates remain mandatory.
+
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
 
