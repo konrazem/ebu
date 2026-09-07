@@ -184,6 +184,8 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "aws_c0_deployment_sequence_correction_contract.json",
     "aws_c0_deployment_sequence_evidence_schema.json",
     "scripts/build_aws_c0_sequence_schema.py",
+    # Tracked controller checkpoint required by the active AWS-C0 workflow.
+    "CURRENT_GATE.md",
     # Prospective overnight architecture authority, source user turn
     # 01a0788e-15f2-79d3-a26b-66c0cd65fff5; historical Gate 1 scope is unchanged.
     "aws/c0/ssm/EBU-C0-Start-v1.yaml",

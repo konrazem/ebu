@@ -2698,6 +2698,7 @@ class AuthorityTests(unittest.TestCase):
     def test_overnight_scope_addition_remains_exact_and_refuses_unrelated_paths(self):
         self.assertIn('aws/c0/ssm/EBU-C0-Start-v1.yaml',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('aws/c0/ssm/EBU-C0-Start-v1.yaml',V.GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS)
+        self.assertIn('CURRENT_GATE.md',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         original=V._git
         def injected(*args,**kwargs):
             value=original(*args,**kwargs)
