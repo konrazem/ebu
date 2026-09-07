@@ -92,6 +92,10 @@
     "original_template_bytes_sha256_required": true,
     "effect_resource_set_derived_from_r45_changes": true,
     "effect_api_set_cross_bound_to_derived_resource_set": true,
+    "prospective_progress": "aws_c0_runtime_control_reconstruction_progress/v6",
+    "prospective_source_attachment": "aws_c0_runtime_control_reconstruction_source_attachment/v5",
+    "source_attachment_predecessor": "aws_c0_runtime_control_reconstruction_source_attachment/v4",
+    "prospective_sealed_context": "aws_c0_predeployment_reconstruction_context/v5",
     "new_aws_actions_or_permissions_authorized": false,
     "science_cost_or_publication_changed": false,
     "historical_schemas_changed": false

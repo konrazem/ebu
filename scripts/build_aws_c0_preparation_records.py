@@ -163,6 +163,10 @@ def build_change_set_effects_output(root,receipts,**context):
         'maximum_cfn_pages':1,'maximum_cfn_items':16,'original_template_bytes_sha256_required':True,
         'effect_resource_set_derived_from_r45_changes':True,
         'effect_api_set_cross_bound_to_derived_resource_set':True,
+        'prospective_progress':'aws_c0_runtime_control_reconstruction_progress/v6',
+        'prospective_source_attachment':'aws_c0_runtime_control_reconstruction_source_attachment/v5',
+        'source_attachment_predecessor':'aws_c0_runtime_control_reconstruction_source_attachment/v4',
+        'prospective_sealed_context':'aws_c0_predeployment_reconstruction_context/v5',
         'new_aws_actions_or_permissions_authorized':False,'science_cost_or_publication_changed':False,
         'historical_schemas_changed':False}
     if authority.get('change_set_effects_reconstruction_authorization')!=expected:
@@ -415,6 +419,31 @@ def build_runtime_control_reconstruction_progress_v5(root,outputs,*,phase,valida
     validate_record(root,'runtime_reconstruction_progress_v5',record)
     return record
 
+def build_runtime_control_reconstruction_progress_v6(root,outputs,*,phase,validation_utc,
+        freshness_max_seconds=300):
+    """Bind the eight implemented candidates to corrected read-plan/v3."""
+    f=finalizer(root)
+    if not isinstance(outputs,dict) or set(outputs)-set(f.RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V6):
+        raise ValueError('only implemented v6 reconstruction outputs may be supplied')
+    plan_fields=build_runtime_control_read_plan_fields_v3(root,freshness_max_seconds=freshness_max_seconds)
+    plan=plan_fields['runtime_control_read_plan'];entries=[]
+    for mapping in plan['required_control_mapping']:
+        control=mapping['control'];output=outputs.get(control)
+        state='CANONICAL_OUTPUT_CANDIDATE' if output is not None else 'UNRESOLVED'
+        entries.append({'control':control,'mapped_row_ids':copy.deepcopy(mapping['row_ids']),
+            'state':state,'output':copy.deepcopy(output),
+            'output_identity':None if output is None else copy.deepcopy(output['identity'])})
+    record={'schema':'aws_c0_runtime_control_reconstruction_progress/v6',
+        'read_plan_identity':copy.deepcopy(plan_fields['runtime_control_read_plan_identity']),
+        'phase':phase,'observed_utc':validation_utc,'controls_in_order':entries,
+        'candidate_control_ids_in_order':[item['control'] for item in entries if item['state']=='CANONICAL_OUTPUT_CANDIDATE'],
+        'unresolved_control_ids_in_order':[item['control'] for item in entries if item['state']=='UNRESOLVED'],
+        'source_revalidation_performed':False,'complete_reconstruction_claimed':False,'disposition':'PARTIAL_NOT_READY'}
+    f.validate_runtime_control_reconstruction_progress_v6(record,read_plan=plan,
+        read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase=phase,validation_utc=validation_utc)
+    validate_record(root,'runtime_reconstruction_progress_v6',record)
+    return record
+
 def build_runtime_control_reconstruction_source_attachment_v1(root,*,account_bundle,
         instance_profile_bundle,vpc_bundle,service_quota_bundle,sealed_context,sealed_context_identity,
         validation_utc,freshness_max_seconds=300):
@@ -494,6 +523,28 @@ def build_runtime_control_reconstruction_source_attachment_v4(root,*,account_bun
         read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
         validation_utc=validation_utc,expected_sealed_context_identity=sealed_context_identity)
     validate_record(root,'runtime_reconstruction_source_attachment_v4',record)
+    return record
+
+def build_runtime_control_reconstruction_source_attachment_v5(root,*,account_bundle,
+        instance_profile_bundle,iam_bundle,bucket_controls_kms_bundle,vpc_bundle,
+        service_quota_bundle,change_set_effects_bundle,artifact_version_set_bundle,
+        sealed_context,sealed_context_identity,validation_utc,freshness_max_seconds=300):
+    """Construct the eight-control attachment by rerunning every source validator."""
+    plan_fields=build_runtime_control_read_plan_fields_v3(root,freshness_max_seconds=freshness_max_seconds)
+    f=finalizer(root)
+    record=f.build_runtime_control_reconstruction_source_attachment_v5(
+        read_plan=plan_fields['runtime_control_read_plan'],
+        read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+        validation_utc=validation_utc,sealed_context=sealed_context,sealed_context_identity=sealed_context_identity,
+        account_bundle=account_bundle,instance_profile_bundle=instance_profile_bundle,iam_bundle=iam_bundle,
+        bucket_controls_kms_bundle=bucket_controls_kms_bundle,vpc_bundle=vpc_bundle,
+        service_quota_bundle=service_quota_bundle,change_set_effects_bundle=change_set_effects_bundle,
+        artifact_version_set_bundle=artifact_version_set_bundle)
+    f.validate_runtime_control_reconstruction_source_attachment_v5(record,
+        read_plan=plan_fields['runtime_control_read_plan'],
+        read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+        validation_utc=validation_utc,expected_sealed_context_identity=sealed_context_identity)
+    validate_record(root,'runtime_reconstruction_source_attachment_v5',record)
     return record
 
 class R64LocalCallBudgetStore:

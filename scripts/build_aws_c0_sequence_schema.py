@@ -331,6 +331,15 @@ def build(root=ROOT):
         sealed_context_identity=typed_identity('aws_c0_predeployment_reconstruction_context/v4'))
     for field in ('source_bundles_in_order','outputs_in_order'):
         attachment_v4_fields[field]['minItems']=attachment_v4_fields[field]['maxItems']=7
+    progress_v6_fields=copy.deepcopy(progress_v5_fields)
+    progress_v6_fields['schema']={'const':'aws_c0_runtime_control_reconstruction_progress/v6'}
+    progress_v6_fields['candidate_control_ids_in_order']['maxItems']=8
+    attachment_v5_fields=copy.deepcopy(attachment_v4_fields)
+    attachment_v5_fields.update(schema={'const':'aws_c0_runtime_control_reconstruction_source_attachment/v5'},
+        previous_source_attachment_identity=typed_identity('aws_c0_runtime_control_reconstruction_source_attachment/v4'),
+        sealed_context_identity=typed_identity('aws_c0_predeployment_reconstruction_context/v5'))
+    for field in ('source_bundles_in_order','outputs_in_order'):
+        attachment_v5_fields[field]['minItems']=attachment_v5_fields[field]['maxItems']=8
     include(CRT,'pagination_transcript')
     # Append prospective definitions so regenerating the ordered registry does
     # not reorder any historical definition.
@@ -373,10 +382,16 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v4_definition']={'type':'object',
         'required':list(attachment_v4_fields),'properties':attachment_v4_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v4']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v4_definition'}
+    definitions['runtime_reconstruction_progress_v6_definition']={'type':'object',
+        'required':list(progress_v6_fields),'properties':progress_v6_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_progress_v6']={'$ref':'#/$defs/runtime_reconstruction_progress_v6_definition'}
+    definitions['runtime_reconstruction_source_attachment_v5_definition']={'type':'object',
+        'required':list(attachment_v5_fields),'properties':attachment_v5_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_source_attachment_v5']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v5_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

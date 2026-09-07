@@ -3727,6 +3727,8 @@ RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V4={**RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_
     'BUCKET_CONTROLS_KMS':'aws_c0_bucket_controls_observation/v1'}
 RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V5={**RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V4,
     'ARTIFACT_VERSION_SET':'aws_c0_artifact_version_set_observation/v1'}
+RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V6={**RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V5,
+    'CHANGE_SET_AND_EFFECTS':'aws_c0_change_set_effects_observation/v1'}
 
 
 def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_plan: Any,
@@ -3946,6 +3948,59 @@ def validate_runtime_control_reconstruction_progress_v5(record: Any, *, read_pla
     if (record['candidate_control_ids_in_order']!=completed
             or record['unresolved_control_ids_in_order']!=unresolved or not unresolved):
         raise Refusal('v5 partial reconstruction completion inventory differs')
+    return record
+
+
+def validate_runtime_control_reconstruction_progress_v6(record: Any, *, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str) -> dict[str,Any]:
+    """Validate the eight-candidate envelope bound to read-plan/v3."""
+    fields={'schema','read_plan_identity','phase','observed_utc','controls_in_order',
+        'candidate_control_ids_in_order','unresolved_control_ids_in_order',
+        'source_revalidation_performed','complete_reconstruction_claimed','disposition'}
+    if (not isinstance(record,dict) or set(record)!=fields
+            or record.get('schema')!='aws_c0_runtime_control_reconstruction_progress/v6'
+            or phase not in ('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
+            or record.get('phase')!=phase or record.get('observed_utc')!=validation_utc
+            or record.get('read_plan_identity')!=read_plan_identity
+            or record.get('source_revalidation_performed') is not False
+            or record.get('complete_reconstruction_claimed') is not False
+            or record.get('disposition')!='PARTIAL_NOT_READY'):
+        raise Refusal('closed v6 partial reconstruction progress envelope required')
+    validate_runtime_control_read_plan_v3(read_plan,read_plan_identity)
+    rows=read_plan['required_control_mapping']
+    if [item.get('control') if isinstance(item,dict) else None for item in rows]!=list(RECONSTRUCTION_PROGRESS_CONTROLS):
+        raise Refusal('exact eleven-control v6 plan ordering required')
+    entries=record['controls_in_order']
+    if not isinstance(entries,list) or len(entries)!=len(rows):
+        raise Refusal('exact eleven v6 partial reconstruction slots required')
+    completed=[];unresolved=[]
+    for plan_entry,entry in zip(rows,entries):
+        if not isinstance(entry,dict) or set(entry)!={'control','mapped_row_ids','state','output','output_identity'}:
+            raise Refusal('v6 partial reconstruction slot field closure failed')
+        control=plan_entry['control'];kind=RECONSTRUCTION_PROGRESS_OUTPUT_KINDS_V6.get(control)
+        if entry['control']!=control or entry['mapped_row_ids']!=plan_entry['row_ids']:
+            raise Refusal('v6 partial reconstruction control mapping drift')
+        if entry['state']=='CANONICAL_OUTPUT_CANDIDATE':
+            output=entry['output']
+            if not kind or not isinstance(output,dict) or output.get('schema')!=kind or output.get('kind')!=kind:
+                raise Refusal('unsupported or malformed v6 partial output')
+            decoded=output.get('decoded_json');raw=canonical_bytes(decoded)
+            if (output.get('identity')!=identity(kind,digest(raw))
+                    or output.get('canonical_json_base64')!=base64.b64encode(raw).decode()
+                    or output.get('canonical_byte_sha256')!=digest(raw)
+                    or output.get('canonical_byte_count')!=len(raw)
+                    or entry.get('output_identity')!=output['identity']
+                    or decoded.get('source_row_ids')!=plan_entry['row_ids']):
+                raise Refusal('v6 partial output canonical/source binding differs')
+            completed.append(control)
+        elif entry['state']=='UNRESOLVED':
+            if entry.get('output') is not None or entry.get('output_identity') is not None:
+                raise Refusal('v6 unresolved partial slot cannot claim output')
+            unresolved.append(control)
+        else:raise Refusal('v6 partial reconstruction slot state refused')
+    if (record['candidate_control_ids_in_order']!=completed
+            or record['unresolved_control_ids_in_order']!=unresolved or not unresolved):
+        raise Refusal('v6 partial reconstruction completion inventory differs')
     return record
 
 
@@ -4301,6 +4356,95 @@ def validate_runtime_control_reconstruction_source_attachment_v4(record: Any, *,
         artifact_version_set_bundle=bundles[6])
     if canonical_bytes(record)!=canonical_bytes(expected):
         raise Refusal('v4 source-bound attachment differs from rerun exact reconstruction')
+    return record
+
+
+def build_runtime_control_reconstruction_source_attachment_v5(*, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str,
+        sealed_context: Any, sealed_context_identity: dict[str,str], account_bundle: Any,
+        instance_profile_bundle: Any, iam_bundle: Any, bucket_controls_kms_bundle: Any,
+        vpc_bundle: Any, service_quota_bundle: Any, change_set_effects_bundle: Any,
+        artifact_version_set_bundle: Any) -> dict[str,Any]:
+    """Extend v4 with the authenticated predeployment CREATE change set."""
+    if phase!='PREDEPLOYMENT':raise Refusal('only eight implemented predeployment controls may attach')
+    added={'expected_change_set_arn','expected_stack_name','expected_template_sha256',
+        'expected_effect_actions_in_order','cfn_pagination_bounds'}
+    prior_fields={'schema','phase_not_before_utc','validation_utc','freshness_max_seconds',
+        'caller_identity','authentication_source_identity','expected_caller_arn','expected_caller_user_id',
+        'expected_role_id','attempt_identity','previous_budget_identity','ec2_pagination_bounds',
+        'iam_pagination_bounds','expected_bucket_name','expected_bucket_identity','expected_prefix',
+        's3_pagination_bounds'}
+    if (not isinstance(sealed_context,dict) or set(sealed_context)!=prior_fields|added
+            or sealed_context.get('schema')!='aws_c0_predeployment_reconstruction_context/v5'
+            or sealed_context.get('validation_utc')!=validation_utc
+            or sealed_context.get('freshness_max_seconds')!=read_plan['freshness_max_seconds']
+            or sealed_context_identity!=identity(sealed_context['schema'],digest(canonical_bytes(sealed_context)))):
+        raise Refusal('v5 independently supplied sealed reconstruction context required')
+    prior_context=strict_json(canonical_bytes(sealed_context));prior_context['schema']='aws_c0_predeployment_reconstruction_context/v4'
+    for field in added:del prior_context[field]
+    prior_context_identity=identity(prior_context['schema'],digest(canonical_bytes(prior_context)))
+    prior=build_runtime_control_reconstruction_source_attachment_v4(read_plan=read_plan,
+        read_plan_identity=read_plan_identity,phase=phase,validation_utc=validation_utc,
+        sealed_context=prior_context,sealed_context_identity=prior_context_identity,
+        account_bundle=account_bundle,instance_profile_bundle=instance_profile_bundle,
+        iam_bundle=iam_bundle,bucket_controls_kms_bundle=bucket_controls_kms_bundle,
+        vpc_bundle=vpc_bundle,service_quota_bundle=service_quota_bundle,
+        artifact_version_set_bundle=artifact_version_set_bundle)
+    if (not isinstance(change_set_effects_bundle,dict)
+            or set(change_set_effects_bundle)!={'candidate','receipts','context'}):
+        raise Refusal('change-set source bundle field closure failed')
+    context=change_set_effects_bundle['context']
+    if (not isinstance(context,dict)
+            or any(context.get(field)!=sealed_context[field] for field in
+                ('caller_identity','authentication_source_identity','phase_not_before_utc','validation_utc',
+                 'freshness_max_seconds','expected_change_set_arn','expected_stack_name','expected_template_sha256',
+                 'expected_effect_actions_in_order','cfn_pagination_bounds'))):
+        raise Refusal('change-set source bundle context differs from sealed v5 context')
+    expected_change=build_change_set_effects_reconstruction_output(change_set_effects_bundle['receipts'],**context)
+    if canonical_bytes(change_set_effects_bundle['candidate'])!=canonical_bytes(expected_change):
+        raise Refusal('change-set source attachment candidate differs from rerun reconstruction')
+    outputs=list(prior['outputs_in_order']);outputs.insert(-1,expected_change)
+    bundles=list(prior['source_bundles_in_order']);bundles.insert(-1,change_set_effects_bundle)
+    record={'schema':'aws_c0_runtime_control_reconstruction_source_attachment/v5',
+        'read_plan_identity':read_plan_identity,'previous_source_attachment_identity':identity(
+            prior['schema'],digest(canonical_bytes(prior))),
+        'phase':phase,'validation_utc':validation_utc,'sealed_context':sealed_context,
+        'sealed_context_identity':sealed_context_identity,'source_bundles_in_order':bundles,
+        'outputs_in_order':outputs,'source_revalidation_performed':True,
+        'complete_reconstruction_claimed':False,'disposition':'PARTIAL_SOURCE_BOUND_NOT_READY'}
+    controls=('ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
+        'VPC_NETWORK_PATH','SERVICE_QUOTA','CHANGE_SET_AND_EFFECTS','ARTIFACT_VERSION_SET')
+    if [item.get('control') for item in outputs]!=list(controls):
+        raise Refusal('v5 source attachment output control order differs')
+    return record
+
+
+def validate_runtime_control_reconstruction_source_attachment_v5(record: Any, *, read_plan: Any,
+        read_plan_identity: dict[str,str], phase: str, validation_utc: str,
+        expected_sealed_context_identity: dict[str,str]) -> dict[str,Any]:
+    fields={'schema','read_plan_identity','previous_source_attachment_identity','phase','validation_utc',
+        'sealed_context','sealed_context_identity','source_bundles_in_order','outputs_in_order',
+        'source_revalidation_performed','complete_reconstruction_claimed','disposition'}
+    if (not isinstance(record,dict) or set(record)!=fields
+            or record.get('schema')!='aws_c0_runtime_control_reconstruction_source_attachment/v5'
+            or record.get('read_plan_identity')!=read_plan_identity or record.get('phase')!=phase
+            or record.get('validation_utc')!=validation_utc
+            or record.get('sealed_context_identity')!=expected_sealed_context_identity
+            or record.get('source_revalidation_performed') is not True
+            or record.get('complete_reconstruction_claimed') is not False
+            or record.get('disposition')!='PARTIAL_SOURCE_BOUND_NOT_READY'
+            or not isinstance(record.get('source_bundles_in_order'),list)
+            or len(record['source_bundles_in_order'])!=8):
+        raise Refusal('closed v5 source-bound partial attachment required')
+    bundles=record['source_bundles_in_order']
+    expected=build_runtime_control_reconstruction_source_attachment_v5(read_plan=read_plan,
+        read_plan_identity=read_plan_identity,phase=phase,validation_utc=validation_utc,
+        sealed_context=record['sealed_context'],sealed_context_identity=record['sealed_context_identity'],
+        account_bundle=bundles[0],instance_profile_bundle=bundles[1],iam_bundle=bundles[2],
+        bucket_controls_kms_bundle=bundles[3],vpc_bundle=bundles[4],service_quota_bundle=bundles[5],
+        change_set_effects_bundle=bundles[6],artifact_version_set_bundle=bundles[7])
+    if canonical_bytes(record)!=canonical_bytes(expected):
+        raise Refusal('v5 source-bound attachment differs from rerun exact reconstruction')
     return record
 
 

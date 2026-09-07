@@ -748,3 +748,11 @@ R45–R48 source mapping. Its one-page, sixteen-item bounds are explicit and it
 adds no action, permission, deployment, publication, cost, or scientific
 authority. Construction and tests are pure local operations and do not claim
 that any AWS observation has occurred.
+
+Progress/v6 and source-attachment/v5 add this output after the six existing
+infrastructure controls and before the exact artifact-version set, preserving
+read-plan/v3 and the source-attachment/v4 predecessor. The independently sealed
+context/v5 carries the exact change-set ARN, stack name, template hash, effect
+API plan, and one-page/sixteen-item CloudFormation bounds. The attachment reruns
+all eight producers. It remains `PARTIAL_SOURCE_BOUND_NOT_READY`; Standard
+workflow, SSM document, and software/image set are still unresolved.

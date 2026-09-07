@@ -1536,6 +1536,84 @@ class ReconstructionV5IntegrationTests(unittest.TestCase):
                 validation_utc=validation,expected_sealed_context_identity=sealed_id)
 
 
+class ReconstructionV6IntegrationTests(unittest.TestCase):
+    def material(self):
+        validation,sealed,_,bundles,outputs,plan_fields=ReconstructionV5IntegrationTests().material()
+        change_receipts,change_context=ChangeSetEffectsReconstructionTests().material()
+        change_context['validation_utc']=validation
+        change=G.build_change_set_effects_output(ROOT,change_receipts,**change_context)
+        change_bundle={'candidate':change,'receipts':change_receipts,'context':change_context}
+        sealed=copy.deepcopy(sealed);sealed['schema']='aws_c0_predeployment_reconstruction_context/v5'
+        for field in ('expected_change_set_arn','expected_stack_name','expected_template_sha256',
+                'expected_effect_actions_in_order','cfn_pagination_bounds'):
+            sealed[field]=copy.deepcopy(change_context[field])
+        sealed_id=F.identity(sealed['schema'],F.digest(F.canonical_bytes(sealed)))
+        outputs={**outputs,'CHANGE_SET_AND_EFFECTS':change}
+        account,profile,iam,bucket,vpc,quota,artifact=bundles
+        return validation,sealed,sealed_id,(account,profile,iam,bucket,vpc,quota,change_bundle,artifact),outputs,plan_fields
+
+    def test_progress_v6_binds_eight_candidates_and_leaves_three_unresolved(self):
+        validation,_,_,_,outputs,plan_fields=self.material()
+        record=G.build_runtime_control_reconstruction_progress_v6(ROOT,outputs,
+            phase='PREDEPLOYMENT',validation_utc=validation)
+        self.assertEqual(record['candidate_control_ids_in_order'],['ACCOUNT_REGION',
+            'INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
+            'VPC_NETWORK_PATH','SERVICE_QUOTA','CHANGE_SET_AND_EFFECTS','ARTIFACT_VERSION_SET'])
+        self.assertEqual(record['unresolved_control_ids_in_order'],
+            ['STANDARD_WORKFLOW','SSM_DOCUMENT','SOFTWARE_AND_IMAGE_SET'])
+        self.assertEqual(F.validate_runtime_control_reconstruction_progress_v6(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation),record)
+        G.validate_record(ROOT,'runtime_reconstruction_progress_v6',record)
+
+    def test_attachment_v5_reruns_eight_and_binds_exact_v4_predecessor(self):
+        validation,sealed,sealed_id,bundles,_,plan_fields=self.material()
+        account,profile,iam,bucket,vpc,quota,change,artifact=bundles
+        record=G.build_runtime_control_reconstruction_source_attachment_v5(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,
+            bucket_controls_kms_bundle=bucket,vpc_bundle=vpc,service_quota_bundle=quota,
+            change_set_effects_bundle=change,artifact_version_set_bundle=artifact,
+            sealed_context=sealed,sealed_context_identity=sealed_id,validation_utc=validation)
+        self.assertEqual([item['control'] for item in record['outputs_in_order']],
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
+                'VPC_NETWORK_PATH','SERVICE_QUOTA','CHANGE_SET_AND_EFFECTS','ARTIFACT_VERSION_SET'])
+        self.assertEqual(record['previous_source_attachment_identity']['kind'],
+            'aws_c0_runtime_control_reconstruction_source_attachment/v4')
+        self.assertEqual(F.validate_runtime_control_reconstruction_source_attachment_v5(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+            validation_utc=validation,expected_sealed_context_identity=sealed_id),record)
+        G.validate_record(ROOT,'runtime_reconstruction_source_attachment_v5',record)
+
+    def test_attachment_v5_refuses_change_context_candidate_or_predecessor_substitution(self):
+        for mutate in ('context','candidate'):
+            validation,sealed,sealed_id,bundles,_,_=self.material()
+            account,profile,iam,bucket,vpc,quota,change,artifact=copy.deepcopy(bundles)
+            if mutate=='context':change['context']['expected_stack_name']='Other'
+            else:change['candidate']['decoded_json']['change_set_status']='CREATE_FAILED'
+            with self.subTest(mutate=mutate),self.assertRaisesRegex(Exception,
+                    'change-set source (bundle context|attachment candidate)'):
+                G.build_runtime_control_reconstruction_source_attachment_v5(ROOT,
+                    account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,
+                    bucket_controls_kms_bundle=bucket,vpc_bundle=vpc,service_quota_bundle=quota,
+                    change_set_effects_bundle=change,artifact_version_set_bundle=artifact,
+                    sealed_context=sealed,sealed_context_identity=sealed_id,validation_utc=validation)
+        validation,sealed,sealed_id,bundles,_,plan_fields=self.material()
+        account,profile,iam,bucket,vpc,quota,change,artifact=bundles
+        record=G.build_runtime_control_reconstruction_source_attachment_v5(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,
+            bucket_controls_kms_bundle=bucket,vpc_bundle=vpc,service_quota_bundle=quota,
+            change_set_effects_bundle=change,artifact_version_set_bundle=artifact,
+            sealed_context=sealed,sealed_context_identity=sealed_id,validation_utc=validation)
+        record['previous_source_attachment_identity']['sha256']='0'*64
+        with self.assertRaises(F.Refusal):
+            F.validate_runtime_control_reconstruction_source_attachment_v5(record,
+                read_plan=plan_fields['runtime_control_read_plan'],
+                read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+                validation_utc=validation,expected_sealed_context_identity=sealed_id)
+
+
 class ServiceQuotaReconstructionTests(unittest.TestCase):
     def material(self):
         sources,_,_,base=R64CallBudgetTests().material();receipts={}

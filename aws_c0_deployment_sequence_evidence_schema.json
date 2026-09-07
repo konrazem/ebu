@@ -98,6 +98,12 @@
     },
     {
       "$ref": "#/$defs/runtime_reconstruction_source_attachment_v4"
+    },
+    {
+      "$ref": "#/$defs/runtime_reconstruction_progress_v6"
+    },
+    {
+      "$ref": "#/$defs/runtime_reconstruction_source_attachment_v5"
     }
   ],
   "$defs": {
@@ -56121,6 +56127,664 @@
     },
     "runtime_reconstruction_source_attachment_v4": {
       "$ref": "#/$defs/runtime_reconstruction_source_attachment_v4_definition"
+    },
+    "runtime_reconstruction_progress_v6_definition": {
+      "type": "object",
+      "required": [
+        "schema",
+        "read_plan_identity",
+        "phase",
+        "observed_utc",
+        "controls_in_order",
+        "candidate_control_ids_in_order",
+        "unresolved_control_ids_in_order",
+        "source_revalidation_performed",
+        "complete_reconstruction_claimed",
+        "disposition"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_runtime_control_reconstruction_progress/v6"
+        },
+        "read_plan_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan/v3"
+                }
+              }
+            }
+          ]
+        },
+        "phase": {
+          "enum": [
+            "PREDEPLOYMENT",
+            "POSTDEPLOYMENT",
+            "EXECUTION_PREFLIGHT",
+            "COMPLETION"
+          ]
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/d4_timestamp"
+        },
+        "controls_in_order": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "prefixItems": [
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": [
+                "control",
+                "mapped_row_ids",
+                "state",
+                "output",
+                "output_identity"
+              ],
+              "properties": {
+                "control": {
+                  "type": "string"
+                },
+                "mapped_row_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 16,
+                  "items": {
+                    "type": "string",
+                    "pattern": "^R[0-9]{2}$"
+                  }
+                },
+                "state": {
+                  "enum": [
+                    "CANONICAL_OUTPUT_CANDIDATE",
+                    "UNRESOLVED"
+                  ]
+                },
+                "output": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "output_identity": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "items": false
+        },
+        "candidate_control_ids_in_order": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "unresolved_control_ids_in_order": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_revalidation_performed": {
+          "const": false
+        },
+        "complete_reconstruction_claimed": {
+          "const": false
+        },
+        "disposition": {
+          "const": "PARTIAL_NOT_READY"
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime_reconstruction_progress_v6": {
+      "$ref": "#/$defs/runtime_reconstruction_progress_v6_definition"
+    },
+    "runtime_reconstruction_source_attachment_v5_definition": {
+      "type": "object",
+      "required": [
+        "schema",
+        "read_plan_identity",
+        "phase",
+        "validation_utc",
+        "sealed_context",
+        "sealed_context_identity",
+        "source_bundles_in_order",
+        "outputs_in_order",
+        "source_revalidation_performed",
+        "complete_reconstruction_claimed",
+        "disposition",
+        "previous_source_attachment_identity"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_runtime_control_reconstruction_source_attachment/v5"
+        },
+        "read_plan_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_read_plan/v3"
+                }
+              }
+            }
+          ]
+        },
+        "phase": {
+          "const": "PREDEPLOYMENT"
+        },
+        "validation_utc": {
+          "$ref": "#/$defs/d4_timestamp"
+        },
+        "sealed_context": {
+          "type": "object"
+        },
+        "sealed_context_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_predeployment_reconstruction_context/v5"
+                }
+              }
+            }
+          ]
+        },
+        "source_bundles_in_order": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object"
+          }
+        },
+        "outputs_in_order": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "type": "object"
+          }
+        },
+        "source_revalidation_performed": {
+          "const": true
+        },
+        "complete_reconstruction_claimed": {
+          "const": false
+        },
+        "disposition": {
+          "const": "PARTIAL_SOURCE_BOUND_NOT_READY"
+        },
+        "previous_source_attachment_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_runtime_control_reconstruction_source_attachment/v4"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtime_reconstruction_source_attachment_v5": {
+      "$ref": "#/$defs/runtime_reconstruction_source_attachment_v5_definition"
     }
   }
 }
