@@ -284,8 +284,6 @@ service execution. The full suite at preceding commit `de49024` ran 159 tests:
 158 passed, one existing full-entry schema error, no skips or expected failures.
 The error is not waived and does not authorize any cloud continuation.
 
-### Validated local checkpoint at `d67a644`
-
 ### Local helper command integration after `e47db87`
 
 The existing flat local source file is now cross-bound to explicit helper argv,
@@ -321,6 +319,25 @@ path. Twenty focused tests pass; the existing independent reviewer approved the
 loader, actions and routing components separately. No AWS command document,
 service or cloud resource was executed or modified in this local validation.
 SSM/ASL consumption and complete evidence proofs remain required before smoke.
+
+### Full local validation at `0a0c35f`
+
+The complete offline suite ran 181 tests in 121.054 seconds: 180 passed,
+zero assertion failures, one error, zero skips and zero expected failures.
+The retained full-public-entry regression refuses the missing
+`runtime_control_reconstruction_set_identity`. All R51 amendment tests and the
+audit-v4/static-v4 entry-point regressions passed within this run. This is not
+an approved complete evidence chain or readiness result.
+
+The existing read-only reviewer independently APPROVED the six-file helper
+component, including the final fresh-heartbeat narrowing and shell failure-path
+regressions. That component approval does not approve the unfinished ASL,
+publication, phase-reconstruction or source-journal proof integration. The
+historical full-suite results below remain historical and are not overwritten.
+No AWS access, credentials, permission changes, deployment, instance start,
+smoke, science, push or publication occurred during this local validation.
+
+### Historical validated local checkpoint at `d67a644`
 
 The later source instruction `01a07a46-d7cd-7970-b7bd-677f9a2ba25f` requires
 continuation through all necessary engineering to the bounded platform smoke,
