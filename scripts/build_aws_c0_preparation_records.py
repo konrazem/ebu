@@ -1,6 +1,6 @@
 """Offline complete Gate 1 record construction with local-only schema resolution."""
 from __future__ import annotations
-import base64,copy,hashlib,importlib.util,json,re,types,unicodedata
+import base64,copy,hashlib,importlib.util,json,os,re,stat,types,unicodedata
 from pathlib import Path
 import jsonschema
 from referencing import Registry
@@ -145,6 +145,165 @@ def build_r64_ingress_observation(root,source_receipts,rule_receipt,*,attempt_id
     f.validate_r64_ingress_observation(record,attempt_identity=attempt_identity,**context)
     validate_record(root,'network_ingress_observation',record)
     return {'network_ingress_observation':record,'network_ingress_observation_identity':identity(record['schema'],record)}
+
+def build_r64_initial_call_budget(root,attempt_identity):
+    """Offline empty budget; creation is not authority to reset a live attempt."""
+    build_runtime_control_read_plan_fields_v2(root)
+    f=finalizer(root)
+    budget={'schema':f.R64_BUDGET_KIND,'attempt_identity':copy.deepcopy(attempt_identity),
+        'amendment_packet_identity':f.identity('aws_c0_network_ingress_source_authority_amendment_packet/v1',f.INGRESS_AMENDMENT_SHA256),
+        'reservations_in_order':[]}
+    return r64_call_budget_fields(root,budget,attempt_identity)
+
+def r64_call_budget_fields(root,budget,attempt_identity):
+    f=finalizer(root);budget_id=identity(f.R64_BUDGET_KIND,budget)
+    f.validate_r64_call_budget(budget,budget_id,attempt_identity=attempt_identity)
+    validate_record(root,'network_ingress_call_budget',budget)
+    return {'network_ingress_call_budget':copy.deepcopy(budget),'network_ingress_call_budget_identity':budget_id}
+
+class R64LocalCallBudgetStore:
+    """Append-only local reservation snapshots for one exact attempt.
+
+    A deterministic /private/tmp path prevents a fresh process from choosing a
+    new random ledger. Each state transition exclusively creates the next
+    numbered file; racing writers cannot both reserve the same slot. An
+    interrupted or malformed write is retained and blocks continuation. This
+    is local crash/race protection, not protection against the user deleting
+    files, a replacement host, or an unbound/untrusted attempt identity.
+
+    No credentials, AWS client, transport or live-authority bypass exists here.
+    The controller must supply the externally anchored attempt/previous budget
+    and invoke transport only after reserve() returns the durable reservation.
+    """
+    def __init__(self,root,attempt_identity):
+        self.root=root;self.f=finalizer(root)
+        self.f._identity({'attempt':attempt_identity},'attempt','aws_c0_attempt/v1')
+        self.attempt=copy.deepcopy(attempt_identity)
+        self.name='ebu-c0-r64-budget-'+attempt_identity['sha256']
+        self.path=Path('/private/tmp')/self.name
+
+    @staticmethod
+    def _private_stat(value,directory=False):
+        kind=stat.S_ISDIR if directory else stat.S_ISREG
+        if (not kind(value.st_mode) or value.st_uid!=os.geteuid()
+                or stat.S_IMODE(value.st_mode)!=(0o700 if directory else 0o600)
+                or (not directory and (value.st_nlink!=1 or not 0<value.st_size<=8192))):
+            raise ValueError('R64 budget private owner/mode/type/link/size required')
+
+    def _directory(self,create=False):
+        parent=os.open('/private/tmp',os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW)
+        try:
+            if create:os.mkdir(self.name,0o700,dir_fd=parent)
+            fd=os.open(self.name,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=parent)
+            try:
+                self._private_stat(os.fstat(fd),directory=True)
+                if create:os.fsync(parent)
+                return fd
+            except BaseException:
+                os.close(fd);raise
+        finally:os.close(parent)
+
+    def _write(self,fd,index,budget):
+        raw=canonical(budget)
+        if len(raw)>8192:raise ValueError('R64 budget byte limit exceeded')
+        name='%02d.json'%index
+        target=os.open(name,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=fd)
+        try:
+            # No truncation, replacement or deletion, including on failure.
+            view=memoryview(raw)
+            while view:
+                count=os.write(target,view)
+                if count<=0:raise OSError('R64 budget short write')
+                view=view[count:]
+            os.fsync(target)
+            self._private_stat(os.fstat(target))
+        finally:os.close(target)
+        os.fsync(fd)
+
+    def initialize(self):
+        initial=build_r64_initial_call_budget(self.root,self.attempt)['network_ingress_call_budget']
+        fd=self._directory(create=True)
+        try:self._write(fd,0,initial)
+        finally:os.close(fd)
+        return r64_call_budget_fields(self.root,initial,self.attempt)
+
+    def _read(self,fd):
+        names=sorted(os.listdir(fd))
+        if not names or len(names)>7 or names!=['%02d.json'%i for i in range(len(names))]:
+            raise ValueError('R64 budget complete contiguous snapshot history required')
+        previous=None
+        for index,name in enumerate(names):
+            source=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK,dir_fd=fd)
+            try:
+                before=os.fstat(source);self._private_stat(before)
+                raw=b''
+                while len(raw)<=8192:
+                    part=os.read(source,8193-len(raw))
+                    if not part:break
+                    raw+=part
+                after=os.fstat(source)
+                if (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns,before.st_ctime_ns)!=(
+                        after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns,after.st_ctime_ns):
+                    raise ValueError('R64 budget file changed during read')
+            finally:os.close(source)
+            budget=self.f.strict_json(raw)
+            self.f.validate_r64_call_budget(budget,identity(self.f.R64_BUDGET_KIND,budget),attempt_identity=self.attempt)
+            if index==0:
+                if budget['reservations_in_order']:
+                    raise ValueError('R64 budget history must begin with the empty snapshot')
+            else:self._transition(previous,budget)
+            previous=budget
+        return previous,len(names)
+
+    def _transition(self,previous,candidate):
+        old=previous['reservations_in_order'];new=candidate['reservations_in_order']
+        self.f.validate_r64_call_budget(candidate,identity(self.f.R64_BUDGET_KIND,candidate),attempt_identity=self.attempt)
+        if len(new)==len(old)+1:
+            if (new[:-1]!=old or new[-1]['state']!='RESERVED'
+                    or (old and old[-1]['state']!='OBSERVED_SUCCESS')):
+                raise ValueError('R64 budget append must exclusively reserve the next slot')
+        elif old and len(new)==len(old):
+            outcome_fields={'state','finished_utc','observation_identity','request_id','failure_class'}
+            if (new[:-1]!=old[:-1] or old[-1]['state']!='RESERVED'
+                    or new[-1]['state'] not in ('OBSERVED_SUCCESS','OBSERVED_FAILURE')
+                    or {k:v for k,v in old[-1].items() if k not in outcome_fields}!=
+                       {k:v for k,v in new[-1].items() if k not in outcome_fields}):
+                raise ValueError('R64 budget completion must preserve the outstanding reservation')
+        else:raise ValueError('R64 budget history cannot shrink, skip or reset')
+
+    def load(self,expected_identity):
+        fd=self._directory()
+        try:budget,_=self._read(fd)
+        finally:os.close(fd)
+        self.f.validate_r64_call_budget(budget,expected_identity,attempt_identity=self.attempt)
+        return r64_call_budget_fields(self.root,budget,self.attempt)
+
+    def _commit(self,expected_identity,candidate):
+        fd=self._directory()
+        try:
+            budget,index=self._read(fd)
+            self.f.validate_r64_call_budget(budget,expected_identity,attempt_identity=self.attempt)
+            self._transition(budget,candidate)
+            # The deterministic O_EXCL filename is the compare-and-set. A
+            # concurrent winner or a torn write consumes it and causes refusal.
+            self._write(fd,index,candidate)
+        finally:os.close(fd)
+        return r64_call_budget_fields(self.root,candidate,self.attempt)
+
+    def reserve(self,expected_identity,source_receipts,**context):
+        budget=self.load(expected_identity)['network_ingress_call_budget']
+        candidate=self.f.reserve_r64_call(budget,expected_identity,source_receipts,attempt_identity=self.attempt,**context)
+        return self._commit(expected_identity,candidate)
+
+    def complete(self,expected_identity,observation,**context):
+        budget=self.load(expected_identity)['network_ingress_call_budget']
+        candidate=self.f.complete_r64_call(budget,expected_identity,observation,attempt_identity=self.attempt,**context)
+        return self._commit(expected_identity,candidate)
+
+    def fail(self,expected_identity,**context):
+        budget=self.load(expected_identity)['network_ingress_call_budget']
+        candidate=self.f.fail_r64_call(budget,expected_identity,attempt_identity=self.attempt,**context)
+        return self._commit(expected_identity,candidate)
 
 def build_r51_policy_observation(root,policy_receipt,function_receipts,*,expected_policy,
                                  caller_identity,authentication_source_identity,observed_utc,freshness_max_seconds):

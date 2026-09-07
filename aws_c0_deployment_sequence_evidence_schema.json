@@ -38,6 +38,9 @@
     },
     {
       "$ref": "#/$defs/network_ingress_observation"
+    },
+    {
+      "$ref": "#/$defs/network_ingress_call_budget"
     }
   ],
   "$defs": {
@@ -50739,6 +50742,288 @@
     },
     "network_ingress_observation": {
       "$ref": "#/$defs/network_ingress_observation_v1"
+    },
+    "network_ingress_call_budget_v1": {
+      "type": "object",
+      "required": [
+        "schema",
+        "amendment_packet_identity",
+        "attempt_identity",
+        "reservations_in_order"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_network_ingress_call_budget/v1"
+        },
+        "amendment_packet_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_network_ingress_source_authority_amendment_packet/v1"
+                }
+              }
+            }
+          ]
+        },
+        "attempt_identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d0_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_attempt/v1"
+                }
+              }
+            }
+          ]
+        },
+        "reservations_in_order": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "ordinal",
+              "phase",
+              "reserved_utc",
+              "caller_identity",
+              "authentication_source_identity",
+              "request",
+              "source_receipt_identities_in_order",
+              "state",
+              "finished_utc",
+              "observation_identity",
+              "request_id",
+              "failure_class"
+            ],
+            "properties": {
+              "ordinal": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 3
+              },
+              "phase": {
+                "enum": [
+                  "PREDEPLOYMENT",
+                  "POSTDEPLOYMENT",
+                  "EXECUTION_PREFLIGHT"
+                ]
+              },
+              "reserved_utc": {
+                "$ref": "#/$defs/d4_timestamp"
+              },
+              "caller_identity": {
+                "$ref": "#/$defs/d0_identity"
+              },
+              "authentication_source_identity": {
+                "$ref": "#/$defs/d0_identity"
+              },
+              "request": {
+                "type": "object",
+                "required": [
+                  "GroupIds"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "GroupIds": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 16,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^sg-[0-9a-f]{8,17}$"
+                    }
+                  }
+                }
+              },
+              "source_receipt_identities_in_order": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "uniqueItems": true,
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/d0_identity"
+                    },
+                    {
+                      "properties": {
+                        "kind": {
+                          "const": "aws_c0_api_request_response_receipt/v1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "state": {
+                "enum": [
+                  "RESERVED",
+                  "OBSERVED_SUCCESS",
+                  "OBSERVED_FAILURE"
+                ]
+              },
+              "finished_utc": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/d4_timestamp"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "observation_identity": {
+                "anyOf": [
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/$defs/d0_identity"
+                      },
+                      {
+                        "properties": {
+                          "kind": {
+                            "const": "aws_c0_network_ingress_observation/v1"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "request_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9-]{8,128}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "failure_class": {
+                "enum": [
+                  null,
+                  "TRANSPORT_FAILURE",
+                  "UNCERTAIN_DELIVERY",
+                  "INVALID_RESPONSE"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "RESERVED"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "finished_utc": {
+                      "type": "null"
+                    },
+                    "observation_identity": {
+                      "type": "null"
+                    },
+                    "request_id": {
+                      "type": "null"
+                    },
+                    "failure_class": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "finished_utc": {
+                      "$ref": "#/$defs/d4_timestamp"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "OBSERVED_SUCCESS"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "observation_identity": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/d0_identity"
+                        },
+                        {
+                          "properties": {
+                            "kind": {
+                              "const": "aws_c0_network_ingress_observation/v1"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9-]{8,128}$"
+                    },
+                    "failure_class": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "OBSERVED_FAILURE"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "observation_identity": {
+                      "type": "null"
+                    },
+                    "request_id": {
+                      "type": "null"
+                    },
+                    "failure_class": {
+                      "enum": [
+                        "TRANSPORT_FAILURE",
+                        "UNCERTAIN_DELIVERY",
+                        "INVALID_RESPONSE"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "network_ingress_call_budget": {
+      "$ref": "#/$defs/network_ingress_call_budget_v1"
     }
   }
 }

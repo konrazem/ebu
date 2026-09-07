@@ -13,6 +13,21 @@
     "permissions_changed": false,
     "aws_calls_performed": 0
   },
+  "prospective_r64_call_budget": {
+    "kind": "aws_c0_network_ingress_call_budget/v1",
+    "maximum_reserved_calls": 3,
+    "phases_in_order": ["PREDEPLOYMENT", "POSTDEPLOYMENT", "EXECUTION_PREFLIGHT"],
+    "pending_or_failed_call_returns_slot": false,
+    "maximum_ledger_bytes": 8192,
+    "independently_anchored_prior_identity_required": true,
+    "local_exclusive_durable_reservation_implemented": true,
+    "torn_write_repair_or_automatic_reset_permitted": false,
+    "pure_transition_and_local_store_component_review": "APPROVED",
+    "authenticated_collector_attached": false,
+    "phase_reconstruction_attachment_complete": false,
+    "global_cloud_enforcement_claimed": false,
+    "cloud_readiness_claimed": false
+  },
   "pending_network_ingress_amendment_packet": {
     "schema": "aws_c0_network_ingress_source_authority_amendment_packet/v1",
     "disposition": "PROPOSED_REQUIRES_EXPLICIT_NEW_AUTHORITY",

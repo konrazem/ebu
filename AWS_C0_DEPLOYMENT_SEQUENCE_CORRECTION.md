@@ -67,6 +67,26 @@ attachment and workflow integration are still required and are not covered by
 that component approval. No IAM policy, credentials or AWS resources changed.
 Work continues through those obligations; this is not a completion checkpoint.
 
+The next local component adds a closed, bounded call-budget ledger. It reserves
+at most one read in each of PREDEPLOYMENT, POSTDEPLOYMENT and EXECUTION_PREFLIGHT;
+completion does not grant a fourth slot. Every next phase retains earlier
+entries and requires new R02/R04 sources. A pending, uncertain or failed call
+is terminal and does not return a slot. Successful completion must bind the
+exact reserved sources, targets, collector, timing and actual ingress receipt.
+Expected ledger identities must come from independently accepted prior phases,
+not be accepted merely because an untrusted sender supplied matching hashes.
+
+The local store uses a deterministic private `/private/tmp` directory per
+attempt and exclusively created numbered snapshots. File and directory sync
+precede a successful reservation return. Competing writers have one winner;
+partial writes and missing histories are preserved and block continuation.
+It does not silently repair, overwrite or reset the ledger. The store is local
+crash/race protection, not authentication or protection against a user deleting
+files, replacing the host or changing an unbound attempt. No cloud transport is
+attached to it yet. Nineteen focused ingress/budget/store tests and pinned
+compilation pass; the existing reviewer independently APPROVED both the pure
+transitions and the local store as components only. Overall NOT_READY remains.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

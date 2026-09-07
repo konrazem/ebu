@@ -2531,6 +2531,154 @@ def validate_r64_ingress_observation(record: Any, *, attempt_identity: dict[str,
     return record
 
 
+R64_BUDGET_KIND = 'aws_c0_network_ingress_call_budget/v1'
+R64_READ_PHASES = ('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT')
+R64_FAILURE_CLASSES = ('TRANSPORT_FAILURE','UNCERTAIN_DELIVERY','INVALID_RESPONSE')
+
+
+def validate_r64_call_budget(budget: Any, expected_identity: dict[str,str], *,
+                            attempt_identity: dict[str,str]) -> dict[str,Any]:
+    """Check a bounded phase ledger against an independently anchored identity.
+
+    This pure verifier does not authenticate an arbitrary ledger, persist a
+    reservation, or provide distributed exclusion. The collector must anchor
+    the expected identity in the accepted prior phase, and durably reserve
+    before transport. A reserved/failed tail is never available for another
+    call; absence of a response does not return a slot to the budget.
+    """
+    fields={'schema','amendment_packet_identity','attempt_identity','reservations_in_order'}
+    if not isinstance(budget,dict) or set(budget)!=fields or budget['schema']!=R64_BUDGET_KIND:
+        raise Refusal('R64 closed call budget required')
+    raw=canonical_bytes(budget)
+    if (len(raw)>8192 or budget['attempt_identity']!=attempt_identity
+            or budget['amendment_packet_identity']!=identity('aws_c0_network_ingress_source_authority_amendment_packet/v1',INGRESS_AMENDMENT_SHA256)
+            or expected_identity!=identity(R64_BUDGET_KIND,digest(raw))):
+        raise Refusal('R64 call budget anchor/attempt/authority mismatch')
+    _identity(budget,'attempt_identity','aws_c0_attempt/v1')
+    entries=budget['reservations_in_order']
+    if not isinstance(entries,list) or len(entries)>3:
+        raise Refusal('R64 at most three reserved calls permitted')
+    entry_fields={'ordinal','phase','reserved_utc','caller_identity','authentication_source_identity',
+        'request','source_receipt_identities_in_order','state','finished_utc','observation_identity',
+        'request_id','failure_class'}
+    previous_end=None;request_ids=[]
+    for index,entry in enumerate(entries):
+        if not isinstance(entry,dict) or set(entry)!=entry_fields:
+            raise Refusal('R64 reservation field closure failed')
+        if type(entry['ordinal']) is not int or entry['ordinal']!=index+1 or entry['phase']!=R64_READ_PHASES[index]:
+            raise Refusal('R64 reservation ordinal/phase order mismatch')
+        started=_r64_utc(entry['reserved_utc'])
+        if previous_end is not None and started<previous_end:
+            raise Refusal('R64 reservation chronology differs')
+        for field in ('caller_identity','authentication_source_identity'):
+            value=entry[field]
+            if not isinstance(value,dict) or not isinstance(value.get('kind'),str):
+                raise Refusal('R64 reservation identity absent')
+            _identity(entry,field,value['kind'])
+        request=entry['request'];sources=entry['source_receipt_identities_in_order']
+        if not isinstance(request,dict) or set(request)!={'GroupIds'}:
+            raise Refusal('R64 reservation exact GroupIds request required')
+        groups=request['GroupIds']
+        if (not isinstance(groups,list) or not 1<=len(groups)<=16
+                or any(not isinstance(g,str) or not re.fullmatch(r'sg-[0-9a-f]{8,17}',g) for g in groups)
+                or groups!=sorted(set(groups))):
+            raise Refusal('R64 reservation bounded sorted unique targets required')
+        if not isinstance(sources,list) or len(sources)!=2:
+            raise Refusal('R64 reservation two source identities required')
+        for source in sources:_identity({'source':source},'source','aws_c0_api_request_response_receipt/v1')
+        if sources[0]==sources[1]:raise Refusal('R64 reservation distinct R02/R04 sources required')
+        state=entry['state']
+        if state not in ('RESERVED','OBSERVED_SUCCESS','OBSERVED_FAILURE'):
+            raise Refusal('R64 reservation state invalid')
+        if state!='OBSERVED_SUCCESS' and index!=len(entries)-1:
+            raise Refusal('R64 pending or failed reservation is terminal')
+        if state=='RESERVED':
+            if any(entry[k] is not None for k in ('finished_utc','observation_identity','request_id','failure_class')):
+                raise Refusal('R64 pending reservation cannot claim an outcome')
+        else:
+            finished=_r64_utc(entry['finished_utc'])
+            if finished<started:raise Refusal('R64 outcome precedes reservation')
+            previous_end=finished
+            if state=='OBSERVED_SUCCESS':
+                _identity(entry,'observation_identity','aws_c0_network_ingress_observation/v1')
+                if (entry['failure_class'] is not None or not isinstance(entry['request_id'],str)
+                        or not re.fullmatch(r'[A-Za-z0-9-]{8,128}',entry['request_id'])
+                        or entry['request_id'] in request_ids):
+                    raise Refusal('R64 success request ID reused or failure claim present')
+                request_ids.append(entry['request_id'])
+            elif (entry['observation_identity'] is not None or entry['request_id'] is not None
+                    or entry['failure_class'] not in R64_FAILURE_CLASSES):
+                raise Refusal('R64 failure cannot claim a successful receipt')
+    return budget
+
+
+def reserve_r64_call(budget: Any, expected_identity: dict[str,str], source_receipts: Any, *,
+                     attempt_identity: dict[str,str], phase: str, caller_identity: dict[str,str],
+                     authentication_source_identity: dict[str,str], observed_utc: str,
+                     freshness_max_seconds: int) -> dict[str,Any]:
+    """Pure next-state construction, not permission to call before persistence."""
+    validate_r64_call_budget(budget,expected_identity,attempt_identity=attempt_identity)
+    entries=budget['reservations_in_order'];index=len(entries)
+    if index>=3 or phase!=R64_READ_PHASES[index] or (entries and entries[-1]['state']!='OBSERVED_SUCCESS'):
+        raise Refusal('R64 read budget exhausted, wrong phase, or unresolved prior call')
+    targets=derive_r64_exact_request(source_receipts,caller_identity=caller_identity,
+        authentication_source_identity=authentication_source_identity,observed_utc=observed_utc,
+        freshness_max_seconds=freshness_max_seconds)
+    if entries and _r64_utc(source_receipts[0]['requested_utc'])<_r64_utc(entries[-1]['finished_utc']):
+        raise Refusal('R64 next phase requires new source observations after prior completion')
+    candidate=strict_json(canonical_bytes(budget))
+    candidate['reservations_in_order'].append({'ordinal':index+1,'phase':phase,'reserved_utc':observed_utc,
+        'caller_identity':caller_identity,'authentication_source_identity':authentication_source_identity,
+        'request':targets['request'],'source_receipt_identities_in_order':[
+            identity('aws_c0_api_request_response_receipt/v1',digest(canonical_bytes(r))) for r in source_receipts],
+        'state':'RESERVED','finished_utc':None,'observation_identity':None,'request_id':None,'failure_class':None})
+    validate_r64_call_budget(candidate,identity(R64_BUDGET_KIND,digest(canonical_bytes(candidate))),attempt_identity=attempt_identity)
+    return candidate
+
+
+def complete_r64_call(budget: Any, expected_identity: dict[str,str], observation: Any, *,
+                      attempt_identity: dict[str,str], phase: str, caller_identity: dict[str,str],
+                      authentication_source_identity: dict[str,str], observed_utc: str,
+                      freshness_max_seconds: int) -> dict[str,Any]:
+    validate_r64_call_budget(budget,expected_identity,attempt_identity=attempt_identity)
+    entries=budget['reservations_in_order']
+    if not entries or entries[-1]['state']!='RESERVED' or entries[-1]['phase']!=phase:
+        raise Refusal('R64 exact outstanding phase reservation required')
+    tail=entries[-1]
+    if tail['caller_identity']!=caller_identity or tail['authentication_source_identity']!=authentication_source_identity:
+        raise Refusal('R64 outcome collector differs from reservation')
+    validate_r64_ingress_observation(observation,attempt_identity=attempt_identity,caller_identity=caller_identity,
+        authentication_source_identity=authentication_source_identity,observed_utc=observed_utc,
+        freshness_max_seconds=freshness_max_seconds)
+    sources=[identity('aws_c0_api_request_response_receipt/v1',digest(canonical_bytes(r))) for r in observation['source_receipts_in_order']]
+    receipt=observation['rule_receipt']
+    if (sources!=tail['source_receipt_identities_in_order'] or tail['request']!={'GroupIds':observation['security_group_ids']}
+            or _r64_utc(receipt['requested_utc'])<_r64_utc(tail['reserved_utc'])):
+        raise Refusal('R64 outcome differs from pre-call reservation')
+    candidate=strict_json(canonical_bytes(budget));entry=candidate['reservations_in_order'][-1]
+    entry.update(state='OBSERVED_SUCCESS',finished_utc=observed_utc,
+        observation_identity=identity(observation['schema'],digest(canonical_bytes(observation))),request_id=receipt['request_id'])
+    validate_r64_call_budget(candidate,identity(R64_BUDGET_KIND,digest(canonical_bytes(candidate))),attempt_identity=attempt_identity)
+    return candidate
+
+
+def fail_r64_call(budget: Any, expected_identity: dict[str,str], *, attempt_identity: dict[str,str],
+                  phase: str, observed_utc: str, failure_class: str) -> dict[str,Any]:
+    """Retain the spent slot, including an uncertain or malformed response.
+
+    No exception text, credential material, invented response ID or successful
+    policy/ingress observation is emitted by this failure transition.
+    """
+    validate_r64_call_budget(budget,expected_identity,attempt_identity=attempt_identity)
+    entries=budget['reservations_in_order']
+    if not entries or entries[-1]['state']!='RESERVED' or entries[-1]['phase']!=phase or failure_class not in R64_FAILURE_CLASSES:
+        raise Refusal('R64 exact pending reservation and closed failure class required')
+    candidate=strict_json(canonical_bytes(budget))
+    candidate['reservations_in_order'][-1].update(state='OBSERVED_FAILURE',finished_utc=observed_utc,failure_class=failure_class)
+    validate_r64_call_budget(candidate,identity(R64_BUDGET_KIND,digest(canonical_bytes(candidate))),attempt_identity=attempt_identity)
+    return candidate
+
+
 def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
     if set(packet) != LIVE_PACKET_V6_FIELDS or packet.get("schema") != "aws_c0_live_packet/v6":
         raise Refusal("live-packet-v5 field closure failed")

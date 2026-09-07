@@ -454,6 +454,212 @@ class R64IngressAmendmentTests(unittest.TestCase):
                     with self.assertRaises(F.Refusal):F.validate_r64_ingress_observation(value,attempt_identity=attempt,**context)
 
 
+class R64CallBudgetTests(unittest.TestCase):
+    """Offline ledger state transitions, not authenticated or durable storage."""
+    def material(self,index=0):
+        sources,receipt,attempt,context=R64IngressAmendmentTests().material()
+        for number,r in enumerate(sources+[receipt]):
+            for field in ('requested_utc','completed_utc'):
+                r[field]=r[field].replace('18:00:','18:%02d:'%index)
+            r['request_id']+='-phase-'+str(index)
+            response=F.strict_json(base64.b64decode(r['response_canonical_json_base64']))
+            response['ResponseMetadata']['RequestId']=r['request_id']
+            response['ResponseMetadata']['HTTPHeaders']['x-amzn-requestid']=r['request_id']
+            R51ProspectiveAmendmentTests.encode(r,'response',response)
+        context['observed_utc']='2026-09-06T18:%02d:07Z'%index
+        return sources,receipt,attempt,context
+
+    def empty(self):
+        _,_,attempt,_=self.material()
+        return G.build_r64_initial_call_budget(ROOT,attempt)['network_ingress_call_budget']
+
+    def reserve(self,budget,index=0):
+        sources,_,attempt,context=self.material(index)
+        context['observed_utc']='2026-09-06T18:%02d:04Z'%index
+        return F.reserve_r64_call(budget,G.identity(F.R64_BUDGET_KIND,budget),sources,
+            attempt_identity=attempt,phase=F.R64_READ_PHASES[index],**context)
+
+    def complete(self,budget,index=0):
+        sources,receipt,attempt,context=self.material(index)
+        value=G.build_r64_ingress_observation(ROOT,sources,receipt,attempt_identity=attempt,**context)['network_ingress_observation']
+        return F.complete_r64_call(budget,G.identity(F.R64_BUDGET_KIND,budget),value,
+            attempt_identity=attempt,phase=F.R64_READ_PHASES[index],**context)
+
+    def test_three_phase_reservations_and_schema_round_trip(self):
+        budget=self.empty();original=copy.deepcopy(budget)
+        for index in range(3):
+            prior=copy.deepcopy(budget);budget=self.reserve(budget,index)
+            self.assertEqual(budget['reservations_in_order'][:-1],prior['reservations_in_order'])
+            G.validate_record(ROOT,'network_ingress_call_budget',budget)
+            budget=self.complete(budget,index)
+            G.validate_record(ROOT,'network_ingress_call_budget',budget)
+        self.assertEqual(original['reservations_in_order'],[])
+        self.assertLess(len(G.canonical(budget)),8192)
+        self.assertEqual([v['ordinal'] for v in budget['reservations_in_order']],[1,2,3])
+        for phase in F.R64_READ_PHASES+('COMPLETION',):
+            sources,_,attempt,context=self.material(3)
+            with self.assertRaises(F.Refusal):F.reserve_r64_call(budget,G.identity(F.R64_BUDGET_KIND,budget),sources,
+                attempt_identity=attempt,phase=phase,**context)
+
+    def test_pending_failed_and_uncertain_calls_never_return_a_slot(self):
+        pending=self.reserve(self.empty());_,_,attempt,context=self.material()
+        for budget in [pending]+[F.fail_r64_call(pending,G.identity(F.R64_BUDGET_KIND,pending),
+                attempt_identity=attempt,phase='PREDEPLOYMENT',observed_utc=context['observed_utc'],failure_class=c)
+                for c in F.R64_FAILURE_CLASSES]:
+            G.validate_record(ROOT,'network_ingress_call_budget',budget)
+            self.assertEqual(len(budget['reservations_in_order']),1)
+            for index in (0,1):
+                with self.assertRaises(F.Refusal):self.reserve(budget,index)
+            if budget is not pending:
+                with self.assertRaises(F.Refusal):self.complete(budget)
+                with self.assertRaises(F.Refusal):F.fail_r64_call(budget,G.identity(F.R64_BUDGET_KIND,budget),
+                    attempt_identity=attempt,phase='PREDEPLOYMENT',observed_utc=context['observed_utc'],failure_class='TRANSPORT_FAILURE')
+
+    def test_wrong_anchor_attempt_phase_and_replayed_completion_refuse(self):
+        empty=self.empty();sources,_,attempt,context=self.material()
+        for anchor,target,phase in [(G.identity(F.R64_BUDGET_KIND,{'different':True}),attempt,'PREDEPLOYMENT'),
+            (G.identity(F.R64_BUDGET_KIND,empty),F.identity('aws_c0_attempt/v1','d'*64),'PREDEPLOYMENT'),
+            (G.identity(F.R64_BUDGET_KIND,empty),attempt,'POSTDEPLOYMENT')]:
+            with self.assertRaises(F.Refusal):F.reserve_r64_call(empty,anchor,sources,attempt_identity=target,phase=phase,**context)
+        complete=self.complete(self.reserve(empty))
+        with self.assertRaises(F.Refusal):self.complete(complete)
+        with self.assertRaises(F.Refusal):self.reserve(complete,0)
+        with self.assertRaises(F.Refusal):F.validate_r64_call_budget(empty,G.identity(F.R64_BUDGET_KIND,complete),attempt_identity=attempt)
+
+    def test_rehashed_ledger_mutations_and_unclosed_fields_refuse(self):
+        budget=self.complete(self.reserve(self.empty()));_,_,attempt,_=self.material()
+        for mutate in (lambda b:b.update(extra=True),lambda b:b.update(attempt_identity={}),
+            lambda b:b['reservations_in_order'][0].update(ordinal=True),
+            lambda b:b['reservations_in_order'][0].update(phase='EXECUTION_PREFLIGHT'),
+            lambda b:b['reservations_in_order'][0].update(request={}),
+            lambda b:b['reservations_in_order'][0]['request'].update(GroupIds=['sg-01234567','sg-01234567']),
+            lambda b:b['reservations_in_order'][0].update(finished_utc='2026-09-06T17:00:00Z'),
+            lambda b:b['reservations_in_order'][0].update(failure_class='UNCERTAIN_DELIVERY'),
+            lambda b:b['reservations_in_order'][0].update(source_receipt_identities_in_order=[]),
+            lambda b:b['reservations_in_order'][0].update(request_id=''),
+            lambda b:b['reservations_in_order'][0].update(reserved_utc='2026-09-06 18:00:04Z')):
+            bad=copy.deepcopy(budget);mutate(bad)
+            with self.assertRaises(F.Refusal):F.validate_r64_call_budget(bad,G.identity(F.R64_BUDGET_KIND,bad),attempt_identity=attempt)
+
+    def test_completion_requires_exact_precall_sources_caller_and_time(self):
+        budget=self.reserve(self.empty());sources,receipt,attempt,context=self.material()
+        observation=G.build_r64_ingress_observation(ROOT,sources,receipt,attempt_identity=attempt,**context)['network_ingress_observation']
+        for mutate in (lambda b:b['reservations_in_order'][0].update(reserved_utc='2026-09-06T18:00:06Z'),
+                       lambda b:b['reservations_in_order'][0].update(caller_identity=F.identity('aws_sts_role_session/v1','e'*64)),
+                       lambda b:b['reservations_in_order'][0]['source_receipt_identities_in_order'].__setitem__(0,F.identity('aws_c0_api_request_response_receipt/v1','e'*64)),
+                       lambda b:b['reservations_in_order'][0]['request'].update(GroupIds=['sg-01234567'])):
+            bad=copy.deepcopy(budget);mutate(bad)
+            with self.assertRaises(F.Refusal):F.complete_r64_call(bad,G.identity(F.R64_BUDGET_KIND,bad),observation,
+                attempt_identity=attempt,phase='PREDEPLOYMENT',**context)
+        complete=self.complete(budget)
+        with self.assertRaises(F.Refusal):F.reserve_r64_call(complete,G.identity(F.R64_BUDGET_KIND,complete),sources,
+            attempt_identity=attempt,phase='POSTDEPLOYMENT',**context)
+
+
+class R64LocalBudgetStoreTests(unittest.TestCase):
+    """Real private temporary files, offline synthetic observations, no AWS."""
+    def setUp(self):
+        self.attempt=F.identity('aws_c0_attempt/v1',hashlib.sha256(os.urandom(32)).hexdigest())
+        self.store=G.R64LocalCallBudgetStore(ROOT,self.attempt)
+        self.initial=self.store.initialize()
+        self.addCleanup(self.cleanup)
+
+    def cleanup(self):
+        # Only this test's newly created, non-recursive private ledger files.
+        os.chmod(self.store.path,0o700)
+        for child in self.store.path.iterdir():child.unlink()
+        self.store.path.rmdir()
+
+    def material(self,index=0):
+        sources,receipt,_,context=R64CallBudgetTests().material(index)
+        return sources,receipt,context
+
+    def reserve(self,store=None,expected=None,index=0):
+        sources,_,context=self.material(index)
+        context['observed_utc']='2026-09-06T18:%02d:04Z'%index
+        return (store or self.store).reserve(expected or self.initial['network_ingress_call_budget_identity'],
+            sources,phase=F.R64_READ_PHASES[index],**context)
+
+    def test_durable_reservation_reopens_without_reset_or_replay(self):
+        reserved=self.reserve();reopened=G.R64LocalCallBudgetStore(ROOT,self.attempt)
+        self.assertEqual(reopened.load(reserved['network_ingress_call_budget_identity']),reserved)
+        with self.assertRaises(FileExistsError):reopened.initialize()
+        with self.assertRaises(Exception):self.reserve(reopened)
+        with self.assertRaises(Exception):self.reserve(reopened,reserved['network_ingress_call_budget_identity'])
+        self.assertEqual(sorted(p.name for p in self.store.path.iterdir()),['00.json','01.json'])
+        for p in self.store.path.iterdir():self.assertEqual(p.stat().st_mode&0o777,0o600)
+        self.assertEqual(self.store.path.stat().st_mode&0o777,0o700)
+
+    def test_complete_and_three_slots_preserve_all_seven_snapshots(self):
+        current=self.initial
+        for index in range(3):
+            reserved=self.reserve(expected=current['network_ingress_call_budget_identity'],index=index)
+            sources,receipt,context=self.material(index)
+            observation=G.build_r64_ingress_observation(ROOT,sources,receipt,attempt_identity=self.attempt,**context)['network_ingress_observation']
+            current=self.store.complete(reserved['network_ingress_call_budget_identity'],observation,phase=F.R64_READ_PHASES[index],**context)
+        self.assertEqual(self.store.load(current['network_ingress_call_budget_identity']),current)
+        self.assertEqual(sorted(p.name for p in self.store.path.iterdir()),['%02d.json'%i for i in range(7)])
+        with self.assertRaises(Exception):self.reserve(expected=current['network_ingress_call_budget_identity'],index=2)
+
+    def test_racing_process_equivalent_writers_have_only_one_winner(self):
+        import concurrent.futures
+        import threading
+        barrier=threading.Barrier(2)
+        def contender():
+            local=G.R64LocalCallBudgetStore(ROOT,self.attempt)
+            barrier.wait()
+            try:return self.reserve(local)
+            except Exception:return None
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+            winners=list(pool.map(lambda _:contender(),range(2)))
+        accepted=[r for r in winners if r is not None]
+        self.assertEqual(len(accepted),1)
+        self.assertEqual(self.store.load(accepted[0]['network_ingress_call_budget_identity']),accepted[0])
+
+    def test_torn_write_is_preserved_and_blocks_next_call(self):
+        real_write=os.write;calls=[]
+        def interrupted(fd,raw):
+            calls.append(True)
+            if len(calls)==1:return real_write(fd,raw[:30])
+            raise OSError('offline injected interruption')
+        with mock.patch.object(G.os,'write',side_effect=interrupted):
+            with self.assertRaises(OSError):self.reserve()
+        self.assertEqual((self.store.path/'01.json').stat().st_size,30)
+        with self.assertRaises(Exception):self.reserve()
+        self.assertEqual(sorted(p.name for p in self.store.path.iterdir()),['00.json','01.json'])
+
+    def test_failed_fsync_keeps_slot_reserved_and_cannot_be_reused(self):
+        with mock.patch.object(G.os,'fsync',side_effect=OSError('offline injected sync failure')):
+            with self.assertRaises(OSError):self.reserve()
+        candidate=F.strict_json((self.store.path/'01.json').read_bytes())
+        self.assertEqual(candidate['reservations_in_order'][-1]['state'],'RESERVED')
+        with self.assertRaises(Exception):self.reserve(expected=G.identity(F.R64_BUDGET_KIND,candidate))
+        with self.assertRaises(Exception):self.reserve()
+
+    def test_unsafe_or_incomplete_local_history_refused(self):
+        initial_path=self.store.path/'00.json';raw=initial_path.read_bytes()
+        for mutate,restore in [
+            (lambda:initial_path.chmod(0o644),lambda:initial_path.chmod(0o600)),
+            (lambda:self.store.path.chmod(0o755),lambda:self.store.path.chmod(0o700)),
+            (lambda:(self.store.path/'unexpected').write_bytes(b'x'),lambda:(self.store.path/'unexpected').unlink()),
+            (lambda:(self.store.path/'02.json').write_bytes(raw),lambda:(self.store.path/'02.json').unlink()),
+            (lambda:os.link(initial_path,self.store.path/'outside-link'),lambda:(self.store.path/'outside-link').unlink())]:
+            mutate()
+            try:
+                with self.assertRaises(Exception):self.store.load(self.initial['network_ingress_call_budget_identity'])
+            finally:restore()
+        initial_path.unlink();initial_path.symlink_to('missing-target')
+        with self.assertRaises(OSError):self.store.load(self.initial['network_ingress_call_budget_identity'])
+
+    def test_failed_transport_state_is_durable_and_never_fabricates_success(self):
+        reserved=self.reserve()
+        failed=self.store.fail(reserved['network_ingress_call_budget_identity'],phase='PREDEPLOYMENT',
+            observed_utc='2026-09-06T18:00:07Z',failure_class='UNCERTAIN_DELIVERY')
+        self.assertEqual(self.store.load(failed['network_ingress_call_budget_identity']),failed)
+        self.assertIsNone(failed['network_ingress_call_budget']['reservations_in_order'][-1]['observation_identity'])
+        with self.assertRaises(Exception):self.reserve(expected=failed['network_ingress_call_budget_identity'],index=1)
+
+
 class SealedRoleProducerTests(unittest.TestCase):
     def material(self):
         values=PhaseObligationProducerTests().material();receipts={k:values[2][k] for k in ('R02','R03','R13','R14')}

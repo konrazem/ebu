@@ -173,10 +173,41 @@ def build(root=ROOT):
     definitions['network_ingress_observation_v1']={'type':'object','required':list(ingress_fields),
         'properties':ingress_fields,'additionalProperties':False}
     definitions['network_ingress_observation']={'$ref':'#/$defs/network_ingress_observation_v1'}
+    nullable_time={'anyOf':[{'$ref':time_ref},{'type':'null'}]}
+    nullable_observation={'anyOf':[typed_identity('aws_c0_network_ingress_observation/v1'),{'type':'null'}]}
+    reservation_fields={'ordinal':{'type':'integer','minimum':1,'maximum':3},
+        'phase':{'enum':['PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT']},
+        'reserved_utc':{'$ref':time_ref},'caller_identity':{'$ref':identity_ref},
+        'authentication_source_identity':{'$ref':identity_ref},
+        'request':{'type':'object','required':['GroupIds'],'additionalProperties':False,
+            'properties':{'GroupIds':copy.deepcopy(ingress_fields['security_group_ids'])}},
+        'source_receipt_identities_in_order':{'type':'array','minItems':2,'maxItems':2,'uniqueItems':True,
+            'items':typed_identity('aws_c0_api_request_response_receipt/v1')},
+        'state':{'enum':['RESERVED','OBSERVED_SUCCESS','OBSERVED_FAILURE']},
+        'finished_utc':nullable_time,'observation_identity':nullable_observation,
+        'request_id':{'anyOf':[{'type':'string','pattern':'^[A-Za-z0-9-]{8,128}$'},{'type':'null'}]},
+        'failure_class':{'enum':[None,'TRANSPORT_FAILURE','UNCERTAIN_DELIVERY','INVALID_RESPONSE']}}
+    reservation={'type':'object','required':list(reservation_fields),'properties':reservation_fields,'additionalProperties':False,
+        'allOf':[{'if':{'properties':{'state':{'const':'RESERVED'}}},
+            'then':{'properties':{k:{'type':'null'} for k in ('finished_utc','observation_identity','request_id','failure_class')}},
+            'else':{'properties':{'finished_utc':{'$ref':time_ref}}}},
+            {'if':{'properties':{'state':{'const':'OBSERVED_SUCCESS'}}},
+            'then':{'properties':{'observation_identity':typed_identity('aws_c0_network_ingress_observation/v1'),
+                'request_id':{'type':'string','pattern':'^[A-Za-z0-9-]{8,128}$'},'failure_class':{'type':'null'}}}},
+            {'if':{'properties':{'state':{'const':'OBSERVED_FAILURE'}}},
+            'then':{'properties':{'observation_identity':{'type':'null'},'request_id':{'type':'null'},
+                'failure_class':{'enum':['TRANSPORT_FAILURE','UNCERTAIN_DELIVERY','INVALID_RESPONSE']}}}}]}
+    budget_fields={'schema':{'const':'aws_c0_network_ingress_call_budget/v1'},
+        'amendment_packet_identity':typed_identity('aws_c0_network_ingress_source_authority_amendment_packet/v1'),
+        'attempt_identity':typed_identity('aws_c0_attempt/v1'),
+        'reservations_in_order':{'type':'array','minItems':0,'maxItems':3,'items':reservation}}
+    definitions['network_ingress_call_budget_v1']={'type':'object','required':list(budget_fields),
+        'properties':budget_fields,'additionalProperties':False}
+    definitions['network_ingress_call_budget']={'$ref':'#/$defs/network_ingress_call_budget_v1'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
