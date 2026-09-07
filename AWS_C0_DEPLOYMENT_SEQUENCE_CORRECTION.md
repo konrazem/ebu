@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: ATOMIC FULL PREFLIGHT AUTHORIZED — not yet begun
+## Checkpoint status: ATOMIC FULL PREFLIGHT FAILED AND CLEANED — NOT READY
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -66,6 +66,35 @@ smoke, science, push, merge, publication, and release remain prohibited until
 the resulting packet receives its separate exact Gate 1 authorization. The
 exact UTF-8 authorization statement has SHA-256
 `7846fa788cda01d209d724e4f67e225af92b9df1d5636c852f48d38256518155`.
+
+That single authorized attempt was durably reserved at
+`2026-09-07T15:34:56Z` with fresh attempt identity
+`7c671d75b76a10fcd98f90ce03c4a2982b11224064c175bedddd371ad1b6e374`.
+It failed at the constrained-session transition before credentials were issued,
+before the 300-second control-collection window began, and before any R01-R64
+control call. The collector supplied role-session name
+`AWS-C0-ATOMIC-PREFLIGHT-492a4f1`, while the frozen trust and bootstrap
+contract require exact preparation session name `AWS-C0-PREP-492a4f1`.
+AWS therefore returned `AccessDenied` for `sts:AssumeRole`. This was a local
+collector-coordinate error, not evidence that any required AWS control failed.
+The attempt is terminal; it was not retried or replayed, and no preparation
+packet was constructed.
+
+The failure path removed only inline policy
+`EBU-C0-Temporary-Atomic-Preflight-20260907`, verified the unchanged base-policy
+SHA-256
+`c2488566da9cd3a3b96f5d60cc2078858621db990d2c1e97293c61852e42b1b8`,
+confirmed that no temporary credentials existed, and reverified the retained
+`t3.small` instance `stopped`. The attempt-reservation, failure, and cleanup
+file SHA-256 values are respectively
+`53cf9515703473cc2852d21edc39e1d9cbcc2f445308d7344690d64a467172e7`,
+`3d43a2b939295eb7cbe66f0a5cd3fe99bc819df9e98bd027fe22003cd74b1654`,
+and `3e63cf324a4a34e0afd5c89843595ebee668edf4f22da4b9cacc2e17d68b2e1b`.
+The collector is corrected offline to use and verify the exact sealed session
+name, but this consumed authority does not permit another live attempt.
+Continuation requires one separately authorized fresh replacement atomic
+full-preflight. No instance start, deployment, smoke, science, push, merge,
+publication, or release is authorized.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
