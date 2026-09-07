@@ -3002,6 +3002,53 @@ def validate_instance_profile_reconstruction_output(output: Any, receipts: Any, 
     return output
 
 
+def build_service_quota_reconstruction_output(receipts: Any, *, caller_identity: dict[str,str],
+        authentication_source_identity: dict[str,str], phase_not_before_utc: str,
+        validation_utc: str, freshness_max_seconds: int) -> dict[str,Any]:
+    """Reconstruct the exact regional On-Demand Standard-instance quota.
+
+    The applied quota is the control value.  The AWS-default read is retained
+    as a distinct source witness and must describe the same quota, but it is
+    never substituted for the account's applied value.
+    """
+    order=('R34','R35')
+    if not isinstance(receipts,dict) or set(receipts)!=set(order):
+        raise Refusal('service quota exact source slots required')
+    request={'ServiceCode':'ec2','QuotaCode':'L-1216C47A'}
+    actions={'R34':'servicequotas:GetServiceQuota','R35':'servicequotas:GetAWSDefaultServiceQuota'}
+    quotas={};previous=_r64_utc(phase_not_before_utc)
+    for row in order:
+        found,response=_r64_api_material(receipts[row],row,actions[row],caller=caller_identity,
+            channel=authentication_source_identity,observed_utc=validation_utc,freshness=freshness_max_seconds)
+        if found!=request or receipts[row]['pagination_item_count']!=1 or _r64_utc(receipts[row]['requested_utc'])<previous:
+            raise Refusal('service quota exact request/count/producer order mismatch')
+        previous=_r64_utc(receipts[row]['completed_utc'])
+        quota=response.get('Quota')
+        if (not isinstance(quota,dict) or quota.get('ServiceCode')!='ec2'
+                or quota.get('QuotaCode')!='L-1216C47A'
+                or type(quota.get('Value')) is not int or quota['Value']<1):
+            raise Refusal('service quota complete exact integral value required')
+        quotas[row]=quota
+    decoded={'schema':'aws_c0_service_quota_observation_preimage/v1','region':REGION,
+        'quota_code':'L-1216C47A','quota_value':quotas['R34']['Value'],'required_value':1,
+        'instance_type':'t3.small','source_row_ids':list(order)}
+    raw=canonical_bytes(decoded);kind='aws_c0_service_quota_observation/v1'
+    age=int((_r64_utc(validation_utc)-_r64_utc(receipts['R34']['requested_utc'])).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'SERVICE_QUOTA','identity':identity(kind,digest(raw)),
+        'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':receipts['R34']['requested_utc'],
+        'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_service_quota_reconstruction_output(output: Any, receipts: Any, **context: Any) -> dict[str,Any]:
+    if canonical_bytes(output)!=canonical_bytes(build_service_quota_reconstruction_output(receipts,**context)):
+        raise Refusal('service quota reconstruction differs from actual source and phase context')
+    return output
+
+
 RECONSTRUCTION_PROGRESS_CONTROLS=(
     'ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
     'VPC_NETWORK_PATH','SERVICE_QUOTA','STANDARD_WORKFLOW','SSM_DOCUMENT',
@@ -3009,7 +3056,8 @@ RECONSTRUCTION_PROGRESS_CONTROLS=(
 RECONSTRUCTION_PROGRESS_OUTPUT_KINDS={
     'ACCOUNT_REGION':'aws_c0_account_region_observation/v1',
     'INSTANCE_PROFILE_SOLE_ROLE':'aws_c0_instance_profile_role_observation/v1',
-    'VPC_NETWORK_PATH':'aws_c0_vpc_network_observation/v2'}
+    'VPC_NETWORK_PATH':'aws_c0_vpc_network_observation/v2',
+    'SERVICE_QUOTA':'aws_c0_service_quota_observation/v1'}
 
 
 def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_plan: Any,
@@ -3076,14 +3124,14 @@ def validate_runtime_control_reconstruction_progress_v2(record: Any, *, read_pla
 def build_runtime_control_reconstruction_source_attachment_v1(*, read_plan: Any,
         read_plan_identity: dict[str,str], phase: str, validation_utc: str,
         sealed_context: Any, sealed_context_identity: dict[str,str], account_bundle: Any,
-        instance_profile_bundle: Any, vpc_bundle: Any) -> dict[str,Any]:
-    """Rerun the three available reconstructors before binding their outputs.
+        instance_profile_bundle: Any, vpc_bundle: Any, service_quota_bundle: Any) -> dict[str,Any]:
+    """Rerun the four available reconstructors before binding their outputs.
 
     This is a source-bearing local record. It deliberately remains partial and
     cannot replace the historical eleven-control reconstruction-set/v1.
     """
     if phase!='PREDEPLOYMENT':
-        raise Refusal('only the three implemented predeployment controls may attach')
+        raise Refusal('only the four implemented predeployment controls may attach')
     validate_runtime_control_read_plan_v2(read_plan,read_plan_identity)
     context_fields={'schema','phase_not_before_utc','validation_utc','freshness_max_seconds',
         'caller_identity','authentication_source_identity','expected_caller_arn','expected_caller_user_id',
@@ -3106,16 +3154,19 @@ def build_runtime_control_reconstruction_source_attachment_v1(*, read_plan: Any,
     account=bundle(account_bundle,'account',{'candidate','receipt','context'})
     profile=bundle(instance_profile_bundle,'instance/profile',{'candidate','receipts','context'})
     vpc=bundle(vpc_bundle,'vpc',{'candidate','receipts','ingress_binding','context'})
-    account_context=account['context'];profile_context=profile['context'];vpc_context=vpc['context']
-    if (not isinstance(account_context,dict) or not isinstance(profile_context,dict) or not isinstance(vpc_context,dict)
+    quota=bundle(service_quota_bundle,'service quota',{'candidate','receipts','context'})
+    account_context=account['context'];profile_context=profile['context'];vpc_context=vpc['context'];quota_context=quota['context']
+    if (not isinstance(account_context,dict) or not isinstance(profile_context,dict)
+            or not isinstance(vpc_context,dict) or not isinstance(quota_context,dict)
             or account_context.get('validation_utc')!=validation_utc
             or profile_context.get('validation_utc')!=validation_utc
             or vpc_context.get('validation_utc')!=validation_utc
+            or quota_context.get('validation_utc')!=validation_utc
             or any(context.get('freshness_max_seconds')!=sealed_context['freshness_max_seconds']
                    or context.get('phase_not_before_utc')!=sealed_context['phase_not_before_utc']
                    or context.get('caller_identity')!=sealed_context['caller_identity']
                    or context.get('authentication_source_identity')!=sealed_context['authentication_source_identity']
-                   for context in (account_context,profile_context))
+                   for context in (account_context,profile_context,quota_context))
             or vpc_context.get('phase_not_before_utc')!=sealed_context['phase_not_before_utc']
             or vpc_context.get('caller_identity')!=sealed_context['caller_identity']
             or vpc_context.get('authentication_source_identity')!=sealed_context['authentication_source_identity']
@@ -3133,15 +3184,16 @@ def build_runtime_control_reconstruction_source_attachment_v1(*, read_plan: Any,
     expected_account=build_account_region_reconstruction_output(account['receipt'],**account_context)
     expected_profile=build_instance_profile_reconstruction_output(profile['receipts'],**profile_context)
     expected_vpc=build_vpc_network_reconstruction_output_v2(vpc['receipts'],vpc['ingress_binding'],**vpc_context)
-    expected=(expected_account,expected_profile,expected_vpc)
-    candidates=(account['candidate'],profile['candidate'],vpc['candidate'])
+    expected_quota=build_service_quota_reconstruction_output(quota['receipts'],**quota_context)
+    expected=(expected_account,expected_profile,expected_vpc,expected_quota)
+    candidates=(account['candidate'],profile['candidate'],vpc['candidate'],quota['candidate'])
     if any(canonical_bytes(found)!=canonical_bytes(wanted) for found,wanted in zip(candidates,expected)):
         raise Refusal('source attachment candidate differs from rerun reconstruction')
-    controls=('ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH')
+    controls=('ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH','SERVICE_QUOTA')
     record={'schema':'aws_c0_runtime_control_reconstruction_source_attachment/v1',
         'read_plan_identity':read_plan_identity,'phase':phase,'validation_utc':validation_utc,
         'sealed_context':sealed_context,'sealed_context_identity':sealed_context_identity,
-        'source_bundles_in_order':[account,profile,vpc],'outputs_in_order':list(expected),
+        'source_bundles_in_order':[account,profile,vpc,quota],'outputs_in_order':list(expected),
         'source_revalidation_performed':True,'complete_reconstruction_claimed':False,
         'disposition':'PARTIAL_SOURCE_BOUND_NOT_READY'}
     if [item.get('control') for item in record['outputs_in_order']]!=list(controls):
@@ -3161,13 +3213,13 @@ def validate_runtime_control_reconstruction_source_attachment_v1(record: Any, *,
             or record.get('sealed_context_identity')!=expected_sealed_context_identity
             or record.get('complete_reconstruction_claimed') is not False
             or record.get('disposition')!='PARTIAL_SOURCE_BOUND_NOT_READY'
-            or not isinstance(record.get('source_bundles_in_order'),list) or len(record['source_bundles_in_order'])!=3):
+            or not isinstance(record.get('source_bundles_in_order'),list) or len(record['source_bundles_in_order'])!=4):
         raise Refusal('closed source-bound partial attachment required')
     bundles=record['source_bundles_in_order']
     expected=build_runtime_control_reconstruction_source_attachment_v1(read_plan=read_plan,
         read_plan_identity=read_plan_identity,phase=phase,validation_utc=validation_utc,
         sealed_context=record['sealed_context'],sealed_context_identity=record['sealed_context_identity'],
-        account_bundle=bundles[0],instance_profile_bundle=bundles[1],vpc_bundle=bundles[2])
+        account_bundle=bundles[0],instance_profile_bundle=bundles[1],vpc_bundle=bundles[2],service_quota_bundle=bundles[3])
     if canonical_bytes(record)!=canonical_bytes(expected):
         raise Refusal('source-bound attachment differs from rerun exact reconstruction')
     return record

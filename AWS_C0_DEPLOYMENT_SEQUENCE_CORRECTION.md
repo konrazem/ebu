@@ -170,6 +170,19 @@ They are three implemented output components (account, instance/profile, VPC),
 not a complete eleven-control set. The suite at `272bac5` ran 212 tests with
 211 passes and the same one public-entry missing reconstruction binding.
 
+The next source-specific local candidate reconstructs SERVICE_QUOTA from the
+exact ordered R34 GetServiceQuota and R35 GetAWSDefaultServiceQuota receipts.
+Both must be fresh authenticated successes for EC2 quota L-1216C47A, and both
+must report a positive integral value. The emitted control value is always the
+account's applied R34 value; the AWS default is retained as a separate witness
+and is never substituted for it. The source-bound attachment now reruns four
+constructors under the same immutable caller, collector, phase and freshness
+context. Three direct quota tests and six progress/attachment tests pass. This
+component has received focused controller review only because the active user
+instruction forbids creating an assistant; no independent-review claim is made.
+The attachment remains `PARTIAL_SOURCE_BOUND_NOT_READY` with seven unresolved
+controls and cannot satisfy the historical v1 live gate.
+
 The account producer follows the actual fields documented by
 [GetCallerIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html).
 Its role-ID syntax follows the already accepted local context schema, rather

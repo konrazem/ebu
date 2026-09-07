@@ -55,6 +55,9 @@
       "$ref": "#/$defs/instance_profile_output"
     },
     {
+      "$ref": "#/$defs/service_quota_output"
+    },
+    {
       "$ref": "#/$defs/runtime_reconstruction_progress_v2"
     },
     {
@@ -51458,6 +51461,84 @@
     "instance_profile_output": {
       "$ref": "#/$defs/instance_profile_reconstruction_output"
     },
+    "service_quota_reconstruction_output": {
+      "type": "object",
+      "required": [
+        "schema",
+        "kind",
+        "control",
+        "identity",
+        "canonical_json_base64",
+        "observed_utc",
+        "freshness_seconds",
+        "max_freshness_seconds",
+        "disposition",
+        "decoded_json",
+        "canonical_byte_sha256",
+        "canonical_byte_count",
+        "canonical_decode_validation_disposition",
+        "freshness_within_bound"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_service_quota_observation/v1"
+        },
+        "kind": {
+          "const": "aws_c0_service_quota_observation/v1"
+        },
+        "control": {
+          "const": "SERVICE_QUOTA"
+        },
+        "identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d65_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_service_quota_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "canonical_json_base64": {
+          "$ref": "#/$defs/d150_canonical_json_base64"
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/d67_timestamp"
+        },
+        "freshness_seconds": {
+          "$ref": "#/$defs/d69_bounded_integer"
+        },
+        "max_freshness_seconds": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "disposition": {
+          "const": "FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS"
+        },
+        "decoded_json": {
+          "$ref": "#/$defs/d162_decoded_service_quota_observation"
+        },
+        "canonical_byte_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "canonical_byte_count": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "canonical_decode_validation_disposition": {
+          "const": "STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS"
+        },
+        "freshness_within_bound": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "service_quota_output": {
+      "$ref": "#/$defs/service_quota_reconstruction_output"
+    },
     "vpc_network_reconstruction_output_v2": {
       "type": "object",
       "required": [
@@ -52062,7 +52143,7 @@
         },
         "candidate_control_ids_in_order": {
           "type": "array",
-          "maxItems": 3,
+          "maxItems": 4,
           "uniqueItems": true,
           "items": {
             "type": "string"
@@ -52150,16 +52231,16 @@
         },
         "source_bundles_in_order": {
           "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
+          "minItems": 4,
+          "maxItems": 4,
           "items": {
             "type": "object"
           }
         },
         "outputs_in_order": {
           "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
+          "minItems": 4,
+          "maxItems": 4,
           "items": {
             "type": "object"
           }

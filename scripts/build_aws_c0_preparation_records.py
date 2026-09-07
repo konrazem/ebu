@@ -190,6 +190,11 @@ def build_instance_profile_output(root,receipts,**context):
     validate_record(root,'instance_profile_output',output)
     return output
 
+def build_service_quota_output(root,receipts,**context):
+    output=finalizer(root).build_service_quota_reconstruction_output(receipts,**context)
+    validate_record(root,'service_quota_output',output)
+    return output
+
 def build_runtime_control_reconstruction_progress_v2(root,outputs,*,phase,validation_utc,
         freshness_max_seconds=300):
     """Bind only reconstructed controls; this cannot claim the v1 PASS gate."""
@@ -218,7 +223,8 @@ def build_runtime_control_reconstruction_progress_v2(root,outputs,*,phase,valida
     return record
 
 def build_runtime_control_reconstruction_source_attachment_v1(root,*,account_bundle,
-        instance_profile_bundle,vpc_bundle,sealed_context,sealed_context_identity,validation_utc,freshness_max_seconds=300):
+        instance_profile_bundle,vpc_bundle,service_quota_bundle,sealed_context,sealed_context_identity,
+        validation_utc,freshness_max_seconds=300):
     """Construct the partial attachment only by rerunning its source validators."""
     plan_fields=build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=freshness_max_seconds)
     f=finalizer(root)
@@ -226,7 +232,7 @@ def build_runtime_control_reconstruction_source_attachment_v1(root,*,account_bun
         read_plan=plan_fields['runtime_control_read_plan'],
         read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
         validation_utc=validation_utc,sealed_context=sealed_context,sealed_context_identity=sealed_context_identity,account_bundle=account_bundle,
-        instance_profile_bundle=instance_profile_bundle,vpc_bundle=vpc_bundle)
+        instance_profile_bundle=instance_profile_bundle,vpc_bundle=vpc_bundle,service_quota_bundle=service_quota_bundle)
     f.validate_runtime_control_reconstruction_source_attachment_v1(record,
         read_plan=plan_fields['runtime_control_read_plan'],
         read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',

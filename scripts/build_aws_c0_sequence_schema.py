@@ -234,6 +234,9 @@ def build(root=ROOT):
     definitions['instance_profile_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
         if v['properties']['control']['const']=='INSTANCE_PROFILE_SOLE_ROLE'))
     definitions['instance_profile_output']={'$ref':'#/$defs/instance_profile_reconstruction_output'}
+    definitions['service_quota_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
+        if v['properties']['control']['const']=='SERVICE_QUOTA'))
+    definitions['service_quota_output']={'$ref':'#/$defs/service_quota_reconstruction_output'}
     output_vpc=copy.deepcopy(next(v for v in output_union['oneOf'] if v['properties']['control']['const']=='VPC_NETWORK_PATH'))
     output_vpc['properties'].update(schema={'const':'aws_c0_vpc_network_observation/v2'},kind={'const':'aws_c0_vpc_network_observation/v2'},
         identity=typed_identity('aws_c0_vpc_network_observation/v2'),decoded_json={'$ref':'#/$defs/vpc_network_decoded_v2'})
@@ -249,7 +252,7 @@ def build(root=ROOT):
         'phase':{'enum':['PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION']},
         'observed_utc':{'$ref':time_ref},'controls_in_order':{'type':'array','minItems':11,'maxItems':11,
             'prefixItems':[copy.deepcopy(progress_slot) for _ in range(11)],'items':False},
-        'candidate_control_ids_in_order':{'type':'array','maxItems':3,'uniqueItems':True,'items':{'type':'string'}},
+        'candidate_control_ids_in_order':{'type':'array','maxItems':4,'uniqueItems':True,'items':{'type':'string'}},
         'unresolved_control_ids_in_order':{'type':'array','minItems':1,'maxItems':11,'uniqueItems':True,'items':{'type':'string'}},
         'source_revalidation_performed':{'const':False},'complete_reconstruction_claimed':{'const':False},'disposition':{'const':'PARTIAL_NOT_READY'}}
     definitions['runtime_reconstruction_progress_v2_definition']={'type':'object','required':list(progress_fields),
@@ -259,8 +262,8 @@ def build(root=ROOT):
         'read_plan_identity':typed_identity('aws_c0_runtime_control_read_plan/v2'),
         'phase':{'const':'PREDEPLOYMENT'},'validation_utc':{'$ref':time_ref},
         'sealed_context':{'type':'object'},'sealed_context_identity':typed_identity('aws_c0_predeployment_reconstruction_context/v1'),
-        'source_bundles_in_order':{'type':'array','minItems':3,'maxItems':3,'items':{'type':'object'}},
-        'outputs_in_order':{'type':'array','minItems':3,'maxItems':3,'items':{'type':'object'}},
+        'source_bundles_in_order':{'type':'array','minItems':4,'maxItems':4,'items':{'type':'object'}},
+        'outputs_in_order':{'type':'array','minItems':4,'maxItems':4,'items':{'type':'object'}},
         'source_revalidation_performed':{'const':True},'complete_reconstruction_claimed':{'const':False},
         'disposition':{'const':'PARTIAL_SOURCE_BOUND_NOT_READY'}}
     definitions['runtime_reconstruction_source_attachment_v1_definition']={'type':'object',
@@ -269,7 +272,7 @@ def build(root=ROOT):
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

@@ -894,6 +894,57 @@ class InstanceProfileReconstructionTests(unittest.TestCase):
         with self.assertRaises(F.Refusal):F.build_instance_profile_reconstruction_output(receipts,**context)
 
 
+class ServiceQuotaReconstructionTests(unittest.TestCase):
+    def material(self):
+        sources,_,_,base=R64CallBudgetTests().material();receipts={}
+        request={'ServiceCode':'ec2','QuotaCode':'L-1216C47A'}
+        actions={'R34':'servicequotas:GetServiceQuota','R35':'servicequotas:GetAWSDefaultServiceQuota'}
+        for index,row in enumerate(('R34','R35')):
+            receipt=copy.deepcopy(sources[0]);request_id='offline-quota-'+row
+            receipt.update(row_id=row,action=actions[row],request_id=request_id,pagination_item_count=1,
+                requested_utc='2026-09-06T18:00:%02dZ'%(2*index+1),completed_utc='2026-09-06T18:00:%02dZ'%(2*index+2))
+            response={'Quota':{'ServiceCode':'ec2','QuotaCode':'L-1216C47A','Value':5 if row=='R34' else 4},
+                'ResponseMetadata':{'RequestId':request_id,'HTTPStatusCode':200,'RetryAttempts':0,
+                    'HTTPHeaders':{'x-amzn-requestid':request_id}}}
+            R51ProspectiveAmendmentTests.encode(receipt,'request',request)
+            R51ProspectiveAmendmentTests.encode(receipt,'response',response);receipts[row]=receipt
+        context={k:base[k] for k in ('caller_identity','authentication_source_identity','freshness_max_seconds')}
+        context.update(phase_not_before_utc='2026-09-06T18:00:00Z',validation_utc='2026-09-06T18:00:50Z')
+        return receipts,context
+
+    def test_actual_sources_reconstruct_applied_quota_without_substituting_default(self):
+        receipts,context=self.material();output=G.build_service_quota_output(ROOT,receipts,**context)
+        self.assertEqual(output['decoded_json']['quota_value'],5)
+        self.assertEqual(output['decoded_json']['source_row_ids'],['R34','R35'])
+        self.assertEqual(output['freshness_seconds'],49)
+        self.assertEqual(F.validate_service_quota_reconstruction_output(output,receipts,**context),output)
+        G.validate_record(ROOT,'service_quota_output',output)
+
+    def test_target_value_order_and_source_context_drift_refuse(self):
+        mutations=[('R34','request',lambda v:v.update(QuotaCode='other')),
+            ('R34','response',lambda v:v['Quota'].update(ServiceCode='s3')),
+            ('R34','response',lambda v:v['Quota'].update(Value=0)),
+            ('R35','response',lambda v:v['Quota'].update(QuotaCode='other'))]
+        for row,stem,mutate in mutations:
+            receipts,context=self.material();R64IngressAmendmentTests().mutate_api(receipts[row],stem,mutate)
+            with self.subTest(row=row,stem=stem),self.assertRaises(F.Refusal):
+                F.build_service_quota_reconstruction_output(receipts,**context)
+        for mutate in (lambda r:r.pop('R35'),lambda r:r['R35'].update(pagination_item_count=True),
+            lambda r:r['R35'].update(requested_utc='2026-09-06T18:00:01Z'),
+            lambda r:r['R34'].update(authentication_source_identity=F.identity('aws_authenticated_api_source/v1','d'*64))):
+            receipts,context=self.material();mutate(receipts)
+            with self.assertRaises(F.Refusal):F.build_service_quota_reconstruction_output(receipts,**context)
+
+    def test_rehashed_output_or_stale_phase_cannot_replace_sources(self):
+        receipts,context=self.material();output=G.build_service_quota_output(ROOT,receipts,**context)
+        output['decoded_json']['quota_value']=4;raw=G.canonical(output['decoded_json'])
+        output.update(identity=G.identity(output['schema'],output['decoded_json']),canonical_json_base64=base64.b64encode(raw).decode(),
+            canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        with self.assertRaises(F.Refusal):F.validate_service_quota_reconstruction_output(output,receipts,**context)
+        receipts,context=self.material();context['validation_utc']='2026-09-06T18:05:02Z'
+        with self.assertRaises(F.Refusal):F.build_service_quota_reconstruction_output(receipts,**context)
+
+
 class ReconstructionProgressV2Tests(unittest.TestCase):
     """The partial envelope remains offline and cannot become a v1 PASS."""
     def material(self):
@@ -903,22 +954,24 @@ class ReconstructionProgressV2Tests(unittest.TestCase):
         profile=G.build_instance_profile_output(ROOT,receipts,**profile_context)
         receipts,binding,vpc_context=VpcNetworkReconstructionV2Tests().material()
         vpc=G.build_vpc_network_output_v2(ROOT,receipts,binding,**vpc_context)
-        return {'ACCOUNT_REGION':account,'INSTANCE_PROFILE_SOLE_ROLE':profile,'VPC_NETWORK_PATH':vpc}
+        receipts,quota_context=ServiceQuotaReconstructionTests().material()
+        quota=G.build_service_quota_output(ROOT,receipts,**quota_context)
+        return {'ACCOUNT_REGION':account,'INSTANCE_PROFILE_SOLE_ROLE':profile,'VPC_NETWORK_PATH':vpc,'SERVICE_QUOTA':quota}
 
-    def test_three_canonical_candidates_bind_without_claiming_complete_set(self):
+    def test_four_canonical_candidates_bind_without_claiming_complete_set(self):
         record=G.build_runtime_control_reconstruction_progress_v2(ROOT,self.material(),
             phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
         self.assertFalse(record['complete_reconstruction_claimed'])
         self.assertEqual(record['disposition'],'PARTIAL_NOT_READY')
         self.assertFalse(record['source_revalidation_performed'])
         self.assertEqual(record['candidate_control_ids_in_order'],
-            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH'])
-        self.assertEqual(len(record['unresolved_control_ids_in_order']),8)
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH','SERVICE_QUOTA'])
+        self.assertEqual(len(record['unresolved_control_ids_in_order']),7)
         G.validate_record(ROOT,'runtime_reconstruction_progress_v2',record)
 
     def test_unknown_output_and_rehashed_slot_mapping_refuse(self):
         with self.assertRaises(ValueError):G.build_runtime_control_reconstruction_progress_v2(ROOT,
-            {'SERVICE_QUOTA':{}},phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
+            {'IAM_POLICY_SET':{}},phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
         record=G.build_runtime_control_reconstruction_progress_v2(ROOT,self.material(),
             phase='PREDEPLOYMENT',validation_utc='2026-09-06T18:00:50Z')
         plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
@@ -941,6 +994,8 @@ class ReconstructionSourceAttachmentTests(unittest.TestCase):
         receipts['R02']=copy.deepcopy(binding['ingress_observation']['source_receipts_in_order'][0])
         profile=G.build_instance_profile_output(ROOT,receipts,**profile_context)
         vpc=G.build_vpc_network_output_v2(ROOT,vpc_receipts,binding,**vpc_context)
+        quota_receipts,quota_context=ServiceQuotaReconstructionTests().material()
+        quota=G.build_service_quota_output(ROOT,quota_receipts,**quota_context)
         sealed={'schema':'aws_c0_predeployment_reconstruction_context/v1',
             'phase_not_before_utc':vpc_context['phase_not_before_utc'],'validation_utc':validation,
             'freshness_max_seconds':vpc_context['read_plan']['freshness_max_seconds'],
@@ -952,25 +1007,26 @@ class ReconstructionSourceAttachmentTests(unittest.TestCase):
         sealed_id=F.identity(sealed['schema'],F.digest(F.canonical_bytes(sealed)))
         return validation,sealed,sealed_id,{'candidate':account,'receipt':receipt,'context':account_context}, \
             {'candidate':profile,'receipts':receipts,'context':profile_context}, \
-            {'candidate':vpc,'receipts':vpc_receipts,'ingress_binding':binding,'context':vpc_context}
+            {'candidate':vpc,'receipts':vpc_receipts,'ingress_binding':binding,'context':vpc_context}, \
+            {'candidate':quota,'receipts':quota_receipts,'context':quota_context}
 
-    def test_source_attachment_reruns_all_three_reconstructors(self):
-        validation,sealed,sealed_id,account,profile,vpc=self.material()
+    def test_source_attachment_reruns_all_four_reconstructors(self):
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material()
         record=G.build_runtime_control_reconstruction_source_attachment_v1(ROOT,
             account_bundle=account,instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,
-            sealed_context_identity=sealed_id,validation_utc=validation)
+            service_quota_bundle=quota,sealed_context_identity=sealed_id,validation_utc=validation)
         self.assertTrue(record['source_revalidation_performed'])
         self.assertFalse(record['complete_reconstruction_claimed'])
         self.assertEqual(record['disposition'],'PARTIAL_SOURCE_BOUND_NOT_READY')
         self.assertEqual([x['control'] for x in record['outputs_in_order']],
-            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH'])
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','VPC_NETWORK_PATH','SERVICE_QUOTA'])
         plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
         self.assertEqual(F.validate_runtime_control_reconstruction_source_attachment_v1(record,
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc=validation,expected_sealed_context_identity=sealed_id),record)
 
     def test_rehashed_candidate_or_source_context_refuses(self):
-        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material()
         account['candidate']=copy.deepcopy(account['candidate'])
         account['candidate']['decoded_json']['account_id']='111111111111'
         raw=G.canonical(account['candidate']['decoded_json'])
@@ -980,40 +1036,46 @@ class ReconstructionSourceAttachmentTests(unittest.TestCase):
         with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
-            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
+            instance_profile_bundle=profile,vpc_bundle=vpc,service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id)
 
     def test_sealed_context_and_shared_r02_cannot_be_substituted(self):
-        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material()
         plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
         profile['context']=copy.deepcopy(profile['context']);profile['context']['expected_role_id']='AROA'+'B'*16
         with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
-            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
+            instance_profile_bundle=profile,vpc_bundle=vpc,service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id)
 
     def test_public_validator_rejects_rehashed_replacement_context(self):
-        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material()
         record=G.build_runtime_control_reconstruction_source_attachment_v1(ROOT,
             account_bundle=account,instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,
-            sealed_context_identity=sealed_id,validation_utc=validation)
+            service_quota_bundle=quota,sealed_context_identity=sealed_id,validation_utc=validation)
         record=copy.deepcopy(record);record['sealed_context']['ec2_pagination_bounds']['max_pages']=3
         record['sealed_context_identity']=F.identity(record['sealed_context']['schema'],F.digest(F.canonical_bytes(record['sealed_context'])))
         plan=G.build_runtime_control_read_plan_fields_v2(ROOT)
         with self.assertRaises(F.Refusal):F.validate_runtime_control_reconstruction_source_attachment_v1(record,
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc=validation,expected_sealed_context_identity=sealed_id)
-        validation,sealed,sealed_id,account,profile,vpc=self.material()
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material()
         profile['receipts']=copy.deepcopy(profile['receipts']);profile['receipts']['R02']['request_id']='different-r02-receipt'
         with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
-            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
-        validation,sealed,sealed_id,account,profile,vpc=self.material();vpc['context']=copy.deepcopy(vpc['context'])
+            instance_profile_bundle=profile,vpc_bundle=vpc,service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id)
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material();vpc['context']=copy.deepcopy(vpc['context'])
         vpc['context']['read_plan_identity']=F.identity('aws_c0_runtime_control_read_plan/v2','0'*64)
         with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
             read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
             phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
-            instance_profile_bundle=profile,vpc_bundle=vpc,sealed_context=sealed,sealed_context_identity=sealed_id)
+            instance_profile_bundle=profile,vpc_bundle=vpc,service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id)
+        validation,sealed,sealed_id,account,profile,vpc,quota=self.material()
+        quota['context']=copy.deepcopy(quota['context']);quota['context']['phase_not_before_utc']='2026-09-06T18:00:02Z'
+        with self.assertRaises(F.Refusal):F.build_runtime_control_reconstruction_source_attachment_v1(
+            read_plan=plan['runtime_control_read_plan'],read_plan_identity=plan['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation,account_bundle=account,
+            instance_profile_bundle=profile,vpc_bundle=vpc,service_quota_bundle=quota,sealed_context=sealed,sealed_context_identity=sealed_id)
 
 
 class R64LocalBudgetStoreTests(unittest.TestCase):
