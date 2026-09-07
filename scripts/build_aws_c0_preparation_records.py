@@ -21,9 +21,12 @@ COMPLETION_ROWS=frozenset(('R38','R44','R54','R55','R56','R57','R58'))
 def sequence(root):return json.loads((root/SEQUENCE).read_bytes())
 
 def currentize(root,value):
-    mapping=sequence(root)['version_upgrades']
+    contract=sequence(root)
+    mappings=(contract['version_upgrades'],contract['prospective_carrier_version_upgrades'])
     def visit(v):
-        if isinstance(v,str):return mapping.get(v,v)
+        if isinstance(v,str):
+            for mapping in mappings:v=mapping.get(v,v)
+            return v
         if isinstance(v,list):return [visit(x) for x in v]
         if isinstance(v,dict):return {k:visit(x) for k,x in v.items()}
         return v
@@ -796,7 +799,7 @@ def record_schema(root,name):
     result.update({'$schema':bundle['$schema'],'$id':SCHEMA_URI+'/'+name,'$defs':bundle['$defs']})
     return result
 
-def schema(root):return record_schema(root,'preparation_packet'),Registry()
+def schema(root):return record_schema(root,'preparation_packet_v6'),Registry()
 
 def validate_record(root,name,value):
     jsonschema.Draft202012Validator(record_schema(root,name),registry=Registry()).validate(value)
@@ -943,6 +946,8 @@ def build_sealed_role_launch_fields(root,snapshot_bytes,receipts,*,earliest,late
         r14_get_role_observation={'row':rows['R14'],'call_disposition':'CALLED','condition_evaluated':True,
                                  'called_receipt':copy.deepcopy(receipts['R14']),'not_called_reason':None})
     validate_named_definition(root,'sealed_ec2_role_context_preimage',context)
+    # This producer remains available to validate the historical launch/v6
+    # duplicate proof fields; launch/v7 deliberately does not carry them.
     launch_schema=record_schema(root,'launch')['allOf'][1]['properties']
     return {'sealed_ec2_role_context_identity':identity('aws_c0_sealed_ec2_role_context/v1',context),
         'sealed_ec2_role_context_preimage':context,
@@ -1037,8 +1042,8 @@ def build_deployment_inputs(root,definition_bytes,document_bytes,template_bytes)
 def validate_predeployment_closure(root,closure):
     """The closure proves preparation, not objects which execution will create."""
     f=finalizer(root)
-    validate_record(root,'preparation_closure',closure)
-    if closure.get('schema')!='aws_c0_preparation_closure/v5':raise ValueError('current preparation closure required')
+    validate_record(root,'preparation_closure_v6',closure)
+    if closure.get('schema')!='aws_c0_preparation_closure/v6':raise ValueError('current preparation closure required')
     f._deployment_control_values(closure['final_runtime_control_preimages'],f.PREDEPLOYMENT_CONTROLS,
                                 '1970-01-01T00:00:00Z',closure['observed_utc'])
     return closure
@@ -1046,9 +1051,10 @@ def validate_predeployment_closure(root,closure):
 def validate_postdeployment_authorization(root,packet,authorization,seed,launch):
     """Mandatory offline validation before the later auth publication and start."""
     f=finalizer(root)
-    for name,value in [('live_packet',packet),('live_authorization',authorization),('closure_seed',seed),('launch',launch)]:
+    for name,value in [('live_packet_v7',packet),('live_authorization_v7',authorization),
+                       ('closure_seed',seed),('launch_v7',launch)]:
         validate_record(root,name,value)
-    f._validate_live_packet_v6(packet);f._validate_live_authorization_v6(authorization)
-    f._validate_launch_v6(launch)
+    f._validate_live_packet_v7(packet);f._validate_live_authorization_v7(authorization)
+    f._validate_launch_v7(launch)
     f.validate_deployment_sequence(packet,authorization,seed,launch)
     return copy.deepcopy(authorization)

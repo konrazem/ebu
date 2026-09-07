@@ -260,8 +260,13 @@ GATE1_DIRECT_VERSION_UPGRADES = (
     ("aws_c0_preparation_closure/v3", "aws_c0_preparation_closure/v4"),
     ("aws_c0_live_packet/v4", "aws_c0_live_packet/v5"),
 )
-SEQUENCE_VERSION_UPGRADES = json.loads((ROOT / "aws_c0_deployment_sequence_correction_contract.json").read_bytes())["version_upgrades"]
-SEQUENCE_PRELIVE_RECORD_KINDS = tuple(SEQUENCE_VERSION_UPGRADES.get(kind, kind) for kind in GATE1_PRELIVE_RECORD_KINDS)
+SEQUENCE_CONTRACT = json.loads((ROOT / "aws_c0_deployment_sequence_correction_contract.json").read_bytes())
+SEQUENCE_VERSION_UPGRADES = SEQUENCE_CONTRACT["version_upgrades"]
+SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES = SEQUENCE_CONTRACT["prospective_carrier_version_upgrades"]
+SEQUENCE_PRELIVE_RECORD_KINDS = tuple(
+    SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES.get(SEQUENCE_VERSION_UPGRADES.get(kind, kind),
+                                              SEQUENCE_VERSION_UPGRADES.get(kind, kind))
+    for kind in GATE1_PRELIVE_RECORD_KINDS)
 GATE1_TRANSITIVE_VERSION_UPGRADES = (
     ("aws_c0_live_authorization/v4", "aws_c0_live_authorization/v5"),
     ("aws_c0_platform_smoke_known_case_local_binding/v1", "aws_c0_platform_smoke_known_case_local_binding/v2"),
@@ -23878,6 +23883,14 @@ def validate_sequence_authority() -> None:
     expected = {kind: kind.rsplit('/v', 1)[0] + '/v' + str(int(kind.rsplit('/v', 1)[1]) + 1) for kind in previous}
     expected['aws_c0_closure_seed/v1'] = 'aws_c0_closure_seed/v2'
     require(contract['version_upgrades'] == expected, 'sequencing upgrade map differs from exact directly affected stack')
+    require(contract['prospective_carrier_version_upgrades'] == {
+        'aws_c0_preparation_packet/v5':'aws_c0_preparation_packet/v6',
+        'aws_c0_preparation_authorization/v4':'aws_c0_preparation_authorization/v5',
+        'aws_c0_launch_request/v6':'aws_c0_launch_request/v7',
+        'aws_c0_preparation_closure/v5':'aws_c0_preparation_closure/v6',
+        'aws_c0_live_packet/v6':'aws_c0_live_packet/v7',
+        'aws_c0_live_authorization/v6':'aws_c0_live_authorization/v7'},
+        'prospective preparation/launch/live carrier map differs')
     require(contract['pre_live_object_count'] == 24 and contract['pre_live_predecessor_count'] == 23 and
             contract['preparation_input_control_count'] == 6 and contract['predeployment_observed_control_count'] == 9 and
             contract['postdeployment_observed_control_count'] == 11 and
@@ -23916,9 +23929,9 @@ def validate_sources() -> None:
             "controller current-record stack absent")
     require("aws_c0_source_sidecar/v5" in controller and "reserve_for_operation" in controller,
             "controller capture reservation absent")
-    require("aws_c0_launch_request/v6" in controller and
-            "aws_c0_live_packet/v6" in controller and
-            "aws_c0_live_authorization/v6" in controller and
+    require("aws_c0_launch_request/v7" in controller and
+            "aws_c0_live_packet/v7" in controller and
+            "aws_c0_live_authorization/v7" in controller and
             "aws_c0_attempt_claim/v3" in controller,
             "controller Gate1 downstream version stack absent")
     require("FROZEN_PRELIVE_OBJECT_COUNT = 24" in finalizer and

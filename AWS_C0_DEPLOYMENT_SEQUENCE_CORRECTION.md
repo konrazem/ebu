@@ -690,6 +690,68 @@ blocker; this document does not claim the user typed a future generated packet.
 
 ## Minimal change
 
+### Prospective live carrier v7 correction
+
+The later explicit user authority to repair every necessary AWS-C0 stage
+authorizes a prospective carrier correction without changing historical
+schemas. `aws_c0_live_packet/v6` and `aws_c0_live_authorization/v6` remain
+unchanged and continue to document the earlier impossible requirement for a
+complete eleven-control reconstruction before CloudFormation created all of
+those resources.
+
+`aws_c0_live_packet/v7` instead binds the exact
+`aws_c0_runtime_control_read_plan/v3` and embeds the source-revalidated
+`aws_c0_runtime_control_reconstruction_source_attachment/v5`. That attachment
+contains the eight controls whose authenticated API sources can be consumed
+before deployment. The packet still carries all nine predeployment semantic
+preimages, including the already published software-and-image material, and
+the existing postdeployment software/image drift comparison remains mandatory.
+`aws_c0_live_authorization/v7` still carries all eleven postdeployment
+preimages and directly repeats the packet's attachment identity.
+
+The v7 packet also binds the change-set reconstruction output and its derived
+API/resource effect identities. The historical orphan fields
+`runtime_control_reconstruction_set_identity`,
+`runtime_control_reconstruction_set`,
+`packet_declared_other_material_coordinates`, and
+`publication_upgrade_binding` are not reinterpreted or weakened in v6; they
+are absent only from the prospective v7 carrier and replaced by the complete
+inline source attachment plus its canonical identity. No AWS action,
+permission, scientific content, cost boundary, publication authority, or
+software drift predicate changes.
+
+### Prospective launch carrier v7 correction
+
+The user's following explicit approval authorizes a prospective
+`aws_c0_launch_request/v7` and a local commit. Historical launch/v6 remains
+unchanged. Launch/v7 omits ten duplicate proof fields for which the repository
+has no production constructor and which neither runtime launch validator ever
+consumed. It preserves the exact authority-audit, static-validation, private
+infrastructure snapshot, cost model, closure seed, eight artifact receipts,
+timeouts, retry count, cleanup path, stopped `t3.small` target, and USD 50
+boundary.
+
+The omitted role-context duplicate is replaced downstream by the live-packet/v7
+source attachment's exact R02, R03, R13, and R14 reconstruction plus the
+explicit authenticated R14 IAM cross-control binding. The publication duplicate
+remains represented by the exact authority-audit-v4 and static-validation-v4
+identities and object receipts already required in launch. The journal-budget
+duplicate remains represented by the exact static-validation-v4 identity and
+object already required in launch. This correction removes unsupported claims;
+it does not remove their underlying evidence sources or runtime safety gates.
+
+Because the preparation packet prospectively enumerates the exact record kinds
+that will exist before execution, launch/v7 also requires a versioned carrier
+extension through `aws_c0_preparation_packet/v6`,
+`aws_c0_preparation_authorization/v5`, and
+`aws_c0_preparation_closure/v6`. Packet/v6 names the prospective launch/v7,
+closure/v6, and live-packet/v7 kinds; authorization/v5 binds packet/v6;
+launch/v7 binds packet/v6 and authorization/v5; closure/v6 binds all three.
+This extension changes no field except those carrier-kind constants and the
+already authorized launch/v7 field removals. All packet/v5, authorization/v4,
+launch/v6, closure/v5, live-packet/v6, and live-authorization/v6 schemas remain
+byte-identical historical definitions.
+
 The existing closure seed required an authenticated workflow observation before
 the workflow existed. Both the preparation closure and live packet also required
 eleven observed controls before CloudFormation created the workflow and SSM

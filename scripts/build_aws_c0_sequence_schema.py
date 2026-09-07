@@ -14,6 +14,7 @@ def build(root=ROOT):
     sequence=json.loads((root/'aws_c0_deployment_sequence_correction_contract.json').read_bytes())
     prior={r['from']:r['to'] for r in lineage['required_version_upgrades']+lineage['required_transitive_version_upgrades']}
     current=sequence['version_upgrades']
+    prospective=sequence['prospective_carrier_version_upgrades']
     documents={};definitions={};names={}
     def upgrade(value):return current.get(prior.get(value,value),prior.get(value,value))
     def document(name):
@@ -388,10 +389,75 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v5_definition']={'type':'object',
         'required':list(attachment_v5_fields),'properties':attachment_v5_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v5']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v5_definition'}
+    # The historical live packet/auth v6 schemas are internally unsatisfiable:
+    # they require a complete eleven-control reconstruction before the stack
+    # has created three of those controls.  Preserve those schemas byte-for-byte
+    # and append prospective carriers that bind the truthful eight-control
+    # source attachment.  The ninth predeployment semantic preimage remains
+    # the already published software/image material, including its unchanged
+    # postdeployment drift check; the later authorization still carries all
+    # eleven postdeployment control preimages.
+    def replace_carriers(value):
+        if isinstance(value,str):return prospective.get(value,value)
+        if isinstance(value,list):return [replace_carriers(item) for item in value]
+        if isinstance(value,dict):return {key:replace_carriers(item) for key,item in value.items()}
+        return value
+    preparation_packet_v5=definitions[definitions['preparation_packet']['$ref'].rsplit('/',1)[-1]]
+    preparation_packet_v6=replace_carriers(copy.deepcopy(preparation_packet_v5))
+    preparation_authorization_v4=definitions[definitions['preparation_authorization']['$ref'].rsplit('/',1)[-1]]
+    preparation_authorization_v5=replace_carriers(copy.deepcopy(preparation_authorization_v4))
+    launch_v6=definitions[definitions['launch']['$ref'].rsplit('/',1)[-1]]
+    launch_v7=replace_carriers(copy.deepcopy(launch_v6));launch_body=launch_v7['allOf'][1]
+    for field in ('publication_upgrade_binding','sealed_ec2_role_context_identity',
+                  'sealed_ec2_role_context_preimage','sealed_ec2_role_context_preimage_canonical_json_base64',
+                  'sealed_ec2_role_context_preimage_byte_count','sealed_ec2_role_context_preimage_sha256',
+                  'sealed_ec2_role_context_cross_binding_disposition','journal_capture_budget_evaluation_identity',
+                  'journal_capture_budget_evaluation_preimage','journal_capture_budget_evaluation_cross_binding_disposition'):
+        launch_body['required'].remove(field);del launch_body['properties'][field]
+    preparation_closure_v5=definitions[definitions['preparation_closure']['$ref'].rsplit('/',1)[-1]]
+    preparation_closure_v6=replace_carriers(copy.deepcopy(preparation_closure_v5))
+    packet_v6=definitions[definitions['live_packet']['$ref'].rsplit('/',1)[-1]]
+    packet_v7=replace_carriers(copy.deepcopy(packet_v6));packet_body=packet_v7['allOf'][1]
+    for field in ('runtime_control_reconstruction_set_identity','runtime_control_reconstruction_set',
+                  'packet_declared_other_material_coordinates','publication_upgrade_binding'):
+        packet_body['required'].remove(field);del packet_body['properties'][field]
+    packet_body['properties']['runtime_control_read_plan']={'$ref':'#/$defs/read_plan_iam_v3'}
+    packet_body['properties']['runtime_control_read_plan_identity']=typed_identity('aws_c0_runtime_control_read_plan/v3')
+    packet_body['properties']['launch_request_identity']=typed_identity('aws_c0_launch_request/v7')
+    packet_body['properties']['change_set_observation_identity']=typed_identity(
+        'aws_c0_change_set_effects_observation/v1')
+    packet_body['properties']['effect_api_set_identity']=typed_identity('aws_c0_effect_api_set/v1')
+    packet_body['properties']['effect_resource_set_identity']=typed_identity('aws_c0_effect_resource_set/v1')
+    packet_body['required']+=['runtime_control_reconstruction_source_attachment_identity',
+                              'runtime_control_reconstruction_source_attachment']
+    packet_body['properties']['runtime_control_reconstruction_source_attachment_identity']=typed_identity(
+        'aws_c0_runtime_control_reconstruction_source_attachment/v5')
+    packet_body['properties']['runtime_control_reconstruction_source_attachment']={
+        '$ref':'#/$defs/runtime_reconstruction_source_attachment_v5_definition'}
+    auth_v6=definitions[definitions['live_authorization']['$ref'].rsplit('/',1)[-1]]
+    auth_v7=replace_carriers(copy.deepcopy(auth_v6));auth_body=auth_v7['allOf'][1]
+    auth_body['required'].remove('runtime_control_reconstruction_set_identity')
+    del auth_body['properties']['runtime_control_reconstruction_set_identity']
+    auth_body['required'].append('runtime_control_reconstruction_source_attachment_identity')
+    auth_body['properties']['runtime_control_reconstruction_source_attachment_identity']=typed_identity(
+        'aws_c0_runtime_control_reconstruction_source_attachment/v5')
+    auth_body['properties']['live_packet_identity']=typed_identity('aws_c0_live_packet/v7')
+    definitions['preparation_packet_v6_definition']=preparation_packet_v6
+    definitions['preparation_packet_v6']={'$ref':'#/$defs/preparation_packet_v6_definition'}
+    definitions['preparation_authorization_v5_definition']=preparation_authorization_v5
+    definitions['preparation_authorization_v5']={'$ref':'#/$defs/preparation_authorization_v5_definition'}
+    definitions['launch_v7_definition']=launch_v7
+    definitions['launch_v7']={'$ref':'#/$defs/launch_v7_definition'}
+    definitions['preparation_closure_v6_definition']=preparation_closure_v6
+    definitions['preparation_closure_v6']={'$ref':'#/$defs/preparation_closure_v6_definition'}
+    definitions['live_packet_v7_definition']=packet_v7
+    definitions['live_packet_v7']={'$ref':'#/$defs/live_packet_v7_definition'}
+    definitions['live_authorization_v7_definition']=auth_v7
+    definitions['live_authorization_v7']={'$ref':'#/$defs/live_authorization_v7_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

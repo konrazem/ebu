@@ -673,7 +673,7 @@ def validate_launch(record: Any, rehearsal: str, attempt: str) -> dict[str, Any]
     if not isinstance(record, dict) or set(record) != LAUNCH_REQUIRED:
         raise Refusal("launch-v5 fields are not closed")
     expected = {
-        "schema": "aws_c0_launch_request/v6", "authority_id": AUTHORITY_ID,
+        "schema": "aws_c0_launch_request/v7", "authority_id": AUTHORITY_ID,
         "correction_authority_id": CORRECTION_ID,
         "closure_correction_authority_id": CLOSURE_ID,
         "material_correction_authority_id": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1",
@@ -698,8 +698,8 @@ def validate_launch(record: Any, rehearsal: str, attempt: str) -> dict[str, Any]
     _no_forbidden(record)
     kinds = {
         "attempt_identity": "aws_c0_attempt/v1",
-        "preparation_packet_identity": "aws_c0_preparation_packet/v5",
-        "preparation_authorization_identity": "aws_c0_preparation_authorization/v4",
+        "preparation_packet_identity": "aws_c0_preparation_packet/v6",
+        "preparation_authorization_identity": "aws_c0_preparation_authorization/v5",
         "authority_audit_identity": "aws_c0_audit_static_handoff_authority_audit/v4",
         "static_validation_identity": "aws_c0_material_runtime_static_validation/v4",
         "private_infrastructure_snapshot_identity": "aws_c0_private_infrastructure_snapshot/v1",
@@ -797,7 +797,7 @@ def build_platform_smoke_known_case_local_binding(record: Any) -> dict[str, Any]
     if _mode(launch["attempt_id"]) != "SUCCESS":
         raise Refusal("platform smoke first capsule requires the SUCCESS known case")
     inputs = (
-        ("LAUNCH_REQUEST", identity("aws_c0_launch_request/v6", launch["record_sha256"])),
+        ("LAUNCH_REQUEST", identity("aws_c0_launch_request/v7", launch["record_sha256"])),
         ("PREPARATION_PACKET", launch["preparation_packet_identity"]),
         ("PREPARATION_AUTHORIZATION", launch["preparation_authorization_identity"]),
         ("COST_MODEL", launch["cost_model_identity"]),
@@ -1010,9 +1010,9 @@ def _ssm_request_identity(launch_id: str, live_packet_id: str,
     preimage = {
         "schema": "aws_c0_ssm_command_request/v3",
         "artifact_prefix": prefix,
-        "launch_request_identity": identity("aws_c0_launch_request/v6", launch_id),
-        "live_packet_identity": identity("aws_c0_live_packet/v6", live_packet_id),
-        "live_authorization_identity": identity("aws_c0_live_authorization/v6", live_auth_id),
+        "launch_request_identity": identity("aws_c0_launch_request/v7", launch_id),
+        "live_packet_identity": identity("aws_c0_live_packet/v7", live_packet_id),
+        "live_authorization_identity": identity("aws_c0_live_authorization/v7", live_auth_id),
         "workflow_execution_identity": workflow_id,
     }
     return identity("aws_ssm_command/v3", digest(canonical_bytes(preimage)))
@@ -1057,7 +1057,7 @@ def validate_helper_local_source_context(args: argparse.Namespace, launch_raw: b
     workflow_id = _workflow_identity(args.workflow_execution_arn)
     if (start['attempt_identity'] != launch['attempt_identity'] or launch['artifact_prefix'] != args.artifact_prefix
             or source['workflow_execution_identity'] != workflow_id
-            or source['live_authorization_identity'] != identity('aws_c0_live_authorization/v6',args.live_authorization_sha256)
+            or source['live_authorization_identity'] != identity('aws_c0_live_authorization/v7',args.live_authorization_sha256)
             or source['ssm_command_identity'] != _ssm_request_identity(root_digest(launch),args.live_packet_sha256,
                                     args.live_authorization_sha256,workflow_id,args.artifact_prefix)):
         raise Refusal('helper prepared source attempt/workflow/identity mismatch')
@@ -1126,14 +1126,14 @@ def prepare_request(args: argparse.Namespace, *, credential_provider: Any = boot
     if len(live_raw) != args.live_packet_bytes:
         raise Refusal("live packet byte length mismatch")
     live_packet = strict_json(live_raw)
-    if not isinstance(live_packet, dict) or live_packet.get("schema") != "aws_c0_live_packet/v6" or "record_sha256" in live_packet:
+    if not isinstance(live_packet, dict) or live_packet.get("schema") != "aws_c0_live_packet/v7" or "record_sha256" in live_packet:
         raise Refusal("invalid live packet")
     launch_id = root_digest(launch)
     bucket_identity = launch["closure_seed_object"]["bucket_identity"]
     launch_receipt = {"bucket_identity": bucket_identity, "key": args.launch_key,
         "version_id": args.launch_version_id, "bytes": args.launch_bytes, "sha256": args.launch_sha256,
         "checksum_sha256_base64": base64.b64encode(bytes.fromhex(args.launch_sha256)).decode()}
-    if live_packet.get("launch_request_identity") != identity("aws_c0_launch_request/v6", launch_id) or live_packet.get("launch_request_object") != launch_receipt or live_packet.get("packet_disposition") != "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED":
+    if live_packet.get("launch_request_identity") != identity("aws_c0_launch_request/v7", launch_id) or live_packet.get("launch_request_object") != launch_receipt or live_packet.get("packet_disposition") != "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED":
         raise Refusal("live packet does not bind exact launch-v5")
     auth_raw, _ = _download(args.bucket, args.live_authorization_key,
                             args.live_authorization_version_id, args.live_authorization_sha256,
@@ -1145,7 +1145,7 @@ def prepare_request(args: argparse.Namespace, *, credential_provider: Any = boot
     packet_receipt = {"bucket_identity": bucket_identity, "key": args.live_packet_key,
         "version_id": args.live_packet_version_id, "bytes": args.live_packet_bytes, "sha256": args.live_packet_sha256,
         "checksum_sha256_base64": base64.b64encode(bytes.fromhex(args.live_packet_sha256)).decode()}
-    if not isinstance(live_auth, dict) or live_auth.get("schema") != "aws_c0_live_authorization/v6" or "record_sha256" in live_auth or live_auth.get("live_packet_identity") != identity("aws_c0_live_packet/v6", args.live_packet_sha256) or live_auth.get("live_packet_object") != packet_receipt or live_auth.get("attempt_identity") != launch["attempt_identity"]:
+    if not isinstance(live_auth, dict) or live_auth.get("schema") != "aws_c0_live_authorization/v7" or "record_sha256" in live_auth or live_auth.get("live_packet_identity") != identity("aws_c0_live_packet/v7", args.live_packet_sha256) or live_auth.get("live_packet_object") != packet_receipt or live_auth.get("attempt_identity") != launch["attempt_identity"]:
         raise Refusal("live authorization does not bind exact packet/attempt")
     bind_ssm_dispatch_to_authenticated_sources(dispatch, launch, live_auth)
     workflow_id = _workflow_identity(args.workflow_execution_arn)
@@ -1167,7 +1167,7 @@ def prepare_request(args: argparse.Namespace, *, credential_provider: Any = boot
         "live_authorization_version_id": args.live_authorization_version_id,
         "live_authorization_sha256": args.live_authorization_sha256,
         "live_authorization_bytes": args.live_authorization_bytes,
-        "live_authorization_identity": identity("aws_c0_live_authorization/v6", args.live_authorization_sha256),
+        "live_authorization_identity": identity("aws_c0_live_authorization/v7", args.live_authorization_sha256),
         "workflow_execution_identity": workflow_id,
         "workflow_execution_arn": args.workflow_execution_arn,
         "ssm_command_identity": ssm_id,
@@ -1685,7 +1685,7 @@ LOCAL_STATUS_FIELDS = {'schema', 'attempt_id', 'attempt_identity', 'workflow_exe
 
 def new_local_operational_status(launch: dict[str, Any], workflow_execution_arn: str) -> dict[str, Any]:
     """An operational cache, not an authenticated root or extra S3 object."""
-    if launch.get('schema') != 'aws_c0_launch_request/v6':
+    if launch.get('schema') != 'aws_c0_launch_request/v7':
         raise Refusal("local status requires the current validated launch kind")
     launch_id = root_digest(launch)
     _identity_field(launch, 'attempt_identity', 'aws_c0_attempt/v1')
@@ -1698,7 +1698,7 @@ def new_local_operational_status(launch: dict[str, Any], workflow_execution_arn:
     return {'schema':'aws_c0_controller_operational_status/v2','attempt_id':launch['attempt_id'],
         'attempt_identity':launch['attempt_identity'],'workflow_execution_arn':workflow_execution_arn,
         'workflow_execution_identity':_workflow_identity(workflow_execution_arn),
-        'launch_request_identity':identity('aws_c0_launch_request/v6',launch_id),'artifact_prefix':launch['artifact_prefix'],
+        'launch_request_identity':identity('aws_c0_launch_request/v7',launch_id),'artifact_prefix':launch['artifact_prefix'],
         'start':None,'heartbeat_zero':None,'latest_heartbeat':None,'terminal':None,
         'controller_journal_handoff_complete':False,'zero_science_counters':dict(ZERO)}
 
@@ -2023,7 +2023,7 @@ def run_attempt(args: argparse.Namespace) -> None:
     if exact_launch != launch_raw or len(live_raw) != source["live_packet_bytes"] or len(auth_raw) != source["live_authorization_bytes"]:
         raise Refusal("exact-version replay bytes mismatch")
     live_packet = strict_json(live_raw); live_auth = strict_json(auth_raw)
-    if live_packet.get("schema") != "aws_c0_live_packet/v6" or live_auth.get("schema") != "aws_c0_live_authorization/v6":
+    if live_packet.get("schema") != "aws_c0_live_packet/v7" or live_auth.get("schema") != "aws_c0_live_authorization/v7":
         raise Refusal("runtime control schema mismatch")
     put_count = 0
 
@@ -2058,8 +2058,8 @@ def run_attempt(args: argparse.Namespace) -> None:
     claim = {
         "schema": "aws_c0_attempt_claim/v3",
         "attempt_identity": launch["attempt_identity"],
-        "launch_request_identity": identity("aws_c0_launch_request/v6", launch_id),
-        "live_packet_identity": identity("aws_c0_live_packet/v6", source["live_packet_sha256"]),
+        "launch_request_identity": identity("aws_c0_launch_request/v7", launch_id),
+        "live_packet_identity": identity("aws_c0_live_packet/v7", source["live_packet_sha256"]),
         "live_authorization_identity": source["live_authorization_identity"],
         "closure_seed_identity": launch["closure_seed_identity"],
         "workflow_execution_identity": source["workflow_execution_identity"],
@@ -2091,9 +2091,9 @@ def run_attempt(args: argparse.Namespace) -> None:
             "checksum_sha256_base64": base64.b64encode(bytes.fromhex(source[label + "_sha256"])).decode()}
     start, start_raw, start_id = _root_record("aws_c0_start_receipt/v7", {
         "attempt_identity": launch["attempt_identity"],
-        "launch_request_identity": identity("aws_c0_launch_request/v6", launch_id),
+        "launch_request_identity": identity("aws_c0_launch_request/v7", launch_id),
         "launch_request_object": exact_receipt("launch"),
-        "live_packet_identity": identity("aws_c0_live_packet/v6", source["live_packet_sha256"]),
+        "live_packet_identity": identity("aws_c0_live_packet/v7", source["live_packet_sha256"]),
         "live_packet_object": exact_receipt("live_packet"),
         "live_authorization_identity": source["live_authorization_identity"],
         "live_authorization_object": exact_receipt("live_authorization"),
