@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: REPLACEMENT PREFLIGHT FAILED AND CLEANED — NOT READY
+## Checkpoint status: SDK-CORRECTED FRESH REPLACEMENT PREFLIGHT AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -135,6 +135,23 @@ are respectively
 and `ee44ca0815bc0851bc3de6e8676feec965b0afaf71cfffdffba36dba9b7dd75c`.
 The SDK coordinate is corrected offline to `service-quotas`. Another live
 attempt requires separate exact authority. All later-stage prohibitions remain.
+
+The user has now supplied that separate exact authority for one fresh
+replacement atomic full-preflight after the SDK-coordinate failure. It binds
+the installed SDK identifier `service-quotas`, the exact session name
+`AWS-C0-PREP-492a4f1`, and a fresh attempt identity; none of the preserved
+attempts may be replayed. The valid bounded read-only pricing evidence may be
+reused, or refreshed read-only if required. Only the previously authorized
+temporary regional `ec2:DescribeSecurityGroups`, `Resource: "*"`,
+`ec2:Region=us-east-1` permission may be applied, and it plus all temporary
+credentials must be removed after success or failure. Every required control,
+including R64, must be collected and bound within 300 seconds, and the complete
+preparation packet must be constructed and validated. The exact UTF-8
+authorization statement is 913 bytes and has SHA-256
+`b74e4d81312e7c564f2d059640ba6633941d942554de588443d40fe3a01f6c71`.
+The stopped `t3.small`, one unspent smoke, USD50 cap, schemas, permissions, and
+scientific content remain fixed. Instance start, deployment, smoke, science,
+push, merge, publication, and release remain prohibited.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
