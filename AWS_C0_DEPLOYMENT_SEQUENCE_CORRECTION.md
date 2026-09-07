@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: POST-R64 PACKET CONSTRUCTION FAILED — NOT READY
+## Checkpoint status: VPC-CONTEXT-CORRECTED FRESH PREFLIGHT AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -266,6 +266,21 @@ Reservation, failure, and cleanup SHA-256 values are
 `7441a81a195ddfa06beaef71c48725363080c59a76e0759532161558a23ffb99`,
 and `8815e4fc065fec7f313d74e1951633b317a56292d28cfc8ab1cda3ba6c7931fd`.
 No further fresh attempt is authorized by the consumed authority.
+
+The user has now exactly authorized one new fresh atomic full-preflight after
+terminal attempt
+`6a745471e62c587c8ba092e9ead1f661f6dfe6fe75c96111091ab7e83cd7b78e`.
+It may correct only the VPC phase context by omitting the unsupported duplicate
+`freshness_max_seconds` argument; the read plan's 300-second bound remains
+unchanged. It must retain the verified deny-only bucket policy,
+`service-quotas` SDK identifier, exact `AWS-C0-PREP-492a4f1` session, 60-second
+IAM propagation interval, sole temporary regional
+`ec2:DescribeSecurityGroups` permission, mandatory cleanup, stopped
+`t3.small`, one-smoke limit, and USD50 cap. Every required control including
+one fresh R64 must be bound and the complete packet constructed and validated.
+The exact 823-byte UTF-8 statement has SHA-256
+`b9b59a8f9c357ad53ac3fcb7f015803d9b903f57ef6439bf71db559f50324040`.
+Science, push, merge, publication, and release remain prohibited.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
