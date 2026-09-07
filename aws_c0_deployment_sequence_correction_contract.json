@@ -1,6 +1,6 @@
 {
   "schema": "aws_c0_deployment_sequence_correction_contract/v1",
-  "readiness_disposition": "FRESH_REPLACEMENT_PREPARATION_PACKET_READY_PENDING_EXACT_GATE1_AUTHORIZATION",
+  "readiness_disposition": "EXACT_GATE1_AUTHORIZATION_ACCEPTED_PREPARATION_BLOCKED_PENDING_AWS_LOGIN",
   "independent_review_disposition": "FINAL_INDEPENDENT_REVIEW_REQUIRED_AFTER_PLATFORM_SMOKE_NOT_BEGUN",
   "aws_continuation_permitted_by_validation": false,
   "recovery_correction_authorization": {
@@ -562,10 +562,34 @@
     "scientific_executions": 0,
     "next_exact_authority_required": "PACKET_BOUND_GATE1_AUTHORIZATION"
   },
+  "fresh_replacement_gate1_authorization": {
+    "schema": "aws_c0_fresh_replacement_gate1_authorization/v1",
+    "source": "EXPLICIT_USER_PACKET_BOUND_AUTHORIZATION_2026_09_07",
+    "observed_utc": "2026-09-07T20:29:44Z",
+    "escaped_transport_statement_byte_count": 1649,
+    "escaped_transport_statement_sha256": "2e47bdb80285152d42e4b0e77493923ef528e68ef00c91ad874696fe88d828eb",
+    "markdown_presentation_escape_characters_removed": 77,
+    "normalized_exact_statement_byte_count": 1572,
+    "normalized_exact_statement_sha256": "63b2d269482455b9a80623bfae92c2228e794d5c1ee7c8876c9ec288877ea75b",
+    "normalized_statement_matches_required_packet_rendering": true,
+    "preparation_packet_identity_sha256": "51c57d0efe0444ebf1cc4ef8634878703f123da069eebac75a13bbf3fba7bf46",
+    "preparation_session_expires_utc": "2026-09-07T21:23:06Z",
+    "authorization_received_before_session_expiry": true,
+    "authorized_actions": ["RECHECK_READ_ONLY_PREFLIGHT", "APPLY_EXACT_IAM_REMEDIATION", "STAGE_EXACT_PRE_LIVE_OBJECTS", "BOOTSTRAP_EXACT_STOPPED_INSTANCE", "CREATE_ONE_UNEXECUTED_CHANGE_SET", "FINALIZE_EXACT_LIVE_PACKET"],
+    "denied_actions": ["LIVE_EXECUTION", "REPLAY", "DELETE", "TERMINATE", "SCIENTIFIC_EXECUTION"],
+    "aws_login_recheck_utc": "2026-09-07T20:31:40Z",
+    "aws_login_recheck_disposition": "EXPIRED_REAUTHENTICATION_REQUIRED",
+    "gate1_aws_calls_performed": 0,
+    "gate1_mutations_performed": 0,
+    "instance_starts_performed": 0,
+    "platform_smoke_executions": 0,
+    "scientific_executions": 0,
+    "next_required_external_prerequisite": "INTERACTIVE_AWS_LOGIN"
+  },
   "required_integration_sequence": {
     "source": "EXPLICIT_USER_DIRECTION_2026_09_07",
     "stages_in_order": ["AWS_C0_LOCAL_IMPLEMENTATION", "ONE_BOUNDED_AWS_PLATFORM_SMOKE", "EVIDENCE_AND_CLEANUP_PASS", "FINAL_INDEPENDENT_REVIEW", "EXACT_MERGE_TO_MAIN_PROPOSAL"],
-    "current_stage": "FRESH_REPLACEMENT_PREPARATION_PACKET_READY_PENDING_EXACT_GATE1_AUTHORIZATION",
+    "current_stage": "EXACT_GATE1_AUTHORIZATION_ACCEPTED_PREPARATION_BLOCKED_PENDING_AWS_LOGIN",
     "merge_push_or_science_authorized_now": false,
     "scientific_work_start_condition": "LATER_FROM_CLEAN_MAIN_OR_A_FRESH_BRANCH_BASED_ON_CLEAN_MAIN_NEVER_FROM_THIS_ACCUMULATING_AWS_C0_BRANCH",
     "smoke_close_report_requirements": ["PRECISE_MERGE_BASE", "PRECISE_MERGE_HEAD", "CI_EVIDENCE", "REVIEW_EVIDENCE", "REQUESTED_MERGE_AUTHORITY"]

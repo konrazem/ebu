@@ -373,6 +373,26 @@ expired; this does not replace or weaken the successful authenticated cleanup
 evidence. No deployment, instance start, smoke, or science occurred. The one
 platform smoke remains unspent pending exact packet-bound Gate 1 authority.
 
+The fresh packet's packet-bound Gate 1 statement was received through a
+Markdown-escaped transport form at `2026-09-07T20:29:44Z`, before the bound
+preparation session's `2026-09-07T21:23:06Z` expiry. The 1,649-byte transport
+form has SHA-256
+`2e47bdb80285152d42e4b0e77493923ef528e68ef00c91ad874696fe88d828eb`.
+Removing its 77 presentation escape characters produces the exact required
+1,572-byte statement with SHA-256
+`63b2d269482455b9a80623bfae92c2228e794d5c1ee7c8876c9ec288877ea75b`.
+It matches packet
+`51c57d0efe0444ebf1cc4ef8634878703f123da069eebac75a13bbf3fba7bf46`
+and authorizes only the six enumerated preparation actions while preserving
+the five enumerated denials.
+
+The first read-only AWS identity recheck at `2026-09-07T20:31:40Z` reported
+that the local AWS session had expired and requires interactive `aws login`.
+No Gate 1 AWS call or mutation, instance start, deployment, smoke, or science
+occurred. Preparation is authorized but fail-closed pending AWS
+reauthentication; the exact approval does not authorize live execution,
+science, replay, delete, or terminate.
+
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
 
