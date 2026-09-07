@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: ATOMIC FULL PREFLIGHT FAILED AND CLEANED — NOT READY
+## Checkpoint status: FRESH REPLACEMENT ATOMIC FULL PREFLIGHT AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -95,6 +95,21 @@ name, but this consumed authority does not permit another live attempt.
 Continuation requires one separately authorized fresh replacement atomic
 full-preflight. No instance start, deployment, smoke, science, push, merge,
 publication, or release is authorized.
+
+The user has now explicitly authorized exactly one such fresh replacement. It
+must use the corrected exact session name `AWS-C0-PREP-492a4f1`, must not replay
+any preserved attempt, and must collect and bind every required preparation
+control including R64 inside one 300-second window before constructing the
+complete packet. It may refresh read-only pricing evidence if required. Only
+the previously authorized temporary regional `ec2:DescribeSecurityGroups`
+permission may be applied, and that permission plus all temporary credentials
+must be removed after success or failure. The exact UTF-8 replacement statement
+has SHA-256
+`e9276a2e75b02d7032f0d0207977c461ecd5a6520844f40cc1d884da21602727`.
+The stopped `t3.small`, one unspent platform smoke, USD50 cap, historical
+schemas, permissions, and scientific content remain fixed. Instance start,
+deployment, smoke, science, push, merge, publication, and release remain
+prohibited.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
