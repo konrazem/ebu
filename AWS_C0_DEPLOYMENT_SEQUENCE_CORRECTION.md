@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: SDK-CORRECTED PREFLIGHT FAILED AND CLEANED — NOT READY
+## Checkpoint status: BUCKET REMEDIATION AND FRESH PREFLIGHT AUTHORIZED
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -184,6 +184,28 @@ The one actual platform smoke remains unspent. Continuation now requires a
 separate exact authority for the required sealed-bucket policy remediation and,
 after verified remediation, one separately authorized fresh atomic full-
 preflight. No such remediation or later attempt has begun.
+
+The user has now authorized all required steps for the platform smoke path and
+directed that the already identified remediation steps proceed without repeated
+authorization prompts. In the present gate this authorizes one exact
+sealed-bucket policy remediation followed by one fresh atomic full-preflight,
+with every preserved attempt remaining terminal and unreplayed. The remediation
+may add only a deny-only TLS enforcement policy to
+`ebu-stage-f-results-k7m4p2`: `s3:*` is denied for both the bucket ARN and its
+object ARN when `aws:SecureTransport` is `false`; it grants no principal or
+action. Its canonical 240-byte JSON has SHA-256
+`be7fdd7bb9af2436ac6b7af34520eb2c0262d52816823a57347970c7400d8fc0`.
+The exact general authorization statements have SHA-256
+`4f94936ce46521e241d50ded3995555dd47aa19f864ecd264fe36573da0af3b3`,
+`42345f9541f76815ddf344b20f2a1ae6b3717dbd3935a55245ec76efd8935683`,
+and `7ece0910dc9bb14751aa5c99feee076510720fb6723323f96f60a6fdd412d532`.
+The fresh preflight retains the exact session, corrected SDK coordinate,
+300-second complete-control window, USD50 cap, stopped `t3.small`, one-smoke
+limit, and mandatory temporary-permission and credential cleanup. A resulting
+packet must still be bound by the frozen packet-specific Gate 1 mechanism
+before instance start, deployment, or smoke; no future packet identity is
+predicted here. Scientific execution, push, merge, publication, and release
+remain prohibited.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
