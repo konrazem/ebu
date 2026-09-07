@@ -3008,6 +3008,46 @@ class ByteBoundStagingTests(unittest.TestCase):
             S.staging_repair_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
                 '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
 
+    def test_staging_finalize_uses_loaded_tag_and_exact_digest_without_reloading(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        repair=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        plan=S.staging_finalize_plan('e'*40,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        self.assertEqual(plan['schema'],'aws_c0_byte_bound_host_staging_finalize_plan/v4')
+        self.assertFalse(plan['docker_image_load'])
+        self.assertEqual(plan['image_tag'],S.IMAGE_TAG)
+        self.assertEqual(S.validate_staging_finalize_plan(
+            plan,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64),plan)
+        document=S.staging_finalize_document(
+            plan,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        body=document['mainSteps'][0]['inputs']['runCommand'][0]
+        self.assertIn("'image','inspect',PLAN['image_tag']",body)
+        self.assertIn("row['Digest']=='sha256:'",body)
+        for forbidden in ("'image','load'","'docker','run'","'systemctl','start'",
+                          "'systemctl','enable'",'aws s3','get-object'):
+            self.assertNotIn(forbidden,body)
+        compile(S.STAGING_FINALIZE_BODY,'<nonexecuted-staging-finalize-body>','exec')
+
+    def test_staging_finalize_refuses_changed_failure_binding_or_execution_boundary(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        repair=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        plan=S.staging_finalize_plan('e'*40,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        for field,bad in [('repair_failure_sha256','0'*64),('docker_image_load',True),
+                          ('container_execution',True),('image_tag','mutable:other')]:
+            changed=copy.deepcopy(plan);changed[field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                S.staging_finalize_document(changed,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+
+    def test_staging_finalize_policy_is_exact_and_expires_within_one_hour(self):
+        policy=S.staging_finalize_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+            '2026-09-07T21:30:00Z','2026-09-07T22:00:00Z')
+        encoded=S.canonical(policy).decode()
+        self.assertNotIn('Resource":"*',encoded)
+        self.assertIn(S.FINALIZE_DOCUMENT,encoded)
+        self.assertIn(S.INSTANCE,encoded)
+        with self.assertRaises(ValueError):
+            S.staging_finalize_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+                '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
+
 
 class ImageManifestBindingTests(unittest.TestCase):
     def verify(self, inspection):

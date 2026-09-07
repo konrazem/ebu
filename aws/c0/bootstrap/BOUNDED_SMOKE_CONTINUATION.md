@@ -98,3 +98,12 @@ same exact image/configuration/reference checks and exclusive controller/unit
 installation as v2. It contacts neither S3 nor a registry, never runs a
 container, and preserves the scratch files if any step fails. The prior v1/v2
 plans and command bodies remain unchanged.
+
+If v3 loads the exact image but fails because the containerd image store does
+not resolve a configuration digest as an image name, the v4 finalizer must not
+load it again. It inspects the saved tag, verifies the exact configuration ID,
+platform, user, working directory, tag, and manifest digest reported by
+`docker image ls --digests --no-trunc`, then exclusively installs the retained
+controller/unit bytes and reloads systemd definitions without starting them.
+The v4 plan binds the v3 plan and authenticated v3 failure. All no-container,
+no-smoke, no-science, stopped-instance, cleanup, and cost boundaries remain.

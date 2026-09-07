@@ -15,17 +15,20 @@ RECOVERY_PREFIX = re.compile(
 DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
 DIAGNOSTIC_DOCUMENT = 'EBU-C0-Stage-Diagnostic-492a4f1-v1'
 REPAIR_DOCUMENT = 'EBU-C0-Stage-Repair-492a4f1-v1'
+FINALIZE_DOCUMENT = 'EBU-C0-Stage-Finalize-492a4f1-v1'
 ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
 POLICY = 'EBU-C0-Staging-Transport-v1'
 DIAGNOSTIC_POLICY = 'EBU-C0-Staging-Diagnostic-Transport-v1'
 REPAIR_POLICY = 'EBU-C0-Staging-Repair-Transport-v1'
+FINALIZE_POLICY = 'EBU-C0-Staging-Finalize-Transport-v1'
 INSTANCE_READ_POLICY = 'EBU-C0-Staging-Exact-Version-Read-v1'
 INSTANCE_ROLE = 'EBU-Rehearsal-EC2-Role'
 ARCHIVE_SHA = '4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef'
 ARCHIVE_BYTES = 414462464
 MANIFEST_SHA = '130f80c15eb32be6d22e47e0b149b81ffa0ff04a6f69eb92bb35a8e683fe3641'
 CONFIG_SHA = 'b7e5f119fa4f06ee013580de495bd391fb348d45316a11b836a98629620f2e9f'
+IMAGE_TAG = 'ebu/aws-c0-platform-smoke:45afc9a'
 SHA = re.compile(r'[0-9a-f]{64}')
 VERSION = re.compile(r'[A-Za-z0-9._+~=/:-]{1,1024}')
 ARTIFACTS = (
@@ -459,6 +462,127 @@ def staging_repair_temporary_policy(role_id,observed_utc,expires_utc):
         'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
         'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
     doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{REPAIR_DOCUMENT}'
+    return {'Version':'2012-10-17','Statement':[
+        {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
+        {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
+
+def staging_finalize_plan(commit,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                          diagnostic_result_sha256,repair_failure_sha256):
+    validate_staging_repair_plan(repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                 diagnostic_result_sha256)
+    if not isinstance(commit,str) or not re.fullmatch(r'[0-9a-f]{40}',commit):
+        raise ValueError('exact committed finalization implementation required')
+    if not isinstance(repair_failure_sha256,str) or not SHA.fullmatch(repair_failure_sha256):
+        raise ValueError('authenticated repair failure SHA-256 required')
+    return {'schema':'aws_c0_byte_bound_host_staging_finalize_plan/v4',
+            'implementation_commit':commit,'account':ACCOUNT,'region':REGION,'instance_id':INSTANCE,
+            'source_repair_plan_sha256':digest(repair_plan),
+            'repair_failure_sha256':repair_failure_sha256,
+            'diagnostic_result_sha256':diagnostic_result_sha256,
+            'scratch_directory':repair_plan['scratch_directory'],'objects':repair_plan['objects'],
+            'image_tag':IMAGE_TAG,'image_manifest_sha256':MANIFEST_SHA,'image_config_sha256':CONFIG_SHA,
+            'maximum_instance_starts':1,'maximum_finalize_commands':1,'maximum_running_seconds':600,
+            'command_timeout_seconds':180,'aggregate_cost_ceiling_minor_units':5000,
+            'retained_exact_bytes_only':True,'docker_image_load':False,'s3_access':False,
+            'package_installation':False,'container_execution':False,'systemd_start_or_enable':False,
+            'scientific_execution':False,'stop_required':True}
+
+def validate_staging_finalize_plan(value,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                   diagnostic_result_sha256,repair_failure_sha256):
+    if not isinstance(value,dict):raise ValueError('staging finalize plan object required')
+    expected=staging_finalize_plan(value.get('implementation_commit'),repair_plan,prior_plan,
+        controller_bytes,unit_bytes,diagnostic_result_sha256,repair_failure_sha256)
+    if value!=expected:raise ValueError('staging finalize plan differs from loaded exact material')
+    return expected
+
+STAGING_FINALIZE_BODY = r'''
+import hashlib,json,os,stat,subprocess
+from pathlib import Path
+assert os.geteuid()==0
+ENV={'PATH':'/usr/local/bin:/usr/bin:/bin','LC_ALL':'C'}
+def run(argv,timeout=30):
+    p=subprocess.run(argv,cwd='/',env=ENV,stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout,check=False)
+    if p.returncode:
+        stderr=p.stderr.decode('utf-8','replace').replace('\x00','')[-3000:]
+        stdout=p.stdout.decode('utf-8','replace').replace('\x00','')[-1000:]
+        raise RuntimeError('bounded command failed: '+Path(argv[0]).name+':'+str(p.returncode)+
+            ':stdout='+stdout+':stderr='+stderr)
+    return p.stdout
+def file_hash(path):
+    h=hashlib.sha256()
+    with path.open('rb') as stream:
+        while chunk:=stream.read(1048576):h.update(chunk)
+    return h.hexdigest()
+for obj in PLAN['objects']:
+    if obj['destination']:assert not os.path.lexists(obj['destination'])
+work=Path(PLAN['scratch_directory']);s=work.lstat()
+assert stat.S_ISDIR(s.st_mode) and not work.is_symlink() and s.st_uid==0 and s.st_gid==0
+for obj in PLAN['objects']:
+    source=work/obj['name'];s=source.lstat()
+    assert stat.S_ISREG(s.st_mode) and not source.is_symlink() and s.st_uid==0 and s.st_gid==0
+    assert stat.S_IMODE(s.st_mode)==0o600 and s.st_size==obj['bytes'] and file_hash(source)==obj['sha256']
+metadata=json.loads(run(['/usr/bin/docker','image','inspect',PLAN['image_tag']]))
+assert len(metadata)==1
+image=metadata[0]
+assert image['Id']=='sha256:'+PLAN['image_config_sha256'] and image['Os']=='linux' and image['Architecture']=='amd64'
+assert PLAN['image_tag'] in image.get('RepoTags',[])
+assert image['Config']['User']=='65534:65534' and image['Config']['WorkingDir']=='/work'
+template=chr(123)*2+'json .'+chr(125)*2
+rows=[json.loads(line) for line in run(['/usr/bin/docker','image','ls','--digests','--no-trunc',
+    '--filter','reference='+PLAN['image_tag'],'--format',template]).decode().splitlines() if line]
+assert len(rows)==1
+row=rows[0]
+assert row['Repository']=='ebu/aws-c0-platform-smoke' and row['Tag']=='45afc9a'
+assert row['Digest']=='sha256:'+PLAN['image_manifest_sha256']
+installed=[]
+for obj in PLAN['objects']:
+    if not obj['destination']:continue
+    destination=Path(obj['destination']);raw=(work/obj['name']).read_bytes()
+    fd=os.open(destination,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o644)
+    with os.fdopen(fd,'wb') as stream:stream.write(raw);stream.flush();os.fsync(stream.fileno())
+    os.chmod(destination,0o644);s=destination.lstat()
+    assert stat.S_ISREG(s.st_mode) and s.st_uid==0 and s.st_gid==0 and stat.S_IMODE(s.st_mode)==0o644
+    assert s.st_size==obj['bytes'] and file_hash(destination)==obj['sha256']
+    installed.append({'path':str(destination),'sha256':obj['sha256'],'bytes':s.st_size})
+run(['/usr/bin/systemctl','daemon-reload'])
+for obj in PLAN['objects']:
+    source=work/obj['name'];assert file_hash(source)==obj['sha256'];source.unlink()
+work.rmdir()
+print(json.dumps({'schema':'aws_c0_byte_bound_host_staging_result/v3','plan_sha256':PLAN_ID,
+    'source_repair_plan_sha256':PLAN['source_repair_plan_sha256'],
+    'repair_failure_sha256':PLAN['repair_failure_sha256'],'installed_files':installed,
+    'image_tag':PLAN['image_tag'],'image_config_sha256':PLAN['image_config_sha256'],
+    'image_manifest_sha256':PLAN['image_manifest_sha256'],'manifest_digest_verified_by_image_list':True,
+    'retained_exact_bytes_used':True,'image_loaded_by_prior_repair':True,
+    'image_load_repeated':False,'container_executed':False,'service_started_or_enabled':False,
+    'package_installed':False,'scientific_execution':False},sort_keys=True,separators=(',',':')))
+'''
+
+def staging_finalize_document(value,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                              diagnostic_result_sha256,repair_failure_sha256):
+    validate_staging_finalize_plan(value,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                   diagnostic_result_sha256,repair_failure_sha256)
+    encoded=base64.b64encode(canonical({'PLAN':value,'PLAN_ID':digest(value)})).decode()
+    script="import base64,json\nglobals().update(json.loads(base64.b64decode('"+encoded+"')))\n"+STAGING_FINALIZE_BODY
+    compile(script,'<nonexecuted-byte-bound-staging-finalize>','exec')
+    if '{{' in script:raise ValueError('SSM parser parameter marker refused')
+    return {'schemaVersion':'2.2','description':'Verify loaded exact AWS-C0 image and install retained controller bytes; no execution.',
+            'parameters':{},'mainSteps':[{'action':'aws:runShellScript','name':'finalizeExactC0Staging',
+            'precondition':{'StringEquals':['platformType','Linux']},
+            'inputs':{'timeoutSeconds':'180','runCommand':["set -eu\n/usr/bin/python3 - <<'C0_FIXED_FINALIZE'\n"+script+"\nC0_FIXED_FINALIZE\n"]}}]}
+
+def staging_finalize_temporary_policy(role_id,observed_utc,expires_utc):
+    if not isinstance(role_id,str) or not re.fullmatch(r'AROA[A-Z0-9]{12,32}',role_id):raise ValueError('exact role ID required')
+    times=[]
+    for value in (observed_utc,expires_utc):
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',value):raise ValueError('exact UTC required')
+        times.append(datetime.fromisoformat(value.replace('Z','+00:00')))
+    if not 0<(times[1]-times[0]).total_seconds()<=3600:raise ValueError('bounded finalization lifetime required')
+    condition={'DateLessThan':{'aws:CurrentTime':expires_utc},'StringEquals':{
+        'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
+        'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
+    doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{FINALIZE_DOCUMENT}'
     return {'Version':'2012-10-17','Statement':[
         {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
         {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
