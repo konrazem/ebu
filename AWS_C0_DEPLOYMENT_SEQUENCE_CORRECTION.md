@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: FRESH REPLACEMENT ATOMIC FULL PREFLIGHT AUTHORIZED
+## Checkpoint status: REPLACEMENT PREFLIGHT FAILED AND CLEANED — NOT READY
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -110,6 +110,31 @@ The stopped `t3.small`, one unspent platform smoke, USD50 cap, historical
 schemas, permissions, and scientific content remain fixed. Instance start,
 deployment, smoke, science, push, merge, publication, and release remain
 prohibited.
+
+The single fresh replacement was durably reserved at
+`2026-09-07T15:58:45Z` under attempt identity
+`7c3081f711bb5d0ce775daa04c48ca73744f72d4c68601bb6650d58f46a75f3a`.
+The corrected exact `AWS-C0-PREP-492a4f1` session was issued successfully and
+the authorized read-only pricing refresh completed. Before the 300-second
+control window began, local client construction failed because this installed
+AWS SDK exposes Service Quotas as `service-quotas`, while the collector used
+`servicequotas`. No R01-R64 control call or R64 budget occurred, and no packet
+was constructed. This attempt is terminal and was not retried or replayed.
+
+The fresh pricing model has SHA-256
+`531adf3926363d78e8b04ec519d287b47a980e7fd7231c004934ce6636d80fad`,
+is valid through `2026-09-08T17:58:50Z`, and bounds the exact sealed resource
+limits at 175 USD minor units against the unchanged 5000-minor-unit cap. It is
+read-only evidence, not Gate 1 authority. Cleanup removed only
+`EBU-C0-Temporary-Replacement-Preflight-20260907`, proved the base policy
+unchanged, disposed the issued temporary credentials, and reverified the
+existing `t3.small` stopped. Reservation, failure, and cleanup SHA-256 values
+are respectively
+`2c489e69100918ad617ccd17ea35f3ea7f7c580e3c662ac0cdbe78c5b63d6fae`,
+`50e4a33d66b6d91ef18eff7fec4cba8f8495cb9503badd264f96f9f96a2af6e2`,
+and `ee44ca0815bc0851bc3de6e8676feec965b0afaf71cfffdffba36dba9b7dd75c`.
+The SDK coordinate is corrected offline to `service-quotas`. Another live
+attempt requires separate exact authority. All later-stage prohibitions remain.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
