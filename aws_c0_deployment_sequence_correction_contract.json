@@ -70,6 +70,10 @@
     "supported_s3_max_pages": 1,
     "supported_s3_max_items": 16,
     "body_digest_must_equal_r29_and_r30_checksum": true,
+    "prospective_progress": "aws_c0_runtime_control_reconstruction_progress/v5",
+    "prospective_source_attachment": "aws_c0_runtime_control_reconstruction_source_attachment/v4",
+    "source_attachment_predecessor": "aws_c0_runtime_control_reconstruction_source_attachment/v3",
+    "prospective_sealed_context": "aws_c0_predeployment_reconstruction_context/v4",
     "new_aws_actions_or_permissions_authorized": false,
     "science_cost_or_publication_changed": false,
     "historical_schemas_changed": false

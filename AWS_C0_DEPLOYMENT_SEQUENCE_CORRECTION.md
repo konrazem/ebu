@@ -243,6 +243,13 @@ attributes checksum. Large bodies are never embedded in JSON. The output/v1
 schema, actions, permissions, scientific content, cost ceiling and publication
 scope are unchanged.
 
+The dependent progress/v5 and source attachment/v4 append the artifact output
+after the six earlier candidates while retaining the frozen eleven-control
+order. Sealed context/v4 adds only the artifact prefix and S3 list bounds, and
+attachment/v4 recomputes the exact six-control attachment/v3 predecessor.
+Seven source-bound predeployment controls leave four unresolved controls and
+still cannot make a complete-set or readiness claim.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

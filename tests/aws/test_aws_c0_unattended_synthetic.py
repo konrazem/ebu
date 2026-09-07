@@ -1371,6 +1371,80 @@ class ArtifactVersionSetReconstructionTests(unittest.TestCase):
             G.build_artifact_version_set_output(ROOT,receipts,**context)
 
 
+class ReconstructionV5IntegrationTests(unittest.TestCase):
+    def material(self):
+        validation,sealed,_,bundles,outputs,plan_fields=ReconstructionV4IntegrationTests().material()
+        artifact_receipts,artifact_context,_,_=ArtifactVersionSetReconstructionTests().material()
+        artifact=G.build_artifact_version_set_output(ROOT,artifact_receipts,**artifact_context)
+        artifact_bundle={'candidate':artifact,'receipts':artifact_receipts,'context':artifact_context}
+        sealed=copy.deepcopy(sealed);sealed['schema']='aws_c0_predeployment_reconstruction_context/v4'
+        sealed['expected_prefix']=artifact_context['expected_prefix']
+        sealed['s3_pagination_bounds']=artifact_context['s3_pagination_bounds']
+        sealed_id=F.identity(sealed['schema'],F.digest(F.canonical_bytes(sealed)))
+        outputs={**outputs,'ARTIFACT_VERSION_SET':artifact}
+        return validation,sealed,sealed_id,(*bundles,artifact_bundle),outputs,plan_fields
+
+    def test_progress_v5_binds_seven_candidates_and_leaves_four_unresolved(self):
+        validation,_,_,_,outputs,plan_fields=self.material()
+        record=G.build_runtime_control_reconstruction_progress_v5(ROOT,outputs,
+            phase='PREDEPLOYMENT',validation_utc=validation)
+        self.assertEqual(record['candidate_control_ids_in_order'],['ACCOUNT_REGION',
+            'INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
+            'VPC_NETWORK_PATH','SERVICE_QUOTA','ARTIFACT_VERSION_SET'])
+        self.assertEqual(len(record['unresolved_control_ids_in_order']),4)
+        self.assertEqual(F.validate_runtime_control_reconstruction_progress_v5(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],
+            phase='PREDEPLOYMENT',validation_utc=validation),record)
+        G.validate_record(ROOT,'runtime_reconstruction_progress_v5',record)
+
+    def test_attachment_v4_reruns_seven_and_binds_exact_v3_predecessor(self):
+        validation,sealed,sealed_id,bundles,_,plan_fields=self.material()
+        account,profile,iam,bucket,vpc,quota,artifact=bundles
+        record=G.build_runtime_control_reconstruction_source_attachment_v4(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,
+            bucket_controls_kms_bundle=bucket,vpc_bundle=vpc,service_quota_bundle=quota,
+            artifact_version_set_bundle=artifact,sealed_context=sealed,
+            sealed_context_identity=sealed_id,validation_utc=validation)
+        self.assertEqual([item['control'] for item in record['outputs_in_order']],
+            ['ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS',
+                'VPC_NETWORK_PATH','SERVICE_QUOTA','ARTIFACT_VERSION_SET'])
+        self.assertEqual(record['previous_source_attachment_identity']['kind'],
+            'aws_c0_runtime_control_reconstruction_source_attachment/v3')
+        self.assertEqual(F.validate_runtime_control_reconstruction_source_attachment_v4(record,
+            read_plan=plan_fields['runtime_control_read_plan'],
+            read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+            validation_utc=validation,expected_sealed_context_identity=sealed_id),record)
+        G.validate_record(ROOT,'runtime_reconstruction_source_attachment_v4',record)
+
+    def test_attachment_v4_refuses_artifact_context_candidate_or_predecessor_substitution(self):
+        for mutate in ('context','candidate'):
+            validation,sealed,sealed_id,bundles,_,_=self.material()
+            account,profile,iam,bucket,vpc,quota,artifact=copy.deepcopy(bundles)
+            if mutate=='context':artifact['context']['expected_prefix']='other/'
+            else:artifact['candidate']['decoded_json']['artifact_count']=7
+            with self.subTest(mutate=mutate),self.assertRaisesRegex(Exception,
+                    'artifact source (bundle context|attachment candidate)'):
+                G.build_runtime_control_reconstruction_source_attachment_v4(ROOT,
+                    account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,
+                    bucket_controls_kms_bundle=bucket,vpc_bundle=vpc,service_quota_bundle=quota,
+                    artifact_version_set_bundle=artifact,sealed_context=sealed,
+                    sealed_context_identity=sealed_id,validation_utc=validation)
+        validation,sealed,sealed_id,bundles,_,plan_fields=self.material()
+        account,profile,iam,bucket,vpc,quota,artifact=bundles
+        record=G.build_runtime_control_reconstruction_source_attachment_v4(ROOT,
+            account_bundle=account,instance_profile_bundle=profile,iam_bundle=iam,
+            bucket_controls_kms_bundle=bucket,vpc_bundle=vpc,service_quota_bundle=quota,
+            artifact_version_set_bundle=artifact,sealed_context=sealed,
+            sealed_context_identity=sealed_id,validation_utc=validation)
+        record['previous_source_attachment_identity']['value']='f'*64
+        with self.assertRaises(F.Refusal):
+            F.validate_runtime_control_reconstruction_source_attachment_v4(record,
+                read_plan=plan_fields['runtime_control_read_plan'],
+                read_plan_identity=plan_fields['runtime_control_read_plan_identity'],phase='PREDEPLOYMENT',
+                validation_utc=validation,expected_sealed_context_identity=sealed_id)
+
+
 class ServiceQuotaReconstructionTests(unittest.TestCase):
     def material(self):
         sources,_,_,base=R64CallBudgetTests().material();receipts={}
