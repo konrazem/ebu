@@ -1,6 +1,6 @@
 {
   "schema": "aws_c0_deployment_sequence_correction_contract/v1",
-  "readiness_disposition": "RECOVERY_REPLACEMENT_R64_PASS_CLEANUP_COMPLETE_FULL_ATOMIC_PREFLIGHT_NOT_READY",
+  "readiness_disposition": "ATOMIC_FULL_PREFLIGHT_AUTHORIZED_NOT_BEGUN",
   "independent_review_disposition": "FINAL_INDEPENDENT_REVIEW_REQUIRED_AFTER_PLATFORM_SMOKE_NOT_BEGUN",
   "aws_continuation_permitted_by_validation": false,
   "recovery_correction_authorization": {
@@ -61,6 +61,34 @@
     "scientific_executions": 0,
     "public_releases": 0,
     "next_authority_required": "ONE_NEW_EXACT_ATOMIC_FULL_PREFLIGHT_AUTHORITY_WITH_A_FRESH_ATTEMPT_IDENTITY_AND_NO_REPLAY_OF_EITHER_PRESERVED_ATTEMPT"
+  },
+  "atomic_full_preflight_authorization": {
+    "schema": "aws_c0_atomic_full_preflight_authorization/v1",
+    "source": "EXACT_USER_AUTHORIZATION_2026_09_07",
+    "source_statement": "I authorize exactly one new AWS-C0 atomic full-preflight attempt. Preserve both prior ledgers and do not replay either attempt. Create a fresh attempt identity, temporarily add only `ec2:DescribeSecurityGroups` with `Resource: \"*\"` and `ec2:Region=us-east-1` to the named constrained AWS-C0 roles as required, collect and bind all required controls including R64 within one 300-second freshness window, and construct the complete preparation packet. Remove the temporary permission and dispose temporary credentials after success or failure. Preserve the one unspent platform smoke, existing `t3.small`, USD50 cap, historical schemas, permissions, and scientific content. Do not start the instance, deploy, smoke, execute science, push, merge, publish, or release until the resulting packet receives its separately required exact Gate 1 authorization",
+    "source_statement_sha256": "7846fa788cda01d209d724e4f67e225af92b9df1d5636c852f48d38256518155",
+    "prior_failed_attempt_identity": "PRESERVED_IN_PRIVATE_APPEND_ONLY_LEDGER",
+    "prior_successful_recovery_attempt_identity": {"kind": "aws_c0_attempt/v1", "sha256": "e82a52b8d60a860c6254ef0936e6ef4c0c4ed2febe710fb48d6da7eb64a75340", "value": "e82a52b8d60a860c6254ef0936e6ef4c0c4ed2febe710fb48d6da7eb64a75340"},
+    "prior_attempt_replay_permitted": false,
+    "new_attempt_limit": 1,
+    "new_attempt_requires_fresh_identity": true,
+    "freshness_max_seconds": 300,
+    "all_required_preparation_controls_and_r64_must_share_window": true,
+    "complete_preparation_packet_required": true,
+    "temporary_permission_action": "ec2:DescribeSecurityGroups",
+    "temporary_permission_resource": "*",
+    "temporary_permission_region_condition": {"StringEquals": {"ec2:Region": "us-east-1"}},
+    "eligible_roles": ["EBU-C0-Operator-492a4f1", "EBU-C0-Corrected-Finalizer-v1"],
+    "permission_removal_and_temporary_credential_disposal_required_after_success_or_failure": true,
+    "maximum_actual_platform_smoke_executions": 1,
+    "actual_platform_smoke_executions_before_attempt": 0,
+    "instance_id": "i-048bac00bdb540a4e",
+    "instance_type": "t3.small",
+    "aggregate_cost_cap_minor_usd": 5000,
+    "historical_schemas_changed": false,
+    "scientific_content_changed": false,
+    "cloud_gates_waived": false,
+    "deny_until_exact_packet_bound_gate1_authorization": ["INSTANCE_START", "DEPLOYMENT", "PLATFORM_SMOKE", "SCIENTIFIC_EXECUTION", "PUSH", "MERGE", "PUBLICATION", "RELEASE"]
   },
   "required_integration_sequence": {
     "source": "EXPLICIT_USER_DIRECTION_2026_09_07",

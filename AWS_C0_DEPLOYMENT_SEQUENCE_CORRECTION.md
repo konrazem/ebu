@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: RECOVERY CLOSED — replacement R64 passed and cleanup verified; full atomic preflight not ready
+## Checkpoint status: ATOMIC FULL PREFLIGHT AUTHORIZED — not yet begun
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -53,6 +53,19 @@ authorized. Scientific work must begin later from clean `main` or a fresh branch
 based on it, never by continuing this accumulating AWS-C0 branch. When smoke
 closes, the report must identify the precise merge base/head, CI and review
 evidence, and requested merge authority.
+
+The user has now authorized exactly one new atomic full-preflight attempt. It
+must use a fresh identity without replaying either preserved ledger, collect
+and bind every required preparation control including R64 inside one
+300-second freshness window, and construct the complete preparation packet.
+Only the exact temporary `ec2:DescribeSecurityGroups`, `Resource: "*"`,
+`ec2:Region=us-east-1` delta may be added to the named constrained roles as
+required, and it plus all temporary credentials must be removed after success
+or failure. The one platform smoke remains unspent. Instance start, deployment,
+smoke, science, push, merge, publication, and release remain prohibited until
+the resulting packet receives its separate exact Gate 1 authorization. The
+exact UTF-8 authorization statement has SHA-256
+`7846fa788cda01d209d724e4f67e225af92b9df1d5636c852f48d38256518155`.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
