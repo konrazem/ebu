@@ -226,6 +226,13 @@ public bucket policy status, incomplete public-access block, or substituted
 bucket identity fails closed. This is a pure producer implementation and adds
 no AWS action, permission, scientific authority, cost, or publication scope.
 
+The dependent progress/v4 and source attachment/v3 are prospective extensions.
+They preserve read-plan/v3, insert `BUCKET_CONTROLS_KMS` in the frozen control
+order, add only the sealed bucket name and typed bucket identity to context/v3,
+and recompute the exact five-control attachment/v2 predecessor. Six source-
+bound predeployment controls leave five controls unresolved, so both records
+remain explicitly partial and not ready.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

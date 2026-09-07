@@ -51,6 +51,10 @@
     "kms_condition": "IFF_AUTHENTICATED_R22_ENCRYPTION_ALGORITHM_IS_aws:kms",
     "maximum_kms_tag_pages": 1,
     "maximum_kms_tags": 16,
+    "prospective_progress": "aws_c0_runtime_control_reconstruction_progress/v4",
+    "prospective_source_attachment": "aws_c0_runtime_control_reconstruction_source_attachment/v3",
+    "source_attachment_predecessor": "aws_c0_runtime_control_reconstruction_source_attachment/v2",
+    "prospective_sealed_context": "aws_c0_predeployment_reconstruction_context/v3",
     "new_aws_actions_or_permissions_authorized": false,
     "science_cost_or_publication_changed": false,
     "historical_schemas_changed": false

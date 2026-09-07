@@ -310,6 +310,15 @@ def build(root=ROOT):
         sealed_context_identity=typed_identity('aws_c0_predeployment_reconstruction_context/v2'))
     for field in ('source_bundles_in_order','outputs_in_order'):
         attachment_v2_fields[field]['minItems']=attachment_v2_fields[field]['maxItems']=5
+    progress_v4_fields=copy.deepcopy(progress_v3_fields)
+    progress_v4_fields['schema']={'const':'aws_c0_runtime_control_reconstruction_progress/v4'}
+    progress_v4_fields['candidate_control_ids_in_order']['maxItems']=6
+    attachment_v3_fields=copy.deepcopy(attachment_v2_fields)
+    attachment_v3_fields.update(schema={'const':'aws_c0_runtime_control_reconstruction_source_attachment/v3'},
+        previous_source_attachment_identity=typed_identity('aws_c0_runtime_control_reconstruction_source_attachment/v2'),
+        sealed_context_identity=typed_identity('aws_c0_predeployment_reconstruction_context/v3'))
+    for field in ('source_bundles_in_order','outputs_in_order'):
+        attachment_v3_fields[field]['minItems']=attachment_v3_fields[field]['maxItems']=6
     include(CRT,'pagination_transcript')
     # Append prospective definitions so regenerating the ordered registry does
     # not reorder any historical definition.
@@ -327,10 +336,16 @@ def build(root=ROOT):
     definitions['runtime_reconstruction_source_attachment_v2_definition']={'type':'object',
         'required':list(attachment_v2_fields),'properties':attachment_v2_fields,'additionalProperties':False}
     definitions['runtime_reconstruction_source_attachment_v2']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v2_definition'}
+    definitions['runtime_reconstruction_progress_v4_definition']={'type':'object',
+        'required':list(progress_v4_fields),'properties':progress_v4_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_progress_v4']={'$ref':'#/$defs/runtime_reconstruction_progress_v4_definition'}
+    definitions['runtime_reconstruction_source_attachment_v3_definition']={'type':'object',
+        'required':list(attachment_v3_fields),'properties':attachment_v3_fields,'additionalProperties':False}
+    definitions['runtime_reconstruction_source_attachment_v3']={'$ref':'#/$defs/runtime_reconstruction_source_attachment_v3_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()
