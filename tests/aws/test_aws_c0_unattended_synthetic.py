@@ -2966,6 +2966,48 @@ class ByteBoundStagingTests(unittest.TestCase):
             S.diagnostic_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
                 '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
 
+    def test_staging_repair_is_versioned_retained_byte_only_and_captures_command_error(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        plan=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        self.assertEqual(plan['schema'],'aws_c0_byte_bound_host_staging_repair_plan/v3')
+        self.assertEqual(plan['source_plan_sha256'],S.digest(prior))
+        self.assertEqual(plan['docker_load_platform'],'linux/amd64')
+        self.assertTrue(plan['retained_exact_bytes_only'])
+        self.assertFalse(plan['s3_access'])
+        self.assertEqual(S.validate_staging_repair_plan(
+            plan,prior,b'controller\n',b'unit\n','d'*64),plan)
+        document=S.staging_repair_document(plan,prior,b'controller\n',b'unit\n','d'*64)
+        body=document['mainSteps'][0]['inputs']['runCommand'][0]
+        self.assertNotIn('{{',body)
+        self.assertIn("'image','load','--platform'",body)
+        self.assertIn("':stderr='",body)
+        for forbidden in ("'docker','run'","'systemctl','start'","'systemctl','enable'",'aws s3','get-object'):
+            self.assertNotIn(forbidden,body)
+        compile(S.STAGING_REPAIR_BODY,'<nonexecuted-staging-repair-body>','exec')
+
+    def test_staging_repair_refuses_drift_or_non_v2_source(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        plan=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        for field,bad in [('maximum_instance_starts',2),('container_execution',True),
+                          ('s3_access',True),('diagnostic_result_sha256','0'*64)]:
+            changed=copy.deepcopy(plan);changed[field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                S.staging_repair_document(changed,prior,b'controller\n',b'unit\n','d'*64)
+        with self.assertRaises(ValueError):
+            S.staging_repair_plan('c'*40,S.plan('a'*40,b'controller\n',b'unit\n'),
+                b'controller\n',b'unit\n','d'*64)
+
+    def test_staging_repair_policy_is_exact_and_expires_within_one_hour(self):
+        policy=S.staging_repair_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+            '2026-09-07T21:30:00Z','2026-09-07T22:00:00Z')
+        encoded=S.canonical(policy).decode()
+        self.assertNotIn('Resource":"*',encoded)
+        self.assertIn(S.REPAIR_DOCUMENT,encoded)
+        self.assertIn(S.INSTANCE,encoded)
+        with self.assertRaises(ValueError):
+            S.staging_repair_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+                '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
+
 
 class ImageManifestBindingTests(unittest.TestCase):
     def verify(self, inspection):

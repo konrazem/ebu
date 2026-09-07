@@ -14,10 +14,12 @@ RECOVERY_PREFIX = re.compile(
     r'^rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/[0-9a-f]{64}/$')
 DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
 DIAGNOSTIC_DOCUMENT = 'EBU-C0-Stage-Diagnostic-492a4f1-v1'
+REPAIR_DOCUMENT = 'EBU-C0-Stage-Repair-492a4f1-v1'
 ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
 POLICY = 'EBU-C0-Staging-Transport-v1'
 DIAGNOSTIC_POLICY = 'EBU-C0-Staging-Diagnostic-Transport-v1'
+REPAIR_POLICY = 'EBU-C0-Staging-Repair-Transport-v1'
 INSTANCE_READ_POLICY = 'EBU-C0-Staging-Exact-Version-Read-v1'
 INSTANCE_ROLE = 'EBU-Rehearsal-EC2-Role'
 ARCHIVE_SHA = '4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef'
@@ -338,6 +340,125 @@ def diagnostic_temporary_policy(role_id,observed_utc,expires_utc):
         'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
         'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
     doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{DIAGNOSTIC_DOCUMENT}'
+    return {'Version':'2012-10-17','Statement':[
+        {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
+        {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
+
+def staging_repair_plan(commit,prior_plan,controller_bytes,unit_bytes,diagnostic_result_sha256):
+    """Versioned continuation over retained bytes from one terminal v2 attempt."""
+    validate_recovery_plan(prior_plan,controller_bytes,unit_bytes)
+    if not isinstance(commit,str) or not re.fullmatch(r'[0-9a-f]{40}',commit):
+        raise ValueError('exact committed repair implementation required')
+    if not isinstance(diagnostic_result_sha256,str) or not SHA.fullmatch(diagnostic_result_sha256):
+        raise ValueError('authenticated diagnostic result SHA-256 required')
+    prior_id=digest(prior_plan)
+    objects=[{k:obj[k] for k in ('role','name','sha256','bytes','destination')}
+             for obj in prior_plan['objects']]
+    return {'schema':'aws_c0_byte_bound_host_staging_repair_plan/v3',
+            'implementation_commit':commit,'account':ACCOUNT,'region':REGION,'instance_id':INSTANCE,
+            'source_plan_sha256':prior_id,
+            'source_recovery_attempt_identity_sha256':prior_plan['recovery_attempt_identity_sha256'],
+            'diagnostic_result_sha256':diagnostic_result_sha256,
+            'scratch_directory':'/var/lib/ebu-c0/staging-'+prior_id[:24],
+            'objects':objects,'image_manifest_sha256':MANIFEST_SHA,'image_config_sha256':CONFIG_SHA,
+            'allowed_image_references':[repo+'@sha256:'+MANIFEST_SHA for repo in
+                ['ebu/aws-c0-platform-smoke','docker.io/ebu/aws-c0-platform-smoke']],
+            'docker_load_platform':'linux/amd64','maximum_instance_starts':1,
+            'maximum_repair_commands':1,'maximum_running_seconds':600,'command_timeout_seconds':300,
+            'aggregate_cost_ceiling_minor_units':5000,'retained_exact_bytes_only':True,
+            's3_access':False,'package_installation':False,'container_execution':False,
+            'systemd_start_or_enable':False,'scientific_execution':False,'stop_required':True}
+
+def validate_staging_repair_plan(value,prior_plan,controller_bytes,unit_bytes,diagnostic_result_sha256):
+    if not isinstance(value,dict):raise ValueError('staging repair plan object required')
+    expected=staging_repair_plan(value.get('implementation_commit'),prior_plan,
+        controller_bytes,unit_bytes,diagnostic_result_sha256)
+    if value!=expected:raise ValueError('staging repair plan differs from retained exact material')
+    return expected
+
+STAGING_REPAIR_BODY = r'''
+import hashlib,json,os,stat,subprocess
+from pathlib import Path
+assert os.geteuid()==0
+ENV={'PATH':'/usr/local/bin:/usr/bin:/bin','LC_ALL':'C'}
+def run(argv,timeout=30):
+    p=subprocess.run(argv,cwd='/',env=ENV,stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout,check=False)
+    if p.returncode:
+        stderr=p.stderr.decode('utf-8','replace').replace('\x00','')[-3000:]
+        stdout=p.stdout.decode('utf-8','replace').replace('\x00','')[-1000:]
+        raise RuntimeError('bounded command failed: '+Path(argv[0]).name+':'+str(p.returncode)+
+            ':stdout='+stdout+':stderr='+stderr)
+    return p.stdout
+def file_hash(path):
+    h=hashlib.sha256()
+    with path.open('rb') as stream:
+        while chunk:=stream.read(1048576):h.update(chunk)
+    return h.hexdigest()
+for obj in PLAN['objects']:
+    if obj['destination']:assert not os.path.lexists(obj['destination'])
+work=Path(PLAN['scratch_directory']);s=work.lstat()
+assert stat.S_ISDIR(s.st_mode) and not work.is_symlink() and s.st_uid==0 and s.st_gid==0
+for obj in PLAN['objects']:
+    source=work/obj['name'];s=source.lstat()
+    assert stat.S_ISREG(s.st_mode) and not source.is_symlink() and s.st_uid==0 and s.st_gid==0
+    assert stat.S_IMODE(s.st_mode)==0o600 and s.st_size==obj['bytes'] and file_hash(source)==obj['sha256']
+run(['/usr/bin/docker','info','--format',chr(123)*2+'.ServerVersion'+chr(125)*2])
+run(['/usr/bin/docker','image','load','--platform',PLAN['docker_load_platform'],
+    '--input',str(work/'synthetic-image.tar')],180)
+metadata=json.loads(run(['/usr/bin/docker','image','inspect','sha256:'+PLAN['image_config_sha256']]))
+assert len(metadata)==1
+image=metadata[0]
+assert image['Id']=='sha256:'+PLAN['image_config_sha256'] and image['Os']=='linux' and image['Architecture']=='amd64'
+assert image['Config']['User']=='65534:65534' and image['Config']['WorkingDir']=='/work'
+references=[r for r in image.get('RepoDigests',[]) if r in PLAN['allowed_image_references']]
+assert references,'loaded archive does not preserve exact immutable repository manifest reference'
+installed=[]
+for obj in PLAN['objects']:
+    if not obj['destination']:continue
+    destination=Path(obj['destination']);raw=(work/obj['name']).read_bytes()
+    fd=os.open(destination,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o644)
+    with os.fdopen(fd,'wb') as stream:stream.write(raw);stream.flush();os.fsync(stream.fileno())
+    os.chmod(destination,0o644);s=destination.lstat()
+    assert stat.S_ISREG(s.st_mode) and s.st_uid==0 and s.st_gid==0 and stat.S_IMODE(s.st_mode)==0o644
+    assert s.st_size==obj['bytes'] and file_hash(destination)==obj['sha256']
+    installed.append({'path':str(destination),'sha256':obj['sha256'],'bytes':s.st_size})
+run(['/usr/bin/systemctl','daemon-reload'])
+for obj in PLAN['objects']:
+    source=work/obj['name'];assert file_hash(source)==obj['sha256'];source.unlink()
+work.rmdir()
+print(json.dumps({'schema':'aws_c0_byte_bound_host_staging_result/v2','plan_sha256':PLAN_ID,
+    'source_plan_sha256':PLAN['source_plan_sha256'],'diagnostic_result_sha256':PLAN['diagnostic_result_sha256'],
+    'installed_files':installed,'image_config_sha256':PLAN['image_config_sha256'],
+    'image_manifest_sha256':PLAN['image_manifest_sha256'],'verified_image_references':references,
+    'docker_load_platform':PLAN['docker_load_platform'],'retained_exact_bytes_used':True,
+    'image_loaded':True,'container_executed':False,'service_started_or_enabled':False,
+    'package_installed':False,'scientific_execution':False},sort_keys=True,separators=(',',':')))
+'''
+
+def staging_repair_document(value,prior_plan,controller_bytes,unit_bytes,diagnostic_result_sha256):
+    validate_staging_repair_plan(value,prior_plan,controller_bytes,unit_bytes,diagnostic_result_sha256)
+    encoded=base64.b64encode(canonical({'PLAN':value,'PLAN_ID':digest(value)})).decode()
+    script="import base64,json\nglobals().update(json.loads(base64.b64decode('"+encoded+"')))\n"+STAGING_REPAIR_BODY
+    compile(script,'<nonexecuted-byte-bound-staging-repair>','exec')
+    if '{{' in script:raise ValueError('SSM parser parameter marker refused')
+    return {'schemaVersion':'2.2','description':'Exact retained-byte AWS-C0 staging repair; no container or service execution.',
+            'parameters':{},'mainSteps':[{'action':'aws:runShellScript','name':'repairExactC0Staging',
+            'precondition':{'StringEquals':['platformType','Linux']},
+            'inputs':{'timeoutSeconds':'300','runCommand':["set -eu\n/usr/bin/python3 - <<'C0_FIXED_REPAIR'\n"+script+"\nC0_FIXED_REPAIR\n"]}}]}
+
+def staging_repair_temporary_policy(role_id,observed_utc,expires_utc):
+    if not isinstance(role_id,str) or not re.fullmatch(r'AROA[A-Z0-9]{12,32}',role_id):
+        raise ValueError('exact role ID required')
+    times=[]
+    for value in (observed_utc,expires_utc):
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',value):raise ValueError('exact UTC required')
+        times.append(datetime.fromisoformat(value.replace('Z','+00:00')))
+    if not 0<(times[1]-times[0]).total_seconds()<=3600:raise ValueError('bounded repair lifetime required')
+    condition={'DateLessThan':{'aws:CurrentTime':expires_utc},'StringEquals':{
+        'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
+        'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
+    doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{REPAIR_DOCUMENT}'
     return {'Version':'2012-10-17','Statement':[
         {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
         {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}

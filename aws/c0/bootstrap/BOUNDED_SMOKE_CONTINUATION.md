@@ -89,3 +89,12 @@ command and not a platform smoke. It changes no artifact byte, historical plan,
 AWS permission boundary, scientific content, or USD50 aggregate ceiling. A
 subsequent corrective staging attempt must be separately versioned from the
 preserved v1/v2 plans and must bind the diagnostic result before it can run.
+
+The versioned v3 repair is limited to the exact files retained by the failed v2
+command. It revalidates their root ownership, mode, length, and SHA-256, calls
+`docker image load` once with the explicit `linux/amd64` selector, and includes
+bounded Docker stdout/stderr in any failure record. On success it performs the
+same exact image/configuration/reference checks and exclusive controller/unit
+installation as v2. It contacts neither S3 nor a registry, never runs a
+container, and preserves the scratch files if any step fails. The prior v1/v2
+plans and command bodies remain unchanged.
