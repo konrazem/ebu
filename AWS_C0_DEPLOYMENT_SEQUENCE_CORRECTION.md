@@ -29,6 +29,82 @@ No credentials, AWS calls, staging, deployment, instance start, smoke, or scienc
 were used in this local correction. The completed host-inventory authorization
 is exhausted and cannot be reused.
 
+## New authority boundary found while implementing reconstruction
+
+Continuation from `2b11b1b` investigated the actual missing
+`runtime_control_reconstruction_set_identity` producer/consumer obligation,
+not just the absent field. A distinct prospective phased reconstruction set
+can preserve the original 63 reads and eleven control slots while carrying
+predeployment, postdeployment, execution-preflight and completion evidence at
+the correct times. The independent reviewer confirmed that design direction.
+Already-due reads still require fresh, correctly targeted, complete responses;
+future reads cannot be invented and old complete-reconstruction dispositions
+cannot label phase fragments.
+
+One required reconstructed fact has no accepted observation source. The frozen
+`decoded_vpc_network_observation` requires `ingress_rule_count` exactly zero,
+with source rows R04–R12. Neither those rows nor any other row in the closed
+R01–R63 universe reads security-group ingress permissions. Network-interface
+responses contain group identifiers, not those groups' complete rule sets.
+The same interface/group identifiers are consistent with an empty rule set or
+with an inbound rule added to that group: hashing those identifiers cannot
+distinguish the two cases. This is a local observability conflict, not an
+observed claim about the actual instance's rules.
+
+The scoped independent review found no accepted separate fresh ingress-rule
+source. The frozen contract's `NO_ROW_OUTSIDE_R01_THROUGH_R63` and
+`NO_UNDECLARED_READ` invariants forbid silently adding the missing API call.
+The R51 amendment changes only its specified policy-absence result and does
+not authorize a new action outside that closed universe. No zero was supplied
+from a schema constant, a planned template, an old snapshot or group IDs.
+
+AWS's [NetworkInterface response definition](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_NetworkInterface.html)
+documents group identifiers. Its [DescribeSecurityGroups response](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html)
+includes the actual inbound `ipPermissions`. The
+[EC2 service authorization reference](https://docs.aws.amazon.com/service-authorization/latest/reference/list_ec2.html)
+lists no resource-level scope for DescribeSecurityGroups and supports the
+`ec2:Region` condition. Consequently an added IAM allow would have Resource `*`
+within us-east-1; exact instance-attached group IDs must additionally be enforced
+by the reviewed request guard. This limitation is disclosed, not represented as
+an IAM-enforced exact-group restriction.
+
+The proposed minimal new authority is the complete object at
+`/pending_network_ingress_amendment_packet` in
+`aws_c0_deployment_sequence_correction_contract.json`. Its identity is SHA-256
+of its complete canonical JSON, with no trailing newline:
+`97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f`.
+It preserves every original row and historical record, adds only prospective
+R64 DescribeSecurityGroups, keeps the zero-ingress requirement, and permits at
+most three bounded exact-group reads in the existing one-smoke sequence after
+all gates pass. Only the two named constrained roles/session ceilings could
+gain that single read action if required; konrad, AdministratorAccess, trust,
+MFA, session durations and security-group rules stay unchanged. It does not
+increase the aggregate USD50 cap, host count, instance type or smoke count.
+All other effective permissions remain unchanged. The additional read permission
+must be removed from any surviving named role during verified cleanup; the
+proposal expressly covers that cleanup and temporary-session disposal.
+Its allow/deny rules apply only to this additional R64 authority, not as a new
+grant for the rest of the existing bounded smoke sequence. Public publication
+remains forbidden; existing privately staged evidence is not a public release.
+
+This packet is a proposal, not user authorization or deployed policy. No code
+gate, historical schema, read-plan pin, permission or AWS resource has been
+changed to accept R64. The full-entry regression remains unskipped and red.
+No AWS API, credentials, staging, deployment, instance start, smoke, science,
+push or publication occurred while investigating and preparing this decision.
+
+The existing independent read-only reviewer recomputed the final packet hash
+above, verified both frozen source pins and the named finalizer role, and
+APPROVED the proposal for presentation only. This is not approval of an
+implementation or AWS execution. Local canonical-identity, source-pin, scope,
+document consistency, deterministic schema generation and whitespace checks
+pass. Runtime code and tests are unchanged from `2b11b1b`; its 180/181 result
+remains the last complete suite run, not a newly claimed green suite.
+
+Exact proposed user authorization (not yet received):
+
+> I authorize AWS-C0 network-ingress source amendment packet SHA-256 97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f in full. Prospectively add R64 ec2:DescribeSecurityGroups, preserve the original R01–R63 and historical evidence, and implement, validate, independently review and commit the required local bindings. After all gates pass, permit at most three bounded reads of the exact security groups attached to i-048bac00bdb540a4e in account 623609441658, us-east-1, within the existing one-smoke authorization. If required, add only this read action to EBU-C0-Operator-492a4f1 and EBU-C0-Corrected-Finalizer-v1 and their session ceilings, with all other effective permissions unchanged. I understand this action requires regional IAM Resource:* and exact group targeting must be enforced by the reviewed request guard. Remove the added permission during verified cleanup. Do not change security-group rules, konrad, AdministratorAccess, trust, source identity, MFA or session duration. Retain the aggregate USD50 cap, one existing t3.small host, one smoke and no scientific execution, larger compute, push or public release. Continue the already authorized workflow automatically within these boundaries.
+
 ## Broader local repair: phase producers and a result-contract boundary
 
 The subsequent AUDITOR delegation (source turn
