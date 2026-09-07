@@ -10,6 +10,8 @@ REGION = 'us-east-1'
 INSTANCE = 'i-048bac00bdb540a4e'
 BUCKET = 'ebu-stage-f-results-k7m4p2'
 PREFIX = 'rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/'
+RECOVERY_PREFIX = re.compile(
+    r'^rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/[0-9a-f]{64}/$')
 DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
 ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
@@ -58,10 +60,35 @@ def plan(commit,controller_bytes,unit_bytes):
             'stop_required':True,'package_installation':False,'container_execution':False,
             'systemd_start_or_enable':False,'scientific_execution':False}
 
+def recovery_plan(commit,controller_bytes,unit_bytes,attempt_identity_sha256):
+    """Derive a fresh, collision-free namespace below the permitted prefix."""
+    if not isinstance(attempt_identity_sha256,str) or not SHA.fullmatch(attempt_identity_sha256):
+        raise ValueError('fresh attempt identity SHA-256 required')
+    value=plan(commit,controller_bytes,unit_bytes)
+    prefix=PREFIX+'recovery/'+attempt_identity_sha256+'/'
+    if not RECOVERY_PREFIX.fullmatch(prefix):raise ValueError('bounded recovery prefix required')
+    value['schema']='aws_c0_byte_bound_host_staging_plan/v2'
+    value['recovery_attempt_identity_sha256']=attempt_identity_sha256
+    for obj in value['objects']:
+        obj['key']=prefix+'artifacts/'+obj['sha256']+'/'+obj['name']
+    return value
+
 def validate_plan(value,controller_bytes,unit_bytes):
     expected=plan(value['implementation_commit'],controller_bytes,unit_bytes)
     if value!=expected:raise ValueError('staging plan differs from exact material')
     return expected
+
+def validate_recovery_plan(value,controller_bytes,unit_bytes):
+    if not isinstance(value,dict):raise ValueError('recovery plan object required')
+    expected=recovery_plan(value['implementation_commit'],controller_bytes,unit_bytes,
+                           value.get('recovery_attempt_identity_sha256'))
+    if value!=expected:raise ValueError('recovery plan differs from exact material')
+    return expected
+
+def validate_any_plan(value,controller_bytes,unit_bytes):
+    if isinstance(value,dict) and value.get('schema')=='aws_c0_byte_bound_host_staging_plan/v2':
+        return validate_recovery_plan(value,controller_bytes,unit_bytes)
+    return validate_plan(value,controller_bytes,unit_bytes)
 
 def validate_receipts(value,receipts):
     if not isinstance(receipts,list) or len(receipts)!=3:raise ValueError('three exact-version receipts required')
@@ -82,7 +109,7 @@ def instance_read_policy(value,receipts,controller_bytes,unit_bytes,observed_utc
     Each statement binds one key to its own VersionId, not a Cartesian product.
     Authenticated receipts and before/after role snapshots remain executor gates.
     """
-    validate_plan(value,controller_bytes,unit_bytes)
+    validate_any_plan(value,controller_bytes,unit_bytes)
     validate_receipts(value,receipts)
     if not all(isinstance(v,str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',v)
                for v in (observed_utc,expires_utc)):
@@ -181,7 +208,7 @@ print(json.dumps({'schema':'aws_c0_byte_bound_host_staging_result/v1','plan_sha2
 '''
 
 def document(value,receipts,controller_bytes,unit_bytes):
-    validate_plan(value,controller_bytes,unit_bytes);validate_receipts(value,receipts)
+    validate_any_plan(value,controller_bytes,unit_bytes);validate_receipts(value,receipts)
     variables={'PLAN':value,'RECEIPTS':receipts,'PLAN_ID':digest(value)}
     encoded=base64.b64encode(canonical(variables)).decode()
     script="import base64,json\nglobals().update(json.loads(base64.b64decode('"+encoded+"')))\n"+HOST_BODY

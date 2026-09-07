@@ -2828,6 +2828,22 @@ class ByteBoundStagingTests(unittest.TestCase):
         for bad in (b'controller\r\n', b'', 'not bytes'):
             with self.assertRaises(ValueError): S.plan('a' * 40, bad, b'unit\n')
 
+    def test_recovery_plan_uses_fresh_attempt_subprefix_without_changing_v1(self):
+        original=S.plan('a'*40,b'controller\n',b'unit\n')
+        attempt='b'*64
+        recovery=S.recovery_plan('a'*40,b'controller\n',b'unit\n',attempt)
+        self.assertEqual(original['schema'],'aws_c0_byte_bound_host_staging_plan/v1')
+        self.assertEqual(recovery['schema'],'aws_c0_byte_bound_host_staging_plan/v2')
+        self.assertEqual(recovery['recovery_attempt_identity_sha256'],attempt)
+        self.assertEqual(S.validate_recovery_plan(recovery,b'controller\n',b'unit\n'),recovery)
+        for old,new in zip(original['objects'],recovery['objects']):
+            self.assertEqual({k:v for k,v in old.items() if k!='key'},
+                             {k:v for k,v in new.items() if k!='key'})
+            self.assertTrue(new['key'].startswith(S.PREFIX+'recovery/'+attempt+'/artifacts/'))
+        for bad in ('', 'x'*64, None):
+            with self.assertRaises(ValueError):
+                S.recovery_plan('a'*40,b'controller\n',b'unit\n',bad)
+
     def test_document_is_closed_fixed_and_cannot_execute_a_container_or_service(self):
         p, receipts = self.material()
         d = S.document(p, receipts, b'controller\n', b'unit\n')

@@ -58,6 +58,15 @@ removes only its exact verified download scratch files. Conflicts refuse rather
 than overwrite. A partial failure must preserve its observations and trigger
 stop/cleanup; no repeated smoke attempt or silent repair is permitted.
 
+If a failed preparation has already created content-addressed versions below
+the fixed preparation prefix, a fresh recovery must not collide with, delete,
+or replay them. `recovery_plan` therefore derives a v2 staging namespace below
+the same permitted prefix from the fresh attempt identity. It changes only S3
+object coordinates; controller, unit, image, AWS account/Region/instance,
+temporary-policy limits, one-start/one-command bounds, USD50 ceiling, and all
+no-container/no-science conditions remain unchanged. The original v1 plan
+remains unchanged for historical validation.
+
 Staging is not smoke success. The final deployment/launch records must still
 bind real post-staging artifacts, exact change-set contents, bounded credentials,
 pricing and the preserved evidence graph before the one platform smoke attempt.
