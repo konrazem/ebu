@@ -216,6 +216,16 @@ They remain `PARTIAL_NOT_READY` and `PARTIAL_SOURCE_BOUND_NOT_READY`: five
 source-bound predeployment controls leave six controls unresolved and cannot
 claim the historical complete reconstruction set.
 
+The next local producer implements the already frozen
+`BUCKET_CONTROLS_KMS` output/v1 without changing its schema or read plan.
+R20–R25 must be fresh ordered authenticated S3 successes for the sealed bucket.
+R31–R33 must all be absent for authenticated AES256 encryption and must all be
+fresh ordered authenticated KMS successes for an `aws:kms` key. The one-page,
+sixteen-tag KMS bound is enforced; a truncated tag response, unusable key,
+public bucket policy status, incomplete public-access block, or substituted
+bucket identity fails closed. This is a pure producer implementation and adds
+no AWS action, permission, scientific authority, cost, or publication scope.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

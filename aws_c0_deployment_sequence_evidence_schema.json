@@ -77,6 +77,9 @@
     },
     {
       "$ref": "#/$defs/runtime_reconstruction_source_attachment_v2"
+    },
+    {
+      "$ref": "#/$defs/bucket_controls_kms_output"
     }
   ],
   "$defs": {
@@ -51553,6 +51556,84 @@
     },
     "service_quota_output": {
       "$ref": "#/$defs/service_quota_reconstruction_output"
+    },
+    "bucket_controls_kms_reconstruction_output": {
+      "type": "object",
+      "required": [
+        "schema",
+        "kind",
+        "control",
+        "identity",
+        "canonical_json_base64",
+        "observed_utc",
+        "freshness_seconds",
+        "max_freshness_seconds",
+        "disposition",
+        "decoded_json",
+        "canonical_byte_sha256",
+        "canonical_byte_count",
+        "canonical_decode_validation_disposition",
+        "freshness_within_bound"
+      ],
+      "properties": {
+        "schema": {
+          "const": "aws_c0_bucket_controls_observation/v1"
+        },
+        "kind": {
+          "const": "aws_c0_bucket_controls_observation/v1"
+        },
+        "control": {
+          "const": "BUCKET_CONTROLS_KMS"
+        },
+        "identity": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/d65_identity"
+            },
+            {
+              "properties": {
+                "kind": {
+                  "const": "aws_c0_bucket_controls_observation/v1"
+                }
+              }
+            }
+          ]
+        },
+        "canonical_json_base64": {
+          "$ref": "#/$defs/d150_canonical_json_base64"
+        },
+        "observed_utc": {
+          "$ref": "#/$defs/d67_timestamp"
+        },
+        "freshness_seconds": {
+          "$ref": "#/$defs/d69_bounded_integer"
+        },
+        "max_freshness_seconds": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "disposition": {
+          "const": "FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS"
+        },
+        "decoded_json": {
+          "$ref": "#/$defs/d160_decoded_bucket_controls_observation"
+        },
+        "canonical_byte_sha256": {
+          "$ref": "#/$defs/d66_sha256"
+        },
+        "canonical_byte_count": {
+          "$ref": "#/$defs/d68_positive_integer"
+        },
+        "canonical_decode_validation_disposition": {
+          "const": "STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS"
+        },
+        "freshness_within_bound": {
+          "const": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "bucket_controls_kms_output": {
+      "$ref": "#/$defs/bucket_controls_kms_reconstruction_output"
     },
     "vpc_network_reconstruction_output_v2": {
       "type": "object",

@@ -1089,6 +1089,117 @@ class IamPolicySetReconstructionTests(unittest.TestCase):
             F.validate_iam_policy_set_reconstruction_output_v2(output,receipts,binding,profile,**context)
 
 
+class BucketControlsKmsReconstructionTests(unittest.TestCase):
+    def material(self,algorithm='AES256'):
+        profile_receipts,profile_context=InstanceProfileReconstructionTests().material()
+        caller=profile_context['caller_identity'];channel=profile_context['authentication_source_identity']
+        bucket='ebu-c0-offline-artifacts';bucket_identity=F.identity('aws_s3_bucket/v1','b'*64)
+        kms_arn='arn:aws:kms:us-east-1:623609441658:key/12345678-1234-1234-1234-1234567890ab'
+        bucket_request={'Bucket':bucket,'ExpectedBucketOwner':'623609441658'}
+        policy={'Version':'2012-10-17','Statement':[{'Effect':'Deny','Principal':'*',
+            'Action':'s3:*','Resource':['arn:aws:s3:::'+bucket,'arn:aws:s3:::'+bucket+'/*'],
+            'Condition':{'Bool':{'aws:SecureTransport':'false'}}}]}
+        encryption={'SSEAlgorithm':algorithm}
+        if algorithm=='aws:kms':encryption['KMSMasterKeyID']=kms_arn
+        responses={'R20':{'LocationConstraint':None},'R21':{'Status':'Enabled'},
+            'R22':{'ServerSideEncryptionConfiguration':{'Rules':[
+                {'ApplyServerSideEncryptionByDefault':encryption}]}},
+            'R23':{'PublicAccessBlockConfiguration':{'BlockPublicAcls':True,
+                'IgnorePublicAcls':True,'BlockPublicPolicy':True,'RestrictPublicBuckets':True}},
+            'R24':{'Policy':json.dumps(policy,indent=2)},'R25':{'PolicyStatus':{'IsPublic':False}}}
+        actions={'R20':'s3:GetBucketLocation','R21':'s3:GetBucketVersioning',
+            'R22':'s3:GetEncryptionConfiguration','R23':'s3:GetBucketPublicAccessBlock',
+            'R24':'s3:GetBucketPolicy','R25':'s3:GetBucketPolicyStatus'}
+        def receipt(row,action,selector,request,response,second,count=1):
+            request_id='offline-bucket-'+row
+            response={**copy.deepcopy(response),'ResponseMetadata':{'RequestId':request_id,
+                'HTTPStatusCode':200,'RetryAttempts':0,'HTTPHeaders':{'x-amz-request-id':request_id}}}
+            value={'row_id':row,'action':action,'resource_selector':selector,'caller_identity':caller,
+                'authentication_source_identity':channel,'http_status':200,'request_id':request_id,
+                'requested_utc':'2026-09-06T18:00:%02dZ'%second,
+                'completed_utc':'2026-09-06T18:00:%02dZ'%(second+1),'pagination_page':1,
+                'pagination_item_count':count,'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+                'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+            R51ProspectiveAmendmentTests.encode(value,'request',request)
+            R51ProspectiveAmendmentTests.encode(value,'response',response)
+            return value
+        receipts={row:receipt(row,actions[row],'SEALED_BUCKET_ARN',bucket_request,
+            responses[row],index*2+1) for index,row in enumerate(('R20','R21','R22','R23','R24','R25'))}
+        receipts.update({'R31':None,'R32':None,'R33':None})
+        if algorithm=='aws:kms':
+            kms_actions={'R31':'kms:DescribeKey','R32':'kms:GetKeyPolicy','R33':'kms:ListResourceTags'}
+            kms_requests={'R31':{'KeyId':kms_arn},'R32':{'KeyId':kms_arn,'PolicyName':'default'},
+                'R33':{'KeyId':kms_arn,'Limit':16}}
+            kms_responses={'R31':{'KeyMetadata':{'Arn':kms_arn,'AWSAccountId':'623609441658',
+                    'KeyState':'Enabled','Enabled':True,'KeyUsage':'ENCRYPT_DECRYPT','KeySpec':'SYMMETRIC_DEFAULT'}},
+                'R32':{'Policy':json.dumps({'Version':'2012-10-17','Statement':[]})},
+                'R33':{'Tags':[{'TagKey':'ebu:authority','TagValue':'AWS-C0'},
+                    {'TagKey':'ebu:payload','TagValue':'synthetic-only'}],'Truncated':False}}
+            for index,row in enumerate(('R31','R32','R33')):
+                count=2 if row=='R33' else 1
+                receipts[row]=receipt(row,kms_actions[row],'SEALED_KMS_KEY_ARN',kms_requests[row],
+                    kms_responses[row],13+index*2,count)
+        context={'caller_identity':caller,'authentication_source_identity':channel,
+            'expected_bucket_name':bucket,'expected_bucket_identity':bucket_identity,
+            'phase_not_before_utc':'2026-09-06T18:00:00Z','validation_utc':'2026-09-06T18:00:50Z',
+            'freshness_max_seconds':300}
+        return receipts,context,policy,kms_arn
+
+    def test_aes256_sources_reconstruct_without_fabricating_kms_calls(self):
+        receipts,context,policy,_=self.material();output=G.build_bucket_controls_kms_output(ROOT,receipts,**context)
+        self.assertEqual(output['decoded_json']['encryption_algorithm'],'AES256')
+        self.assertIsNone(output['decoded_json']['kms_key_arn'])
+        self.assertEqual(output['decoded_json']['bucket_policy_sha256'],G.sha(G.canonical(policy)))
+        self.assertEqual(output['decoded_json']['source_row_ids'],
+            ['R20','R21','R22','R23','R24','R25','R31','R32','R33'])
+        self.assertEqual(F.validate_bucket_controls_kms_reconstruction_output(output,receipts,**context),output)
+        G.validate_record(ROOT,'bucket_controls_kms_output',output)
+
+    def test_kms_sources_require_enabled_key_policy_and_terminal_tags(self):
+        receipts,context,_,kms_arn=self.material('aws:kms')
+        output=G.build_bucket_controls_kms_output(ROOT,receipts,**context)
+        self.assertEqual(output['decoded_json']['kms_key_arn'],kms_arn)
+        self.assertEqual(output['decoded_json']['encryption_algorithm'],'aws:kms')
+        G.validate_record(ROOT,'bucket_controls_kms_output',output)
+
+    def test_encryption_condition_and_kms_completeness_fail_closed(self):
+        receipts,context,_,_=self.material();receipts['R31']=copy.deepcopy(receipts['R20'])
+        with self.assertRaisesRegex(F.Refusal,'AES256'):
+            F.build_bucket_controls_kms_reconstruction_output(receipts,**context)
+        for mutate in (lambda r:r.update(R33=None),
+                lambda r:R64IngressAmendmentTests().mutate_api(r['R33'],'response',lambda v:v.update(Truncated=True,NextMarker='next')),
+                lambda r:R64IngressAmendmentTests().mutate_api(r['R31'],'response',lambda v:v['KeyMetadata'].update(KeyState='Disabled'))):
+            receipts,context,_,_=self.material('aws:kms');mutate(receipts)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.build_bucket_controls_kms_reconstruction_output(receipts,**context)
+
+    def test_bucket_security_response_request_and_identity_substitutions_refuse(self):
+        mutations=(('R21','response',lambda v:v.update(Status='Suspended')),
+            ('R23','response',lambda v:v['PublicAccessBlockConfiguration'].update(BlockPublicPolicy=False)),
+            ('R25','response',lambda v:v['PolicyStatus'].update(IsPublic=True)),
+            ('R20','request',lambda v:v.update(ExpectedBucketOwner='111111111111')))
+        for row,stem,mutate in mutations:
+            receipts,context,_,_=self.material();R64IngressAmendmentTests().mutate_api(receipts[row],stem,mutate)
+            with self.subTest(row=row),self.assertRaises(F.Refusal):
+                F.build_bucket_controls_kms_reconstruction_output(receipts,**context)
+        receipts,context,_,_=self.material();context['expected_bucket_identity']=F.identity('aws_s3_bucket/v1','c'*64)
+        output=F.build_bucket_controls_kms_reconstruction_output(receipts,**context)
+        context['expected_bucket_identity']=F.identity('aws_s3_bucket/v1','b'*64)
+        with self.assertRaises(F.Refusal):
+            F.validate_bucket_controls_kms_reconstruction_output(output,receipts,**context)
+
+    def test_rehashed_output_or_authority_drift_refuses(self):
+        receipts,context,_,_=self.material();output=G.build_bucket_controls_kms_output(ROOT,receipts,**context)
+        output['decoded_json']['versioning_status']='Suspended';raw=G.canonical(output['decoded_json'])
+        output.update(identity=G.identity(output['schema'],output['decoded_json']),
+            canonical_json_base64=base64.b64encode(raw).decode(),canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        with self.assertRaises(F.Refusal):
+            F.validate_bucket_controls_kms_reconstruction_output(output,receipts,**context)
+        authority=G.sequence(ROOT);authority['bucket_controls_kms_reconstruction_authorization']['maximum_kms_tags']=15
+        with mock.patch.object(G,'sequence',return_value=authority),self.assertRaises(ValueError):
+            G.build_bucket_controls_kms_output(ROOT,receipts,**context)
+
+
 class ServiceQuotaReconstructionTests(unittest.TestCase):
     def material(self):
         sources,_,_,base=R64CallBudgetTests().material();receipts={}

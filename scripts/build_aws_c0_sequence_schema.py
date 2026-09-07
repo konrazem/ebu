@@ -245,6 +245,9 @@ def build(root=ROOT):
     definitions['service_quota_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
         if v['properties']['control']['const']=='SERVICE_QUOTA'))
     definitions['service_quota_output']={'$ref':'#/$defs/service_quota_reconstruction_output'}
+    definitions['bucket_controls_kms_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
+        if v['properties']['control']['const']=='BUCKET_CONTROLS_KMS'))
+    definitions['bucket_controls_kms_output']={'$ref':'#/$defs/bucket_controls_kms_reconstruction_output'}
     decoded_iam=copy.deepcopy(next(v for k,v in definitions.items() if k.endswith('_decoded_iam_policy_set_observation')))
     decoded_iam['properties'].update(schema={'const':'aws_c0_iam_policy_set_observation_preimage/v2'},
         source_row_ids={'const':['R15','R16','R17','R18','R19']})
@@ -327,7 +330,7 @@ def build(root=ROOT):
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

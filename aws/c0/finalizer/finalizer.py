@@ -3266,6 +3266,129 @@ def validate_iam_policy_set_reconstruction_output_v2(output: Any, receipts: Any,
     return output
 
 
+def build_bucket_controls_kms_reconstruction_output(receipts: Any, *,
+        caller_identity: dict[str,str], authentication_source_identity: dict[str,str],
+        expected_bucket_name: str, expected_bucket_identity: dict[str,str],
+        phase_not_before_utc: str, validation_utc: str,
+        freshness_max_seconds: int) -> dict[str,Any]:
+    """Reconstruct the artifact-bucket controls and conditional KMS source set."""
+    order=('R20','R21','R22','R23','R24','R25','R31','R32','R33')
+    if (not isinstance(receipts,dict) or set(receipts)!=set(order)
+            or not isinstance(expected_bucket_name,str)
+            or not re.fullmatch(r'[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]',expected_bucket_name)
+            or '..' in expected_bucket_name or '.-' in expected_bucket_name or '-.' in expected_bucket_name):
+        raise Refusal('bucket/KMS exact source slots and sealed bucket name required')
+    _identity({'bucket':expected_bucket_identity},'bucket','aws_s3_bucket/v1')
+    context={'caller_identity':caller_identity,
+        'authentication_source_identity':authentication_source_identity,
+        'phase_not_before_utc':phase_not_before_utc,'validation_utc':validation_utc,
+        'freshness_max_seconds':freshness_max_seconds}
+    actions={'R20':'s3:GetBucketLocation','R21':'s3:GetBucketVersioning',
+        'R22':'s3:GetEncryptionConfiguration','R23':'s3:GetBucketPublicAccessBlock',
+        'R24':'s3:GetBucketPolicy','R25':'s3:GetBucketPolicyStatus'}
+    request={'Bucket':expected_bucket_name,'ExpectedBucketOwner':'623609441658'}
+    responses={};previous=_r64_utc(phase_not_before_utc)
+    for row in order[:6]:
+        found,response=_iam_api_material(receipts[row],row,actions[row],'SEALED_BUCKET_ARN',
+            maximum_items=16,**context)
+        if (found!=request or receipts[row]['pagination_page']!=1
+                or receipts[row]['pagination_item_count']!=1
+                or _r64_utc(receipts[row]['requested_utc'])<previous):
+            raise Refusal('bucket exact request/count/producer order mismatch: '+row)
+        previous=_r64_utc(receipts[row]['completed_utc']);responses[row]=response
+    if responses['R20'].get('LocationConstraint') is not None:
+        raise Refusal('bucket must be authenticated in us-east-1')
+    if responses['R21'].get('Status')!='Enabled' or responses['R21'].get('MFADelete') not in (None,'Disabled'):
+        raise Refusal('bucket versioning must be enabled without MFA-delete drift')
+    rules=responses['R22'].get('ServerSideEncryptionConfiguration',{}).get('Rules')
+    if not isinstance(rules,list) or len(rules)!=1 or not isinstance(rules[0],dict):
+        raise Refusal('bucket exact single default-encryption rule required')
+    encryption=rules[0].get('ApplyServerSideEncryptionByDefault')
+    if not isinstance(encryption,dict) or encryption.get('SSEAlgorithm') not in ('AES256','aws:kms'):
+        raise Refusal('bucket accepted default-encryption algorithm required')
+    algorithm=encryption['SSEAlgorithm'];kms_arn=encryption.get('KMSMasterKeyID')
+    if algorithm=='AES256':
+        if kms_arn is not None or any(receipts[row] is not None for row in order[6:]):
+            raise Refusal('AES256 bucket requires no KMS key or conditional KMS calls')
+        kms_arn=None
+    else:
+        if (not isinstance(kms_arn,str) or not re.fullmatch(
+                r'arn:aws:kms:us-east-1:623609441658:key/[0-9a-f-]{36}',kms_arn)
+                or any(receipts[row] is None for row in order[6:])):
+            raise Refusal('KMS bucket requires exact same-account regional key and all KMS rows')
+    public=responses['R23'].get('PublicAccessBlockConfiguration')
+    public_fields=('BlockPublicAcls','IgnorePublicAcls','BlockPublicPolicy','RestrictPublicBuckets')
+    if not isinstance(public,dict) or set(public)!=set(public_fields) or any(public[k] is not True for k in public_fields):
+        raise Refusal('bucket complete all-true public access block required')
+    policy_text=responses['R24'].get('Policy')
+    if not isinstance(policy_text,str) or not policy_text or len(policy_text.encode())>65536:
+        raise Refusal('bucket bounded policy source required')
+    try:policy=_source_json(policy_text.encode())
+    except Refusal as exc:raise Refusal('bucket policy must be strict JSON') from exc
+    if not isinstance(policy,dict) or responses['R25'].get('PolicyStatus',{}).get('IsPublic') is not False:
+        raise Refusal('bucket non-public complete policy status required')
+    if algorithm=='aws:kms':
+        kms_actions={'R31':'kms:DescribeKey','R32':'kms:GetKeyPolicy','R33':'kms:ListResourceTags'}
+        kms_requests={'R31':{'KeyId':kms_arn},'R32':{'KeyId':kms_arn,'PolicyName':'default'},
+            'R33':{'KeyId':kms_arn,'Limit':16}}
+        for row in order[6:]:
+            found,response=_iam_api_material(receipts[row],row,kms_actions[row],'SEALED_KMS_KEY_ARN',
+                maximum_items=16,**context)
+            if (found!=kms_requests[row] or receipts[row]['pagination_page']!=1
+                    or _r64_utc(receipts[row]['requested_utc'])<previous):
+                raise Refusal('KMS exact request/producer order mismatch: '+row)
+            previous=_r64_utc(receipts[row]['completed_utc']);responses[row]=response
+        metadata=responses['R31'].get('KeyMetadata')
+        if (receipts['R31']['pagination_item_count']!=1 or not isinstance(metadata,dict)
+                or metadata.get('Arn')!=kms_arn or metadata.get('AWSAccountId')!='623609441658'
+                or metadata.get('KeyState')!='Enabled' or metadata.get('Enabled') is not True
+                or metadata.get('KeyUsage')!='ENCRYPT_DECRYPT'
+                or metadata.get('KeySpec')!='SYMMETRIC_DEFAULT'):
+            raise Refusal('KMS exact enabled symmetric encryption key required')
+        key_policy_text=responses['R32'].get('Policy')
+        if (receipts['R32']['pagination_item_count']!=1 or not isinstance(key_policy_text,str)
+                or not key_policy_text or len(key_policy_text.encode())>65536):
+            raise Refusal('KMS bounded default policy source required')
+        try:key_policy=_source_json(key_policy_text.encode())
+        except Refusal as exc:raise Refusal('KMS policy must be strict JSON') from exc
+        tags=responses['R33'].get('Tags');truncated=responses['R33'].get('Truncated')
+        if (not isinstance(key_policy,dict) or not isinstance(tags,list) or type(truncated) is not bool
+                or truncated or responses['R33'].get('NextMarker') not in (None,'')
+                or len(tags)!=receipts['R33']['pagination_item_count'] or len(tags)>16
+                or any(not isinstance(tag,dict) or set(tag)!={'TagKey','TagValue'}
+                    or not isinstance(tag['TagKey'],str) or not isinstance(tag['TagValue'],str) for tag in tags)
+                or len({tag['TagKey'] for tag in tags})!=len(tags)):
+            raise Refusal('KMS complete terminal unique tag inventory required')
+    sources=[receipts[row] for row in order if receipts[row] is not None]
+    if (len({item['request_id'] for item in sources})!=len(sources)
+            or len({digest(canonical_bytes(item)) for item in sources})!=len(sources)):
+        raise Refusal('bucket/KMS source receipts must have unique request IDs and bytes')
+    decoded={'schema':'aws_c0_bucket_controls_observation_preimage/v1',
+        'bucket_identity':expected_bucket_identity,'bucket_region':REGION,
+        'versioning_status':'Enabled','encryption_algorithm':algorithm,'kms_key_arn':kms_arn,
+        'public_access_block':{'block_public_acls':True,'ignore_public_acls':True,
+            'block_public_policy':True,'restrict_public_buckets':True},
+        'bucket_policy_sha256':digest(canonical_bytes(policy)),'source_row_ids':list(order)}
+    raw=canonical_bytes(decoded);kind='aws_c0_bucket_controls_observation/v1'
+    observed=receipts['R20']['requested_utc']
+    age=int((_r64_utc(validation_utc)-_r64_utc(observed)).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'BUCKET_CONTROLS_KMS',
+        'identity':identity(kind,digest(raw)),'canonical_json_base64':base64.b64encode(raw).decode(),
+        'observed_utc':observed,'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_bucket_controls_kms_reconstruction_output(output: Any, receipts: Any,
+        **context: Any) -> dict[str,Any]:
+    expected=build_bucket_controls_kms_reconstruction_output(receipts,**context)
+    if canonical_bytes(output)!=canonical_bytes(expected):
+        raise Refusal('bucket/KMS output differs from exact authenticated source reconstruction')
+    return output
+
+
 def build_service_quota_reconstruction_output(receipts: Any, *, caller_identity: dict[str,str],
         authentication_source_identity: dict[str,str], phase_not_before_utc: str,
         validation_utc: str, freshness_max_seconds: int) -> dict[str,Any]:

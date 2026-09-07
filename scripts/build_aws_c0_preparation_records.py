@@ -243,6 +243,24 @@ def build_iam_policy_set_output_v2(root,receipts,role_context_binding,instance_p
     validate_record(root,'iam_policy_set_output_v2',output)
     return output
 
+def build_bucket_controls_kms_output(root,receipts,**context):
+    authority=sequence(root).get('bucket_controls_kms_reconstruction_authorization')
+    expected={'authority_id':'EBU-AWS-C0-BUCKET-CONTROLS-KMS-RECONSTRUCTION-AUTHORITY-v1',
+        'source':'EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS',
+        'output':'aws_c0_bucket_controls_observation/v1',
+        'source_row_ids':['R20','R21','R22','R23','R24','R25','R31','R32','R33'],
+        'always_called_row_ids':['R20','R21','R22','R23','R24','R25'],
+        'kms_conditional_row_ids':['R31','R32','R33'],
+        'kms_condition':'IFF_AUTHENTICATED_R22_ENCRYPTION_ALGORITHM_IS_aws:kms',
+        'maximum_kms_tag_pages':1,'maximum_kms_tags':16,
+        'new_aws_actions_or_permissions_authorized':False,
+        'science_cost_or_publication_changed':False,'historical_schemas_changed':False}
+    if authority!=expected:raise ValueError('exact authorized bucket/KMS reconstruction required')
+    f=finalizer(root);output=f.build_bucket_controls_kms_reconstruction_output(receipts,**context)
+    f.validate_bucket_controls_kms_reconstruction_output(output,receipts,**context)
+    validate_record(root,'bucket_controls_kms_output',output)
+    return output
+
 def build_service_quota_output(root,receipts,**context):
     output=finalizer(root).build_service_quota_reconstruction_output(receipts,**context)
     validate_record(root,'service_quota_output',output)
