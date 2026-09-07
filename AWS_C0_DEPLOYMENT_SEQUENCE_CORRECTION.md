@@ -1,6 +1,6 @@
 # AWS-C0 truthful first-deployment sequencing correction
 
-## Checkpoint status: RECOVERY AUTHORIZED — failed R64 preflight preserved; continuation not yet ready
+## Checkpoint status: RECOVERY CLOSED — replacement R64 passed and cleanup verified; full atomic preflight not ready
 
 On 2026-09-07 the first durably reserved PREDEPLOYMENT R64 request failed with
 AWS `UnauthorizedOperation` because the deployed
@@ -10,16 +10,49 @@ terminal attempt and must not be reset, retried, or replayed. The retained
 instance was freshly verified `stopped`, no cloud mutation or smoke occurred,
 and the failed preparation credentials were disposed.
 
-The user subsequently authorized one recovery correction. It permits a fresh
+The user subsequently authorized one recovery correction. It permitted a fresh
 replacement preflight identity and only the already specified temporary
 `ec2:DescribeSecurityGroups`, `Resource: "*"`, `ec2:Region=us-east-1` IAM delta
-for the named constrained AWS-C0 roles as required. The permission must be
-removed during verified cleanup. This recovery does not authorize a second
-actual smoke, another permission, security-group mutation, scientific
-execution, or public release. Full AWS continuation remains false until the
-replacement read passes and the readiness record is updated from actual
-evidence. The exact UTF-8 recovery statement has SHA-256
+for the named constrained AWS-C0 roles as required. This recovery did not
+authorize a second actual smoke, another permission, security-group mutation,
+scientific execution, or public release. The exact UTF-8 recovery statement has SHA-256
 `3532ac7f30849e1e90c54ea6f160a8b8eda94aed1ef3156dfee9466ffbe59ee3`.
+
+The single fresh replacement attempt completed PREDEPLOYMENT R64 successfully
+at `2026-09-07T14:36:24Z`. It read exactly security group
+`sg-0d3be0dc4769f9f44`, retained the authenticated request and response, and
+derived `ingress_rule_count=0`. Its attempt identity is
+`e82a52b8d60a860c6254ef0936e6ef4c0c4ed2febe710fb48d6da7eb64a75340`;
+its phase-binding file SHA-256 is
+`a3eac1f5a0c32f05d147b7aa27853914dbe675ff567da11f12d73d6c38678b23`.
+The first failed ledger remains terminal and was not replayed.
+
+R64's 300-second freshness window closed at `2026-09-07T14:41:24Z` before the
+remaining control observations and a complete atomic preparation packet could
+be constructed. The successful recovery attempt is therefore preserved but
+cannot truthfully authorize continuation, cannot be replayed, and cannot be
+replaced again under the consumed one-attempt recovery authority. Full AWS
+continuation remains fail-closed pending one new exact authority for a fresh,
+atomic full preflight.
+
+Verified cleanup removed only inline policy
+`EBU-C0-Temporary-R64-Recovery-20260907`, proved it absent, proved the original
+operator base policy remained byte-equivalent at SHA-256
+`c2488566da9cd3a3b96f5d60cc2078858621db990d2c1e97293c61852e42b1b8`,
+disposed the temporary session material, and reverified the exact retained
+`t3.small` instance `stopped`. The cleanup completion SHA-256 is
+`06aeb0ae51b66435b5dc1f2b3144b05e511360b72bff0cafe05850132d044f27`.
+The finalizer role was absent and was neither created nor modified. No instance
+start, platform smoke, scientific execution, push, merge, or publication
+occurred.
+
+The mandatory integration sequence is: AWS-C0 local implementation; one
+bounded AWS platform smoke; evidence and cleanup passes; final independent
+review; only then an exact merge-to-main proposal. No merge or push is
+authorized. Scientific work must begin later from clean `main` or a fresh branch
+based on it, never by continuing this accumulating AWS-C0 branch. When smoke
+closes, the report must identify the precise merge base/head, CI and review
+evidence, and requested merge authority.
 
 The original NOT_READY checkpoint below is retained as historical diagnosis;
 it is not the current recovery disposition.
