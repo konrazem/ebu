@@ -2383,7 +2383,8 @@ def _r64_api_material(receipt: Any, row: str, action: str, *, caller: dict[str,s
         raise Refusal('R64 source API field closure failed')
     if row=='R64' and receipt['schema']!='aws_c0_r64_api_request_response_receipt/v1':
         raise Refusal('R64 prospective receipt kind required')
-    expected={'row_id':row,'action':action,'resource_selector':'*','caller_identity':caller,
+    selector={'R13':'SEALED_INSTANCE_PROFILE_ARN','R14':'SEALED_INSTANCE_ROLE_ARN'}.get(row,'*')
+    expected={'row_id':row,'action':action,'resource_selector':selector,'caller_identity':caller,
         'authentication_source_identity':channel,'http_status':200,'pagination_page':1,
         'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
         'api_success_disposition':'AWS_API_CALL_SUCCESS'}
@@ -2894,6 +2895,110 @@ def validate_vpc_network_reconstruction_output_v2(output: Any, receipts: Any, in
     expected=build_vpc_network_reconstruction_output_v2(receipts,ingress_binding,**phase_context)
     if canonical_bytes(output)!=canonical_bytes(expected):
         raise Refusal('VPC complete output differs from actual row-source reconstruction')
+    return output
+
+
+def build_account_region_reconstruction_output(receipt: Any, *, caller_identity: dict[str,str],
+        authentication_source_identity: dict[str,str], expected_caller_arn: str, expected_caller_user_id: str,
+        region: str, phase_not_before_utc: str, validation_utc: str, freshness_max_seconds: int) -> dict[str,Any]:
+    """R01 facts, bound to independently verified constrained-session context.
+
+    GetCallerIdentity does not report source identity or MFA state. This
+    constructor does not infer either from an ARN. Those remain obligations of
+    the separately verified session/collector context. Region is the sealed
+    collector endpoint region, not a fabricated field in the STS response.
+    """
+    request,response=_r64_api_material(receipt,'R01','sts:GetCallerIdentity',caller=caller_identity,
+        channel=authentication_source_identity,observed_utc=validation_utc,freshness=freshness_max_seconds)
+    pattern=r'arn:aws:sts::623609441658:assumed-role/(?:EBU-C0-Operator-492a4f1|EBU-C0-Corrected-Finalizer-v1)/([A-Za-z0-9+=,.@_-]{2,64})'
+    match=re.fullmatch(pattern,expected_caller_arn) if isinstance(expected_caller_arn,str) else None
+    if (not match or not isinstance(expected_caller_user_id,str)
+            or not re.fullmatch(r'AROA[A-Z0-9]{12,64}:'+re.escape(match[1]),expected_caller_user_id)
+            or region!=REGION or request!={} or receipt['pagination_item_count']!=1
+            or response.get('Account')!='623609441658' or response.get('Arn')!=expected_caller_arn
+            or response.get('UserId')!=expected_caller_user_id
+            or _r64_utc(receipt['requested_utc'])<_r64_utc(phase_not_before_utc)):
+        raise Refusal('R01 exact constrained caller/account/region/phase binding required')
+    decoded={'schema':'aws_c0_account_region_observation_preimage/v1','account_id':response['Account'],
+        'partition':'aws','region':region,'caller_arn':response['Arn'],'caller_user_id':response['UserId'],'source_row_ids':['R01']}
+    raw=canonical_bytes(decoded);kind='aws_c0_account_region_observation/v1'
+    age=int((_r64_utc(validation_utc)-_r64_utc(receipt['requested_utc'])).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'ACCOUNT_REGION','identity':identity(kind,digest(raw)),
+        'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':receipt['requested_utc'],
+        'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_account_region_reconstruction_output(output: Any, receipt: Any, **context: Any) -> dict[str,Any]:
+    if canonical_bytes(output)!=canonical_bytes(build_account_region_reconstruction_output(receipt,**context)):
+        raise Refusal('R01 reconstruction differs from actual source and independent session context')
+    return output
+
+
+def build_instance_profile_reconstruction_output(receipts: Any, *, caller_identity: dict[str,str],
+        authentication_source_identity: dict[str,str], expected_role_id: str,
+        phase_not_before_utc: str, validation_utc: str, freshness_max_seconds: int) -> dict[str,Any]:
+    """Reconstruct the existing exact instance/profile/sole-role relationship."""
+    order=('R02','R03','R13','R14');name='EBU-Rehearsal-EC2-Role'
+    profile_arn='arn:aws:iam::623609441658:instance-profile/'+name
+    role_arn='arn:aws:iam::623609441658:role/'+name
+    if (not isinstance(receipts,dict) or set(receipts)!=set(order)
+            or not isinstance(expected_role_id,str) or not re.fullmatch(r'AROA[A-Z0-9]{12,64}',expected_role_id)):
+        raise Refusal('instance/profile exact source slots and sealed role ID required')
+    expected_requests={'R02':{'InstanceIds':[INSTANCE_ID]},
+        'R03':{'Filters':[{'Name':'instance-id','Values':[INSTANCE_ID]}]},
+        'R13':{'InstanceProfileName':name},'R14':{'RoleName':name}}
+    actions={'R02':'ec2:DescribeInstances','R03':'ec2:DescribeIamInstanceProfileAssociations',
+        'R13':'iam:GetInstanceProfile','R14':'iam:GetRole'}
+    data={};previous=_r64_utc(phase_not_before_utc)
+    for row in order:
+        req,response=_r64_api_material(receipts[row],row,actions[row],caller=caller_identity,
+            channel=authentication_source_identity,observed_utc=validation_utc,freshness=freshness_max_seconds)
+        if req!=expected_requests[row] or receipts[row]['pagination_item_count']!=1 or _r64_utc(receipts[row]['requested_utc'])<previous:
+            raise Refusal('instance/profile exact request/count/producer order mismatch')
+        previous=_r64_utc(receipts[row]['completed_utc']);data[row]=response
+    reservations=data['R02'].get('Reservations')
+    if (not isinstance(reservations,list) or len(reservations)!=1 or not isinstance(reservations[0],dict)
+            or reservations[0].get('OwnerId')!='623609441658'
+            or not isinstance(reservations[0].get('Instances'),list) or len(reservations[0]['Instances'])!=1):
+        raise Refusal('instance/profile exact owned instance reservation required')
+    instance=reservations[0]['Instances'][0]
+    if (not isinstance(instance,dict) or instance.get('InstanceId')!=INSTANCE_ID or instance.get('InstanceType')!='t3.small'
+            or instance.get('State',{}).get('Name')!='stopped' or instance.get('IamInstanceProfile',{}).get('Arn')!=profile_arn):
+        raise Refusal('instance/profile stopped small instance and exact profile required')
+    associations=data['R03'].get('IamInstanceProfileAssociations')
+    if (not isinstance(associations,list) or len(associations)!=1 or not isinstance(associations[0],dict)
+            or associations[0].get('InstanceId')!=INSTANCE_ID or associations[0].get('State')!='associated'
+            or associations[0].get('IamInstanceProfile',{}).get('Arn')!=profile_arn):
+        raise Refusal('instance/profile sole associated exact target required')
+    profile=data['R13'].get('InstanceProfile');role=data['R14'].get('Role')
+    if (not isinstance(profile,dict) or profile.get('Arn')!=profile_arn or profile.get('InstanceProfileName')!=name
+            or not isinstance(profile.get('Roles'),list) or len(profile['Roles'])!=1
+            or not isinstance(profile['Roles'][0],dict) or not isinstance(role,dict)):
+        raise Refusal('instance/profile sole complete role/profile required')
+    expected={'Arn':role_arn,'RoleName':name,'RoleId':expected_role_id}
+    if any(role.get(k)!=v or profile['Roles'][0].get(k)!=v for k,v in expected.items()):
+        raise Refusal('instance/profile role ARN/name/unique ID differs from sealed context')
+    decoded={'schema':'aws_c0_instance_profile_role_observation_preimage/v1','instance_id':INSTANCE_ID,
+        'instance_profile_arn':profile['Arn'],'instance_profile_name':profile['InstanceProfileName'],
+        'role_arn':role['Arn'],'attached_role_count':len(profile['Roles']),'source_row_ids':list(order)}
+    raw=canonical_bytes(decoded);kind='aws_c0_instance_profile_role_observation/v1';observed=receipts['R02']['requested_utc']
+    age=int((_r64_utc(validation_utc)-_r64_utc(observed)).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'INSTANCE_PROFILE_SOLE_ROLE','identity':identity(kind,digest(raw)),
+        'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':observed,
+        'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_instance_profile_reconstruction_output(output: Any, receipts: Any, **context: Any) -> dict[str,Any]:
+    if canonical_bytes(output)!=canonical_bytes(build_instance_profile_reconstruction_output(receipts,**context)):
+        raise Refusal('instance/profile reconstruction differs from actual source and sealed role')
     return output
 
 

@@ -228,6 +228,12 @@ def build(root=ROOT):
     decoded_vpc['properties']['ingress_rule_count']={'type':'integer','const':0}
     definitions['vpc_network_decoded_v2']=decoded_vpc
     output_union=next(v for k,v in definitions.items() if k.endswith('_reconstruction_output_tagged_union'))
+    definitions['account_region_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
+        if v['properties']['control']['const']=='ACCOUNT_REGION'))
+    definitions['account_region_output']={'$ref':'#/$defs/account_region_reconstruction_output'}
+    definitions['instance_profile_reconstruction_output']=copy.deepcopy(next(v for v in output_union['oneOf']
+        if v['properties']['control']['const']=='INSTANCE_PROFILE_SOLE_ROLE'))
+    definitions['instance_profile_output']={'$ref':'#/$defs/instance_profile_reconstruction_output'}
     output_vpc=copy.deepcopy(next(v for v in output_union['oneOf'] if v['properties']['control']['const']=='VPC_NETWORK_PATH'))
     output_vpc['properties'].update(schema={'const':'aws_c0_vpc_network_observation/v2'},kind={'const':'aws_c0_vpc_network_observation/v2'},
         identity=typed_identity('aws_c0_vpc_network_observation/v2'),decoded_json={'$ref':'#/$defs/vpc_network_decoded_v2'})
@@ -236,7 +242,7 @@ def build(root=ROOT):
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

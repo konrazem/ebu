@@ -87,9 +87,9 @@
     "deny": ["SECURITY_GROUP_RULE_MUTATION", "CALLER_KONRAD_PERMISSION_CHANGE", "ADMINISTRATORACCESS_CHANGE", "TRUST_PRINCIPAL_CHANGE", "SOURCE_IDENTITY_CHANGE", "MFA_SETTING_CHANGE", "SESSION_DURATION_CHANGE", "ANY_OTHER_PERMISSION_ADDITION", "OTHER_ROLE", "ROOT_CREDENTIALS", "LARGER_OR_ADDITIONAL_COMPUTE", "SCIENTIFIC_EXECUTION", "PUSH", "RELEASE", "PUBLIC_PUBLICATION", "HISTORY_REWRITING", "FABRICATED_OR_DEFAULTED_ZERO_INGRESS"]
   },
   "latest_local_validation_checkpoint": {
-    "code_commit": "5d31093",
-    "tests_run": 200,
-    "tests_passed": 199,
+    "code_commit": "272bac5",
+    "tests_run": 212,
+    "tests_passed": 211,
     "assertion_failures": 0,
     "errors": 1,
     "skipped": 0,

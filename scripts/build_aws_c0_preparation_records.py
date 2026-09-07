@@ -180,6 +180,16 @@ def build_vpc_network_output_v2(root,receipts,ingress_binding,**phase_context):
     validate_record(root,'vpc_network_output_v2',output)
     return output
 
+def build_account_region_output(root,receipt,**context):
+    output=finalizer(root).build_account_region_reconstruction_output(receipt,**context)
+    validate_record(root,'account_region_output',output)
+    return output
+
+def build_instance_profile_output(root,receipts,**context):
+    output=finalizer(root).build_instance_profile_reconstruction_output(receipts,**context)
+    validate_record(root,'instance_profile_output',output)
+    return output
+
 class R64LocalCallBudgetStore:
     """Append-only local reservation snapshots for one exact attempt.
 

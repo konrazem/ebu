@@ -126,6 +126,24 @@ The address request uses its documented
 [network-interface-id filter](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeAddresses.html).
 Missing association state is conservatively refused rather than inferred.
 
+The account and instance/profile reconstruction producers are now implemented
+against their unchanged closed output schemas. R01 must match the independently
+supplied constrained-session ARN/UserId and sealed collector region; it does
+not establish or infer MFA or source identity. R02/R03/R13/R14 must show the
+exact owned, stopped t3.small, its exact associated profile, and the sole role
+with the expected unique RoleId. Ordered fresh responses, exact request scopes
+and complete output bytes/hashes are checked. A matching ARN does not excuse
+a changed RoleId. Both components received focused independent APPROVAL;
+thirty-nine combined focused tests, pinned compilation and schema checks pass.
+They are three implemented output components (account, instance/profile, VPC),
+not a complete eleven-control set. The suite at `272bac5` ran 212 tests with
+211 passes and the same one public-entry missing reconstruction binding.
+
+The account producer follows the actual fields documented by
+[GetCallerIdentity](https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html).
+Its role-ID syntax follows the already accepted local context schema, rather
+than assuming every AWS unique identifier has one fixed length.
+
 Continuation from `2b11b1b` investigated the actual missing
 `runtime_control_reconstruction_set_identity` producer/consumer obligation,
 not just the absent field. A distinct prospective phased reconstruction set

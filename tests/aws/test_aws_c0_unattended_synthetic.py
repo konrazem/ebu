@@ -770,6 +770,129 @@ class VpcNetworkReconstructionV2Tests(unittest.TestCase):
                 **{**args,'ec2_pagination_bounds':bounds})
 
 
+class AccountRegionReconstructionTests(unittest.TestCase):
+    def material(self,role='EBU-C0-Operator-492a4f1',session='AWS-C0-PREP-492a4f1'):
+        sources,_,_,context=R64CallBudgetTests().material()
+        receipt=copy.deepcopy(sources[0]);request_id='offline-account-R01'
+        arn='arn:aws:sts::623609441658:assumed-role/'+role+'/'+session
+        user_id='AROA'+'A'*17+':'+session
+        receipt.update(row_id='R01',action='sts:GetCallerIdentity',request_id=request_id,pagination_item_count=1)
+        response={'Account':'623609441658','Arn':arn,'UserId':user_id,
+            'ResponseMetadata':{'RequestId':request_id,'HTTPStatusCode':200,'RetryAttempts':0,
+                'HTTPHeaders':{'x-amzn-requestid':request_id}}}
+        R51ProspectiveAmendmentTests.encode(receipt,'request',{})
+        R51ProspectiveAmendmentTests.encode(receipt,'response',response)
+        args={k:context[k] for k in ('caller_identity','authentication_source_identity','freshness_max_seconds')}
+        args.update(expected_caller_arn=arn,expected_caller_user_id=user_id,region='us-east-1',
+            phase_not_before_utc='2026-09-06T18:00:00Z',validation_utc=context['observed_utc'])
+        return receipt,args
+
+    def test_actual_r01_reconstructs_closed_existing_account_schema(self):
+        for role,session in [('EBU-C0-Operator-492a4f1','AWS-C0-PREP-492a4f1'),
+                             ('EBU-C0-Corrected-Finalizer-v1','ebu-c0-corrected-finalizer-v1')]:
+            receipt,args=self.material(role,session)
+            output=G.build_account_region_output(ROOT,receipt,**args)
+            self.assertEqual(output['decoded_json']['caller_arn'],args['expected_caller_arn'])
+            self.assertEqual(output['decoded_json']['caller_user_id'],args['expected_caller_user_id'])
+            self.assertEqual(output['identity'],G.identity(output['schema'],output['decoded_json']))
+            self.assertEqual(output['freshness_seconds'],6)
+            self.assertEqual(F.validate_account_region_reconstruction_output(output,receipt,**args),output)
+            G.validate_record(ROOT,'account_region_output',output)
+            self.assertNotIn('mfa_authenticated',output['decoded_json'])
+            self.assertNotIn('source_identity',output['decoded_json'])
+
+    def test_rehashed_wrong_account_caller_session_and_nonempty_request_refuse(self):
+        for stem,mutate in [('response',lambda v:v.update(Account='111111111111')),
+            ('response',lambda v:v.update(Arn='arn:aws:iam::623609441658:root')),
+            ('response',lambda v:v.update(UserId='AROA'+'B'*17+':AWS-C0-PREP-492a4f1')),
+            ('response',lambda v:v.update(Arn=v['Arn']+'other')),
+            ('request',lambda v:v.update(RoleArn='arn:aws:iam::623609441658:role/other'))]:
+            receipt,args=self.material();R64IngressAmendmentTests().mutate_api(receipt,stem,mutate)
+            with self.assertRaises(F.Refusal):F.build_account_region_reconstruction_output(receipt,**args)
+
+    def test_root_other_role_region_stale_and_phase_context_refuse(self):
+        receipt,args=self.material('AnotherRole')
+        with self.assertRaises(F.Refusal):F.build_account_region_reconstruction_output(receipt,**args)
+        for field,value in [('region','eu-west-1'),('expected_caller_arn','arn:aws:iam::623609441658:root'),
+            ('expected_caller_user_id','AROA'+'A'*17+':different-session'),
+            ('validation_utc','2026-09-06T18:05:02Z'),('phase_not_before_utc','2026-09-06T18:00:02Z')]:
+            receipt,args=self.material();args[field]=value
+            with self.assertRaises(F.Refusal):F.build_account_region_reconstruction_output(receipt,**args)
+
+    def test_rehashed_output_cannot_replace_source_fields_or_freshness(self):
+        receipt,args=self.material();output=G.build_account_region_output(ROOT,receipt,**args)
+        for mutate in (lambda o:o['decoded_json'].update(account_id='111111111111'),
+            lambda o:o['decoded_json'].update(region='eu-west-1'),lambda o:o.update(freshness_seconds=0),
+            lambda o:o.update(observed_utc=args['validation_utc'])):
+            bad=copy.deepcopy(output);mutate(bad);raw=G.canonical(bad['decoded_json'])
+            bad.update(identity=G.identity(bad['schema'],bad['decoded_json']),canonical_json_base64=base64.b64encode(raw).decode(),
+                canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+            with self.assertRaises(F.Refusal):F.validate_account_region_reconstruction_output(bad,receipt,**args)
+
+
+class InstanceProfileReconstructionTests(unittest.TestCase):
+    def material(self):
+        _,receipts,old_context=SealedRoleProducerTests().material()
+        for index,row in enumerate(('R02','R03','R13','R14')):
+            receipt=receipts[row]
+            receipt.update(requested_utc='2026-09-06T18:00:%02dZ'%(2*index+1),
+                completed_utc='2026-09-06T18:00:%02dZ'%(2*index+2),pagination_item_count=1)
+            response=F.strict_json(base64.b64decode(receipt['response_canonical_json_base64']))
+            response['ResponseMetadata'].update(RetryAttempts=0,HTTPHeaders={'x-amzn-requestid':receipt['request_id']})
+            if row=='R02':
+                response['Reservations'][0]['OwnerId']='623609441658'
+                response['Reservations'][0]['Instances'][0]['InstanceType']='t3.small'
+            R51ProspectiveAmendmentTests.encode(receipt,'response',response)
+        context={k:old_context[k] for k in ('caller_identity','authentication_source_identity')}
+        context.update(expected_role_id='AROA'+'A'*16,phase_not_before_utc=old_context['earliest'],
+            validation_utc=old_context['latest'],freshness_max_seconds=300)
+        return receipts,context
+
+    def test_actual_sources_reconstruct_closed_existing_instance_profile_schema(self):
+        receipts,context=self.material();output=G.build_instance_profile_output(ROOT,receipts,**context)
+        self.assertEqual(F.validate_instance_profile_reconstruction_output(output,receipts,**context),output)
+        self.assertEqual(output['decoded_json']['attached_role_count'],1)
+        self.assertEqual(output['decoded_json']['source_row_ids'],['R02','R03','R13','R14'])
+        self.assertEqual(output['identity'],G.identity(output['schema'],output['decoded_json']))
+        self.assertEqual(output['freshness_seconds'],59)
+        G.validate_record(ROOT,'instance_profile_output',output)
+
+    def test_exact_host_profile_scope_and_sole_role_sources_are_required(self):
+        mutations=[('R02','response',lambda v:v['Reservations'][0].update(OwnerId='111111111111')),
+            ('R02','response',lambda v:v['Reservations'][0]['Instances'][0].update(InstanceType='t3.large')),
+            ('R02','response',lambda v:v['Reservations'][0]['Instances'][0]['State'].update(Name='running')),
+            ('R03','response',lambda v:v['IamInstanceProfileAssociations'][0].update(State='disassociating')),
+            ('R03','response',lambda v:v['IamInstanceProfileAssociations'][0].update(InstanceId='i-other')),
+            ('R13','request',lambda v:v.update(InstanceProfileName='OtherRole')),
+            ('R13','response',lambda v:v['InstanceProfile']['Roles'].append(copy.deepcopy(v['InstanceProfile']['Roles'][0]))),
+            ('R14','response',lambda v:v['Role'].update(RoleId='AROA'+'B'*17)),
+            ('R14','response',lambda v:v['Role'].update(Arn='arn:aws:iam::623609441658:role/OtherRole'))]
+        for row,stem,mutate in mutations:
+            receipts,context=self.material();R64IngressAmendmentTests().mutate_api(receipts[row],stem,mutate)
+            with self.subTest(row=row),self.assertRaises(F.Refusal):F.build_instance_profile_reconstruction_output(receipts,**context)
+
+    def test_unchanged_arn_does_not_hide_replaced_role_id(self):
+        receipts,context=self.material()
+        R64IngressAmendmentTests().mutate_api(receipts['R13'],'response',lambda v:v['InstanceProfile']['Roles'][0].update(RoleId='AROA'+'B'*17))
+        R64IngressAmendmentTests().mutate_api(receipts['R14'],'response',lambda v:v['Role'].update(RoleId='AROA'+'B'*17))
+        with self.assertRaisesRegex(F.Refusal,'unique ID'):F.build_instance_profile_reconstruction_output(receipts,**context)
+
+    def test_source_scope_freshness_authentication_and_output_substitutions_refuse(self):
+        for mutate in (lambda r:r.pop('R03'),lambda r:r['R13'].update(resource_selector='*'),
+            lambda r:r['R13'].update(requested_utc='2026-09-06T18:00:01Z'),
+            lambda r:r['R14'].update(pagination_item_count=True),
+            lambda r:r['R14'].update(authentication_source_identity=F.identity('aws_authenticated_api_source/v1','d'*64))):
+            receipts,context=self.material();mutate(receipts)
+            with self.assertRaises(F.Refusal):F.build_instance_profile_reconstruction_output(receipts,**context)
+        receipts,context=self.material();output=G.build_instance_profile_output(ROOT,receipts,**context)
+        output['decoded_json']['attached_role_count']=2;raw=G.canonical(output['decoded_json'])
+        output.update(identity=G.identity(output['schema'],output['decoded_json']),canonical_json_base64=base64.b64encode(raw).decode(),
+            canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        with self.assertRaises(F.Refusal):F.validate_instance_profile_reconstruction_output(output,receipts,**context)
+        context['validation_utc']='2026-09-06T18:05:02Z'
+        with self.assertRaises(F.Refusal):F.build_instance_profile_reconstruction_output(receipts,**context)
+
+
 class R64LocalBudgetStoreTests(unittest.TestCase):
     """Real private temporary files, offline synthetic observations, no AWS."""
     def setUp(self):
