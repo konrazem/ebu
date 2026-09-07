@@ -286,6 +286,42 @@ The error is not waived and does not authorize any cloud continuation.
 
 ### Validated local checkpoint at `d67a644`
 
+### Local helper command integration after `e47db87`
+
+The existing flat local source file is now cross-bound to explicit helper argv,
+the exact prepared launch bytes, the saved START dispatch and all three chained
+GET captures. Descriptor-pinned reads require root-owned private directories and
+single-link bounded regular files. Rehashed/rechained negative tests check the
+actual operation, source identity, request-envelope hash and sequential capture
+timestamps, rather than merely detecting broken hashes. This is operational
+source consistency, not acceptance of the still-incomplete full provenance
+sidecar required by the historical evidence contract.
+
+Dedicated local STATUS and SAFE_CLOSE entry points do not prepare requests,
+request credentials, use S3, execute containers or start services. STATUS keeps
+missing cache, stale heartbeat, terminal-awaiting-handoff and completed journal
+handoff distinct; no state claims an authenticated evidence root or synthetic
+outcome. Its 20000-byte bound plus framing fits the 24000-character inline SSM
+stdout limit documented by
+[AWS GetCommandInvocation](https://docs.aws.amazon.com/systems-manager/latest/APIReference/API_GetCommandInvocation.html).
+
+SAFE_CLOSE writes one private exclusive marker requesting a readiness observation
+only after accepted START and fresh heartbeat-zero/latest-heartbeat projections,
+and before terminal. The marker does not stop the worker and does not claim
+completed safe close. This preserves the existing workflow's healthy-observation
+then continued-execution behavior. Actual cleanup and accepted safe-close evidence
+remain the later workflow/closure responsibilities; a local marker is not their
+substitute.
+
+The standalone and embedded command documents retain exactly 23 parameters and
+route both helper operations before request-directory creation, preparation and
+the one original service start. Helpers exit explicitly; classifier/helper
+failure propagates under set-eu. Only typed START can reach the original startup
+path. Twenty focused tests pass; the existing independent reviewer approved the
+loader, actions and routing components separately. No AWS command document,
+service or cloud resource was executed or modified in this local validation.
+SSM/ASL consumption and complete evidence proofs remain required before smoke.
+
 The later source instruction `01a07a46-d7cd-7970-b7bd-677f9a2ba25f` requires
 continuation through all necessary engineering to the bounded platform smoke,
 not termination at this historical local checkpoint. It does not waive any

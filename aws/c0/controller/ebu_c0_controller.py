@@ -380,6 +380,20 @@ def validate_local_helper_transport_v1(args: argparse.Namespace, *, expected_sta
         expected_start_dispatch=expected_start_dispatch, attempt_deadline_utc=attempt_deadline_utc, now=now)
 
 
+def classify_local_dispatch(args: argparse.Namespace) -> str:
+    """No-effect routing only; each destination must run its complete gate."""
+    semantic=ssm_semantic_parameters_from_argv(args);record=_decode_ssm_transport(args)
+    if isinstance(record,dict) and record.get('schema') == 'aws_c0_ssm_dispatch_request/v2':
+        validate_ssm_dispatch_record_v2(record,semantic_parameters=semantic)
+        return 'START'
+    if (not isinstance(record,dict) or set(record) != {'schema','operation','start_dispatch_request','attempt_deadline_utc'}
+            or record['schema'] != 'aws_c0_controller_local_helper_request/v1'
+            or record['operation'] not in ('STATUS','SAFE_CLOSE')):
+        raise Refusal('unknown local dispatch operation')
+    validate_ssm_dispatch_record_v2(record['start_dispatch_request'],semantic_parameters=semantic)
+    return record['operation']
+
+
 def validate_local_helper_request_v1(record: Any, *, semantic_parameters: dict[str, list[str]],
                                      expected_start_dispatch: dict[str, Any], attempt_deadline_utc: str,
                                      now: dt.datetime) -> dict[str, Any]:
@@ -937,6 +951,44 @@ def _exclusive(path: Path, raw: bytes) -> None:
         os.close(fd)
 
 
+def _read_bound_request_file(path: Path) -> bytes:
+    """Read the exact private request/sidecar without path-reopen races."""
+    stem = path.name.removesuffix('.source.json') if path.name.endswith('.source.json') else path.stem
+    if path.parent != REQUESTS or not path.name.endswith('.json') or not ATTEMPT.fullmatch(stem):
+        raise Refusal('helper local request path is not exact')
+    if os.geteuid() != 0:
+        raise Refusal('helper local request access requires root')
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    parent = os.open(REQUESTS.parent, flags)
+    directory = None
+    try:
+        info = os.fstat(parent)
+        if info.st_uid != 0 or stat.S_IMODE(info.st_mode) != 0o700:
+            raise Refusal('helper state directory must be private root-owned')
+        directory = os.open(REQUESTS.name, flags, dir_fd=parent)
+        info = os.fstat(directory)
+        if info.st_uid != 0 or stat.S_IMODE(info.st_mode) != 0o700:
+            raise Refusal('helper request directory must be private root-owned')
+        fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+        try:
+            before = os.fstat(fd)
+            if (not stat.S_ISREG(before.st_mode) or before.st_uid != 0 or stat.S_IMODE(before.st_mode) != 0o600
+                    or before.st_nlink != 1 or not 1 <= before.st_size <= MAX_OBJECT_BYTES):
+                raise Refusal('helper requires one private bounded regular request file')
+            with os.fdopen(fd, 'rb', closefd=False) as handle:
+                raw = handle.read(MAX_OBJECT_BYTES + 1)
+            after = os.fstat(fd)
+            if len(raw) != before.st_size or any(getattr(before,k) != getattr(after,k) for k in
+                    ('st_dev','st_ino','st_mode','st_uid','st_nlink','st_size','st_mtime_ns','st_ctime_ns')):
+                raise Refusal('helper request changed during bounded read')
+            return raw
+        finally:
+            os.close(fd)
+    finally:
+        if directory is not None: os.close(directory)
+        os.close(parent)
+
+
 def _file_secure(path: Path) -> bytes:
     info = path.lstat()
     if not stat.S_ISREG(info.st_mode) or info.st_uid != 0 or info.st_mode & 0o022:
@@ -964,6 +1016,84 @@ def _ssm_request_identity(launch_id: str, live_packet_id: str,
         "workflow_execution_identity": workflow_id,
     }
     return identity("aws_ssm_command/v3", digest(canonical_bytes(preimage)))
+
+
+OPERATIONAL_SOURCE_FIELDS = {"schema", "artifact_bucket", "launch_key", "launch_version_id", "launch_sha256", "launch_bytes",
+    "live_packet_key", "live_packet_version_id", "live_packet_sha256", "live_packet_bytes",
+    "live_authorization_key", "live_authorization_version_id", "live_authorization_sha256", "live_authorization_bytes",
+    "live_authorization_identity", "workflow_execution_identity", "workflow_execution_arn", "ssm_command_identity",
+    "rehearsal_id", "attempt_id", "artifact_prefix", "declared_exact_version_source_get_captures_in_order", "zero_science_counters",
+    "ssm_dispatch_semantic21", "ssm_dispatch_transport2"}
+
+
+def validate_helper_local_source_context(args: argparse.Namespace, launch_raw: bytes, source_raw: bytes) -> dict[str, Any]:
+    """Cross-bind previously prepared local inputs, not a full evidence proof.
+
+    These operational inputs must have been read by the private descriptor
+    loader. The accepted complete source-sidecar proof remains a separate
+    required runtime/evidence attachment; this function cannot substitute it.
+    """
+    semantic = ssm_semantic_parameters_from_argv(args)
+    launch = validate_launch(strict_json(launch_raw), args.rehearsal_id, args.attempt_id)
+    source = strict_json(source_raw)
+    if not isinstance(source, dict) or set(source) != OPERATIONAL_SOURCE_FIELDS or source.get('schema') != 'aws_c0_source_sidecar/v5':
+        raise Refusal('helper operational source field closure failed')
+    if (source['ssm_dispatch_semantic21'] != semantic or source['zero_science_counters'] != ZERO
+            or any(type(v) is not int for v in source['zero_science_counters'].values())):
+        raise Refusal('helper operational source semantics/science mismatch')
+    for name in SEMANTIC21:
+        # Region/token/window live only in the exact stored START transport.
+        if name in source:
+            expected = getattr(args, 'bucket' if name == 'artifact_bucket' else name)
+            if source[name] != expected or type(source[name]) is not type(expected):
+                raise Refusal('helper source scalar differs from explicit argv: '+name)
+    if len(launch_raw) != args.launch_bytes or digest(launch_raw) != args.launch_sha256:
+        raise Refusal('helper launch bytes differ from exact prepared source')
+    transport = source['ssm_dispatch_transport2']
+    if not isinstance(transport, dict) or set(transport) != set(TRANSPORT2):
+        raise Refusal('helper accepted START transport missing')
+    start_args = argparse.Namespace(**{**vars(args), **transport})
+    start = validate_ssm_dispatch_v2(start_args)
+    workflow_id = _workflow_identity(args.workflow_execution_arn)
+    if (start['attempt_identity'] != launch['attempt_identity'] or launch['artifact_prefix'] != args.artifact_prefix
+            or source['workflow_execution_identity'] != workflow_id
+            or source['live_authorization_identity'] != identity('aws_c0_live_authorization/v6',args.live_authorization_sha256)
+            or source['ssm_command_identity'] != _ssm_request_identity(root_digest(launch),args.live_packet_sha256,
+                                    args.live_authorization_sha256,workflow_id,args.artifact_prefix)):
+        raise Refusal('helper prepared source attempt/workflow/identity mismatch')
+    journal = CaptureJournal.restore('EC2_INSTANCE_PROFILE_CONTROLLER',source['declared_exact_version_source_get_captures_in_order'])
+    previous_completion = _utc(args.ssm_expected_command_not_before_utc)
+    for stem,envelope in zip(('launch','live_packet','live_authorization'),journal.envelopes):
+        capture=envelope['operation_capture_preimage'];expected_sha=getattr(args,stem+'_sha256')
+        wanted={'bucket':args.bucket,'key':getattr(args,stem+'_key'),'version_id':getattr(args,stem+'_version_id'),
+            'operation':'S3_GET_OBJECT_EXACT_VERSION',
+            'source_object_identity':identity('aws_c0_s3_object/v1',expected_sha),
+            'request_envelope_sha256':digest(canonical_bytes({'method':'GET','bucket':args.bucket,
+                'key':getattr(args,stem+'_key'),'version_id':getattr(args,stem+'_version_id'),'checksum_mode':'ENABLED'})),
+            'expected_sha256':expected_sha,'observed_version_id':getattr(args,stem+'_version_id'),
+            'observed_sha256':expected_sha,'observed_bytes':getattr(args,stem+'_bytes'),
+            'observed_checksum_sha256':base64.b64encode(bytes.fromhex(expected_sha)).decode()}
+        if any(capture.get(k) != v for k,v in wanted.items()) or type(capture.get('observed_bytes')) is not int:
+            raise Refusal('helper prepared GET capture differs from exact argv source')
+        if not previous_completion <= _utc(capture['operation_requested_utc']) <= _utc(capture['operation_completed_utc']) <= _utc(launch['attempt_deadline_utc']):
+            raise Refusal('helper prepared GET capture chronology invalid')
+        previous_completion = _utc(capture['operation_completed_utc'])
+    return {'launch':launch,'expected_start_dispatch':start,'workflow_execution_arn':args.workflow_execution_arn,
+            'attempt_deadline_utc':launch['attempt_deadline_utc']}
+
+
+def load_local_helper_context(args: argparse.Namespace) -> dict[str, Any]:
+    # Reject malformed command/semantic input before filesystem access. Only the
+    # later helper validator may compare its deadline to independently read data.
+    ssm_semantic_parameters_from_argv(args)
+    request = _decode_ssm_transport(args)
+    if (not isinstance(request, dict) or set(request) != {'schema','operation','start_dispatch_request','attempt_deadline_utc'}
+            or request.get('schema') != 'aws_c0_controller_local_helper_request/v1'
+            or request['operation'] not in ('STATUS','SAFE_CLOSE')):
+        raise Refusal('local helper cannot load START or unknown request kinds')
+    path = REQUESTS / (args.attempt_id+'.json')
+    return validate_helper_local_source_context(args,_read_bound_request_file(path),
+                                                _read_bound_request_file(path.with_suffix('.source.json')))
 
 
 def prepare_request(args: argparse.Namespace, *, credential_provider: Any = bootstrap_imdsv2_credentials,
@@ -1681,6 +1811,124 @@ def advance_local_operational_status(status: dict[str, Any], root_bytes: bytes, 
     return validate_local_operational_status(result,launch=launch,workflow_execution_arn=workflow_execution_arn)
 
 
+def build_local_status_response(request: dict[str, Any], status: Any, *, context: dict[str, Any],
+                                now: dt.datetime) -> dict[str, Any]:
+    """A bounded operational response, never a synthetic pass or evidence root."""
+    launch=context['launch'];start=context['expected_start_dispatch']
+    validate_local_helper_request_v1(request,semantic_parameters=start['semantic_parameters'],
+        expected_start_dispatch=start,attempt_deadline_utc=context['attempt_deadline_utc'],now=now)
+    if request['operation'] != 'STATUS':
+        raise Refusal('status helper cannot execute another operation')
+    state='WAITING_FOR_START';age=None
+    if status is not None:
+        validate_local_operational_status(status,launch=launch,workflow_execution_arn=context['workflow_execution_arn'])
+        for key in ('start','heartbeat_zero','latest_heartbeat','terminal'):
+            if status[key] is not None and _utc(status[key]['observed_utc']) > now:
+                raise Refusal('local status contains a future publication timestamp')
+        if status['start'] is not None: state='WAITING_FOR_HEARTBEAT'
+        heartbeat=status['latest_heartbeat']
+        if heartbeat is not None:
+            elapsed=(now-_utc(heartbeat['observed_utc'])).total_seconds();age=int(elapsed)
+            state='HEARTBEAT_STALE' if elapsed >= launch['phase_timeouts_seconds']['heartbeat_stale'] else 'RUNNING'
+        if status['terminal'] is not None:
+            state='TERMINAL_AWAITING_JOURNAL_HANDOFF'
+        if status['controller_journal_handoff_complete']:
+            state='CONTROLLER_HANDOFF_COMPLETE'
+    result={'schema':'aws_c0_controller_local_status_response/v1','operation':'STATUS',
+        'helper_request_identity':identity('aws_c0_controller_local_helper_request/v1',digest(canonical_bytes(request))),
+        'attempt_identity':launch['attempt_identity'],'workflow_execution_identity':_workflow_identity(context['workflow_execution_arn']),
+        'observed_utc':now.isoformat(timespec='seconds').replace('+00:00','Z'),'state':state,
+        'heartbeat_age_seconds':age,'status':status,'authentication_disposition':'LOCAL_OPERATIONAL_ONLY_NOT_AUTHENTICATED_EVIDENCE',
+        'synthetic_outcome_claimed':False,'zero_science_counters':dict(ZERO)}
+    if len(canonical_bytes(result)) > 20000:
+        raise Refusal('status helper response exceeds SSM inline output bound')
+    return result
+
+
+def execute_local_status_helper(args: argparse.Namespace, *, now: dt.datetime | None = None) -> dict[str, Any]:
+    request=_decode_ssm_transport(args)
+    if not isinstance(request,dict) or request.get('operation') != 'STATUS':
+        raise Refusal('status entry point refuses START and SAFE_CLOSE')
+    context=load_local_helper_context(args)
+    current=now or dt.datetime.now(dt.timezone.utc)
+    validate_local_helper_transport_v1(args,expected_start_dispatch=context['expected_start_dispatch'],
+        attempt_deadline_utc=context['attempt_deadline_utc'],now=current)
+    try:
+        status=read_local_operational_status(launch=context['launch'],workflow_execution_arn=context['workflow_execution_arn'])
+    except FileNotFoundError:
+        status=None
+    return build_local_status_response(request,status,context=context,now=current)
+
+
+def build_local_safe_close_marker(request: dict[str, Any], status: Any, *, context: dict[str, Any],
+                                   now: dt.datetime) -> dict[str, Any]:
+    """Request safe-close evidence while healthy; do not stop the controller.
+
+    The workflow continues after this observation request. The later closure
+    must prove its accepted readiness and actual cleanup independently.
+    """
+    start=context['expected_start_dispatch'];launch=context['launch']
+    validate_local_helper_request_v1(request,semantic_parameters=start['semantic_parameters'],
+        expected_start_dispatch=start,attempt_deadline_utc=context['attempt_deadline_utc'],now=now)
+    if request['operation'] != 'SAFE_CLOSE':
+        raise Refusal('safe-close helper refuses other operations')
+    validate_local_operational_status(status,launch=launch,workflow_execution_arn=context['workflow_execution_arn'])
+    if status['start'] is None or status['heartbeat_zero'] is None or status['terminal'] is not None:
+        raise Refusal('safe-close intent requires accepted start and heartbeat zero without terminal')
+    if any(_utc(status[k]['observed_utc']) > now for k in ('start','heartbeat_zero','latest_heartbeat')):
+        raise Refusal('safe-close intent cannot use future status')
+    stale=launch['phase_timeouts_seconds']['heartbeat_stale']
+    if any((now-_utc(status[k]['observed_utc'])).total_seconds() >= stale for k in ('heartbeat_zero','latest_heartbeat')):
+        raise Refusal('safe-close observation requires fresh heartbeat-zero and latest heartbeat')
+    marker={'schema':'aws_c0_controller_local_safe_close_marker/v1','operation':'SAFE_CLOSE',
+        'attempt_identity':launch['attempt_identity'],'workflow_execution_identity':_workflow_identity(context['workflow_execution_arn']),
+        'helper_request_identity':identity('aws_c0_controller_local_helper_request/v1',digest(canonical_bytes(request))),
+        'request_disposition':'LOCAL_SAFE_CLOSE_OBSERVATION_REQUESTED',
+        'observed_utc':now.isoformat(timespec='seconds').replace('+00:00','Z'),
+        'start_identity':status['start']['identity'],'heartbeat_zero_identity':status['heartbeat_zero']['identity'],
+        'latest_heartbeat_identity':status['latest_heartbeat']['identity'],
+        'status_sha256':digest(canonical_bytes(status)),'safe_close_completed':False,'synthetic_outcome_claimed':False,
+        'authentication_disposition':'LOCAL_OPERATIONAL_ONLY_NOT_AUTHENTICATED_EVIDENCE','zero_science_counters':dict(ZERO)}
+    if len(canonical_bytes(marker)) > 4096:
+        raise Refusal('local safe-close marker exceeds bound')
+    return marker
+
+
+def _write_local_safe_close_marker(attempt: str, marker: dict[str, Any]) -> None:
+    if not isinstance(attempt,str) or not ATTEMPT.fullmatch(attempt):
+        raise Refusal('local safe-close attempt path invalid')
+    raw=canonical_bytes(marker)
+    if len(raw) > 4096:
+        raise Refusal('local safe-close marker exceeds bound')
+    directory=_status_directory_fd();name=attempt+'.safe-close.json';created=False
+    try:
+        fd=os.open(name,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600,dir_fd=directory)
+        created=True
+        with os.fdopen(fd,'wb') as handle:
+            handle.write(raw);handle.flush();os.fsync(handle.fileno())
+        os.fsync(directory)
+    except BaseException:
+        if created:os.unlink(name,dir_fd=directory)
+        raise
+    finally:
+        os.close(directory)
+
+
+def execute_local_safe_close_helper(args: argparse.Namespace, *, now: dt.datetime | None = None) -> dict[str, Any]:
+    request=_decode_ssm_transport(args)
+    if not isinstance(request,dict) or request.get('operation') != 'SAFE_CLOSE':
+        raise Refusal('safe-close entry point refuses START and STATUS')
+    context=load_local_helper_context(args);current=now or dt.datetime.now(dt.timezone.utc)
+    validate_local_helper_transport_v1(args,expected_start_dispatch=context['expected_start_dispatch'],
+        attempt_deadline_utc=context['attempt_deadline_utc'],now=current)
+    status=read_local_operational_status(launch=context['launch'],workflow_execution_arn=context['workflow_execution_arn'])
+    marker=build_local_safe_close_marker(request,status,context=context,now=current)
+    _write_local_safe_close_marker(args.attempt_id,marker)
+    return {'schema':'aws_c0_controller_local_safe_close_response/v1','operation':'SAFE_CLOSE',
+        'marker_identity':identity(marker['schema'],digest(canonical_bytes(marker))),'marker':marker,
+        'marker_written':True,'safe_close_completed':False}
+
+
 def _software_contract(live_packet: dict[str, Any]) -> dict[str, Any]:
     matches = [item for item in live_packet.get("runtime_control_preimages", [])
                if isinstance(item, dict) and item.get("control_kind") == "SOFTWARE_AND_IMAGE_SET"]
@@ -1747,13 +1995,7 @@ def run_attempt(args: argparse.Namespace) -> None:
     source_raw = _file_secure(request_path.with_suffix(".source.json"))
     launch = strict_json(launch_raw)
     source = strict_json(source_raw)
-    source_fields = {"schema", "artifact_bucket", "launch_key", "launch_version_id", "launch_sha256", "launch_bytes",
-        "live_packet_key", "live_packet_version_id", "live_packet_sha256", "live_packet_bytes",
-        "live_authorization_key", "live_authorization_version_id", "live_authorization_sha256", "live_authorization_bytes",
-        "live_authorization_identity", "workflow_execution_identity", "workflow_execution_arn", "ssm_command_identity",
-        "rehearsal_id", "attempt_id", "artifact_prefix", "declared_exact_version_source_get_captures_in_order", "zero_science_counters",
-        "ssm_dispatch_semantic21", "ssm_dispatch_transport2"}
-    if not isinstance(source, dict) or set(source) != source_fields or source.get("schema") != "aws_c0_source_sidecar/v5":
+    if not isinstance(source, dict) or set(source) != OPERATIONAL_SOURCE_FIELDS or source.get("schema") != "aws_c0_source_sidecar/v5":
         raise Refusal("invalid source sidecar")
     attempt = source.get("attempt_id")
     rehearsal = source.get("rehearsal_id")
@@ -2040,15 +2282,19 @@ def parser() -> argparse.ArgumentParser:
     commands = top.add_subparsers(dest="command", required=True)
     prep = commands.add_parser("prepare-request-v4")
     legacy = commands.add_parser("prepare-request-v3")
+    helper = commands.add_parser("local-status-v1")
+    close_helper = commands.add_parser("local-safe-close-v1")
+    classifier = commands.add_parser("classify-dispatch-v1")
     for flag in ("bucket", "region", "artifact-prefix", "launch-key", "launch-version-id", "launch-sha256",
                  "live-packet-key", "live-packet-version-id", "live-packet-sha256",
                  "live-authorization-key", "live-authorization-version-id", "live-authorization-sha256",
                  "rehearsal-id", "attempt-id",
                  "workflow-execution-arn", "ssm-client-request-token", "ssm-expected-command-not-before-utc",
-                 "ssm-expected-command-not-after-utc", "ssm-dispatch-request-canonical-json-base64", "ssm-dispatch-request-sha256", "output"):
-        prep.add_argument("--" + flag, required=True); legacy.add_argument("--" + flag, required=True)
+                 "ssm-expected-command-not-after-utc", "ssm-dispatch-request-canonical-json-base64", "ssm-dispatch-request-sha256"):
+        for command in (prep,legacy,helper,close_helper,classifier):command.add_argument("--" + flag, required=True)
+    for command in (prep,legacy):command.add_argument('--output',required=True)
     for flag in ("launch-bytes", "live-packet-bytes", "live-authorization-bytes"):
-        prep.add_argument("--" + flag, required=True, type=int); legacy.add_argument("--" + flag, required=True, type=int)
+        for command in (prep,legacy,helper,close_helper,classifier):command.add_argument("--" + flag, required=True, type=int)
     run = commands.add_parser("run")
     run.add_argument("--launch-request", required=True)
     return top
@@ -2059,6 +2305,12 @@ def main(argv: list[str] | None = None) -> int:
         args = parser().parse_args(argv)
         if args.command in {"prepare-request-v3", "prepare-request-v4"}:
             prepare_request(args)
+        elif args.command == 'classify-dispatch-v1':
+            print(classify_local_dispatch(args))
+        elif args.command in ('local-status-v1','local-safe-close-v1'):
+            response=(execute_local_status_helper(args) if args.command == 'local-status-v1' else execute_local_safe_close_helper(args))
+            sys.stdout.buffer.write(canonical_bytes(response)+b'\n')
+            sys.stdout.buffer.flush()
         else:
             run_attempt(args)
         return 0

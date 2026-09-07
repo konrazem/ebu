@@ -6,6 +6,7 @@ import base64
 import copy
 import hashlib
 import importlib.util
+import io
 import json
 import os
 import sys
@@ -568,6 +569,298 @@ class LocalHelperDecodeTests(unittest.TestCase):
         args,_,_=self.material();args.ssm_dispatch_request_canonical_json_base64='e31='
         args.ssm_dispatch_request_sha256=C.digest(b'{}')
         with self.assertRaisesRegex(C.Refusal,'pair derivation'):C._decode_ssm_transport(args)
+
+
+class LocalHelperSourceTests(unittest.TestCase):
+    def material(self):
+        args,_,_=SsmDispatchInterfaceTests().material()
+        launch=current_launch(load('aws/c0/fixtures/launch-request.valid.json'))
+        launch.update(observed_utc='2026-09-06T18:00:00Z',attempt_deadline_utc='2026-09-06T18:40:00Z',cleanup_deadline_utc='2026-09-06T18:50:00Z')
+        launch['cost_envelope']['accounting_window'].update(start_inclusive_utc='2026-09-06T00:00:00Z',end_exclusive_utc='2026-09-07T00:00:00Z')
+        launch=reroot(launch);raws={'launch':C.canonical_bytes(launch)}
+        def receipt(stem):
+            raw=raws[stem]
+            return {'bucket_identity':launch['closure_seed_object']['bucket_identity'],'key':getattr(args,stem+'_key'),
+                'version_id':getattr(args,stem+'_version_id'),'bytes':len(raw),'sha256':C.digest(raw),
+                'checksum_sha256_base64':base64.b64encode(hashlib.sha256(raw).digest()).decode()}
+        packet={'schema':'aws_c0_live_packet/v6','launch_request_identity':C.identity('aws_c0_launch_request/v6',C.root_digest(launch)),
+            'launch_request_object':receipt('launch'),'packet_disposition':'AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED'}
+        raws['live_packet']=C.canonical_bytes(packet)
+        observed={'Name':'EBU-C0-Start-v1','DocumentVersion':'1','Status':'Active','DocumentType':'Command'}
+        auth={'schema':'aws_c0_live_authorization/v6','live_packet_identity':C.identity('aws_c0_live_packet/v6',C.digest(raws['live_packet'])),
+            'live_packet_object':receipt('live_packet'),'attempt_identity':launch['attempt_identity'],
+            'deployment_completed_utc':'2026-09-06T17:58:00Z','observed_utc':'2026-09-06T18:00:00Z',
+            'post_deployment_control_preimages':[DeploymentSequenceTests.control('SSM_DOCUMENT',observed,'2026-09-06T17:59:00Z')]}
+        raws['live_authorization']=C.canonical_bytes(auth)
+        for stem,raw in raws.items():setattr(args,stem+'_sha256',C.digest(raw));setattr(args,stem+'_bytes',len(raw))
+        start=G.build_ssm_dispatch_transport_v2(ROOT,C.ssm_semantic_parameters_from_argv(args),launch['attempt_identity'],'1')
+        args.ssm_dispatch_request_canonical_json_base64=start['transport_parameters']['SsmDispatchRequestCanonicalJsonBase64'][0]
+        args.ssm_dispatch_request_sha256=start['transport_parameters']['SsmDispatchRequestSha256'][0]
+        bykey={getattr(args,stem+'_key'):raw for stem,raw in raws.items()};stored={}
+        def transport(host,uri,query,headers):
+            raw=bykey[C.urllib.parse.unquote(uri[1:])]
+            return raw,{'version_id':'observed-offline-version','checksum_sha256':base64.b64encode(hashlib.sha256(raw).digest()).decode(),
+                'etag':'offline-etag','request_id':'offline-request-id','tls_certificate_sha256':'a'*64}
+        with mock.patch.object(C,'_exclusive',side_effect=lambda path,raw:stored.update({path.name:raw})):
+            C.prepare_request(args,credential_provider=lambda:{'access_key_id':'OFFLINE_KEY','secret_access_key':'OFFLINE_SECRET','session_token':'OFFLINE_TOKEN'},
+                transport=transport,now=C.dt.datetime(2026,9,6,18,0,30,tzinfo=C.dt.timezone.utc))
+        helper=G.build_local_helper_transport_v1(ROOT,start['dispatch_request_preimage'],'STATUS',launch['attempt_deadline_utc'])
+        args.ssm_dispatch_request_canonical_json_base64=helper['transport_parameters']['SsmDispatchRequestCanonicalJsonBase64'][0]
+        args.ssm_dispatch_request_sha256=helper['transport_parameters']['SsmDispatchRequestSha256'][0]
+        return args,stored[args.attempt_id+'.json'],stored[args.attempt_id+'.source.json']
+
+    def test_actual_prepare_producer_to_helper_binding_without_second_download(self):
+        args,launch_raw,source_raw=self.material()
+        with (mock.patch.object(C,'bootstrap_imdsv2_credentials',side_effect=AssertionError('no credentials')),
+              mock.patch.object(C,'_download',side_effect=AssertionError('no download')),
+              mock.patch.object(C,'prepare_request',side_effect=AssertionError('no second prepare')),
+              mock.patch.object(C,'_run',side_effect=AssertionError('no command'))):
+            context=C.validate_helper_local_source_context(args,launch_raw,source_raw)
+            helper=C.validate_local_helper_transport_v1(args,expected_start_dispatch=context['expected_start_dispatch'],
+                attempt_deadline_utc=context['attempt_deadline_utc'],now=C.dt.datetime(2026,9,6,18,2,tzinfo=C.dt.timezone.utc))
+            self.assertEqual(helper['operation'],'STATUS')
+            self.assertEqual(context['launch'],C.strict_json(launch_raw))
+
+    def test_source_scalar_dispatch_capture_and_science_drift_are_refused(self):
+        for mutate in (lambda s:s.update(launch_sha256='a'*64),lambda s:s.update(attempt_id='OTHER'),
+                       lambda s:s.update(workflow_execution_identity=C.identity('aws_step_functions_standard_execution/v1','a'*64)),
+                       lambda s:s['ssm_dispatch_transport2'].update(ssm_dispatch_request_sha256='0'*64),
+                       lambda s:s['declared_exact_version_source_get_captures_in_order'].reverse(),
+                       lambda s:s['declared_exact_version_source_get_captures_in_order'][0]['operation_capture_preimage'].update(key='wrong'),
+                       lambda s:s['zero_science_counters'].update(trajectory_count=False),lambda s:s.update(extra=True)):
+            args,launch_raw,source_raw=self.material();source=C.strict_json(source_raw);mutate(source)
+            with self.assertRaises(C.Refusal):C.validate_helper_local_source_context(args,launch_raw,C.canonical_bytes(source))
+        args,launch_raw,source_raw=self.material();launch=C.strict_json(launch_raw);launch['attempt_deadline_utc']='2026-09-06T18:55:00Z'
+        with self.assertRaises(C.Refusal):C.validate_helper_local_source_context(args,C.canonical_bytes(reroot(launch)),source_raw)
+
+    def test_loader_derives_only_exact_paths_and_refuses_start_before_file_access(self):
+        args,launch_raw,source_raw=self.material()
+        with mock.patch.object(C,'_read_bound_request_file',side_effect=[launch_raw,source_raw]) as reading:
+            C.load_local_helper_context(args)
+            self.assertEqual(reading.call_args_list,[mock.call(C.REQUESTS/(args.attempt_id+'.json')),mock.call(C.REQUESTS/(args.attempt_id+'.source.json'))])
+        args,_,_=SsmDispatchInterfaceTests().material()
+        with mock.patch.object(C,'_read_bound_request_file') as reading:
+            with self.assertRaises(C.Refusal):C.load_local_helper_context(args)
+            reading.assert_not_called()
+
+    def test_rehashed_rechained_capture_still_binds_actual_get_operation_and_source(self):
+        for changes in ({'operation':'S3_PUT_OBJECT'}, {'source_object_identity':C.identity('aws_c0_s3_object/v1','c'*64)},
+                        {'request_envelope_sha256':'d'*64}, {'key':'wrong-key'}, {'observed_bytes':True},
+                        {'operation_completed_utc':'2026-09-06T18:00:50.000000Z'}):
+            args,launch_raw,source_raw=self.material();source=C.strict_json(source_raw)
+            captures=source['declared_exact_version_source_get_captures_in_order']
+            captures[0]['operation_capture_preimage'].update(changes)
+            previous=None
+            for item in captures:
+                item['body_sha256']=C.digest(C.canonical_bytes(item['operation_capture_preimage']))
+                item['previous_envelope_sha256']=previous;previous=C.digest(C.canonical_bytes(item))
+            C.CaptureJournal.restore('EC2_INSTANCE_PROFILE_CONTROLLER',captures)
+            with self.assertRaisesRegex(C.Refusal,'capture differs|capture chronology'):
+                C.validate_helper_local_source_context(args,launch_raw,C.canonical_bytes(source))
+
+    def test_private_request_reader_refuses_path_symlink_and_insecure_file(self):
+        actual_fstat=os.fstat
+        def root_owned(fd):
+            fields=list(actual_fstat(fd));fields[4]=0
+            return os.stat_result(fields)
+        with tempfile.TemporaryDirectory() as folder:
+            state=Path(folder)/'state';state.mkdir(mode=0o700);requests=state/'requests';requests.mkdir(mode=0o700)
+            name='ATTEMPT-OFFLINE-SUCCESS.json';path=requests/name;path.write_bytes(b'{}');path.chmod(0o600)
+            with mock.patch.object(C,'REQUESTS',requests),mock.patch.object(C.os,'geteuid',return_value=0),mock.patch.object(C.os,'fstat',side_effect=root_owned):
+                self.assertEqual(C._read_bound_request_file(path),b'{}')
+                with self.assertRaises(C.Refusal):C._read_bound_request_file(state/name)
+                path.chmod(0o644)
+                with self.assertRaises(C.Refusal):C._read_bound_request_file(path)
+                path.unlink();path.symlink_to(state/'missing')
+                with self.assertRaises(OSError):C._read_bound_request_file(path)
+
+
+class LocalStatusActionTests(unittest.TestCase):
+    def material(self):
+        args,launch_raw,source_raw=LocalHelperSourceTests().material()
+        context=C.validate_helper_local_source_context(args,launch_raw,source_raw)
+        return args,context,C._decode_ssm_transport(args),launch_raw,source_raw
+
+    def test_status_progress_requires_terminal_then_actual_handoff_flag(self):
+        _,context,request,_,_=self.material();now=C.dt.datetime(2026,9,6,18,2,tzinfo=C.dt.timezone.utc)
+        projection={k:context[k] for k in ('launch','workflow_execution_arn')}
+        def response(value):return C.build_local_status_response(request,value,context=context,now=now)
+        self.assertEqual(response(None)['state'],'WAITING_FOR_START')
+        status=C.new_local_operational_status(**projection)
+        for kind,expected in (('start','WAITING_FOR_HEARTBEAT'),('heartbeat','RUNNING'),('terminal','TERMINAL_AWAITING_JOURNAL_HANDOFF')):
+            status=LocalOperationalStatusTests().advance(status,projection,kind)
+            result=response(status);self.assertEqual(result['state'],expected)
+            self.assertFalse(result['synthetic_outcome_claimed'])
+        status['controller_journal_handoff_complete']=True
+        result=response(status);self.assertEqual(result['state'],'CONTROLLER_HANDOFF_COMPLETE')
+        self.assertLessEqual(len(C.canonical_bytes(result)),20000)
+        self.assertEqual(result['authentication_disposition'],'LOCAL_OPERATIONAL_ONLY_NOT_AUTHENTICATED_EVIDENCE')
+
+    def test_freshness_boundary_future_status_and_expired_helper_refused(self):
+        _,context,request,_,_=self.material()
+        projection={k:context[k] for k in ('launch','workflow_execution_arn')};status=C.new_local_operational_status(**projection)
+        for kind in ('start','heartbeat'):status=LocalOperationalStatusTests().advance(status,projection,kind)
+        for second,expected in ((119,'RUNNING'),(120,'HEARTBEAT_STALE')):
+            now=C.dt.datetime(2026,9,6,18,2,tzinfo=C.dt.timezone.utc)+C.dt.timedelta(seconds=second)
+            result=C.build_local_status_response(request,status,context=context,now=now)
+            self.assertEqual(result['state'],expected);self.assertEqual(result['heartbeat_age_seconds'],second)
+        for now in (C.dt.datetime(2026,9,6,18,1,59,tzinfo=C.dt.timezone.utc),C.dt.datetime(2026,9,6,18,40,tzinfo=C.dt.timezone.utc)):
+            with self.assertRaises(C.Refusal):C.build_local_status_response(request,status,context=context,now=now)
+
+    def test_actual_status_action_missing_cache_is_waiting_but_missing_source_or_unsafe_cache_refused(self):
+        args,_,_,launch_raw,source_raw=self.material();now=C.dt.datetime(2026,9,6,18,2,tzinfo=C.dt.timezone.utc)
+        with (mock.patch.object(C,'_read_bound_request_file',side_effect=[launch_raw,source_raw]),
+              mock.patch.object(C,'read_local_operational_status',side_effect=FileNotFoundError),
+              mock.patch.object(C,'_download',side_effect=AssertionError('no network')),
+              mock.patch.object(C,'_run',side_effect=AssertionError('no command')),
+              mock.patch.object(C,'bootstrap_imdsv2_credentials',side_effect=AssertionError('no credentials'))):
+            self.assertEqual(C.execute_local_status_helper(args,now=now)['state'],'WAITING_FOR_START')
+        with mock.patch.object(C,'_read_bound_request_file',side_effect=FileNotFoundError):
+            with self.assertRaises(FileNotFoundError):C.execute_local_status_helper(args,now=now)
+        with mock.patch.object(C,'_read_bound_request_file',side_effect=[launch_raw,source_raw]),mock.patch.object(C,'read_local_operational_status',side_effect=C.Refusal('unsafe')):
+            with self.assertRaises(C.Refusal):C.execute_local_status_helper(args,now=now)
+
+    def test_public_status_cli_dispatch_does_not_prepare_or_run_controller(self):
+        args,_,_,launch_raw,source_raw=self.material();argv=['local-status-v1']
+        for name in (*C.SEMANTIC21,*C.TRANSPORT2):
+            attr='bucket' if name=='artifact_bucket' else name
+            argv+=['--'+attr.replace('_','-'),str(getattr(args,attr))]
+        parsed=C.parser().parse_args(argv);self.assertEqual(parsed.command,'local-status-v1')
+        self.assertFalse(hasattr(parsed,'output'))
+        original=C.execute_local_status_helper;output=io.BytesIO()
+        with (mock.patch.object(C,'_read_bound_request_file',side_effect=[launch_raw,source_raw]),
+              mock.patch.object(C,'read_local_operational_status',side_effect=FileNotFoundError),
+              mock.patch.object(C,'execute_local_status_helper',side_effect=lambda a:original(a,now=C.dt.datetime(2026,9,6,18,2,tzinfo=C.dt.timezone.utc))),
+              mock.patch.object(C.sys,'stdout',mock.Mock(buffer=output)),
+              mock.patch.object(C,'prepare_request',side_effect=AssertionError('no preparation')),
+              mock.patch.object(C,'run_attempt',side_effect=AssertionError('no worker'))):
+            self.assertEqual(C.main(argv),0)
+        raw=output.getvalue();self.assertTrue(raw.endswith(b'\n'))
+        self.assertEqual(C.strict_json(raw[:-1])['state'],'WAITING_FOR_START')
+
+
+class LocalSafeCloseActionTests(unittest.TestCase):
+    def material(self):
+        args,context,_,launch_raw,source_raw=LocalStatusActionTests().material()
+        request=G.build_local_helper_transport_v1(ROOT,context['expected_start_dispatch'],'SAFE_CLOSE',context['attempt_deadline_utc'])
+        args.ssm_dispatch_request_canonical_json_base64=request['transport_parameters']['SsmDispatchRequestCanonicalJsonBase64'][0]
+        args.ssm_dispatch_request_sha256=request['transport_parameters']['SsmDispatchRequestSha256'][0]
+        projection={k:context[k] for k in ('launch','workflow_execution_arn')}
+        status=C.new_local_operational_status(**projection)
+        for kind in ('start','heartbeat'):status=LocalOperationalStatusTests().advance(status,projection,kind)
+        return args,context,request['helper_request'],status,launch_raw,source_raw
+
+    def test_marker_requires_start_heartbeat_zero_and_never_claims_completed_close(self):
+        _,context,request,status,_,_=self.material();now=C.dt.datetime(2026,9,6,18,3,tzinfo=C.dt.timezone.utc)
+        marker=C.build_local_safe_close_marker(request,status,context=context,now=now)
+        self.assertFalse(marker['safe_close_completed']);self.assertFalse(marker['synthetic_outcome_claimed'])
+        self.assertEqual(marker['status_sha256'],C.digest(C.canonical_bytes(status)))
+        for changes in ({'start':None},{'heartbeat_zero':None}):
+            with self.assertRaises(C.Refusal):C.build_local_safe_close_marker(request,{**status,**changes},context=context,now=now)
+        projection={k:context[k] for k in ('launch','workflow_execution_arn')}
+        terminal=LocalOperationalStatusTests().advance(status,projection,'terminal')
+        with self.assertRaises(C.Refusal):C.build_local_safe_close_marker(request,terminal,context=context,now=now)
+        for now in (C.dt.datetime(2026,9,6,18,1,tzinfo=C.dt.timezone.utc),C.dt.datetime(2026,9,6,18,4,tzinfo=C.dt.timezone.utc),
+                    C.dt.datetime(2026,9,6,18,40,tzinfo=C.dt.timezone.utc)):
+            with self.assertRaises(C.Refusal):C.build_local_safe_close_marker(request,status,context=context,now=now)
+
+    def test_exact_exclusive_private_marker_refuses_replay_and_symlink(self):
+        args,context,request,status,_,_=self.material()
+        marker=C.build_local_safe_close_marker(request,status,context=context,now=C.dt.datetime(2026,9,6,18,3,tzinfo=C.dt.timezone.utc))
+        actual_fstat=os.fstat
+        def root_owned(fd):
+            fields=list(actual_fstat(fd));fields[4]=0
+            return os.stat_result(fields)
+        with tempfile.TemporaryDirectory() as folder:
+            state=Path(folder)/'state';state.mkdir(mode=0o700);directory=state/'status';directory.mkdir(mode=0o700)
+            with mock.patch.object(C,'STATUS',directory),mock.patch.object(C.os,'geteuid',return_value=0),mock.patch.object(C.os,'fstat',side_effect=root_owned):
+                C._write_local_safe_close_marker(args.attempt_id,marker)
+                path=directory/(args.attempt_id+'.safe-close.json');raw=path.read_bytes()
+                self.assertEqual(raw,C.canonical_bytes(marker));self.assertEqual(path.stat().st_mode & 0o777,0o600)
+                with self.assertRaises(FileExistsError):C._write_local_safe_close_marker(args.attempt_id,marker)
+                self.assertEqual(path.read_bytes(),raw)
+                path.unlink();target=state/'untouched';target.write_bytes(b'unchanged');path.symlink_to(target)
+                with self.assertRaises(FileExistsError):C._write_local_safe_close_marker(args.attempt_id,marker)
+                self.assertEqual(target.read_bytes(),b'unchanged')
+                with self.assertRaises(C.Refusal):C._write_local_safe_close_marker('../escape',marker)
+
+    def test_actual_safe_close_cli_only_writes_local_intent(self):
+        args,_,_,status,launch_raw,source_raw=self.material();argv=['local-safe-close-v1']
+        for name in (*C.SEMANTIC21,*C.TRANSPORT2):
+            attr='bucket' if name=='artifact_bucket' else name
+            argv+=['--'+attr.replace('_','-'),str(getattr(args,attr))]
+        original=C.execute_local_safe_close_helper;output=io.BytesIO()
+        with (mock.patch.object(C,'_read_bound_request_file',side_effect=[launch_raw,source_raw]),
+              mock.patch.object(C,'read_local_operational_status',return_value=status),
+              mock.patch.object(C,'execute_local_safe_close_helper',side_effect=lambda a:original(a,now=C.dt.datetime(2026,9,6,18,3,tzinfo=C.dt.timezone.utc))),
+              mock.patch.object(C,'_write_local_safe_close_marker') as writing,
+              mock.patch.object(C.sys,'stdout',mock.Mock(buffer=output)),
+              mock.patch.object(C,'_run',side_effect=AssertionError('no command')),
+              mock.patch.object(C,'_s3_put',side_effect=AssertionError('no S3')),
+              mock.patch.object(C,'prepare_request',side_effect=AssertionError('no preparation')),
+              mock.patch.object(C,'bootstrap_imdsv2_credentials',side_effect=AssertionError('no credentials')),
+              mock.patch.object(C,'run_attempt',side_effect=AssertionError('no worker'))):
+            self.assertEqual(C.main(argv),0);self.assertEqual(writing.call_count,1)
+        response=C.strict_json(output.getvalue()[:-1]);self.assertTrue(response['marker_written'])
+        self.assertFalse(response['safe_close_completed']);self.assertLess(len(output.getvalue()),20000)
+
+
+class LocalSsmRoutingTests(unittest.TestCase):
+    def test_classifier_is_typed_and_has_no_filesystem_credential_or_command_effect(self):
+        material=[('START',SsmDispatchInterfaceTests().material()[0]),
+                  ('STATUS',LocalHelperSourceTests().material()[0]),('SAFE_CLOSE',LocalSafeCloseActionTests().material()[0])]
+        with (mock.patch.object(C.os,'open',side_effect=AssertionError('no file')),
+              mock.patch.object(C,'_run',side_effect=AssertionError('no command')),
+              mock.patch.object(C,'bootstrap_imdsv2_credentials',side_effect=AssertionError('no credentials')),
+              mock.patch.object(C,'prepare_request',side_effect=AssertionError('no prepare'))):
+            for expected,args in material:self.assertEqual(C.classify_local_dispatch(args),expected)
+            args=copy.deepcopy(material[1][1]);record=C._decode_ssm_transport(args);record['operation']='SCIENCE'
+            raw=C.canonical_bytes(record);args.ssm_dispatch_request_canonical_json_base64=base64.b64encode(raw).decode();args.ssm_dispatch_request_sha256=C.digest(raw)
+            with self.assertRaises(C.Refusal):C.classify_local_dispatch(args)
+            args=copy.deepcopy(material[1][1]);args.launch_bytes+=1
+            with self.assertRaises(C.Refusal):C.classify_local_dispatch(args)
+
+    def test_document_helpers_exit_before_any_preparation_or_service_start(self):
+        document=load('aws/c0/ssm/EBU-C0-Start-v1.yaml')
+        self.assertEqual(document,load('aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml')['Resources']['EBUC0StartDocument']['Properties']['Content'])
+        self.assertEqual(len(document['parameters']),23)
+        lines=document['mainSteps'][0]['inputs']['runCommand']
+        begin=lines.index('case "$dispatch_operation" in');end=lines.index('esac',begin)
+        self.assertLess(end,next(i for i,line in enumerate(lines) if '/usr/bin/install -d' in line))
+        self.assertLess(end,next(i for i,line in enumerate(lines) if ' prepare-request-v4 ' in line))
+        self.assertEqual(sum('/usr/bin/systemctl start --no-block' in line for line in lines),1)
+        self.assertTrue(lines[begin-1].startswith('dispatch_operation="$(/usr/bin/python3 '))
+        self.assertIn(' classify-dispatch-v1 ',lines[begin-1])
+        routed=lines[begin:end+1]
+        # Exercise only the literal case/exit structure with side-effect-free
+        # printf stand-ins, never the SSM document or controller runtime.
+        modeled=[]
+        for line in routed:
+            if line.startswith(('STATUS) ','SAFE_CLOSE) ')):
+                start=line.index('/usr/bin/python3 ');stop=line.index('; exit 0 ;;',start)
+                operation=line.split(')',1)[0]
+                line=line[:start]+"printf '%s\\n' "+operation+line[stop:]
+            modeled.append(line)
+        script='\n'.join(['set -eu','dispatch_operation="$OFFLINE_OPERATION"',*modeled,"printf '%s\\n' START_PATH"])
+        for operation,code,wanted in (('STATUS',0,b'STATUS\n'),('SAFE_CLOSE',0,b'SAFE_CLOSE\n'),('START',0,b'START_PATH\n'),('UNKNOWN',64,b'')):
+            result=C.subprocess.run(['/bin/sh','-c',script],env={'OFFLINE_OPERATION':operation},capture_output=True,timeout=5)
+            self.assertEqual((result.returncode,result.stdout),(code,wanted))
+        for operation in ('STATUS','SAFE_CLOSE'):
+            failed=script.replace("printf '%s\\n' "+operation+';','false;')
+            result=C.subprocess.run(['/bin/sh','-c',failed],env={'OFFLINE_OPERATION':operation},capture_output=True,timeout=5)
+            self.assertEqual((result.returncode,result.stdout),(1,b''))
+        failed=script.replace('dispatch_operation="$OFFLINE_OPERATION"','dispatch_operation="$(exit 23)"')
+        result=C.subprocess.run(['/bin/sh','-c',failed],capture_output=True,timeout=5)
+        self.assertEqual((result.returncode,result.stdout),(23,b''))
+
+    def test_classifier_cli_reuses_all_explicit_semantics_and_transport(self):
+        args=LocalHelperSourceTests().material()[0];argv=['classify-dispatch-v1']
+        for name in (*C.SEMANTIC21,*C.TRANSPORT2):
+            attr='bucket' if name=='artifact_bucket' else name
+            argv+=['--'+attr.replace('_','-'),str(getattr(args,attr))]
+        output=io.StringIO()
+        with mock.patch.object(C.sys,'stdout',output):self.assertEqual(C.main(argv),0)
+        self.assertEqual(output.getvalue(),'STATUS\n')
 
 
 class LocalOperationalStatusTests(unittest.TestCase):
