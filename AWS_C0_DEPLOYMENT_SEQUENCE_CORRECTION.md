@@ -730,3 +730,21 @@ The correction does not change trust, caller permissions, compact V5 policy,
 scientific payload, controller transport arity, SSM command body or ASL behavior.
 Any AWS continuation must use fresh actual observations and separately valid
 bounded authority; local tests are not deployed readiness.
+
+## Authenticated CREATE change-set reconstruction
+
+CloudFormation creates a unique stack ID in `REVIEW_IN_PROGRESS` when it creates
+a CREATE change set for a new stack. The predeployment change-set producer must
+therefore collect all of R45 through R48; no missing-stack exception or null
+receipt is valid. R45 must show the exact named change set as `CREATE_COMPLETE`
+and `AVAILABLE`, R46 must return original template bytes matching the sealed
+template SHA-256, R47 must show the same stack in `REVIEW_IN_PROGRESS`, and R48
+must be a complete terminal same-stack event page.
+
+The producer derives the resource-effect identity from the complete R45 change
+list and cross-binds the closed effect-API plan to that derived resource set.
+It retains the historical `aws_c0_change_set_effects_observation/v1` output and
+R45–R48 source mapping. Its one-page, sixteen-item bounds are explicit and it
+adds no action, permission, deployment, publication, cost, or scientific
+authority. Construction and tests are pure local operations and do not claim
+that any AWS observation has occurred.

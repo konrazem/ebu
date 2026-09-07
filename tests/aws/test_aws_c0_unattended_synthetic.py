@@ -1272,6 +1272,97 @@ class ReconstructionV4IntegrationTests(unittest.TestCase):
                 validation_utc=validation,expected_sealed_context_identity=sealed_id)
 
 
+class ChangeSetEffectsReconstructionTests(unittest.TestCase):
+    def material(self):
+        _,profile_context=InstanceProfileReconstructionTests().material()
+        caller=profile_context['caller_identity'];channel=profile_context['authentication_source_identity']
+        name='EBU-C0-492a4f1'
+        change_arn='arn:aws:cloudformation:us-east-1:623609441658:changeSet/'+name+'/offline-change'
+        stack_arn='arn:aws:cloudformation:us-east-1:623609441658:stack/'+name+'/offline-stack'
+        template=(ROOT/'aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml').read_text()
+        changes=[{'Type':'Resource','ResourceChange':{'Action':'Add','LogicalResourceId':'FinalizerFunction',
+            'ResourceType':'AWS::Lambda::Function','Replacement':'False','Scope':[]}},
+            {'Type':'Resource','ResourceChange':{'Action':'Add','LogicalResourceId':'StateMachine',
+            'ResourceType':'AWS::StepFunctions::StateMachine','Replacement':'False','Scope':[]}}]
+        def receipt(row,action,selector,request,response,second,count):
+            request_id='offline-change-'+row
+            response={**copy.deepcopy(response),'ResponseMetadata':{'RequestId':request_id,
+                'HTTPStatusCode':200,'RetryAttempts':0,'HTTPHeaders':{'x-amzn-requestid':request_id}}}
+            value={'row_id':row,'action':action,'resource_selector':selector,'caller_identity':caller,
+                'authentication_source_identity':channel,'http_status':200,'request_id':request_id,
+                'requested_utc':'2026-09-06T18:00:%02dZ'%second,
+                'completed_utc':'2026-09-06T18:00:%02dZ'%(second+1),'pagination_page':1,
+                'pagination_item_count':count,'authentication_disposition':'SIGNED_CALLER_AND_EXACT_REQUEST_RESPONSE_BYTES_PASS',
+                'api_success_disposition':'AWS_API_CALL_SUCCESS'}
+            R51ProspectiveAmendmentTests.encode(value,'request',request)
+            R51ProspectiveAmendmentTests.encode(value,'response',response)
+            return value
+        receipts={'R45':receipt('R45','cloudformation:DescribeChangeSet','SEALED_CHANGE_SET_ARN',
+                {'ChangeSetName':change_arn},{'ChangeSetId':change_arn,'ChangeSetName':name,
+                    'StackId':stack_arn,'StackName':name,'Status':'CREATE_COMPLETE',
+                    'ExecutionStatus':'AVAILABLE','ChangeSetType':'CREATE','Changes':changes},1,len(changes)),
+            'R46':receipt('R46','cloudformation:GetTemplate','SEALED_STACK_ARN',
+                {'ChangeSetName':change_arn,'TemplateStage':'Original'},
+                {'TemplateBody':template,'StagesAvailable':['Original','Processed']},3,1),
+            'R47':receipt('R47','cloudformation:DescribeStacks','SEALED_STACK_ARN',
+                {'StackName':stack_arn},{'Stacks':[{'StackId':stack_arn,'StackName':name,
+                    'StackStatus':'REVIEW_IN_PROGRESS'}]},5,1),
+            'R48':receipt('R48','cloudformation:DescribeStackEvents','SEALED_STACK_ARN',
+                {'StackName':stack_arn},{'StackEvents':[{'EventId':'review-event','StackId':stack_arn,
+                    'StackName':name,'LogicalResourceId':name,'ResourceType':'AWS::CloudFormation::Stack',
+                    'ResourceStatus':'REVIEW_IN_PROGRESS'}]},7,1)}
+        context={'caller_identity':caller,'authentication_source_identity':channel,
+            'expected_change_set_arn':change_arn,'expected_stack_name':name,
+            'expected_template_sha256':hashlib.sha256(template.encode()).hexdigest(),
+            'expected_effect_actions_in_order':['iam:CreateRole','lambda:CreateFunction','states:CreateStateMachine'],
+            'phase_not_before_utc':'2026-09-06T18:00:00Z','validation_utc':'2026-09-06T18:00:10Z',
+            'freshness_max_seconds':300,'cfn_pagination_bounds':{'max_pages':1,'max_items':16}}
+        return receipts,context
+
+    def test_exact_r45_r48_build_historical_change_set_output(self):
+        receipts,context=self.material();output=G.build_change_set_effects_output(ROOT,receipts,**context)
+        self.assertEqual(F.validate_change_set_effects_reconstruction_output(output,receipts,**context),output)
+        self.assertEqual(output['decoded_json']['source_row_ids'],['R45','R46','R47','R48'])
+        self.assertEqual(output['decoded_json']['change_set_status'],'CREATE_COMPLETE')
+        self.assertEqual(output['decoded_json']['change_set_type'],'CREATE')
+        self.assertEqual(output['decoded_json']['change_set_identity']['kind'],'aws_cloudformation_change_set/v1')
+        self.assertEqual(output['decoded_json']['effect_api_set_identity']['kind'],'aws_c0_effect_api_set/v1')
+        self.assertEqual(output['decoded_json']['effect_resource_set_identity']['kind'],'aws_c0_effect_resource_set/v1')
+        G.validate_named_definition(ROOT,'reconstruction_output_tagged_union',output)
+
+    def test_template_status_stack_and_resource_effect_substitution_refuse(self):
+        mutations=(('R46','response',lambda value:value.update(TemplateBody='{}')),
+            ('R45','response',lambda value:value.update(Status='FAILED')),
+            ('R47','response',lambda value:value['Stacks'][0].update(StackStatus='CREATE_COMPLETE')),
+            ('R48','response',lambda value:value['StackEvents'][0].update(StackId='arn:aws:cloudformation:us-east-1:623609441658:stack/Other/x')),
+            ('R45','response',lambda value:value['Changes'].append(copy.deepcopy(value['Changes'][0]))))
+        for row,stem,mutate in mutations:
+            receipts,context=self.material();R64IngressAmendmentTests().mutate_api(receipts[row],stem,mutate)
+            if row=='R45' and stem=='response' and len(F.strict_json(base64.b64decode(
+                    receipts[row]['response_canonical_json_base64']))['Changes'])==3:
+                receipts[row]['pagination_item_count']=3
+            with self.subTest(row=row,mutate=mutate),self.assertRaises(F.Refusal):
+                F.build_change_set_effects_reconstruction_output(receipts,**context)
+
+    def test_incomplete_or_reordered_sources_and_rehashed_output_refuse(self):
+        for mutate in (lambda r:r.pop('R48'),lambda r:r['R45'].update(pagination_page=2),
+                lambda r:r['R47'].update(requested_utc='2026-09-06T18:00:02Z'),
+                lambda r:r['R48'].update(pagination_item_count=2)):
+            receipts,context=self.material();mutate(receipts)
+            with self.subTest(mutate=mutate),self.assertRaises(F.Refusal):
+                F.build_change_set_effects_reconstruction_output(receipts,**context)
+        receipts,context=self.material();output=G.build_change_set_effects_output(ROOT,receipts,**context)
+        output['decoded_json']['change_set_arn']=output['decoded_json']['stack_arn'];raw=G.canonical(output['decoded_json'])
+        output.update(identity=G.identity(output['schema'],output['decoded_json']),
+            canonical_json_base64=base64.b64encode(raw).decode(),canonical_byte_sha256=G.sha(raw),canonical_byte_count=len(raw))
+        with self.assertRaises(F.Refusal):
+            F.validate_change_set_effects_reconstruction_output(output,receipts,**context)
+        receipts,context=self.material();authority=G.sequence(ROOT)
+        authority['change_set_effects_reconstruction_authorization']['maximum_cfn_items']=15
+        with mock.patch.object(G,'sequence',return_value=authority),self.assertRaises(ValueError):
+            G.build_change_set_effects_output(ROOT,receipts,**context)
+
+
 class ArtifactVersionSetReconstructionTests(unittest.TestCase):
     def material(self):
         profile_receipts,profile_context=InstanceProfileReconstructionTests().material()

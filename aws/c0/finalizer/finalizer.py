@@ -2299,6 +2299,7 @@ READ_PLAN_MAPPING_SHA256 = '27d362e40c48a55963f9936adea4249ec672d0a47f381e88e576
 INGRESS_AMENDMENT_SHA256 = '97be006dd5112b00854779a8ba668c6c5bbf0aae37f922907920db17d77d7b9f'
 IAM_SOURCE_MAPPING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-RECONSTRUCTION-SOURCE-MAPPING-AMENDMENT-v1'
 IAM_CROSS_CONTROL_BINDING_AUTHORITY_ID = 'EBU-AWS-C0-IAM-CROSS-CONTROL-SOURCE-BINDING-AUTHORITY-v1'
+CHANGE_SET_EFFECTS_RECONSTRUCTION_AUTHORITY_ID = 'EBU-AWS-C0-CHANGE-SET-EFFECTS-RECONSTRUCTION-AUTHORITY-v1'
 R64_ROW = {'id':'R64','action':'ec2:DescribeSecurityGroups','resource_selector':'*',
     'use':'ALWAYS','control':'VPC_NETWORK_PATH','condition':'ALWAYS','call_requirement':'ALWAYS',
     'pagination_bounds':{'max_pages':1,'max_items':16},
@@ -3589,6 +3590,125 @@ def build_service_quota_reconstruction_output(receipts: Any, *, caller_identity:
 def validate_service_quota_reconstruction_output(output: Any, receipts: Any, **context: Any) -> dict[str,Any]:
     if canonical_bytes(output)!=canonical_bytes(build_service_quota_reconstruction_output(receipts,**context)):
         raise Refusal('service quota reconstruction differs from actual source and phase context')
+    return output
+
+
+def build_change_set_effects_reconstruction_output(receipts: Any, *,
+        caller_identity: dict[str,str], authentication_source_identity: dict[str,str],
+        expected_change_set_arn: str, expected_stack_name: str, expected_template_sha256: str,
+        expected_effect_actions_in_order: Any, phase_not_before_utc: str,
+        validation_utc: str, freshness_max_seconds: int, cfn_pagination_bounds: Any) -> dict[str,Any]:
+    """Reconstruct the exact unexecuted CREATE change set from R45-R48.
+
+    A CREATE change set already owns a stack ID in REVIEW_IN_PROGRESS. This
+    producer therefore requires all four historical rows; it does not infer a
+    missing stack or treat planned resource effects as deployed resources.
+    """
+    if (not isinstance(receipts,dict) or set(receipts)!={'R45','R46','R47','R48'}
+            or cfn_pagination_bounds!={'max_pages':1,'max_items':16}
+            or not isinstance(expected_change_set_arn,str)
+            or not re.fullmatch(r'arn:aws:cloudformation:us-east-1:623609441658:changeSet/EBU-C0-492a4f1/[A-Za-z0-9-]+',expected_change_set_arn)
+            or expected_stack_name!='EBU-C0-492a4f1'
+            or not isinstance(expected_template_sha256,str) or not SHA.fullmatch(expected_template_sha256)
+            or not isinstance(expected_effect_actions_in_order,list)
+            or not expected_effect_actions_in_order or len(expected_effect_actions_in_order)>64
+            or expected_effect_actions_in_order!=sorted(set(expected_effect_actions_in_order))
+            or any(not isinstance(action,str) or not re.fullmatch(r'[a-z0-9-]+:[A-Za-z0-9*]+',action)
+                for action in expected_effect_actions_in_order)):
+        raise Refusal('change-set exact sources, coordinates, bounds and effect API plan required')
+    context={'caller_identity':caller_identity,
+        'authentication_source_identity':authentication_source_identity,
+        'phase_not_before_utc':phase_not_before_utc,'validation_utc':validation_utc,
+        'freshness_max_seconds':freshness_max_seconds}
+    actions={'R45':('cloudformation:DescribeChangeSet','SEALED_CHANGE_SET_ARN'),
+        'R46':('cloudformation:GetTemplate','SEALED_STACK_ARN'),
+        'R47':('cloudformation:DescribeStacks','SEALED_STACK_ARN'),
+        'R48':('cloudformation:DescribeStackEvents','SEALED_STACK_ARN')}
+    expected_requests={'R45':{'ChangeSetName':expected_change_set_arn},
+        'R46':{'ChangeSetName':expected_change_set_arn,'TemplateStage':'Original'}}
+    responses={};previous=_r64_utc(phase_not_before_utc)
+    for row in ('R45','R46'):
+        action,selector=actions[row]
+        request,response=_iam_api_material(receipts[row],row,action,selector,maximum_items=16,**context)
+        if (request!=expected_requests[row] or receipts[row]['pagination_page']!=1
+                or _r64_utc(receipts[row]['requested_utc'])<previous):
+            raise Refusal('change-set exact request/page/source order mismatch: '+row)
+        previous=_r64_utc(receipts[row]['completed_utc']);responses[row]=response
+    change=responses['R45'];changes=change.get('Changes')
+    stack_arn=change.get('StackId')
+    if (change.get('ChangeSetId')!=expected_change_set_arn or change.get('ChangeSetName')!=expected_stack_name
+            or change.get('StackName')!=expected_stack_name
+            or not isinstance(stack_arn,str)
+            or not re.fullmatch(r'arn:aws:cloudformation:us-east-1:623609441658:stack/EBU-C0-492a4f1/[A-Za-z0-9-]+',stack_arn)
+            or change.get('Status')!='CREATE_COMPLETE' or change.get('ExecutionStatus')!='AVAILABLE'
+            or change.get('ChangeSetType')!='CREATE' or change.get('NextToken') not in (None,'')
+            or not isinstance(changes,list) or not 1<=len(changes)<=16
+            or receipts['R45']['pagination_item_count']!=len(changes)):
+        raise Refusal('change-set exact complete available CREATE response required')
+    normalized=[];logical_ids=[]
+    for item in changes:
+        resource=item.get('ResourceChange') if isinstance(item,dict) and item.get('Type')=='Resource' else None
+        if (not isinstance(resource,dict) or resource.get('Action')!='Add'
+                or not isinstance(resource.get('LogicalResourceId'),str)
+                or not isinstance(resource.get('ResourceType'),str)):
+            raise Refusal('change-set CREATE requires explicit Add resource changes')
+        logical_ids.append(resource['LogicalResourceId']);normalized.append(strict_json(canonical_bytes(item)))
+    if len(set(logical_ids))!=len(logical_ids):raise Refusal('change-set duplicate logical resource effect refused')
+    normalized.sort(key=lambda item:item['ResourceChange']['LogicalResourceId'])
+    resource_preimage={'schema':'aws_c0_effect_resource_set_preimage/v1','changes_in_order':normalized}
+    resource_identity=identity('aws_c0_effect_resource_set/v1',digest(canonical_bytes(resource_preimage)))
+    api_preimage={'schema':'aws_c0_effect_api_set_preimage/v1','resource_set_identity':resource_identity,
+        'actions_in_order':strict_json(canonical_bytes(expected_effect_actions_in_order))}
+    api_identity=identity('aws_c0_effect_api_set/v1',digest(canonical_bytes(api_preimage)))
+    template_body=responses['R46'].get('TemplateBody')
+    if (not isinstance(template_body,str) or not template_body
+            or digest(template_body.encode())!=expected_template_sha256
+            or receipts['R46']['pagination_item_count']!=1):
+        raise Refusal('change-set exact original template bytes differ')
+    for row,key in (('R47','Stacks'),('R48','StackEvents')):
+        action,selector=actions[row]
+        request,response=_iam_api_material(receipts[row],row,action,selector,maximum_items=16,**context)
+        values=response.get(key)
+        if (request!={'StackName':stack_arn} or receipts[row]['pagination_page']!=1
+                or _r64_utc(receipts[row]['requested_utc'])<previous
+                or response.get('NextToken') not in (None,'') or not isinstance(values,list)
+                or len(values)!=receipts[row]['pagination_item_count'] or len(values)>16):
+            raise Refusal('change-set stack observation request/completeness/order mismatch: '+row)
+        previous=_r64_utc(receipts[row]['completed_utc']);responses[row]=response
+    stacks=responses['R47']['Stacks']
+    if (len(stacks)!=1 or not isinstance(stacks[0],dict) or stacks[0].get('StackId')!=stack_arn
+            or stacks[0].get('StackName')!=expected_stack_name
+            or stacks[0].get('StackStatus')!='REVIEW_IN_PROGRESS'):
+        raise Refusal('change-set predeployment REVIEW_IN_PROGRESS stack required')
+    events=responses['R48']['StackEvents'];event_ids=[]
+    for event in events:
+        if (not isinstance(event,dict) or event.get('StackId')!=stack_arn
+                or event.get('StackName')!=expected_stack_name or not isinstance(event.get('EventId'),str)):
+            raise Refusal('change-set exact same-stack events required')
+        event_ids.append(event['EventId'])
+    if len(event_ids)!=len(set(event_ids)):raise Refusal('change-set duplicate stack event refused')
+    change_preimage={k:strict_json(canonical_bytes(v)) for k,v in change.items()
+        if k not in ('ResponseMetadata','NextToken','Changes')}
+    change_preimage['Changes']=normalized
+    change_identity=identity('aws_cloudformation_change_set/v1',digest(canonical_bytes(change_preimage)))
+    decoded={'schema':'aws_c0_change_set_effects_observation_preimage/v1','stack_arn':stack_arn,
+        'change_set_arn':expected_change_set_arn,'change_set_status':'CREATE_COMPLETE','change_set_type':'CREATE',
+        'change_set_identity':change_identity,'effect_api_set_identity':api_identity,
+        'effect_resource_set_identity':resource_identity,'source_row_ids':['R45','R46','R47','R48']}
+    raw=canonical_bytes(decoded);kind='aws_c0_change_set_effects_observation/v1'
+    observed=receipts['R45']['requested_utc'];age=int((_r64_utc(validation_utc)-_r64_utc(observed)).total_seconds())
+    return {'schema':kind,'kind':kind,'control':'CHANGE_SET_AND_EFFECTS','identity':identity(kind,digest(raw)),
+        'canonical_json_base64':base64.b64encode(raw).decode(),'observed_utc':observed,
+        'freshness_seconds':age,'max_freshness_seconds':freshness_max_seconds,
+        'disposition':'FRESH_COMPLETE_AUTHENTICATED_RECONSTRUCTION_PASS','decoded_json':decoded,
+        'canonical_byte_sha256':digest(raw),'canonical_byte_count':len(raw),
+        'canonical_decode_validation_disposition':'STRICT_BASE64_DECODE_CANONICAL_JSON_SCHEMA_AND_IDENTITY_PASS',
+        'freshness_within_bound':True}
+
+
+def validate_change_set_effects_reconstruction_output(output: Any, receipts: Any, **context: Any) -> dict[str,Any]:
+    if canonical_bytes(output)!=canonical_bytes(build_change_set_effects_reconstruction_output(receipts,**context)):
+        raise Refusal('change-set output differs from exact authenticated source reconstruction')
     return output
 
 

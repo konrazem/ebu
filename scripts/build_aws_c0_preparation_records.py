@@ -153,6 +153,27 @@ def build_r64_exact_request(root,source_receipts,**context):
     build_runtime_control_read_plan_fields_v2(root,freshness_max_seconds=context['freshness_max_seconds'])
     return finalizer(root).derive_r64_exact_request(source_receipts,**context)['request']
 
+def build_change_set_effects_output(root,receipts,**context):
+    authority=sequence(root);f=finalizer(root)
+    expected={'authority_id':f.CHANGE_SET_EFFECTS_RECONSTRUCTION_AUTHORITY_ID,
+        'source':'EXPLICIT_USER_AUTHORIZATION_2026_09_07_ALL_NECESSARY_REPAIRS',
+        'output':'aws_c0_change_set_effects_observation/v1','source_row_ids':['R45','R46','R47','R48'],
+        'predeployment_stack_status':'REVIEW_IN_PROGRESS','change_set_status':'CREATE_COMPLETE',
+        'change_set_execution_status':'AVAILABLE','change_set_type':'CREATE',
+        'maximum_cfn_pages':1,'maximum_cfn_items':16,'original_template_bytes_sha256_required':True,
+        'effect_resource_set_derived_from_r45_changes':True,
+        'effect_api_set_cross_bound_to_derived_resource_set':True,
+        'new_aws_actions_or_permissions_authorized':False,'science_cost_or_publication_changed':False,
+        'historical_schemas_changed':False}
+    if authority.get('change_set_effects_reconstruction_authorization')!=expected:
+        raise ValueError('exact authorized change-set reconstruction required')
+    plan=build_runtime_control_read_plan_fields_v3(root,
+        freshness_max_seconds=context['freshness_max_seconds'])
+    f.validate_runtime_control_read_plan_v3(plan['runtime_control_read_plan'],plan['runtime_control_read_plan_identity'])
+    output=f.build_change_set_effects_reconstruction_output(receipts,**context)
+    validate_named_definition(root,'reconstruction_output_tagged_union',output)
+    return output
+
 def build_r64_ingress_observation(root,source_receipts,rule_receipt,*,attempt_identity,**context):
     f=finalizer(root)
     build_r64_exact_request(root,source_receipts,**context)
