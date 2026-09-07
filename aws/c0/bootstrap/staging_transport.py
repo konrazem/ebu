@@ -13,9 +13,11 @@ PREFIX = 'rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/'
 RECOVERY_PREFIX = re.compile(
     r'^rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/[0-9a-f]{64}/$')
 DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
+DIAGNOSTIC_DOCUMENT = 'EBU-C0-Stage-Diagnostic-492a4f1-v1'
 ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
 POLICY = 'EBU-C0-Staging-Transport-v1'
+DIAGNOSTIC_POLICY = 'EBU-C0-Staging-Diagnostic-Transport-v1'
 INSTANCE_READ_POLICY = 'EBU-C0-Staging-Exact-Version-Read-v1'
 INSTANCE_ROLE = 'EBU-Rehearsal-EC2-Role'
 ARCHIVE_SHA = '4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef'
@@ -229,6 +231,113 @@ def temporary_policy(role_id,observed_utc,expires_utc):
     condition={'DateLessThan':{'aws:CurrentTime':expires_utc},'StringEquals':{
         'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
     doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{DOCUMENT}'
+    return {'Version':'2012-10-17','Statement':[
+        {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
+        {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
+
+def diagnostic_plan(failed_plan_sha256,failed_command_id,execution_start_utc,execution_end_utc):
+    """Closed read-only diagnosis for one preserved staging failure."""
+    if not isinstance(failed_plan_sha256,str) or not SHA.fullmatch(failed_plan_sha256):
+        raise ValueError('failed staging plan identity required')
+    if not isinstance(failed_command_id,str) or not re.fullmatch(
+            r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',failed_command_id):
+        raise ValueError('failed command ID required')
+    for value in (execution_start_utc,execution_end_utc):
+        if not isinstance(value,str) or not re.fullmatch(
+                r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z',value):
+            raise ValueError('exact failed-command UTC bounds required')
+    start=datetime.fromisoformat(execution_start_utc.replace('Z','+00:00'))
+    end=datetime.fromisoformat(execution_end_utc.replace('Z','+00:00'))
+    if not 0<(end-start).total_seconds()<=360:raise ValueError('bounded failed-command interval required')
+    return {'schema':'aws_c0_host_staging_read_only_diagnostic_plan/v1',
+            'account':ACCOUNT,'region':REGION,'instance_id':INSTANCE,
+            'failed_plan_sha256':failed_plan_sha256,'failed_command_id':failed_command_id,
+            'failed_execution_start_utc':execution_start_utc,'failed_execution_end_utc':execution_end_utc,
+            'scratch_archive':'/var/lib/ebu-c0/staging-'+failed_plan_sha256[:24]+'/synthetic-image.tar',
+            'archive_sha256':ARCHIVE_SHA,'archive_bytes':ARCHIVE_BYTES,
+            'image_manifest_sha256':MANIFEST_SHA,'image_config_sha256':CONFIG_SHA,
+            'maximum_instance_starts':1,'maximum_diagnostic_commands':1,'maximum_running_seconds':600,
+            'maximum_output_bytes':20000,'aggregate_cost_ceiling_minor_units':5000,
+            'docker_image_load':False,'file_write_or_delete':False,'container_execution':False,
+            'systemd_start_or_enable':False,'scientific_execution':False,'stop_required':True}
+
+def validate_diagnostic_plan(value):
+    if not isinstance(value,dict):raise ValueError('diagnostic plan object required')
+    expected=diagnostic_plan(value.get('failed_plan_sha256'),value.get('failed_command_id'),
+        value.get('failed_execution_start_utc'),value.get('failed_execution_end_utc'))
+    if value!=expected:raise ValueError('diagnostic plan differs from closed read-only plan')
+    return expected
+
+DIAGNOSTIC_BODY = r'''
+import hashlib,json,os,shutil,stat,subprocess,tarfile
+from pathlib import Path
+assert os.geteuid()==0
+ENV={'PATH':'/usr/local/bin:/usr/bin:/bin','LC_ALL':'C'}
+def call(argv,timeout=30):
+    p=subprocess.run(argv,cwd='/',env=ENV,stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout,check=False)
+    return {'returncode':p.returncode,'stdout':p.stdout.decode('utf-8','replace')[:3500],
+            'stderr':p.stderr.decode('utf-8','replace')[:3500]}
+def file_hash(path):
+    h=hashlib.sha256()
+    with path.open('rb') as stream:
+        while chunk:=stream.read(1048576):h.update(chunk)
+    return h.hexdigest()
+archive=Path(PLAN['scratch_archive']);s=archive.lstat()
+assert stat.S_ISREG(s.st_mode) and not archive.is_symlink() and s.st_uid==0 and s.st_gid==0
+assert s.st_size==PLAN['archive_bytes'] and file_hash(archive)==PLAN['archive_sha256']
+with tarfile.open(archive,'r') as outer:
+    names=set(outer.getnames())
+    index=json.load(outer.extractfile('index.json'))
+    manifest_digest=index['manifests'][0]['digest'].split(':',1)[1]
+    assert manifest_digest==PLAN['image_manifest_sha256']
+    manifest=json.load(outer.extractfile('blobs/sha256/'+manifest_digest))
+    assert manifest['config']['digest']=='sha256:'+PLAN['image_config_sha256']
+    required=['blobs/sha256/'+manifest_digest,'blobs/sha256/'+PLAN['image_config_sha256']]
+    required += ['blobs/sha256/'+layer['digest'].split(':',1)[1] for layer in manifest['layers']]
+    assert all(name in names for name in required)
+template=chr(123)*2+'json .'+chr(125)*2
+docker_version=call(['/usr/bin/docker','version','--format',template])
+docker_info=call(['/usr/bin/docker','info','--format',template])
+image_inspect=call(['/usr/bin/docker','image','inspect','sha256:'+PLAN['image_config_sha256']])
+journal=call(['/usr/bin/journalctl','--unit=docker','--since',PLAN['failed_execution_start_utc'],
+    '--until',PLAN['failed_execution_end_utc'],'--no-pager','--lines=120','--output=short-iso'],30)
+free=shutil.disk_usage('/var/lib')
+result={'schema':'aws_c0_host_staging_read_only_diagnostic_result/v1',
+    'plan_sha256':PLAN_ID,'archive_present_and_verified':True,'archive_mode':stat.S_IMODE(s.st_mode),
+    'archive_uid':s.st_uid,'archive_gid':s.st_gid,'required_oci_members_present':True,
+    'docker_version':docker_version,'docker_info':docker_info,'image_inspect':image_inspect,
+    'docker_journal':journal,'var_lib_free_bytes':free.free,'var_lib_total_bytes':free.total,
+    'docker_image_load_executed':False,'file_written_or_deleted':False,'container_executed':False,
+    'service_started_or_enabled':False,'scientific_execution':False}
+raw=json.dumps(result,sort_keys=True,separators=(',',':'))
+assert len(raw.encode())<=PLAN['maximum_output_bytes']
+print(raw)
+'''
+
+def diagnostic_document(value):
+    validate_diagnostic_plan(value)
+    encoded=base64.b64encode(canonical({'PLAN':value,'PLAN_ID':digest(value)})).decode()
+    script="import base64,json\nglobals().update(json.loads(base64.b64decode('"+encoded+"')))\n"+DIAGNOSTIC_BODY
+    compile(script,'<nonexecuted-staging-diagnostic>','exec')
+    if '{{' in script:raise ValueError('SSM parser parameter marker refused')
+    return {'schemaVersion':'2.2','description':'Read-only diagnosis of one preserved AWS-C0 staging failure.',
+            'parameters':{},'mainSteps':[{'action':'aws:runShellScript','name':'diagnoseC0StagingFailure',
+            'precondition':{'StringEquals':['platformType','Linux']},
+            'inputs':{'timeoutSeconds':'180','runCommand':["set -eu\n/usr/bin/python3 - <<'C0_FIXED_DIAG'\n"+script+"\nC0_FIXED_DIAG\n"]}}]}
+
+def diagnostic_temporary_policy(role_id,observed_utc,expires_utc):
+    if not isinstance(role_id,str) or not re.fullmatch(r'AROA[A-Z0-9]{12,32}',role_id):
+        raise ValueError('exact role ID required')
+    times=[]
+    for value in (observed_utc,expires_utc):
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',value):raise ValueError('exact UTC required')
+        times.append(datetime.fromisoformat(value.replace('Z','+00:00')))
+    if not 0<(times[1]-times[0]).total_seconds()<=3600:raise ValueError('bounded diagnostic lifetime required')
+    condition={'DateLessThan':{'aws:CurrentTime':expires_utc},'StringEquals':{
+        'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
+        'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
+    doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{DIAGNOSTIC_DOCUMENT}'
     return {'Version':'2012-10-17','Statement':[
         {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
         {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}

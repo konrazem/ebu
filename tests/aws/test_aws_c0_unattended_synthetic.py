@@ -2926,6 +2926,46 @@ class ByteBoundStagingTests(unittest.TestCase):
                 S.instance_read_policy(p, receipts, b'controller\n', b'unit\n',
                                        '2026-09-06T15:00:00Z', expiry)
 
+    def test_read_only_diagnostic_is_closed_and_cannot_repeat_image_load(self):
+        plan=S.diagnostic_plan('b'*64,'61bfd52b-8959-43c0-9a0c-cfeebe04a19b',
+            '2026-09-07T21:28:28.953Z','2026-09-07T21:28:56.953Z')
+        self.assertEqual(S.validate_diagnostic_plan(plan),plan)
+        self.assertEqual(plan['scratch_archive'],'/var/lib/ebu-c0/staging-'+'b'*24+'/synthetic-image.tar')
+        self.assertFalse(plan['docker_image_load'])
+        document=S.diagnostic_document(plan)
+        body=document['mainSteps'][0]['inputs']['runCommand'][0]
+        self.assertEqual(document['parameters'],{})
+        self.assertNotIn('{{',body)
+        for forbidden in ("'image','load'","'docker','run'","'systemctl','start'",
+                          "'systemctl','enable'",'.unlink(','.write_','aws s3'):
+            self.assertNotIn(forbidden,body)
+        compile(S.DIAGNOSTIC_BODY,'<nonexecuted-staging-diagnostic-body>','exec')
+
+    def test_read_only_diagnostic_refuses_changed_bounds_or_failed_identity(self):
+        plan=S.diagnostic_plan('b'*64,'61bfd52b-8959-43c0-9a0c-cfeebe04a19b',
+            '2026-09-07T21:28:28.953Z','2026-09-07T21:28:56.953Z')
+        for field,bad in [('maximum_instance_starts',2),('docker_image_load',True),
+                          ('archive_sha256','0'*64),('file_write_or_delete',True)]:
+            changed=copy.deepcopy(plan);changed[field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                S.diagnostic_document(changed)
+        for args in (('x'*64,plan['failed_command_id'],plan['failed_execution_start_utc'],plan['failed_execution_end_utc']),
+                     ('b'*64,'not-a-command',plan['failed_execution_start_utc'],plan['failed_execution_end_utc']),
+                     ('b'*64,plan['failed_command_id'],plan['failed_execution_end_utc'],plan['failed_execution_start_utc'])):
+            with self.assertRaises(ValueError):S.diagnostic_plan(*args)
+
+    def test_diagnostic_policy_is_expiring_and_scoped_to_exact_document_and_instance(self):
+        policy=S.diagnostic_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+            '2026-09-07T21:30:00Z','2026-09-07T22:00:00Z')
+        encoded=S.canonical(policy).decode()
+        self.assertNotIn('Resource":"*',encoded)
+        self.assertIn(S.DIAGNOSTIC_DOCUMENT,encoded)
+        self.assertIn(S.INSTANCE,encoded)
+        self.assertNotIn(S.DOCUMENT+'"',encoded)
+        with self.assertRaises(ValueError):
+            S.diagnostic_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+                '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
+
 
 class ImageManifestBindingTests(unittest.TestCase):
     def verify(self, inspection):

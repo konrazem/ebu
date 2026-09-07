@@ -70,3 +70,22 @@ remains unchanged for historical validation.
 Staging is not smoke success. The final deployment/launch records must still
 bind real post-staging artifacts, exact change-set contents, bounded credentials,
 pricing and the preserved evidence graph before the one platform smoke attempt.
+
+## Failed image-load diagnosis
+
+If the one staging command fails after it has verified and retained the exact
+archive, preserve that attempt and its cleanup as terminal. A fresh diagnostic
+may start the same stopped `t3.small` once, issue one parameter-free private SSM
+command, and stop it within 600 seconds. The diagnostic may only hash and inspect
+the retained archive, read Docker client/server facts, check whether the exact
+configuration identity is already present, read the bounded Docker journal
+interval corresponding to the failed command, and report free space. It must not
+load or run an image, write or delete a host file, start or enable a service,
+contact S3, or execute science. Its temporary document and exact-document/host
+transport policy must be absent again after the verified stop.
+
+This diagnostic is recovery observation, not replay of the terminal staging
+command and not a platform smoke. It changes no artifact byte, historical plan,
+AWS permission boundary, scientific content, or USD50 aggregate ceiling. A
+subsequent corrective staging attempt must be separately versioned from the
+preserved v1/v2 plans and must bind the diagnostic result before it can run.
