@@ -53,7 +53,7 @@ def main() -> int:
     proposal = json.loads(PROPOSAL.read_bytes())
     if proposal["proposal_status"] != "PROSPECTIVE_NOT_EXECUTION_AUTHORITY":
         raise RuntimeError("proposal cannot grant execution authority")
-    if proposal["permitted_api_operations"] != ["HeadObject", "GetObject"]:
+    if proposal["permitted_api_operations"] != ["GetObject"]:
         raise RuntimeError("only exact-version read API operations are permitted")
     if proposal["permitted_iam_actions"] != ["s3:GetObjectVersion"]:
         raise RuntimeError("only the version-specific read IAM action is permitted")
@@ -92,6 +92,26 @@ def main() -> int:
         if item["artifact_class"] in SOURCE_PATHS:
             verify_bytes(item, SOURCE_PATHS[item["artifact_class"]].read_bytes())
 
+    policy = proposal["exact_transfer_iam_policy"]
+    if policy.get("Version") != "2012-10-17" or len(policy.get("Statement", [])) != 8:
+        raise RuntimeError("eight-statement exact transfer policy required")
+    expected_resources = {
+        "arn:aws:s3:::" + proposal["bucket"] + "/" + item["key"]: item["version_id"]
+        for item in artifacts
+    }
+    actual_resources = {}
+    for statement in policy["Statement"]:
+        if statement.get("Effect") != "Allow" or statement.get("Action") != "s3:GetObjectVersion":
+            raise RuntimeError("transfer policy action is not exact-version read only")
+        resource = statement.get("Resource")
+        version_id = statement.get("Condition", {}).get("StringEquals", {}).get("s3:VersionId")
+        resource_account = statement.get("Condition", {}).get("StringEquals", {}).get("s3:ResourceAccount")
+        if resource in actual_resources or resource_account != proposal["aws_account_id"]:
+            raise RuntimeError("transfer policy resource binding is not one-to-one")
+        actual_resources[resource] = version_id
+    if actual_resources != expected_resources:
+        raise RuntimeError("transfer policy does not bind every exact object version")
+
     spec = importlib.util.spec_from_file_location(
         "deployment_manifest", ROOT / "scripts/build_aws_c0_deployment_manifest.py"
     )
@@ -118,6 +138,14 @@ def main() -> int:
 
     if not all(proposal["explicit_exclusions"].values()):
         raise RuntimeError("every excluded scope must remain excluded")
+    if proposal["current_contract_blocker"] != {
+        "contract": "aws_c0_live_preparation_choreography_correction_contract.json",
+        "rule": "C0-LPC-N34",
+        "rule_text": "EXISTING_OBJECT_KEY_REUSE_REFUSES",
+        "required_narrow_amendment": "DISTINGUISH_EXACT_READ_ONLY_IMMUTABLE_VERSION_REUSE_FROM_OBJECT_CREATION_OVERWRITE_OR_DELETE",
+        "amendment_scope_limit": "THE_FRESH_KEY_RULE_REMAINS_MANDATORY_FOR_EVERY_NEW_PREPARATION_RECORD_AND_ALL_WRITES",
+    }:
+        raise RuntimeError("current contract blocker is not closed")
     subprocess.run(["git", "diff", "--check"], cwd=ROOT, check=True)
     print(json.dumps({
         "disposition": "LOCAL_TRANSFER_RECOVERY_PROPOSAL_PASS",

@@ -14,10 +14,7 @@
   "artifact_reuse_is_attempt_replay": false,
   "artifact_count": 8,
   "aggregate_bytes": 415108495,
-  "permitted_api_operations": [
-    "HeadObject",
-    "GetObject"
-  ],
+  "permitted_api_operations": ["GetObject"],
   "permitted_iam_actions": [
     "s3:GetObjectVersion"
   ],
@@ -134,11 +131,31 @@
       "etag": "\"c2ce2b08926d1b2a4c36b13e59c46a87\""
     }
   ],
+  "exact_transfer_iam_policy": {
+    "Version": "2012-10-17",
+    "Statement": [
+      {"Sid": "ReadExactStateMachineVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/86b4d877b2b99fce37e92360637e06fd905d9ad6ebc5c43b897768dc1631e936/aws-c0.asl.json", "Condition": {"StringEquals": {"s3:VersionId": "N1mqaYrLKjlWG2QmTrVs3o5kieUzP.rV", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactSsmDocumentVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/e5e61f9f9bcb0808afabe4be1ef62ff5fbc4f025e8947162144bee7a3e4ea214/EBU-C0-Start-v1.yaml", "Condition": {"StringEquals": {"s3:VersionId": "Q6fMRq30wHfQVJ1vItnA5MFITFWG7P4O", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactControllerVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/cdbb185849a7a98872c59ab16951ab2ee184da89cfe004abe6be9337b95734e3/ebu_c0_controller.py", "Condition": {"StringEquals": {"s3:VersionId": "39er9sZffadlDiuIyjG_8b39bw9rvAKW", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactSystemdUnitVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/76d083c2daa97b4329426047d92f2dddf010eae7babd9afca9d4694aff452a26/ebu-c0@.service", "Condition": {"StringEquals": {"s3:VersionId": "RMSW7n6lX3UzGOCrQE4XOiGoavH6rYq6", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactFinalizerVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/cdc676d7362eed8db836d39b196f5dbd06b7c1fd67372cb43e554a55be12f297/finalizer.zip", "Condition": {"StringEquals": {"s3:VersionId": ".G6X2WbW.7DOY.i2T5Cs0FG94YCa.isD", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactSyntheticImageVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef/synthetic-image.tar", "Condition": {"StringEquals": {"s3:VersionId": "EUy4lre3twBXGR5cAx72zeS_tV4vJR84", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactDockerfileVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/cc4e16c60c5a8527a3b1e260f6a138b361d5e57d89c4bfab24bc945555559b9a/Dockerfile", "Condition": {"StringEquals": {"s3:VersionId": "uHvqdBJvUEQJb8ea1AH1tsMzZes1JbVi", "s3:ResourceAccount": "623609441658"}}},
+      {"Sid": "ReadExactCloudFormationTemplateVersion", "Effect": "Allow", "Action": "s3:GetObjectVersion", "Resource": "arn:aws:s3:::ebu-stage-f-results-k7m4p2/rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/44565e50ba6e820c4d7aadd62c2b8668ef73508f8291f4379532c3891986f905/aws-c0-unattended-synthetic.yaml", "Condition": {"StringEquals": {"s3:VersionId": "2gbmmzA.6mmXKN3xdCVIDH8G6_0g7quA", "s3:ResourceAccount": "623609441658"}}}
+    ]
+  },
   "required_future_versioned_changes": [
     "A_NEW_PREPARATION_PACKET_SCHEMA_MUST_BIND_THESE_EXACT_EXISTING_VERSION_RECEIPTS_INSTEAD_OF_NEW_ARTIFACT_PUT_TARGETS",
     "A_NEW_VALIDATION_CASE_MUST_DISTINGUISH_EXACT_IMMUTABLE_ARTIFACT_VERSION_REUSE_FROM_ATTEMPT_REPLAY",
     "ALL_GENERATED_PREPARATION_RECORDS_REMAIN_FRESH_CONDITIONAL_CHECKSUMMED_VERSIONED_PUTS_UNDER_A_FRESH_ATTEMPT_PREFIX"
   ],
+  "current_contract_blocker": {
+    "contract": "aws_c0_live_preparation_choreography_correction_contract.json",
+    "rule": "C0-LPC-N34",
+    "rule_text": "EXISTING_OBJECT_KEY_REUSE_REFUSES",
+    "required_narrow_amendment": "DISTINGUISH_EXACT_READ_ONLY_IMMUTABLE_VERSION_REUSE_FROM_OBJECT_CREATION_OVERWRITE_OR_DELETE",
+    "amendment_scope_limit": "THE_FRESH_KEY_RULE_REMAINS_MANDATORY_FOR_EVERY_NEW_PREPARATION_RECORD_AND_ALL_WRITES"
+  },
   "explicit_exclusions": {
     "other_buckets": true,
     "other_prefixes": true,
