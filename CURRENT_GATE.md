@@ -1,5 +1,21 @@
 # AWS-C0 current gate
 
+- Runtime-artifact compatibility successors are complete at implementation
+  commits `231783ae7f97008c174f60691aab098804351568` and
+  `fd259192d3e6e98242fe19cee2b66499739b2081`. Packet/v8 and all eight
+  historical VersionIds remain immutable evidence. The prospective packet/v9
+  chain retains six exact existing artifact receipts and permits only two new
+  private content-addressed receipts: committed controller bytes and the
+  deterministic stored finalizer archive. Their SHA-256 and byte counts are
+  derived from committed bytes, not supplied by a caller. All 340 prior schema
+  definitions are unchanged; six v9/v8 successor definitions were added.
+  The full 289-test offline AWS-C0 suite passed in 114.862 seconds; one focused
+  review approved `fd25919`. No AWS action, deployment, formal smoke, science,
+  push, merge, publication, or release occurred in this repair. Current
+  disposition: `RUNTIME_ARTIFACT_SUCCESSOR_READY_FOR_FRESH_PACKET_CONSTRUCTION`.
+  The user will perform any formal AWS smoke external actions manually after a
+  fresh packet receives its exact packet-specific authorization.
+
 - Prospective downstream carrier successors are implemented at commit
   `fc3293107d841980a52f2f261d7219c5d84258ef`, tree
   `6d55f2683a24a0e47db3673e67dc3227f696044b`: preparation packet/v8,
