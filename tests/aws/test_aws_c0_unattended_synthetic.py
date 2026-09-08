@@ -50,10 +50,11 @@ class CompletePreparationBuilderTests(unittest.TestCase):
                 'bytes':item['bytes'],'sha256':item['sha256'],
                 'checksum_sha256_base64':item['checksum_sha256_base64']}
                 for item in proposal['artifacts']]
-        for index,filename,digest_value in ((2,'ebu_c0_controller.py','a'*64),(4,'finalizer.zip','b'*64)):
+        successors=G.runtime_successor_artifacts(ROOT)
+        for index,(filename,byte_count,digest_value) in successors.items():
             receipts[index]={'bucket_identity':bucket,
                 'key':f'recovery/test-runtime-successors/artifacts/{digest_value}/{filename}',
-                'version_id':f'fresh-version-{index}','bytes':1,'sha256':digest_value,
+                'version_id':f'fresh-version-{index}','bytes':byte_count,'sha256':digest_value,
                 'checksum_sha256_base64':base64.b64encode(bytes.fromhex(digest_value)).decode()}
         return {
             'schema':'aws_c0_preparation_packet/v9',
@@ -158,7 +159,9 @@ class CompletePreparationBuilderTests(unittest.TestCase):
             (lambda x:x['sealed_source_transfer_proposal_identity'].update(
                 value='0'*64,sha256='0'*64),'proposal identity'),
             (lambda x:x['sealed_source_downstream_carrier_compatibility_contract_identity'].update(
-                value='0'*64,sha256='0'*64),'downstream compatibility')):
+                value='0'*64,sha256='0'*64),'downstream compatibility'),
+            (lambda x:x['sealed_artifact_version_receipts'][2].update(sha256='0'*64),
+             'exact runtime successor receipt')):
             candidate=copy.deepcopy(fields);mutation(candidate)
             with self.subTest(pattern=pattern),self.assertRaisesRegex(ValueError,pattern):
                 G.validate_sealed_source_packet_fields(ROOT,candidate)

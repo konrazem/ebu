@@ -23,6 +23,17 @@ COMPLETION_ROWS=frozenset(('R38','R44','R54','R55','R56','R57','R58'))
 
 def sequence(root):return json.loads((root/SEQUENCE).read_bytes())
 
+def runtime_successor_artifacts(root):
+    """Derive the only two permitted successor payloads from committed bytes."""
+    spec=importlib.util.spec_from_file_location(
+        'aws_c0_runtime_successor_manifest',root/'scripts/build_aws_c0_deployment_manifest.py')
+    manifest=importlib.util.module_from_spec(spec);spec.loader.exec_module(manifest)
+    records={item['kind']:item for item in manifest.build(root)['artifacts']}
+    return {
+        2:('ebu_c0_controller.py',records['controller']['byte_count'],records['controller']['sha256']),
+        4:('finalizer.zip',records['finalizer_zip']['byte_count'],records['finalizer_zip']['sha256']),
+    }
+
 def currentize(root,value):
     contract=sequence(root)
     recovery=json.loads((root/SEALED_SOURCE_PACKET).read_bytes())
@@ -1016,16 +1027,16 @@ def validate_sealed_source_packet_fields(root,value):
                 runtime['exact_new_private_artifact_put_count']!=2):
             raise ValueError('runtime-artifact compatibility composition drift')
         receipts=value['sealed_artifact_version_receipts']
-        successor_indices={2:'ebu_c0_controller.py',4:'finalizer.zip'}
+        successor_indices=runtime_successor_artifacts(root)
         for index,(actual,historical) in enumerate(zip(receipts,expected)):
             if index not in successor_indices:
                 if actual!=historical:
                     raise ValueError('one of six unchanged artifact receipts changed')
                 continue
-            filename=successor_indices[index]
+            filename,expected_bytes,expected_sha256=successor_indices[index]
             if (actual['bucket_identity']!=value['artifact_bucket_identity'] or
                     actual['version_id'] in ('','null',historical['version_id']) or
-                    actual['sha256']==historical['sha256'] or actual['bytes']<1 or
+                    actual['sha256']!=expected_sha256 or actual['bytes']!=expected_bytes or
                     not actual['key'].endswith('/artifacts/'+actual['sha256']+'/'+filename) or
                     base64.b64encode(bytes.fromhex(actual['sha256'])).decode()!=
                         actual['checksum_sha256_base64']):
