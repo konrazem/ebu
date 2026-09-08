@@ -137,3 +137,14 @@ It does not assert that mismatches pass. It may start the existing stopped
 seconds and remove its exact temporary document and policy. It cannot load or
 run an image, mutate a host file, invoke systemd, contact S3 or a registry,
 consume the platform smoke, or execute science.
+
+The v2 diagnostic passed. The loaded image's exact tag, sole filtered
+repository/tag row, manifest digest, OS, architecture, user, and working
+directory all match. The sole mismatch is representational: Docker 29.7.2 with
+the containerd image store reports image `Id` as the sealed manifest digest,
+not the OCI configuration digest. A prospective finalizer repair may therefore
+bind the already-proved archive manifest-to-configuration relationship, require
+the loaded image ID and image-list digest to equal the sealed manifest digest,
+and retain the separate exact configuration-field checks. It must not weaken or
+remove any manifest, platform, user, working-directory, retained-byte, cleanup,
+cost, no-container, no-smoke, or no-science requirement.
