@@ -1,0 +1,165 @@
+{
+  "schema": "aws_c0_sealed_source_transfer_recovery_proposal/v1",
+  "record_class": "NON_SCIENTIFIC_AWS_C0_OPERATIONAL_PROPOSAL",
+  "proposal_status": "PROSPECTIVE_NOT_EXECUTION_AUTHORITY",
+  "source_implementation_commit": "1aa16a052797dd323ac2aac9b770ef72a4d46eb1",
+  "source_implementation_tree": "08e684c02df86549ab928e0d9731912046d5fb1b",
+  "aws_account_id": "623609441658",
+  "region": "us-east-1",
+  "bucket": "ebu-stage-f-results-k7m4p2",
+  "bucket_identity_sha256": "c4f2892489fa16844b0b9fe37f992f2d27281c2610d30ac2d4027a1cd2fd3874",
+  "source_prefix": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/",
+  "prior_publication_progress_sha256": "cfca2af15df36bef59b12732a6e3e6807032e41d2900a6bb07f4b735a0c7b077",
+  "prior_attempt_identity_sha256": "7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7",
+  "artifact_reuse_is_attempt_replay": false,
+  "artifact_count": 8,
+  "aggregate_bytes": 415108495,
+  "permitted_api_operations": [
+    "HeadObject",
+    "GetObject"
+  ],
+  "permitted_iam_actions": [
+    "s3:GetObjectVersion"
+  ],
+  "required_request_constraints": {
+    "bucket": "ebu-stage-f-results-k7m4p2",
+    "expected_bucket_owner": "623609441658",
+    "checksum_mode": "ENABLED",
+    "version_id": "EXACT_BOUND_VERSION_ID_ONLY"
+  },
+  "transfer_operation": {
+    "api_operation": "GetObject",
+    "iam_action": "s3:GetObjectVersion",
+    "source_selector": "EXACT_BOUND_BUCKET_KEY_AND_VERSION_ID_ONLY",
+    "destination": "EPHEMERAL_LOCAL_VALIDATION_PATH_ONLY",
+    "required_response_readback": "RETURNED_VERSION_ID_MUST_EQUAL_BOUND_VERSION_ID",
+    "required_content_verification": "DOWNLOADED_BYTES_SHA256_AND_LENGTH_MUST_EQUAL_BOUND_VALUES",
+    "retention": "DISPOSE_AFTER_VALIDATION"
+  },
+  "prohibited_api_operations": [
+    "PutObject",
+    "CopyObject",
+    "DeleteObject",
+    "DeleteObjects",
+    "ListObjectsV2",
+    "ListObjectVersions"
+  ],
+  "prohibited_iam_actions": [
+    "s3:GetObject",
+    "s3:PutObject",
+    "s3:DeleteObject",
+    "s3:DeleteObjectVersion",
+    "s3:ListBucket",
+    "s3:ListBucketVersions"
+  ],
+  "artifacts": [
+    {
+      "artifact_class": "STATE_MACHINE_DEFINITION",
+      "source": "aws/c0/state-machine/aws-c0.asl.json",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/86b4d877b2b99fce37e92360637e06fd905d9ad6ebc5c43b897768dc1631e936/aws-c0.asl.json",
+      "version_id": "N1mqaYrLKjlWG2QmTrVs3o5kieUzP.rV",
+      "sha256": "86b4d877b2b99fce37e92360637e06fd905d9ad6ebc5c43b897768dc1631e936",
+      "bytes": 26807,
+      "checksum_sha256_base64": "hrTYd7K5n8436SNgY34G/ZBdmtbrxcQ7iXdo3BYx6TY=",
+      "etag": "\"85549eb60b92764adc98cc6b90a56722\""
+    },
+    {
+      "artifact_class": "SSM_DOCUMENT",
+      "source": "aws/c0/ssm/EBU-C0-Start-v1.yaml",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/e5e61f9f9bcb0808afabe4be1ef62ff5fbc4f025e8947162144bee7a3e4ea214/EBU-C0-Start-v1.yaml",
+      "version_id": "Q6fMRq30wHfQVJ1vItnA5MFITFWG7P4O",
+      "sha256": "e5e61f9f9bcb0808afabe4be1ef62ff5fbc4f025e8947162144bee7a3e4ea214",
+      "bytes": 14423,
+      "checksum_sha256_base64": "5eYfn5vLCAivq+S+HvYv9fvE8CXolHFiFEvuej5OohQ=",
+      "etag": "\"19561b3ba347aa7727d821c759c2b77b\""
+    },
+    {
+      "artifact_class": "CONTROLLER",
+      "source": "aws/c0/controller/ebu_c0_controller.py",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/cdbb185849a7a98872c59ab16951ab2ee184da89cfe004abe6be9337b95734e3/ebu_c0_controller.py",
+      "version_id": "39er9sZffadlDiuIyjG_8b39bw9rvAKW",
+      "sha256": "cdbb185849a7a98872c59ab16951ab2ee184da89cfe004abe6be9337b95734e3",
+      "bytes": 147532,
+      "checksum_sha256_base64": "zbsYWEmnqYhyxZqxaVGrLuGE2onP4ASr5r6TN7lXNOM=",
+      "etag": "\"1feefb0ca951659ffc50e5f33140158e\""
+    },
+    {
+      "artifact_class": "SYSTEMD_UNIT",
+      "source": "aws/c0/controller/ebu-c0@.service",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/76d083c2daa97b4329426047d92f2dddf010eae7babd9afca9d4694aff452a26/ebu-c0@.service",
+      "version_id": "RMSW7n6lX3UzGOCrQE4XOiGoavH6rYq6",
+      "sha256": "76d083c2daa97b4329426047d92f2dddf010eae7babd9afca9d4694aff452a26",
+      "bytes": 1383,
+      "checksum_sha256_base64": "dtCDwtqpe0MpQmBH2S8t3fAQ6ue6vZr8qdRpSv9FKiY=",
+      "etag": "\"43bbf160b1bb8f076497fb247bff8225\""
+    },
+    {
+      "artifact_class": "FINALIZER_ZIP",
+      "source": "DETERMINISTIC_ZIP_FROM_aws/c0/finalizer/finalizer.py",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/cdc676d7362eed8db836d39b196f5dbd06b7c1fd67372cb43e554a55be12f297/finalizer.zip",
+      "version_id": ".G6X2WbW.7DOY.i2T5Cs0FG94YCa.isD",
+      "sha256": "cdc676d7362eed8db836d39b196f5dbd06b7c1fd67372cb43e554a55be12f297",
+      "bytes": 407706,
+      "checksum_sha256_base64": "zcZ21zYu7Y24NtObGW9dvQa3wf1nNyy0PlVKVb4S8pc=",
+      "etag": "\"ee4f33344620e95140c969f783b9a0dc\""
+    },
+    {
+      "artifact_class": "SYNTHETIC_IMAGE_ARCHIVE",
+      "source": "ebu-aws-c0-platform-smoke-45afc9a-lf-linux-amd64.tar",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef/synthetic-image.tar",
+      "version_id": "EUy4lre3twBXGR5cAx72zeS_tV4vJR84",
+      "sha256": "4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef",
+      "bytes": 414462464,
+      "checksum_sha256_base64": "S+gvoGkoZEFnw6LWXB2hBkuRCHKoQdRLDTq0pb+DV+8=",
+      "etag": "\"f5e0d5d63bdb20a9c1f670192706d687\""
+    },
+    {
+      "artifact_class": "CONTAINER_RUNTIME_POLICY",
+      "source": "aws/c0/container/Dockerfile",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/cc4e16c60c5a8527a3b1e260f6a138b361d5e57d89c4bfab24bc945555559b9a/Dockerfile",
+      "version_id": "uHvqdBJvUEQJb8ea1AH1tsMzZes1JbVi",
+      "sha256": "cc4e16c60c5a8527a3b1e260f6a138b361d5e57d89c4bfab24bc945555559b9a",
+      "bytes": 818,
+      "checksum_sha256_base64": "zE4WxgxahSejseJg9qE4s2HV5X2JxL+rJLyUVVVVm5o=",
+      "etag": "\"102261d875c20226e516920335de4638\""
+    },
+    {
+      "artifact_class": "CLOUDFORMATION_TEMPLATE",
+      "source": "aws/c0/cloudformation/aws-c0-unattended-synthetic.yaml",
+      "key": "rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/7a5bd8a4875e59e60aad5342c79869e9ae86e2fa50a96645d92267d448af07e7/artifacts/44565e50ba6e820c4d7aadd62c2b8668ef73508f8291f4379532c3891986f905/aws-c0-unattended-synthetic.yaml",
+      "version_id": "2gbmmzA.6mmXKN3xdCVIDH8G6_0g7quA",
+      "sha256": "44565e50ba6e820c4d7aadd62c2b8668ef73508f8291f4379532c3891986f905",
+      "bytes": 47362,
+      "checksum_sha256_base64": "RFZeULpuggxNeq3WLCuGaO9zUI+CkfQ3lTLDiRmG+QU=",
+      "etag": "\"c2ce2b08926d1b2a4c36b13e59c46a87\""
+    }
+  ],
+  "required_future_versioned_changes": [
+    "A_NEW_PREPARATION_PACKET_SCHEMA_MUST_BIND_THESE_EXACT_EXISTING_VERSION_RECEIPTS_INSTEAD_OF_NEW_ARTIFACT_PUT_TARGETS",
+    "A_NEW_VALIDATION_CASE_MUST_DISTINGUISH_EXACT_IMMUTABLE_ARTIFACT_VERSION_REUSE_FROM_ATTEMPT_REPLAY",
+    "ALL_GENERATED_PREPARATION_RECORDS_REMAIN_FRESH_CONDITIONAL_CHECKSUMMED_VERSIONED_PUTS_UNDER_A_FRESH_ATTEMPT_PREFIX"
+  ],
+  "explicit_exclusions": {
+    "other_buckets": true,
+    "other_prefixes": true,
+    "unversioned_reads": true,
+    "new_artifact_uploads": true,
+    "object_copy": true,
+    "object_delete": true,
+    "object_listing": true,
+    "credential_transfer": true,
+    "instance_start": true,
+    "deployment": true,
+    "platform_smoke": true,
+    "scientific_execution": true,
+    "push": true,
+    "merge": true,
+    "public_release": true
+  },
+  "cost_ceiling_minor_units": 5000,
+  "maximum_platform_smokes": 1,
+  "scientific_content_changed": false,
+  "historical_schemas_changed": false,
+  "historical_evidence_changed": false,
+  "disposition": "COMMITTED_REVIEWABLE_READ_ONLY_ARTIFACT_REUSE_PROPOSAL"
+}
