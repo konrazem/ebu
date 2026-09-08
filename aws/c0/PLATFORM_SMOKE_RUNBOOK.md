@@ -15,6 +15,12 @@ the returned non-null VersionId, and compared byte-for-byte and by SHA-256.
 Upload and retrieval receipts are part of the sealed evidence. Any missing or
 mismatched member refuses formal PASS.
 
+The attempt timestamp is part of the attempt ID, plan, host binding, AWS command
+chronology, and seal-time freshness check. Cleanup is armed before StartInstances.
+One absolute 900-second post-start deadline governs every running-host wait and
+cleanup, with 300 seconds reserved for stop/readback and bounded AWS CLI calls.
+Unknown or out-of-order worker rows refuse PASS.
+
 The command runs only the inert `SUCCESS` synthetic worker in a networkless,
 read-only, non-root, capability-free, resource-bounded container. It is a
 non-scientific platform smoke. Earlier manual execution is diagnostic only and
@@ -38,18 +44,33 @@ RUN_DIR="$(pwd)/aws-c0-platform-smoke-${ATTEMPT}"
 TOOL='aws/c0/bootstrap/platform_smoke_transport.py'
 STARTED=0
 STOPPED=0
+RUN_DEADLINE_EPOCH=0
+
+aws_c0() {
+  aws --profile "$PROFILE" --region "$REGION" \
+    --cli-connect-timeout 5 --cli-read-timeout 20 "$@"
+}
 
 stop_and_record() {
   if [ "$STARTED" -eq 1 ] && [ "$STOPPED" -eq 0 ]; then
     set +e
-    aws --profile "$PROFILE" --region "$REGION" ec2 stop-instances \
+    aws_c0 ec2 stop-instances \
       --instance-ids "$INSTANCE" --output json > "$RUN_DIR/stop-request.json"
-    aws --profile "$PROFILE" --region "$REGION" ec2 wait instance-stopped \
-      --instance-ids "$INSTANCE"
-    if aws --profile "$PROFILE" --region "$REGION" ec2 describe-instances \
-      --instance-ids "$INSTANCE" --output json > "$RUN_DIR/stopped-instance.json"; then
-      STOPPED=1
-    fi
+    while [ "$(date -u +%s)" -le "$RUN_DEADLINE_EPOCH" ]; do
+      if aws_c0 ec2 describe-instances --instance-ids "$INSTANCE" \
+        --output json > "$RUN_DIR/stopped-instance.json" && \
+        python3 - "$RUN_DIR/stopped-instance.json" "$ACCOUNT" "$INSTANCE" <<'PY'
+import json,sys
+rows=json.load(open(sys.argv[1],encoding='utf-8'))['Reservations']
+instances=rows[0]['Instances'] if len(rows)==1 and rows[0]['OwnerId']==sys.argv[2] else []
+raise SystemExit(0 if len(instances)==1 and instances[0]['InstanceId']==sys.argv[3] and instances[0]['State']=={'Code':80,'Name':'stopped'} else 1)
+PY
+      then
+        if [ "$(date -u +%s)" -le "$RUN_DEADLINE_EPOCH" ]; then STOPPED=1; fi
+        break
+      fi
+      sleep 5
+    done
     set -e
   fi
 }
@@ -57,9 +78,11 @@ trap stop_and_record EXIT
 trap 'exit 130' HUP INT TERM
 
 python3 "$TOOL" prepare --attempt-id "$ATTEMPT" --output-dir "$RUN_DIR"
-aws --profile "$PROFILE" --region "$REGION" sts get-caller-identity \
+PREPARED_EPOCH="$(python3 -c 'import datetime,json,sys;v=json.load(open(sys.argv[1]))["prepared_utc"];print(int(datetime.datetime.fromisoformat(v.replace("Z","+00:00")).timestamp()))' "$RUN_DIR/plan.json")"
+SEND_DEADLINE_EPOCH=$((PREPARED_EPOCH + 300))
+aws_c0 sts get-caller-identity \
   --output json > "$RUN_DIR/caller-identity.json"
-aws --profile "$PROFILE" --region "$REGION" ec2 describe-instances \
+aws_c0 ec2 describe-instances \
   --instance-ids "$INSTANCE" --output json > "$RUN_DIR/pre-start-instance.json"
 python3 - "$RUN_DIR/caller-identity.json" "$RUN_DIR/pre-start-instance.json" "$ACCOUNT" "$INSTANCE" <<'PY'
 import json,sys
@@ -74,16 +97,32 @@ assert instances[0]['InstanceType']=='t3.small'
 assert instances[0]['State']=={'Code':80,'Name':'stopped'}
 PY
 
-aws --profile "$PROFILE" --region "$REGION" ec2 start-instances \
-  --instance-ids "$INSTANCE" --output json > "$RUN_DIR/start-request.json"
+RUN_DEADLINE_EPOCH=$(( $(date -u +%s) + 900 ))
 STARTED=1
-aws --profile "$PROFILE" --region "$REGION" ec2 wait instance-running \
-  --instance-ids "$INSTANCE"
+aws_c0 ec2 start-instances \
+  --instance-ids "$INSTANCE" --output json > "$RUN_DIR/start-request.json"
+
+RUNNING=0
+while [ "$(date -u +%s)" -lt "$SEND_DEADLINE_EPOCH" ]; do
+  if aws_c0 ec2 describe-instances --instance-ids "$INSTANCE" \
+    --output json > "$RUN_DIR/running-instance.json" && \
+    python3 - "$RUN_DIR/running-instance.json" "$INSTANCE" <<'PY'
+import json,sys
+rows=json.load(open(sys.argv[1],encoding='utf-8'))['Reservations']
+instances=rows[0]['Instances'] if len(rows)==1 else []
+raise SystemExit(0 if len(instances)==1 and instances[0]['InstanceId']==sys.argv[2] and instances[0]['State']=={'Code':16,'Name':'running'} else 1)
+PY
+  then
+    RUNNING=1
+    break
+  fi
+  sleep 5
+done
+test "$RUNNING" -eq 1
 
 ONLINE=0
-COUNT=0
-while [ "$COUNT" -lt 60 ]; do
-  aws --profile "$PROFILE" --region "$REGION" ssm describe-instance-information \
+while [ "$(date -u +%s)" -lt "$SEND_DEADLINE_EPOCH" ]; do
+  aws_c0 ssm describe-instance-information \
     --filters "Key=InstanceIds,Values=$INSTANCE" --output json > "$RUN_DIR/ssm-online.json"
   if python3 - "$RUN_DIR/ssm-online.json" "$INSTANCE" <<'PY'
 import json,sys
@@ -94,33 +133,35 @@ PY
     ONLINE=1
     break
   fi
-  COUNT=$((COUNT + 1))
   sleep 5
 done
 test "$ONLINE" -eq 1
+test "$(date -u +%s)" -lt "$SEND_DEADLINE_EPOCH"
 
 SCRIPT_SHA="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["command_script_sha256"])' "$RUN_DIR/plan.json")"
-aws --profile "$PROFILE" --region "$REGION" ssm send-command \
+aws_c0 ssm send-command \
   --document-name 'AWS-RunShellScript' --instance-ids "$INSTANCE" \
   --parameters "file://$RUN_DIR/parameters.json" --timeout-seconds 120 \
   --max-concurrency 1 --max-errors 0 --comment "AWS-C0 formal smoke $SCRIPT_SHA" \
   --output json > "$RUN_DIR/send-command.json"
 COMMAND_ID="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["Command"]["CommandId"])' "$RUN_DIR/send-command.json")"
 
-COUNT=0
-while [ "$COUNT" -lt 90 ]; do
-  if aws --profile "$PROFILE" --region "$REGION" ssm get-command-invocation \
+COMMAND_DEADLINE_EPOCH=$(( $(date -u +%s) + 180 ))
+STOP_RESERVE_EPOCH=$((RUN_DEADLINE_EPOCH - 300))
+if [ "$COMMAND_DEADLINE_EPOCH" -gt "$STOP_RESERVE_EPOCH" ]; then COMMAND_DEADLINE_EPOCH="$STOP_RESERVE_EPOCH"; fi
+TERMINAL=0
+while [ "$(date -u +%s)" -lt "$COMMAND_DEADLINE_EPOCH" ]; do
+  if aws_c0 ssm get-command-invocation \
     --command-id "$COMMAND_ID" --instance-id "$INSTANCE" \
     --output json > "$RUN_DIR/invocation.json" 2> "$RUN_DIR/invocation-poll.stderr"; then
     STATUS="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["Status"])' "$RUN_DIR/invocation.json")"
     case "$STATUS" in
-      Success|Cancelled|TimedOut|Failed) break ;;
+      Success|Cancelled|TimedOut|Failed) TERMINAL=1; break ;;
     esac
   fi
-  COUNT=$((COUNT + 1))
   sleep 2
 done
-test "$COUNT" -lt 90
+test "$TERMINAL" -eq 1
 
 stop_and_record
 test "$STOPPED" -eq 1
@@ -141,7 +182,7 @@ PY
 STDOUT_SHA="$1"
 STDOUT_CHECKSUM="$2"
 STDOUT_BYTES="$3"
-aws --profile "$PROFILE" --region "$REGION" s3api put-object \
+aws_c0 s3api put-object \
   --bucket "$BUCKET" --key "$RESULT_KEY" \
   --body "$RUN_DIR/invocation-stdout.jsonl" \
   --content-type 'application/x-ndjson' --metadata "sha256=$STDOUT_SHA" \
@@ -151,7 +192,7 @@ aws --profile "$PROFILE" --region "$REGION" s3api put-object \
 VERSION_ID="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["VersionId"])' "$RUN_DIR/upload-receipt.json")"
 test -n "$VERSION_ID"
 test "$VERSION_ID" != 'null'
-aws --profile "$PROFILE" --region "$REGION" s3api get-object \
+aws_c0 s3api get-object \
   --bucket "$BUCKET" --key "$RESULT_KEY" --version-id "$VERSION_ID" \
   --checksum-mode ENABLED --expected-bucket-owner "$ACCOUNT" \
   "$RUN_DIR/retrieved-stdout.jsonl" \

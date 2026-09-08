@@ -15,6 +15,7 @@ import json
 import os
 import re
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +27,7 @@ DOCUMENT = "AWS-RunShellScript"
 BUCKET = "ebu-stage-f-results-k7m4p2"
 IMAGE_MANIFEST_SHA256 = "130f80c15eb32be6d22e47e0b149b81ffa0ff04a6f69eb92bb35a8e683fe3641"
 IMAGE_REFERENCE = "ebu/aws-c0-platform-smoke@sha256:" + IMAGE_MANIFEST_SHA256
-ATTEMPT = re.compile(r"ATTEMPT-[A-Z0-9-]{1,64}-SUCCESS")
+ATTEMPT = re.compile(r"ATTEMPT-USER-([0-9]{8}T[0-9]{6}Z)-SUCCESS")
 COMMAND_ID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")
 VERSION_ID = re.compile(r"[A-Za-z0-9._+~=/:-]{1,1024}")
 TERMINAL_STATUSES = {"Success", "Cancelled", "TimedOut", "Failed"}
@@ -58,12 +59,32 @@ def _attempt(value: str) -> str:
     return value
 
 
+def _utc(value: Any, label: str) -> datetime:
+    if not isinstance(value, str):
+        raise Refusal(f"{label} UTC timestamp required")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise Refusal(f"{label} UTC timestamp required") from exc
+    if parsed.tzinfo is None or parsed.utcoffset() != timedelta(0):
+        raise Refusal(f"{label} UTC timestamp required")
+    return parsed
+
+
+def _attempt_utc(attempt_id: str) -> str:
+    match = ATTEMPT.fullmatch(_attempt(attempt_id))
+    assert match is not None
+    parsed = datetime.strptime(match.group(1), "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+    return parsed.isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
 def render_command_script(attempt_id: str) -> bytes:
     attempt_id = _attempt(attempt_id)
     container_name = "ebu-c0-" + attempt_id.lower()
     binding = canonical({
         "account": ACCOUNT,
         "attempt_id": attempt_id,
+        "prepared_utc": _attempt_utc(attempt_id),
         "container_execution": True,
         "image_manifest_sha256": IMAGE_MANIFEST_SHA256,
         "image_reference": IMAGE_REFERENCE,
@@ -106,6 +127,7 @@ def build_plan(attempt_id: str) -> dict[str, Any]:
         "region": REGION,
         "instance_id": INSTANCE,
         "attempt_id": attempt_id,
+        "prepared_utc": _attempt_utc(attempt_id),
         "document_name": DOCUMENT,
         "result_bucket": BUCKET,
         "result_key": result_key,
@@ -121,6 +143,8 @@ def build_plan(attempt_id: str) -> dict[str, Any]:
         "maximum_s3_puts": 1,
         "maximum_s3_exact_version_gets": 1,
         "maximum_running_seconds": 900,
+        "maximum_prepare_to_send_seconds": 300,
+        "maximum_prepare_to_seal_seconds": 1200,
         "conditional_s3_create_only": True,
         "temporary_private_document_operations": 0,
         "iam_mutations": 0,
@@ -161,6 +185,7 @@ def validate_stdout(stdout: str, plan: dict[str, Any]) -> dict[str, Any]:
         "region": REGION,
         "instance_id": INSTANCE,
         "attempt_id": plan["attempt_id"],
+        "prepared_utc": plan["prepared_utc"],
         "image_reference": IMAGE_REFERENCE,
         "image_manifest_sha256": IMAGE_MANIFEST_SHA256,
         "container_execution": True,
@@ -169,16 +194,23 @@ def validate_stdout(stdout: str, plan: dict[str, Any]) -> dict[str, Any]:
     if rows[0] != expected_binding:
         raise Refusal("host binding differs from sealed account, Region, instance, attempt, or image")
     events = rows[1:]
+    if any(row.get("event") not in {"heartbeat", "checkpoint", "terminal"} for row in events):
+        raise Refusal("unknown worker stdout row refused")
     heartbeats = [row for row in events if row.get("event") == "heartbeat"]
     checkpoints = [row for row in events if row.get("event") == "checkpoint"]
     terminals = [row for row in events if row.get("event") == "terminal"]
     if len(terminals) != 1 or events[-1] != terminals[0] or len(checkpoints) != 2 or not heartbeats:
         raise Refusal("SUCCESS known-case event shape is incomplete")
+    if events != [heartbeats[0], checkpoints[0], *heartbeats[1:], checkpoints[1], terminals[0]]:
+        raise Refusal("SUCCESS known-case event order differs from sealed worker order")
+    prior_monotonic = 0
     for sequence, row in enumerate(heartbeats):
         if set(row) != {"event", "sequence", "monotonic_nanoseconds", "payload_sha256"}:
             raise Refusal("heartbeat fields not closed")
-        if row["sequence"] != sequence or type(row["monotonic_nanoseconds"]) is not int or row["monotonic_nanoseconds"] <= 0:
+        if (row["sequence"] != sequence or type(row["monotonic_nanoseconds"]) is not int
+                or row["monotonic_nanoseconds"] <= prior_monotonic):
             raise Refusal("heartbeat sequence or clock invalid")
+        prior_monotonic = row["monotonic_nanoseconds"]
         if row["payload_sha256"] != _worker_payload(plan["attempt_id"], "heartbeat", sequence):
             raise Refusal("heartbeat payload identity mismatch")
     for sequence, row in enumerate(checkpoints):
@@ -286,7 +318,7 @@ def _s3_receipts(*, plan: dict[str, Any], uploaded: bytes, upload: dict[str, Any
 def seal_evidence(*, plan: dict[str, Any], script: bytes, caller: dict[str, Any],
                   send: dict[str, Any], invocation: dict[str, Any], stopped: dict[str, Any],
                   uploaded: bytes, upload: dict[str, Any], retrieved: bytes,
-                  retrieval: dict[str, Any]) -> dict[str, Any]:
+                  retrieval: dict[str, Any], observed_utc: str) -> dict[str, Any]:
     validate_plan(plan, script)
     if caller.get("Account") != ACCOUNT or not all(isinstance(caller.get(k), str) and caller[k] for k in ("Arn", "UserId")):
         raise Refusal("authenticated caller does not bind the fixed AWS account")
@@ -298,10 +330,24 @@ def seal_evidence(*, plan: dict[str, Any], script: bytes, caller: dict[str, Any]
     for field in ("DocumentName", "InstanceIds", "Parameters", "TimeoutSeconds", "MaxConcurrency", "MaxErrors"):
         if command.get(field) != request[field]:
             raise Refusal(f"SendCommand response does not bind {field}")
+    prepared = _utc(plan["prepared_utc"], "prepared")
+    requested = _utc(command.get("RequestedDateTime"), "SendCommand requested")
+    observed = _utc(observed_utc, "seal observation")
+    if not prepared - timedelta(seconds=5) <= requested <= prepared + timedelta(
+            seconds=plan["maximum_prepare_to_send_seconds"]):
+        raise Refusal("SendCommand is outside the fresh prepared window")
     if invocation.get("CommandId") != command_id or invocation.get("InstanceId") != INSTANCE:
         raise Refusal("invocation does not bind returned command and retained instance")
     if invocation.get("DocumentName") != DOCUMENT or invocation.get("Status") not in TERMINAL_STATUSES:
         raise Refusal("terminal AWS-RunShellScript invocation required")
+    execution_start = _utc(invocation.get("ExecutionStartDateTime"), "invocation start")
+    execution_end = _utc(invocation.get("ExecutionEndDateTime"), "invocation end")
+    if not requested - timedelta(seconds=5) <= execution_start <= execution_end:
+        raise Refusal("invocation chronology differs from returned SendCommand")
+    if (execution_end - execution_start).total_seconds() > request["TimeoutSeconds"]:
+        raise Refusal("invocation exceeds sealed command timeout")
+    if not execution_end <= observed <= prepared + timedelta(seconds=plan["maximum_prepare_to_seal_seconds"]):
+        raise Refusal("evidence sealing is outside the fresh attempt window")
     stdout = invocation.get("StandardOutputContent")
     stderr = invocation.get("StandardErrorContent")
     response_code = invocation.get("ResponseCode")
@@ -327,6 +373,9 @@ def seal_evidence(*, plan: dict[str, Any], script: bytes, caller: dict[str, Any]
         "region": REGION,
         "instance_id": INSTANCE,
         "attempt_id": plan["attempt_id"],
+        "prepared_utc": plan["prepared_utc"],
+        "sealed_utc": observed_utc,
+        "fresh_attempt_window_verified": True,
         "image_reference": IMAGE_REFERENCE,
         "image_manifest_sha256": IMAGE_MANIFEST_SHA256,
         "command_script_base64": plan["command_script_base64"],
@@ -391,6 +440,7 @@ def seal(args: argparse.Namespace) -> int:
         invocation=_json(Path(args.invocation)), stopped=_json(Path(args.stopped_instance)),
         uploaded=Path(args.uploaded_object).read_bytes(), upload=_json(Path(args.upload_receipt)),
         retrieved=Path(args.retrieved_object).read_bytes(), retrieval=_json(Path(args.retrieval_receipt)),
+        observed_utc=datetime.now(timezone.utc).isoformat(timespec="microseconds").replace("+00:00", "Z"),
     )
     output = Path(args.output)
     _write_exclusive(output, canonical(evidence) + b"\n")

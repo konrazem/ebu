@@ -11,6 +11,13 @@
   The earlier manual run remains diagnostic-only and is not formal evidence.
   No AWS call, smoke, container, or scientific execution occurred while making
   this correction. Current disposition: `USER_OPERATED_FORMAL_SMOKE_READY_NOT_RUN`.
+  Independent review of initial commit `bd05f56` found four fail-closed gaps:
+  ambiguous-start cleanup, an unenforced running deadline, open stdout rows,
+  and insufficient attempt freshness. The successor correction arms cleanup
+  before StartInstances, applies one 900-second post-start deadline with a
+  300-second stop reserve and bounded CLI calls, closes worker event ordering,
+  and binds prepare/SendCommand/invocation/seal chronology. The failed review is
+  preserved as diagnostic review history and is not an approval.
 
 - The portable user-operated packet/v9 full-preflight package is complete under
   `/Users/konrad.grzyb/code/test-aws`. Package-manifest SHA-256 is
