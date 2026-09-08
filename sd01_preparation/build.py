@@ -90,9 +90,9 @@ def projections():
     return sorted(cells, key=canonical)
 
 
-def build(archive):
+def build(archive, implementation_revision="HEAD"):
     sources = locked_sources()
-    implementation_commit = git('rev-parse', 'HEAD').decode().strip()
+    implementation_commit = git('rev-parse', '--verify', implementation_revision + '^{commit}').decode().strip()
     git('merge-base', '--is-ancestor', BASE, implementation_commit)
     implementation_paths = sorted([str(p.relative_to(ROOT)) for p in (ROOT / 'sd01_preparation').glob('*.py')]
                                   + ['sd01_preparation/README.md', 'SD01_CONTROL_DECISIONS.md', 'tests/sd01_preparation/test_preparation.py'])
@@ -172,8 +172,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--stage-e-archive', required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--implementation-revision', default='HEAD')
     args = parser.parse_args()
-    packet = build(args.stage_e_archive)
+    packet = build(args.stage_e_archive, args.implementation_revision)
     with args.output.open('xb') as stream: stream.write(canonical(packet))
     print(packet['status'], packet['dossier_sha256'])
 

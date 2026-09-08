@@ -32,8 +32,10 @@ Recovery metadata checks require every inherited recovery condition.
 `build.py` checks the immutable source bytes, parses all Stage D/E/F JSON,
 projects the 192 scientific cells without constructing a model state, retains
 four visibly unresolved control slots, and extracts the complete frozen
-scientific row and operational contracts. It downloads nothing. Commit all implementation sources before building. Supply the
-accepted Stage E archive separately; the builder checks its frozen archive
+scientific row and operational contracts. It downloads nothing. Commit all
+implementation sources before building. For later byte-identical reconstruction,
+pass `--implementation-revision` with the dossier’s pinned implementation commit.
+Supply the accepted Stage E archive separately; the builder checks its frozen archive
 hash and all nine base-manifest member hashes and linkage. The retained Stage E
 projection is not an SD-01 benchmark. Its 33 projected slices cannot be used as
 an executable allocation for 196 distinct trajectories.
