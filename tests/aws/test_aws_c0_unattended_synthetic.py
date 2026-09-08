@@ -2966,6 +2966,47 @@ class ByteBoundStagingTests(unittest.TestCase):
             S.diagnostic_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
                 '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
 
+    def test_image_metadata_diagnostic_reports_each_v5_assertion_member_without_mutation(self):
+        plan=S.image_metadata_diagnostic_plan('1'*40,'2'*64,'3'*64,
+            '0bc534bf-7450-473d-be69-ff9bd6288366')
+        self.assertEqual(S.validate_image_metadata_diagnostic_plan(
+            plan,'2'*64,'3'*64,'0bc534bf-7450-473d-be69-ff9bd6288366'),plan)
+        self.assertEqual(plan['schema'],'aws_c0_host_staging_image_metadata_diagnostic_plan/v2')
+        document=S.image_metadata_diagnostic_document(
+            plan,'2'*64,'3'*64,'0bc534bf-7450-473d-be69-ff9bd6288366')
+        self.assertEqual(document['parameters'],{})
+        body=document['mainSteps'][0]['inputs']['runCommand'][0]
+        for field in ('config_id_matches','os_matches','architecture_matches','user_matches',
+                      'working_directory_matches','manifest_digest_matches'):
+            self.assertIn(field,body)
+        for forbidden in ("'image','load'","'docker','run'","'systemctl'",'.unlink(',
+                          '.write_','aws s3','get-object'):
+            self.assertNotIn(forbidden,body)
+        compile(S.IMAGE_METADATA_DIAGNOSTIC_BODY,'<nonexecuted-image-metadata-diagnostic-body>','exec')
+
+    def test_image_metadata_diagnostic_refuses_scope_or_predecessor_drift(self):
+        plan=S.image_metadata_diagnostic_plan('1'*40,'2'*64,'3'*64,
+            '0bc534bf-7450-473d-be69-ff9bd6288366')
+        for field,bad in [('v5_plan_sha256','0'*64),('v5_failure_evidence_sha256','0'*64),
+                          ('docker_image_load',True),('maximum_instance_starts',2),
+                          ('image_tag','other:tag'),('scientific_execution',True)]:
+            changed=copy.deepcopy(plan);changed[field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                S.image_metadata_diagnostic_document(
+                    changed,'2'*64,'3'*64,'0bc534bf-7450-473d-be69-ff9bd6288366')
+
+    def test_image_metadata_diagnostic_policy_is_exact_and_expires_within_one_hour(self):
+        policy=S.image_metadata_diagnostic_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+            '2026-09-08T07:00:00Z','2026-09-08T07:30:00Z')
+        encoded=S.canonical(policy).decode()
+        self.assertNotIn('Resource":"*',encoded)
+        self.assertIn(S.IMAGE_METADATA_DIAGNOSTIC_DOCUMENT,encoded)
+        self.assertIn(S.INSTANCE,encoded)
+        self.assertNotIn(S.DIAGNOSTIC_DOCUMENT+'"',encoded)
+        with self.assertRaises(ValueError):
+            S.image_metadata_diagnostic_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
+                '2026-09-08T07:00:00Z','2026-09-08T08:00:01Z')
+
     def test_staging_repair_is_versioned_retained_byte_only_and_captures_command_error(self):
         prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
         plan=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)

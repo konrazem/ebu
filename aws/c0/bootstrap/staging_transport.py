@@ -14,6 +14,7 @@ RECOVERY_PREFIX = re.compile(
     r'^rehearsal/aws-c0/preparation/AWS-C0-PREP-492A4F1/recovery/[0-9a-f]{64}/$')
 DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
 DIAGNOSTIC_DOCUMENT = 'EBU-C0-Stage-Diagnostic-492a4f1-v1'
+IMAGE_METADATA_DIAGNOSTIC_DOCUMENT = 'EBU-C0-Stage-Diagnostic-492a4f1-v2'
 REPAIR_DOCUMENT = 'EBU-C0-Stage-Repair-492a4f1-v1'
 FINALIZE_DOCUMENT = 'EBU-C0-Stage-Finalize-492a4f1-v1'
 FINALIZE_V5_DOCUMENT = 'EBU-C0-Stage-Finalize-492a4f1-v2'
@@ -21,6 +22,7 @@ ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
 POLICY = 'EBU-C0-Staging-Transport-v1'
 DIAGNOSTIC_POLICY = 'EBU-C0-Staging-Diagnostic-Transport-v1'
+IMAGE_METADATA_DIAGNOSTIC_POLICY = 'EBU-C0-Staging-Diagnostic-Transport-v2'
 REPAIR_POLICY = 'EBU-C0-Staging-Repair-Transport-v1'
 FINALIZE_POLICY = 'EBU-C0-Staging-Finalize-Transport-v1'
 FINALIZE_V5_POLICY = 'EBU-C0-Staging-Finalize-Transport-v2'
@@ -345,6 +347,117 @@ def diagnostic_temporary_policy(role_id,observed_utc,expires_utc):
         'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
         'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
     doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{DIAGNOSTIC_DOCUMENT}'
+    return {'Version':'2012-10-17','Statement':[
+        {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
+        {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
+
+def image_metadata_diagnostic_plan(commit,v5_plan_sha256,v5_failure_evidence_sha256,
+                                   v5_command_id):
+    """Read-only field-level diagnosis of the terminal v5 image assertion."""
+    if not isinstance(commit,str) or not re.fullmatch(r'[0-9a-f]{40}',commit):
+        raise ValueError('exact committed diagnostic implementation required')
+    for name,value in (('v5 plan',v5_plan_sha256),
+                       ('v5 failure evidence',v5_failure_evidence_sha256)):
+        if not isinstance(value,str) or not SHA.fullmatch(value):
+            raise ValueError(name+' SHA-256 required')
+    if not isinstance(v5_command_id,str) or not re.fullmatch(
+            r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',v5_command_id):
+        raise ValueError('v5 command ID required')
+    return {'schema':'aws_c0_host_staging_image_metadata_diagnostic_plan/v2',
+            'implementation_commit':commit,'account':ACCOUNT,'region':REGION,
+            'instance_id':INSTANCE,'v5_plan_sha256':v5_plan_sha256,
+            'v5_failure_evidence_sha256':v5_failure_evidence_sha256,
+            'v5_command_id':v5_command_id,'image_tag':IMAGE_TAG,
+            'expected_image_config_sha256':CONFIG_SHA,
+            'expected_image_manifest_sha256':MANIFEST_SHA,
+            'expected_os':'linux','expected_architecture':'amd64',
+            'expected_user':'65534:65534','expected_working_directory':'/work',
+            'maximum_instance_starts':1,'maximum_diagnostic_commands':1,
+            'maximum_running_seconds':600,'command_timeout_seconds':180,
+            'maximum_image_list_rows':8,'maximum_output_bytes':20000,
+            'aggregate_cost_ceiling_minor_units':5000,'docker_image_load':False,
+            'file_write_or_delete':False,'container_execution':False,
+            'systemd_action':False,'s3_or_registry_access':False,
+            'scientific_execution':False,'stop_required':True}
+
+def validate_image_metadata_diagnostic_plan(value,v5_plan_sha256,
+                                            v5_failure_evidence_sha256,v5_command_id):
+    if not isinstance(value,dict):raise ValueError('image metadata diagnostic plan required')
+    expected=image_metadata_diagnostic_plan(value.get('implementation_commit'),
+        v5_plan_sha256,v5_failure_evidence_sha256,v5_command_id)
+    if value!=expected:raise ValueError('image metadata diagnostic plan differs from closed plan')
+    return expected
+
+IMAGE_METADATA_DIAGNOSTIC_BODY = r'''
+import json,os,subprocess
+assert os.geteuid()==0
+ENV={'PATH':'/usr/local/bin:/usr/bin:/bin','LC_ALL':'C'}
+def run(argv,timeout=30):
+    p=subprocess.run(argv,cwd='/',env=ENV,stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout,check=False)
+    if p.returncode:
+        stderr=p.stderr.decode('utf-8','replace').replace('\x00','')[-3000:]
+        stdout=p.stdout.decode('utf-8','replace').replace('\x00','')[-1000:]
+        raise RuntimeError('bounded read-only command failed:'+str(p.returncode)+
+            ':stdout='+stdout+':stderr='+stderr)
+    return p.stdout
+metadata=json.loads(run(['/usr/bin/docker','image','inspect',PLAN['image_tag']]))
+assert isinstance(metadata,list) and len(metadata)==1
+image=metadata[0];config=image.get('Config') or {}
+template=chr(123)*2+'json .'+chr(125)*2
+rows=[json.loads(line) for line in run(['/usr/bin/docker','image','ls','--digests','--no-trunc',
+    '--filter','reference='+PLAN['image_tag'],'--format',template]).decode().splitlines() if line]
+assert len(rows)<=PLAN['maximum_image_list_rows']
+observed={'id':image.get('Id'),'os':image.get('Os'),'architecture':image.get('Architecture'),
+    'user':config.get('User'),'working_directory':config.get('WorkingDir'),
+    'repo_tags':image.get('RepoTags'),'repo_digests':image.get('RepoDigests'),
+    'image_list_rows':[{key:row.get(key) for key in ('Repository','Tag','Digest','ID')} for row in rows]}
+checks={'config_id_matches':observed['id']=='sha256:'+PLAN['expected_image_config_sha256'],
+    'os_matches':observed['os']==PLAN['expected_os'],
+    'architecture_matches':observed['architecture']==PLAN['expected_architecture'],
+    'user_matches':observed['user']==PLAN['expected_user'],
+    'working_directory_matches':observed['working_directory']==PLAN['expected_working_directory'],
+    'exactly_one_image_list_row':len(rows)==1,
+    'repository_matches':len(rows)==1 and rows[0].get('Repository')=='ebu/aws-c0-platform-smoke',
+    'tag_matches':len(rows)==1 and rows[0].get('Tag')=='45afc9a',
+    'manifest_digest_matches':len(rows)==1 and rows[0].get('Digest')=='sha256:'+PLAN['expected_image_manifest_sha256']}
+result={'schema':'aws_c0_host_staging_image_metadata_diagnostic_result/v2',
+    'plan_sha256':PLAN_ID,'v5_plan_sha256':PLAN['v5_plan_sha256'],
+    'v5_failure_evidence_sha256':PLAN['v5_failure_evidence_sha256'],
+    'v5_command_id':PLAN['v5_command_id'],'observed':observed,'checks':checks,
+    'docker_image_load_executed':False,'file_written_or_deleted':False,
+    'container_executed':False,'systemd_action_executed':False,
+    's3_or_registry_access_executed':False,'scientific_execution':False}
+raw=json.dumps(result,sort_keys=True,separators=(',',':'))
+assert len(raw.encode())<=PLAN['maximum_output_bytes']
+print(raw)
+'''
+
+def image_metadata_diagnostic_document(value,v5_plan_sha256,
+                                       v5_failure_evidence_sha256,v5_command_id):
+    validate_image_metadata_diagnostic_plan(value,v5_plan_sha256,
+        v5_failure_evidence_sha256,v5_command_id)
+    encoded=base64.b64encode(canonical({'PLAN':value,'PLAN_ID':digest(value)})).decode()
+    script="import base64,json\nglobals().update(json.loads(base64.b64decode('"+encoded+"')))\n"+IMAGE_METADATA_DIAGNOSTIC_BODY
+    compile(script,'<nonexecuted-image-metadata-diagnostic>','exec')
+    if '{{' in script:raise ValueError('SSM parser parameter marker refused')
+    return {'schemaVersion':'2.2','description':'Read-only field-level diagnosis of terminal AWS-C0 image metadata mismatch.',
+            'parameters':{},'mainSteps':[{'action':'aws:runShellScript','name':'diagnoseC0ImageMetadata',
+            'precondition':{'StringEquals':['platformType','Linux']},
+            'inputs':{'timeoutSeconds':'180','runCommand':["set -eu\n/usr/bin/python3 - <<'C0_FIXED_IMAGE_METADATA_DIAG'\n"+script+"\nC0_FIXED_IMAGE_METADATA_DIAG\n"]}}]}
+
+def image_metadata_diagnostic_temporary_policy(role_id,observed_utc,expires_utc):
+    if not isinstance(role_id,str) or not re.fullmatch(r'AROA[A-Z0-9]{12,32}',role_id):
+        raise ValueError('exact role ID required')
+    times=[]
+    for value in (observed_utc,expires_utc):
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',value):raise ValueError('exact UTC required')
+        times.append(datetime.fromisoformat(value.replace('Z','+00:00')))
+    if not 0<(times[1]-times[0]).total_seconds()<=3600:raise ValueError('bounded metadata diagnostic lifetime required')
+    condition={'DateLessThan':{'aws:CurrentTime':expires_utc},'StringEquals':{
+        'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
+        'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
+    doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{IMAGE_METADATA_DIAGNOSTIC_DOCUMENT}'
     return {'Version':'2012-10-17','Statement':[
         {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
         {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}

@@ -127,3 +127,13 @@ AWS observation must be a fresh, separately authorized, versioned diagnostic
 that reports the non-secret exact-tag metadata fields individually without
 loading or running the image, installing files, or consuming the platform
 smoke. The v4 and v5 ledgers remain immutable and terminal.
+
+The next authorized stage is one v2 image-metadata diagnostic. It binds the
+terminal v5 plan, failure evidence, and command ID and reports the exact-tag
+configuration ID, OS, architecture, user, working directory, repository
+tags/digests, and bounded filtered image-list rows as separate observations.
+It does not assert that mismatches pass. It may start the existing stopped
+`t3.small` once, issue one parameter-free command, and must stop it within 600
+seconds and remove its exact temporary document and policy. It cannot load or
+run an image, mutate a host file, invoke systemd, contact S3 or a registry,
+consume the platform smoke, or execute science.
