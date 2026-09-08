@@ -164,3 +164,15 @@ v3 transport. The image was not reloaded or run, no service was started or
 enabled, and the one platform smoke remains unspent. Host staging is complete;
 the next phase is the separately gated deployment preparation and exact
 unexecuted change-set construction required by the deployment sequence.
+
+The user then explicitly directed the controller to proceed. That exact
+53-byte statement has SHA-256
+`ef2ad9cd0ef9593bf2b49e07ba0495f5a0303394bb14ab60e4b00e931083d679`.
+It authorizes one fresh non-replayable deployment-preparation preflight bound to
+the completed v6 staging evidence. The preflight may construct and validate a
+current packet under the existing constrained-session, R64, 300-second
+freshness, cleanup, stopped-instance, one-smoke, and USD50 boundaries. It does
+not predict or waive the exact packet-specific Gate 1 statement: artifact
+publication, change-set creation, deployment, and smoke remain blocked until
+that statement is received for the resulting packet. Scientific execution,
+push, merge, publication, and release remain prohibited.

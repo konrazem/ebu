@@ -1242,6 +1242,17 @@ adds no action, permission, deployment, publication, cost, or scientific
 authority. Construction and tests are pure local operations and do not claim
 that any AWS observation has occurred.
 
+After the verified v6 host-staging pass, the user explicitly directed the
+controller to proceed. The exact 53-byte statement has SHA-256
+`ef2ad9cd0ef9593bf2b49e07ba0495f5a0303394bb14ab60e4b00e931083d679`.
+It authorizes one fresh non-replayable deployment-preparation preflight that
+binds the v6 cleanup evidence while preserving the stopped `t3.small`, one
+unspent smoke, USD50 cap, historical ledgers, schemas, permission boundaries,
+and scientific content. The preflight may construct and validate a current
+preparation packet. The packet-specific Gate 1 statement remains mandatory
+before any artifact publication, change-set creation, deployment, or smoke;
+science, push, merge, publication, and release remain prohibited.
+
 Progress/v6 and source-attachment/v5 add this output after the six existing
 infrastructure controls and before the exact artifact-version set, preserving
 read-plan/v3 and the source-attachment/v4 predecessor. The independently sealed

@@ -880,10 +880,32 @@
     "platform_smoke_count": 0,
     "disposition": "PASS_HOST_STAGING_COMPLETE_DEPLOYMENT_PREPARATION_NEXT"
   },
+  "deployment_preparation_continuation_authorization": {
+    "schema": "aws_c0_deployment_preparation_continuation_authorization/v1",
+    "source": "EXPLICIT_USER_DIRECTION_2026_09_08_PROCEED",
+    "source_statement_utf8_byte_count": 53,
+    "source_statement_sha256": "ef2ad9cd0ef9593bf2b49e07ba0495f5a0303394bb14ab60e4b00e931083d679",
+    "authorized_attempts": 1,
+    "authorized_goal": "CONSTRUCT_ONE_FRESH_NONREPLAYABLE_PREPARATION_PACKET_FOR_EXACT_UNEXECUTED_CHANGE_SET_AND_LIVE_PACKET_PREPARATION",
+    "binds_host_staging_v6_cleanup_evidence_sha256": "c451d5287df93246cbda27ba2848a82937dc1aba6428996bc2951c40a20bf45a",
+    "required_profile": "ebu-admin",
+    "required_preparation_session_name": "AWS-C0-PREP-492a4f1",
+    "temporary_permission_action": "ec2:DescribeSecurityGroups",
+    "temporary_permission_resource": "*",
+    "temporary_permission_region": "us-east-1",
+    "iam_propagation_interval_seconds": 60,
+    "freshness_max_seconds": 300,
+    "packet_specific_gate1_authorization_required_before_mutation": true,
+    "maximum_platform_smokes": 1,
+    "cost_ceiling_minor_units": 5000,
+    "preserve": ["ALL_PRIOR_LEDGERS", "HOST_STAGING_V6_PASS", "STOPPED_T3_SMALL", "ONE_UNSPENT_PLATFORM_SMOKE", "HISTORICAL_SCHEMAS", "AWS_PERMISSION_BOUNDARIES", "SCIENTIFIC_CONTENT"],
+    "deny_before_exact_packet_gate1": ["INSTANCE_START", "ARTIFACT_PUBLICATION", "CHANGE_SET_CREATION", "DEPLOYMENT", "PLATFORM_SMOKE"],
+    "deny": ["REPLAY", "SCIENTIFIC_EXECUTION", "PUSH", "MERGE", "PUBLICATION", "RELEASE"]
+  },
   "required_integration_sequence": {
     "source": "EXPLICIT_USER_DIRECTION_2026_09_07",
     "stages_in_order": ["AWS_C0_LOCAL_IMPLEMENTATION", "ONE_BOUNDED_AWS_PLATFORM_SMOKE", "EVIDENCE_AND_CLEANUP_PASS", "FINAL_INDEPENDENT_REVIEW", "EXACT_MERGE_TO_MAIN_PROPOSAL"],
-    "current_stage": "HOST_STAGING_V6_PASS_DEPLOYMENT_PREPARATION_NEXT",
+    "current_stage": "DEPLOYMENT_PREPARATION_PREFLIGHT_AUTHORIZED_NOT_BEGUN",
     "merge_push_or_science_authorized_now": false,
     "scientific_work_start_condition": "LATER_FROM_CLEAN_MAIN_OR_A_FRESH_BRANCH_BASED_ON_CLEAN_MAIN_NEVER_FROM_THIS_ACCUMULATING_AWS_C0_BRANCH",
     "smoke_close_report_requirements": ["PRECISE_MERGE_BASE", "PRECISE_MERGE_HEAD", "CI_EVIDENCE", "REVIEW_EVIDENCE", "REQUESTED_MERGE_AUTHORITY"]
