@@ -16,12 +16,14 @@ DOCUMENT = 'EBU-C0-Stage-492a4f1-v1'
 DIAGNOSTIC_DOCUMENT = 'EBU-C0-Stage-Diagnostic-492a4f1-v1'
 REPAIR_DOCUMENT = 'EBU-C0-Stage-Repair-492a4f1-v1'
 FINALIZE_DOCUMENT = 'EBU-C0-Stage-Finalize-492a4f1-v1'
+FINALIZE_V5_DOCUMENT = 'EBU-C0-Stage-Finalize-492a4f1-v2'
 ROLE = 'EBU-C0-Operator-492a4f1'
 SESSION = 'AWS-C0-PREP-492a4f1'
 POLICY = 'EBU-C0-Staging-Transport-v1'
 DIAGNOSTIC_POLICY = 'EBU-C0-Staging-Diagnostic-Transport-v1'
 REPAIR_POLICY = 'EBU-C0-Staging-Repair-Transport-v1'
 FINALIZE_POLICY = 'EBU-C0-Staging-Finalize-Transport-v1'
+FINALIZE_V5_POLICY = 'EBU-C0-Staging-Finalize-Transport-v2'
 INSTANCE_READ_POLICY = 'EBU-C0-Staging-Exact-Version-Read-v1'
 INSTANCE_ROLE = 'EBU-Rehearsal-EC2-Role'
 ARCHIVE_SHA = '4be82fa06928644167c3a2d65c1da1064b910872a841d44b0d3ab4a5bf8357ef'
@@ -583,6 +585,64 @@ def staging_finalize_temporary_policy(role_id,observed_utc,expires_utc):
         'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
         'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
     doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{FINALIZE_DOCUMENT}'
+    return {'Version':'2012-10-17','Statement':[
+        {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
+        {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}
+
+def staging_finalize_plan_v5(commit,v4_plan,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                             diagnostic_result_sha256,repair_failure_sha256,v4_failure_sha256):
+    validate_staging_finalize_plan(v4_plan,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                   diagnostic_result_sha256,repair_failure_sha256)
+    if not isinstance(v4_failure_sha256,str) or not SHA.fullmatch(v4_failure_sha256):
+        raise ValueError('authenticated v4 failure SHA-256 required')
+    value=staging_finalize_plan(commit,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                diagnostic_result_sha256,repair_failure_sha256)
+    value['schema']='aws_c0_byte_bound_host_staging_finalize_plan/v5'
+    value['previous_finalize_plan_sha256']=digest(v4_plan)
+    value['v4_failure_sha256']=v4_failure_sha256
+    value['image_tag_binding']='EXACT_LOOKUP_PLUS_IMAGE_LIST_REPOSITORY_TAG_AND_MANIFEST_DIGEST'
+    value['legacy_repo_tags_field_required']=False
+    return value
+
+def validate_staging_finalize_plan_v5(value,v4_plan,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                      diagnostic_result_sha256,repair_failure_sha256,v4_failure_sha256):
+    if not isinstance(value,dict):raise ValueError('v5 staging finalize plan object required')
+    expected=staging_finalize_plan_v5(value.get('implementation_commit'),v4_plan,repair_plan,prior_plan,
+        controller_bytes,unit_bytes,diagnostic_result_sha256,repair_failure_sha256,v4_failure_sha256)
+    if value!=expected:raise ValueError('v5 staging finalize plan differs from exact loaded material')
+    return expected
+
+STAGING_FINALIZE_BODY_V5=STAGING_FINALIZE_BODY.replace(
+    "assert PLAN['image_tag'] in image.get('RepoTags',[])\n",'').replace(
+    "'schema':'aws_c0_byte_bound_host_staging_result/v3'",
+    "'schema':'aws_c0_byte_bound_host_staging_result/v4'").replace(
+    "'repair_failure_sha256':PLAN['repair_failure_sha256'],'installed_files':installed,",
+    "'repair_failure_sha256':PLAN['repair_failure_sha256'],'v4_failure_sha256':PLAN['v4_failure_sha256'],'installed_files':installed,")
+
+def staging_finalize_document_v5(value,v4_plan,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                 diagnostic_result_sha256,repair_failure_sha256,v4_failure_sha256):
+    validate_staging_finalize_plan_v5(value,v4_plan,repair_plan,prior_plan,controller_bytes,unit_bytes,
+                                      diagnostic_result_sha256,repair_failure_sha256,v4_failure_sha256)
+    encoded=base64.b64encode(canonical({'PLAN':value,'PLAN_ID':digest(value)})).decode()
+    script="import base64,json\nglobals().update(json.loads(base64.b64decode('"+encoded+"')))\n"+STAGING_FINALIZE_BODY_V5
+    compile(script,'<nonexecuted-byte-bound-staging-finalize-v5>','exec')
+    if '{{' in script:raise ValueError('SSM parser parameter marker refused')
+    return {'schemaVersion':'2.2','description':'Verify loaded exact AWS-C0 image and install retained bytes using containerd-compatible identity checks.',
+            'parameters':{},'mainSteps':[{'action':'aws:runShellScript','name':'finalizeExactC0StagingV5',
+            'precondition':{'StringEquals':['platformType','Linux']},
+            'inputs':{'timeoutSeconds':'180','runCommand':["set -eu\n/usr/bin/python3 - <<'C0_FIXED_FINALIZE_V5'\n"+script+"\nC0_FIXED_FINALIZE_V5\n"]}}]}
+
+def staging_finalize_temporary_policy_v5(role_id,observed_utc,expires_utc):
+    if not isinstance(role_id,str) or not re.fullmatch(r'AROA[A-Z0-9]{12,32}',role_id):raise ValueError('exact role ID required')
+    times=[]
+    for value in (observed_utc,expires_utc):
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z',value):raise ValueError('exact UTC required')
+        times.append(datetime.fromisoformat(value.replace('Z','+00:00')))
+    if not 0<(times[1]-times[0]).total_seconds()<=3600:raise ValueError('bounded v5 finalization lifetime required')
+    condition={'DateLessThan':{'aws:CurrentTime':expires_utc},'StringEquals':{
+        'aws:SourceIdentity':'konrad','aws:userid':role_id+':'+SESSION,
+        'aws:PrincipalArn':f'arn:aws:iam::{ACCOUNT}:role/{ROLE}'}}
+    doc=f'arn:aws:ssm:{REGION}:{ACCOUNT}:document/{FINALIZE_V5_DOCUMENT}'
     return {'Version':'2012-10-17','Statement':[
         {'Effect':'Allow','Action':['ssm:GetDocument','ssm:DescribeDocument'],'Resource':doc,'Condition':condition},
         {'Effect':'Allow','Action':'ssm:SendCommand','Resource':[doc,f'arn:aws:ec2:{REGION}:{ACCOUNT}:instance/{INSTANCE}'],'Condition':condition}]}

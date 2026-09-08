@@ -3048,6 +3048,37 @@ class ByteBoundStagingTests(unittest.TestCase):
             S.staging_finalize_temporary_policy('AROAAAAAAAAAAAAAAAAAA',
                 '2026-09-07T21:30:00Z','2026-09-07T22:30:01Z')
 
+    def test_staging_finalize_v5_removes_only_redundant_legacy_repo_tags_gate(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        repair=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        v4=S.staging_finalize_plan('e'*40,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        v5=S.staging_finalize_plan_v5('1'*40,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
+        self.assertEqual(v5['schema'],'aws_c0_byte_bound_host_staging_finalize_plan/v5')
+        self.assertEqual(v5['previous_finalize_plan_sha256'],S.digest(v4))
+        self.assertFalse(v5['legacy_repo_tags_field_required'])
+        self.assertEqual(S.validate_staging_finalize_plan_v5(
+            v5,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64),v5)
+        doc=S.staging_finalize_document_v5(
+            v5,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
+        body=doc['mainSteps'][0]['inputs']['runCommand'][0]
+        self.assertNotIn("image.get('RepoTags'",body)
+        self.assertIn("'reference='+PLAN['image_tag']",body)
+        self.assertIn("row['Repository']=='ebu/aws-c0-platform-smoke'",body)
+        self.assertIn("row['Digest']=='sha256:'",body)
+        for forbidden in ("'image','load'","'docker','run'","'systemctl','start'",'aws s3'):
+            self.assertNotIn(forbidden,body)
+
+    def test_staging_finalize_v5_refuses_v4_failure_or_predecessor_drift(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        repair=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        v4=S.staging_finalize_plan('e'*40,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        v5=S.staging_finalize_plan_v5('1'*40,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
+        for field,bad in [('v4_failure_sha256','0'*64),('docker_image_load',True),
+                          ('legacy_repo_tags_field_required',True)]:
+            changed=copy.deepcopy(v5);changed[field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                S.staging_finalize_document_v5(changed,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
+
 
 class ImageManifestBindingTests(unittest.TestCase):
     def verify(self, inspection):

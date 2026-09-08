@@ -107,3 +107,11 @@ platform, user, working directory, tag, and manifest digest reported by
 controller/unit bytes and reloads systemd definitions without starting them.
 The v4 plan binds the v3 plan and authenticated v3 failure. All no-container,
 no-smoke, no-science, stopped-instance, cleanup, and cost boundaries remain.
+
+On the containerd image store, an exact tag lookup can return the expected
+configuration, platform, user, and working directory while omitting the legacy
+`RepoTags` array. The v5 finalizer therefore removes only that redundant array
+assertion. It retains the exact tag as the lookup and image-list filter and
+still requires exactly one image-list row whose repository, tag, and manifest
+digest match the sealed values. It binds the terminal v4 failure and changes no
+other v4 operation or boundary.
