@@ -3120,6 +3120,58 @@ class ByteBoundStagingTests(unittest.TestCase):
             with self.subTest(field=field),self.assertRaises(ValueError):
                 S.staging_finalize_document_v5(changed,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
 
+    def test_staging_finalize_v6_uses_proved_manifest_id_and_preserves_config_binding(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        repair=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        v4=S.staging_finalize_plan('e'*40,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        v5=S.staging_finalize_plan_v5('1'*40,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
+        v6=S.staging_finalize_plan_v6('3'*40,v5,v4,repair,prior,b'controller\n',b'unit\n',
+            'd'*64,'f'*64,'2'*64,'4'*64,'5'*64)
+        self.assertEqual(v6['schema'],'aws_c0_byte_bound_host_staging_finalize_plan/v6')
+        self.assertEqual(v6['previous_finalize_plan_sha256'],S.digest(v5))
+        self.assertTrue(v6['archive_manifest_config_relationship_required'])
+        self.assertEqual(S.validate_staging_finalize_plan_v6(v6,v5,v4,repair,prior,
+            b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64,'4'*64,'5'*64),v6)
+        doc=S.staging_finalize_document_v6(v6,v5,v4,repair,prior,b'controller\n',b'unit\n',
+            'd'*64,'f'*64,'2'*64,'4'*64,'5'*64)
+        body=doc['mainSteps'][0]['inputs']['runCommand'][0]
+        self.assertEqual(doc['parameters'],{})
+        self.assertIn("manifest['config']['digest']=='sha256:'+PLAN['image_config_sha256']",body)
+        self.assertIn("image['Id']=='sha256:'+PLAN['image_manifest_sha256']",body)
+        self.assertNotIn("image['Id']=='sha256:'+PLAN['image_config_sha256']",body)
+        self.assertIn("row['Digest']=='sha256:'+PLAN['image_manifest_sha256']",body)
+        for forbidden in ("'image','load'","'docker','run'","'systemctl','start'",
+                          "'systemctl','enable'",'aws s3','get-object'):
+            self.assertNotIn(forbidden,body)
+
+    def test_staging_finalize_v6_refuses_diagnostic_or_predecessor_drift(self):
+        prior=S.recovery_plan('a'*40,b'controller\n',b'unit\n','b'*64)
+        repair=S.staging_repair_plan('c'*40,prior,b'controller\n',b'unit\n','d'*64)
+        v4=S.staging_finalize_plan('e'*40,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64)
+        v5=S.staging_finalize_plan_v5('1'*40,v4,repair,prior,b'controller\n',b'unit\n','d'*64,'f'*64,'2'*64)
+        v6=S.staging_finalize_plan_v6('3'*40,v5,v4,repair,prior,b'controller\n',b'unit\n',
+            'd'*64,'f'*64,'2'*64,'4'*64,'5'*64)
+        for field,bad in [('v5_failure_sha256','0'*64),
+                          ('image_metadata_diagnostic_result_sha256','0'*64),
+                          ('archive_manifest_config_relationship_required',False),
+                          ('docker_image_load',True),('container_execution',True)]:
+            changed=copy.deepcopy(v6);changed[field]=bad
+            with self.subTest(field=field),self.assertRaises(ValueError):
+                S.staging_finalize_document_v6(changed,v5,v4,repair,prior,b'controller\n',
+                    b'unit\n','d'*64,'f'*64,'2'*64,'4'*64,'5'*64)
+
+    def test_staging_finalize_v6_policy_is_exact_and_expires_within_one_hour(self):
+        policy=S.staging_finalize_temporary_policy_v6('AROAAAAAAAAAAAAAAAAAA',
+            '2026-09-08T08:00:00Z','2026-09-08T08:30:00Z')
+        encoded=S.canonical(policy).decode()
+        self.assertNotIn('Resource":"*',encoded)
+        self.assertIn(S.FINALIZE_V6_DOCUMENT,encoded)
+        self.assertIn(S.INSTANCE,encoded)
+        self.assertNotIn(S.FINALIZE_V5_DOCUMENT+'"',encoded)
+        with self.assertRaises(ValueError):
+            S.staging_finalize_temporary_policy_v6('AROAAAAAAAAAAAAAAAAAA',
+                '2026-09-08T08:00:00Z','2026-09-08T09:00:01Z')
+
 
 class ImageManifestBindingTests(unittest.TestCase):
     def verify(self, inspection):

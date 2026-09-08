@@ -148,3 +148,12 @@ the loaded image ID and image-list digest to equal the sealed manifest digest,
 and retain the separate exact configuration-field checks. It must not weaken or
 remove any manifest, platform, user, working-directory, retained-byte, cleanup,
 cost, no-container, no-smoke, or no-science requirement.
+
+The authorized v6 finalizer implements that single proved correction. It binds
+the terminal v5 plan/failure and authenticated v2 diagnostic, revalidates the
+retained archive manifest-to-configuration relationship, then requires the
+exact loaded tag and image-list row to identify the sealed manifest digest.
+Exact OS, architecture, user, working directory, controller/unit bytes,
+exclusive installation, daemon-reload-only, stopped-instance, temporary-control
+cleanup, and cost boundaries remain unchanged. It does not reload or run the
+image and cannot execute the platform smoke or science.
