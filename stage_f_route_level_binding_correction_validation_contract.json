@@ -1,0 +1,6 @@
+{
+  "schema": "stage_f_route_level_binding_correction_validation_contract/v1",
+  "validation": ["verify six authority candidate paths only at authority integration", "compare campaign order and gap registry against committed Stage F foundation contract", "verify deterministic canonical JSON digests", "verify every route with a gap is blocked", "verify no packet permits execution", "verify nesting and SD-14 dependency"],
+  "required_result": "STAGE_F_ROUTE_LEVEL_BINDING_VALIDATION_PASS",
+  "scientific_execution_counters": {"runner_import": 0, "model_advance": 0, "trajectory": 0, "stochastic_draw": 0, "outcome_inspection": 0, "aws_execution": 0}
+}

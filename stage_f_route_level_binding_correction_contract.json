@@ -1,0 +1,14 @@
+{
+  "schema": "stage_f_route_level_binding_correction_contract/v1",
+  "authority_id": "EBU-STAGE-F-ROUTE-LEVEL-BINDING-CORRECTION-v1",
+  "required_target_commit": "9f7d217d04a201e98611580a1a0d0be88f188143",
+  "campaign_order": ["SD-01", "SD-01-GROWTH-v1", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13", "SD-14"],
+  "route_execution_unit": "sealed_route_packet/v1",
+  "campaign_packet_prerequisite": "ORDERED_QUEUE_NOT_SIMULTANEOUS_SEALABILITY",
+  "nested_route": {"route_id": "SD-01-GROWTH-v1", "parent_study_id": "SD-01", "must_follow": "SD-01"},
+  "last_route": {"route_id": "SD-14", "must_follow_accepted_dispositions": ["SD-01", "SD-01-GROWTH-v1", "SD-02", "SD-03", "SD-04", "SD-05", "SD-06", "SD-07", "SD-08", "SD-09", "SD-10", "SD-11", "SD-12", "SD-13"]},
+  "seal_requirements": ["zero_inherited_authority_gaps", "frozen_route_packet", "deterministic_validation_pass", "independent_binding_pass", "hard_route_cost_cap", "result_s3_layout", "protocol_execution_permission"],
+  "blocked_disposition": "BLOCKED_AUTHORITY_GAP",
+  "prohibited_without_seal": ["runner_import", "model_advance", "trajectory", "stochastic_draw", "outcome_inspection", "result_production", "aws_provisioning", "aws_execution"],
+  "authority_scope_paths": ["STAGE_F_ROUTE_LEVEL_BINDING_AUTHORITY_CORRECTION.md", "stage_f_route_level_binding_correction_contract.json", "stage_f_route_level_binding_correction_schema.json", "stage_f_route_level_binding_correction_implementation_path_manifest.json", "stage_f_route_level_binding_correction_predecessor_manifest.json", "stage_f_route_level_binding_correction_validation_contract.json"]
+}

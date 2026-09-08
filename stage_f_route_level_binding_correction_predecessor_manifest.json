@@ -1,0 +1,7 @@
+{
+  "schema": "stage_f_route_level_binding_correction_predecessor_manifest/v1",
+  "required_target_commit": "9f7d217d04a201e98611580a1a0d0be88f188143",
+  "controlling_gap_source": "stage_f_local_execution_binding_contract.json#/accepted_base_readiness/gap_registry",
+  "controlling_order_source": "stage_f_local_execution_binding_contract.json#/campaign_order",
+  "preservation": "all inherited route gaps and scientific authorities remain unchanged"
+}

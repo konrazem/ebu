@@ -1,0 +1,6 @@
+{
+  "schema": "stage_f_route_level_binding_correction_implementation_path_manifest/v1",
+  "permitted_new_paths": ["scripts/build_stage_f_route_packets.py", "scripts/validate_stage_f_route_packets.py", "stage_f_route_registry.json", "tests/stage_f_route_packets/test_route_packets.py"],
+  "prohibited": ["existing_authority_modification", "scientific_runner", "aws_c0_paths", "scientific_execution"],
+  "outcome_blind": true
+}

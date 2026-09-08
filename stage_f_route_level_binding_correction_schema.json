@@ -1,0 +1,9 @@
+{
+  "schema": "stage_f_route_level_binding_correction_schema/v1",
+  "records": {
+    "route_registry/v1": {"required": ["route_id", "ordinal", "parent_route_id", "predecessors", "gap_class", "gap_ids"]},
+    "sealed_route_packet/v1": {"required": ["route_id", "packet_sha256", "authority_gaps", "execution_permitted", "route_cost_cap", "result_s3_layout", "independent_binding_status"]},
+    "programme_ledger/v1": {"required": ["registry_sha256", "routes", "next_route"]}
+  },
+  "invariants": ["route ids occur once in campaign order", "unsealed routes have no execution identity", "a nonempty authority_gaps array requires BLOCKED_AUTHORITY_GAP", "SD-01-GROWTH-v1 parent is SD-01", "SD-14 is final"]
+}
