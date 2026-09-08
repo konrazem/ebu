@@ -157,3 +157,10 @@ Exact OS, architecture, user, working directory, controller/unit bytes,
 exclusive installation, daemon-reload-only, stopped-instance, temporary-control
 cleanup, and cost boundaries remain unchanged. It does not reload or run the
 image and cannot execute the platform smoke or science.
+
+The v6 finalizer passed. It installed the exact retained controller and unit,
+performed daemon-reload only, stopped the instance, and removed the temporary
+v3 transport. The image was not reloaded or run, no service was started or
+enabled, and the one platform smoke remains unspent. Host staging is complete;
+the next phase is the separately gated deployment preparation and exact
+unexecuted change-set construction required by the deployment sequence.
