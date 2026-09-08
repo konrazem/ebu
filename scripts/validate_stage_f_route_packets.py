@@ -78,6 +78,9 @@ def main() -> None:
             raise ValueError("packet file differs from ledger projection")
         if packet["disposition"] != "BLOCKED_AUTHORITY_GAP" or not packet["authority_gaps"] or packet["execution_permitted"]: raise ValueError("route is not safely blocked")
         if packet["route_cost_cap"] is not None or packet["result_s3_layout"] is not None: raise ValueError("unsealed route carries launch material")
+    expected_blocked = [{"route_id": packet["route_id"], "gap_ids": packet["authority_gaps"]} for packet in routes]
+    if ledger["blocked_routes"] != expected_blocked or ledger["next_route"] is not None or ledger["next_required_action"] != "supply exact missing authority for SD-01":
+        raise ValueError("ledger route projection or next-action claim invalid")
     print(json.dumps({"status": "STAGE_F_ROUTE_LEVEL_BINDING_VALIDATION_PASS", "routes": len(routes), "scientific_execution_count": 0}, sort_keys=True))
 
 
