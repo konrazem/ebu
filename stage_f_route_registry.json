@@ -1,0 +1,21 @@
+{
+  "schema": "route_registry/v1",
+  "source_commit": "9f7d217d04a201e98611580a1a0d0be88f188143",
+  "routes": [
+    {"route_id":"SD-01","ordinal":1,"parent_route_id":null,"predecessors":[],"gap_class":"IMPLEMENTATION_AUTHORITY","gap_ids":["STAGE_F_SD01_ADAPTER_AND_RUN_ID_CLOSURE"]},
+    {"route_id":"SD-01-GROWTH-v1","ordinal":2,"parent_route_id":"SD-01","predecessors":["SD-01"],"gap_class":"IMPLEMENTATION_AUTHORITY","gap_ids":["STAGE_F_DYNAMIC_GROWTH_RUNNER_AND_DURABLE_RECORD_CLOSURE"]},
+    {"route_id":"SD-02","ordinal":3,"parent_route_id":null,"predecessors":[],"gap_class":"IMPLEMENTATION_AUTHORITY","gap_ids":["GATE_1D_C_LOCAL_HOST_REBINDING_AND_RECORD_TRANSLATION"]},
+    {"route_id":"SD-03","ordinal":4,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["ATOMIC_GENERATOR_EXECUTABLE_CHAIN_AND_EXACT_ORACLE"]},
+    {"route_id":"SD-04","ordinal":5,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["TAYLOR_COEFFICIENT_REMAINDER_AND_COMMUTATOR_ORACLE"]},
+    {"route_id":"SD-05","ordinal":6,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["PARALLEL_AND_SUBSET_VALUE_SEMANTICS"]},
+    {"route_id":"SD-06","ordinal":7,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["FINITE_POSET_INPUT_VALUE_TABLES"]},
+    {"route_id":"SD-07","ordinal":8,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["CONCRETE_REUSE_QUERY_AND_BOUNDARY_CERTIFICATES"]},
+    {"route_id":"SD-08","ordinal":9,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["PART_VII_ROUTE_QUEUE_AND_TIE_BREAKING_SEMANTICS"]},
+    {"route_id":"SD-09","ordinal":10,"parent_route_id":null,"predecessors":[],"gap_class":"INSTITUTIONAL_AUTHORITY","gap_ids":["FAIRNESS_METRIC_AUTHORITY","SD_08_AUDITED_RESULT_BASIS"]},
+    {"route_id":"SD-10","ordinal":11,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["CORRECTION_COST_RECEIPT_AND_PROPAGATION_MODEL"]},
+    {"route_id":"SD-11","ordinal":12,"parent_route_id":null,"predecessors":[],"gap_class":"SCIENTIFIC_AUTHORITY","gap_ids":["EVENT_FIXTURE_AND_INDEPENDENT_LEDGER_ORACLE_CLOSURE"]},
+    {"route_id":"SD-12","ordinal":13,"parent_route_id":null,"predecessors":[],"gap_class":"INSTITUTIONAL_AUTHORITY","gap_ids":["COOPERATION_DISCLOSURE_AND_GOVERNANCE_MODEL_AUTHORITY"]},
+    {"route_id":"SD-13","ordinal":14,"parent_route_id":null,"predecessors":[],"gap_class":"INSTITUTIONAL_AUTHORITY","gap_ids":["SETTLEMENT_RESERVE_APPEAL_FRAUD_AND_GOVERNANCE_AUTHORITY"]},
+    {"route_id":"SD-14","ordinal":15,"parent_route_id":null,"predecessors":["SD-01","SD-01-GROWTH-v1","SD-02","SD-03","SD-04","SD-05","SD-06","SD-07","SD-08","SD-09","SD-10","SD-11","SD-12","SD-13"],"gap_class":"INSTITUTIONAL_AND_DEPENDENCY_AUTHORITY","gap_ids":["COMPLETE_ECONOMY_MODEL_AND_EXCHANGE_AUTHORITY","SD_01_THROUGH_SD_13_ACCEPTED_DISPOSITIONS"]}
+  ]
+}
