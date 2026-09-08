@@ -30,6 +30,7 @@ C = module("aws/c0/controller/ebu_c0_controller.py", "aws_c0_controller")
 F = module("aws/c0/finalizer/finalizer.py", "aws_c0_finalizer")
 W = module("aws/c0/container/synthetic_worker.py", "aws_c0_worker")
 D = module("scripts/build_aws_c0_deployment_manifest.py", "aws_c0_deployment_manifest")
+AP = module("aws/c0/bootstrap/atomic_preflight.py", "aws_c0_atomic_preflight")
 P = module("scripts/collect_aws_c0_pricing.py", "aws_c0_pricing")
 B = module("aws/c0/bootstrap/bootstrap_transport.py", "aws_c0_bootstrap_transport")
 S = module("aws/c0/bootstrap/staging_transport.py", "aws_c0_staging_transport")
@@ -3849,6 +3850,56 @@ class CanonicalTests(unittest.TestCase):
         with self.assertRaises(V.ValidationError): V.validate_identity({"kind": "x", "sha256": "0" * 64, "value": "1" * 64})
 
 
+class SealedSourceAtomicPreflightTests(unittest.TestCase):
+    def test_exact_plan_is_closed_and_nonexecuting(self):
+        value = AP.plan(ROOT, "1" * 40, "2" * 40, "3" * 64)
+        self.assertEqual(AP.validate_plan(ROOT, value), value)
+        self.assertEqual(len(value["requests_in_order"]), 8)
+        self.assertEqual((value["maximum_get_object_calls"], value["new_object_puts"],
+                          value["iam_mutations"], value["instance_starts"],
+                          value["platform_smokes"], value["scientific_executions"]), (8, 0, 0, 0, 0, 0))
+
+    def test_plan_refuses_any_unbound_object(self):
+        value = AP.plan(ROOT, "1" * 40, "2" * 40, "3" * 64)
+        value["requests_in_order"][0]["key"] += ".unbound"
+        with self.assertRaisesRegex(ValueError, "differs from exact sealed inputs"):
+            AP.validate_plan(ROOT, value)
+
+    def test_read_one_binds_version_length_checksum_and_digest(self):
+        import io
+        raw = b"exact-version-bytes"
+        request = {"artifact_class": "TEST", "bucket": "b", "key": "k", "version_id": "v1",
+                   "expected_bytes": len(raw), "expected_sha256": AP.sha(raw),
+                   "expected_checksum_sha256_base64": base64.b64encode(bytes.fromhex(AP.sha(raw))).decode(),
+                   "expected_etag": '"e"', "expected_bucket_owner": AP.ACCOUNT, "checksum_mode": "ENABLED"}
+        class Client:
+            def get_object(self, **kwargs):
+                self.kwargs = kwargs
+                return {"Body": io.BytesIO(raw), "VersionId": "v1", "ContentLength": len(raw),
+                        "ChecksumSHA256": request["expected_checksum_sha256_base64"], "ETag": '"e"',
+                        "ResponseMetadata": {"RequestId": "r"}}
+        client = Client(); receipt = AP.read_one(client, request)
+        self.assertEqual(client.kwargs, {"Bucket": "b", "Key": "k", "VersionId": "v1",
+                                        "ChecksumMode": "ENABLED", "ExpectedBucketOwner": AP.ACCOUNT})
+        self.assertEqual((receipt["version_id"], receipt["bytes"], receipt["sha256"]),
+                         ("v1", len(raw), AP.sha(raw)))
+
+    def test_read_one_refuses_wrong_version(self):
+        import io
+        raw = b"x"; digest = AP.sha(raw)
+        request = {"artifact_class": "TEST", "bucket": "b", "key": "k", "version_id": "v1",
+                   "expected_bytes": 1, "expected_sha256": digest,
+                   "expected_checksum_sha256_base64": base64.b64encode(bytes.fromhex(digest)).decode(),
+                   "expected_etag": '"e"', "expected_bucket_owner": AP.ACCOUNT, "checksum_mode": "ENABLED"}
+        class Client:
+            def get_object(self, **kwargs):
+                return {"Body": io.BytesIO(raw), "VersionId": "wrong", "ContentLength": 1,
+                        "ChecksumSHA256": request["expected_checksum_sha256_base64"], "ETag": '"e"',
+                        "ResponseMetadata": {"RequestId": "r"}}
+        with self.assertRaisesRegex(ValueError, "exact-version response binding mismatch"):
+            AP.read_one(Client(), request)
+
+
 class AuthorityTests(unittest.TestCase):
     def test_frozen_arithmetic(self): V.validate_authorities()
     def test_exact_paths_and_modes(self): V.validate_paths()
@@ -3860,6 +3911,7 @@ class AuthorityTests(unittest.TestCase):
         self.assertIn('aws_c0_sealed_source_transfer_recovery_proposal.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('aws_c0_sealed_source_transfer_reuse_contract.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('scripts/validate_aws_c0_sealed_source_transfer_recovery.py',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
+        self.assertIn('aws/c0/bootstrap/atomic_preflight.py',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         original=V._git
         def injected(*args,**kwargs):
             value=original(*args,**kwargs)
