@@ -2,7 +2,7 @@
 
 - The portable user-operated packet/v9 full-preflight package is complete under
   `/Users/konrad.grzyb/code/test-aws`. Package-manifest SHA-256 is
-  `b4192cd3c306d127bd0ec191253e51123d576bf8fb57119a0eb867ebdda4548a`;
+  `936240b345550447d139853b5932465f154e770ffaf5ab25d51163e40aa56e0f`;
   it binds source commit `50d79189a54a053c4c94dd4a487b021b315c0934`, tree
   `18203a65febacc91e24bd302685a82b36bf3d26e`, the six immutable historical
   artifact versions, and the two exact verified runtime successors. The
