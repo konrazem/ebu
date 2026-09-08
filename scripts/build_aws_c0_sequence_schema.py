@@ -507,10 +507,41 @@ def build(root=ROOT):
         ('preparation_authorization_v6',preparation_authorization_v6)):
         definitions[name+'_definition']=value
         definitions[name]={'$ref':'#/$defs/'+name+'_definition'}
+    # Packet/v7 fixed the artifact source, but its preserved downstream
+    # carriers still require packet/v6 and authorization/v5. Append a fully
+    # transitive prospective chain and leave every definition above intact.
+    compatibility=json.loads((root/'aws_c0_sealed_source_downstream_carrier_compatibility_contract.json').read_bytes())
+    compatibility_versions=compatibility['prospective_carrier_version_upgrades']
+    def replace_compatibility(value):
+        if isinstance(value,str):return compatibility_versions.get(value,value)
+        if isinstance(value,list):return [replace_compatibility(item) for item in value]
+        if isinstance(value,dict):return {key:replace_compatibility(item) for key,item in value.items()}
+        return value
+    preparation_packet_v8=replace_compatibility(copy.deepcopy(preparation_packet_v7))
+    compatibility_packet_body=preparation_packet_v8['allOf'][1]
+    compatibility_packet_body['required'].append(
+        'sealed_source_downstream_carrier_compatibility_contract_identity')
+    compatibility_packet_body['properties'][
+        'sealed_source_downstream_carrier_compatibility_contract_identity']=typed_identity(
+            'aws_c0_sealed_source_downstream_carrier_compatibility_contract/v1')
+    preparation_authorization_v7=replace_compatibility(copy.deepcopy(preparation_authorization_v6))
+    launch_v8=replace_compatibility(replace_recovery(copy.deepcopy(launch_v7)))
+    preparation_closure_v7=replace_compatibility(replace_recovery(copy.deepcopy(preparation_closure_v6)))
+    live_packet_v8=replace_compatibility(copy.deepcopy(packet_v7))
+    live_authorization_v8=replace_compatibility(copy.deepcopy(auth_v7))
+    for name,value in (
+        ('preparation_packet_v8',preparation_packet_v8),
+        ('preparation_authorization_v7',preparation_authorization_v7),
+        ('launch_v8',launch_v8),
+        ('preparation_closure_v7',preparation_closure_v7),
+        ('live_packet_v8',live_packet_v8),
+        ('live_authorization_v8',live_authorization_v8)):
+        definitions[name+'_definition']=value
+        definitions[name]={'$ref':'#/$defs/'+name+'_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7','preparation_packet_v7','preparation_authorization_v6']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7','preparation_packet_v7','preparation_authorization_v6','preparation_packet_v8','preparation_authorization_v7','launch_v8','preparation_closure_v7','live_packet_v8','live_authorization_v8']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

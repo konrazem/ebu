@@ -200,15 +200,15 @@ FROZEN_PRELIVE_RECORD_KINDS = (
     "aws_c0_operator_session_renewal_packet/v1",
     "aws_c0_operator_session_renewal_authorization/v1",
     "aws_c0_operator_session_renewal_closure/v1",
-    "aws_c0_preparation_packet/v6",
-    "aws_c0_preparation_authorization/v5",
+    "aws_c0_preparation_packet/v8",
+    "aws_c0_preparation_authorization/v7",
     "aws_c0_private_infrastructure_snapshot/v1",
     "aws_c0_audit_static_handoff_authority_audit/v4",
     "aws_c0_material_runtime_static_validation/v4",
     "aws_c0_cost_model/v2",
     "aws_c0_closure_seed/v2",
-    "aws_c0_launch_request/v7",
-    "aws_c0_preparation_closure/v6",
+    "aws_c0_launch_request/v8",
+    "aws_c0_preparation_closure/v7",
 )
 FROZEN_GATE0_LINEAGE_COMPLETE_BYTE_SHA256 = (
     "d77b2cd6e5301dd69f9c10447e1c1030e369852522944b1ff7c9ccbcb19b4c9c",
@@ -1646,13 +1646,13 @@ ROOT_KINDS = (
     "aws_c0_audit_static_handoff_authority_audit/v4",
     "aws_c0_material_runtime_static_validation/v4",
     "aws_c0_private_infrastructure_snapshot/v1",
-    "aws_c0_launch_request/v7", "aws_c0_start_receipt/v7", "aws_c0_heartbeat/v1",
+    "aws_c0_launch_request/v8", "aws_c0_start_receipt/v7", "aws_c0_heartbeat/v1",
     "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1", "aws_c0_finalizer_receipt/v4",
     "aws_c0_retrieval_verification/v6", "aws_c0_cost_closure/v4", "aws_c0_final_manifest/v6",
 )
 MATERIAL_AUTHORITY_ID = 'EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1'
-CURRENT_PHASE_KINDS = {'aws_c0_closure_seed/v2','aws_c0_preparation_packet/v6','aws_c0_preparation_authorization/v5',
-                       'aws_c0_launch_request/v7','aws_c0_preparation_closure/v6','aws_c0_live_packet/v7','aws_c0_live_authorization/v7'}
+CURRENT_PHASE_KINDS = {'aws_c0_closure_seed/v2','aws_c0_preparation_packet/v8','aws_c0_preparation_authorization/v7',
+                       'aws_c0_launch_request/v8','aws_c0_preparation_closure/v7','aws_c0_live_packet/v8','aws_c0_live_authorization/v8'}
 COMMON_FIELDS = {"schema", "authority_id", "correction_authority_id", "closure_correction_authority_id", "material_correction_authority_id",
     "record_class", "scientific_execution_authorized", "stage_f_execution_authorized", "stage_f_readiness_claimed",
     "zero_science_counters", "observed_utc"}
@@ -1666,7 +1666,7 @@ LIVE_PACKET_V6_FIELDS = COMMON_FIELDS | {"packet_disposition", "preparation_clos
     "pass_role_scope_proof_identity", "pass_role_scope_proof_canonical_json_base64", "execution_session_max_duration_seconds",
     "live_session_assumer_expires_utc", "iam_pagination_bounds", "final_preflight_observed_utc", "final_instance_state",
     "pre_live_object_count", "deployment_inputs_identity", "runtime_control_read_plan_identity", "runtime_control_read_plan"}
-LIVE_PACKET_V7_FIELDS = LIVE_PACKET_V6_FIELDS | {
+LIVE_PACKET_V8_FIELDS = LIVE_PACKET_V6_FIELDS | {
     "runtime_control_reconstruction_source_attachment_identity",
     "runtime_control_reconstruction_source_attachment",
 }
@@ -1681,7 +1681,7 @@ LIVE_AUTH_V6_FIELDS = COMMON_FIELDS | {"statement_sha256", "authenticated_source
     "execution_session_expires_utc", "authorized_actions", "denied_actions",
     "deployment_authorized_utc", "deployment_started_utc", "deployment_completed_utc",
     "deployment_inputs_identity", "post_deployment_control_preimages"}
-LIVE_AUTH_V7_FIELDS = LIVE_AUTH_V6_FIELDS | {"runtime_control_reconstruction_source_attachment_identity"}
+LIVE_AUTH_V8_FIELDS = LIVE_AUTH_V6_FIELDS | {"runtime_control_reconstruction_source_attachment_identity"}
 LAUNCH_V6_FIELDS = COMMON_FIELDS | {"record_sha256", "rehearsal_id", "attempt_id", "attempt_identity", "region",
     "instance_id", "required_initial_instance_state", "artifact_prefix", "preparation_packet_identity",
     "preparation_packet_object", "preparation_authorization_identity", "preparation_authorization_object",
@@ -1691,7 +1691,7 @@ LAUNCH_V6_FIELDS = COMMON_FIELDS | {"record_sha256", "rehearsal_id", "attempt_id
     "phase_timeouts_seconds", "deployed_lambda_timeout_seconds", "state_machine_timeout_seconds",
     "heartbeat_interval_seconds", "checkpoint_interval_seconds", "attempt_deadline_utc", "cleanup_deadline_utc",
     "iam_pagination_bounds", "cost_envelope", "retry_attempts", "cleanup_path"}
-LAUNCH_V7_FIELDS = LAUNCH_V6_FIELDS
+LAUNCH_V8_FIELDS = LAUNCH_V6_FIELDS
 CATEGORY = {
     ROOT_KINDS[0]: "AUTHORITY_AUDIT", ROOT_KINDS[1]: "STATIC_VALIDATION",
     ROOT_KINDS[2]: "SNAPSHOT", ROOT_KINDS[3]: "LAUNCH", ROOT_KINDS[4]: "START",
@@ -1823,9 +1823,9 @@ def _validate_launch_v6(record: Any) -> dict[str, Any]:
                             'aws_c0_preparation_packet/v5','aws_c0_preparation_authorization/v4')
 
 
-def _validate_launch_v7(record: Any) -> dict[str, Any]:
-    return _validate_launch(record,'aws_c0_launch_request/v7',LAUNCH_V7_FIELDS,
-                            'aws_c0_preparation_packet/v6','aws_c0_preparation_authorization/v5')
+def _validate_launch_v8(record: Any) -> dict[str, Any]:
+    return _validate_launch(record,'aws_c0_launch_request/v8',LAUNCH_V8_FIELDS,
+                            'aws_c0_preparation_packet/v8','aws_c0_preparation_authorization/v7')
 
 
 def _validate_cost_model(model: Any, model_id: str, launch: dict[str, Any]) -> dict[str, Any]:
@@ -2162,8 +2162,8 @@ def validate_deployment_sequence(packet: dict[str, Any], auth: dict[str, Any], s
                                  launch: dict[str, Any]) -> dict[str, Any]:
     """Pure local gate; call before publishing authorization or StartExecution."""
     for parent, child, id_field, receipt_field, kind, root in (
-        (auth, packet, 'live_packet_identity', 'live_packet_object', 'aws_c0_live_packet/v7', False),
-        (packet, launch, 'launch_request_identity', 'launch_request_object', 'aws_c0_launch_request/v7', True),
+        (auth, packet, 'live_packet_identity', 'live_packet_object', 'aws_c0_live_packet/v8', False),
+        (packet, launch, 'launch_request_identity', 'launch_request_object', 'aws_c0_launch_request/v8', True),
         (launch, seed, 'closure_seed_identity', 'closure_seed_object', 'aws_c0_closure_seed/v2', False)):
         raw = canonical_bytes(child)
         child_id = _root_digest(child) if root else digest(raw)
@@ -4519,20 +4519,20 @@ def _validate_live_packet_v6(packet: dict[str, Any]) -> None:
         raise Refusal("packet assumer already expired")
 
 
-def _validate_live_packet_v7(packet: dict[str, Any]) -> None:
+def _validate_live_packet_v8(packet: dict[str, Any]) -> None:
     """Validate the truthful prospective predeployment carrier.
 
-    V7 preserves the nine v6 preimages and every action, permission, session,
+    V8 preserves the nine v7 preimages and every action, permission, session,
     cost, science and software-drift field.  It directly embeds the eight
     controls currently eligible for source reconstruction before deployment.
     """
-    if set(packet) != LIVE_PACKET_V7_FIELDS or packet.get("schema") != "aws_c0_live_packet/v7":
-        raise Refusal("live-packet-v7 field closure failed")
-    _common(packet, "aws_c0_live_packet/v7", root=False)
+    if set(packet) != LIVE_PACKET_V8_FIELDS or packet.get("schema") != "aws_c0_live_packet/v8":
+        raise Refusal("live-packet-v8 field closure failed")
+    _common(packet, "aws_c0_live_packet/v8", root=False)
     plan=packet['runtime_control_read_plan'];plan_id=packet['runtime_control_read_plan_identity']
     validate_runtime_control_read_plan_v3(plan,plan_id)
-    _identity(packet, "preparation_closure_identity", "aws_c0_preparation_closure/v6")
-    _identity(packet, "launch_request_identity", "aws_c0_launch_request/v7")
+    _identity(packet, "preparation_closure_identity", "aws_c0_preparation_closure/v7")
+    _identity(packet, "launch_request_identity", "aws_c0_launch_request/v8")
     if (packet["packet_disposition"] != "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED"
             or packet["final_instance_state"] != "stopped"
             or packet["pre_live_object_count"] != FROZEN_PRELIVE_OBJECT_COUNT):
@@ -4611,11 +4611,11 @@ def _validate_live_authorization_v6(auth: dict[str, Any]) -> None:
         raise Refusal("live session expiry ordering invalid")
 
 
-def _validate_live_authorization_v7(auth: dict[str, Any]) -> None:
-    if set(auth)!=LIVE_AUTH_V7_FIELDS or auth.get('schema')!='aws_c0_live_authorization/v7':
-        raise Refusal('live-authorization-v7 field closure failed')
-    _common(auth,'aws_c0_live_authorization/v7',root=False)
-    _identity(auth,'live_packet_identity','aws_c0_live_packet/v7')
+def _validate_live_authorization_v8(auth: dict[str, Any]) -> None:
+    if set(auth)!=LIVE_AUTH_V8_FIELDS or auth.get('schema')!='aws_c0_live_authorization/v8':
+        raise Refusal('live-authorization-v8 field closure failed')
+    _common(auth,'aws_c0_live_authorization/v8',root=False)
+    _identity(auth,'live_packet_identity','aws_c0_live_packet/v8')
     _identity(auth,'runtime_control_reconstruction_source_attachment_identity',
               'aws_c0_runtime_control_reconstruction_source_attachment/v5')
     for identity_field,bytes_field,kind in (
@@ -4638,8 +4638,8 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
     if set(event) != {"action", "live_authorization", "workflow_execution_arn"} or event["action"] != "preflight":
         raise Refusal("preflight event not closed")
     execution_arn = event["workflow_execution_arn"]
-    auth, _, auth_id = _fetch_receipt(event["live_authorization"], "aws_c0_live_authorization/v7", root=False)
-    _validate_live_authorization_v7(auth)
+    auth, _, auth_id = _fetch_receipt(event["live_authorization"], "aws_c0_live_authorization/v8", root=False)
+    _validate_live_authorization_v8(auth)
     if auth["live_authorization_key"] != event["live_authorization"]["key"]:
         raise Refusal("live authorization key mismatch")
     if auth.get("authorized_actions") != ["EXECUTE_EXACT_CHANGE_SET",
@@ -4649,9 +4649,9 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
         raise Refusal("live denial set mismatch")
     if _utc(auth["execution_session_expires_utc"]) <= dt.datetime.now(dt.timezone.utc):
         raise Refusal("live session expired")
-    packet, _, packet_id = _fetch_receipt(auth["live_packet_object"], "aws_c0_live_packet/v7", root=False)
-    _validate_live_packet_v7(packet)
-    if auth.get("live_packet_identity") != identity("aws_c0_live_packet/v7", packet_id):
+    packet, _, packet_id = _fetch_receipt(auth["live_packet_object"], "aws_c0_live_packet/v8", root=False)
+    _validate_live_packet_v8(packet)
+    if auth.get("live_packet_identity") != identity("aws_c0_live_packet/v8", packet_id):
         raise Refusal("live authorization packet identity mismatch")
     for field in ("change_set_identity", "live_session_assumer_identity", "execution_operator_role_identity",
                   "execution_session_policy_identity", "execution_session_policy_ceiling_identity",
@@ -4662,9 +4662,9 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
         raise Refusal("live session duration mismatch")
     if _utc(auth["execution_session_expires_utc"]) > _utc(packet["live_session_assumer_expires_utc"]):
         raise Refusal("derived live session exceeds assumer expiry")
-    launch, launch_receipt, launch_id = _fetch_receipt(packet["launch_request_object"], "aws_c0_launch_request/v7", root=True)
-    _validate_launch_v7(launch)
-    if packet.get("launch_request_identity") != identity("aws_c0_launch_request/v7", launch_id):
+    launch, launch_receipt, launch_id = _fetch_receipt(packet["launch_request_object"], "aws_c0_launch_request/v8", root=True)
+    _validate_launch_v8(launch)
+    if packet.get("launch_request_identity") != identity("aws_c0_launch_request/v8", launch_id):
         raise Refusal("packet launch identity mismatch")
     seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v2", root=False)
     if launch.get("closure_seed_identity") != identity("aws_c0_closure_seed/v2", seed_id) or launch.get("closure_seed_object") != seed_receipt:
@@ -4679,11 +4679,11 @@ def preflight(event: dict[str, Any]) -> dict[str, Any]:
     _runtime_preflight(packet, launch, execution_arn, auth, seed)
     return {
         "preflight_disposition": "AWS_C0_PREFLIGHT_PASS", "launch": launch,
-        "launch_request_identity": identity("aws_c0_launch_request/v7", launch_id),
+        "launch_request_identity": identity("aws_c0_launch_request/v8", launch_id),
         "launch_request_object": launch_receipt,
-        "live_packet_identity": identity("aws_c0_live_packet/v7", packet_id),
+        "live_packet_identity": identity("aws_c0_live_packet/v8", packet_id),
         "live_packet_object": auth["live_packet_object"],
-        "live_authorization_identity": identity("aws_c0_live_authorization/v7", auth_id),
+        "live_authorization_identity": identity("aws_c0_live_authorization/v8", auth_id),
         "live_authorization_object": event["live_authorization"],
         "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
         "closure_seed_object": seed_receipt,
@@ -4799,11 +4799,11 @@ def _resource_use(launch: dict[str, Any], seed_id: str, seed_receipt: dict[str, 
     rows = [{"dimension": name, "unit": UNITS[name], "observation_disposition": "SEALED_MAXIMUM_SUBSTITUTION",
              "observed_units": None, "charged_units": limits[name], "limit_units": limits[name],
              "usage_observation_identity": None, "usage_observation": None, "usage_observation_object": None,
-             "maximum_substitution_source_identity": identity("aws_c0_launch_request/v7", launch_id)}
+             "maximum_substitution_source_identity": identity("aws_c0_launch_request/v8", launch_id)}
             for name in DIMENSIONS]
     return _control_record("aws_c0_resource_use_closure/v3", {
         "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
-        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v7", launch_id),
+        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v8", launch_id),
         "cost_model_identity": launch["cost_model_identity"], "accounting_window": launch["cost_envelope"]["accounting_window"],
         "dimensions": rows, "all_limits_respected": True, "resource_use_disposition": "AWS_C0_RESOURCE_USE_CLOSED",
         "failure_phase": None, "failure_code": None,
@@ -4847,7 +4847,7 @@ def _semantic_roots(launch: dict[str, Any], launch_receipt: dict[str, Any], laun
         if launch[identity_field] != expected:
             raise Refusal(f"launch predecessor identity mismatch:{schema}")
         roots.append((expected, launch[object_field]))
-    roots.append((identity("aws_c0_launch_request/v7", launch_id), launch_receipt))
+    roots.append((identity("aws_c0_launch_request/v8", launch_id), launch_receipt))
     for schema in ("aws_c0_start_receipt/v7", "aws_c0_heartbeat/v1", "aws_c0_checkpoint/v1", "aws_c0_terminal_receipt/v1"):
         rows = [(record, receipt, item_id) for record, receipt, item_id in dynamic if record["schema"] == schema]
         if not rows or (schema in {"aws_c0_start_receipt/v7", "aws_c0_terminal_receipt/v1"} and len(rows) != 1):
@@ -4890,10 +4890,10 @@ def _validate_sealed_gate0_lineage_record(position: int, expected_schema: str,
 def _verify_prelive_objects(packet_receipt: dict[str, Any], auth_receipt: dict[str, Any],
                             launch: dict[str, Any]) -> list[dict[str, Any]]:
     """Exact-version-read the closed 24-object pre-live set and later live auth."""
-    packet, _, packet_id = _fetch_receipt(packet_receipt, "aws_c0_live_packet/v7", root=False)
-    auth, _, auth_id = _fetch_receipt(auth_receipt, "aws_c0_live_authorization/v7", root=False)
-    _validate_live_packet_v7(packet); _validate_live_authorization_v7(auth)
-    if auth["live_packet_identity"] != identity("aws_c0_live_packet/v7", packet_id):
+    packet, _, packet_id = _fetch_receipt(packet_receipt, "aws_c0_live_packet/v8", root=False)
+    auth, _, auth_id = _fetch_receipt(auth_receipt, "aws_c0_live_authorization/v8", root=False)
+    _validate_live_packet_v8(packet); _validate_live_authorization_v8(auth)
+    if auth["live_packet_identity"] != identity("aws_c0_live_packet/v8", packet_id):
         raise Refusal("retrieval live-packet authorization binding mismatch")
     predecessors = packet["pre_live_predecessor_object_receipts"]
     if (len(predecessors) != FROZEN_PRELIVE_PREDECESSOR_COUNT or
@@ -4933,9 +4933,9 @@ def _verify_prelive_objects(packet_receipt: dict[str, Any], auth_receipt: dict[s
             packet["preparation_closure_identity"] != verified[-1]["record_or_object_identity"]):
         raise Refusal("live packet does not bind the terminal launch/closure predecessors")
     verified.extend([
-        {"record_or_object_identity": identity("aws_c0_live_packet/v7", packet_id), "object": packet_receipt,
+        {"record_or_object_identity": identity("aws_c0_live_packet/v8", packet_id), "object": packet_receipt,
          "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"},
-        {"record_or_object_identity": identity("aws_c0_live_authorization/v7", auth_id), "object": auth_receipt,
+        {"record_or_object_identity": identity("aws_c0_live_authorization/v8", auth_id), "object": auth_receipt,
          "verification_disposition": "EXACT_VERSION_COMPLETE_BYTES_PASS"},
     ])
     return verified
@@ -4976,8 +4976,8 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
     bucket = _env("AWS_C0_ARTIFACT_BUCKET", BUCKET); prefix = event["artifact_prefix"]
     seed, seed_receipt, seed_id = _exact_environment_record("CLOSURE_SEED", "aws_c0_closure_seed/v2", root=False)
     model, model_receipt, model_id = _exact_environment_record("COST_MODEL", "aws_c0_cost_model/v2", root=False)
-    launch, launch_receipt, launch_id = _exact_environment_record("LAUNCH", "aws_c0_launch_request/v7", root=True)
-    _validate_launch_v7(launch)
+    launch, launch_receipt, launch_id = _exact_environment_record("LAUNCH", "aws_c0_launch_request/v8", root=True)
+    _validate_launch_v8(launch)
     _validate_cost_model(model, model_id, launch)
     prelive_verified = _verify_prelive_objects(event["live_packet_object"], event["live_authorization_object"], launch)
     if event["attempt_identity"] != launch["attempt_identity"]:
@@ -5019,7 +5019,7 @@ def closure(event: dict[str, Any]) -> dict[str, Any]:
     within = total <= launch["cost_envelope"]["ceiling_minor_units"]
     cost_record = _root_record("aws_c0_cost_closure/v4", {
         "attempt_identity": launch["attempt_identity"], "closure_seed_identity": identity("aws_c0_closure_seed/v2", seed_id),
-        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v7", launch_id),
+        "closure_seed_object": seed_receipt, "launch_request_identity": identity("aws_c0_launch_request/v8", launch_id),
         "finalizer_receipt_identity": finalizer_id, "cost_model_identity": identity("aws_c0_cost_model/v2", model_id),
         "cost_model_object": model_receipt, "resource_use_closure_identity": use_id, "resource_use_object": use_receipt,
         "currency": "USD", "accounting_window": launch["cost_envelope"]["accounting_window"],

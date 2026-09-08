@@ -190,6 +190,8 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "aws_c0_sealed_source_transfer_recovery_proposal.json",
     "aws_c0_sealed_source_transfer_reuse_contract.json",
     "aws_c0_sealed_source_preparation_packet_contract.json",
+    "AWS_C0_SEALED_SOURCE_DOWNSTREAM_CARRIER_COMPATIBILITY_AMENDMENT.md",
+    "aws_c0_sealed_source_downstream_carrier_compatibility_contract.json",
     "scripts/validate_aws_c0_sealed_source_transfer_recovery.py",
     "aws/c0/bootstrap/atomic_preflight.py",
     # Prospective overnight architecture authority, source user turn
@@ -269,10 +271,20 @@ GATE1_DIRECT_VERSION_UPGRADES = (
 SEQUENCE_CONTRACT = json.loads((ROOT / "aws_c0_deployment_sequence_correction_contract.json").read_bytes())
 SEQUENCE_VERSION_UPGRADES = SEQUENCE_CONTRACT["version_upgrades"]
 SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES = SEQUENCE_CONTRACT["prospective_carrier_version_upgrades"]
-SEQUENCE_PRELIVE_RECORD_KINDS = tuple(
-    SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES.get(SEQUENCE_VERSION_UPGRADES.get(kind, kind),
-                                              SEQUENCE_VERSION_UPGRADES.get(kind, kind))
-    for kind in GATE1_PRELIVE_RECORD_KINDS)
+SEALED_SOURCE_PACKET_CONTRACT = json.loads((ROOT / "aws_c0_sealed_source_preparation_packet_contract.json").read_bytes())
+SEALED_SOURCE_COMPATIBILITY_CONTRACT = json.loads(
+    (ROOT / "aws_c0_sealed_source_downstream_carrier_compatibility_contract.json").read_bytes())
+SEQUENCE_CARRIER_MAPPINGS = (
+    SEQUENCE_VERSION_UPGRADES,
+    SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES,
+    SEALED_SOURCE_PACKET_CONTRACT["prospective_carrier_version_upgrades"],
+    SEALED_SOURCE_COMPATIBILITY_CONTRACT["prospective_carrier_version_upgrades"],
+)
+def current_carrier_kind(kind: str) -> str:
+    for mapping in SEQUENCE_CARRIER_MAPPINGS:
+        kind = mapping.get(kind, kind)
+    return kind
+SEQUENCE_PRELIVE_RECORD_KINDS = tuple(current_carrier_kind(kind) for kind in GATE1_PRELIVE_RECORD_KINDS)
 GATE1_TRANSITIVE_VERSION_UPGRADES = (
     ("aws_c0_live_authorization/v4", "aws_c0_live_authorization/v5"),
     ("aws_c0_platform_smoke_known_case_local_binding/v1", "aws_c0_platform_smoke_known_case_local_binding/v2"),
@@ -23897,6 +23909,22 @@ def validate_sequence_authority() -> None:
         'aws_c0_live_packet/v6':'aws_c0_live_packet/v7',
         'aws_c0_live_authorization/v6':'aws_c0_live_authorization/v7'},
         'prospective preparation/launch/live carrier map differs')
+    compatibility=load_json('aws_c0_sealed_source_downstream_carrier_compatibility_contract.json')
+    require(compatibility['predecessor_packet_contract_sha256']==digest(
+                (ROOT/'aws_c0_sealed_source_preparation_packet_contract.json').read_bytes()) and
+            compatibility['prospective_carrier_version_upgrades']=={
+                'aws_c0_preparation_packet/v7':'aws_c0_preparation_packet/v8',
+                'aws_c0_preparation_authorization/v6':'aws_c0_preparation_authorization/v7',
+                'aws_c0_launch_request/v7':'aws_c0_launch_request/v8',
+                'aws_c0_preparation_closure/v6':'aws_c0_preparation_closure/v7',
+                'aws_c0_live_packet/v7':'aws_c0_live_packet/v8',
+                'aws_c0_live_authorization/v7':'aws_c0_live_authorization/v8'} and
+            compatibility['historical_schema_mutation_count']==0 and
+            compatibility['fresh_replacement_atomic_full_preflight_attempt_limit']==1 and
+            compatibility['preserved_semantics']['cost_ceiling_minor_units']==5000 and
+            compatibility['preserved_semantics']['maximum_platform_smokes']==1 and
+            compatibility['preserved_semantics']['new_artifact_put_count']==0,
+            'sealed-source downstream compatibility contract drift')
     require(contract['pre_live_object_count'] == 24 and contract['pre_live_predecessor_count'] == 23 and
             contract['preparation_input_control_count'] == 6 and contract['predeployment_observed_control_count'] == 9 and
             contract['postdeployment_observed_control_count'] == 11 and
@@ -23935,9 +23963,9 @@ def validate_sources() -> None:
             "controller current-record stack absent")
     require("aws_c0_source_sidecar/v5" in controller and "reserve_for_operation" in controller,
             "controller capture reservation absent")
-    require("aws_c0_launch_request/v7" in controller and
-            "aws_c0_live_packet/v7" in controller and
-            "aws_c0_live_authorization/v7" in controller and
+    require("aws_c0_launch_request/v8" in controller and
+            "aws_c0_live_packet/v8" in controller and
+            "aws_c0_live_authorization/v8" in controller and
             "aws_c0_attempt_claim/v3" in controller,
             "controller Gate1 downstream version stack absent")
     require("FROZEN_PRELIVE_OBJECT_COUNT = 24" in finalizer and

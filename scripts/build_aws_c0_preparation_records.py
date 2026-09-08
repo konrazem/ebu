@@ -9,9 +9,10 @@ ROOT=Path(__file__).resolve().parents[1]
 CRT='aws_c0_cost_runtime_retrieval_closure_correction_evidence_schema.json'
 REGISTRY='aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json'
 LINEAGE='aws_c0_gate1_bootstrap_lineage_correction_contract.json'
-SCHEMA_URI='https://ebu.invalid/local/preparation-packet-v7.json'
+SCHEMA_URI='https://ebu.invalid/local/preparation-packet-v8.json'
 SEQUENCE='aws_c0_deployment_sequence_correction_contract.json'
 SEALED_SOURCE_PACKET='aws_c0_sealed_source_preparation_packet_contract.json'
+SEALED_SOURCE_COMPATIBILITY='aws_c0_sealed_source_downstream_carrier_compatibility_contract.json'
 PHASES=('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
 # These are producer boundaries, not exemptions from the frozen 63 obligations.
 # In particular DescribeExecution is ALWAYS, but its producer is StartExecution.
@@ -24,8 +25,10 @@ def sequence(root):return json.loads((root/SEQUENCE).read_bytes())
 def currentize(root,value):
     contract=sequence(root)
     recovery=json.loads((root/SEALED_SOURCE_PACKET).read_bytes())
+    compatibility=json.loads((root/SEALED_SOURCE_COMPATIBILITY).read_bytes())
     mappings=(contract['version_upgrades'],contract['prospective_carrier_version_upgrades'],
-              recovery['prospective_carrier_version_upgrades'])
+              recovery['prospective_carrier_version_upgrades'],
+              compatibility['prospective_carrier_version_upgrades'])
     def visit(v):
         if isinstance(v,str):
             for mapping in mappings:v=mapping.get(v,v)
@@ -802,7 +805,7 @@ def record_schema(root,name):
     result.update({'$schema':bundle['$schema'],'$id':SCHEMA_URI+'/'+name,'$defs':bundle['$defs']})
     return result
 
-def schema(root):return record_schema(root,'preparation_packet_v7'),Registry()
+def schema(root):return record_schema(root,'preparation_packet_v8'),Registry()
 
 def validate_record(root,name,value):
     jsonschema.Draft202012Validator(record_schema(root,name),registry=Registry()).validate(value)
@@ -990,6 +993,14 @@ def validate_sealed_source_packet_fields(root,value):
             'checksum_sha256_base64':item['checksum_sha256_base64']})
     if value['sealed_artifact_version_receipts']!=expected:
         raise ValueError('eight exact ordered sealed artifact receipts required')
+    if value.get('schema')=='aws_c0_preparation_packet/v8':
+        compatibility_raw=(root/SEALED_SOURCE_COMPATIBILITY).read_bytes()
+        compatibility=json.loads(compatibility_raw)
+        if compatibility['predecessor_packet_contract_sha256']!=sha((root/SEALED_SOURCE_PACKET).read_bytes()):
+            raise ValueError('downstream compatibility predecessor drift')
+        if value.get('sealed_source_downstream_carrier_compatibility_contract_identity')!=identity(
+                compatibility['schema'],compatibility):
+            raise ValueError('packet downstream compatibility contract identity mismatch')
     return value
 
 def validate_packet(root,value):
@@ -1072,8 +1083,8 @@ def build_deployment_inputs(root,definition_bytes,document_bytes,template_bytes)
 def validate_predeployment_closure(root,closure):
     """The closure proves preparation, not objects which execution will create."""
     f=finalizer(root)
-    validate_record(root,'preparation_closure_v6',closure)
-    if closure.get('schema')!='aws_c0_preparation_closure/v6':raise ValueError('current preparation closure required')
+    validate_record(root,'preparation_closure_v7',closure)
+    if closure.get('schema')!='aws_c0_preparation_closure/v7':raise ValueError('current preparation closure required')
     f._deployment_control_values(closure['final_runtime_control_preimages'],f.PREDEPLOYMENT_CONTROLS,
                                 '1970-01-01T00:00:00Z',closure['observed_utc'])
     return closure
@@ -1081,10 +1092,10 @@ def validate_predeployment_closure(root,closure):
 def validate_postdeployment_authorization(root,packet,authorization,seed,launch):
     """Mandatory offline validation before the later auth publication and start."""
     f=finalizer(root)
-    for name,value in [('live_packet_v7',packet),('live_authorization_v7',authorization),
-                       ('closure_seed',seed),('launch_v7',launch)]:
+    for name,value in [('live_packet_v8',packet),('live_authorization_v8',authorization),
+                       ('closure_seed',seed),('launch_v8',launch)]:
         validate_record(root,name,value)
-    f._validate_live_packet_v7(packet);f._validate_live_authorization_v7(authorization)
-    f._validate_launch_v7(launch)
+    f._validate_live_packet_v8(packet);f._validate_live_authorization_v8(authorization)
+    f._validate_launch_v8(launch)
     f.validate_deployment_sequence(packet,authorization,seed,launch)
     return copy.deepcopy(authorization)
