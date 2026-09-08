@@ -186,6 +186,9 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "scripts/build_aws_c0_sequence_schema.py",
     # Tracked controller checkpoint required by the active AWS-C0 workflow.
     "CURRENT_GATE.md",
+    # Read-only recovery binding for already-sealed, exact-version source artifacts.
+    "aws_c0_sealed_source_transfer_recovery_proposal.json",
+    "scripts/validate_aws_c0_sealed_source_transfer_recovery.py",
     # Prospective overnight architecture authority, source user turn
     # 01a0788e-15f2-79d3-a26b-66c0cd65fff5; historical Gate 1 scope is unchanged.
     "aws/c0/ssm/EBU-C0-Start-v1.yaml",
