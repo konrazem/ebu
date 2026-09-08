@@ -3858,6 +3858,7 @@ class AuthorityTests(unittest.TestCase):
         self.assertIn('aws/c0/ssm/EBU-C0-Start-v1.yaml',V.GATE1_BOOTSTRAP_LINEAGE_EXCLUDED_PATHS)
         self.assertIn('CURRENT_GATE.md',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('aws_c0_sealed_source_transfer_recovery_proposal.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
+        self.assertIn('aws_c0_sealed_source_transfer_reuse_contract.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('scripts/validate_aws_c0_sealed_source_transfer_recovery.py',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         original=V._git
         def injected(*args,**kwargs):

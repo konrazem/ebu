@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROPOSAL = ROOT / "aws_c0_sealed_source_transfer_recovery_proposal.json"
+REUSE_CONTRACT = ROOT / "aws_c0_sealed_source_transfer_reuse_contract.json"
 EXPECTED_CLASSES = [
     "STATE_MACHINE_DEFINITION",
     "SSM_DOCUMENT",
@@ -51,6 +52,44 @@ def main() -> int:
     args = parser.parse_args()
 
     proposal = json.loads(PROPOSAL.read_bytes())
+    reuse_contract = json.loads(REUSE_CONTRACT.read_bytes())
+    if reuse_contract != {
+        "schema": "aws_c0_sealed_source_transfer_reuse_contract/v1",
+        "record_class": "NON_SCIENTIFIC_AWS_C0_PROSPECTIVE_OPERATIONAL_CONTRACT",
+        "proposal_schema": "aws_c0_sealed_source_transfer_recovery_proposal/v1",
+        "proposal_sha256": sha(PROPOSAL.read_bytes()),
+        "historical_contract_preserved": "aws_c0_live_preparation_choreography_correction_contract.json",
+        "historical_rule_preserved": "C0-LPC-N34",
+        "narrow_exception": {
+            "applies_only_to": "EXACT_READ_ONLY_REUSE_OF_THE_EIGHT_BOUND_OBJECT_VERSIONS",
+            "does_not_apply_to": ["OBJECT_CREATION", "OBJECT_OVERWRITE", "OBJECT_DELETE", "OBJECT_COPY", "OBJECT_LISTING", "UNVERSIONED_READ"],
+            "attempt_replay": False,
+        },
+        "required_source_binding": {
+            "bucket": "ebu-stage-f-results-k7m4p2", "account_id": "623609441658", "region": "us-east-1",
+            "artifact_count": 8, "aggregate_bytes": 415108495, "only_api_operation": "GetObject",
+            "only_iam_action": "s3:GetObjectVersion",
+            "requires_exact_key_version_id_returned_version_id_byte_length_and_sha256": True,
+        },
+        "new_record_rule": {
+            "applies_to": "EVERY_GENERATED_PREPARATION_RECORD", "fresh_key_required": True,
+            "if_none_match": "*", "checksum_algorithm": "SHA256", "returned_version_id_required": True,
+            "exact_version_readback_required": True, "overwrite_or_delete": "FORBIDDEN",
+        },
+        "future_packet_requirements": [
+            "DECLARE_ARTIFACT_SOURCE_MODE_EXACT_SEALED_VERSION_REUSE",
+            "BIND_THE_PROPOSAL_AND_THIS_CONTRACT_BY_SHA256",
+            "BIND_ALL_EIGHT_EXISTING_OBJECT_RECEIPTS_WITHOUT_RETAGGING_OR_REWRITING",
+            "USE_A_FRESH_ATTEMPT_PREFIX_ONLY_FOR_NEWLY_GENERATED_PREPARATION_RECORDS",
+            "REFUSE_ANY_UNBOUND_ARTIFACT_OR_VERSION_OR_ANY_ARTIFACT_WRITE",
+        ],
+        "excluded_scope": [
+            "AWS_SESSION_CREATION", "AWS_MUTATION", "INSTANCE_START", "DEPLOYMENT", "PLATFORM_SMOKE",
+            "SCIENTIFIC_EXECUTION", "PUSH", "MERGE", "PUBLICATION", "RELEASE",
+        ],
+        "disposition": "LOCAL_CONTRACT_ONLY_REQUIRES_FUTURE_PACKET_BOUND_AUTHORIZATION",
+    }:
+        raise RuntimeError("sealed-source reuse contract is not exact")
     if proposal["proposal_status"] != "PROSPECTIVE_NOT_EXECUTION_AUTHORITY":
         raise RuntimeError("proposal cannot grant execution authority")
     if proposal["permitted_api_operations"] != ["GetObject"]:
