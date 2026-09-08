@@ -1,5 +1,21 @@
 # AWS-C0 current gate
 
+- The portable user-operated packet/v9 full-preflight package is complete under
+  `/Users/konrad.grzyb/code/test-aws`. Package-manifest SHA-256 is
+  `b4192cd3c306d127bd0ec191253e51123d576bf8fb57119a0eb867ebdda4548a`;
+  it binds source commit `50d79189a54a053c4c94dd4a487b021b315c0934`, tree
+  `18203a65febacc91e24bd302685a82b36bf3d26e`, the six immutable historical
+  artifact versions, and the two exact verified runtime successors. The
+  one-shot runner accepts caller-supplied source/evidence roots, writes all raw
+  receipts and packet output beneath `test-aws/results`, removes the sole
+  temporary regional R64 permission, keeps its mode-0600 constrained credential
+  only for the exact packet-specific Gate 1 decision, and fails closed on any
+  error or replay. Read-only AST, offline static construction, path-portability,
+  idempotent-result, prior-invocation refusal, and prohibited-API checks pass.
+  No AWS call, instance start, deployment, platform smoke, or scientific
+  execution occurred during package construction. Current disposition:
+  `PACKET_V9_USER_PREFLIGHT_PACKAGE_READY_NOT_INVOKED`.
+
 - Runtime-artifact compatibility successors are complete at implementation
   commits `231783ae7f97008c174f60691aab098804351568` and
   `fd259192d3e6e98242fe19cee2b66499739b2081`. Packet/v8 and all eight
