@@ -1,5 +1,32 @@
 # AWS-C0 current gate
 
+- Prospective downstream carrier successors are implemented at commit
+  `fc3293107d841980a52f2f261d7219c5d84258ef`, tree
+  `6d55f2683a24a0e47db3673e67dc3227f696044b`: preparation packet/v8,
+  preparation authorization/v7, launch/v8, preparation closure/v7, live
+  packet/v8, and live authorization/v8. They change only the transitive
+  carrier-kind bindings and packet/v8's exact compatibility-contract identity
+  `b22dd965e3b5bbd7b54a9957d2c11d3bb4f5d01080877ba1143ae5b0ba44a824`.
+  Canonical hashes of all six immediate historical definitions are unchanged.
+  Deterministic schema generation, audit-v4, static-v4, `git diff --check`,
+  focused successor tests, and the complete 289-test AWS-C0 suite pass.
+- The one authorized fresh replacement atomic full-preflight attempt
+  `6bb83a0d94c3b55f402f6633ee2c75f8ec84e355a5c4ac7117a0eedb8e70534b`
+  passed and constructed complete `aws_c0_preparation_packet/v8`
+  `982c6da5447a5ef8a796b0f879252c86ba0bcf656b0394032b29e3179b7271b4`.
+  All controls, including one fresh R64, were bound in six seconds within the
+  300-second limit. Completion evidence SHA-256 is
+  `3335f28329b692d750725def7114755dd0b3e49952cd4250ce4c15934bffb6ea`;
+  mandatory-cleanup evidence SHA-256 is
+  `e99d0b7df2f56e3081c14b8f24c42831505c3eeb9560315a18b7383f4745a8a7`.
+  The temporary regional `ec2:DescribeSecurityGroups` policy was removed,
+  temporary credentials were disposed, the original base role remained
+  unchanged, and the existing `t3.small` remained stopped. The eight sealed
+  artifact versions are preserved with zero new artifact puts. No instance
+  start, deployment, smoke, science, push, merge, publication, or release
+  occurred. Current disposition:
+  `PACKET_V8_READY_PENDING_EXACT_PACKET_SPECIFIC_GATE1_AUTHORIZATION`.
+
 - Exact Gate 1 authorization for packet/v7
   `dc3c1c3394efcf9b02b04aee5aadfc4cc713394d176445e2fc714288956f12cd`
   was accepted after removing Markdown presentation escapes; its normalized
