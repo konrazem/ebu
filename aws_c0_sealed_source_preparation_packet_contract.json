@@ -1,0 +1,64 @@
+{
+  "schema": "aws_c0_sealed_source_preparation_packet_contract/v1",
+  "record_class": "NON_SCIENTIFIC_AWS_C0_PROSPECTIVE_OPERATIONAL_CONTRACT",
+  "source_proposal_sha256": "8ad38a053b28280af185ef87dfd937091b5f03fea0b516a8a1389911f472559a",
+  "source_reuse_contract_sha256": "796bdc146aa95db2c990ede72416a6cf2337a4bfff670382599ceaafd8c898c1",
+  "successful_atomic_preflight_attempt_identity_sha256": "a6e5fb4f0eccf0a8dd6a0962809046e985bccbd9a9106486a67580e77a893946",
+  "successful_atomic_preflight_plan_file_sha256": "ffb77200290cce3f251bc09f369a1d5a2ac2be85d53cac0e5d8804da8da87503",
+  "successful_atomic_preflight_execution_context_file_sha256": "1496e3ff7874086c7ac7d4b3d5ade2e128e38ade4148aad52f80cbf79cbc6fe6",
+  "successful_atomic_preflight_result_file_sha256": "f13437ebf08df6aea3e3421eb4d4a50d00d97180f436af25cab2561f5e1b24d8",
+  "successful_atomic_preflight_result_identity_sha256": "3065be208775380e0e3a3b02ef6e69525d3157b21faec7b895651ed393e56859",
+  "artifact_source_mode": "EXACT_SEALED_VERSION_REUSE",
+  "artifact_count": 8,
+  "aggregate_bytes": 415108495,
+  "logical_pre_live_object_count": 24,
+  "fresh_new_pre_live_record_count": 16,
+  "reused_existing_artifact_count": 8,
+  "new_artifact_put_count": 0,
+  "historical_schema_mutation_count": 0,
+  "prospective_carrier_version_upgrades": {
+    "aws_c0_preparation_packet/v6": "aws_c0_preparation_packet/v7",
+    "aws_c0_preparation_authorization/v5": "aws_c0_preparation_authorization/v6"
+  },
+  "preparation_packet_v7_required_changes": [
+    "DECLARE_ARTIFACT_SOURCE_MODE_EXACT_SEALED_VERSION_REUSE",
+    "BIND_SOURCE_PROPOSAL_IDENTITY",
+    "BIND_SOURCE_REUSE_CONTRACT_IDENTITY",
+    "BIND_SUCCESSFUL_ATOMIC_PREFLIGHT_RESULT_IDENTITY",
+    "BIND_EXACTLY_EIGHT_EXISTING_ARTIFACT_VERSION_RECEIPTS",
+    "REMOVE_NEW_ARTIFACT_PUBLICATION_TARGETS_AND_CONTRACT"
+  ],
+  "preserved_semantics": {
+    "logical_pre_live_object_set": true,
+    "fresh_key_rule_for_every_new_record": true,
+    "write_once_conditional_put_rule": true,
+    "aws_actions_other_than_removing_eight_redundant_artifact_puts": true,
+    "permissions": true,
+    "one_existing_t3_small": true,
+    "maximum_platform_smokes": 1,
+    "cost_ceiling_minor_units": 5000,
+    "scientific_content": true,
+    "historical_schemas": true,
+    "historical_evidence": true
+  },
+  "downstream_runtime_carriers": {
+    "launch_request": "aws_c0_launch_request/v7",
+    "preparation_closure": "aws_c0_preparation_closure/v6",
+    "live_packet": "aws_c0_live_packet/v7",
+    "live_authorization": "aws_c0_live_authorization/v7",
+    "disposition": "PRESERVED_PENDING_SEPARATE_SEALED_CONTROLLER_COMPATIBILITY_BINDING"
+  },
+  "prohibited_actions": [
+    "ARTIFACT_PUT",
+    "OBJECT_OVERWRITE",
+    "OBJECT_DELETE",
+    "OBJECT_COPY",
+    "UNVERSIONED_ARTIFACT_READ",
+    "ATTEMPT_REPLAY",
+    "SCIENTIFIC_EXECUTION",
+    "PUSH",
+    "MERGE",
+    "PUBLIC_RELEASE"
+  ],
+  "disposition": "PROSPECTIVE_VERSIONED_PACKET_BINDING_REQUIRES_IMPLEMENTATION_AND_VALIDATION"
+}

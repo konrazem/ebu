@@ -189,6 +189,7 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     # Read-only recovery binding for already-sealed, exact-version source artifacts.
     "aws_c0_sealed_source_transfer_recovery_proposal.json",
     "aws_c0_sealed_source_transfer_reuse_contract.json",
+    "aws_c0_sealed_source_preparation_packet_contract.json",
     "scripts/validate_aws_c0_sealed_source_transfer_recovery.py",
     "aws/c0/bootstrap/atomic_preflight.py",
     # Prospective overnight architecture authority, source user turn

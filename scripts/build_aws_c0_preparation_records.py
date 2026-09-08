@@ -9,8 +9,9 @@ ROOT=Path(__file__).resolve().parents[1]
 CRT='aws_c0_cost_runtime_retrieval_closure_correction_evidence_schema.json'
 REGISTRY='aws_c0_audit_static_real_execution_registry_correction_evidence_schema.json'
 LINEAGE='aws_c0_gate1_bootstrap_lineage_correction_contract.json'
-SCHEMA_URI='https://ebu.invalid/local/preparation-packet-v5.json'
+SCHEMA_URI='https://ebu.invalid/local/preparation-packet-v7.json'
 SEQUENCE='aws_c0_deployment_sequence_correction_contract.json'
+SEALED_SOURCE_PACKET='aws_c0_sealed_source_preparation_packet_contract.json'
 PHASES=('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
 # These are producer boundaries, not exemptions from the frozen 63 obligations.
 # In particular DescribeExecution is ALWAYS, but its producer is StartExecution.
@@ -22,7 +23,9 @@ def sequence(root):return json.loads((root/SEQUENCE).read_bytes())
 
 def currentize(root,value):
     contract=sequence(root)
-    mappings=(contract['version_upgrades'],contract['prospective_carrier_version_upgrades'])
+    recovery=json.loads((root/SEALED_SOURCE_PACKET).read_bytes())
+    mappings=(contract['version_upgrades'],contract['prospective_carrier_version_upgrades'],
+              recovery['prospective_carrier_version_upgrades'])
     def visit(v):
         if isinstance(v,str):
             for mapping in mappings:v=mapping.get(v,v)
@@ -799,7 +802,7 @@ def record_schema(root,name):
     result.update({'$schema':bundle['$schema'],'$id':SCHEMA_URI+'/'+name,'$defs':bundle['$defs']})
     return result
 
-def schema(root):return record_schema(root,'preparation_packet_v6'),Registry()
+def schema(root):return record_schema(root,'preparation_packet_v7'),Registry()
 
 def validate_record(root,name,value):
     jsonschema.Draft202012Validator(record_schema(root,name),registry=Registry()).validate(value)
@@ -956,6 +959,39 @@ def build_sealed_role_launch_fields(root,snapshot_bytes,receipts,*,earliest,late
         'sealed_ec2_role_context_preimage_sha256':sha(canonical(context)),
         'sealed_ec2_role_context_cross_binding_disposition':launch_schema['sealed_ec2_role_context_cross_binding_disposition']['const']}
 
+def validate_sealed_source_packet_fields(root,value):
+    proposal_raw=(root/'aws_c0_sealed_source_transfer_recovery_proposal.json').read_bytes()
+    reuse_raw=(root/'aws_c0_sealed_source_transfer_reuse_contract.json').read_bytes()
+    proposal=json.loads(proposal_raw)
+    reuse=json.loads(reuse_raw)
+    packet_contract=json.loads((root/SEALED_SOURCE_PACKET).read_bytes())
+    if (packet_contract['source_proposal_sha256']!=sha(proposal_raw) or
+            packet_contract['source_reuse_contract_sha256']!=sha(reuse_raw) or
+            packet_contract['artifact_count']!=len(proposal['artifacts']) or
+            packet_contract['aggregate_bytes']!=sum(item['bytes'] for item in proposal['artifacts']) or
+            packet_contract['logical_pre_live_object_count']!=24 or
+            packet_contract['fresh_new_pre_live_record_count']!=16 or
+            packet_contract['reused_existing_artifact_count']!=8 or
+            packet_contract['new_artifact_put_count']!=0):
+        raise ValueError('sealed-source preparation contract drift')
+    if value['sealed_source_transfer_proposal_identity']!=identity(proposal['schema'],proposal):
+        raise ValueError('packet proposal identity mismatch')
+    if value['sealed_source_transfer_reuse_contract_identity']!=identity(reuse['schema'],reuse):
+        raise ValueError('packet reuse contract identity mismatch')
+    if value['sealed_source_preparation_packet_contract_identity']!=identity(packet_contract['schema'],packet_contract):
+        raise ValueError('packet sealed-source carrier contract identity mismatch')
+    if value['sealed_source_atomic_preflight_result_identity'].get('sha256')!=packet_contract[
+            'successful_atomic_preflight_result_identity_sha256']:
+        raise ValueError('packet atomic preflight result identity mismatch')
+    expected=[]
+    for item in proposal['artifacts']:
+        expected.append({'bucket_identity':value['artifact_bucket_identity'],'key':item['key'],
+            'version_id':item['version_id'],'bytes':item['bytes'],'sha256':item['sha256'],
+            'checksum_sha256_base64':item['checksum_sha256_base64']})
+    if value['sealed_artifact_version_receipts']!=expected:
+        raise ValueError('eight exact ordered sealed artifact receipts required')
+    return value
+
 def validate_packet(root,value):
     definition,registry=schema(root)
     jsonschema.Draft202012Validator(definition,registry=registry).validate(value)
@@ -989,13 +1025,7 @@ def validate_packet(root,value):
     if [v['control_kind'] for v in value['initial_prestate_control_preimages']]!=[
         'ACCOUNT_REGION','INSTANCE_PROFILE_SOLE_ROLE','IAM_POLICY_SET','BUCKET_CONTROLS_KMS','VPC_NETWORK_PATH','SERVICE_QUOTA']:
         raise ValueError('six ordered current preimages required')
-    if [v['artifact_class'] for v in value['artifact_targets']]!=[
-        'STATE_MACHINE_DEFINITION','SSM_DOCUMENT','CONTROLLER','SYSTEMD_UNIT','FINALIZER_ZIP',
-        'SYNTHETIC_IMAGE_ARCHIVE','CONTAINER_RUNTIME_POLICY','CLOUDFORMATION_TEMPLATE']:
-        raise ValueError('eight ordered artifact targets required')
-    for target in [v['target'] for v in value['artifact_targets']]:
-        if target['if_none_match']!='*' or 'version_id' in target:
-            raise ValueError('preapproval artifact must be conditional and have no future version')
+    validate_sealed_source_packet_fields(root,value)
     return value
 
 def build(root,fields):

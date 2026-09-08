@@ -38,16 +38,51 @@ G = module("scripts/build_aws_c0_preparation_records.py", "aws_c0_preparation_re
 
 
 class CompletePreparationBuilderTests(unittest.TestCase):
+    def sealed_source_fields(self):
+        proposal=json.loads((ROOT/'aws_c0_sealed_source_transfer_recovery_proposal.json').read_bytes())
+        reuse=json.loads((ROOT/'aws_c0_sealed_source_transfer_reuse_contract.json').read_bytes())
+        contract=json.loads((ROOT/'aws_c0_sealed_source_preparation_packet_contract.json').read_bytes())
+        bucket=G.identity('aws_s3_bucket/v1','b'*64)
+        return {
+            'artifact_bucket_identity':bucket,
+            'sealed_source_transfer_proposal_identity':G.identity(proposal['schema'],proposal),
+            'sealed_source_transfer_reuse_contract_identity':G.identity(reuse['schema'],reuse),
+            'sealed_source_preparation_packet_contract_identity':G.identity(contract['schema'],contract),
+            'sealed_source_atomic_preflight_result_identity':{
+                'kind':'aws_c0_sealed_source_atomic_preflight_result/v1',
+                'value':contract['successful_atomic_preflight_result_identity_sha256'],
+                'sha256':contract['successful_atomic_preflight_result_identity_sha256']},
+            'sealed_artifact_version_receipts':[{
+                'bucket_identity':bucket,'key':item['key'],'version_id':item['version_id'],
+                'bytes':item['bytes'],'sha256':item['sha256'],
+                'checksum_sha256_base64':item['checksum_sha256_base64']}
+                for item in proposal['artifacts']]}
+
     def test_schema_upgrade_is_narrow_and_uses_exact_existing_lineage(self):
         schema, _ = G.schema(ROOT)
         p = schema['allOf'][1]['properties']
-        self.assertEqual(p['schema']['const'], 'aws_c0_preparation_packet/v6')
+        self.assertEqual(p['schema']['const'], 'aws_c0_preparation_packet/v7')
         self.assertEqual(p['bootstrap_control_candidates']['minItems'], 6)
         self.assertEqual(p['bootstrap_control_candidates']['maxItems'], 6)
         self.assertEqual(p['planned_pre_live_object_count']['const'], 24)
-        self.assertEqual(p['planned_pre_live_record_kinds']['const'], list(V.SEQUENCE_PRELIVE_RECORD_KINDS))
+        self.assertEqual(p['artifact_source_mode']['const'], 'EXACT_SEALED_VERSION_REUSE')
+        self.assertEqual(p['sealed_artifact_version_receipts']['minItems'], 8)
+        self.assertEqual(p['sealed_artifact_version_receipts']['maxItems'], 8)
+        self.assertEqual(p['fresh_new_pre_live_record_count']['const'], 16)
+        self.assertEqual(p['new_artifact_put_count']['const'], 0)
+        self.assertNotIn('artifact_targets',p)
+        self.assertNotIn('artifact_publication_contract_identity',p)
+        preapproval=p['preapproval_identity_preimages']['$ref'].rsplit('/',1)[-1]
+        self.assertNotIn('artifact_publication_contract',
+            json.loads((ROOT/'aws_c0_deployment_sequence_evidence_schema.json').read_bytes())['$defs'][preapproval]['required'])
         original = json.loads((ROOT / G.REGISTRY).read_bytes())['$defs']['preparation_packet_v3']
-        self.assertEqual(schema['allOf'][1]['required'], original['allOf'][1]['required']+['material_correction_authority_id'])
+        historical_required=original['allOf'][1]['required']+['material_correction_authority_id']
+        self.assertEqual(set(schema['allOf'][1]['required']),
+            set(historical_required)-{'artifact_targets','artifact_publication_contract_identity'}|
+            {'artifact_source_mode','sealed_source_transfer_proposal_identity',
+             'sealed_source_transfer_reuse_contract_identity','sealed_source_preparation_packet_contract_identity',
+             'sealed_source_atomic_preflight_result_identity','sealed_source_atomic_preflight_attempt_identity_sha256',
+             'sealed_artifact_version_receipts','fresh_new_pre_live_record_count','new_artifact_put_count'})
 
     def test_complete_builder_refuses_convenience_draft_or_missing_observations(self):
         for value in ({}, {'schema': 'aws_c0_gate1_preparation_packet_draft/v1'},
@@ -59,6 +94,19 @@ class CompletePreparationBuilderTests(unittest.TestCase):
         for value in ({'amount': 1.5}, {'amount': float('inf')}, {'text': 'e\u0301'}):
             with self.subTest(value=value), self.assertRaises(ValueError): G.canonical(value)
         self.assertEqual(G.canonical({'b': 2, 'a': 1}), b'{"a":1,"b":2}')
+
+    def test_sealed_source_packet_fields_bind_exact_existing_versions(self):
+        fields=self.sealed_source_fields()
+        self.assertEqual(G.validate_sealed_source_packet_fields(ROOT,fields),fields)
+        for mutation,pattern in (
+            (lambda x:x['sealed_artifact_version_receipts'][0].update(version_id='wrong'),'eight exact ordered'),
+            (lambda x:x['sealed_source_atomic_preflight_result_identity'].update(
+                value='0'*64,sha256='0'*64),'atomic preflight result'),
+            (lambda x:x['sealed_source_transfer_proposal_identity'].update(
+                value='0'*64,sha256='0'*64),'proposal identity')):
+            candidate=copy.deepcopy(fields);mutation(candidate)
+            with self.subTest(pattern=pattern),self.assertRaisesRegex(ValueError,pattern):
+                G.validate_sealed_source_packet_fields(ROOT,candidate)
 
 class PhaseObligationProducerTests(unittest.TestCase):
     """Explicit offline API-shaped fixtures; never actual AWS observations."""
@@ -3910,6 +3958,7 @@ class AuthorityTests(unittest.TestCase):
         self.assertIn('CURRENT_GATE.md',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('aws_c0_sealed_source_transfer_recovery_proposal.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('aws_c0_sealed_source_transfer_reuse_contract.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
+        self.assertIn('aws_c0_sealed_source_preparation_packet_contract.json',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('scripts/validate_aws_c0_sealed_source_transfer_recovery.py',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         self.assertIn('aws/c0/bootstrap/atomic_preflight.py',V.LOCAL_DEPLOYMENT_READINESS_PATHS)
         original=V._git

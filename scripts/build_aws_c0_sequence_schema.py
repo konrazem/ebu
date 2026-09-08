@@ -454,10 +454,63 @@ def build(root=ROOT):
     definitions['live_packet_v7']={'$ref':'#/$defs/live_packet_v7_definition'}
     definitions['live_authorization_v7_definition']=auth_v7
     definitions['live_authorization_v7']={'$ref':'#/$defs/live_authorization_v7_definition'}
+    # The sealed-source recovery changes only how the eight implementation
+    # artifacts enter the prospective preparation carrier: exact existing
+    # VersionIds replace redundant PutObject targets.  Clone every affected
+    # carrier so all historical schemas above remain byte-for-byte available.
+    recovery=json.loads((root/'aws_c0_sealed_source_preparation_packet_contract.json').read_bytes())
+    recovery_versions=recovery['prospective_carrier_version_upgrades']
+    def replace_recovery(value):
+        if isinstance(value,str):return recovery_versions.get(value,value)
+        if isinstance(value,list):return [replace_recovery(item) for item in value]
+        if isinstance(value,dict):return {key:replace_recovery(item) for key,item in value.items()}
+        return value
+    preparation_packet_v7=replace_recovery(copy.deepcopy(preparation_packet_v6))
+    recovery_packet_body=preparation_packet_v7['allOf'][1]
+    for field in ('artifact_targets','artifact_publication_contract_identity'):
+        recovery_packet_body['required'].remove(field);del recovery_packet_body['properties'][field]
+    preapproval_name=recovery_packet_body['properties']['preapproval_identity_preimages']['$ref'].rsplit('/',1)[-1]
+    recovery_preapproval=copy.deepcopy(definitions[preapproval_name])
+    recovery_preapproval['required'].remove('artifact_publication_contract')
+    del recovery_preapproval['properties']['artifact_publication_contract']
+    definitions['sealed_source_preapproval_identity_preimages_v1']=recovery_preapproval
+    recovery_packet_body['properties']['preapproval_identity_preimages']={
+        '$ref':'#/$defs/sealed_source_preapproval_identity_preimages_v1'}
+    receipt_fields={
+        'bucket_identity':{'$ref':identity_ref},'key':{'type':'string','minLength':1,'maxLength':1024},
+        'version_id':{'type':'string','minLength':1,'maxLength':1024},
+        'bytes':{'type':'integer','minimum':1},'sha256':{'type':'string','pattern':'^[0-9a-f]{64}$'},
+        'checksum_sha256_base64':{'type':'string','pattern':'^[A-Za-z0-9+/]{43}=$'}}
+    definitions['sealed_source_artifact_version_receipt_v1']={
+        'type':'object','required':list(receipt_fields),'properties':receipt_fields,'additionalProperties':False}
+    recovery_fields={
+        'artifact_source_mode':{'const':'EXACT_SEALED_VERSION_REUSE'},
+        'sealed_source_transfer_proposal_identity':typed_identity(
+            'aws_c0_sealed_source_transfer_recovery_proposal/v1'),
+        'sealed_source_transfer_reuse_contract_identity':typed_identity(
+            'aws_c0_sealed_source_transfer_reuse_contract/v1'),
+        'sealed_source_preparation_packet_contract_identity':typed_identity(
+            'aws_c0_sealed_source_preparation_packet_contract/v1'),
+        'sealed_source_atomic_preflight_result_identity':typed_identity(
+            'aws_c0_sealed_source_atomic_preflight_result/v1'),
+        'sealed_source_atomic_preflight_attempt_identity_sha256':{
+            'const':recovery['successful_atomic_preflight_attempt_identity_sha256']},
+        'sealed_artifact_version_receipts':{
+            'type':'array','minItems':8,'maxItems':8,'uniqueItems':True,
+            'items':{'$ref':'#/$defs/sealed_source_artifact_version_receipt_v1'}},
+        'fresh_new_pre_live_record_count':{'const':16},'new_artifact_put_count':{'const':0}}
+    recovery_packet_body['required']+=list(recovery_fields)
+    recovery_packet_body['properties'].update(recovery_fields)
+    preparation_authorization_v6=replace_recovery(copy.deepcopy(preparation_authorization_v5))
+    for name,value in (
+        ('preparation_packet_v7',preparation_packet_v7),
+        ('preparation_authorization_v6',preparation_authorization_v6)):
+        definitions[name+'_definition']=value
+        definitions[name]={'$ref':'#/$defs/'+name+'_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7','preparation_packet_v7','preparation_authorization_v6']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

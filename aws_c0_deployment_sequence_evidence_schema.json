@@ -122,6 +122,12 @@
     },
     {
       "$ref": "#/$defs/live_authorization_v7"
+    },
+    {
+      "$ref": "#/$defs/preparation_packet_v7"
+    },
+    {
+      "$ref": "#/$defs/preparation_authorization_v6"
     }
   ],
   "$defs": {
@@ -58454,6 +58460,626 @@
     },
     "live_authorization_v7": {
       "$ref": "#/$defs/live_authorization_v7_definition"
+    },
+    "sealed_source_preapproval_identity_preimages_v1": {
+      "type": "object",
+      "required": [
+        "preparation_policy_ceiling",
+        "preparation_policy_subset_proof",
+        "preparation_pass_role_scope_proof",
+        "preparation_packet_key_derivation_contract",
+        "preparation_authorization_key_derivation_contract",
+        "authority_audit_observation_contract",
+        "static_validation_observation_contract",
+        "private_snapshot_derivation_contract",
+        "runtime_control_derivation_contract",
+        "bootstrap_derivation_contract",
+        "iam_before",
+        "iam_remediation_plan",
+        "iam_rollback_plan",
+        "change_set_plan",
+        "change_set_effect_api_plan",
+        "change_set_effect_resource_plan",
+        "launch_construction_contract",
+        "preparation_closure_contract",
+        "live_packet_contract"
+      ],
+      "properties": {
+        "preparation_policy_ceiling": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "preparation_policy_subset_proof": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "preparation_pass_role_scope_proof": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "preparation_packet_key_derivation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "preparation_authorization_key_derivation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "authority_audit_observation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "static_validation_observation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "private_snapshot_derivation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "runtime_control_derivation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "bootstrap_derivation_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "iam_before": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "iam_remediation_plan": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "iam_rollback_plan": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "change_set_plan": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "change_set_effect_api_plan": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "change_set_effect_resource_plan": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "launch_construction_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "preparation_closure_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        },
+        "live_packet_contract": {
+          "$ref": "#/$defs/d18_bound_identity_preimage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sealed_source_artifact_version_receipt_v1": {
+      "type": "object",
+      "required": [
+        "bucket_identity",
+        "key",
+        "version_id",
+        "bytes",
+        "sha256",
+        "checksum_sha256_base64"
+      ],
+      "properties": {
+        "bucket_identity": {
+          "$ref": "#/$defs/d0_identity"
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "version_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "checksum_sha256_base64": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9+/]{43}=$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "preparation_packet_v7_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d6_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "implementation_commit",
+            "implementation_tree",
+            "account_identity",
+            "region",
+            "instance_id",
+            "artifact_bucket_identity",
+            "preparation_session_assumer_identity",
+            "preparation_operator_role_identity",
+            "preparation_session_policy_identity",
+            "preparation_session_policy_canonical_json_base64",
+            "preparation_session_expires_utc",
+            "preparation_session_max_duration_seconds",
+            "preparation_policy_ceiling_identity",
+            "preparation_policy_subset_proof_identity",
+            "preparation_pass_role_scope_proof_identity",
+            "read_only_preflight_allowlist_identity",
+            "read_only_preflight_allowlist_canonical_json_base64",
+            "preapproval_identity_preimages",
+            "bootstrap_control_candidates",
+            "planned_pre_live_object_count",
+            "planned_pre_live_record_kinds",
+            "preparation_packet_key_derivation_contract_identity",
+            "preparation_authorization_key_derivation_contract_identity",
+            "authority_audit_publication_target",
+            "authority_audit_observation_contract_identity",
+            "static_validation_publication_target",
+            "static_validation_observation_contract_identity",
+            "private_snapshot_publication_target",
+            "private_snapshot_derivation_contract_identity",
+            "cost_model_candidate",
+            "closure_seed_candidate",
+            "launch_publication_target",
+            "preparation_closure_publication_target",
+            "live_packet_publication_target",
+            "initial_prestate_control_preimages",
+            "runtime_control_derivation_contract_identity",
+            "bootstrap_derivation_contract_identity",
+            "iam_before_identity",
+            "iam_remediation_plan_identity",
+            "iam_rollback_plan_identity",
+            "change_set_plan_identity",
+            "change_set_effect_api_plan_identity",
+            "change_set_effect_resource_plan_identity",
+            "cost_envelope",
+            "launch_construction_contract_identity",
+            "preparation_closure_contract_identity",
+            "live_packet_contract_identity",
+            "material_correction_authority_id",
+            "artifact_source_mode",
+            "sealed_source_transfer_proposal_identity",
+            "sealed_source_transfer_reuse_contract_identity",
+            "sealed_source_preparation_packet_contract_identity",
+            "sealed_source_atomic_preflight_result_identity",
+            "sealed_source_atomic_preflight_attempt_identity_sha256",
+            "sealed_artifact_version_receipts",
+            "fresh_new_pre_live_record_count",
+            "new_artifact_put_count"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_preparation_packet/v7"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "implementation_commit": {
+              "$ref": "#/$defs/d16_git_oid"
+            },
+            "implementation_tree": {
+              "$ref": "#/$defs/d16_git_oid"
+            },
+            "account_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "region": {
+              "const": "us-east-1"
+            },
+            "instance_id": {
+              "const": "i-048bac00bdb540a4e"
+            },
+            "artifact_bucket_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_assumer_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_operator_role_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "preparation_session_expires_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "preparation_session_max_duration_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "preparation_policy_ceiling_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_policy_subset_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_pass_role_scope_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "read_only_preflight_allowlist_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "read_only_preflight_allowlist_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "preapproval_identity_preimages": {
+              "$ref": "#/$defs/sealed_source_preapproval_identity_preimages_v1"
+            },
+            "bootstrap_control_candidates": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d19_canonical_candidate"
+              }
+            },
+            "planned_pre_live_object_count": {
+              "const": 24
+            },
+            "planned_pre_live_record_kinds": {
+              "const": [
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_operator_bootstrap_packet/v4",
+                "aws_c0_operator_bootstrap_authorization/v5",
+                "aws_c0_operator_bootstrap_closure/v5",
+                "aws_c0_operator_session_renewal_packet/v1",
+                "aws_c0_operator_session_renewal_authorization/v1",
+                "aws_c0_operator_session_renewal_closure/v1",
+                "aws_c0_preparation_packet/v7",
+                "aws_c0_preparation_authorization/v6",
+                "aws_c0_private_infrastructure_snapshot/v1",
+                "aws_c0_audit_static_handoff_authority_audit/v4",
+                "aws_c0_material_runtime_static_validation/v4",
+                "aws_c0_cost_model/v2",
+                "aws_c0_closure_seed/v2",
+                "aws_c0_launch_request/v7",
+                "aws_c0_preparation_closure/v6",
+                "aws_c0_live_packet/v7"
+              ]
+            },
+            "preparation_packet_key_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_authorization_key_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "authority_audit_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "authority_audit_observation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "static_validation_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "static_validation_observation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "private_snapshot_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "private_snapshot_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "cost_model_candidate": {
+              "$ref": "#/$defs/d19_canonical_candidate"
+            },
+            "closure_seed_candidate": {
+              "$ref": "#/$defs/d19_canonical_candidate"
+            },
+            "launch_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "preparation_closure_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "live_packet_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "initial_prestate_control_preimages": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d23_initial_prestate_control_preimage"
+              }
+            },
+            "runtime_control_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "bootstrap_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "iam_before_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "iam_remediation_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "iam_rollback_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "change_set_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "change_set_effect_api_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "change_set_effect_resource_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "cost_envelope": {
+              "$ref": "#/$defs/d11_cost_envelope_seed"
+            },
+            "launch_construction_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_closure_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "live_packet_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
+            "artifact_source_mode": {
+              "const": "EXACT_SEALED_VERSION_REUSE"
+            },
+            "sealed_source_transfer_proposal_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_transfer_recovery_proposal/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_transfer_reuse_contract_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_transfer_reuse_contract/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_preparation_packet_contract_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_preparation_packet_contract/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_atomic_preflight_result_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_atomic_preflight_result/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_atomic_preflight_attempt_identity_sha256": {
+              "const": "a6e5fb4f0eccf0a8dd6a0962809046e985bccbd9a9106486a67580e77a893946"
+            },
+            "sealed_artifact_version_receipts": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/sealed_source_artifact_version_receipt_v1"
+              }
+            },
+            "fresh_new_pre_live_record_count": {
+              "const": 16
+            },
+            "new_artifact_put_count": {
+              "const": 0
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "preparation_packet_v7": {
+      "$ref": "#/$defs/preparation_packet_v7_definition"
+    },
+    "preparation_authorization_v6_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d6_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "statement_sha256",
+            "authenticated_source_identity",
+            "preparation_packet_identity",
+            "account_identity",
+            "preparation_session_assumer_identity",
+            "preparation_operator_role_identity",
+            "preparation_session_policy_identity",
+            "preparation_session_policy_canonical_json_base64",
+            "preparation_policy_ceiling_identity",
+            "preparation_policy_ceiling_canonical_json_base64",
+            "preparation_policy_subset_proof_identity",
+            "preparation_policy_subset_proof_canonical_json_base64",
+            "preparation_pass_role_scope_proof_identity",
+            "preparation_pass_role_scope_proof_canonical_json_base64",
+            "preparation_session_max_duration_seconds",
+            "operator_session_identity",
+            "operator_session_derivation_proof_identity",
+            "operator_session_derivation_proof_canonical_json_base64",
+            "operator_session_expires_utc",
+            "pre_live_object_count",
+            "accounting_end_utc",
+            "cost_ceiling_minor_units",
+            "authorized_actions",
+            "denied_actions",
+            "material_correction_authority_id"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_preparation_authorization/v6"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "statement_sha256": {
+              "$ref": "#/$defs/d1_sha256"
+            },
+            "authenticated_source_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_packet_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_preparation_packet/v7"
+                    }
+                  }
+                }
+              ]
+            },
+            "account_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_assumer_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_operator_role_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "preparation_policy_ceiling_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_policy_ceiling_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "preparation_policy_subset_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_policy_subset_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "preparation_pass_role_scope_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_pass_role_scope_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "preparation_session_max_duration_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "operator_session_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "operator_session_derivation_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "operator_session_derivation_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "operator_session_expires_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "pre_live_object_count": {
+              "const": 24
+            },
+            "accounting_end_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "cost_ceiling_minor_units": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "authorized_actions": {
+              "const": [
+                "RECHECK_READ_ONLY_PREFLIGHT",
+                "APPLY_EXACT_IAM_REMEDIATION",
+                "STAGE_EXACT_PRE_LIVE_OBJECTS",
+                "BOOTSTRAP_EXACT_STOPPED_INSTANCE",
+                "CREATE_ONE_UNEXECUTED_CHANGE_SET",
+                "FINALIZE_EXACT_LIVE_PACKET"
+              ]
+            },
+            "denied_actions": {
+              "const": [
+                "LIVE_EXECUTION",
+                "REPLAY",
+                "DELETE",
+                "TERMINATE",
+                "SCIENTIFIC_EXECUTION"
+              ]
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "preparation_authorization_v6": {
+      "$ref": "#/$defs/preparation_authorization_v6_definition"
     }
   }
 }
