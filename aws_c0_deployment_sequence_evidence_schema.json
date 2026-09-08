@@ -146,6 +146,24 @@
     },
     {
       "$ref": "#/$defs/live_authorization_v8"
+    },
+    {
+      "$ref": "#/$defs/preparation_packet_v9"
+    },
+    {
+      "$ref": "#/$defs/preparation_authorization_v8"
+    },
+    {
+      "$ref": "#/$defs/launch_v9"
+    },
+    {
+      "$ref": "#/$defs/preparation_closure_v8"
+    },
+    {
+      "$ref": "#/$defs/live_packet_v9"
+    },
+    {
+      "$ref": "#/$defs/live_authorization_v9"
     }
   ],
   "$defs": {
@@ -60836,6 +60854,1759 @@
     },
     "live_authorization_v8": {
       "$ref": "#/$defs/live_authorization_v8_definition"
+    },
+    "preparation_packet_v9_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d6_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "implementation_commit",
+            "implementation_tree",
+            "account_identity",
+            "region",
+            "instance_id",
+            "artifact_bucket_identity",
+            "preparation_session_assumer_identity",
+            "preparation_operator_role_identity",
+            "preparation_session_policy_identity",
+            "preparation_session_policy_canonical_json_base64",
+            "preparation_session_expires_utc",
+            "preparation_session_max_duration_seconds",
+            "preparation_policy_ceiling_identity",
+            "preparation_policy_subset_proof_identity",
+            "preparation_pass_role_scope_proof_identity",
+            "read_only_preflight_allowlist_identity",
+            "read_only_preflight_allowlist_canonical_json_base64",
+            "preapproval_identity_preimages",
+            "bootstrap_control_candidates",
+            "planned_pre_live_object_count",
+            "planned_pre_live_record_kinds",
+            "preparation_packet_key_derivation_contract_identity",
+            "preparation_authorization_key_derivation_contract_identity",
+            "authority_audit_publication_target",
+            "authority_audit_observation_contract_identity",
+            "static_validation_publication_target",
+            "static_validation_observation_contract_identity",
+            "private_snapshot_publication_target",
+            "private_snapshot_derivation_contract_identity",
+            "cost_model_candidate",
+            "closure_seed_candidate",
+            "launch_publication_target",
+            "preparation_closure_publication_target",
+            "live_packet_publication_target",
+            "initial_prestate_control_preimages",
+            "runtime_control_derivation_contract_identity",
+            "bootstrap_derivation_contract_identity",
+            "iam_before_identity",
+            "iam_remediation_plan_identity",
+            "iam_rollback_plan_identity",
+            "change_set_plan_identity",
+            "change_set_effect_api_plan_identity",
+            "change_set_effect_resource_plan_identity",
+            "cost_envelope",
+            "launch_construction_contract_identity",
+            "preparation_closure_contract_identity",
+            "live_packet_contract_identity",
+            "material_correction_authority_id",
+            "artifact_source_mode",
+            "sealed_source_transfer_proposal_identity",
+            "sealed_source_transfer_reuse_contract_identity",
+            "sealed_source_preparation_packet_contract_identity",
+            "sealed_source_atomic_preflight_result_identity",
+            "sealed_source_atomic_preflight_attempt_identity_sha256",
+            "sealed_artifact_version_receipts",
+            "fresh_new_pre_live_record_count",
+            "new_artifact_put_count",
+            "sealed_source_downstream_carrier_compatibility_contract_identity",
+            "runtime_artifact_compatibility_successor_contract_identity"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_preparation_packet/v9"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "implementation_commit": {
+              "$ref": "#/$defs/d16_git_oid"
+            },
+            "implementation_tree": {
+              "$ref": "#/$defs/d16_git_oid"
+            },
+            "account_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "region": {
+              "const": "us-east-1"
+            },
+            "instance_id": {
+              "const": "i-048bac00bdb540a4e"
+            },
+            "artifact_bucket_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_assumer_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_operator_role_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "preparation_session_expires_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "preparation_session_max_duration_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "preparation_policy_ceiling_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_policy_subset_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_pass_role_scope_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "read_only_preflight_allowlist_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "read_only_preflight_allowlist_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "preapproval_identity_preimages": {
+              "$ref": "#/$defs/sealed_source_preapproval_identity_preimages_v1"
+            },
+            "bootstrap_control_candidates": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d19_canonical_candidate"
+              }
+            },
+            "planned_pre_live_object_count": {
+              "const": 24
+            },
+            "planned_pre_live_record_kinds": {
+              "const": [
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_implementation_artifact/v1",
+                "aws_c0_operator_bootstrap_packet/v4",
+                "aws_c0_operator_bootstrap_authorization/v5",
+                "aws_c0_operator_bootstrap_closure/v5",
+                "aws_c0_operator_session_renewal_packet/v1",
+                "aws_c0_operator_session_renewal_authorization/v1",
+                "aws_c0_operator_session_renewal_closure/v1",
+                "aws_c0_preparation_packet/v9",
+                "aws_c0_preparation_authorization/v8",
+                "aws_c0_private_infrastructure_snapshot/v1",
+                "aws_c0_audit_static_handoff_authority_audit/v4",
+                "aws_c0_material_runtime_static_validation/v4",
+                "aws_c0_cost_model/v2",
+                "aws_c0_closure_seed/v2",
+                "aws_c0_launch_request/v9",
+                "aws_c0_preparation_closure/v8",
+                "aws_c0_live_packet/v9"
+              ]
+            },
+            "preparation_packet_key_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_authorization_key_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "authority_audit_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "authority_audit_observation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "static_validation_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "static_validation_observation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "private_snapshot_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "private_snapshot_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "cost_model_candidate": {
+              "$ref": "#/$defs/d19_canonical_candidate"
+            },
+            "closure_seed_candidate": {
+              "$ref": "#/$defs/d19_canonical_candidate"
+            },
+            "launch_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "preparation_closure_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "live_packet_publication_target": {
+              "$ref": "#/$defs/d21_derived_publication_target"
+            },
+            "initial_prestate_control_preimages": {
+              "type": "array",
+              "minItems": 6,
+              "maxItems": 6,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d23_initial_prestate_control_preimage"
+              }
+            },
+            "runtime_control_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "bootstrap_derivation_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "iam_before_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "iam_remediation_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "iam_rollback_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "change_set_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "change_set_effect_api_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "change_set_effect_resource_plan_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "cost_envelope": {
+              "$ref": "#/$defs/d11_cost_envelope_seed"
+            },
+            "launch_construction_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_closure_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "live_packet_contract_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
+            "artifact_source_mode": {
+              "const": "EXACT_SIX_SEALED_VERSION_REUSE_PLUS_TWO_RUNTIME_SUCCESSORS"
+            },
+            "sealed_source_transfer_proposal_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_transfer_recovery_proposal/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_transfer_reuse_contract_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_transfer_reuse_contract/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_preparation_packet_contract_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_preparation_packet_contract/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_atomic_preflight_result_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_atomic_preflight_result/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "sealed_source_atomic_preflight_attempt_identity_sha256": {
+              "const": "a6e5fb4f0eccf0a8dd6a0962809046e985bccbd9a9106486a67580e77a893946"
+            },
+            "sealed_artifact_version_receipts": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/sealed_source_artifact_version_receipt_v1"
+              }
+            },
+            "fresh_new_pre_live_record_count": {
+              "const": 18
+            },
+            "new_artifact_put_count": {
+              "const": 2
+            },
+            "sealed_source_downstream_carrier_compatibility_contract_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_sealed_source_downstream_carrier_compatibility_contract/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "runtime_artifact_compatibility_successor_contract_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_runtime_artifact_compatibility_successor_contract/v1"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "preparation_packet_v9": {
+      "$ref": "#/$defs/preparation_packet_v9_definition"
+    },
+    "preparation_authorization_v8_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d6_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "statement_sha256",
+            "authenticated_source_identity",
+            "preparation_packet_identity",
+            "account_identity",
+            "preparation_session_assumer_identity",
+            "preparation_operator_role_identity",
+            "preparation_session_policy_identity",
+            "preparation_session_policy_canonical_json_base64",
+            "preparation_policy_ceiling_identity",
+            "preparation_policy_ceiling_canonical_json_base64",
+            "preparation_policy_subset_proof_identity",
+            "preparation_policy_subset_proof_canonical_json_base64",
+            "preparation_pass_role_scope_proof_identity",
+            "preparation_pass_role_scope_proof_canonical_json_base64",
+            "preparation_session_max_duration_seconds",
+            "operator_session_identity",
+            "operator_session_derivation_proof_identity",
+            "operator_session_derivation_proof_canonical_json_base64",
+            "operator_session_expires_utc",
+            "pre_live_object_count",
+            "accounting_end_utc",
+            "cost_ceiling_minor_units",
+            "authorized_actions",
+            "denied_actions",
+            "material_correction_authority_id"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_preparation_authorization/v8"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "statement_sha256": {
+              "$ref": "#/$defs/d1_sha256"
+            },
+            "authenticated_source_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_packet_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_preparation_packet/v9"
+                    }
+                  }
+                }
+              ]
+            },
+            "account_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_assumer_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_operator_role_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_session_policy_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "preparation_policy_ceiling_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_policy_ceiling_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "preparation_policy_subset_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_policy_subset_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "preparation_pass_role_scope_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "preparation_pass_role_scope_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "preparation_session_max_duration_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "operator_session_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "operator_session_derivation_proof_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "operator_session_derivation_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d2_canonical_json_base64"
+            },
+            "operator_session_expires_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "pre_live_object_count": {
+              "const": 24
+            },
+            "accounting_end_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "cost_ceiling_minor_units": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "authorized_actions": {
+              "const": [
+                "RECHECK_READ_ONLY_PREFLIGHT",
+                "APPLY_EXACT_IAM_REMEDIATION",
+                "STAGE_EXACT_PRE_LIVE_OBJECTS",
+                "BOOTSTRAP_EXACT_STOPPED_INSTANCE",
+                "CREATE_ONE_UNEXECUTED_CHANGE_SET",
+                "FINALIZE_EXACT_LIVE_PACKET"
+              ]
+            },
+            "denied_actions": {
+              "const": [
+                "LIVE_EXECUTION",
+                "REPLAY",
+                "DELETE",
+                "TERMINATE",
+                "SCIENTIFIC_EXECUTION"
+              ]
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "preparation_authorization_v8": {
+      "$ref": "#/$defs/preparation_authorization_v8_definition"
+    },
+    "launch_v9_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d26_root_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "rehearsal_id",
+            "attempt_id",
+            "attempt_identity",
+            "region",
+            "instance_id",
+            "required_initial_instance_state",
+            "artifact_prefix",
+            "preparation_packet_identity",
+            "preparation_packet_object",
+            "preparation_authorization_identity",
+            "preparation_authorization_object",
+            "authority_audit_identity",
+            "authority_audit_object",
+            "static_validation_identity",
+            "static_validation_object",
+            "private_infrastructure_snapshot_identity",
+            "private_infrastructure_snapshot_object",
+            "cost_model_identity",
+            "cost_model_object",
+            "closure_seed_identity",
+            "closure_seed_object",
+            "artifact_version_receipts",
+            "phase_timeouts_seconds",
+            "deployed_lambda_timeout_seconds",
+            "state_machine_timeout_seconds",
+            "heartbeat_interval_seconds",
+            "checkpoint_interval_seconds",
+            "attempt_deadline_utc",
+            "cleanup_deadline_utc",
+            "iam_pagination_bounds",
+            "cost_envelope",
+            "retry_attempts",
+            "cleanup_path",
+            "material_correction_authority_id"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_launch_request/v9"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_EVIDENCE"
+            },
+            "rehearsal_id": {
+              "type": "string",
+              "pattern": "^AWS-C0-[A-Z0-9-]{1,64}$"
+            },
+            "attempt_id": {
+              "type": "string",
+              "pattern": "^ATTEMPT-[A-Z0-9-]{1,64}-(SUCCESS|FAIL-AFTER-CHECKPOINT|TIMEOUT)$"
+            },
+            "attempt_identity": {
+              "$ref": "#/$defs/d8_attempt_identity"
+            },
+            "region": {
+              "const": "us-east-1"
+            },
+            "instance_id": {
+              "const": "i-048bac00bdb540a4e"
+            },
+            "required_initial_instance_state": {
+              "const": "stopped"
+            },
+            "artifact_prefix": {
+              "type": "string",
+              "pattern": "^rehearsal/aws-c0/"
+            },
+            "preparation_packet_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_preparation_packet/v9"
+                    }
+                  }
+                }
+              ]
+            },
+            "preparation_packet_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "preparation_authorization_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_preparation_authorization/v8"
+                    }
+                  }
+                }
+              ]
+            },
+            "preparation_authorization_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "authority_audit_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_audit_static_handoff_authority_audit/v4"
+                    }
+                  }
+                }
+              ]
+            },
+            "authority_audit_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "static_validation_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_material_runtime_static_validation/v4"
+                    }
+                  }
+                }
+              ]
+            },
+            "static_validation_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "private_infrastructure_snapshot_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "private_infrastructure_snapshot_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "cost_model_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "cost_model_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "closure_seed_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "closure_seed_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "artifact_version_receipts": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d27_object_receipt"
+              }
+            },
+            "phase_timeouts_seconds": {
+              "$ref": "#/$defs/d28_phase_timeouts"
+            },
+            "deployed_lambda_timeout_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "state_machine_timeout_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "heartbeat_interval_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "checkpoint_interval_seconds": {
+              "$ref": "#/$defs/d9_positive_integer"
+            },
+            "attempt_deadline_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "cleanup_deadline_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "iam_pagination_bounds": {
+              "$ref": "#/$defs/d10_iam_pagination_bounds"
+            },
+            "cost_envelope": {
+              "$ref": "#/$defs/d29_cost_envelope_v3"
+            },
+            "retry_attempts": {
+              "const": 1
+            },
+            "cleanup_path": {
+              "const": "STEP_FUNCTIONS_SINGLE_STOP_THEN_FINALIZER_VERIFY"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "launch_v9": {
+      "$ref": "#/$defs/launch_v9_definition"
+    },
+    "preparation_closure_v8_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d6_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "closure_seed_identity",
+            "closure_seed_object",
+            "preparation_packet_identity",
+            "preparation_packet_object",
+            "preparation_authorization_identity",
+            "preparation_authorization_object",
+            "authority_audit_identity",
+            "authority_audit_object",
+            "static_validation_identity",
+            "static_validation_object",
+            "private_snapshot_identity",
+            "private_snapshot_object",
+            "artifact_objects",
+            "launch_request_identity",
+            "launch_request_object",
+            "change_set_identity",
+            "change_set_observation_identity",
+            "final_runtime_control_preimages",
+            "objects_published_before_closure",
+            "pre_live_object_count_after_live_packet",
+            "published_object_receipts",
+            "final_instance_state",
+            "preparation_disposition",
+            "preparation_failure_phase",
+            "preparation_failure_code",
+            "publication_upgrade_binding",
+            "material_correction_authority_id",
+            "deployment_inputs_identity"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_preparation_closure/v8"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "closure_seed_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "closure_seed_object": {
+              "$ref": "#/$defs/d27_object_receipt"
+            },
+            "preparation_packet_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_preparation_packet/v9"
+                    }
+                  }
+                }
+              ]
+            },
+            "preparation_packet_object": {
+              "$ref": "#/$defs/d141_nullable_object_receipt"
+            },
+            "preparation_authorization_identity": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/d0_identity"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "kind"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "aws_c0_preparation_authorization/v8"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "preparation_authorization_object": {
+              "$ref": "#/$defs/d141_nullable_object_receipt"
+            },
+            "authority_audit_identity": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/d0_identity"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "kind"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "aws_c0_audit_static_handoff_authority_audit/v4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "authority_audit_object": {
+              "$ref": "#/$defs/d141_nullable_object_receipt"
+            },
+            "static_validation_identity": {
+              "oneOf": [
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/d0_identity"
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "kind"
+                      ],
+                      "properties": {
+                        "kind": {
+                          "const": "aws_c0_material_runtime_static_validation/v4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "static_validation_object": {
+              "$ref": "#/$defs/d141_nullable_object_receipt"
+            },
+            "private_snapshot_identity": {
+              "$ref": "#/$defs/d142_nullable_identity"
+            },
+            "private_snapshot_object": {
+              "$ref": "#/$defs/d141_nullable_object_receipt"
+            },
+            "artifact_objects": {
+              "type": "array",
+              "maxItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d27_object_receipt"
+              }
+            },
+            "launch_request_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_launch_request/v9"
+                    }
+                  }
+                }
+              ]
+            },
+            "launch_request_object": {
+              "$ref": "#/$defs/d141_nullable_object_receipt"
+            },
+            "change_set_identity": {
+              "$ref": "#/$defs/d142_nullable_identity"
+            },
+            "change_set_observation_identity": {
+              "$ref": "#/$defs/d142_nullable_identity"
+            },
+            "final_runtime_control_preimages": {
+              "type": "array",
+              "maxItems": 9,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d3_control_preimage"
+              }
+            },
+            "objects_published_before_closure": {
+              "$ref": "#/$defs/d14_bounded_integer"
+            },
+            "pre_live_object_count_after_live_packet": {
+              "$ref": "#/$defs/d14_bounded_integer"
+            },
+            "published_object_receipts": {
+              "type": "array",
+              "maxItems": 19,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d27_object_receipt"
+              }
+            },
+            "final_instance_state": {
+              "enum": [
+                "stopped",
+                "unknown"
+              ]
+            },
+            "preparation_disposition": {
+              "enum": [
+                "AWS_C0_PREPARATION_PASS",
+                "AWS_C0_PREPARATION_FAIL",
+                "AWS_C0_PREPARATION_INCONCLUSIVE"
+              ]
+            },
+            "preparation_failure_phase": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "preparation_failure_code": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "publication_upgrade_binding": {
+              "$ref": "#/$defs/d30_publication_upgrade_binding_v4"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
+            "deployment_inputs_identity": {
+              "$ref": "#/$defs/d0_identity"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "preparation_disposition": {
+                    "const": "AWS_C0_PREPARATION_PASS"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "preparation_packet_object": {
+                    "$ref": "#/$defs/d27_object_receipt"
+                  },
+                  "preparation_authorization_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "preparation_authorization_object": {
+                    "$ref": "#/$defs/d27_object_receipt"
+                  },
+                  "authority_audit_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "authority_audit_object": {
+                    "$ref": "#/$defs/d27_object_receipt"
+                  },
+                  "static_validation_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "static_validation_object": {
+                    "$ref": "#/$defs/d27_object_receipt"
+                  },
+                  "private_snapshot_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "private_snapshot_object": {
+                    "$ref": "#/$defs/d27_object_receipt"
+                  },
+                  "artifact_objects": {
+                    "type": "array",
+                    "minItems": 8,
+                    "maxItems": 8
+                  },
+                  "launch_request_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "launch_request_object": {
+                    "$ref": "#/$defs/d27_object_receipt"
+                  },
+                  "change_set_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "change_set_observation_identity": {
+                    "$ref": "#/$defs/d0_identity"
+                  },
+                  "final_runtime_control_preimages": {
+                    "type": "array",
+                    "minItems": 9,
+                    "maxItems": 9
+                  },
+                  "objects_published_before_closure": {
+                    "const": 22
+                  },
+                  "pre_live_object_count_after_live_packet": {
+                    "const": 24
+                  },
+                  "published_object_receipts": {
+                    "type": "array",
+                    "minItems": 22,
+                    "maxItems": 22
+                  },
+                  "final_instance_state": {
+                    "const": "stopped"
+                  },
+                  "preparation_failure_phase": {
+                    "type": "null"
+                  },
+                  "preparation_failure_code": {
+                    "type": "null"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "preparation_failure_phase": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "preparation_failure_code": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "preparation_closure_v8": {
+      "$ref": "#/$defs/preparation_closure_v8_definition"
+    },
+    "live_packet_v9_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d144_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "packet_disposition",
+            "preparation_closure_identity",
+            "preparation_closure_object",
+            "launch_request_identity",
+            "launch_request_object",
+            "pre_live_predecessor_object_receipts",
+            "live_authorization_key_target",
+            "runtime_control_preimages",
+            "change_set_identity",
+            "change_set_observation_identity",
+            "effect_api_set_identity",
+            "effect_resource_set_identity",
+            "live_session_assumer_identity",
+            "execution_operator_role_identity",
+            "execution_session_policy_identity",
+            "execution_session_policy_canonical_json_base64",
+            "execution_session_policy_ceiling_identity",
+            "execution_session_policy_ceiling_canonical_json_base64",
+            "execution_session_policy_subset_proof_identity",
+            "execution_session_policy_subset_proof_canonical_json_base64",
+            "pass_role_scope_proof_identity",
+            "pass_role_scope_proof_canonical_json_base64",
+            "execution_session_max_duration_seconds",
+            "live_session_assumer_expires_utc",
+            "iam_pagination_bounds",
+            "final_preflight_observed_utc",
+            "final_instance_state",
+            "pre_live_object_count",
+            "runtime_control_read_plan_identity",
+            "runtime_control_read_plan",
+            "material_correction_authority_id",
+            "deployment_inputs_identity",
+            "runtime_control_reconstruction_source_attachment_identity",
+            "runtime_control_reconstruction_source_attachment"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_live_packet/v9"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "packet_disposition": {
+              "const": "AWS_C0_LIVE_PACKET_COMPLETE_UNAUTHORIZED"
+            },
+            "preparation_closure_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_preparation_closure/v8"
+                    }
+                  }
+                }
+              ]
+            },
+            "preparation_closure_object": {
+              "$ref": "#/$defs/d146_object_receipt"
+            },
+            "launch_request_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_launch_request/v9"
+                    }
+                  }
+                }
+              ]
+            },
+            "launch_request_object": {
+              "$ref": "#/$defs/d146_object_receipt"
+            },
+            "pre_live_predecessor_object_receipts": {
+              "type": "array",
+              "minItems": 23,
+              "maxItems": 23,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d146_object_receipt"
+              }
+            },
+            "live_authorization_key_target": {
+              "$ref": "#/$defs/d148_publication_key_target"
+            },
+            "runtime_control_preimages": {
+              "type": "array",
+              "minItems": 9,
+              "maxItems": 9,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/d149_control_preimage"
+              }
+            },
+            "change_set_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_cloudformation_change_set/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "change_set_observation_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_change_set_effects_observation/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "effect_api_set_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_effect_api_set/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "effect_resource_set_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_effect_resource_set/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "live_session_assumer_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_principal/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_operator_role_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_role/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_session_policy/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "execution_session_policy_ceiling_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_policy_ceiling/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_ceiling_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "execution_session_policy_subset_proof_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_policy_subset_proof/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_subset_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "pass_role_scope_proof_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_passrole_scope_proof/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "pass_role_scope_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "execution_session_max_duration_seconds": {
+              "$ref": "#/$defs/d68_positive_integer"
+            },
+            "live_session_assumer_expires_utc": {
+              "$ref": "#/$defs/d67_timestamp"
+            },
+            "iam_pagination_bounds": {
+              "$ref": "#/$defs/d151_iam_pagination_bounds"
+            },
+            "final_preflight_observed_utc": {
+              "$ref": "#/$defs/d67_timestamp"
+            },
+            "final_instance_state": {
+              "const": "stopped"
+            },
+            "pre_live_object_count": {
+              "const": 24
+            },
+            "runtime_control_read_plan_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_runtime_control_read_plan/v3"
+                    }
+                  }
+                }
+              ]
+            },
+            "runtime_control_read_plan": {
+              "$ref": "#/$defs/read_plan_iam_v3"
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
+            "deployment_inputs_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "runtime_control_reconstruction_source_attachment_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_runtime_control_reconstruction_source_attachment/v5"
+                    }
+                  }
+                }
+              ]
+            },
+            "runtime_control_reconstruction_source_attachment": {
+              "$ref": "#/$defs/runtime_reconstruction_source_attachment_v5_definition"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "live_packet_v9": {
+      "$ref": "#/$defs/live_packet_v9_definition"
+    },
+    "live_authorization_v9_definition": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/d144_common"
+        },
+        {
+          "type": "object",
+          "required": [
+            "statement_sha256",
+            "authenticated_source_identity",
+            "live_packet_identity",
+            "live_packet_object",
+            "live_authorization_key",
+            "account_identity",
+            "attempt_identity",
+            "change_set_identity",
+            "live_session_assumer_identity",
+            "execution_operator_role_identity",
+            "execution_session_policy_identity",
+            "execution_session_policy_canonical_json_base64",
+            "execution_session_policy_ceiling_identity",
+            "execution_session_policy_ceiling_canonical_json_base64",
+            "execution_session_policy_subset_proof_identity",
+            "execution_session_policy_subset_proof_canonical_json_base64",
+            "pass_role_scope_proof_identity",
+            "pass_role_scope_proof_canonical_json_base64",
+            "execution_session_max_duration_seconds",
+            "execution_session_identity",
+            "execution_session_derivation_proof_identity",
+            "execution_session_derivation_proof_canonical_json_base64",
+            "execution_session_expires_utc",
+            "authorized_actions",
+            "denied_actions",
+            "material_correction_authority_id",
+            "deployment_inputs_identity",
+            "deployment_authorized_utc",
+            "deployment_started_utc",
+            "deployment_completed_utc",
+            "post_deployment_control_preimages",
+            "runtime_control_reconstruction_source_attachment_identity"
+          ],
+          "properties": {
+            "schema": {
+              "const": "aws_c0_live_authorization/v9"
+            },
+            "record_class": {
+              "const": "NON_SCIENTIFIC_AWS_C0_CONTROL_EVIDENCE"
+            },
+            "statement_sha256": {
+              "$ref": "#/$defs/d66_sha256"
+            },
+            "authenticated_source_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_operator_live_authorization_source/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "live_packet_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_live_packet/v9"
+                    }
+                  }
+                }
+              ]
+            },
+            "live_packet_object": {
+              "$ref": "#/$defs/d146_object_receipt"
+            },
+            "live_authorization_key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            "account_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_account/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "attempt_identity": {
+              "$ref": "#/$defs/d241_attempt_identity"
+            },
+            "change_set_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_cloudformation_change_set/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "live_session_assumer_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_principal/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_operator_role_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_role/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_session_policy/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_canonical_json_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+              "minLength": 4
+            },
+            "execution_session_policy_ceiling_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_policy_ceiling/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_ceiling_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "execution_session_policy_subset_proof_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_policy_subset_proof/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_policy_subset_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "pass_role_scope_proof_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_iam_passrole_scope_proof/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "pass_role_scope_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "execution_session_max_duration_seconds": {
+              "$ref": "#/$defs/d68_positive_integer"
+            },
+            "execution_session_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_sts_role_session/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_derivation_proof_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d65_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_sts_session_derivation_proof/v1"
+                    }
+                  }
+                }
+              ]
+            },
+            "execution_session_derivation_proof_canonical_json_base64": {
+              "$ref": "#/$defs/d150_canonical_json_base64"
+            },
+            "execution_session_expires_utc": {
+              "$ref": "#/$defs/d67_timestamp"
+            },
+            "authorized_actions": {
+              "const": [
+                "EXECUTE_EXACT_CHANGE_SET",
+                "PUBLISH_EXACT_LIVE_AUTHORIZATION",
+                "START_ONE_EXACT_EXECUTION"
+              ]
+            },
+            "denied_actions": {
+              "const": [
+                "REPLAY",
+                "OTHER_CHANGE_SET",
+                "OTHER_ATTEMPT",
+                "SCIENTIFIC_EXECUTION"
+              ]
+            },
+            "material_correction_authority_id": {
+              "const": "EBU-AWS-C0-MATERIAL-IDENTITY-RUNTIME-VALIDATION-CORRECTION-AUTHORITY-v1"
+            },
+            "deployment_inputs_identity": {
+              "$ref": "#/$defs/d0_identity"
+            },
+            "deployment_authorized_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "deployment_started_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "deployment_completed_utc": {
+              "$ref": "#/$defs/d4_timestamp"
+            },
+            "post_deployment_control_preimages": {
+              "type": "array",
+              "minItems": 11,
+              "maxItems": 11,
+              "items": {
+                "$ref": "#/$defs/d3_control_preimage"
+              }
+            },
+            "runtime_control_reconstruction_source_attachment_identity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/d0_identity"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "const": "aws_c0_runtime_control_reconstruction_source_attachment/v5"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "live_authorization_v9": {
+      "$ref": "#/$defs/live_authorization_v9_definition"
     }
   }
 }

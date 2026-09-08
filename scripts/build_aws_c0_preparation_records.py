@@ -13,6 +13,7 @@ SCHEMA_URI='https://ebu.invalid/local/preparation-packet-v8.json'
 SEQUENCE='aws_c0_deployment_sequence_correction_contract.json'
 SEALED_SOURCE_PACKET='aws_c0_sealed_source_preparation_packet_contract.json'
 SEALED_SOURCE_COMPATIBILITY='aws_c0_sealed_source_downstream_carrier_compatibility_contract.json'
+RUNTIME_ARTIFACT_COMPATIBILITY='aws_c0_runtime_artifact_compatibility_successor_contract.json'
 PHASES=('PREDEPLOYMENT','POSTDEPLOYMENT','EXECUTION_PREFLIGHT','COMPLETION')
 # These are producer boundaries, not exemptions from the frozen 63 obligations.
 # In particular DescribeExecution is ALWAYS, but its producer is StartExecution.
@@ -26,9 +27,11 @@ def currentize(root,value):
     contract=sequence(root)
     recovery=json.loads((root/SEALED_SOURCE_PACKET).read_bytes())
     compatibility=json.loads((root/SEALED_SOURCE_COMPATIBILITY).read_bytes())
+    runtime_compatibility=json.loads((root/RUNTIME_ARTIFACT_COMPATIBILITY).read_bytes())
     mappings=(contract['version_upgrades'],contract['prospective_carrier_version_upgrades'],
               recovery['prospective_carrier_version_upgrades'],
-              compatibility['prospective_carrier_version_upgrades'])
+              compatibility['prospective_carrier_version_upgrades'],
+              runtime_compatibility['prospective_carrier_version_upgrades'])
     def visit(v):
         if isinstance(v,str):
             for mapping in mappings:v=mapping.get(v,v)
@@ -805,7 +808,7 @@ def record_schema(root,name):
     result.update({'$schema':bundle['$schema'],'$id':SCHEMA_URI+'/'+name,'$defs':bundle['$defs']})
     return result
 
-def schema(root):return record_schema(root,'preparation_packet_v8'),Registry()
+def schema(root):return record_schema(root,'preparation_packet_v9'),Registry()
 
 def validate_record(root,name,value):
     jsonschema.Draft202012Validator(record_schema(root,name),registry=Registry()).validate(value)
@@ -991,9 +994,10 @@ def validate_sealed_source_packet_fields(root,value):
         expected.append({'bucket_identity':value['artifact_bucket_identity'],'key':item['key'],
             'version_id':item['version_id'],'bytes':item['bytes'],'sha256':item['sha256'],
             'checksum_sha256_base64':item['checksum_sha256_base64']})
-    if value['sealed_artifact_version_receipts']!=expected:
+    packet_v9=value.get('schema')=='aws_c0_preparation_packet/v9'
+    if not packet_v9 and value['sealed_artifact_version_receipts']!=expected:
         raise ValueError('eight exact ordered sealed artifact receipts required')
-    if value.get('schema')=='aws_c0_preparation_packet/v8':
+    if value.get('schema') in ('aws_c0_preparation_packet/v8','aws_c0_preparation_packet/v9'):
         compatibility_raw=(root/SEALED_SOURCE_COMPATIBILITY).read_bytes()
         compatibility=json.loads(compatibility_raw)
         if compatibility['predecessor_packet_contract_sha256']!=sha((root/SEALED_SOURCE_PACKET).read_bytes()):
@@ -1001,6 +1005,31 @@ def validate_sealed_source_packet_fields(root,value):
         if value.get('sealed_source_downstream_carrier_compatibility_contract_identity')!=identity(
                 compatibility['schema'],compatibility):
             raise ValueError('packet downstream compatibility contract identity mismatch')
+    if packet_v9:
+        runtime=json.loads((root/RUNTIME_ARTIFACT_COMPATIBILITY).read_bytes())
+        if value.get('runtime_artifact_compatibility_successor_contract_identity')!=identity(
+                runtime['schema'],runtime):
+            raise ValueError('packet runtime-artifact compatibility contract identity mismatch')
+        if (runtime['packet_v9_artifact_receipt_composition']!={
+                'unchanged_existing_version_receipts':6,
+                'fresh_runtime_successor_version_receipts':2,'total':8} or
+                runtime['exact_new_private_artifact_put_count']!=2):
+            raise ValueError('runtime-artifact compatibility composition drift')
+        receipts=value['sealed_artifact_version_receipts']
+        successor_indices={2:'ebu_c0_controller.py',4:'finalizer.zip'}
+        for index,(actual,historical) in enumerate(zip(receipts,expected)):
+            if index not in successor_indices:
+                if actual!=historical:
+                    raise ValueError('one of six unchanged artifact receipts changed')
+                continue
+            filename=successor_indices[index]
+            if (actual['bucket_identity']!=value['artifact_bucket_identity'] or
+                    actual['version_id'] in ('','null',historical['version_id']) or
+                    actual['sha256']==historical['sha256'] or actual['bytes']<1 or
+                    not actual['key'].endswith('/artifacts/'+actual['sha256']+'/'+filename) or
+                    base64.b64encode(bytes.fromhex(actual['sha256'])).decode()!=
+                        actual['checksum_sha256_base64']):
+                raise ValueError('exact runtime successor receipt required: '+filename)
     return value
 
 def validate_packet(root,value):
@@ -1083,8 +1112,8 @@ def build_deployment_inputs(root,definition_bytes,document_bytes,template_bytes)
 def validate_predeployment_closure(root,closure):
     """The closure proves preparation, not objects which execution will create."""
     f=finalizer(root)
-    validate_record(root,'preparation_closure_v7',closure)
-    if closure.get('schema')!='aws_c0_preparation_closure/v7':raise ValueError('current preparation closure required')
+    validate_record(root,'preparation_closure_v8',closure)
+    if closure.get('schema')!='aws_c0_preparation_closure/v8':raise ValueError('current preparation closure required')
     f._deployment_control_values(closure['final_runtime_control_preimages'],f.PREDEPLOYMENT_CONTROLS,
                                 '1970-01-01T00:00:00Z',closure['observed_utc'])
     return closure
@@ -1092,10 +1121,10 @@ def validate_predeployment_closure(root,closure):
 def validate_postdeployment_authorization(root,packet,authorization,seed,launch):
     """Mandatory offline validation before the later auth publication and start."""
     f=finalizer(root)
-    for name,value in [('live_packet_v8',packet),('live_authorization_v8',authorization),
-                       ('closure_seed',seed),('launch_v8',launch)]:
+    for name,value in [('live_packet_v9',packet),('live_authorization_v9',authorization),
+                       ('closure_seed',seed),('launch_v9',launch)]:
         validate_record(root,name,value)
-    f._validate_live_packet_v8(packet);f._validate_live_authorization_v8(authorization)
-    f._validate_launch_v8(launch)
+    f._validate_live_packet_v9(packet);f._validate_live_authorization_v9(authorization)
+    f._validate_launch_v9(launch)
     f.validate_deployment_sequence(packet,authorization,seed,launch)
     return copy.deepcopy(authorization)

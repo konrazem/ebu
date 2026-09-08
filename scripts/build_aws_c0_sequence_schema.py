@@ -538,10 +538,45 @@ def build(root=ROOT):
         ('live_authorization_v8',live_authorization_v8)):
         definitions[name+'_definition']=value
         definitions[name]={'$ref':'#/$defs/'+name+'_definition'}
+    # Packet/v8 proved that the two preserved runtime artifacts cannot consume
+    # its successor carrier kinds. Preserve that full definition and append a
+    # mixed six-reuse/two-successor packet plus a transitive runtime chain.
+    runtime_compatibility=json.loads(
+        (root/'aws_c0_runtime_artifact_compatibility_successor_contract.json').read_bytes())
+    runtime_versions=runtime_compatibility['prospective_carrier_version_upgrades']
+    def replace_runtime_compatibility(value):
+        if isinstance(value,str):return runtime_versions.get(value,value)
+        if isinstance(value,list):return [replace_runtime_compatibility(item) for item in value]
+        if isinstance(value,dict):return {key:replace_runtime_compatibility(item) for key,item in value.items()}
+        return value
+    preparation_packet_v9=replace_runtime_compatibility(copy.deepcopy(preparation_packet_v8))
+    runtime_packet_body=preparation_packet_v9['allOf'][1]
+    runtime_packet_body['required'].append('runtime_artifact_compatibility_successor_contract_identity')
+    runtime_packet_body['properties'][
+        'runtime_artifact_compatibility_successor_contract_identity']=typed_identity(
+            'aws_c0_runtime_artifact_compatibility_successor_contract/v1')
+    runtime_packet_body['properties']['artifact_source_mode']={
+        'const':'EXACT_SIX_SEALED_VERSION_REUSE_PLUS_TWO_RUNTIME_SUCCESSORS'}
+    runtime_packet_body['properties']['fresh_new_pre_live_record_count']={'const':18}
+    runtime_packet_body['properties']['new_artifact_put_count']={'const':2}
+    preparation_authorization_v8=replace_runtime_compatibility(copy.deepcopy(preparation_authorization_v7))
+    launch_v9=replace_runtime_compatibility(copy.deepcopy(launch_v8))
+    preparation_closure_v8=replace_runtime_compatibility(copy.deepcopy(preparation_closure_v7))
+    live_packet_v9=replace_runtime_compatibility(copy.deepcopy(live_packet_v8))
+    live_authorization_v9=replace_runtime_compatibility(copy.deepcopy(live_authorization_v8))
+    for name,value in (
+        ('preparation_packet_v9',preparation_packet_v9),
+        ('preparation_authorization_v8',preparation_authorization_v8),
+        ('launch_v9',launch_v9),
+        ('preparation_closure_v8',preparation_closure_v8),
+        ('live_packet_v9',live_packet_v9),
+        ('live_authorization_v9',live_authorization_v9)):
+        definitions[name+'_definition']=value
+        definitions[name]={'$ref':'#/$defs/'+name+'_definition'}
     return {'$schema':'https://json-schema.org/draft/2020-12/schema',
             '$id':'https://ebu.invalid/schema/aws-c0-deployment-sequence-v1.json',
             'description':'New versioned sequencing schemas; historical source schemas remain unchanged.',
-            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7','preparation_packet_v7','preparation_authorization_v6','preparation_packet_v8','preparation_authorization_v7','launch_v8','preparation_closure_v7','live_packet_v8','live_authorization_v8']], '$defs':definitions}
+            'oneOf':[{'$ref':'#/$defs/'+name} for name in list(records)+['r51_result','ssm_local_helper_request','runtime_read_plan_v2','runtime_read_plan_v3','r64_receipt','network_ingress_observation','network_ingress_call_budget','network_ingress_phase_binding','vpc_network_output_v2','account_region_output','instance_profile_output','service_quota_output','iam_policy_set_output_v2','iam_role_context_binding','runtime_reconstruction_progress_v2','runtime_reconstruction_source_attachment_v1','runtime_reconstruction_progress_v3','runtime_reconstruction_source_attachment_v2','bucket_controls_kms_output','runtime_reconstruction_progress_v4','runtime_reconstruction_source_attachment_v3','artifact_version_set_output','s3_exact_version_content_binding','runtime_reconstruction_progress_v5','runtime_reconstruction_source_attachment_v4','runtime_reconstruction_progress_v6','runtime_reconstruction_source_attachment_v5','preparation_packet_v6','preparation_authorization_v5','launch_v7','preparation_closure_v6','live_packet_v7','live_authorization_v7','preparation_packet_v7','preparation_authorization_v6','preparation_packet_v8','preparation_authorization_v7','launch_v8','preparation_closure_v7','live_packet_v8','live_authorization_v8','preparation_packet_v9','preparation_authorization_v8','launch_v9','preparation_closure_v8','live_packet_v9','live_authorization_v9']], '$defs':definitions}
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true');args=parser.parse_args()

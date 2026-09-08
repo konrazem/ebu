@@ -1,0 +1,75 @@
+{
+  "schema": "aws_c0_runtime_artifact_compatibility_successor_contract/v1",
+  "record_class": "NON_SCIENTIFIC_AWS_C0_PROSPECTIVE_OPERATIONAL_CONTRACT",
+  "source": "EXPLICIT_USER_AUTHORIZATION_2026_09_08",
+  "source_statement_utf8_byte_count": 812,
+  "source_statement_sha256": "831bbf1b4159414dd755f6a563acc7698c23d946c3944f747acb380bdb0f3c58",
+  "terminal_packet_v8_identity_sha256": "982c6da5447a5ef8a796b0f879252c86ba0bcf656b0394032b29e3179b7271b4",
+  "terminal_packet_v8_replay_permitted": false,
+  "terminal_packet_v8_refusal_evidence_sha256": "50cb09df193972e3f44b91a34a667146598d032a3c001f2a3c631de16e48ab42",
+  "historical_artifact_version_count": 8,
+  "historical_artifact_versions_preserved": true,
+  "packet_v9_artifact_receipt_composition": {
+    "unchanged_existing_version_receipts": 6,
+    "fresh_runtime_successor_version_receipts": 2,
+    "total": 8
+  },
+  "runtime_successors_in_order": [
+    {
+      "artifact_class": "CONTROLLER",
+      "source": "COMMITTED_aws/c0/controller/ebu_c0_controller.py",
+      "key_derivation": "FRESH_PREFIX_PLUS_COMPLETE_BYTE_SHA256_PLUS_FILENAME"
+    },
+    {
+      "artifact_class": "FINALIZER_ZIP",
+      "source": "DETERMINISTIC_STORED_ZIP_OF_COMMITTED_aws/c0/finalizer/finalizer.py",
+      "key_derivation": "FRESH_PREFIX_PLUS_COMPLETE_BYTE_SHA256_PLUS_FILENAME"
+    }
+  ],
+  "exact_new_private_artifact_put_count": 2,
+  "conditional_create": "IF_NONE_MATCH_STAR",
+  "versioned_readback_required": true,
+  "object_overwrite_permitted": false,
+  "object_copy_permitted": false,
+  "object_delete_permitted": false,
+  "prospective_carrier_version_upgrades": {
+    "aws_c0_preparation_packet/v8": "aws_c0_preparation_packet/v9",
+    "aws_c0_preparation_authorization/v7": "aws_c0_preparation_authorization/v8",
+    "aws_c0_launch_request/v8": "aws_c0_launch_request/v9",
+    "aws_c0_preparation_closure/v7": "aws_c0_preparation_closure/v8",
+    "aws_c0_live_packet/v8": "aws_c0_live_packet/v9",
+    "aws_c0_live_authorization/v8": "aws_c0_live_authorization/v9"
+  },
+  "packet_v9_additional_binding": "runtime_artifact_compatibility_successor_contract_identity",
+  "historical_schema_mutation_count": 0,
+  "fresh_atomic_full_preflight_and_packet_limit": 1,
+  "fresh_attempt_identity_required": true,
+  "freshness_max_seconds": 300,
+  "exact_preparation_session_name": "AWS-C0-PREP-492a4f1",
+  "temporary_permission_action": "ec2:DescribeSecurityGroups",
+  "temporary_permission_resource": "*",
+  "temporary_permission_region": "us-east-1",
+  "permission_removal_and_credential_disposal_required": true,
+  "preserved_semantics": {
+    "logical_pre_live_object_count": 24,
+    "fresh_new_pre_live_record_and_artifact_count": 18,
+    "aws_actions": true,
+    "permissions": true,
+    "one_existing_t3_small": true,
+    "maximum_platform_smokes": 1,
+    "cost_ceiling_minor_units": 5000,
+    "scientific_content": true,
+    "historical_schemas": true,
+    "historical_evidence": true
+  },
+  "prohibited_before_exact_packet_authorization": [
+    "DEPLOYMENT",
+    "PLATFORM_SMOKE",
+    "SCIENTIFIC_EXECUTION",
+    "PUSH",
+    "MERGE",
+    "PUBLIC_PUBLICATION",
+    "PUBLIC_RELEASE"
+  ],
+  "disposition": "AUTHORIZED_PROSPECTIVE_RUNTIME_ARTIFACT_SUCCESSORS_AND_ONE_FRESH_PACKET"
+}

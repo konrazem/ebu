@@ -192,6 +192,8 @@ LOCAL_DEPLOYMENT_READINESS_PATHS = CLOUDFORMATION_READINESS_MODIFIED_PATHS + (
     "aws_c0_sealed_source_preparation_packet_contract.json",
     "AWS_C0_SEALED_SOURCE_DOWNSTREAM_CARRIER_COMPATIBILITY_AMENDMENT.md",
     "aws_c0_sealed_source_downstream_carrier_compatibility_contract.json",
+    "AWS_C0_RUNTIME_ARTIFACT_COMPATIBILITY_SUCCESSOR_AMENDMENT.md",
+    "aws_c0_runtime_artifact_compatibility_successor_contract.json",
     "scripts/validate_aws_c0_sealed_source_transfer_recovery.py",
     "aws/c0/bootstrap/atomic_preflight.py",
     # Prospective overnight architecture authority, source user turn
@@ -274,11 +276,14 @@ SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES = SEQUENCE_CONTRACT["prospective_carrier_v
 SEALED_SOURCE_PACKET_CONTRACT = json.loads((ROOT / "aws_c0_sealed_source_preparation_packet_contract.json").read_bytes())
 SEALED_SOURCE_COMPATIBILITY_CONTRACT = json.loads(
     (ROOT / "aws_c0_sealed_source_downstream_carrier_compatibility_contract.json").read_bytes())
+RUNTIME_ARTIFACT_COMPATIBILITY_CONTRACT = json.loads(
+    (ROOT / "aws_c0_runtime_artifact_compatibility_successor_contract.json").read_bytes())
 SEQUENCE_CARRIER_MAPPINGS = (
     SEQUENCE_VERSION_UPGRADES,
     SEQUENCE_PROSPECTIVE_CARRIER_UPGRADES,
     SEALED_SOURCE_PACKET_CONTRACT["prospective_carrier_version_upgrades"],
     SEALED_SOURCE_COMPATIBILITY_CONTRACT["prospective_carrier_version_upgrades"],
+    RUNTIME_ARTIFACT_COMPATIBILITY_CONTRACT["prospective_carrier_version_upgrades"],
 )
 def current_carrier_kind(kind: str) -> str:
     for mapping in SEQUENCE_CARRIER_MAPPINGS:
@@ -23925,6 +23930,35 @@ def validate_sequence_authority() -> None:
             compatibility['preserved_semantics']['maximum_platform_smokes']==1 and
             compatibility['preserved_semantics']['new_artifact_put_count']==0,
             'sealed-source downstream compatibility contract drift')
+    runtime_compatibility=load_json('aws_c0_runtime_artifact_compatibility_successor_contract.json')
+    require(runtime_compatibility['source_statement_sha256']==
+                '831bbf1b4159414dd755f6a563acc7698c23d946c3944f747acb380bdb0f3c58' and
+            runtime_compatibility['terminal_packet_v8_identity_sha256']==
+                '982c6da5447a5ef8a796b0f879252c86ba0bcf656b0394032b29e3179b7271b4' and
+            runtime_compatibility['terminal_packet_v8_replay_permitted'] is False and
+            runtime_compatibility['terminal_packet_v8_refusal_evidence_sha256']==
+                '50cb09df193972e3f44b91a34a667146598d032a3c001f2a3c631de16e48ab42' and
+            runtime_compatibility['prospective_carrier_version_upgrades']=={
+                'aws_c0_preparation_packet/v8':'aws_c0_preparation_packet/v9',
+                'aws_c0_preparation_authorization/v7':'aws_c0_preparation_authorization/v8',
+                'aws_c0_launch_request/v8':'aws_c0_launch_request/v9',
+                'aws_c0_preparation_closure/v7':'aws_c0_preparation_closure/v8',
+                'aws_c0_live_packet/v8':'aws_c0_live_packet/v9',
+                'aws_c0_live_authorization/v8':'aws_c0_live_authorization/v9'} and
+            runtime_compatibility['packet_v9_artifact_receipt_composition']=={
+                'unchanged_existing_version_receipts':6,
+                'fresh_runtime_successor_version_receipts':2,
+                'total':8} and
+            runtime_compatibility['exact_new_private_artifact_put_count']==2 and
+            runtime_compatibility['conditional_create']=='IF_NONE_MATCH_STAR' and
+            runtime_compatibility['versioned_readback_required'] is True and
+            runtime_compatibility['historical_schema_mutation_count']==0 and
+            runtime_compatibility['fresh_atomic_full_preflight_and_packet_limit']==1 and
+            runtime_compatibility['preserved_semantics']['logical_pre_live_object_count']==24 and
+            runtime_compatibility['preserved_semantics']['fresh_new_pre_live_record_and_artifact_count']==18 and
+            runtime_compatibility['preserved_semantics']['cost_ceiling_minor_units']==5000 and
+            runtime_compatibility['preserved_semantics']['maximum_platform_smokes']==1,
+            'runtime-artifact compatibility successor contract drift')
     require(contract['pre_live_object_count'] == 24 and contract['pre_live_predecessor_count'] == 23 and
             contract['preparation_input_control_count'] == 6 and contract['predeployment_observed_control_count'] == 9 and
             contract['postdeployment_observed_control_count'] == 11 and
@@ -23963,9 +23997,9 @@ def validate_sources() -> None:
             "controller current-record stack absent")
     require("aws_c0_source_sidecar/v5" in controller and "reserve_for_operation" in controller,
             "controller capture reservation absent")
-    require("aws_c0_launch_request/v8" in controller and
-            "aws_c0_live_packet/v8" in controller and
-            "aws_c0_live_authorization/v8" in controller and
+    require("aws_c0_launch_request/v9" in controller and
+            "aws_c0_live_packet/v9" in controller and
+            "aws_c0_live_authorization/v9" in controller and
             "aws_c0_attempt_claim/v3" in controller,
             "controller Gate1 downstream version stack absent")
     require("FROZEN_PRELIVE_OBJECT_COUNT = 24" in finalizer and
