@@ -1,5 +1,22 @@
 # Bounded platform-smoke continuation
 
+## Current formal smoke transport correction
+
+The current formal platform smoke no longer creates, reads, versions, grants
+access to, or deletes a temporary private SSM document. The user operates one
+sealed SendCommand through the AWS-managed `AWS-RunShellScript` document using
+the offline generator and sealer in `platform_smoke_transport.py`; the portable
+procedure is `../PLATFORM_SMOKE_RUNBOOK.md`. Its closed evidence binds the exact
+command-script bytes and SHA-256, immutable image manifest digest, fixed AWS
+account/Region/instance, returned command ID, complete terminal invocation
+stdout/stderr/status, one conditional upload of those exact stdout/result bytes
+below the existing `rehearsal/` prefix, exact returned-VersionId retrieval and
+SHA-256 verification, both S3 receipts, and final stopped-instance receipt. It
+performs no IAM mutation and never treats an earlier manual run as formal evidence.
+
+All temporary-document descriptions below are preserved as historical staging,
+diagnostic, and repair records. They are not the current formal smoke procedure.
+
 On 2026-09-06, after the completed host inventory, the user requested completion
 of the smoke test and readiness checks before scientific execution, with
 continuation without ordinary permission interruptions. The originating local

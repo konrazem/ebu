@@ -49,3 +49,9 @@ jobs:
           AWS_EC2_METADATA_DISABLED: "true"
         run: >-
           python -B -I tests/aws/test_aws_c0_unattended_synthetic.py
+
+      - name: Run user-operated platform-smoke transport tests
+        env:
+          AWS_EC2_METADATA_DISABLED: "true"
+        run: >-
+          python -B -I tests/aws/test_aws_c0_platform_smoke_transport.py

@@ -1,5 +1,17 @@
 # AWS-C0 current gate
 
+- Local correction replaces the formal smoke's temporary private SSM document
+  lifecycle with one sealed, user-operated `AWS-RunShellScript` SendCommand.
+  The procedure binds exact command bytes/SHA-256, image manifest digest,
+  account/Region/instance, returned command ID, complete invocation output and
+  status, one conditional result upload below the existing `rehearsal/` prefix,
+  its returned VersionId, upload and exact-version retrieval receipts, retrieved
+  SHA-256 verification, and the final stopped-instance receipt. It performs no
+  IAM mutation.
+  The earlier manual run remains diagnostic-only and is not formal evidence.
+  No AWS call, smoke, container, or scientific execution occurred while making
+  this correction. Current disposition: `USER_OPERATED_FORMAL_SMOKE_READY_NOT_RUN`.
+
 - The portable user-operated packet/v9 full-preflight package is complete under
   `/Users/konrad.grzyb/code/test-aws`. Package-manifest SHA-256 is
   `936240b345550447d139853b5932465f154e770ffaf5ab25d51163e40aa56e0f`;

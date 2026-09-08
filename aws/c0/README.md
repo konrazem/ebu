@@ -146,8 +146,8 @@ Run these local verification commands from the integration worktree before
 presenting any live authorization packet:
 
 ```sh
-python3 -m py_compile aws/c0/controller/ebu_c0_controller.py aws/c0/finalizer/finalizer.py scripts/validate_aws_c0_static.py tests/aws/test_aws_c0_unattended_synthetic.py
-python3 -m unittest tests.aws.test_aws_c0_unattended_synthetic
+python3 -m py_compile aws/c0/controller/ebu_c0_controller.py aws/c0/finalizer/finalizer.py aws/c0/bootstrap/platform_smoke_transport.py scripts/validate_aws_c0_static.py tests/aws/test_aws_c0_unattended_synthetic.py tests/aws/test_aws_c0_platform_smoke_transport.py
+python3 -m unittest tests.aws.test_aws_c0_unattended_synthetic tests.aws.test_aws_c0_platform_smoke_transport
 python3 scripts/validate_aws_c0_static.py --mode audit-v4
 python3 scripts/validate_aws_c0_static.py --mode static-v4
 git status --short --branch
@@ -796,6 +796,19 @@ closure must leave the retained instance stopped.  A separate Gate 2 live
 authorization remains required before executing that exact change set.
 
 ## Deployment and launch (only after Gate 2)
+
+For the current user-operated non-scientific platform smoke, the temporary
+private SSM document lifecycle is superseded by
+[`PLATFORM_SMOKE_RUNBOOK.md`](PLATFORM_SMOKE_RUNBOOK.md). The smoke uses one
+byte-sealed `AWS-RunShellScript` SendCommand and a local evidence sealer. It
+binds the command bytes/hash, immutable image manifest digest, exact account,
+Region and retained instance, returned command ID, terminal invocation
+stdout/stderr/status, a conditional result upload under the existing
+`rehearsal/` prefix, the returned S3 VersionId, upload and exact-version
+retrieval receipts, retrieved-byte SHA-256 verification, and the final
+stopped-instance receipt. It creates or deletes no SSM document and mutates no
+IAM policy. Prior manual execution is diagnostic-only and cannot satisfy this
+fresh formal procedure.
 
 First-deployment checkpoint (2026-09-06): the replacement LF image and its
 pinned-base ancestry verified. A fresh SSO login and one exact compact-V5
