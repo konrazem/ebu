@@ -115,3 +115,15 @@ assertion. It retains the exact tag as the lookup and image-list filter and
 still requires exactly one image-list row whose repository, tag, and manifest
 digest match the sealed values. It binds the terminal v4 failure and changes no
 other v4 operation or boundary.
+
+The authenticated v4 failure was initially misclassified. Exact script-line
+reconstruction proves that line 33 was the combined configuration-ID, OS, and
+architecture assertion; the later legacy `RepoTags` assertion was not reached.
+The terminal v5 command failed at that same combined assertion, so removing the
+legacy assertion did not repair the observed mismatch. Neither failure output
+identifies which combined member differed. The v5 image-list digest check,
+controller/unit installation, and daemon reload were not reached. Any further
+AWS observation must be a fresh, separately authorized, versioned diagnostic
+that reports the non-secret exact-tag metadata fields individually without
+loading or running the image, installing files, or consuming the platform
+smoke. The v4 and v5 ledgers remain immutable and terminal.
