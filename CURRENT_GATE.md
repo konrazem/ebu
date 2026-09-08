@@ -1,5 +1,27 @@
 # AWS-C0 current gate
 
+- Exact Gate 1 authorization for packet/v7
+  `dc3c1c3394efcf9b02b04aee5aadfc4cc713394d176445e2fc714288956f12cd`
+  was accepted after removing Markdown presentation escapes; its normalized
+  SHA-256 is `3c6f26b7e24b863216e2dcae75e193ec9e3a6a6c49e641117d7221b49c3a14a9`.
+  Six historical bootstrap controls, the packet, and authorization/v6
+  `76ebdadddb88668b4949a3ff998c68cf2af426850ff692e783b33773f27aa05a`
+  were conditionally created. Independent readback evidence SHA-256
+  `3891d09b455bb117cb73af60c01f354b436190e1416036d96d180a64ef4348df`
+  verifies all eight non-null VersionIds, lengths, and SHA-256 checksums, the
+  stopped existing `t3.small`, the operator role's sole original bounded
+  inline policy, no attached policy, and disposal of the held credential file.
+  The eight sealed artifacts were not written or transferred. No instance was
+  started, no change set was created, and no smoke or science ran.
+- The pre-mutation downstream check found that launch/v7 and
+  preparation-closure/v6 still require packet/v6 and authorization/v5.
+  Packet/v7 and authorization/v6 therefore cannot truthfully enter the
+  downstream chain; using older identities would violate validation and the
+  no-replay rule. Current disposition:
+  `PACKET_V7_GATE1_STAGED_DOWNSTREAM_CARRIER_CORRECTION_REQUIRES_SEPARATE_AUTHORITY`.
+  A separate prospective carrier correction is required while preserving
+  every historical schema and all AWS, cost, smoke, and scientific boundaries.
+
 - Fresh full preflight `ed28afdfc96941d27d92fc488c1c0ee1261ef027979e9dda087a84dfb7848aa8` passed under implementation commit `a0a7a2ab106260ca0fb9f42f1ccab5fd6fc3595c`, tree `1bd248d5db28d72140e443a319bed34578de643e`. All required R01-R64 controls were collected within the unchanged 300-second window, the sole temporary regional `ec2:DescribeSecurityGroups` permission was removed, the base role remained unchanged, and the existing `t3.small` remained stopped. Complete `aws_c0_preparation_packet/v7` identity and complete-byte SHA-256: `dc3c1c3394efcf9b02b04aee5aadfc4cc713394d176445e2fc714288956f12cd`; it binds the eight verified sealed artifact versions and declares zero new artifact puts. The constrained preparation session is held only through `2026-09-08T11:42:57Z` for the separately required exact packet-bound Gate 1 decision. No artifact publication, instance start, deployment, smoke, or science occurred. Current disposition: `SEALED_SOURCE_PACKET_V7_READY_PENDING_EXACT_GATE1_AUTHORIZATION`.
 - The prospective sealed-source preparation carrier is implemented as `aws_c0_preparation_packet/v7` with corresponding `aws_c0_preparation_authorization/v6`. It preserves every historical schema and the logical 24-object pre-live set, but replaces the eight redundant artifact publication targets and their preapproval contract with exactly eight existing bucket/key/VersionId/length/SHA-256/checksum receipts. It binds the committed proposal, reuse contract, preparation-packet contract, and successful atomic-preflight result identity; declares 16 fresh records and zero new artifact puts; and leaves all downstream runtime carrier versions unchanged for compatibility with the already-sealed controller bytes. The deterministic schema check, focused positive/negative receipt-binding tests, offline transformation of a prior complete packet, audit-v4, static-v4, and `git diff --check` pass. No AWS action or scientific execution was performed by this schema/validator work.
 - Fresh sealed-source atomic preflight `a6e5fb4f0eccf0a8dd6a0962809046e985bccbd9a9106486a67580e77a893946` passed against implementation commit `9939cb0f7c2bf09a13a1256e8262da11383501de`, tree `684b71d920526182ed10c68f673b7d8c3dcd6471`. Two size-bounded STS policy shards retained the exact role, session name, account, recovery prefix, `s3:GetObjectVersion`-only action, and four bound VersionIds apiece; the reviewed facade enforced all eight exact key/version pairs and order. All eight receipts matched returned VersionId, checksum, ETag, byte count, SHA-256, and request ID: 8 calls, 415,108,495 bytes, 17.234029 seconds within the 300-second bound. Plan, execution-context, and result evidence SHA-256 values are `ffb77200290cce3f251bc09f369a1d5a2ac2be85d53cac0e5d8804da8da87503`, `1496e3ff7874086c7ac7d4b3d5ade2e128e38ade4148aad52f80cbf79cbc6fe6`, and `f13437ebf08df6aea3e3421eb4d4a50d00d97180f436af25cab2561f5e1b24d8`. The streamed artifact bodies were discarded and credentials were not persisted. No upload, IAM mutation, instance action, smoke, or science occurred. The preceding fresh attempt `c3f3752f129438d97b4001a5adc217bcf02ef271f3f04cdbe6d2e6d5399bd899` is terminal and preserved: its single session policy was rejected by AWS at 112% packed size before any object read; failure evidence SHA-256 `f1cc339ac67ca0a5a32223a650eccdc542799fabf5826cae166c55850db5a32e`.
