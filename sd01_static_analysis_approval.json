@@ -1,0 +1,58 @@
+{
+  "record_id": "SD01-STATIC-ANALYSIS-APPROVAL-v1",
+  "status": "USER_APPROVED_STATIC_ANALYSIS_ONLY",
+  "source_revision": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+  "user_instruction": "Approve the independently reviewed SD-01 control-binding draft as static derivation and ambiguity analysis only. Preserve every frozen predicate and leave any genuinely unresolved semantic binding explicitly open. Do not execute SD-01 or any scientific model.",
+  "approved_draft_id": "SD01-CONTROL-DERIVATION-v1",
+  "approved_scope": [
+    "exact arithmetic",
+    "candidate derivation chains",
+    "ambiguity analysis"
+  ],
+  "scientific_control_tuples_adopted": false,
+  "scientific_assertion_mapping_adopted": false,
+  "frozen_predicates_changed": false,
+  "scientific_execution_authorized": false,
+  "readiness_gap": {
+    "id": "STAGE_F_SD01_ADAPTER_AND_RUN_ID_CLOSURE",
+    "status": "OPEN"
+  },
+  "unresolved_decision_ids": [
+    "SD01-CONTROL-TUPLES",
+    "SD01-CONTROL-ASSERTION-MAPPING"
+  ],
+  "ambiguity_authority": "SD01_CONTROL_DERIVATION.md",
+  "review_disposition": "INDEPENDENT_STATIC_DERIVATION_REVIEW_PASS \u2014 NOT A SCIENTIFIC BINDING PASS",
+  "records": [
+    {
+      "path": "SD01_CONTROL_BINDING_AUTHORITY_DRAFT.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "46c7fb14ea6545be79c86dbd9d576850a34e02c09e0c3049cf8c360a94acf761",
+      "bytes": 2227
+    },
+    {
+      "path": "SD01_CONTROL_DERIVATION.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "693ea160154b43f86ec4e2e7a6bcade005cc5c9635e99510eda511370f514d0c",
+      "bytes": 10167
+    },
+    {
+      "path": "sd01_control_derivation_checks.json",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "53353f6346dbfb21ea7b6311bb538efcd580abf621361920963a9cfdebc72600",
+      "bytes": 2985
+    },
+    {
+      "path": "SD01_CONTROL_BINDING_REVIEW.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "ff7e17351d01c5fc6c2e4a5d34505f3caf34ee4f04bdc1b8c91ac2e0ecafd5e9",
+      "bytes": 3483
+    },
+    {
+      "path": "SD01_CONTROL_DECISIONS.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "fc9292f67ef036250816a3cfb3ec6087c483908ae1e88ade4ac36b8ec0a5aa42",
+      "bytes": 2635
+    }
+  ]
+}

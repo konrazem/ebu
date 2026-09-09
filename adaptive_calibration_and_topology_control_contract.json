@@ -1,0 +1,453 @@
+{
+  "authority_id": "ACTC-LOCAL-SCIENTIFIC-DESIGN-v1",
+  "study_name": "adaptive calibration and topology control",
+  "source_revision": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+  "status": "LOCAL_DESIGN_AUTHORITY_WITH_OPEN_PREREGISTRATION",
+  "stage_intent": "future Stage F study; no route registered",
+  "execution_authorized": false,
+  "preregistration_complete": false,
+  "binding_packet_sealed": false,
+  "source_manifest": [
+    {
+      "source_id": "CIIF",
+      "locators": "\u00a79; \u00a711\u201312; \u00a715\u201317",
+      "path": "COUPLED_INTERACTION_INFERENCE_FEEDBACK_STABILITY_PROGRAMME_REVIEW.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "9174951adad518a7ec57439c58d0750d4947173d35fb928f3f9b137ad99500f0",
+      "bytes": 36083
+    },
+    {
+      "source_id": "TOPO",
+      "locators": "\u00a73.1\u20133.3; \u00a79; \u00a713\u201314",
+      "path": "CANONICAL_TOPOLOGY_MOTIF_PROGRAMME_FOUNDATION.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "3820015fa540e86b191199a65c5740459f8fd5989ec2756564859bfb45507812",
+      "bytes": 29970
+    },
+    {
+      "source_id": "BALANCE",
+      "locators": "\u00a74; \u00a79; \u00a713",
+      "path": "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a",
+      "bytes": 40027
+    },
+    {
+      "source_id": "CLCD",
+      "locators": "\u00a73\u20134; \u00a710\u201312; \u00a714\u201316; \u00a719\u201320",
+      "path": "CLOSED_LOOP_CORRECTION_DYNAMICS_MILESTONE_AUTHORITY.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "e2d59c3602e577edc04dd20234dd125a30c854e57088eb4c590a901686dfbc87",
+      "bytes": 16164
+    },
+    {
+      "source_id": "CLCD_JSON",
+      "locators": "/programme_layers; /protocol_schema; /comparative_output_order",
+      "path": "closed_loop_correction_dynamics_milestone_contract.json",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "08e2a0054669fbebf20389992d02d03224ddfb23b55a87bdefe83ade7d0b0736",
+      "bytes": 14827
+    },
+    {
+      "source_id": "CLCD_B",
+      "locators": "inert implementation and scientific boundary",
+      "path": "CLOSED_LOOP_CORRECTION_DIAGNOSTICS_IMPLEMENTATION_AUTHORITY.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "970e3f6813824a1c4ecb75e414b89285355dc31402c97a22d1c5cf9111698e27",
+      "bytes": 11038
+    },
+    {
+      "source_id": "STAGE_D",
+      "locators": "/stage_boundary; /evidence_levels; /evidence_nonpromotion_rule; /claim_traceability_chain; /universal_study_fields",
+      "path": "stage_d_scientific_validation_contract.json",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "1b12c97f51d99720979700f048ac527cb0d97c1323f051fe53e0fda3ac743089",
+      "bytes": 44051
+    },
+    {
+      "source_id": "MATRIX",
+      "locators": "/studies/9 (SD-10; scope boundary, no numerical inheritance)",
+      "path": "stage_d_scientific_validation_master_matrix.json",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "081f2e994c23051514aef19a0516d1996d9c4b86cd528dfc05bf9d17658bdb81",
+      "bytes": 148183
+    },
+    {
+      "source_id": "STAGE_F",
+      "locators": "Narrow correction; Per-route gate; Dependencies",
+      "path": "STAGE_F_ROUTE_LEVEL_BINDING_AUTHORITY_CORRECTION.md",
+      "commit": "1e98dacbf1793850b68123ed2f09f88136cfda0c",
+      "sha256": "628ccdff880ed6a552b8aef1c363bfa52d6ba85b1efb0bec8515767d137221d7",
+      "bytes": 2817
+    }
+  ],
+  "required_preregistration": [
+    {
+      "decision_id": "ACTC-D01",
+      "slot": "registration",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which route identity, placement and prerequisite dispositions govern this future study?",
+      "why_needed": "The existing queue does not register this named study.",
+      "source_refs": [
+        "STAGE_D",
+        "STAGE_F"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D02",
+      "slot": "scientific_question_and_claim",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which falsifiable question and prospective claim, acceptance and inconclusive interpretations will be tested?",
+      "why_needed": "A title and mechanism classes do not determine an objective or success predicate.",
+      "source_refs": [
+        "STAGE_D",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D03",
+      "slot": "model_domain",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which system, typed state, units, boundary, initial-state domain and uncorrected dynamics define the study?",
+      "why_needed": "Legal actions and accounting depend on the system and boundary.",
+      "source_refs": [
+        "CLCD",
+        "BALANCE"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D04",
+      "slot": "observables",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which observation map or measured quantities, units, resolution, uncertainty, latency and missingness rules are available to each mechanism?",
+      "why_needed": "Observation can hide modes; the foundations select no measurement process.",
+      "source_refs": [
+        "CIIF",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D05",
+      "slot": "empirical_observations",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which empirical records and inclusion/provenance rules are admissible for calibration?",
+      "why_needed": "No dataset is supplied or authorized for acquisition; simulated data are not empirical observations.",
+      "source_refs": [
+        "CIIF",
+        "STAGE_D"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D06",
+      "slot": "calibration_information_boundary",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which calibration/validation partition and time-availability rule governs fitting and action inputs?",
+      "why_needed": "Independent assessment needs a declared boundary against evaluation or future-data leakage.",
+      "source_refs": [
+        "CIIF",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D07",
+      "slot": "calibration_estimand",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which model parameters are estimated under which identifiable observation-to-parameter model?",
+      "why_needed": "An estimated model coefficient is not automatically a policy gain or link weight.",
+      "source_refs": [
+        "CIIF"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D08",
+      "slot": "calibration_estimator",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which estimator, noise, weighting, regularization and uncertainty/validation contract maps observations to estimates?",
+      "why_needed": "Exact inversion, sensitivity and estimation are distinct; none is selected here.",
+      "source_refs": [
+        "CIIF"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D09",
+      "slot": "policy_actions",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which policy parameters may change by which update law and available inputs, with which effect on physical dynamics?",
+      "why_needed": "A diagnostic or estimate does not specify an intervention.",
+      "source_refs": [
+        "CIIF",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D10",
+      "slot": "topology_actions",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which topology layer or separately typed physical graph may change through which edits or weight updates, with which dynamical meanings?",
+      "why_needed": "Structural support does not identify physical edges, measured weights or a best topology.",
+      "source_refs": [
+        "TOPO",
+        "CIIF"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D11",
+      "slot": "update_timing",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which cadence, observation-to-action delay, event ordering and application timing govern the three mechanisms?",
+      "why_needed": "Changing delay or update order changes the system; no schedule is supplied.",
+      "source_refs": [
+        "CLCD",
+        "CIIF"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D12",
+      "slot": "parameter_bounds",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which admissible domains and change bounds apply separately to estimates and policy parameters, including constraint/saturation behavior?",
+      "why_needed": "Bounded policy adaptation is required but no legal values or bound-handling rule is frozen for this model.",
+      "source_refs": [
+        "CLCD",
+        "CIIF"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D13",
+      "slot": "topology_bounds",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which topology domain, edit/weight bounds and structural invariants constrain topology actions?",
+      "why_needed": "No initial graph, legal edge set, weight domain or change budget is supplied.",
+      "source_refs": [
+        "TOPO",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D14",
+      "slot": "error_metrics",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which prediction, control and closure errors, references, units, aggregation and uncertainty treatment define the error metrics?",
+      "why_needed": "These errors answer different questions; no common loss or tolerance follows.",
+      "source_refs": [
+        "CIIF",
+        "BALANCE",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D15",
+      "slot": "cost_metrics",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which typed resource/cost quantities, ownership, aggregation and comparison rules account for all three mechanisms?",
+      "why_needed": "Correction accounting does not select monetary weights or a scalar objective across incompatible units.",
+      "source_refs": [
+        "BALANCE",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D16",
+      "slot": "stability_viability",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which model-specific stability/viability constraints and admissibility checks apply to the complete adaptive system and action sequence?",
+      "why_needed": "Fixed-gain or fixed-topology results do not establish adaptive stability; closure does not establish viability.",
+      "source_refs": [
+        "CLCD",
+        "CIIF",
+        "BALANCE"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D17",
+      "slot": "control_arms",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which exact fixed-policy and fixed-topology arms, reference configurations and matched calibration exposure identify the contrasts?",
+      "why_needed": "Both controls are required, but their settings and crossing are absent; a doubly fixed baseline alone cannot separate both adaptive effects.",
+      "source_refs": [
+        "BALANCE",
+        "CLCD",
+        "STAGE_D"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D18",
+      "slot": "seeds_and_randomness",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which deterministic/stochastic declaration, seed set, streams and between-arm coupling will be frozen?",
+      "why_needed": "Neither randomness nor seed zero is implied; existing seeds belong to their own studies.",
+      "source_refs": [
+        "STAGE_D",
+        "MATRIX"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D19",
+      "slot": "stopping_rules",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which horizon, stopping rules, terminal classifications and treatment of incomplete/interrupted observations are preregistered?",
+      "why_needed": "Other studies cannot supply early-stop criteria or terminal interpretation.",
+      "source_refs": [
+        "CLCD",
+        "STAGE_D"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D20",
+      "slot": "numerical_contract",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which numerical representation, method, precision, error controls and conformance criteria implement the chosen model and estimator?",
+      "why_needed": "Existing matrix/scalar diagnostics and serialization profiles have limited scope.",
+      "source_refs": [
+        "CLCD",
+        "TOPO"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D21",
+      "slot": "closure_profile",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which quantities, boundary flows, residual uncertainty/tolerances and failure dispositions define the accounting profiles?",
+      "why_needed": "A typed balance does not select a conserved quantity, completeness assumption or tolerance.",
+      "source_refs": [
+        "BALANCE",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D22",
+      "slot": "evidence_schema",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which exact versioned configuration, observation, estimate, action, topology, checkpoint, output and manifest schemas, paths and retention rules realize the evidence?",
+      "why_needed": "Conceptual fields are not runtime schemas; applicability and privacy depend on the domain.",
+      "source_refs": [
+        "CLCD",
+        "CIIF",
+        "STAGE_D"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D23",
+      "slot": "recovery_semantics",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which checkpoint state and resume/restart rules preserve information history and the adaptation schedule after interruption?",
+      "why_needed": "Estimates, pending actions, topology versions, clocks and any random state need model-specific recovery.",
+      "source_refs": [
+        "CIIF",
+        "CLCD"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D24",
+      "slot": "resource_envelope",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which compute/storage envelope and hard cost cap bound the registered design?",
+      "why_needed": "Sizing requires dimensions, arms, cadence and horizon; another route cap cannot authorize this study.",
+      "source_refs": [
+        "STAGE_D",
+        "STAGE_F"
+      ]
+    },
+    {
+      "decision_id": "ACTC-D25",
+      "slot": "audit_and_claim_disposition",
+      "status": "UNRESOLVED",
+      "value": null,
+      "exact_missing_decision": "Which independent result audit and claim-to-artifact sufficiency rules resolve each future claim?",
+      "why_needed": "An evidence ladder does not supply study-specific acceptance or publication authority.",
+      "source_refs": [
+        "STAGE_D",
+        "CLCD"
+      ]
+    }
+  ],
+  "mechanism_definitions": [
+    {
+      "id": "EMPIRICAL_CALIBRATION",
+      "definition": "Estimate declared model parameters from admissible empirical observations under declared identifiability, noise, estimator and validation contracts. The versioned scientific estimate is distinct from applying a policy or topology action.",
+      "source_refs": [
+        "CIIF",
+        "CLCD"
+      ]
+    },
+    {
+      "id": "ONLINE_POLICY_ADJUSTMENT",
+      "definition": "Change declared bounded policy parameters through a declared observation-dependent correction law with explicit delay, constraints and effect on physical dynamics.",
+      "source_refs": [
+        "CIIF",
+        "CLCD"
+      ]
+    },
+    {
+      "id": "BOUNDED_TOPOLOGY_ADAPTATION",
+      "definition": "Apply declared permitted edits or weight actions within a typed topology domain, naming the affected layer or physical relation, dynamical meaning and bounds.",
+      "source_refs": [
+        "TOPO",
+        "CIIF"
+      ]
+    }
+  ],
+  "conditional_clcd_output_order": [
+    "trajectories",
+    "equilibria",
+    "roots_or_eigenvalues",
+    "damping",
+    "frequency",
+    "period",
+    "mode_visibility",
+    "peak_overshoot",
+    "recovery_time",
+    "delay_sensitivity",
+    "accumulated_correction_action_or_work",
+    "Delta_or_nonlinear_counterpart",
+    "correction_receipt_status",
+    "closure_and_residual",
+    "dependency_invalidation",
+    "numerical_errors_and_failed_checks"
+  ],
+  "evidence_nonpromotion_rule": "No evidence item or disposition may be described as a stronger evidence level than the mechanism that produced it.",
+  "claim_traceability_chain": [
+    "equation",
+    "configuration",
+    "code",
+    "test",
+    "immutable_run_or_trace",
+    "table_or_figure",
+    "claim_disposition"
+  ],
+  "exclusions": [
+    "model or runner import",
+    "scientific execution or simulation",
+    "outcome inspection",
+    "AWS actions",
+    "data acquisition",
+    "external communication",
+    "push or publication",
+    "existing frozen scientific or campaign changes"
+  ],
+  "closure_rule": "Resolve every open slot through prospective scientific authority before implementation/binding gates and a separate execution authorization. No null is a runtime default."
+}
