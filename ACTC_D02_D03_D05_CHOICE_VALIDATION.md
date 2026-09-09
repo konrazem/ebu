@@ -24,6 +24,18 @@ All pre-existing tracked files remain byte-identical to baseline, including
 SD-01, original ACTC declarations and campaign records. No code, runtime schema,
 scientific parameter, observation record or result artifact was added.
 
+Branch-scope clarification after review of `6149e33`: the complete four-commit
+chain on `codex/actc-choice-packet` (`1e98dac`, `dfbc328`, `531836a`,
+`6149e33`) is **static-design material plus a static verifier**, not
+documentation-only. The two-file description above applies to the choice-packet
+increment. Commit `531836a` introduced
+[actc_static_decision_derivation_check.py](actc_static_decision_derivation_check.py),
+which is preserved unchanged and permitted only as a static document-consistency
+checker. Its checks use standard-library document handling and read-only Git;
+its path-scope check covers the original three-file derivation increment.
+This clarification grants no scientific, AWS, Docker, model-execution or
+outcome-inspection capability or authority, and changes no scientific choice.
+
 ## Completed mechanical checks
 
 Checks used only read-only Git operations and Python standard-library text,
@@ -97,17 +109,29 @@ Automatic approval review rejected the subsequent local commit: it did not
 recognize a trusted user message explicitly authorizing the commit and also
 flagged disabling repository hooks. Hooks had been disabled in the proposed
 command to preserve the static-only execution boundary. The rejected command
-did not create a commit; no alternate commit mechanism was attempted. Direct
-user approval is needed before retrying. The completed two-file packet remains
-staged at the unchanged baseline. A clean worktree or completed commit is not
-claimed, and no remote equivalence is asserted.
+did not create a commit; at that point no alternate commit mechanism had been
+attempted and the two-file packet remained staged at the unchanged baseline.
+
+Subsequently, the packet was committed normally at
+`6149e33ad174ec362c75e6fea1db5a7c43facb87` (`6149e33`), with hooks enabled.
+That commit contains both packet files and supersedes the historical pending
+commit/approval state above. Git records the committed contents; the normal
+hooks-enabled completion is recorded by the coordinating task and explicitly
+confirmed in this correction's instruction. No remote equivalence is asserted.
 
 No SD-01 modification, implementation, model advance, stochastic draw,
 simulation, Gate/runner execution, outcome inspection, data acquisition,
 AWS/Docker use, external communication, push, merge or publication occurred.
 
+This review correction changes only this validation record. Static checks
+verify the one-file diff, unchanged checker and scientific declarations, all
+14 source/approval byte locks, the 25 null/UNRESOLVED slots, false execution
+and sealing flags, document links and whitespace. The original increment's
+checker and scientific tests are not run for this correction. The next action
+is **independent read-only re-review** of the corrected local commit.
+
 The study author must choose the primary question/endpoint and claim rule,
 the system/equations/typed boundary, and the empirical source/admission rules.
-The exact next task is the local additive decision receipt specified at the
+The next scientific-design task is the local additive decision receipt specified at the
 end of the choice packet, after those author answers arrive. That receipt,
 later sealing and every implementation or execution stage have not begun.
