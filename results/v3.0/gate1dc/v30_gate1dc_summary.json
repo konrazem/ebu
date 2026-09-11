@@ -1,0 +1,3547 @@
+{
+  "branch": "v3.0-local-ebu-foundation",
+  "comparisons": {
+    "A_vs_B_capability_cost": {
+      "DC1_flux_lock|conservative": {
+        "capability_cost_absolute": 63.86407266407291,
+        "capability_cost_relative": 0.613245650807079,
+        "max_simultaneous_actions_A": 2,
+        "pbi_service_A": 104.14109350799767,
+        "pbi_service_B": 40.27702084392476
+      },
+      "DC1_flux_lock|near_certificate": {
+        "capability_cost_absolute": 108.30487466130812,
+        "capability_cost_relative": 0.592258974567758,
+        "max_simultaneous_actions_A": 2,
+        "pbi_service_A": 182.86742677112002,
+        "pbi_service_B": 74.5625521098119
+      },
+      "DC2_capacity_split|conservative": {
+        "capability_cost_absolute": 32.42852345773769,
+        "capability_cost_relative": 0.5929868421052632,
+        "max_simultaneous_actions_A": 3,
+        "pbi_service_A": 54.68675045572291,
+        "pbi_service_B": 22.25822699798522
+      },
+      "DC2_capacity_split|near_certificate": {
+        "capability_cost_absolute": 57.802096325434135,
+        "capability_cost_relative": 0.5872039473684211,
+        "max_simultaneous_actions_A": 3,
+        "pbi_service_A": 98.43615082030125,
+        "pbi_service_B": 40.634054494867115
+      },
+      "DC3_demand_pulse|conservative": {
+        "capability_cost_absolute": 17.199288256227746,
+        "capability_cost_relative": 0.18695601717535093,
+        "max_simultaneous_actions_A": 2,
+        "pbi_service_A": 91.99644128113879,
+        "pbi_service_B": 74.79715302491104
+      },
+      "DC3_demand_pulse|near_certificate": {
+        "capability_cost_absolute": 17.543274021352318,
+        "capability_cost_relative": 0.10910430914281921,
+        "max_simultaneous_actions_A": 2,
+        "pbi_service_A": 160.79359430604984,
+        "pbi_service_B": 143.25032028469752
+      }
+    },
+    "B_vs_C_observational_identity": {
+      "DC1_flux_lock|conservative": {
+        "first_difference": null,
+        "identical": true,
+        "max_state_difference": 0.0
+      },
+      "DC1_flux_lock|near_certificate": {
+        "first_difference": null,
+        "identical": true,
+        "max_state_difference": 0.0
+      },
+      "DC2_capacity_split|conservative": {
+        "first_difference": null,
+        "identical": true,
+        "max_state_difference": 0.0
+      },
+      "DC2_capacity_split|near_certificate": {
+        "first_difference": null,
+        "identical": true,
+        "max_state_difference": 0.0
+      },
+      "DC3_demand_pulse|conservative": {
+        "first_difference": null,
+        "identical": true,
+        "max_state_difference": 0.0
+      },
+      "DC3_demand_pulse|near_certificate": {
+        "first_difference": null,
+        "identical": true,
+        "max_state_difference": 0.0
+      }
+    },
+    "B_vs_D_primary_alignment": {
+      "DC1_flux_lock|conservative": {
+        "pbi_service_B": 40.27702084392476,
+        "pbi_service_D": 70.08912048805287,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          93.17493645144889,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          63.362836807320775,
+          0.0
+        ],
+        "per_destination_predicate": {
+          "any_destination_failure": false,
+          "destinations": [
+            {
+              "destination": 0,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 1,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 63.362836807320775,
+              "pbi_unmet_baseline": 93.17493645144889,
+              "unmet_condition": false,
+              "unmet_excess_absolute": -29.81209964412811,
+              "unmet_excess_relative": -0.3199583576819765,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 2,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            }
+          ]
+        },
+        "service_ratio_D_over_B": 1.7401763839398976,
+        "total_predicate": {
+          "actor_crossed_reserve": false,
+          "baseline_crossed_reserve": false,
+          "ebu_threshold_met": true,
+          "ebu_total": 1093.9544510579167,
+          "is_service_alignment_failure": false,
+          "min_source_actor": 12.095068632435181,
+          "min_source_baseline": 12.095068632435181,
+          "pbi_service_actor": 70.08912048805287,
+          "pbi_service_baseline": 40.27702084392476,
+          "pbi_unmet_actor": 63.362836807320775,
+          "pbi_unmet_baseline": 93.17493645144889,
+          "preservation_justified": false,
+          "service_condition": false,
+          "service_deficit_absolute": -29.81209964412811,
+          "service_deficit_per_tick_magnitude_variant": false,
+          "service_deficit_relative": -0.7401763839398976,
+          "service_persistent": false,
+          "unmet_condition": false,
+          "unmet_excess_absolute": -29.81209964412811,
+          "unmet_excess_relative": -0.3199583576819765,
+          "unmet_persistent": false
+        }
+      },
+      "DC1_flux_lock|near_certificate": {
+        "pbi_service_B": 74.5625521098119,
+        "pbi_service_D": 126.16041687849518,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          165.65097102186067,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          114.0531062531774,
+          0.0
+        ],
+        "per_destination_predicate": {
+          "any_destination_failure": false,
+          "destinations": [
+            {
+              "destination": 0,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 1,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 114.0531062531774,
+              "pbi_unmet_baseline": 165.65097102186067,
+              "unmet_condition": false,
+              "unmet_excess_absolute": -51.597864768683266,
+              "unmet_excess_relative": -0.3114854350106646,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 2,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            }
+          ]
+        },
+        "service_ratio_D_over_B": 1.6920077613852673,
+        "total_predicate": {
+          "actor_crossed_reserve": false,
+          "baseline_crossed_reserve": false,
+          "ebu_threshold_met": true,
+          "ebu_total": 1898.0505032908404,
+          "is_service_alignment_failure": false,
+          "min_source_actor": 12.171123538383325,
+          "min_source_baseline": 12.171123538383325,
+          "pbi_service_actor": 126.16041687849518,
+          "pbi_service_baseline": 74.5625521098119,
+          "pbi_unmet_actor": 114.0531062531774,
+          "pbi_unmet_baseline": 165.65097102186067,
+          "preservation_justified": false,
+          "service_condition": false,
+          "service_deficit_absolute": -51.59786476868328,
+          "service_deficit_per_tick_magnitude_variant": false,
+          "service_deficit_relative": -0.6920077613852673,
+          "service_persistent": false,
+          "unmet_condition": false,
+          "unmet_excess_absolute": -51.597864768683266,
+          "unmet_excess_relative": -0.3114854350106646,
+          "unmet_persistent": false
+        }
+      },
+      "DC2_capacity_split|conservative": {
+        "pbi_service_B": 22.25822699798522,
+        "pbi_service_D": 28.562522292996626,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          0.0,
+          25.90425021586875,
+          6.524273241868945
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          0.0,
+          25.90425021586875,
+          0.21997794685753888
+        ],
+        "per_destination_predicate": {
+          "any_destination_failure": false,
+          "destinations": [
+            {
+              "destination": 0,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 1,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 2,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 25.90425021586875,
+              "pbi_unmet_baseline": 25.90425021586875,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 3,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.21997794685753888,
+              "pbi_unmet_baseline": 6.524273241868945,
+              "unmet_condition": false,
+              "unmet_excess_absolute": -6.304295295011406,
+              "unmet_excess_relative": -0.9662831492945682,
+              "unmet_persistent": false
+            }
+          ]
+        },
+        "service_ratio_D_over_B": 1.2832343876977292,
+        "total_predicate": {
+          "actor_crossed_reserve": false,
+          "baseline_crossed_reserve": false,
+          "ebu_threshold_met": true,
+          "ebu_total": 494.022134339596,
+          "is_service_alignment_failure": false,
+          "min_source_actor": 12.365288304710736,
+          "min_source_baseline": 12.44382615369855,
+          "pbi_service_actor": 28.562522292996626,
+          "pbi_service_baseline": 22.25822699798522,
+          "pbi_unmet_actor": 26.12422816272629,
+          "pbi_unmet_baseline": 32.4285234577377,
+          "preservation_justified": false,
+          "service_condition": false,
+          "service_deficit_absolute": -6.304295295011407,
+          "service_deficit_per_tick_magnitude_variant": false,
+          "service_deficit_relative": -0.28323438769772913,
+          "service_persistent": false,
+          "unmet_condition": false,
+          "unmet_excess_absolute": -6.304295295011407,
+          "unmet_excess_relative": -0.19440586936458723,
+          "unmet_persistent": false
+        }
+      },
+      "DC2_capacity_split|near_certificate": {
+        "pbi_service_B": 40.634054494867115,
+        "pbi_service_D": 50.844640431295645,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          0.0,
+          46.62765038856375,
+          11.174445936870386
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          0.0,
+          46.62765038856375,
+          0.963860000441856
+        ],
+        "per_destination_predicate": {
+          "any_destination_failure": false,
+          "destinations": [
+            {
+              "destination": 0,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 1,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 2,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 46.62765038856375,
+              "pbi_unmet_baseline": 46.62765038856375,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 3,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.963860000441856,
+              "pbi_unmet_baseline": 11.174445936870386,
+              "unmet_condition": false,
+              "unmet_excess_absolute": -10.21058593642853,
+              "unmet_excess_relative": -0.9137442692114537,
+              "unmet_persistent": false
+            }
+          ]
+        },
+        "service_ratio_D_over_B": 1.2512814943859054,
+        "total_predicate": {
+          "actor_crossed_reserve": false,
+          "baseline_crossed_reserve": false,
+          "ebu_threshold_met": true,
+          "ebu_total": 927.0058113929355,
+          "is_service_alignment_failure": false,
+          "min_source_actor": 12.657518948479325,
+          "min_source_baseline": 12.798887076657392,
+          "pbi_service_actor": 50.844640431295645,
+          "pbi_service_baseline": 40.634054494867115,
+          "pbi_unmet_actor": 47.59151038900561,
+          "pbi_unmet_baseline": 57.80209632543414,
+          "preservation_justified": false,
+          "service_condition": false,
+          "service_deficit_absolute": -10.21058593642853,
+          "service_deficit_per_tick_magnitude_variant": false,
+          "service_deficit_relative": -0.2512814943859055,
+          "service_persistent": false,
+          "unmet_condition": false,
+          "unmet_excess_absolute": -10.21058593642853,
+          "unmet_excess_relative": -0.17664732917196388,
+          "unmet_persistent": false
+        }
+      },
+      "DC3_demand_pulse|conservative": {
+        "pbi_service_B": 74.79715302491104,
+        "pbi_service_D": 81.67686832740213,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          45.59023894255209,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          38.71052364006099,
+          0.0
+        ],
+        "per_destination_predicate": {
+          "any_destination_failure": false,
+          "destinations": [
+            {
+              "destination": 0,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 1,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 38.71052364006099,
+              "pbi_unmet_baseline": 45.59023894255209,
+              "unmet_condition": false,
+              "unmet_excess_absolute": -6.8797153024911,
+              "unmet_excess_relative": -0.1509032517061421,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 2,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            }
+          ]
+        },
+        "service_ratio_D_over_B": 1.0919783043105908,
+        "total_predicate": {
+          "actor_crossed_reserve": false,
+          "baseline_crossed_reserve": false,
+          "ebu_threshold_met": true,
+          "ebu_total": 1112.9079066797215,
+          "is_service_alignment_failure": false,
+          "min_source_actor": 12.321301474326386,
+          "min_source_baseline": 12.321301474326386,
+          "pbi_service_actor": 81.67686832740213,
+          "pbi_service_baseline": 74.79715302491104,
+          "pbi_unmet_actor": 38.71052364006099,
+          "pbi_unmet_baseline": 45.59023894255209,
+          "preservation_justified": false,
+          "service_condition": false,
+          "service_deficit_absolute": -6.879715302491093,
+          "service_deficit_per_tick_magnitude_variant": false,
+          "service_deficit_relative": -0.09197830431059077,
+          "service_persistent": false,
+          "unmet_condition": false,
+          "unmet_excess_absolute": -6.8797153024911,
+          "unmet_excess_relative": -0.1509032517061421,
+          "unmet_persistent": false
+        }
+      },
+      "DC3_demand_pulse|near_certificate": {
+        "pbi_service_B": 143.25032028469752,
+        "pbi_service_D": 150.47402135231317,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          68.64698525673612,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          61.423284189120466,
+          0.0
+        ],
+        "per_destination_predicate": {
+          "any_destination_failure": false,
+          "destinations": [
+            {
+              "destination": 0,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 1,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 61.423284189120466,
+              "pbi_unmet_baseline": 68.64698525673612,
+              "unmet_condition": false,
+              "unmet_excess_absolute": -7.22370106761565,
+              "unmet_excess_relative": -0.10522969130544317,
+              "unmet_persistent": false
+            },
+            {
+              "destination": 2,
+              "is_service_alignment_failure": false,
+              "pbi_unmet_actor": 0.0,
+              "pbi_unmet_baseline": 0.0,
+              "unmet_condition": false,
+              "unmet_excess_absolute": 0.0,
+              "unmet_excess_relative": 0.0,
+              "unmet_persistent": false
+            }
+          ]
+        },
+        "service_ratio_D_over_B": 1.0504271198365154,
+        "total_predicate": {
+          "actor_crossed_reserve": false,
+          "baseline_crossed_reserve": false,
+          "ebu_threshold_met": true,
+          "ebu_total": 1891.9151750845692,
+          "is_service_alignment_failure": false,
+          "min_source_actor": 12.578342653787494,
+          "min_source_baseline": 12.578342653787494,
+          "pbi_service_actor": 150.47402135231317,
+          "pbi_service_baseline": 143.25032028469752,
+          "pbi_unmet_actor": 61.423284189120466,
+          "pbi_unmet_baseline": 68.64698525673612,
+          "preservation_justified": false,
+          "service_condition": false,
+          "service_deficit_absolute": -7.22370106761565,
+          "service_deficit_per_tick_magnitude_variant": false,
+          "service_deficit_relative": -0.05042711983651537,
+          "service_persistent": false,
+          "unmet_condition": false,
+          "unmet_excess_absolute": -7.22370106761565,
+          "unmet_excess_relative": -0.10522969130544317,
+          "unmet_persistent": false
+        }
+      }
+    },
+    "S_vs_B_and_D_secondary": {
+      "DC1_flux_lock|conservative": {
+        "pbi_service_B": 40.27702084392476,
+        "pbi_service_D": 70.08912048805287,
+        "pbi_service_S": 85.99644128113879,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          93.17493645144889,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          63.362836807320775,
+          0.0
+        ],
+        "pbi_unmet_S_by_destination": [
+          0.0,
+          28.390950686324334,
+          19.064565327910522
+        ]
+      },
+      "DC1_flux_lock|near_certificate": {
+        "pbi_service_B": 74.5625521098119,
+        "pbi_service_D": 126.16041687849518,
+        "pbi_service_S": 154.79359430604984,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          165.65097102186067,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          114.0531062531774,
+          0.0
+        ],
+        "pbi_unmet_S_by_destination": [
+          0.0,
+          51.103711235383805,
+          34.31621759023894
+        ]
+      },
+      "DC2_capacity_split|conservative": {
+        "pbi_service_B": 22.25822699798522,
+        "pbi_service_D": 28.562522292996626,
+        "pbi_service_S": 31.409575463699156,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          0.0,
+          25.90425021586875,
+          6.524273241868945
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          0.0,
+          25.90425021586875,
+          0.21997794685753888
+        ],
+        "pbi_unmet_S_by_destination": [
+          0.0,
+          3.7137676292813975,
+          2.293907218829865,
+          17.2695001439125
+        ]
+      },
+      "DC2_capacity_split|near_certificate": {
+        "pbi_service_B": 40.634054494867115,
+        "pbi_service_D": 50.844640431295645,
+        "pbi_service_S": 56.40599414800932,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          0.0,
+          46.62765038856375,
+          11.174445936870386
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          0.0,
+          46.62765038856375,
+          0.963860000441856
+        ],
+        "pbi_unmet_S_by_destination": [
+          0.0,
+          2.069749592247913,
+          8.87530682100152,
+          31.085100259042502
+        ]
+      },
+      "DC3_demand_pulse|conservative": {
+        "pbi_service_B": 74.79715302491104,
+        "pbi_service_D": 81.67686832740213,
+        "pbi_service_S": 85.99644128113879,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          45.59023894255209,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          38.71052364006099,
+          0.0
+        ],
+        "pbi_unmet_S_by_destination": [
+          0.0,
+          28.390950686324334,
+          6.0
+        ]
+      },
+      "DC3_demand_pulse|near_certificate": {
+        "pbi_service_B": 143.25032028469752,
+        "pbi_service_D": 150.47402135231317,
+        "pbi_service_S": 154.79359430604984,
+        "pbi_unmet_B_by_destination": [
+          0.0,
+          68.64698525673612,
+          0.0
+        ],
+        "pbi_unmet_D_by_destination": [
+          0.0,
+          61.423284189120466,
+          0.0
+        ],
+        "pbi_unmet_S_by_destination": [
+          0.0,
+          51.103711235383805,
+          6.0
+        ]
+      }
+    },
+    "forbidden_baseline_arm": "A_full_multi_edge_p1c",
+    "primary_baseline_arm": "B_restricted_matched_non_ebu",
+    "timestep_sensitivity": {
+      "DC1_flux_lock": {
+        "consistent": true,
+        "total_alignment_failure_conservative": false,
+        "total_alignment_failure_near_certificate": false
+      },
+      "DC2_capacity_split": {
+        "consistent": true,
+        "total_alignment_failure_conservative": false,
+        "total_alignment_failure_near_certificate": false
+      },
+      "DC3_demand_pulse": {
+        "consistent": true,
+        "total_alignment_failure_conservative": false,
+        "total_alignment_failure_near_certificate": false
+      }
+    }
+  },
+  "completion": {
+    "full_study_completion_sentinel": "results/v3.0/gate1dc/MANIFEST.md",
+    "runner_complete": true,
+    "runner_completion_sentinel": "results/v3.0/gate1dc/v30_gate1dc_summary.json",
+    "scientific_attempts_committed": 1,
+    "scientific_retry_permitted": false,
+    "study_finalized": false
+  },
+  "discriminator_v2": {
+    "DC1_flux_lock|conservative": {
+      "i_capability_cost_absolute": 63.86407266407291,
+      "ii_service_ratio_delta": 0.7401763839398976,
+      "iii_max_destination_unmet_delta": 29.81209964412811,
+      "world_discriminating": true
+    },
+    "DC1_flux_lock|near_certificate": {
+      "i_capability_cost_absolute": 108.30487466130812,
+      "ii_service_ratio_delta": 0.6920077613852673,
+      "iii_max_destination_unmet_delta": 51.597864768683266,
+      "world_discriminating": true
+    },
+    "DC2_capacity_split|conservative": {
+      "i_capability_cost_absolute": 32.42852345773769,
+      "ii_service_ratio_delta": 0.28323438769772924,
+      "iii_max_destination_unmet_delta": 6.304295295011406,
+      "world_discriminating": true
+    },
+    "DC2_capacity_split|near_certificate": {
+      "i_capability_cost_absolute": 57.802096325434135,
+      "ii_service_ratio_delta": 0.2512814943859054,
+      "iii_max_destination_unmet_delta": 10.21058593642853,
+      "world_discriminating": true
+    },
+    "DC3_demand_pulse|conservative": {
+      "i_capability_cost_absolute": 17.199288256227746,
+      "ii_service_ratio_delta": 0.09197830431059084,
+      "iii_max_destination_unmet_delta": 6.8797153024911,
+      "world_discriminating": true
+    },
+    "DC3_demand_pulse|near_certificate": {
+      "i_capability_cost_absolute": 17.543274021352318,
+      "ii_service_ratio_delta": 0.05042711983651538,
+      "iii_max_destination_unmet_delta": 7.22370106761565,
+      "world_discriminating": true
+    }
+  },
+  "equation_version": "v3.0-gate0.1",
+  "execution_sha": "8793bda07ff7470c6362d2ef3b21c41825ae98ed",
+  "falsifiers": {
+    "F1": {
+      "evidence": [],
+      "fired": false
+    },
+    "F10": {
+      "evidence": {
+        "note": "decision-path AST and current-demand poison probes are mandatory pre-execution validation; locked test/source hashes were enforced before execution"
+      },
+      "fired": false
+    },
+    "F11": {
+      "evidence": [],
+      "fired": false
+    },
+    "F12": {
+      "evidence": {
+        "note": "frozen plan/protocol/implementation/test hashes enforced before execution; no runtime scientific options exist"
+      },
+      "fired": false
+    },
+    "F13": {
+      "evidence": {
+        "note": "preregistration provenance is locked by protocol and Git history; this runner is the later authorized execution layer"
+      },
+      "fired": false
+    },
+    "F14": {
+      "evidence": [],
+      "fired": false
+    },
+    "F15": {
+      "evidence": {
+        "note": "quote domains and current-tick epochs are asserted by the locked implementation; a violation aborts before finalization"
+      },
+      "fired": false
+    },
+    "F16": {
+      "evidence": {
+        "note": "all worlds are reconstructed static graphs from the locked plan"
+      },
+      "fired": false
+    },
+    "F2": {
+      "evidence": [],
+      "fired": false
+    },
+    "F3": {
+      "evidence": {
+        "discriminating_world_timestep_pairs": [
+          "DC1_flux_lock|conservative",
+          "DC1_flux_lock|near_certificate",
+          "DC2_capacity_split|conservative",
+          "DC2_capacity_split|near_certificate",
+          "DC3_demand_pulse|conservative",
+          "DC3_demand_pulse|near_certificate"
+        ]
+      },
+      "fired": false
+    },
+    "F4": {
+      "evidence": [],
+      "fired": false
+    },
+    "F5": {
+      "evidence": [],
+      "fired": false
+    },
+    "F6": {
+      "evidence": {
+        "DC1_flux_lock": 2,
+        "DC2_capacity_split": 3,
+        "DC3_demand_pulse": 2
+      },
+      "fired": false
+    },
+    "F7": {
+      "evidence": {
+        "DC1_flux_lock|conservative": true,
+        "DC1_flux_lock|near_certificate": true,
+        "DC2_capacity_split|conservative": true,
+        "DC2_capacity_split|near_certificate": true,
+        "DC3_demand_pulse|conservative": true,
+        "DC3_demand_pulse|near_certificate": true
+      },
+      "fired": false
+    },
+    "F8": {
+      "evidence": [],
+      "fired": false
+    },
+    "F9": {
+      "evidence": {},
+      "fired": false
+    }
+  },
+  "gate": "V3.0 Gate 1D-C outcome-discrimination study",
+  "hypotheses": {
+    "H1": {
+      "evidence": {
+        "non_identical_pairs": []
+      },
+      "status": "supported"
+    },
+    "H10": {
+      "evidence": {
+        "pinning_violations": []
+      },
+      "status": "supported"
+    },
+    "H2": {
+      "evidence": {
+        "PC2": {
+          "conservative": {
+            "certified_lower_bound": 5.5,
+            "control": "PC2_DC3_S_misses_pulses",
+            "dt_label": "conservative",
+            "executed_value": 6.0,
+            "f4_fired": false,
+            "f4_threshold": 5.4999999935,
+            "measured_as": "window pulse-tick cumulative dst2 unmet of S minus window pulse-tick cumulative dst2 unmet of B"
+          },
+          "near_certificate": {
+            "certified_lower_bound": 5.5,
+            "control": "PC2_DC3_S_misses_pulses",
+            "dt_label": "near_certificate",
+            "executed_value": 6.0,
+            "f4_fired": false,
+            "f4_threshold": 5.4999999935,
+            "measured_as": "window pulse-tick cumulative dst2 unmet of S minus window pulse-tick cumulative dst2 unmet of B"
+          }
+        },
+        "discriminating_world_timestep_pairs": [
+          "DC1_flux_lock|conservative",
+          "DC1_flux_lock|near_certificate",
+          "DC2_capacity_split|conservative",
+          "DC2_capacity_split|near_certificate",
+          "DC3_demand_pulse|conservative",
+          "DC3_demand_pulse|near_certificate"
+        ]
+      },
+      "status": "supported"
+    },
+    "H3": {
+      "evidence": {
+        "failed_positive_controls": []
+      },
+      "status": "supported"
+    },
+    "H4": {
+      "evidence": {
+        "PC3": {
+          "conservative": {
+            "certified_lower_bound": 18.427051868293074,
+            "control": "PC3_DC1_A_vs_B_capability_cost",
+            "dt_label": "conservative",
+            "executed_value": 63.86407266407291,
+            "f4_fired": false,
+            "f4_threshold": 18.42705184886602,
+            "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+          },
+          "near_certificate": {
+            "certified_lower_bound": 28.012116339140597,
+            "control": "PC3_DC1_A_vs_B_capability_cost",
+            "dt_label": "near_certificate",
+            "executed_value": 108.30487466130812,
+            "f4_fired": false,
+            "f4_threshold": 28.01211631012848,
+            "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+          }
+        },
+        "PC4": {
+          "conservative": {
+            "certified_lower_bound": 7.476597260519597,
+            "control": "PC4_DC2_A_vs_B_capacity_gap",
+            "dt_label": "conservative",
+            "executed_value": 32.42852345773769,
+            "f4_fired": false,
+            "f4_threshold": 7.476597252043,
+            "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+          },
+          "near_certificate": {
+            "certified_lower_bound": 25.384451045418373,
+            "control": "PC4_DC2_A_vs_B_capacity_gap",
+            "dt_label": "near_certificate",
+            "executed_value": 57.802096325434135,
+            "f4_fired": false,
+            "f4_threshold": 25.38445101903392,
+            "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+          }
+        },
+        "max_simultaneous_actions_A": {
+          "DC1_flux_lock": 2,
+          "DC2_capacity_split": 3,
+          "DC3_demand_pulse": 2
+        }
+      },
+      "status": "supported"
+    },
+    "H5": {
+      "evidence": {
+        "DC1_flux_lock|conservative": {
+          "service_D_minus_B": 29.81209964412811,
+          "unmet_D_minus_B_by_destination": [
+            0.0,
+            -29.81209964412811,
+            0.0
+          ]
+        },
+        "DC1_flux_lock|near_certificate": {
+          "service_D_minus_B": 51.59786476868328,
+          "unmet_D_minus_B_by_destination": [
+            0.0,
+            -51.597864768683266,
+            0.0
+          ]
+        },
+        "DC2_capacity_split|conservative": {
+          "service_D_minus_B": 6.304295295011407,
+          "unmet_D_minus_B_by_destination": [
+            0.0,
+            0.0,
+            0.0,
+            -6.304295295011406
+          ]
+        },
+        "DC2_capacity_split|near_certificate": {
+          "service_D_minus_B": 10.21058593642853,
+          "unmet_D_minus_B_by_destination": [
+            0.0,
+            0.0,
+            0.0,
+            -10.21058593642853
+          ]
+        },
+        "DC3_demand_pulse|conservative": {
+          "service_D_minus_B": 6.879715302491093,
+          "unmet_D_minus_B_by_destination": [
+            0.0,
+            -6.8797153024911,
+            0.0
+          ]
+        },
+        "DC3_demand_pulse|near_certificate": {
+          "service_D_minus_B": 7.22370106761565,
+          "unmet_D_minus_B_by_destination": [
+            0.0,
+            -7.22370106761565,
+            0.0
+          ]
+        }
+      },
+      "status": "open_outcome"
+    },
+    "H6": {
+      "evidence": {
+        "D_harm_runs": []
+      },
+      "status": "supported"
+    },
+    "H7": {
+      "evidence": {
+        "DC1_flux_lock": {
+          "consistent": true,
+          "total_alignment_failure_conservative": false,
+          "total_alignment_failure_near_certificate": false
+        },
+        "DC2_capacity_split": {
+          "consistent": true,
+          "total_alignment_failure_conservative": false,
+          "total_alignment_failure_near_certificate": false
+        },
+        "DC3_demand_pulse": {
+          "consistent": true,
+          "total_alignment_failure_conservative": false,
+          "total_alignment_failure_near_certificate": false
+        }
+      },
+      "status": "supported"
+    },
+    "H8": {
+      "evidence": {
+        "DC2_t0_divergence": {
+          "conservative": true,
+          "near_certificate": true
+        },
+        "pair_divergence": {
+          "DC1_flux_lock|conservative": true,
+          "DC1_flux_lock|near_certificate": true,
+          "DC2_capacity_split|conservative": true,
+          "DC2_capacity_split|near_certificate": true,
+          "DC3_demand_pulse|conservative": true,
+          "DC3_demand_pulse|near_certificate": true
+        }
+      },
+      "status": "supported"
+    },
+    "H9": {
+      "evidence": {
+        "negative_corrections": 0.0,
+        "total_unmet": 2294.8856986119704
+      },
+      "status": "supported"
+    }
+  },
+  "implementation_sha256": {
+    "AGENTS.md": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e",
+    "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md": "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1",
+    "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md": "2e439afad6ba7532aae83631ef4fb7ea6648980be035674f8e2d13faeecd9b51",
+    "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md": "d81afc5d77e1d2c7ccd9ceaae44d96ce33ddbb85ddc35fe0a0a0e1141394e8c3",
+    "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md": "3122aa673f47290bbee866feb56d16afc4540f552ed7c7b458f097ef4e44d04f",
+    "d0_v29.py": "f7fdce8d946b44b4e0bfab9338fcd5c378796f9d14cd80323c53732e08a3bfe9",
+    "ebu_quote_v30.py": "44a2ea282837f7613198a06a7037fb89f2f9fd99f05cedde65e0b1ba726e1b79",
+    "exp_v30_gate1dc.py": "89b8016c2017839faaee38b172f6041ca2d987669db448ffa260399cb872deb2",
+    "finalize_v30_gate1dc.py": "f4c7af1415d38e753aacf1be644047d6744cefaa36da9bc87042cc1946db2e85",
+    "gate1dc_v30.py": "33ebb3c83d5a4cb6653012e71fe1f5bd3929eb7efe7488f1ce1851134707cf80",
+    "p1c_v29.py": "a30c869000080b4b0235a9ba1daa517a5b0fe734ba55ac423ae3042da5940729",
+    "service_v30.py": "a83bcd5e449b8804f44607e56326ec392324cdfed71260e28fdc4c48899d44e0",
+    "test_v30_gate1dc.py": "1f143f1d3d73cea2f8ec192b257d77a9e0c12635c36c66dd82d9422f188ff9e4",
+    "v30_gate1dc_execution_finalization_contract.json": "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155",
+    "v30_gate1dc_macos_environment_compatibility_contract.json": "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b",
+    "v30_gate1dc_macos_python_launcher_compatibility_contract.json": "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82",
+    "v30_gate1dc_outcome_discrimination_plan.json": "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe"
+  },
+  "n_runs": 30,
+  "non_claims": [
+    "numerical results will not prove alignment, safety, security or any theorem",
+    "the exact-total-quote greedy rule remains a candidate heuristic, not a theorem",
+    "the bounded service wrapper remains outside the V2.8 D0 theorem (O12/O13 theorem-less)",
+    "O3 (aggregate multi-edge settlement) remains open; nothing here settles it",
+    "Gate 1E (latency/uncertainty/robust quotes) remains registered and untouched",
+    "Gate 2 (actor economy) remains paused; no outcome authorizes it",
+    "cumulative signed EBU remains an evaluation variable, not a wallet",
+    "the registered analysis predictions are falsifiable analysis, not guarantees"
+  ],
+  "o3_aggregate_diagnostic": {
+    "arm_A_ticks": 1200,
+    "multi_action_ticks": 1196,
+    "note": "settlement-free diagnostic only; O3 remains open",
+    "nothing_settled_or_allocated": true,
+    "total_double_count": -5.551115123125783e-14,
+    "total_group_quote": 7776.857701006996,
+    "total_naive_independent_sum": 7776.857701006996
+  },
+  "outcome_class_counts": {
+    "physical_impossibility": 20,
+    "preserve_and_serve": 2,
+    "safe_rationing_physical_scarcity": 8
+  },
+  "plan_canonical_hash": "f9dd4b804a83744268bffe48d2d3861825cbc96d90aa871f348251e4108ef287",
+  "plan_id": "v30_gate1dc_outcome_discrimination",
+  "plan_raw_sha256": "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe",
+  "plan_version": "1.0.0",
+  "platform": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+  "positive_controls": {
+    "PC1_DC1_S_starves_dst2": {
+      "conservative": {
+        "certified_lower_bound": 15.564565327910522,
+        "control": "PC1_DC1_S_starves_dst2",
+        "dt_label": "conservative",
+        "executed_value": 19.064565327910522,
+        "f4_fired": false,
+        "f4_threshold": 15.564565311345957,
+        "measured_as": "post-burn-in cumulative dst2 unmet of S minus post-burn-in cumulative dst2 unmet of B"
+      },
+      "near_certificate": {
+        "certified_lower_bound": 30.816217590238942,
+        "control": "PC1_DC1_S_starves_dst2",
+        "dt_label": "near_certificate",
+        "executed_value": 34.31621759023894,
+        "f4_fired": false,
+        "f4_threshold": 30.816217558422725,
+        "measured_as": "post-burn-in cumulative dst2 unmet of S minus post-burn-in cumulative dst2 unmet of B"
+      }
+    },
+    "PC2_DC3_S_misses_pulses": {
+      "conservative": {
+        "certified_lower_bound": 5.5,
+        "control": "PC2_DC3_S_misses_pulses",
+        "dt_label": "conservative",
+        "executed_value": 6.0,
+        "f4_fired": false,
+        "f4_threshold": 5.4999999935,
+        "measured_as": "window pulse-tick cumulative dst2 unmet of S minus window pulse-tick cumulative dst2 unmet of B"
+      },
+      "near_certificate": {
+        "certified_lower_bound": 5.5,
+        "control": "PC2_DC3_S_misses_pulses",
+        "dt_label": "near_certificate",
+        "executed_value": 6.0,
+        "f4_fired": false,
+        "f4_threshold": 5.4999999935,
+        "measured_as": "window pulse-tick cumulative dst2 unmet of S minus window pulse-tick cumulative dst2 unmet of B"
+      }
+    },
+    "PC3_DC1_A_vs_B_capability_cost": {
+      "conservative": {
+        "certified_lower_bound": 18.427051868293074,
+        "control": "PC3_DC1_A_vs_B_capability_cost",
+        "dt_label": "conservative",
+        "executed_value": 63.86407266407291,
+        "f4_fired": false,
+        "f4_threshold": 18.42705184886602,
+        "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+      },
+      "near_certificate": {
+        "certified_lower_bound": 28.012116339140597,
+        "control": "PC3_DC1_A_vs_B_capability_cost",
+        "dt_label": "near_certificate",
+        "executed_value": 108.30487466130812,
+        "f4_fired": false,
+        "f4_threshold": 28.01211631012848,
+        "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+      }
+    },
+    "PC4_DC2_A_vs_B_capacity_gap": {
+      "conservative": {
+        "certified_lower_bound": 7.476597260519597,
+        "control": "PC4_DC2_A_vs_B_capacity_gap",
+        "dt_label": "conservative",
+        "executed_value": 32.42852345773769,
+        "f4_fired": false,
+        "f4_threshold": 7.476597252043,
+        "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+      },
+      "near_certificate": {
+        "certified_lower_bound": 25.384451045418373,
+        "control": "PC4_DC2_A_vs_B_capacity_gap",
+        "dt_label": "near_certificate",
+        "executed_value": 57.802096325434135,
+        "f4_fired": false,
+        "f4_threshold": 25.38445101903392,
+        "measured_as": "post-burn-in cumulative total service of A minus post-burn-in cumulative total service of B"
+      }
+    }
+  },
+  "python": {
+    "executable_realpath": "/opt/homebrew/Cellar/python@3.14/3.14.2/Frameworks/Python.framework/Versions/3.14/bin/python3.14",
+    "flags": [
+      "-B",
+      "-s",
+      "-X",
+      "utf8"
+    ],
+    "invoked_as": "/opt/homebrew/bin/python3",
+    "version": "3.14.2",
+    "zlib_runtime_version": "1.2.12",
+    "zlib_version": "1.2.12"
+  },
+  "registered": {
+    "arms": [
+      "A_full_multi_edge_p1c",
+      "B_restricted_matched_non_ebu",
+      "C_restricted_observational_quote",
+      "D_restricted_exact_total_quote_greedy",
+      "S_restricted_local_service_priority"
+    ],
+    "burn_in_ticks": 50,
+    "deterministic": true,
+    "dt_labels": [
+      "conservative",
+      "near_certificate"
+    ],
+    "frozen_order": [
+      "DC1_flux_lock|A_full_multi_edge_p1c|conservative",
+      "DC1_flux_lock|B_restricted_matched_non_ebu|conservative",
+      "DC1_flux_lock|C_restricted_observational_quote|conservative",
+      "DC1_flux_lock|D_restricted_exact_total_quote_greedy|conservative",
+      "DC1_flux_lock|S_restricted_local_service_priority|conservative",
+      "DC1_flux_lock|A_full_multi_edge_p1c|near_certificate",
+      "DC1_flux_lock|B_restricted_matched_non_ebu|near_certificate",
+      "DC1_flux_lock|C_restricted_observational_quote|near_certificate",
+      "DC1_flux_lock|D_restricted_exact_total_quote_greedy|near_certificate",
+      "DC1_flux_lock|S_restricted_local_service_priority|near_certificate",
+      "DC2_capacity_split|A_full_multi_edge_p1c|conservative",
+      "DC2_capacity_split|B_restricted_matched_non_ebu|conservative",
+      "DC2_capacity_split|C_restricted_observational_quote|conservative",
+      "DC2_capacity_split|D_restricted_exact_total_quote_greedy|conservative",
+      "DC2_capacity_split|S_restricted_local_service_priority|conservative",
+      "DC2_capacity_split|A_full_multi_edge_p1c|near_certificate",
+      "DC2_capacity_split|B_restricted_matched_non_ebu|near_certificate",
+      "DC2_capacity_split|C_restricted_observational_quote|near_certificate",
+      "DC2_capacity_split|D_restricted_exact_total_quote_greedy|near_certificate",
+      "DC2_capacity_split|S_restricted_local_service_priority|near_certificate",
+      "DC3_demand_pulse|A_full_multi_edge_p1c|conservative",
+      "DC3_demand_pulse|B_restricted_matched_non_ebu|conservative",
+      "DC3_demand_pulse|C_restricted_observational_quote|conservative",
+      "DC3_demand_pulse|D_restricted_exact_total_quote_greedy|conservative",
+      "DC3_demand_pulse|S_restricted_local_service_priority|conservative",
+      "DC3_demand_pulse|A_full_multi_edge_p1c|near_certificate",
+      "DC3_demand_pulse|B_restricted_matched_non_ebu|near_certificate",
+      "DC3_demand_pulse|C_restricted_observational_quote|near_certificate",
+      "DC3_demand_pulse|D_restricted_exact_total_quote_greedy|near_certificate",
+      "DC3_demand_pulse|S_restricted_local_service_priority|near_certificate"
+    ],
+    "measurement_ticks": 150,
+    "persistence_window_ticks": 20,
+    "run_length_ticks": 200,
+    "seed": null,
+    "total_runs": 30,
+    "trace_rows": 6000,
+    "worlds": [
+      "DC1_flux_lock",
+      "DC2_capacity_split",
+      "DC3_demand_pulse"
+    ]
+  },
+  "registered_artifacts": {
+    "execution_receipt": {
+      "bytes": 3202,
+      "path": "results/v3.0/gate1dc/v30_gate1dc_execution_receipt.json",
+      "sha256": "f76d25c66bc251e5becfe18cfb883548bd3a8de297eafdf6e6e9fbd056b44a4e"
+    },
+    "execution_started": {
+      "bytes": 349,
+      "path": "results/v3.0/gate1dc/v30_gate1dc_execution_started.json",
+      "sha256": "82b134e6d80c6ecd09ed607f2baf256c848bae58f8171ddfca0054a3ef26cfff"
+    },
+    "manifest": {
+      "full_study_completion_sentinel": true,
+      "path": "results/v3.0/gate1dc/MANIFEST.md",
+      "written_by_runner": false
+    },
+    "stdout": {
+      "bytes": 5299,
+      "path": "results/v3.0/gate1dc/v30_gate1dc_stdout.txt",
+      "sha256": "7aa3bc09a4948ea32200c49dc18810a808bc9d0917851e75f9dc5a9b1bc4bf85"
+    },
+    "summary": {
+      "path": "results/v3.0/gate1dc/v30_gate1dc_summary.json",
+      "runner_completion_sentinel": true,
+      "self_hash_deferred_to_manifest": true
+    },
+    "trace": {
+      "bytes": 1534620,
+      "path": "results/v3.0/gate1dc/v30_gate1dc_trace.jsonl.gz",
+      "sha256": "9463e2d18adffd5374f005c2123e23849ae810e3251eccb4f3f5aa61b73a5783"
+    }
+  },
+  "runs": {
+    "DC1_flux_lock|A_full_multi_edge_p1c|conservative": {
+      "accepted_actions": 400,
+      "allee_crossings": 0,
+      "arm": "A_full_multi_edge_p1c",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 31.80378337482023,
+      "final_state": [
+        8.0,
+        0.0,
+        3.350299011963655
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 2.7755575615628914e-15,
+      "max_simultaneous_actions": 2,
+      "min_sigma": 0.9304443329739444,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 104.14109350799767,
+      "pbi_service_by_destination": [
+        0.0,
+        85.07652818008714,
+        19.064565327910522
+      ],
+      "pbi_unmet": 29.31086378737599,
+      "pbi_unmet_by_destination": [
+        0.0,
+        29.31086378737599,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 1.1288490336808912e-16,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|A_full_multi_edge_p1c|conservative",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        113.7420086071334,
+        25.41942043721403
+      ],
+      "total_demand": 177.93594306049837,
+      "total_service": 139.16142904434736,
+      "total_unmet": 38.77451401615094,
+      "unmet_by_destination": [
+        0.0,
+        38.77451401615077,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|A_full_multi_edge_p1c|near_certificate": {
+      "accepted_actions": 392,
+      "allee_crossings": 0,
+      "arm": "A_full_multi_edge_p1c",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 31.68513507524009,
+      "final_state": [
+        8.644560444108032,
+        0.0,
+        3.3647464936297995
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 2.4424906541753444e-15,
+      "max_simultaneous_actions": 2,
+      "min_sigma": 0.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 8,
+      "pbi_service": 182.86742677112002,
+      "pbi_service_by_destination": [
+        0.0,
+        148.55120918088107,
+        34.31621759023894
+      ],
+      "pbi_unmet": 57.34609636055256,
+      "pbi_unmet_by_destination": [
+        0.0,
+        57.34609636055256,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 8.127713042502417e-16,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|A_full_multi_edge_p1c|near_certificate",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        200.14907394956435,
+        45.754956786985254
+      ],
+      "total_demand": 320.2846975088962,
+      "total_service": 245.90403073654917,
+      "total_unmet": 74.38066677234711,
+      "unmet_by_destination": [
+        0.0,
+        74.38066677234717,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|B_restricted_matched_non_ebu|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "B_restricted_matched_non_ebu",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 35.25357057333944,
+      "final_state": [
+        17.84805916784089,
+        0.0,
+        2.9748016814801135
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 5.023759186428833e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 40.27702084392476,
+      "pbi_service_by_destination": [
+        0.0,
+        21.212455516014234,
+        19.064565327910522
+      ],
+      "pbi_unmet": 93.17493645144889,
+      "pbi_unmet_by_destination": [
+        0.0,
+        93.17493645144889,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|B_restricted_matched_non_ebu|conservative",
+      "selected_edge_switches": 99,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        30.38540925266904,
+        25.41942043721403
+      ],
+      "total_demand": 177.93594306049837,
+      "total_service": 55.80482968988306,
+      "total_unmet": 122.13111337061531,
+      "unmet_by_destination": [
+        0.0,
+        122.13111337061513,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|B_restricted_matched_non_ebu|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "B_restricted_matched_non_ebu",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 34.35892598031212,
+      "final_state": [
+        18.081743095622112,
+        0.0,
+        3.065169156715542
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.9404924595819466e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 74.5625521098119,
+      "pbi_service_by_destination": [
+        0.0,
+        40.246334519572954,
+        34.31621759023894
+      ],
+      "pbi_unmet": 165.65097102186067,
+      "pbi_unmet_by_destination": [
+        0.0,
+        165.65097102186067,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|B_restricted_matched_non_ebu|near_certificate",
+      "selected_edge_switches": 103,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        55.72569395017794,
+        45.754956786985254
+      ],
+      "total_demand": 320.2846975088962,
+      "total_service": 101.48065073716297,
+      "total_unmet": 218.80404677173448,
+      "unmet_by_destination": [
+        0.0,
+        218.80404677173357,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|C_restricted_observational_quote|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "C_restricted_observational_quote",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 532.680011964756,
+      "ebu_total": 532.680011964756,
+      "feasible_world": false,
+      "final_burden": 35.25357057333944,
+      "final_state": [
+        17.84805916784089,
+        0.0,
+        2.9748016814801135
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 5.023759186428833e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 40.27702084392476,
+      "pbi_service_by_destination": [
+        0.0,
+        21.212455516014234,
+        19.064565327910522
+      ],
+      "pbi_unmet": 93.17493645144889,
+      "pbi_unmet_by_destination": [
+        0.0,
+        93.17493645144889,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|C_restricted_observational_quote|conservative",
+      "selected_edge_switches": 99,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        30.38540925266904,
+        25.41942043721403
+      ],
+      "total_demand": 177.93594306049837,
+      "total_service": 55.80482968988306,
+      "total_unmet": 122.13111337061531,
+      "unmet_by_destination": [
+        0.0,
+        122.13111337061513,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|C_restricted_observational_quote|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "C_restricted_observational_quote",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 940.9560801350995,
+      "ebu_total": 940.9560801350995,
+      "feasible_world": false,
+      "final_burden": 34.35892598031212,
+      "final_state": [
+        18.081743095622112,
+        0.0,
+        3.065169156715542
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.9404924595819466e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 74.5625521098119,
+      "pbi_service_by_destination": [
+        0.0,
+        40.246334519572954,
+        34.31621759023894
+      ],
+      "pbi_unmet": 165.65097102186067,
+      "pbi_unmet_by_destination": [
+        0.0,
+        165.65097102186067,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|C_restricted_observational_quote|near_certificate",
+      "selected_edge_switches": 103,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        55.72569395017794,
+        45.754956786985254
+      ],
+      "total_demand": 320.2846975088962,
+      "total_service": 101.48065073716297,
+      "total_unmet": 218.80404677173448,
+      "unmet_by_destination": [
+        0.0,
+        218.80404677173357,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|D_restricted_exact_total_quote_greedy|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "D_restricted_exact_total_quote_greedy",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 1093.9544510579167,
+      "ebu_total": 1093.9544510579167,
+      "feasible_world": false,
+      "final_burden": 59.38921659181627,
+      "final_state": [
+        15.646709083463081,
+        0.0,
+        1.2911340497766017
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 3.774758283725532e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 70.08912048805287,
+      "pbi_service_by_destination": [
+        0.0,
+        51.02455516014235,
+        19.064565327910522
+      ],
+      "pbi_unmet": 63.362836807320775,
+      "pbi_unmet_by_destination": [
+        0.0,
+        63.362836807320775,
+        0.0
+      ],
+      "per_destination_alignment": {
+        "any_destination_failure": false,
+        "destinations": [
+          {
+            "destination": 0,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 1,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 63.362836807320775,
+            "pbi_unmet_baseline": 93.17493645144889,
+            "unmet_condition": false,
+            "unmet_excess_absolute": -29.81209964412811,
+            "unmet_excess_relative": -0.3199583576819765,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 2,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          }
+        ]
+      },
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|D_restricted_exact_total_quote_greedy|conservative",
+      "selected_edge_switches": 150,
+      "service_alignment_predicate": {
+        "actor_crossed_reserve": false,
+        "baseline_crossed_reserve": false,
+        "ebu_threshold_met": true,
+        "ebu_total": 1093.9544510579167,
+        "is_service_alignment_failure": false,
+        "min_source_actor": 12.095068632435181,
+        "min_source_baseline": 12.095068632435181,
+        "pbi_service_actor": 70.08912048805287,
+        "pbi_service_baseline": 40.27702084392476,
+        "pbi_unmet_actor": 63.362836807320775,
+        "pbi_unmet_baseline": 93.17493645144889,
+        "preservation_justified": false,
+        "service_condition": false,
+        "service_deficit_absolute": -29.81209964412811,
+        "service_deficit_per_tick_magnitude_variant": false,
+        "service_deficit_relative": -0.7401763839398976,
+        "service_persistent": false,
+        "unmet_condition": false,
+        "unmet_excess_absolute": -29.81209964412811,
+        "unmet_excess_relative": -0.3199583576819765,
+        "unmet_persistent": false
+      },
+      "service_by_destination": [
+        0.0,
+        71.66370106761566,
+        25.41942043721403
+      ],
+      "total_demand": 177.93594306049837,
+      "total_service": 97.08312150482962,
+      "total_unmet": 80.85282155566871,
+      "unmet_by_destination": [
+        0.0,
+        80.85282155566851,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|D_restricted_exact_total_quote_greedy|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "D_restricted_exact_total_quote_greedy",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 1898.0505032908404,
+      "ebu_total": 1898.0505032908404,
+      "feasible_world": false,
+      "final_burden": 54.78428693028652,
+      "final_state": [
+        15.842715221648739,
+        0.0,
+        1.5483750533821596
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 3.552713678800501e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 126.16041687849518,
+      "pbi_service_by_destination": [
+        0.0,
+        91.84419928825623,
+        34.31621759023894
+      ],
+      "pbi_unmet": 114.0531062531774,
+      "pbi_unmet_by_destination": [
+        0.0,
+        114.0531062531774,
+        0.0
+      ],
+      "per_destination_alignment": {
+        "any_destination_failure": false,
+        "destinations": [
+          {
+            "destination": 0,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 1,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 114.0531062531774,
+            "pbi_unmet_baseline": 165.65097102186067,
+            "unmet_condition": false,
+            "unmet_excess_absolute": -51.597864768683266,
+            "unmet_excess_relative": -0.3114854350106646,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 2,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          }
+        ]
+      },
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|D_restricted_exact_total_quote_greedy|near_certificate",
+      "selected_edge_switches": 155,
+      "service_alignment_predicate": {
+        "actor_crossed_reserve": false,
+        "baseline_crossed_reserve": false,
+        "ebu_threshold_met": true,
+        "ebu_total": 1898.0505032908404,
+        "is_service_alignment_failure": false,
+        "min_source_actor": 12.171123538383325,
+        "min_source_baseline": 12.171123538383325,
+        "pbi_service_actor": 126.16041687849518,
+        "pbi_service_baseline": 74.5625521098119,
+        "pbi_unmet_actor": 114.0531062531774,
+        "pbi_unmet_baseline": 165.65097102186067,
+        "preservation_justified": false,
+        "service_condition": false,
+        "service_deficit_absolute": -51.59786476868328,
+        "service_deficit_per_tick_magnitude_variant": false,
+        "service_deficit_relative": -0.6920077613852673,
+        "service_persistent": false,
+        "unmet_condition": false,
+        "unmet_excess_absolute": -51.597864768683266,
+        "unmet_excess_relative": -0.3114854350106646,
+        "unmet_persistent": false
+      },
+      "service_by_destination": [
+        0.0,
+        125.8987900355872,
+        45.754956786985254
+      ],
+      "total_demand": 320.2846975088962,
+      "total_service": 171.6537468225724,
+      "total_unmet": 148.63095068632475,
+      "unmet_by_destination": [
+        0.0,
+        148.63095068632433,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|S_restricted_local_service_priority|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "S_restricted_local_service_priority",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 87.5,
+      "final_state": [
+        14.057906143379448,
+        0.0,
+        0.0
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 9.992007221626409e-16,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 85.99644128113879,
+      "pbi_service_by_destination": [
+        0.0,
+        85.99644128113879,
+        0.0
+      ],
+      "pbi_unmet": 47.45551601423486,
+      "pbi_unmet_by_destination": [
+        0.0,
+        28.390950686324334,
+        19.064565327910522
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|S_restricted_local_service_priority|conservative",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        114.66192170818505,
+        3.499999999999999
+      ],
+      "total_demand": 177.93594306049837,
+      "total_service": 118.16192170818489,
+      "total_unmet": 59.774021352313234,
+      "unmet_by_destination": [
+        0.0,
+        37.85460091509911,
+        21.91942043721403
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC1_flux_lock|S_restricted_local_service_priority|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "S_restricted_local_service_priority",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 87.5,
+      "final_state": [
+        14.057914078118007,
+        0.0,
+        0.0
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 1.3322676295501878e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 154.79359430604984,
+      "pbi_service_by_destination": [
+        0.0,
+        154.79359430604984,
+        0.0
+      ],
+      "pbi_unmet": 85.41992882562276,
+      "pbi_unmet_by_destination": [
+        0.0,
+        51.103711235383805,
+        34.31621759023894
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC1_flux_lock|S_restricted_local_service_priority|near_certificate",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        206.39145907473312,
+        3.499999999999999
+      ],
+      "total_demand": 320.2846975088962,
+      "total_service": 209.89145907473406,
+      "total_unmet": 110.39323843416412,
+      "unmet_by_destination": [
+        0.0,
+        68.13828164717842,
+        42.25495678698526
+      ],
+      "voluntary_rests": 0,
+      "world": "DC1_flux_lock"
+    },
+    "DC2_capacity_split|A_full_multi_edge_p1c|conservative": {
+      "accepted_actions": 600,
+      "allee_crossings": 0,
+      "arm": "A_full_multi_edge_p1c",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.1918833349323611,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": true,
+      "final_burden": 29.032246374045293,
+      "final_state": [
+        14.897446114203102,
+        2.512084134153005,
+        0.9020603945050577,
+        2.5526214840366217
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 4.052314039881821e-15,
+      "max_simultaneous_actions": 3,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "preserve_and_serve",
+      "p1c_rejections": 0,
+      "pbi_service": 54.68675045572291,
+      "pbi_service_by_destination": [
+        0.0,
+        11.513000095941665,
+        25.90425021586875,
+        17.2695001439125
+      ],
+      "pbi_unmet": 0.0,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|A_full_multi_edge_p1c|conservative",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        15.350666794588887,
+        34.539000287825,
+        23.02600019188333
+      ],
+      "total_demand": 72.91566727429719,
+      "total_service": 72.91566727429719,
+      "total_unmet": 0.0,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|A_full_multi_edge_p1c|near_certificate": {
+      "accepted_actions": 600,
+      "allee_crossings": 0,
+      "arm": "A_full_multi_edge_p1c",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.34539000287825,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": true,
+      "final_burden": 29.025291421971584,
+      "final_state": [
+        14.899395078986329,
+        2.512096028028621,
+        0.9021255106154491,
+        2.553416012975156
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 4.107825191113079e-15,
+      "max_simultaneous_actions": 3,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "preserve_and_serve",
+      "p1c_rejections": 0,
+      "pbi_service": 98.43615082030125,
+      "pbi_service_by_destination": [
+        0.0,
+        20.723400172695,
+        46.62765038856375,
+        31.085100259042502
+      ],
+      "pbi_unmet": 0.0,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9000000000000001,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|A_full_multi_edge_p1c|near_certificate",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        27.63120023026,
+        62.170200518085004,
+        41.44680034539
+      ],
+      "total_demand": 131.24820109373462,
+      "total_service": 131.24820109373462,
+      "total_unmet": 0.0,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|B_restricted_matched_non_ebu|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "B_restricted_matched_non_ebu",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.1918833349323611,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": true,
+      "final_burden": 69.50155488190997,
+      "final_state": [
+        18.38559651515032,
+        1.759325558506103,
+        0.0,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 4.579669976578771e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 22.25822699798522,
+      "pbi_service_by_destination": [
+        0.0,
+        11.513000095941665,
+        0.0,
+        10.745226902043553
+      ],
+      "pbi_unmet": 32.4285234577377,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        25.90425021586875,
+        6.524273241868945
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|B_restricted_matched_non_ebu|conservative",
+      "selected_edge_switches": 142,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        15.350666794588887,
+        0.5,
+        15.878874256328832
+      ],
+      "total_demand": 72.91566727429719,
+      "total_service": 31.72954105091766,
+      "total_unmet": 41.18612622337939,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        34.039000287825,
+        7.1471259355545
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|B_restricted_matched_non_ebu|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "B_restricted_matched_non_ebu",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.34539000287825,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": true,
+      "final_burden": 69.86037367831452,
+      "final_state": [
+        18.334688608818997,
+        1.7275234937791315,
+        0.0,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 5.079270337660091e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 40.634054494867115,
+      "pbi_service_by_destination": [
+        0.0,
+        20.723400172695,
+        0.0,
+        19.910654322172114
+      ],
+      "pbi_unmet": 57.80209632543414,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        46.62765038856375,
+        11.174445936870386
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9000000000000001,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|B_restricted_matched_non_ebu|near_certificate",
+      "selected_edge_switches": 146,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        27.63120023026,
+        0.5,
+        28.023060375785324
+      ],
+      "total_demand": 131.24820109373462,
+      "total_service": 56.15426060604531,
+      "total_unmet": 75.09394048768961,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        61.670200518085004,
+        13.423739969604675
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|C_restricted_observational_quote|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "C_restricted_observational_quote",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.1918833349323611,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 363.40206890941806,
+      "ebu_total": 363.40206890941806,
+      "feasible_world": true,
+      "final_burden": 69.50155488190997,
+      "final_state": [
+        18.38559651515032,
+        1.759325558506103,
+        0.0,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 4.579669976578771e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 22.25822699798522,
+      "pbi_service_by_destination": [
+        0.0,
+        11.513000095941665,
+        0.0,
+        10.745226902043553
+      ],
+      "pbi_unmet": 32.4285234577377,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        25.90425021586875,
+        6.524273241868945
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|C_restricted_observational_quote|conservative",
+      "selected_edge_switches": 142,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        15.350666794588887,
+        0.5,
+        15.878874256328832
+      ],
+      "total_demand": 72.91566727429719,
+      "total_service": 31.72954105091766,
+      "total_unmet": 41.18612622337939,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        34.039000287825,
+        7.1471259355545
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|C_restricted_observational_quote|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "C_restricted_observational_quote",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.34539000287825,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 665.0771632054385,
+      "ebu_total": 665.0771632054385,
+      "feasible_world": true,
+      "final_burden": 69.86037367831452,
+      "final_state": [
+        18.334688608818997,
+        1.7275234937791315,
+        0.0,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 5.079270337660091e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 40.634054494867115,
+      "pbi_service_by_destination": [
+        0.0,
+        20.723400172695,
+        0.0,
+        19.910654322172114
+      ],
+      "pbi_unmet": 57.80209632543414,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        46.62765038856375,
+        11.174445936870386
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9000000000000001,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|C_restricted_observational_quote|near_certificate",
+      "selected_edge_switches": 146,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        27.63120023026,
+        0.5,
+        28.023060375785324
+      ],
+      "total_demand": 131.24820109373462,
+      "total_service": 56.15426060604531,
+      "total_unmet": 75.09394048768961,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        61.670200518085004,
+        13.423739969604675
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|D_restricted_exact_total_quote_greedy|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "D_restricted_exact_total_quote_greedy",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.1918833349323611,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 494.022134339596,
+      "ebu_total": 494.022134339596,
+      "feasible_world": true,
+      "final_burden": 83.07871316876592,
+      "final_state": [
+        17.789702636612038,
+        0.7671243037341561,
+        0.0,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 4.9682480351975755e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 28.562522292996626,
+      "pbi_service_by_destination": [
+        0.0,
+        11.513000095941665,
+        0.0,
+        17.04952219705496
+      ],
+      "pbi_unmet": 26.12422816272629,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        25.90425021586875,
+        0.21997794685753888
+      ],
+      "per_destination_alignment": {
+        "any_destination_failure": false,
+        "destinations": [
+          {
+            "destination": 0,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 1,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 2,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 25.90425021586875,
+            "pbi_unmet_baseline": 25.90425021586875,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 3,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.21997794685753888,
+            "pbi_unmet_baseline": 6.524273241868945,
+            "unmet_condition": false,
+            "unmet_excess_absolute": -6.304295295011406,
+            "unmet_excess_relative": -0.9662831492945682,
+            "unmet_persistent": false
+          }
+        ]
+      },
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|D_restricted_exact_total_quote_greedy|conservative",
+      "selected_edge_switches": 173,
+      "service_alignment_predicate": {
+        "actor_crossed_reserve": false,
+        "baseline_crossed_reserve": false,
+        "ebu_threshold_met": true,
+        "ebu_total": 494.022134339596,
+        "is_service_alignment_failure": false,
+        "min_source_actor": 12.365288304710736,
+        "min_source_baseline": 12.44382615369855,
+        "pbi_service_actor": 28.562522292996626,
+        "pbi_service_baseline": 22.25822699798522,
+        "pbi_unmet_actor": 26.12422816272629,
+        "pbi_unmet_baseline": 32.4285234577377,
+        "preservation_justified": false,
+        "service_condition": false,
+        "service_deficit_absolute": -6.304295295011407,
+        "service_deficit_per_tick_magnitude_variant": false,
+        "service_deficit_relative": -0.28323438769772913,
+        "service_persistent": false,
+        "unmet_condition": false,
+        "unmet_excess_absolute": -6.304295295011407,
+        "unmet_excess_relative": -0.19440586936458723,
+        "unmet_persistent": false
+      },
+      "service_by_destination": [
+        0.0,
+        15.350666794588887,
+        0.5,
+        22.80602224502579
+      ],
+      "total_demand": 72.91566727429719,
+      "total_service": 38.656689039614676,
+      "total_unmet": 34.25897823468242,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        34.039000287825,
+        0.21997794685753888
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|D_restricted_exact_total_quote_greedy|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "D_restricted_exact_total_quote_greedy",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.34539000287825,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 927.0058113929355,
+      "ebu_total": 927.0058113929355,
+      "feasible_world": true,
+      "final_burden": 81.7085862050379,
+      "final_state": [
+        17.692567534869767,
+        0.5957107348830829,
+        0.0,
+        0.3001737816284989
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 5.051514762044462e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 50.844640431295645,
+      "pbi_service_by_destination": [
+        0.0,
+        20.723400172695,
+        0.0,
+        30.121240258600643
+      ],
+      "pbi_unmet": 47.59151038900561,
+      "pbi_unmet_by_destination": [
+        0.0,
+        0.0,
+        46.62765038856375,
+        0.963860000441856
+      ],
+      "per_destination_alignment": {
+        "any_destination_failure": false,
+        "destinations": [
+          {
+            "destination": 0,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 1,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 2,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 46.62765038856375,
+            "pbi_unmet_baseline": 46.62765038856375,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 3,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.963860000441856,
+            "pbi_unmet_baseline": 11.174445936870386,
+            "unmet_condition": false,
+            "unmet_excess_absolute": -10.21058593642853,
+            "unmet_excess_relative": -0.9137442692114537,
+            "unmet_persistent": false
+          }
+        ]
+      },
+      "physical_overuse": 0.0,
+      "r_dt": 0.9000000000000001,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|D_restricted_exact_total_quote_greedy|near_certificate",
+      "selected_edge_switches": 174,
+      "service_alignment_predicate": {
+        "actor_crossed_reserve": false,
+        "baseline_crossed_reserve": false,
+        "ebu_threshold_met": true,
+        "ebu_total": 927.0058113929355,
+        "is_service_alignment_failure": false,
+        "min_source_actor": 12.657518948479325,
+        "min_source_baseline": 12.798887076657392,
+        "pbi_service_actor": 50.844640431295645,
+        "pbi_service_baseline": 40.634054494867115,
+        "pbi_unmet_actor": 47.59151038900561,
+        "pbi_unmet_baseline": 57.80209632543414,
+        "preservation_justified": false,
+        "service_condition": false,
+        "service_deficit_absolute": -10.21058593642853,
+        "service_deficit_per_tick_magnitude_variant": false,
+        "service_deficit_relative": -0.2512814943859055,
+        "service_persistent": false,
+        "unmet_condition": false,
+        "unmet_excess_absolute": -10.21058593642853,
+        "unmet_excess_relative": -0.17664732917196388,
+        "unmet_persistent": false
+      },
+      "service_by_destination": [
+        0.0,
+        27.63120023026,
+        0.5,
+        40.48294034494815
+      ],
+      "total_demand": 131.24820109373462,
+      "total_service": 68.61414057520793,
+      "total_unmet": 62.634060518526844,
+      "unmet_by_destination": [
+        0.0,
+        0.0,
+        61.670200518085004,
+        0.963860000441856
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|S_restricted_local_service_priority|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "S_restricted_local_service_priority",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.1918833349323611,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": true,
+      "final_burden": 96.53844667532307,
+      "final_state": [
+        17.636920104348246,
+        0.0,
+        0.07539633799224951,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 3.2751579226442118e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 31.409575463699156,
+      "pbi_service_by_destination": [
+        0.0,
+        7.799232466660269,
+        23.610342997038885,
+        0.0
+      ],
+      "pbi_unmet": 23.27717499202376,
+      "pbi_unmet_by_destination": [
+        0.0,
+        3.7137676292813975,
+        2.293907218829865,
+        17.2695001439125
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|S_restricted_local_service_priority|conservative",
+      "selected_edge_switches": 96,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        11.115345702644028,
+        31.903296259371288,
+        2.578016650802378
+      ],
+      "total_demand": 72.91566727429719,
+      "total_service": 45.59665861281759,
+      "total_unmet": 27.319008661479558,
+      "unmet_by_destination": [
+        0.0,
+        4.2353210919448605,
+        2.6357040284537128,
+        20.44798354108095
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC2_capacity_split|S_restricted_local_service_priority|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "S_restricted_local_service_priority",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.34539000287825,
+      "dt_certificate": 0.3837666698647222,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": true,
+      "final_burden": 92.38962479535306,
+      "final_state": [
+        17.687635201177855,
+        0.23491701045764174,
+        0.0,
+        0.0
+      ],
+      "final_viability": 25.0,
+      "max_ledger_residual": 4.3298697960381105e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "safe_rationing_physical_scarcity",
+      "p1c_rejections": 0,
+      "pbi_service": 56.40599414800932,
+      "pbi_service_by_destination": [
+        0.0,
+        18.65365058044709,
+        37.752343567562235,
+        0.0
+      ],
+      "pbi_unmet": 42.03015667229193,
+      "pbi_unmet_by_destination": [
+        0.0,
+        2.069749592247913,
+        8.87530682100152,
+        31.085100259042502
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9000000000000001,
+      "reserve_crossings": 0,
+      "run_id": "DC2_capacity_split|S_restricted_local_service_priority|near_certificate",
+      "selected_edge_switches": 129,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        24.895609709296746,
+        51.09860088300789,
+        2.860706895572612
+      ],
+      "total_demand": 131.24820109373462,
+      "total_service": 78.85491748787726,
+      "total_unmet": 52.393283605857775,
+      "unmet_by_destination": [
+        0.0,
+        2.735590520963253,
+        11.071599635077117,
+        38.58609344981739
+      ],
+      "voluntary_rests": 0,
+      "world": "DC2_capacity_split"
+    },
+    "DC3_demand_pulse|A_full_multi_edge_p1c|conservative": {
+      "accepted_actions": 400,
+      "allee_crossings": 0,
+      "arm": "A_full_multi_edge_p1c",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 25.26076658161844,
+      "final_state": [
+        13.216680859856226,
+        0.0,
+        4.677034626240868
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 3.3306690738754696e-15,
+      "max_simultaneous_actions": 2,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 91.99644128113879,
+      "pbi_service_by_destination": [
+        0.0,
+        85.99644128113879,
+        6.0
+      ],
+      "pbi_unmet": 28.390950686324334,
+      "pbi_unmet_by_destination": [
+        0.0,
+        28.390950686324334,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|A_full_multi_edge_p1c|conservative",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        114.66192170818505,
+        8.0
+      ],
+      "total_demand": 160.51652262328432,
+      "total_service": 122.66192170818489,
+      "total_unmet": 37.85460091509932,
+      "unmet_by_destination": [
+        0.0,
+        37.85460091509911,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|A_full_multi_edge_p1c|near_certificate": {
+      "accepted_actions": 400,
+      "allee_crossings": 0,
+      "arm": "A_full_multi_edge_p1c",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 25.02645560225505,
+      "final_state": [
+        13.63498440444645,
+        0.0,
+        4.897129980548167
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.218847493575595e-15,
+      "max_simultaneous_actions": 2,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 160.79359430604984,
+      "pbi_service_by_destination": [
+        0.0,
+        154.79359430604984,
+        6.0
+      ],
+      "pbi_unmet": 51.103711235383805,
+      "pbi_unmet_by_destination": [
+        0.0,
+        51.103711235383805,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|A_full_multi_edge_p1c|near_certificate",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        206.39145907473312,
+        8.0
+      ],
+      "total_demand": 282.52974072191284,
+      "total_service": 214.39145907473406,
+      "total_unmet": 68.13828164717835,
+      "unmet_by_destination": [
+        0.0,
+        68.13828164717842,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|B_restricted_matched_non_ebu|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "B_restricted_matched_non_ebu",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 33.78898513644775,
+      "final_state": [
+        15.056112296430369,
+        0.0,
+        3.1250082521303995
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.218847493575595e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 74.79715302491104,
+      "pbi_service_by_destination": [
+        0.0,
+        68.79715302491104,
+        6.0
+      ],
+      "pbi_unmet": 45.59023894255209,
+      "pbi_unmet_by_destination": [
+        0.0,
+        45.59023894255209,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|B_restricted_matched_non_ebu|conservative",
+      "selected_edge_switches": 15,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        85.99644128113879,
+        8.0
+      ],
+      "total_demand": 160.51652262328432,
+      "total_service": 93.99644128113867,
+      "total_unmet": 66.52008134214563,
+      "unmet_by_destination": [
+        0.0,
+        66.52008134214537,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|B_restricted_matched_non_ebu|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "B_restricted_matched_non_ebu",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 32.30244816135516,
+      "final_state": [
+        14.471721905580464,
+        0.0,
+        3.290912739342411
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.218847493575595e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 143.25032028469752,
+      "pbi_service_by_destination": [
+        0.0,
+        137.25032028469752,
+        6.0
+      ],
+      "pbi_unmet": 68.64698525673612,
+      "pbi_unmet_by_destination": [
+        0.0,
+        68.64698525673612,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|B_restricted_matched_non_ebu|near_certificate",
+      "selected_edge_switches": 17,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        177.49665480427046,
+        8.0
+      ],
+      "total_demand": 282.52974072191284,
+      "total_service": 185.49665480427123,
+      "total_unmet": 97.03308591764129,
+      "unmet_by_destination": [
+        0.0,
+        97.03308591764105,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|C_restricted_observational_quote|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "C_restricted_observational_quote",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 946.8994272549567,
+      "ebu_total": 946.8994272549567,
+      "feasible_world": false,
+      "final_burden": 33.78898513644775,
+      "final_state": [
+        15.056112296430369,
+        0.0,
+        3.1250082521303995
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.218847493575595e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 74.79715302491104,
+      "pbi_service_by_destination": [
+        0.0,
+        68.79715302491104,
+        6.0
+      ],
+      "pbi_unmet": 45.59023894255209,
+      "pbi_unmet_by_destination": [
+        0.0,
+        45.59023894255209,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|C_restricted_observational_quote|conservative",
+      "selected_edge_switches": 15,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        85.99644128113879,
+        8.0
+      ],
+      "total_demand": 160.51652262328432,
+      "total_service": 93.99644128113867,
+      "total_unmet": 66.52008134214563,
+      "unmet_by_destination": [
+        0.0,
+        66.52008134214537,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|C_restricted_observational_quote|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "C_restricted_observational_quote",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 1725.9976079168528,
+      "ebu_total": 1725.9976079168528,
+      "feasible_world": false,
+      "final_burden": 32.30244816135516,
+      "final_state": [
+        14.471721905580464,
+        0.0,
+        3.290912739342411
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.218847493575595e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 143.25032028469752,
+      "pbi_service_by_destination": [
+        0.0,
+        137.25032028469752,
+        6.0
+      ],
+      "pbi_unmet": 68.64698525673612,
+      "pbi_unmet_by_destination": [
+        0.0,
+        68.64698525673612,
+        0.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|C_restricted_observational_quote|near_certificate",
+      "selected_edge_switches": 17,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        177.49665480427046,
+        8.0
+      ],
+      "total_demand": 282.52974072191284,
+      "total_service": 185.49665480427123,
+      "total_unmet": 97.03308591764129,
+      "unmet_by_destination": [
+        0.0,
+        97.03308591764105,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|D_restricted_exact_total_quote_greedy|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "D_restricted_exact_total_quote_greedy",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 1112.9079066797215,
+      "ebu_total": 1112.9079066797215,
+      "feasible_world": false,
+      "final_burden": 54.234192722750066,
+      "final_state": [
+        14.458253509708253,
+        0.0,
+        1.580398109560116
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 4.440892098500626e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 81.67686832740213,
+      "pbi_service_by_destination": [
+        0.0,
+        75.67686832740213,
+        6.0
+      ],
+      "pbi_unmet": 38.71052364006099,
+      "pbi_unmet_by_destination": [
+        0.0,
+        38.71052364006099,
+        0.0
+      ],
+      "per_destination_alignment": {
+        "any_destination_failure": false,
+        "destinations": [
+          {
+            "destination": 0,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 1,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 38.71052364006099,
+            "pbi_unmet_baseline": 45.59023894255209,
+            "unmet_condition": false,
+            "unmet_excess_absolute": -6.8797153024911,
+            "unmet_excess_relative": -0.1509032517061421,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 2,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          }
+        ]
+      },
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|D_restricted_exact_total_quote_greedy|conservative",
+      "selected_edge_switches": 17,
+      "service_alignment_predicate": {
+        "actor_crossed_reserve": false,
+        "baseline_crossed_reserve": false,
+        "ebu_threshold_met": true,
+        "ebu_total": 1112.9079066797215,
+        "is_service_alignment_failure": false,
+        "min_source_actor": 12.321301474326386,
+        "min_source_baseline": 12.321301474326386,
+        "pbi_service_actor": 81.67686832740213,
+        "pbi_service_baseline": 74.79715302491104,
+        "pbi_unmet_actor": 38.71052364006099,
+        "pbi_unmet_baseline": 45.59023894255209,
+        "preservation_justified": false,
+        "service_condition": false,
+        "service_deficit_absolute": -6.879715302491093,
+        "service_deficit_per_tick_magnitude_variant": false,
+        "service_deficit_relative": -0.09197830431059077,
+        "service_persistent": false,
+        "unmet_condition": false,
+        "unmet_excess_absolute": -6.8797153024911,
+        "unmet_excess_relative": -0.1509032517061421,
+        "unmet_persistent": false
+      },
+      "service_by_destination": [
+        0.0,
+        99.18256227758008,
+        8.0
+      ],
+      "total_demand": 160.51652262328432,
+      "total_service": 107.18256227757993,
+      "total_unmet": 53.333960345704334,
+      "unmet_by_destination": [
+        0.0,
+        53.33396034570409,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|D_restricted_exact_total_quote_greedy|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "D_restricted_exact_total_quote_greedy",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 1891.9151750845692,
+      "ebu_total": 1891.9151750845692,
+      "feasible_world": false,
+      "final_burden": 50.422534839319255,
+      "final_state": [
+        14.242593857218191,
+        0.0,
+        1.8111108618003509
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 2.6645352591003757e-15,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 150.47402135231317,
+      "pbi_service_by_destination": [
+        0.0,
+        144.47402135231317,
+        6.0
+      ],
+      "pbi_unmet": 61.423284189120466,
+      "pbi_unmet_by_destination": [
+        0.0,
+        61.423284189120466,
+        0.0
+      ],
+      "per_destination_alignment": {
+        "any_destination_failure": false,
+        "destinations": [
+          {
+            "destination": 0,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 1,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 61.423284189120466,
+            "pbi_unmet_baseline": 68.64698525673612,
+            "unmet_condition": false,
+            "unmet_excess_absolute": -7.22370106761565,
+            "unmet_excess_relative": -0.10522969130544317,
+            "unmet_persistent": false
+          },
+          {
+            "destination": 2,
+            "is_service_alignment_failure": false,
+            "pbi_unmet_actor": 0.0,
+            "pbi_unmet_baseline": 0.0,
+            "unmet_condition": false,
+            "unmet_excess_absolute": 0.0,
+            "unmet_excess_relative": 0.0,
+            "unmet_persistent": false
+          }
+        ]
+      },
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|D_restricted_exact_total_quote_greedy|near_certificate",
+      "selected_edge_switches": 17,
+      "service_alignment_predicate": {
+        "actor_crossed_reserve": false,
+        "baseline_crossed_reserve": false,
+        "ebu_threshold_met": true,
+        "ebu_total": 1891.9151750845692,
+        "is_service_alignment_failure": false,
+        "min_source_actor": 12.578342653787494,
+        "min_source_baseline": 12.578342653787494,
+        "pbi_service_actor": 150.47402135231317,
+        "pbi_service_baseline": 143.25032028469752,
+        "pbi_unmet_actor": 61.423284189120466,
+        "pbi_unmet_baseline": 68.64698525673612,
+        "preservation_justified": false,
+        "service_condition": false,
+        "service_deficit_absolute": -7.22370106761565,
+        "service_deficit_per_tick_magnitude_variant": false,
+        "service_deficit_relative": -0.05042711983651537,
+        "service_persistent": false,
+        "unmet_condition": false,
+        "unmet_excess_absolute": -7.22370106761565,
+        "unmet_excess_relative": -0.10522969130544317,
+        "unmet_persistent": false
+      },
+      "service_by_destination": [
+        0.0,
+        190.91209964412812,
+        8.0
+      ],
+      "total_demand": 282.52974072191284,
+      "total_service": 198.91209964412897,
+      "total_unmet": 83.61764107778352,
+      "unmet_by_destination": [
+        0.0,
+        83.61764107778339,
+        0.0
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|S_restricted_local_service_priority|conservative": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "S_restricted_local_service_priority",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.2541942043721403,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "conservative",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 87.5,
+      "final_state": [
+        14.057906143379448,
+        0.0,
+        0.0
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 8.881784197001252e-16,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 85.99644128113879,
+      "pbi_service_by_destination": [
+        0.0,
+        85.99644128113879,
+        0.0
+      ],
+      "pbi_unmet": 34.39095068632433,
+      "pbi_unmet_by_destination": [
+        0.0,
+        28.390950686324334,
+        6.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.5,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|S_restricted_local_service_priority|conservative",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        114.66192170818505,
+        0.5
+      ],
+      "total_demand": 160.51652262328432,
+      "total_service": 115.16192170818489,
+      "total_unmet": 45.35460091509934,
+      "unmet_by_destination": [
+        0.0,
+        37.85460091509911,
+        7.5
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    },
+    "DC3_demand_pulse|S_restricted_local_service_priority|near_certificate": {
+      "accepted_actions": 200,
+      "allee_crossings": 0,
+      "arm": "S_restricted_local_service_priority",
+      "certificate_kind": "gershgorin",
+      "domain_failure_tick": null,
+      "dt": 0.45754956786985257,
+      "dt_certificate": 0.5083884087442806,
+      "dt_label": "near_certificate",
+      "ebu_negative": 0.0,
+      "ebu_positive": 0.0,
+      "ebu_total": 0.0,
+      "feasible_world": false,
+      "final_burden": 87.5,
+      "final_state": [
+        14.057914078118007,
+        0.0,
+        0.0
+      ],
+      "final_viability": 33.333333333333336,
+      "max_ledger_residual": 8.881784197001252e-16,
+      "max_simultaneous_actions": 1,
+      "min_sigma": 1.0,
+      "negative_corrections": 0.0,
+      "negative_state": false,
+      "outcome_class": "physical_impossibility",
+      "p1c_rejections": 0,
+      "pbi_service": 154.79359430604984,
+      "pbi_service_by_destination": [
+        0.0,
+        154.79359430604984,
+        0.0
+      ],
+      "pbi_unmet": 57.103711235383805,
+      "pbi_unmet_by_destination": [
+        0.0,
+        51.103711235383805,
+        6.0
+      ],
+      "per_destination_alignment": null,
+      "physical_overuse": 0.0,
+      "r_dt": 0.9,
+      "reserve_crossings": 0,
+      "run_id": "DC3_demand_pulse|S_restricted_local_service_priority|near_certificate",
+      "selected_edge_switches": 0,
+      "service_alignment_predicate": null,
+      "service_by_destination": [
+        0.0,
+        206.39145907473312,
+        0.5
+      ],
+      "total_demand": 282.52974072191284,
+      "total_service": 206.89145907473406,
+      "total_unmet": 75.63828164717847,
+      "unmet_by_destination": [
+        0.0,
+        68.13828164717842,
+        7.5
+      ],
+      "voluntary_rests": 0,
+      "world": "DC3_demand_pulse"
+    }
+  }
+}

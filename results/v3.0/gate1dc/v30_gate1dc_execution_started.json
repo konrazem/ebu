@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","artifact_type":"gate1dc_execution_started","gate":"V3.0 Gate 1D-C","attempt_id":"gate1dc-single-authorized-attempt","authorized_execution_sha":"8793bda07ff7470c6362d2ef3b21c41825ae98ed","execution_receipt_sha256":"f76d25c66bc251e5becfe18cfb883548bd3a8de297eafdf6e6e9fbd056b44a4e","phase":"scientific_execution_reachable"}

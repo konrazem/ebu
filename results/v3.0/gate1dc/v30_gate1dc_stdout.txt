@@ -1,0 +1,41 @@
+EBP V3.0 Gate 1D-C - outcome-discrimination study
+execution SHA: 8793bda07ff7470c6362d2ef3b21c41825ae98ed
+plan canonical hash: f9dd4b804a83744268bffe48d2d3861825cbc96d90aa871f348251e4108ef287
+registered: 3 worlds x 2 timesteps x 5 arms = 30 runs; 200 ticks each; burn-in 50; measurement 150; no seed
+run 01/30 | DC1_flux_lock|A_full_multi_edge_p1c|conservative | service=139.16142904434736 | unmet=38.77451401615094 | ebu=0.0 | r_dt=0.5
+run 02/30 | DC1_flux_lock|B_restricted_matched_non_ebu|conservative | service=55.80482968988306 | unmet=122.13111337061531 | ebu=0.0 | r_dt=0.5
+run 03/30 | DC1_flux_lock|C_restricted_observational_quote|conservative | service=55.80482968988306 | unmet=122.13111337061531 | ebu=532.680011964756 | r_dt=0.5
+run 04/30 | DC1_flux_lock|D_restricted_exact_total_quote_greedy|conservative | service=97.08312150482962 | unmet=80.85282155566871 | ebu=1093.9544510579167 | r_dt=0.5
+run 05/30 | DC1_flux_lock|S_restricted_local_service_priority|conservative | service=118.16192170818489 | unmet=59.774021352313234 | ebu=0.0 | r_dt=0.5
+run 06/30 | DC1_flux_lock|A_full_multi_edge_p1c|near_certificate | service=245.90403073654917 | unmet=74.38066677234711 | ebu=0.0 | r_dt=0.9
+run 07/30 | DC1_flux_lock|B_restricted_matched_non_ebu|near_certificate | service=101.48065073716297 | unmet=218.80404677173448 | ebu=0.0 | r_dt=0.9
+run 08/30 | DC1_flux_lock|C_restricted_observational_quote|near_certificate | service=101.48065073716297 | unmet=218.80404677173448 | ebu=940.9560801350995 | r_dt=0.9
+run 09/30 | DC1_flux_lock|D_restricted_exact_total_quote_greedy|near_certificate | service=171.6537468225724 | unmet=148.63095068632475 | ebu=1898.0505032908404 | r_dt=0.9
+run 10/30 | DC1_flux_lock|S_restricted_local_service_priority|near_certificate | service=209.89145907473406 | unmet=110.39323843416412 | ebu=0.0 | r_dt=0.9
+run 11/30 | DC2_capacity_split|A_full_multi_edge_p1c|conservative | service=72.91566727429719 | unmet=0.0 | ebu=0.0 | r_dt=0.5
+run 12/30 | DC2_capacity_split|B_restricted_matched_non_ebu|conservative | service=31.72954105091766 | unmet=41.18612622337939 | ebu=0.0 | r_dt=0.5
+run 13/30 | DC2_capacity_split|C_restricted_observational_quote|conservative | service=31.72954105091766 | unmet=41.18612622337939 | ebu=363.40206890941806 | r_dt=0.5
+run 14/30 | DC2_capacity_split|D_restricted_exact_total_quote_greedy|conservative | service=38.656689039614676 | unmet=34.25897823468242 | ebu=494.022134339596 | r_dt=0.5
+run 15/30 | DC2_capacity_split|S_restricted_local_service_priority|conservative | service=45.59665861281759 | unmet=27.319008661479558 | ebu=0.0 | r_dt=0.5
+run 16/30 | DC2_capacity_split|A_full_multi_edge_p1c|near_certificate | service=131.24820109373462 | unmet=0.0 | ebu=0.0 | r_dt=0.9000000000000001
+run 17/30 | DC2_capacity_split|B_restricted_matched_non_ebu|near_certificate | service=56.15426060604531 | unmet=75.09394048768961 | ebu=0.0 | r_dt=0.9000000000000001
+run 18/30 | DC2_capacity_split|C_restricted_observational_quote|near_certificate | service=56.15426060604531 | unmet=75.09394048768961 | ebu=665.0771632054385 | r_dt=0.9000000000000001
+run 19/30 | DC2_capacity_split|D_restricted_exact_total_quote_greedy|near_certificate | service=68.61414057520793 | unmet=62.634060518526844 | ebu=927.0058113929355 | r_dt=0.9000000000000001
+run 20/30 | DC2_capacity_split|S_restricted_local_service_priority|near_certificate | service=78.85491748787726 | unmet=52.393283605857775 | ebu=0.0 | r_dt=0.9000000000000001
+run 21/30 | DC3_demand_pulse|A_full_multi_edge_p1c|conservative | service=122.66192170818489 | unmet=37.85460091509932 | ebu=0.0 | r_dt=0.5
+run 22/30 | DC3_demand_pulse|B_restricted_matched_non_ebu|conservative | service=93.99644128113867 | unmet=66.52008134214563 | ebu=0.0 | r_dt=0.5
+run 23/30 | DC3_demand_pulse|C_restricted_observational_quote|conservative | service=93.99644128113867 | unmet=66.52008134214563 | ebu=946.8994272549567 | r_dt=0.5
+run 24/30 | DC3_demand_pulse|D_restricted_exact_total_quote_greedy|conservative | service=107.18256227757993 | unmet=53.333960345704334 | ebu=1112.9079066797215 | r_dt=0.5
+run 25/30 | DC3_demand_pulse|S_restricted_local_service_priority|conservative | service=115.16192170818489 | unmet=45.35460091509934 | ebu=0.0 | r_dt=0.5
+run 26/30 | DC3_demand_pulse|A_full_multi_edge_p1c|near_certificate | service=214.39145907473406 | unmet=68.13828164717835 | ebu=0.0 | r_dt=0.9
+run 27/30 | DC3_demand_pulse|B_restricted_matched_non_ebu|near_certificate | service=185.49665480427123 | unmet=97.03308591764129 | ebu=0.0 | r_dt=0.9
+run 28/30 | DC3_demand_pulse|C_restricted_observational_quote|near_certificate | service=185.49665480427123 | unmet=97.03308591764129 | ebu=1725.9976079168528 | r_dt=0.9
+run 29/30 | DC3_demand_pulse|D_restricted_exact_total_quote_greedy|near_certificate | service=198.91209964412897 | unmet=83.61764107778352 | ebu=1891.9151750845692 | r_dt=0.9
+run 30/30 | DC3_demand_pulse|S_restricted_local_service_priority|near_certificate | service=206.89145907473406 | unmet=75.63828164717847 | ebu=0.0 | r_dt=0.9
+outcome | physical_impossibility | 20
+outcome | safe_rationing_physical_scarcity | 8
+outcome | preserve_and_serve | 2
+falsifiers fired: none
+runner outputs validated in memory
+trace published durably
+stdout complete; summary publication follows
