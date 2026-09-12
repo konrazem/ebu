@@ -5,7 +5,7 @@ a multi-tick loop, ``p1c_v29.p1c_step``, ``service_v30.bounded_step``, or any
 tick function.  Every check below is an isolated pure-function evaluation on a
 frozen synthetic state, or a static source/AST inspection.
 
-It validates the four adopted mechanisms, their fail-closed behaviour, their
+It validates the prospective mechanisms, their fail-closed behaviour, their
 agreement with the published P1C rule and with the frozen single-action
 selectors, and the module's execution-safety guarantees.
 """
@@ -117,8 +117,8 @@ def test_execution_safety_and_import_purity():
     check("gate1dc_v30" not in imported,
           "does not import gate1dc_v30 (not import-pure at module scope)")
     check("service_v30" not in imported, "does not import service_v30")
-    check(imported == {"__future__", "math", "dataclasses", "typing",
-                       "d0_v29", "p1c_v29", "ebu_quote_v30"},
+    check(imported == {"__future__", "itertools", "math", "dataclasses",
+                       "typing", "d0_v29", "p1c_v29", "ebu_quote_v30"},
           f"imports EXACTLY the stdlib and frozen law modules it needs "
           f"(found {sorted(imported)})")
 
@@ -238,7 +238,7 @@ def test_mechanism_1_joint_budget_cap():
         world, cfg, x, u, dt, [a, candidate(0, 3, 0.8, 0.6, 0.1, 0.1)]),
         "rejects two actions on one edge", "distinct")
     rejects(lambda: lh.joint_budget_cap(world, cfg, x, u, dt, [a], m=3),
-            "rejects m above the adopted bound", "bound")
+            "rejects m above the prospective bound", "bound")
     rejects(lambda: lh.joint_budget_cap(world, cfg, x, u, dt, [{"edge": 0}]),
             "rejects a malformed candidate", "missing required key")
     rejects(lambda: lh.joint_budget_cap(
@@ -281,122 +281,242 @@ def test_mechanism_1_joint_budget_cap():
                 "finite real number")
 
 
-def test_mechanism_2_matched_selection():
-    group("mechanism 2: matched two-action selection")
+def test_mechanism_2_set_enumeration_and_joint_ebu():
+    group("mechanism 2: action-set enumeration")
     world = synthetic_world()
-    menu = [candidate(0, 0, 0.2, 0.60, 0.20, 0.20),
-            candidate(0, 4, 1.0, 0.60, 1.00, 1.00),
-            candidate(1, 0, 0.2, 0.55, 0.18, 0.18),
-            candidate(1, 4, 1.0, 0.55, 0.90, 0.90)]
+    cfg = synthetic_config()
+    dt = 0.02
+    x = (1.15, 0.2, 0.3)
+    u = (0.98, -0.25, -0.25)
+    _state, budget = lh.source_budget_rate(cfg, x[0], u[0], dt)
+    # Sized against the budget so singletons fit but pairs must be scaled:
+    # that is the regime the joint cap exists for.
+    menu = [candidate(0, 0, 0.5, 0.60, 0.30 * budget, 0.30 * budget),
+            candidate(0, 1, 1.0, 0.60, 0.70 * budget, 0.70 * budget),
+            candidate(1, 0, 0.5, 0.55, 0.35 * budget, 0.35 * budget),
+            candidate(1, 1, 1.0, 0.55, 0.80 * budget, 0.80 * budget)]
 
-    picked = lh.select_matched_non_ebu(menu, m=2)
-    check(len(picked) == 2, "non-EBU comparator selects two actions")
-    check({c["edge"] for c in picked} == {0, 1}, "one action per distinct edge")
-    check(all(c["quant_index"] == 4 for c in picked),
-          "ties on f broken by larger q_acc, as the frozen key does")
-    check([c["edge"] for c in picked] == [0, 1],
-          "returned in ascending edge order for shaping")
+    sets = lh.enumerate_action_sets(menu, m=2)
+    check(len(sets) == 4 + 4, "2 edges x 2 rungs gives 4 singletons + 4 pairs")
+    check(all(len(g) <= 2 for g in sets), "no set exceeds the bound m = 2")
+    check(all(len({int(c["edge"]) for c in g}) == len(g) for g in sets),
+          "every set obeys the distinct-edge rule")
+    check(all(tuple(int(c["edge"]) for c in g)
+              == tuple(sorted(int(c["edge"]) for c in g)) for g in sets),
+          "each set is ordered by ascending edge index")
+    sizes = [len(g) for g in sets]
+    check(sizes == sorted(sizes), "sets are ordered by size, then identifiers")
+    again = lh.enumerate_action_sets(list(reversed(menu)), m=2)
+    check([[(int(c["edge"]), int(c["quant_index"])) for c in g] for g in sets]
+          == [[(int(c["edge"]), int(c["quant_index"])) for c in g]
+              for g in again],
+          "enumeration is independent of menu order")
+    check(len(lh.enumerate_action_sets(menu, m=1)) == 4,
+          "m = 1 enumerates singletons only")
+    check(() not in sets, "rest is not enumerated; it is the act-condition "
+                          "fallback")
 
-    single = lh.select_matched_non_ebu(menu, m=1)
-    check(len(single) == 1 and single[0]["edge"] == 0 and
-          single[0]["quant_index"] == 4,
-          "m=1 reproduces the frozen select_arm_B choice (highest f, then q_acc)")
+    group("mechanism 2: exact joint EBU equals the frozen quote path")
+    # Single action: the joint form must agree with ebu_quote_v30's exact
+    # finite endpoint difference, which is the governing authority.
+    lam_l = 0.5
+    for edge_index in (0, 1):
+        for quantity in (0.05, 0.2, 0.4):
+            joint = lh.joint_exact_ebu(world, x, u, dt, (edge_index,),
+                                       (quantity,), lam_l)
+            spec = world.edges[edge_index]
+            cost = eq.ProcessCost(category=eq.ALLOWED_COST_CATEGORY, c0=0.0,
+                                  c1=lam_l * dt * (1.0 - spec.eta))
+            inp = eq.LocalQuoteInput(
+                src=d0.local_view(world.cells[spec.i], x[spec.i]),
+                dst=d0.local_view(world.cells[spec.j], x[spec.j]),
+                u_src=u[spec.i], u_dst=u[spec.j], dt=dt, eta=spec.eta,
+                q_req=quantity, q_acc=quantity, source_id=spec.i,
+                dest_id=spec.j, config_id="probe")
+            schedule = eq.build_quote(inp, cost, "probe-pass", 0, 0)
+            check(close(joint.group_quote, schedule.exact(quantity), 1e-12),
+                  f"edge {edge_index} q={quantity}: joint form equals "
+                  f"QuoteSchedule.exact")
+            check(close(joint.naive_sum, joint.group_quote, 1e-12)
+                  and close(joint.double_count, 0.0, 1e-12),
+                  f"edge {edge_index} q={quantity}: one action has zero "
+                  f"double_count by construction")
 
-    quotes = [0.10, 0.40, 0.05, 0.90]
-    ebu = lh.select_exact_ebu(menu, quotes, m=2)
-    check([c["edge"] for c in ebu] == [0, 1], "exact-EBU arm picks both edges")
-    check([c["quant_index"] for c in ebu] == [4, 4],
-          "exact-EBU arm picks the highest exact quote per edge")
-    negative = lh.select_exact_ebu(menu, [-1.0, -2.0, -3.0, -4.0], m=2)
-    check(negative == (), "non-positive exact quotes are declined, as arm D does")
-    mixed = lh.select_exact_ebu(menu, [0.0, 0.0, 0.0, 0.7], m=2)
-    check(len(mixed) == 1 and mixed[0]["edge"] == 1,
-          "only strictly positive exact quotes are acted on")
+    group("mechanism 2: the joint transition is counted once")
+    pair = lh.joint_exact_ebu(world, x, u, dt, (0, 1), (0.2, 0.15), lam_l)
+    single_a = lh.joint_exact_ebu(world, x, u, dt, (0,), (0.2,), lam_l)
+    single_b = lh.joint_exact_ebu(world, x, u, dt, (1,), (0.15,), lam_l)
+    check(close(pair.naive_sum, single_a.group_quote + single_b.group_quote,
+                1e-12),
+          "naive_sum is exactly the sum of independently frozen per-edge "
+          "quotes")
+    check(close(pair.double_count, pair.naive_sum - pair.group_quote, 1e-15),
+          "double_count = naive_sum - group_quote, as registered")
+    check(pair.n_actions == 2, "the action count is recorded")
+    check(abs(pair.double_count) > 0.0,
+          "a shared source makes the interaction term non-zero here")
+    check(pair.naive_sum >= pair.group_quote - 1e-12,
+          "naive_sum >= group_quote on this state (registered expected sign)")
+    empty = lh.joint_exact_ebu(world, x, u, dt, (), (), lam_l)
+    check(empty.group_quote == 0.0 and empty.naive_sum == 0.0
+          and empty.double_count == 0.0 and empty.n_actions == 0,
+          "rest quotes exactly zero on every field")
 
-    demand = (0.0, 1.0, 0.0)
-    blind = lh.select_stock_blind(menu, world, demand, m=2)
-    check(len(blind) == 1 and blind[0]["edge"] == 0,
-          "stock-blind control acts only toward a currently demanding "
-          "destination")
-    both = lh.select_stock_blind(menu, world, (0.0, 1.0, 1.0), m=2)
-    check([c["edge"] for c in both] == [0, 1],
-          "stock-blind control takes both edges when both destinations demand")
-    none = lh.select_stock_blind(menu, world, (0.0, 0.0, 0.0), m=2)
-    check(none == (), "stock-blind control rests when nothing demands")
+    group("mechanism 2: ranked value IS the executed value")
+    evaluations = lh.evaluate_action_sets(world, cfg, x, u, dt, menu, lam_l,
+                                          m=2)
+    check(len(evaluations) == len(sets),
+          "every enumerated set is capped and quoted")
+    # Falsifiable: for every BOUND set the recorded quote must equal the
+    # capped-vector quote and must DIFFER from the requested-vector quote.
+    # A regression that quoted the request would fail the second clause.
+    bound_checked = 0
+    mismatch = 0
+    for evaluation in evaluations:
+        requested = tuple(float(c["q_req"]) for c in evaluation.actions)
+        capped = lh.joint_exact_ebu(world, x, u, dt, evaluation.edges,
+                                    evaluation.allocation.q_acc, lam_l)
+        asked = lh.joint_exact_ebu(world, x, u, dt, evaluation.edges,
+                                   requested, lam_l)
+        if evaluation.quote.group_quote != capped.group_quote:
+            mismatch += 1
+        if evaluation.allocation.binding:
+            bound_checked += 1
+            if evaluation.quote.group_quote == asked.group_quote:
+                mismatch += 1
+            if evaluation.allocation.q_acc == requested:
+                mismatch += 1
+    check(mismatch == 0 and bound_checked > 0,
+          f"every set is quoted on its capped vector, and on all "
+          f"{bound_checked} bound sets that differs from the requested "
+          f"vector's quote")
+    binding = [e for e in evaluations if e.allocation.binding]
+    check(binding, "at least one enumerated set is budget-bound on this state")
+    for evaluation in binding:
+        requested = math.fsum(float(c["q_req"]) for c in evaluation.actions)
+        check(evaluation.allocation.accepted_total < requested,
+              "a bound set executes strictly less than it requested")
+        break
 
-    group("mechanism 2: the arms are matched by construction")
-    shared = inspect.getsource(lh.select_actions)
-    for name, function in (("non-EBU", lh.select_matched_non_ebu),
-                           ("exact-EBU", lh.select_exact_ebu),
-                           ("stock-blind", lh.select_stock_blind)):
+    group("mechanism 2: the exact-EBU arm selects on the joint value")
+    chosen = lh.select_exact_ebu_joint(evaluations)
+    check(chosen is not None, "a strictly positive joint quote is acted on")
+    best = max(e.quote.group_quote for e in evaluations)
+    check(chosen.quote.group_quote == best,
+          "the selected set maximises the exact joint EBU of what executes")
+    check(all(not isinstance(n, ast.Div) for n in ast.walk(
+              ast.parse(textwrap.dedent(
+                  inspect.getsource(lh.select_exact_ebu_joint))))),
+          "the exact-EBU arm performs no division: per-unit ranking (F8) "
+          "cannot occur")
+
+    # Act condition: rest unless strictly positive.
+    negative = tuple(
+        lh.SetEvaluation(actions=e.actions, allocation=e.allocation,
+                         quote=lh.JointQuote(-1.0, -1.0, 0.0,
+                                             e.quote.n_actions))
+        for e in evaluations)
+    check(lh.select_exact_ebu_joint(negative) is None,
+          "rests when no set has a strictly positive joint quote")
+    zeroed = tuple(
+        lh.SetEvaluation(actions=e.actions, allocation=e.allocation,
+                         quote=lh.JointQuote(0.0, 0.0, 0.0,
+                                             e.quote.n_actions))
+        for e in evaluations)
+    check(lh.select_exact_ebu_joint(zeroed) is None,
+          "a zero joint quote is not strictly positive, so it rests")
+    check(lh.select_exact_ebu_joint(()) is None,
+          "an empty enumeration rests")
+
+    group("mechanism 2: deterministic identifier tie-breaking")
+    tied = tuple(
+        lh.SetEvaluation(actions=e.actions, allocation=e.allocation,
+                         quote=lh.JointQuote(1.0, 1.0, 0.0,
+                                             e.quote.n_actions))
+        for e in evaluations)
+    winner = lh.select_exact_ebu_joint(tied)
+    check(len(winner.actions) == 1,
+          "on an exact tie the smaller set wins (fewer actions first)")
+    check(winner.edges == (0,) and winner.quant_indices == (0,),
+          "then the lowest edge index, then the lowest quantity-menu index")
+    shuffled = lh.select_exact_ebu_joint(tuple(reversed(tied)))
+    check(shuffled.edges == winner.edges
+          and shuffled.quant_indices == winner.quant_indices,
+          "tie-breaking is independent of evaluation order")
+
+    group("mechanism 2: arms are matched, and unregistered scores fail closed")
+    shared = inspect.getsource(lh.select_set_by_declared_score)
+    check("select_set_by_declared_score(" in inspect.getsource(
+              lh.select_exact_ebu_joint),
+          "the exact-EBU arm routes through the shared set selector")
+    for name, function in (("matched non-EBU", lh.select_matched_non_ebu_joint),
+                           ("stock-blind", lh.select_stock_blind_joint)):
         body = inspect.getsource(function)
-        check("select_actions(" in body,
-              f"{name} arm delegates to the shared selector")
-    check("sorted(" in shared, "one shared ranking path for every arm")
+        calls = {n.func.id for n in ast.walk(ast.parse(textwrap.dedent(body)))
+                 if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)}
+        check(calls & {"select_set_by_declared_score"}
+              and not (calls & {"_select_by_tuple_score"}),
+              f"the {name} arm calls ONLY the shared set selector")
+    check(not hasattr(lh, "_select_by_tuple_score"),
+          "there is exactly one selector, so no arm can acquire a different "
+          "tie discipline")
+    check("edges" in shared and "quant_indices" in shared,
+          "tie-breaking uses identifiers only, in the shared path")
 
-    def code_of(function):
-        """The function's AST with its docstring removed (code, not prose)."""
-        tree = ast.parse(textwrap.dedent(inspect.getsource(function)))
-        body = tree.body[0].body
-        if (body and isinstance(body[0], ast.Expr)
-                and isinstance(body[0].value, ast.Constant)
-                and isinstance(body[0].value.value, str)):
-            body = body[1:]
-        return ast.Module(body=body, type_ignores=[])
+    # The divergence a second selector would have caused: an f-tie must be
+    # broken by the larger accepted quantity, as the frozen key requires.
+    tie_world = synthetic_world()
+    tie_cfg = synthetic_config()
+    _st, tie_budget = lh.source_budget_rate(tie_cfg, x[0], u[0], dt)
+    tie_menu = [candidate(0, 0, 1.0, 0.5, 0.02 * tie_budget, 0.0),
+                candidate(1, 0, 1.0, 0.5, 0.09 * tie_budget, 0.0)]
+    tie_evals = lh.evaluate_action_sets(tie_world, tie_cfg, x, u, dt,
+                                        tie_menu, lam_l, m=1)
+    tie_pick = lh.select_matched_non_ebu_joint(tie_evals)
+    check(tie_pick.edges == (1,),
+          "on an f-tie the larger accepted quantity wins, as select_arm_B "
+          "requires")
 
-    def keys_read(function):
-        return {n.slice.value for n in ast.walk(code_of(function))
-                if isinstance(n, ast.Subscript)
-                and isinstance(n.slice, ast.Constant)
-                and isinstance(n.slice.value, str)}
+    rejects(lambda: lh.select_matched_non_ebu_joint(evaluations),
+            "arm B fails closed: no registered set-level score",
+            "no registered set-level score")
+    rejects(lambda: lh.select_stock_blind_joint(evaluations),
+            "arm S fails closed: no registered set-level score",
+            "no registered set-level score")
+    check(issubclass(lh.UnregisteredScoringRule, lh.MechanismError),
+          "an unregistered scoring rule is a fail-closed MechanismError")
+    # Once an author registers one, it routes through the identical selector.
+    supplied = lh.select_matched_non_ebu_joint(
+        evaluations, set_score=lambda e: math.fsum(
+            float(c["f"]) for c in e.actions))
+    check(supplied is not None,
+          "a caller-registered set score is accepted through the shared path")
 
-    non_ebu_keys = keys_read(lh.select_matched_non_ebu)
-    check(non_ebu_keys <= {"f", "q_acc"},
-          f"matched comparator reads only the physical menu keys {sorted(non_ebu_keys)}")
-    check(not any(term in key for key in non_ebu_keys
-                  for term in ("quote", "exact", "ebu", "delta")),
-          "matched comparator never reads an EBU-valued field")
-    check(any(isinstance(n, ast.Div)
-              for n in ast.walk(code_of(lh.select_exact_ebu))) is False,
-          "exact-EBU arm performs no division: no per-unit value is formed")
-    check("q_req" not in keys_read(lh.select_exact_ebu),
-          "exact-EBU arm never reads a quantity to normalise a quote by")
-
-    group("mechanism 2: determinism and fail-closed")
-    first = lh.select_matched_non_ebu(menu, m=2)
-    second = lh.select_matched_non_ebu(list(reversed(menu)), m=2)
-    check([c["edge"] for c in first] == [c["edge"] for c in second] and
-          [c["quant_index"] for c in first] == [c["quant_index"] for c in second],
-          "selection is independent of menu order")
-    rejects(lambda: lh.select_actions(menu, lambda c: 1.0, m=3),
-            "rejects m above the adopted bound", "bound")
-    rejects(lambda: lh.select_actions(menu, lambda c: 1.0,
-                                      ranking_basis="joint_objective"),
-            "rejects an unimplemented ranking basis", "not provided")
-    rejects(lambda: lh.select_actions(
-        menu, lambda c: (1.0,) if c["edge"] == 0 else (1.0, 2.0)),
-        "rejects score keys of non-uniform arity", "uniform arity")
-
-    # A score callable is evaluated exactly once per candidate, so it cannot
-    # change the answer between ranking and the positivity filter.
-    calls = []
-
-    def counting(c):
-        calls.append(c["edge"])
-        return float(c["f"])
-
-    lh.select_actions(menu, counting, m=2)
-    check(len(calls) == len(menu),
-          f"each candidate's score is evaluated exactly once "
-          f"({len(calls)} calls for {len(menu)} candidates)")
-    rejects(lambda: lh.select_exact_ebu(menu, quotes[:2]),
-            "rejects a quote/candidate length mismatch", "mismatch")
-    rejects(lambda: lh.select_exact_ebu(menu, [1.0, 2.0, 3.0, float("nan")]),
-            "rejects a non-finite quote", "finite")
-    rejects(lambda: lh.select_stock_blind(menu, world, (0.0, 1.0)),
-            "rejects a demand vector of the wrong length", "length")
-    check(lh.select_actions([], lambda c: 1.0) == (),
-          "an empty menu selects nothing (explicit rest)")
+    group("mechanism 2: fail-closed")
+    rejects(lambda: lh.enumerate_action_sets(menu, m=3),
+            "rejects m above the prospective bound", "bound")
+    rejects(lambda: lh.enumerate_action_sets([{"edge": 0}]),
+            "rejects a malformed candidate", "missing required key")
+    rejects(lambda: lh.joint_exact_ebu(world, x, u, dt, (0, 0), (0.1, 0.1),
+                                       lam_l),
+            "rejects repeated edges in one action vector", "distinct")
+    rejects(lambda: lh.joint_exact_ebu(world, x, u, dt, (0,), (0.1, 0.2),
+                                       lam_l),
+            "rejects an edges/accepted length mismatch", "mismatch")
+    rejects(lambda: lh.joint_exact_ebu(world, x, u, dt, (9,), (0.1,), lam_l),
+            "rejects an out-of-range edge", "out of range")
+    rejects(lambda: lh.joint_exact_ebu(world, x, u, 0.0, (0,), (0.1,), lam_l),
+            "rejects dt = 0", "dt must be > 0")
+    rejects(lambda: lh.joint_exact_ebu(world, x, u, dt, (0,), (-0.1,), lam_l),
+            "rejects a negative accepted quantity", ">= 0")
+    rejects(lambda: lh.joint_exact_ebu(world, x, u, dt, (0,), (0.1,), -1.0),
+            "rejects a negative cost coefficient", ">= 0")
+    rejects(lambda: lh.joint_exact_ebu(world, (1.0,), u, dt, (0,), (0.1,),
+                                       lam_l),
+            "rejects a state of the wrong length", "one entry per cell")
+    rejects(lambda: lh.select_set_by_declared_score(["not an evaluation"],
+                                                    lambda e: 1.0),
+            "rejects a non-SetEvaluation", "SetEvaluation")
 
 
 def test_mechanism_3_shaping_identity():
@@ -424,8 +544,9 @@ def test_mechanism_3_shaping_identity():
     rest = lh.shaped_active_world(world, [])
     check(rest.edges == () and rest.cells is world.cells,
           "an empty selection shapes an explicit rest tick")
-    check(all(0.0 < c["frac"] <= 1.0 for c in (a, b)),
-          "shaping fractions stay within the physical edge")
+    rejects(lambda: lh.shaped_active_world(
+        world, [candidate(0, 0, 1.0 + 2 ** -52, 0.6, 1.0, 1.0)]),
+        "rejects a fraction one ulp above 1", "(0, 1]")
 
     # Shaping preserves the force and scales the request, as the frozen
     # single-action shaping asserts.
@@ -562,7 +683,7 @@ def test_mechanism_4_checkpoint_restart():
 
 
 def test_fidelity_to_the_frozen_selectors():
-    """At m=1 the generalized selectors must BE the frozen ones.
+    """At m=1 with an unbinding budget, set selection IS the frozen selection.
 
     ``gate1dc_v30`` is imported here, inside the test, rather than by
     ``longhorizon_v30``: it builds and validates its locked plan at module
@@ -573,59 +694,135 @@ def test_fidelity_to_the_frozen_selectors():
     import itertools
     import gate1dc_v30 as dc
 
-    group("fidelity: m=1 reproduces select_arm_B over a tie-saturated sweep")
+    world = synthetic_world()
+    cfg = synthetic_config()
+    dt = 0.02
+    x = (1.15, 0.2, 0.3)
+    u = (0.98, -0.25, -0.25)
+    lam_l = 0.5
+    _state, budget = lh.source_budget_rate(cfg, x[0], u[0], dt)
+
+    group("fidelity: m=1 unbound reproduces select_arm_B over tie-saturated "
+          "menus")
     grid = (0.0, 0.25, 0.5)
+    # q_acc must be the accepted quantity, so it follows q_req. Every
+    # singleton is unbound here, where menu q_acc and the joint-capped
+    # allocation agree exactly (sigma == 1.0), which is what makes the frozen
+    # comparison meaningful at all.
+    quantities = tuple(0.01 * budget * (k + 1) for k in range(4))
     divergences = 0
     menus = 0
     for values in itertools.product(grid, repeat=4):
-        menu = [candidate(0, 0, 1.0, values[0], 1.0, values[1]),
-                candidate(0, 1, 1.0, values[1], 1.0, values[0]),
-                candidate(1, 0, 1.0, values[2], 1.0, values[3]),
-                candidate(1, 1, 1.0, values[3], 1.0, values[2])]
+        menu = [candidate(0, 0, 1.0, values[0], quantities[0], quantities[0]),
+                candidate(0, 1, 1.0, values[1], quantities[1], quantities[1]),
+                candidate(1, 0, 1.0, values[2], quantities[2], quantities[2]),
+                candidate(1, 1, 1.0, values[3], quantities[3], quantities[3])]
         menus += 1
-        mine = lh.select_matched_non_ebu(menu, m=1)
+        evaluations = lh.evaluate_action_sets(world, cfg, x, u, dt, menu,
+                                              lam_l, m=1)
+        mine = lh.select_matched_non_ebu_joint(evaluations)
         frozen = dc.select_arm_B(menu)
-        if (mine[0] if mine else None) is not frozen:
+        picked = mine.actions[0] if mine else None
+        if picked is not frozen:
             divergences += 1
     check(divergences == 0,
-          f"arm B: {menus} tie-saturated menus, {divergences} divergences")
-
-    group("fidelity: m=1 reproduces select_arm_D and select_arm_S")
-    menu = [candidate(0, 0, 0.5, 0.60, 0.5, 0.5),
-            candidate(0, 1, 1.0, 0.60, 1.0, 1.0),
-            candidate(1, 0, 0.5, 0.55, 0.5, 0.5),
-            candidate(1, 1, 1.0, 0.55, 1.0, 1.0)]
-    quote_values = (-1.0, -0.0, 0.0, 0.5, 1.0)
-    divergences = 0
-    combos = 0
-    for quotes in itertools.product(quote_values, repeat=4):
-        combos += 1
-        mine = lh.select_exact_ebu(menu, list(quotes), m=1)
-        index = dc.select_arm_D(menu, list(quotes))
-        frozen = menu[index] if index is not None else None
-        if (mine[0] if mine else None) is not frozen:
-            divergences += 1
-    check(divergences == 0,
-          f"arm D: {combos} quote vectors incl. -0.0 and ties, "
+          f"arm B: {menus} tie-saturated menus with consistent quantities, "
           f"{divergences} divergences")
+    check(all(not e.allocation.binding for e in lh.evaluate_action_sets(
+              world, cfg, x, u, dt,
+              [candidate(0, 0, 1.0, 0.5, quantities[0], quantities[0])],
+              lam_l, m=1)),
+          "the sweep runs in the unbound regime where menu and allocation "
+          "agree exactly")
 
-    world = synthetic_world()
+    group("fidelity: m=1 unbound reproduces select_arm_S")
     divergences = 0
     cases = 0
     for demand in itertools.product((0.0, 1.0), repeat=2):
         rates = (0.0,) + demand
-        for values in itertools.product((0.0, 0.5, 1.0), repeat=2):
-            probe = [candidate(0, 0, 1.0, 0.6, 1.0, values[0]),
-                     candidate(0, 1, 1.0, 0.6, 1.0, values[1]),
-                     candidate(1, 0, 1.0, 0.5, 1.0, values[1]),
-                     candidate(1, 1, 1.0, 0.5, 1.0, values[0])]
+        for values in itertools.product((0.005, 0.01, 0.02), repeat=2):
+            a0, a1 = values[0] * budget, values[1] * budget
+            probe = [candidate(0, 0, 1.0, 0.6, a0, a0),
+                     candidate(0, 1, 1.0, 0.6, a1, a1),
+                     candidate(1, 0, 1.0, 0.5, a1 * 1.5, a1 * 1.5),
+                     candidate(1, 1, 1.0, 0.5, a0 * 1.5, a0 * 1.5)]
             cases += 1
-            mine = lh.select_stock_blind(probe, world, rates, m=1)
+            evaluations = lh.evaluate_action_sets(world, cfg, x, u, dt, probe,
+                                                  lam_l, m=1)
+            mine = lh.select_stock_blind_joint(evaluations, world, rates)
             frozen = dc.select_arm_S(probe, rates, world)
-            if (mine[0] if mine else None) is not frozen:
+            picked = mine.actions[0] if mine else None
+            if picked is not frozen:
                 divergences += 1
     check(divergences == 0,
           f"arm S: {cases} demand/menu cases, {divergences} divergences")
+
+    group("fidelity: m=1 unbound reproduces select_arm_D on the same quotes")
+    menu = [candidate(0, 0, 0.25, 0.60, 0.05 * budget, 0.05 * budget),
+            candidate(0, 1, 1.00, 0.60, 0.20 * budget, 0.20 * budget),
+            candidate(1, 0, 0.25, 0.55, 0.06 * budget, 0.06 * budget),
+            candidate(1, 1, 1.00, 0.55, 0.22 * budget, 0.22 * budget)]
+    evaluations = lh.evaluate_action_sets(world, cfg, x, u, dt, menu, lam_l,
+                                          m=1)
+    check(all(not e.allocation.binding for e in evaluations),
+          "every singleton is unbound at these quantities")
+    quotes = [lh.joint_exact_ebu(world, x, u, dt, (int(c["edge"]),),
+                                 (float(c["q_req"]),), lam_l).group_quote
+              for c in menu]
+    index = dc.select_arm_D(menu, quotes)
+    frozen = menu[index] if index is not None else None
+    mine = lh.select_exact_ebu_joint(evaluations)
+    picked = mine.actions[0] if mine else None
+    check(picked is frozen,
+          "unbound m=1 exact-EBU selection equals select_arm_D on the same "
+          "exact quotes")
+
+    group("fidelity: the correction is visible exactly where it should be")
+    # With a BINDING pair the ranked value and the executed value would have
+    # differed under the superseded rule. Here they cannot.
+    wide = [candidate(0, 1, 1.0, 0.60, 0.70 * budget, 0.70 * budget),
+            candidate(1, 1, 1.0, 0.55, 0.80 * budget, 0.80 * budget)]
+    pairs = lh.evaluate_action_sets(world, cfg, x, u, dt, wide, lam_l, m=2)
+    bound = [e for e in pairs if e.allocation.binding]
+    check(bound, "the two-action set is budget-bound at these quantities")
+    for evaluation in bound:
+        requested = tuple(float(c["q_req"]) for c in evaluation.actions)
+        uncapped = lh.joint_exact_ebu(world, x, u, dt, evaluation.edges,
+                                      requested, lam_l)
+        check(uncapped.group_quote != evaluation.quote.group_quote,
+              "the uncapped quote differs from the executed quote, so ranking "
+              "on the uncapped one would have been the defect")
+        check(evaluation.quote.group_quote == lh.joint_exact_ebu(
+                  world, x, u, dt, evaluation.edges,
+                  evaluation.allocation.q_acc, lam_l).group_quote,
+              "the recorded quote is the one for the vector that executes")
+
+    group("fidelity: the joint quote equals the frozen group diagnostic")
+    probe_world = synthetic_world()
+    divergences = 0
+    cases = 0
+    for quantities in ((0.2, 0.15), (0.5, 0.5), (1.0, 0.0001), (0.3, 0.0),
+                       (0.0, 0.0), (0.0, 0.4)):
+        cases += 1
+        mine = lh.joint_exact_ebu(probe_world, x, u, dt, (0, 1), quantities,
+                                  dc.LAM_L)
+        frozen_quote = dc.group_quote_diagnostic(probe_world, x, u, dt,
+                                                 list(quantities), 0)
+        if (mine.group_quote != frozen_quote["group_quote"]
+                or mine.naive_sum != frozen_quote["naive_independent_sum"]
+                or mine.double_count != frozen_quote["double_count"]
+                or mine.n_actions != frozen_quote["n_actions"]):
+            divergences += 1
+    check(divergences == 0,
+          f"joint quote bitwise equals gate1dc_v30.group_quote_diagnostic on "
+          f"{cases} vectors, including zero-quantity members")
+    # The zero-quantity case is the one that used to diverge in sign.
+    zero_member = lh.joint_exact_ebu(probe_world, x, u, dt, (0, 1),
+                                     (0.3, 0.0), dc.LAM_L)
+    check(zero_member.n_actions == 1,
+          "a zero-quantity member is not counted as an active action")
+    check(zero_member.double_count == 0.0,
+          "one active action leaves double_count exactly zero")
 
     group("fidelity: shaping reproduces the frozen single-action shaping")
     divergences = 0
@@ -633,8 +830,9 @@ def test_fidelity_to_the_frozen_selectors():
         for fraction in dc.FRACTIONS:
             one = candidate(edge_index, 0, fraction, 0.6, 1.0, 1.0)
             mine = lh.shaped_active_world(world, [one])
-            frozen = dc.shaped_active_world(world, one)
-            if mine.edges != frozen.edges or mine.cells is not frozen.cells:
+            frozen_world = dc.shaped_active_world(world, one)
+            if mine.edges != frozen_world.edges \
+                    or mine.cells is not frozen_world.cells:
                 divergences += 1
     check(divergences == 0,
           "shaped edges identical to gate1dc_v30.shaped_active_world for "
@@ -645,9 +843,8 @@ def test_fidelity_to_the_frozen_selectors():
           "the empty selection matches the frozen rest tick")
 
     group("fidelity: the frozen single-action assertion is subsumed")
-    cfg = synthetic_config()
-    one = candidate(0, 0, 1.0, 0.6, 1.0, 1.0)
-    allocation = lh.joint_budget_cap(world, cfg, 1.15, 0.98, 0.02, [one])
+    one = candidate(0, 0, 1.0, 0.6, 0.1 * budget, 0.1 * budget)
+    allocation = lh.joint_budget_cap(world, cfg, x[0], u[0], dt, [one])
     lh.check_request_shaping_identity([one], allocation, allocation.q_acc)
     check(len(allocation.q_acc) == 1,
           "m=1 yields exactly one accepted quantity, as gate1dc asserts")
@@ -657,22 +854,58 @@ def test_fidelity_to_the_frozen_selectors():
         "identity violated")
 
 
-def test_adopted_constants_and_arm_roles():
-    group("adopted constants and arm roles")
-    check(lh.M_MAX == 2, "simultaneous-action bound is the adopted m = 2")
-    check(len(lh.ADOPTED_ARMS) == 4 and len(set(lh.ADOPTED_ARMS)) == 4,
-          "exactly four distinct adopted arms")
-    check(lh.ADOPTED_ARMS[0] == "A_full_multi_edge_p1c",
+def test_prospective_constants_and_arm_roles():
+    group("prospective constants, arm roles, and truthful status")
+    check(lh.M_BOUND == 2, "simultaneous-action bound is the proposed m = 2")
+    check(len(lh.PROSPECTIVE_ARMS) == 4
+          and len(set(lh.PROSPECTIVE_ARMS)) == 4,
+          "exactly four distinct prospective arms")
+    check(lh.PROSPECTIVE_ARMS[0] == "A_full_multi_edge_p1c",
           "first arm is the full-capability reference")
-    check(set(lh.RESTRICTED_ARMS) == set(lh.ADOPTED_ARMS[1:]),
+    check(set(lh.RESTRICTED_ARMS) == set(lh.PROSPECTIVE_ARMS[1:]),
           "the other three are restricted policies sharing one menu")
-    check(set(lh.ARM_ROLES) == set(lh.ADOPTED_ARMS),
-          "every adopted arm has a declared role")
+    check(set(lh.ARM_ROLES) == set(lh.PROSPECTIVE_ARMS),
+          "every prospective arm has a declared role")
     check(lh.ARM_ROLES["S_restricted_local_service_priority"]
           == "stock-blind control",
           "arm S is the registered stock-blind control")
-    check(lh.RANKING_BASIS == "menu_rank_then_joint_cap",
-          "the selection semantics is named and single-valued")
+    check(len(lh.DECISION_RULE) == 6,
+          "the prospective decision rule is recorded as six ordered steps")
+    rule = " ".join(lh.DECISION_RULE).lower()
+    check("admissibility" in rule and rule.index("admissibility")
+          < rule.index("joint ebu"),
+          "admissibility precedes the joint EBU step in the recorded order")
+    check("accepted action vector" in rule,
+          "the rule quotes the accepted vector, not the request")
+
+    # Documentation truthfulness: the code must not claim adoption while the
+    # candidate authority says "PROPOSED, NOT ADOPTED".
+    module_text = inspect.getsource(lh)
+    names = [n for n in dir(lh) if not n.startswith("_")]
+    check(not any("ADOPTED" in n for n in names),
+          "no public symbol is named ADOPTED while the authority says "
+          "proposed")
+    with open("V3.0_LONG_HORIZON_NORMALIZED_MECHANISM_CANDIDATE.md",
+              encoding="utf-8") as handle:
+        candidate_doc = handle.read()
+    check("PROPOSED, NOT ADOPTED" in candidate_doc,
+          "the candidate authority still records PROPOSED, NOT ADOPTED")
+    check("PROSPECTIVE, NOT ADOPTED" in module_text,
+          "the module records the same status as its authority")
+
+    # This file's own prose must not claim adoption either.
+    with open(__file__, encoding="utf-8") as handle:
+        own_text = handle.read()
+    for text, label in ((module_text, "longhorizon_v30.py"),
+                        (own_text, "this test file")):
+        marker = "adopt" + "ed"
+        negations = ("not", "no ", "nothing", "never", "nor ")
+        offenders = [line.strip() for line in text.splitlines()
+                     if marker in line.lower()
+                     and not any(n in line.lower() for n in negations)]
+        check(not offenders,
+              f"{label} claims adoption on no line "
+              f"({len(offenders)} affirmative: {offenders[:2]})")
 
     # The module hardcodes arm identifiers because importing gate1dc_v30 is
     # not import-pure. Verify them against the locked plan by static read.
@@ -680,17 +913,24 @@ def test_adopted_constants_and_arm_roles():
               encoding="utf-8") as handle:
         plan = json.load(handle)
     registered = set(plan["arms"])
-    check(set(lh.ADOPTED_ARMS) <= registered,
-          "every adopted arm identifier appears verbatim in the locked plan")
+    check(set(lh.PROSPECTIVE_ARMS) <= registered,
+          "every arm identifier appears verbatim in the locked plan")
     blind = plan["arms"]["S_restricted_local_service_priority"]
     check("stock-blind" in blind and "positive-control" in blind,
           "the locked plan confirms arm S is the stock-blind positive control")
-    check("C_restricted_observational_quote" not in lh.ADOPTED_ARMS
-          and "E_aggregate_source_group_quote" not in lh.ADOPTED_ARMS,
-          "no unadopted registered arm is smuggled in")
+    check("C_restricted_observational_quote" not in lh.PROSPECTIVE_ARMS
+          and "E_aggregate_source_group_quote" not in lh.PROSPECTIVE_ARMS,
+          "no unselected registered arm is smuggled in")
+    check("NOT REGISTERED FOR EXECUTION" in plan["arms"][
+              "E_aggregate_source_group_quote"],
+          "the locked plan still defers a settling aggregate arm (O3 open)")
+    check(any("no aggregate-quote settlement" in p
+              for p in json.load(open("v30_o14_multi_edge_plan.json",
+                                      encoding="utf-8"))["prohibitions"]),
+          "aggregate-quote settlement remains prohibited while O3 is open")
 
     # Behavioural, not prose: the module must not reach for any EBU
-    # construction the adopted mathematics forbids.
+    # construction the governing mathematics forbids.
     source_tree = ast.parse(inspect.getsource(lh))
     attributes = {n.attr for n in ast.walk(source_tree)
                   if isinstance(n, ast.Attribute)}
@@ -710,11 +950,11 @@ def test_adopted_constants_and_arm_roles():
 def main() -> int:
     test_execution_safety_and_import_purity()
     test_mechanism_1_joint_budget_cap()
-    test_mechanism_2_matched_selection()
+    test_mechanism_2_set_enumeration_and_joint_ebu()
     test_mechanism_3_shaping_identity()
     test_mechanism_4_checkpoint_restart()
     test_fidelity_to_the_frozen_selectors()
-    test_adopted_constants_and_arm_roles()
+    test_prospective_constants_and_arm_roles()
     print(f"\nLong-horizon mechanisms: {PASSED} passed, {FAILED} failed, "
           f"{GROUPS} groups")
     print("Model-state advancement: NONE; registered runs generated: 0")

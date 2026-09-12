@@ -1,23 +1,36 @@
-"""Long-horizon normalized mechanism study - the four adopted mechanisms.
+"""Long-horizon normalized mechanism study - prospective decision mechanisms.
 
-Implements ONLY the four gaps authorized for the first normalized mechanism
-study (the deterministic N/H/X stress ladder, Option B, ``m = 2``, R-b
-reserve-binding), as recorded in
-``V3.0_LONG_HORIZON_NORMALIZED_MECHANISM_CANDIDATE.md``:
+PROSPECTIVE, NOT ADOPTED. ``V3.0_LONG_HORIZON_NORMALIZED_MECHANISM_CANDIDATE.md``
+records the N/H/X families, the four-arm set and every parameter tuple as
+"PROPOSED, NOT ADOPTED", and no author-adoption statement is recorded in the
+repository. Nothing in this module is adopted, preregistered, or authorized to
+run; it carries a prospective design forward and selects nothing.
+
+Supplies only the mechanisms the prospective study needs:
 
   1. joint two-action budget cap
-  2. matched two-action selection (the non-EBU comparator and its matched
-     exact-EBU and stock-blind counterparts)
+  2. action-set enumeration, exact joint EBU, and matched set selection
   3. generalized request-shaping identity
   4. checkpoint and restart mechanism
+
+THE DECISION RULE (see ``DECISION_RULE``). P1C admissibility screens the menu;
+permitted action sets of size at most ``m`` are enumerated under the
+distinct-edge rule; the shared-source proportional joint cap is applied to each
+set; the exact finite JOINT EBU is computed for the resulting ACCEPTED action
+vector only; selection uses that value; and ``group_quote``, ``naive_sum`` and
+``double_count`` are recorded without allocating anything.
+
+The point of the ordering is that the ranked value and the executed value are
+the same object. An uncapped requested action is never ranked and then
+executed at a different capped quantity.
 
 EXECUTION SAFETY. This module is import-pure. It contains NO runner, NO tick
 function, NO trajectory, NO multi-tick loop, and NO world construction, and it
 never calls ``p1c_v29.p1c_step``, ``service_v30.bounded_step``, or any other
-step function. The published P1C aggregate allocation rule is *reproduced*
-from public ``p1c_v29`` entry points so that a selector can rank on the
-quantities it would actually be allocated; reproducing a rule is not executing
-a step.
+step function. The published P1C aggregate allocation rule and the registered
+aggregate-quote formula are *reproduced* from published sources so that a
+selector can rank on the quantities it would actually be allocated;
+reproducing a rule is not executing a step.
 
 FROZEN SOURCES. ``d0_v29``, ``p1c_v29`` and ``ebu_quote_v30`` are imported
 read-only and unmodified. ``gate1dc_v30`` is deliberately NOT imported: it
@@ -25,15 +38,30 @@ builds and validates its locked plan at module scope, so importing it would
 not be import-pure. Arm identifiers below are copied verbatim from the
 registered plan and are asserted against it by the test suite, not here.
 
-ADOPTED EBU MATHEMATICS, UNCHANGED. The governing value is only
+EBU MATHEMATICS, UNCHANGED. The governing value is only
 
     Delta_e(q) = V_loc(z) - V_loc(z + dt*S_e*q) - C_a(q)
 
-evaluated as an exact finite endpoint difference by
-``ebu_quote_v30.QuoteSchedule.exact``. This module never computes it. It
-accepts an exact quote from the caller as an opaque ranking key and never
-forms a per-unit value, a weighted burden function, a numerical quadrature, an
-EBU wallet, a causal allocation, or a replacement objective.
+evaluated as an exact finite endpoint difference. ``joint_exact_ebu``
+implements the registered aggregate form of it verbatim from
+``v30_o14_multi_edge_plan.json`` -> ``aggregate_quote_diagnostics``, over the
+source and its destinations, with the physical transition counted ONCE. No
+per-unit value, weighted burden function, numerical quadrature, EBU wallet,
+causal allocation, or replacement objective is ever formed. No EBU value is
+ever divided by a quantity, so per-unit ranking (falsifier F8) cannot happen;
+the only divisions in this module are the two frozen-rule rates, the State-F
+availability rate and the proportional scale sigma. Nothing is settled or allocated here and O3 remains open.
+
+WHAT IS DERIVABLE, AND WHAT IS NOT. The exact-EBU arm's set-level score is
+derived from committed authority: the registered aggregate quote, the
+registered strict-positivity act condition, and the registered tie rule
+("deterministic identifiers only"). The matched non-EBU comparator and the
+stock-blind control have NO registered set-level score - both are registered
+as per-candidate, single-action rules - so ``select_matched_non_ebu_joint``
+and ``select_stock_blind_joint`` fail closed with the precise ambiguity rather
+than inventing an aggregation. A third open question is recorded in the
+candidate document: the settlement form for a multi-action tick, since
+aggregate-quote settlement is prohibited while O3 is open.
 
 DECISION ORDER. Homeostatic/P1C admissibility first (classify -> budget ->
 menu), exact EBU quote second, declared selection third. That ordering is
@@ -49,6 +77,7 @@ and is NOT a guarantee about an executed trajectory.
 """
 from __future__ import annotations
 
+import itertools
 import math
 from dataclasses import dataclass
 from typing import Callable, Mapping, Optional, Sequence
@@ -58,30 +87,39 @@ import ebu_quote_v30 as eq
 import p1c_v29 as p1c
 
 __all__ = [
-    "M_MAX", "ADOPTED_ARMS", "RESTRICTED_ARMS", "ARM_ROLES", "RANKING_BASIS",
-    "CHECKPOINT_SCHEMA", "MechanismError", "RequestShapingViolation",
-    "CheckpointChainError", "JointAllocation", "Checkpoint",
-    "source_budget_rate", "joint_budget_cap", "select_actions",
-    "select_matched_non_ebu", "select_exact_ebu", "select_stock_blind",
+    "M_BOUND", "PROSPECTIVE_ARMS", "RESTRICTED_ARMS", "ARM_ROLES",
+    "DECISION_RULE", "CHECKPOINT_SCHEMA", "MechanismError",
+    "RequestShapingViolation", "CheckpointChainError",
+    "UnregisteredScoringRule", "JointAllocation", "JointQuote",
+    "SetEvaluation", "Checkpoint", "source_budget_rate", "joint_budget_cap",
+    "enumerate_action_sets", "joint_exact_ebu", "evaluate_action_sets",
+    "select_set_by_declared_score", "select_exact_ebu_joint",
+    "select_matched_non_ebu_joint", "select_stock_blind_joint",
     "shaped_active_world", "check_request_shaping_identity",
     "config_digest", "make_checkpoint", "verify_chain", "resume_from",
 ]
 
 # --------------------------------------------------------------------------
-# adopted constants
+# prospective constants
+#
+# PROSPECTIVE, NOT ADOPTED. V3.0_LONG_HORIZON_NORMALIZED_MECHANISM_CANDIDATE.md
+# records the N/H/X families, the four-arm set and every parameter tuple as
+# "PROPOSED, NOT ADOPTED". No author-adoption statement is recorded in the
+# repository, so nothing here may be described as adopted. These names carry
+# the prospective design forward; they select nothing.
 # --------------------------------------------------------------------------
-M_MAX = 2                       # D3-2: simultaneous-action bound
+M_BOUND = 2                     # D3-2: proposed simultaneous-action bound
 
 # Registered arm identifiers, verbatim from the locked plan. The first is the
 # unrestricted capability reference; the rest are restricted policies sharing
 # one menu, one joint cap and one cardinality bound.
-ADOPTED_ARMS = (
+PROSPECTIVE_ARMS = (
     "A_full_multi_edge_p1c",
     "D_restricted_exact_total_quote_greedy",
     "B_restricted_matched_non_ebu",
     "S_restricted_local_service_priority",
 )
-RESTRICTED_ARMS = ADOPTED_ARMS[1:]
+RESTRICTED_ARMS = PROSPECTIVE_ARMS[1:]
 ARM_ROLES = {
     "A_full_multi_edge_p1c": "full-capability reference",
     "D_restricted_exact_total_quote_greedy": "exact-EBU restricted policy",
@@ -89,14 +127,22 @@ ARM_ROLES = {
     "S_restricted_local_service_priority": "stock-blind control",
 }
 
-# The single declared selection semantics. Candidates are ranked INDIVIDUALLY
-# on the arm's own key over the screened menu, the top `m` on distinct edges
-# are taken, and the joint budget cap is applied to that set afterwards. This
-# is the faithful generalization of the frozen single-action rule, which also
-# ranks individually. Selecting a pair by a joint objective would be a
-# different registered rule; it is not implemented, and asking for it fails
-# closed. For m = 1 this reduces exactly to the frozen behaviour.
-RANKING_BASIS = "menu_rank_then_joint_cap"
+# The prospective decision rule, in the order it is applied. Step 4 quotes the
+# vector that would ACTUALLY execute, which is the correction this module
+# exists to carry: an earlier rule ranked an uncapped requested action and
+# then executed a different capped quantity, making the ranked value and the
+# settled value different objects.
+DECISION_RULE = (
+    "1. P1C/homeostatic admissibility screens the candidates.",
+    "2. Enumerate permitted action sets of size <= m under the distinct-edge "
+    "rule.",
+    "3. Apply the shared-source proportional joint budget cap to each set.",
+    "4. Compute the exact finite JOINT EBU of the resulting accepted action "
+    "vector only.",
+    "5. Select on that exact joint value for the vector that would execute.",
+    "6. Record group_quote, naive_sum and double_count; allocate nothing; "
+    "O3 remains open.",
+)
 
 CHECKPOINT_SCHEMA = "v30.longhorizon.checkpoint.1"
 
@@ -208,7 +254,7 @@ def source_budget_rate(cfg: p1c.SourceConfig, x: float, u: float,
 
 def joint_budget_cap(world: d0.World, cfg: p1c.SourceConfig, x_src: float,
                      u_src: float, dt: float, chosen: Sequence[Mapping],
-                     m: int = M_MAX) -> JointAllocation:
+                     m: int = M_BOUND) -> JointAllocation:
     """Apply ONE source's aggregate budget to a chosen action set.
 
     This is the mechanism the single-action path did not need. The frozen menu
@@ -243,9 +289,10 @@ def joint_budget_cap(world: d0.World, cfg: p1c.SourceConfig, x_src: float,
         raise MechanismError("world must be a d0_v29.World")
     if not isinstance(m, int) or isinstance(m, bool) or m < 1:
         raise MechanismError(f"m must be a positive int, got {m!r}")
-    if m > M_MAX:
+    if m > M_BOUND:
         raise MechanismError(
-            f"m={m} exceeds the adopted simultaneous-action bound {M_MAX}")
+            f"m={m} exceeds the prospective simultaneous-action bound "
+            f"{M_BOUND}")
     chosen = tuple(chosen)
     if len(chosen) > m:
         raise MechanismError(
@@ -279,159 +326,383 @@ def joint_budget_cap(world: d0.World, cfg: p1c.SourceConfig, x_src: float,
 
 
 # --------------------------------------------------------------------------
-# mechanism 2 - matched two-action selection
+# mechanism 2 - action-set enumeration, joint exact EBU, and set selection
 # --------------------------------------------------------------------------
-def select_actions(candidates: Sequence[Mapping],
-                   score: Callable[[Mapping], float],
-                   m: int = M_MAX,
-                   require_positive_score: bool = False,
-                   ranking_basis: str = RANKING_BASIS) -> tuple:
-    """Select up to ``m`` candidates on distinct edges by a declared key.
+def enumerate_action_sets(candidates: Sequence[Mapping],
+                          m: int = M_BOUND) -> tuple:
+    """Every permitted action set of size 1..m, under the distinct-edge rule.
 
-    The ONLY thing that differs between the restricted arms is ``score``.
-    Menu, cardinality bound, distinct-edge rule and tie-breaking are shared,
-    which is what makes the comparators matched rather than merely similar.
+    Step 2 of the prospective decision rule. The menu handed in must already
+    have passed P1C screening (step 1); this function adds no candidate and
+    relaxes no cap. Sets are returned in a deterministic order: by size, then
+    by the ascending tuple of edge indices, then by the ascending tuple of
+    quantity-menu indices - the registered tie rule's "deterministic
+    identifiers only, no hidden physical objective".
 
-    ``score`` returns a float or a tuple of floats; a tuple is compared
-    lexicographically, which is how the frozen ``(f, q_acc)`` key works.
-
-    Tie-breaking reproduces the frozen convention exactly: higher score first,
-    then LOWER edge index, then LOWER quantity-menu index. Ordering is total
-    and deterministic; no seed, sampling or adaptive rule is involved.
-
-    ``require_positive_score`` reproduces the frozen drop rules for arms D and
-    S, which decline to act when their key is not strictly positive.
-
-    Returns candidates ordered by ascending edge index, which is the order the
-    shaped active world and the request-shaping identity both use.
+    Rest is not enumerated. It is the fallback when no set satisfies the
+    strict-positivity act condition, matching the registered
+    ``act_condition`` ("otherwise rest; voluntary rest is recorded").
     """
-    if ranking_basis != RANKING_BASIS:
-        raise MechanismError(
-            f"unknown ranking_basis {ranking_basis!r}; only {RANKING_BASIS!r} "
-            "is implemented. Selecting a set by a joint objective would be a "
-            "different registered rule and is deliberately not provided.")
     if not isinstance(m, int) or isinstance(m, bool) or m < 1:
         raise MechanismError(f"m must be a positive int, got {m!r}")
-    if m > M_MAX:
+    if m > M_BOUND:
         raise MechanismError(
-            f"m={m} exceeds the adopted simultaneous-action bound {M_MAX}")
+            f"m={m} exceeds the prospective simultaneous-action bound {M_BOUND}")
     candidates = tuple(candidates)
     for candidate in candidates:
         _validate_candidate(candidate)
-    if not candidates:
-        return ()
+    seen = set()
+    for candidate in candidates:
+        identifier = (int(candidate["edge"]), int(candidate["quant_index"]))
+        if identifier in seen:
+            raise MechanismError(
+                f"duplicate candidate identifier {identifier}; the registered "
+                "tie rule uses identifiers only, so duplicates would make the "
+                "winner depend on menu order")
+        seen.add(identifier)
+    sets = []
+    for size in range(1, m + 1):
+        for combination in itertools.combinations(candidates, size):
+            edges = [int(c["edge"]) for c in combination]
+            if len(set(edges)) != len(edges):
+                continue                      # distinct-edge rule
+            sets.append(tuple(sorted(combination,
+                                     key=lambda c: int(c["edge"]))))
+    sets.sort(key=lambda group: (len(group),
+                                 tuple(int(c["edge"]) for c in group),
+                                 tuple(int(c["quant_index"]) for c in group)))
+    return tuple(sets)
 
-    def key_of(candidate):
-        value = score(candidate)
-        if isinstance(value, tuple):
-            return tuple(_finite("score component", v) for v in value)
-        return (_finite("score", value),)
 
-    # Each key is evaluated exactly ONCE, so a score callable cannot change
-    # the answer between ranking and the positivity filter.
+@dataclass(frozen=True)
+class JointQuote:
+    """The registered aggregate-quote diagnostics for one action vector."""
+    group_quote: float        # exact joint EBU of the accepted vector
+    naive_sum: float          # sum of independently frozen per-edge quotes
+    double_count: float       # naive_sum - group_quote
+    n_actions: int
+
+    def as_record(self) -> dict:
+        return {"group_quote": self.group_quote, "naive_sum": self.naive_sum,
+                "double_count": self.double_count, "n_actions": self.n_actions}
+
+
+def _penalty_of(world: d0.World, cell: int, value: float) -> float:
+    spec = world.cells[cell]
+    return d0.penalty(spec.alpha, spec.beta, spec.chi, spec.L, spec.U, spec.R,
+                      value)
+
+
+def joint_exact_ebu(world: d0.World, x: Sequence[float], u: Sequence[float],
+                    dt: float, edges: Sequence[int],
+                    accepted: Sequence[float], lam_l: float) -> JointQuote:
+    """Exact finite JOINT EBU of one accepted action vector, plus diagnostics.
+
+    Implements the registered aggregate-quote formula verbatim
+    (``v30_o14_multi_edge_plan.json`` -> ``aggregate_quote_diagnostics``):
+
+        Delta e_group(q_vec) = V_loc(z) - V_loc(z + dt * sum_e S_e q_e_acc)
+                               - sum_e C_e(q_e_acc),     z = x + dt*u
+
+    evaluated over the source and its destinations as an exact finite endpoint
+    difference. Never per unit, never sampled quadrature, never a surrogate.
+    The physical transition is counted ONCE: shared cells are displaced by the
+    summed contribution of every action, not once per action.
+
+    ``naive_sum`` is the sum of the independently frozen per-edge quotes and
+    ``double_count = naive_sum - group_quote`` is the measured interaction, as
+    registered. Nothing is allocated between actions and nothing is settled
+    here; O3 remains open.
+    """
+    if not isinstance(world, d0.World):
+        raise MechanismError("world must be a d0_v29.World")
+    dt = _finite("dt", dt)
+    if dt <= 0.0:
+        raise MechanismError(f"dt must be > 0, got {dt}")
+    lam_l = _nonneg("lam_l", lam_l)
+    edges = tuple(edges)
+    for edge in edges:
+        if isinstance(edge, bool) or not isinstance(edge, int):
+            raise MechanismError(
+                f"edge index must be an int, got {edge!r}; silent coercion "
+                "would quote a different edge than the caller named")
+        if edge < 0:
+            raise MechanismError(f"edge index must be >= 0, got {edge}")
+    accepted = tuple(_nonneg("accepted", value) for value in accepted)
+    if len(edges) != len(accepted):
+        raise MechanismError("edges/accepted length mismatch")
+    if len(set(edges)) != len(edges):
+        raise MechanismError("edges must be distinct")
+    for edge in edges:
+        if edge < 0 or edge >= len(world.edges):
+            raise MechanismError(f"edge index {edge} out of range")
+    xs = tuple(_finite("x", value) for value in x)
+    us = tuple(_finite("u", value) for value in u)
+    if len(xs) != world.n or len(us) != world.n:
+        raise MechanismError("x and u must have one entry per cell")
+    # The frozen diagnostic restricts the involved-cell set to edges that
+    # actually move stock (gate1dc_v30.group_quote_diagnostic). Keeping an
+    # idle cell in both endpoint sums is not exact: its penalty enters
+    # `before` and `after` as separate fsum terms, which can flip the sign of
+    # a near-zero group quote and always inflates the active-action count.
+    active = [(edge, quantity) for edge, quantity in zip(edges, accepted)
+              if quantity > 0.0]
+    if not active:
+        return JointQuote(0.0, 0.0, 0.0, 0)
+    edges = tuple(edge for edge, _ in active)
+    accepted = tuple(quantity for _, quantity in active)
+
+    involved = sorted({world.edges[e].i for e in edges}
+                      | {world.edges[e].j for e in edges})
+    z = {cell: xs[cell] + dt * us[cell] for cell in involved}
+
+    before = math.fsum(_penalty_of(world, cell, z[cell]) for cell in involved)
+    successor = dict(z)
+    process_cost = 0.0
+    for edge, quantity in zip(edges, accepted):
+        spec = world.edges[edge]
+        successor[spec.i] -= dt * quantity
+        successor[spec.j] += dt * spec.eta * quantity
+        process_cost += (lam_l * dt * (1.0 - spec.eta)) * quantity
+    after = math.fsum(_penalty_of(world, cell, successor[cell])
+                      for cell in involved)
+    group = before - after - process_cost
+
+    independent = []
+    for edge, quantity in zip(edges, accepted):
+        spec = world.edges[edge]
+        pair = (spec.i, spec.j)
+        head = math.fsum(_penalty_of(world, cell, z[cell]) for cell in pair)
+        moved = {spec.i: z[spec.i] - dt * quantity,
+                 spec.j: z[spec.j] + dt * spec.eta * quantity}
+        tail = math.fsum(_penalty_of(world, cell, moved[cell]) for cell in pair)
+        cost = (lam_l * dt * (1.0 - spec.eta)) * quantity
+        independent.append(head - tail - cost)
+    naive = math.fsum(independent)
+    return JointQuote(group_quote=group, naive_sum=naive,
+                      double_count=naive - group, n_actions=len(edges))
+
+
+@dataclass(frozen=True)
+class SetEvaluation:
+    """One enumerated action set, capped and quoted as it would execute."""
+    actions: tuple                   # candidates, ascending edge order
+    allocation: JointAllocation      # the joint-capped accepted vector
+    quote: JointQuote                # exact joint EBU of that vector
+
+    @property
+    def edges(self) -> tuple:
+        return self.allocation.edges
+
+    @property
+    def quant_indices(self) -> tuple:
+        return tuple(int(c["quant_index"]) for c in self.actions)
+
+
+def evaluate_action_sets(world: d0.World, cfg: p1c.SourceConfig,
+                         x: Sequence[float], u: Sequence[float], dt: float,
+                         candidates: Sequence[Mapping], lam_l: float,
+                         m: int = M_BOUND) -> tuple:
+    """Steps 2-4: enumerate sets, joint-cap each, quote the ACCEPTED vector.
+
+    This is the correction that matters. An earlier rule ranked candidates on
+    their uncapped menu quantities and then executed a different, capped
+    quantity. Here every set is capped first and the exact joint EBU is taken
+    of the vector that would actually execute, so the ranked value and the
+    executed value are the same object.
+    """
+    if not isinstance(world, d0.World):
+        raise MechanismError("world must be a d0_v29.World")
+    if not isinstance(cfg, p1c.SourceConfig):
+        raise MechanismError("cfg must be a p1c_v29.SourceConfig")
+    if not 0 <= cfg.source_id < world.n:
+        raise MechanismError(
+            f"cfg.source_id {cfg.source_id} is not a cell of this world")
+    if len(x) != world.n or len(u) != world.n:
+        raise MechanismError("x and u must have one entry per cell")
+    evaluations = []
+    for group in enumerate_action_sets(candidates, m=m):
+        allocation = joint_budget_cap(world, cfg, x[cfg.source_id],
+                                      u[cfg.source_id], dt, group, m=m)
+        quote = joint_exact_ebu(world, x, u, dt, allocation.edges,
+                                allocation.q_acc, lam_l)
+        evaluations.append(SetEvaluation(actions=group, allocation=allocation,
+                                         quote=quote))
+    return tuple(evaluations)
+
+
+def select_set_by_declared_score(evaluations: Sequence[SetEvaluation],
+                                 score: Callable,
+                                 require_positive_score: bool = True) -> Optional[SetEvaluation]:
+    """Step 5, shared by every arm. ONLY ``score`` may differ between arms.
+
+    Enumeration, cardinality bound, joint cap, distinct-edge rule and
+    tie-breaking are all supplied here, so the arms are matched by
+    construction rather than by inspection.
+
+    ``score`` returns a float or a tuple of floats; a tuple is compared
+    lexicographically, which is how the frozen ``(f, q_acc)`` key works. Every
+    arm uses this one path, so no arm can acquire a different tie discipline.
+
+    Tie-breaking GENERALIZES the registered rule - "deterministic identifiers
+    only, no hidden physical objective" - from one ``(edge, quant_index)``
+    pair to the ascending tuples of a set: higher score first, then the lower
+    edge-index tuple, then the lower quantity-menu-index tuple. Comparing
+    tuples is the minimal generalization; no cardinality preference is
+    imposed, because none is registered anywhere.
+
+    ``require_positive_score`` implements the registered ``act_condition``:
+    act only on a strictly positive score, otherwise rest.
+    """
+    evaluations = tuple(evaluations)
+    if not evaluations:
+        return None
     decorated = []
     arity = None
-    for candidate in candidates:
-        key = key_of(candidate)
+    for evaluation in evaluations:
+        if not isinstance(evaluation, SetEvaluation):
+            raise MechanismError("evaluations must be SetEvaluation instances")
+        raw = score(evaluation)
+        key = (tuple(_finite("score component", v) for v in raw)
+               if isinstance(raw, tuple) else (_finite("score", raw),))
         if arity is None:
             arity = len(key)
         elif len(key) != arity:
             raise MechanismError(
                 "score must return keys of uniform arity; lexicographic "
                 "comparison of different-length keys has no declared meaning")
-        decorated.append((tuple(-v for v in key), int(candidate["edge"]),
-                          int(candidate["quant_index"]), key, candidate))
+        decorated.append((tuple(-v for v in key), evaluation.edges,
+                          evaluation.quant_indices, key, evaluation))
     decorated.sort(key=lambda row: row[:3])
-
-    picked = []
-    used = set()
-    for _negated, edge, _quant, key, candidate in decorated:
-        if len(picked) >= m:
-            break
-        if edge in used:
-            continue
-        if require_positive_score and not key[0] > 0.0:
-            continue
-        picked.append(candidate)
-        used.add(edge)
-    return tuple(sorted(picked, key=lambda c: int(c["edge"])))
+    best = decorated[0]
+    if require_positive_score and not best[3][0] > 0.0:
+        return None
+    return best[4]
 
 
-def select_matched_non_ebu(candidates: Sequence[Mapping],
-                           m: int = M_MAX) -> tuple:
-    """Arm B. Rank by the physical force, then by accepted quantity.
+def select_exact_ebu_joint(evaluations: Sequence[SetEvaluation]
+                           ) -> Optional[SetEvaluation]:
+    """The exact-EBU arm. Selects on the exact joint EBU of what will execute.
 
-    Matched to the exact-EBU arm in every respect except the key: same menu,
-    same joint cap, same bound, same tie-breaking. It never consults an EBU
-    value. Reproduces ``select_arm_B``'s key ``(f, q_acc)`` and, at ``m = 1``,
-    its selection exactly.
+    Derived from committed authority: the ranking quantity is the registered
+    aggregate quote ``Delta e_group(q_vec)`` over the accepted vector; the act
+    condition is the registered strict positivity; the tie rule is the
+    registered identifier ordering. Per-unit ranking is forbidden (falsifier
+    F8) and never occurs - no EBU value is ever divided by a quantity.
+
+    Nothing is allocated between actions and nothing is settled here.
     """
-    for candidate in candidates:
-        for key in ("f", "q_acc"):
-            if key not in candidate:
-                raise MechanismError(
-                    f"matched non-EBU comparator requires candidate key {key!r}")
-
-    # The frozen key is the lexicographic pair (f, q_acc); it is passed
-    # through the SHARED selector so menu, bound, distinct-edge rule and
-    # tie-breaking are identical to the other arms by construction.
-    return select_actions(
-        candidates,
-        lambda c: (float(c["f"]), float(c["q_acc"])),
-        m=m, require_positive_score=False)
+    return select_set_by_declared_score(
+        evaluations, lambda evaluation: evaluation.quote.group_quote,
+        require_positive_score=True)
 
 
-def select_exact_ebu(candidates: Sequence[Mapping],
-                     exact_quotes: Sequence[float],
-                     m: int = M_MAX) -> tuple:
-    """Arm D. Rank by the EXACT finite total local EBU quote only.
+class UnregisteredScoringRule(MechanismError):
+    """A set-level scoring rule that no committed authority determines."""
 
-    ``exact_quotes[k]`` must be ``QuoteSchedule.exact(q)`` for
-    ``candidates[k]``, computed by the caller from the authoritative equation.
-    Per-unit values never enter, and a non-positive quote is declined, exactly
-    as ``select_arm_D`` does.
+
+_B_AMBIGUITY = (
+    "the matched non-EBU comparator has no registered set-level score. "
+    "v30_o14_multi_edge_plan.json registers arm B as 'one outgoing action per "
+    "source per micro-step', scored by the per-edge loss-aware force f_e with "
+    "ties by larger q_acc then lower edge index. No aggregation of f_e over a "
+    "set of edges is registered anywhere, and f_e is a per-edge marginal, so "
+    "summing, maximising or averaging it across a set are all different rules "
+    "with different physics. Register one explicitly before use.")
+
+_S_AMBIGUITY = (
+    "the stock-blind control has no registered set-level score. "
+    "v30_o14_multi_edge_plan.json registers arm S's score as the per-candidate "
+    "eta_e * q_acc * 1[declared demand rate > 0], described as a 'volume "
+    "maximizer toward a demanding destination'. Summing delivered volume over "
+    "a set is the natural reading of that phrase but is NOT registered, and "
+    "the alternative of scoring only the best single action is equally "
+    "consistent with the registered text. Register one explicitly before use.")
+
+
+def _require_singletons(evaluations, ambiguity: str) -> None:
+    """The ambiguity bites only for sets of size >= 2.
+
+    For a singleton there is nothing to aggregate, so the registered
+    per-candidate score applies directly and unambiguously. As soon as a set
+    of two or more actions must be scored, an aggregation is needed and none
+    is registered - so this fails closed rather than inventing one.
     """
-    candidates = tuple(candidates)
-    quotes = tuple(_finite("exact quote", value) for value in exact_quotes)
-    if len(candidates) != len(quotes):
-        raise MechanismError("candidates/exact_quotes length mismatch")
-    quote_by_id = {id(candidate): quote
-                   for candidate, quote in zip(candidates, quotes)}
-    if len(quote_by_id) != len(candidates):
-        raise MechanismError(
-            "candidates must be distinct objects so each maps to one quote")
-    return select_actions(candidates, lambda c: quote_by_id[id(c)], m=m,
-                          require_positive_score=True)
+    for evaluation in evaluations:
+        if not isinstance(evaluation, SetEvaluation):
+            raise MechanismError("evaluations must be SetEvaluation instances")
+        if len(evaluation.actions) > 1:
+            raise UnregisteredScoringRule(ambiguity)
 
 
-def select_stock_blind(candidates: Sequence[Mapping], world: d0.World,
-                       demand_rate: Sequence[float], m: int = M_MAX) -> tuple:
-    """Arm S. The registered stock-blind positive control.
+def select_matched_non_ebu_joint(evaluations: Sequence[SetEvaluation],
+                                 set_score: Optional[Callable] = None):
+    """Arm B. Registered per-candidate score for singletons; else fails closed.
 
-    Score ``eta_e * q_acc * 1[declared current-tick demand rate > 0]``, reading
-    only the menu and the adjacent destination's declared demand rate, exactly
-    as ``select_arm_S`` does. Its declared limitation - blindness to
-    destination stock buffers - is the point of the control and is preserved.
+    With no ``set_score`` supplied this accepts only singleton sets, which it
+    scores by the registered loss-aware force key ``(f, q_acc)``. Supply
+    ``set_score`` once an author registers an aggregation; it is then routed
+    through the same shared selector as every other arm, so the arms stay
+    matched in enumeration, cap, bound, distinct-edge rule and ties.
     """
-    if not isinstance(world, d0.World):
-        raise MechanismError("world must be a d0_v29.World")
-    rates = tuple(_finite("demand_rate", value) for value in demand_rate)
-    if len(rates) != world.n:
-        raise MechanismError("demand_rate length must equal the cell count")
-    for candidate in candidates:
-        if "q_acc" not in candidate:
-            raise MechanismError("stock-blind control requires 'q_acc'")
-        _validate_candidate(candidate)
-        if int(candidate["edge"]) >= len(world.edges):
+    if set_score is None:
+        _require_singletons(evaluations, _B_AMBIGUITY)
+        for evaluation in evaluations:
+            for key in ("f", "q_acc"):
+                if key not in evaluation.actions[0]:
+                    raise MechanismError(
+                        f"the matched comparator requires candidate key "
+                        f"{key!r}")
+
+        def set_score(evaluation):
+            # q_acc is the ACCEPTED quantity, so under a joint cap it is the
+            # allocation's, not the menu's independently-clamped figure. The
+            # arms therefore all score the vector that would execute.
+            action = evaluation.actions[0]
+            return (float(action["f"]), float(evaluation.allocation.q_acc[0]))
+
+        return select_set_by_declared_score(evaluations, set_score,
+                                            require_positive_score=False)
+    return select_set_by_declared_score(evaluations, set_score,
+                                        require_positive_score=False)
+
+
+def select_stock_blind_joint(evaluations: Sequence[SetEvaluation],
+                             world: Optional[d0.World] = None,
+                             demand_rate: Optional[Sequence[float]] = None,
+                             set_score: Optional[Callable] = None):
+    """Arm S. Registered per-candidate score for singletons; else fails closed.
+
+    With no ``set_score`` supplied this accepts only singleton sets, scored by
+    the registered ``eta_e * q_acc * 1[declared current-tick demand rate > 0]``,
+    reading only the menu and the adjacent destination's declared demand rate.
+    Its declared limitation - blindness to destination stock buffers - is the
+    point of the control and is preserved.
+    """
+    if set_score is None:
+        _require_singletons(evaluations, _S_AMBIGUITY)
+        if not isinstance(world, d0.World):
             raise MechanismError(
-                f"edge index {candidate['edge']} out of range")
+                "the stock-blind control needs the world to read edge eta")
+        if demand_rate is None:
+            raise MechanismError(
+                "the stock-blind control needs the declared demand rates")
+        rates = tuple(_finite("demand_rate", value) for value in demand_rate)
+        if len(rates) != world.n:
+            raise MechanismError(
+                "demand_rate length must equal the cell count")
 
-    def score(candidate):
-        edge = world.edges[int(candidate["edge"])]
-        indicator = 1.0 if rates[edge.j] > 0.0 else 0.0
-        return edge.eta * float(candidate["q_acc"]) * indicator
+        def set_score(evaluation):
+            action = evaluation.actions[0]
+            edge = world.edges[int(action["edge"])]
+            indicator = 1.0 if rates[edge.j] > 0.0 else 0.0
+            return (edge.eta * float(evaluation.allocation.q_acc[0])
+                    * indicator)
 
-    return select_actions(candidates, score, m=m, require_positive_score=True)
+        return select_set_by_declared_score(evaluations, set_score,
+                                            require_positive_score=True)
+    return select_set_by_declared_score(evaluations, set_score,
+                                        require_positive_score=True)
 
 
 # --------------------------------------------------------------------------
@@ -453,9 +724,9 @@ def shaped_active_world(world: d0.World,
     if not isinstance(world, d0.World):
         raise MechanismError("world must be a d0_v29.World")
     selected = tuple(selected)
-    if len(selected) > M_MAX:
+    if len(selected) > M_BOUND:
         raise MechanismError(
-            f"{len(selected)} actions exceed the bound {M_MAX}")
+            f"{len(selected)} actions exceed the bound {M_BOUND}")
     for candidate in selected:
         _validate_candidate(candidate)
         if "frac" not in candidate:
