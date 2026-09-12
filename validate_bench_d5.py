@@ -253,8 +253,54 @@ def main():
     record("(1, 2, 4, 8, 16, 32)" in source and "GRID_M = (1, 2)" in source
            and '"E-none", "E-full", "E-settled"' in source,
            "grid K/m/policy unchanged")
-    record(not os.path.exists(os.path.join("results", "benchmarks")),
-           "no benchmark output directory exists")
+    # ---- retention correction: run directories, raw samples, binding ------
+    record("LEGACY_SUMMARY" in source
+           and "preserved predecessor summary is never a write target" in source,
+           "root-level predecessor is guarded, never a write target (R1)")
+    record("root-level output is forbidden" in source,
+           "root-level output forbidden; writes go beneath a run dir (R1)")
+    record("_validate_run_id" in names and "_guard_run_directory" in names,
+           "run-id validation and run-directory guard present (R2)")
+    traversal = all(token in source for token in
+                    ('".." in run_id', "os.sep in run_id", "isascii()",
+                     "RUN_ID_MAX_LENGTH", "run_id[0] in \"-.\""))
+    record(traversal, "run identifier checked against traversal (R2)")
+    record("run directory already exists" in source
+           and "os.path.dirname(target) != root" in source,
+           "existing run directory refused; no escape from the root (R2)")
+    record('SUMMARY_BASENAME = "d5_summary.json"' in source
+           and 'RAW_BASENAME = "d5_raw_samples.jsonl"' in source,
+           "both output basenames declared (R3)")
+    record("both the raw-sample file and the summary are required" in source,
+           "run fails unless both files exist (R3)")
+    writes = [c for c in ast.walk(tree) if isinstance(c, ast.Call)
+              and isinstance(c.func, ast.Name) and c.func.id == "open"
+              and any(isinstance(a, ast.Constant) and a.value == "w"
+                      for a in c.args)]
+    record(len(writes) >= 2, "harness opens both outputs for writing (R3)",
+           "write-mode open() calls: %d" % len(writes))
+    record("RAW_KEYS" in source and "FORBIDDEN_RAW_KEYS" in source
+           and "_p10_raw_schema" in names,
+           "raw schema allow-list and P10 present (R4)")
+    for banned in ("group_quote", "naive_sum", "double_count", "settlement",
+                   "outcome_class", "world"):
+        record('"%s"' % banned in source.split("FORBIDDEN_RAW_KEYS")[1]
+               .split(")")[0],
+               "raw schema excludes %s (R4)" % banned)
+    record("must be scalar" in source,
+           "raw values restricted to scalars (R4)")
+    record("_p11_raw_binding" in names and "raw_samples_sha256" in source
+           and "raw_samples_file" in source,
+           "summary binds the raw file by SHA-256 (R5)")
+    binding_ok = False
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name == "_orchestrate":
+            keys = [c.value for c in ast.walk(node)
+                    if isinstance(c, ast.Constant) and isinstance(c.value, str)]
+            binding_ok = ("raw_samples_sha256" in keys
+                          and "raw_samples_file" in keys
+                          and "raw_samples_records" in keys)
+    record(binding_ok, "orchestrator writes the binding fields (R5)")
 
     # ---- brief / harness agreement (text inspection only) -----------------
     if os.path.exists(BRIEF):
@@ -295,6 +341,21 @@ def main():
         absent = [phrase for phrase in required if phrase not in block]
         record(not absent, "brief section 11 authorization sentence complete "
                            "(C3-final)", "missing: %s" % absent)
+        flat = " ".join(brief.split())
+        record("preserved byte-identically as a nonconforming predecessor" in flat
+               and "summary statistics only" in flat,
+               "brief: predecessor preserved, summary-only (R6)")
+        record("d5_raw_samples.jsonl" in flat
+               and "every raw non-scientific observation" in flat,
+               "brief: future runs retain raw observations (R6)")
+        record("non-scientific and permitted" in flat
+               and "new run identifier" in flat
+               and "never overwrite prior output" in flat,
+               "brief: rerun permitted, new run-id, no overwrite (R6)")
+        record("| P10 |" in brief and "| P11 |" in brief,
+               "brief: P10 and P11 boundaries documented (R6)")
+        record("--run-id" in block and "d5_raw_samples.jsonl" in block,
+               "brief section 11 requires run-id and both files (R6)")
     else:
         record(False, "brief present", BRIEF)
 

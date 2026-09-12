@@ -44,6 +44,12 @@ DENY_FUNCTIONS = (
 ALLOWED_KERNEL_MODULES = ("d0_v29", "ebu_quote_v30")
 OUTPUT_ROOT = "results/benchmarks/d5"
 FORBIDDEN_ROOT = "results/v3.0"
+# The first D5 run wrote a summary-only file at the output root. It is a
+# preserved, nonconforming predecessor and is never a write target again.
+LEGACY_SUMMARY = "results/benchmarks/d5/d5_summary.json"
+SUMMARY_BASENAME = "d5_summary.json"
+RAW_BASENAME = "d5_raw_samples.jsonl"
+RUN_ID_MAX_LENGTH = 64
 
 # ---------------------------------------------------------------------------
 # frozen synthetic inputs (brief section 2)
@@ -114,6 +120,21 @@ CELL_KEYS = (
     "calls_commitment_hash", "calls_canonical_json_total",
     "calls_canonical_json_nested_in_commitment_hash",
     "calls_canonical_json_direct", "audit_note",
+)
+RAW_KEYS = (
+    "cell", "kind", "order", "op", "K", "m", "policy",
+    "repetition", "duration_ns", "inner_ops",
+    "traced_before_bytes", "traced_after_bytes", "base_records",
+    "delta_records", "retained_bytes_per_record", "process_peak_rss_bytes",
+    "calls_commitment_hash", "calls_canonical_json_total",
+    "calls_canonical_json_nested_in_commitment_hash",
+    "calls_canonical_json_direct",
+)
+FORBIDDEN_RAW_KEYS = (
+    "ebu", "ebu_total", "quote_value", "exact_value", "group_quote",
+    "naive_sum", "double_count", "settlement", "issued", "outcome_class",
+    "world", "arm", "service", "unmet", "x_before", "x_after", "dt_label",
+    "tick", "trajectory",
 )
 FORBIDDEN_OUTPUT_KEYS = (
     "ebu", "ebu_total", "quote_value", "exact_value", "group_quote",
@@ -296,6 +317,30 @@ def _time_body(body):
     return samples
 
 
+def _cell_identity(kind, op=None, k=None, m=None, policy=None):
+    parts = [kind]
+    if op is not None:
+        parts.append("op=%s" % op)
+    if k is not None:
+        parts.append("K=%d" % k)
+    if m is not None:
+        parts.append("m=%d" % m)
+    if policy is not None:
+        parts.append("policy=%s" % policy)
+    return "|".join(parts)
+
+
+def _raw_timing_rows(identity, kind, samples, inner, fields):
+    """One raw row per repetition; enough to recompute every summary."""
+    rows = []
+    for index, duration in enumerate(samples):
+        row = {"cell": identity, "kind": kind, "repetition": index,
+               "duration_ns": duration, "inner_ops": inner}
+        row.update(fields)
+        rows.append(row)
+    return rows
+
+
 def _timing_stats(samples, inner):
     per_op = sorted(sample / float(inner) for sample in samples)
     median = statistics.median(per_op)
@@ -351,8 +396,11 @@ def _cell_time_unit(op):
         raise BoundaryFailure("unknown unit op %r" % (op,))
 
     samples = _time_body(body)
+    identity = _cell_identity("time-unit", op=op)
     result = {"kind": "time-unit", "op": op}
     result.update(_timing_stats(samples, INNER_OPS))
+    result["raw"] = _raw_timing_rows(identity, "time-unit", samples,
+                                     INNER_OPS, {"op": op})
     return result
 
 
@@ -380,6 +428,9 @@ def _cell_time_record(k, m, policy):
     if policy == "E-settled" and m < 2:
         result["joint_interaction"] = JOINT_NOT_APPLICABLE
     result.update(_timing_stats(samples, inner))
+    result["raw"] = _raw_timing_rows(
+        _cell_identity("time-record", k=k, m=m, policy=policy),
+        "time-record", samples, inner, {"K": k, "m": m, "policy": policy})
     return result
 
 
@@ -424,6 +475,14 @@ def _cell_memory(k, m, policy):
     }
     if policy == "E-settled" and m < 2:
         result["joint_interaction"] = JOINT_NOT_APPLICABLE
+    result["raw"] = [{
+        "cell": _cell_identity("memory", k=k, m=m, policy=policy),
+        "kind": "memory", "K": k, "m": m, "policy": policy,
+        "traced_before_bytes": before, "traced_after_bytes": after,
+        "base_records": MEM_BASE_RECORDS, "delta_records": MEM_DELTA_RECORDS,
+        "retained_bytes_per_record": retained,
+        "process_peak_rss_bytes": rss_bytes,
+    }]
     return result
 
 
@@ -469,7 +528,17 @@ def _cell_audit():
     finally:
         sys.setprofile(None)
 
+    identity = _cell_identity("audit")
+    counted = {
+        "calls_commitment_hash": counts["hash"],
+        "calls_canonical_json_total": counts["json_total"],
+        "calls_canonical_json_nested_in_commitment_hash": counts["json_nested"],
+        "calls_canonical_json_direct": (counts["json_total"]
+                                        - counts["json_nested"]),
+    }
+    raw = [dict(counted, cell=identity, kind="audit")]
     return {
+        "raw": raw,
         "kind": "audit",
         "calls_commitment_hash": counts["hash"],
         "calls_canonical_json_total": counts["json_total"],
@@ -546,7 +615,78 @@ def _p3_guard_output(path):
         raise BoundaryFailure("P3: target under the frozen results root")
     if target != root and not target.startswith(root + os.sep):
         raise BoundaryFailure("P3: target outside %s" % OUTPUT_ROOT)
+    if target == os.path.abspath(LEGACY_SUMMARY):
+        raise BoundaryFailure(
+            "P3: the preserved predecessor summary is never a write target")
+    if os.path.dirname(target) == root:
+        raise BoundaryFailure(
+            "P3: root-level output is forbidden; write beneath a run "
+            "directory")
     return target
+
+
+def _validate_run_id(run_id):
+    """Validate an explicit benchmark run identifier against traversal."""
+    if not isinstance(run_id, str) or not run_id:
+        raise BoundaryFailure(
+            "a benchmark run identifier is required and must be explicit")
+    if len(run_id) > RUN_ID_MAX_LENGTH:
+        raise BoundaryFailure("run identifier exceeds %d characters"
+                              % RUN_ID_MAX_LENGTH)
+    if not run_id.isascii():
+        raise BoundaryFailure("run identifier must be ASCII")
+    if run_id in (".", ".."):
+        raise BoundaryFailure("run identifier must not be a path element")
+    if run_id[0] in "-.":
+        raise BoundaryFailure("run identifier must not start with '-' or '.'")
+    if ".." in run_id or "/" in run_id or "\\" in run_id or os.sep in run_id:
+        raise BoundaryFailure(
+            "run identifier must not contain a path separator or '..'")
+    for character in run_id:
+        if not (character.isalnum() or character in "._-"):
+            raise BoundaryFailure("run identifier has an illegal character")
+    return run_id
+
+
+def _guard_run_directory(run_id):
+    """Resolve and guard the per-run output directory; never overwrite."""
+    _validate_run_id(run_id)
+    root = os.path.abspath(OUTPUT_ROOT)
+    target = os.path.abspath(os.path.join(root, run_id))
+    if os.path.dirname(target) != root:
+        raise BoundaryFailure("P3: run directory escapes the output root")
+    if target == root:
+        raise BoundaryFailure("P3: run identifier resolves to the output root")
+    if os.path.exists(target):
+        raise BoundaryFailure(
+            "P3: run directory already exists; prior output is never "
+            "overwritten - choose a new run identifier")
+    return target
+
+
+def _p10_raw_schema(rows):
+    for row in rows:
+        for key, value in row.items():
+            if key in FORBIDDEN_RAW_KEYS:
+                raise BoundaryFailure("P10: forbidden raw key %r" % key)
+            if key not in RAW_KEYS:
+                raise BoundaryFailure("P10: raw key %r not in allow-list"
+                                      % key)
+            if isinstance(value, (dict, list, tuple)):
+                raise BoundaryFailure(
+                    "P10: raw value for %r must be scalar" % key)
+    return "P10 ok: %d raw rows, allow-listed scalar keys only" % len(rows)
+
+
+def _p11_raw_binding(summary, raw_path):
+    with open(raw_path, "rb") as handle:
+        digest = hashlib.sha256(handle.read()).hexdigest()
+    if summary.get("raw_samples_file") != os.path.basename(raw_path):
+        raise BoundaryFailure("P11: raw-sample file name is not bound")
+    if summary.get("raw_samples_sha256") != digest:
+        raise BoundaryFailure("P11: summary does not bind the raw-sample "
+                              "file by SHA-256")
+    return "P11 ok: summary binds %s by SHA-256" % os.path.basename(raw_path)
 
 
 def _p4_no_world(path=None):
@@ -742,35 +882,61 @@ def _run_cell(args):
 
 def _orchestrate(args):
     _require_launcher_mode(args.launcher_mode)
+    run_directory = _guard_run_directory(args.run_id)
     checks = [_p1_module_table(), _p2_self_scan(), _p4_no_world()]
     fingerprint = _spec_fingerprint()
     cells = []
+    raw_rows = []
     forward = _grid()
     for order, sequence in (("forward", forward),
                             ("reversed", list(reversed(forward)))):
         for cell in sequence:
             result = _spawn(cell, args.launcher_mode)
+            for row in result.pop("raw", []):
+                row["order"] = order
+                raw_rows.append(row)
             result["order"] = order
             cells.append(result)
     checks.append(_p5_spec_unchanged(fingerprint))
     environment = _environment_identity(args.launcher_mode)
     checks.append(_p7_schema(cells))
     checks.append(_p8_environment(environment))
+    checks.append(_p10_raw_schema(raw_rows))
+
+    os.makedirs(run_directory, exist_ok=False)
+    raw_path = _p3_guard_output(os.path.join(run_directory, RAW_BASENAME))
+    with open(raw_path, "w", encoding="utf-8") as handle:
+        for row in raw_rows:
+            handle.write(json.dumps(row, sort_keys=True,
+                                    separators=(",", ":")))
+            handle.write("\n")
+    with open(raw_path, "rb") as handle:
+        raw_digest = hashlib.sha256(handle.read()).hexdigest()
+
     summary = {
         "label": "NON-SCIENTIFIC SOFTWARE MEASUREMENT",
         "statement": ("software overhead only; never EBU quality, "
                       "homeostasis, service, recovery or scientific success"),
+        "run_id": args.run_id,
         "environment": environment,
         "boundaries": checks,
+        "raw_samples_file": RAW_BASENAME,
+        "raw_samples_sha256": raw_digest,
+        "raw_samples_records": len(raw_rows),
         "cells": cells,
     }
     checks.append(_p6_no_ebu(summary))
-    target = _p3_guard_output(os.path.join(OUTPUT_ROOT, "d5_summary.json"))
-    os.makedirs(os.path.dirname(target), exist_ok=True)
-    with open(target, "w", encoding="utf-8") as handle:
+    checks.append(_p11_raw_binding(summary, raw_path))
+
+    summary_path = _p3_guard_output(
+        os.path.join(run_directory, SUMMARY_BASENAME))
+    with open(summary_path, "w", encoding="utf-8") as handle:
         json.dump(summary, handle, indent=1, sort_keys=True)
         handle.write("\n")
-    sys.stderr.write("wrote %s\n" % target)
+    if not (os.path.exists(raw_path) and os.path.exists(summary_path)):
+        raise BoundaryFailure(
+            "both the raw-sample file and the summary are required")
+    sys.stderr.write("wrote %s\nwrote %s\n" % (raw_path, summary_path))
     return 0
 
 
@@ -798,6 +964,10 @@ def main(argv=None):
     parser.add_argument("--K", type=int, choices=GRID_K)
     parser.add_argument("--m", type=int, choices=GRID_M)
     parser.add_argument("--policy", choices=GRID_POLICY)
+    parser.add_argument("--run-id", dest="run_id", default=None,
+                        help="explicit run identifier; a new run directory "
+                             "is created beneath the output root and prior "
+                             "output is never overwritten")
     parser.add_argument("--launcher-mode", dest="launcher_mode",
                         choices=LAUNCHER_MODES, required=True,
                         help="explicit launcher label; never inferred")
