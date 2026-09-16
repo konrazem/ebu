@@ -376,6 +376,101 @@ cap objective.
 | V.15 | **Long-Horizon Simulations as Theorem Adversaries** | Uses Python sweeps, boundary searches, disturbances, and assumption-removal experiments to attack the proof and find counterexamples. Simulation supports scope testing; it does not supply the word “forever.” | Phase portraits, parameter maps, adversarial seeds, and theorem-failure plots. |
 | V.16 | **The Strongest Homeostasis Theorem Actually Earned** | States the final theorem at exactly the scope supported by proof and tests. If shared-source settlement remains unresolved, it may use one action per source or conservative serialization and must say so. Ends by exposing the multiple-action boundary inherited by Part VI. | Final theorem box, assumptions table, evidence ledger, and boundary cases. |
 
+### Prospective test specification: normalized exact-EBU recovery study
+
+This is the planned empirical-adversarial companion to Chapters V.5, V.6,
+V.11, V.13, and V.15. It is a **prospective specification**, not a report of a
+completed study, a preregistration, a theorem, or evidence about a real
+system. Its purpose is to make the future test legible in the book: a reader
+must be able to see precisely what was decided before any trajectory is run,
+what was measured, and what the study could not establish.
+
+**Question.** In declared synthetic worlds, do repeated exact-finite-EBU
+decisions preserve the P1C homeostatic constraints, reserve protection,
+service, and recovery through repeated shocks? The study tests a mechanism; it
+does not calibrate or describe an ecosystem, market, organisation, or other
+external system.
+
+**Governing value and decision order.** Each admissible candidate action is
+quoted only by the finite endpoint difference
+
+```
+Delta_e(q) = V_loc(z) - V_loc(z + dt*S_e*q) - C_a(q).
+```
+
+It is never replaced by a per-unit quote, sampled quadrature, a weighted
+surrogate burden, an EBU wallet, or an allocation rule. The order is fixed:
+
+1. apply P1C/homeostatic admissibility and reserve screening;
+2. evaluate the exact finite EBU quote for the remaining candidates; and
+3. apply the declared arm's selection rule.
+
+Thus an action that would violate a homeostatic constraint is not made
+admissible by a favourable EBU value. Conversely, a first-order diagnostic is
+only a diagnostic: it does not prove the sign of the exact finite quote.
+
+**Proposed world and stress ladder.** The first mechanism-study candidate is
+a normalized, deterministic shared-source topology: one regenerative source,
+two destination cells, and two outgoing actions from the source. It retains
+the selected reserve-binding regime, medium resolution `F = 5`, simultaneous
+action bound `m = 2`, settled-action evidence, and the no-attribution boundary:
+the joint transition is quoted once; `group_quote`, `naive_sum`, and
+`double_count` are recorded; O3 remains open and joint EBU is never divided
+among actions. The proposed N/H/X variants differ only in starting source
+headroom: normal moderate (N), high but action-capable (H), and extreme
+near-boundary (X). The proposed medium-horizon schedule has a 240-tick
+burn-in and four declared shock/recovery episodes beginning at ticks 241,
+581, 921, and 1261 within a 1,600-tick trajectory.
+
+| Proposed family | Source stock at episode start | Headroom above reserve | Declared shock | Source stock at trough | Reference stress at start -> trough |
+|---|---:|---:|---:|---:|---:|
+| N — normal moderate | 1.150 | 0.150 | 0.090 | 1.060 | 1.0409 -> 1.8641 |
+| H — high, action-capable | 1.060 | 0.060 | 0.036 | 1.024 | 1.8641 -> 3.2475 |
+| X — extreme near-boundary | 1.020 | 0.020 | 0.008 | 1.012 | 3.5751 -> 4.5175 |
+
+These are normalized synthetic parameters, not estimates of an external
+system. They document the proposed stress ladder so that the reader can
+distinguish deliberately chosen test conditions from a measured result.
+
+The candidate is designed to exercise binding preservation, repeated recovery,
+stress-dependent loss of action resolution, and near-reserve protection. Its
+reference-state calculations are necessary design checks, not a proof that an
+executed trajectory will remain safe, retain a non-empty menu, avoid refusal,
+or recover after every shock. A genuine reserve-breach/collapse condition is
+not part of this recovery study; it requires a separately registered terminal
+case.
+
+**Planned comparison set.** The planned four-arm structure is a
+full-capability reference, an exact-EBU restricted policy, a matched non-EBU
+restricted policy, and a stock-blind control. The comparator must be matched
+for the allowed two-action decision shape; it must not be tuned from outcomes
+or used to make EBU appear favourable. The arm semantics, final parameter
+tuple, and run composition must be frozen in a separate preregistration before
+execution.
+
+**Measures and evidence.** The study will record reserve status, homeostatic
+constraint status, service and unmet demand, recovery after each declared
+shock, the accepted action set, exact joint EBU, `group_quote`, `naive_sum`,
+`double_count`, and evidence of decision resolution. It may show whether these
+properties hold or fail in its declared synthetic worlds. It cannot prove an
+unbounded homeostasis theorem, settle O3, establish causal contribution,
+validate an external system, or turn cumulative EBU into a spendable balance.
+
+**Implementation and scale boundary.** Before this study can be
+preregistered, the framework needs a joint two-action budget cap, a matched
+two-action non-EBU comparator, a generalized request-shaping identity, and
+checkpoint/restart. The proposed 1,600-tick N/H/X study is an initial
+medium-horizon recovery-and-stress test; it is not the later large AWS drift,
+ratchet, or slow-erosion study. A longer B3 study must receive its own horizon,
+cost, durability, and execution authorization rather than inheriting them from
+this one.
+
+**Book treatment after execution.** Part V should include the frozen
+specification before displaying results, then report every result—supportive,
+null, adverse, or inconclusive—against this specification. No figure or prose
+may silently replace the planned protocol with settings chosen after inspecting
+outcomes.
+
 ### Target conclusion
 
 The desired conclusion remains conditional:
