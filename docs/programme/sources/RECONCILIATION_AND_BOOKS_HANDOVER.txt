@@ -1,0 +1,2337 @@
+# EBU PROGRAMME RECONCILIATION, REPOSITORY CLEANUP,
+# BOOK ARCHITECTURE REALIGNMENT, AND FRAMEWORK DECISION
+#
+# FULL CONTROLLING HANDOVER
+#
+# THIS TASK PRECEDES THE LOCAL-GAUSSIAN EXPERIMENT IMPLEMENTATION PROGRAMME
+
+You are taking over a major programme-reconciliation stage of the EBU project.
+
+This is not a narrow documentation-edit task.
+
+This is not yet primarily a simulation task.
+
+This task exists because the scientific direction of EBU has materially clarified
+and the repository now contains a substantial amount of historical code,
+historical experiments, prospective framework architecture, future-book planning,
+controller work, settlement work, topology/motif work, and documentation that was
+created under several earlier formulations of the project.
+
+The repository must now be reconciled around one coherent scientific architecture
+BEFORE the new Local Gaussian two-stage experiment becomes the active development
+programme.
+
+Work for as long as useful and safe.
+
+Do not stop after producing an inventory if the next phase can be completed
+without an unresolved scientific or authority conflict.
+
+Progress automatically through the gates below.
+
+Stop only for a genuine blocking condition defined later in this handover.
+
+---
+
+# 0. PRIMARY GOAL
+
+The immediate programme goal is:
+
+\[
+\boxed{
+\text{reconcile repository}
+\rightarrow
+\text{reconcile scientific architecture}
+\rightarrow
+\text{reconcile books}
+\rightarrow
+\text{decide framework disposition}
+\rightarrow
+\text{clean active code path}
+\rightarrow
+\text{implement new foundation}
+}
+\]
+
+The new scientific centre of EBU is NOT:
+
+> an EBU controller that knows which action restores homeostasis.
+
+The central architecture is now:
+
+\[
+\boxed{
+\text{physical world proposes possibilities}
+\rightarrow
+\text{EBU measures}
+\rightarrow
+\text{capacity constrains}
+\rightarrow
+\text{actors choose}.
+}
+\]
+
+Most importantly:
+
+\[
+\boxed{\text{EBU CALCULATES; EBU DOES NOT CHOOSE.}}
+\]
+
+This principle has priority over older prospective controller designs.
+
+---
+
+# 1. AUTHORITATIVE LOCAL REPOSITORY
+
+Expected local repository:
+
+    /Users/konrad.grzyb/code/ebu
+
+The local Git repository is the primary working source of truth.
+
+GitHub repository:
+
+    konrazem/ebu
+
+The GitHub default branch is presently `main`.
+
+A `framework-v0.1` branch also exists and contains the prospective
+`ebu-framework` work.
+
+DO NOT assume that any previously reported SHA, tree, local branch, tracking
+branch, or worktree state remains current.
+
+Verify everything directly.
+
+---
+
+# 2. FIRST ACTION: DO NOT EDIT ANYTHING YET
+
+Before modifying one byte:
+
+1. locate repository root;
+2. read root `AGENTS.md`;
+3. search for nested `AGENTS.md`;
+4. inspect `git status`;
+5. inspect current branch;
+6. record current HEAD;
+7. record current tree;
+8. record remote configuration;
+9. record local branch inventory;
+10. record tracking branches;
+11. inspect `main`;
+12. inspect `framework-v0.1`;
+13. inspect any later programme branches that appear scientifically relevant;
+14. inspect recent first-parent history;
+15. run a read-only comparison among candidate bases.
+
+If working tree contains unexplained user changes:
+
+- DO NOT discard them;
+- DO NOT stash them automatically;
+- DO NOT reset them;
+- report exact paths and stop mutation work until a safe disposition exists.
+
+A clean starting repository is mandatory.
+
+---
+
+# 3. BASE-BRANCH DECISION
+
+Do not assume that `main` is the correct development base merely because GitHub
+calls it the default branch.
+
+Do not assume that `framework-v0.1` is correct merely because it contains newer
+framework work.
+
+Compare them.
+
+At minimum inspect:
+
+- merge base;
+- ahead/behind relation;
+- relevant scientific documents;
+- framework package;
+- tests;
+- book planning;
+- topology/motif work;
+- settlement work;
+- current provenance/authority files;
+- whether either branch is missing accepted work.
+
+Produce an explicit:
+
+    GAUSSIAN_EBU_BASELINE_DECISION.md
+
+or repository-equivalent file.
+
+It must state:
+
+- candidate branches;
+- exact SHAs;
+- exact trees;
+- what each contains;
+- what each lacks;
+- selected development base;
+- why that selection loses no accepted evidence.
+
+Do not choose based on branch name.
+
+---
+
+# 4. CLEAN WORKING BRANCH
+
+Once the base is verified and the worktree is clean, create or use a dedicated
+local reconciliation branch.
+
+Suggested name if repository conventions do not imply a better one:
+
+    programme/local-gaussian-reconciliation
+
+Do NOT reuse an old experimental/controller feature branch merely because it is
+available.
+
+Record:
+
+- parent branch;
+- parent SHA;
+- parent tree.
+
+Do not push the branch, create a PR, merge, release, or modify remote GitHub state
+unless separately authorized.
+
+Local commits are permitted if local task authority permits them.
+
+The desired final state of this task is:
+
+\[
+\boxed{\text{clean working tree + coherent active branch + passing tests}.}
+\]
+
+---
+
+# 5. WHY THIS RECONCILIATION IS NECESSARY
+
+The repository currently preserves several generations of thinking.
+
+Examples include:
+
+- viable-band / hinge burden potentials;
+- gradient-responsive actor laws;
+- line-searched burden-reducing actions;
+- regeneration and ecological controllers;
+- P1C;
+- historical EBU ledgers;
+- guarded-ledger adversarial studies;
+- sequential/parallel accounting;
+- topology/motif work;
+- dynamic coordination;
+- prospective framework layers;
+- future economy plans.
+
+These are not all wrong.
+
+Many contain important scientific results and infrastructure.
+
+But they do not all describe the current intended EBU architecture.
+
+The active project must therefore distinguish:
+
+\[
+\boxed{
+\text{historical result}
+\neq
+\text{current foundation}
+\neq
+\text{future hypothesis}.
+}
+\]
+
+Never erase this distinction.
+
+---
+
+# 6. NEW SCIENTIFIC DIRECTION TO RECONCILE AROUND
+
+The present programme is centred on the following hierarchy.
+
+## 6.1 Physical state first
+
+A physical state exists independently of EBU.
+
+Actions physically transform that state.
+
+EBU evaluates physical transformations.
+
+The field is an instrument for evaluating physical action.
+
+It is not itself an actor.
+
+---
+
+## 6.2 Equilibrium-deviation potential
+
+The first new prospective field model is:
+
+\[
+\boxed{
+V_i(x_i)
+=
+\frac12
+\left(
+\frac{x_i-x_i^\star}{\sigma_i}
+\right)^2.
+}
+\]
+
+For Level 1:
+
+\[
+\boxed{
+V(x)=\sum_iV_i(x_i).
+}
+\]
+
+Interpretation:
+
+- \(x_i^\star\): declared local equilibrium/reference;
+- \(\sigma_i\): local fluctuation/sensitivity scale;
+- \(V_i\): standardized equilibrium-deviation potential.
+
+Use terminology such as:
+
+- equilibrium-deviation potential;
+- stability-deviation potential;
+- local reference potential.
+
+Do not automatically call this "burden" when discussing the new model.
+
+The old hinge/boundary burden model remains historically and scientifically
+valid for threshold-type systems.
+
+Do NOT delete it.
+
+---
+
+# 7. MODEL FAMILY, NOT ONE UNIVERSAL POTENTIAL
+
+The repository should ultimately make clear that EBU is not tied to one single
+potential formula.
+
+A useful conceptual hierarchy is:
+
+\[
+\boxed{
+\text{potential interface}
+\rightarrow
+\begin{cases}
+\text{threshold/hinge model}\\
+\text{Local Gaussian model}\\
+\text{local factor model later}
+\end{cases}
+}
+\]
+
+Do not hard-code the new Gaussian equation so deeply that the threshold model
+can no longer exist.
+
+Likewise, do not preserve the threshold model so deeply that Gaussian fields
+must pretend to have \(L/U\) bands.
+
+---
+
+# 8. MARGINAL FIELD
+
+For Local Gaussian Level 1:
+
+\[
+\boxed{
+\mu_i
+=
+\frac{x_i-x_i^\star}{\sigma_i^2}.
+}
+\]
+
+For physical increment \(\delta x\):
+
+\[
+\boxed{
+E
+=
+V_{\rm pre}-V_{\rm post}.
+}
+\]
+
+For the quadratic Gaussian potential:
+
+\[
+\boxed{
+E
+=
+-\mu^T\delta x
+-
+\frac12\delta x^TH\delta x
+}
+\]
+
+with:
+
+\[
+H=\operatorname{diag}(1/\sigma_i^2).
+\]
+
+The finite quadratic term matters.
+
+Zero marginal at exact equilibrium does not make a finite disturbance free.
+
+---
+
+# 9. PATH INTERPRETATION
+
+Preserve the exact finite path interpretation:
+
+\[
+\boxed{
+E
+=
+-\int_\gamma \nabla V^T dx.
+}
+\]
+
+For simultaneous group increment:
+
+\[
+\delta x_G=\sum_a\delta x_a,
+\]
+
+use:
+
+\[
+\boxed{
+E_G=V(x)-V(x+\delta x_G).
+}
+\]
+
+And common-path receipts:
+
+\[
+\boxed{
+R_a
+=
+-\int_0^1
+\nabla V(x+\lambda\delta x_G)^T
+\delta x_a\,d\lambda.
+}
+\]
+
+Require:
+
+\[
+\boxed{
+\sum_aR_a=E_G.
+}
+\]
+
+This is field-effect decomposition.
+
+It is not a game-theory allocation.
+
+---
+
+# 10. MULTIPLE ACTIONS DO NOT REQUIRE A GLOBAL MULTIVARIATE GAUSSIAN
+
+Preserve this distinction explicitly.
+
+Many simultaneous actions may exist under:
+
+\[
+V=\sum_iV_i.
+\]
+
+Actions can interact because they overlap on physical coordinates or constraints.
+
+That is different from statistical coupling of equilibrium variables.
+
+Therefore:
+
+\[
+\boxed{
+\text{action interaction}
+\neq
+\text{multivariate equilibrium factor}.
+}
+\]
+
+Local multivariate Gaussian factors remain future work.
+
+Do not build a global covariance model now.
+
+---
+
+# 11. FUTURE LOCAL FACTOR ARCHITECTURE
+
+The future-compatible form is:
+
+\[
+\boxed{
+V(x)
+=
+\sum_\alpha
+\phi_\alpha(x_{S_\alpha}).
+}
+\]
+
+An action need only reevaluate factors touching its physical support.
+
+This should influence interface design.
+
+It should NOT trigger implementation of automatic factor discovery now.
+
+---
+
+# 12. THREE DIFFERENT TOPOLOGIES MUST NOT BE COLLAPSED
+
+Preserve explicit distinctions among:
+
+### Physical topology
+
+Where physical actions/resources can move.
+
+### Factor topology
+
+Which state variables jointly determine the potential.
+
+### Action-interaction topology
+
+Which finite actions interact nonadditively in an event.
+
+Möbius analysis belongs primarily to the third role.
+
+These topologies may relate.
+
+They are not identical.
+
+---
+
+# 13. MÖBIUS ROLE
+
+Keep the accepted insight:
+
+Möbius decomposition is:
+
+- structural analysis;
+- interaction diagnosis;
+- recursive/topological microscope;
+- independent reconstruction/audit.
+
+It is NOT:
+
+- runtime issuance;
+- extra EBU;
+- a wallet;
+- an actor-selection rule.
+
+For pure quadratic potential and fixed additive increments:
+
+\[
+\boxed{
+I(a,b)=-\delta_a^TH\delta_b.
+}
+\]
+
+Higher-order interactions should vanish under the strict quadratic/additive
+assumptions.
+
+Observed higher-order terms must trigger diagnosis of:
+
+- nonlinear field;
+- nonlinear resolver;
+- state-dependent efficiency;
+- subset-specific accepted quantities;
+- event/feasibility structure.
+
+---
+
+# 14. CAPACITY SEMANTICS
+
+The prospective experiment introduces persistent local:
+
+\[
+\boxed{
+B_i(t)\ge0
+}
+\]
+
+called:
+
+\[
+\boxed{\text{EBU capacity balance}.}
+\]
+
+Not:
+
+- money;
+- wallet;
+- physical energy;
+- global liquidity.
+
+Initial state:
+
+\[
+\boxed{B_i(0)=0.}
+\]
+
+Capacity can increase or decrease.
+
+The correct prohibition is:
+
+\[
+\boxed{\text{no debt / no overdraft / no negative balance}.}
+\]
+
+Do NOT preserve wording such as "no debit" if it implies balances cannot fall.
+
+A negative receipt can consume earned capacity when:
+
+\[
+B_i+R_i\ge0.
+\]
+
+No:
+
+- arbitrary genesis;
+- periodic refill;
+- borrowing;
+- direct balance transfer;
+- global pool.
+
+---
+
+# 15. EXTERNAL PHYSICAL DRIVE
+
+The prospective tests separate nature from actors.
+
+External drive:
+
+\[
+x_t\rightarrow z_t=x_t+u_t^{ext}.
+\]
+
+For the first closed world:
+
+\[
+\boxed{
+\mathbf1^Tu_t^{ext}=0.
+}
+\]
+
+Preferred synthetic construction:
+
+\[
+\boxed{
+u_t^{ext}=S\xi_t.
+}
+\]
+
+Nature changes physical state.
+
+Nature does NOT directly issue actor capacity.
+
+Define:
+
+\[
+\boxed{
+D_t^{ext}=V(z_t)-V(x_t).
+}
+\]
+
+Audit ledger:
+
+\[
+\boxed{
+J_{t+1}=J_t+D_t^{ext}.
+}
+\]
+
+---
+
+# 16. DRIVEN ACCOUNTING IDENTITY
+
+For the prospective zero-initialized benchmark:
+
+\[
+x_0=x^\star,
+\qquad
+V_0=0,
+\qquad
+B_i(0)=0,
+\qquad
+J_0=0.
+\]
+
+The candidate exact identity is:
+
+\[
+\boxed{
+V(x_t)+\sum_iB_i(t)=J_t.
+}
+\]
+
+Equivalently:
+
+\[
+\boxed{
+V+\sum_iB_i-J=\text{constant}.
+}
+\]
+
+This must be derived and tested, not merely stated.
+
+---
+
+# 17. EBU CALCULATES; ACTOR CHOOSES
+
+This is the most important architecture rule.
+
+The canonical event chain is:
+
+\[
+\boxed{
+\text{external physical forcing}
+\rightarrow
+\text{candidate physical actions}
+\rightarrow
+\text{physical feasibility}
+\rightarrow
+\text{exact EBU valuation}
+\rightarrow
+\text{capacity affordability}
+\rightarrow
+\text{actor choice}
+\rightarrow
+\text{execution}
+\rightarrow
+\text{settlement}
+\rightarrow
+\text{audit}.
+}
+\]
+
+EBU must not:
+
+- maximize itself;
+- select lowest \(V\);
+- select largest positive EBU;
+- maximize service;
+- select "least harmful";
+- choose a preservation action.
+
+Selection belongs to the actor/policy layer.
+
+---
+
+# 18. FIRST ACTOR POLICY
+
+For the core falsification study:
+
+\[
+\boxed{
+\text{seeded random choice among affordable physically feasible candidates}.
+}
+\]
+
+This is deliberate.
+
+It removes intelligent homeostatic selection.
+
+The actor RNG must not inspect:
+
+- \(V\);
+- \(\mu\);
+- EBU magnitude;
+- sign;
+- global state quality;
+- future forcing.
+
+---
+
+# 19. TWO INDEPENDENT RANDOM PROCESSES
+
+The experiment must separate:
+
+### Nature RNG
+
+Produces external physical disturbance.
+
+### Actor RNG
+
+Chooses among affordable physical possibilities.
+
+Separate seeds are mandatory.
+
+Conceptually:
+
+\[
+\boxed{
+\text{random nature}
+\rightarrow
+\text{deterministic physical/EBU filters}
+\rightarrow
+\text{random actor}
+\rightarrow
+\text{deterministic execution/audit}.
+}
+\]
+
+The framework must make this separation natural.
+
+---
+
+# 20. NO BUILT-IN MEAN REVERSION
+
+The first EBU experiment MUST NOT hide a restoring plant law such as:
+
+\[
+-\gamma(x-x^\star).
+\]
+
+Or:
+
+\[
+\dot x=-\nabla V.
+\]
+
+Or state-dependent "regeneration" deliberately pushing toward \(x^\star\).
+
+Or any fallback global repair.
+
+Ornstein-Uhlenbeck/Langevin theory is a scientific reference.
+
+It is not the first test plant.
+
+The Gaussian potential is:
+
+\[
+\boxed{\text{the ruler}}
+\]
+
+not:
+
+\[
+\boxed{\text{the restoring engine}}.
+\]
+
+---
+
+# 21. FIRST TWO SCIENTIFIC TEST STAGES
+
+The programme now aims at two stages.
+
+## Stage A — impulse response
+
+Start at equilibrium:
+
+\[
+x=x^\star,\quad V=0,\quad B=0.
+\]
+
+Apply one conservative external shock.
+
+Turn forcing off.
+
+Then test whether the random affordable actor process:
+
+- returns toward equilibrium;
+- stalls;
+- oscillates;
+- repeatedly recreates deviation;
+- deadlocks.
+
+Measure return rate only if mathematically justified.
+
+## Stage B — continuously driven stochastic world
+
+Apply repeated conservative stochastic forcing.
+
+Study whether a stable statistical fluctuation regime emerges.
+
+Do not impose a Gaussian output distribution.
+
+Measure the resulting distribution.
+
+---
+
+# 22. MATCHED SCIENTIFIC CONTROL
+
+Preserve the newly required control:
+
+\[
+\boxed{
+\text{EBU affordability + random choice}
+}
+\]
+
+versus:
+
+\[
+\boxed{
+\text{physical feasibility + random choice only}.
+}
+\]
+
+Use matched physical conditions/forcing.
+
+This distinguishes EBU-affordability effects from stability caused merely by
+topology or physical constraints.
+
+---
+
+# 23. IMPORTANT NEGATIVE POSSIBILITY
+
+Earned capacity may later finance new deviation.
+
+Example:
+
+\[
+(V,B)=(10,0)
+\rightarrow
+(0,10)
+\rightarrow
+(10,0).
+\]
+
+This is not automatically an accounting failure.
+
+Repeated restoration/destruction cycling is an explicit falsification target.
+
+Do not "fix" this before testing it.
+
+---
+
+# 24. HUMAN/ECONOMIC CALIBRATION IS NOT CURRENT FOUNDATION WORK
+
+Do not continue the speculative attempt to derive universal EBU weights from:
+
+- population;
+- human body as universal consumer;
+- species counts;
+- economic throughput;
+- unmeasured natural patterns.
+
+Those may later motivate domain-specific models.
+
+They are not needed for the first scientific foundation.
+
+Do not encode them into the framework.
+
+---
+
+# 25. CLAIM BOUNDARY FOR GAUSSIAN SCIENCE
+
+The following external mathematics/science is established and may be used as
+background with proper sources:
+
+- fixed points;
+- linearization;
+- Gaussian distributions;
+- stochastic forcing;
+- Langevin/OU models;
+- covariance methods;
+- near-equilibrium linear approximations.
+
+The EBU-specific modeling choice is:
+
+\[
+V_i=
+\frac12((x_i-x_i^\star)/\sigma_i)^2.
+\]
+
+Do not describe that particular use as an already established natural law.
+
+All documentation and books must keep this distinction explicit.
+
+---
+
+# 26. NOW PERFORM AN EXHAUSTIVE REPOSITORY IMPACT AUDIT
+
+Before semantic edits, inventory ALL tracked project files.
+
+Do not inspect only filenames that sound relevant.
+
+Use:
+
+- `git ls-files`;
+- repository tree;
+- targeted content searches;
+- import graph where useful;
+- test discovery;
+- documentation links;
+- build inputs;
+- manuscript-generation inputs.
+
+Search terms should include at minimum:
+
+    burden
+    homeostasis
+    viable
+    L_i
+    U_i
+    regeneration
+    demand
+    gradient
+    optimizer
+    controller
+    service
+    service-first
+    P1C
+    D0
+    wallet
+    debt
+    debit
+    guarded
+    ledger
+    capacity
+    EBU
+    distortion
+    potential
+    marginal
+    sequential
+    parallel
+    simultaneous
+    interaction
+    Möbius
+    topology
+    motif
+    coordination
+    settlement
+    economy
+    framework
+    Gaussian
+    covariance
+    equilibrium
+    forcing
+    stochastic
+    random
+
+This is not a global replacement instruction.
+
+It is an impact-discovery instruction.
+
+---
+
+# 27. CLASSIFY EVERY MATERIAL SCIENTIFIC FILE
+
+Create a project-wide migration matrix.
+
+Suggested categories:
+
+## H — HISTORICAL IMMUTABLE
+
+Historical study/result/version evidence.
+
+Its original meaning must not be rewritten.
+
+Examples may include historical V2.x result documents and exact experiment
+records.
+
+## C — CURRENT COMPATIBLE
+
+Still valid and directly usable.
+
+## A — CURRENT BUT NEEDS AMENDMENT
+
+Concept remains valid but active wording/architecture must change.
+
+## S — SUPERSEDED PROSPECTIVE DESIGN
+
+Never became historical scientific evidence and is now replaced by the new
+direction.
+
+Preserve for provenance if important, but remove from active authority.
+
+## Q — QUARANTINED / NOT ACTIVE
+
+Implementation or design kept in repository but not allowed in the current
+execution path.
+
+## U — UNRESOLVED
+
+Requires authority/scientific decision.
+
+For every material file record:
+
+- path;
+- current role;
+- category;
+- evidence status;
+- proposed action;
+- dependencies;
+- whether editing it changes historical meaning.
+
+Produce a machine-readable form if repository practices support one.
+
+---
+
+# 28. DO THE SAME FOR CODE
+
+For relevant code modules classify:
+
+- REUSE UNCHANGED;
+- GENERALIZE;
+- ADAPT;
+- ISOLATE AS LEGACY;
+- REMOVE FROM ACTIVE IMPORT PATH;
+- REPLACE;
+- NEW MODULE REQUIRED;
+- UNRESOLVED.
+
+Do not delete functioning code merely because it belongs to an older study.
+
+Historical reproducibility matters.
+
+---
+
+# 29. DO NOT PERFORM BLIND TERMINOLOGY REPLACEMENT
+
+For example:
+
+Do NOT globally replace:
+
+    burden -> equilibrium deviation
+
+because historical hinge burden studies really did use burden.
+
+Do NOT globally replace:
+
+    controller -> actor
+
+because historical controller studies really did test controllers.
+
+Meaning must determine edits.
+
+---
+
+# 30. BOOKS ARE A FIRST-CLASS PART OF THIS RECONCILIATION
+
+The project contains Parts I–III and a future Parts IV–IX architecture.
+
+The new scientific direction may alter:
+
+- chapter ordering;
+- transitions;
+- terminology;
+- future dependencies;
+- which results belong in which book;
+- which subjects are now historical;
+- which new Gaussian material belongs in foundation versus future dynamics.
+
+Do NOT assume the existing Parts IV–IX plan is still optimal.
+
+Do NOT assume it must be thrown away either.
+
+Audit it.
+
+---
+
+# 31. BUILD A BOOK DEPENDENCY GRAPH
+
+For every existing and planned book identify:
+
+- prerequisites;
+- definitions introduced;
+- theorems/identities owned;
+- empirical results owned;
+- unresolved hypotheses;
+- imported concepts;
+- future dependencies.
+
+Then evaluate the new desired conceptual progression.
+
+A candidate conceptual progression to test against the existing series is:
+
+\[
+\boxed{
+\text{physical state}
+\rightarrow
+\text{equilibrium/reference geometry}
+\rightarrow
+\text{finite action EBU}
+\rightarrow
+\text{simultaneous interaction}
+\rightarrow
+\text{dynamics under forcing}
+\rightarrow
+\text{distance/transport}
+\rightarrow
+\text{coordination}
+\rightarrow
+\text{capacity/economy}.
+}
+\]
+
+This is a conceptual dependency chain.
+
+It does NOT prescribe the number of books.
+
+Determine whether the existing series can represent it cleanly.
+
+---
+
+# 32. PARTS I–III
+
+Read the authoritative sources/manuscripts for Parts I–III.
+
+Do not rely only on the PDFs if manuscript sources exist.
+
+Create a chapter-by-chapter impact map.
+
+For each chapter identify:
+
+- unchanged material;
+- historical material needing status clarification;
+- active definitions that conflict with the new architecture;
+- missing Gaussian explanation;
+- places where EBU is incorrectly presented as an action selector;
+- places where global/local distinctions require correction;
+- places where simultaneous settlement/path receipts need synchronization;
+- places where conservation/boundary accounting remains correct.
+
+Do NOT bulk rewrite or regenerate Parts I–III yet unless manuscript provenance is
+fully verified and the requested revision is clearly non-destructive.
+
+First produce the map.
+
+---
+
+# 33. FUTURE BOOK STRUCTURE
+
+Reconcile:
+
+    EBU_FUTURE_BOOKS_STRUCTURE.md
+
+against the new programme.
+
+It must eventually answer:
+
+- Where is Local Gaussian equilibrium geometry taught?
+- Where are threshold potentials retained?
+- Where are finite path receipts taught?
+- Where is simultaneous/Möbius interaction taught?
+- Where is stochastic forcing/stability taught?
+- Where does recursive factor/motif topology belong?
+- Where does distance belong?
+- Where does dynamic coordination belong?
+- Where does persistent EBU capacity belong?
+- Where does institutional/economic structure begin?
+- What is established theory vs prospective hypothesis?
+
+Do not add a book merely because the outline is inconvenient.
+
+Do not combine books merely to minimize page count.
+
+Use scientific dependency and pedagogical coherence.
+
+---
+
+# 34. REQUIRED BOOK-RECONCILIATION ARTIFACT
+
+Create something equivalent to:
+
+    LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md
+
+It should contain:
+
+1. current book architecture;
+2. problems introduced by the new direction;
+3. preserved material;
+4. moved material;
+5. amended material;
+6. superseded prospective material;
+7. new required chapters/sections;
+8. chapter transitions;
+9. scientific claim status;
+10. dependencies on future experiments;
+11. exact files that eventually require manuscript edits.
+
+Then update `EBU_FUTURE_BOOKS_STRUCTURE.md` only after this analysis is complete.
+
+---
+
+# 35. DO NOT WRITE EXPERIMENTAL RESULTS INTO BOOKS BEFORE THEY EXIST
+
+The books may explain:
+
+- the Local Gaussian model;
+- its mathematical identities;
+- the proposed falsification programme.
+
+They must not state:
+
+> EBU stabilizes the Gaussian world
+
+before the experiments establish that.
+
+Keep status labels explicit:
+
+- Definition;
+- Algebraic identity;
+- Theorem;
+- Model-dependent result;
+- Tested implementation property;
+- Observed registered result;
+- Research hypothesis.
+
+---
+
+# 36. README / PROJECT FRONT DOOR MUST BE RECONCILED
+
+The current README still describes the project primarily through:
+
+- viable bands;
+- natural demand/regeneration;
+- local burden-gradient actors;
+- burden-reducing movement.
+
+That description is historically meaningful but should no longer be the only
+definition of modern EBU.
+
+After architecture reconciliation, update the active README so that a new reader
+understands:
+
+1. what EBU is;
+2. what physical state is;
+3. what a potential is;
+4. that EBU measures physical action;
+5. that EBU does not inherently choose actions;
+6. that several potential models exist;
+7. what is historical;
+8. what the current prospective programme is;
+9. where to find reproducible historical studies.
+
+Do not erase the version history.
+
+---
+
+# 37. FRAMEWORK QUESTION — DO NOT ASSUME WE NEED A NEW FRAMEWORK
+
+This task must explicitly answer:
+
+\[
+\boxed{
+\text{Can the existing ebu-framework support the new architecture cleanly?}
+}
+\]
+
+Do NOT create `ebu-framework-v2`, `new_ebu`, `ebu_next`, or another parallel
+framework before completing this analysis.
+
+The current framework is pre-alpha infrastructure.
+
+Its scientific purpose may change.
+
+Infrastructure should not be thrown away merely because a scientific model
+changes.
+
+---
+
+# 38. FRAMEWORK REUSE CRITERIA
+
+The existing framework is valuable if it can cleanly support:
+
+- typed physical state;
+- topology;
+- physical actions;
+- simultaneous groups;
+- frozen event baselines;
+- deterministic execution;
+- provenance;
+- hashing/reproducibility;
+- separation of physical state and measurement;
+- pluggable potential models;
+- local factor evaluation;
+- physical feasibility;
+- side-effect-free EBU valuation;
+- settlement;
+- persistent capacity;
+- external forcing;
+- independent RNG streams;
+- actor policies external to EBU;
+- experiment configuration;
+- audit/reporting.
+
+Generic infrastructure satisfying these requirements should normally be reused.
+
+---
+
+# 39. FRAMEWORK RED FLAGS
+
+Record whether the current framework fundamentally assumes any of the following:
+
+- an EBU controller must choose actions;
+- accepted actions must reduce \(V\);
+- a global burden is required by runtime;
+- every state must contain \(L/U\) viable bands;
+- regeneration/demand are mandatory parts of every world;
+- one service objective is mandatory;
+- policy and measurement are coupled;
+- EBU value and physical feasibility are coupled;
+- sequential execution is structurally incompatible with frozen simultaneous
+  groups;
+- actor account semantics cannot support earned/spent nonnegative capacity;
+- research/audit values feed into policy;
+- historical controller objects are mandatory framework primitives.
+
+If these are superficial, refactor.
+
+If they are fundamental, document evidence.
+
+---
+
+# 40. THREE ALLOWED FRAMEWORK DISPOSITIONS
+
+The framework decision must end in exactly one of these broad outcomes.
+
+## F1 — REUSE EXISTING FRAMEWORK
+
+Generic core already fits.
+
+Add new model/services without architectural replacement.
+
+## F2 — REFACTOR EXISTING FRAMEWORK
+
+Preserve generic infrastructure and compatibility, but replace or isolate old
+scientific execution layers.
+
+This is currently the preferred kind of outcome if technically sound.
+
+## F3 — FREEZE OLD FRAMEWORK AND CREATE A NEW MINIMAL ACTIVE FRAMEWORK
+
+Choose this ONLY if direct repository evidence shows that the existing core is
+structurally incompatible and refactoring would destroy reproducibility or
+produce a more complex system than replacement.
+
+If F3 appears necessary:
+
+\[
+\boxed{\text{STOP BEFORE CREATING THE NEW FRAMEWORK}.}
+\]
+
+Produce the evidence and request user decision.
+
+The user is explicitly uncertain whether a new framework should exist.
+
+Do not make that major architectural choice silently.
+
+---
+
+# 41. REQUIRED FRAMEWORK DECISION ARTIFACT
+
+Create:
+
+    LOCAL_GAUSSIAN_EBU_FRAMEWORK_DECISION.md
+
+It must include:
+
+- current framework module map;
+- active scientific assumptions;
+- generic infrastructure;
+- coupling points;
+- compatibility with new event chain;
+- compatibility with Local Gaussian potential;
+- compatibility with simultaneous receipts;
+- compatibility with capacity;
+- compatibility with two RNG streams;
+- compatibility with locality;
+- historical reproducibility impact;
+- F1/F2/F3 disposition;
+- evidence.
+
+Do not use vague statements such as:
+
+> framework seems complicated.
+
+Use file/function/class-level evidence.
+
+---
+
+# 42. IMPORTANT EXISTING FRAMEWORK PRINCIPLE TO PRESERVE
+
+The existing Unified Framework specification contains an important architectural
+principle:
+
+> physical measurement, causal inference, policy choice, and institutional
+> settlement are separate operations.
+
+Preserve and strengthen that idea.
+
+It is highly compatible with:
+
+\[
+\boxed{\text{EBU calculates; actors choose}.}
+\]
+
+Do not discard valuable architecture merely because older planned experiments
+were different.
+
+---
+
+# 43. TARGET ACTIVE LAYER SEPARATION
+
+Regardless of exact module names, the active system should eventually make these
+layers visible:
+
+## Physical model
+
+State, topology, conservation, action transformation.
+
+## Potential model
+
+Local potential/factors and marginals.
+
+## Physical feasibility
+
+What can physically happen.
+
+## EBU valuation
+
+What the candidate action/group measures.
+
+## Capacity affordability
+
+Whether the actor can finance negative receipts.
+
+## Actor policy
+
+Which allowed action is selected.
+
+## External forcing
+
+Nature/environment process.
+
+## Execution
+
+Actual physical transition.
+
+## Settlement
+
+Receipt/capacity update.
+
+## Audit/research
+
+Global validation and scientific metrics.
+
+No layer should silently perform another layer's responsibility.
+
+---
+
+# 44. POTENTIAL INTERFACE SHOULD BECOME MODEL-AGNOSTIC
+
+If existing code hard-codes the old hinge burden everywhere, identify the minimum
+generalization needed.
+
+Conceptually a potential model should support operations equivalent to:
+
+- local value;
+- affected-support value;
+- marginal/gradient where defined;
+- exact finite before/after evaluation;
+- factor support;
+- metadata/identity.
+
+Do not prematurely design a huge abstract framework.
+
+Implement only what present models require while preserving future factor
+compatibility.
+
+---
+
+# 45. HISTORICAL ENGINE PRESERVATION
+
+Historical V2.x engines and registered studies must remain reproducible.
+
+Do not retrofit Local Gaussian semantics into historical V2.4/V2.5/V2.6/etc.
+result engines and then pretend old results were produced by the new model.
+
+If active code is currently mixed with historical engines, separate import/use
+boundaries.
+
+Historical code may remain historical.
+
+New science needs a clean active path.
+
+---
+
+# 46. CONTROLLER WORK
+
+Audit every current/prospective controller.
+
+Classify:
+
+- historical experimental controller;
+- prospective but superseded controller;
+- reusable policy abstraction;
+- control arm;
+- active current policy.
+
+The Local Gaussian core experiment's active actor policy is random affordable
+selection.
+
+Do not route the new study through a service-first, gradient-best, EBU-best, or
+preservation controller.
+
+---
+
+# 47. PHYSICAL-RANDOM CONTROL
+
+The framework should also support a control actor that chooses randomly among
+physically feasible candidates without EBU affordability.
+
+This is a scientific comparison arm.
+
+It is not the production EBU actor.
+
+Keep it conceptually separate.
+
+---
+
+# 48. CONSERVATION AND LOSS WORK
+
+Preserve the existing conservation and boundary-accounting foundation.
+
+The first Gaussian experiment will be lossless:
+
+\[
+\eta=1.
+\]
+
+Loss-aware machinery may remain in the framework.
+
+Do not remove it merely because the first study turns it off.
+
+Do not let unresolved loss semantics block the ideal lossless experiment unless
+they contaminate shared execution.
+
+---
+
+# 49. ATOMIC ACTION DESIGN
+
+Preserve the physical compositionality principle.
+
+Do not collapse a causal chain such as:
+
+\[
+\text{fuel transformation}
+\rightarrow
+\text{electricity}
+\rightarrow
+\text{delivery}
+\rightarrow
+\text{water transfer}
+\]
+
+into one giant action merely to simplify accounting.
+
+Physical micro-actions remain compositional.
+
+Field measurement evaluates their actual represented effects.
+
+---
+
+# 50. PROCESS BURDEN
+
+For the first idealized world:
+
+\[
+\boxed{C_a=0.}
+\]
+
+Do not reintroduce arbitrary process-cost coefficients.
+
+Later physical process effects should preferably be explicit state/action effects
+when represented.
+
+Residual process burden is only for physical consequences intentionally outside
+the represented state.
+
+---
+
+# 51. CODE MIGRATION ORDER
+
+After repository/book/framework reconciliation, and only if framework outcome is
+F1 or F2, proceed into code realignment.
+
+Recommended order:
+
+### C1
+Stabilize active generic state/action/topology interfaces.
+
+### C2
+Make potential model pluggable if it is not already.
+
+### C3
+Preserve old threshold potential.
+
+### C4
+Add Local Gaussian potential.
+
+### C5
+Verify exact marginal/finite EBU.
+
+### C6
+Verify simultaneous group/common-path receipts.
+
+### C7
+Separate physical feasibility from EBU valuation.
+
+### C8
+Isolate EBU-driven controller logic from core measurement.
+
+### C9
+Add persistent nonnegative capacity.
+
+### C10
+Add external deviation ledger.
+
+### C11
+Add independent nature RNG.
+
+### C12
+Add independent actor-choice RNG.
+
+### C13
+Add random-affordable actor policy.
+
+### C14
+Add physical-random control policy.
+
+### C15
+Add driven-accounting audit.
+
+### C16
+Only then prepare Stage A experiment.
+
+Do not start long-run Stage B during reconciliation.
+
+---
+
+# 52. TEST PRESERVATION
+
+Before changing code:
+
+- run existing relevant test suites;
+- record baseline pass/fail counts;
+- record environment;
+- distinguish already-failing tests from regressions.
+
+After each code phase:
+
+- rerun affected tests;
+- rerun historical regression tests where practical;
+- add new tests.
+
+No historical failure should disappear merely because its test was deleted.
+
+---
+
+# 53. NEW FOUNDATION TESTS EVENTUALLY REQUIRED
+
+The new active path should eventually prove by tests:
+
+- Gaussian potential minimum;
+- marginal exactness;
+- Hessian/curvature;
+- finite disturbance at equilibrium has negative EBU;
+- restorative action positive EBU;
+- overshoot handled exactly;
+- path-integral closure;
+- simultaneous group closure;
+- shared-coordinate nonadditivity;
+- receipt closure;
+- Möbius quadratic interaction;
+- physical conservation;
+- zero capacity genesis;
+- capacity earning;
+- capacity spending;
+- overdraft rejection;
+- external forcing does not credit actor;
+- external ledger exactness;
+- driven identity;
+- RNG independence;
+- locality;
+- research metrics cannot influence runtime.
+
+---
+
+# 54. REPOSITORY DOCUMENTATION AUTHORITY
+
+After reconciliation, the active repository should make it easy to answer:
+
+- What is EBU?
+- What is historical?
+- What is current?
+- What is prospective?
+- Which potential model is being tested?
+- Which experiments have actually run?
+- Which hypotheses remain untested?
+- Which branch contains current development?
+- Which framework is active?
+
+Avoid forcing a future researcher to infer this from dozens of superseded
+authority amendments.
+
+---
+
+# 55. AUTHORITY SIMPLIFICATION
+
+The existing repository contains many exact authority locks and historical
+amendments.
+
+Do not destroy them.
+
+But evaluate whether active development can use a simpler current authority
+index pointing to historical records instead of making every new scientific
+change cascade through dozens of old prospective lock files.
+
+If simplification is possible without losing provenance, propose and implement a
+current authority index.
+
+Do not rewrite historical hashes.
+
+---
+
+# 56. SUGGESTED CURRENT AUTHORITY INDEX
+
+If repository conventions permit, create something equivalent to:
+
+    CURRENT_SCIENTIFIC_AUTHORITY.md
+
+or a machine-readable paired manifest.
+
+It should identify:
+
+- historical foundations;
+- active mathematical foundations;
+- active model definition;
+- active framework specification;
+- active experiment programme;
+- current books structure;
+- superseded prospective designs.
+
+This is a convenience/current-truth index.
+
+It does not replace historical evidence.
+
+---
+
+# 57. BOOK/MANUSCRIPT PRESERVATION
+
+When actual book editing eventually begins:
+
+- identify exact manuscript source;
+- record source hash;
+- record generated PDF hash;
+- preserve previous artifact;
+- produce change ledger;
+- verify no unexplained chapter deletion;
+- regenerate deterministically;
+- compare before/after.
+
+For this reconciliation task, structure and revision maps come before mass PDF
+regeneration.
+
+---
+
+# 58. DO NOT OVERLOAD PART I WITH UNTESTED DYNAMICS
+
+The Local Gaussian equation itself may belong in foundational exposition once
+properly labeled as a model.
+
+But observed claims such as:
+
+> finite capacity produces equilibrium restoration
+
+belong only after evidence.
+
+Keep definitions/theorems separate from experimental behavior.
+
+---
+
+# 59. SCIENTIFIC LANGUAGE CLEANUP
+
+Audit active documentation for statements that imply:
+
+- EBU inherently optimizes;
+- EBU inherently preserves;
+- EBU inherently chooses the best action;
+- EBU guarantees homeostasis;
+- all natural variables are Gaussian;
+- capacity is money;
+- global \(V\) is runtime information.
+
+Correct active prospective documentation.
+
+Do not rewrite historical statements out of their original context.
+
+---
+
+# 60. CENTRAL PROJECT STATEMENT
+
+The reconciled project should be able to state something close to:
+
+> EBU is a local physical-action accounting framework. A declared potential
+> represents deviation relative to a declared physical reference or constraint.
+> EBU measures the exact finite change produced by physical actions. Physical
+> feasibility determines what can happen; EBU capacity may constrain what an
+> actor can afford; actor policy determines what is chosen. Global quantities
+> are used for theorem, audit, and research rather than ordinary local action
+> selection.
+
+Do not adopt this wording blindly.
+
+Reconcile it against the accepted mathematical foundations and refine as needed.
+
+---
+
+# 61. REQUIRED PROGRAMME-RECONCILIATION DOCUMENT
+
+Create:
+
+    LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md
+
+It should become the main explanatory handoff.
+
+Required sections:
+
+1. previous programme;
+2. reason for change;
+3. unchanged foundations;
+4. changed interpretations;
+5. historical models;
+6. Local Gaussian model;
+7. potential model family;
+8. action/field distinction;
+9. simultaneous settlement;
+10. Möbius role;
+11. topology hierarchy;
+12. capacity;
+13. external forcing;
+14. two RNG streams;
+15. actor-choice separation;
+16. two-stage experiment;
+17. matched control;
+18. framework disposition;
+19. books disposition;
+20. implementation plan;
+21. open problems;
+22. explicit nonclaims.
+
+---
+
+# 62. REQUIRED MIGRATION MATRIX
+
+Create:
+
+    LOCAL_GAUSSIAN_EBU_MIGRATION_MATRIX.md
+
+or equivalent.
+
+It must enumerate all material:
+
+- scientific docs;
+- framework docs;
+- book-planning docs;
+- code families;
+- tests;
+- experiment specs;
+- result artifacts.
+
+For each, state:
+
+- status;
+- compatibility;
+- action;
+- dependency;
+- evidence.
+
+This is crucial.
+
+Do not summarize the repository with ten filenames if hundreds are material.
+
+---
+
+# 63. REQUIRED FRAMEWORK REPORT
+
+Create:
+
+    LOCAL_GAUSSIAN_EBU_FRAMEWORK_DECISION.md
+
+Choose F1/F2/F3.
+
+If F3:
+
+STOP before implementing a replacement framework.
+
+---
+
+# 64. REQUIRED BOOK REPORT
+
+Create:
+
+    LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md
+
+Then, if evidence supports it, update:
+
+    EBU_FUTURE_BOOKS_STRUCTURE.md
+
+Do not update the future-books file first and rationalize later.
+
+---
+
+# 65. REQUIRED CODE PLAN
+
+Create:
+
+    LOCAL_GAUSSIAN_EBU_IMPLEMENTATION_ROADMAP.md
+
+It must map every implementation phase to:
+
+- exact modules;
+- expected tests;
+- prerequisites;
+- preserved legacy behavior;
+- stop conditions.
+
+Then begin implementation automatically if framework outcome is F1 or F2 and no
+authority blocker exists.
+
+---
+
+# 66. COMMITS
+
+Prefer small logical local commits.
+
+Example conceptual sequence:
+
+1. programme reconciliation documents;
+2. books architecture reconciliation;
+3. framework authority reconciliation;
+4. generic potential interface;
+5. Local Gaussian foundation;
+6. settlement/capacity separation;
+7. forcing/RNG architecture;
+8. test harness preparation.
+
+Do not bundle thousands of unrelated changes into one commit merely to finish.
+
+Do not commit generated noise.
+
+---
+
+# 67. END EACH PHASE CLEAN
+
+Before leaving a phase:
+
+- run relevant tests;
+- inspect diff;
+- ensure no accidental generated files;
+- record exact commit;
+- ensure worktree clean before beginning next major phase where practical.
+
+Do not leave half-written authority files mixed with code changes.
+
+---
+
+# 68. WORK AUTONOMOUSLY THROUGH NON-BLOCKED PHASES
+
+This task is intended to make substantial progress.
+
+Do NOT stop merely after saying:
+
+> I found many files that need changes.
+
+Continue.
+
+Do NOT ask the user to approve routine refactors already implied by this
+handover.
+
+Continue automatically when:
+
+- repository is clean;
+- authority is clear;
+- change preserves historical evidence;
+- framework outcome is F1/F2;
+- tests provide feedback.
+
+---
+
+# 69. STOP CONDITIONS
+
+Stop and report before proceeding only if one of the following occurs:
+
+1. unexplained dirty user work;
+2. no trustworthy base branch can be identified;
+3. two authoritative scientific documents contradict each other on core
+   semantics;
+4. required manuscript/source artifacts are missing;
+5. framework audit requires F3/new framework;
+6. action ownership/settlement authority fundamentally conflicts with the new
+   capacity model;
+7. a proved historical theorem would be invalidated rather than merely scoped;
+8. an existing registered result cannot remain reproducible after proposed
+   architecture change;
+9. tests expose a foundational mathematical inconsistency;
+10. proceeding would require remote GitHub mutation not authorized.
+
+Otherwise continue.
+
+---
+
+# 70. DO NOT DO THESE THINGS
+
+Do NOT:
+
+- erase V2.x history;
+- rewrite old results to look Gaussian;
+- delete old potentials;
+- globally replace "burden";
+- globally replace "controller";
+- create a second framework prematurely;
+- put an optimizer back inside EBU;
+- let EBU select actions;
+- make global V available to actor choice;
+- add OU mean reversion;
+- add biological/economic calibration;
+- add arbitrary capacity issuance;
+- add global capacity pooling;
+- run Stage B before Stage A foundation;
+- present prospective hypotheses as observed results;
+- modify official historical result artifacts.
+
+---
+
+# 71. SUCCESSFUL END STATE OF THIS RECONCILIATION STAGE
+
+A successful stage should leave the project with:
+
+\[
+\boxed{
+\text{one clean active branch}
+}
+\]
+
+\[
+\boxed{
+\text{one comprehensible current scientific direction}
+}
+\]
+
+\[
+\boxed{
+\text{historical evidence preserved}
+}
+\]
+
+\[
+\boxed{
+\text{books structurally synchronized}
+}
+\]
+
+\[
+\boxed{
+\text{framework disposition explicitly decided}
+}
+\]
+
+\[
+\boxed{
+\text{old controller assumptions removed from the active EBU core}
+}
+\]
+
+\[
+\boxed{
+\text{code ready for Local Gaussian foundation work}
+}
+\]
+
+and preferably, if unblocked:
+
+\[
+\boxed{
+\text{Local Gaussian foundation implementation already begun/completed}.
+}
+\]
+
+---
+
+# 72. AFTER RECONCILIATION — CONTINUE INTO FOUNDATION IMPLEMENTATION
+
+If:
+
+- base is clean;
+- framework outcome is F1/F2;
+- migration documents are complete;
+- books structure is reconciled;
+- tests are under control;
+
+do NOT stop merely because the planning stage finished.
+
+Continue into the Local Gaussian foundation.
+
+At minimum implement and test:
+
+\[
+V_i=
+\frac12
+\left(
+\frac{x_i-x_i^\star}{\sigma_i}
+\right)^2
+\]
+
+\[
+\mu_i=
+\frac{x_i-x_i^\star}{\sigma_i^2}
+\]
+
+\[
+E=V_{\rm pre}-V_{\rm post}
+\]
+
+and exact quadratic finite EBU.
+
+Then proceed through the previously defined foundation gates:
+
+- finite equilibrium disturbance;
+- restorative finite action;
+- path closure;
+- simultaneous group closure;
+- common-path receipts;
+- capacity;
+- external ledger;
+- RNG separation.
+
+Do not run the full long-run experiment until these gates pass.
+
+---
+
+# 73. FINAL REPORT
+
+When the task finally reaches a genuine stopping point, report:
+
+## Repository
+
+- branch;
+- HEAD;
+- tree;
+- clean/dirty;
+- base used.
+
+## Project reconciliation
+
+- files audited;
+- classifications;
+- active/superseded/historical counts;
+- key semantic changes.
+
+## Books
+
+- revised structure;
+- Parts I–III impacts;
+- Parts IV+ impacts;
+- files modified;
+- manuscripts not yet changed.
+
+## Framework
+
+- F1/F2/F3;
+- exact evidence;
+- modules reused;
+- modules isolated;
+- modules changed.
+
+## Code
+
+- files changed;
+- new abstractions;
+- Gaussian implementation status;
+- legacy compatibility.
+
+## Tests
+
+- baseline;
+- final;
+- failures;
+- maximum numerical residuals where relevant.
+
+## Experiment readiness
+
+Explicitly state:
+
+- Stage A foundation READY / NOT READY;
+- Stage A experiment RUN / NOT RUN;
+- Stage B READY / NOT READY;
+- Stage B experiment RUN / NOT RUN.
+
+Do not conflate software readiness with scientific evidence.
+
+---
+
+# 74. FINAL PRIORITY ORDER
+
+If scope becomes large, prioritize in this exact order:
+
+\[
+\boxed{
+1.\ \text{protect repository/history}
+}
+\]
+
+\[
+\boxed{
+2.\ \text{establish current scientific authority}
+}
+\]
+
+\[
+\boxed{
+3.\ \text{reconcile project/book architecture}
+}
+\]
+
+\[
+\boxed{
+4.\ \text{decide framework reuse}
+}
+\]
+
+\[
+\boxed{
+5.\ \text{clean active code path}
+}
+\]
+
+\[
+\boxed{
+6.\ \text{implement Local Gaussian foundation}
+}
+\]
+
+\[
+\boxed{
+7.\ \text{implement capacity/forcing/random actor architecture}
+}
+\]
+
+\[
+\boxed{
+8.\ \text{only then execute Stage A}
+}
+\]
+
+\[
+\boxed{
+9.\ \text{Stage B only after Stage-A gate}.
+}
+\]
+
+END OF CONTROLLING HANDOVER.

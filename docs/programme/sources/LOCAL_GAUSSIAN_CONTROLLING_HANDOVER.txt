@@ -1,0 +1,4024 @@
+# EBU LOCAL GAUSSIAN PROGRAMME
+# FULL CONTROLLING HANDOVER FOR IMPLEMENTATION, FALSIFICATION, AND TWO-STAGE SCIENTIFIC TEST
+
+You are taking over the next EBU scientific-development stage.
+
+This is a full controlling handover. Read it completely before modifying code.
+
+The purpose of this task is NOT to invent another EBU architecture.
+
+The purpose is to:
+
+1. audit the current repository and identify the authoritative implementation;
+2. add the prospective Local Gaussian equilibrium-deviation model without
+   destroying historical EBU models;
+3. prove and test its exact accounting identities;
+4. implement persistent nonnegative EBU capacity;
+5. separate stochastic physical forcing from stochastic actor choice;
+6. perform a single-shock recovery experiment;
+7. only after that foundation is validated, perform a continuously driven
+   stochastic experiment;
+8. actively attempt to falsify the claim that the EBU affordability mechanism
+   can produce stable behavior without an intelligent EBU action selector.
+
+This task must remain evidence-first.
+
+A negative result is scientifically valid.
+
+Do not tune the model to make EBU succeed.
+
+---
+
+# 0. REPOSITORY AND AUTHORITY
+
+Expected local repository:
+
+    /Users/konrad.grzyb/code/ebu
+
+Historically the active development branch has been `framework-v0.1`, but DO NOT
+assume that any previously reported branch, SHA, tree, or worktree coordinate is
+still current.
+
+At the start:
+
+1. inspect the actual local repository;
+2. report current branch;
+3. report HEAD SHA;
+4. report working-tree status;
+5. report relevant existing study/design documents;
+6. report current test status;
+7. identify existing implementation of:
+   - potentials;
+   - marginal fields;
+   - finite EBU;
+   - action/group settlement;
+   - topology;
+   - feasibility;
+   - conservation;
+   - loss accounting;
+   - candidate controllers/policies;
+   - Möbius analysis;
+   - capacity/account-like state if any.
+
+The repository is the source of truth.
+
+Do not infer missing implementation from old conversational summaries.
+
+Do not push, merge, release, rewrite history, or modify remote GitHub state unless
+explicitly instructed by the user in the current task.
+
+---
+
+# 1. IMPORTANT HISTORICAL CONTEXT
+
+EBU already has an established mathematical foundation.
+
+Do not rediscover it as if it were missing.
+
+Historically established ideas include:
+
+- local potentials;
+- marginal fields;
+- loss-aware edge forces;
+- exact finite EBU;
+- exact local-to-global cancellation for separable/factor potentials;
+- exact path-integral interpretation;
+- simultaneous action settlement;
+- conservation;
+- loss accounting;
+- topology and recursive motifs;
+- Möbius interaction analysis;
+- finite-step descent/certification work;
+- separation of physical action from accounting/audit.
+
+The old threshold/hinge burden model is NOT to be deleted.
+
+The previous form has included concepts such as:
+
+\[
+v_i(x_i)
+=
+\alpha_i[L_i-x_i]_+^2
++
+\beta_i[x_i-U_i]_+^2
++
+\chi_i[R_i-x_i]_+^2.
+\]
+
+That remains a legitimate threshold model for systems in which a flat admissible
+region and explicit thresholds are physically appropriate.
+
+The new Local Gaussian model is a prospective equilibrium-deviation model.
+
+Do not silently rewrite historical EBU authority to pretend the Gaussian model
+was always there.
+
+Keep both model classes conceptually separate.
+
+---
+
+# 2. PROGRAMME RESET THAT MUST BE PRESERVED
+
+Earlier prospective work explored service-first and other action-selection
+controllers.
+
+That direction is NOT the controlling model for this experiment.
+
+The critical architecture is now:
+
+\[
+\boxed{
+\text{EBU calculates; actors choose.}
+}
+\]
+
+EBU MUST NOT choose the action that maximizes:
+
+- EBU;
+- burden reduction;
+- service;
+- stability;
+- global welfare;
+- distance reduction;
+- any weighted score.
+
+The test intentionally removes intelligent homeostatic action selection.
+
+The core actor policy is seeded random choice among candidates that have already
+passed:
+
+1. physical feasibility;
+2. exact EBU calculation;
+3. EBU-capacity affordability.
+
+Any historical C0-C4/C5/service-first work found in the repository must be
+classified, preserved if historically relevant, and kept OUT of the controlling
+test path unless explicitly required for a comparison fixture.
+
+Do not delete history merely because it is no longer the chosen experiment.
+
+---
+
+# 3. CENTRAL SCIENTIFIC QUESTION
+
+We want to study whether this architecture:
+
+\[
+\boxed{
+\text{physical disturbance}
++
+\text{exact local EBU valuation}
++
+\text{finite earned EBU capacity}
++
+\text{random affordable actor choice}
+}
+\]
+
+can exhibit meaningful return toward equilibrium and/or stochastic stability.
+
+Crucially:
+
+- nature does not choose disturbances that help EBU;
+- EBU does not choose the action;
+- actors do not know which action best restores equilibrium;
+- the plant does not contain hidden automatic mean reversion;
+- global research metrics do not feed back into runtime decisions.
+
+If stability emerges, it must emerge from the declared architecture.
+
+If it does not emerge, that is a valid result.
+
+---
+
+# 4. FREEZE THE FIRST TEST MODEL
+
+The first scientific world uses:
+
+\[
+\boxed{
+\text{one homogeneous, conserved, continuously divisible scalar resource}.
+}
+\]
+
+For cells:
+
+\[
+i=1,\dots,n
+\]
+
+let:
+
+\[
+x_i\ge0.
+\]
+
+Total physical resource:
+
+\[
+\boxed{
+\sum_i x_i=M.
+}
+\]
+
+The declared equilibrium/reference state satisfies:
+
+\[
+\boxed{
+\sum_i x_i^\star=M.
+}
+\]
+
+Actor transfers are lossless in this first study:
+
+\[
+\boxed{\eta_e=1.}
+\]
+
+No first-study:
+
+- process loss;
+- resource destruction;
+- explicit waste stock;
+- process burden \(C_a\);
+- borrowing;
+- external EBU issuance;
+- human physiology;
+- economic preferences;
+- prices;
+- money;
+- utility maximization;
+- biological metabolism model;
+- autonomous regeneration model;
+- multivariate Gaussian factor discovery;
+- giant global covariance model;
+- OU mean-reversion plant.
+
+For this first study:
+
+\[
+\boxed{C_a=0.}
+\]
+
+Existing loss-aware machinery may remain and should be tested for regression, but
+loss channels should be inert in this experiment.
+
+---
+
+# 5. LOCAL GAUSSIAN EQUILIBRIUM-DEVIATION POTENTIAL
+
+Each cell has:
+
+\[
+x_i^\star
+\]
+
+and:
+
+\[
+\sigma_i>0.
+\]
+
+Define the local potential:
+
+\[
+\boxed{
+V_i(x_i)
+=
+\frac12
+\left(
+\frac{x_i-x_i^\star}{\sigma_i}
+\right)^2.
+}
+\]
+
+The audit potential is:
+
+\[
+\boxed{
+V(x)=\sum_iV_i(x_i).
+}
+\]
+
+Interpretation:
+
+\[
+V_i
+\]
+
+is a dimensionless squared standardized displacement from the declared local
+equilibrium/reference state.
+
+It is inspired by the relative negative log-density of a local Gaussian
+reference:
+
+\[
+-\log
+\frac{p_i(x_i)}{p_i(x_i^\star)}
+=
+\frac12
+\left(
+\frac{x_i-x_i^\star}{\sigma_i}
+\right)^2.
+\]
+
+DO NOT claim that this makes EBU a law of nature.
+
+For the first synthetic experiment, this is the declared potential geometry.
+
+The experiment asks what dynamics result from using this geometry inside EBU.
+
+---
+
+# 6. IMPORTANT TERMINOLOGY: NO "GLOBAL GAUSSIAN"
+
+"No global Gaussian" means:
+
+- do not fit one giant full-system covariance matrix;
+- do not require the runtime action to inspect every state coordinate;
+- do not use a dense global precision matrix for decisions.
+
+The mathematical audit quantity:
+
+\[
+V=\sum_iV_i
+\]
+
+still exists.
+
+That is not the prohibited "global Gaussian" model.
+
+The Level-1 model has diagonal/local factors only.
+
+Physical conservation can still cause actual trajectories to be correlated.
+
+Thus distinguish:
+
+\[
+\boxed{
+\text{no covariance cross-term in the potential}
+}
+\]
+
+from:
+
+\[
+\boxed{
+\text{no correlation in observed trajectories}.
+}
+\]
+
+They are not the same claim.
+
+The conservation constraint alone can induce correlations in state trajectories.
+
+---
+
+# 7. LOCAL MARGINAL FIELD
+
+For every cell:
+
+\[
+\boxed{
+\mu_i
+=
+\frac{\partial V_i}{\partial x_i}
+=
+\frac{x_i-x_i^\star}{\sigma_i^2}.
+}
+\]
+
+For a lossless directed physical transfer:
+
+\[
+i\rightarrow j
+\]
+
+with quantity \(q\), define the state increment:
+
+\[
+\delta x_e=S_eq
+\]
+
+where:
+
+\[
+S_e=-e_i+e_j.
+\]
+
+Then:
+
+\[
+\boxed{
+f_e
+=
+-\mu^TS_e
+=
+\mu_i-\mu_j.
+}
+\]
+
+This is a local field quantity.
+
+Do not reinterpret it as actor preference.
+
+---
+
+# 8. EXACT FINITE EBU
+
+For any physically realizable finite increment:
+
+\[
+\delta x,
+\]
+
+define:
+
+\[
+\boxed{
+E(\delta x)
+=
+V(x)-V(x+\delta x).
+}
+\]
+
+For the Level-1 quadratic model:
+
+\[
+H
+=
+\operatorname{diag}
+\left(
+1/\sigma_1^2,
+\dots,
+1/\sigma_n^2
+\right),
+\]
+
+so:
+
+\[
+\boxed{
+E(\delta x)
+=
+-\mu(x)^T\delta x
+-
+\frac12\delta x^TH\delta x.
+}
+\]
+
+For a lossless edge transfer:
+
+\[
+\boxed{
+E_e(q)
+=
+qf_e
+-
+\frac{q^2}{2}
+S_e^THS_e.
+}
+\]
+
+Do NOT approximate finite EBU as:
+
+\[
+qf_e(x_{\rm initial})
+\]
+
+when the finite curvature term matters.
+
+---
+
+# 9. CRITICAL EQUILIBRIUM PROPERTY
+
+At exact equilibrium:
+
+\[
+x=x^\star,
+\]
+
+therefore:
+
+\[
+\mu=0.
+\]
+
+But for every nonzero physical increment:
+
+\[
+\delta x\neq0,
+\]
+
+with positive quadratic curvature:
+
+\[
+\boxed{
+E(\delta x)
+=
+-\frac12\delta x^TH\delta x
+<0.
+}
+\]
+
+This is important.
+
+A zero marginal at equilibrium DOES NOT make a finite disturbance free.
+
+This property requires explicit unit/conformance tests.
+
+---
+
+# 10. EXACT PATH-INTEGRAL INTERPRETATION
+
+For the path:
+
+\[
+x(\lambda)
+=
+x+\lambda\delta x,
+\qquad
+0\le\lambda\le1,
+\]
+
+require:
+
+\[
+\boxed{
+E(\delta x)
+=
+-\int_0^1
+\nabla V(x+\lambda\delta x)^T
+\delta x\,d\lambda.
+}
+\]
+
+This is an exact identity for the declared path.
+
+The canonical interpretation is:
+
+\[
+\boxed{
+\text{EBU is accumulated marginal field effect along the physical state path.}
+}
+\]
+
+Preserve this connection.
+
+---
+
+# 11. SIMULTANEOUS MULTIPLE ACTIONS ARE REQUIRED
+
+The first world has independent local Gaussian factors, but it MUST support
+multiple simultaneous actions.
+
+These are two different concepts.
+
+For a simultaneous group:
+
+\[
+G=\{a_1,\dots,a_m\}
+\]
+
+with individual increments:
+
+\[
+\delta x_a,
+\]
+
+define:
+
+\[
+\boxed{
+\delta x_G
+=
+\sum_{a\in G}\delta x_a.
+}
+\]
+
+The group EBU is:
+
+\[
+\boxed{
+E_G
+=
+V(x)-V(x+\delta x_G).
+}
+\]
+
+Do not independently quote all actions from the same baseline and blindly add
+the quotes.
+
+Interaction can exist even with diagonal \(H\) whenever actions share affected
+state coordinates.
+
+Therefore:
+
+\[
+\boxed{
+\text{multiple-action interaction}
+\neq
+\text{multivariate statistical factor}.
+}
+\]
+
+This distinction is mandatory.
+
+---
+
+# 12. COMMON-PATH PER-ACTION RECEIPTS
+
+For a simultaneous accepted group, use the common physical path:
+
+\[
+x(\lambda)
+=
+x+\lambda\delta x_G.
+\]
+
+Per-action field receipt:
+
+\[
+\boxed{
+R_a
+=
+-\int_0^1
+\nabla V(x+\lambda\delta x_G)^T
+\delta x_a\,d\lambda.
+}
+\]
+
+Require exact closure:
+
+\[
+\boxed{
+\sum_{a\in G}R_a=E_G.
+}
+\]
+
+For the quadratic model, derive and test the closed form:
+
+\[
+\boxed{
+R_a
+=
+-\mu(x)^T\delta x_a
+-
+\frac12
+\delta x_a^TH\delta x_G.
+}
+\]
+
+Summing this over \(a\) must recover exact group EBU.
+
+This is settlement decomposition of actual group field effect.
+
+It is NOT a fairness rule.
+
+It is NOT a game-theory allocation.
+
+It is NOT extra issuance.
+
+---
+
+# 13. MÖBIUS ROLE
+
+Preserve existing Möbius work.
+
+For fixed additive increments in the pure quadratic Level-1 model:
+
+\[
+I(a,b)
+=
+E(ab)-E(a)-E(b)
+\]
+
+should satisfy:
+
+\[
+\boxed{
+I(a,b)
+=
+-\delta x_a^TH\delta x_b.
+}
+\]
+
+With diagonal \(H\), this can be nonzero when actions overlap on affected
+coordinates.
+
+Under the strict assumptions:
+
+- quadratic field;
+- fixed additive increments;
+- no nonlinear resolver;
+- no state-dependent action map;
+
+higher-order field Möbius terms:
+
+\[
+I(S),\quad |S|\ge3
+\]
+
+should vanish.
+
+Use this as a conformance fixture.
+
+Do NOT use Möbius enumeration as runtime settlement.
+
+Möbius remains:
+
+- structural analysis;
+- interaction diagnosis;
+- topology validation;
+- independent reconstruction/audit.
+
+---
+
+# 14. MULTIVARIATE GAUSSIAN FACTORS ARE OUT OF SCOPE FOR THE FIRST LONG-RUN WORLD
+
+Do NOT implement a giant multivariate Gaussian in this phase.
+
+Do not perform automatic factor discovery.
+
+The first experiment is:
+
+\[
+\boxed{
+V=\sum_iV_i.
+}
+\]
+
+However, architect the implementation so a later factor model can naturally use:
+
+\[
+V(x)
+=
+\sum_\alpha
+\phi_\alpha(x_{S_\alpha})
+\]
+
+without rewriting the entire settlement/accounting architecture.
+
+A later local multivariate Gaussian conformance extension may use:
+
+\[
+\phi_\alpha
+=
+\frac12
+(x_{S_\alpha}-x^\star_{S_\alpha})^T
+\Sigma_\alpha^{-1}
+(x_{S_\alpha}-x^\star_{S_\alpha}).
+\]
+
+That is NOT required for the initial long-run scientific run.
+
+---
+
+# 15. PHYSICAL FEASIBILITY PRECEDES EBU
+
+The EBU layer must never rescue a physically impossible proposal.
+
+The order is:
+
+\[
+\boxed{
+\text{proposal}
+\rightarrow
+\text{physical feasibility}
+\rightarrow
+\text{EBU calculation}.
+}
+\]
+
+Physical feasibility may use only physical information such as:
+
+- current stocks;
+- topology;
+- source availability;
+- capacity constraints;
+- transfer direction;
+- declared action quantity;
+- simultaneous joint resource constraints.
+
+Physical feasibility MUST NOT read:
+
+- EBU value;
+- global \(V\);
+- marginal field for action ranking;
+- EBU capacity;
+- future forcing;
+- actor preference.
+
+Joint groups must be checked jointly.
+
+Do not:
+
+1. accept an infeasible group;
+2. calculate EBU;
+3. rescale the group afterward.
+
+The action/group that is valued must be the action/group that is executed.
+
+---
+
+# 16. MINIMAL PHYSICAL ACTION FORM
+
+For the first scalar-resource benchmark, a basic physical action is:
+
+\[
+a=(i,j,q)
+\]
+
+meaning lossless transfer:
+
+\[
+q>0
+\]
+
+from source \(i\) to destination \(j\).
+
+Its physical increment is:
+
+\[
+\delta x_i=-q,
+\qquad
+\delta x_j=+q.
+\]
+
+Require at minimum:
+
+\[
+x_i-q\ge0.
+\]
+
+Any additional edge/quantity constraints must be declared before the scientific
+run.
+
+Use existing repository action abstractions where compatible.
+
+Do not create a parallel incompatible action system merely because it is easier.
+
+---
+
+# 17. CANDIDATE GENERATION MUST BE EBU-BLIND
+
+The candidate generator is not a controller.
+
+It may enumerate possible physical transfers/groups according to declared study
+rules.
+
+It must not generate more proposals in directions that reduce \(V\).
+
+It must not look at:
+
+\[
+\mu_i
+\]
+
+to decide which proposals exist.
+
+For small foundation experiments, exhaustive enumeration over a frozen finite
+quantity/action set is acceptable.
+
+For larger experiments, a proposal-generation RNG may be required.
+
+If introduced, this must be treated as a third exogenous RNG stream distinct
+from:
+
+- nature forcing;
+- actor choice.
+
+Do not introduce that third RNG unless necessary.
+
+Prefer exhaustive finite candidate enumeration in the first small world.
+
+---
+
+# 18. EBU CAPACITY STATE
+
+Each cell has persistent:
+
+\[
+\boxed{
+B_i(t)\ge0.
+}
+\]
+
+Use the scientific term:
+
+\[
+\boxed{\text{EBU capacity balance}.}
+\]
+
+Avoid "wallet" in scientific documentation.
+
+It is not:
+
+- money;
+- a token currency;
+- physical energy;
+- physical resource stock;
+- price;
+- utility;
+- freely transferable wealth.
+
+Working interpretation:
+
+> previously verified equilibrium-restoring field effect attributable to that
+> cell which has not subsequently been spent on negative-EBU actions.
+
+Initial condition:
+
+\[
+\boxed{
+B_i(0)=0
+\qquad\forall i.
+}
+\]
+
+There is no arbitrary genesis balance.
+
+---
+
+# 19. IMPORTANT CAPACITY CORRECTION
+
+DO NOT interpret "nonnegative capacity" as "capacity cannot decrease."
+
+Capacity can be earned and spent.
+
+For receipt \(R_i\):
+
+\[
+\boxed{
+B_i^{t+1}=B_i^t+R_i.
+}
+\]
+
+If:
+
+\[
+R_i>0,
+\]
+
+capacity increases.
+
+If:
+
+\[
+R_i<0,
+\]
+
+previously earned capacity is consumed.
+
+The hard rule is:
+
+\[
+\boxed{
+B_i^{t+1}\ge0.
+}
+\]
+
+Therefore use these terms:
+
+- no debt;
+- no overdraft;
+- no negative balance.
+
+DO NOT use the ambiguous phrase "no debit."
+
+There is:
+
+- no borrowing;
+- no negative capacity;
+- no arbitrary refill;
+- no direct balance transfer between cells;
+- no external issuance to an actor.
+
+---
+
+# 20. GROUP SETTLEMENT
+
+For executed group \(G\), each action has exact receipt:
+
+\[
+R_a.
+\]
+
+Each action must have a declared owner according to repository action semantics.
+
+For cell \(i\):
+
+\[
+\Delta B_i(G)
+=
+\sum_{a\in G:\operatorname{owner}(a)=i}R_a.
+\]
+
+Then:
+
+\[
+\boxed{
+B_i'
+=
+B_i+\Delta B_i(G).
+}
+\]
+
+Require global receipt closure:
+
+\[
+\boxed{
+\sum_i\Delta B_i(G)
+=
+\sum_aR_a
+=
+E_G.
+}
+\]
+
+Do not invent arbitrary receipt splitting.
+
+If existing repository authority defines action ownership or simultaneous
+settlement differently, report the conflict before modifying semantics.
+
+For this prospective experiment, group-level net projected balance is the
+intended affordability rule unless controlling repository authority explicitly
+prohibits same-event netting.
+
+Any such conflict must be surfaced, not hidden.
+
+---
+
+# 21. AFFORDABILITY
+
+For every physically feasible candidate group \(G\), calculate projected
+balances:
+
+\[
+\boxed{
+\widehat B_i(G)
+=
+B_i+\Delta B_i(G).
+}
+\]
+
+The group is affordable iff:
+
+\[
+\boxed{
+\widehat B_i(G)\ge0
+\qquad
+\forall i.
+}
+\]
+
+This is a hard binary filter.
+
+Do not rank affordable groups by EBU afterward.
+
+A group may have:
+
+\[
+E_G>0
+\]
+
+globally but still be unaffordable because one owner would go negative.
+
+Log this explicitly.
+
+---
+
+# 22. CAPACITY CAN LATER RECREATE DEVIATION
+
+This is NOT to be hidden.
+
+Suppose external forcing injects:
+
+\[
+D=10.
+\]
+
+After complete repair:
+
+\[
+V=0,
+\qquad
+\sum_iB_i=10.
+\]
+
+A later affordable actor action may have:
+
+\[
+E=-10.
+\]
+
+Then it is possible to obtain:
+
+\[
+V=10,
+\qquad
+\sum_iB_i=0.
+\]
+
+Accounting remains exact.
+
+Thus:
+
+\[
+\boxed{
+\text{capacity prevents unbacked deviation;
+it does not automatically make repaired deviation impossible to recreate}.
+}
+\]
+
+The system may potentially cycle:
+
+\[
+(V,B)=(10,0)
+\leftrightarrow
+(V,B)=(0,10).
+\]
+
+This is an explicit dynamical falsification target.
+
+Do not classify such oscillation as an accounting error if the identities remain
+exact.
+
+Record it as a dynamical result.
+
+---
+
+# 23. EXTERNAL PHYSICAL FORCING
+
+External forcing is not an actor transaction.
+
+It changes physical state directly:
+
+\[
+x_t
+\rightarrow
+z_t=x_t+u_t^{ext}.
+\]
+
+For the closed first benchmark require:
+
+\[
+\boxed{
+\mathbf 1^Tu_t^{ext}=0.
+}
+\]
+
+A preferred construction is:
+
+\[
+\boxed{
+u_t^{ext}=S\xi_t
+}
+\]
+
+where:
+
+- \(S\) is a conservative physical incidence operator;
+- \(\xi_t\) is an externally generated edge-flux disturbance.
+
+Because:
+
+\[
+\mathbf1^TS=0,
+\]
+
+physical conservation follows automatically:
+
+\[
+\mathbf1^Tu_t^{ext}=0.
+\]
+
+Forcing must also respect physical nonnegativity.
+
+Do not silently clip forcing in a way that changes its declared distribution
+without recording/rejecting the event.
+
+---
+
+# 24. "NATURAL DEMAND" / "METABOLISM" INTERPRETATION
+
+Do NOT implement literal metabolism in the first synthetic benchmark.
+
+The long-run external forcing may later be interpreted as:
+
+- depletion;
+- regeneration;
+- biological use;
+- weather;
+- environmental load;
+- stochastic resource redistribution.
+
+But mathematically, initially call it:
+
+\[
+\boxed{\text{external conservative physical drive}.}
+\]
+
+External drive does NOT directly create EBU capacity.
+
+This is essential.
+
+It changes:
+
+\[
+x
+\]
+
+and therefore changes:
+
+\[
+V.
+\]
+
+It does NOT directly change:
+
+\[
+B_i.
+\]
+
+There is no "metabolic EBU allowance."
+
+Only verified actor actions change actor capacity.
+
+---
+
+# 25. EXTERNAL DEVIATION INJECTION
+
+At start of tick \(t\), state is:
+
+\[
+(x_t,B_t,J_t).
+\]
+
+Nature applies:
+
+\[
+x_t\to z_t.
+\]
+
+Define signed external deviation injection:
+
+\[
+\boxed{
+D_t^{ext}
+=
+V(z_t)-V(x_t).
+}
+\]
+
+This may be:
+
+\[
+D_t^{ext}>0
+\]
+
+if nature moves the system farther from equilibrium, or:
+
+\[
+D_t^{ext}<0
+\]
+
+if external physics happens to move it closer.
+
+Nature receives no capacity.
+
+No actor receives capacity merely because:
+
+\[
+D_t^{ext}\neq0.
+\]
+
+---
+
+# 26. EXTERNAL-DEVIATION LEDGER
+
+Define:
+
+\[
+\boxed{
+J_{t+1}
+=
+J_t+D_t^{ext}.
+}
+\]
+
+Use a clearly named quantity such as:
+
+    external_deviation_ledger
+
+or an existing repository-consistent equivalent.
+
+It is audit-only.
+
+It is NOT:
+
+- spendable;
+- an actor account;
+- physical resource stock;
+- EBU capacity;
+- a wallet.
+
+Initialize:
+
+\[
+\boxed{J_0=0.}
+\]
+
+---
+
+# 27. ACTOR EVENT AFTER FORCING
+
+After forcing:
+
+\[
+z_t
+\]
+
+is the frozen pre-action state for that event.
+
+The executed actor group produces:
+
+\[
+z_t\to x_{t+1}.
+\]
+
+Exact actor EBU:
+
+\[
+\boxed{
+E_t
+=
+V(z_t)-V(x_{t+1}).
+}
+\]
+
+Capacity update must satisfy:
+
+\[
+\boxed{
+\sum_iB_i(t+1)
+=
+\sum_iB_i(t)
++
+E_t.
+}
+\]
+
+---
+
+# 28. DRIVEN ACCOUNTING IDENTITY
+
+Combine external and actor steps.
+
+Since:
+
+\[
+D_t^{ext}
+=
+V(z_t)-V(x_t)
+\]
+
+and:
+
+\[
+E_t
+=
+V(z_t)-V(x_{t+1}),
+\]
+
+while:
+
+\[
+\Delta \sum_iB_i=E_t,
+\]
+
+derive:
+
+\[
+\boxed{
+V(x_{t+1})
++
+\sum_iB_i(t+1)
+-
+J_{t+1}
+=
+V(x_t)
++
+\sum_iB_i(t)
+-
+J_t.
+}
+\]
+
+Therefore the quantity:
+
+\[
+\boxed{
+K
+=
+V(x_t)
++
+\sum_iB_i(t)
+-
+J_t
+}
+\]
+
+is invariant under the ideal first model.
+
+With:
+
+\[
+x_0=x^\star,
+\qquad
+V(x_0)=0,
+\qquad
+B_i(0)=0,
+\qquad
+J_0=0,
+\]
+
+require:
+
+\[
+\boxed{
+V(x_t)+\sum_iB_i(t)=J_t.
+}
+\]
+
+This is one of the central exact accounting targets.
+
+It must be derived, unit tested, and numerically audited.
+
+It is not merely an empirical correlation.
+
+---
+
+# 29. PHYSICAL CONSERVATION IS A SEPARATE INVARIANT
+
+At all valid states:
+
+\[
+\boxed{
+\sum_i x_i=M.
+}
+\]
+
+Audit separately:
+
+\[
+r_{\rm physical}
+=
+\sum_i x_i-M.
+\]
+
+Do not confuse physical conservation with EBU accounting closure.
+
+A run can satisfy one and fail the other.
+
+Both are required.
+
+---
+
+# 30. TWO COMPLETELY DIFFERENT RANDOM PROCESSES
+
+There are two mandatory RNG streams.
+
+They must be independently seeded and independently replayable.
+
+## RNG A — EXTERNAL NATURE/FORCING
+
+Use something like:
+
+    forcing_seed
+
+This determines:
+
+\[
+\xi_t
+\]
+
+and therefore:
+
+\[
+u_t^{ext}.
+\]
+
+Nature RNG must not inspect:
+
+- \(V\);
+- \(\mu\);
+- EBU;
+- capacities;
+- affordable set;
+- actor RNG;
+- future actor actions.
+
+## RNG B — ACTOR CHOICE
+
+Use something like:
+
+    choice_seed
+
+It operates only after:
+
+1. physical candidate generation;
+2. joint physical feasibility;
+3. exact EBU calculation;
+4. capacity affordability filtering.
+
+It then chooses randomly among surviving affordable candidate groups.
+
+Actor RNG must not rank by:
+
+- EBU magnitude;
+- EBU sign;
+- global \(V\);
+- local \(\mu\);
+- distance from equilibrium;
+- service;
+- "goodness";
+- future forcing.
+
+---
+
+# 31. CANONICAL TICK ORDER
+
+The canonical runtime order is:
+
+\[
+\boxed{
+\text{start state}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{external stochastic physical forcing}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{freeze pre-action physical state}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{generate EBU-blind physical candidates/groups}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{joint physical feasibility filter}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{exact EBU + exact per-action receipts for every feasible group}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{capacity affordability filter}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{seeded random choice among affordable groups}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{execute EXACT selected group}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{settle EBU capacities}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{physical + accounting audit}
+}
+\]
+
+\[
+\downarrow
+\]
+
+\[
+\boxed{
+\text{next tick}.
+}
+\]
+
+Do NOT use:
+
+\[
+\text{random action selection}\to\text{EBU calculation}.
+\]
+
+That ordering is wrong because affordability requires exact EBU first.
+
+---
+
+# 32. NO BUILT-IN RESTORING PLANT
+
+The Gaussian field is a measuring/evaluation geometry.
+
+It is NOT an automatic dynamical force in this experiment.
+
+Do not add:
+
+\[
+-\gamma(x-x^\star)
+\]
+
+to the plant.
+
+Do not implement:
+
+\[
+\dot x=-\nabla V.
+\]
+
+Do not implement an OU restoring drift.
+
+Do not make "regeneration" automatically increase when:
+
+\[
+x_i<x_i^\star.
+\]
+
+Do not make "depletion" automatically decrease when:
+
+\[
+x_i>x_i^\star.
+\]
+
+Those mechanisms would build homeostasis into the plant.
+
+The first experiment asks whether EBU capacity/affordability dynamics produce a
+stabilizing tendency WITHOUT such hidden mean reversion.
+
+---
+
+# 33. ORNSTEIN-UHLENBECK IS A SCIENTIFIC REFERENCE, NOT THE TEST PLANT
+
+The familiar process:
+
+\[
+dx
+=
+-\gamma(x-x^\star)dt
++
+\sigma\,dW_t
+\]
+
+is useful as an external scientific comparison because it demonstrates:
+
+- stable equilibrium;
+- random forcing;
+- mean reversion;
+- Gaussian stationary fluctuations.
+
+But DO NOT insert its restoring term into the first EBU experiment.
+
+Otherwise observed recovery would be uninterpretable:
+
+Was it caused by EBU, or by:
+
+\[
+-\gamma(x-x^\star)?
+\]
+
+Keep these separate.
+
+---
+
+# 34. GAUSSIAN POTENTIAL IS THE RULER, NOT THE ANSWER
+
+The model declares:
+
+\[
+V(x^\star)=0
+\]
+
+and:
+
+\[
+V(x)>0
+\]
+
+away from equilibrium.
+
+That does NOT mathematically force:
+
+\[
+x(t)\to x^\star.
+\]
+
+A potential/evaluation function is not automatically a dynamic law.
+
+Actors may:
+
+- improve \(V\);
+- worsen \(V\) if they can afford it;
+- oscillate;
+- deadlock;
+- wander.
+
+Therefore successful recovery is not baked into the Gaussian definition.
+
+This must be clear in documentation.
+
+---
+
+# 35. RESEARCH METRICS MUST NOT FEED BACK INTO RUNTIME
+
+Separate runtime from scientific evaluation.
+
+Runtime must not access:
+
+- global \(V\) for action selection;
+- fitted return rate;
+- spectral diagnostics;
+- stationarity metrics;
+- future state;
+- plotting data;
+- aggregate capacity concentration.
+
+Global calculations are allowed for:
+
+- theorem checking;
+- audit;
+- offline scientific evaluation.
+
+Architect this separation explicitly.
+
+If practical, add tests that fail if the actor-choice path imports or calls
+global research-evaluation services.
+
+---
+
+# 36. NO AUTOMATIC FALLBACK RESTORATION
+
+Do not invent:
+
+- forced-rest actions;
+- safety controller;
+- emergency EBU-minimizing action;
+- hidden service-first fallback;
+- global rebalancing;
+- repair oracle.
+
+If no affordable physical candidate exists:
+
+\[
+\boxed{\text{record no execution / deadlock}.}
+\]
+
+Deadlock is scientific evidence.
+
+Do not repair the experiment because the outcome looks bad.
+
+---
+
+# 37. STAGE 0 — REPOSITORY AUDIT BEFORE IMPLEMENTATION
+
+Before changing model behavior, produce a concise repository audit.
+
+Map existing code to:
+
+1. state model;
+2. topology;
+3. action representation;
+4. physical feasibility;
+5. exact finite EBU;
+6. path integration;
+7. simultaneous group handling;
+8. settlement;
+9. Möbius;
+10. conservation;
+11. loss accounting;
+12. actor/controller policy;
+13. persistent per-cell accounts/capacity if present;
+14. simulation runner;
+15. research/audit reporting.
+
+Identify:
+
+- reusable code;
+- conflicting code;
+- historical code to preserve;
+- missing components;
+- authority conflicts.
+
+Do not begin by rewriting everything.
+
+Prefer minimal changes preserving existing validated foundations.
+
+---
+
+# 38. STOP-AND-REPORT AUTHORITY CONFLICTS
+
+If repository authority conflicts with this prospective study in a way that would
+change established semantics, STOP the affected implementation path and report
+the conflict.
+
+Examples:
+
+- different canonical finite-EBU sign convention;
+- existing authoritative settlement attribution incompatible with \(R_a\);
+- authoritative account semantics that prohibit the proposed capacity update;
+- action ownership unresolved;
+- same-event netting explicitly prohibited;
+- locality rule conflict;
+- historical conservation theorem contradicted.
+
+Do not silently "fix" authority.
+
+Independent foundation work that does not depend on the conflict may continue.
+
+---
+
+# 39. PHASE 1 — LOCAL GAUSSIAN FOUNDATION
+
+Implement or add a prospective Gaussian potential type without deleting the
+threshold model.
+
+Required tests:
+
+## 39.1 Minimum
+
+\[
+V_i(x_i^\star)=0.
+\]
+
+## 39.2 Positivity
+
+\[
+V_i(x_i)>0
+\]
+
+for:
+
+\[
+x_i\ne x_i^\star.
+\]
+
+## 39.3 Symmetry
+
+For equal displacement:
+
+\[
+V_i(x_i^\star+d)
+=
+V_i(x_i^\star-d).
+\]
+
+## 39.4 Marginal
+
+Analytic:
+
+\[
+\mu_i
+=
+\frac{x_i-x_i^\star}{\sigma_i^2}.
+\]
+
+Check against finite difference.
+
+## 39.5 Hessian
+
+\[
+\frac{\partial^2V_i}{\partial x_i^2}
+=
+\frac1{\sigma_i^2}.
+\]
+
+## 39.6 Exact finite EBU
+
+Compare:
+
+\[
+V(x)-V(x+\delta x)
+\]
+
+with the analytic quadratic formula.
+
+## 39.7 Equilibrium finite disturbance
+
+From:
+
+\[
+x=x^\star,
+\]
+
+every nonzero feasible action must have:
+
+\[
+E<0.
+\]
+
+## 39.8 Restorative action
+
+Construct an off-equilibrium fixture where an action moves state toward
+\(x^\star\).
+
+Require:
+
+\[
+E>0.
+\]
+
+## 39.9 Overshoot
+
+Construct a finite action that passes through equilibrium and ends far enough on
+the other side.
+
+Ensure exact finite EBU handles this correctly.
+
+Do not infer sign from initial marginal alone.
+
+---
+
+# 40. PHASE 2 — PATH AND SIMULTANEOUS GROUP FOUNDATION
+
+Required tests:
+
+## 40.1 Path integral closure
+
+Numerically/in closed form verify:
+
+\[
+V(x)-V(x+\delta x)
+=
+-\int\nabla V^Tdx.
+\]
+
+## 40.2 Two simultaneous actions, disjoint support
+
+Where:
+
+\[
+\delta_a^TH\delta_b=0,
+\]
+
+require field additivity under fixed additive increments:
+
+\[
+E(ab)=E(a)+E(b).
+\]
+
+## 40.3 Two simultaneous actions, shared node
+
+Construct:
+
+\[
+1\to2
+\]
+
+and:
+
+\[
+3\to2.
+\]
+
+Both affect node 2.
+
+Require generally:
+
+\[
+E(ab)\ne E(a)+E(b).
+\]
+
+Verify:
+
+\[
+I(a,b)
+=
+-\delta_a^TH\delta_b.
+\]
+
+## 40.4 Receipt closure
+
+Require:
+
+\[
+R_a+R_b=E(ab).
+\]
+
+## 40.5 Higher-order quadratic fixture
+
+For three fixed additive actions under pure quadratic field, confirm third-order
+Möbius interaction is zero within numerical tolerance.
+
+If not, determine whether:
+
+- resolver;
+- feasibility;
+- state-dependent quantity;
+- implementation;
+
+introduced nonlinearity.
+
+Do not simply change the expected answer.
+
+---
+
+# 41. PHASE 3 — PHYSICAL CONSERVATION AND CAPACITY
+
+Implement/finalize:
+
+- persistent \(B_i\);
+- projected balance;
+- affordability filter;
+- group settlement;
+- external-deviation ledger;
+- independent RNG streams.
+
+Required tests include:
+
+## 41.1 Zero genesis
+
+\[
+B_i(0)=0.
+\]
+
+## 41.2 Positive receipt earns capacity
+
+\[
+R_i>0
+\Rightarrow
+B_i'\gt B_i.
+\]
+
+## 41.3 Negative receipt spends capacity
+
+\[
+R_i<0
+\]
+
+is allowed when:
+
+\[
+B_i+R_i\ge0.
+\]
+
+## 41.4 Overdraft rejected
+
+If:
+
+\[
+B_i+R_i<0,
+\]
+
+candidate is unaffordable.
+
+## 41.5 External forcing does not change \(B\)
+
+After nature step alone:
+
+\[
+B_i'=B_i.
+\]
+
+## 41.6 External forcing updates \(J\)
+
+Exactly by:
+
+\[
+D^{ext}=V(z)-V(x).
+\]
+
+## 41.7 Actor settlement does not update \(J\)
+
+Actor actions change:
+
+\[
+V,\ B
+\]
+
+but not external ledger.
+
+## 41.8 Driven identity
+
+Check:
+
+\[
+V+\sum_iB_i-J
+\]
+
+is invariant.
+
+## 41.9 Physical conservation
+
+Check:
+
+\[
+\sum_i x_i=M.
+\]
+
+## 41.10 No direct capacity transfer
+
+There must be no API allowing:
+
+\[
+B_i\to B_j
+\]
+
+without a verified physical-action settlement.
+
+---
+
+# 42. PHASE 4 — RNG INDEPENDENCE TESTS
+
+Explicitly prove by tests that forcing RNG and actor RNG are separate.
+
+Required replay tests:
+
+## 42.1 Same forcing seed, same parameters
+
+Changing only:
+
+\[
+s_{\rm choice}
+\]
+
+must reproduce the exact same external forcing sequence.
+
+## 42.2 Same choice seed
+
+Changing only:
+
+\[
+s_{\rm forcing}
+\]
+
+must not alter the deterministic sequence generated by the actor RNG itself,
+although realized selected actions may differ because candidate sets differ.
+
+## 42.3 Actor choice must not modify forcing state
+
+No shared mutable RNG object.
+
+## 42.4 Forcing must not read capacity
+
+Perturbing \(B\) while holding physical state and forcing RNG state fixed must
+not change next external forcing.
+
+---
+
+# 43. SCIENTIFIC CONTROL ARM — REQUIRED
+
+Add a matched control experiment.
+
+This is not another EBU controller.
+
+It is a falsification control.
+
+Use:
+
+- same physical world;
+- same topology;
+- same action candidates;
+- same forcing protocol;
+- same physical feasibility;
+- same random actor-choice mechanism;
+
+but remove the EBU-capacity affordability restriction.
+
+Control choice occurs randomly among physically feasible candidate groups.
+
+Call it something scientifically neutral such as:
+
+\[
+\boxed{\text{physical-random control}}
+\]
+
+rather than "bad controller."
+
+Purpose:
+
+> determine whether observed recovery/stability is actually produced by EBU
+> affordability or already arises from the conservative topology/action space.
+
+Do NOT use this control to select parameters that make EBU look better.
+
+Use paired forcing seeds where possible.
+
+The core comparison is:
+
+\[
+\boxed{
+\text{EBU affordable-random}
+\quad\text{vs}\quad
+\text{physical feasible-random}.
+}
+\]
+
+Do not compute a single weighted "winner score."
+
+Report differences descriptively and statistically.
+
+---
+
+# 44. STAGE A — SINGLE-SHOCK IMPULSE-RESPONSE EXPERIMENT
+
+This is the first scientific dynamics experiment.
+
+DO NOT start Stage B before Stage A foundation is understood.
+
+Initial state:
+
+\[
+\boxed{
+x_0=x^\star.
+}
+\]
+
+Thus:
+
+\[
+V_0=0.
+\]
+
+Capacity:
+
+\[
+\boxed{
+B_i(0)=0.
+}
+\]
+
+External ledger:
+
+\[
+\boxed{
+J_0=0.
+}
+\]
+
+---
+
+# 45. STAGE A1 — DETERMINISTIC CONFORMANCE SHOCK
+
+Before random shocks, use at least one transparent deterministic conservative
+shock.
+
+Example form:
+
+\[
+u_0=S\xi_0.
+\]
+
+Require:
+
+\[
+\mathbf1^Tu_0=0.
+\]
+
+Require post-shock:
+
+\[
+z_0=x^\star+u_0\ge0.
+\]
+
+Calculate:
+
+\[
+\boxed{
+D_{\rm shock}
+=
+V(z_0)-V(x^\star)
+=
+V(z_0).
+}
+\]
+
+Update:
+
+\[
+J=D_{\rm shock}.
+\]
+
+After this event turn external forcing OFF:
+
+\[
+\boxed{
+u_t^{ext}=0
+\qquad
+t>0.
+}
+\]
+
+---
+
+# 46. STAGE A RECOVERY LOOP
+
+For every subsequent actor tick:
+
+1. freeze current physical state;
+2. enumerate/generate candidate actions/groups;
+3. joint physical feasibility;
+4. exact EBU for every feasible group;
+5. exact common-path receipts;
+6. affordability;
+7. random choice among affordable groups;
+8. exact execution;
+9. capacity settlement;
+10. audit;
+11. log.
+
+No external disturbance after the initial shock.
+
+Therefore:
+
+\[
+J=D_{\rm shock}
+\]
+
+remains constant.
+
+Require at every tick:
+
+\[
+\boxed{
+V(t)+\sum_iB_i(t)=D_{\rm shock}.
+}
+\]
+
+within declared numerical tolerance.
+
+---
+
+# 47. STAGE A PRIMARY DYNAMICAL QUESTION
+
+Do NOT assume the answer.
+
+Ask:
+
+\[
+\boxed{
+\text{Does }V(t)\text{ tend toward zero after the external forcing stops?}
+}
+\]
+
+Possible outcomes include:
+
+- monotonic recovery;
+- nonmonotonic recovery;
+- damped oscillation;
+- persistent oscillation;
+- plateau;
+- recurrent destruction/restoration;
+- deadlock;
+- divergence within physical state bounds;
+- convergence to nonzero deviation.
+
+All are valid outputs.
+
+---
+
+# 48. STAGE A CAPACITY INTERPRETATION
+
+If full recovery occurs:
+
+\[
+V_{\rm final}=0,
+\]
+
+then exact accounting requires:
+
+\[
+\boxed{
+\sum_iB_i^{\rm final}=D_{\rm shock}.
+}
+\]
+
+This means the externally injected deviation has been removed through verified
+actor action receipts and is represented by earned EBU capacity.
+
+It does NOT imply this capacity can never later be spent to recreate deviation.
+
+That subsequent behavior is part of the test.
+
+---
+
+# 49. STAGE A RETURN RATE
+
+If the observed recovery supports an approximately exponential regime, estimate
+a return rate.
+
+For example, if:
+
+\[
+V(t)\approx V_0e^{-\lambda_Vt},
+\]
+
+estimate:
+
+\[
+\lambda_V.
+\]
+
+But do not force an exponential fit.
+
+Check diagnostics.
+
+Alternative state-mode or autocorrelation return metrics may be used if more
+appropriate.
+
+Do not call something:
+
+\[
+\lambda_{\rm EBU}
+\]
+
+as if it were a universal constant.
+
+Use study-specific terminology until a theorem justifies more.
+
+---
+
+# 50. STAGE A REPLICATION
+
+After deterministic conformance, run a preregistered set of random conservative
+single shocks.
+
+For each:
+
+- forcing seed;
+- shock vector;
+- initial \(D_{\rm shock}\);
+- actor-choice seeds.
+
+Use multiple actor-choice seeds for the same shock.
+
+This is important because we want to distinguish:
+
+\[
+\boxed{
+\text{response to the disturbance}
+}
+\]
+
+from:
+
+\[
+\boxed{
+\text{luck of one random actor sequence}.
+}
+\]
+
+---
+
+# 51. STAGE A CONTROL
+
+Repeat matched Stage-A shocks under the physical-random control.
+
+Use the same:
+
+- topology;
+- physical constraints;
+- shock;
+- candidate-generation rules.
+
+Compare:
+
+- recovery probability;
+- recovery time;
+- residual \(V\);
+- oscillation;
+- deadlock;
+- state trajectories.
+
+Do NOT state that EBU "wins" based on a weighted ranking.
+
+Report the empirical comparison.
+
+---
+
+# 52. STAGE A FAILURE CLASSIFICATION
+
+Keep failures distinct.
+
+## Accounting failure
+
+\[
+V+\sum B-J
+\]
+
+drifts beyond tolerance.
+
+## Physical conservation failure
+
+\[
+\sum_i x_i\ne M.
+\]
+
+## Capacity failure
+
+Executed group produces:
+
+\[
+B_i<0.
+\]
+
+## Locality failure
+
+Runtime action decision accessed prohibited global information.
+
+## Recovery failure
+
+Accounting is correct, but:
+
+\[
+V(t)\not\to0.
+\]
+
+## Deadlock
+
+\[
+V>0
+\]
+
+but no affordable executable response exists.
+
+## Persistent cycling
+
+Deviation is repeatedly converted:
+
+\[
+V\to B\to V\to B
+\]
+
+without damping.
+
+## Sensitivity failure
+
+Outcome depends pathologically on random actor seed.
+
+Do not merge these into one "failed run."
+
+---
+
+# 53. REQUIRED STAGE A LOGGING
+
+At minimum log per tick:
+
+- tick;
+- physical state \(x\);
+- global audit \(V\);
+- each local \(V_i\);
+- each \(B_i\);
+- total \(B\);
+- \(J\);
+- physical conservation residual;
+- EBU accounting residual;
+- feasible candidate count;
+- affordable candidate count;
+- affordability rejections;
+- chosen group identity;
+- action increments;
+- group EBU;
+- per-action receipts;
+- forcing seed/state where applicable;
+- choice seed/state/reference;
+- deadlock/no-execution indicator.
+
+For large runs, full state can be stored efficiently, but reproducibility must be
+preserved.
+
+---
+
+# 54. GATE BEFORE STAGE B
+
+Do NOT automatically launch the long-run experiment merely because code builds.
+
+Before Stage B, produce a Stage-A gate report containing:
+
+1. mathematical foundation status;
+2. exact closure status;
+3. conservation status;
+4. locality status;
+5. capacity semantics status;
+6. reproducibility status;
+7. Stage-A trajectory results;
+8. matched control results;
+9. identified failure modes;
+10. unresolved authority questions.
+
+If Stage A reveals a fundamental accounting bug, stop and fix foundation before
+Stage B.
+
+If Stage A reveals scientifically interesting recovery failure but accounting
+is correct, DO NOT "fix" the model automatically.
+
+Report the result.
+
+The user decides whether the next study should alter architecture.
+
+---
+
+# 55. STAGE B — CONTINUOUSLY DRIVEN STOCHASTIC WORLD
+
+Only after Stage-A gate acceptance, prepare Stage B.
+
+Start again from a clean initial condition unless preregistration explicitly
+states otherwise:
+
+\[
+x_0=x^\star,
+\]
+
+\[
+V_0=0,
+\]
+
+\[
+B_i(0)=0,
+\]
+
+\[
+J_0=0.
+\]
+
+At every tick generate a conservative external drive:
+
+\[
+\boxed{
+u_t^{ext}=S\xi_t.
+}
+\]
+
+Then run the full EBU response cycle.
+
+---
+
+# 56. STAGE B CANONICAL LOOP
+
+At tick \(t\):
+
+## Nature
+
+\[
+x_t\to z_t=x_t+u_t^{ext}.
+\]
+
+## External accounting
+
+\[
+D_t^{ext}=V(z_t)-V(x_t).
+\]
+
+\[
+J_{t+1}=J_t+D_t^{ext}.
+\]
+
+## Candidate generation
+
+Using only permitted physical information.
+
+## Physical feasibility
+
+Reject impossible groups.
+
+## Exact EBU calculation
+
+Compute:
+
+\[
+E_G.
+\]
+
+Compute:
+
+\[
+R_a.
+\]
+
+## Affordability
+
+Require:
+
+\[
+B_i+\Delta B_i(G)\ge0.
+\]
+
+## Actor choice
+
+Random among affordable groups.
+
+## Execution
+
+Execute exactly chosen group.
+
+## Settlement
+
+Update:
+
+\[
+B_i.
+\]
+
+## Audit
+
+Check:
+
+\[
+\sum x_i=M.
+\]
+
+Check:
+
+\[
+V+\sum B-J=0
+\]
+
+relative to initial invariant.
+
+Then continue.
+
+---
+
+# 57. STAGE B CENTRAL QUESTION
+
+The question is NOT:
+
+> Does the system remain exactly at \(x^\star\)?
+
+With continuous stochastic forcing that would be inappropriate.
+
+The question is:
+
+\[
+\boxed{
+\text{Does the complete driven process develop a bounded/stationary fluctuation
+regime around the declared equilibrium region?}
+}
+\]
+
+Study the actual resulting distribution.
+
+Do NOT require it to be Gaussian just because the reference potential is
+Gaussian-derived.
+
+The output distribution is an experimental result.
+
+---
+
+# 58. STAGE B SCIENTIFIC OBSERVABLES
+
+At minimum investigate:
+
+- time series \(V(t)\);
+- mean \(V\);
+- variance of \(V\);
+- quantiles/tails of \(V\);
+- state means;
+- state covariance;
+- distance of empirical state mean from \(x^\star\);
+- total capacity;
+- per-cell capacity distribution;
+- capacity concentration;
+- frequency of negative-EBU executed actions;
+- frequency of positive-EBU executed actions;
+- affordability rejection rate;
+- deadlock rate;
+- recurrence/oscillation;
+- autocorrelation;
+- recovery after identifiable local disturbances;
+- long-run drift;
+- stationarity diagnostics.
+
+Do not collapse this into an arbitrary weighted composite score.
+
+---
+
+# 59. STATIONARITY
+
+A noisy stable system need not stop moving.
+
+The correct stochastic concept is that its distribution may approach a
+time-invariant regime:
+
+\[
+p_t(x)\to p_\infty(x).
+\]
+
+Investigate this empirically.
+
+Do not declare stationarity from visual inspection alone.
+
+Use appropriate diagnostics such as:
+
+- rolling means;
+- rolling variances;
+- multiple initial segments;
+- multiple seeds;
+- autocorrelation;
+- distributional comparison across late windows.
+
+Use scientifically standard diagnostics where appropriate, but avoid claiming a
+theorem from simulation alone.
+
+---
+
+# 60. STABILITY / RETURN-RATE METRIC
+
+The long-term programme wants a scientifically meaningful notion of return rate.
+
+For a linear deterministic system:
+
+\[
+\dot y=-Ay,
+\]
+
+the slowest decay rate is connected to:
+
+\[
+\min_k\operatorname{Re}\lambda_k(A).
+\]
+
+For suitable stochastic Markov processes, convergence can be connected to a
+spectral gap.
+
+But DO NOT assign a "spectral gap" merely because the phrase sounds appropriate.
+
+First establish whether assumptions are justified.
+
+For the current simulation, acceptable outputs are:
+
+- empirically fitted return time;
+- relaxation time;
+- autocorrelation time;
+- mixing estimate;
+- no justified scalar rate.
+
+If a scalar is not scientifically supported, report that.
+
+---
+
+# 61. MATCHED STAGE B CONTROL
+
+Run the physical-random control under the same preregistered forcing protocol.
+
+Compare distributions under:
+
+\[
+\boxed{
+\text{EBU affordability}
+}
+\]
+
+versus:
+
+\[
+\boxed{
+\text{no EBU affordability}.
+}
+\]
+
+Important comparisons include:
+
+- mean \(V\);
+- tail \(V\);
+- drift;
+- deadlock;
+- stationarity;
+- state covariance;
+- frequency/magnitude of destructive actions.
+
+The purpose is attribution.
+
+If both systems behave similarly, report that.
+
+If the EBU-filtered process differs, quantify the difference.
+
+Do not turn it into advocacy.
+
+---
+
+# 62. PREREGISTRATION / PARAMETER DISCIPLINE
+
+Before official Stage-A replicated runs and before Stage B, freeze relevant
+parameters.
+
+At minimum:
+
+- number of cells;
+- topology;
+- \(M\);
+- \(x_i^\star\);
+- \(\sigma_i\);
+- allowed action quantities;
+- group size rules;
+- forcing distribution;
+- forcing amplitude;
+- shock distribution;
+- horizon;
+- number of seeds;
+- burn-in if used;
+- numerical tolerances;
+- analysis windows;
+- stopping criteria.
+
+Do not alter these because early results are inconvenient.
+
+Exploratory runs are allowed but must be labeled:
+
+\[
+\boxed{\text{EXPLORATORY}}
+\]
+
+and must not be mixed with preregistered evidence.
+
+---
+
+# 63. SYNTHETIC PARAMETERS ARE NOT CLAIMED NATURAL CONSTANTS
+
+For the first synthetic world, transparent values such as:
+
+\[
+x_i^\star=10,
+\qquad
+\sigma_i=1
+\]
+
+may be useful for conformance fixtures.
+
+But do not claim they represent biology, ecology, or economics.
+
+The synthetic test asks whether the mathematical mechanism behaves as specified.
+
+Real-world calibration is a later scientific programme.
+
+---
+
+# 64. CALIBRATION MUST BE SEPARATE FROM TESTING
+
+When real/reference data are eventually used:
+
+1. estimate/fix:
+   \[
+   x^\star,\sigma;
+   \]
+2. freeze them;
+3. run prospective tests separately.
+
+Do not continuously re-estimate:
+
+\[
+x^\star
+\]
+
+or:
+
+\[
+\sigma
+\]
+
+from the official evaluation trajectory unless adaptive calibration is itself
+the declared object of a later study.
+
+Otherwise the reference geometry would move in response to the data being used
+to test it.
+
+---
+
+# 65. WHAT THE FIRST GAUSSIAN STUDY DOES NOT CLAIM
+
+Do not claim:
+
+- all natural systems are Gaussian;
+- all physiology is Gaussian;
+- z-scores provide universal ethical weights;
+- EBU has solved universal cross-domain valuation;
+- a stationary Gaussian must emerge;
+- Gaussian potential proves stability;
+- one simulation proves real-world ecological stability.
+
+The first study claims only what it actually tests.
+
+---
+
+# 66. EXPECTED SCIENTIFIC INTERPRETATION IF STAGE A WORKS
+
+If:
+
+- plant has no automatic mean reversion;
+- actor choice is random;
+- nature forcing is independent;
+- capacity is finite/nonnegative;
+- EBU evaluates but does not select;
+
+and repeated Stage-A shocks nevertheless show reproducible return toward
+equilibrium significantly different from the matched physical-random control,
+then this is evidence that:
+
+> the EBU affordability/accounting constraint contributes an effective
+> stabilizing selection pressure even though actors do not explicitly choose
+> restorative actions.
+
+Do not state this before evidence exists.
+
+---
+
+# 67. EXPECTED SCIENTIFIC INTERPRETATION IF IT FAILS
+
+Possible meaningful negative findings include:
+
+- capacity merely oscillates between \(V\) and \(B\);
+- random affordable behavior has no net restoring tendency;
+- capacity concentration creates deadlock;
+- topology dominates results;
+- affordability changes accounting but not dynamics;
+- continuous forcing produces unbounded deviation;
+- random actors spend restoration capacity as fast as it is earned.
+
+These are useful scientific results.
+
+Do not hide them.
+
+---
+
+# 68. FALSIFICATION TARGETS
+
+Actively test for:
+
+1. accounting drift;
+2. conservation failure;
+3. capacity created without verified action;
+4. capacity becoming negative;
+5. direct capacity transfer;
+6. forcing influenced by EBU;
+7. actor selection influenced by EBU ranking;
+8. hidden global information;
+9. hidden mean reversion;
+10. repeated paid destruction;
+11. persistent cycles;
+12. action-space deadlock;
+13. pathological capacity concentration;
+14. strong sensitivity to random seed;
+15. failure to recover after finite shock;
+16. failure to form a stationary regime under bounded forcing;
+17. no measurable difference from physical-random control.
+
+A serious study must attempt to find these failures.
+
+---
+
+# 69. NUMERICAL TOLERANCES
+
+Exact theoretical identities will be evaluated numerically.
+
+Do not use arbitrary loose thresholds.
+
+Choose tolerance based on:
+
+- floating-point precision;
+- trajectory length;
+- operation count;
+- magnitude scale.
+
+Report both:
+
+- absolute residual;
+- normalized/relative residual where meaningful.
+
+For example track:
+
+\[
+r_{\rm EBU}
+=
+V+\sum B-J-K_0
+\]
+
+and:
+
+\[
+r_{\rm physical}
+=
+\sum x_i-M.
+\]
+
+Do not merely report "PASS."
+
+Report observed maximum residual.
+
+---
+
+# 70. TESTING STRATEGY
+
+Use layers.
+
+## Unit tests
+
+Individual equations.
+
+## Property tests
+
+Random physically valid examples testing identities.
+
+## Conformance fixtures
+
+Hand-checkable scenarios.
+
+## Simulation integration tests
+
+Full tick ordering.
+
+## Reproducibility tests
+
+Seed separation/replay.
+
+## Scientific runs
+
+Not ordinary CI tests.
+
+Do not place extremely long stochastic scientific studies into normal fast CI
+unless repository conventions specifically support that.
+
+---
+
+# 71. REQUIRED HAND-CHECKABLE FIXTURES
+
+Create very small examples whose answer can be calculated manually.
+
+At minimum:
+
+### Fixture 1
+
+Two cells at equilibrium.
+
+Try nonzero transfer.
+
+Expected:
+
+\[
+E<0.
+\]
+
+With:
+
+\[
+B=0,
+\]
+
+action must be unaffordable.
+
+### Fixture 2
+
+External conservative shock moves two cells away from equilibrium.
+
+No actor receives capacity.
+
+### Fixture 3
+
+Restorative transfer after shock.
+
+Expected:
+
+\[
+E>0.
+\]
+
+Capacity earned.
+
+### Fixture 4
+
+Earned capacity later finances negative EBU action.
+
+Expected:
+
+\[
+B\downarrow,
+\quad
+V\uparrow,
+\]
+
+with exact closure.
+
+### Fixture 5
+
+Attempt larger destructive action than capacity supports.
+
+Expected affordability rejection.
+
+### Fixture 6
+
+Two simultaneous actions share one destination.
+
+Expected nonadditive same-baseline singleton quotes but exact group/path receipt
+closure.
+
+These fixtures should be easy to explain in a scientific paper/book.
+
+---
+
+# 72. LOCALITY REQUIREMENT
+
+Runtime valuation of action/group \(G\) may inspect only potential factors
+touched by its support.
+
+For Level 1, this means affected coordinates.
+
+For action:
+
+\[
+i\to j,
+\]
+
+there is no reason to evaluate unrelated:
+
+\[
+V_k,\quad k\notin\{i,j\}
+\]
+
+except audit.
+
+For groups, evaluate union of affected support.
+
+Global potential is allowed after the event for independent audit.
+
+Test this architectural property where practical.
+
+---
+
+# 73. FUTURE FACTOR TOPOLOGY
+
+Do not implement it now beyond interface compatibility, but preserve the
+direction:
+
+\[
+V=\sum_\alpha\phi_\alpha(x_{S_\alpha}).
+\]
+
+Later, an action reevaluates only factors satisfying:
+
+\[
+S_\alpha\cap A(G)\ne\varnothing.
+\]
+
+This is how local multivariate factors should enter later.
+
+Do not design the Level-1 implementation in a way that requires a future global
+dense matrix.
+
+---
+
+# 74. RECURSIVE MOTIFS
+
+Existing recursive topology ideas remain important but are not required to make
+Stage A/B run.
+
+Do not derail this task into a full recursive-motif implementation.
+
+Preserve interfaces/notes where relevant.
+
+Future local quadratic motif compression may use Schur complements:
+
+\[
+H_{\rm eff}
+=
+H_{BB}
+-
+H_{BI}H_{II}^{-1}H_{IB}.
+\]
+
+This belongs to later certification work.
+
+Do not make Stage-A success depend on it.
+
+---
+
+# 75. LOSS ACCOUNTING
+
+Existing loss-aware infrastructure must not be broken.
+
+But first study is deliberately:
+
+\[
+\eta=1.
+\]
+
+Therefore:
+
+- no physical transfer loss;
+- no loss-sink increment;
+- no process burden from loss;
+- conservation is exact on represented scalar resource.
+
+Do not unnecessarily involve unresolved partially represented dissipation in
+this first benchmark.
+
+---
+
+# 76. DOCUMENTATION REQUIREMENTS
+
+Create/update a clear prospective-study document following repository naming
+conventions.
+
+It must explain in plain scientific language:
+
+1. why Local Gaussian potential is being tested;
+2. what is established mathematics;
+3. what is prospective EBU modeling;
+4. why Gaussian geometry does not force recovery;
+5. why OU mean reversion is deliberately omitted;
+6. why nature RNG and actor RNG are separate;
+7. how external deviation creates the accounting source for earned capacity;
+8. why capacity can later be spent;
+9. why repeated paid disturbance is an explicit test;
+10. why a matched no-affordability control is needed.
+
+Do not describe synthetic results as real-world validation.
+
+---
+
+# 77. REQUIRED EXPERIMENT ARTIFACTS
+
+Prefer repository conventions, but the programme should eventually contain
+equivalents of:
+
+- Local Gaussian model specification;
+- foundation/conformance test report;
+- Stage-A preregistration;
+- Stage-A results;
+- Stage-A gate decision;
+- Stage-B preregistration;
+- Stage-B results;
+- machine-readable trajectory data/metadata;
+- reproducibility metadata.
+
+Do not fabricate Stage-B results before Stage B is actually run.
+
+---
+
+# 78. REQUIRED STAGE A RESULT SUMMARY
+
+Report at minimum:
+
+- repository SHA/tree used;
+- study configuration identity/hash;
+- model parameters;
+- topology;
+- deterministic shock;
+- random shock seeds;
+- actor seeds;
+- \(D_{\rm shock}\);
+- \(V(t)\);
+- \(\sum B(t)\);
+- individual \(B_i(t)\);
+- conservation residual;
+- EBU accounting residual;
+- deadlocks;
+- cycles;
+- recovery classification;
+- return-rate fit if justified;
+- matched-control result.
+
+Include raw/canonical identities sufficient for exact reproduction.
+
+---
+
+# 79. REQUIRED STAGE B RESULT SUMMARY
+
+When Stage B is authorized/run, report:
+
+- exact configuration;
+- forcing law;
+- all seeds or deterministic seed-generation protocol;
+- horizon;
+- burn-in if any;
+- state statistics;
+- \(V\) statistics;
+- capacity statistics;
+- concentration;
+- deadlocks;
+- affordability rates;
+- recurrence;
+- stationarity diagnostics;
+- relaxation/mixing diagnostics;
+- maximum conservation residual;
+- maximum EBU-accounting residual;
+- matched control results.
+
+Do not cherry-pick only favorable seeds.
+
+---
+
+# 80. PERFORMANCE / ENUMERATION
+
+The first scientific world should remain small enough that correctness is more
+important than optimization.
+
+If exhaustive feasible-group enumeration is computationally manageable, prefer
+it.
+
+This avoids introducing a hidden proposal-selection heuristic.
+
+Only optimize after:
+
+- exactness;
+- locality;
+- reproducibility;
+- settlement closure;
+
+are proven.
+
+Do not use performance pressure as justification for changing scientific
+semantics.
+
+---
+
+# 81. NO SILENT ACTION RESCALING
+
+Once a group is:
+
+1. physically feasible;
+2. valued;
+3. affordable;
+4. randomly selected;
+
+execute that exact group.
+
+If circumstances invalidate it between selection and execution, fail closed and
+record the event.
+
+Do not modify quantity after valuation unless the entire event is recomputed
+from the same frozen-state protocol.
+
+---
+
+# 82. NO GLOBAL LIQUIDITY
+
+Even though:
+
+\[
+\sum_iB_i
+\]
+
+is useful for audit, it is not a communal spendable pool.
+
+Do not allow one cell to spend another cell's capacity unless a future explicit
+institutional mechanism is separately designed.
+
+This first study has:
+
+\[
+\boxed{\text{local persistent capacity only}.}
+\]
+
+---
+
+# 83. NO ARBITRARY ISSUANCE
+
+Capacity changes only through verified actor receipts.
+
+Not through:
+
+- time;
+- demand;
+- external forcing;
+- depletion;
+- random grants;
+- equilibrium distance itself;
+- periodic reset;
+- population;
+- global subsidy.
+
+If nature creates:
+
+\[
+V>0,
+\]
+
+that creates potential restorative opportunity but no immediate actor capacity.
+
+---
+
+# 84. IMPORTANT DISTINCTION: DEVIATION VS CAPACITY
+
+Track these separately:
+
+\[
+V
+=
+\text{current equilibrium deviation}.
+\]
+
+\[
+B_i
+=
+\text{earned/spendable EBU action capacity}.
+\]
+
+\[
+J
+=
+\text{cumulative external signed deviation injection}.
+\]
+
+They are not interchangeable state variables.
+
+The exact ideal identity relates them, but they have different meanings.
+
+---
+
+# 85. SCIENTIFIC CONTROL OF EXPERIMENTER EFFECT
+
+This is a classical simulation.
+
+Reading/calculating:
+
+\[
+x,\quad V,\quad\mu,\quad E
+\]
+
+does not physically modify state.
+
+Only:
+
+- external forcing;
+- executed physical actions;
+
+may change \(x\).
+
+Keep evaluation side-effect free.
+
+If any function named as a calculation mutates world state, treat that as a
+serious architecture defect.
+
+---
+
+# 86. PAIRING EXPERIMENTS ACROSS RANDOMNESS
+
+Support experiments such as:
+
+## Fixed nature, variable actors
+
+Hold:
+
+\[
+s_{\rm forcing}
+\]
+
+fixed.
+
+Vary:
+
+\[
+s_{\rm choice}.
+\]
+
+Ask how much outcome depends on arbitrary actor history.
+
+## Fixed actor RNG protocol, variable nature
+
+Hold actor seed-generation protocol fixed.
+
+Vary forcing seeds.
+
+Ask how robust the architecture is to different disturbances.
+
+## EBU vs control
+
+Use matched forcing seeds.
+
+This gives much stronger evidence than one trajectory.
+
+---
+
+# 87. DO NOT OVERINTERPRET ONE NUMBER
+
+The programme is interested in a scientifically meaningful return/stability
+factor.
+
+But do not manufacture one.
+
+A valid final result may be:
+
+> No single spectral/return scalar is justified for these nonlinear
+> event-driven dynamics; the following empirical relaxation measures are
+> reported instead.
+
+That is preferable to an impressive but invalid number.
+
+---
+
+# 88. IMPLEMENTATION ORDER — DO NOT SKIP
+
+Follow this order:
+
+## Step 1
+Repository audit.
+
+## Step 2
+Authority/conflict report.
+
+## Step 3
+Local Gaussian potential implementation.
+
+## Step 4
+Analytic finite EBU + marginal tests.
+
+## Step 5
+Path-integral closure.
+
+## Step 6
+Simultaneous group/common-path receipt closure.
+
+## Step 7
+Möbius quadratic conformance fixture.
+
+## Step 8
+Persistent capacity.
+
+## Step 9
+Affordability.
+
+## Step 10
+External deviation ledger.
+
+## Step 11
+Driven accounting invariant.
+
+## Step 12
+Separate RNG streams.
+
+## Step 13
+Canonical tick integration.
+
+## Step 14
+Matched physical-random control.
+
+## Step 15
+Deterministic Stage-A shock.
+
+## Step 16
+Replicated Stage-A shocks.
+
+## Step 17
+Stage-A gate report.
+
+## Step 18
+Only after acceptance: Stage-B preregistration.
+
+## Step 19
+Stage-B runs.
+
+## Step 20
+Scientific analysis and report.
+
+Do not jump from Step 3 to a million-tick simulation.
+
+---
+
+# 89. FOUNDATION GATE
+
+Before any scientific dynamics claims, all of the following must pass:
+
+- Gaussian potential exactness;
+- marginal exactness;
+- finite EBU exactness;
+- finite equilibrium disturbance negative;
+- restorative example positive;
+- path integral closure;
+- simultaneous group closure;
+- per-action receipt closure;
+- physical feasibility;
+- conservation;
+- capacity zero genesis;
+- capacity spending;
+- overdraft rejection;
+- external drive not crediting actors;
+- external-ledger exactness;
+- driven accounting closure;
+- RNG independence;
+- runtime locality.
+
+If any foundation gate fails, do not interpret long-run trajectories.
+
+---
+
+# 90. CORE SCIENTIFIC HYPOTHESIS — KEEP MODEST
+
+The prospective hypothesis is not:
+
+> EBU proves every economy will become stable.
+
+The first test hypothesis is closer to:
+
+> In the declared conservative Local Gaussian world, exact EBU accounting with
+> persistent finite nonnegative capacity may constrain randomly chosen physical
+> actions in a way that produces measurable recovery/stability relative to an
+> otherwise matched physical-random process.
+
+This is falsifiable.
+
+Treat it as such.
+
+---
+
+# 91. FINAL GOVERNING EQUATIONS
+
+Reference potential:
+
+\[
+\boxed{
+V_i
+=
+\frac12
+\left(
+\frac{x_i-x_i^\star}{\sigma_i}
+\right)^2
+}
+\]
+
+\[
+\boxed{
+V=\sum_iV_i
+}
+\]
+
+Marginal:
+
+\[
+\boxed{
+\mu_i
+=
+\frac{x_i-x_i^\star}{\sigma_i^2}
+}
+\]
+
+Exact finite EBU:
+
+\[
+\boxed{
+E
+=
+V_{\rm pre}-V_{\rm post}
+}
+\]
+
+Quadratic finite EBU:
+
+\[
+\boxed{
+E
+=
+-\mu^T\delta x
+-
+\frac12\delta x^TH\delta x
+}
+\]
+
+Group:
+
+\[
+\boxed{
+\delta x_G=\sum_a\delta x_a
+}
+\]
+
+\[
+\boxed{
+E_G=V(x)-V(x+\delta x_G)
+}
+\]
+
+Common-path receipt:
+
+\[
+\boxed{
+R_a
+=
+-\int_0^1
+\nabla V(x+\lambda\delta x_G)^T
+\delta x_a\,d\lambda
+}
+\]
+
+Closure:
+
+\[
+\boxed{
+\sum_aR_a=E_G
+}
+\]
+
+Capacity:
+
+\[
+\boxed{
+B_i'
+=
+B_i+\sum_{a:\operatorname{owner}(a)=i}R_a
+}
+\]
+
+Affordability:
+
+\[
+\boxed{
+B_i'\ge0
+\quad\forall i
+}
+\]
+
+External injection:
+
+\[
+\boxed{
+D_t^{ext}
+=
+V(z_t)-V(x_t)
+}
+\]
+
+External ledger:
+
+\[
+\boxed{
+J_{t+1}=J_t+D_t^{ext}
+}
+\]
+
+Driven invariant:
+
+\[
+\boxed{
+V(x_t)+\sum_iB_i(t)-J_t
+=
+\text{constant}
+}
+\]
+
+Zero-initialized benchmark:
+
+\[
+\boxed{
+V(x_t)+\sum_iB_i(t)=J_t.
+}
+\]
+
+Physical conservation:
+
+\[
+\boxed{
+\sum_i x_i=M.
+}
+\]
+
+---
+
+# 92. FINAL GOVERNING ARCHITECTURE
+
+The entire experiment can be summarized as:
+
+\[
+\boxed{
+\underbrace{\text{random physical forcing}}_{\text{nature}}
+\rightarrow
+\underbrace{\text{physical feasibility}}_{\text{physics}}
+\rightarrow
+\underbrace{\text{exact EBU valuation}}_{\text{measurement}}
+\rightarrow
+\underbrace{\text{capacity affordability}}_{\text{constraint}}
+\rightarrow
+\underbrace{\text{random choice}}_{\text{actor}}
+\rightarrow
+\underbrace{\text{exact physical execution}}_{\text{world}}
+\rightarrow
+\underbrace{\text{settlement + audit}}_{\text{verification}}.
+}
+\]
+
+EBU evaluates.
+
+EBU does not choose.
+
+This is the most important architectural requirement in the programme.
+
+---
+
+# 93. FINAL NON-NEGOTIABLES
+
+Do NOT:
+
+- add an EBU-maximizing controller;
+- add service-first selection;
+- add automatic equilibrium restoration;
+- let forcing inspect EBU;
+- let actors inspect global V for selection;
+- issue initial capacity;
+- permit negative capacity;
+- transfer capacity directly between cells;
+- credit actors for external forcing;
+- fit parameters after seeing official outcomes;
+- silently delete historical threshold EBU;
+- replace local factors with a dense global Gaussian;
+- use full Möbius as runtime settlement;
+- silently rescale chosen actions;
+- hide deadlock;
+- hide cycling;
+- hide negative results.
+
+---
+
+# 94. FINAL DELIVERABLE FROM THIS TASK
+
+At the end of each meaningful implementation stage, report:
+
+1. current repository branch/SHA/tree;
+2. exact files changed;
+3. mathematical statements implemented;
+4. tests added;
+5. tests passed/failed;
+6. unresolved authority conflicts;
+7. whether any model semantics changed;
+8. whether Stage A has been run;
+9. whether Stage B has been run;
+10. whether evidence supports, fails to support, or is insufficient to assess
+    the prospective stability hypothesis.
+
+Do not self-certify scientific success merely because tests pass.
+
+Software correctness and scientific hypothesis support are different gates.
+
+---
+
+# 95. IMMEDIATE FIRST ACTION
+
+Do NOT immediately implement the long-run simulation.
+
+First:
+
+1. inspect repository;
+2. produce the architecture/authority audit;
+3. identify exact integration points;
+4. identify any conflict with current settlement/capacity semantics;
+5. then implement Phase 1 foundation.
+
+Proceed through the numbered implementation order unless a genuine authority
+conflict requires stopping.
+
+END OF CONTROLLING HANDOVER.

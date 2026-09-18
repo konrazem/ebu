@@ -1,0 +1,1745 @@
+{
+  "schema_version": 1,
+  "status": "DOCUMENTATION_INVENTORY_NOT_SCIENTIFIC_ACCEPTANCE",
+  "checkpoint": "924a4d9a801b96f265aa3f0adc40e2c09063e469",
+  "scope": "All 216 tracked paths at the preservation checkpoint; reconciliation additions are listed separately in the completion report.",
+  "classification_method": "Exhaustive path inventory and reviewed family-level impact dispositions, with focused source inspection of load-bearing mathematical/framework/book claims; not independent revalidation of every historical proof or test.",
+  "categories": {
+    "H": "historical immutable during this stage",
+    "C": "current compatible within stated scope",
+    "A": "current navigation/contract needs amendment or scope qualification",
+    "S": "superseded prospective design/implementation",
+    "Q": "quarantined from active programme",
+    "U": "unresolved authority/provenance"
+  },
+  "entries": [
+    {
+      "sha256": "a2dc9f0f57a004232f87ddc71662ea126ae6e17511215cd32ac50fe4d72f6766",
+      "path": ".github/workflows/tests.yml",
+      "category": "A",
+      "current_role": "mixed historical dynamic and prospective static CI",
+      "this_stage": "preserve checkpoint workflow bytes",
+      "later_disposition": "Do not run whole CI in static-only stage; Gaussian tests require separate later routing."
+    },
+    {
+      "sha256": "9accad1a84877418575e887719f21270ac2555a6658fae0b41d2a96461ecd537",
+      "path": ".gitignore",
+      "category": "C",
+      "current_role": "compatible repository/provenance infrastructure",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Reuse within original semantics; no new execution authority."
+    },
+    {
+      "sha256": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e",
+      "path": "AGENTS.md",
+      "category": "C",
+      "current_role": "compatible repository/provenance infrastructure",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Reuse within original semantics; no new execution authority."
+    },
+    {
+      "sha256": "1663c5494a89e6df477885642c0a00418b3c0d24c0fcd88f6bafc285a3fa3b54",
+      "path": "CITATION.cff",
+      "category": "C",
+      "current_role": "compatible repository/provenance infrastructure",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Reuse within original semantics; no new execution authority."
+    },
+    {
+      "sha256": "b164b8079ebafbb86309f1c2a073c3467fc43356a719c95bd89227a1064e9d4a",
+      "path": "CONSERVATION_AND_BOUNDARY_ACCOUNTING_FOUNDATION.md",
+      "category": "C",
+      "current_role": "compatible scoped analytical/boundary foundation",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Use stated assumptions; closure is not physical completeness or allocation entitlement."
+    },
+    {
+      "sha256": "ee2e5bb7ab4ff2c40092bfa06858e4c181065e3f89088b7f5f0cb62389f2f96f",
+      "path": "CONSERVATIVE_WORLD_ADOPTION_PACKAGE_CANDIDATE.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "542612c5372c529f315bb641840bf0e6170d63ea7d78ad625b07bd41598e9549",
+      "path": "CONSERVATIVE_WORLD_ADOPTION_PACKAGE_REVIEW.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "23e78c48ee8152e2acb56e26266b409a507c67e4b04c82eefeba8bf76b5548be",
+      "path": "CONSERVATIVE_WORLD_FOUNDATION_DESIGN.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "6f9bf4a95e307c5a44ad386aa5e680d917c13b547b3bdbaffab1e4d11a1d5a95",
+      "path": "DYNAMIC_COORDINATION_FOUNDATION.md",
+      "category": "A",
+      "current_role": "source-locked generic framework or coordination contract",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Gaussian event profile needs prospective amendment; do not reorder current contract."
+    },
+    {
+      "sha256": "89cb8c10b6b3e98757c6b6498157f531a94412116ea2b80a4a38556df324f52d",
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "category": "A",
+      "current_role": "current project/book front door needing replacement",
+      "this_stage": "replace with scoped current navigation; exact old snapshot retained",
+      "later_disposition": "Current programme and book architecture only."
+    },
+    {
+      "sha256": "d02554aafacd4647a261f6dd354c34a6c60e9847a4f99154a075f467033a7904",
+      "path": "EBU_TEST_DESIGN_CONFORMANCE_MAP.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "23706158641f7fd07407698db9029500401c659d8fbf9ffe6eb7aa7cd111d7da",
+      "path": "Energy_Balance_Project_Foundation_v2.1.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "95155998ca6bdbe636fb2903253c25a7fff73be34f20df5d8ebcf0dc8e839e75",
+      "path": "Energy_Balance_Project_Foundation_v2.2.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "b0ce63925eb323e7b5aab6abbe6f73d7a02241571f8911b7a800fc943779fa4c",
+      "path": "Energy_Balance_Project_Foundation_v2.3.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "ede1596a2ee55a8b2a2ec8f91c636266997e2860896f8c4de5d730944a1f34b8",
+      "path": "Energy_Balance_Project_Foundation_v2.4.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "300157da9f9043a58b7de80f6bc8cfa6920e46a18447eca4f3cb3d8353d79494",
+      "path": "Energy_Balance_Project_Foundation_v2.5.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "dfb6f006657750528fda3bf89627aec7e8097d98d1133afdedbe9e13bfc60e1e",
+      "path": "Energy_Balance_Project_Foundation_v2.6.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "e06f9cc384ec952652300336d54b8c0c1a05ae2302bb8d9cc8fbb2f2d0a27673",
+      "path": "Energy_Balance_Project_Foundation_v2.9.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "4f0de05073760ba280c4f82f9e3036f8de248e1033a180ce87742d336a4547df",
+      "path": "Foundation_v2.7_math.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "f59d507a2acfb9ac1ee39c0b35f388b476b2ec148319c60d936b453bf13dbee7",
+      "path": "Foundation_v2.7_math.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "4668d0bbb977dbbca44f4b4adc09fad4acf8023738b52d8c5bc7d9cae4f33103",
+      "path": "Foundation_v2.8_discrete.pdf",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "e5e2eb523a2da34fe0d248ce564a0b7f37d13bb0da6c56370a98413622cf3fe4",
+      "path": "Foundation_v2.8_discrete_draft.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "17f735109f76b41cfc42a364f035cb1f3a81c535357a97be9a0f77a2dc5503fc",
+      "path": "Foundation_v2.9_local_preservation.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "2cdab1dd4903f2652a8c52be11911573d8bacf0b9c7d7cf2c1e81af118b2b907",
+      "path": "LICENSE",
+      "category": "C",
+      "current_role": "compatible repository/provenance infrastructure",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Reuse within original semantics; no new execution authority."
+    },
+    {
+      "sha256": "9f90ffc973e743891d15ae52b186ec5b1facc5ca4a2ae638d8006f91d5e547df",
+      "path": "PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "category": "A",
+      "current_role": "retained source needing current-scope qualification",
+      "this_stage": "preserve body; add explicit navigation/status notice",
+      "later_disposition": "Historical and separate-programme content remains scoped; current index takes forward-planning precedence."
+    },
+    {
+      "sha256": "25722f43fc35fee20900b8a235797030b104adb6b2aae5f7a0a1abacbc051b0b",
+      "path": "README.md",
+      "category": "A",
+      "current_role": "current project/book front door needing replacement",
+      "this_stage": "replace with scoped current navigation; exact old snapshot retained",
+      "later_disposition": "Current programme and book architecture only."
+    },
+    {
+      "sha256": "c229ecac7143229024e76a38f6ec152195c500ade99083482a93885367793e52",
+      "path": "RELEASE_NOTES_v2.9.0.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "d98c7620e7a1aa95bbab63a44a9d35bc629a098d91ece08b83939e755129e987",
+      "path": "SD_01_TO_14_MASTER_TEST_REGISTER.md",
+      "category": "A",
+      "current_role": "retained source needing current-scope qualification",
+      "this_stage": "preserve body; add explicit navigation/status notice",
+      "later_disposition": "Historical and separate-programme content remains scoped; current index takes forward-planning precedence."
+    },
+    {
+      "sha256": "144911e088c3f17da1f85a8214ddd2aa128d395c5a53af978523b3e405d1c391",
+      "path": "SD_03_PRE_EXECUTION_READINESS.md",
+      "category": "U",
+      "current_role": "separate SD-03 programme with unresolved P1 authority",
+      "this_stage": "preserve",
+      "later_disposition": "Resolve registered SD oracle assumptions separately; no Gaussian reassignment."
+    },
+    {
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10",
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "category": "C",
+      "current_role": "compatible scoped analytical/boundary foundation",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Use stated assumptions; closure is not physical completeness or allocation entitlement."
+    },
+    {
+      "sha256": "a27aedf955c1e7bbf7039efc905951f516e070a2f36dc24b23c72d75f6a2f448",
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_I1_PACKAGING_AMENDMENT.md",
+      "category": "A",
+      "current_role": "source-locked generic framework or coordination contract",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Gaussian event profile needs prospective amendment; do not reorder current contract."
+    },
+    {
+      "sha256": "3422a0887b82637ce323de7015869770ffa59408cb11907f7266ed0e95a22a9c",
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_IMPLEMENTATION_PLAN.md",
+      "category": "A",
+      "current_role": "source-locked generic framework or coordination contract",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Gaussian event profile needs prospective amendment; do not reorder current contract."
+    },
+    {
+      "sha256": "32bc5b9d1983b3b46242d0ccc9323636847d1c8cfeea641f64796f0665916f69",
+      "path": "UNIFIED_PYTHON_RESEARCH_FRAMEWORK_SPECIFICATION.md",
+      "category": "A",
+      "current_role": "source-locked generic framework or coordination contract",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Gaussian event profile needs prospective amendment; do not reorder current contract."
+    },
+    {
+      "sha256": "dc99e810c12d9eb10b2a21511473b549ea6f2afc3f2e233fb365b2542ab6928a",
+      "path": "V2.9_BEHAVIORAL_PROTOCOL_DRAFT.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "8d754c3f97858dc90865b264bee7e7bd0c603715da3d16bf2c57a8be033c7864",
+      "path": "V2.9_OBJECTIVE_ALIGNMENT_DRAFT.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "ed1d4e3d24a1b756f9df4ed6d5f84720b918b047640a0da39f5f646155806449",
+      "path": "V2.9_OBJECTIVE_ALIGNMENT_REVIEW.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "30ba3a7c8a3e5fb3ef5c0ae9409a56e0c82a1b2a4c3739c635bc035b2be092bb",
+      "path": "V3.0_D5_MICROBENCHMARK_AUTHORIZATION_BRIEF.md",
+      "category": "H",
+      "current_role": "historical non-scientific performance material",
+      "this_stage": "preserve",
+      "later_disposition": "Do not turn timing figures into Gaussian evidence or a cloud price."
+    },
+    {
+      "sha256": "98dc32c6a10e8ab4b1e0638d0429a64d577d3d43ec014152e388848804bffade",
+      "path": "V3.0_DESIGN_READINESS_NOTE_C4_DEGENERACY_AND_P1C_APPLICABILITY.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "27d18b3bd8862c708d163ac5e77c008a51785b7dca78122f31b4a7147645d5a2",
+      "path": "V3.0_DIRECTION_C_DEMAND_DRIVEN_FINITE_ACTION_DESIGN_PACKET.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "22514d8bfc13f7cac7bda711793d89e43563d61cafbb3946d76f7ba8b0b90261",
+      "path": "V3.0_FIRST_STUDY_RESOURCE_MODEL_AND_LOSS_ACCOUNTING.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "b64701b6c955370d72c45a0bd9481d87966e48c2e00fe1a14add7539f441050a",
+      "path": "V3.0_GATE1D_B_O14_MULTI_EDGE_PROTOCOL.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "3153c445e03fa4e3431ac036c53562853d33ea80536d5d46c829101f432587c9",
+      "path": "V3.0_GATE1D_B_O14_RUNNER_CORRECTION.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "28d47aa314e74206b4cc3da9ceccfbf0a08bd2196930490636c1d3c991039fa1",
+      "path": "V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "2e439afad6ba7532aae83631ef4fb7ea6648980be035674f8e2d13faeecd9b51",
+      "path": "V3.0_GATE1D_C_MACOS_ENVIRONMENT_COMPATIBILITY_ADDENDUM.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "d81afc5d77e1d2c7ccd9ceaae44d96ce33ddbb85ddc35fe0a0a0e1141394e8c3",
+      "path": "V3.0_GATE1D_C_MACOS_PYTHON_LAUNCHER_COMPATIBILITY_ADDENDUM.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "3122aa673f47290bbee866feb56d16afc4540f552ed7c7b458f097ef4e44d04f",
+      "path": "V3.0_GATE1D_C_OUTCOME_DISCRIMINATION_PROTOCOL.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "5bfeddfe0a089a7a7987f0ce192f8b003ad01f05ee4cf7b929920f25880d586e",
+      "path": "V3.0_GATE1D_SERVICE_ALIGNMENT_DIAGNOSIS.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "72c42b6eb61e82f0736514fd48311152144757185007524be44d5eac6e5d233c",
+      "path": "V3.0_GATE1_INDEPENDENT_REVIEW.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "164d2ed2b5d4fc05c7f0754663d073ad94c8e3dd5b254393537f99b7881875cb",
+      "path": "V3.0_GATE1_QUOTE_VALIDATION_PROTOCOL.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e",
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "2ecce03c98235aafbd559f445f01c531d91da29ba073524aae948ea5ef3e3f60",
+      "path": "V3.0_LONG_HORIZON_COST_AND_LAUNCH_PLAN.md",
+      "category": "Q",
+      "current_role": "parked N/H/X or prior long-horizon planning",
+      "this_stage": "preserve with current-index quarantine",
+      "later_disposition": "No active study, AWS budget or launch authority."
+    },
+    {
+      "sha256": "70a8cd471c3d1e5236141ddb1fb286875b3f0bfa95458eaba159581f551936ba",
+      "path": "V3.0_LONG_HORIZON_NORMALIZED_MECHANISM_CANDIDATE.md",
+      "category": "Q",
+      "current_role": "parked N/H/X or prior long-horizon planning",
+      "this_stage": "preserve with current-index quarantine",
+      "later_disposition": "No active study, AWS budget or launch authority."
+    },
+    {
+      "sha256": "4ef7a903d240dadda2c73a124e213c562fd1f333744b20ace326cda87bd5766e",
+      "path": "V3.0_LONG_HORIZON_STUDY_DECISION_PACKET.md",
+      "category": "Q",
+      "current_role": "parked N/H/X or prior long-horizon planning",
+      "this_stage": "preserve with current-index quarantine",
+      "later_disposition": "No active study, AWS budget or launch authority."
+    },
+    {
+      "sha256": "53867c3a7b2a7ef47146d9d1b5e93fe3f1da68985deffce0f0bab7d16129a6c5",
+      "path": "V3.0_LONG_HORIZON_STUDY_SHAPE_AND_COST_WORKSHEET.md",
+      "category": "Q",
+      "current_role": "parked N/H/X or prior long-horizon planning",
+      "this_stage": "preserve with current-index quarantine",
+      "later_disposition": "No active study, AWS budget or launch authority."
+    },
+    {
+      "sha256": "a3461cb387e6d26bfb6f09b50e7c6f4f49b918699f133f309b6b654e541292c6",
+      "path": "V3.0_LONG_RUN_STUDY_FRAMEWORK.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "66aee6264b8d89234691b9f7a3446e3cd78429df13c8bc0258caae027138084c",
+      "path": "V3.0_POST_O14_SCIENTIFIC_DISPOSITION.md",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "d2c9870cccd2e19625865522969e770780cb9cdd79b7aab37070f3248142810c",
+      "path": "V3.0_PROGRAMME_AUTHORITY_COORDINATE.md",
+      "category": "A",
+      "current_role": "retained source needing current-scope qualification",
+      "this_stage": "preserve body; add explicit navigation/status notice",
+      "later_disposition": "Historical and separate-programme content remains scoped; current index takes forward-planning precedence."
+    },
+    {
+      "sha256": "b2b119e4f1e417fff685cb64e2c2b5d29090d01d736a635ac313080f337f8c36",
+      "path": "V3.0_PROSPECTIVE_STUDY_CONTROLLER_DECISION_PACKET.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "fea724f0fb8bf702157751a320d2aba4b2b1ae4aa9d325b6c8d65ef111778557",
+      "path": "adversary_v30.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "f43976d1005eaee23c6ec915cced73909e45a89dd342ff277109c7b46fc0b3bc",
+      "path": "analysis.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "b547866be8f8cfb845719fa57cca2162ad0b3f966ea69343d67a9a2f641b593d",
+      "path": "audit_v231.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "5c9ed17e49a88749bae96be97fb7706115c5f9ec6327b3e775df763f4b71fd4c",
+      "path": "audit_v30_gate1c_reproduction.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "ddbb5eb0047bc0649611ef2b8a70e0eee82303419a22b85fd1ee15e7106fdea2",
+      "path": "audit_v30_quote.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "1fb27f00ebe72dbe683e837b570a95acaf65edc7a6b6dd8ce84b3fc95d4f78b2",
+      "path": "authority_coordinate.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "a297a7f91b8b85663a0ba683adf273bbb52fb71504d9c43efbfa75b89c41c608",
+      "path": "bench_d5_kernel.py",
+      "category": "H",
+      "current_role": "historical non-scientific performance material",
+      "this_stage": "preserve",
+      "later_disposition": "Do not turn timing figures into Gaussian evidence or a cloud price."
+    },
+    {
+      "sha256": "f7fdce8d946b44b4e0bfab9338fcd5c378796f9d14cd80323c53732e08a3bfe9",
+      "path": "d0_v29.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "cac37e9014f5699c7ca32644d7d234fd7873cf959135ed11ba3667ce9581b0eb",
+      "path": "ebu_candidate_controllers.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "44a2ea282837f7613198a06a7037fb89f2f9fd99f05cedde65e0b1ba726e1b79",
+      "path": "ebu_quote_v30.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "b040f017334dff53c0de3aa04f404157f750ad9ae2a3c2c8c70604ab03bba5c9",
+      "path": "ebu_test_protocol.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "5a42e376f3c2f8fda3ac050949182f180ad9552840e5e26f8171f415a5129375",
+      "path": "ebu_test_settlement.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "52a0ba1ad07c585e9e01be78fcb6140673a3578e72cf594e115cd02a00a0fb81",
+      "path": "ebu_test_world.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "46441bd65df2e80df0b12bc0ca8b2054ea6c6373cb949231a448b99ff97dc7df",
+      "path": "ebu_v22.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "5314ca68d94a85b5f0ed8ee685f45fcd5b474c018ee11f9a09e93ea12633c10c",
+      "path": "ebu_v23.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "ed53ceb8899010341ebcbcc1f12708da840e3e3e61ce9fe4833fc3014dff5a73",
+      "path": "ebu_v24.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "9154159524169baf5ea42ee71434f7865c6f7aed358f1c06b096dc9815388495",
+      "path": "ebu_v25.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "4c1987080deb370b2a171d6cc3a676c682d3377a2f419d4d1e29d7a9e2a6a3ff",
+      "path": "ebu_v26.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "294b15cfb34ba73b6c96c6ec78223543393d0db2ed3b9426b2c3a7522926cf5f",
+      "path": "ecosystem.gif",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "2bc43a2799809a2f8a39c5051c9a42a8c047d40e54d10c3eb55fc64874e1f1a9",
+      "path": "ecosystem.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "f62348fbec3571bb5222a5cd4d69e224541d4713f71baee98f0bc7d93be40f77",
+      "path": "energy_balance.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "357320d19a367d7968af7c4ec5bdd1fbae8d8be4618b015948d46b7fa972472d",
+      "path": "exp_v23.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "c46ef71bf887f99c70419b8cdc6e1b6b72e00117bd32e6130c47f3d92648f811",
+      "path": "exp_v24.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "b3018ee670b3b47a786908c36e30edb22265413aeec4dcb75c14510b5cd03979",
+      "path": "exp_v24_clustered.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "f389106fe549bbb4752112df2207485c16189af52d82e33e97248a49ef7bf689",
+      "path": "exp_v25.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "d2ee45c33325c87954687ce7c0a9438e810ee63af4ef01573c70b3f036a7b3f7",
+      "path": "exp_v26.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "32cf386a3c92655b14485583315e2881b06db2b1238490ece03d8971b56afd11",
+      "path": "exp_v29.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "6d704ff4581a628258d3038c873ba1f6dff5ec809d30aecbd0f855b95a8d8ff0",
+      "path": "exp_v29_d9_d10.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "4d3f5ed637ffa258f5d9d651245de5fb8f8d1c84291f5594c8be8549523434d6",
+      "path": "exp_v30_adversary.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "89b8016c2017839faaee38b172f6041ca2d987669db448ffa260399cb872deb2",
+      "path": "exp_v30_gate1dc.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "4bd5915e89187935b26d8b36714555bf49b714e6afd702bb3baaa2d30c5cb296",
+      "path": "exp_v30_o14.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "a05929dc0c3135b9ce2ae726f4ec109cd815c795972ffa238dbcb80071c28728",
+      "path": "exp_v30_service.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "13c5d82a9c372acea23ca7b6fcb884d4e7d3b39c6f7b4615ebe314379cb02437",
+      "path": "exp_v30_service_attempt2.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "e5030cd1a4408878ea5e8e16d8cb9e67d505b368894741f3308e31f402022ac8",
+      "path": "experiments_v22.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "a30b16377a9f1204bb6aa639b135abf42222d367f26a3e2bd0952a446b5947fa",
+      "path": "figures/B_vs_time.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "d3205556488e51816fbec2a7836383f00c55174d0dfd0e2f45f7939902aa6d3e",
+      "path": "figures/audit.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "9758cac4c88cc7fb0a5728d68746850724f8385357ac0b1aecb3f8986addfc10",
+      "path": "figures/heatmap_snapshots.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "e90de596742b098af48bf1083b65d49d23c119e34a3b0756291b8e419e22f862",
+      "path": "figures/inflow_sweep.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "c38fbeb7da6e1102f3eb00d03fd0376b722075ba32c39a9a8f20907512e3d5ff",
+      "path": "figures/phase_map.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "fb909922a80d400903778afdb7bc57f2cd57dc39817143abf9670e930eb222c8",
+      "path": "figures/shock_recovery.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "f00c71792beb8ecee75a0676470295bd99ca5ff82054c0716dda502aa3bc6d3b",
+      "path": "figures/v23_src_stock.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "a1a8c41341c612d5f8093120c25d4b8179df19b07050a5b8a1c377f8e34e979f",
+      "path": "figures/v23_viable.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "bcef783d358df6ae831aef493da8030a055d653cde94db23f44531cbb53c74c2",
+      "path": "figures/v24_clustered.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "589d527aaa497de7e65bc459862a431384288e3bc76b24c52186868bd99e7a99",
+      "path": "figures/v24_stock.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "e8336eb061be2237bf529ff20c0e3807548383fa5b72f09cb62b82fec99b3781",
+      "path": "figures/v24_viable.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "2c7b5dc7f91773fb6349655f4cb729f9f21b18db88f90663acefd86ab39e7cb9",
+      "path": "figures/v25_compare.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "828a9c8750f31fc4f46e8df5aef0a4c2a31d4b1345ed454c322255c10cb626c3",
+      "path": "figures/v26_policies.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "72f9885d64565135494083d135a4a5c1fcd4873e440cabc2694a08cd982a5daa",
+      "path": "figures/v26_random.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "f71a9eb5230fdd80bf73b2c02ff2132c192735c17a8ee8255b60ef7f5a41c7ce",
+      "path": "figures/viable_vs_time.png",
+      "category": "U",
+      "current_role": "historical illustration; individual figure-to-result provenance not revalidated",
+      "this_stage": "preserve",
+      "later_disposition": "Verify provenance before reuse in a new book."
+    },
+    {
+      "sha256": "f4c7af1415d38e753aacf1be644047d6744cefaa36da9bc87042cc1946db2e85",
+      "path": "finalize_v30_gate1dc.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "33ebb3c83d5a4cb6653012e71fe1f5bd3929eb7efe7488f1ce1851134707cf80",
+      "path": "gate1dc_v30.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "8952bf0e1d695dddade37ff23e73f7f08a99112740e74676fda90a0f44f2bd06",
+      "path": "longhorizon_v30.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "85a67b139b46af849981b5acbfd7d02b68839dc0141f02ce14afbd64c10beed6",
+      "path": "make_paper.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "1d04e1d81b1d69b365df2653ca6bed2cd3233fdad9281634ac47714e28a46039",
+      "path": "make_paper_v22.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "f9f010dec7cf91ea881b1cbc6d03f3cb331627512b6a54c24d6d5cb3be254a58",
+      "path": "make_paper_v23.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "a5aac3b32106c069d61cdc41a2c99dac971eeb987d3a4cae6e1f8a3a6dd4eedd",
+      "path": "make_paper_v24.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "8941b19108814bf9226d86ffef858f9b611ba11cb803332838aafbb06de06ca0",
+      "path": "make_paper_v25.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "62796159347ee325d54eef8c1d8ff8f2c58258bb0997beca7f0df07e432dfce7",
+      "path": "make_paper_v26.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "9e3541bffdbac1343d62e35ee646bc605e78c4003450990164e53af712361da1",
+      "path": "make_paper_v27_math.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "00a0604ee6fc89827c09efd649db3d98fe066d05ab43fc3f0ffd20f95b0d389a",
+      "path": "make_paper_v28_discrete.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "94d4b22b02af4771159eb60fce5d46a0113ccc7bc0ae034309cccdbccd318cf0",
+      "path": "make_paper_v29.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "6d23ce9d481345c5f1d01dd7dd42b1742301fe67e1587b1f6da68af6c4f6eccb",
+      "path": "o14_v30.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "a30c869000080b4b0235a9ba1daa517a5b0fe734ba55ac423ae3042da5940729",
+      "path": "p1c_v29.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "e06882aad521f9ebe67b58b4cf77fbf0f7cc8bcb36275ef96a9f8e1110f7e1ee",
+      "path": "requirements.txt",
+      "category": "C",
+      "current_role": "compatible repository/provenance infrastructure",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Reuse within original semantics; no new execution authority."
+    },
+    {
+      "sha256": "98f7466b6a303fb74caca01ebc872ee2d7f01b2ad4f41c2b5154f3ae06e02311",
+      "path": "results/benchmarks/d5/d5-raw-001/d5_raw_samples.jsonl",
+      "category": "H",
+      "current_role": "historical non-scientific performance material",
+      "this_stage": "preserve",
+      "later_disposition": "Do not turn timing figures into Gaussian evidence or a cloud price."
+    },
+    {
+      "sha256": "58b0ec6c9dd0411bef5ee8e4984280bc55fe69a76ea515493cb7355ba5870d4d",
+      "path": "results/benchmarks/d5/d5-raw-001/d5_summary.json",
+      "category": "H",
+      "current_role": "historical non-scientific performance material",
+      "this_stage": "preserve",
+      "later_disposition": "Do not turn timing figures into Gaussian evidence or a cloud price."
+    },
+    {
+      "sha256": "111de703a7bc6a16fd3165fe85421a1a9a5617ec22e932e352a48a06bebc8bae",
+      "path": "results/benchmarks/d5/d5_summary.json",
+      "category": "H",
+      "current_role": "historical non-scientific performance material",
+      "this_stage": "preserve",
+      "later_disposition": "Do not turn timing figures into Gaussian evidence or a cloud price."
+    },
+    {
+      "sha256": "1e155c86bc8e157c6cdc7c94bb97895ca46f6601d0e6762dc5da00019f167f6b",
+      "path": "results/v2.4/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "313251393bdd84a1008de74d6368a6f9f84bd2e4fb278f554f7a0605e18fce9c",
+      "path": "results/v2.4/v22_experiments.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "1aab7b037540ba9a5b6b3dcfbb7793913e75ac79a16d9fa6686b79871e92b444",
+      "path": "results/v2.4/v231_audit.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "5546e459a4b2d6b0944a6111d2c444bf881a0a04ab5ad7fb1e02ef571ebfb14b",
+      "path": "results/v2.4/v23_regeneration.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "b1bcf9fcdd38aa21c60bb4b9dbc42ca4696928ca6ec35496a0ba450157aa0c32",
+      "path": "results/v2.4/v24_clustered.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "415ab58fb6411c56fef4cd8fdeeb97c63938cd01cbe1a45ffbc28e70d07aa32c",
+      "path": "results/v2.4/v24_regeneration.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "db6bc64f2464a8d046c283409f85fc3feb2e2db743b5889e06309d01bd687128",
+      "path": "results/v2.6/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "375a5ea220ff6beb50096ce15044cdf259e1b818e9659be37397651741c15583",
+      "path": "results/v2.6/v26_experiments.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "eee0393f013a88dd05eee94a21ac954b6fda29b62b05d22b91a8e94a83f2a8a2",
+      "path": "results/v2.7/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "c6c8faad574f37b54210b14420815eb3fcb379a84e4178e8b4f1f306333ec80a",
+      "path": "results/v2.8/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "20291fc7d3207eb0515bd8f55126b29161c6410d65a5c9ced58b7b43278b47e5",
+      "path": "results/v2.8/v28_validation.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "84686cfe4305eb297cc467d9cda40428a9ce9b8cc3d60a9aec0c46e112d2f1cf",
+      "path": "results/v2.9/RELEASE_MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "8040017632a8911702144ef0423e4d8de22b55ca2f2e6ab4bf45d687e050555d",
+      "path": "results/v2.9/d9_d10/ATTEMPT_1_FAILURE.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "79d1def9fc5bc81672ce112639f01ba39f931407dee8c2463464fdcb4b8571ab",
+      "path": "results/v2.9/d9_d10/ATTEMPT_1_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "48d5a89870d7e0d30e3c06855d71f6a55d1ebb8842773a110625002b8c957a48",
+      "path": "results/v2.9/d9_d10/ATTEMPT_2_SERIALIZATION_REPAIR.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "dc04c7ce0f9222b0a8784ab00f352a15d618cdaac4887dc7595a824c91b80c9b",
+      "path": "results/v2.9/d9_d10/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "c9537419b657671878df4abc05b0c44b36f4d401d0840512057c497aad528b8a",
+      "path": "results/v2.9/d9_d10/v29_d9_d10_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "55603b5751b5b945e66165614d6c9993a6f4defadfb8aa2143f50558d536d3b4",
+      "path": "results/v2.9/d9_d10/v29_d9_d10_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "4b1ef577c64e000566e464362703da34ddd98eacdd3fa35812523b63b3da3da5",
+      "path": "results/v2.9/d9_d10/v29_d9_d10_trace.jsonl.gz",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "7a5fa39e4936d270fb6e0e8c068fc58aee34585654d8fe979d9f16c81c0389b1",
+      "path": "results/v2.9/deterministic/v29_deterministic_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "5501fbc289b087bd31e86337c27f60ecb2582ab75c7919148b870787a5c70c7c",
+      "path": "results/v2.9/deterministic/v29_deterministic_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "c6f79056940ef6780ffad5b334efcb61e41fe9465a3d6a28fdf1960df6c458fc",
+      "path": "results/v2.9/deterministic/v29_deterministic_trace.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "b08d4859afcad5832d99b94b6e2adf890f5017477268201192423ef25f2d613f",
+      "path": "results/v3.0/gate1/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "4c0af3cfc29baa9345eb03c533a0bc851bef03d817b72863c2703f655de1453d",
+      "path": "results/v3.0/gate1/v30_quote_audit.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "2ff01f308a6b75ad1d6a8fc5e420a72df0f35614855d12a7d6690e8bdf4d7ab3",
+      "path": "results/v3.0/gate1/v30_quote_validation.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "e24753e51733a174065b18af758bffbde17c9c0e6bf70913677d3c80e1cb467a",
+      "path": "results/v3.0/gate1c/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "14592386d905f7b1b50ff478f76dc83df3ebec18760befc5578968a9e74e779a",
+      "path": "results/v3.0/gate1c/v30_adversarial_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "7114ea702132a0b95ca00e5cda6afc2ccd9d70207bc0dc450b2e5b4fefe42263",
+      "path": "results/v3.0/gate1c/v30_adversarial_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "e4c09e8aa54e0ddc87bf37be77138f7cf87abaed277349eaddd4e5755897b0fd",
+      "path": "results/v3.0/gate1c/v30_adversarial_trace.jsonl.gz",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "f92a51ee4ef225fe88988932b0a1da9b53587d786a82c94c4280cdb27b5ca236",
+      "path": "results/v3.0/gate1d/ATTEMPT_1_RESERVE_TOLERANCE_DEFECT.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "17868276c9deb839a135ee585b03d2e401a15e628f47040fede4413e8e744232",
+      "path": "results/v3.0/gate1d/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "f4e1b17d0143efcd0ec8d868028c387fe38e256cfff0a7f578e2fff207dee985",
+      "path": "results/v3.0/gate1d/attempt2/ATTEMPT_2_COMPARISON.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "5661f668a7e4cd2f0196185ccc33100f1ee283ccf4eed254a3de045313ba5580",
+      "path": "results/v3.0/gate1d/attempt2/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "4198d587ae3002daf387b1e3a1ef7c8b98c838e0c0812fc9a16038ea9722a319",
+      "path": "results/v3.0/gate1d/attempt2/v30_service_alignment_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "f2b065b5040ebb9151aca7de4a85831d054c89c21d690d61bfa4dabd42a96bc4",
+      "path": "results/v3.0/gate1d/attempt2/v30_service_alignment_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "b509606eb10c7d94500b735edb5cb31ab81616e6114081661cdf3be821fd095b",
+      "path": "results/v3.0/gate1d/attempt2/v30_service_alignment_trace.jsonl.gz",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "dacf9891ccb912641f60889f8bf9066fe7623f6aeb2cb9611d93afb3b80e4fb8",
+      "path": "results/v3.0/gate1d/v30_service_alignment_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "bd8de06658f68ff0d1b2aa337022daf4768d0ae620fb6a3cc79e88eeab41a867",
+      "path": "results/v3.0/gate1d/v30_service_alignment_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "3cb97610774ee94f9dab6c777c8b6d7a3496eeeaf254d580cdf30e3babbce3ab",
+      "path": "results/v3.0/gate1d/v30_service_alignment_trace.jsonl.gz",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "f9129a2b32869dc47a01df0b86258bec10ec2b3cb57583ff9f01639aafc5b7e1",
+      "path": "results/v3.0/gate1db/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "dff9b2329082898904f5a11ba6858e31404b9e3901d1f86da4b848d8362caacc",
+      "path": "results/v3.0/gate1db/v30_o14_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "4c258f822d5cd4ae5d9a5fe70909cf5a00a305ae4d34b26dc67491429ea68327",
+      "path": "results/v3.0/gate1db/v30_o14_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "77d190caced2bdc22427213e2b0ca5a481fb537593848560d80c5ea0a8f5991d",
+      "path": "results/v3.0/gate1db/v30_o14_trace.jsonl.gz",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "417552fce4681953d1b6d6bc3353d3e14f865aca2d17adefd1edf58a2528f9a8",
+      "path": "results/v3.0/gate1dc/MANIFEST.md",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "f76d25c66bc251e5becfe18cfb883548bd3a8de297eafdf6e6e9fbd056b44a4e",
+      "path": "results/v3.0/gate1dc/v30_gate1dc_execution_receipt.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "82b134e6d80c6ecd09ed607f2baf256c848bae58f8171ddfca0054a3ef26cfff",
+      "path": "results/v3.0/gate1dc/v30_gate1dc_execution_started.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "7aa3bc09a4948ea32200c49dc18810a808bc9d0917851e75f9dc5a9b1bc4bf85",
+      "path": "results/v3.0/gate1dc/v30_gate1dc_stdout.txt",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "e1e1cc6b6ed3f9ae84cf43197e66cc2c36716e51279d3a0192272a6ceff6f375",
+      "path": "results/v3.0/gate1dc/v30_gate1dc_summary.json",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "9463e2d18adffd5374f005c2123e23849ae810e3251eccb4f3f5aa61b73a5783",
+      "path": "results/v3.0/gate1dc/v30_gate1dc_trace.jsonl.gz",
+      "category": "H",
+      "current_role": "historical artifact under original scope",
+      "this_stage": "preserve",
+      "later_disposition": "No rewriting, rerun, regeneration or Gaussian relabelling."
+    },
+    {
+      "sha256": "c16f9b2e280cd5b9af0fce28fdc4a5416e0bb95b4d6b262e6e8ebf5bc28cc38e",
+      "path": "sd03_exact_oracle.py",
+      "category": "U",
+      "current_role": "separate SD-03 programme with unresolved P1 authority",
+      "this_stage": "preserve",
+      "later_disposition": "Resolve registered SD oracle assumptions separately; no Gaussian reassignment."
+    },
+    {
+      "sha256": "ce41b7931b90f479db149a1003aeba98a52b7836cc856dfb5572eb83854a6476",
+      "path": "serialization_v29.py",
+      "category": "C",
+      "current_role": "compatible repository/provenance infrastructure",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Reuse within original semantics; no new execution authority."
+    },
+    {
+      "sha256": "a83bcd5e449b8804f44607e56326ec392324cdfed71260e28fdc4c48899d44e0",
+      "path": "service_v30.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "0db6defb4aeb6d3b5fba30375bd9d64b39cf2a2a4decbcb8692a07334bf14489",
+      "path": "study_harness.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "75bd92a24ddc4873f27f9648f17307162094b24ef382b75d4f7f3581756ee19f",
+      "path": "study_protocol_schema.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "c1a6da141c0d007903381dee83c93d0b7a93f486c72f68a4bb367217cb457494",
+      "path": "test_authority_coordinate.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "0406376cb49f20d3956b1aa563b1d67ea819bf1518585cde9e65fe7657ae4d3d",
+      "path": "test_design.md",
+      "category": "S",
+      "current_role": "superseded prospective conservative-world/service-controller design",
+      "this_stage": "preserve; navigation banner where listed",
+      "later_disposition": "Reuse only specifically reviewed physical/accounting concepts."
+    },
+    {
+      "sha256": "a696f1d1f6a098dda9f1133a1d00334b0f8a65e4f6fd32ec1d9c265a56dc0caf",
+      "path": "test_ebu_foundation.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "9cc9b9a97a5eb60fa1d92a859737f8788fb2f761f396f789877aa4a0814d54d7",
+      "path": "test_ebu_foundation_transitions.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "62fdfab911657cc3664991867b913a6fad884515970a8971be5a6c9708886845",
+      "path": "test_energy_balance.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "16bd571c13ea3fd89332e4dccbe793db926c1892267be70638cb7b2ba5e9bc88",
+      "path": "test_math.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "d1e8bb26d60a48ac7e53de35b5998d615ca39062cf9dc3ac74258bf397a3f233",
+      "path": "test_sd03_exact_oracle.py",
+      "category": "U",
+      "current_role": "separate SD-03 programme with unresolved P1 authority",
+      "this_stage": "preserve",
+      "later_disposition": "Resolve registered SD oracle assumptions separately; no Gaussian reassignment."
+    },
+    {
+      "sha256": "41ef2dd010286c9efb976a577a25692c83e6f7d690c535e5947b9752cd0cfe02",
+      "path": "test_study_harness.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "281cbbe0f01a94b30941c2678d3918e7365b8547393305248da2dc7d759c1b09",
+      "path": "test_study_protocol_schema.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "4f8342241a0e4e431d5c8edfe25d7e1f9e0ce48b363aefc850850d225b003468",
+      "path": "test_v22.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "cb0c246ed95c0dfae4ffa4bc99b7d0b459a02a476abaafc4dde6dcedd57f30f4",
+      "path": "test_v23.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "506da057e6303b022e00f5fd670410401b082e12b5725f7773c4bec7ec81253f",
+      "path": "test_v24.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "d65b4a1dc45f065fe3b5494e542442a33ebe87315723d06e8e5dbb861356fd89",
+      "path": "test_v25.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "3f716d1b160da1d747637404f2a1b634efc7a9c409960880c97a8a158dc7409a",
+      "path": "test_v26.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "139e93a2b70bf3c64fa6f71a3c3b7be993de39cc5066158cb2110d4243bd6203",
+      "path": "test_v28.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "487975c79ad7ba9bd02caa80ea2a80bf7e809201a83cabc3fa930c92bba430d8",
+      "path": "test_v29.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "aca3bd9ec802b71d4ab48382e207037ab3b72cc44147aebd131006d66eab845e",
+      "path": "test_v29_behavior.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "379c8abc087274aacc0f920729d690a039800a129add5515db7af83e5ae4b709",
+      "path": "test_v29_d9_d10.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "6cc3d8071244c8130d119ae1a0ddb024d8d4985f9b908dec7b61413dd1fb4a9c",
+      "path": "test_v29_p1c.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "7eecccf07ed185065949b28a7b897c6fc6f83900c5fa63e84ac9df311b4874b1",
+      "path": "test_v29_serialization.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "4418a86e47a453a23243fa0ff74f558aee251ccac66c4eaab0ef7050ec028a5e",
+      "path": "test_v30_adversary.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "1f143f1d3d73cea2f8ec192b257d77a9e0c12635c36c66dd82d9422f188ff9e4",
+      "path": "test_v30_gate1dc.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "a5f6ef0908df331b0cbebaa39c72a4396b7026366f11f94a8dd0e77fd210012b",
+      "path": "test_v30_longhorizon.py",
+      "category": "S",
+      "current_role": "preserved prospective implementation or conformance suite",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Review selective reuse; do not import threshold/selector semantics wholesale."
+    },
+    {
+      "sha256": "9bb5d1228ae1912197f3a43860fef036806c08851bf28781134d735df6751bc0",
+      "path": "test_v30_o14.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "7f0f38ce8e88c2962492dd96cd016ca26f9c07f33b2b94025151094d466ea9ee",
+      "path": "test_v30_quote.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "3d0e14e0424a8c6dffd20f6911307f81e626f261427138da5790695355dd9035",
+      "path": "test_v30_service.py",
+      "category": "H",
+      "current_role": "historical implementation/test/generator under original model",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "edf2bd33361e7b2b2e083a10535c87e1e1cbbd36d21c2a3f3004f12b1743c351",
+      "path": "unified_python_research_framework_packaging_contract.json",
+      "category": "A",
+      "current_role": "source-locked generic framework or coordination contract",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Gaussian event profile needs prospective amendment; do not reorder current contract."
+    },
+    {
+      "sha256": "a931bc09e2a7cbb86f12c3c805fbb851aae84e09e240558c8cc2176183dff5bd",
+      "path": "v29_d9_d10_plan.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "a1a5ccaa2b7a740b0a33941350e33459f161041dae4d0bd751c89fa297ad9e8f",
+      "path": "v29_deterministic_plan.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "81d96d3f377a2d1d2471b38328af8968b9c728db590023d0d921e4312cd23155",
+      "path": "v30_gate1dc_execution_finalization_contract.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "628ee126011b3bdb6587af53c64f69db2fbd86d92deaef27ff60366b4d80ef8b",
+      "path": "v30_gate1dc_macos_environment_compatibility_contract.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "b937e0ed047799fbcce9d6390ca2836b0db6ca18c0a2b8ab854f89395bd79c82",
+      "path": "v30_gate1dc_macos_python_launcher_compatibility_contract.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "91a2c42558c09051988bfebe6f0d11c0fab440340d161171afc4442c86fa30fe",
+      "path": "v30_gate1dc_outcome_discrimination_plan.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "00c4dd472eb332e57865f845e41265032fa69ef3535bb170a8ade013f783d22a",
+      "path": "v30_o14_multi_edge_plan.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "5f01a1fd554bfb2f5e684dc318a805f2887d51274e456c98d1a1d5788d1a6f4f",
+      "path": "v30_quote_validation_plan.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "7a5676e2013d3baa4f18d48443fe448f1d6d0973be79b5c1ca8634a95bfa4f7c",
+      "path": "v30_service_alignment_plan.json",
+      "category": "H",
+      "current_role": "historical protocol, mathematical source or disposition",
+      "this_stage": "preserve byte-identically",
+      "later_disposition": "Retain original assumptions and evidence class; no new-model authority inferred."
+    },
+    {
+      "sha256": "184b6d6ff22d9c1653524e927bc38f3f00d992f6fbf4e3bef30fa559b3f326d0",
+      "path": "validate_bench_d5.py",
+      "category": "H",
+      "current_role": "historical non-scientific performance material",
+      "this_stage": "preserve",
+      "later_disposition": "Do not turn timing figures into Gaussian evidence or a cloud price."
+    }
+  ]
+}

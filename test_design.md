@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Superseded prospective test design. The Local Gaussian programme does not inherit its service/controller requirements. This body is preserved for trace, not an instruction to implement it.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved from checkpoint `924a4d9`, with only its missing final newline normalized.
+
 # EBU SCIENTIFIC TEST DESIGN TASK
 # Build the Python experimental harness only after the mathematical foundation gate is accepted
 

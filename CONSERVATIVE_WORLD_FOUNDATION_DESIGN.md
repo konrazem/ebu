@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Preserved earlier prospective physical-world design. Reuse requires explicit compatibility review; this is not the current actor/valuation contract.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.
+
 # Conservative World Foundation — Design Memo
 
 **Status: RESEARCH DESIGN MEMO — prospective comparison and recommendation

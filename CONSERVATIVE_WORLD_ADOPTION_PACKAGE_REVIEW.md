@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Preserved review of an earlier prospective package. Its findings retain that scope; this is not acceptance or review of the new Gaussian programme.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.
+
 # Conservative World Adoption Package — Independent Review Record
 
 **Status: REVIEW RECORD — an honest account of what was checked, what was

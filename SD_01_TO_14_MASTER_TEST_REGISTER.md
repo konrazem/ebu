@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Derived register for the separate source-locked SD programme, not a Gaussian study registration. Section 4A records an older prospective study. Its two-transition claim is a count of call sites per execution, not known lifetime executions; cumulative historical count is unknown.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.
+
 # SD-01 to SD-14 Master Test Register
 
 **Status: PROSPECTIVE, DERIVED, SUBORDINATE. Not an authority.**

@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Historical conformance map for the preserved prospective harness, not evidence or a Gaussian conformance map. Reported counts were not rerun in this reconciliation.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.
+
 # EBU Scientific Test Design — Section-by-Section Conformance Map
 
 **Status: DERIVED CONFORMANCE ANALYSIS. Not an authority; adopts nothing;

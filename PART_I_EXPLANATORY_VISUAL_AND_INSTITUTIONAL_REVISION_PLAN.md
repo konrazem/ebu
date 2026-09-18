@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Earlier Part I revision scope is superseded by the author's major introductory restructure. Preserve its historical PDF lock, conservation/preservation guidance and layout cautions. Its old page estimates and timing do not gate the new theory-first Book I.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.
+
 # Part I Explanatory, Visual, and Institutional Integrated Revision Plan
 
 **Version:** 0.1

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "checkpoint": "924a4d9a801b96f265aa3f0adc40e2c09063e469",
+  "inventory": "local_gaussian_ebu_migration_inventory.json",
+  "replacements": [
+    {
+      "path": "README.md",
+      "archive": "docs/history/README_PRE_GAUSSIAN.md"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "archive": "docs/history/BOOKS_STRUCTURE_V3_36373aa.md"
+    }
+  ],
+  "navigation_banners": [
+    {
+      "path": "test_design.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Superseded prospective test design. The Local Gaussian programme does not inherit its service/controller requirements. This body is preserved for trace, not an instruction to implement it.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved from checkpoint `924a4d9`, with only its missing final newline normalized.\n\n"
+    },
+    {
+      "path": "EBU_TEST_DESIGN_CONFORMANCE_MAP.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Historical conformance map for the preserved prospective harness, not evidence or a Gaussian conformance map. Reported counts were not rerun in this reconciliation.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "V3.0_PROSPECTIVE_STUDY_CONTROLLER_DECISION_PACKET.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Superseded prospective C0–C4 study packet. Its corrections and candidate formulas are retained; no controller is adopted for the Local Gaussian programme.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "V3.0_DIRECTION_C_DEMAND_DRIVEN_FINITE_ACTION_DESIGN_PACKET.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Superseded prospective Direction C/service-face design. The new programme separates EBU valuation from random actor choice; this packet is not its implementation authority.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "V3.0_DESIGN_READINESS_NOTE_C4_DEGENERACY_AND_P1C_APPLICABILITY.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Preserved diagnosis of the earlier controller/world combination. It is not a diagnosis or result of the new Gaussian programme.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "V3.0_FIRST_STUDY_RESOURCE_MODEL_AND_LOSS_ACCOUNTING.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Preserved earlier study/loss-accounting reconciliation. Lossless conservation concepts may be reused; its study identity and controller assumptions do not govern the new programme. Loss-aware runtime is not declared ready.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "V3.0_LONG_RUN_STUDY_FRAMEWORK.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Superseded prospective framework for the earlier study. The new programme has a separate F2 reuse plan and explicit actor/valuation separation.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "V3.0_PROGRAMME_AUTHORITY_COORDINATE.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Historical W-2 reconciliation, with source locks retained. Its HEAD/cleanliness and implementation-status statements describe an earlier snapshot, not this checkout. I-3C repair is implemented on the framework lineage; see the current index for exact status.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "SD_01_TO_14_MASTER_TEST_REGISTER.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Derived register for the separate source-locked SD programme, not a Gaussian study registration. Section 4A records an older prospective study. Its two-transition claim is a count of call sites per execution, not known lifetime executions; cumulative historical count is unknown.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Earlier Part I revision scope is superseded by the author's major introductory restructure. Preserve its historical PDF lock, conservation/preservation guidance and layout cautions. Its old page estimates and timing do not gate the new theory-first Book I.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "CONSERVATIVE_WORLD_ADOPTION_PACKAGE_CANDIDATE.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Preserved prospective conservative-world package; superseded as the active first-study design. It does not adopt Gaussian dynamics or capacity semantics.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "CONSERVATIVE_WORLD_ADOPTION_PACKAGE_REVIEW.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Preserved review of an earlier prospective package. Its findings retain that scope; this is not acceptance or review of the new Gaussian programme.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    },
+    {
+      "path": "CONSERVATIVE_WORLD_FOUNDATION_DESIGN.md",
+      "prefix": "> **Current-scope notice — 18 September 2026.** Preserved earlier prospective physical-world design. Reuse requires explicit compatibility review; this is not the current actor/valuation contract.\n>\n> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).\n> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.\n\n"
+    }
+  ],
+  "historical_snapshots": [
+    {
+      "path": "docs/history/README_PRE_GAUSSIAN.md",
+      "git_blob": "f450260d9c260ee18c01c9d0a5200cacdd23a8f5"
+    },
+    {
+      "path": "docs/history/BOOKS_STRUCTURE_V3_36373aa.md",
+      "git_blob": "6a74c8ccb8eb538125d71a4b3cf185a88a5fb503"
+    },
+    {
+      "path": "docs/history/BOOKS_STRUCTURE_FRAMEWORK_4ab6f9c.md",
+      "git_blob": "654145ef732814047a0e5a45bdd0edb732104390"
+    },
+    {
+      "path": "docs/history/BOOKS_STRUCTURE_STAGE_F_4d15bbd.md",
+      "git_blob": "fc4df2ffd09dedc68d46c4e5e3be6969db61ea15"
+    }
+  ],
+  "supplied_inputs": [
+    {
+      "path": "docs/programme/sources/LOCAL_GAUSSIAN_CONTROLLING_HANDOVER.txt",
+      "original_sha256": "5bac316c10a94ed8c372f709ee4e74b634cc59f3b76a776e95aced2c1617b8c6",
+      "normalization": "one final newline"
+    },
+    {
+      "path": "docs/programme/sources/RECONCILIATION_AND_BOOKS_HANDOVER.txt",
+      "original_sha256": "79e7625ee6edfe99cad5b49a4b2ef7e963bebe3fdc12db71d2ca1edc80d45854",
+      "normalization": "one final newline"
+    }
+  ],
+  "book_pdfs": [
+    {
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_I_Unified_Explanatory_Edition.pdf",
+      "sha256": "335ed5c6d3541d48a61438e213a8a1148eb196649da83392a4ba0741ce65a4ad"
+    },
+    {
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "sha256": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095"
+    },
+    {
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "sha256": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019"
+    }
+  ],
+  "body_normalizations": [
+    {
+      "path": "test_design.md",
+      "change": "one final newline added"
+    }
+  ]
+}

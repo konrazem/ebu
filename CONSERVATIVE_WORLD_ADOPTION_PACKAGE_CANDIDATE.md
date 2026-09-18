@@ -1,3 +1,8 @@
+> **Current-scope notice — 18 September 2026.** Preserved prospective conservative-world package; superseded as the active first-study design. It does not adopt Gaussian dynamics or capacity semantics.
+>
+> Current navigation: [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md).
+> The pre-existing body below is preserved unchanged from checkpoint `924a4d9`.
+
 # Conservative World Adoption Package — Candidate
 
 **Status: PROSPECTIVE ADOPTION PACKAGE CANDIDATE — not adopted; not a
