@@ -44,3 +44,59 @@ jobs:
       - name: Run V2.9 serialization audit - validates committed results (6 groups, 46 checks)
         run: |
           python test_v29_serialization.py
+      # V3.0 NON-MODEL-ADVANCING STATIC/PURE suites. These are static, AST and
+      # pure-function checks on frozen or synthetic individual states only:
+      # they advance no model state, run no trajectory, and generate no
+      # registered run.
+      #
+      # SCOPE, stated precisely: this label covers THIS SUBSET only. The steps
+      # ABOVE (the V2.2-V2.9 and earlier V3.0 suites) include older dynamic
+      # suites whose execution class is declared separately and is NOT all
+      # static. The workflow as a whole is therefore not a static-only
+      # workflow, and must not be described as one.
+      #
+      # CORRECTION: the EBU foundation gate below was previously listed here
+      # while it executed one `world.apply_joint` (F8) and one
+      # `proto.execute_tick` conformance tick, and printed
+      # "Model-state advancement: NONE". That claim was FALSE. Both checks now
+      # live in test_ebu_foundation_transitions.py, which is a SEPARATE
+      # EXECUTION CLASS, requires EBU_ALLOW_MODEL_TRANSITIONS=1, and is
+      # DELIBERATELY NOT RUN on this default path. The foundation gate now
+      # parses its own source and asserts it calls no transition, so the
+      # static-only label below is machine-enforced rather than asserted.
+      - name: Run V3.0 long-horizon mechanism validation - static only (34 groups, 320 checks)
+        run: |
+          python test_v30_longhorizon.py
+      - name: Run V3.0 authority-coordinate validation - static only (10 groups, 212 checks)
+        run: |
+          python test_authority_coordinate.py
+      - name: Run V3.0 study-protocol schema validation - static only (6 groups, 68 checks)
+        run: |
+          python test_study_protocol_schema.py
+      - name: Run V3.0 study-harness validation - static and synthetic only (10 groups, 120 checks)
+        run: |
+          python test_study_harness.py
+      - name: Run EBU foundation conformance gate F1-F10 + F-L1-F-L6 + negative controls - STATIC ONLY, machine-enforced (23 groups, 741 checks)
+        run: |
+          python test_ebu_foundation.py
+      # Boundary check, not a test run: assert the transition suite stays off
+      # this path. It must refuse with the SPECIFIC refusal code 2.
+      #
+      # CORRECTION: an earlier version of this step used `if python ...; then`,
+      # which accepts ANY nonzero exit as success. That would have passed on a
+      # SyntaxError, an ImportError or a test failure just as readily as on the
+      # intended refusal, so it did not prove the refusal it claimed to prove.
+      # The exit code is now compared exactly.
+      - name: Assert the model-transition suite refuses with exit code 2
+        run: |
+          set +e
+          python test_ebu_foundation_transitions.py > /tmp/tx.log 2>&1
+          code=$?
+          set -e
+          if [ "$code" -ne 2 ]; then
+            echo "FAIL: expected refusal exit code 2, got $code"
+            cat /tmp/tx.log
+            exit 1
+          fi
+          grep -q "REFUSED" /tmp/tx.log || { echo "FAIL: no refusal message"; exit 1; }
+          echo "OK: refused with exit 2; this suite stays off the default path"

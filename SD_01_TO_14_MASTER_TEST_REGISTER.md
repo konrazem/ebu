@@ -459,6 +459,67 @@ configuration, which is a separate authorization.
 
 ---
 
+## 4A. Where the prospective conservative-world study belongs: outside the fourteen
+
+The **prospective stochastic sustained-demand conservative-world study** is
+registered as a **separate prospective candidate**. It is recorded here only so
+that it is discoverable from the register; it does **not** occupy a stage.
+
+- **No SD number.** None is assigned, none is implied, and no stage row above is
+  created, renamed or reserved for it.
+- **Not SD-01.** It does not amend, replace or supersede SD-01 or any registered
+  SD study, and it rewrites no historical study identity. Design section 45
+  requires a prospective *new* registration or an explicit *approved* amendment;
+  the candidate is a candidate for the former and is neither.
+- **Not regenerative.** Its world is closed and lossless and **regeneration is
+  absent from the physical plant** - which is precisely why it is not a second
+  parameterization of SD-01's regenerative question (contrast section 4).
+- **Nothing scientific is frozen**: parameters, controllers, metrics,
+  thresholds, seeds, horizons, tolerances and oracle rules all remain unfrozen.
+- **Identity registration is not preregistration, not execution permission and
+  not scientific evidence.** AWS and scientific execution remain unauthorized
+  (E5, coordinate W-2 clause 6).
+
+Its five controller arms (C0-C4) are all `CANDIDATE_UNAPPROVED` and every
+`build()` path fails closed. Identity and arms:
+`V3.0_PROSPECTIVE_STUDY_CONTROLLER_DECISION_PACKET.md`,
+`ebu_candidate_controllers.py`.
+
+**Corrections recorded (this revision).** Two errors in the C3 arm, both fixed:
+
+1. Its export was bounded by the *reserve coordinate* `[x_i - R_i]_+`, which on
+   the illustrative fixture left the source **below its own lower homeostatic
+   band**. The fixture claims that depended on it were false and are withdrawn,
+   including a "dominates" claim - a category error while metric slot S-M is
+   unfilled.
+2. The first correction then removed C3's reserve awareness entirely, reasoning
+   that the committed P1C layer already supplied it. **That was wrong.**
+   `R_eff` is a PROVIDER/EXPORT FLOOR bounding what a source may send; `R`
+   (`NodeSpec.reserve`) is the HOMEOSTATIC RESERVE COORDINATE. `R_eff` does not
+   implement `R`, and nothing in the resolver moves resource toward a
+   destination below its `R`.
+
+C3 is now the **three-stage reserve-and-band-aware** non-field arm
+(`C3-reserve-and-band-aware`): one source-side band-safe budget
+`A_i = [x_i - L_i]_+`, spent lexicographically on destination reserve deficits,
+then lower-band deficits, then ordinary service inside the upper band. Design
+section 27's stated purpose is retained, so **CONFLICT-4 is resolved without a
+design amendment**; CONFLICT-5 (no destination-side resolver) is contained for
+the first study by a configuration-time topology restriction and remains open
+in general.
+
+**Execution-record correction.** The foundation suite previously printed
+`Model-state advancement: NONE` while executing one `apply_joint` and one
+conformance tick. That claim was false and is withdrawn; the accurate record is
+**2 single synthetic transitions, 0 trajectories, no scientific evidence**.
+Those two checks now live in a separate opt-in execution class off the default
+CI path, and the default gate is static-only and machine-enforced.
+
+Nothing about the study's status changed: no arm is approved, no parameter is
+selected, and every `build()` path still fails closed.
+
+---
+
 ## 5. Status summary and cost readiness
 
 **One blocker is common to all fourteen** and is not repeated in the table:
@@ -503,11 +564,27 @@ register would otherwise have ignored:
 | SD-01 | 5 | level-2 derivation checks; level-3 harness conformance; level-4 numerical verification; **independent Stage E PASS** |
 | SD-03 | **4** | level-2 exact derivations; level-3 interface conformance |
 
-**SD-03 is the only stage in the programme that does not require an independent
-Stage E PASS.** Every other stage is gated behind a Stage E acceptance that has
-not happened. SD-03 is gated only behind work that can be done now: an
+> **Correction (superseded claim retained for trace).** An earlier revision of
+> this section stated: "SD-03 is the only stage in the programme that does not
+> require an independent Stage E PASS." That claim is **false** and is
+> superseded by `SD_03_PRE_EXECUTION_READINESS.md` §8, which records that
+> SD-03, SD-04, SD-05, SD-10, SD-11, SD-12 and SD-13 **all** omit it — seven of
+> fourteen. The sentence is corrected below; the conclusion it supported still
+> stands, on different grounds.
+
+**SD-03 is the earliest executable stage in the programme.** Seven of the
+fourteen stages do not require an independent Stage E PASS, but SD-03 is the
+only one of them with **no SD-stage prerequisite at all**: SD-04 and SD-05
+depend on SD-03, and SD-10 through SD-13 depend on stages further up the chain.
+SD-03 is therefore gated only behind work that can be done now: an
 exact-rational oracle and an interface-conformance check, over 192 cases and
 1,344 evaluations in 128 MiB, on a laptop.
+
+> **Registered-scale caveat.** The 7-projection / 1,344-evaluation figures are
+> the *registered* ones. `SD_03_PRE_EXECUTION_READINESS.md` prerequisite **P1**
+> records that three of the seven chain projections (`f_e`, `Psi_e`, `J_e`)
+> cannot be computed for SD-03's declared domain; if the chain is narrowed
+> instead of extended, the honest figures become 4 and 768. P1 is unresolved.
 
 It is also the stage that everything else needs. SD-04, SD-05 and SD-14 depend
 on it directly; SD-06 through SD-13 depend on it transitively. And the exact
