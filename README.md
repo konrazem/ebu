@@ -6,6 +6,7 @@ A value equation is not, by itself, a controller or a promise of homeostasis.
 
 ## Start here
 
+- [Completed reconciliation and preservation report](RECONCILIATION_COMPLETION_REPORT.md)
 - [Current scientific authority and work boundary](CURRENT_SCIENTIFIC_AUTHORITY.md)
 - [Local Gaussian programme reconciliation](LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md)
 - [Book series structure](EBU_FUTURE_BOOKS_STRUCTURE.md)

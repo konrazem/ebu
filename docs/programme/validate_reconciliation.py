@@ -101,6 +101,7 @@ def main():
         "LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md",
         "BOOK_I_INTRODUCTION_BLUEPRINT.md", "BOOK_I_GENERATION_HANDOVER.md",
         "BOOK_I_MOTIVATION_SOURCE_REGISTER.md", "docs/history/README.md",
+        "RECONCILIATION_COMPLETION_REPORT.md",
         "docs/programme/sources/README.md",
     ]]
     links = 0
